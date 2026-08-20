@@ -15,6 +15,7 @@ if (capitals.cities.some((city) => !Number.isFinite(city.budget?.local_amount) |
 if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fiscal_details?.balance_classification || !Array.isArray(city.fiscal_details?.components))) throw new Error("Incomplete European capital fiscal details");
 if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
 if (!homepage.includes('href="eu-capitals.html?lang=cs"') || !homepage.includes('data-i18n="capitalsCta"')) throw new Error("Homepage must expose the European capitals comparison");
-if (!homepage.includes('styles-v2.css?v=24226edf') || !homepage.includes('homepage-v2.js?v=24226edf')) throw new Error("Homepage assets must be cache-busted for the capitals release");
+if (!homepage.includes('href="cz/mesta/?lang=cs"') || !homepage.includes('data-i18n="citiesCta"') || !homepage.includes('data-i18n="cityHeroCta"')) throw new Error("Homepage must prominently expose Czech cities");
+if (!homepage.includes('styles-v2.css?v=20260820-cities') || !homepage.includes('homepage-v2.js?v=20260820-cities') || !homepage.includes('global-nav.js?v=20260820-cities')) throw new Error("Homepage assets must be cache-busted for the Czech cities release");
 for (const required of ["index.html", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "sitemap.xml"]) await stat(required);
 console.log("CZ Budget site validation passed");
