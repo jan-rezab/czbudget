@@ -97,6 +97,16 @@
 .plan-panel { display: grid; gap: 30px; }
 .plan-row>div:first-child,.panel-title,.mix-row>div:first-child { display: flex; justify-content: space-between; gap: 20px; align-items: baseline; }
 .plan-row span,.mix-row span { color: var(--cz-muted); font-size: 12px; }
+.budget-stage-scroll { overflow-x: auto; }
+.budget-stage-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.budget-stage-table th,.budget-stage-table td { padding: 15px 16px; border-bottom: 1px solid var(--cz-line); text-align: right; white-space: nowrap; }
+.budget-stage-table thead th { color: var(--cz-muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.budget-stage-table th:first-child { text-align: left; }
+.budget-stage-table tbody th { font-size: 14px; }
+.budget-stage-table tbody tr:last-child { background: color-mix(in srgb, var(--acid) 20%, white); }
+.budget-stage-table tbody tr:last-child th,.budget-stage-table tbody tr:last-child td { border-bottom: 0; font-weight: 800; }
+.budget-stage-source { margin: 14px 0 0; color: var(--cz-muted); font-size: 11px; }
+.budget-stage-source code { font-size: 10px; }
 .plan-track,.mix-track { position: relative; height: 28px; margin-top: 12px; background: #e6e2d9; }
 .plan-track i,.mix-track i { display: block; height: 100%; background: var(--cz-green); }
 .plan-track b,.mix-track b { position: absolute; right: 8px; top: 6px; font-size: 11px; }

@@ -26,6 +26,43 @@
     header.append(switcher);
   }
 
+  const renderBudgetStages = async () => {
+    const panel = document.querySelector(".detail-page .plan-panel");
+    const entityId = document.body.dataset.entityId;
+    if (!panel || !entityId) return;
+    const ico = entityId.split(":").at(-1);
+    try {
+      const response = await fetch(`../../../data/entities/${encodeURIComponent(ico)}.json`);
+      if (!response.ok) throw new Error(`Municipal profile returned ${response.status}`);
+      const payload = await response.json();
+      const entity = payload.entity;
+      const a = entity.amounts;
+      const fallback = [
+        { stage: "enacted", revenue_czk: a.revenue_approved, expenditure_czk: a.expense_approved },
+        { stage: "revised", revenue_czk: a.revenue_adjusted, expenditure_czk: a.expense_adjusted },
+        { stage: "actual", revenue_czk: a.revenue_actual, expenditure_czk: a.expense_actual },
+      ].map((row) => ({ ...row, balance_czk: row.revenue_czk - row.expenditure_czk }));
+      const stages = entity.budget_stages?.length === 3 ? entity.budget_stages : fallback;
+      const labels = lang === "en"
+        ? { enacted: "Approved", revised: "Amended", actual: "Actual", stage: "Budget stage", revenue: "Revenue", expenditure: "Expenditure", balance: "Balance", heading: "Approved, amended and actual.", source: "BigQuery headline · FIN 2-12 M" }
+        : { enacted: "Schválený", revised: "Upravený", actual: "Skutečnost", stage: "Stav rozpočtu", revenue: "Příjmy", expenditure: "Výdaje", balance: "Saldo", heading: "Schválený, upravený a skutečnost.", source: "BigQuery headline · FIN 2-12 M" };
+      const money = new Intl.NumberFormat(lang === "en" ? "en-GB" : "cs-CZ", {
+        style: "currency", currency: "CZK", maximumFractionDigits: 0,
+      });
+      const ordered = ["enacted", "revised", "actual"].map((stage) => stages.find((row) => row.stage === stage));
+      if (ordered.some((row) => !row)) throw new Error("Municipal profile has incomplete budget stages");
+      panel.innerHTML = `<div class="budget-stage-scroll"><table class="budget-stage-table">
+        <thead><tr><th scope="col">${labels.stage}</th><th scope="col">${labels.revenue}</th><th scope="col">${labels.expenditure}</th><th scope="col">${labels.balance}</th></tr></thead>
+        <tbody>${ordered.map((row) => `<tr class="budget-stage-${row.stage}"><th scope="row">${labels[row.stage]}</th><td>${money.format(row.revenue_czk)}</td><td>${money.format(row.expenditure_czk)}</td><td class="${row.balance_czk >= 0 ? "positive" : "negative"}">${money.format(row.balance_czk)}</td></tr>`).join("")}</tbody>
+      </table></div><p class="budget-stage-source">${labels.source}${entity.budget_stage_lineage ? ` · <code>${entity.budget_stage_lineage.ingestion_run_id}</code>` : ""}</p>`;
+      const heading = document.querySelector("#rozpocet .detail-section-title h2");
+      if (heading) heading.textContent = labels.heading;
+    } catch (error) {
+      console.error("Budget-stage integration failed", error);
+    }
+  };
+  void renderBudgetStages();
+
   if (lang !== "en") return;
   const dictionary = new Map(Object.entries({
     "Domů": "Home", "Obce": "Municipalities", "Obce a kraje": "Municipalities and regions", "Velká města": "Large cities", "Kraje": "Regions",
