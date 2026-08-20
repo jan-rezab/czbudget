@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Evropská hlavní města — rozpočty, obyvatelé a cestovní ruch</title>
+  <meta name="description" content="Rozpočty 27 hlavních měst EU a Londýna v eurech i místních měnách, doplněné o počet obyvatel a statistiky cestovního ruchu.">
+  <meta property="og:title" content="Evropská hlavní města — Public Spending Data">
+  <meta property="og:description" content="Městské rozpočty, obyvatelé a cestovní ruch na jednom místě.">
+  <meta property="og:image" content="assets/og.png">
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-v2.css">
+  <link rel="stylesheet" href="chart-system.css">
+  <link rel="stylesheet" href="eu-capitals.css">
+  <script src="eu-capitals.js" defer></script>
+  <script src="global-nav.js" defer></script>
+</head>
+<body class="home-v2 capitals-page">
+  <header class="site-header compact-header has-global-nav">
+    <a class="brand" href="index.html" aria-label="Public Spending Data"><span class="brand-grid"><i></i><i></i><i></i><i></i></span><span class="wordmark">Public Spending <b>Data</b></span></a>
+    <nav class="global-nav" aria-label="Primary navigation"></nav>
+    <div class="lang-switch" aria-label="Jazyk"><button type="button" data-lang="cs" class="active" aria-pressed="true">CS</button><span>/</span><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+  </header>
+
+  <main id="top">
+    <section class="capitals-hero">
+      <div class="capitals-hero-copy">
+        <span class="eyebrow"><i class="live-dot"></i><span data-i18n="eyebrow">27 hlavních měst EU + Londýn</span></span>
+        <h1><span data-i18n="hero1">Města v číslech.</span><br><em data-i18n="hero2">Rozpočet i kontext.</em></h1>
+        <p data-i18n="heroCopy">Nejnovější oficiální rozpočty evropských metropolí, přepínatelné mezi eurem a místní měnou. Vedle nich počet obyvatel a turistická přenocování.</p>
+        <a class="primary-button" href="#atlas"><span data-i18n="heroCta">Otevřít atlas měst</span> <b>↘</b></a>
+      </div>
+      <aside class="capitals-ledger" aria-label="Přehled dat">
+        <div class="ledger-head"><span data-i18n="ledgerTitle">Datový výřez</span><strong>2026</strong></div>
+        <dl>
+          <div><dt data-i18n="statCities">Města</dt><dd id="stat-cities">28</dd></div>
+          <div><dt data-i18n="statCurrencies">Měny</dt><dd id="stat-currencies">8</dd></div>
+          <div><dt data-i18n="statEu">Členské státy EU</dt><dd>27</dd></div>
+          <div><dt data-i18n="statTourism">Turistika</dt><dd>2024</dd></div>
+        </dl>
+        <p data-i18n="ledgerNote">Rozpočtové období je 2026, s označenými výjimkami pro Vallettu a Londýn.</p>
+      </aside>
+    </section>
+
+    <section class="capitals-note" aria-label="Upozornění ke srovnání"><strong data-i18n="warningLabel">Čtěte rozsah.</strong><p data-i18n="warningCopy">Městské struktury a účetní definice se liší. Částky zachovávají nejširší oficiální výdajový údaj každého města; nejsou bez dalšího vhodné jako žebříček.</p></section>
+
+    <section class="capitals-atlas" id="atlas">
+      <div class="compact-title"><div><span class="kicker" data-i18n="atlasKicker">01 / Městský atlas</span><h2 data-i18n="atlasTitle">Jedno místo. Čtyři měřítka.</h2></div><p data-i18n="atlasCopy">Rozpočet, obyvatelé, turistická přenocování a intenzita cestovního ruchu. Kliknutím na řádek otevřete přesný rozsah a původ hodnoty.</p></div>
+      <div class="capital-controls">
+        <label class="search-control"><span data-i18n="searchLabel">Hledat město nebo zemi</span><input id="capital-search" type="search" autocomplete="off" placeholder="Praha, France…" data-i18n-placeholder="searchPlaceholder"></label>
+        <fieldset><legend data-i18n="currencyLabel">Zobrazená měna</legend><button type="button" class="active" data-currency="eur" data-i18n="currencyEur">EUR</button><button type="button" data-currency="local" data-i18n="currencyLocal">Místní měna</button></fieldset>
+        <label><span data-i18n="sortLabel">Seřadit podle</span><select id="capital-sort"><option value="city" data-i18n="sortCity">Města A–Z</option><option value="budget" data-i18n="sortBudget">Rozpočtu</option><option value="population" data-i18n="sortPopulation">Počtu obyvatel</option><option value="nights" data-i18n="sortNights">Přenocování</option><option value="intensity" data-i18n="sortIntensity">Přenocování / obyv.</option></select></label>
+        <label><span data-i18n="coverageLabel">Výběr</span><select id="capital-coverage"><option value="all" data-i18n="coverageAll">EU + Londýn</option><option value="eu" data-i18n="coverageEu">Pouze EU</option></select></label>
+      </div>
+      <div class="capital-result-line"><span id="capital-count" aria-live="polite">28 měst</span><small data-i18n="resultNote">Hodnoty rozpočtu jsou nominální.</small></div>
+      <div class="capital-table-wrap"><table class="capital-table"><thead><tr><th data-i18n="thCity">Město</th><th data-i18n="thBudget">Rozpočet</th><th data-i18n="thPopulation">Obyvatelé</th><th data-i18n="thNights">Přenocování</th><th data-i18n="thIntensity">Noci / obyv.</th><th><span class="sr-only" data-i18n="thDetail">Detail</span></th></tr></thead><tbody id="capital-table-body"></tbody></table></div>
+      <div class="capital-empty" id="capital-empty" hidden><strong data-i18n="emptyTitle">Nic jsme nenašli.</strong><span data-i18n="emptyCopy">Zkuste jiné město nebo zemi.</span></div>
+    </section>
+
+    <section class="capital-detail-section" id="city-detail" aria-live="polite"><div class="detail-empty"><span class="kicker" data-i18n="detailKicker">02 / Detail města</span><h2 data-i18n="detailInitial">Vyberte město v tabulce.</h2></div></section>
+
+    <section class="capitals-method" id="method">
+      <div class="compact-title"><div><span class="kicker" data-i18n="methodKicker">03 / Jak data číst</span><h2 data-i18n="methodTitle">Srovnání s přiznanými hranicemi.</h2></div><p data-i18n="methodCopy">Každá hodnota si nese rok, územní vymezení a primární zdroj. To umožní později stavět městské profily bez ztráty původního významu.</p></div>
+      <div class="capital-method-grid">
+        <article><b>01</b><h3 data-i18n="methodBudgetTitle">Rozpočty</h3><p data-i18n="methodBudgetCopy">Nejširší oficiální výdajová částka dostupná k 20. srpnu 2026. Přesná definice a rozsah jsou v detailu města.</p></article>
+        <article><b>02</b><h3 data-i18n="methodFxTitle">Přepočet měn</h3><p data-i18n="methodFxCopy">EUR hodnoty používají referenční kurzy ECB z 20. srpna 2026. Místní částka zůstává uložená beze změny.</p></article>
+        <article><b>03</b><h3 data-i18n="methodPopulationTitle">Obyvatelé</h3><p data-i18n="methodPopulationCopy">Nejnovější dostupný údaj Eurostatu. Rok a případné širší území „greater city“ zobrazujeme přímo u hodnoty.</p></article>
+        <article><b>04</b><h3 data-i18n="methodTourismTitle">Cestovní ruch</h3><p data-i18n="methodTourismCopy">Přenocování za rok 2024. Dublin a Londýn používají širší místní zdroje, proto jsou v detailu zvlášť označené.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer><div><strong>Public Spending Data</strong><small data-i18n="footerScope">Evropská města</small></div><p data-i18n="footerSource">Zdroje: rozpočty měst · Eurostat · ECB</p><a href="#top" data-i18n="backTop">Nahoru ↑</a></footer>
+  <noscript>Tato stránka potřebuje JavaScript pro načtení městských dat.</noscript>
+</body>
+</html>

@@ -1,6 +1,6 @@
 (() => {
   const csToEn = {
-    "Rozpočet":"Budget","Firmy státu":"State firms","Struktura":"Structure","Demografie":"Demography","Srovnání":"Comparison","Metodika":"Methodology",
+    "Domů":"Home","Rozpočet":"Budget","Firmy státu":"State firms","Struktura":"Structure","Demografie":"Demography","Srovnání":"Comparison","Metodika":"Methodology","Přehled":"Overview","Veřejné subjekty":"Public entities","Země":"Countries","Příjmy / výdaje":"Revenue / expenditure","630 organizací":"630 organisations","10 profilů":"10 profiles","Zdroje":"Sources",
     "Státní rozpočet ČR · skutečnost, návrh a výhled":"Czech state budget · outturn, proposal and outlook",
     "Český rozpočet.":"The Czech budget.","Bez krátké paměti.":"With a long memory.",
     "Pětadvacet let příjmů a výdajů, návrh pro rok 2026 a model toho, co s veřejnými financemi udělá stárnutí populace.":"Twenty-five years of revenue and expenditure, the 2026 proposal and a model of how population ageing affects public finance.",

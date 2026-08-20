@@ -11,7 +11,7 @@ const summary=code=>state.data.summaries.find(x=>x.country_code===code),name=c=>
 const fmt=(v,signed=false)=>Number.isFinite(v)?`${signed&&v>0?"+":""}${v.toLocaleString(loc(),{minimumFractionDigits:1,maximumFractionDigits:1})} %`:"—";
 const median=a=>{a=a.filter(Number.isFinite).sort((x,y)=>x-y);const m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2};
 const countries=()=>state.data.countries.filter(c=>state.group==="all"||(state.group==="requested"?c.role!=="responsible_benchmark":c.role==="anchor"||c.role==="responsible_benchmark"));
-const link=code=>`country.html?code=${code}&lang=${state.lang}`;
+const link=code=>code==="CZE"?`cesky-rozpocet.html?lang=${state.lang}`:`country.html?code=${code}&lang=${state.lang}`;
 function translate(){
   document.documentElement.lang=state.lang;document.querySelectorAll("[data-i18n]").forEach(n=>{if(I[state.lang][n.dataset.i18n])n.textContent=I[state.lang][n.dataset.i18n]});document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("active",b.dataset.lang===state.lang));
   $("#metric-select").innerHTML=keys.map(k=>`<option value="${k}">${I[state.lang].metricLabels[k]}</option>`).join("");$("#metric-select").value=state.metric;
