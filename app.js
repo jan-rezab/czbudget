@@ -43,13 +43,26 @@ function linear(domainMin, domainMax, rangeMin, rangeMax) {
   return scale;
 }
 
-function niceMax(value, steps = 5) {
-  if (!Number.isFinite(value) || value <= 0) return 1;
-  const raw = value / steps;
-  const power = 10 ** Math.floor(Math.log10(raw));
-  const fraction = raw / power;
-  const nice = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
-  return nice * power * steps;
+function timeScale(domainMin, domainMax, rangeMin, rangeMax, interval = 1) {
+  return linear(domainMin-interval/2,domainMax+interval/2,rangeMin,rangeMax);
+}
+
+function niceAxis(domainMin, domainMax, targetSteps = 4) {
+  if (!Number.isFinite(domainMin) || !Number.isFinite(domainMax)) return { min:0, max:1, ticks:[0,1] };
+  if (domainMin === domainMax) {
+    const pad = Math.abs(domainMin)*.1 || 1;
+    domainMin -= pad; domainMax += pad;
+  }
+  const roughStep = Math.abs(domainMax-domainMin)/targetSteps;
+  const power = 10 ** Math.floor(Math.log10(roughStep));
+  const fraction = roughStep/power;
+  const multiplier = [1,2,2.5,5,10].find((candidate)=>candidate>=fraction) || 10;
+  const step = multiplier*power;
+  const min = Math.floor(domainMin/step)*step;
+  const max = Math.ceil(domainMax/step)*step;
+  const count = Math.round((max-min)/step);
+  const ticks = Array.from({length:count+1},(_,index)=>Number((min+index*step).toPrecision(12)));
+  return { min, max, ticks };
 }
 
 function drawAxes(frame, x, y, xTicks, yTicks, yFormat, xTitle, yTitle) {
@@ -149,9 +162,9 @@ function renderBudget() {
     displayBalance:budgetValue(d.revenue-d.expense,d.year)
   }));
   const frame = chartFrame("budget-pair-chart", 310), { svg, margin:m, iw, ih } = frame;
-  const x = linear(2001,2026,0,iw), max = niceMax(Math.max(...rows.flatMap((d) => [d.displayRevenue,d.displayExpense]))*1.04);
-  const y = linear(0,max,ih,0), yTicks = Array.from({length:6},(_,i)=>max*i/5);
-  drawAxes(frame,x,y,[2001,2005,2010,2015,2020,2026],yTicks,fmt0,"rok","mld. Kč");
+  const x = timeScale(2001,2026,0,iw), axis = niceAxis(0,Math.max(...rows.flatMap((d) => [d.displayRevenue,d.displayExpense]))*1.04);
+  const y = linear(axis.min,axis.max,ih,0);
+  drawAxes(frame,x,y,[2001,2005,2010,2015,2020,2026],axis.ticks,fmt0,"rok","mld. Kč");
   const proposalX = m.left+x(2026);
   svg.append(node("rect", { x:proposalX-9, y:m.top, width:18, height:ih, fill:colors.revenue, opacity:".22" }));
   [["displayRevenue",colors.revenue,"Příjmy"],["displayExpense",colors.expense,"Výdaje"]].forEach(([key,color,label]) => {
@@ -191,10 +204,10 @@ function renderStructure(rows) {
 }
 
 function renderStack(id, rows, definitions, total, amount) {
-  const frame=chartFrame(id,280),{svg,margin:m,iw,ih}=frame,x=linear(2001,2026,0,iw);
+  const frame=chartFrame(id,280),{svg,margin:m,iw,ih}=frame,x=timeScale(2001,2026,0,iw);
   const transformed=rows.map(d=>{let sum=0;const out={...d};definitions.forEach(([key,,get])=>{const value=budgetValue(get(d),d.year);out[key]=amount?value:value/budgetValue(total(d),d.year)*100;out[key+"0"]=sum;sum+=out[key];out[key+"1"]=sum});return out});
-  const max=amount?niceMax(Math.max(...transformed.map(d=>definitions.reduce((s,[key])=>s+d[key],0)))*1.03):100,y=linear(0,max,ih,0),bar=Math.max(3,iw/transformed.length*.68);
-  drawAxes(frame,x,y,[2001,2010,2020,2026],[0,max*.25,max*.5,max*.75,max],amount?fmt0:(v)=>`${fmt0.format(v)} %`,"rok",amount?"mld. Kč":"podíl");
+  const axis=amount?niceAxis(0,Math.max(...transformed.map(d=>definitions.reduce((s,[key])=>s+d[key],0)))*1.03):{min:0,max:100,ticks:[0,25,50,75,100]},y=linear(axis.min,axis.max,ih,0),bar=Math.max(3,iw/transformed.length*.68);
+  drawAxes(frame,x,y,[2001,2010,2020,2026],axis.ticks,amount?fmt0:(v)=>`${fmt0.format(v)} %`,"rok",amount?"mld. Kč":"podíl");
   transformed.forEach(d=>definitions.forEach(([key])=>svg.append(node("rect",{x:m.left+x(d.year)-bar/2,y:m.top+y(d[key+"1"]),width:bar,height:y(d[key+"0"])-y(d[key+"1"]),fill:colors[key],opacity:.92}))));
   svg.append(node("line",{x1:m.left+x(2026),x2:m.left+x(2026),y1:m.top,y2:m.top+ih,class:"chart-year-guide"}));
   addHover(frame,x,transformed,(year)=>transformed.reduce((best,d)=>Math.abs(d.year-year)<Math.abs(best.year-year)?d:best),d=>definitions.map(([key,label])=>[label,amount?`${fmt1.format(d[key])} mld.`:`${fmt1.format(d[key])} %`]));
@@ -236,10 +249,10 @@ function renderDemography(){const series=modelSeries(),b=series[0],e=series.at(-
 }
 
 function renderPopulation(series) {
-  const f=chartFrame("population-chart",290),{svg,margin:m,iw,ih}=f,x=linear(2025,2045,0,iw);
+  const f=chartFrame("population-chart",290),{svg,margin:m,iw,ih}=f,x=timeScale(2025,2045,0,iw);
   const defs=[["a019","0–19",d=>d.age_0_19/1e6,8],["a2064","20–64",d=>d.age_20_64/1e6,0],["a6579","65–79",d=>d.age_65_79/1e6,-8],["a80","80+",d=>d.age_80_plus/1e6,0]];
-  const max=niceMax(Math.max(...series.flatMap(d=>defs.map(([, ,get])=>get(d))))*1.08),y=linear(0,max,ih,0);
-  drawAxes(f,x,y,[2025,2030,2035,2040,2045],[0,max*.25,max*.5,max*.75,max],fmt0,"rok","miliony");
+  const axis=niceAxis(0,Math.max(...series.flatMap(d=>defs.map(([, ,get])=>get(d))))*1.08),y=linear(axis.min,axis.max,ih,0);
+  drawAxes(f,x,y,[2025,2030,2035,2040,2045],axis.ticks,fmt1,"rok","miliony");
   defs.forEach(([key,label,get,dy])=>{
     svg.append(node("path",{d:linePath(series,v=>m.left+x(v),v=>m.top+y(v),d=>d.year,get),fill:"none",stroke:colors[key],"stroke-width":2.7}));
     endLabel(f,x,y,series.at(-1),label,get(series.at(-1)),colors[key],dy);
@@ -249,8 +262,8 @@ function renderPopulation(series) {
 }
 
 function renderPressure(series) {
-  const f=chartFrame("pressure-chart",280),{svg,margin:m,iw,ih}=f,x=linear(2025,2045,0,iw),defs=[["pension","Důchody",d=>d.pensionDriver*100],["health","Zdravotnictví",d=>d.healthDriver*100],["care","Péče",d=>d.careDriver*100],["work","Příjmová báze",d=>d.workDriver*100]],max=niceMax(Math.max(...series.map(d=>Math.max(...defs.map(([, ,get])=>get(d)))))*1.03),y=linear(85,max,ih,0);
-  drawAxes(f,x,y,[2025,2030,2035,2040,2045],[90,100,110,120,130,140,150].filter(v=>v<=max),fmt0,"rok","index");
+  const f=chartFrame("pressure-chart",280),{svg,margin:m,iw,ih}=f,x=timeScale(2025,2045,0,iw),defs=[["pension","Důchody",d=>d.pensionDriver*100],["health","Zdravotnictví",d=>d.healthDriver*100],["care","Péče",d=>d.careDriver*100],["work","Příjmová báze",d=>d.workDriver*100]],values=series.flatMap(d=>defs.map(([, ,get])=>get(d))),axis=niceAxis(Math.min(...values)*.97,Math.max(...values)*1.03,5),y=linear(axis.min,axis.max,ih,0);
+  drawAxes(f,x,y,[2025,2030,2035,2040,2045],axis.ticks,fmt0,"rok","index");
   svg.append(node("line",{x1:m.left,x2:m.left+iw,y1:m.top+y(100),y2:m.top+y(100),stroke:"#ffffff88","stroke-dasharray":"4 4"}));
   defs.forEach(([key,label,get])=>{
     svg.append(node("path",{d:linePath(series,v=>m.left+x(v),v=>m.top+y(v),d=>d.year,get),fill:"none",stroke:colors[key],"stroke-width":2.7}));
@@ -261,10 +274,9 @@ function renderPressure(series) {
 }
 
 function renderExtra(series) {
-  const f=chartFrame("extra-chart",280),{svg,margin:m,iw,ih}=f,x=linear(2025,2045,0,iw),defs=[["pension","Důchody",d=>d.pensionExtra],["health","Zdravotnictví",d=>d.healthExtra],["care","Péče",d=>d.careExtra]],max=350,y=linear(0,max,ih,0),bar=iw/series.length*.62;
-  drawAxes(f,x,y,[2025,2030,2035,2040,2045],[0,50,100,150,200,250,300,350],fmt0,"rok","mld. Kč");
+  const f=chartFrame("extra-chart",280),{svg,margin:m,iw,ih}=f,x=timeScale(2025,2045,0,iw),defs=[["pension","Důchody",d=>d.pensionExtra],["health","Zdravotnictví",d=>d.healthExtra],["care","Péče",d=>d.careExtra]],deficit=demographicData.base_2025.budget_deficit_2026,stackedMax=Math.max(...series.map(d=>defs.reduce((sum,[,,get])=>sum+Math.max(0,get(d)),0))),axis=niceAxis(0,Math.max(stackedMax,deficit)*1.06),y=linear(axis.min,axis.max,ih,0),bar=iw/series.length*.62;
+  drawAxes(f,x,y,[2025,2030,2035,2040,2045],axis.ticks,fmt0,"rok","mld. Kč");
   series.forEach(d=>{let base=0;defs.forEach(([key,,get])=>{const value=Math.max(0,get(d));svg.append(node("rect",{x:m.left+x(d.year)-bar/2,y:m.top+y(base+value),width:bar,height:y(base)-y(base+value),fill:colors[key],opacity:.92}));base+=value})});
-  const deficit=demographicData.base_2025.budget_deficit_2026;
   svg.append(node("line",{x1:m.left,x2:m.left+iw,y1:m.top+y(deficit),y2:m.top+y(deficit),stroke:"white","stroke-width":1.5,"stroke-dasharray":"4 3"}));
   svg.append(node("text",{x:m.left+iw-3,y:m.top+y(deficit)-7,"text-anchor":"end",class:"chart-axis"},"schodek 2026 · 310 mld."));
   addHover(f,x,series,year=>series.reduce((a,d)=>Math.abs(d.year-year)<Math.abs(a.year-year)?d:a),d=>defs.map(([,label,get])=>[label,`${fmt1.format(get(d))} mld.`]));
@@ -272,8 +284,8 @@ function renderExtra(series) {
 }
 
 function renderPension(series) {
-  const f=chartFrame("pension-chart",300),{svg,margin:m,iw,ih}=f,x=linear(2025,2045,0,iw),min=Math.min(-300,Math.min(...series.map(d=>d.balance))),max=niceMax(Math.max(...series.map(d=>Math.max(d.income,d.expense)))*1.03),y=linear(min,max,ih,0);
-  drawAxes(f,x,y,[2025,2030,2035,2040,2045],[-200,0,200,400,600,800,1000].filter(v=>v>=min&&v<=max),fmt0,"rok","mld. Kč");
+  const f=chartFrame("pension-chart",300),{svg,margin:m,iw,ih}=f,x=timeScale(2025,2045,0,iw),rawMin=Math.min(-300,Math.min(...series.map(d=>d.balance))),rawMax=Math.max(...series.map(d=>Math.max(d.income,d.expense))),axis=niceAxis(rawMin*1.03,rawMax*1.03,5),y=linear(axis.min,axis.max,ih,0);
+  drawAxes(f,x,y,[2025,2030,2035,2040,2045],axis.ticks,fmt0,"rok","mld. Kč");
   [["income","Příjmy",colors.work],["expense","Výdaje",colors.pension],["balance","Saldo",colors.balance]].forEach(([key,label,color])=>{
     svg.append(node("path",{d:linePath(series,v=>m.left+x(v),v=>m.top+y(v),d=>d.year,d=>d[key]),fill:"none",stroke:color,"stroke-width":key==="balance"?2.3:2.8,"stroke-dasharray":key==="balance"?"5 3":"none"}));
     endLabel(f,x,y,series.at(-1),label,series.at(-1)[key],color);
@@ -294,7 +306,7 @@ function renderBenchmark(){const countries=benchmarkCountries().map(c=>({...c,va
 
 function renderCountryProfile(){const c=countryMeta(benchmarkState.country),y=benchmarkState.year,vals={revenue:metricValue(c.country_code,"revenue_pct_gdp",y),expense:metricValue(c.country_code,"expenditure_pct_gdp",y),balance:metricValue(c.country_code,"balance_pct_gdp",y),debt:metricValue(c.country_code,"gross_debt_pct_gdp",y)};$("#country-profile").innerHTML=`<div class="city-title"><div><span class="country-flag">${esc(c.country_code)}</span><h3>${esc(c.name_cs)}</h3><p>${y} · sektor vládních institucí</p></div></div><div class="city-kpis"><div><span>Příjmy</span><strong>${formatMetric(vals.revenue,"revenue_pct_gdp")}</strong></div><div><span>Výdaje</span><strong>${formatMetric(vals.expense,"expenditure_pct_gdp")}</strong></div><div><span>Saldo</span><strong>${formatMetric(vals.balance,"balance_pct_gdp")}</strong></div><div><span>Hrubý dluh</span><strong>${formatMetric(vals.debt,"gross_debt_pct_gdp")}</strong></div></div><p class="profile-note">Harmonizovaný rozsah IMF zahrnuje centrální a místní vládu i fondy sociálního zabezpečení. Není totožný se státním rozpočtem výše.</p>`;}
 
-function renderScatter(){const rows=sovereignData.countries.map(c=>({...c,balance:metricValue(c.country_code,"balance_pct_gdp",benchmarkState.year),debt:metricValue(c.country_code,"gross_debt_pct_gdp",benchmarkState.year)})).filter(d=>d.balance!=null&&d.debt!=null),container=$("#scatter-wrap"),width=Math.max(500,(container.clientWidth||900)-290),height=360,m={top:20,right:24,bottom:42,left:54},iw=width-m.left-m.right,ih=height-m.top-m.bottom,xMin=Math.floor(Math.min(...rows.map(d=>d.balance))-1),xMax=Math.ceil(Math.max(...rows.map(d=>d.balance))+1),yMax=niceMax(Math.max(...rows.map(d=>d.debt))*1.08),x=linear(xMin,xMax,0,iw),y=linear(0,yMax,ih,0),svg=node("svg",{viewBox:`0 0 ${width} ${height}`,role:"img","aria-label":`Saldo a dluh zemí v roce ${benchmarkState.year}`});[0,yMax*.25,yMax*.5,yMax*.75,yMax].forEach(t=>{svg.append(node("line",{x1:m.left,x2:m.left+iw,y1:m.top+y(t),y2:m.top+y(t),class:"chart-grid"}));svg.append(node("text",{x:m.left-7,y:m.top+y(t)+3,"text-anchor":"end",class:"chart-axis"},fmt0.format(t)))});[xMin,0,xMax].forEach(t=>svg.append(node("text",{x:m.left+x(t),y:m.top+ih+18,"text-anchor":"middle",class:"chart-axis"},fmt0.format(t))));svg.append(node("line",{x1:m.left+x(0),x2:m.left+x(0),y1:m.top,y2:m.top+ih,stroke:"#6e716d","stroke-dasharray":"4 4"}));rows.forEach(d=>{const g=node("g",{class:"scatter-city"}),circle=node("circle",{cx:m.left+x(d.balance),cy:m.top+y(d.debt),r:d.country_code===benchmarkState.country?8:5,fill:d.country_code===benchmarkState.country?"#a8b63f":"#8b8d83",stroke:"#171918","stroke-width":d.country_code===benchmarkState.country?2.5:1});g.append(circle);g.append(node("text",{x:m.left+x(d.balance)+8,y:m.top+y(d.debt)-7,class:"chart-axis"},d.country_code));g.addEventListener("click",()=>{benchmarkState.country=d.country_code;$("#country-select").value=d.country_code;renderBenchmark()});svg.append(g)});const active=rows.find(d=>d.country_code===benchmarkState.country)||rows[0];container.innerHTML="";container.append(svg);const aside=document.createElement("aside");aside.className="scatter-insight";aside.innerHTML=`<span>${esc(active.name_cs)} · ${benchmarkState.year}</span><strong>${active.balance>=0?"Přebytek":"Schodek"} ${fmt1.format(Math.abs(active.balance))} % HDP</strong><div><span>Saldo</span><b>${fmt1.format(active.balance)} %</b></div><div><span>Dluh</span><b>${fmt1.format(active.debt)} %</b></div>`;container.append(aside);}
+function renderScatter(){const rows=sovereignData.countries.map(c=>({...c,balance:metricValue(c.country_code,"balance_pct_gdp",benchmarkState.year),debt:metricValue(c.country_code,"gross_debt_pct_gdp",benchmarkState.year)})).filter(d=>d.balance!=null&&d.debt!=null),container=$("#scatter-wrap"),width=Math.max(500,(container.clientWidth||900)-290),height=360,m={top:20,right:24,bottom:42,left:54},iw=width-m.left-m.right,ih=height-m.top-m.bottom,xMin=Math.floor(Math.min(...rows.map(d=>d.balance))-1),xMax=Math.ceil(Math.max(...rows.map(d=>d.balance))+1),yAxis=niceAxis(0,Math.max(...rows.map(d=>d.debt))*1.08),x=linear(xMin,xMax,0,iw),y=linear(yAxis.min,yAxis.max,ih,0),svg=node("svg",{viewBox:`0 0 ${width} ${height}`,role:"img","aria-label":`Saldo a dluh zemí v roce ${benchmarkState.year}`});yAxis.ticks.forEach(t=>{svg.append(node("line",{x1:m.left,x2:m.left+iw,y1:m.top+y(t),y2:m.top+y(t),class:"chart-grid"}));svg.append(node("text",{x:m.left-7,y:m.top+y(t)+3,"text-anchor":"end",class:"chart-axis"},fmt0.format(t)))});[xMin,0,xMax].forEach(t=>svg.append(node("text",{x:m.left+x(t),y:m.top+ih+18,"text-anchor":"middle",class:"chart-axis"},fmt0.format(t))));svg.append(node("line",{x1:m.left+x(0),x2:m.left+x(0),y1:m.top,y2:m.top+ih,stroke:"#6e716d","stroke-dasharray":"4 4"}));rows.forEach(d=>{const g=node("g",{class:"scatter-city"}),circle=node("circle",{cx:m.left+x(d.balance),cy:m.top+y(d.debt),r:d.country_code===benchmarkState.country?8:5,fill:d.country_code===benchmarkState.country?"#a8b63f":"#8b8d83",stroke:"#171918","stroke-width":d.country_code===benchmarkState.country?2.5:1});g.append(circle);g.append(node("text",{x:m.left+x(d.balance)+8,y:m.top+y(d.debt)-7,class:"chart-axis"},d.country_code));g.addEventListener("click",()=>{benchmarkState.country=d.country_code;$("#country-select").value=d.country_code;renderBenchmark()});svg.append(g)});const active=rows.find(d=>d.country_code===benchmarkState.country)||rows[0];container.innerHTML="";container.append(svg);const aside=document.createElement("aside");aside.className="scatter-insight";aside.innerHTML=`<span>${esc(active.name_cs)} · ${benchmarkState.year}</span><strong>${active.balance>=0?"Přebytek":"Schodek"} ${fmt1.format(Math.abs(active.balance))} % HDP</strong><div><span>Saldo</span><b>${fmt1.format(active.balance)} %</b></div><div><span>Dluh</span><b>${fmt1.format(active.debt)} %</b></div>`;container.append(aside);}
 
 function bindControls(){$("#budget-price-mode").addEventListener("change",e=>{budgetState.price=e.target.value;renderBudget()});$("#budget-year").addEventListener("input",e=>{budgetState.year=+e.target.value;renderBudget()});$$("#structure-mode button").forEach(button=>button.addEventListener("click",()=>{budgetState.structure=button.dataset.mode;$$("#structure-mode button").forEach(b=>b.setAttribute("aria-pressed",b===button));renderBudget()}));$$("#demo-variant button").forEach(button=>button.addEventListener("click",()=>{demoState.variant=button.dataset.value;$$("#demo-variant button").forEach(b=>b.setAttribute("aria-pressed",b===button));renderDemography()}));[["ret-age","retAge","ret-age-label",v=>`${v} let`],["wage-growth","wageGrowth","wage-growth-label",v=>`${fmt1.format(v)} %`],["cost-growth","costGrowth","cost-growth-label",v=>`${fmt1.format(v)} %`]].forEach(([id,key,label,format])=>$("#"+id).addEventListener("input",e=>{demoState[key]=+e.target.value;$("#"+label).textContent=format(+e.target.value);renderDemography()}));}
 
