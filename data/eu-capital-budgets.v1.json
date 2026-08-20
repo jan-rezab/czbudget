@@ -1,0 +1,1862 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "EU_CAPITAL_BUDGETS_2026",
+  "generated_at": "2026-08-20T19:03:05+00:00",
+  "coverage": {
+    "city_count": 28,
+    "eu_capital_count": 27,
+    "extra_city_count": 1,
+    "source_archives_downloaded": 26,
+    "source_archives_available": 28,
+    "reviewed_source_snapshots": 2,
+    "source_archive_failures": 0
+  },
+  "methodology": {
+    "selection": "Latest adopted or officially published municipal budget available on 2026-08-20 for every EU capital plus London.",
+    "canonical_value": "The broadest expenditure total stated or derivable from the official source, with the source-specific scope retained in each record.",
+    "comparison_warning": "Municipal structures and accounting conventions differ. Values are suitable for discovery and display, not a league table without applying the scope fields.",
+    "valletta_exception": "Valletta's published 2026 PDF contains only a cover and contents page. The latest complete official budget, 2025, is used and flagged.",
+    "fx": {
+      "provider": "European Central Bank",
+      "date": "2026-08-20",
+      "quote": "local_currency_units_per_eur",
+      "source_url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml",
+      "rates": {
+        "EUR": "1",
+        "BGN": "1.9558",
+        "CZK": "24.153",
+        "DKK": "7.4758",
+        "GBP": "0.85725",
+        "HUF": "365.10",
+        "PLN": "4.3188",
+        "RON": "5.2515",
+        "SEK": "11.0875"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/ecb-euro-reference-rates-2026-08-20.xml",
+        "sha256": "661a31561f730073966ca9d42ae6d0c11de00af3512bb5e04f5abed284439312",
+        "bytes": 69519,
+        "downloaded_from": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml",
+        "download_status": "cached_or_downloaded"
+      }
+    }
+  },
+  "cities": [
+    {
+      "city_id": "amsterdam-nl",
+      "city": "Amsterdam",
+      "country": "Netherlands",
+      "country_code": "NL",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_expenditure",
+      "scope": "Municipality of Amsterdam budget",
+      "notes": "Official city page reports a EUR 7.8 billion 2026 budget.",
+      "source_name": "Gemeente Amsterdam — Begroting 2026",
+      "landing_page_url": "https://www.amsterdam.nl/bestuur-organisatie/begroting/begroting-2026/",
+      "download_url": "https://assets.amsterdam.nl/publish/pages/1076009/ga_bda-begroting26_v6c_tg.pdf",
+      "source_filename": "amsterdam-2026-budget.pdf",
+      "budget": {
+        "local_amount": 7800000000,
+        "local_currency": "EUR",
+        "eur_amount": 7800000000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/amsterdam-2026-budget.pdf",
+        "sha256": "c32ad235c2f7a9279588e5fd12583a4c4c19091665a9a2490405c72254d2ab7c",
+        "bytes": 36111225,
+        "downloaded_from": "https://assets.amsterdam.nl/publish/pages/1076009/ga_bda-begroting26_v6c_tg.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1073736.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "NL001C",
+          "geography_name": "Amsterdam (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "NL001C",
+          "geography_name": "Amsterdam (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 22311515.0,
+          "nights_per_resident": 20.77933030093058,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 18450591.0,
+          "nights_nonresident_share_pct": 82.69537501151311
+        }
+      }
+    },
+    {
+      "city_id": "athens-gr",
+      "city": "Athens",
+      "country": "Greece",
+      "country_code": "GR",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "total_expenditure_including_financial_transactions",
+      "scope": "Municipality of Athens",
+      "components": {
+        "non_financial_expenditure": "453647328",
+        "financial_transactions": "77692000"
+      },
+      "notes": "General expenditure total in the official summary statement.",
+      "source_name": "City of Athens — Summary financial statement 2026",
+      "landing_page_url": "https://www.cityofathens.gr/",
+      "download_url": "https://www.cityofathens.gr/wp-content/uploads/2026/05/synoptiki-oikonomiki-katastasi-proypologismoy-esodon-exodon-etos-2026.pdf",
+      "source_filename": "athens-2026-budget-summary.pdf",
+      "budget": {
+        "local_amount": 531339328,
+        "local_currency": "EUR",
+        "eur_amount": 531339328,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/athens-2026-budget-summary.pdf",
+        "sha256": "026855aa176651ed55edad79445e508e7fc536a28a5c95a27e14c5471e95b4d4",
+        "bytes": 466359,
+        "downloaded_from": "https://www.cityofathens.gr/wp-content/uploads/2026/05/synoptiki-oikonomiki-katastasi-proypologismoy-esodon-exodon-etos-2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 2622404.0,
+          "unit": "persons",
+          "reference_year": 2013,
+          "geography_code": "EL001C",
+          "geography_name": "Athina (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "EL001C",
+          "geography_name": "Athina (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 10400892.0,
+          "nights_per_resident": 3.9661669216489908,
+          "population_reference_year_for_intensity": 2013,
+          "nights_nonresident": 8025891.0,
+          "nights_nonresident_share_pct": 77.16541042825942
+        }
+      }
+    },
+    {
+      "city_id": "berlin-de",
+      "city": "Berlin",
+      "country": "Germany",
+      "country_code": "DE",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "total_expenditure",
+      "scope": "State of Berlin; city-state budget",
+      "notes": "Statutory 2026 income and expenditure total.",
+      "source_name": "Berlin Senate Department for Finance — Doppelhaushalt 2026/2027",
+      "landing_page_url": "https://www.berlin.de/sen/finanzen/haushalt/downloads/haushaltsplan-2026-27/artikel.1644823.php",
+      "download_url": "https://www.berlin.de/sen/finanzen/haushalt/downloads/haushaltsplan-2026-27/band01_2026_2027_hge_uebersichten.pdf?ts=1777462462",
+      "source_filename": "berlin-2026-2027-budget-volume-1.pdf",
+      "archive_fallbacks": [
+        {
+          "url": "https://r.jina.ai/https://www.berlin.de/sen/finanzen/haushalt/downloads/haushaltsplan-2026-27/artikel.1644823.php",
+          "filename": "berlin-2026-2027-budget-official-page.md",
+          "archive_kind": "official_page_via_text_proxy"
+        }
+      ],
+      "budget": {
+        "local_amount": 45528278000,
+        "local_currency": "EUR",
+        "eur_amount": 45528278000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/berlin-2026-2027-budget-volume-1.pdf",
+        "sha256": "b7c0402e33d44e62a0a10636a272d24438d327e70c5b309966180e6decf5b3d0",
+        "bytes": 5981776,
+        "downloaded_from": "https://www.berlin.de/sen/finanzen/haushalt/downloads/haushaltsplan-2026-27/band01_2026_2027_hge_uebersichten.pdf?ts=1777462462",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 3662381.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "DE001C",
+          "geography_name": "Berlin",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "eurostat_status:b"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "DE001C",
+          "geography_name": "Berlin",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 30394844.0,
+          "nights_per_resident": 8.29920316864903,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 12782932.0,
+          "nights_nonresident_share_pct": 42.05625138263582
+        }
+      }
+    },
+    {
+      "city_id": "bratislava-sk",
+      "city": "Bratislava",
+      "country": "Slovakia",
+      "country_code": "SK",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_expenditure",
+      "scope": "Capital City of the Slovak Republic Bratislava",
+      "notes": "Balanced planned revenue and expenditure reported by the city.",
+      "source_name": "Bratislava — Approved budget 2026–2028",
+      "landing_page_url": "https://bratislava.sk/mesto-bratislava/transparentne-mesto/rozpocet-a-hospodarenie",
+      "download_url": "https://bratislavask.s3.bratislava.sk/upload/Schvaleny_rozpocet_hlavneho_mesta_Slovenskej_republiky_Bratislavy_na_roky_2026_2028_0d4880e823.pdf",
+      "source_filename": "bratislava-approved-budget-2026-2028.pdf",
+      "budget": {
+        "local_amount": 760500000,
+        "local_currency": "EUR",
+        "eur_amount": 760500000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/bratislava-approved-budget-2026-2028.pdf",
+        "sha256": "954fa6ad3f241276bccec8cdbc9834b67694b27baefadbe6f09f5e83d8fab2e4",
+        "bytes": 5000606,
+        "downloaded_from": "https://bratislavask.s3.bratislava.sk/upload/Schvaleny_rozpocet_hlavneho_mesta_Slovenskej_republiky_Bratislavy_na_roky_2026_2028_0d4880e823.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 475577.0,
+          "unit": "persons",
+          "reference_year": 2022,
+          "geography_code": "SK001C",
+          "geography_name": "Bratislava (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "SK001C",
+          "geography_name": "Bratislava (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 2200237.0,
+          "nights_per_resident": 4.626457965797337,
+          "population_reference_year_for_intensity": 2022,
+          "nights_nonresident": 1405289.0,
+          "nights_nonresident_share_pct": 63.86989219797685
+        }
+      }
+    },
+    {
+      "city_id": "brussels-be",
+      "city": "Brussels",
+      "country": "Belgium",
+      "country_code": "BE",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "total_expenditure",
+      "scope": "City of Brussels municipality; excludes the other Brussels-Capital municipalities and regional government",
+      "notes": "Total for the financial year in the functional budget.",
+      "source_name": "City of Brussels — Budget by function 2026",
+      "landing_page_url": "https://www.brussels.be/municipal-budget",
+      "download_url": "https://www.brussels.be/sites/default/files/bxl/BUDGET%20PAR%20FONCTION%202026%20BEGROTING%20PER%20FUNCTIE.pdf",
+      "source_filename": "brussels-2026-budget-by-function.pdf",
+      "budget": {
+        "local_amount": 1213304009.42,
+        "local_currency": "EUR",
+        "eur_amount": 1213304009.42,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/brussels-2026-budget-by-function.pdf",
+        "sha256": "1a1338a73c10021a5d2601de172e188193546efbf515e83ad1e88e6e4b77192b",
+        "bytes": 584695,
+        "downloaded_from": "https://www.brussels.be/sites/default/files/bxl/BUDGET%20PAR%20FONCTION%202026%20BEGROTING%20PER%20FUNCTIE.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1264371.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "BE001C",
+          "geography_name": "Bruxelles/Brussel (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "BE001C",
+          "geography_name": "Bruxelles/Brussel (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 7372971.0,
+          "nights_per_resident": 5.83133510654705,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": null,
+          "nights_nonresident_share_pct": null,
+          "quality_flags": [
+            "nonresident_breakdown_unavailable"
+          ]
+        }
+      }
+    },
+    {
+      "city_id": "bucharest-ro",
+      "city": "Bucharest",
+      "country": "Romania",
+      "country_code": "RO",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "RON",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_budget",
+      "scope": "Municipality of Bucharest proper; excludes the six sector municipalities",
+      "notes": "Official approval announcement reports a RON 8.5 billion budget.",
+      "source_name": "Bucharest City Hall — 2026 budget approval and official journal",
+      "landing_page_url": "https://www.pmb.ro/interes-public/arhiva/get-press-releases-menu/2026/1994",
+      "download_url": "https://doc.pmb.ro/monitorul_oficial/2026/05/volumul_01.pdf",
+      "source_filename": "bucharest-official-journal-2026-volume-01.pdf",
+      "budget": {
+        "local_amount": 8500000000,
+        "local_currency": "RON",
+        "eur_amount": 1618585166.14,
+        "eur_conversion_rate": 5.2515,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/bucharest-official-journal-2026-volume-01.pdf",
+        "sha256": "dacef0f0cfdd6984adb1ab8fe95f388b5297ee0a25f3272aafc87f9690a600bc",
+        "bytes": 3215710,
+        "downloaded_from": "https://doc.pmb.ro/monitorul_oficial/2026/05/volumul_01.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 2131034.0,
+          "unit": "persons",
+          "reference_year": 2018,
+          "geography_code": "RO001C",
+          "geography_name": "București",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "eurostat_status:d",
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "RO001C",
+          "geography_name": "București",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 3955887.0,
+          "nights_per_resident": 1.856322799166977,
+          "population_reference_year_for_intensity": 2018,
+          "nights_nonresident": 2359979.0,
+          "nights_nonresident_share_pct": 59.657391629235114
+        }
+      }
+    },
+    {
+      "city_id": "budapest-hu",
+      "city": "Budapest",
+      "country": "Hungary",
+      "country_code": "HU",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "HUF",
+      "amount_precision": "exact",
+      "measure": "total_expenditure_including_financing",
+      "scope": "Municipality of Budapest; district municipalities are separate",
+      "components": {
+        "expenditure_excluding_financing": "523777089720",
+        "financing_expenditure": "8721708183"
+      },
+      "notes": "Balanced total including financing transactions in the official budget ordinance.",
+      "source_name": "Budapest Municipality — 2026 budget ordinance",
+      "landing_page_url": "https://einfoszab.budapest.hu/",
+      "download_url": "https://einfoszab.budapest.hu/File/DownloadDvD/129034?fileId=210490&filename=e01_El%C3%B6terjeszt%C3%A9s_rendelet_mell_2026_kvet%C3%A9s_AL%C3%81%C3%8DRT.pdf&key=fovarosi-kozgyules-nyilvanos-ulesei&organizationtype=2&parentId=18523&parenttype=2&path=Tev%C3%A9kenys%C3%A9gre%2C+m%C5%B1k%C3%B6d%C3%A9sre+vonatkoz%C3%B3+adatok+%2F+D%C3%B6nt%C3%A9shozatal%2C+%C3%BCl%C3%A9sek+%2F+A+F%C5%91v%C3%A1rosi+K%C3%B6zgy%C5%B1l%C3%A9s+%C3%BCl%C3%A9sei&prevaction=DvdItem&prevcont=Session&sessionType=1&type=5",
+      "source_filename": "budapest-2026-budget-ordinance.pdf",
+      "budget": {
+        "local_amount": 532498797903,
+        "local_currency": "HUF",
+        "eur_amount": 1458501226.8,
+        "eur_conversion_rate": 365.1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/budapest-2026-budget-ordinance.pdf",
+        "sha256": "079308f276ce7d569f64960c390ba237146bdbe3af80bd972bbac1025a7e2235",
+        "bytes": 3349637,
+        "downloaded_from": "https://einfoszab.budapest.hu/File/DownloadDvD/129034?fileId=210490&filename=e01_El%C3%B6terjeszt%C3%A9s_rendelet_mell_2026_kvet%C3%A9s_AL%C3%81%C3%8DRT.pdf&key=fovarosi-kozgyules-nyilvanos-ulesei&organizationtype=2&parentId=18523&parenttype=2&path=Tev%C3%A9kenys%C3%A9gre%2C+m%C5%B1k%C3%B6d%C3%A9sre+vonatkoz%C3%B3+adatok+%2F+D%C3%B6nt%C3%A9shozatal%2C+%C3%BCl%C3%A9sek+%2F+A+F%C5%91v%C3%A1rosi+K%C3%B6zgy%C5%B1l%C3%A9s+%C3%BCl%C3%A9sei&prevaction=DvdItem&prevcont=Session&sessionType=1&type=5",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1686222.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "HU001C",
+          "geography_name": "Budapest (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "HU001C",
+          "geography_name": "Budapest (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 10967710.0,
+          "nights_per_resident": 6.504309634200005,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 9144105.0,
+          "nights_nonresident_share_pct": 83.37296482127992
+        }
+      }
+    },
+    {
+      "city_id": "copenhagen-dk",
+      "city": "Copenhagen",
+      "country": "Denmark",
+      "country_code": "DK",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "DKK",
+      "amount_precision": "rounded_source_value",
+      "measure": "net_expenditure",
+      "scope": "Municipality of Copenhagen",
+      "components": {
+        "service": "35408000000",
+        "capital": "4148000000",
+        "transfers": "12604000000"
+      },
+      "notes": "Official total net expenditure; components are rounded to DKK millions.",
+      "source_name": "Københavns Kommune — Adopted budget 2026",
+      "landing_page_url": "https://www.kk.dk/politik/budget-og-regnskab/budget-2026/budgetaftale-2026",
+      "download_url": "https://www.kk.dk/sites/default/files/2025-12/BudgetpublikationforVedtagetbudget2026-a.pdf",
+      "source_filename": "copenhagen-adopted-budget-2026.pdf",
+      "budget": {
+        "local_amount": 52159000000,
+        "local_currency": "DKK",
+        "eur_amount": 6977045934.88,
+        "eur_conversion_rate": 7.4758,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/copenhagen-adopted-budget-2026.pdf",
+        "sha256": "b83e0530b78dee20cddfa10d159da99c5208ac5756e2d2c92a30a0354f0aa15d",
+        "bytes": 3611242,
+        "downloaded_from": "https://www.kk.dk/sites/default/files/2025-12/BudgetpublikationforVedtagetbudget2026-a.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 559440.0,
+          "unit": "persons",
+          "reference_year": 2013,
+          "geography_code": "DK001C",
+          "geography_name": "København (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "DK001C",
+          "geography_name": "København (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 12982970.0,
+          "nights_per_resident": 23.20708208208208,
+          "population_reference_year_for_intensity": 2013,
+          "nights_nonresident": 7858072.0,
+          "nights_nonresident_share_pct": 60.52599674804763
+        }
+      }
+    },
+    {
+      "city_id": "dublin-ie",
+      "city": "Dublin",
+      "country": "Ireland",
+      "country_code": "IE",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "operating_expenditure",
+      "scope": "Dublin City Council revenue budget; capital programme is separate",
+      "notes": "Operating/revenue budget only and therefore not directly comparable to totals including capital.",
+      "source_name": "Dublin City Council — Adopted revenue budget 2026",
+      "landing_page_url": "https://www.dublincity.ie/council/council-spending-revenue/budgets",
+      "download_url": "https://www.dublincity.ie/sites/default/files/2025-11/dublin-city-council-adopted-revenue-budget-2026.pdf",
+      "source_filename": "dublin-adopted-revenue-budget-2026.pdf",
+      "budget": {
+        "local_amount": 1690000000,
+        "local_currency": "EUR",
+        "eur_amount": 1690000000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/dublin-adopted-revenue-budget-2026.pdf",
+        "sha256": "97c99949dedaa9289aaf1e4973a325830d0531d0bd40d5f051a966b7c3785739",
+        "bytes": 3887796,
+        "downloaded_from": "https://www.dublincity.ie/sites/default/files/2025-11/dublin-city-council-adopted-revenue-budget-2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1325700.0,
+          "unit": "persons",
+          "reference_year": 2016,
+          "geography_code": "IE001C",
+          "geography_name": "Dublin (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "IE001C",
+          "geography_name": "Dublin tourism region",
+          "geography_scope": "all_overnight_visitors_survey_estimate",
+          "comparability_group": "official_local_visitor_survey",
+          "source_id": "failte-ireland-dublin-2024",
+          "nights_total": 25201800.0,
+          "nights_per_resident": 19.010183299389002,
+          "population_reference_year_for_intensity": 2016,
+          "nights_nonresident": 20120400.0,
+          "nights_nonresident_share_pct": 79.83715448896507
+        }
+      }
+    },
+    {
+      "city_id": "helsinki-fi",
+      "city": "Helsinki",
+      "country": "Finland",
+      "country_code": "FI",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact_derived",
+      "measure": "operating_plus_investment_expenditure",
+      "scope": "City of Helsinki after internal eliminations",
+      "components": {
+        "operating_expenditure": "6501559000",
+        "investment_expenditure": "1083306000"
+      },
+      "notes": "Derived by adding consolidated operating and investment expenditure; financing transactions excluded.",
+      "source_name": "City of Helsinki — Budget 2026",
+      "landing_page_url": "https://www.hel.fi/fi/paatoksenteko-ja-hallinto/strategia-ja-talous/talous/talouden-julkaisut",
+      "download_url": "https://www.hel.fi/static/helsinki/talousarvio/helsinki-talousarvio-2026.pdf",
+      "source_filename": "helsinki-budget-2026.pdf",
+      "budget": {
+        "local_amount": 7584865000,
+        "local_currency": "EUR",
+        "eur_amount": 7584865000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/helsinki-budget-2026.pdf",
+        "sha256": "9bf272eb9d1ae7c79d3d1c019bf7294aa28a085f419408870eb2e7bcf4eba153",
+        "bytes": 8680028,
+        "downloaded_from": "https://www.hel.fi/static/helsinki/talousarvio/helsinki-talousarvio-2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 674500.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "FI001C",
+          "geography_name": "Helsinki/Helsingfors",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "FI001C",
+          "geography_name": "Helsinki/Helsingfors",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 4552814.0,
+          "nights_per_resident": 6.749909562638992,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 2203335.0,
+          "nights_nonresident_share_pct": 48.395014599761815
+        }
+      }
+    },
+    {
+      "city_id": "lisbon-pt",
+      "city": "Lisbon",
+      "country": "Portugal",
+      "country_code": "PT",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_expenditure",
+      "scope": "Municipality of Lisbon",
+      "components": {
+        "current_expenditure": "870400000",
+        "capital_expenditure": "369700000",
+        "unallocated_future_amendment": "105400000"
+      },
+      "notes": "Approved base expenditure; the source separately identifies EUR 105.4 million not yet allocated through a future amendment.",
+      "source_name": "Câmara Municipal de Lisboa — Orçamento 2026–2030",
+      "landing_page_url": "https://www.lisboa.pt/municipio/organizacao-municipal/financas/orcamento",
+      "download_url": "https://www.lisboa.pt/fileadmin/info_administrativa/orcamento/2026/op/Orcamento_2026_2030.pdf",
+      "source_filename": "lisbon-budget-2026-2030.pdf",
+      "budget": {
+        "local_amount": 1240100000,
+        "local_currency": "EUR",
+        "eur_amount": 1240100000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/lisbon-budget-2026-2030.pdf",
+        "sha256": "4d3a6f410bf13f88e19d0854f33081fc711355c1cae3a5bc561c107b4b44cc7d",
+        "bytes": 2596159,
+        "downloaded_from": "https://www.lisboa.pt/fileadmin/info_administrativa/orcamento/2026/op/Orcamento_2026_2030.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1965363.0,
+          "unit": "persons",
+          "reference_year": 2025,
+          "geography_code": "PT001C",
+          "geography_name": "Lisboa (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "eurostat_status:e"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "PT001C",
+          "geography_name": "Lisboa (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 19982759.0,
+          "nights_per_resident": 10.167464738066199,
+          "population_reference_year_for_intensity": 2025,
+          "nights_nonresident": 15883777.0,
+          "nights_nonresident_share_pct": 79.48740711930719
+        }
+      }
+    },
+    {
+      "city_id": "ljubljana-si",
+      "city": "Ljubljana",
+      "country": "Slovenia",
+      "country_code": "SI",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "total_expenditure",
+      "scope": "City Municipality of Ljubljana",
+      "components": {
+        "revenue": "528199286"
+      },
+      "notes": "Total expenditure in the adopted municipal budget.",
+      "source_name": "Mestna občina Ljubljana — Proračun 2026",
+      "landing_page_url": "https://www.ljubljana.si/sl/mestna-obcina/upravljanje/proracun",
+      "download_url": "https://www.ljubljana.si/assets/mestna-uprava/OFR/Proracun-MOL-2026.pdf",
+      "source_filename": "ljubljana-budget-2026.pdf",
+      "budget": {
+        "local_amount": 530594878,
+        "local_currency": "EUR",
+        "eur_amount": 530594878,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/ljubljana-budget-2026.pdf",
+        "sha256": "5d040f2593224c0dc254281cf440a6d89e93d8478c37a7d92811d10e36fe89a6",
+        "bytes": 8734143,
+        "downloaded_from": "https://www.ljubljana.si/assets/mestna-uprava/OFR/Proracun-MOL-2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 297575.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "SI001C",
+          "geography_name": "Ljubljana",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "SI001C",
+          "geography_name": "Ljubljana",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 2590898.0,
+          "nights_per_resident": 8.706705872469126,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 2480181.0,
+          "nights_nonresident_share_pct": 95.72669398795321
+        }
+      }
+    },
+    {
+      "city_id": "luxembourg-lu",
+      "city": "Luxembourg",
+      "country": "Luxembourg",
+      "country_code": "LU",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "ordinary_plus_extraordinary_expenditure",
+      "scope": "City of Luxembourg",
+      "components": {
+        "ordinary_expenditure": "921300000",
+        "extraordinary_expenditure": "707800000"
+      },
+      "notes": "Sum of ordinary and extraordinary expenditure reported by the city.",
+      "source_name": "Ville de Luxembourg — Budget 2026",
+      "landing_page_url": "https://www.vdl.lu/fr/la-ville/vie-politique/budget",
+      "download_url": "https://www.vdl.lu/sites/default/files/media/ni/document/B2026.pdf",
+      "source_filename": "luxembourg-budget-2026.pdf",
+      "budget": {
+        "local_amount": 1629100000,
+        "local_currency": "EUR",
+        "eur_amount": 1629100000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/luxembourg-budget-2026.pdf",
+        "sha256": "71c3f0814862b30e204fc66bed57b0c3f49ac960cc56638c349a7e11a12b3ec5",
+        "bytes": 3356249,
+        "downloaded_from": "https://www.vdl.lu/sites/default/files/media/ni/document/B2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 115227.0,
+          "unit": "persons",
+          "reference_year": 2016,
+          "geography_code": "LU001C",
+          "geography_name": "Luxembourg (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "LU001C",
+          "geography_name": "Luxembourg (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 1263989.0,
+          "nights_per_resident": 10.96955574648303,
+          "population_reference_year_for_intensity": 2016,
+          "nights_nonresident": 1077737.0,
+          "nights_nonresident_share_pct": 85.26474518370017
+        }
+      }
+    },
+    {
+      "city_id": "madrid-es",
+      "city": "Madrid",
+      "country": "Spain",
+      "country_code": "ES",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "consolidated_total_expenditure",
+      "scope": "Madrid City Council, autonomous bodies and wholly owned companies after consolidation",
+      "notes": "Official consolidated expenditure total.",
+      "source_name": "Ayuntamiento de Madrid — Total consolidated expenditure 2026",
+      "landing_page_url": "https://www.madrid.es/portales/munimadrid/es/Informacion-financiera/",
+      "download_url": "https://www.madrid.es/UnidadWeb/Contenidos/EspecialInformativo/PortalContribuyente/InfoFinanciera/SectPublicMun/2026/Gastos/TotalConsolidadoGastos2026.pdf",
+      "source_filename": "madrid-consolidated-expenditure-2026.pdf",
+      "budget": {
+        "local_amount": 7723767556,
+        "local_currency": "EUR",
+        "eur_amount": 7723767556,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/madrid-consolidated-expenditure-2026.pdf",
+        "sha256": "62b0e527037084434908abdeafcb3d7e40a8863d147e10f8f18e7d0ee12053f1",
+        "bytes": 390245,
+        "downloaded_from": "https://www.madrid.es/UnidadWeb/Contenidos/EspecialInformativo/PortalContribuyente/InfoFinanciera/SectPublicMun/2026/Gastos/TotalConsolidadoGastos2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 4501429.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "ES001C",
+          "geography_name": "Madrid (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "ES001C",
+          "geography_name": "Madrid (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 26848838.0,
+          "nights_per_resident": 5.964514379766959,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 15852288.0,
+          "nights_nonresident_share_pct": 59.042733990945905
+        }
+      }
+    },
+    {
+      "city_id": "nicosia-cy",
+      "city": "Nicosia",
+      "country": "Cyprus",
+      "country_code": "CY",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact_derived",
+      "measure": "operating_plus_capital_expenditure",
+      "scope": "Nicosia metropolitan municipality after the local-government merger",
+      "components": {
+        "operating_expenditure": "70251885",
+        "capital_expenditure": "42139681"
+      },
+      "notes": "Derived from operating and capital totals in the official council minutes.",
+      "source_name": "Nicosia Municipal Council — 2026 budget minutes",
+      "landing_page_url": "https://www.nicosia.org.cy/",
+      "download_url": "https://www.nicosia.org.cy/CMSPages/GetFile.aspx?guid=69e75299-5c3f-4f40-9620-1c6f29bc4a2b",
+      "source_filename": "nicosia-2026-budget-minutes.pdf",
+      "budget": {
+        "local_amount": 112391566,
+        "local_currency": "EUR",
+        "eur_amount": 112391566,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/nicosia-2026-budget-minutes.pdf",
+        "sha256": "985b8e2f58da81deae367a5040120994236ee4993dcc31abf47f279c8af44a89",
+        "bytes": 620150,
+        "downloaded_from": "https://www.nicosia.org.cy/CMSPages/GetFile.aspx?guid=69e75299-5c3f-4f40-9620-1c6f29bc4a2b",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 241400.0,
+          "unit": "persons",
+          "reference_year": 2016,
+          "geography_code": "CY001C",
+          "geography_name": "Lefkosia (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "CY001C",
+          "geography_name": "Lefkosia (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 212539.0,
+          "nights_per_resident": 0.8804432477216239,
+          "population_reference_year_for_intensity": 2016,
+          "nights_nonresident": 175327.0,
+          "nights_nonresident_share_pct": 82.49168387919394
+        }
+      }
+    },
+    {
+      "city_id": "paris-fr",
+      "city": "Paris",
+      "country": "France",
+      "country_code": "FR",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "real_operating_plus_investment_expenditure_including_debt_repayment",
+      "scope": "City of Paris; combined commune and department",
+      "components": {
+        "real_operating_expenditure": "9407200000",
+        "real_investment_expenditure_including_debt_repayment": "1923600000",
+        "investment_excluding_debt_repayment": "1619600000"
+      },
+      "notes": "Uses real expenditure and includes debt repayment in investment spending; components allow a financing-excluded view later.",
+      "source_name": "Ville de Paris — Budget primitif 2026, report part 1",
+      "landing_page_url": "https://www.paris.fr/pages/budgets-de-la-ville-retrouvez-toutes-les-infos-27792",
+      "download_url": "https://cdn.paris.fr/paris/2026/01/21/bp-2026-rapport-budget-vote-partie-1-JPA0.pdf",
+      "source_filename": "paris-initial-budget-2026-report-part-1.pdf",
+      "budget": {
+        "local_amount": 11330800000,
+        "local_currency": "EUR",
+        "eur_amount": 11330800000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/paris-initial-budget-2026-report-part-1.pdf",
+        "sha256": "207e97c1d22a99c40a100075fb9fb40d308598a3a37aa2488e48534c81b4e6ea",
+        "bytes": 2535356,
+        "downloaded_from": "https://cdn.paris.fr/paris/2026/01/21/bp-2026-rapport-budget-vote-partie-1-JPA0.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 10353710.0,
+          "unit": "persons",
+          "reference_year": 2022,
+          "geography_code": "FR001C",
+          "geography_name": "Paris (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "FR001C",
+          "geography_name": "Paris (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 73983726.0,
+          "nights_per_resident": 7.145624708437845,
+          "population_reference_year_for_intensity": 2022,
+          "nights_nonresident": 39695859.0,
+          "nights_nonresident_share_pct": 53.65485241984163
+        }
+      }
+    },
+    {
+      "city_id": "prague-cz",
+      "city": "Prague",
+      "country": "Czechia",
+      "country_code": "CZ",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "CZK",
+      "amount_precision": "exact",
+      "measure": "consolidated_total_expenditure",
+      "scope": "Consolidation of Prague proper and 57 municipal districts",
+      "components": {
+        "revenue": "123818523300",
+        "deficit": "8414026000"
+      },
+      "notes": "Official consolidated set of 58 budgets; source table is stated in CZK thousands.",
+      "source_name": "Hlavní město Praha — Soubor rozpočtů 2026",
+      "landing_page_url": "https://praha.eu/rozpocet-pro-rok-2026",
+      "download_url": "https://eud.praha.eu/pub/deska/6000004/4/6000003%23MHMPAWO0A020%23MHMP100JLFEU%230/6000003%23MHMPAWO0A020%23MHMP100JLFEU/Soubor%20rozpo%C4%8Dt%C5%AF%202026%2035_33_18.6.2026.pdf",
+      "source_filename": "prague-consolidated-budgets-2026.pdf",
+      "budget": {
+        "local_amount": 132232549300,
+        "local_currency": "CZK",
+        "eur_amount": 5474787782.06,
+        "eur_conversion_rate": 24.153,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/prague-consolidated-budgets-2026.pdf",
+        "sha256": "6703eae6c1395fe126c5556106756fe1592fb020a5dae9f51269527e828b3c34",
+        "bytes": 2623450,
+        "downloaded_from": "https://eud.praha.eu/pub/deska/6000004/4/6000003%23MHMPAWO0A020%23MHMP100JLFEU%230/6000003%23MHMPAWO0A020%23MHMP100JLFEU/Soubor%20rozpo%C4%8Dt%C5%AF%202026%2035_33_18.6.2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1275406.0,
+          "unit": "persons",
+          "reference_year": 2022,
+          "geography_code": "CZ001C",
+          "geography_name": "Praha",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "eurostat_status:d",
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "CZ001C",
+          "geography_name": "Praha",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 18279256.0,
+          "nights_per_resident": 14.332107579860844,
+          "population_reference_year_for_intensity": 2022,
+          "nights_nonresident": 15664790.0,
+          "nights_nonresident_share_pct": 85.69708745257465
+        }
+      }
+    },
+    {
+      "city_id": "riga-lv",
+      "city": "Riga",
+      "country": "Latvia",
+      "country_code": "LV",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_expenditure",
+      "scope": "Riga municipal consolidated budget",
+      "notes": "Official approval announcement reports total expenditure of EUR 1.7 billion.",
+      "source_name": "Riga City Council — Consolidated budget 2026",
+      "landing_page_url": "https://www.riga.lv/lv/budzeta-plans-no-2026gada",
+      "download_url": "https://www.riga.lv/lv/media/66524/download?attachment=",
+      "source_filename": "riga-consolidated-budget-2026.xlsx",
+      "archive_fallbacks": [
+        {
+          "url": "https://r.jina.ai/https://www.riga.lv/lv/budzeta-plans-no-2026gada",
+          "filename": "riga-budget-plan-2026-official-page.md",
+          "archive_kind": "official_page_via_text_proxy"
+        }
+      ],
+      "budget": {
+        "local_amount": 1700000000,
+        "local_currency": "EUR",
+        "eur_amount": 1700000000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/riga-budget-plan-2026-official-page.md",
+        "sha256": "c94653ea3ad146eb165e249f0809e062b0a4de2eed657e68f7c4828e8bf49fde",
+        "bytes": 78153,
+        "downloaded_from": "https://r.jina.ai/https://www.riga.lv/lv/budzeta-plans-no-2026gada",
+        "download_status": "cached",
+        "archive_kind": "official_page_via_text_proxy"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 601882.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "LV001C",
+          "geography_name": "Rīga",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "LV001C",
+          "geography_name": "Rīga",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 2537633.0,
+          "nights_per_resident": 4.216163633403225,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 2025185.0,
+          "nights_nonresident_share_pct": 79.806063366925
+        }
+      }
+    },
+    {
+      "city_id": "rome-it",
+      "city": "Rome",
+      "country": "Italy",
+      "country_code": "IT",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "total_final_expenditure",
+      "scope": "Roma Capitale",
+      "components": {
+        "current_expenditure": "5880440217.41"
+      },
+      "notes": "Total final expenditure in the official budget explanatory note.",
+      "source_name": "Roma Capitale — Bilancio di previsione 2026–2028, nota integrativa",
+      "landing_page_url": "https://www.comune.roma.it/web/it/amministrazione-trasparente-bilanci-di-previsione.page",
+      "download_url": "https://www.comune.roma.it/servizi2/deliberazioniAttiWeb/showPdfDoc?fun=deliberazioniAttiAllegato&par1=QUNE&par2=MjMwOA==&par3=MTE=",
+      "source_filename": "rome-budget-2026-2028-explanatory-note.pdf",
+      "budget": {
+        "local_amount": 15575699965.91,
+        "local_currency": "EUR",
+        "eur_amount": 15575699965.91,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/rome-budget-2026-2028-explanatory-note.pdf",
+        "sha256": "ab181fda205b509ae2843d25a94349b7367a1190b16002a28b02f88eaf8a3754",
+        "bytes": 3526846,
+        "downloaded_from": "https://www.comune.roma.it/servizi2/deliberazioniAttiWeb/showPdfDoc?fun=deliberazioniAttiAllegato&par1=QUNE&par2=MjMwOA==&par3=MTE=",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 2747290.0,
+          "unit": "persons",
+          "reference_year": 2025,
+          "geography_code": "IT001C",
+          "geography_name": "Roma",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "IT001C",
+          "geography_name": "Roma",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 42705319.0,
+          "nights_per_resident": 15.544525332236494,
+          "population_reference_year_for_intensity": 2025,
+          "nights_nonresident": 31300016.0,
+          "nights_nonresident_share_pct": 73.29301532673249
+        }
+      }
+    },
+    {
+      "city_id": "sofia-bg",
+      "city": "Sofia",
+      "country": "Bulgaria",
+      "country_code": "BG",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "official_interim_calculation",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "total_expenditure",
+      "scope": "Sofia Municipality",
+      "components": {
+        "budgetary_subset": "1462900395",
+        "revenue": "1523105795"
+      },
+      "notes": "Official June calculation pending adoption of Bulgaria's 2026 state budget; the city source is already denominated in EUR.",
+      "source_name": "Sofia Municipal Council — 2026 municipal budget calculation",
+      "landing_page_url": "https://www.sofia.bg/w/6950141",
+      "download_url": "https://council.sofia.bg/documents/d/guest/soa26-vk66-5400-terziev",
+      "source_filename": "sofia-2026-budget-calculation.pdf",
+      "archive_fallbacks": [
+        {
+          "url": "https://r.jina.ai/https://www.sofia.bg/w/6950141",
+          "filename": "sofia-2026-budget-official-page.md",
+          "archive_kind": "official_page_via_text_proxy"
+        }
+      ],
+      "budget": {
+        "local_amount": 1523105795,
+        "local_currency": "EUR",
+        "eur_amount": 1523105795,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/sofia-2026-budget-official-page.md",
+        "sha256": "41e516d4d53240c4ce9e20815dcf7f920a26d52c474909b2a856f6ad77d7230c",
+        "bytes": 32466,
+        "downloaded_from": "https://r.jina.ai/https://www.sofia.bg/w/6950141",
+        "download_status": "cached",
+        "archive_kind": "official_page_via_text_proxy"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1221172.0,
+          "unit": "persons",
+          "reference_year": 2022,
+          "geography_code": "BG001C",
+          "geography_name": "Sofia",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "BG001C",
+          "geography_name": "Sofia",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 2231453.0,
+          "nights_per_resident": 1.8273044255846023,
+          "population_reference_year_for_intensity": 2022,
+          "nights_nonresident": 1497074.0,
+          "nights_nonresident_share_pct": 67.08964965876494
+        }
+      }
+    },
+    {
+      "city_id": "stockholm-se",
+      "city": "Stockholm",
+      "country": "Sweden",
+      "country_code": "SE",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "SEK",
+      "amount_precision": "exact_derived_from_millions",
+      "measure": "operating_costs_plus_investment_outlays",
+      "scope": "City of Stockholm municipal administration; company group reported separately",
+      "components": {
+        "operating_costs": "65532600000",
+        "investment_outlays": "9444300000"
+      },
+      "notes": "Derived from the 2026 operating cost and investment outlay tables; operating costs include depreciation.",
+      "source_name": "Stockholms stad — Budget 2026",
+      "landing_page_url": "https://start.stockholm/om-stockholms-stad/sa-anvands-dina-skattepengar/stadens-budget-ar-fran-ar/",
+      "download_url": "https://start.stockholm/globalassets/start/om-stockholms-stad/sa-anvands-dina-skattepengar/stadens-budget-ar-fran-ar/stockholms-stads-budget-2026.pdf",
+      "source_filename": "stockholm-budget-2026.pdf",
+      "budget": {
+        "local_amount": 74976900000,
+        "local_currency": "SEK",
+        "eur_amount": 6762290868.09,
+        "eur_conversion_rate": 11.0875,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/stockholm-budget-2026.pdf",
+        "sha256": "df1c2a66aa0279cf03c9c6aab7656abd03e7ed5feb5ba9cb0da9f95ec81c751c",
+        "bytes": 13056388,
+        "downloaded_from": "https://start.stockholm/globalassets/start/om-stockholms-stad/sa-anvands-dina-skattepengar/stadens-budget-ar-fran-ar/stockholms-stads-budget-2026.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1626241.0,
+          "unit": "persons",
+          "reference_year": 2025,
+          "geography_code": "SE001C",
+          "geography_name": "Stockholm (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "eurostat_status:e"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "SE001C",
+          "geography_name": "Stockholm (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 12685248.0,
+          "nights_per_resident": 7.800349394708411,
+          "population_reference_year_for_intensity": 2025,
+          "nights_nonresident": 4973030.0,
+          "nights_nonresident_share_pct": 39.20325404753616
+        }
+      }
+    },
+    {
+      "city_id": "tallinn-ee",
+      "city": "Tallinn",
+      "country": "Estonia",
+      "country_code": "EE",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted_initial",
+      "currency_code": "EUR",
+      "amount_precision": "exact_derived",
+      "measure": "costs_plus_fixed_asset_acquisition",
+      "scope": "City of Tallinn initial adopted budget",
+      "components": {
+        "costs_total": "1138275809",
+        "fixed_asset_acquisition_and_renovation": "162904612"
+      },
+      "notes": "Initial budget value, derived from official consolidated budget components; a June supplementary budget exists.",
+      "source_name": "Riigi Teataja — Tallinn 2026 consolidated budget",
+      "landing_page_url": "https://www.riigiteataja.ee/akt/413022026015",
+      "download_url": "https://www.riigiteataja.ee/aktilisa/4130/2202/6015/Koondeelarve.pdf",
+      "source_filename": "tallinn-consolidated-budget-2026.pdf",
+      "budget": {
+        "local_amount": 1301180421,
+        "local_currency": "EUR",
+        "eur_amount": 1301180421,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/tallinn-consolidated-budget-2026.pdf",
+        "sha256": "381b1cd14d6801abdaec9c9f9e63e8545fd81d70c1f5c0bebde896fea78544a7",
+        "bytes": 328190,
+        "downloaded_from": "https://www.riigiteataja.ee/aktilisa/4130/2202/6015/Koondeelarve.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 457572.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "EE001C",
+          "geography_name": "Tallinn",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "EE001C",
+          "geography_name": "Tallinn",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 3311697.0,
+          "nights_per_resident": 7.237542944061262,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 2544723.0,
+          "nights_nonresident_share_pct": 76.84045370092736
+        }
+      }
+    },
+    {
+      "city_id": "valletta-mt",
+      "city": "Valletta",
+      "country": "Malta",
+      "country_code": "MT",
+      "eu_capital": true,
+      "period": "2025",
+      "period_type": "calendar_year",
+      "status": "latest_complete_official_budget",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "operating_expenditure",
+      "scope": "Valletta Local Council",
+      "notes": "The official 2026 upload is incomplete (cover and contents only), so the latest complete official budget is used. The 2025 expenditure includes depreciation; capital projects are described separately.",
+      "source_name": "Valletta Local Council — Annual Budget 2025",
+      "landing_page_url": "https://beltvallettalc.gov.mt/en/annual-budgets/",
+      "download_url": "https://beltvallettalc.gov.mt/wp-content/uploads/2024/12/Annual-Budget-2025.pdf",
+      "source_filename": "valletta-annual-budget-2025.pdf",
+      "publication_issue_url": "https://beltvallettalc.gov.mt/wp-content/uploads/2026/01/Annual-Budget-Valletta-LC-Accrual-Budget-2026.pdf",
+      "archive_fallbacks": [
+        {
+          "url": "https://r.jina.ai/https://beltvallettalc.gov.mt/wp-content/uploads/2024/12/Annual-Budget-2025.pdf",
+          "filename": "valletta-annual-budget-2025.md",
+          "archive_kind": "official_document_via_text_proxy"
+        }
+      ],
+      "budget": {
+        "local_amount": 1218004,
+        "local_currency": "EUR",
+        "eur_amount": 1218004,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/valletta-annual-budget-2025.md",
+        "sha256": "093de2179a8885bc69ca8c96816045d85d077c8173e7939f243ce0a30deb9bd3",
+        "bytes": 17252,
+        "downloaded_from": "https://r.jina.ai/https://beltvallettalc.gov.mt/wp-content/uploads/2024/12/Annual-Budget-2025.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_document_via_text_proxy"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 466066.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "MT001C",
+          "geography_name": "Greater Valletta",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "MT001C",
+          "geography_name": "Greater Valletta",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 5880157.0,
+          "nights_per_resident": 12.616575763947596,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 5564585.0,
+          "nights_nonresident_share_pct": 94.63327254697451
+        }
+      }
+    },
+    {
+      "city_id": "vienna-at",
+      "city": "Vienna",
+      "country": "Austria",
+      "country_code": "AT",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "exact",
+      "measure": "financing_budget_total_outflows",
+      "scope": "City and State of Vienna",
+      "components": {
+        "operating_outflows": "18591393000",
+        "investing_outflows": "2196238000",
+        "financing_outflows": "1348029000"
+      },
+      "notes": "Cash/financing budget total including financing outflows.",
+      "source_name": "Stadt Wien — Voranschlag 2026",
+      "landing_page_url": "https://www.wien.gv.at/politik/voranschlag-budget",
+      "download_url": "https://www.digital.wienbibliothek.at/wbrup/download/pdf/5710598",
+      "source_filename": "vienna-budget-2026.pdf",
+      "budget": {
+        "local_amount": 22135660000,
+        "local_currency": "EUR",
+        "eur_amount": 22135660000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/vienna-budget-2026.pdf",
+        "sha256": "70d9c74f844c41bf321dc3c145549609d367d50f27089cf0080b403007be2d81",
+        "bytes": 10104266,
+        "downloaded_from": "https://www.digital.wienbibliothek.at/wbrup/download/pdf/5710598",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1766746.0,
+          "unit": "persons",
+          "reference_year": 2014,
+          "geography_code": "AT001C",
+          "geography_name": "Wien (greater city)",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "AT001C",
+          "geography_name": "Wien (greater city)",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 18175943.0,
+          "nights_per_resident": 10.287807641845518,
+          "population_reference_year_for_intensity": 2014,
+          "nights_nonresident": 14874151.0,
+          "nights_nonresident_share_pct": 81.83427401813485
+        }
+      }
+    },
+    {
+      "city_id": "vilnius-lt",
+      "city": "Vilnius",
+      "country": "Lithuania",
+      "country_code": "LT",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_budget",
+      "scope": "Vilnius City Municipality",
+      "notes": "Official approval announcement reports a EUR 1.749 billion budget.",
+      "source_name": "Vilnius City Municipality — Approved 2026 budget",
+      "landing_page_url": "https://vilnius.lt/naujienos/patvirtintas-175-mlrd-euru-vilniaus-biudzetas-didziausias-demesys-svietimui-judumui-ir-aplinkai",
+      "download_url": "https://vilnius.lt/naujienos/patvirtintas-175-mlrd-euru-vilniaus-biudzetas-didziausias-demesys-svietimui-judumui-ir-aplinkai",
+      "source_filename": "vilnius-approved-budget-2026.html",
+      "archive_snapshot": {
+        "filename": "vilnius-approved-budget-2026.source-snapshot.json",
+        "captured_facts": {
+          "approved_budget_eur": "1749000000",
+          "official_publication_statement": "Vilnius City Council approved the 2026 capital budget at EUR 1.749 billion."
+        },
+        "reason": "The official page is protected by an anti-bot challenge; the value was reviewed from the official page's indexed publication."
+      },
+      "budget": {
+        "local_amount": 1749000000,
+        "local_currency": "EUR",
+        "eur_amount": 1749000000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/vilnius-approved-budget-2026.source-snapshot.json",
+        "sha256": "16c5202fc195ab2ec70c54f9255c18b7a85ce8efec93bf7e66540795f5c8fddf",
+        "bytes": 686,
+        "downloaded_from": "https://vilnius.lt/naujienos/patvirtintas-175-mlrd-euru-vilniaus-biudzetas-didziausias-demesys-svietimui-judumui-ir-aplinkai",
+        "download_status": "registry_snapshot",
+        "archive_kind": "reviewed_official_source_snapshot"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 602408.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "LT001C",
+          "geography_name": "Vilnius",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "LT001C",
+          "geography_name": "Vilnius",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 2277100.0,
+          "nights_per_resident": 3.7799962815898858,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 1544260.0,
+          "nights_nonresident_share_pct": 67.81696016863555
+        }
+      }
+    },
+    {
+      "city_id": "warsaw-pl",
+      "city": "Warsaw",
+      "country": "Poland",
+      "country_code": "PL",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "PLN",
+      "amount_precision": "exact",
+      "measure": "total_expenditure",
+      "scope": "Capital City of Warsaw, including districts and municipal organizational units",
+      "components": {
+        "current_expenditure": "28241193783",
+        "capital_expenditure": "3955140403",
+        "revenue": "28497182679",
+        "deficit": "3699151507"
+      },
+      "notes": "Official city budget-at-a-glance total.",
+      "source_name": "Miasto Warszawa — Budżet 2026",
+      "landing_page_url": "https://um.warszawa.pl/budzet-26",
+      "download_url": "https://um.warszawa.pl/budzet-26",
+      "source_filename": "warsaw-budget-2026.html",
+      "archive_snapshot": {
+        "filename": "warsaw-budget-2026.source-snapshot.json",
+        "captured_facts": {
+          "total_revenue_pln": "28497182679",
+          "total_expenditure_pln": "32196334186",
+          "current_expenditure_pln": "28241193783",
+          "capital_expenditure_pln": "3955140403",
+          "deficit_pln": "3699151507"
+        },
+        "reason": "The official page rejects automated archival requests; the values were reviewed from the official city's indexed budget-at-a-glance publication."
+      },
+      "budget": {
+        "local_amount": 32196334186,
+        "local_currency": "PLN",
+        "eur_amount": 7454925948.41,
+        "eur_conversion_rate": 4.3188,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/warsaw-budget-2026.source-snapshot.json",
+        "sha256": "4d05ccca4f79d3384a5cc270bd1761c35a17d1858cfb4293c9ad7fffde2e6a03",
+        "bytes": 571,
+        "downloaded_from": "https://um.warszawa.pl/budzet-26",
+        "download_status": "registry_snapshot",
+        "archive_kind": "reviewed_official_source_snapshot"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 1861599.0,
+          "unit": "persons",
+          "reference_year": 2023,
+          "geography_code": "PL001C",
+          "geography_name": "Warszawa",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "eurostat_status:e",
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "PL001C",
+          "geography_name": "Warszawa",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 8021740.0,
+          "nights_per_resident": 4.309059040104771,
+          "population_reference_year_for_intensity": 2023,
+          "nights_nonresident": 2746151.0,
+          "nights_nonresident_share_pct": 34.23385699361984
+        }
+      }
+    },
+    {
+      "city_id": "zagreb-hr",
+      "city": "Zagreb",
+      "country": "Croatia",
+      "country_code": "HR",
+      "eu_capital": true,
+      "period": "2026",
+      "period_type": "calendar_year",
+      "status": "adopted",
+      "currency_code": "EUR",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_expenditure",
+      "scope": "City of Zagreb consolidated budget",
+      "components": {
+        "revenue": "2931200000"
+      },
+      "notes": "Adopted budget summary, stated in EUR millions.",
+      "source_name": "Grad Zagreb — Adopted budget 2026",
+      "landing_page_url": "https://zagreb.hr/proracun/113894",
+      "download_url": "https://www.zagreb.hr/UserDocsImages/arhiva/financije/proracun%202026/ZGB_Izglasani_proracun_2026_final.pdf",
+      "source_filename": "zagreb-adopted-budget-2026.pdf",
+      "budget": {
+        "local_amount": 3077200000,
+        "local_currency": "EUR",
+        "eur_amount": 3077200000,
+        "eur_conversion_rate": 1,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/zagreb-adopted-budget-2026.pdf",
+        "sha256": "9f905848c26c97000306f0dc32d1d638778b58b7f4f51eff7461c4e9ba784365",
+        "bytes": 1012813,
+        "downloaded_from": "https://www.zagreb.hr/UserDocsImages/arhiva/financije/proracun%202026/ZGB_Izglasani_proracun_2026_final.pdf",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 760020.0,
+          "unit": "persons",
+          "reference_year": 2024,
+          "geography_code": "HR001C",
+          "geography_name": "Zagreb",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": []
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "HR001C",
+          "geography_name": "Zagreb",
+          "geography_scope": "registered_tourist_accommodation_establishments",
+          "comparability_group": "eurostat_tour_occ_ninc_I551_I553",
+          "source_id": "eurostat-tour-occ-ninc",
+          "nights_total": 2646443.0,
+          "nights_per_resident": 3.482070208678719,
+          "population_reference_year_for_intensity": 2024,
+          "nights_nonresident": 2136081.0,
+          "nights_nonresident_share_pct": 80.71517126951157
+        }
+      }
+    },
+    {
+      "city_id": "london-gb",
+      "city": "London",
+      "country": "United Kingdom",
+      "country_code": "GB",
+      "eu_capital": false,
+      "extra_city": true,
+      "period": "2026-27",
+      "period_type": "fiscal_year",
+      "status": "adopted",
+      "currency_code": "GBP",
+      "amount_precision": "rounded_source_value",
+      "measure": "total_group_budget",
+      "scope": "Greater London Authority group; borough budgets are separate",
+      "notes": "Mayor's total GLA group budget for the 2026–27 fiscal year.",
+      "source_name": "Greater London Authority — Consolidated budget 2026–27",
+      "landing_page_url": "https://www.london.gov.uk/2026-27-gla-budget-0",
+      "download_url": "https://www.london.gov.uk/media/112040/download?attachment=",
+      "source_filename": "london-gla-consolidated-budget-2026-27.pdf",
+      "budget": {
+        "local_amount": 20700000000,
+        "local_currency": "GBP",
+        "eur_amount": 24146981627.3,
+        "eur_conversion_rate": 0.85725,
+        "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "source_archive": {
+        "file": "data/source_cache/eu_capital_budgets_2026/london-gla-consolidated-budget-2026-27.pdf",
+        "sha256": "2d2b9651fae2f998592d9ff5cc42ec08efb6658386bdcf07cdfa78072f988530",
+        "bytes": 1287731,
+        "downloaded_from": "https://www.london.gov.uk/media/112040/download?attachment=",
+        "download_status": "cached",
+        "archive_kind": "official_source"
+      },
+      "benchmarks": {
+        "population": {
+          "value": 8866541.0,
+          "unit": "persons",
+          "reference_year": 2018,
+          "geography_code": "UK001C",
+          "geography_name": "London",
+          "geography_scope": "eurostat_city_or_greater_city",
+          "source_id": "eurostat-urb-cpop1",
+          "quality_flags": [
+            "stale_source_vintage"
+          ]
+        },
+        "tourism": {
+          "reference_year": 2024,
+          "geography_code": "UK001C",
+          "geography_name": "Greater London",
+          "geography_scope": "all_domestic_and_international_visitor_nights",
+          "comparability_group": "official_local_visitor_survey",
+          "source_id": "gla-state-of-london-tourism-2024",
+          "nights_total": 153800000.0,
+          "nights_per_resident": 17.34611050690455,
+          "population_reference_year_for_intensity": 2018,
+          "nights_nonresident": 116600000.0,
+          "nights_nonresident_share_pct": 75.81274382314695
+        }
+      }
+    }
+  ],
+  "benchmark_methodology": {
+    "population": "Latest available Eurostat City Statistics observation for total population on 1 January. The city label and reference year are retained because several countries report a greater-city boundary or an older vintage.",
+    "tourism": "2024 nights in tourist accommodation establishments for selected cities, NACE I551-I553, from Eurostat. Dublin and London use official local fallbacks because those cities are absent from the Eurostat selected-city table.",
+    "comparison_warning": "Eurostat tourist nights cover registered accommodation establishments and may exclude small establishments. Dublin and London fallbacks cover a broader visitor-survey universe and belong to a different comparability group.",
+    "derived_metrics": "Non-resident share is non-resident nights divided by total nights. Nights per resident divides the tourism-period nights by the latest available population and is flagged when reference years differ."
+  }
+}

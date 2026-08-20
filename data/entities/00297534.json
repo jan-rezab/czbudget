@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00297534",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00297534",
     "name": "Statutární město Karviná",
     "short_name": "Karviná",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 21,
-      "grade": "C",
-      "score": 6.38
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Moravskoslezský kraj",
+      "district_name": "Karviná",
+      "municipality_code": 598917
     },
     "amounts": {
-      "revenue_approved": 1366554810,
-      "revenue_adjusted": 1585526862.6999998,
-      "revenue_actual": 1754045556.9299996,
-      "expense_approved": 1544705024,
-      "expense_adjusted": 2478245745.1000004,
-      "expense_actual": 1698867608.2399998,
-      "financing_actual": -55177948.69,
-      "cash_current": 1646945828.5,
-      "cash_previous": 1588159956.6399999,
+      "revenue_approved": 1366554810.0,
+      "revenue_adjusted": 1585526862.7,
+      "revenue_actual": 1754045556.93,
+      "expense_approved": 1544705024.0,
+      "expense_adjusted": 2478245745.1,
+      "expense_actual": 1698867608.24,
       "tax_revenue": 1278997949.37,
       "nontax_revenue": 251717618.13,
       "capital_revenue": 24020326.66,
       "transfer_revenue": 199309662.77,
-      "current_expense": 1365698954.8299992,
-      "capital_expense": 333168653.40999997,
-      "budget_balance": 55177948.68999982
+      "current_expense": 1365698954.83,
+      "capital_expense": 333168653.41,
+      "budget_balance": 55177948.69,
+      "cash_current": 1646945828.5,
+      "cash_previous": 1588159956.64
     },
     "ratios": {
-      "revenue_execution": 1.106286,
-      "expense_execution": 0.685512,
-      "cash_to_expense": 0.969437,
-      "capital_expense_share": 0.196112,
-      "transfer_revenue_share": 0.113629,
-      "tax_revenue_share": 0.72917,
-      "balance_to_revenue": 0.031458,
-      "cash_yoy": 0.037015
+      "revenue_execution": 1.10628561,
+      "expense_execution": 0.68551217,
+      "balance_to_revenue": 0.03145753,
+      "cash_to_expense": 0.96943742,
+      "cash_yoy": 0.03701508,
+      "capital_expense_share": 0.19611219,
+      "transfer_revenue_share": 0.11362856
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00297534/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00297534"
     },
-    "entity_id": "CZ:00297534",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "karvina",
-      "municipality_path": "/cz/obce/karvina/",
-      "region_path": null
+      "path": "/cz/obce/karvina/"
     }
   }
 }

@@ -17,8 +17,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Česko: stát jako vlastník 2024","description":"Výsledky hospodaření a odvody 38 strategických společností a organizací ovládaných státem.","url":"https://publicspendingdata.org/cesko.html","inLanguage":"cs","temporalCoverage":"2024","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"isBasedOn":"https://www.mfcr.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf","distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-state-enterprises-2024.json"}}</script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
-  <script src="cz-firmy.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260820-2">
+  <script src="cz-firmy.js?v=20260820-2" defer></script>
 </head>
 <body class="cz-enterprises-page">
   <header class="site-header">
@@ -52,13 +52,31 @@
     <section class="enterprise-ranking" id="poradi">
       <div class="section-heading">
         <div><span class="kicker">01 / Výsledek hospodaření</span><h2>Dva konce<br>jednoho portfolia.</h2></div>
-        <p>Pořadí používá individuální výsledek po zdanění za rok 2024. Nejde o konsolidované skupiny a u veřejné infrastruktury není ztráta automaticky známkou špatného hospodaření.</p>
+        <p>TOP 20 používá individuální údaje 38 strategických subjektů za rok 2024. Úplný registr firem, veřejných vysokých škol a nemocnic je pod zvýrazněnými žebříčky.</p>
       </div>
-      <div class="ranking-columns">
-        <article class="ranking-card positive"><header><span>Nejziskovější</span><strong>TOP 5</strong></header><div id="profit-list"></div></article>
-        <article class="ranking-card negative"><header><span>Nejztrátovější</span><strong>BOTTOM 5</strong></header><div id="loss-list"></div></article>
+      <div class="portfolio-totals" aria-label="Součty dostupných výkazů veřejných subjektů">
+        <article><span>Suma zisků</span><strong id="profit-sum">—</strong><small>mld. Kč · dostupné výkazy</small></article>
+        <article><span>Suma ztrát</span><strong id="loss-sum">—</strong><small>mld. Kč · dostupné výkazy</small></article>
+        <article><span>Čistý výsledek</span><strong id="net-sum">—</strong><small>mld. Kč · dostupné výkazy</small></article>
+        <article><span>Výnosy / obrat</span><strong id="turnover-sum">—</strong><small>mld. Kč · dostupné výkazy</small></article>
       </div>
-      <aside class="reading-note"><strong>Jak číst pořadí</strong><p>ČEZ je uveden individuálně za mateřskou společnost. Správa železnic, ŘSD nebo Česká pošta plní veřejné služby; jejich výsledky proto nelze mechanicky porovnávat s čistě komerční firmou.</p></aside>
+      <div class="ranking-switch" id="ranking-mode" aria-label="Vyberte žebříček">
+        <button type="button" data-mode="profit" aria-pressed="true">20 nejziskovějších</button>
+        <button type="button" data-mode="weakest" aria-pressed="false">20 nejslabších</button>
+        <button type="button" data-mode="largest" aria-pressed="false">20 největších</button>
+      </div>
+      <article class="ranking-card focused-ranking"><header><span id="ranking-heading">Nejziskovější strategické subjekty</span><strong id="ranking-count">TOP 20</strong></header><div id="enterprise-list"></div></article>
+      <aside class="reading-note"><strong id="ranking-note-title">Jak číst pořadí</strong><p id="ranking-note">ČEZ je uveden individuálně za mateřskou společnost. Správa železnic, ŘSD nebo Česká pošta plní veřejné služby; jejich výsledky proto nelze mechanicky porovnávat s čistě komerční firmou.</p><small id="reconciliation-note"></small></aside>
+      <section class="public-entity-registry" aria-labelledby="registry-title">
+        <header><div><span>Úplný registr · 2024</span><h3 id="registry-title">Firmy, školy a nemocnice</h3></div><strong id="registry-coverage">—</strong></header>
+        <div class="registry-controls">
+          <label><span>Hledat název nebo IČO</span><input id="entity-search" type="search" placeholder="např. univerzita, nemocnice, ČEZ"></label>
+          <label><span>Typ subjektu</span><select id="entity-category"><option value="all">Všechny typy</option><option value="Firma">Firmy</option><option value="Vysoká škola">Vysoké školy</option><option value="Nemocnice">Nemocnice</option></select></label>
+          <label><span>Úroveň vlastníka</span><select id="entity-owner"><option value="all">Všichni veřejní vlastníci</option></select></label>
+        </div>
+        <div class="registry-table-wrap"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejný vlastník</th><th>Výnosy / obrat</th><th>Výsledek</th><th>Data</th></tr></thead><tbody id="public-entity-rows"></tbody></table></div>
+        <div class="registry-footer"><span id="registry-count">—</span><small>Chybějící výkaz není nula. Přímé rozpočty obcí a krajů nejsou v tabulce.</small></div>
+      </section>
     </section>
 
     <section class="budget-return" id="odvody">
@@ -82,6 +100,7 @@
         <article><span>02</span><h3>Veřejná služba</h3><p>Železnice, silnice a pošta poskytují službu, kterou stát zadává nebo reguluje. Zisk není jejich jediným cílem.</p></article>
         <article><span>03</span><h3>Sanace a bezpečnost</h3><p>DIAMO, správci povodí či strategické zásoby nesou náklady, které mají charakter veřejné pojistky.</p></article>
       </div>
+      <p class="comparison-framework-note"><strong>Rámec pro zahraniční srovnání:</strong> každá firma má pracovní sektor, ekonomickou roli a konkrétní mezinárodní peer group. Porovnávat budeme ROA, marži, zadlužení vůči aktivům, investiční intenzitu, obrat na zaměstnance a výsledek na zaměstnance — vždy pouze uvnitř stejné ekonomické funkce.</p>
       <div class="coverage-roadmap">
         <span>Datová mapa ČR</span>
         <strong>2005–2024</strong>

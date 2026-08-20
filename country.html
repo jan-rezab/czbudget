@@ -1,14 +1,45 @@
 <!doctype html>
-<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profil země — Public Spending Data</title><meta name="description" content="Detailní fiskální profil země."><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v2.css"><script src="country.js" defer></script></head>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Profil země — Public Spending Data</title>
+  <meta name="description" content="Detailní fiskální profil země, makroekonomické ukazatele a primární rozpočtové zdroje.">
+  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v2.css"><link rel="stylesheet" href="chart-system.css"><script src="country.js" defer></script>
+</head>
 <body class="country-page">
-  <header class="site-header compact-header"><a class="brand" href="index.html"><span class="brand-grid"><i></i><i></i><i></i><i></i></span><span class="wordmark">Public Spending <b>Data</b></span></a><nav><a id="back-link" href="index.html#countries" data-i18n="back">← Všechny země</a><a href="#trend" data-i18n="navTrend">Vývoj</a><a href="#specifics" data-i18n="navSpecifics">Specifika</a><a href="#sources" data-i18n="navSources">Zdroje</a></nav><div class="lang-switch"><button data-lang="cs" class="active">CS</button><span>/</span><button data-lang="en">EN</button></div></header>
+  <header class="site-header compact-header">
+    <a class="brand" id="home-link" href="index.html"><span class="brand-grid"><i></i><i></i><i></i><i></i></span><span class="wordmark">Public Spending <b>Data</b></span></a>
+    <nav><a id="back-link" href="index.html#countries" data-i18n="back">← Všechny země</a><a href="#trend" data-i18n="navTrend">Vývoj</a><a href="#macro" data-i18n="navMacro">Makro</a><a href="#specifics" data-i18n="navSpecifics">Specifika</a><a href="#sources" data-i18n="navSources">Zdroje</a></nav>
+    <div class="lang-switch"><button data-lang="cs" class="active">CS</button><span>/</span><button data-lang="en">EN</button></div>
+  </header>
   <main>
-    <section class="country-hero"><div><span class="country-code-large" id="country-code">CZE</span><span class="eyebrow" data-i18n="profileEyebrow">Detail země · veřejné finance</span><h1 id="country-name">Česko</h1><p id="country-subtitle">—</p><div class="country-switch-wrap"><label><span data-i18n="switchCountry">Změnit zemi</span><select id="country-switch"></select></label><label><span data-i18n="switchYear">Rok profilu</span><select id="year-switch"></select></label></div></div><aside class="country-hero-aside"><span data-i18n="fiscalSnapshot">Fiskální snapshot</span><div id="snapshot"></div></aside></section>
+    <section class="country-hero">
+      <div><span class="country-code-large" id="country-code">CZE</span><span class="eyebrow" data-i18n="profileEyebrow">Detail země · veřejné finance</span><h1 id="country-name">Česko</h1><p id="country-subtitle">—</p>
+        <div class="country-switch-wrap"><label><span data-i18n="switchCountry">Změnit zemi</span><select id="country-switch"></select></label><label><span data-i18n="switchYear">Rok profilu</span><select id="year-switch"></select></label></div>
+        <div class="currency-toggle" aria-label="Currency display"><span data-i18n="currencyView">Měna</span><button data-currency="local" class="active" data-i18n="localCurrency">Místní</button><button data-currency="eur">EUR</button></div>
+      </div>
+      <aside class="country-hero-aside"><span data-i18n="fiscalSnapshot">Fiskální snapshot</span><div id="snapshot"></div></aside>
+    </section>
     <section class="country-kpis" id="country-kpis"></section>
-    <section class="country-section" id="trend"><div class="detail-heading"><div><span class="kicker" data-i18n="trendKicker">01 / Dvacetiletý vývoj</span><h2 data-i18n="trendTitle">Saldo, výdaje a dluh.</h2></div><p data-i18n="trendCopy">Harmonizované ukazatele IMF umožňují číst dlouhodobý fiskální příběh ve společné jednotce.</p></div><article class="country-chart-panel"><div class="chart-tabs"><button data-chart="balance_pct_gdp" class="active" data-i18n="balance">Saldo</button><button data-chart="gross_debt_pct_gdp" data-i18n="debt">Dluh</button><button data-chart="expenditure_pct_gdp" data-i18n="expense">Výdaje</button><button data-chart="revenue_pct_gdp" data-i18n="revenue">Příjmy</button></div><div id="country-chart"></div></article></section>
-    <section class="country-section specifics-section" id="specifics"><div class="detail-heading"><div><span class="kicker" data-i18n="specificKicker">02 / Národní specifika</span><h2 data-i18n="specificTitle">Srovnání není celý příběh.</h2></div><p data-i18n="specificCopy">Rozsah rozpočtu, institucionální uspořádání a fiskální pravidla se země od země liší.</p></div><div class="specific-grid" id="specific-grid"></div></section>
-    <section class="country-section macro-section"><div class="detail-heading"><div><span class="kicker" data-i18n="macroKicker">03 / Makro kontext</span><h2 data-i18n="macroTitle">Ekonomika kolem rozpočtu.</h2></div><p data-i18n="macroCopy">Růst, inflace a nezaměstnanost doplňují fiskální ukazatele o kontext hospodářského cyklu.</p></div><div class="macro-grid" id="macro-grid"></div></section>
-    <section class="country-section sources-section" id="sources"><div class="detail-heading"><div><span class="kicker" data-i18n="sourcesKicker">04 / Primární zdroje</span><h2 data-i18n="sourcesTitle">Od srovnání k originálu.</h2></div><p data-i18n="sourcesCopy">Národní portály a dokumenty vedou k detailu kapitol, plnění a místního účetního rámce.</p></div><div class="source-cards" id="source-cards"></div><div id="czech-local-link"></div></section>
+
+    <section class="country-section" id="trend">
+      <div class="detail-heading"><div><span class="kicker" data-i18n="trendKicker">01 / Dvacetiletý vývoj</span><h2 data-i18n="trendTitle">Rozpočet v čase.</h2></div><p data-i18n="trendCopy">Harmonizované ukazatele IMF umožňují číst dlouhodobý fiskální příběh ve společné definici.</p></div>
+      <div class="country-chart-grid">
+        <article class="country-chart-panel"><div class="chart-tabs"><button data-chart="balance_pct_gdp" class="active" data-i18n="balance">Saldo</button><button data-chart="gross_debt_pct_gdp" data-i18n="debt">Dluh</button><button data-chart="expenditure_pct_gdp" data-i18n="expense">Výdaje</button><button data-chart="revenue_pct_gdp" data-i18n="revenue">Příjmy</button></div><h3 id="fiscal-chart-title">Saldo / % HDP</h3><div id="country-chart"></div></article>
+        <article class="country-chart-panel"><div class="chart-label"><span>GDP / CAPITA</span><small id="gdp-unit-label">CZK</small></div><h3 data-i18n="gdpPcTitle">HDP na obyvatele</h3><div id="gdp-per-capita-chart"></div></article>
+      </div>
+    </section>
+
+    <section class="country-section" id="macro">
+      <div class="detail-heading"><div><span class="kicker" data-i18n="macroKicker">02 / Makro kontext</span><h2 data-i18n="macroTitle">Výkon, dluh a kupní síla.</h2></div><p data-i18n="macroCopy">Měnové částky se na detailu zobrazují v místní měně; přepínač je přepočítá na EUR. PPP zůstává v mezinárodních dolarech.</p></div>
+      <div class="country-chart-grid">
+        <article class="country-chart-panel"><div class="chart-label"><span>DEBT / GDP</span><small>%</small></div><h3 data-i18n="debtRatioTitle">Hrubý dluh k HDP</h3><div id="debt-ratio-chart"></div></article>
+        <article class="country-chart-panel"><div class="chart-label"><span>PPP / CAPITA</span><small>intl$</small></div><h3 data-i18n="pppTitle">HDP na obyvatele v paritě kupní síly</h3><div id="ppp-chart"></div></article>
+      </div>
+    </section>
+
+    <section class="country-section specifics-section" id="specifics"><div class="detail-heading"><div><span class="kicker" data-i18n="specificKicker">03 / Národní specifika</span><h2 data-i18n="specificTitle">Jak země hlídá rozpočet.</h2></div><p data-i18n="specificCopy">Vedle výsledku ukazujeme institucionální pravidla a četnost přebytku, ne jen jeden vybraný rok.</p></div><div class="specific-grid" id="specific-grid"></div></section>
+    <section class="country-section sources-section" id="sources"><div class="detail-heading"><div><span class="kicker" data-i18n="sourcesKicker">04 / Primární zdroje</span><h2 data-i18n="sourcesTitle">Od srovnání k rozpočtovým kapitolám.</h2></div><p data-i18n="sourcesCopy">Ukládáme originální soubory a jejich kontrolní součty; mapování ministerstev bude následovat nad touto reprodukovatelnou vrstvou.</p></div><div class="source-cards" id="source-cards"></div><div id="ministry-source"></div><div id="czech-local-link"></div></section>
   </main>
-  <footer><div><span>Public Spending Data</span><small id="footer-country">—</small></div><p data-i18n="footerSource">Srovnávací řady: IMF WEO · národní zdroje jsou uvedené výše</p><a href="#top" data-i18n="backTop">Nahoru ↑</a></footer>
+  <footer><div><span>Public Spending Data</span><small id="footer-country">—</small></div><p data-i18n="footerSource">Srovnávací řady: IMF WEO · kurzy: ECB · národní zdroje jsou uvedené výše</p><a href="#top" data-i18n="backTop">Nahoru ↑</a></footer>
 </body></html>

@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00283924",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00283924",
     "name": "Statutární město Zlín",
     "short_name": "Zlín",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 13,
-      "grade": "B",
-      "score": 5.43
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Zlínský kraj",
+      "district_name": "Zlín",
+      "municipality_code": 585068
     },
     "amounts": {
-      "revenue_approved": 2435552000,
-      "revenue_adjusted": 2785118400,
-      "revenue_actual": 2864608750.520001,
-      "expense_approved": 2406152000,
-      "expense_adjusted": 3970013400,
-      "expense_actual": 2969971491.4100013,
-      "financing_actual": 105362740.89,
-      "cash_current": 1060675272.1899999,
-      "cash_previous": 1154600688.1599998,
-      "tax_revenue": 2036691497.4500003,
-      "nontax_revenue": 439060109.30999994,
-      "capital_revenue": 28216717.240000002,
+      "revenue_approved": 2435552000.0,
+      "revenue_adjusted": 2785118400.0,
+      "revenue_actual": 2864608750.52,
+      "expense_approved": 2406152000.0,
+      "expense_adjusted": 3970013400.0,
+      "expense_actual": 2969971491.41,
+      "tax_revenue": 2036691497.45,
+      "nontax_revenue": 439060109.31,
+      "capital_revenue": 28216717.24,
       "transfer_revenue": 360640426.52,
-      "current_expense": 2226548767.070002,
+      "current_expense": 2226548767.07,
       "capital_expense": 743422724.34,
-      "budget_balance": -105362740.89000034
+      "budget_balance": -105362740.89,
+      "cash_current": 1060675272.19,
+      "cash_previous": 1154600688.16
     },
     "ratios": {
-      "revenue_execution": 1.028541,
-      "expense_execution": 0.748101,
-      "cash_to_expense": 0.357133,
-      "capital_expense_share": 0.250313,
-      "transfer_revenue_share": 0.125895,
-      "tax_revenue_share": 0.710984,
-      "balance_to_revenue": -0.036781,
-      "cash_yoy": -0.081349
+      "revenue_execution": 1.0285411,
+      "expense_execution": 0.74810113,
+      "balance_to_revenue": -0.03678085,
+      "cash_to_expense": 0.35713315,
+      "cash_yoy": -0.08134883,
+      "capital_expense_share": 0.25031308,
+      "transfer_revenue_share": 0.12589518
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00283924/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00283924"
     },
-    "entity_id": "CZ:00283924",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "zlin",
-      "municipality_path": "/cz/obce/zlin/",
-      "region_path": null
+      "path": "/cz/obce/zlin/"
     }
   }
 }

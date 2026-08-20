@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00081531",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00081531",
     "name": "Statutární město Ústí nad Labem",
     "short_name": "Ústí nad Labem",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 7,
-      "grade": "B",
-      "score": 4.46
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Ústecký kraj",
+      "district_name": "Ústí nad Labem",
+      "municipality_code": 554804
     },
     "amounts": {
-      "revenue_approved": 2925621500,
+      "revenue_approved": 2925621500.0,
       "revenue_adjusted": 3480590142.1,
-      "revenue_actual": 3539487942.9499993,
-      "expense_approved": 3555769100,
-      "expense_adjusted": 4428714302.099999,
+      "revenue_actual": 3539487942.95,
+      "expense_approved": 3555769100.0,
+      "expense_adjusted": 4428714302.1,
       "expense_actual": 3539584121.12,
-      "financing_actual": 96178.17,
-      "cash_current": 1422475792.27,
-      "cash_previous": 1402581013.28,
       "tax_revenue": 2499638540.33,
       "nontax_revenue": 192369137.15,
-      "capital_revenue": 1203217,
+      "capital_revenue": 1203217.0,
       "transfer_revenue": 846277048.47,
-      "current_expense": 3046250057.3000007,
-      "capital_expense": 493334063.81999993,
-      "budget_balance": -96178.17000055313
+      "current_expense": 3046250057.3,
+      "capital_expense": 493334063.82,
+      "budget_balance": -96178.17,
+      "cash_current": 1422475792.27,
+      "cash_previous": 1402581013.28
     },
     "ratios": {
-      "revenue_execution": 1.016922,
-      "expense_execution": 0.799235,
-      "cash_to_expense": 0.401877,
-      "capital_expense_share": 0.139376,
-      "transfer_revenue_share": 0.239096,
-      "tax_revenue_share": 0.706215,
-      "balance_to_revenue": -2.7e-05,
-      "cash_yoy": 0.014184
+      "revenue_execution": 1.01692179,
+      "expense_execution": 0.79923515,
+      "balance_to_revenue": -2.717e-05,
+      "cash_to_expense": 0.40187653,
+      "cash_yoy": 0.01418441,
+      "capital_expense_share": 0.13937628,
+      "transfer_revenue_share": 0.2390959
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00081531/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00081531"
     },
-    "entity_id": "CZ:00081531",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "usti-nad-labem",
-      "municipality_path": "/cz/obce/usti-nad-labem/",
-      "region_path": null
+      "path": "/cz/obce/usti-nad-labem/"
     }
   }
 }

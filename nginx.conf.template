@@ -1,0 +1,19 @@
+server {
+  listen ${PORT};
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  location / {
+    try_files $uri $uri/ $uri/index.html =404;
+  }
+
+  location ~* \.(?:css|js|svg|png|jpg|jpeg|webp|json)$ {
+    expires 1h;
+    add_header Cache-Control "public, max-age=3600";
+    try_files $uri =404;
+  }
+
+  gzip on;
+  gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+}

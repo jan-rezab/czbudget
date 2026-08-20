@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00299308",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00299308",
     "name": "Statutární město Olomouc",
     "short_name": "Olomouc",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 26,
-      "grade": "C",
-      "score": null
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Olomoucký kraj",
+      "district_name": "Olomouc",
+      "municipality_code": 500496
     },
     "amounts": {
-      "revenue_approved": 3505838000,
-      "revenue_adjusted": 3787000474.9199996,
-      "revenue_actual": 3609363387.9100003,
-      "expense_approved": 4088370000,
+      "revenue_approved": 3505838000.0,
+      "revenue_adjusted": 3787000474.92,
+      "revenue_actual": 3609363387.91,
+      "expense_approved": 4088370000.0,
       "expense_adjusted": 4750716062.39,
-      "expense_actual": 3835206255.9100013,
-      "financing_actual": 225842868,
-      "cash_current": 1476025513.15,
-      "cash_previous": 1473227237.77,
+      "expense_actual": 3835206255.91,
       "tax_revenue": 2951957225.18,
       "nontax_revenue": 250036518.96,
       "capital_revenue": 834583.59,
       "transfer_revenue": 406535060.18,
-      "current_expense": 3085634056.7700014,
+      "current_expense": 3085634056.77,
       "capital_expense": 749572199.14,
-      "budget_balance": -225842868.00000095
+      "budget_balance": -225842868.0,
+      "cash_current": 1476025513.15,
+      "cash_previous": 1473227237.77
     },
     "ratios": {
-      "revenue_execution": 0.953093,
-      "expense_execution": 0.80729,
-      "cash_to_expense": 0.384862,
-      "capital_expense_share": 0.195445,
-      "transfer_revenue_share": 0.112633,
-      "tax_revenue_share": 0.817861,
-      "balance_to_revenue": -0.062571,
-      "cash_yoy": 0.001899
+      "revenue_execution": 0.95309293,
+      "expense_execution": 0.80729014,
+      "balance_to_revenue": -0.06257139,
+      "cash_to_expense": 0.38486209,
+      "cash_yoy": 0.00189942,
+      "capital_expense_share": 0.19544508,
+      "transfer_revenue_share": 0.11263345
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00299308/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00299308"
     },
-    "entity_id": "CZ:00299308",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "olomouc",
-      "municipality_path": "/cz/obce/olomouc/",
-      "region_path": null
+      "path": "/cz/obce/olomouc/"
     }
   }
 }

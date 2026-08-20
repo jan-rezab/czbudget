@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00244732",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00244732",
     "name": "Statutární město České Budějovice",
     "short_name": "České Budějovice",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 11,
-      "grade": "B",
-      "score": 4.91
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Jihočeský kraj",
+      "district_name": "České Budějovice",
+      "municipality_code": 544256
     },
     "amounts": {
-      "revenue_approved": 3376707000,
+      "revenue_approved": 3376707000.0,
       "revenue_adjusted": 3750138140.11,
-      "revenue_actual": 3890592297.710001,
-      "expense_approved": 4509836000,
-      "expense_adjusted": 5218874714.4400015,
-      "expense_actual": 4275327552.969999,
-      "financing_actual": 384735255.26,
-      "cash_current": 1364303834.95,
-      "cash_previous": 1293699926.23,
+      "revenue_actual": 3890592297.71,
+      "expense_approved": 4509836000.0,
+      "expense_adjusted": 5218874714.44,
+      "expense_actual": 4275327552.97,
       "tax_revenue": 2677810826.5,
       "nontax_revenue": 587103084.74,
       "capital_revenue": 7833926.38,
       "transfer_revenue": 617844460.09,
       "current_expense": 2898412448.57,
-      "capital_expense": 1376915104.4000006,
-      "budget_balance": -384735255.25999784
+      "capital_expense": 1376915104.4,
+      "budget_balance": -384735255.26,
+      "cash_current": 1364303834.95,
+      "cash_previous": 1293699926.23
     },
     "ratios": {
-      "revenue_execution": 1.037453,
-      "expense_execution": 0.819205,
-      "cash_to_expense": 0.319111,
-      "capital_expense_share": 0.322061,
-      "transfer_revenue_share": 0.158805,
-      "tax_revenue_share": 0.688278,
-      "balance_to_revenue": -0.098889,
-      "cash_yoy": 0.054575
+      "revenue_execution": 1.03745306,
+      "expense_execution": 0.81920486,
+      "balance_to_revenue": -0.09888861,
+      "cash_to_expense": 0.31911095,
+      "cash_yoy": 0.05457518,
+      "capital_expense_share": 0.32206073,
+      "transfer_revenue_share": 0.15880473
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00244732/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00244732"
     },
-    "entity_id": "CZ:00244732",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "ceske-budejovice",
-      "municipality_path": "/cz/obce/ceske-budejovice/",
-      "region_path": null
+      "path": "/cz/obce/ceske-budejovice/"
     }
   }
 }

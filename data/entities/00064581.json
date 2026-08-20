@@ -1,29 +1,32 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
     "entity_id": "CZ:00064581",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00064581",
-    "name": "Hlavní město Praha",
+    "name": "HLAVNÍ MĚSTO PRAHA",
     "short_name": "Praha",
+    "entity_type": "capital_city",
     "administrative_levels": [
       "municipality",
       "region"
     ],
-    "entity_type": "capital_city",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": null,
-      "grade": null,
-      "score": null
+    "territory": {
+      "region_name": "Hlavní město Praha",
+      "district_name": null,
+      "municipality_code": 554782
     },
     "amounts": {
       "revenue_approved": 117879060700.0,
@@ -31,27 +34,25 @@
       "revenue_actual": 148140567664.53,
       "expense_approved": 125126110300.0,
       "expense_adjusted": 145102757200.0,
-      "expense_actual": 123970124035.39005,
-      "financing_actual": -24170443629.14,
-      "cash_current": 169724064895.19998,
-      "cash_previous": 158015999302.72,
+      "expense_actual": 123970124035.39,
       "tax_revenue": 102553263595.08,
-      "nontax_revenue": 8978728044.760002,
+      "nontax_revenue": 8978728044.76,
       "capital_revenue": 617966777.41,
-      "transfer_revenue": 35990609247.27999,
-      "current_expense": 98001773459.68997,
-      "capital_expense": 25968350575.69999,
-      "budget_balance": 24170443629.139954
+      "transfer_revenue": 35990609247.28,
+      "current_expense": 98001773459.69,
+      "capital_expense": 25968350575.7,
+      "budget_balance": 24170443629.14,
+      "cash_current": 169724064895.2,
+      "cash_previous": 158015999302.72
     },
     "ratios": {
-      "revenue_execution": 1.154301,
-      "expense_execution": 0.854361,
-      "cash_to_expense": 1.369072,
-      "capital_expense_share": 0.209473,
-      "transfer_revenue_share": 0.242949,
-      "tax_revenue_share": 0.69227,
-      "balance_to_revenue": 0.163159,
-      "cash_yoy": 0.074094
+      "revenue_execution": 1.1543013,
+      "expense_execution": 0.85436091,
+      "balance_to_revenue": 0.16315884,
+      "cash_to_expense": 1.36907232,
+      "cash_yoy": 0.07409418,
+      "capital_expense_share": 0.20947265,
+      "transfer_revenue_share": 0.24294904
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00064581/rozpocet/souhrnny?obdobi=2512&rad=t",
@@ -59,8 +60,7 @@
     },
     "seo": {
       "slug": "praha",
-      "municipality_path": "/cz/obce/praha/",
-      "region_path": "/cz/kraje/praha/"
+      "path": "/cz/obce/praha/"
     }
   }
 }

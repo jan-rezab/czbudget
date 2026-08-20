@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00075370",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00075370",
     "name": "Statutární město Plzeň",
     "short_name": "Plzeň",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 2,
-      "grade": "B",
-      "score": 3.33
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Plzeňský kraj",
+      "district_name": "Plzeň-město",
+      "municipality_code": 554791
     },
     "amounts": {
       "revenue_approved": 8772536916.41,
       "revenue_adjusted": 9381745651.28,
-      "revenue_actual": 9959442907.470003,
-      "expense_approved": 11993740723,
-      "expense_adjusted": 10109050050.550001,
-      "expense_actual": 9700461714.059992,
-      "financing_actual": -258981193.41,
-      "cash_current": 7710423454.04,
-      "cash_previous": 7629046740.18,
-      "tax_revenue": 8133748416.110001,
-      "nontax_revenue": 1120141428.2299998,
-      "capital_revenue": 185743803.07999998,
+      "revenue_actual": 9959442907.47,
+      "expense_approved": 11993740723.0,
+      "expense_adjusted": 10109050050.55,
+      "expense_actual": 9700461714.06,
+      "tax_revenue": 8133748416.11,
+      "nontax_revenue": 1120141428.23,
+      "capital_revenue": 185743803.08,
       "transfer_revenue": 519809260.05,
-      "current_expense": 7016521664.009996,
-      "capital_expense": 2683940050.0499997,
-      "budget_balance": 258981193.4100113
+      "current_expense": 7016521664.01,
+      "capital_expense": 2683940050.05,
+      "budget_balance": 258981193.41,
+      "cash_current": 7710423454.04,
+      "cash_previous": 7629046740.18
     },
     "ratios": {
-      "revenue_execution": 1.061577,
-      "expense_execution": 0.959582,
-      "cash_to_expense": 0.794851,
-      "capital_expense_share": 0.276682,
-      "transfer_revenue_share": 0.052193,
-      "tax_revenue_share": 0.816687,
-      "balance_to_revenue": 0.026004,
-      "cash_yoy": 0.010667
+      "revenue_execution": 1.06157673,
+      "expense_execution": 0.95958193,
+      "balance_to_revenue": 0.02600358,
+      "cash_to_expense": 0.79485118,
+      "cash_yoy": 0.01066669,
+      "capital_expense_share": 0.27668168,
+      "transfer_revenue_share": 0.0521926
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00075370/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00075370"
     },
-    "entity_id": "CZ:00075370",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "plzen",
-      "municipality_path": "/cz/obce/plzen/",
-      "region_path": null
+      "path": "/cz/obce/plzen/"
     }
   }
 }

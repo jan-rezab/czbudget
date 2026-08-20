@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "Push blocked: commit or discard local changes first." >&2
+  exit 1
+fi
+
+node scripts/validate-site.mjs

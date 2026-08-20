@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00297313",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00297313",
     "name": "Statutární město Třinec",
     "short_name": "Třinec",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 17,
-      "grade": "B",
-      "score": 5.89
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Moravskoslezský kraj",
+      "district_name": "Frýdek-Místek",
+      "municipality_code": 598810
     },
     "amounts": {
       "revenue_approved": 1000027434.55,
       "revenue_adjusted": 1128315081.77,
-      "revenue_actual": 1157261251.8000002,
-      "expense_approved": 1208859000,
-      "expense_adjusted": 1549799099.8100002,
-      "expense_actual": 1303966332.810001,
-      "financing_actual": 146705081.01,
-      "cash_current": 410531182.07,
-      "cash_previous": 573777609.21,
-      "tax_revenue": 835125782.0100001,
+      "revenue_actual": 1157261251.8,
+      "expense_approved": 1208859000.0,
+      "expense_adjusted": 1549799099.81,
+      "expense_actual": 1303966332.81,
+      "tax_revenue": 835125782.01,
       "nontax_revenue": 143367355.9,
       "capital_revenue": 5789719.6,
       "transfer_revenue": 172978394.29,
-      "current_expense": 974093677.3200005,
-      "capital_expense": 329872655.49000007,
-      "budget_balance": -146705081.0100007
+      "current_expense": 974093677.32,
+      "capital_expense": 329872655.49,
+      "budget_balance": -146705081.01,
+      "cash_current": 410531182.07,
+      "cash_previous": 573777609.21
     },
     "ratios": {
-      "revenue_execution": 1.025654,
-      "expense_execution": 0.841378,
-      "cash_to_expense": 0.314833,
-      "capital_expense_share": 0.252976,
-      "transfer_revenue_share": 0.149472,
-      "tax_revenue_share": 0.72164,
-      "balance_to_revenue": -0.126769,
-      "cash_yoy": -0.284512
+      "revenue_execution": 1.02565433,
+      "expense_execution": 0.84137766,
+      "balance_to_revenue": -0.1267692,
+      "cash_to_expense": 0.31483265,
+      "cash_yoy": -0.28451167,
+      "capital_expense_share": 0.25297636,
+      "transfer_revenue_share": 0.14947221
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00297313/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00297313"
     },
-    "entity_id": "CZ:00297313",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "trinec",
-      "municipality_path": "/cz/obce/trinec/",
-      "region_path": null
+      "path": "/cz/obce/trinec/"
     }
   }
 }

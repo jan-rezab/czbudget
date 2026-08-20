@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00234516",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00234516",
     "name": "Statutární město Kladno",
     "short_name": "Kladno",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 22,
-      "grade": "C",
-      "score": 6.47
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Středočeský kraj",
+      "district_name": "Kladno",
+      "municipality_code": 532053
     },
     "amounts": {
-      "revenue_approved": 2300616200,
-      "revenue_adjusted": 2404648720.7700005,
-      "revenue_actual": 2396787173.1800003,
-      "expense_approved": 2967968200,
+      "revenue_approved": 2300616200.0,
+      "revenue_adjusted": 2404648720.77,
+      "revenue_actual": 2396787173.18,
+      "expense_approved": 2967968200.0,
       "expense_adjusted": 3169953720.77,
-      "expense_actual": 2461834785.4899993,
-      "financing_actual": 65047612.31,
-      "cash_current": 318762342.66999996,
-      "cash_previous": 371445144.82,
-      "tax_revenue": 1788717747.8100002,
+      "expense_actual": 2461834785.49,
+      "tax_revenue": 1788717747.81,
       "nontax_revenue": 140307004.72,
       "capital_revenue": 227013727.38,
       "transfer_revenue": 240748693.27,
-      "current_expense": 1977146035.4899993,
-      "capital_expense": 484688750.00000006,
-      "budget_balance": -65047612.30999899
+      "current_expense": 1977146035.49,
+      "capital_expense": 484688750.0,
+      "budget_balance": -65047612.31,
+      "cash_current": 318762342.67,
+      "cash_previous": 371445144.82
     },
     "ratios": {
-      "revenue_execution": 0.996731,
-      "expense_execution": 0.776615,
-      "cash_to_expense": 0.129482,
-      "capital_expense_share": 0.196881,
-      "transfer_revenue_share": 0.100446,
-      "tax_revenue_share": 0.746298,
-      "balance_to_revenue": -0.02714,
-      "cash_yoy": -0.141832
+      "revenue_execution": 0.99673069,
+      "expense_execution": 0.77661537,
+      "balance_to_revenue": -0.0271395,
+      "cash_to_expense": 0.12948161,
+      "cash_yoy": -0.14183198,
+      "capital_expense_share": 0.1968811,
+      "transfer_revenue_share": 0.10044642
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00234516/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00234516"
     },
-    "entity_id": "CZ:00234516",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "kladno",
-      "municipality_path": "/cz/obce/kladno/",
-      "region_path": null
+      "path": "/cz/obce/kladno/"
     }
   }
 }
