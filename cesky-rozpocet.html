@@ -17,27 +17,28 @@
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Státní rozpočet ČR 2001–2026 a demografický model 2025–2045","description":"Příjmy, výdaje a struktura státního rozpočtu ČR doplněné modelem demografického tlaku na důchody, zdravotnictví a péči.","url":"https://publicspendingdata.org/cesky-rozpocet.html","inLanguage":"cs","temporalCoverage":"2001/2045","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/czech-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/demography-social.v1.json"}]}</script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20260820-2">
+  <link rel="stylesheet" href="styles.css?v=20260820-3">
   <link rel="stylesheet" href="styles-v2.css?v=20260820-2">
-  <link rel="stylesheet" href="chart-system.css?v=20260820-2">
+  <link rel="stylesheet" href="chart-system.css?v=20260820-4">
   <script src="app.js?v=20260820-2" defer></script>
   <script src="budget-i18n.js?v=20260820-2" defer></script>
-  <script src="cz-firmy-embed.js?v=20260820-2" defer></script>
+  <script src="cz-firmy-embed.js?v=20260820-3" defer></script>
+  <script src="global-nav.js?v=20260820-1" defer></script>
+  <script src="budget-shell.js?v=20260820-1" defer></script>
 </head>
-<body>
+<body class="budget-workspace-page">
 <main>
-  <header class="site-header">
+  <header class="site-header has-global-nav">
     <a class="brand" id="budget-home-link" href="index.html" aria-label="Public Spending Data — začátek stránky"><span class="brand-grid"><i></i><i></i><i></i><i></i></span><span class="wordmark">Public Spending <b>Data</b></span></a>
-    <nav aria-label="Hlavní navigace"><a href="#cesko">Rozpočet</a><a href="#statni-firmy">Firmy státu</a><a href="#struktura">Struktura</a><a href="#demografie">Demografie</a><a href="#benchmark">Srovnání</a><a href="#metodika">Metodika</a></nav>
-    <div class="budget-header-tools"><div class="dataset-pill"><span>MF × ČSÚ</span> · 2001–2045</div><div class="lang-switch"><button type="button" data-budget-lang="cs" class="active">CS</button><span>/</span><button type="button" data-budget-lang="en">EN</button></div></div>
+    <nav class="global-nav" aria-label="Primary navigation"></nav>
+    <div class="budget-header-tools"><div class="lang-switch"><button type="button" data-budget-lang="cs" class="active">CS</button><span>/</span><button type="button" data-budget-lang="en">EN</button></div></div>
   </header>
 
-  <section class="hero budget-hero" id="top">
+  <section class="hero budget-hero budget-hero-compact" id="overview">
     <div class="eyebrow"><span class="live-dot"></span> Státní rozpočet ČR · skutečnost, návrh a výhled</div>
-    <h1>Český rozpočet.<br><em>Bez krátké paměti.</em></h1>
+    <h1>Český rozpočet.</h1>
     <p class="hero-copy">Pětadvacet let příjmů a výdajů, návrh pro rok 2026 a model toho, co s veřejnými financemi udělá stárnutí populace.</p>
-    <div class="hero-actions"><a class="primary-button" href="#cesko">Otevřít data <span>↘</span></a><span class="hero-note">MF ČR · ČSÚ · ČSSZ · MPSV</span></div>
-    <div class="hero-count">26</div>
+    <div class="hero-actions"><span class="hero-note">MF ČR · ČSÚ · ČSSZ · MPSV · 2001–2045</span></div>
     <aside class="hero-budget-card" aria-label="Návrh státního rozpočtu 2026">
       <div><span>Návrh 2026</span><b>mld. Kč</b></div>
       <p>Rozpočet počítá se schodkem, který odpovídá téměř celému čistému demografickému tlaku vybraných systémů v roce 2045.</p>
@@ -88,6 +89,7 @@
       <article><span>Čistý výsledek</span><strong id="embed-net-sum">—</strong><small>mld. Kč · dostupné výkazy</small></article>
       <article><span>Výnosy / obrat</span><strong id="embed-turnover-sum">—</strong><small>mld. Kč · dostupné výkazy</small></article>
     </div>
+    <p class="aggregate-scope" id="embed-aggregate-scope">Součty za všechny subjekty s dostupným výsledkem za rok 2024.</p>
     <div class="ranking-switch" id="embed-ranking-mode" aria-label="Vyberte žebříček státních firem">
       <button type="button" data-mode="profit" aria-pressed="true">20 nejziskovějších</button>
       <button type="button" data-mode="weakest" aria-pressed="false">20 nejslabších</button>
@@ -105,11 +107,17 @@
       <header><div><span>Úplný registr · 2024</span><h3 id="embed-registry-title">Firmy, školy a nemocnice</h3></div><strong id="embed-registry-coverage">—</strong></header>
       <div class="registry-controls">
         <label><span>Hledat název nebo IČO</span><input id="embed-entity-search" type="search" placeholder="např. univerzita, nemocnice, ČEZ"></label>
-        <label><span>Typ subjektu</span><select id="embed-entity-category"><option value="all">Všechny typy</option><option value="Firma">Firmy</option><option value="Vysoká škola">Vysoké školy</option><option value="Nemocnice">Nemocnice</option></select></label>
         <label><span>Úroveň vlastníka</span><select id="embed-entity-owner"><option value="all">Všichni veřejní vlastníci</option></select></label>
+        <label><span>Seřadit podle</span><select id="embed-entity-sort"><option value="topline">Výnosy / obrat</option><option value="result">Výsledek</option><option value="margin">Čistá marže</option><option value="name">Název</option></select></label>
       </div>
-      <div class="registry-table-wrap"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejný vlastník</th><th>Výnosy / obrat</th><th>Výsledek</th><th>Data</th></tr></thead><tbody id="embed-public-entity-rows"></tbody></table></div>
-      <div class="registry-footer"><span id="embed-registry-count">—</span><small>Chybějící výkaz není nula. Přímé rozpočty obcí a krajů nejsou v tabulce.</small></div>
+      <div class="registry-table-wrap"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejný vlastník</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="embed-public-entity-rows"></tbody></table></div>
+      <div class="registry-footer"><span id="embed-registry-count">—</span><small>Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.</small></div>
+      <div class="registry-bottom-tabs" id="embed-entity-tabs" role="tablist" aria-label="Typ veřejného subjektu">
+        <button type="button" role="tab" data-category="all" aria-selected="true"><span>Vše</span><small id="embed-tab-all">—</small></button>
+        <button type="button" role="tab" data-category="Firma" aria-selected="false"><span>Firmy</span><small id="embed-tab-companies">—</small></button>
+        <button type="button" role="tab" data-category="Vysoká škola" aria-selected="false"><span>Vysoké školy</span><small id="embed-tab-universities">—</small></button>
+        <button type="button" role="tab" data-category="Nemocnice" aria-selected="false"><span>Nemocnice</span><small id="embed-tab-hospitals">—</small></button>
+      </div>
     </section>
   </section>
 
