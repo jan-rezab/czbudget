@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "dataset_id": "EU_CAPITAL_BUDGETS_2026",
-  "generated_at": "2026-08-20T19:03:05+00:00",
+  "generated_at": "2026-08-20T19:51:17+00:00",
   "coverage": {
     "city_count": 28,
     "eu_capital_count": 27,
@@ -55,7 +55,11 @@
       "amount_precision": "rounded_source_value",
       "measure": "total_expenditure",
       "scope": "Municipality of Amsterdam budget",
-      "notes": "Official city page reports a EUR 7.8 billion 2026 budget.",
+      "components": {
+        "revenue": "7176700000",
+        "expenditure_excluding_reserves": "7307500000"
+      },
+      "notes": "Official city page reports a rounded EUR 7.8 billion 2026 budget. The balance uses the source's narrower table excluding reserves and therefore is not calculated from the displayed headline.",
       "source_name": "Gemeente Amsterdam — Begroting 2026",
       "landing_page_url": "https://www.amsterdam.nl/bestuur-organisatie/begroting/begroting-2026/",
       "download_url": "https://assets.amsterdam.nl/publish/pages/1076009/ga_bda-begroting26_v6c_tg.pdf",
@@ -66,6 +70,39 @@
         "eur_amount": 7800000000,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 7176700000,
+          "local_currency": "EUR",
+          "eur_amount": 7176700000
+        },
+        "expenditure": {
+          "local_amount": 7800000000,
+          "local_currency": "EUR",
+          "eur_amount": 7800000000
+        },
+        "balance": {
+          "local_amount": -130800000,
+          "local_currency": "EUR",
+          "eur_amount": -130800000
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "balance_before_reserve_appropriations",
+        "balance_note_en": "Before reserve movements, the 2026 budget has a EUR 130.8 million deficit on EUR 7.18 billion of revenue and EUR 7.31 billion of expenditure. Reserve withdrawals and additions bring the adopted result after appropriations to zero; the city separately reports a EUR 189.7 million structural surplus.",
+        "balance_note_cs": "Před pohyby rezerv vykazuje rozpočet na rok 2026 schodek 130,8 mil. EUR při příjmech 7,18 mld. EUR a výdajích 7,31 mld. EUR. Čerpání a tvorba rezerv upraví schválený výsledek po přídělech na nulu; město samostatně uvádí strukturální přebytek 189,7 mil. EUR.",
+        "balance_margin_pct": -1.82,
+        "components": [
+          {
+            "local_amount": 7307500000,
+            "local_currency": "EUR",
+            "eur_amount": 7307500000,
+            "component_code": "expenditure_excluding_reserves",
+            "component_kind": "other",
+            "share_of_headline_pct": 93.69
+          }
+        ],
+        "data_completeness": "partial"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/amsterdam-2026-budget.pdf",
@@ -130,6 +167,39 @@
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 531339328,
+          "local_currency": "EUR",
+          "eur_amount": 531339328
+        },
+        "balance": null,
+        "balance_classification": "unavailable",
+        "balance_basis": "not_available",
+        "balance_note_en": "The current source extraction does not contain a revenue total, so a defensible budget balance cannot be calculated.",
+        "balance_note_cs": "Současná extrakce zdroje neobsahuje celkové příjmy, proto nelze spolehlivě vypočítat saldo rozpočtu.",
+        "balance_margin_pct": null,
+        "components": [
+          {
+            "local_amount": 453647328,
+            "local_currency": "EUR",
+            "eur_amount": 453647328,
+            "component_code": "non_financial_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 85.38
+          },
+          {
+            "local_amount": 77692000,
+            "local_currency": "EUR",
+            "eur_amount": 77692000,
+            "component_code": "financial_transactions",
+            "component_kind": "other",
+            "share_of_headline_pct": 14.62
+          }
+        ],
+        "data_completeness": "partial"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/athens-2026-budget-summary.pdf",
         "sha256": "026855aa176651ed55edad79445e508e7fc536a28a5c95a27e14c5471e95b4d4",
@@ -179,6 +249,9 @@
       "amount_precision": "exact",
       "measure": "total_expenditure",
       "scope": "State of Berlin; city-state budget",
+      "components": {
+        "revenue": "45528278000"
+      },
       "notes": "Statutory 2026 income and expenditure total.",
       "source_name": "Berlin Senate Department for Finance — Doppelhaushalt 2026/2027",
       "landing_page_url": "https://www.berlin.de/sen/finanzen/haushalt/downloads/haushaltsplan-2026-27/artikel.1644823.php",
@@ -197,6 +270,30 @@
         "eur_amount": 45528278000,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 45528278000,
+          "local_currency": "EUR",
+          "eur_amount": 45528278000
+        },
+        "expenditure": {
+          "local_amount": 45528278000,
+          "local_currency": "EUR",
+          "eur_amount": 45528278000
+        },
+        "balance": {
+          "local_amount": 0,
+          "local_currency": "EUR",
+          "eur_amount": 0
+        },
+        "balance_classification": "balanced",
+        "balance_basis": "official_income_equals_expenditure",
+        "balance_note_en": "The statutory appropriation sets income and expenditure at the same total; this is a balanced appropriation, not an operating profit.",
+        "balance_note_cs": "Rozpočtový zákon stanoví příjmy a výdaje ve stejné výši; jde o vyrovnaný rozpočet, nikoli provozní zisk.",
+        "balance_margin_pct": 0,
+        "components": [],
+        "data_completeness": "partial"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/berlin-2026-2027-budget-volume-1.pdf",
@@ -244,20 +341,102 @@
       "period_type": "calendar_year",
       "status": "adopted",
       "currency_code": "EUR",
-      "amount_precision": "rounded_source_value",
+      "amount_precision": "exact",
       "measure": "total_expenditure",
       "scope": "Capital City of the Slovak Republic Bratislava",
+      "components": {
+        "operating_revenue": "604116686",
+        "capital_revenue": "111848340",
+        "financing_revenue": "44507497",
+        "operating_expenditure": "603671980",
+        "capital_expenditure": "136232625",
+        "financing_expenditure": "20567918",
+        "revenue": "760472523"
+      },
       "notes": "Balanced planned revenue and expenditure reported by the city.",
       "source_name": "Bratislava — Approved budget 2026–2028",
       "landing_page_url": "https://bratislava.sk/mesto-bratislava/transparentne-mesto/rozpocet-a-hospodarenie",
       "download_url": "https://bratislavask.s3.bratislava.sk/upload/Schvaleny_rozpocet_hlavneho_mesta_Slovenskej_republiky_Bratislavy_na_roky_2026_2028_0d4880e823.pdf",
       "source_filename": "bratislava-approved-budget-2026-2028.pdf",
       "budget": {
-        "local_amount": 760500000,
+        "local_amount": 760472523,
         "local_currency": "EUR",
-        "eur_amount": 760500000,
+        "eur_amount": 760472523,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 760472523,
+          "local_currency": "EUR",
+          "eur_amount": 760472523
+        },
+        "expenditure": {
+          "local_amount": 760472523,
+          "local_currency": "EUR",
+          "eur_amount": 760472523
+        },
+        "balance": {
+          "local_amount": 0,
+          "local_currency": "EUR",
+          "eur_amount": 0
+        },
+        "balance_classification": "balanced",
+        "balance_basis": "official_total_balance_including_financial_operations",
+        "balance_note_en": "The total budget is balanced after financial operations; the current budget alone has a EUR 444,706 surplus.",
+        "balance_note_cs": "Celkový rozpočet je po započtení finančních operací vyrovnaný; samotný běžný rozpočet má přebytek 444 706 EUR.",
+        "balance_margin_pct": 0,
+        "components": [
+          {
+            "local_amount": 604116686,
+            "local_currency": "EUR",
+            "eur_amount": 604116686,
+            "component_code": "operating_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 79.44
+          },
+          {
+            "local_amount": 111848340,
+            "local_currency": "EUR",
+            "eur_amount": 111848340,
+            "component_code": "capital_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 14.71
+          },
+          {
+            "local_amount": 44507497,
+            "local_currency": "EUR",
+            "eur_amount": 44507497,
+            "component_code": "financing_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 5.85
+          },
+          {
+            "local_amount": 603671980,
+            "local_currency": "EUR",
+            "eur_amount": 603671980,
+            "component_code": "operating_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 79.38
+          },
+          {
+            "local_amount": 136232625,
+            "local_currency": "EUR",
+            "eur_amount": 136232625,
+            "component_code": "capital_expenditure",
+            "component_kind": "capital",
+            "share_of_headline_pct": 17.91
+          },
+          {
+            "local_amount": 20567918,
+            "local_currency": "EUR",
+            "eur_amount": 20567918,
+            "component_code": "financing_expenditure",
+            "component_kind": "financing",
+            "share_of_headline_pct": 2.7
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/bratislava-approved-budget-2026-2028.pdf",
@@ -308,6 +487,9 @@
       "amount_precision": "exact",
       "measure": "total_expenditure",
       "scope": "City of Brussels municipality; excludes the other Brussels-Capital municipalities and regional government",
+      "components": {
+        "revenue": "1213347071.47"
+      },
       "notes": "Total for the financial year in the functional budget.",
       "source_name": "City of Brussels — Budget by function 2026",
       "landing_page_url": "https://www.brussels.be/municipal-budget",
@@ -319,6 +501,30 @@
         "eur_amount": 1213304009.42,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 1213347071.47,
+          "local_currency": "EUR",
+          "eur_amount": 1213347071.47
+        },
+        "expenditure": {
+          "local_amount": 1213304009.42,
+          "local_currency": "EUR",
+          "eur_amount": 1213304009.42
+        },
+        "balance": {
+          "local_amount": 43062.05,
+          "local_currency": "EUR",
+          "eur_amount": 43062.05
+        },
+        "balance_classification": "surplus",
+        "balance_basis": "official_current_year_result",
+        "balance_note_en": "The functional budget reports EUR 1,213,347,071.47 of current-year revenue and EUR 1,213,304,009.42 of expenditure, leaving a EUR 43,062.05 surplus. A separate EUR 3.64 million prior-year result is not included here.",
+        "balance_note_cs": "Funkční rozpočet uvádí příjmy běžného roku 1 213 347 071,47 EUR a výdaje 1 213 304 009,42 EUR, tedy přebytek 43 062,05 EUR. Samostatný výsledek minulých let 3,64 mil. EUR zde není zahrnut.",
+        "balance_margin_pct": 0,
+        "components": [],
+        "data_completeness": "partial"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/brussels-2026-budget-by-function.pdf",
@@ -382,6 +588,22 @@
         "eur_conversion_rate": 5.2515,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 8500000000,
+          "local_currency": "RON",
+          "eur_amount": 1618585166.14
+        },
+        "balance": null,
+        "balance_classification": "unavailable",
+        "balance_basis": "not_available",
+        "balance_note_en": "The current source extraction does not contain a revenue total, so a defensible budget balance cannot be calculated.",
+        "balance_note_cs": "Současná extrakce zdroje neobsahuje celkové příjmy, proto nelze spolehlivě vypočítat saldo rozpočtu.",
+        "balance_margin_pct": null,
+        "components": [],
+        "data_completeness": "headline_only"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/bucharest-official-journal-2026-volume-01.pdf",
         "sha256": "dacef0f0cfdd6984adb1ab8fe95f388b5297ee0a25f3272aafc87f9690a600bc",
@@ -433,8 +655,15 @@
       "measure": "total_expenditure_including_financing",
       "scope": "Municipality of Budapest; district municipalities are separate",
       "components": {
+        "operating_expenditure": "498122622443",
+        "capital_expenditure": "25654467277",
         "expenditure_excluding_financing": "523777089720",
-        "financing_expenditure": "8721708183"
+        "financing_expenditure": "8721708183",
+        "operating_revenue": "519455406008",
+        "capital_revenue": "1043391895",
+        "revenue": "520498797903",
+        "financing_revenue": "12000000000",
+        "deficit": "3278291817"
       },
       "notes": "Balanced total including financing transactions in the official budget ordinance.",
       "source_name": "Budapest Municipality — 2026 budget ordinance",
@@ -447,6 +676,87 @@
         "eur_amount": 1458501226.8,
         "eur_conversion_rate": 365.1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 520498797903,
+          "local_currency": "HUF",
+          "eur_amount": 1425633519.32
+        },
+        "expenditure": {
+          "local_amount": 532498797903,
+          "local_currency": "HUF",
+          "eur_amount": 1458501226.8
+        },
+        "balance": {
+          "local_amount": -3278291817,
+          "local_currency": "HUF",
+          "eur_amount": -8979161.37
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "budget_revenue_minus_expenditure_excluding_financing",
+        "balance_note_en": "The underlying budget has a HUF 3.28 billion deficit, exactly covered by net financing; the overall financing-inclusive appropriation is balanced.",
+        "balance_note_cs": "Vlastní rozpočet má schodek 3,28 mld. HUF, který přesně kryje čisté financování; celkový rozpočet včetně financování je vyrovnaný.",
+        "balance_margin_pct": -0.63,
+        "components": [
+          {
+            "local_amount": 498122622443,
+            "local_currency": "HUF",
+            "eur_amount": 1364345720.19,
+            "component_code": "operating_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 93.54
+          },
+          {
+            "local_amount": 25654467277,
+            "local_currency": "HUF",
+            "eur_amount": 70266960.5,
+            "component_code": "capital_expenditure",
+            "component_kind": "capital",
+            "share_of_headline_pct": 4.82
+          },
+          {
+            "local_amount": 523777089720,
+            "local_currency": "HUF",
+            "eur_amount": 1434612680.69,
+            "component_code": "expenditure_excluding_financing",
+            "component_kind": "financing",
+            "share_of_headline_pct": 98.36
+          },
+          {
+            "local_amount": 8721708183,
+            "local_currency": "HUF",
+            "eur_amount": 23888546.11,
+            "component_code": "financing_expenditure",
+            "component_kind": "financing",
+            "share_of_headline_pct": 1.64
+          },
+          {
+            "local_amount": 519455406008,
+            "local_currency": "HUF",
+            "eur_amount": 1422775694.35,
+            "component_code": "operating_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 97.55
+          },
+          {
+            "local_amount": 1043391895,
+            "local_currency": "HUF",
+            "eur_amount": 2857824.97,
+            "component_code": "capital_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 0.2
+          },
+          {
+            "local_amount": 12000000000,
+            "local_currency": "HUF",
+            "eur_amount": 32867707.48,
+            "component_code": "financing_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 2.25
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/budapest-2026-budget-ordinance.pdf",
@@ -498,9 +808,12 @@
       "components": {
         "service": "35408000000",
         "capital": "4148000000",
-        "transfers": "12604000000"
+        "transfers": "12604000000",
+        "revenue": "66141000000",
+        "gross_budget_expenditure": "66141000000",
+        "gross_budget_revenue": "66141000000"
       },
-      "notes": "Official total net expenditure; components are rounded to DKK millions.",
+      "notes": "Official total net expenditure; components and the gross balanced budget are stated in DKK millions.",
       "source_name": "Københavns Kommune — Adopted budget 2026",
       "landing_page_url": "https://www.kk.dk/politik/budget-og-regnskab/budget-2026/budgetaftale-2026",
       "download_url": "https://www.kk.dk/sites/default/files/2025-12/BudgetpublikationforVedtagetbudget2026-a.pdf",
@@ -511,6 +824,71 @@
         "eur_amount": 6977045934.88,
         "eur_conversion_rate": 7.4758,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 66141000000,
+          "local_currency": "DKK",
+          "eur_amount": 8847347441.08
+        },
+        "expenditure": {
+          "local_amount": 52159000000,
+          "local_currency": "DKK",
+          "eur_amount": 6977045934.88
+        },
+        "balance": {
+          "local_amount": 0,
+          "local_currency": "DKK",
+          "eur_amount": 0
+        },
+        "balance_classification": "balanced",
+        "balance_basis": "official_gross_budget_balance",
+        "balance_note_en": "The official financing table balances gross expenditure and revenue at DKK 66.141 billion. The displayed DKK 52.159 billion headline is net expenditure, so the balance is not revenue minus that headline.",
+        "balance_note_cs": "Oficiální finanční tabulka vyrovnává hrubé výdaje a příjmy na 66,141 mld. DKK. Zobrazený hlavní údaj 52,159 mld. DKK představuje čisté výdaje, proto saldo není rozdílem příjmů a tohoto hlavního údaje.",
+        "balance_margin_pct": 0,
+        "components": [
+          {
+            "local_amount": 35408000000,
+            "local_currency": "DKK",
+            "eur_amount": 4736349287.03,
+            "component_code": "service",
+            "component_kind": "operating",
+            "share_of_headline_pct": 67.88
+          },
+          {
+            "local_amount": 4148000000,
+            "local_currency": "DKK",
+            "eur_amount": 554857005.27,
+            "component_code": "capital",
+            "component_kind": "capital",
+            "share_of_headline_pct": 7.95
+          },
+          {
+            "local_amount": 12604000000,
+            "local_currency": "DKK",
+            "eur_amount": 1685973407.53,
+            "component_code": "transfers",
+            "component_kind": "operating",
+            "share_of_headline_pct": 24.16
+          },
+          {
+            "local_amount": 66141000000,
+            "local_currency": "DKK",
+            "eur_amount": 8847347441.08,
+            "component_code": "gross_budget_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 126.81
+          },
+          {
+            "local_amount": 66141000000,
+            "local_currency": "DKK",
+            "eur_amount": 8847347441.08,
+            "component_code": "gross_budget_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 126.81
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/copenhagen-adopted-budget-2026.pdf",
@@ -558,20 +936,156 @@
       "period_type": "calendar_year",
       "status": "adopted",
       "currency_code": "EUR",
-      "amount_precision": "rounded_source_value",
+      "amount_precision": "exact",
       "measure": "operating_expenditure",
       "scope": "Dublin City Council revenue budget; capital programme is separate",
+      "components": {
+        "service_income": "1177561144",
+        "property_tax_and_general_grant": "62324168",
+        "commercial_rates": "430347369",
+        "credit_balance_funding": "26772525",
+        "revenue": "1697005206",
+        "housing_expenditure": "862090540",
+        "transport_expenditure": "162376170",
+        "water_expenditure": "53538437",
+        "development_expenditure": "110173383",
+        "environment_expenditure": "305800507",
+        "recreation_expenditure": "146029693",
+        "agriculture_expenditure": "4424740",
+        "miscellaneous_expenditure": "52571736"
+      },
       "notes": "Operating/revenue budget only and therefore not directly comparable to totals including capital.",
       "source_name": "Dublin City Council — Adopted revenue budget 2026",
       "landing_page_url": "https://www.dublincity.ie/council/council-spending-revenue/budgets",
       "download_url": "https://www.dublincity.ie/sites/default/files/2025-11/dublin-city-council-adopted-revenue-budget-2026.pdf",
       "source_filename": "dublin-adopted-revenue-budget-2026.pdf",
       "budget": {
-        "local_amount": 1690000000,
+        "local_amount": 1697005206,
         "local_currency": "EUR",
-        "eur_amount": 1690000000,
+        "eur_amount": 1697005206,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 1697005206,
+          "local_currency": "EUR",
+          "eur_amount": 1697005206
+        },
+        "expenditure": {
+          "local_amount": 1697005206,
+          "local_currency": "EUR",
+          "eur_amount": 1697005206
+        },
+        "balance": {
+          "local_amount": 0,
+          "local_currency": "EUR",
+          "eur_amount": 0
+        },
+        "balance_classification": "balanced",
+        "balance_basis": "adopted_revenue_budget_after_rates_and_tax_funding",
+        "balance_note_en": "Gross service income leaves a EUR 519.4 million net requirement, funded by property tax, commercial rates and credit balances; the adopted operating budget then balances.",
+        "balance_note_cs": "Hrubé příjmy služeb ponechávají čistou potřebu 519,4 mil. EUR, krytou majetkovou daní, komerčními sazbami a zůstatky; přijatý provozní rozpočet je poté vyrovnaný.",
+        "balance_margin_pct": 0,
+        "components": [
+          {
+            "local_amount": 1177561144,
+            "local_currency": "EUR",
+            "eur_amount": 1177561144,
+            "component_code": "service_income",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 69.39
+          },
+          {
+            "local_amount": 62324168,
+            "local_currency": "EUR",
+            "eur_amount": 62324168,
+            "component_code": "property_tax_and_general_grant",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 3.67
+          },
+          {
+            "local_amount": 430347369,
+            "local_currency": "EUR",
+            "eur_amount": 430347369,
+            "component_code": "commercial_rates",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 25.36
+          },
+          {
+            "local_amount": 26772525,
+            "local_currency": "EUR",
+            "eur_amount": 26772525,
+            "component_code": "credit_balance_funding",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 1.58
+          },
+          {
+            "local_amount": 862090540,
+            "local_currency": "EUR",
+            "eur_amount": 862090540,
+            "component_code": "housing_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 50.8
+          },
+          {
+            "local_amount": 162376170,
+            "local_currency": "EUR",
+            "eur_amount": 162376170,
+            "component_code": "transport_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 9.57
+          },
+          {
+            "local_amount": 53538437,
+            "local_currency": "EUR",
+            "eur_amount": 53538437,
+            "component_code": "water_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 3.15
+          },
+          {
+            "local_amount": 110173383,
+            "local_currency": "EUR",
+            "eur_amount": 110173383,
+            "component_code": "development_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 6.49
+          },
+          {
+            "local_amount": 305800507,
+            "local_currency": "EUR",
+            "eur_amount": 305800507,
+            "component_code": "environment_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 18.02
+          },
+          {
+            "local_amount": 146029693,
+            "local_currency": "EUR",
+            "eur_amount": 146029693,
+            "component_code": "recreation_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 8.61
+          },
+          {
+            "local_amount": 4424740,
+            "local_currency": "EUR",
+            "eur_amount": 4424740,
+            "component_code": "agriculture_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 0.26
+          },
+          {
+            "local_amount": 52571736,
+            "local_currency": "EUR",
+            "eur_amount": 52571736,
+            "component_code": "miscellaneous_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 3.1
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/dublin-adopted-revenue-budget-2026.pdf",
@@ -638,6 +1152,43 @@
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 7584865000,
+          "local_currency": "EUR",
+          "eur_amount": 7584865000
+        },
+        "balance": {
+          "local_amount": 92700000,
+          "local_currency": "EUR",
+          "eur_amount": 92700000
+        },
+        "balance_classification": "surplus",
+        "balance_basis": "official_accounting_year_result",
+        "balance_note_en": "Helsinki projects a EUR 92.7 million accounting result for 2026 after a EUR 459.8 million annual contribution margin and EUR 367.1 million of depreciation. This accrual result is not revenue minus the displayed operating-plus-investment cash measure.",
+        "balance_note_cs": "Helsinky plánují na rok 2026 účetní výsledek 92,7 mil. EUR po ročním příspěvkovém rozpětí 459,8 mil. EUR a odpisech 367,1 mil. EUR. Tento akruální výsledek není rozdílem příjmů a zobrazené hotovostní sumy provozních a investičních výdajů.",
+        "balance_margin_pct": null,
+        "components": [
+          {
+            "local_amount": 6501559000,
+            "local_currency": "EUR",
+            "eur_amount": 6501559000,
+            "component_code": "operating_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 85.72
+          },
+          {
+            "local_amount": 1083306000,
+            "local_currency": "EUR",
+            "eur_amount": 1083306000,
+            "component_code": "investment_expenditure",
+            "component_kind": "capital",
+            "share_of_headline_pct": 14.28
+          }
+        ],
+        "data_completeness": "partial"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/helsinki-budget-2026.pdf",
         "sha256": "9bf272eb9d1ae7c79d3d1c019bf7294aa28a085f419408870eb2e7bcf4eba153",
@@ -701,6 +1252,47 @@
         "eur_amount": 1240100000,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 1240100000,
+          "local_currency": "EUR",
+          "eur_amount": 1240100000
+        },
+        "balance": null,
+        "balance_classification": "unavailable",
+        "balance_basis": "not_available",
+        "balance_note_en": "The current source extraction does not contain a revenue total, so a defensible budget balance cannot be calculated.",
+        "balance_note_cs": "Současná extrakce zdroje neobsahuje celkové příjmy, proto nelze spolehlivě vypočítat saldo rozpočtu.",
+        "balance_margin_pct": null,
+        "components": [
+          {
+            "local_amount": 870400000,
+            "local_currency": "EUR",
+            "eur_amount": 870400000,
+            "component_code": "current_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 70.19
+          },
+          {
+            "local_amount": 369700000,
+            "local_currency": "EUR",
+            "eur_amount": 369700000,
+            "component_code": "capital_expenditure",
+            "component_kind": "capital",
+            "share_of_headline_pct": 29.81
+          },
+          {
+            "local_amount": 105400000,
+            "local_currency": "EUR",
+            "eur_amount": 105400000,
+            "component_code": "unallocated_future_amendment",
+            "component_kind": "other",
+            "share_of_headline_pct": 8.5
+          }
+        ],
+        "data_completeness": "partial"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/lisbon-budget-2026-2030.pdf",
@@ -766,6 +1358,30 @@
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 528199286,
+          "local_currency": "EUR",
+          "eur_amount": 528199286
+        },
+        "expenditure": {
+          "local_amount": 530594878,
+          "local_currency": "EUR",
+          "eur_amount": 530594878
+        },
+        "balance": {
+          "local_amount": -2395592,
+          "local_currency": "EUR",
+          "eur_amount": -2395592
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "revenue_minus_headline_expenditure",
+        "balance_note_en": "Calculated as reported revenue minus the displayed expenditure measure.",
+        "balance_note_cs": "Výpočet používá vykázané příjmy minus zobrazenou hodnotu výdajů.",
+        "balance_margin_pct": -0.45,
+        "components": [],
+        "data_completeness": "partial"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/ljubljana-budget-2026.pdf",
         "sha256": "5d040f2593224c0dc254281cf440a6d89e93d8478c37a7d92811d10e36fe89a6",
@@ -810,24 +1426,84 @@
       "period_type": "calendar_year",
       "status": "adopted",
       "currency_code": "EUR",
-      "amount_precision": "rounded_source_value",
+      "amount_precision": "exact_derived",
       "measure": "ordinary_plus_extraordinary_expenditure",
       "scope": "City of Luxembourg",
       "components": {
-        "ordinary_expenditure": "921300000",
-        "extraordinary_expenditure": "707800000"
+        "revenue": "1396545100",
+        "ordinary_revenue": "1306620800",
+        "extraordinary_revenue": "89924300",
+        "ordinary_expenditure": "921302500",
+        "extraordinary_expenditure": "707852000"
       },
-      "notes": "Sum of ordinary and extraordinary expenditure reported by the city.",
+      "notes": "Exact sum of ordinary and extraordinary expenditure reported by the city.",
       "source_name": "Ville de Luxembourg — Budget 2026",
       "landing_page_url": "https://www.vdl.lu/fr/la-ville/vie-politique/budget",
       "download_url": "https://www.vdl.lu/sites/default/files/media/ni/document/B2026.pdf",
       "source_filename": "luxembourg-budget-2026.pdf",
       "budget": {
-        "local_amount": 1629100000,
+        "local_amount": 1629154500,
         "local_currency": "EUR",
-        "eur_amount": 1629100000,
+        "eur_amount": 1629154500,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 1396545100,
+          "local_currency": "EUR",
+          "eur_amount": 1396545100
+        },
+        "expenditure": {
+          "local_amount": 1629154500,
+          "local_currency": "EUR",
+          "eur_amount": 1629154500
+        },
+        "balance": {
+          "local_amount": -232609400,
+          "local_currency": "EUR",
+          "eur_amount": -232609400
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "official_general_budget_result",
+        "balance_note_en": "An ordinary-budget surplus of EUR 385.32 million is outweighed by a EUR 617.93 million extraordinary-budget deficit, producing a planned general deficit of EUR 232.61 million.",
+        "balance_note_cs": "Přebytek běžného rozpočtu 385,32 mil. EUR převáží mimořádný rozpočtový schodek 617,93 mil. EUR, takže plánovaný celkový schodek činí 232,61 mil. EUR.",
+        "balance_margin_pct": -16.66,
+        "components": [
+          {
+            "local_amount": 1306620800,
+            "local_currency": "EUR",
+            "eur_amount": 1306620800,
+            "component_code": "ordinary_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 80.2
+          },
+          {
+            "local_amount": 89924300,
+            "local_currency": "EUR",
+            "eur_amount": 89924300,
+            "component_code": "extraordinary_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 5.52
+          },
+          {
+            "local_amount": 921302500,
+            "local_currency": "EUR",
+            "eur_amount": 921302500,
+            "component_code": "ordinary_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 56.55
+          },
+          {
+            "local_amount": 707852000,
+            "local_currency": "EUR",
+            "eur_amount": 707852000,
+            "component_code": "extraordinary_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 43.45
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/luxembourg-budget-2026.pdf",
@@ -890,6 +1566,22 @@
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 7723767556,
+          "local_currency": "EUR",
+          "eur_amount": 7723767556
+        },
+        "balance": null,
+        "balance_classification": "unavailable",
+        "balance_basis": "not_available",
+        "balance_note_en": "The current source extraction does not contain a revenue total, so a defensible budget balance cannot be calculated.",
+        "balance_note_cs": "Současná extrakce zdroje neobsahuje celkové příjmy, proto nelze spolehlivě vypočítat saldo rozpočtu.",
+        "balance_margin_pct": null,
+        "components": [],
+        "data_completeness": "headline_only"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/madrid-consolidated-expenditure-2026.pdf",
         "sha256": "62b0e527037084434908abdeafcb3d7e40a8863d147e10f8f18e7d0ee12053f1",
@@ -938,6 +1630,8 @@
       "measure": "operating_plus_capital_expenditure",
       "scope": "Nicosia metropolitan municipality after the local-government merger",
       "components": {
+        "revenue": "69795585",
+        "operating_revenue": "69795585",
         "operating_expenditure": "70251885",
         "capital_expenditure": "42139681"
       },
@@ -952,6 +1646,55 @@
         "eur_amount": 112391566,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 69795585,
+          "local_currency": "EUR",
+          "eur_amount": 69795585
+        },
+        "expenditure": {
+          "local_amount": 112391566,
+          "local_currency": "EUR",
+          "eur_amount": 112391566
+        },
+        "balance": {
+          "local_amount": -456300,
+          "local_currency": "EUR",
+          "eur_amount": -456300
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "official_revised_operating_budget_result",
+        "balance_note_en": "The revised operating budget reports EUR 69.80 million of revenue and EUR 70.25 million of expenditure, a EUR 456,300 operating deficit. The displayed headline also includes EUR 42.14 million of capital expenditure, for which the minutes do not provide a matching revenue total.",
+        "balance_note_cs": "Revidovaný provozní rozpočet uvádí příjmy 69,80 mil. EUR a výdaje 70,25 mil. EUR, tedy provozní schodek 456 300 EUR. Zobrazený hlavní údaj zahrnuje také kapitálové výdaje 42,14 mil. EUR, k nimž zápis neuvádí odpovídající celkové příjmy.",
+        "balance_margin_pct": -0.65,
+        "components": [
+          {
+            "local_amount": 69795585,
+            "local_currency": "EUR",
+            "eur_amount": 69795585,
+            "component_code": "operating_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 62.1
+          },
+          {
+            "local_amount": 70251885,
+            "local_currency": "EUR",
+            "eur_amount": 70251885,
+            "component_code": "operating_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 62.51
+          },
+          {
+            "local_amount": 42139681,
+            "local_currency": "EUR",
+            "eur_amount": 42139681,
+            "component_code": "capital_expenditure",
+            "component_kind": "capital",
+            "share_of_headline_pct": 37.49
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/nicosia-2026-budget-minutes.pdf",
@@ -1003,6 +1746,9 @@
       "measure": "real_operating_plus_investment_expenditure_including_debt_repayment",
       "scope": "City of Paris; combined commune and department",
       "components": {
+        "revenue": "10204900000",
+        "operating_revenue": "10204900000",
+        "investment_revenue": "468100000",
         "real_operating_expenditure": "9407200000",
         "real_investment_expenditure_including_debt_repayment": "1923600000",
         "investment_excluding_debt_repayment": "1619600000"
@@ -1018,6 +1764,71 @@
         "eur_amount": 11330800000,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 10204900000,
+          "local_currency": "EUR",
+          "eur_amount": 10204900000
+        },
+        "expenditure": {
+          "local_amount": 11330800000,
+          "local_currency": "EUR",
+          "eur_amount": 11330800000
+        },
+        "balance": {
+          "local_amount": 797600000,
+          "local_currency": "EUR",
+          "eur_amount": 797600000
+        },
+        "balance_classification": "surplus",
+        "balance_basis": "gross_operating_savings",
+        "balance_note_en": "Paris calls this result gross savings: EUR 10.20 billion of real operating revenue less EUR 9.41 billion of real operating expenditure, leaving EUR 797.6 million available before investment financing. It is not a company profit or a total-budget surplus.",
+        "balance_note_cs": "Paříž tento výsledek označuje jako hrubé úspory: reálné provozní příjmy 10,20 mld. EUR minus reálné provozní výdaje 9,41 mld. EUR ponechávají 797,6 mil. EUR před financováním investic. Nejde o firemní zisk ani přebytek celého rozpočtu.",
+        "balance_margin_pct": 7.82,
+        "components": [
+          {
+            "local_amount": 10204900000,
+            "local_currency": "EUR",
+            "eur_amount": 10204900000,
+            "component_code": "operating_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 90.06
+          },
+          {
+            "local_amount": 468100000,
+            "local_currency": "EUR",
+            "eur_amount": 468100000,
+            "component_code": "investment_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 4.13
+          },
+          {
+            "local_amount": 9407200000,
+            "local_currency": "EUR",
+            "eur_amount": 9407200000,
+            "component_code": "real_operating_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 83.02
+          },
+          {
+            "local_amount": 1923600000,
+            "local_currency": "EUR",
+            "eur_amount": 1923600000,
+            "component_code": "real_investment_expenditure_including_debt_repayment",
+            "component_kind": "capital",
+            "share_of_headline_pct": 16.98
+          },
+          {
+            "local_amount": 1619600000,
+            "local_currency": "EUR",
+            "eur_amount": 1619600000,
+            "component_code": "investment_excluding_debt_repayment",
+            "component_kind": "capital",
+            "share_of_headline_pct": 14.29
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/paris-initial-budget-2026-report-part-1.pdf",
@@ -1070,7 +1881,23 @@
       "scope": "Consolidation of Prague proper and 57 municipal districts",
       "components": {
         "revenue": "123818523300",
-        "deficit": "8414026000"
+        "deficit": "8414026000",
+        "tax_revenue": "89962868300",
+        "non_tax_revenue": "3437784000",
+        "capital_revenue": "146389500",
+        "transfer_revenue": "30271481500",
+        "operating_expenditure": "101581779400",
+        "capital_expenditure": "30650769900",
+        "functional_community_development": "2435380700",
+        "functional_infrastructure": "8091789000",
+        "functional_transport": "42397649300",
+        "functional_education_sport": "38149496600",
+        "functional_health_social": "8486115500",
+        "functional_culture_tourism": "4958150900",
+        "functional_safety": "4275298900",
+        "functional_economy": "4528705200",
+        "functional_internal_administration": "13978284800",
+        "functional_treasury": "4931678400"
       },
       "notes": "Official consolidated set of 58 budgets; source table is stated in CZK thousands.",
       "source_name": "Hlavní město Praha — Soubor rozpočtů 2026",
@@ -1083,6 +1910,159 @@
         "eur_amount": 5474787782.06,
         "eur_conversion_rate": 24.153,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 123818523300,
+          "local_currency": "CZK",
+          "eur_amount": 5126424183.33
+        },
+        "expenditure": {
+          "local_amount": 132232549300,
+          "local_currency": "CZK",
+          "eur_amount": 5474787782.06
+        },
+        "balance": {
+          "local_amount": -8414026000,
+          "local_currency": "CZK",
+          "eur_amount": -348363598.72
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "reported_deficit",
+        "balance_note_en": "Calculated as reported revenue minus the displayed expenditure measure.",
+        "balance_note_cs": "Výpočet používá vykázané příjmy minus zobrazenou hodnotu výdajů.",
+        "balance_margin_pct": -6.8,
+        "components": [
+          {
+            "local_amount": 89962868300,
+            "local_currency": "CZK",
+            "eur_amount": 3724707833.4,
+            "component_code": "tax_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 68.03
+          },
+          {
+            "local_amount": 3437784000,
+            "local_currency": "CZK",
+            "eur_amount": 142333623.15,
+            "component_code": "non_tax_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 2.6
+          },
+          {
+            "local_amount": 146389500,
+            "local_currency": "CZK",
+            "eur_amount": 6060924.11,
+            "component_code": "capital_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 0.11
+          },
+          {
+            "local_amount": 30271481500,
+            "local_currency": "CZK",
+            "eur_amount": 1253321802.67,
+            "component_code": "transfer_revenue",
+            "component_kind": "revenue",
+            "share_of_headline_pct": 22.89
+          },
+          {
+            "local_amount": 101581779400,
+            "local_currency": "CZK",
+            "eur_amount": 4205762406.33,
+            "component_code": "operating_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 76.82
+          },
+          {
+            "local_amount": 30650769900,
+            "local_currency": "CZK",
+            "eur_amount": 1269025375.73,
+            "component_code": "capital_expenditure",
+            "component_kind": "capital",
+            "share_of_headline_pct": 23.18
+          },
+          {
+            "local_amount": 2435380700,
+            "local_currency": "CZK",
+            "eur_amount": 100831395.69,
+            "component_code": "functional_community_development",
+            "component_kind": "functional",
+            "share_of_headline_pct": 1.84
+          },
+          {
+            "local_amount": 8091789000,
+            "local_currency": "CZK",
+            "eur_amount": 335022109.05,
+            "component_code": "functional_infrastructure",
+            "component_kind": "functional",
+            "share_of_headline_pct": 6.12
+          },
+          {
+            "local_amount": 42397649300,
+            "local_currency": "CZK",
+            "eur_amount": 1755378184.9,
+            "component_code": "functional_transport",
+            "component_kind": "functional",
+            "share_of_headline_pct": 32.06
+          },
+          {
+            "local_amount": 38149496600,
+            "local_currency": "CZK",
+            "eur_amount": 1579493089.89,
+            "component_code": "functional_education_sport",
+            "component_kind": "functional",
+            "share_of_headline_pct": 28.85
+          },
+          {
+            "local_amount": 8486115500,
+            "local_currency": "CZK",
+            "eur_amount": 351348300.42,
+            "component_code": "functional_health_social",
+            "component_kind": "functional",
+            "share_of_headline_pct": 6.42
+          },
+          {
+            "local_amount": 4958150900,
+            "local_currency": "CZK",
+            "eur_amount": 205280954.75,
+            "component_code": "functional_culture_tourism",
+            "component_kind": "functional",
+            "share_of_headline_pct": 3.75
+          },
+          {
+            "local_amount": 4275298900,
+            "local_currency": "CZK",
+            "eur_amount": 177009021.65,
+            "component_code": "functional_safety",
+            "component_kind": "functional",
+            "share_of_headline_pct": 3.23
+          },
+          {
+            "local_amount": 4528705200,
+            "local_currency": "CZK",
+            "eur_amount": 187500732.83,
+            "component_code": "functional_economy",
+            "component_kind": "functional",
+            "share_of_headline_pct": 3.42
+          },
+          {
+            "local_amount": 13978284800,
+            "local_currency": "CZK",
+            "eur_amount": 578739071.75,
+            "component_code": "functional_internal_administration",
+            "component_kind": "functional",
+            "share_of_headline_pct": 10.57
+          },
+          {
+            "local_amount": 4931678400,
+            "local_currency": "CZK",
+            "eur_amount": 204184921.13,
+            "component_code": "functional_treasury",
+            "component_kind": "functional",
+            "share_of_headline_pct": 3.73
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/prague-consolidated-budgets-2026.pdf",
@@ -1153,6 +2133,22 @@
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 1700000000,
+          "local_currency": "EUR",
+          "eur_amount": 1700000000
+        },
+        "balance": null,
+        "balance_classification": "unavailable",
+        "balance_basis": "not_available",
+        "balance_note_en": "The current source extraction does not contain a revenue total, so a defensible budget balance cannot be calculated.",
+        "balance_note_cs": "Současná extrakce zdroje neobsahuje celkové příjmy, proto nelze spolehlivě vypočítat saldo rozpočtu.",
+        "balance_margin_pct": null,
+        "components": [],
+        "data_completeness": "headline_only"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/riga-budget-plan-2026-official-page.md",
         "sha256": "c94653ea3ad146eb165e249f0809e062b0a4de2eed657e68f7c4828e8bf49fde",
@@ -1214,6 +2210,35 @@
         "eur_amount": 15575699965.91,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 15575699965.91,
+          "local_currency": "EUR",
+          "eur_amount": 15575699965.91
+        },
+        "balance": {
+          "local_amount": 0,
+          "local_currency": "EUR",
+          "eur_amount": 0
+        },
+        "balance_classification": "balanced",
+        "balance_basis": "official_final_budget_equilibrium",
+        "balance_note_en": "Rome's statutory equilibrium schedule reports a EUR 12.68 million current balance and an equal capital shortfall, producing a zero final budget equilibrium. This is a legal budget balance, not an operating profit.",
+        "balance_note_cs": "Římská tabulka zákonné rovnováhy uvádí běžné saldo +12,68 mil. EUR a stejně velký kapitálový schodek, takže konečná rozpočtová rovnováha je nulová. Jde o právní vyrovnání rozpočtu, nikoli provozní zisk.",
+        "balance_margin_pct": null,
+        "components": [
+          {
+            "local_amount": 5880440217.41,
+            "local_currency": "EUR",
+            "eur_amount": 5880440217.41,
+            "component_code": "current_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 37.75
+          }
+        ],
+        "data_completeness": "partial"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/rome-budget-2026-2028-explanatory-note.pdf",
@@ -1285,6 +2310,39 @@
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 1523105795,
+          "local_currency": "EUR",
+          "eur_amount": 1523105795
+        },
+        "expenditure": {
+          "local_amount": 1523105795,
+          "local_currency": "EUR",
+          "eur_amount": 1523105795
+        },
+        "balance": {
+          "local_amount": 0,
+          "local_currency": "EUR",
+          "eur_amount": 0
+        },
+        "balance_classification": "balanced",
+        "balance_basis": "revenue_minus_headline_expenditure",
+        "balance_note_en": "Calculated as reported revenue minus the displayed expenditure measure.",
+        "balance_note_cs": "Výpočet používá vykázané příjmy minus zobrazenou hodnotu výdajů.",
+        "balance_margin_pct": 0,
+        "components": [
+          {
+            "local_amount": 1462900395,
+            "local_currency": "EUR",
+            "eur_amount": 1462900395,
+            "component_code": "budgetary_subset",
+            "component_kind": "other",
+            "share_of_headline_pct": 96.05
+          }
+        ],
+        "data_completeness": "partial"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/sofia-2026-budget-official-page.md",
         "sha256": "41e516d4d53240c4ce9e20815dcf7f920a26d52c474909b2a856f6ad77d7230c",
@@ -1350,6 +2408,43 @@
         "eur_conversion_rate": 11.0875,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 74976900000,
+          "local_currency": "SEK",
+          "eur_amount": 6762290868.09
+        },
+        "balance": {
+          "local_amount": 100000,
+          "local_currency": "SEK",
+          "eur_amount": 9019.17
+        },
+        "balance_classification": "surplus",
+        "balance_basis": "municipal_balance_requirement_result",
+        "balance_note_en": "Stockholm sets a minimum 2026 result under the municipal balance requirement of SEK 0.1 million. This statutory result is effectively balanced relative to the city's SEK 74.98 billion spending headline.",
+        "balance_note_cs": "Stockholm stanoví minimální výsledek roku 2026 podle obecního požadavku vyrovnaného rozpočtu na 0,1 mil. SEK. V poměru k hlavnímu údaji výdajů 74,98 mld. SEK jde prakticky o vyrovnaný rozpočet.",
+        "balance_margin_pct": null,
+        "components": [
+          {
+            "local_amount": 65532600000,
+            "local_currency": "SEK",
+            "eur_amount": 5910493799.32,
+            "component_code": "operating_costs",
+            "component_kind": "operating",
+            "share_of_headline_pct": 87.4
+          },
+          {
+            "local_amount": 9444300000,
+            "local_currency": "SEK",
+            "eur_amount": 851797068.77,
+            "component_code": "investment_outlays",
+            "component_kind": "capital",
+            "share_of_headline_pct": 12.6
+          }
+        ],
+        "data_completeness": "partial"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/stockholm-budget-2026.pdf",
         "sha256": "df1c2a66aa0279cf03c9c6aab7656abd03e7ed5feb5ba9cb0da9f95ec81c751c",
@@ -1400,6 +2495,7 @@
       "measure": "costs_plus_fixed_asset_acquisition",
       "scope": "City of Tallinn initial adopted budget",
       "components": {
+        "revenue": "1173602267",
         "costs_total": "1138275809",
         "fixed_asset_acquisition_and_renovation": "162904612"
       },
@@ -1414,6 +2510,47 @@
         "eur_amount": 1301180421,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 1173602267,
+          "local_currency": "EUR",
+          "eur_amount": 1173602267
+        },
+        "expenditure": {
+          "local_amount": 1301180421,
+          "local_currency": "EUR",
+          "eur_amount": 1301180421
+        },
+        "balance": {
+          "local_amount": 35326458,
+          "local_currency": "EUR",
+          "eur_amount": 35326458
+        },
+        "balance_classification": "surplus",
+        "balance_basis": "official_operating_result_before_depreciation",
+        "balance_note_en": "The initial budget projects a EUR 35.33 million operating result from EUR 1.174 billion of revenue and EUR 1.138 billion of costs. After EUR 55.30 million of depreciation, the full-year accounting result is a EUR 19.97 million loss; the displayed expenditure headline additionally includes fixed-asset acquisition.",
+        "balance_note_cs": "Počáteční rozpočet plánuje provozní výsledek 35,33 mil. EUR z příjmů 1,174 mld. EUR a nákladů 1,138 mld. EUR. Po odpisech 55,30 mil. EUR činí celoroční účetní výsledek ztrátu 19,97 mil. EUR; zobrazený hlavní údaj výdajů navíc zahrnuje pořízení majetku.",
+        "balance_margin_pct": 3.01,
+        "components": [
+          {
+            "local_amount": 1138275809,
+            "local_currency": "EUR",
+            "eur_amount": 1138275809,
+            "component_code": "costs_total",
+            "component_kind": "other",
+            "share_of_headline_pct": 87.48
+          },
+          {
+            "local_amount": 162904612,
+            "local_currency": "EUR",
+            "eur_amount": 162904612,
+            "component_code": "fixed_asset_acquisition_and_renovation",
+            "component_kind": "capital",
+            "share_of_headline_pct": 12.52
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/tallinn-consolidated-budget-2026.pdf",
@@ -1462,6 +2599,14 @@
       "amount_precision": "exact",
       "measure": "operating_expenditure",
       "scope": "Valletta Local Council",
+      "components": {
+        "revenue": "1325700",
+        "surplus": "107696",
+        "personnel_expenditure": "279000",
+        "operations_and_maintenance_expenditure": "751500",
+        "administration_expenditure": "110464",
+        "depreciation_expenditure": "77040"
+      },
       "notes": "The official 2026 upload is incomplete (cover and contents only), so the latest complete official budget is used. The 2025 expenditure includes depreciation; capital projects are described separately.",
       "source_name": "Valletta Local Council — Annual Budget 2025",
       "landing_page_url": "https://beltvallettalc.gov.mt/en/annual-budgets/",
@@ -1481,6 +2626,63 @@
         "eur_amount": 1218004,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 1325700,
+          "local_currency": "EUR",
+          "eur_amount": 1325700
+        },
+        "expenditure": {
+          "local_amount": 1218004,
+          "local_currency": "EUR",
+          "eur_amount": 1218004
+        },
+        "balance": {
+          "local_amount": 107696,
+          "local_currency": "EUR",
+          "eur_amount": 107696
+        },
+        "balance_classification": "surplus",
+        "balance_basis": "budgeted_income_minus_expenditure",
+        "balance_note_en": "The latest complete official budget projects a EUR 107,696 surplus for 2025.",
+        "balance_note_cs": "Nejnovější úplný oficiální rozpočet očekává pro rok 2025 přebytek 107 696 EUR.",
+        "balance_margin_pct": 8.12,
+        "components": [
+          {
+            "local_amount": 279000,
+            "local_currency": "EUR",
+            "eur_amount": 279000,
+            "component_code": "personnel_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 22.91
+          },
+          {
+            "local_amount": 751500,
+            "local_currency": "EUR",
+            "eur_amount": 751500,
+            "component_code": "operations_and_maintenance_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 61.7
+          },
+          {
+            "local_amount": 110464,
+            "local_currency": "EUR",
+            "eur_amount": 110464,
+            "component_code": "administration_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 9.07
+          },
+          {
+            "local_amount": 77040,
+            "local_currency": "EUR",
+            "eur_amount": 77040,
+            "component_code": "depreciation_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 6.33
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/valletta-annual-budget-2025.md",
@@ -1530,11 +2732,13 @@
       "measure": "financing_budget_total_outflows",
       "scope": "City and State of Vienna",
       "components": {
+        "revenue": "20078642000",
+        "accrual_expenditure": "20396923000",
         "operating_outflows": "18591393000",
         "investing_outflows": "2196238000",
         "financing_outflows": "1348029000"
       },
-      "notes": "Cash/financing budget total including financing outflows.",
+      "notes": "Cash/financing budget total including financing outflows; the fiscal result comes from the separate accrual budget.",
       "source_name": "Stadt Wien — Voranschlag 2026",
       "landing_page_url": "https://www.wien.gv.at/politik/voranschlag-budget",
       "download_url": "https://www.digital.wienbibliothek.at/wbrup/download/pdf/5710598",
@@ -1545,6 +2749,63 @@
         "eur_amount": 22135660000,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 20078642000,
+          "local_currency": "EUR",
+          "eur_amount": 20078642000
+        },
+        "expenditure": {
+          "local_amount": 22135660000,
+          "local_currency": "EUR",
+          "eur_amount": 22135660000
+        },
+        "balance": {
+          "local_amount": -318281000,
+          "local_currency": "EUR",
+          "eur_amount": -318281000
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "official_accrual_net_result_before_reserves",
+        "balance_note_en": "Vienna's accrual result budget reports EUR 20.08 billion of income and EUR 20.40 billion of expense, a EUR 318.28 million net deficit before reserves (EUR 214.65 million after reserves). The displayed EUR 22.14 billion headline is the separate cash-financing budget's total outflows.",
+        "balance_note_cs": "Vídeňský akruální výsledkový rozpočet uvádí příjmy 20,08 mld. EUR a náklady 20,40 mld. EUR, tedy čistý schodek 318,28 mil. EUR před rezervami (214,65 mil. EUR po rezervách). Zobrazený hlavní údaj 22,14 mld. EUR představuje samostatné celkové výdaje hotovostního finančního rozpočtu.",
+        "balance_margin_pct": -1.59,
+        "components": [
+          {
+            "local_amount": 20396923000,
+            "local_currency": "EUR",
+            "eur_amount": 20396923000,
+            "component_code": "accrual_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 92.15
+          },
+          {
+            "local_amount": 18591393000,
+            "local_currency": "EUR",
+            "eur_amount": 18591393000,
+            "component_code": "operating_outflows",
+            "component_kind": "operating",
+            "share_of_headline_pct": 83.99
+          },
+          {
+            "local_amount": 2196238000,
+            "local_currency": "EUR",
+            "eur_amount": 2196238000,
+            "component_code": "investing_outflows",
+            "component_kind": "other",
+            "share_of_headline_pct": 9.92
+          },
+          {
+            "local_amount": 1348029000,
+            "local_currency": "EUR",
+            "eur_amount": 1348029000,
+            "component_code": "financing_outflows",
+            "component_kind": "financing",
+            "share_of_headline_pct": 6.09
+          }
+        ],
+        "data_completeness": "detailed"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/vienna-budget-2026.pdf",
@@ -1614,6 +2875,22 @@
         "eur_amount": 1749000000,
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 1749000000,
+          "local_currency": "EUR",
+          "eur_amount": 1749000000
+        },
+        "balance": null,
+        "balance_classification": "unavailable",
+        "balance_basis": "not_available",
+        "balance_note_en": "The current source extraction does not contain a revenue total, so a defensible budget balance cannot be calculated.",
+        "balance_note_cs": "Současná extrakce zdroje neobsahuje celkové příjmy, proto nelze spolehlivě vypočítat saldo rozpočtu.",
+        "balance_margin_pct": null,
+        "components": [],
+        "data_completeness": "headline_only"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/vilnius-approved-budget-2026.source-snapshot.json",
@@ -1691,6 +2968,47 @@
         "eur_conversion_rate": 4.3188,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 28497182679,
+          "local_currency": "PLN",
+          "eur_amount": 6598402954.29
+        },
+        "expenditure": {
+          "local_amount": 32196334186,
+          "local_currency": "PLN",
+          "eur_amount": 7454925948.41
+        },
+        "balance": {
+          "local_amount": -3699151507,
+          "local_currency": "PLN",
+          "eur_amount": -856522994.12
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "reported_deficit",
+        "balance_note_en": "Calculated as reported revenue minus the displayed expenditure measure.",
+        "balance_note_cs": "Výpočet používá vykázané příjmy minus zobrazenou hodnotu výdajů.",
+        "balance_margin_pct": -12.98,
+        "components": [
+          {
+            "local_amount": 28241193783,
+            "local_currency": "PLN",
+            "eur_amount": 6539129800.64,
+            "component_code": "current_expenditure",
+            "component_kind": "operating",
+            "share_of_headline_pct": 87.72
+          },
+          {
+            "local_amount": 3955140403,
+            "local_currency": "PLN",
+            "eur_amount": 915796147.77,
+            "component_code": "capital_expenditure",
+            "component_kind": "capital",
+            "share_of_headline_pct": 12.28
+          }
+        ],
+        "data_completeness": "detailed"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/warsaw-budget-2026.source-snapshot.json",
         "sha256": "4d05ccca4f79d3384a5cc270bd1761c35a17d1858cfb4293c9ad7fffde2e6a03",
@@ -1756,6 +3074,30 @@
         "eur_conversion_rate": 1,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
       },
+      "fiscal_details": {
+        "revenue": {
+          "local_amount": 2931200000,
+          "local_currency": "EUR",
+          "eur_amount": 2931200000
+        },
+        "expenditure": {
+          "local_amount": 3077200000,
+          "local_currency": "EUR",
+          "eur_amount": 3077200000
+        },
+        "balance": {
+          "local_amount": -146000000,
+          "local_currency": "EUR",
+          "eur_amount": -146000000
+        },
+        "balance_classification": "deficit",
+        "balance_basis": "revenue_minus_headline_expenditure",
+        "balance_note_en": "Calculated as reported revenue minus the displayed expenditure measure.",
+        "balance_note_cs": "Výpočet používá vykázané příjmy minus zobrazenou hodnotu výdajů.",
+        "balance_margin_pct": -4.98,
+        "components": [],
+        "data_completeness": "partial"
+      },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/zagreb-adopted-budget-2026.pdf",
         "sha256": "9f905848c26c97000306f0dc32d1d638778b58b7f4f51eff7461c4e9ba784365",
@@ -1815,6 +3157,22 @@
         "eur_amount": 24146981627.3,
         "eur_conversion_rate": 0.85725,
         "eur_conversion_formula": "local_amount / local_currency_units_per_eur"
+      },
+      "fiscal_details": {
+        "revenue": null,
+        "expenditure": {
+          "local_amount": 20700000000,
+          "local_currency": "GBP",
+          "eur_amount": 24146981627.3
+        },
+        "balance": null,
+        "balance_classification": "unavailable",
+        "balance_basis": "not_available",
+        "balance_note_en": "The current source extraction does not contain a revenue total, so a defensible budget balance cannot be calculated.",
+        "balance_note_cs": "Současná extrakce zdroje neobsahuje celkové příjmy, proto nelze spolehlivě vypočítat saldo rozpočtu.",
+        "balance_margin_pct": null,
+        "components": [],
+        "data_completeness": "headline_only"
       },
       "source_archive": {
         "file": "data/source_cache/eu_capital_budgets_2026/london-gla-consolidated-budget-2026-27.pdf",

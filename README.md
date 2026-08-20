@@ -18,8 +18,8 @@ Potom otevřete <http://localhost:3000/>.
 - `country.html?code=CZE&lang=cs` — sdílená šablona detailu každé země
 - `country.js` — dlouhodobé řady, národní specifika, zdroje a CS/EN překlady
 - `eu-capitals.html` — rozpočty 27 hlavních měst EU a Londýna s přepínačem EUR / místní měna
-- `eu-capitals.js` a `eu-capitals.css` — filtry, městský detail, obyvatelé a cestovní ruch
-- `data/eu-capital-budgets.v1.json` — auditovatelný zdroj městských rozpočtů a benchmarků
+- `eu-capitals.js` a `eu-capitals.css` — filtry, fiskální profily, rozpočtová salda, struktura výdajů/příjmů, obyvatelé a cestovní ruch
+- `data/eu-capital-budgets.v1.json` — auditovatelný zdroj městských rozpočtů, komponent, sald a benchmarků
 - `styles-v2.css` — vizuální systém homepage a detailů zemí
 - `cz/obce/` a `cz/kraje/` — filtrovatelné české územní benchmarky
 - `cz/obce/<slug>/` a `cz/kraje/<slug>/` — indexovatelné detailní profily
