@@ -35,3 +35,17 @@ Celý obsah složky lze nahrát na libovolný statický hosting; build není pot
 České územní stránky se po aktualizaci `data/benchmark.v1.json` regenerují
 skriptem `../scripts/build_czech_site.py`. Proměnná `PUBLIC_ORIGIN` při
 sestavení určuje produkční canonical URL a adresu sitemap.
+
+## Produkční nasazení
+
+Tato složka je samostatný kanonický Git projekt. Každý push do hlavní větve
+spustí validaci, vytvoří neměnný kontejner označený Git commitem a nasadí jej
+do samostatné Cloud Run služby `czbudget-public` v projektu
+`czbudget-janrezab`. Služba `czbudget-web` ani projekt Riverdata nejsou součástí
+tohoto deploymentu.
+
+Lokální kontrola před commitem:
+
+```bash
+node scripts/validate-site.mjs
+```

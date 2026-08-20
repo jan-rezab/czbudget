@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00254657",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00254657",
     "name": "Statutární město Karlovy Vary",
     "short_name": "Karlovy Vary",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 3,
-      "grade": "B",
-      "score": 3.79
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Karlovarský kraj",
+      "district_name": "Karlovy Vary",
+      "municipality_code": 554961
     },
     "amounts": {
-      "revenue_approved": 1575230000,
+      "revenue_approved": 1575230000.0,
       "revenue_adjusted": 1791522676.87,
-      "revenue_actual": 1934787542.5200005,
-      "expense_approved": 2434685000,
-      "expense_adjusted": 3806299586.9999995,
+      "revenue_actual": 1934787542.52,
+      "expense_approved": 2434685000.0,
+      "expense_adjusted": 3806299587.0,
       "expense_actual": 1828392781.63,
-      "financing_actual": -106394760.89,
-      "cash_current": 1280288406.49,
-      "cash_previous": 1235739515.19,
-      "tax_revenue": 1478715452.9900002,
-      "nontax_revenue": 182301036.60999998,
+      "tax_revenue": 1478715452.99,
+      "nontax_revenue": 182301036.61,
       "capital_revenue": 21545464.05,
       "transfer_revenue": 252225588.87,
       "current_expense": 1432979996.53,
-      "capital_expense": 395412785.1000001,
-      "budget_balance": 106394760.89000034
+      "capital_expense": 395412785.1,
+      "budget_balance": 106394760.89,
+      "cash_current": 1280288406.49,
+      "cash_previous": 1235739515.19
     },
     "ratios": {
-      "revenue_execution": 1.079968,
-      "expense_execution": 0.48036,
-      "cash_to_expense": 0.700226,
-      "capital_expense_share": 0.216262,
-      "transfer_revenue_share": 0.130363,
-      "tax_revenue_share": 0.764278,
-      "balance_to_revenue": 0.05499,
-      "cash_yoy": 0.03605
+      "revenue_execution": 1.07996821,
+      "expense_execution": 0.48035966,
+      "balance_to_revenue": 0.05499041,
+      "cash_to_expense": 0.70022613,
+      "cash_yoy": 0.03605039,
+      "capital_expense_share": 0.2162625,
+      "transfer_revenue_share": 0.13036346
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00254657/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00254657"
     },
-    "entity_id": "CZ:00254657",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "karlovy-vary",
-      "municipality_path": "/cz/obce/karlovy-vary/",
-      "region_path": null
+      "path": "/cz/obce/karlovy-vary/"
     }
   }
 }

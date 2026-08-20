@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00297488",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00297488",
     "name": "Statutární město Havířov",
     "short_name": "Havířov",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 1,
-      "grade": "B",
-      "score": 3.19
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Moravskoslezský kraj",
+      "district_name": "Karviná",
+      "municipality_code": 555088
     },
     "amounts": {
-      "revenue_approved": 2072603000,
-      "revenue_adjusted": 2333236094,
+      "revenue_approved": 2072603000.0,
+      "revenue_adjusted": 2333236094.0,
       "revenue_actual": 2365363257.74,
-      "expense_approved": 2845325000,
-      "expense_adjusted": 3433777432,
+      "expense_approved": 2845325000.0,
+      "expense_adjusted": 3433777432.0,
       "expense_actual": 2635842316.97,
-      "financing_actual": 270479059.23,
-      "cash_current": 1176281714.16,
-      "cash_previous": 1473774064.4399998,
       "tax_revenue": 1731699796.22,
       "nontax_revenue": 146861704.19,
       "capital_revenue": 1990189.5,
-      "transfer_revenue": 484811567.83000004,
-      "current_expense": 2022896181.7799997,
+      "transfer_revenue": 484811567.83,
+      "current_expense": 2022896181.78,
       "capital_expense": 612946135.19,
-      "budget_balance": -270479059.23
+      "budget_balance": -270479059.23,
+      "cash_current": 1176281714.16,
+      "cash_previous": 1473774064.44
     },
     "ratios": {
-      "revenue_execution": 1.013769,
-      "expense_execution": 0.767622,
-      "cash_to_expense": 0.446264,
-      "capital_expense_share": 0.232543,
-      "transfer_revenue_share": 0.204963,
-      "tax_revenue_share": 0.732107,
-      "balance_to_revenue": -0.11435,
-      "cash_yoy": -0.201858
+      "revenue_execution": 1.01376936,
+      "expense_execution": 0.76762177,
+      "balance_to_revenue": -0.1143499,
+      "cash_to_expense": 0.44626407,
+      "cash_yoy": -0.2018575,
+      "capital_expense_share": 0.23254279,
+      "transfer_revenue_share": 0.20496284
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00297488/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00297488"
     },
-    "entity_id": "CZ:00297488",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "havirov",
-      "municipality_path": "/cz/obce/havirov/",
-      "region_path": null
+      "path": "/cz/obce/havirov/"
     }
   }
 }

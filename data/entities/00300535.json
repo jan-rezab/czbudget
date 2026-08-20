@@ -1,65 +1,65 @@
 {
-  "schema_version": "2.0.0",
-  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T18:47:51.503605+00:00",
   "period": {
     "fiscal_year": 2025,
-    "as_of_date": "2025-12-31",
-    "reporting_status": "actual"
+    "period_code": "2512",
+    "as_of": "2025-12-31"
   },
-  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "definitions": {
+    "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
+    "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací."
+  },
   "entity": {
+    "entity_id": "CZ:00300535",
     "country_code": "CZ",
+    "currency_code": "CZK",
+    "fiscal_year": 2025,
     "national_id": "00300535",
     "name": "Statutární město Opava",
     "short_name": "Opava",
-    "fiscal_year": 2025,
-    "currency_code": "CZK",
-    "risk": {
-      "rank": 20,
-      "grade": "C",
-      "score": 6.29
+    "entity_type": "statutory_city",
+    "administrative_levels": [
+      "municipality"
+    ],
+    "territory": {
+      "region_name": "Moravskoslezský kraj",
+      "district_name": "Opava",
+      "municipality_code": 505927
     },
     "amounts": {
-      "revenue_approved": 1712561435,
+      "revenue_approved": 1712561435.0,
       "revenue_adjusted": 2164145085.4,
       "revenue_actual": 2338212535.4,
-      "expense_approved": 1648608735,
-      "expense_adjusted": 3602286873.0499988,
-      "expense_actual": 2232975917.1499996,
-      "financing_actual": -105236618.25,
-      "cash_current": 1359572077.44,
-      "cash_previous": 1301371256.19,
+      "expense_approved": 1648608735.0,
+      "expense_adjusted": 3602286873.05,
+      "expense_actual": 2232975917.15,
       "tax_revenue": 1520013989.93,
       "nontax_revenue": 287663711.21,
       "capital_revenue": 46345183.4,
       "transfer_revenue": 484189650.86,
-      "current_expense": 1750949199.3999996,
-      "capital_expense": 482026717.7499999,
-      "budget_balance": 105236618.25000048
+      "current_expense": 1750949199.4,
+      "capital_expense": 482026717.75,
+      "budget_balance": 105236618.25,
+      "cash_current": 1359572077.44,
+      "cash_previous": 1301371256.19
     },
     "ratios": {
-      "revenue_execution": 1.080432,
-      "expense_execution": 0.619877,
-      "cash_to_expense": 0.608861,
-      "capital_expense_share": 0.215867,
-      "transfer_revenue_share": 0.207077,
-      "tax_revenue_share": 0.650075,
-      "balance_to_revenue": 0.045007,
-      "cash_yoy": 0.044723
+      "revenue_execution": 1.08043243,
+      "expense_execution": 0.61987732,
+      "balance_to_revenue": 0.04500729,
+      "cash_to_expense": 0.60886106,
+      "cash_yoy": 0.04472269,
+      "capital_expense_share": 0.21586741,
+      "transfer_revenue_share": 0.20707683
     },
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00300535/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00300535"
     },
-    "entity_id": "CZ:00300535",
-    "administrative_levels": [
-      "municipality"
-    ],
-    "entity_type": "statutory_city",
     "seo": {
       "slug": "opava",
-      "municipality_path": "/cz/obce/opava/",
-      "region_path": null
+      "path": "/cz/obce/opava/"
     }
   }
 }

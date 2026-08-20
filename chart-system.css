@@ -1,0 +1,353 @@
+:root {
+  --chart-ink: #171918;
+  --chart-paper: #faf7ef;
+  --chart-green: #a8b63f;
+  --chart-green-dark: #68711f;
+  --chart-red: #c93237;
+  --chart-neutral: #8b8d83;
+  --chart-grid: #d2ccc1;
+  --chart-muted: #6e716d;
+  --chart-font: Arial, Helvetica, sans-serif;
+}
+
+/* One visual grammar for line, column and horizontal-bar charts. */
+.svg-chart,
+#country-chart,
+.home-hero-chart,
+.rank-list,
+.macro-grid {
+  font-family: var(--chart-font);
+}
+
+.svg-chart {
+  min-height: 0;
+  padding: 12px 14px 0;
+}
+
+.svg-chart svg,
+#country-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--chart-font);
+  overflow: visible;
+}
+
+.svg-chart::after,
+.chart-source {
+  display: block;
+  margin: 0;
+  padding: 9px 4px 11px;
+  border-top: 1px solid var(--chart-grid);
+  color: var(--chart-muted);
+  font: 9px/1.35 var(--chart-font);
+  letter-spacing: .01em;
+}
+
+.svg-chart::after {
+  content: attr(data-source);
+}
+
+.svg-chart[data-source=""]::after {
+  display: none;
+}
+
+.dark-chart::after {
+  border-top-color: #ffffff24;
+  color: #b6b6ac;
+}
+
+.home-hero-chart .chart-source {
+  margin-top: 12px;
+  padding-inline: 0;
+  border-top-color: #ffffff24;
+  color: #b6b6ac;
+}
+
+.ranking-panel > .chart-source,
+.comparison-panel > .chart-source {
+  margin: 0 18px;
+}
+
+.chart-grid,
+.grid-line {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.dark-chart .chart-grid {
+  stroke: #ffffff20;
+}
+
+.chart-axis,
+.axis-label,
+.chart-axis-title,
+.chart-end-label {
+  fill: var(--chart-muted);
+  font-family: var(--chart-font);
+}
+
+.chart-axis,
+.axis-label {
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.chart-axis-title {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.chart-end-label {
+  font-size: 10px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--chart-paper);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.dark-chart .chart-axis,
+.dark-chart .chart-axis-title,
+.dark-chart .chart-end-label {
+  fill: #c2c2b8;
+  stroke: transparent;
+}
+
+.svg-chart path[fill="none"],
+.detail-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.svg-chart rect {
+  shape-rendering: crispEdges;
+}
+
+.chart-year-guide {
+  stroke: var(--chart-ink);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.dark-chart .chart-year-guide {
+  stroke: #ffffffaa;
+}
+
+.chart-legend,
+.stack-legend {
+  min-height: 38px;
+  padding: 9px 14px 4px;
+  gap: 12px;
+  font-family: var(--chart-font);
+}
+
+.chart-legend span,
+.stack-legend span {
+  color: var(--chart-muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.chart-legend i,
+.stack-legend i {
+  width: 13px;
+  height: 5px;
+  border-radius: 0;
+}
+
+.panel-head,
+.model-panel > header,
+.country-chart-panel .chart-tabs {
+  border-top: 4px solid var(--chart-green);
+}
+
+.panel-head h3,
+.model-panel header h3 {
+  font-family: var(--chart-font);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.panel-index,
+.model-panel header span {
+  border-radius: 0;
+}
+
+/* Horizontal bars use the same thickness, track and value alignment. */
+.hero-bar,
+.rank-row {
+  font-family: var(--chart-font);
+}
+
+.hero-bar {
+  min-height: 57px;
+}
+
+.hero-bar > i,
+.rank-track,
+.macro-grid i {
+  height: 8px;
+  background: #ffffff13;
+}
+
+.rank-track,
+.macro-grid i {
+  background: #e2ddd3;
+}
+
+.home-hero-chart .hero-bar > i b,
+.rank-track i,
+.macro-grid i b {
+  display: block;
+  height: 100%;
+  background: var(--chart-green);
+}
+
+.hero-bar[data-country="CZE"] > i b {
+  background: var(--chart-red);
+}
+
+.hero-bar strong,
+.hero-bar em,
+.rank-row strong,
+.rank-value {
+  font-family: var(--chart-font);
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-row {
+  min-height: 48px;
+}
+
+.rank-row.active .rank-track i {
+  background: var(--chart-red);
+}
+
+.macro-grid article {
+  min-height: 165px;
+}
+
+.macro-grid strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Country time series: clean line, no decorative area fill. */
+.detail-area {
+  display: none;
+}
+
+.detail-line {
+  stroke: var(--chart-green);
+  stroke-width: 3;
+}
+
+#country-chart circle {
+  fill: var(--chart-paper);
+  stroke: var(--chart-green);
+  stroke-width: 2;
+}
+
+#country-chart .chart-source {
+  margin: 0 18px;
+}
+
+#country-chart .chart-current {
+  top: 22px;
+  right: 28px;
+}
+
+.chart-tooltip {
+  font-family: var(--chart-font);
+  font-variant-numeric: tabular-nums;
+}
+
+.country-chart-panel {
+  box-shadow: none;
+}
+
+.chart-tabs button.active {
+  background: var(--chart-green);
+  color: var(--chart-ink);
+}
+
+@media (max-width: 720px) {
+  .chart-axis,
+  .axis-label,
+  .chart-end-label {
+    font-size: 9px;
+  }
+
+  .svg-chart {
+    padding-inline: 5px;
+  }
+}
+
+/* Editorial chart layouts: two analytical panels per row, direct labels, visible sources. */
+.country-chart-grid,
+.home-macro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.country-chart-panel {
+  min-width: 0;
+  padding: 0 18px 10px;
+  border: 0;
+  border-top: 4px solid var(--chart-ink);
+  background: var(--chart-paper);
+}
+
+.country-chart-panel:nth-child(even) { border-top-color: var(--chart-red); }
+.country-chart-panel h3 { margin: 14px 0 0; font: 600 20px/1.1 Georgia, serif; }
+.country-chart-panel > div[id$="chart"] { padding: 10px 0 0; }
+.country-chart-panel svg { display:block; width:100%; height:auto; overflow:visible; }
+.country-chart-panel .chart-source { margin-top: 2px; padding-inline: 0; }
+.country-chart-panel .chart-tabs { margin-inline: -18px; padding-inline: 0; border-top: 0; }
+.chart-label { display:flex; justify-content:space-between; padding-top:12px; color:var(--chart-muted); font:700 8px/1 monospace; letter-spacing:.08em; }
+.zero-line { stroke:var(--chart-ink); stroke-width:1.2; }
+
+.currency-toggle { display:flex; align-items:center; width:max-content; gap:0; margin-top:14px; border:1px solid var(--line); background:var(--white); }
+.currency-toggle > span { padding:0 11px; color:var(--muted); font:700 7px/1 monospace; text-transform:uppercase; }
+.currency-toggle button { min-width:62px; padding:9px 12px; border:0; border-left:1px solid var(--line); background:transparent; color:var(--ink); font:700 8px/1 monospace; }
+.currency-toggle button.active { background:var(--chart-ink); color:#fff; }
+#snapshot small { color:#aaa9a1; font:8px/1.2 monospace; }
+.country-kpis { grid-template-columns:repeat(4,1fr); }
+.specific-grid a { display:inline-block; margin-top:18px; color:var(--chart-green); font:700 9px/1.2 Arial,sans-serif; }
+
+.ministry-source-card { margin-top:14px; padding:24px; display:flex; justify-content:space-between; align-items:center; gap:24px; border-top:4px solid var(--chart-red); background:var(--chart-ink); color:#fff; text-decoration:none; }
+.ministry-source-card span { color:#aaa9a1; font:700 8px/1 monospace; }
+.ministry-source-card h3 { margin:10px 0 7px; font:500 27px/1 Georgia,serif; }
+.ministry-source-card p { margin:0; color:#aaa9a1; font:9px/1.4 monospace; }
+.ministry-source-card strong { color:var(--chart-green); font:700 9px/1.2 Arial,sans-serif; }
+
+.model-grid .model-panel.model-wide { grid-column:auto; }
+.budget-header-tools { justify-self:end; display:flex; align-items:center; gap:14px; }
+.budget-header-tools .lang-switch { display:flex; }
+
+.home-macro-section { padding:80px 4vw 90px; border-bottom:1px solid var(--line); background:var(--paper); }
+.home-macro-panel { min-width:0; padding:18px; border-top:4px solid var(--chart-ink); background:var(--white); }
+.home-macro-panel:nth-child(2),.home-macro-panel:nth-child(4){ border-top-color:var(--chart-red); }
+.home-macro-panel header { display:flex; justify-content:space-between; gap:12px; }
+.home-macro-panel header span { color:var(--muted); font:700 8px/1 monospace; text-transform:uppercase; }
+.home-macro-panel h3 { margin:12px 0 4px; font:500 23px/1.05 Georgia,serif; }
+.home-macro-panel p { margin:0 0 12px; color:var(--muted); font-size:9px; line-height:1.45; }
+.home-macro-chart .macro-row { display:grid; grid-template-columns:38px 1fr 76px; gap:9px; align-items:center; min-height:31px; border-top:1px solid var(--chart-grid); font:8px/1 monospace; }
+.home-macro-chart .macro-row i { height:7px; background:#e2ddd3; }
+.home-macro-chart .macro-row i b { display:block; height:100%; background:var(--chart-green); }
+.home-macro-panel:nth-child(even) .macro-row i b { background:var(--chart-red); }
+.home-macro-chart .macro-row strong { text-align:right; font-variant-numeric:tabular-nums; }
+
+@media (max-width: 820px) {
+  .country-chart-grid,.home-macro-grid { grid-template-columns:1fr; }
+  .country-kpis { grid-template-columns:1fr 1fr; }
+  .ministry-source-card { align-items:flex-start; flex-direction:column; }
+}

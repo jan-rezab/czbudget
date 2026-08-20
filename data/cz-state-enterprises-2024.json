@@ -1,51 +1,1471 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "3.0.0",
   "country_code": "CZ",
   "currency_code": "CZK",
   "year": 2024,
-  "units": "mil. Kč",
+  "units": {
+    "financial": "mil. Kč",
+    "employees": "persons"
+  },
   "scope": "38 strategických společností a organizací ovládaných státem podle Ministerstva financí ČR",
+  "ranking_definition": {
+    "all_entities": "všech 38 individuálních karet seřazených podle výsledku hospodaření po zdanění",
+    "most_profitable": "20 nejvyšších individuálních výsledků hospodaření po zdanění",
+    "weakest_result": "20 nejnižších individuálních výsledků hospodaření; pouze záporné hodnoty jsou ztráty",
+    "largest": "20 nejvyšších hodnot aktiv celkem"
+  },
   "summary": {
     "entity_count": 38,
-    "net_result_total": 46551,
+    "loss_making_count": 6,
+    "positive_net_result_sum": 49166,
+    "negative_net_result_sum": -3105,
+    "negative_net_result_absolute_sum": 3105,
+    "turnover_ranked_entities_sum": 689524,
+    "assets_ranked_entities_sum": 1358397,
+    "net_result_portfolio_reported": 46551,
+    "net_result_ranked_entities_sum": 46061,
     "budget_transfers_total": 29867,
-    "employees": 84308
+    "employees_portfolio_reported": 84308,
+    "employees_ranked_entities_sum": 83117,
+    "reconciliation_note": "Součet 38 individuálních karet se liší od souhrnného portfolia MF o 490 mil. Kč výsledku a 1 191 zaměstnanců; obě hodnoty jsou proto zveřejněny odděleně."
   },
-  "profit_rank": [
-    {"rank": 1, "name": "ČEZ", "legal_form": "a.s.", "state_share_pct": 69.78, "value": 19685, "note": "Individuální výsledek mateřské společnosti, nikoli konsolidovaná skupina."},
-    {"rank": 2, "name": "ČEPS", "legal_form": "a.s.", "state_share_pct": 100, "value": 7025, "note": "Provozovatel přenosové soustavy."},
-    {"rank": 3, "name": "Lesy České republiky", "legal_form": "s.p.", "state_share_pct": 100, "value": 4740, "note": "Státní podnik hospodařící v lesích ve vlastnictví státu."},
-    {"rank": 4, "name": "Ředitelství silnic a dálnic", "legal_form": "s.p.", "state_share_pct": 100, "value": 3917, "note": "Výsledek veřejné infrastrukturní organizace není běžný komerční benchmark."},
-    {"rank": 5, "name": "Letiště Praha", "legal_form": "a.s.", "state_share_pct": 100, "value": 2471, "note": "Provozovatel Letiště Václava Havla Praha."}
-  ],
-  "loss_rank": [
-    {"rank": 1, "name": "Správa železnic", "legal_form": "s.o.", "state_share_pct": 100, "value": -1677, "note": "Správa železniční infrastruktury je financována především přes SFDI."},
-    {"rank": 2, "name": "Česká pošta", "legal_form": "s.p.", "state_share_pct": 100, "value": -1249, "note": "Součástí poslání je poskytování univerzální poštovní služby."},
-    {"rank": 3, "name": "DIAMO", "legal_form": "s.p.", "state_share_pct": 100, "value": -120, "note": "Výsledek ovlivňují sanační práce a náklady na útlum těžby."},
-    {"rank": 4, "name": "Státní investiční a rozvojová společnost", "legal_form": "a.s.", "state_share_pct": 100, "value": -36, "note": "Společnost zahájila činnost v březnu 2024."},
-    {"rank": 5, "name": "Povodí Moravy", "legal_form": "s.p.", "state_share_pct": 100, "value": -14, "note": "Výsledek ovlivnila opatření související s povodněmi."}
+  "comparison_framework": {
+    "primary_peer_key": "classification.international_peer_group",
+    "classification_status": "working_classification",
+    "principle": "Porovnávat pouze subjekty se stejnou ekonomickou funkcí a oddělit komerční výkon od veřejné služby.",
+    "fair_metrics": [
+      "return_on_assets_pct",
+      "net_margin_pct",
+      "ebitda_margin_pct",
+      "debt_to_assets_pct",
+      "investment_to_assets_pct",
+      "asset_turnover",
+      "turnover_per_employee_mczk",
+      "net_result_per_employee_mczk"
+    ]
+  },
+  "entities": [
+    {
+      "name": "ČEZ, a. s.",
+      "source_page": 12,
+      "metrics": {
+        "ebitda": 83925,
+        "employees": 6698,
+        "owner_transfer": 19521,
+        "total_assets": 692641,
+        "fixed_assets": 490166,
+        "turnover": 191576,
+        "debt": 101058,
+        "investment": 22764,
+        "equity": 165800,
+        "net_result": 19685,
+        "women_employees": 1447,
+        "registered_capital": 53799
+      },
+      "ico": "45274649",
+      "classification": {
+        "sector_code": "energy",
+        "sector_name": "Energetika",
+        "role_code": "commercial",
+        "international_peer_group": "integrated_electric_utility",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.842,
+        "net_margin_pct": 10.275,
+        "ebitda_margin_pct": 43.808,
+        "debt_to_assets_pct": 14.59,
+        "investment_to_assets_pct": 3.287,
+        "asset_turnover": 0.277,
+        "turnover_per_employee_mczk": 28.602,
+        "net_result_per_employee_mczk": 2.939
+      }
+    },
+    {
+      "name": "Letiště Praha, a. s.",
+      "source_page": 14,
+      "metrics": {
+        "ebitda": 4332,
+        "employees": 2942,
+        "owner_transfer": 305,
+        "total_assets": 39880,
+        "fixed_assets": 33744,
+        "turnover": 9528,
+        "debt": 900,
+        "investment": 1289,
+        "equity": 35821,
+        "net_result": 2471,
+        "women_employees": 947,
+        "registered_capital": 27032
+      },
+      "ico": "28244532",
+      "classification": {
+        "sector_code": "transport",
+        "sector_name": "Doprava a infrastruktura",
+        "role_code": "commercial",
+        "international_peer_group": "airport_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 6.196,
+        "net_margin_pct": 25.934,
+        "ebitda_margin_pct": 45.466,
+        "debt_to_assets_pct": 2.257,
+        "investment_to_assets_pct": 3.232,
+        "asset_turnover": 0.239,
+        "turnover_per_employee_mczk": 3.239,
+        "net_result_per_employee_mczk": 0.84
+      }
+    },
+    {
+      "name": "MERO ČR, a.s.",
+      "source_page": 16,
+      "metrics": {
+        "ebitda": 1119,
+        "employees": 119,
+        "owner_transfer": 1330,
+        "total_assets": 10418,
+        "fixed_assets": 5802,
+        "turnover": 2627,
+        "debt": 0,
+        "investment": 318,
+        "equity": 9532,
+        "net_result": 682,
+        "women_employees": 30,
+        "registered_capital": 8431
+      },
+      "ico": "60193468",
+      "classification": {
+        "sector_code": "energy",
+        "sector_name": "Energetika",
+        "role_code": "network_operator",
+        "international_peer_group": "oil_pipeline_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 6.546,
+        "net_margin_pct": 25.961,
+        "ebitda_margin_pct": 42.596,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 3.052,
+        "asset_turnover": 0.252,
+        "turnover_per_employee_mczk": 22.076,
+        "net_result_per_employee_mczk": 5.731
+      }
+    },
+    {
+      "name": "Exportní garanční a pojišťovací společnost, a.s.",
+      "source_page": 18,
+      "metrics": {
+        "ebitda": 368,
+        "employees": 107,
+        "owner_transfer": 0,
+        "total_assets": 23184,
+        "fixed_assets": 536,
+        "turnover": 562,
+        "debt": 0,
+        "investment": 14,
+        "equity": 16085,
+        "net_result": 363,
+        "women_employees": 56,
+        "registered_capital": 6114
+      },
+      "ico": "45279314",
+      "classification": {
+        "sector_code": "finance",
+        "sector_name": "Finance a rozvoj",
+        "role_code": "policy_finance",
+        "international_peer_group": "export_credit_agency",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 1.566,
+        "net_margin_pct": 64.591,
+        "ebitda_margin_pct": 65.48,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 0.06,
+        "asset_turnover": 0.024,
+        "turnover_per_employee_mczk": 5.252,
+        "net_result_per_employee_mczk": 3.393
+      }
+    },
+    {
+      "name": "ČEPRO, a.s.",
+      "source_page": 20,
+      "metrics": {
+        "ebitda": 3298,
+        "employees": 892,
+        "owner_transfer": 832,
+        "total_assets": 22147,
+        "fixed_assets": 8460,
+        "turnover": 76836,
+        "debt": 0,
+        "investment": 917,
+        "equity": 11843,
+        "net_result": 1779,
+        "women_employees": 176,
+        "registered_capital": 5661
+      },
+      "ico": "60193531",
+      "classification": {
+        "sector_code": "energy",
+        "sector_name": "Energetika",
+        "role_code": "commercial",
+        "international_peer_group": "fuel_storage_and_distribution",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 8.033,
+        "net_margin_pct": 2.315,
+        "ebitda_margin_pct": 4.292,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 4.141,
+        "asset_turnover": 3.469,
+        "turnover_per_employee_mczk": 86.139,
+        "net_result_per_employee_mczk": 1.994
+      }
+    },
+    {
+      "name": "Česká exportní banka, a.s.",
+      "source_page": 22,
+      "metrics": {
+        "ebitda": null,
+        "employees": 115,
+        "owner_transfer": 0,
+        "total_assets": 32355,
+        "fixed_assets": 71,
+        "turnover": 2155,
+        "debt": 22515,
+        "investment": 40,
+        "equity": 9840,
+        "net_result": 742,
+        "women_employees": 60,
+        "registered_capital": 5000
+      },
+      "ico": "63078333",
+      "classification": {
+        "sector_code": "finance",
+        "sector_name": "Finance a rozvoj",
+        "role_code": "policy_finance",
+        "international_peer_group": "export_import_bank",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.293,
+        "net_margin_pct": 34.432,
+        "ebitda_margin_pct": null,
+        "debt_to_assets_pct": 69.587,
+        "investment_to_assets_pct": 0.124,
+        "asset_turnover": 0.067,
+        "turnover_per_employee_mczk": 18.739,
+        "net_result_per_employee_mczk": 6.452
+      }
+    },
+    {
+      "name": "Kongresové centrum Praha, a.s.",
+      "source_page": 24,
+      "metrics": {
+        "ebitda": 184,
+        "employees": 239,
+        "owner_transfer": 0,
+        "total_assets": 3724,
+        "fixed_assets": 2551,
+        "turnover": 671,
+        "debt": 0,
+        "investment": 45,
+        "equity": 3573,
+        "net_result": 94,
+        "women_employees": 78,
+        "registered_capital": 3680
+      },
+      "ico": "63080249",
+      "classification": {
+        "sector_code": "real_estate_tourism",
+        "sector_name": "Reality a cestovní ruch",
+        "role_code": "commercial",
+        "international_peer_group": "convention_venue_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.524,
+        "net_margin_pct": 14.009,
+        "ebitda_margin_pct": 27.422,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 1.208,
+        "asset_turnover": 0.18,
+        "turnover_per_employee_mczk": 2.808,
+        "net_result_per_employee_mczk": 0.393
+      }
+    },
+    {
+      "name": "PRISKO a.s.",
+      "source_page": 26,
+      "metrics": {
+        "ebitda": 2022,
+        "employees": 3,
+        "owner_transfer": 1826,
+        "total_assets": 4248,
+        "fixed_assets": 2109,
+        "turnover": 2039,
+        "debt": 0,
+        "investment": 0,
+        "equity": 4241,
+        "net_result": 2015,
+        "women_employees": 2,
+        "registered_capital": 2068
+      },
+      "ico": "46355901",
+      "classification": {
+        "sector_code": "finance",
+        "sector_name": "Finance a rozvoj",
+        "role_code": "asset_management",
+        "international_peer_group": "state_asset_holding",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 47.434,
+        "net_margin_pct": 98.823,
+        "ebitda_margin_pct": 99.166,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 0.0,
+        "asset_turnover": 0.48,
+        "turnover_per_employee_mczk": 679.667,
+        "net_result_per_employee_mczk": 671.667
+      }
+    },
+    {
+      "name": "Státní tiskárna cenin, s. p.",
+      "source_page": 28,
+      "metrics": {
+        "ebitda": 526,
+        "employees": 359,
+        "owner_transfer": 0,
+        "total_assets": 3680,
+        "fixed_assets": 1334,
+        "turnover": 1642,
+        "debt": 0,
+        "investment": 52,
+        "equity": 3424,
+        "net_result": 340,
+        "women_employees": 158,
+        "registered_capital": 500
+      },
+      "ico": "00001279",
+      "classification": {
+        "sector_code": "public_services",
+        "sector_name": "Digitální a veřejné služby",
+        "role_code": "strategic_security",
+        "international_peer_group": "secure_document_producer",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 9.239,
+        "net_margin_pct": 20.706,
+        "ebitda_margin_pct": 32.034,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 1.413,
+        "asset_turnover": 0.446,
+        "turnover_per_employee_mczk": 4.574,
+        "net_result_per_employee_mczk": 0.947
+      }
+    },
+    {
+      "name": "Státní pokladna Centrum sdílených služeb, s. p.",
+      "source_page": 30,
+      "metrics": {
+        "ebitda": 107,
+        "employees": 238,
+        "owner_transfer": 0,
+        "total_assets": 1953,
+        "fixed_assets": 1058,
+        "turnover": 756,
+        "debt": 0,
+        "investment": 86,
+        "equity": 1791,
+        "net_result": 7,
+        "women_employees": 65,
+        "registered_capital": 763
+      },
+      "ico": "03630919",
+      "classification": {
+        "sector_code": "public_services",
+        "sector_name": "Digitální a veřejné služby",
+        "role_code": "public_service",
+        "international_peer_group": "government_shared_it_services",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 0.358,
+        "net_margin_pct": 0.926,
+        "ebitda_margin_pct": 14.153,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 4.403,
+        "asset_turnover": 0.387,
+        "turnover_per_employee_mczk": 3.176,
+        "net_result_per_employee_mczk": 0.029
+      }
+    },
+    {
+      "name": "VZLU AEROSPACE, a.s.",
+      "source_page": 32,
+      "metrics": {
+        "ebitda": 23,
+        "employees": 189,
+        "owner_transfer": 0,
+        "total_assets": 1483,
+        "fixed_assets": 895,
+        "turnover": 299,
+        "debt": 1,
+        "investment": 24,
+        "equity": 1011,
+        "net_result": 8,
+        "women_employees": 52,
+        "registered_capital": 751
+      },
+      "ico": "00010669",
+      "classification": {
+        "sector_code": "defence",
+        "sector_name": "Obrana a strategický průmysl",
+        "role_code": "strategic_security",
+        "international_peer_group": "aerospace_research_and_testing",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 0.539,
+        "net_margin_pct": 2.676,
+        "ebitda_margin_pct": 7.692,
+        "debt_to_assets_pct": 0.067,
+        "investment_to_assets_pct": 1.618,
+        "asset_turnover": 0.202,
+        "turnover_per_employee_mczk": 1.582,
+        "net_result_per_employee_mczk": 0.042
+      }
+    },
+    {
+      "name": "THERMAL-F, a.s.",
+      "source_page": 34,
+      "metrics": {
+        "ebitda": 92,
+        "employees": 150,
+        "owner_transfer": 0,
+        "total_assets": 1165,
+        "fixed_assets": 1111,
+        "turnover": 335,
+        "debt": 193,
+        "investment": 19,
+        "equity": 963,
+        "net_result": 31,
+        "women_employees": 102,
+        "registered_capital": 1099
+      },
+      "ico": "25401726",
+      "classification": {
+        "sector_code": "real_estate_tourism",
+        "sector_name": "Reality a cestovní ruch",
+        "role_code": "commercial",
+        "international_peer_group": "spa_hotel_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.661,
+        "net_margin_pct": 9.254,
+        "ebitda_margin_pct": 27.463,
+        "debt_to_assets_pct": 16.567,
+        "investment_to_assets_pct": 1.631,
+        "asset_turnover": 0.288,
+        "turnover_per_employee_mczk": 2.233,
+        "net_result_per_employee_mczk": 0.207
+      }
+    },
+    {
+      "name": "Správa železnic, státní organizace",
+      "source_page": 38,
+      "metrics": {
+        "ebitda": 1054,
+        "employees": 16872,
+        "owner_transfer": 0,
+        "total_assets": 52984,
+        "fixed_assets": 44252,
+        "turnover": 36179,
+        "debt": 0,
+        "investment": 39088,
+        "equity": 44270,
+        "net_result": -1677,
+        "women_employees": 4742,
+        "registered_capital": 57607
+      },
+      "ico": "70994234",
+      "classification": {
+        "sector_code": "transport",
+        "sector_name": "Doprava a infrastruktura",
+        "role_code": "network_operator",
+        "international_peer_group": "rail_infrastructure_manager",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": -3.165,
+        "net_margin_pct": -4.635,
+        "ebitda_margin_pct": 2.913,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 73.773,
+        "asset_turnover": 0.683,
+        "turnover_per_employee_mczk": 2.144,
+        "net_result_per_employee_mczk": -0.099
+      }
+    },
+    {
+      "name": "Řízení letového provozu České republiky, státní podnik",
+      "source_page": 40,
+      "metrics": {
+        "ebitda": 924,
+        "employees": 990,
+        "owner_transfer": 0,
+        "total_assets": 6633,
+        "fixed_assets": 4434,
+        "turnover": 4886,
+        "debt": 1405,
+        "investment": 699,
+        "equity": 4401,
+        "net_result": 294,
+        "women_employees": 283,
+        "registered_capital": 1088
+      },
+      "ico": "49710371",
+      "classification": {
+        "sector_code": "transport",
+        "sector_name": "Doprava a infrastruktura",
+        "role_code": "network_operator",
+        "international_peer_group": "air_navigation_service_provider",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 4.432,
+        "net_margin_pct": 6.017,
+        "ebitda_margin_pct": 18.911,
+        "debt_to_assets_pct": 21.182,
+        "investment_to_assets_pct": 10.538,
+        "asset_turnover": 0.737,
+        "turnover_per_employee_mczk": 4.935,
+        "net_result_per_employee_mczk": 0.297
+      }
+    },
+    {
+      "name": "České dráhy, a.s.",
+      "source_page": 42,
+      "metrics": {
+        "ebitda": 12136,
+        "employees": 13183,
+        "owner_transfer": 0,
+        "total_assets": 113765,
+        "fixed_assets": 101196,
+        "turnover": 36841,
+        "debt": 75805,
+        "investment": 17748,
+        "equity": 37960,
+        "net_result": 2109,
+        "women_employees": 3802,
+        "registered_capital": 20000
+      },
+      "ico": "70994226",
+      "classification": {
+        "sector_code": "transport",
+        "sector_name": "Doprava a infrastruktura",
+        "role_code": "public_service",
+        "international_peer_group": "passenger_rail_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 1.854,
+        "net_margin_pct": 5.725,
+        "ebitda_margin_pct": 32.942,
+        "debt_to_assets_pct": 66.633,
+        "investment_to_assets_pct": 15.601,
+        "asset_turnover": 0.324,
+        "turnover_per_employee_mczk": 2.795,
+        "net_result_per_employee_mczk": 0.16
+      }
+    },
+    {
+      "name": "Ředitelství silnic a dálnic s. p.",
+      "source_page": 44,
+      "metrics": {
+        "ebitda": 5310,
+        "employees": 2398,
+        "owner_transfer": 0,
+        "total_assets": 29253,
+        "fixed_assets": 4150,
+        "turnover": 20833,
+        "debt": 0,
+        "investment": 50851,
+        "equity": 8172,
+        "net_result": 3917,
+        "women_employees": 849,
+        "registered_capital": 76642
+      },
+      "ico": "65993390",
+      "classification": {
+        "sector_code": "transport",
+        "sector_name": "Doprava a infrastruktura",
+        "role_code": "network_operator",
+        "international_peer_group": "road_infrastructure_manager",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 13.39,
+        "net_margin_pct": 18.802,
+        "ebitda_margin_pct": 25.488,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 173.832,
+        "asset_turnover": 0.712,
+        "turnover_per_employee_mczk": 8.688,
+        "net_result_per_employee_mczk": 1.633
+      }
+    },
+    {
+      "name": "LOM PRAHA s.p.",
+      "source_page": 48,
+      "metrics": {
+        "ebitda": 225,
+        "employees": 758,
+        "owner_transfer": 0,
+        "total_assets": 3935,
+        "fixed_assets": 1982,
+        "turnover": 2204,
+        "debt": 1200,
+        "investment": 868,
+        "equity": 1502,
+        "net_result": 49,
+        "women_employees": 127,
+        "registered_capital": 576
+      },
+      "ico": "00000515",
+      "classification": {
+        "sector_code": "defence",
+        "sector_name": "Obrana a strategický průmysl",
+        "role_code": "strategic_security",
+        "international_peer_group": "military_aviation_mro",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 1.245,
+        "net_margin_pct": 2.223,
+        "ebitda_margin_pct": 10.209,
+        "debt_to_assets_pct": 30.496,
+        "investment_to_assets_pct": 22.058,
+        "asset_turnover": 0.56,
+        "turnover_per_employee_mczk": 2.908,
+        "net_result_per_employee_mczk": 0.065
+      }
+    },
+    {
+      "name": "Vojenské lesy a statky ČR, s.p.",
+      "source_page": 50,
+      "metrics": {
+        "ebitda": 537,
+        "employees": 2564,
+        "owner_transfer": 0,
+        "total_assets": 10577,
+        "fixed_assets": 7903,
+        "turnover": 3186,
+        "debt": 0,
+        "investment": 437,
+        "equity": 9239,
+        "net_result": 279,
+        "women_employees": 745,
+        "registered_capital": 1612
+      },
+      "ico": "00000205",
+      "classification": {
+        "sector_code": "natural_resources",
+        "sector_name": "Přírodní zdroje a sanace",
+        "role_code": "strategic_security",
+        "international_peer_group": "defence_forestry_and_estate",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.638,
+        "net_margin_pct": 8.757,
+        "ebitda_margin_pct": 16.855,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 4.132,
+        "asset_turnover": 0.301,
+        "turnover_per_employee_mczk": 1.243,
+        "net_result_per_employee_mczk": 0.109
+      }
+    },
+    {
+      "name": "Vojenský technický ústav, s.p.",
+      "source_page": 52,
+      "metrics": {
+        "ebitda": 106,
+        "employees": 421,
+        "owner_transfer": 0,
+        "total_assets": 3816,
+        "fixed_assets": 246,
+        "turnover": 1015,
+        "debt": 270,
+        "investment": 57,
+        "equity": 476,
+        "net_result": 27,
+        "women_employees": 93,
+        "registered_capital": 1
+      },
+      "ico": "24272523",
+      "classification": {
+        "sector_code": "defence",
+        "sector_name": "Obrana a strategický průmysl",
+        "role_code": "strategic_security",
+        "international_peer_group": "defence_research_and_engineering",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 0.708,
+        "net_margin_pct": 2.66,
+        "ebitda_margin_pct": 10.443,
+        "debt_to_assets_pct": 7.075,
+        "investment_to_assets_pct": 1.494,
+        "asset_turnover": 0.266,
+        "turnover_per_employee_mczk": 2.411,
+        "net_result_per_employee_mczk": 0.064
+      }
+    },
+    {
+      "name": "Vojenský výzkumný ústav, s. p.",
+      "source_page": 54,
+      "metrics": {
+        "ebitda": 66,
+        "employees": 150,
+        "owner_transfer": 0,
+        "total_assets": 1098,
+        "fixed_assets": 237,
+        "turnover": 613,
+        "debt": 0,
+        "investment": 26,
+        "equity": 661,
+        "net_result": 56,
+        "women_employees": 36,
+        "registered_capital": 189
+      },
+      "ico": "29372259",
+      "classification": {
+        "sector_code": "defence",
+        "sector_name": "Obrana a strategický průmysl",
+        "role_code": "strategic_security",
+        "international_peer_group": "defence_research_institute",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 5.1,
+        "net_margin_pct": 9.135,
+        "ebitda_margin_pct": 10.767,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 2.368,
+        "asset_turnover": 0.558,
+        "turnover_per_employee_mczk": 4.087,
+        "net_result_per_employee_mczk": 0.373
+      }
+    },
+    {
+      "name": "VOP CZ, s.p.",
+      "source_page": 56,
+      "metrics": {
+        "ebitda": 148,
+        "employees": 562,
+        "owner_transfer": 0,
+        "total_assets": 1369,
+        "fixed_assets": 647,
+        "turnover": 1293,
+        "debt": 406,
+        "investment": 44,
+        "equity": 409,
+        "net_result": 31,
+        "women_employees": 111,
+        "registered_capital": 721
+      },
+      "ico": "00000493",
+      "classification": {
+        "sector_code": "defence",
+        "sector_name": "Obrana a strategický průmysl",
+        "role_code": "strategic_security",
+        "international_peer_group": "land_systems_mro_and_manufacturing",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.264,
+        "net_margin_pct": 2.398,
+        "ebitda_margin_pct": 11.446,
+        "debt_to_assets_pct": 29.657,
+        "investment_to_assets_pct": 3.214,
+        "asset_turnover": 0.944,
+        "turnover_per_employee_mczk": 2.301,
+        "net_result_per_employee_mczk": 0.055
+      }
+    },
+    {
+      "name": "Národní rozvojová banka, a.s.",
+      "source_page": 60,
+      "metrics": {
+        "ebitda": 1538,
+        "employees": 263,
+        "owner_transfer": 0,
+        "total_assets": 36188,
+        "fixed_assets": 267,
+        "turnover": 1418,
+        "debt": 29473,
+        "investment": 52,
+        "equity": 6715,
+        "net_result": 1012,
+        "women_employees": 154,
+        "registered_capital": 2632
+      },
+      "ico": "44848943",
+      "classification": {
+        "sector_code": "finance",
+        "sector_name": "Finance a rozvoj",
+        "role_code": "policy_finance",
+        "international_peer_group": "national_development_bank",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.797,
+        "net_margin_pct": 71.368,
+        "ebitda_margin_pct": 108.463,
+        "debt_to_assets_pct": 81.444,
+        "investment_to_assets_pct": 0.144,
+        "asset_turnover": 0.039,
+        "turnover_per_employee_mczk": 5.392,
+        "net_result_per_employee_mczk": 3.848
+      }
+    },
+    {
+      "name": "OTE, a.s.",
+      "source_page": 62,
+      "metrics": {
+        "ebitda": 300,
+        "employees": 85,
+        "owner_transfer": 3,
+        "total_assets": 26132,
+        "fixed_assets": 225,
+        "turnover": 152771,
+        "debt": 12079,
+        "investment": 91,
+        "equity": 1160,
+        "net_result": 25,
+        "women_employees": 36,
+        "registered_capital": 1000
+      },
+      "ico": "26463318",
+      "classification": {
+        "sector_code": "energy",
+        "sector_name": "Energetika",
+        "role_code": "network_operator",
+        "international_peer_group": "electricity_market_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 0.096,
+        "net_margin_pct": 0.016,
+        "ebitda_margin_pct": 0.196,
+        "debt_to_assets_pct": 46.223,
+        "investment_to_assets_pct": 0.348,
+        "asset_turnover": 5.846,
+        "turnover_per_employee_mczk": 1797.306,
+        "net_result_per_employee_mczk": 0.294
+      }
+    },
+    {
+      "name": "ČEPS, a.s.",
+      "source_page": 64,
+      "metrics": {
+        "ebitda": 17410,
+        "employees": 708,
+        "owner_transfer": 2000,
+        "total_assets": 90621,
+        "fixed_assets": 72828,
+        "turnover": 83402,
+        "debt": 19857,
+        "investment": 7964,
+        "equity": 34363,
+        "net_result": 7025,
+        "women_employees": 159,
+        "registered_capital": 10535
+      },
+      "ico": "25702556",
+      "classification": {
+        "sector_code": "energy",
+        "sector_name": "Energetika",
+        "role_code": "network_operator",
+        "international_peer_group": "electricity_transmission_system_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 7.752,
+        "net_margin_pct": 8.423,
+        "ebitda_margin_pct": 20.875,
+        "debt_to_assets_pct": 21.912,
+        "investment_to_assets_pct": 8.788,
+        "asset_turnover": 0.92,
+        "turnover_per_employee_mczk": 117.799,
+        "net_result_per_employee_mczk": 9.922
+      }
+    },
+    {
+      "name": "DIAMO, státní podnik",
+      "source_page": 66,
+      "metrics": {
+        "ebitda": 41,
+        "employees": 3175,
+        "owner_transfer": 0,
+        "total_assets": 5487,
+        "fixed_assets": 1893,
+        "turnover": 5416,
+        "debt": 0,
+        "investment": 207,
+        "equity": 4785,
+        "net_result": -120,
+        "women_employees": 719,
+        "registered_capital": 2965
+      },
+      "ico": "00002739",
+      "classification": {
+        "sector_code": "natural_resources",
+        "sector_name": "Přírodní zdroje a sanace",
+        "role_code": "remediation",
+        "international_peer_group": "mining_remediation_agency",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": -2.187,
+        "net_margin_pct": -2.216,
+        "ebitda_margin_pct": 0.757,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 3.773,
+        "asset_turnover": 0.987,
+        "turnover_per_employee_mczk": 1.706,
+        "net_result_per_employee_mczk": -0.038
+      }
+    },
+    {
+      "name": "Explosia a.s.",
+      "source_page": 68,
+      "metrics": {
+        "ebitda": 621,
+        "employees": 615,
+        "owner_transfer": 0,
+        "total_assets": 2702,
+        "fixed_assets": 1257,
+        "turnover": 1831,
+        "debt": 0,
+        "investment": 267,
+        "equity": 2116,
+        "net_result": 442,
+        "women_employees": 182,
+        "registered_capital": 1434
+      },
+      "ico": "25291581",
+      "classification": {
+        "sector_code": "defence",
+        "sector_name": "Obrana a strategický průmysl",
+        "role_code": "commercial",
+        "international_peer_group": "explosives_manufacturer",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 16.358,
+        "net_margin_pct": 24.14,
+        "ebitda_margin_pct": 33.916,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 9.882,
+        "asset_turnover": 0.678,
+        "turnover_per_employee_mczk": 2.977,
+        "net_result_per_employee_mczk": 0.719
+      }
+    },
+    {
+      "name": "Státní investiční a rozvojová společnost, a.s.",
+      "source_page": 70,
+      "metrics": {
+        "ebitda": -36,
+        "employees": 27,
+        "owner_transfer": 0,
+        "total_assets": 125,
+        "fixed_assets": 1,
+        "turnover": 0,
+        "debt": 0,
+        "investment": 2,
+        "equity": 114,
+        "net_result": -36,
+        "women_employees": 13,
+        "registered_capital": 150
+      },
+      "ico": "21333858",
+      "classification": {
+        "sector_code": "real_estate_tourism",
+        "sector_name": "Reality a cestovní ruch",
+        "role_code": "asset_development",
+        "international_peer_group": "industrial_site_developer",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": -28.8,
+        "net_margin_pct": null,
+        "ebitda_margin_pct": null,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 1.6,
+        "asset_turnover": 0.0,
+        "turnover_per_employee_mczk": 0.0,
+        "net_result_per_employee_mczk": -1.333
+      }
+    },
+    {
+      "name": "Národní agentura pro komunikační a informační technologie, s. p.",
+      "source_page": 74,
+      "metrics": {
+        "ebitda": 50,
+        "employees": 533,
+        "owner_transfer": 0,
+        "total_assets": 990,
+        "fixed_assets": 185,
+        "turnover": 1586,
+        "debt": 157,
+        "investment": 120,
+        "equity": 270,
+        "net_result": 8,
+        "women_employees": 145,
+        "registered_capital": 200
+      },
+      "ico": "04767543",
+      "classification": {
+        "sector_code": "public_services",
+        "sector_name": "Digitální a veřejné služby",
+        "role_code": "public_service",
+        "international_peer_group": "government_digital_services",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 0.808,
+        "net_margin_pct": 0.504,
+        "ebitda_margin_pct": 3.153,
+        "debt_to_assets_pct": 15.859,
+        "investment_to_assets_pct": 12.121,
+        "asset_turnover": 1.602,
+        "turnover_per_employee_mczk": 2.976,
+        "net_result_per_employee_mczk": 0.015
+      }
+    },
+    {
+      "name": "Česká pošta, s.p.",
+      "source_page": 76,
+      "metrics": {
+        "ebitda": -504,
+        "employees": 19702,
+        "owner_transfer": 0,
+        "total_assets": 18047,
+        "fixed_assets": 6964,
+        "turnover": 18463,
+        "debt": 4104,
+        "investment": 438,
+        "equity": 2774,
+        "net_result": -1249,
+        "women_employees": 14047,
+        "registered_capital": 3588
+      },
+      "ico": "47114983",
+      "classification": {
+        "sector_code": "public_services",
+        "sector_name": "Digitální a veřejné služby",
+        "role_code": "public_service",
+        "international_peer_group": "universal_postal_operator",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": -6.921,
+        "net_margin_pct": -6.765,
+        "ebitda_margin_pct": -2.73,
+        "debt_to_assets_pct": 22.741,
+        "investment_to_assets_pct": 2.427,
+        "asset_turnover": 1.023,
+        "turnover_per_employee_mczk": 0.937,
+        "net_result_per_employee_mczk": -0.063
+      }
+    },
+    {
+      "name": "Budějovický Budvar, národní podnik",
+      "source_page": 80,
+      "metrics": {
+        "ebitda": 639,
+        "employees": 617,
+        "owner_transfer": 550,
+        "total_assets": 5807,
+        "fixed_assets": 2945,
+        "turnover": 3711,
+        "debt": 1023,
+        "investment": 182,
+        "equity": 4784,
+        "net_result": 361,
+        "women_employees": 184,
+        "registered_capital": 3100
+      },
+      "ico": "00514152",
+      "classification": {
+        "sector_code": "agriculture_food",
+        "sector_name": "Zemědělství a potraviny",
+        "role_code": "commercial",
+        "international_peer_group": "brewery",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 6.217,
+        "net_margin_pct": 9.728,
+        "ebitda_margin_pct": 17.219,
+        "debt_to_assets_pct": 17.617,
+        "investment_to_assets_pct": 3.134,
+        "asset_turnover": 0.639,
+        "turnover_per_employee_mczk": 6.015,
+        "net_result_per_employee_mczk": 0.585
+      }
+    },
+    {
+      "name": "Lesy České republiky, s.p.",
+      "source_page": 82,
+      "metrics": {
+        "ebitda": 6594,
+        "employees": 3815,
+        "owner_transfer": 3500,
+        "total_assets": 74014,
+        "fixed_assets": 61721,
+        "turnover": 18316,
+        "debt": 0,
+        "investment": 2058,
+        "equity": 67131,
+        "net_result": 4740,
+        "women_employees": 952,
+        "registered_capital": 13826
+      },
+      "ico": "42196451",
+      "classification": {
+        "sector_code": "natural_resources",
+        "sector_name": "Přírodní zdroje a sanace",
+        "role_code": "commercial",
+        "international_peer_group": "state_forestry",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 6.404,
+        "net_margin_pct": 25.879,
+        "ebitda_margin_pct": 36.001,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 2.781,
+        "asset_turnover": 0.247,
+        "turnover_per_employee_mczk": 4.801,
+        "net_result_per_employee_mczk": 1.242
+      }
+    },
+    {
+      "name": "Povodí Vltavy, státní podnik",
+      "source_page": 84,
+      "metrics": {
+        "ebitda": 520,
+        "employees": 857,
+        "owner_transfer": 0,
+        "total_assets": 9435,
+        "fixed_assets": 8028,
+        "turnover": 1592,
+        "debt": 0,
+        "investment": 990,
+        "equity": 8292,
+        "net_result": 131,
+        "women_employees": 327,
+        "registered_capital": 7785
+      },
+      "ico": "70889953",
+      "classification": {
+        "sector_code": "water",
+        "sector_name": "Vodní hospodářství",
+        "role_code": "network_operator",
+        "international_peer_group": "river_basin_manager",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 1.388,
+        "net_margin_pct": 8.229,
+        "ebitda_margin_pct": 32.663,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 10.493,
+        "asset_turnover": 0.169,
+        "turnover_per_employee_mczk": 1.858,
+        "net_result_per_employee_mczk": 0.153
+      }
+    },
+    {
+      "name": "Povodí Labe, státní podnik",
+      "source_page": 86,
+      "metrics": {
+        "ebitda": 234,
+        "employees": 830,
+        "owner_transfer": 0,
+        "total_assets": 5846,
+        "fixed_assets": 4604,
+        "turnover": 1353,
+        "debt": 827,
+        "investment": 439,
+        "equity": 5009,
+        "net_result": 46,
+        "women_employees": 207,
+        "registered_capital": 3817
+      },
+      "ico": "70890005",
+      "classification": {
+        "sector_code": "water",
+        "sector_name": "Vodní hospodářství",
+        "role_code": "network_operator",
+        "international_peer_group": "river_basin_manager",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 0.787,
+        "net_margin_pct": 3.4,
+        "ebitda_margin_pct": 17.295,
+        "debt_to_assets_pct": 14.146,
+        "investment_to_assets_pct": 7.509,
+        "asset_turnover": 0.231,
+        "turnover_per_employee_mczk": 1.63,
+        "net_result_per_employee_mczk": 0.055
+      }
+    },
+    {
+      "name": "Povodí Ohře, státní podnik",
+      "source_page": 88,
+      "metrics": {
+        "ebitda": 354,
+        "employees": 597,
+        "owner_transfer": 0,
+        "total_assets": 5987,
+        "fixed_assets": 5043,
+        "turnover": 1168,
+        "debt": 0,
+        "investment": 453,
+        "equity": 5398,
+        "net_result": 162,
+        "women_employees": 216,
+        "registered_capital": 4672
+      },
+      "ico": "70889988",
+      "classification": {
+        "sector_code": "water",
+        "sector_name": "Vodní hospodářství",
+        "role_code": "network_operator",
+        "international_peer_group": "river_basin_manager",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.706,
+        "net_margin_pct": 13.87,
+        "ebitda_margin_pct": 30.308,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 7.566,
+        "asset_turnover": 0.195,
+        "turnover_per_employee_mczk": 1.956,
+        "net_result_per_employee_mczk": 0.271
+      }
+    },
+    {
+      "name": "Povodí Moravy, s.p.",
+      "source_page": 90,
+      "metrics": {
+        "ebitda": 163,
+        "employees": 695,
+        "owner_transfer": 0,
+        "total_assets": 6119,
+        "fixed_assets": 5476,
+        "turnover": 1103,
+        "debt": 0,
+        "investment": 133,
+        "equity": 5421,
+        "net_result": -14,
+        "women_employees": 192,
+        "registered_capital": 4126
+      },
+      "ico": "70890013",
+      "classification": {
+        "sector_code": "water",
+        "sector_name": "Vodní hospodářství",
+        "role_code": "network_operator",
+        "international_peer_group": "river_basin_manager",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": -0.229,
+        "net_margin_pct": -1.269,
+        "ebitda_margin_pct": 14.778,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 2.174,
+        "asset_turnover": 0.18,
+        "turnover_per_employee_mczk": 1.587,
+        "net_result_per_employee_mczk": -0.02
+      }
+    },
+    {
+      "name": "Povodí Odry, státní podnik",
+      "source_page": 92,
+      "metrics": {
+        "ebitda": 158,
+        "employees": 433,
+        "owner_transfer": 0,
+        "total_assets": 5220,
+        "fixed_assets": 4604,
+        "turnover": 792,
+        "debt": 0,
+        "investment": 390,
+        "equity": 4649,
+        "net_result": -9,
+        "women_employees": 153,
+        "registered_capital": 1628
+      },
+      "ico": "70890021",
+      "classification": {
+        "sector_code": "water",
+        "sector_name": "Vodní hospodářství",
+        "role_code": "network_operator",
+        "international_peer_group": "river_basin_manager",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": -0.172,
+        "net_margin_pct": -1.136,
+        "ebitda_margin_pct": 19.949,
+        "debt_to_assets_pct": 0.0,
+        "investment_to_assets_pct": 7.471,
+        "asset_turnover": 0.152,
+        "turnover_per_employee_mczk": 1.829,
+        "net_result_per_employee_mczk": -0.021
+      }
+    },
+    {
+      "name": "Podpůrný a garanční rolnický a lesnický fond, a.s.",
+      "source_page": 94,
+      "metrics": {
+        "ebitda": 284,
+        "employees": 102,
+        "owner_transfer": 0,
+        "total_assets": 5123,
+        "fixed_assets": 470,
+        "turnover": 272,
+        "debt": 2903,
+        "investment": 16,
+        "equity": 2139,
+        "net_result": 230,
+        "women_employees": 62,
+        "registered_capital": 500
+      },
+      "ico": "49241494",
+      "classification": {
+        "sector_code": "finance",
+        "sector_name": "Finance a rozvoj",
+        "role_code": "policy_finance",
+        "international_peer_group": "agricultural_guarantee_fund",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 4.49,
+        "net_margin_pct": 84.559,
+        "ebitda_margin_pct": 104.412,
+        "debt_to_assets_pct": 56.666,
+        "investment_to_assets_pct": 0.312,
+        "asset_turnover": 0.053,
+        "turnover_per_employee_mczk": 2.667,
+        "net_result_per_employee_mczk": 2.255
+      }
+    },
+    {
+      "name": "Českomoravská společnost chovatelů, a.s.",
+      "source_page": 96,
+      "metrics": {
+        "ebitda": 41,
+        "employees": 114,
+        "owner_transfer": 0,
+        "total_assets": 246,
+        "fixed_assets": 120,
+        "turnover": 254,
+        "debt": 2,
+        "investment": 21,
+        "equity": 222,
+        "net_result": 5,
+        "women_employees": 84,
+        "registered_capital": 58
+      },
+      "ico": "26162539",
+      "classification": {
+        "sector_code": "agriculture_food",
+        "sector_name": "Zemědělství a potraviny",
+        "role_code": "public_service",
+        "international_peer_group": "livestock_data_and_breeding_services",
+        "status": "working_classification"
+      },
+      "fair_metrics": {
+        "return_on_assets_pct": 2.033,
+        "net_margin_pct": 1.969,
+        "ebitda_margin_pct": 16.142,
+        "debt_to_assets_pct": 0.813,
+        "investment_to_assets_pct": 8.537,
+        "asset_turnover": 1.033,
+        "turnover_per_employee_mczk": 2.228,
+        "net_result_per_employee_mczk": 0.044
+      }
+    }
   ],
   "budget_transfers": [
-    {"rank": 1, "name": "ČEZ", "value": 19521},
-    {"rank": 2, "name": "Lesy České republiky", "value": 3500},
-    {"rank": 3, "name": "ČEPS", "value": 2000},
-    {"rank": 4, "name": "PRISKO", "value": 1826},
-    {"rank": 5, "name": "MERO ČR", "value": 1330},
-    {"rank": 6, "name": "ČEPRO", "value": 832},
-    {"rank": 7, "name": "Budějovický Budvar", "value": 550},
-    {"rank": 8, "name": "Letiště Praha", "value": 305},
-    {"rank": 9, "name": "OTE", "value": 3}
+    {
+      "rank": 1,
+      "name": "ČEZ",
+      "value": 19521
+    },
+    {
+      "rank": 2,
+      "name": "Lesy České republiky",
+      "value": 3500
+    },
+    {
+      "rank": 3,
+      "name": "ČEPS",
+      "value": 2000
+    },
+    {
+      "rank": 4,
+      "name": "PRISKO",
+      "value": 1826
+    },
+    {
+      "rank": 5,
+      "name": "MERO ČR",
+      "value": 1330
+    },
+    {
+      "rank": 6,
+      "name": "ČEPRO",
+      "value": 832
+    },
+    {
+      "rank": 7,
+      "name": "Budějovický Budvar",
+      "value": 550
+    },
+    {
+      "rank": 8,
+      "name": "Letiště Praha",
+      "value": 305
+    },
+    {
+      "rank": 9,
+      "name": "OTE",
+      "value": 3
+    }
   ],
   "sources": [
     {
-      "title": "Zpráva o činnosti strategických společností a organizací za rok 2024",
+      "title": "Zpráva o činnosti a výsledcích strategických společností a organizací za rok 2024",
       "publisher": "Ministerstvo financí ČR",
-      "url": "https://www.mfcr.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf"
-    },
-    {
-      "title": "Zpráva o plnění opatření Strategie vlastnické politiky státu za rok 2024",
-      "publisher": "Ministerstvo financí ČR",
-      "url": "https://mf.gov.cz/assets/attachments/2024-12-31_Zprava-o-plneni-opatreni-Strategie-vlastnicke-politiky-statu-za-rok-2024.pdf"
+      "url": "https://mf.gov.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf"
     }
   ]
 }
