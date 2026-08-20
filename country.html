@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Profil země — Public Spending Data</title>
   <meta name="description" content="Detailní fiskální profil země, makroekonomické ukazatele a primární rozpočtové zdroje.">
-  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v2.css"><link rel="stylesheet" href="chart-system.css?v=20260820-capitals-history"><script src="country.js?v=20260820-1" defer></script><script src="global-nav.js?v=20260820-capitals-history" defer></script>
+  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v2.css"><link rel="stylesheet" href="chart-system.css?v=20260820-capitals-history"><link rel="stylesheet" href="country-spending.css?v=20260821"><script src="country.js?v=20260821-spending" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="global-nav.js?v=20260820-capitals-history" defer></script>
 </head>
 <body class="country-page">
   <header class="site-header compact-header has-global-nav">
@@ -38,8 +38,12 @@
       </div>
     </section>
 
-    <section class="country-section specifics-section" id="specifics"><div class="detail-heading"><div><span class="kicker" data-i18n="specificKicker">03 / Národní specifika</span><h2 data-i18n="specificTitle">Jak země hlídá rozpočet.</h2></div><p data-i18n="specificCopy">Vedle výsledku ukazujeme institucionální pravidla a četnost přebytku, ne jen jeden vybraný rok.</p></div><div class="specific-grid" id="specific-grid"></div></section>
-    <section class="country-section sources-section" id="sources"><div class="detail-heading"><div><span class="kicker" data-i18n="sourcesKicker">04 / Primární zdroje</span><h2 data-i18n="sourcesTitle">Od srovnání k rozpočtovým kapitolám.</h2></div><p data-i18n="sourcesCopy">Ukládáme originální soubory a jejich kontrolní součty; mapování ministerstev bude následovat nad touto reprodukovatelnou vrstvou.</p></div><div class="source-cards" id="source-cards"></div><div id="ministry-source"></div><div id="czech-local-link"></div></section>
+    <section class="country-section country-spending-section" id="spending" aria-labelledby="country-spending-title">
+      <div id="country-spending-root" aria-live="polite"></div>
+    </section>
+
+    <section class="country-section specifics-section" id="specifics"><div class="detail-heading"><div><span class="kicker" data-i18n="specificKicker">04 / Národní specifika</span><h2 data-i18n="specificTitle">Jak země hlídá rozpočet.</h2></div><p data-i18n="specificCopy">Vedle výsledku ukazujeme institucionální pravidla a četnost přebytku, ne jen jeden vybraný rok.</p></div><div class="specific-grid" id="specific-grid"></div></section>
+    <section class="country-section sources-section" id="sources"><div class="detail-heading"><div><span class="kicker" data-i18n="sourcesKicker">05 / Primární zdroje</span><h2 data-i18n="sourcesTitle">Od srovnání k rozpočtovým kapitolám.</h2></div><p data-i18n="sourcesCopy">Originální národní soubory tvoří reprodukovatelný základ detailu výdajů výše; zde jsou odkazy na celé zdrojové publikace.</p></div><div class="source-cards" id="source-cards"></div><div id="ministry-source"></div><div id="czech-local-link"></div></section>
   </main>
   <footer><div><span>Public Spending Data</span><small id="footer-country">—</small></div><p data-i18n="footerSource">Srovnávací řady: IMF WEO · kurzy: ECB · národní zdroje jsou uvedené výše</p><a href="#top" data-i18n="backTop">Nahoru ↑</a></footer>
 </body></html>
