@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stát jako vlastník — Public Spending Data</title>
+  <meta name="description" content="Nejziskovější a nejztrátovější státní firmy v Česku a jejich skutečné odvody do státního rozpočtu.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://publicspendingdata.org/cesko.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="cs_CZ">
+  <meta property="og:site_name" content="Public Spending Data">
+  <meta property="og:title" content="Česko: stát jako vlastník — Public Spending Data">
+  <meta property="og:description" content="Zisk není příjem rozpočtu. Žebříčky státních firem a skutečné odvody za rok 2024.">
+  <meta property="og:image" content="assets/og-cesko.png">
+  <meta property="og:url" content="https://publicspendingdata.org/cesko.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Česko: stát jako vlastník 2024","description":"Výsledky hospodaření a odvody 38 strategických společností a organizací ovládaných státem.","url":"https://publicspendingdata.org/cesko.html","inLanguage":"cs","temporalCoverage":"2024","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"isBasedOn":"https://www.mfcr.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf","distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-state-enterprises-2024.json"}}</script>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="cz-firmy.js" defer></script>
+</head>
+<body class="cz-enterprises-page">
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Public Spending Data — hlavní stránka"><span class="brand-mark">P</span><span>Public Spending <b>Data</b></span></a>
+    <nav aria-label="Navigace sekce"><a href="#prehled">Přehled</a><a href="#poradi">Pořadí</a><a href="#odvody">Odvody</a><a href="#metodika">Metodika</a><a href="cz-obce.html">Obce</a></nav>
+    <div class="dataset-pill"><span>CZ</span> · 2024 · MF</div>
+  </header>
+
+  <main>
+    <section class="hero enterprise-hero" id="top">
+      <div class="eyebrow"><span class="live-dot"></span> Česko · stát jako vlastník</div>
+      <h1>Zisk není<br><em>příjem rozpočtu.</em></h1>
+      <p class="hero-copy">Účetní výsledek státní firmy a peníze, které skutečně odvede státu, jsou dvě různá čísla. Tady jsou poprvé vedle sebe.</p>
+      <div class="hero-actions"><a class="primary-button" href="#poradi">Otevřít žebříčky <span>↘</span></a><span class="hero-note">38 strategických subjektů · skutečnost 2024</span></div>
+      <div class="hero-count">CZ</div>
+      <aside class="enterprise-equation" aria-label="Rozdíl mezi výsledkem hospodaření a odvody státu">
+        <div><span>Čistý výsledek</span><strong id="hero-result">—</strong><small>Kč</small></div>
+        <b>≠</b>
+        <div><span>Odvody státu</span><strong id="hero-transfer">—</strong><small>Kč</small></div>
+        <p>Součet zisků a ztrát zůstává nejprve uvnitř jednotlivých podniků. Rozpočtovým příjmem je až dividenda nebo odvod do fondu zakladatele.</p>
+      </aside>
+    </section>
+
+    <section class="metrics enterprise-metrics" id="prehled" aria-label="Klíčová čísla">
+      <article><span>Sledované subjekty</span><strong id="entity-count">—</strong><small>strategické firmy a organizace</small></article>
+      <article><span>Čistý výsledek</span><strong id="net-result">—</strong><small>mld. Kč · součet 2024</small></article>
+      <article><span>Odvody státu</span><strong id="budget-transfers">—</strong><small>mld. Kč · dividendy a odvody</small></article>
+      <article><span>Zaměstnanci</span><strong id="employee-count">—</strong><small>osob na konci roku</small></article>
+    </section>
+
+    <section class="enterprise-ranking" id="poradi">
+      <div class="section-heading">
+        <div><span class="kicker">01 / Výsledek hospodaření</span><h2>Dva konce<br>jednoho portfolia.</h2></div>
+        <p>Pořadí používá individuální výsledek po zdanění za rok 2024. Nejde o konsolidované skupiny a u veřejné infrastruktury není ztráta automaticky známkou špatného hospodaření.</p>
+      </div>
+      <div class="ranking-columns">
+        <article class="ranking-card positive"><header><span>Nejziskovější</span><strong>TOP 5</strong></header><div id="profit-list"></div></article>
+        <article class="ranking-card negative"><header><span>Nejztrátovější</span><strong>BOTTOM 5</strong></header><div id="loss-list"></div></article>
+      </div>
+      <aside class="reading-note"><strong>Jak číst pořadí</strong><p>ČEZ je uveden individuálně za mateřskou společnost. Správa železnic, ŘSD nebo Česká pošta plní veřejné služby; jejich výsledky proto nelze mechanicky porovnávat s čistě komerční firmou.</p></aside>
+    </section>
+
+    <section class="budget-return" id="odvody">
+      <div class="section-heading light-heading">
+        <div><span class="kicker">02 / Peníze pro stát</span><h2>Co skutečně<br>přiteklo státu.</h2></div>
+        <p>Dividendy a odvody ze zisku v roce 2024. Teprve tato vrstva představuje výnos vlastníka nebo příjem veřejných rozpočtů — nikoli celý zisk firem.</p>
+      </div>
+      <article class="return-panel">
+        <header><span>Odvod / dividenda</span><strong>mil. Kč</strong></header>
+        <div id="return-chart"></div>
+      </article>
+    </section>
+
+    <section class="enterprise-context">
+      <div class="section-heading compact-heading">
+        <div><span class="kicker">03 / Kontext</span><h2>Jedno vlastnictví.<br>Tři různé logiky.</h2></div>
+        <p>Portfolio státu není jednolitá skupina. Pro smysluplné srovnání budeme subjekty v dalších letech držet odděleně podle jejich veřejné a komerční role.</p>
+      </div>
+      <div class="context-grid">
+        <article><span>01</span><h3>Komerční výnos</h3><p>Energetika, letiště nebo pivovar lze posuzovat přes návratnost, dividendu a dlouhodobou hodnotu podílu.</p></article>
+        <article><span>02</span><h3>Veřejná služba</h3><p>Železnice, silnice a pošta poskytují službu, kterou stát zadává nebo reguluje. Zisk není jejich jediným cílem.</p></article>
+        <article><span>03</span><h3>Sanace a bezpečnost</h3><p>DIAMO, správci povodí či strategické zásoby nesou náklady, které mají charakter veřejné pojistky.</p></article>
+      </div>
+      <div class="coverage-roadmap">
+        <span>Datová mapa ČR</span>
+        <strong>2005–2024</strong>
+        <div><b>Státní firmy</b><small>výsledky · dotace · odvody</small></div>
+        <div><b>Veřejné vysoké školy</b><small>výnosy · náklady · transfery</small></div>
+        <div><b>Nemocnice</b><small>výsledek · úhrady · investiční transfery</small></div>
+        <p>Historická řada bude publikována po účetních jednotkách. Agregace nebudou sčítat vzájemné transfery dvakrát.</p>
+      </div>
+    </section>
+
+    <section class="methodology" id="metodika">
+      <div><span class="kicker">04 / Data & metodika</span><h2>Bez dvojího<br>započítání.</h2></div>
+      <div class="method-grid">
+        <article><span>01</span><h3>Účetní výsledek</h3><p>Zisk nebo ztráta po zdanění za jednotlivý subjekt. Není automaticky příjmem státního rozpočtu.</p></article>
+        <article><span>02</span><h3>Odvod vlastníkovi</h3><p>Dividenda nebo odvod do fondu zakladatele v daném roce. Načasování se může lišit od roku, kdy zisk vznikl.</p></article>
+        <article><span>03</span><h3>Veřejné transfery</h3><p>Dotace a platby ze státních fondů vedeme odděleně, aby se při pohledu na celý stát nezapočítaly jako nový příjem.</p></article>
+        <article><span>04</span><h3>Srovnatelný rozsah</h3><p>Firmy, vysoké školy a nemocnice budou mít vlastní kohorty; právní forma ani veřejné poslání nejsou zaměnitelné.</p></article>
+      </div>
+      <div class="schema-line"><span>schema_version</span><strong id="schema-version">—</strong><span>country_code</span><strong>CZ</strong><span>year</span><strong>2024</strong><span>units</span><strong>mil. Kč</strong></div>
+      <div class="source-links" id="source-links"></div>
+    </section>
+  </main>
+
+  <footer><div><span>Public Spending Data</span><small>Česko · stát jako vlastník</small></div><p>Zdroj: Ministerstvo financí ČR · data za rok 2024</p><a href="#top">Nahoru ↑</a></footer>
+  <noscript>Pro načtení žebříčků je potřeba zapnout JavaScript.</noscript>
+</body>
+</html>
