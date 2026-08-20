@@ -11,5 +11,7 @@ if (snapshot.scope.combined_unique_entity_count !== 6267) throw new Error("Expec
 if (history.cities.length !== 27 || history.cities.some((city) => city.series.length !== 20)) throw new Error("Expected 20 annual observations for 27 large cities");
 if (capitals.cities.length !== 28 || capitals.cities.filter((city) => city.eu_capital).length !== 27) throw new Error("Expected 27 EU capitals plus London");
 if (capitals.cities.some((city) => !Number.isFinite(city.budget?.local_amount) || !Number.isFinite(city.budget?.eur_amount) || !city.benchmarks?.population || !city.benchmarks?.tourism)) throw new Error("Incomplete European capitals facts");
+if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fiscal_details?.balance_classification || !Array.isArray(city.fiscal_details?.components))) throw new Error("Incomplete European capital fiscal details");
+if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
 for (const required of ["index.html", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "sitemap.xml"]) await stat(required);
 console.log("CZ Budget site validation passed");
