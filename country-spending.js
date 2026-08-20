@@ -93,7 +93,8 @@
       </div>`;
     ROOT.querySelector(".spending-expand")?.addEventListener("click", () => { expanded = !expanded; render(); });
     document.querySelector('[data-i18n="specificKicker"]')?.replaceChildren(document.createTextNode(lang()==="en"?"04 / National specifics":"04 / Národní specifika"));
-    document.querySelector('[data-i18n="sourcesKicker"]')?.replaceChildren(document.createTextNode(lang()==="en"?"05 / Primary sources":"05 / Primární zdroje"));
+    const hasHealth=["DEU","FRA","POL","GBR","USA","CHE","SWE","DNK"].includes(c.code);
+    document.querySelector('[data-i18n="sourcesKicker"]')?.replaceChildren(document.createTextNode(lang()==="en"?`${hasHealth?"07":"05"} / Primary sources`:`${hasHealth?"07":"05"} / Primární zdroje`));
   }
 
   fetch("data/country-spending-2025-2026.v1.json")
