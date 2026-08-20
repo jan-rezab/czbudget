@@ -2,6 +2,7 @@ const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? "—").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const number = value => new Intl.NumberFormat("cs-CZ", {maximumFractionDigits: 0}).format(value);
 const money = value => value == null ? "—" : new Intl.NumberFormat("cs-CZ", {minimumFractionDigits: 0, maximumFractionDigits: 1}).format(value);
+const percent = value => value == null ? "—" : `${new Intl.NumberFormat("cs-CZ", {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(value)} %`;
 const billion = value => new Intl.NumberFormat("cs-CZ", {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(value / 1000);
 
 function enterpriseRows(rows, metric, kind) {
@@ -39,38 +40,75 @@ function returnChart(rows) {
 
 function renderPublicRegistry(data) {
   const search = $("#entity-search");
-  const category = $("#entity-category");
   const owner = $("#entity-owner");
+  const sort = $("#entity-sort");
   const body = $("#public-entity-rows");
+  const tabs = [...document.querySelectorAll("#entity-tabs button")];
+  let activeCategory = "all";
   const owners = [...new Set(data.entities.map(row => row.owner_level))].sort((a, b) => a.localeCompare(b, "cs"));
   owner.insertAdjacentHTML("beforeend", owners.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join(""));
+
+  const tabCounts = {all: "#tab-all", Firma: "#tab-companies", "Vysoká škola": "#tab-universities", Nemocnice: "#tab-hospitals"};
+  Object.entries(tabCounts).forEach(([key, selector]) => {
+    const group = data.summary.groups[key];
+    $(selector).textContent = `${number(group.entity_count)} · ${number(group.financial_result_count)} s výsledkem`;
+  });
+
+  function updateSummary() {
+    const group = data.summary.groups[activeCategory];
+    const label = activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : "nemocnice";
+    const hasFinancials = group.financial_result_count > 0;
+    $("#profit-sum").textContent = hasFinancials ? billion(group.positive_net_result_sum_mczk) : "—";
+    $("#loss-sum").textContent = hasFinancials ? `−${billion(group.negative_net_result_absolute_sum_mczk)}` : "—";
+    $("#net-sum").textContent = hasFinancials ? billion(group.net_result_sum_mczk) : "—";
+    $("#turnover-sum").textContent = hasFinancials ? billion(group.revenue_sum_mczk) : "—";
+    $("#aggregate-scope").textContent = `Součty za ${label}: ${number(group.financial_result_count)} z ${number(group.entity_count)} subjektů s dostupným výsledkem za rok 2024.`;
+    $("#registry-coverage").textContent = `${number(group.financial_result_count)} / ${number(group.entity_count)} s výsledkem`;
+  }
 
   function render() {
     const query = search.value.trim().toLocaleLowerCase("cs");
     const visible = data.entities.filter(row =>
-      (category.value === "all" || row.category === category.value) &&
+      (activeCategory === "all" || row.category === activeCategory) &&
       (owner.value === "all" || row.owner_level === owner.value) &&
       (!query || `${row.name} ${row.ico}`.toLocaleLowerCase("cs").includes(query))
     );
+    visible.sort((a, b) => {
+      if (sort.value === "name") return a.name.localeCompare(b.name, "cs");
+      const field = sort.value === "result" ? "net_result_mczk" : sort.value === "margin" ? "net_margin_pct" : "value_mczk";
+      const left = a.top_line[field];
+      const right = b.top_line[field];
+      if (left == null && right == null) return a.name.localeCompare(b.name, "cs");
+      if (left == null) return 1;
+      if (right == null) return -1;
+      return right - left || a.name.localeCompare(b.name, "cs");
+    });
     body.innerHTML = visible.map(row => `<tr${row.strategic_highlight ? ' class="strategic-highlight"' : ""}>
       <td><strong>${esc(row.name)}</strong><small>IČO ${esc(row.ico)} · ${esc(row.legal_form)}</small></td>
       <td><span class="entity-type">${esc(row.category)}</span></td>
       <td>${esc(row.owner_level)}</td>
-      <td class="numeric">${row.revenue_mczk == null ? "—" : `${money(row.revenue_mczk)} <small>mil. Kč</small>`}</td>
-      <td class="numeric ${row.net_result_mczk < 0 ? "negative" : ""}">${row.net_result_mczk == null ? "—" : `${valueLabel(row.net_result_mczk, true)} <small>mil. Kč</small>`}</td>
+      <td class="numeric">${row.top_line.value_mczk == null ? "—" : `${money(row.top_line.value_mczk)} <small>mil. Kč · ${esc(row.top_line.definition)}</small>`}</td>
+      <td class="numeric ${row.top_line.net_result_mczk < 0 ? "negative" : ""}">${row.top_line.net_result_mczk == null ? "—" : `${row.top_line.net_result_mczk < 0 ? "−" : "+"}${money(Math.abs(row.top_line.net_result_mczk))} <small>mil. Kč</small>`}</td>
+      <td class="numeric ${row.top_line.net_margin_pct < 0 ? "negative" : ""}">${percent(row.top_line.net_margin_pct)}</td>
       <td>${row.financial_source_kind ? `<span class="data-available">${esc(row.financial_source_kind)}</span>` : '<span class="data-missing">výkaz chybí</span>'}${row.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
     </tr>`).join("");
-    $("#registry-count").textContent = `Zobrazeno ${number(visible.length)} z ${number(data.summary.entity_count)} subjektů`;
+    $("#registry-count").textContent = `Zobrazeno ${number(visible.length)} z ${number(data.summary.groups[activeCategory].entity_count)} subjektů v záložce`;
   }
 
-  $("#registry-coverage").textContent = `${number(data.summary.financial_result_count)} / ${number(data.summary.entity_count)} s výsledkem`;
-  [search, category, owner].forEach(control => control.addEventListener(control === search ? "input" : "change", render));
+  tabs.forEach(tab => tab.addEventListener("click", () => {
+    activeCategory = tab.dataset.category;
+    tabs.forEach(item => item.setAttribute("aria-selected", String(item === tab)));
+    updateSummary();
+    render();
+  }));
+  [search, owner, sort].forEach(control => control.addEventListener(control === search ? "input" : "change", render));
+  updateSummary();
   render();
 }
 
 Promise.all([
-  fetch("data/cz-state-enterprises-2024.json"),
-  fetch("data/cz-public-entities-2024.json")
+  fetch("data/cz-state-enterprises-2024.json?v=20260820-3"),
+  fetch("data/cz-public-entities-2024.json?v=20260820-3")
 ])
   .then(async responses => {
     for (const response of responses) if (!response.ok) throw new Error(`Dataset odpověděl ${response.status}`);
@@ -117,10 +155,6 @@ Promise.all([
     $("#net-result").textContent = billion(data.summary.net_result_portfolio_reported);
     $("#budget-transfers").textContent = billion(data.summary.budget_transfers_total);
     $("#employee-count").textContent = number(data.summary.employees_portfolio_reported);
-    $("#profit-sum").textContent = billion(publicData.summary.positive_net_result_sum_mczk);
-    $("#loss-sum").textContent = `−${billion(publicData.summary.negative_net_result_absolute_sum_mczk)}`;
-    $("#net-sum").textContent = billion(publicData.summary.net_result_sum_mczk);
-    $("#turnover-sum").textContent = billion(publicData.summary.revenue_sum_mczk);
     $("#hero-result").textContent = `${billion(data.summary.net_result_portfolio_reported)} mld.`;
     $("#hero-transfer").textContent = `${billion(data.summary.budget_transfers_total)} mld.`;
     $("#return-chart").innerHTML = returnChart(data.budget_transfers);
