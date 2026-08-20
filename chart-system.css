@@ -358,6 +358,8 @@
 .site-header .global-nav > a,
 .site-header .global-nav summary { min-width:102px; height:100%; padding:0 16px; display:flex; align-items:center; justify-content:center; gap:7px; border-left:1px solid var(--line); color:var(--ink); text-decoration:none; list-style:none; cursor:pointer; font:700 10px/1 Arial,sans-serif; letter-spacing:.07em; text-transform:uppercase; }
 .site-header .global-nav > a:last-child { border-right:1px solid var(--line); }
+.site-header .global-nav > a.capitals-nav-icon { min-width:54px; padding-inline:14px; }
+.site-header .capitals-nav-icon svg { width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
 .site-header .global-nav > a:hover,
 .site-header .global-nav > a.active,
 .site-header .global-nav details.active summary,
@@ -423,6 +425,7 @@
   .site-header.has-global-nav { height:auto; min-height:70px; padding:8px 4vw 0; grid-template-columns:1fr auto; grid-template-rows:54px 42px; }
   .site-header.has-global-nav .global-nav { grid-column:1/-1; grid-row:2; width:calc(100% + 8vw); margin-left:-4vw; overflow:visible; justify-content:center; border-top:1px solid var(--line); }
   .site-header.has-global-nav .global-nav > a,.site-header.has-global-nav .global-nav summary { min-width:0; flex:1; padding-inline:10px; border-left:0; border-right:1px solid var(--line); font-size:8px; }
+  .site-header.has-global-nav .global-nav > a.capitals-nav-icon { flex:0 0 44px; padding-inline:0; }
   .site-header .country-menu { flex:1; }
   .site-header .country-menu summary { width:100%; }
   .site-header .country-menu-panel { position:fixed; top:112px; left:4vw; right:4vw; width:auto; }
