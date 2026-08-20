@@ -4,29 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Public Spending Data — český rozpočet v čase</title>
-  <meta name="description" content="Státní rozpočet ČR 2001–2026: příjmy, výdaje, 30 účelových oblastí, všech 47 rozpočtových kapitol a demografický tlak do roku 2045.">
+  <meta name="description" content="Státní rozpočet ČR 2001–2026, tok peněz ve zdravotnictví, benchmark nemocnic, 30 účelových oblastí, 47 rozpočtových kapitol a demografický tlak do roku 2045.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://publicspendingdata.org/cesky-rozpocet.html">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="cs_CZ">
   <meta property="og:site_name" content="Public Spending Data">
   <meta property="og:title" content="Český rozpočet v čase — Public Spending Data">
-  <meta property="og:description" content="25 let skutečnosti, schválený rozpočet 2026, detail výdajů a model sociálních systémů do roku 2045.">
+  <meta property="og:description" content="25 let rozpočtu, detail výdajů, tok peněz ve zdravotnictví, benchmark nemocnic a model sociálních systémů do roku 2045.">
   <meta property="og:image" content="assets/og-budget.png">
   <meta property="og:url" content="https://publicspendingdata.org/cesky-rozpocet.html">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Státní rozpočet ČR 2001–2026 a demografický model 2025–2045","description":"Příjmy, výdaje, účelová struktura a kapitoly státního rozpočtu ČR doplněné modelem demografického tlaku.","url":"https://publicspendingdata.org/cesky-rozpocet.html","inLanguage":"cs","temporalCoverage":"2001/2045","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/czech-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-spending-2026.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/demography-social.v1.json"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Státní rozpočet ČR 2001–2026, zdravotnictví a demografický model 2025–2045","description":"Příjmy, výdaje, účelová struktura a kapitoly státního rozpočtu ČR doplněné tokem peněz ve zdravotnictví, benchmarkem nemocnic a modelem demografického tlaku.","url":"https://publicspendingdata.org/cesky-rozpocet.html","inLanguage":["cs","en"],"temporalCoverage":"2001/2045","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/czech-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-spending-2026.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-health-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/demography-social.v1.json"}]}</script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=20260820-3">
   <link rel="stylesheet" href="styles-v2.css?v=20260820-2">
   <link rel="stylesheet" href="chart-system.css?v=20260820-capitals-history">
   <link rel="stylesheet" href="cz-spending.css?v=20260820-1">
+  <link rel="stylesheet" href="health-budget.css?v=20260820-1">
   <script src="app.js?v=20260820-3" defer></script>
   <script src="budget-i18n.js?v=20260820-2" defer></script>
   <script src="cz-firmy-embed.js?v=20260820-3" defer></script>
   <script src="global-nav.js?v=20260820-capitals-history" defer></script>
   <script src="budget-shell.js?v=20260820-1" defer></script>
   <script src="cz-spending.js?v=20260820-1" defer></script>
+  <script src="health-budget.js?v=20260820-1" defer></script>
 </head>
 <body class="budget-workspace-page">
 <main>
@@ -60,9 +62,11 @@
         <a href="#struktura"><span>02</span><b>Struktura</b><small>Příjmy / výdaje</small></a>
         <a href="#utraceni"><span>03</span><b>Na co</b><small>30 účelů / 47 kapitol</small></a>
         <a href="#statni-firmy"><span>04</span><b>Veřejné subjekty</b><small>630 organizací</small></a>
-        <a href="#demografie"><span>05</span><b>Demografie</b><small>Model 2045</small></a>
-        <a href="#benchmark"><span>06</span><b>Země</b><small>10 profilů</small></a>
-        <a href="#metodika"><span>07</span><b>Metodika</b><small>Zdroje</small></a>
+        <a href="#zdravotni-system"><span>05</span><b data-health-key="navHealth">Zdravotnictví</b><small data-health-key="navHealthFlow">Tok peněz</small></a>
+        <a href="#nemocnice-benchmark"><span>06</span><b data-health-key="navHospitals">Nemocnice</b><small data-health-key="navHospitalBench">Benchmark 2024</small></a>
+        <a href="#demografie"><span>07</span><b>Demografie</b><small>Model 2045</small></a>
+        <a href="#benchmark"><span>08</span><b>Země</b><small>10 profilů</small></a>
+        <a href="#metodika"><span>09</span><b>Metodika</b><small>Zdroje</small></a>
       </nav>
     </aside>
     <div class="budget-workspace-content">
@@ -170,8 +174,60 @@
     </section>
   </section>
 
+  <section class="health-flow-section" id="zdravotni-system">
+    <div class="section-heading compact-heading">
+      <div><span class="kicker" data-health-key="flowKicker">05 / Zdravotnictví</span><h2 data-health-key="flowTitle">Jeden systém.<br>Tři rozpočty.</h2></div>
+      <p data-health-key="flowIntro">Zdravotnictví není jediná rozpočtová kapitola. Pojistné, státní platby, úhrady pojišťoven a hospodaření nemocnic jsou propojené, ale každý celek má jiný rozsah i účetní rok.</p>
+    </div>
+    <div class="health-scope-note"><b data-health-key="scopeLead">Pozor na rozsah:</b> <span data-health-key="scopeCopy">pojišťovny spravují veřejné zdravotní pojištění. Nemocnice mají různé zřizovatele a právní formy; nejsou jednou veřejnou institucí.</span></div>
+    <div class="health-mode" id="health-flow-mode" role="tablist" aria-label="Pohled na zdravotnické rozpočty">
+      <button type="button" role="tab" data-mode="system" aria-selected="true" data-health-key="modeSystem">Celý systém · 2023</button>
+      <button type="button" role="tab" data-mode="insurers" aria-selected="false" data-health-key="modeInsurers">Pojišťovny · 2024</button>
+      <button type="button" role="tab" data-mode="hospitals" aria-selected="false" data-health-key="modeSector">Nemocnice · 2022</button>
+    </div>
+    <div class="health-flow-board" id="health-flow-board">
+      <div class="health-flow-side health-flow-in"><header><span data-health-key="flowIn">Zdroje / výnosy</span><strong id="health-in-total">—</strong></header><div id="health-flow-in"></div></div>
+      <div class="health-flow-center"><span id="health-center-label">Výdaje na zdravotní péči</span><strong id="health-center-total">—</strong><small data-health-key="bnPerYear">mld. Kč za rok</small><b id="health-center-balance">—</b></div>
+      <div class="health-flow-side health-flow-out"><header><span data-health-key="flowOut">Příjemci / náklady</span><strong id="health-out-total">—</strong></header><div id="health-flow-out"></div></div>
+    </div>
+    <div class="health-flow-facts" id="health-flow-facts"></div>
+    <div class="health-sources" id="health-flow-sources"></div>
+  </section>
+
+  <section class="hospital-benchmark-section" id="nemocnice-benchmark">
+    <div class="section-heading compact-heading">
+      <div><span class="kicker" data-health-key="benchKicker">06 / Benchmark nemocnic</span><h2 data-health-key="benchTitle">Každá nemocnice.<br>Ve správném srovnání.</h2></div>
+      <p data-health-key="benchIntro">Vyberte veřejně ovládanou nemocnici s dostupným výkazem za rok 2024. Výsledek porovnáváme s podobně velkými organizacemi nebo se stejnou úrovní zřizovatele.</p>
+    </div>
+    <div class="hospital-coverage">
+      <article><span data-health-key="registeredHospitals">Evidované nemocniční subjekty</span><strong id="hospital-registered">—</strong><small data-health-key="publicControl">veřejná kontrola</small></article>
+      <article><span data-health-key="comparableHospitals">Srovnatelné výkazy 2024</span><strong id="hospital-comparable">—</strong><small data-health-key="positiveStatements">kladné výnosy a náklady</small></article>
+      <article><span data-health-key="medianRevenue">Medián výnosů</span><strong id="hospital-median-revenue">—</strong><small data-health-key="comparableSample">srovnatelný vzorek</small></article>
+      <article><span data-health-key="medianMargin">Medián marže</span><strong id="hospital-median-margin">—</strong><small data-health-key="resultOverRevenue">výsledek / výnosy</small></article>
+    </div>
+    <p class="hospital-coverage-note" data-health-key="coverageNote">Srovnatelný vzorek tvoří 97 příspěvkových organizací s dostupným individuálním výkazem VZZ. Akciové společnosti bez srovnatelného otevřeného výkazu v benchmarku nejsou; chybějící data nejsou nula.</p>
+    <div class="hospital-benchmark-controls">
+      <label><span data-health-key="selectHospital">Vybraná nemocnice</span><select id="hospital-select"></select></label>
+      <label><span data-health-key="peerGroup">Srovnávací skupina</span><select id="hospital-peer-mode"><option value="size" data-health-key="peerSize">Podobná velikost</option><option value="owner" data-health-key="peerOwner">Stejný zřizovatel</option><option value="all" data-health-key="peerAll">Všech 97 výkazů</option></select></label>
+    </div>
+    <article class="hospital-profile" id="hospital-profile">
+      <header><div><span id="hospital-meta">—</span><h3 id="hospital-name">—</h3></div><strong id="hospital-peer-count">—</strong></header>
+      <div class="hospital-profile-grid">
+        <div class="hospital-kpis" id="hospital-kpis"></div>
+        <div class="hospital-hundred">
+          <span data-health-key="hundredTitle">Ze 100 Kč výnosů</span>
+          <div class="hundred-ring" id="hospital-hundred-ring"><strong id="hospital-cost-per-100">—</strong><small data-health-key="costCzk">Kč nákladů</small></div>
+          <p id="hospital-hundred-note">—</p>
+        </div>
+        <div class="hospital-peer-bars" id="hospital-peer-bars"></div>
+      </div>
+    </article>
+    <div class="hospital-method-note"><b data-health-key="benchCaveatLead">Co benchmark neříká:</b> <span data-health-key="benchCaveat">vyšší marže sama o sobě neznamená lepší péči. Mix pacientů, centrová léčiva, investiční dotace i role fakultní nemocnice zásadně mění ekonomiku. Srovnání je finanční orientace, ne žebříček kvality.</span></div>
+    <div class="health-sources" id="hospital-benchmark-sources"></div>
+  </section>
+
   <section class="demography-section" id="demografie">
-    <div class="section-heading light-heading"><div><span class="kicker">05 / Demografický model</span><h2>Stárnutí není graf.<br>Je to účet.</h2></div><p>Model propojuje věkovou projekci ČSÚ s důchody, veřejným zdravotním pojištěním a příspěvkem na péči. Výchozí nastavení izoluje čistý vliv demografie.</p></div>
+    <div class="section-heading light-heading"><div><span class="kicker">07 / Demografický model</span><h2>Stárnutí není graf.<br>Je to účet.</h2></div><p>Model propojuje věkovou projekci ČSÚ s důchody, veřejným zdravotním pojištěním a příspěvkem na péči. Výchozí nastavení izoluje čistý vliv demografie.</p></div>
     <div class="model-controls">
       <div class="model-control"><span>Varianta ČSÚ</span><div class="segmented-control" id="demo-variant"><button type="button" data-value="low" aria-pressed="false">Nízká</button><button type="button" data-value="mid" aria-pressed="true">Střední</button><button type="button" data-value="high" aria-pressed="false">Vysoká</button></div></div>
       <label class="model-control"><span>Efektivní důchodový věk <b id="ret-age-label">65 let</b></span><input id="ret-age" type="range" min="65" max="68" value="65" step="1"></label>
@@ -188,14 +244,14 @@
   </section>
 
   <section class="explorer" id="benchmark">
-    <div class="section-heading"><div><span class="kicker">06 / Mezinárodní kontext</span><h2>Jedna metrika.<br>Deset realit.</h2></div><p>Český státní rozpočet doplňuje harmonizované srovnání sektoru vládních institucí podle IMF. Jde o jiný rozsah než národní státní rozpočet, proto data nemícháme.</p></div>
+    <div class="section-heading"><div><span class="kicker">08 / Mezinárodní kontext</span><h2>Jedna metrika.<br>Deset realit.</h2></div><p>Český státní rozpočet doplňuje harmonizované srovnání sektoru vládních institucí podle IMF. Jde o jiný rozsah než národní státní rozpočet, proto data nemícháme.</p></div>
     <div class="control-bar sovereign-controls"><label><span>Rok</span><select id="year-select"></select></label><label class="wide-control"><span>Ukazatel</span><select id="metric-select"></select></label><label><span>Skupina</span><select id="group-select"><option value="all">Všechny země</option><option value="requested">Základní srovnání</option><option value="responsible_benchmark">Fiskální benchmark</option></select></label><div class="currency-status"><span class="status-light"></span><div><strong>IMF WEO</strong><small>skutečnost do 2024</small></div></div></div>
     <div class="explorer-grid"><article class="panel ranking-panel"><div class="panel-head"><div><span class="panel-index">D</span><h3 id="ranking-title">Výdaje</h3></div><span id="ranking-count">10 zemí</span></div><div class="rank-list" id="rank-list"></div><div class="chart-source">Zdroj: IMF World Economic Outlook · duben 2026</div></article><article class="panel city-panel"><div class="panel-head"><div><span class="panel-index">E</span><h3>Profil země</h3></div><label class="city-select"><span class="sr-only">Vybraná země</span><select id="country-select"></select></label></div><div id="country-profile"></div></article></div>
     <article class="panel comparison-panel"><div class="panel-head"><div><span class="panel-index">F</span><h3>Saldo × dluh</h3></div><span id="comparison-year">2024</span></div><div class="scatter-wrap" id="scatter-wrap"></div><div class="chart-source">Zdroj: IMF World Economic Outlook · duben 2026</div></article>
   </section>
 
   <section class="methodology" id="metodika">
-    <div><span class="kicker">07 / Data & metodika</span><h2>Důvěra začíná<br>u definice.</h2></div>
+    <div><span class="kicker">09 / Data & metodika</span><h2>Důvěra začíná<br>u definice.</h2></div>
     <div class="method-grid"><article><span>01</span><h3>Český rozpočet</h3><p>Pokladní plnění státního rozpočtu 2001–2025 a schválený rozpočet 2026. Národní metodika, mld. Kč.</p></article><article><span>02</span><h3>Výdaje 2026</h3><p>Účelová struktura zahrnuje EU/FM; všech 47 kapitol je srovnáno bez EU/FM. Rozsahy jsou viditelně oddělené.</p></article><article><span>03</span><h3>Demografie</h3><p>Střední, nízká a vysoká varianta projekce ČSÚ 2023–2100, agregovaná do věkových skupin.</p></article><article><span>04</span><h3>Mezinárodní benchmark</h3><p>IMF WEO, sektor vládních institucí, podíly na HDP. Kontext, nikoli náhrada národní klasifikace.</p></article></div>
     <div class="source-links"><a href="https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/snemovna-schvalila-zakon-o-statnim-rozpoctu-2026-63269" target="_blank" rel="noreferrer">MF: schválený rozpočet 2026 ↗</a><a href="https://mf.gov.cz/assets/attachments/2026-04-01_Statni-rozpocet-2026-exekutivni-shrnuti.pdf" target="_blank" rel="noreferrer">MF: účelová struktura výdajů ↗</a><a href="https://csu.gov.cz/produkty/projekce-obyvatelstva-ceske-republiky-2023-2100" target="_blank" rel="noreferrer">ČSÚ: projekce populace ↗</a><a href="https://www.cssz.cz/documents/20143/2955094/4%2BPrijmy_a_vydaje_na_socialni_zabezpeceni_12_2025.pdf/4504ffb7-2a74-0882-7566-37b17802f977?version=1.0" target="_blank" rel="noreferrer">ČSSZ: důchodový účet ↗</a><a href="https://www.imf.org/en/Publications/WEO/weo-database/2026/April" target="_blank" rel="noreferrer">IMF WEO ↗</a></div>
   </section>
