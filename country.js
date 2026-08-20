@@ -44,12 +44,18 @@ function snapshot(){
   const kpis=[[T[state.lang].primary,"primary_balance_pct_gdp","% HDP",true],[T[state.lang].growth,"real_gdp_growth_pct","%",true],[T[state.lang].inflation,"inflation_pct","%",false],[T[state.lang].unemployment,"unemployment_pct","%",false]];
   $("#country-kpis").innerHTML=kpis.map(([label,key,unit,signed])=>`<article><span>${label}</span><strong>${fmt(value(key),unit,signed)}</strong><small>${point(key)?.status==="actual"?T[state.lang].actual:T[state.lang].estimate} · ${state.year}</small></article>`).join("");
 }
+function niceAxis(domainMin,domainMax,targetSteps=4){
+  if(domainMin===domainMax){const pad=Math.abs(domainMin)*.1||1;domainMin-=pad;domainMax+=pad}
+  const roughStep=Math.abs(domainMax-domainMin)/targetSteps,power=10**Math.floor(Math.log10(roughStep)),fraction=roughStep/power,multiplier=[1,2,5,10].find(candidate=>candidate>=fraction)||10,step=multiplier*power;
+  const min=Math.floor(domainMin/step)*step,max=Math.ceil(domainMax/step)*step,count=Math.round((max-min)/step);
+  return{min,max,ticks:Array.from({length:count+1},(_,index)=>Number((min+index*step).toPrecision(12)))};
+}
 function lineChart(id, values, {format=v=>fmt(v,"",false,0),source="IMF World Economic Outlook · April 2026",zero=false,color="#0b5d4a"}={}){
   const target=$("#"+id), W=760,H=280,m={t:24,r:94,b:34,l:56}, clean=values.filter(v=>Number.isFinite(v.value));
   if(!clean.length){target.innerHTML="—";return}
-  let lo=Math.min(...clean.map(v=>v.value)),hi=Math.max(...clean.map(v=>v.value)); const pad=Math.max((hi-lo)*.14,Math.abs(hi)*.04,1); lo-=pad;hi+=pad;if(zero){lo=Math.min(0,lo);hi=Math.max(0,hi)}
-  const x=i=>m.l+i*(W-m.l-m.r)/(clean.length-1), y=v=>m.t+(hi-v)/(hi-lo)*(H-m.t-m.b), path=clean.map((p,i)=>`${i?"L":"M"}${x(i)},${y(p.value)}`).join(" "), last=clean.at(-1);
-  target.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${[0,.25,.5,.75,1].map(t=>`<line x1="${m.l}" x2="${W-m.r}" y1="${m.t+t*(H-m.t-m.b)}" y2="${m.t+t*(H-m.t-m.b)}" class="grid-line"/><text x="${m.l-8}" y="${m.t+t*(H-m.t-m.b)+4}" text-anchor="end" class="axis-label">${format(hi-t*(hi-lo))}</text>`).join("")}${zero&&lo<0&&hi>0?`<line x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}" class="zero-line"/>`:""}<path d="${path}" fill="none" stroke="${color}" stroke-width="3"/>${clean.map((p,i)=>i%5===0||i===clean.length-1?`<text x="${x(i)}" y="${H-10}" text-anchor="middle" class="axis-label">${p.year}</text>`:"").join("")}<circle cx="${x(clean.length-1)}" cy="${y(last.value)}" r="4" fill="${color}"/><text x="${x(clean.length-1)+10}" y="${y(last.value)+4}" class="chart-end-label">${format(last.value)}</text></svg><div class="chart-source">${state.lang==="en"?"Source":"Zdroj"}: ${source}</div>`;
+  let rawLo=Math.min(...clean.map(v=>v.value)),rawHi=Math.max(...clean.map(v=>v.value)); const pad=Math.max((rawHi-rawLo)*.08,Math.abs(rawHi)*.03,1);rawLo-=pad;rawHi+=pad;if(zero){rawLo=Math.min(0,rawLo);rawHi=Math.max(0,rawHi)}
+  const axis=niceAxis(rawLo,rawHi),lo=axis.min,hi=axis.max,plotWidth=W-m.l-m.r,x=i=>m.l+(i+.5)*plotWidth/clean.length,y=v=>m.t+(hi-v)/(hi-lo)*(H-m.t-m.b),path=clean.map((p,i)=>`${i?"L":"M"}${x(i)},${y(p.value)}`).join(" "),last=clean.at(-1);
+  target.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${axis.ticks.slice().reverse().map(tick=>`<line x1="${m.l}" x2="${W-m.r}" y1="${y(tick)}" y2="${y(tick)}" class="grid-line"/><text x="${m.l-8}" y="${y(tick)+4}" text-anchor="end" class="axis-label">${format(tick)}</text>`).join("")}${zero&&lo<0&&hi>0?`<line x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}" class="zero-line"/>`:""}<path d="${path}" fill="none" stroke="${color}" stroke-width="3"/>${clean.map((p,i)=>i%5===0||i===clean.length-1?`<text x="${x(i)}" y="${H-10}" text-anchor="middle" class="axis-label">${p.year}</text>`:"").join("")}<circle cx="${x(clean.length-1)}" cy="${y(last.value)}" r="4" fill="${color}"/><text x="${x(clean.length-1)+10}" y="${y(last.value)+4}" class="chart-end-label">${format(last.value)}</text></svg><div class="chart-source">${state.lang==="en"?"Source":"Zdroj"}: ${source}</div>`;
 }
 function charts(){
   const fiscalLabels={balance_pct_gdp:T[state.lang].balance,gross_debt_pct_gdp:T[state.lang].debt,expenditure_pct_gdp:T[state.lang].expense,revenue_pct_gdp:T[state.lang].revenue};

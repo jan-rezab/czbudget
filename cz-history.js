@@ -10,6 +10,15 @@ if (historyRoot) {
   const fmt = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });
   const compact = (value) => `${value < 0 ? "−" : ""}${fmt.format(Math.abs(value) / 1e9)} mld. Kč`;
   const svgEscape = (value) => String(value).replace(/[&<>]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[character]);
+  const niceAxis = (domainMax, targetSteps = 4) => {
+    const roughStep = domainMax / targetSteps;
+    const power = 10 ** Math.floor(Math.log10(roughStep));
+    const fraction = roughStep / power;
+    const multiplier = [1, 2, 2.5, 5, 10].find((candidate) => candidate >= fraction) || 10;
+    const step = multiplier * power;
+    const max = Math.ceil(domainMax / step) * step;
+    return { max, ticks: Array.from({ length: Math.round(max / step) + 1 }, (_, index) => index * step) };
+  };
 
   function render(city) {
     const series = city.series;
@@ -19,10 +28,11 @@ if (historyRoot) {
     kpis.innerHTML = `<article><span>${english ? "Revenue" : "Příjmy"} ${latest.year}</span><strong>${compact(latest.revenue_actual)}</strong></article><article><span>${english ? "Balance" : "Výsledek"} ${latest.year}</span><strong class="${latest.budget_balance >= 0 ? "positive" : "negative"}">${compact(latest.budget_balance)}</strong></article><article><span>${english ? "Cash and deposits" : "Stav účtů"} ${latest.year}</span><strong>${compact(latest.cash_current)}</strong></article><article><span>${english ? "20-year cumulative balance" : "Součet výsledků za 20 let"}</span><strong class="${cumulative >= 0 ? "positive" : "negative"}">${compact(cumulative)}</strong><small>${english ? `${surplusYears} of 20 years in surplus` : `${surplusYears} z 20 let v přebytku`}</small></article>`;
     const width = 1120, height = 460, left = 72, right = 26, top = 30, bottom = 54;
     const values = series.flatMap((row) => [row.revenue_actual, row.expense_actual, row.cash_current]);
-    const max = Math.max(...values) * 1.08;
-    const x = (index) => left + index * ((width - left - right) / (series.length - 1));
+    const axis = niceAxis(Math.max(...values) * 1.04);
+    const max = axis.max;
+    const x = (index) => left + (index + .5) * ((width - left - right) / series.length);
     const y = (value) => top + (max - value) / max * (height - top - bottom);
-    const ticks = [0, .25, .5, .75, 1].map((share) => ({ value: max * share, y: y(max * share) }));
+    const ticks = axis.ticks.map((value) => ({ value, y: y(value) }));
     const gridLines = ticks.map((tick) => `<line x1="${left}" x2="${width-right}" y1="${tick.y}" y2="${tick.y}"/><text x="${left-12}" y="${tick.y+4}" text-anchor="end">${fmt.format(tick.value/1e9)}</text>`).join("");
     const line = (field) => series.map((row, index) => `${index ? "L" : "M"}${x(index).toFixed(1)},${y(row[field]).toFixed(1)}`).join(" ");
     const points = series.map((row, index) => `<g class="history-point"><circle cx="${x(index)}" cy="${y(row.cash_current)}" r="4"><title>${row.year}: ${compact(row.cash_current)}</title></circle></g>`).join("");
