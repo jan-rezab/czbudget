@@ -42,6 +42,7 @@
     document.title = lang === "en" ? "Public Spending Data — Czech budget over time" : "Public Spending Data — český rozpočet v čase";
     const url = new URL(location.href); url.searchParams.set("lang", lang); history.replaceState(null,"",url);
     translating = false;
+    dispatchEvent(new CustomEvent("budgetlanguagechange", { detail: { lang } }));
   }
   document.querySelectorAll("[data-budget-lang]").forEach(button => button.addEventListener("click", () => applyLanguage(button.dataset.budgetLang)));
   const observer = new MutationObserver(records => {
