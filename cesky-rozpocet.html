@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Public Spending Data — český rozpočet v čase</title>
+  <meta name="description" content="Státní rozpočet ČR 2001–2026, jeho struktura a demografický tlak na důchody, zdravotnictví a péči do roku 2045.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://publicspendingdata.org/cesky-rozpocet.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="cs_CZ">
+  <meta property="og:site_name" content="Public Spending Data">
+  <meta property="og:title" content="Český rozpočet v čase — Public Spending Data">
+  <meta property="og:description" content="25 let skutečnosti, návrh 2026 a model sociálních systémů do roku 2045.">
+  <meta property="og:image" content="assets/og-budget.png">
+  <meta property="og:url" content="https://publicspendingdata.org/cesky-rozpocet.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Státní rozpočet ČR 2001–2026 a demografický model 2025–2045","description":"Příjmy, výdaje a struktura státního rozpočtu ČR doplněné modelem demografického tlaku na důchody, zdravotnictví a péči.","url":"https://publicspendingdata.org/cesky-rozpocet.html","inLanguage":"cs","temporalCoverage":"2001/2045","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/czech-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/demography-social.v1.json"}]}</script>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-v2.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Public Spending Data — začátek stránky"><span class="brand-grid"><i></i><i></i><i></i><i></i></span><span class="wordmark">Public Spending <b>Data</b></span></a>
+    <nav aria-label="Hlavní navigace"><a href="#cesko">Rozpočet</a><a href="cesko.html">Firmy státu</a><a href="#struktura">Struktura</a><a href="#demografie">Demografie</a><a href="#benchmark">Srovnání</a><a href="#metodika">Metodika</a></nav>
+    <div class="dataset-pill"><span>MF × ČSÚ</span> · 2001–2045</div>
+  </header>
+
+  <section class="hero budget-hero" id="top">
+    <div class="eyebrow"><span class="live-dot"></span> Státní rozpočet ČR · skutečnost, návrh a výhled</div>
+    <h1>Český rozpočet.<br><em>Bez krátké paměti.</em></h1>
+    <p class="hero-copy">Pětadvacet let příjmů a výdajů, návrh pro rok 2026 a model toho, co s veřejnými financemi udělá stárnutí populace.</p>
+    <div class="hero-actions"><a class="primary-button" href="#cesko">Otevřít data <span>↘</span></a><span class="hero-note">MF ČR · ČSÚ · ČSSZ · MPSV</span></div>
+    <div class="hero-count">26</div>
+    <aside class="hero-budget-card" aria-label="Návrh státního rozpočtu 2026">
+      <div><span>Návrh 2026</span><b>mld. Kč</b></div>
+      <p>Rozpočet počítá se schodkem, který odpovídá téměř celému čistému demografickému tlaku vybraných systémů v roce 2045.</p>
+      <div class="hero-flow"><span>Příjmy</span><strong>2 117,8</strong><i><b style="width:87.2%"></b></i></div>
+      <div class="hero-flow expense"><span>Výdaje</span><strong>2 427,8</strong><i><b style="width:100%"></b></i></div>
+      <div class="hero-deficit"><span>Schodek</span><strong>−310,0</strong><small>12,8 % výdajů</small></div>
+      <small>Úplné příjmy a výdaje včetně EU/FM; saldo je totožné s variantou bez EU/FM.</small>
+    </aside>
+  </section>
+
+  <section class="metrics" aria-label="Klíčová čísla">
+    <article><span>Skutečný schodek 2025</span><strong>−290,7</strong><small>mld. Kč</small></article>
+    <article><span>Návrh schodku 2026</span><strong>−310,0</strong><small>mld. Kč</small></article>
+    <article><span>65+ na 100 lidí 20–64</span><strong id="headline-ratio">49,6</strong><small>střední varianta · 2045</small></article>
+    <article><span>Změna populace 80+</span><strong id="headline-80">+72 %</strong><small>2025–2045</small></article>
+  </section>
+
+  <section class="budget-section" id="cesko">
+    <div class="section-heading"><div><span class="kicker">01 / Rozpočet v čase</span><h2>Příjmy a výdaje.<br>Na jedné ose.</h2></div><p>Skutečné pokladní plnění 2001–2025 a návrh 2026. Přepněte nominální koruny na ceny roku 2025 a porovnejte období bez inflačního zkreslení.</p></div>
+    <div class="control-bar budget-controls">
+      <label><span>Zobrazení</span><select id="budget-price-mode"><option value="nominal">Nominální Kč</option><option value="real">Ceny roku 2025</option></select></label>
+      <label><span>Vybraný rok</span><input id="budget-year" type="range" min="2001" max="2026" value="2026" step="1"></label>
+      <div class="control-readout"><span>Aktivní rok</span><strong id="budget-year-label">2026 · návrh</strong></div>
+    </div>
+    <article class="panel chart-panel primary-chart-panel">
+      <div class="panel-head"><div><span class="panel-index">A</span><h3>Příjmy × výdaje</h3></div><div class="chart-legend"><span><i class="revenue-key"></i>Příjmy</span><span><i class="expense-key"></i>Výdaje</span><span><i class="proposal-key"></i>Návrh</span></div></div>
+      <div class="svg-chart" id="budget-pair-chart"></div><div class="selected-year-grid" id="budget-year-detail"></div>
+    </article>
+  </section>
+
+  <section class="structure-section" id="struktura">
+    <div class="section-heading compact-heading"><div><span class="kicker">02 / Detailní struktura</span><h2>Co rozpočet živí.<br>A co živí rozpočet.</h2></div><p>Každý rok má stejnou klasifikaci. Reziduální položka „ostatní“ zachovává součet a dlouhou časovou srovnatelnost.</p></div>
+    <div class="segmented-control standalone-segments" id="structure-mode" aria-label="Jednotka strukturálních grafů"><button type="button" data-mode="amount" aria-pressed="true">mld. Kč</button><button type="button" data-mode="share" aria-pressed="false">podíl v %</button></div>
+    <div class="structure-grid">
+      <article class="panel chart-panel"><div class="panel-head"><div><span class="panel-index">B</span><h3>Příjmová část</h3></div><span>daně · pojistné · ostatní</span></div><div class="stack-legend" id="income-legend"></div><div class="svg-chart" id="income-stack-chart"></div></article>
+      <article class="panel chart-panel"><div class="panel-head"><div><span class="panel-index">C</span><h3>Výdajová část</h3></div><span>dávky · provoz · investice</span></div><div class="stack-legend" id="expense-legend"></div><div class="svg-chart" id="expense-stack-chart"></div></article>
+    </div>
+  </section>
+
+  <section class="demography-section" id="demografie">
+    <div class="section-heading light-heading"><div><span class="kicker">03 / Demografický model</span><h2>Stárnutí není graf.<br>Je to účet.</h2></div><p>Model propojuje věkovou projekci ČSÚ s důchody, veřejným zdravotním pojištěním a příspěvkem na péči. Výchozí nastavení izoluje čistý vliv demografie.</p></div>
+    <div class="model-controls">
+      <div class="model-control"><span>Varianta ČSÚ</span><div class="segmented-control" id="demo-variant"><button type="button" data-value="low" aria-pressed="false">Nízká</button><button type="button" data-value="mid" aria-pressed="true">Střední</button><button type="button" data-value="high" aria-pressed="false">Vysoká</button></div></div>
+      <label class="model-control"><span>Efektivní důchodový věk <b id="ret-age-label">65 let</b></span><input id="ret-age" type="range" min="65" max="68" value="65" step="1"></label>
+      <label class="model-control"><span>Reálný růst mezd <b id="wage-growth-label">0,0 %</b></span><input id="wage-growth" type="range" min="0" max="2.5" value="0" step="0.25"></label>
+      <label class="model-control"><span>Reálný růst nákladů <b id="cost-growth-label">0,0 %</b></span><input id="cost-growth" type="range" min="0" max="2.5" value="0" step="0.25"></label>
+    </div>
+    <div class="model-kpis"><article><span>65+ / 20–64</span><strong id="model-ratio">—</strong><small id="model-ratio-note">2045</small></article><article><span>Populace 80+</span><strong id="model-80">—</strong><small id="model-80-note">změna proti 2025</small></article><article><span>Dodatečný tlak</span><strong id="model-extra">—</strong><small>mld. Kč ročně · 2045</small></article><article><span>Důchodové saldo</span><strong id="model-pension-balance">—</strong><small>mld. Kč · 2045</small></article></div>
+    <div class="model-grid">
+      <article class="model-panel model-wide"><header><div><span>01</span><h3>Věková struktura</h3></div><small>miliony obyvatel</small></header><div class="stack-legend" id="population-legend"></div><div class="svg-chart dark-chart" id="population-chart"></div></article>
+      <article class="model-panel"><header><div><span>02</span><h3>Tlak podle systému</h3></div><small>2025 = 100</small></header><div class="stack-legend" id="pressure-legend"></div><div class="svg-chart dark-chart" id="pressure-chart"></div></article>
+      <article class="model-panel"><header><div><span>03</span><h3>Nový každoroční účet</h3></div><small>proti 2025 · mld. Kč</small></header><div class="stack-legend" id="extra-legend"></div><div class="svg-chart dark-chart" id="extra-chart"></div></article>
+      <article class="model-panel model-wide"><header><div><span>04</span><h3>Důchodový účet: plátci proti příjemcům</h3></div><small>mld. Kč v cenách 2025</small></header><div class="stack-legend" id="pension-legend"></div><div class="svg-chart dark-chart" id="pension-chart"></div><p class="model-note"><b>Jak číst model:</b> „Nulový růst“ znamená stejné reálné ceny a náklady na člověka jako v roce 2025. Důchodový věk se zavádí lineárně během deseti let. Váhy zdravotnictví a péče jsou scénářové předpoklady, nikoli prognóza ČSÚ.</p></article>
+    </div>
+  </section>
+
+  <section class="explorer" id="benchmark">
+    <div class="section-heading"><div><span class="kicker">04 / Mezinárodní kontext</span><h2>Jedna metrika.<br>Deset realit.</h2></div><p>Český státní rozpočet doplňuje harmonizované srovnání sektoru vládních institucí podle IMF. Jde o jiný rozsah než národní státní rozpočet, proto data nemícháme.</p></div>
+    <div class="control-bar sovereign-controls"><label><span>Rok</span><select id="year-select"></select></label><label class="wide-control"><span>Ukazatel</span><select id="metric-select"></select></label><label><span>Skupina</span><select id="group-select"><option value="all">Všechny země</option><option value="requested">Základní srovnání</option><option value="responsible_benchmark">Fiskální benchmark</option></select></label><div class="currency-status"><span class="status-light"></span><div><strong>IMF WEO</strong><small>skutečnost do 2024</small></div></div></div>
+    <div class="explorer-grid"><article class="panel ranking-panel"><div class="panel-head"><div><span class="panel-index">D</span><h3 id="ranking-title">Výdaje</h3></div><span id="ranking-count">10 zemí</span></div><div class="rank-list" id="rank-list"></div></article><article class="panel city-panel"><div class="panel-head"><div><span class="panel-index">E</span><h3>Profil země</h3></div><label class="city-select"><span class="sr-only">Vybraná země</span><select id="country-select"></select></label></div><div id="country-profile"></div></article></div>
+    <article class="panel comparison-panel"><div class="panel-head"><div><span class="panel-index">F</span><h3>Saldo × dluh</h3></div><span id="comparison-year">2024</span></div><div class="scatter-wrap" id="scatter-wrap"></div></article>
+  </section>
+
+  <section class="methodology" id="metodika">
+    <div><span class="kicker">05 / Data & metodika</span><h2>Důvěra začíná<br>u definice.</h2></div>
+    <div class="method-grid"><article><span>01</span><h3>Český rozpočet</h3><p>Pokladní plnění státního rozpočtu 2001–2025 a návrh 2026. Národní metodika, mld. Kč.</p></article><article><span>02</span><h3>Demografie</h3><p>Střední, nízká a vysoká varianta projekce ČSÚ 2023–2100, agregovaná do věkových skupin.</p></article><article><span>03</span><h3>Sociální systémy</h3><p>Výchozí skutečnost 2025: ČSSZ, zdravotní pojišťovny a konečný rozpočet příspěvku na péči.</p></article><article><span>04</span><h3>Mezinárodní benchmark</h3><p>IMF WEO, sektor vládních institucí, podíly na HDP. Kontext, nikoli náhrada národní klasifikace.</p></article></div>
+    <div class="source-links"><a href="https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/mf-zrevidovalo-rozpocet-na-rok-2026-62672" target="_blank" rel="noreferrer">MF: návrh rozpočtu 2026 ↗</a><a href="https://csu.gov.cz/produkty/projekce-obyvatelstva-ceske-republiky-2023-2100" target="_blank" rel="noreferrer">ČSÚ: projekce populace ↗</a><a href="https://www.cssz.cz/documents/20143/2955094/4%2BPrijmy_a_vydaje_na_socialni_zabezpeceni_12_2025.pdf/4504ffb7-2a74-0882-7566-37b17802f977?version=1.0" target="_blank" rel="noreferrer">ČSSZ: důchodový účet ↗</a><a href="https://www.imf.org/en/Publications/WEO/weo-database/2026/April" target="_blank" rel="noreferrer">IMF WEO ↗</a></div>
+  </section>
+
+  <footer><div><span>Public Spending Data</span><small>Český rozpočet v čase a souvislostech</small></div><p>MF ČR · ČSÚ · ČSSZ · MPSV · IMF</p><a href="#top">Nahoru ↑</a></footer>
+</main>
+<div class="chart-tooltip" id="chart-tooltip" role="status" aria-live="polite"></div>
+<noscript>Pro interaktivní grafy je potřeba zapnout JavaScript.</noscript>
+</body>
+</html>

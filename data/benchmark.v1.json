@@ -1,0 +1,2406 @@
+{
+  "schema_version": "2.0.0",
+  "dataset_id": "municipal-finance-benchmark",
+  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "period": {
+    "fiscal_year": 2025,
+    "as_of_date": "2025-12-31",
+    "reporting_status": "actual"
+  },
+  "scope": "Samostatné účetní jednotky statutárních měst a krajů; bez příspěvkových organizací a bez samostatných městských částí/obvodů.",
+  "cash_definition": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 podle metodiky MF.",
+  "countries": [
+    {
+      "country_code": "CZ",
+      "name_cs": "Česko",
+      "name_en": "Czechia",
+      "default_currency_code": "CZK"
+    }
+  ],
+  "currencies": [
+    {
+      "currency_code": "CZK",
+      "symbol": "Kč",
+      "minor_units": 2,
+      "name_cs": "česká koruna"
+    }
+  ],
+  "fx_rates": [
+    {
+      "base_currency_code": "CZK",
+      "quote_currency_code": "CZK",
+      "rate": 1,
+      "observed_on": "2025-12-31",
+      "provider": "identity"
+    }
+  ],
+  "cohorts": [
+    {
+      "cohort_id": "CZ_STATUTORY_2025",
+      "country_code": "CZ",
+      "fiscal_year": 2025,
+      "level_code": "municipality",
+      "label_cs": "Statutární města ČR včetně Prahy",
+      "entity_count": 27,
+      "entity_ids": [
+        "CZ:00297488",
+        "CZ:00075370",
+        "CZ:00254657",
+        "CZ:00301825",
+        "CZ:00266094",
+        "CZ:00261238",
+        "CZ:00081531",
+        "CZ:44992785",
+        "CZ:00845451",
+        "CZ:00288659",
+        "CZ:00244732",
+        "CZ:00261891",
+        "CZ:00283924",
+        "CZ:00238295",
+        "CZ:00262340",
+        "CZ:00262978",
+        "CZ:00297313",
+        "CZ:00286010",
+        "CZ:00274046",
+        "CZ:00300535",
+        "CZ:00297534",
+        "CZ:00234516",
+        "CZ:00266621",
+        "CZ:00268810",
+        "CZ:00296643",
+        "CZ:00299308",
+        "CZ:00064581"
+      ]
+    },
+    {
+      "cohort_id": "CZ_REGIONS_2025",
+      "country_code": "CZ",
+      "fiscal_year": 2025,
+      "level_code": "region",
+      "label_cs": "Kraje ČR včetně hlavního města Prahy",
+      "entity_count": 14,
+      "entity_ids": [
+        "CZ:00064581",
+        "CZ:70891095",
+        "CZ:70890650",
+        "CZ:70890366",
+        "CZ:70891168",
+        "CZ:70892156",
+        "CZ:70891508",
+        "CZ:70889546",
+        "CZ:70892822",
+        "CZ:70890749",
+        "CZ:70888337",
+        "CZ:60609460",
+        "CZ:70891320",
+        "CZ:70890692"
+      ]
+    }
+  ],
+  "metric_definitions": [
+    {
+      "metric_code": "revenue_actual",
+      "label_cs": "Příjmy",
+      "unit": "currency",
+      "polarity": "neutral"
+    },
+    {
+      "metric_code": "expense_actual",
+      "label_cs": "Výdaje",
+      "unit": "currency",
+      "polarity": "neutral"
+    },
+    {
+      "metric_code": "cash_current",
+      "label_cs": "Peníze a vklady",
+      "unit": "currency",
+      "polarity": "positive"
+    },
+    {
+      "metric_code": "cash_to_expense",
+      "label_cs": "Krytí výdajů hotovostí",
+      "unit": "ratio",
+      "polarity": "positive"
+    },
+    {
+      "metric_code": "capital_expense_share",
+      "label_cs": "Podíl kapitálových výdajů",
+      "unit": "ratio",
+      "polarity": "positive"
+    },
+    {
+      "metric_code": "revenue_execution",
+      "label_cs": "Plnění upravených příjmů",
+      "unit": "ratio",
+      "polarity": "target_1"
+    },
+    {
+      "metric_code": "expense_execution",
+      "label_cs": "Čerpání upravených výdajů",
+      "unit": "ratio",
+      "polarity": "target_1"
+    },
+    {
+      "metric_code": "balance_to_revenue",
+      "label_cs": "Saldo vůči příjmům",
+      "unit": "ratio",
+      "polarity": "neutral"
+    }
+  ],
+  "source_registry": [
+    {
+      "source_id": "MF_FINM_2025_12",
+      "label_cs": "FIN 2-12M",
+      "url": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinM/2025_12_Data_CSUIS_FINM.zip",
+      "sha256": "3d48d2ea5e273273301b4c28888c03c4c3ae694c0620480d51ac8524a4f9b123"
+    },
+    {
+      "source_id": "MF_ROZV_2025_12",
+      "label_cs": "Rozvaha",
+      "url": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/Rozvaha/2025_12_Data_CSUIS_ROZV.zip",
+      "sha256": "80658386aff7e4254b5c5c3ba993a3fb409e29b1258f00a592e7aac94f3aa844"
+    }
+  ],
+  "entity_levels": [
+    {
+      "level_code": "municipality",
+      "label_cs": "Statutární města",
+      "entity_count": 27
+    },
+    {
+      "level_code": "region",
+      "label_cs": "Kraje",
+      "entity_count": 14
+    }
+  ],
+  "entities": [
+    {
+      "country_code": "CZ",
+      "national_id": "00297488",
+      "name": "Statutární město Havířov",
+      "short_name": "Havířov",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 1,
+        "grade": "B",
+        "score": 3.19
+      },
+      "amounts": {
+        "revenue_approved": 2072603000,
+        "revenue_adjusted": 2333236094,
+        "revenue_actual": 2365363257.74,
+        "expense_approved": 2845325000,
+        "expense_adjusted": 3433777432,
+        "expense_actual": 2635842316.97,
+        "financing_actual": 270479059.23,
+        "cash_current": 1176281714.16,
+        "cash_previous": 1473774064.4399998,
+        "tax_revenue": 1731699796.22,
+        "nontax_revenue": 146861704.19,
+        "capital_revenue": 1990189.5,
+        "transfer_revenue": 484811567.83000004,
+        "current_expense": 2022896181.7799997,
+        "capital_expense": 612946135.19,
+        "budget_balance": -270479059.23
+      },
+      "ratios": {
+        "revenue_execution": 1.013769,
+        "expense_execution": 0.767622,
+        "cash_to_expense": 0.446264,
+        "capital_expense_share": 0.232543,
+        "transfer_revenue_share": 0.204963,
+        "tax_revenue_share": 0.732107,
+        "balance_to_revenue": -0.11435,
+        "cash_yoy": -0.201858
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00297488/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00297488"
+      },
+      "entity_id": "CZ:00297488",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "havirov",
+        "municipality_path": "/cz/obce/havirov/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00075370",
+      "name": "Statutární město Plzeň",
+      "short_name": "Plzeň",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 2,
+        "grade": "B",
+        "score": 3.33
+      },
+      "amounts": {
+        "revenue_approved": 8772536916.41,
+        "revenue_adjusted": 9381745651.28,
+        "revenue_actual": 9959442907.470003,
+        "expense_approved": 11993740723,
+        "expense_adjusted": 10109050050.550001,
+        "expense_actual": 9700461714.059992,
+        "financing_actual": -258981193.41,
+        "cash_current": 7710423454.04,
+        "cash_previous": 7629046740.18,
+        "tax_revenue": 8133748416.110001,
+        "nontax_revenue": 1120141428.2299998,
+        "capital_revenue": 185743803.07999998,
+        "transfer_revenue": 519809260.05,
+        "current_expense": 7016521664.009996,
+        "capital_expense": 2683940050.0499997,
+        "budget_balance": 258981193.4100113
+      },
+      "ratios": {
+        "revenue_execution": 1.061577,
+        "expense_execution": 0.959582,
+        "cash_to_expense": 0.794851,
+        "capital_expense_share": 0.276682,
+        "transfer_revenue_share": 0.052193,
+        "tax_revenue_share": 0.816687,
+        "balance_to_revenue": 0.026004,
+        "cash_yoy": 0.010667
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00075370/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00075370"
+      },
+      "entity_id": "CZ:00075370",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "plzen",
+        "municipality_path": "/cz/obce/plzen/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00254657",
+      "name": "Statutární město Karlovy Vary",
+      "short_name": "Karlovy Vary",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 3,
+        "grade": "B",
+        "score": 3.79
+      },
+      "amounts": {
+        "revenue_approved": 1575230000,
+        "revenue_adjusted": 1791522676.87,
+        "revenue_actual": 1934787542.5200005,
+        "expense_approved": 2434685000,
+        "expense_adjusted": 3806299586.9999995,
+        "expense_actual": 1828392781.63,
+        "financing_actual": -106394760.89,
+        "cash_current": 1280288406.49,
+        "cash_previous": 1235739515.19,
+        "tax_revenue": 1478715452.9900002,
+        "nontax_revenue": 182301036.60999998,
+        "capital_revenue": 21545464.05,
+        "transfer_revenue": 252225588.87,
+        "current_expense": 1432979996.53,
+        "capital_expense": 395412785.1000001,
+        "budget_balance": 106394760.89000034
+      },
+      "ratios": {
+        "revenue_execution": 1.079968,
+        "expense_execution": 0.48036,
+        "cash_to_expense": 0.700226,
+        "capital_expense_share": 0.216262,
+        "transfer_revenue_share": 0.130363,
+        "tax_revenue_share": 0.764278,
+        "balance_to_revenue": 0.05499,
+        "cash_yoy": 0.03605
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00254657/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00254657"
+      },
+      "entity_id": "CZ:00254657",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "karlovy-vary",
+        "municipality_path": "/cz/obce/karlovy-vary/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00301825",
+      "name": "Statutární město Přerov",
+      "short_name": "Přerov",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 4,
+        "grade": "B",
+        "score": 3.97
+      },
+      "amounts": {
+        "revenue_approved": 1483369034.5,
+        "revenue_adjusted": 1527414959.04,
+        "revenue_actual": 1557944348.8300004,
+        "expense_approved": 1482680934.5,
+        "expense_adjusted": 3013532804.0999994,
+        "expense_actual": 1662627042.7100003,
+        "financing_actual": 104682693.88,
+        "cash_current": 1670621890.17,
+        "cash_previous": 1773122589.42,
+        "tax_revenue": 1059929659.71,
+        "nontax_revenue": 238004050.70000002,
+        "capital_revenue": 10804955,
+        "transfer_revenue": 249205683.42,
+        "current_expense": 1195886803.7900004,
+        "capital_expense": 466740238.92,
+        "budget_balance": -104682693.87999988
+      },
+      "ratios": {
+        "revenue_execution": 1.019988,
+        "expense_execution": 0.55172,
+        "cash_to_expense": 1.004809,
+        "capital_expense_share": 0.280725,
+        "transfer_revenue_share": 0.159958,
+        "tax_revenue_share": 0.680339,
+        "balance_to_revenue": -0.067193,
+        "cash_yoy": -0.057808
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00301825/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00301825"
+      },
+      "entity_id": "CZ:00301825",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "prerov",
+        "municipality_path": "/cz/obce/prerov/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00266094",
+      "name": "Statutární město Most",
+      "short_name": "Most",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 5,
+        "grade": "B",
+        "score": 4.39
+      },
+      "amounts": {
+        "revenue_approved": 2756347000,
+        "revenue_adjusted": 2549828800,
+        "revenue_actual": 2473584184.41,
+        "expense_approved": 3038411000,
+        "expense_adjusted": 2905678000,
+        "expense_actual": 2505237662.44,
+        "financing_actual": 31653478.03,
+        "cash_current": 588925727.23,
+        "cash_previous": 669960801.22,
+        "tax_revenue": 1686811080.21,
+        "nontax_revenue": 162623983.38,
+        "capital_revenue": 93050719.2,
+        "transfer_revenue": 531098401.61999995,
+        "current_expense": 1944781790.5899992,
+        "capital_expense": 560455871.8500001,
+        "budget_balance": -31653478.03000021
+      },
+      "ratios": {
+        "revenue_execution": 0.970098,
+        "expense_execution": 0.862187,
+        "cash_to_expense": 0.235078,
+        "capital_expense_share": 0.223714,
+        "transfer_revenue_share": 0.214708,
+        "tax_revenue_share": 0.68193,
+        "balance_to_revenue": -0.012797,
+        "cash_yoy": -0.120955
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00266094/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00266094"
+      },
+      "entity_id": "CZ:00266094",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "most",
+        "municipality_path": "/cz/obce/most/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00261238",
+      "name": "Statutární město Děčín",
+      "short_name": "Děčín",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 6,
+        "grade": "B",
+        "score": 4.41
+      },
+      "amounts": {
+        "revenue_approved": 1357676000,
+        "revenue_adjusted": 1551808000,
+        "revenue_actual": 1562750321.73,
+        "expense_approved": 1812676000,
+        "expense_adjusted": 2092192000,
+        "expense_actual": 1804511335.5200002,
+        "financing_actual": 241761013.79,
+        "cash_current": 87217197.69,
+        "cash_previous": 284854580.71,
+        "tax_revenue": 1141468379.0400002,
+        "nontax_revenue": 141889230.61,
+        "capital_revenue": 15765893,
+        "transfer_revenue": 263626819.07999998,
+        "current_expense": 1412798807.9199998,
+        "capital_expense": 391712527.59999996,
+        "budget_balance": -241761013.7900002
+      },
+      "ratios": {
+        "revenue_execution": 1.007051,
+        "expense_execution": 0.862498,
+        "cash_to_expense": 0.048333,
+        "capital_expense_share": 0.217074,
+        "transfer_revenue_share": 0.168694,
+        "tax_revenue_share": 0.730423,
+        "balance_to_revenue": -0.154702,
+        "cash_yoy": -0.693819
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00261238/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00261238"
+      },
+      "entity_id": "CZ:00261238",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "decin",
+        "municipality_path": "/cz/obce/decin/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00081531",
+      "name": "Statutární město Ústí nad Labem",
+      "short_name": "Ústí nad Labem",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 7,
+        "grade": "B",
+        "score": 4.46
+      },
+      "amounts": {
+        "revenue_approved": 2925621500,
+        "revenue_adjusted": 3480590142.1,
+        "revenue_actual": 3539487942.9499993,
+        "expense_approved": 3555769100,
+        "expense_adjusted": 4428714302.099999,
+        "expense_actual": 3539584121.12,
+        "financing_actual": 96178.17,
+        "cash_current": 1422475792.27,
+        "cash_previous": 1402581013.28,
+        "tax_revenue": 2499638540.33,
+        "nontax_revenue": 192369137.15,
+        "capital_revenue": 1203217,
+        "transfer_revenue": 846277048.47,
+        "current_expense": 3046250057.3000007,
+        "capital_expense": 493334063.81999993,
+        "budget_balance": -96178.17000055313
+      },
+      "ratios": {
+        "revenue_execution": 1.016922,
+        "expense_execution": 0.799235,
+        "cash_to_expense": 0.401877,
+        "capital_expense_share": 0.139376,
+        "transfer_revenue_share": 0.239096,
+        "tax_revenue_share": 0.706215,
+        "balance_to_revenue": -2.7e-05,
+        "cash_yoy": 0.014184
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00081531/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00081531"
+      },
+      "entity_id": "CZ:00081531",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "usti-nad-labem",
+        "municipality_path": "/cz/obce/usti-nad-labem/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "44992785",
+      "name": "Statutární město Brno",
+      "short_name": "Brno",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 8,
+        "grade": "B",
+        "score": 4.55
+      },
+      "amounts": {
+        "revenue_approved": 21233788580,
+        "revenue_adjusted": 23324310860.479996,
+        "revenue_actual": 23756213333.35,
+        "expense_approved": 26444683880,
+        "expense_adjusted": 27621680276.290005,
+        "expense_actual": 23055105096.629997,
+        "financing_actual": -701108236.72,
+        "cash_current": 9565305379.48,
+        "cash_previous": 8111036959.81,
+        "tax_revenue": 17256805040.45,
+        "nontax_revenue": 2043206578.7299998,
+        "capital_revenue": 406467630.78,
+        "transfer_revenue": 4049734083.3899994,
+        "current_expense": 15281611875.20998,
+        "capital_expense": 7773493221.420002,
+        "budget_balance": 701108236.7200012
+      },
+      "ratios": {
+        "revenue_execution": 1.018517,
+        "expense_execution": 0.834674,
+        "cash_to_expense": 0.414889,
+        "capital_expense_share": 0.33717,
+        "transfer_revenue_share": 0.170471,
+        "tax_revenue_share": 0.726412,
+        "balance_to_revenue": 0.029513,
+        "cash_yoy": 0.179295
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/44992785/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/44992785"
+      },
+      "entity_id": "CZ:44992785",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "brno",
+        "municipality_path": "/cz/obce/brno/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00845451",
+      "name": "Statutární město Ostrava",
+      "short_name": "Ostrava",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 9,
+        "grade": "B",
+        "score": 4.56
+      },
+      "amounts": {
+        "revenue_approved": 14363068000,
+        "revenue_adjusted": 16652394400,
+        "revenue_actual": 17553246769.139996,
+        "expense_approved": 17461417000,
+        "expense_adjusted": 18316488400,
+        "expense_actual": 17172562242.239996,
+        "financing_actual": -380684526.9,
+        "cash_current": 6619349542.93,
+        "cash_previous": 6718651630.02,
+        "tax_revenue": 12312045051.3,
+        "nontax_revenue": 2901861507.81,
+        "capital_revenue": 674836615.25,
+        "transfer_revenue": 1664503594.78,
+        "current_expense": 13423833199.489996,
+        "capital_expense": 3748729042.75,
+        "budget_balance": 380684526.8999996
+      },
+      "ratios": {
+        "revenue_execution": 1.054097,
+        "expense_execution": 0.937547,
+        "cash_to_expense": 0.385461,
+        "capital_expense_share": 0.218298,
+        "transfer_revenue_share": 0.094826,
+        "tax_revenue_share": 0.701411,
+        "balance_to_revenue": 0.021687,
+        "cash_yoy": -0.01478
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00845451/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00845451"
+      },
+      "entity_id": "CZ:00845451",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "ostrava",
+        "municipality_path": "/cz/obce/ostrava/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00288659",
+      "name": "Statutární město Prostějov",
+      "short_name": "Prostějov",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 10,
+        "grade": "B",
+        "score": 4.84
+      },
+      "amounts": {
+        "revenue_approved": 1483699589.19,
+        "revenue_adjusted": 1572530829.3400004,
+        "revenue_actual": 1567697316.31,
+        "expense_approved": 1722887993.74,
+        "expense_adjusted": 2068007431.3499997,
+        "expense_actual": 1765336547.2999997,
+        "financing_actual": 197639230.99,
+        "cash_current": 593796461.75,
+        "cash_previous": 789550893.81,
+        "tax_revenue": 1110428934.87,
+        "nontax_revenue": 213896110.26,
+        "capital_revenue": 17365210,
+        "transfer_revenue": 226007061.18,
+        "current_expense": 1220829340.5099995,
+        "capital_expense": 544507206.7900001,
+        "budget_balance": -197639230.98999977
+      },
+      "ratios": {
+        "revenue_execution": 0.996926,
+        "expense_execution": 0.853641,
+        "cash_to_expense": 0.336364,
+        "capital_expense_share": 0.308444,
+        "transfer_revenue_share": 0.144165,
+        "tax_revenue_share": 0.708318,
+        "balance_to_revenue": -0.12607,
+        "cash_yoy": -0.247931
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00288659/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00288659"
+      },
+      "entity_id": "CZ:00288659",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "prostejov",
+        "municipality_path": "/cz/obce/prostejov/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00244732",
+      "name": "Statutární město České Budějovice",
+      "short_name": "České Budějovice",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 11,
+        "grade": "B",
+        "score": 4.91
+      },
+      "amounts": {
+        "revenue_approved": 3376707000,
+        "revenue_adjusted": 3750138140.11,
+        "revenue_actual": 3890592297.710001,
+        "expense_approved": 4509836000,
+        "expense_adjusted": 5218874714.4400015,
+        "expense_actual": 4275327552.969999,
+        "financing_actual": 384735255.26,
+        "cash_current": 1364303834.95,
+        "cash_previous": 1293699926.23,
+        "tax_revenue": 2677810826.5,
+        "nontax_revenue": 587103084.74,
+        "capital_revenue": 7833926.38,
+        "transfer_revenue": 617844460.09,
+        "current_expense": 2898412448.57,
+        "capital_expense": 1376915104.4000006,
+        "budget_balance": -384735255.25999784
+      },
+      "ratios": {
+        "revenue_execution": 1.037453,
+        "expense_execution": 0.819205,
+        "cash_to_expense": 0.319111,
+        "capital_expense_share": 0.322061,
+        "transfer_revenue_share": 0.158805,
+        "tax_revenue_share": 0.688278,
+        "balance_to_revenue": -0.098889,
+        "cash_yoy": 0.054575
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00244732/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00244732"
+      },
+      "entity_id": "CZ:00244732",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "ceske-budejovice",
+        "municipality_path": "/cz/obce/ceske-budejovice/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00261891",
+      "name": "Statutární město Chomutov",
+      "short_name": "Chomutov",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 12,
+        "grade": "B",
+        "score": 5.01
+      },
+      "amounts": {
+        "revenue_approved": 1545059900,
+        "revenue_adjusted": 1689325800,
+        "revenue_actual": 1670441498.57,
+        "expense_approved": 1545059900,
+        "expense_adjusted": 1738272800,
+        "expense_actual": 1549206180.3700001,
+        "financing_actual": -121235318.2,
+        "cash_current": 181663203.66000003,
+        "cash_previous": 85987295.77,
+        "tax_revenue": 1214652113.95,
+        "nontax_revenue": 195824050.92999998,
+        "capital_revenue": 7768543,
+        "transfer_revenue": 252196790.69,
+        "current_expense": 1308661409.9700003,
+        "capital_expense": 240544770.40000004,
+        "budget_balance": 121235318.19999981
+      },
+      "ratios": {
+        "revenue_execution": 0.988821,
+        "expense_execution": 0.891233,
+        "cash_to_expense": 0.117262,
+        "capital_expense_share": 0.15527,
+        "transfer_revenue_share": 0.150976,
+        "tax_revenue_share": 0.727144,
+        "balance_to_revenue": 0.072577,
+        "cash_yoy": 1.112675
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00261891/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00261891"
+      },
+      "entity_id": "CZ:00261891",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "chomutov",
+        "municipality_path": "/cz/obce/chomutov/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00283924",
+      "name": "Statutární město Zlín",
+      "short_name": "Zlín",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 13,
+        "grade": "B",
+        "score": 5.43
+      },
+      "amounts": {
+        "revenue_approved": 2435552000,
+        "revenue_adjusted": 2785118400,
+        "revenue_actual": 2864608750.520001,
+        "expense_approved": 2406152000,
+        "expense_adjusted": 3970013400,
+        "expense_actual": 2969971491.4100013,
+        "financing_actual": 105362740.89,
+        "cash_current": 1060675272.1899999,
+        "cash_previous": 1154600688.1599998,
+        "tax_revenue": 2036691497.4500003,
+        "nontax_revenue": 439060109.30999994,
+        "capital_revenue": 28216717.240000002,
+        "transfer_revenue": 360640426.52,
+        "current_expense": 2226548767.070002,
+        "capital_expense": 743422724.34,
+        "budget_balance": -105362740.89000034
+      },
+      "ratios": {
+        "revenue_execution": 1.028541,
+        "expense_execution": 0.748101,
+        "cash_to_expense": 0.357133,
+        "capital_expense_share": 0.250313,
+        "transfer_revenue_share": 0.125895,
+        "tax_revenue_share": 0.710984,
+        "balance_to_revenue": -0.036781,
+        "cash_yoy": -0.081349
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00283924/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00283924"
+      },
+      "entity_id": "CZ:00283924",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "zlin",
+        "municipality_path": "/cz/obce/zlin/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00238295",
+      "name": "Statutární město Mladá Boleslav",
+      "short_name": "Mladá Boleslav",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 14,
+        "grade": "B",
+        "score": 5.45
+      },
+      "amounts": {
+        "revenue_approved": 1993919621.29,
+        "revenue_adjusted": 1856313954.7099998,
+        "revenue_actual": 1778552207.02,
+        "expense_approved": 2164256413.910001,
+        "expense_adjusted": 2035132774.880001,
+        "expense_actual": 1858336045.0999992,
+        "financing_actual": 79783838.08,
+        "cash_current": 33285114.61,
+        "cash_previous": 66838061.949999996,
+        "tax_revenue": 1363983585.43,
+        "nontax_revenue": 103523028.35999998,
+        "capital_revenue": 1032775,
+        "transfer_revenue": 310012818.23,
+        "current_expense": 1370322593.0099995,
+        "capital_expense": 488013452.09,
+        "budget_balance": -79783838.07999921
+      },
+      "ratios": {
+        "revenue_execution": 0.95811,
+        "expense_execution": 0.913128,
+        "cash_to_expense": 0.017911,
+        "capital_expense_share": 0.262608,
+        "transfer_revenue_share": 0.174306,
+        "tax_revenue_share": 0.766907,
+        "balance_to_revenue": -0.044859,
+        "cash_yoy": -0.502004
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00238295/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00238295"
+      },
+      "entity_id": "CZ:00238295",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "mlada-boleslav",
+        "municipality_path": "/cz/obce/mlada-boleslav/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00262340",
+      "name": "Statutární město Jablonec nad Nisou",
+      "short_name": "Jablonec nad Nisou",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 15,
+        "grade": "B",
+        "score": 5.58
+      },
+      "amounts": {
+        "revenue_approved": 1439941900,
+        "revenue_adjusted": 1517627225.93,
+        "revenue_actual": 1581132533.0600002,
+        "expense_approved": 1664240500,
+        "expense_adjusted": 2008897714.0100002,
+        "expense_actual": 1616061280.5099998,
+        "financing_actual": 34928747.45,
+        "cash_current": 103142995.28,
+        "cash_previous": 167134466.74,
+        "tax_revenue": 1163683119.8100002,
+        "nontax_revenue": 187475129.93999997,
+        "capital_revenue": 30894130.42,
+        "transfer_revenue": 199080152.89000002,
+        "current_expense": 1215215990.2699997,
+        "capital_expense": 400845290.24000007,
+        "budget_balance": -34928747.44999957
+      },
+      "ratios": {
+        "revenue_execution": 1.041845,
+        "expense_execution": 0.804452,
+        "cash_to_expense": 0.063824,
+        "capital_expense_share": 0.248038,
+        "transfer_revenue_share": 0.12591,
+        "tax_revenue_share": 0.735981,
+        "balance_to_revenue": -0.022091,
+        "cash_yoy": -0.382874
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00262340/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00262340"
+      },
+      "entity_id": "CZ:00262340",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "jablonec-nad-nisou",
+        "municipality_path": "/cz/obce/jablonec-nad-nisou/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00262978",
+      "name": "Statutární město Liberec",
+      "short_name": "Liberec",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 16,
+        "grade": "B",
+        "score": 5.84
+      },
+      "amounts": {
+        "revenue_approved": 3566672142,
+        "revenue_adjusted": 4000528683.8799996,
+        "revenue_actual": 3948429182.9799995,
+        "expense_approved": 4993651617,
+        "expense_adjusted": 6085989661.7,
+        "expense_actual": 4457056576.580003,
+        "financing_actual": 508627393.6,
+        "cash_current": 470225791.43,
+        "cash_previous": 1006651062.2499999,
+        "tax_revenue": 3017869135.84,
+        "nontax_revenue": 362011310.46,
+        "capital_revenue": 10995416,
+        "transfer_revenue": 557553320.6800001,
+        "current_expense": 3224518691.190002,
+        "capital_expense": 1232537885.3899996,
+        "budget_balance": -508627393.60000324
+      },
+      "ratios": {
+        "revenue_execution": 0.986977,
+        "expense_execution": 0.732347,
+        "cash_to_expense": 0.105501,
+        "capital_expense_share": 0.276536,
+        "transfer_revenue_share": 0.141209,
+        "tax_revenue_share": 0.764321,
+        "balance_to_revenue": -0.128818,
+        "cash_yoy": -0.532881
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00262978/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00262978"
+      },
+      "entity_id": "CZ:00262978",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "liberec",
+        "municipality_path": "/cz/obce/liberec/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00297313",
+      "name": "Statutární město Třinec",
+      "short_name": "Třinec",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 17,
+        "grade": "B",
+        "score": 5.89
+      },
+      "amounts": {
+        "revenue_approved": 1000027434.55,
+        "revenue_adjusted": 1128315081.77,
+        "revenue_actual": 1157261251.8000002,
+        "expense_approved": 1208859000,
+        "expense_adjusted": 1549799099.8100002,
+        "expense_actual": 1303966332.810001,
+        "financing_actual": 146705081.01,
+        "cash_current": 410531182.07,
+        "cash_previous": 573777609.21,
+        "tax_revenue": 835125782.0100001,
+        "nontax_revenue": 143367355.9,
+        "capital_revenue": 5789719.6,
+        "transfer_revenue": 172978394.29,
+        "current_expense": 974093677.3200005,
+        "capital_expense": 329872655.49000007,
+        "budget_balance": -146705081.0100007
+      },
+      "ratios": {
+        "revenue_execution": 1.025654,
+        "expense_execution": 0.841378,
+        "cash_to_expense": 0.314833,
+        "capital_expense_share": 0.252976,
+        "transfer_revenue_share": 0.149472,
+        "tax_revenue_share": 0.72164,
+        "balance_to_revenue": -0.126769,
+        "cash_yoy": -0.284512
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00297313/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00297313"
+      },
+      "entity_id": "CZ:00297313",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "trinec",
+        "municipality_path": "/cz/obce/trinec/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00286010",
+      "name": "Statutární město Jihlava",
+      "short_name": "Jihlava",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 18,
+        "grade": "B",
+        "score": 5.91
+      },
+      "amounts": {
+        "revenue_approved": 2261207000,
+        "revenue_adjusted": 2612767515.94,
+        "revenue_actual": 3076865613.149999,
+        "expense_approved": 3125331000,
+        "expense_adjusted": 4894089608.13,
+        "expense_actual": 3579995328.9700017,
+        "financing_actual": 503129715.82,
+        "cash_current": 1418953428.03,
+        "cash_previous": 1954243758.7599998,
+        "tax_revenue": 1506397631.07,
+        "nontax_revenue": 657205641.6,
+        "capital_revenue": 189664502.56,
+        "transfer_revenue": 723597837.92,
+        "current_expense": 1826236522.0500011,
+        "capital_expense": 1753758806.92,
+        "budget_balance": -503129715.82000256
+      },
+      "ratios": {
+        "revenue_execution": 1.177627,
+        "expense_execution": 0.731494,
+        "cash_to_expense": 0.396356,
+        "capital_expense_share": 0.489877,
+        "transfer_revenue_share": 0.235174,
+        "tax_revenue_share": 0.489588,
+        "balance_to_revenue": -0.16352,
+        "cash_yoy": -0.273912
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00286010/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00286010"
+      },
+      "entity_id": "CZ:00286010",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "jihlava",
+        "municipality_path": "/cz/obce/jihlava/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00274046",
+      "name": "Statutární město Pardubice",
+      "short_name": "Pardubice",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 19,
+        "grade": "C",
+        "score": 6.03
+      },
+      "amounts": {
+        "revenue_approved": 3186059200,
+        "revenue_adjusted": 3317771746,
+        "revenue_actual": 3481917802.319999,
+        "expense_approved": 4434628700,
+        "expense_adjusted": 4966814310.58,
+        "expense_actual": 3405105127.4400015,
+        "financing_actual": -76812674.88,
+        "cash_current": 1613805573.59,
+        "cash_previous": 1862562029.22,
+        "tax_revenue": 2632002563.08,
+        "nontax_revenue": 463805257.05,
+        "capital_revenue": 30321249.96,
+        "transfer_revenue": 355788732.23,
+        "current_expense": 2765939559.76,
+        "capital_expense": 639165567.68,
+        "budget_balance": 76812674.87999773
+      },
+      "ratios": {
+        "revenue_execution": 1.049475,
+        "expense_execution": 0.685571,
+        "cash_to_expense": 0.473937,
+        "capital_expense_share": 0.187708,
+        "transfer_revenue_share": 0.102182,
+        "tax_revenue_share": 0.755906,
+        "balance_to_revenue": 0.02206,
+        "cash_yoy": -0.133556
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00274046/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00274046"
+      },
+      "entity_id": "CZ:00274046",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "pardubice",
+        "municipality_path": "/cz/obce/pardubice/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00300535",
+      "name": "Statutární město Opava",
+      "short_name": "Opava",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 20,
+        "grade": "C",
+        "score": 6.29
+      },
+      "amounts": {
+        "revenue_approved": 1712561435,
+        "revenue_adjusted": 2164145085.4,
+        "revenue_actual": 2338212535.4,
+        "expense_approved": 1648608735,
+        "expense_adjusted": 3602286873.0499988,
+        "expense_actual": 2232975917.1499996,
+        "financing_actual": -105236618.25,
+        "cash_current": 1359572077.44,
+        "cash_previous": 1301371256.19,
+        "tax_revenue": 1520013989.93,
+        "nontax_revenue": 287663711.21,
+        "capital_revenue": 46345183.4,
+        "transfer_revenue": 484189650.86,
+        "current_expense": 1750949199.3999996,
+        "capital_expense": 482026717.7499999,
+        "budget_balance": 105236618.25000048
+      },
+      "ratios": {
+        "revenue_execution": 1.080432,
+        "expense_execution": 0.619877,
+        "cash_to_expense": 0.608861,
+        "capital_expense_share": 0.215867,
+        "transfer_revenue_share": 0.207077,
+        "tax_revenue_share": 0.650075,
+        "balance_to_revenue": 0.045007,
+        "cash_yoy": 0.044723
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00300535/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00300535"
+      },
+      "entity_id": "CZ:00300535",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "opava",
+        "municipality_path": "/cz/obce/opava/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00297534",
+      "name": "Statutární město Karviná",
+      "short_name": "Karviná",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 21,
+        "grade": "C",
+        "score": 6.38
+      },
+      "amounts": {
+        "revenue_approved": 1366554810,
+        "revenue_adjusted": 1585526862.6999998,
+        "revenue_actual": 1754045556.9299996,
+        "expense_approved": 1544705024,
+        "expense_adjusted": 2478245745.1000004,
+        "expense_actual": 1698867608.2399998,
+        "financing_actual": -55177948.69,
+        "cash_current": 1646945828.5,
+        "cash_previous": 1588159956.6399999,
+        "tax_revenue": 1278997949.37,
+        "nontax_revenue": 251717618.13,
+        "capital_revenue": 24020326.66,
+        "transfer_revenue": 199309662.77,
+        "current_expense": 1365698954.8299992,
+        "capital_expense": 333168653.40999997,
+        "budget_balance": 55177948.68999982
+      },
+      "ratios": {
+        "revenue_execution": 1.106286,
+        "expense_execution": 0.685512,
+        "cash_to_expense": 0.969437,
+        "capital_expense_share": 0.196112,
+        "transfer_revenue_share": 0.113629,
+        "tax_revenue_share": 0.72917,
+        "balance_to_revenue": 0.031458,
+        "cash_yoy": 0.037015
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00297534/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00297534"
+      },
+      "entity_id": "CZ:00297534",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "karvina",
+        "municipality_path": "/cz/obce/karvina/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00234516",
+      "name": "Statutární město Kladno",
+      "short_name": "Kladno",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 22,
+        "grade": "C",
+        "score": 6.47
+      },
+      "amounts": {
+        "revenue_approved": 2300616200,
+        "revenue_adjusted": 2404648720.7700005,
+        "revenue_actual": 2396787173.1800003,
+        "expense_approved": 2967968200,
+        "expense_adjusted": 3169953720.77,
+        "expense_actual": 2461834785.4899993,
+        "financing_actual": 65047612.31,
+        "cash_current": 318762342.66999996,
+        "cash_previous": 371445144.82,
+        "tax_revenue": 1788717747.8100002,
+        "nontax_revenue": 140307004.72,
+        "capital_revenue": 227013727.38,
+        "transfer_revenue": 240748693.27,
+        "current_expense": 1977146035.4899993,
+        "capital_expense": 484688750.00000006,
+        "budget_balance": -65047612.30999899
+      },
+      "ratios": {
+        "revenue_execution": 0.996731,
+        "expense_execution": 0.776615,
+        "cash_to_expense": 0.129482,
+        "capital_expense_share": 0.196881,
+        "transfer_revenue_share": 0.100446,
+        "tax_revenue_share": 0.746298,
+        "balance_to_revenue": -0.02714,
+        "cash_yoy": -0.141832
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00234516/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00234516"
+      },
+      "entity_id": "CZ:00234516",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "kladno",
+        "municipality_path": "/cz/obce/kladno/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00266621",
+      "name": "Statutární město Teplice",
+      "short_name": "Teplice",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 23,
+        "grade": "C",
+        "score": 6.57
+      },
+      "amounts": {
+        "revenue_approved": 1520147220.3799999,
+        "revenue_adjusted": 1831252830.2899997,
+        "revenue_actual": 1784959679.7800002,
+        "expense_approved": 2309088334.81,
+        "expense_adjusted": 2826190992.63,
+        "expense_actual": 1965525308.0800006,
+        "financing_actual": 180565628.3,
+        "cash_current": 1522209864.48,
+        "cash_previous": 1702335253.17,
+        "tax_revenue": 1404255986.5800002,
+        "nontax_revenue": 215967822.41,
+        "capital_revenue": 12835410.05,
+        "transfer_revenue": 151900460.74,
+        "current_expense": 1509064984,
+        "capital_expense": 456460324.08000004,
+        "budget_balance": -180565628.30000043
+      },
+      "ratios": {
+        "revenue_execution": 0.974721,
+        "expense_execution": 0.695468,
+        "cash_to_expense": 0.774454,
+        "capital_expense_share": 0.232233,
+        "transfer_revenue_share": 0.0851,
+        "tax_revenue_share": 0.786716,
+        "balance_to_revenue": -0.101159,
+        "cash_yoy": -0.105811
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00266621/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00266621"
+      },
+      "entity_id": "CZ:00266621",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "teplice",
+        "municipality_path": "/cz/obce/teplice/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00268810",
+      "name": "Statutární město Hradec Králové",
+      "short_name": "Hradec Králové",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 24,
+        "grade": "C",
+        "score": 6.59
+      },
+      "amounts": {
+        "revenue_approved": 3080220300,
+        "revenue_adjusted": 3260684719.5199995,
+        "revenue_actual": 3449656296.24,
+        "expense_approved": 3647427000,
+        "expense_adjusted": 4661918923.449997,
+        "expense_actual": 3672845377.109999,
+        "financing_actual": 223189080.87,
+        "cash_current": 2051682576.03,
+        "cash_previous": 2374831717.98,
+        "tax_revenue": 2710188724.48,
+        "nontax_revenue": 419523786.90000004,
+        "capital_revenue": 71491823,
+        "transfer_revenue": 248451961.85999998,
+        "current_expense": 2955978117.019998,
+        "capital_expense": 716867260.0899999,
+        "budget_balance": -223189080.8699994
+      },
+      "ratios": {
+        "revenue_execution": 1.057955,
+        "expense_execution": 0.78784,
+        "cash_to_expense": 0.558608,
+        "capital_expense_share": 0.19518,
+        "transfer_revenue_share": 0.072022,
+        "tax_revenue_share": 0.78564,
+        "balance_to_revenue": -0.064699,
+        "cash_yoy": -0.136072
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00268810/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00268810"
+      },
+      "entity_id": "CZ:00268810",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "hradec-kralove",
+        "municipality_path": "/cz/obce/hradec-kralove/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00296643",
+      "name": "Statutární město Frýdek-Místek",
+      "short_name": "Frýdek-Místek",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 25,
+        "grade": "C",
+        "score": 7.04
+      },
+      "amounts": {
+        "revenue_approved": 1842497980,
+        "revenue_adjusted": 1974659550,
+        "revenue_actual": 2039436112.0999997,
+        "expense_approved": 2352900150,
+        "expense_adjusted": 2257473830,
+        "expense_actual": 2004438176.3299987,
+        "financing_actual": -34997935.77,
+        "cash_current": 819122209.94,
+        "cash_previous": 856821171.13,
+        "tax_revenue": 1339705705.1599998,
+        "nontax_revenue": 315165598.88,
+        "capital_revenue": 55963726.57,
+        "transfer_revenue": 328601081.49,
+        "current_expense": 1711457641.769999,
+        "capital_expense": 292980534.56,
+        "budget_balance": 34997935.770000935
+      },
+      "ratios": {
+        "revenue_execution": 1.032804,
+        "expense_execution": 0.887912,
+        "cash_to_expense": 0.408654,
+        "capital_expense_share": 0.146166,
+        "transfer_revenue_share": 0.161123,
+        "tax_revenue_share": 0.6569,
+        "balance_to_revenue": 0.017161,
+        "cash_yoy": -0.043999
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00296643/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00296643"
+      },
+      "entity_id": "CZ:00296643",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "frydek-mistek",
+        "municipality_path": "/cz/obce/frydek-mistek/",
+        "region_path": null
+      }
+    },
+    {
+      "country_code": "CZ",
+      "national_id": "00299308",
+      "name": "Statutární město Olomouc",
+      "short_name": "Olomouc",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": 26,
+        "grade": "C",
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 3505838000,
+        "revenue_adjusted": 3787000474.9199996,
+        "revenue_actual": 3609363387.9100003,
+        "expense_approved": 4088370000,
+        "expense_adjusted": 4750716062.39,
+        "expense_actual": 3835206255.9100013,
+        "financing_actual": 225842868,
+        "cash_current": 1476025513.15,
+        "cash_previous": 1473227237.77,
+        "tax_revenue": 2951957225.18,
+        "nontax_revenue": 250036518.96,
+        "capital_revenue": 834583.59,
+        "transfer_revenue": 406535060.18,
+        "current_expense": 3085634056.7700014,
+        "capital_expense": 749572199.14,
+        "budget_balance": -225842868.00000095
+      },
+      "ratios": {
+        "revenue_execution": 0.953093,
+        "expense_execution": 0.80729,
+        "cash_to_expense": 0.384862,
+        "capital_expense_share": 0.195445,
+        "transfer_revenue_share": 0.112633,
+        "tax_revenue_share": 0.817861,
+        "balance_to_revenue": -0.062571,
+        "cash_yoy": 0.001899
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00299308/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00299308"
+      },
+      "entity_id": "CZ:00299308",
+      "administrative_levels": [
+        "municipality"
+      ],
+      "entity_type": "statutory_city",
+      "seo": {
+        "slug": "olomouc",
+        "municipality_path": "/cz/obce/olomouc/",
+        "region_path": null
+      }
+    },
+    {
+      "entity_id": "CZ:00064581",
+      "country_code": "CZ",
+      "national_id": "00064581",
+      "name": "Hlavní město Praha",
+      "short_name": "Praha",
+      "administrative_levels": [
+        "municipality",
+        "region"
+      ],
+      "entity_type": "capital_city",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 117879060700.0,
+        "revenue_adjusted": 128337868100.0,
+        "revenue_actual": 148140567664.53,
+        "expense_approved": 125126110300.0,
+        "expense_adjusted": 145102757200.0,
+        "expense_actual": 123970124035.39005,
+        "financing_actual": -24170443629.14,
+        "cash_current": 169724064895.19998,
+        "cash_previous": 158015999302.72,
+        "tax_revenue": 102553263595.08,
+        "nontax_revenue": 8978728044.760002,
+        "capital_revenue": 617966777.41,
+        "transfer_revenue": 35990609247.27999,
+        "current_expense": 98001773459.68997,
+        "capital_expense": 25968350575.69999,
+        "budget_balance": 24170443629.139954
+      },
+      "ratios": {
+        "revenue_execution": 1.154301,
+        "expense_execution": 0.854361,
+        "cash_to_expense": 1.369072,
+        "capital_expense_share": 0.209473,
+        "transfer_revenue_share": 0.242949,
+        "tax_revenue_share": 0.69227,
+        "balance_to_revenue": 0.163159,
+        "cash_yoy": 0.074094
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00064581/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00064581"
+      },
+      "seo": {
+        "slug": "praha",
+        "municipality_path": "/cz/obce/praha/",
+        "region_path": "/cz/kraje/praha/"
+      }
+    },
+    {
+      "entity_id": "CZ:70891095",
+      "country_code": "CZ",
+      "national_id": "70891095",
+      "name": "Středočeský kraj",
+      "short_name": "Středočeský kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 50894077700.0,
+        "revenue_adjusted": 52631478567.62,
+        "revenue_actual": 52865160862.780014,
+        "expense_approved": 52326426700.0,
+        "expense_adjusted": 60272645428.37,
+        "expense_actual": 53584738272.45,
+        "financing_actual": 719577409.67,
+        "cash_current": 5522266132.87,
+        "cash_previous": 5888129943.290001,
+        "tax_revenue": 16315037363.920002,
+        "nontax_revenue": 1216277240.51,
+        "capital_revenue": 23565741.0,
+        "transfer_revenue": 35310280517.350006,
+        "current_expense": 47251801096.70999,
+        "capital_expense": 6332937175.740002,
+        "budget_balance": -719577409.6699829
+      },
+      "ratios": {
+        "revenue_execution": 1.00444,
+        "expense_execution": 0.889039,
+        "cash_to_expense": 0.103057,
+        "capital_expense_share": 0.118185,
+        "transfer_revenue_share": 0.667931,
+        "tax_revenue_share": 0.308616,
+        "balance_to_revenue": -0.013612,
+        "cash_yoy": -0.062136
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891095/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70891095"
+      },
+      "seo": {
+        "slug": "stredocesky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/stredocesky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70890650",
+      "country_code": "CZ",
+      "national_id": "70890650",
+      "name": "Jihočeský kraj",
+      "short_name": "Jihočeský kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 28047978000.0,
+        "revenue_adjusted": 28136521089.800003,
+        "revenue_actual": 28224242856.370007,
+        "expense_approved": 29611786600.0,
+        "expense_adjusted": 28952331910.889996,
+        "expense_actual": 27715553108.99,
+        "financing_actual": -508689747.38,
+        "cash_current": 8362434578.5,
+        "cash_previous": 7853966324.07,
+        "tax_revenue": 10189432216.150002,
+        "nontax_revenue": 1078026080.23,
+        "capital_revenue": 819470.1,
+        "transfer_revenue": 16955965089.890001,
+        "current_expense": 22834229456.32001,
+        "capital_expense": 4881323652.669999,
+        "budget_balance": 508689747.3800049
+      },
+      "ratios": {
+        "revenue_execution": 1.003118,
+        "expense_execution": 0.957282,
+        "cash_to_expense": 0.301724,
+        "capital_expense_share": 0.176122,
+        "transfer_revenue_share": 0.600759,
+        "tax_revenue_share": 0.361017,
+        "balance_to_revenue": 0.018023,
+        "cash_yoy": 0.06474
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890650/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70890650"
+      },
+      "seo": {
+        "slug": "jihocesky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/jihocesky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70890366",
+      "country_code": "CZ",
+      "national_id": "70890366",
+      "name": "Plzeňský kraj",
+      "short_name": "Plzeňský kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 22084518000.0,
+        "revenue_adjusted": 23624063135.979996,
+        "revenue_actual": 23890097295.680004,
+        "expense_approved": 24651403000.0,
+        "expense_adjusted": 26512109360.91999,
+        "expense_actual": 24242578081.749996,
+        "financing_actual": 352480786.07,
+        "cash_current": 5115482782.51,
+        "cash_previous": 5567963568.58,
+        "tax_revenue": 8576426667.110001,
+        "nontax_revenue": 970059687.5200001,
+        "capital_revenue": 6029119.25,
+        "transfer_revenue": 14337581821.800001,
+        "current_expense": 20147934845.070007,
+        "capital_expense": 4094643236.6800003,
+        "budget_balance": -352480786.06999207
+      },
+      "ratios": {
+        "revenue_execution": 1.011261,
+        "expense_execution": 0.914396,
+        "cash_to_expense": 0.211012,
+        "capital_expense_share": 0.168903,
+        "transfer_revenue_share": 0.600147,
+        "tax_revenue_share": 0.358995,
+        "balance_to_revenue": -0.014754,
+        "cash_yoy": -0.081265
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890366/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70890366"
+      },
+      "seo": {
+        "slug": "plzensky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/plzensky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70891168",
+      "country_code": "CZ",
+      "national_id": "70891168",
+      "name": "Karlovarský kraj",
+      "short_name": "Karlovarský kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 11263538000.0,
+        "revenue_adjusted": 12080472405.359999,
+        "revenue_actual": 12666351383.74,
+        "expense_approved": 12979516000.0,
+        "expense_adjusted": 14911262018.950006,
+        "expense_actual": 11998122530.75001,
+        "financing_actual": -668228852.99,
+        "cash_current": 4639691379.42,
+        "cash_previous": 4210794350.62,
+        "tax_revenue": 4538557752.309999,
+        "nontax_revenue": 660177361.2299998,
+        "capital_revenue": 26250.0,
+        "transfer_revenue": 7467590020.2,
+        "current_expense": 10472102800.500004,
+        "capital_expense": 1526019730.2499998,
+        "budget_balance": 668228852.9899902
+      },
+      "ratios": {
+        "revenue_execution": 1.048498,
+        "expense_execution": 0.804635,
+        "cash_to_expense": 0.386701,
+        "capital_expense_share": 0.127188,
+        "transfer_revenue_share": 0.589561,
+        "tax_revenue_share": 0.358316,
+        "balance_to_revenue": 0.052756,
+        "cash_yoy": 0.101857
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891168/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70891168"
+      },
+      "seo": {
+        "slug": "karlovarsky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/karlovarsky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70892156",
+      "country_code": "CZ",
+      "national_id": "70892156",
+      "name": "Ústecký kraj",
+      "short_name": "Ústecký kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 29337663000.0,
+        "revenue_adjusted": 31309090405.0,
+        "revenue_actual": 31477848377.670002,
+        "expense_approved": 31063661000.0,
+        "expense_adjusted": 34731063831.0,
+        "expense_actual": 31774102039.53999,
+        "financing_actual": 296253661.87,
+        "cash_current": 3077190303.85,
+        "cash_previous": 3520979042.0,
+        "tax_revenue": 9882813566.5,
+        "nontax_revenue": 866544457.14,
+        "capital_revenue": 36458818.0,
+        "transfer_revenue": 20692031536.030003,
+        "current_expense": 28381053940.149998,
+        "capital_expense": 3393048099.390002,
+        "budget_balance": -296253661.8699875
+      },
+      "ratios": {
+        "revenue_execution": 1.00539,
+        "expense_execution": 0.914861,
+        "cash_to_expense": 0.096846,
+        "capital_expense_share": 0.106787,
+        "transfer_revenue_share": 0.657352,
+        "tax_revenue_share": 0.313961,
+        "balance_to_revenue": -0.009411,
+        "cash_yoy": -0.126041
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70892156/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70892156"
+      },
+      "seo": {
+        "slug": "ustecky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/ustecky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70891508",
+      "country_code": "CZ",
+      "national_id": "70891508",
+      "name": "Liberecký kraj",
+      "short_name": "Liberecký kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 15321622263.0,
+        "revenue_adjusted": 16876749698.939999,
+        "revenue_actual": 17274611531.84,
+        "expense_approved": 15547388323.0,
+        "expense_adjusted": 23887517046.560005,
+        "expense_actual": 17562481666.220005,
+        "financing_actual": 287870134.38,
+        "cash_current": 6723050997.4,
+        "cash_previous": 5930863317.429999,
+        "tax_revenue": 5575817708.73,
+        "nontax_revenue": 472208083.62,
+        "capital_revenue": 370214.6,
+        "transfer_revenue": 11226215524.89,
+        "current_expense": 14756571011.660004,
+        "capital_expense": 2805910654.56,
+        "budget_balance": -287870134.3800049
+      },
+      "ratios": {
+        "revenue_execution": 1.023575,
+        "expense_execution": 0.735216,
+        "cash_to_expense": 0.382808,
+        "capital_expense_share": 0.159767,
+        "transfer_revenue_share": 0.649868,
+        "tax_revenue_share": 0.322775,
+        "balance_to_revenue": -0.016664,
+        "cash_yoy": 0.13357
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891508/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70891508"
+      },
+      "seo": {
+        "slug": "liberecky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/liberecky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70889546",
+      "country_code": "CZ",
+      "national_id": "70889546",
+      "name": "Královéhradecký kraj",
+      "short_name": "Královéhradecký kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 19749729000.0,
+        "revenue_adjusted": 22944246828.610004,
+        "revenue_actual": 23279830054.720005,
+        "expense_approved": 19569729000.0,
+        "expense_adjusted": 26435154632.4,
+        "expense_actual": 23965189320.969986,
+        "financing_actual": 685359266.25,
+        "cash_current": 2803313026.76,
+        "cash_previous": 3670907763.5499997,
+        "tax_revenue": 7679545658.8,
+        "nontax_revenue": 662016697.05,
+        "capital_revenue": 5394368.0,
+        "transfer_revenue": 14932873330.869999,
+        "current_expense": 19427837040.959984,
+        "capital_expense": 4537352280.009999,
+        "budget_balance": -685359266.2499809
+      },
+      "ratios": {
+        "revenue_execution": 1.014626,
+        "expense_execution": 0.906565,
+        "cash_to_expense": 0.116974,
+        "capital_expense_share": 0.189331,
+        "transfer_revenue_share": 0.641451,
+        "tax_revenue_share": 0.32988,
+        "balance_to_revenue": -0.02944,
+        "cash_yoy": -0.236343
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70889546/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70889546"
+      },
+      "seo": {
+        "slug": "kralovehradecky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/kralovehradecky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70892822",
+      "country_code": "CZ",
+      "national_id": "70892822",
+      "name": "Pardubický kraj",
+      "short_name": "Pardubický kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 19457742410.0,
+        "revenue_adjusted": 20407896174.12,
+        "revenue_actual": 21349047271.229996,
+        "expense_approved": 19321135210.0,
+        "expense_adjusted": 22448891747.800014,
+        "expense_actual": 21033565966.18999,
+        "financing_actual": -315481305.04,
+        "cash_current": 3497743793.9,
+        "cash_previous": 4134008847.29,
+        "tax_revenue": 6620893246.49,
+        "nontax_revenue": 358815554.7,
+        "capital_revenue": 21215298.53,
+        "transfer_revenue": 14348123171.51,
+        "current_expense": 17800785959.939995,
+        "capital_expense": 3232780006.250001,
+        "budget_balance": 315481305.04000473
+      },
+      "ratios": {
+        "revenue_execution": 1.046117,
+        "expense_execution": 0.936953,
+        "cash_to_expense": 0.166293,
+        "capital_expense_share": 0.153696,
+        "transfer_revenue_share": 0.672073,
+        "tax_revenue_share": 0.310126,
+        "balance_to_revenue": 0.014777,
+        "cash_yoy": -0.15391
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70892822/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70892822"
+      },
+      "seo": {
+        "slug": "pardubicky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/pardubicky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70890749",
+      "country_code": "CZ",
+      "national_id": "70890749",
+      "name": "Kraj Vysočina",
+      "short_name": "Kraj Vysočina",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 20151720000.0,
+        "revenue_adjusted": 22914011122.100002,
+        "revenue_actual": 23410035599.24,
+        "expense_approved": 21917398000.0,
+        "expense_adjusted": 25887249602.05,
+        "expense_actual": 23141913539.070004,
+        "financing_actual": -268122060.17,
+        "cash_current": 8732789486.98,
+        "cash_previous": 8543732903.5199995,
+        "tax_revenue": 8735881612.03,
+        "nontax_revenue": 814637788.94,
+        "capital_revenue": 1688226.0,
+        "transfer_revenue": 13857827972.269999,
+        "current_expense": 18873767505.620007,
+        "capital_expense": 4268146033.4500003,
+        "budget_balance": 268122060.16999817
+      },
+      "ratios": {
+        "revenue_execution": 1.021647,
+        "expense_execution": 0.89395,
+        "cash_to_expense": 0.377358,
+        "capital_expense_share": 0.184434,
+        "transfer_revenue_share": 0.591961,
+        "tax_revenue_share": 0.373168,
+        "balance_to_revenue": 0.011453,
+        "cash_yoy": 0.022128
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890749/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70890749"
+      },
+      "seo": {
+        "slug": "kraj-vysocina",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/kraj-vysocina/"
+      }
+    },
+    {
+      "entity_id": "CZ:70888337",
+      "country_code": "CZ",
+      "national_id": "70888337",
+      "name": "Jihomoravský kraj",
+      "short_name": "Jihomoravský kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 42065376000.0,
+        "revenue_adjusted": 41698655195.0,
+        "revenue_actual": 42242821545.69,
+        "expense_approved": 43327494000.0,
+        "expense_adjusted": 45785580548.0,
+        "expense_actual": 42697360737.67,
+        "financing_actual": 454539191.98,
+        "cash_current": 3901549971.73,
+        "cash_previous": 4357163189.67,
+        "tax_revenue": 11413246591.79,
+        "nontax_revenue": 1604562022.7,
+        "capital_revenue": 4846290.0,
+        "transfer_revenue": 29220166641.2,
+        "current_expense": 38180953377.86999,
+        "capital_expense": 4516407359.799999,
+        "budget_balance": -454539191.9799957
+      },
+      "ratios": {
+        "revenue_execution": 1.01305,
+        "expense_execution": 0.93255,
+        "cash_to_expense": 0.091377,
+        "capital_expense_share": 0.105777,
+        "transfer_revenue_share": 0.691719,
+        "tax_revenue_share": 0.270182,
+        "balance_to_revenue": -0.01076,
+        "cash_yoy": -0.104566
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70888337/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70888337"
+      },
+      "seo": {
+        "slug": "jihomoravsky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/jihomoravsky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:60609460",
+      "country_code": "CZ",
+      "national_id": "60609460",
+      "name": "Olomoucký kraj",
+      "short_name": "Olomoucký kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 23512338000.0,
+        "revenue_adjusted": 26292988268.46,
+        "revenue_actual": 26627523570.969997,
+        "expense_approved": 25188381000.0,
+        "expense_adjusted": 28842775224.609997,
+        "expense_actual": 26148973682.659977,
+        "financing_actual": -478549888.31,
+        "cash_current": 4622373195.610001,
+        "cash_previous": 4404687472.21,
+        "tax_revenue": 7993223440.1,
+        "nontax_revenue": 914785787.53,
+        "capital_revenue": 4883776.0,
+        "transfer_revenue": 17714630567.339996,
+        "current_expense": 22912808197.219994,
+        "capital_expense": 3236165485.4399986,
+        "budget_balance": 478549888.31002045
+      },
+      "ratios": {
+        "revenue_execution": 1.012723,
+        "expense_execution": 0.906604,
+        "cash_to_expense": 0.176771,
+        "capital_expense_share": 0.123759,
+        "transfer_revenue_share": 0.665275,
+        "tax_revenue_share": 0.300187,
+        "balance_to_revenue": 0.017972,
+        "cash_yoy": 0.049421
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/60609460/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/60609460"
+      },
+      "seo": {
+        "slug": "olomoucky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/olomoucky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70891320",
+      "country_code": "CZ",
+      "national_id": "70891320",
+      "name": "Zlínský kraj",
+      "short_name": "Zlínský kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 21634485176.379997,
+        "revenue_adjusted": 22650184546.68,
+        "revenue_actual": 22616815638.1,
+        "expense_approved": 23545279992.38,
+        "expense_adjusted": 27059400542.680004,
+        "expense_actual": 23687455297.839973,
+        "financing_actual": 1070639659.74,
+        "cash_current": 5715560209.73,
+        "cash_previous": 6966022778.65,
+        "tax_revenue": 6289297477.460001,
+        "nontax_revenue": 1046923852.68,
+        "capital_revenue": 7884995.14,
+        "transfer_revenue": 15272709312.819998,
+        "current_expense": 20234255388.509983,
+        "capital_expense": 3453199909.330001,
+        "budget_balance": -1070639659.739975
+      },
+      "ratios": {
+        "revenue_execution": 0.998527,
+        "expense_execution": 0.875387,
+        "cash_to_expense": 0.241291,
+        "capital_expense_share": 0.145782,
+        "transfer_revenue_share": 0.675281,
+        "tax_revenue_share": 0.278081,
+        "balance_to_revenue": -0.047338,
+        "cash_yoy": -0.179509
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891320/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70891320"
+      },
+      "seo": {
+        "slug": "zlinsky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/zlinsky-kraj/"
+      }
+    },
+    {
+      "entity_id": "CZ:70890692",
+      "country_code": "CZ",
+      "national_id": "70890692",
+      "name": "Moravskoslezský kraj",
+      "short_name": "Moravskoslezský kraj",
+      "administrative_levels": [
+        "region"
+      ],
+      "entity_type": "region",
+      "fiscal_year": 2025,
+      "currency_code": "CZK",
+      "risk": {
+        "rank": null,
+        "grade": null,
+        "score": null
+      },
+      "amounts": {
+        "revenue_approved": 39580699000.0,
+        "revenue_adjusted": 41350998237.0,
+        "revenue_actual": 41856431553.88,
+        "expense_approved": 42722075000.0,
+        "expense_adjusted": 46146810550.0,
+        "expense_actual": 41877819328.639946,
+        "financing_actual": 21387774.76,
+        "cash_current": 9764330867.43,
+        "cash_previous": 9645500429.519999,
+        "tax_revenue": 11445015007.51,
+        "nontax_revenue": 1462587239.62,
+        "capital_revenue": 75975794.22,
+        "transfer_revenue": 28872853512.529995,
+        "current_expense": 37426128813.51995,
+        "capital_expense": 4451690515.120001,
+        "budget_balance": -21387774.75994873
+      },
+      "ratios": {
+        "revenue_execution": 1.012223,
+        "expense_execution": 0.907491,
+        "cash_to_expense": 0.233162,
+        "capital_expense_share": 0.106302,
+        "transfer_revenue_share": 0.689807,
+        "tax_revenue_share": 0.273435,
+        "balance_to_revenue": -0.000511,
+        "cash_yoy": 0.01232
+      },
+      "sources": {
+        "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890692/rozpocet/souhrnny?obdobi=2512&rad=t",
+        "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/70890692"
+      },
+      "seo": {
+        "slug": "moravskoslezsky-kraj",
+        "municipality_path": null,
+        "region_path": "/cz/kraje/moravskoslezsky-kraj/"
+      }
+    }
+  ],
+  "analysis_dimensions": [
+    {
+      "dimension_code": "administrative_level",
+      "values": [
+        "municipality",
+        "region"
+      ]
+    },
+    {
+      "dimension_code": "country_code",
+      "values": [
+        "CZ"
+      ]
+    },
+    {
+      "dimension_code": "currency_code",
+      "values": [
+        "CZK"
+      ]
+    },
+    {
+      "dimension_code": "fiscal_year",
+      "values": [
+        2025
+      ]
+    }
+  ]
+}
