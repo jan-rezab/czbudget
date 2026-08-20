@@ -123,7 +123,7 @@ function addHover(frame, xScale, data, nearest, rows, guideClass = "chart-year-g
     const item = nearest(xScale.invert(Math.max(0, Math.min(iw, px))));
     const xx = m.left + xScale(item.year);
     guide.setAttribute("x1", xx); guide.setAttribute("x2", xx); guide.setAttribute("visibility", "visible");
-    showTip(event, item.proposal ? `${item.year} · návrh` : item.year, rows(item));
+    showTip(event, item.proposal ? `${item.year} · schválený rozpočet` : item.year, rows(item));
   });
   hit.addEventListener("pointerleave", () => { guide.setAttribute("visibility", "hidden"); hideTip(); });
   svg.append(hit);
@@ -181,7 +181,7 @@ function renderBudget() {
 }
 
 function renderBudgetDetail(d) {
-  $("#budget-year-label").textContent = `${d.year}${d.proposal ? " · návrh" : " · skutečnost"}`;
+  $("#budget-year-label").textContent = `${d.year}${d.proposal ? " · schválený" : " · skutečnost"}`;
   const pct = Math.abs(d.displayBalance)/d.displayExpense*100;
   $("#budget-year-detail").innerHTML = [
     ["Příjmy",`${fmt1.format(d.displayRevenue)} mld.`,`daně + pojistné + ostatní`],
