@@ -25,7 +25,7 @@ function translate(){
   document.querySelectorAll("[data-i18n]").forEach(n=>{if(T[state.lang][n.dataset.i18n])n.textContent=T[state.lang][n.dataset.i18n]});
   document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("active",b.dataset.lang===state.lang));
   document.querySelectorAll("[data-currency]").forEach(b=>b.classList.toggle("active",b.dataset.currency===state.currency));
-  $("#back-link").href=`index.html?lang=${state.lang}#countries`; $("#home-link").href=`index.html?lang=${state.lang}`;
+  const back=$("#back-link"); if(back) back.href=`index.html?lang=${state.lang}#countries`; $("#home-link").href=`index.html?lang=${state.lang}`;
   document.title=`${name()} — Public Spending Data`;
 }
 function header(){
