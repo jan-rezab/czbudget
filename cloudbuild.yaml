@@ -1,4 +1,39 @@
 steps:
+  - id: export-municipal-headlines
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        bq query \
+          --project_id="$PROJECT_ID" \
+          --location=EU \
+          --use_legacy_sql=false \
+          --format=json \
+          --max_rows=20000 \
+          '
+          SELECT
+            entity.national_entity_code AS ico,
+            headline.budget_stage,
+            CAST(headline.amount_local AS STRING) AS expenditure_total_czk,
+            JSON_VALUE(headline.components, "$.revenue_total_czk") AS revenue_total_czk,
+            JSON_VALUE(headline.components, "$.financing_total_czk") AS financing_total_czk,
+            JSON_VALUE(headline.components, "$.budget_balance_czk") AS budget_balance_czk,
+            headline.source_id,
+            headline.ingestion_run_id
+          FROM `czbudget-janrezab.budget_detail.public_entity_budget_headlines` AS headline
+          JOIN `czbudget-janrezab.budget_detail.public_entities` AS entity
+            USING (public_entity_id)
+          WHERE headline.fiscal_year = 2025
+            AND headline.ingestion_run_id = "cz-finm-2025-all-municipalities-v1"
+          ORDER BY ico, budget_stage
+          ' > data/.municipal-headlines-query.json
+
+  - id: merge-municipal-headlines
+    name: node:22-alpine
+    entrypoint: node
+    args: [scripts/merge-municipal-headlines.mjs]
+
   - id: validate
     name: node:22-alpine
     entrypoint: node
