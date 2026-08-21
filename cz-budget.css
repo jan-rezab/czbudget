@@ -107,6 +107,42 @@
 .budget-stage-table tbody tr:last-child th,.budget-stage-table tbody tr:last-child td { border-bottom: 0; font-weight: 800; }
 .budget-stage-source { margin: 14px 0 0; color: var(--cz-muted); font-size: 11px; }
 .budget-stage-source code { font-size: 10px; }
+.municipal-breakdown-explorer { margin-top: 76px; }
+.breakdown-heading { display: grid; grid-template-columns: 1.1fr .8fr; gap: 9vw; align-items: end; margin-bottom: 28px; }
+.breakdown-heading h2 { margin: 14px 0 0; font: 500 clamp(40px,5vw,68px)/.94 Georgia,serif; letter-spacing: -.045em; }
+.breakdown-heading p { margin: 0; color: var(--cz-muted); line-height: 1.65; }
+.breakdown-stage-tabs { display: flex; width: max-content; max-width: 100%; margin: 0 0 14px; border: 1px solid var(--cz-ink); overflow-x: auto; }
+.breakdown-stage-tabs button { min-width: 118px; padding: 13px 18px; border: 0; border-right: 1px solid var(--cz-ink); background: transparent; color: var(--cz-ink); font: 700 10px monospace; text-transform: uppercase; letter-spacing: .05em; cursor: pointer; }
+.breakdown-stage-tabs button:last-child { border-right: 0; }
+.breakdown-stage-tabs button[aria-pressed="true"] { background: var(--cz-ink); color: white; }
+.budget-breakdown-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+.budget-breakdown-panel { min-width: 0; background: white; border: 1px solid var(--cz-line); box-shadow: 0 7px 0 rgba(23,26,25,.05); }
+.budget-breakdown-panel>header { min-height: 112px; padding: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--cz-line); }
+.budget-breakdown-panel>header span { color: var(--cz-muted); font: 8px/1.35 monospace; text-transform: uppercase; letter-spacing: .06em; }
+.budget-breakdown-panel>header h3 { margin: 14px 0 0; font: 500 24px/1 Georgia,serif; }
+.budget-breakdown-panel>header>strong { font: 500 19px/1 Georgia,serif; white-space: nowrap; }
+.breakdown-ranked { padding: 8px 20px 18px; }
+.breakdown-rank-row { padding: 13px 0 10px; border-bottom: 1px solid var(--cz-line); }
+.breakdown-rank-label { display: grid; grid-template-columns: 42px minmax(0,1fr); gap: 4px 9px; align-items: baseline; }
+.breakdown-rank-label code { grid-row: 1/3; color: var(--cz-muted); font-size: 9px; }
+.breakdown-rank-label strong { min-width: 0; font-size: 11px; line-height: 1.3; }
+.breakdown-rank-label span { color: var(--cz-muted); font-size: 9px; }
+.breakdown-rank-track { height: 5px; margin: 9px 0 0 51px; background: #ece9e1; }
+.breakdown-rank-track i { display: block; height: 100%; background: var(--cz-green); }
+.budget-breakdown-panel:nth-child(2) .breakdown-rank-track i { background: var(--cz-ink); }
+.budget-breakdown-panel:nth-child(3) .breakdown-rank-track i { background: #86b6ff; }
+.breakdown-full { border-top: 1px solid var(--cz-line); }
+.breakdown-full summary { padding: 16px 20px; color: var(--cz-green); font: 700 10px monospace; cursor: pointer; }
+.breakdown-full>div { max-height: 480px; overflow: auto; border-top: 1px solid var(--cz-line); }
+.breakdown-full table { width: 100%; min-width: 620px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.breakdown-full th,.breakdown-full td { padding: 11px 13px; border-bottom: 1px solid var(--cz-line); text-align: right; font-size: 10px; }
+.breakdown-full thead th { position: sticky; top: 0; z-index: 1; background: var(--cz-ink); color: white; font: 700 8px monospace; text-transform: uppercase; }
+.breakdown-full tbody th { max-width: 390px; text-align: left; font-weight: 600; }
+.breakdown-full th:first-child,.breakdown-full td:first-child { text-align: left; }
+.budget-financing-detail { margin-top: 14px; }
+.budget-financing-detail .budget-breakdown-panel>header { min-height: 86px; }
+.breakdown-method-note { margin: 20px 0 0; color: var(--cz-muted); font-size: 10px; line-height: 1.6; }
+.breakdown-method-note code { font-size: 9px; }
 .plan-track,.mix-track { position: relative; height: 28px; margin-top: 12px; background: #e6e2d9; }
 .plan-track i,.mix-track i { display: block; height: 100%; background: var(--cz-green); }
 .plan-track b,.mix-track b { position: absolute; right: 8px; top: 6px; font-size: 11px; }
@@ -169,6 +205,12 @@
   .detail-score { width: calc(100% - 10px); }
   .detail-actions { align-items: flex-start; flex-direction: column; }
   .detail-controls { grid-template-columns: 1fr; }
+  .municipal-breakdown-explorer { margin-top: 58px; }
+  .breakdown-heading,.budget-breakdown-grid { grid-template-columns: 1fr; }
+  .breakdown-heading { gap: 18px; }
+  .breakdown-stage-tabs { width: 100%; }
+  .breakdown-stage-tabs button { min-width: max-content; flex: 1; padding-inline: 13px; }
+  .budget-breakdown-panel>header { min-height: 96px; }
   .cash-story { grid-template-columns: 1fr; }
   .cash-story>i { min-height: 65px; }
   .plan-note { flex-direction: column; gap: 10px; }

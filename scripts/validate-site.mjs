@@ -16,6 +16,7 @@ const czechBudgetPage = await readFile("cesky-rozpocet.html", "utf8");
 const globalNav = await readFile("global-nav.js", "utf8");
 const capitalsScript = await readFile("eu-capitals.js", "utf8");
 const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
+const municipalI18n = await readFile("municipal-i18n.js", "utf8");
 if (snapshot.municipalities.length !== 6254) throw new Error("Expected 6,254 municipalities");
 if (snapshot.scope.combined_unique_entity_count !== 6267) throw new Error("Expected 6,267 unique municipal and regional entities");
 if (history.cities.length !== 27 || history.cities.some((city) => city.series.length !== 20)) throw new Error("Expected 20 annual observations for 27 large cities");
@@ -39,6 +40,7 @@ if (!homepage.includes('href="eu-capitals.html?lang=cs"') || !homepage.includes(
 if (!homepage.includes('id="category-comparison-root"') || !homepage.includes('homepage-category.js?v=20260821') || !homepage.includes('homepage-category.css?v=20260821')) throw new Error("Homepage must expose the country category comparison");
 if (!globalNav.includes('data-global-nav="capitals"') || !globalNav.includes('cz/obce/?lang=${lang}') || !globalNav.includes('capitals:"EU cities"')) throw new Error("Global navigation must expose municipalities and EU cities as visible destinations");
 if (!cloudbuild.includes("scripts/assert-single-production.sh") || !cloudbuild.includes("run\n      - deploy\n      - czbudget-public") || cloudbuild.includes("${_SERVICE}") || cloudbuild.includes("czbudget-web")) throw new Error("Cloud Build must be locked to the sole canonical production service");
+if (!cloudbuild.includes("scripts/merge-municipal-breakdowns.mjs") || !municipalI18n.includes("renderBudgetBreakdown") || !municipalI18n.includes("municipal-budget-codebook.v1.json")) throw new Error("Municipal profiles must surface the detailed FIN 2-12 M breakdown");
 if (!capitalsScript.includes('data/large-city-history.v1.json') || !capitalsScript.includes('renderHistory(city)')) throw new Error("European capitals must surface the Prague ten-year history");
 const fiscalFields = ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp", "gross_debt_pct_gdp", "nominal_gdp_local_bn", "nominal_gdp_usd_bn", "inflation_pct"];
 if (sovereign.series.some((country) => fiscalFields.some((field) => !country.metrics[field]?.values?.length))) throw new Error("Country profiles require complete nominal and inflation fiscal series");
@@ -54,5 +56,5 @@ if (!homepage.includes('styles-v2.css?v=20260821-fiscal-scope') || !homepage.inc
 if (!homepage.includes('class="compare-scope-readout"') || !homepage.includes("General government")) throw new Error("Homepage comparison must state its harmonised fiscal perimeter");
 if (!homepage.includes('id="fiscal-architecture-body"') || !homepageScript.includes("function architectureTable")) throw new Error("Homepage must compare fiscal architecture across all tracked countries");
 if (!countryPage.includes('country-spending.js?v=20260821') || !countryPage.includes('country-health.js?v=20260821-health8') || !countryScript.includes('countryprofilechange')) throw new Error("Fiscal profiles must preserve the spending and healthcare modules");
-for (const required of ["index.html", "homepage-category.js", "homepage-category.css", "data/country-spending-comparison.v1.json", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "sitemap.xml"]) await stat(required);
+for (const required of ["index.html", "homepage-category.js", "homepage-category.css", "data/country-spending-comparison.v1.json", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "scripts/export-municipal-breakdowns.sql", "scripts/export-municipal-budget-codebook.sql", "scripts/merge-municipal-breakdowns.mjs", "sitemap.xml"]) await stat(required);
 console.log("CZ Budget site validation passed");

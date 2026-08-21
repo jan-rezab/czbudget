@@ -43,6 +43,34 @@ steps:
     entrypoint: node
     args: [scripts/merge-municipal-headlines.mjs]
 
+  - id: export-municipal-breakdowns
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        bq query \
+          --project_id="$PROJECT_ID" \
+          --location=EU \
+          --use_legacy_sql=false \
+          --format=json \
+          --max_rows=100000 \
+          < scripts/export-municipal-breakdowns.sql \
+          > data/.municipal-breakdowns-query.json
+        bq query \
+          --project_id="$PROJECT_ID" \
+          --location=EU \
+          --use_legacy_sql=false \
+          --format=json \
+          --max_rows=2000 \
+          < scripts/export-municipal-budget-codebook.sql \
+          > data/.municipal-budget-codebook-query.json
+
+  - id: merge-municipal-breakdowns
+    name: node:22-alpine
+    entrypoint: node
+    args: [scripts/merge-municipal-breakdowns.mjs]
+
   - id: validate
     name: node:22-alpine
     entrypoint: node

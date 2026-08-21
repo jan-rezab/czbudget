@@ -54,3 +54,8 @@ Lokální kontrola před commitem:
 ```bash
 node scripts/validate-site.mjs
 ```
+
+Při produkčním buildu se z BigQuery načtou také konsolidované řádky FIN 2-12 M
+pro všech 6 254 obcí. Do každého profilového JSONu se vloží kompaktní členění
+podle funkčních paragrafů a ekonomických položek pro schválený, upravený i
+skutečný rozpočet; oficiální názvy sdílí jeden společný číselník.
