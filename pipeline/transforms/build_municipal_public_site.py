@@ -35,6 +35,32 @@ def summary_row(label: str, summary: dict, note: str) -> str:
     return f"""<article class="layer-row"><div><span>{esc(label)}</span><strong>{entity_count}</strong><small>{esc(note)}</small></div><dl><div><dt>Příjmy</dt><dd>{amount(summary['revenue_actual'])}</dd></div><div><dt>Výdaje</dt><dd>{amount(summary['expense_actual'])}</dd></div><div><dt>Výsledek</dt><dd class="{'positive' if summary['budget_balance'] >= 0 else 'negative'}">{amount(summary['budget_balance'])}</dd></div><div><dt>Stav účtů</dt><dd>{amount(summary['cash_current'])}</dd></div></dl></article>"""
 
 
+def aggregate_story(municipalities: list[dict]) -> str:
+    surplus = [entity for entity in municipalities if entity["amounts"]["budget_balance"] >= 0]
+    deficit = [entity for entity in municipalities if entity["amounts"]["budget_balance"] < 0]
+
+    def total(group: list[dict], field: str) -> float:
+        return sum(entity["amounts"][field] for entity in group)
+
+    def count(group: list[dict]) -> str:
+        return f"{len(group):,}".replace(",", " ")
+
+    def share(group: list[dict]) -> str:
+        return f"{len(group) / len(municipalities):.1%}".replace(".", ",")
+
+    net_balance = total(municipalities, "budget_balance")
+    surplus_balance = total(surplus, "budget_balance")
+    deficit_balance = total(deficit, "budget_balance")
+    worst = sorted(deficit, key=lambda entity: entity["amounts"]["budget_balance"])[:5]
+    worst_balance = total(worst, "budget_balance")
+    without_worst = net_balance - worst_balance
+    cards = "".join(
+        f'<li><a href="{esc(entity["seo"]["path"])}"><span>{index}. {esc(entity["short_name"])}</span><strong>{amount(entity["amounts"]["budget_balance"])}</strong></a></li>'
+        for index, entity in enumerate(worst, 1)
+    )
+    return f"""<section class="municipal-aggregate-story" aria-labelledby="aggregate-story-title"><div class="directory-title"><div><span class="kicker">02 / Co tvoří výsledek</span><h2 id="aggregate-story-title">{amount(surplus_balance)} vytvořily přebytkové obce.</h2></div><p>Celkové příjmy a souhrnný výsledek podle toho, zda obec rok 2025 uzavřela v přebytku, nebo ve schodku.</p></div><div class="aggregate-equation"><article class="aggregate-cohort good-cohort"><span>Přebytkové obce</span><strong>{count(surplus)}</strong><small>{share(surplus)} <i>všech obcí</i></small><dl><div><dt>Celkové příjmy</dt><dd>{amount(total(surplus, 'revenue_actual'))}</dd></div><div><dt>Souhrnný výsledek</dt><dd class="positive">+{amount(surplus_balance)}</dd></div></dl></article><div class="equation-sign" aria-hidden="true">+</div><article class="aggregate-cohort bad-cohort"><span>Schodkové obce</span><strong>{count(deficit)}</strong><small>{share(deficit)} <i>všech obcí</i></small><dl><div><dt>Celkové příjmy</dt><dd>{amount(total(deficit, 'revenue_actual'))}</dd></div><div><dt>Souhrnný výsledek</dt><dd class="negative">{amount(deficit_balance)}</dd></div></dl></article><div class="equation-sign" aria-hidden="true">=</div><article class="aggregate-cohort net-cohort"><span>Všechny obce čistě</span><strong>{count(municipalities)}</strong><small><i>příjmy</i> {amount(total(municipalities, 'revenue_actual'))}</small><dl><div><dt>Výsledek po započtení</dt><dd class="positive">+{amount(net_balance)}</dd></div></dl></article></div><div class="piggy-panel"><div class="piggy-copy"><span class="kicker">Pět největších schodků</span><h3>Pět „špatných prasátek“ ubralo {amount(abs(worst_balance))}.</h3><p>Bez této pětice by obce dohromady skončily v přebytku <strong>{amount(without_worst)}</strong> namísto {amount(net_balance)}.</p><small>„Špatné“ zde znamená pouze největší schodek za jediný rok. Schodek může být plánovanou investicí hrazenou z dřívějších úspor; nejde o hodnocení kvality vedení ani platební schopnosti.</small></div><ol>{cards}</ol></div></section>"""
+
+
 def build_directory(data: dict) -> None:
     municipalities = sorted(data["municipalities"], key=lambda item: item["amounts"]["revenue_actual"], reverse=True)
     summary = data["summary"]
@@ -54,10 +80,11 @@ def build_directory(data: dict) -> None:
 <nav class="breadcrumbs"><a href="../../index.html">Domů</a><span>›</span><strong>Obce a kraje</strong></nav>
 <section class="cz-hero compact-cz-hero"><div><span class="eyebrow"><i class="live-dot"></i>České územní rozpočty · skutečnost 2025</span><h1>Obce a kraje<br><em>v jednom obrazu.</em></h1><p>Všechny obecní účetní jednotky, kraje i společný součet. Praha je započtena jen jednou.</p></div><div class="cohort-switch wide-switch"><a class="active" href="../obce/">Obce <b>6 254</b></a><a href="../mesta/">Velká města <b>20 let</b></a><a href="../kraje/">Kraje <b>14</b></a></div></section>
 <section class="territorial-stack" aria-label="Souhrn územních rozpočtů"><div class="directory-title"><div><span class="kicker">01 / Deduplikovaný součet</span><h2>901,9 mld. Kč příjmů.</h2></div><p>6 254 obcí včetně Prahy + 13 krajů bez Prahy = 6 267 unikátních účetních jednotek.</p></div>{summary_row('Obce a města', summary['municipalities'], 'Praha je zde jako obec')}{summary_row('Kraje bez Prahy', summary['regions_excluding_prague'], '13 krajských účetních jednotek')}{summary_row('Celkem — Praha jen jednou', summary['combined_deduplicated_prague'], '6 267 unikátních jednotek')}<p class="method-warning"><strong>Pozor na interpretaci:</strong> Praha není zdvojena, ale součet není konsolidovaný mezi obcemi a kraji — vzájemné transfery mohou zůstávat na obou stranách.</p></section>
-<section class="directory" id="subjekty"><div class="directory-title"><div><span class="kicker">02 / Všechny obce</span><h2>Najděte libovolnou obec.</h2></div><p>Jednotná data FIN 2-12M a rozvahy za rok 2025. Stav účtů nezahrnuje samostatné příspěvkové organizace.</p></div>
+{aggregate_story(municipalities)}
+<section class="directory" id="subjekty"><div class="directory-title"><div><span class="kicker">03 / Všechny obce</span><h2>Najděte libovolnou obec.</h2></div><p>Jednotná data FIN 2-12M a rozvahy za rok 2025. Stav účtů nezahrnuje samostatné příspěvkové organizace.</p></div>
 <form class="directory-filters" id="municipality-filters"><label class="filter-search"><span>Hledat</span><input id="municipality-query" type="search" placeholder="Název nebo IČO…" autocomplete="off"></label><label><span>Kraj</span><select id="municipality-region"><option value="">Všechny kraje</option>{options}</select></label><label><span>Výsledek</span><select id="municipality-balance"><option value="all">Přebytek i schodek</option><option value="surplus">Přebytek</option><option value="deficit">Schodek</option></select></label><label><span>Řazení</span><select id="municipality-sort"><option value="revenue_actual">Podle příjmů</option><option value="expense_actual">Podle výdajů</option><option value="cash_current">Podle stavu účtů</option><option value="budget_balance">Podle výsledku</option><option value="name">Podle názvu</option></select></label><button type="reset">Vymazat filtry</button></form>
 <div class="result-meta"><strong id="municipality-count">6 254 obcí</strong><a href="../mesta/">Zobrazit 20letý trend velkých měst →</a></div><div class="entity-grid" id="municipality-grid">{initial}</div><p id="municipality-empty" class="empty-state" hidden>Žádná obec neodpovídá filtrům.</p><button class="load-more" id="municipality-more" type="button">Načíst dalších 48 obcí</button></section>
-<section class="data-contract" id="metodika"><div><span class="kicker">03 / Definice</span><h2>Výsledek i stav účtů.</h2><p>Výsledek = skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci. Stav účtů je součet účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze obce.</p></div><div class="source-list"><a href="../../data/municipal-snapshot.v1.json"><span>Kompletní snapshot</span><strong>JSON · 6 254 obcí ↗</strong></a><a href="https://monitor.statnipokladna.gov.cz/datovy-katalog/" target="_blank" rel="noopener"><span>Primární zdroj</span><strong>Monitor MF ČR ↗</strong></a></div></section>
+<section class="data-contract" id="metodika"><div><span class="kicker">04 / Definice</span><h2>Výsledek i stav účtů.</h2><p>Výsledek = skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci. Stav účtů je součet účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze obce.</p></div><div class="source-list"><a href="../../data/municipal-snapshot.v1.json"><span>Kompletní snapshot</span><strong>JSON · 6 254 obcí ↗</strong></a><a href="https://monitor.statnipokladna.gov.cz/datovy-katalog/" target="_blank" rel="noopener"><span>Primární zdroj</span><strong>Monitor MF ČR ↗</strong></a></div></section>
 </main>{footer('../../')}<script src="../../municipal-i18n.js" defer></script><script src="../../cz-municipal-directory.js" defer></script></body></html>\n""", encoding="utf-8")
 
 

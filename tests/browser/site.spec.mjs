@@ -35,6 +35,20 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("municipal directory explains the aggregate balance in both languages", async ({ page }) => {
+  await page.goto("/cz/obce/?lang=cs", { waitUntil: "networkidle" });
+  const story = page.locator(".municipal-aggregate-story");
+  await expect(story).toContainText("43,4 mld. Kč vytvořily přebytkové obce.");
+  await expect(story.locator(".aggregate-cohort")).toHaveCount(3);
+  await expect(story).toContainText("+14,9 mld. Kč");
+  await expect(story.locator(".piggy-panel li")).toHaveCount(5);
+  await expect(story).toContainText("16,9 mld. Kč");
+
+  await page.goto("/cz/obce/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator(".municipal-aggregate-story")).toContainText("Surplus municipalities generated CZK 43.4bn.");
+  await expect(page.locator(".piggy-panel")).toContainText("Five “bad piggies” took away CZK 2.0bn.");
+});
+
 test("all representative page menus resolve and primary navigation routes correctly", async ({ page, request }) => {
   for (const route of routes.map(([, path]) => path)) {
     await page.goto(route, { waitUntil: "networkidle" });
