@@ -219,7 +219,7 @@
 /* All-municipality and long-term fiscal views */
 .wide-switch { min-width: min(520px,100%); }
 .wide-switch a { flex: 1; }
-.territorial-stack,.history-explorer { padding: 90px 5vw; border-bottom: 1px solid var(--cz-line); }
+.territorial-stack,.municipal-aggregate-story,.history-explorer { padding: 90px 5vw; border-bottom: 1px solid var(--cz-line); }
 .layer-row { display: grid; grid-template-columns: 260px 1fr; gap: 30px; align-items: center; padding: 24px 26px; margin-top: 10px; background: white; border: 1px solid var(--cz-line); box-shadow: 0 5px 0 rgba(23,26,25,.04); }
 .layer-row>div>span,.layer-row>div>small { display: block; color: var(--cz-muted); }
 .layer-row>div>span { font: 700 11px monospace; text-transform: uppercase; letter-spacing: .08em; }
@@ -229,6 +229,34 @@
 .layer-row dt { color: var(--cz-muted); font: 9px monospace; text-transform: uppercase; }
 .layer-row dd { margin: 8px 0 0; font-weight: 750; }
 .method-warning { margin: 18px 0 0; padding: 17px 20px; background: #fff2cf; border-left: 4px solid #d7a731; color: #55461e; font-size: 12px; line-height: 1.55; }
+.municipal-aggregate-story { background: #f4f1e9; }
+.aggregate-equation { display: grid; grid-template-columns: minmax(0,1fr) 40px minmax(0,1fr) 40px minmax(0,1fr); align-items: stretch; }
+.aggregate-cohort { padding: 26px; background: white; border: 1px solid var(--cz-line); }
+.aggregate-cohort>span,.aggregate-cohort>small { display: block; color: var(--cz-muted); }
+.aggregate-cohort>span { font: 700 11px monospace; text-transform: uppercase; letter-spacing: .08em; }
+.aggregate-cohort>strong { display: block; margin: 9px 0 2px; font: 500 clamp(34px,4vw,58px)/1 Georgia,serif; }
+.aggregate-cohort>small { font-size: 11px; }
+.aggregate-cohort>small i { font-style: normal; }
+.aggregate-cohort dl { display: grid; gap: 14px; margin: 26px 0 0; }
+.aggregate-cohort dl div { padding-top: 13px; border-top: 1px solid #dedad1; }
+.aggregate-cohort dt { color: var(--cz-muted); font: 9px monospace; text-transform: uppercase; }
+.aggregate-cohort dd { margin: 7px 0 0; font-size: clamp(17px,1.8vw,25px); font-weight: 750; }
+.good-cohort { border-top: 5px solid #47735c; }
+.bad-cohort { border-top: 5px solid #d2674d; }
+.net-cohort { border-top: 5px solid var(--cz-ink); background: var(--cz-ink); color: white; }
+.net-cohort>span,.net-cohort>small,.net-cohort dt { color: #babdb7; }
+.net-cohort dl div { border-color: #424743; }
+.net-cohort .positive { color: #d9ff69; }
+.equation-sign { display: grid; place-items: center; font: 500 34px Georgia,serif; }
+.piggy-panel { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(320px,.85fr); gap: 50px; margin-top: 34px; padding: 34px; background: #fff2cf; border: 1px solid #ead79d; }
+.piggy-copy h3 { margin: 14px 0; font: 500 clamp(30px,4vw,52px)/1 Georgia,serif; letter-spacing: -.04em; }
+.piggy-copy p { margin: 0 0 22px; font-size: 17px; line-height: 1.55; }
+.piggy-copy>small { display: block; max-width: 72ch; color: #695f46; line-height: 1.55; }
+.piggy-panel ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid #d9c991; }
+.piggy-panel li { border-bottom: 1px solid #d9c991; }
+.piggy-panel li a { display: flex; justify-content: space-between; gap: 20px; padding: 14px 2px; text-decoration: none; }
+.piggy-panel li a:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.piggy-panel li strong { color: var(--cz-red); white-space: nowrap; }
 .compact-entity-card { min-height: 315px; }
 .compact-entity-card h2 { margin: 34px 0 20px; font-size: 27px; }
 .load-more { display: block; margin: 30px auto 0; padding: 15px 24px; border: 1px solid var(--cz-ink); background: transparent; font-weight: 750; cursor: pointer; }
@@ -262,13 +290,18 @@
 @media (max-width: 900px) {
   .layer-row { grid-template-columns: 1fr; }
   .layer-row dl { grid-template-columns: 1fr 1fr; }
+  .aggregate-equation { grid-template-columns: 1fr; }
+  .equation-sign { min-height: 48px; }
+  .piggy-panel { grid-template-columns: 1fr; }
   .history-kpis { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 760px) {
-  .territorial-stack,.history-explorer { padding: 70px 20px; }
+  .territorial-stack,.municipal-aggregate-story,.history-explorer { padding: 70px 20px; }
   .wide-switch { display: grid; grid-template-columns: 1fr; }
   .layer-row dl { grid-template-columns: 1fr; }
   .layer-row dl div { border-left: 0; border-top: 1px solid #dedad1; padding: 12px 0 0; }
+  .piggy-panel { gap: 28px; padding: 25px 20px; }
+  .piggy-panel li a { align-items: baseline; }
   .history-kpis { grid-template-columns: 1fr; }
 }
