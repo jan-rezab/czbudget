@@ -22,8 +22,8 @@
   <link rel="stylesheet" href="chart-system.css?v=20260821-city-navigation">
   <link rel="stylesheet" href="cz-spending.css?v=20260820-1">
   <link rel="stylesheet" href="health-budget.css?v=20260820-1">
-  <script src="app.js?v=20260821-fiscal-scope" defer></script>
-  <script src="budget-i18n.js?v=20260821-fiscal-scope" defer></script>
+  <script src="app.js?v=20260821-annual-system-cost-baseline" defer></script>
+  <script src="budget-i18n.js?v=20260821-annual-system-cost-baseline" defer></script>
   <script src="cz-firmy-embed.js?v=20260820-3" defer></script>
   <script src="global-nav.js?v=20260821-city-navigation" defer></script>
   <script src="budget-shell.js?v=20260820-1" defer></script>
@@ -246,15 +246,15 @@
     <div class="model-controls">
       <div class="model-control"><span>Varianta ČSÚ</span><div class="segmented-control" id="demo-variant"><button type="button" data-value="low" aria-pressed="false">Nízká</button><button type="button" data-value="mid" aria-pressed="true">Střední</button><button type="button" data-value="high" aria-pressed="false">Vysoká</button></div></div>
       <label class="model-control"><span>Efektivní důchodový věk <b id="ret-age-label">65 let</b></span><input id="ret-age" type="range" min="65" max="68" value="65" step="1"></label>
-      <label class="model-control"><span>Reálný růst mezd <b id="wage-growth-label">0,0 %</b></span><input id="wage-growth" type="range" min="0" max="2.5" value="0" step="0.25"></label>
-      <label class="model-control"><span>Reálný růst nákladů <b id="cost-growth-label">0,0 %</b></span><input id="cost-growth" type="range" min="0" max="2.5" value="0" step="0.25"></label>
+      <label class="model-control"><span>Roční reálný růst mezd na plátce <b id="wage-growth-label">0,0 %</b></span><input id="wage-growth" type="range" min="0" max="2.5" value="0" step="0.25"></label>
+      <label class="model-control"><span>Roční reálný růst nákladů na osobu <b id="cost-growth-label">0,0 %</b></span><input id="cost-growth" type="range" min="0" max="2.5" value="0" step="0.25"></label>
     </div>
-    <div class="model-kpis"><article><span>65+ / 20–64</span><strong id="model-ratio">—</strong><small id="model-ratio-note">2045</small></article><article><span>Populace 80+</span><strong id="model-80">—</strong><small id="model-80-note">změna proti 2025</small></article><article><span>Dodatečný tlak</span><strong id="model-extra">—</strong><small>mld. Kč ročně · 2045</small></article><article><span>Důchodové saldo</span><strong id="model-pension-balance">—</strong><small>mld. Kč · 2045</small></article></div>
+    <div class="model-kpis"><article><span>65+ / 20–64</span><strong id="model-ratio">—</strong><small id="model-ratio-note">2045</small></article><article><span>Populace 80+</span><strong id="model-80">—</strong><small id="model-80-note">změna proti 2025</small></article><article><span>Roční náklady systémů · 2045</span><strong id="model-system-cost">—</strong><small id="model-system-cost-note">výchozí úroveň 2025 se načítá…</small></article><article><span>Důchodové saldo</span><strong id="model-pension-balance">—</strong><small>mld. Kč · 2045</small></article></div>
     <div class="model-grid">
       <article class="model-panel model-wide"><header><div><span>01</span><h3>Věková struktura</h3></div><small>miliony obyvatel</small></header><div class="stack-legend" id="population-legend"></div><div class="svg-chart dark-chart" id="population-chart"></div></article>
       <article class="model-panel"><header><div><span>02</span><h3>Tlak podle systému</h3></div><small>2025 = 100</small></header><div class="stack-legend" id="pressure-legend"></div><div class="svg-chart dark-chart" id="pressure-chart"></div></article>
-      <article class="model-panel"><header><div><span>03</span><h3>Nový každoroční účet</h3></div><small>proti 2025 · mld. Kč</small></header><div class="stack-legend" id="extra-legend"></div><div class="svg-chart dark-chart" id="extra-chart"></div></article>
-      <article class="model-panel model-wide"><header><div><span>04</span><h3>Důchodový účet: plátci proti příjemcům</h3></div><small>mld. Kč v cenách 2025</small></header><div class="stack-legend" id="pension-legend"></div><div class="svg-chart dark-chart" id="pension-chart"></div><p class="model-note"><b>Jak číst model:</b> „Nulový růst“ znamená stejné reálné ceny a náklady na člověka jako v roce 2025. Důchodový věk se zavádí lineárně během deseti let. Váhy zdravotnictví a péče jsou scénářové předpoklady, nikoli prognóza ČSÚ.</p></article>
+      <article class="model-panel"><header><div><span>03</span><h3>Roční výdaje systémů</h3></div><small>úroveň v mld. Kč · ceny 2025</small></header><div class="stack-legend" id="system-cost-legend"></div><div class="svg-chart dark-chart" id="system-cost-chart"></div></article>
+      <article class="model-panel model-wide"><header><div><span>04</span><h3>Důchodový účet: plátci proti příjemcům</h3></div><small>mld. Kč v cenách 2025</small></header><div class="stack-legend" id="pension-legend"></div><div class="svg-chart dark-chart" id="pension-chart"></div><p class="model-note"><b>Jak číst model:</b> Výdaje na důchody začínají v roce 2025 na 700,1 mld. Kč, nikoli na nule. „0 %“ v ovladači je pouze nulový roční reálný růst nákladu na osobu; celkové výdaje se i tehdy mění s demografií. Důchodový věk se zavádí lineárně během deseti let. Váhy zdravotnictví a péče jsou scénářové předpoklady, nikoli prognóza ČSÚ.</p></article>
     </div>
   </section>
 
