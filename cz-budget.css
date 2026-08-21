@@ -141,9 +141,9 @@
 .source-list a:last-child { border-bottom: 0; }
 .source-list span { color: #b6bdb8; font-size: 11px; }
 .source-list strong { color: var(--cz-acid); font-size: 12px; }
-.language-switch { display: flex; margin-left: auto; border: 1px solid var(--cz-line); }
-.language-switch a { padding: 7px 9px; text-decoration: none; font: 700 10px monospace; color: var(--cz-muted); }
-.language-switch a[aria-current="true"] { background: var(--cz-ink); color: white; }
+.cz-header .municipal-lang-switch { justify-self: end; display: flex; align-items: center; gap: 6px; font: 9px/1 monospace; }
+.cz-header .municipal-lang-switch a { padding: 6px 4px; border: 0; background: transparent; color: var(--cz-muted); font-weight: 800; text-decoration: none; }
+.cz-header .municipal-lang-switch a[aria-current="true"] { color: var(--cz-ink); box-shadow: inset 0 -2px 0 var(--acid); }
 
 @media (max-width: 1100px) {
   .entity-grid { grid-template-columns: repeat(2,1fr); }

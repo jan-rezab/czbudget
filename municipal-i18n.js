@@ -20,10 +20,12 @@
       ? `<a href="${root}index.html?lang=en">Overview</a><a href="${root}cesko.html?lang=en">Czechia</a><a href="${root}cz/obce/?lang=en" aria-current="page">Municipalities &amp; regions</a>`
       : `<a href="${root}index.html?lang=cs">Přehled</a><a href="${root}cesko.html?lang=cs">Česko</a><a href="${root}cz/obce/?lang=cs" aria-current="page">Obce a kraje</a>`;
     const switcher = document.createElement("div");
-    switcher.className = "language-switch";
+    switcher.className = "lang-switch municipal-lang-switch";
     switcher.setAttribute("aria-label", lang === "en" ? "Language" : "Jazyk");
     switcher.innerHTML = `<a href="${withLang("cs")}"${lang === "cs" ? ' aria-current="true"' : ""}>CZ</a><a href="${withLang("en")}"${lang === "en" ? ' aria-current="true"' : ""}>EN</a>`;
-    header.append(switcher);
+    const datasetPill = header.querySelector(".dataset-pill");
+    if (datasetPill) datasetPill.replaceWith(switcher);
+    else header.append(switcher);
   }
 
   const renderBudgetStages = async () => {
@@ -67,7 +69,7 @@
   const dictionary = new Map(Object.entries({
     "Domů": "Home", "Obce": "Municipalities", "Obce a kraje": "Municipalities and regions", "Velká města": "Large cities", "Kraje": "Regions",
     "České územní rozpočty · skutečnost 2025": "Czech local government budgets · 2025 actuals",
-    "Obce a kraje\nv jednom obrazu.": "Municipalities and regions\nin one view.",
+    "Obce a kraje\nv jednom obrazu.": "Municipalities and regions\nin one view.", "v jednom obrazu.": "in one view.",
     "Všechny obecní účetní jednotky, kraje i společný součet. Praha je započtena jen jednou.": "Every municipal reporting entity, every region and a combined total. Prague is counted once.",
     "01 / Deduplikovaný součet": "01 / Deduplicated total", "901,9 mld. Kč příjmů.": "CZK 901.9bn in revenue.",
     "6 254 obcí včetně Prahy + 13 krajů bez Prahy = 6 267 unikátních účetních jednotek.": "6,254 municipalities including Prague + 13 regions excluding Prague = 6,267 unique reporting entities.",
@@ -80,7 +82,7 @@
     "Hledat": "Search", "Název nebo IČO…": "Name or registration ID…", "Kraj": "Region", "Všechny kraje": "All regions", "Přebytek i schodek": "Surplus and deficit", "Přebytek": "Surplus", "Schodek": "Deficit", "Řazení": "Sort", "Podle příjmů": "By revenue", "Podle výdajů": "By expenditure", "Podle stavu účtů": "By cash", "Podle výsledku": "By balance", "Podle názvu": "By name", "Vymazat filtry": "Reset filters", "Načíst dalších 48 obcí": "Load 48 more municipalities",
     "Zobrazit 20letý trend velkých měst →": "View the 20-year large-city trend →", "Detail a data": "Profile and data", "Detail rozpočtu": "Budget profile",
     "03 / Definice": "03 / Definitions", "Výsledek i stav účtů.": "Balance and cash.", "Kompletní snapshot": "Complete snapshot", "Primární zdroj": "Primary source",
-    "27 velkých měst · nominální CZK": "27 large cities · nominal CZK", "Dvacet let\nv jednom trendu.": "Twenty years\nin one trend.",
+    "27 velkých měst · nominální CZK": "27 large cities · nominal CZK", "20 let": "20 years", "Dvacet let\nv jednom trendu.": "Twenty years\nin one trend.",
     "Každý rok od 2006 do 2025: příjmy, výdaje, výsledek hospodaření a stav účtů.": "Every year from 2006 to 2025: revenue, expenditure, fiscal balance and cash.",
     "20 let / 2006–2025": "20 years / 2006-2025", "Výsledek hospodaření a stav účtů.": "Fiscal balance and cash.", "Vyberte město": "Select a city",
     "Roční data v tabulce": "Annual data table", "Rok": "Year", "Profily": "Profiles", "Detail každého města.": "Every city in detail.", "Nejnovější rok i celá časová řada na jedné trvalé adrese.": "The latest year and full time series on one permanent URL.",
