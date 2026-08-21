@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { access, readdir, readFile, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 
@@ -12,6 +12,10 @@ const selected = [
   "data/eu-capital-budgets.v1.json", "data/municipal-snapshot.v1.json",
   "lib/data/sovereign-benchmark.v1.json", "sitemap.xml",
 ];
+try {
+  await access(path.join(root, "data", "municipal-budget-codebook.v1.json"));
+  selected.push("data/municipal-budget-codebook.v1.json");
+} catch {}
 const sha256 = (content) => createHash("sha256").update(content).digest("hex");
 const artifacts = [];
 for (const relative of selected) {
