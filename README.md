@@ -43,9 +43,11 @@ sestavení určuje produkční canonical URL a adresu sitemap.
 
 Tato složka je samostatný kanonický Git projekt. Každý push do hlavní větve
 spustí validaci, vytvoří neměnný kontejner označený Git commitem a nasadí jej
-do samostatné Cloud Run služby `czbudget-public` v projektu
-`czbudget-janrezab`. Služba `czbudget-web` ani projekt Riverdata nejsou součástí
-tohoto deploymentu.
+do jediné Cloud Run služby `czbudget-public` v projektu `czbudget-janrezab` a
+regionu `europe-west1`. Build má cílovou službu i region napevno a skončí
+chybou, pokud v projektu existuje jiná služba `czbudget-*`. Legacy služba
+`czbudget-web` byla po úplném porovnání zdrojů zrušena; nesmí se znovu vytvořit.
+Projekt Riverdata není součástí tohoto deploymentu.
 
 Lokální kontrola před commitem:
 
