@@ -1,0 +1,17 @@
+{
+  "name": "czbudget-integrity",
+  "version": "1.0.0",
+  "private": true,
+  "engines": { "node": "22.x" },
+  "scripts": {
+    "validate": "node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
+    "validate:data": "node scripts/validate-integrity.mjs --data-only",
+    "audit:links": "node scripts/check-external-links.mjs --write-report",
+    "test:browser": "playwright test",
+    "test": "npm run validate && npm run test:browser"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.62.1"
+  }
+}

@@ -11,8 +11,8 @@ const metrics = {
   balance_to_revenue: { label: "Saldo vůči příjmům", short: "Saldo / příjmy", kind: "percent", value: (e) => e.ratios.balance_to_revenue || 0 },
 };
 
-const money = (value) => new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", notation: "compact", maximumFractionDigits: 1 }).format(value);
-const percent = (value, digits = 1) => new Intl.NumberFormat("cs-CZ", { style: "percent", maximumFractionDigits: digits, minimumFractionDigits: digits }).format(value);
+const money = (value) => Number.isFinite(value) ? new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", notation: "compact", maximumFractionDigits: 1 }).format(value) : "—";
+const percent = (value, digits = 1) => Number.isFinite(value) ? new Intl.NumberFormat("cs-CZ", { style: "percent", maximumFractionDigits: digits, minimumFractionDigits: digits }).format(value) : "—";
 const formatMetric = (value, kind) => kind === "money" ? money(value) : percent(value);
 const median = (values) => { const sorted = [...values].sort((a,b)=>a-b); const m = Math.floor(sorted.length/2); return sorted.length%2 ? sorted[m] : (sorted[m-1]+sorted[m])/2; };
 const percentile = (value, values) => Math.round(((values.filter((v)=>v<value).length + .5*values.filter((v)=>v===value).length) / values.length) * 100);
@@ -38,7 +38,7 @@ function renderContext() {
   const totals = entities.reduce((sum,e)=>({
     revenue: sum.revenue + e.amounts.revenue_actual,
     expense: sum.expense + e.amounts.expense_actual,
-    cash: sum.cash + e.amounts.cash_current,
+    cash: sum.cash + (e.amounts.cash_current || 0),
   }), {revenue:0,expense:0,cash:0});
   $("#level-kicker").textContent = isRegion ? "Všech 14 krajů včetně Prahy" : "Všech 27 statutárních měst včetně Prahy";
   $("#hero-copy").textContent = isRegion

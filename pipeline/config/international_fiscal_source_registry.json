@@ -1,0 +1,289 @@
+{
+  "registry_version": "1.0.0",
+  "countries": [
+    {
+      "country_code": "CZE",
+      "role": "anchor",
+      "name_cs": "Česko",
+      "name_en": "Czechia",
+      "currency_code": "CZK",
+      "national_scope": "state_budget",
+      "sources": [
+        {
+          "name": "Ministerstvo financí ČR – plnění státního rozpočtu",
+          "url": "https://www.mfcr.cz/cs/rozpoctova-politika/statni-rozpocet/plneni-statniho-rozpoctu",
+          "coverage": "2001–současnost",
+          "formats": ["HTML", "XLSX", "PDF"],
+          "purpose": "schválený rozpočet, pokladní plnění, příjmy, výdaje a saldo"
+        },
+        {
+          "name": "Monitor státní pokladny",
+          "url": "https://monitor.statnipokladna.gov.cz/",
+          "coverage": "účetní a rozpočtová data veřejného sektoru",
+          "formats": ["CSV", "XML", "HTML"],
+          "purpose": "kapitoly, organizace, druhové a odvětvové členění, skutečnost"
+        }
+      ]
+    },
+    {
+      "country_code": "UKR",
+      "role": "requested",
+      "name_cs": "Ukrajina",
+      "name_en": "Ukraine",
+      "currency_code": "UAH",
+      "national_scope": "state_and_consolidated_budget",
+      "sources": [
+        {
+          "name": "Open Budget – Budget for Citizens",
+          "url": "https://openbudget.gov.ua/en",
+          "coverage": "státní, místní a konsolidovaný rozpočet",
+          "formats": ["HTML", "open data"],
+          "purpose": "upravený plán, plnění, hierarchie příjmů a výdajů, měsíční dynamika"
+        },
+        {
+          "name": "E-data Spending",
+          "url": "https://spending.gov.ua/",
+          "coverage": "veřejné platby a smlouvy",
+          "formats": ["HTML", "API"],
+          "purpose": "transakční detail použití veřejných prostředků"
+        }
+      ]
+    },
+    {
+      "country_code": "POL",
+      "role": "requested",
+      "name_cs": "Polsko",
+      "name_en": "Poland",
+      "currency_code": "PLN",
+      "national_scope": "state_budget",
+      "sources": [
+        {
+          "name": "Ministerstwo Finansów – roční zprávy o plnění",
+          "url": "https://www.gov.pl/web/finanse/sprawozdania-roczne",
+          "coverage": "2018–současnost, starší roky v archivu",
+          "formats": ["XLSX", "PDF", "HTML"],
+          "purpose": "zákonný plán, plán po změnách a skutečné plnění"
+        },
+        {
+          "name": "Ministerstwo Finansów – měsíční plnění příjmů a výdajů",
+          "url": "https://www.gov.pl/web/finance/revenue-expenditure-execution",
+          "coverage": "2018–současnost, starší roky v archivu",
+          "formats": ["XLSX", "PDF"],
+          "purpose": "měsíční plnění podle hlavních příjmových a výdajových tříd"
+        }
+      ]
+    },
+    {
+      "country_code": "DEU",
+      "role": "requested",
+      "name_cs": "Německo",
+      "name_en": "Germany",
+      "currency_code": "EUR",
+      "national_scope": "federal_budget",
+      "sources": [
+        {
+          "name": "Bundeshaushalt – Download-Portal",
+          "url": "https://www.bundeshaushalt.de/DE/Download-Portal/download-portal.html",
+          "coverage": "2005–současnost",
+          "formats": ["CSV", "XML", "PDF"],
+          "purpose": "federální plán a skutečnost podle kapitol, skupin a položek"
+        }
+      ]
+    },
+    {
+      "country_code": "GBR",
+      "role": "requested",
+      "name_cs": "Spojené království",
+      "name_en": "United Kingdom",
+      "currency_code": "GBP",
+      "national_scope": "public_sector_and_central_government",
+      "sources": [
+        {
+          "name": "HM Treasury – Public Expenditure Statistical Analyses",
+          "url": "https://www.gov.uk/government/collections/public-expenditure-statistical-analyses-pesa",
+          "coverage": "dlouhé časové řady; každoroční sešity",
+          "formats": ["XLSX", "PDF"],
+          "purpose": "plány a skutečnost podle resortu, funkce, ekonomické kategorie a území"
+        },
+        {
+          "name": "Office for Budget Responsibility – Data",
+          "url": "https://obr.uk/data/",
+          "coverage": "historické skutečnosti a vintages prognóz",
+          "formats": ["XLSX"],
+          "purpose": "daně, výdaje, saldo, dluh, revize prognóz a dopady politik"
+        }
+      ]
+    },
+    {
+      "country_code": "FRA",
+      "role": "requested",
+      "name_cs": "Francie",
+      "name_en": "France",
+      "currency_code": "EUR",
+      "national_scope": "state_budget",
+      "sources": [
+        {
+          "name": "budget.gouv.fr – státní rozpočet podle misí",
+          "url": "https://www.budget.gouv.fr/budget-etat/mission",
+          "coverage": "LOLF struktura od poloviny 2000s",
+          "formats": ["HTML", "CSV"],
+          "purpose": "mise, programy, akce, ukazatele výkonu"
+        },
+        {
+          "name": "data.economie.gouv.fr – PLF a PLRG",
+          "url": "https://www.data.economie.gouv.fr/",
+          "coverage": "roční návrhy a závěrečné účty",
+          "formats": ["CSV", "JSON API", "XLSX"],
+          "purpose": "AE/CP, plán, otevřené kredity a plnění podle mise, programu a titulu"
+        }
+      ]
+    },
+    {
+      "country_code": "USA",
+      "role": "requested",
+      "name_cs": "USA",
+      "name_en": "United States",
+      "currency_code": "USD",
+      "national_scope": "federal_budget",
+      "sources": [
+        {
+          "name": "OMB – Public Budget Database a Historical Tables",
+          "url": "https://www.whitehouse.gov/omb/information-resources/budget/supplemental-materials/",
+          "coverage": "účty od 1962, budget authority od 1976",
+          "formats": ["XLSX", "XLS", "PDF"],
+          "purpose": "příjmy, outlays a budget authority po agentuře, účtu, funkci a programu"
+        },
+        {
+          "name": "U.S. Treasury Fiscal Data",
+          "url": "https://fiscaldata.treasury.gov/",
+          "coverage": "měsíční a roční fiskální data",
+          "formats": ["JSON API", "CSV", "PDF"],
+          "purpose": "skutečné příjmy, výdaje, deficit, dluh a účty"
+        },
+        {
+          "name": "USAspending",
+          "url": "https://www.usaspending.gov/",
+          "coverage": "federální awards a subawards",
+          "formats": ["JSON API", "CSV"],
+          "purpose": "příjemci, kontrakty, granty, půjčky a geografický detail"
+        }
+      ]
+    },
+    {
+      "country_code": "CHE",
+      "role": "responsible_benchmark",
+      "name_cs": "Švýcarsko",
+      "name_en": "Switzerland",
+      "currency_code": "CHF",
+      "national_scope": "confederation_and_general_government",
+      "benchmark_reason": "Ústavní dluhová brzda omezuje výdaje strukturálními příjmy přes hospodářský cyklus.",
+      "benchmark_evidence_url": "https://www.oecd.org/en/publications/quality-budget-institutions_8e811202-en/full-report/set-clear-fiscal-objectives_490cf9b0.html",
+      "sources": [
+        {
+          "name": "Federal Finance Administration – Open Government Data",
+          "url": "https://www.efv.admin.ch/de/open-government-data-de",
+          "coverage": "časové řady federálního rozpočtu a účtů",
+          "formats": ["CSV", "XLSX"],
+          "purpose": "plán, finanční plán, schválený rozpočet a závěrečný účet"
+        }
+      ]
+    },
+    {
+      "country_code": "SWE",
+      "role": "responsible_benchmark",
+      "name_cs": "Švédsko",
+      "name_en": "Sweden",
+      "currency_code": "SEK",
+      "national_scope": "central_and_general_government",
+      "benchmark_reason": "Dluhová kotva, cíl salda a víceleté nominální výdajové stropy jsou propojené s top-down rozpočtovým procesem.",
+      "benchmark_evidence_url": "https://www.oecd.org/en/publications/oecd-economic-surveys-norway-2026_5cc02644-en/full-report/preparing-for-long-term-challenges_b3a8411e.html",
+      "sources": [
+        {
+          "name": "Government.se – central government budget in figures",
+          "url": "https://www.government.se/government-of-sweden/ministry-of-finance/central-government-budget/central-government-budget-in-figures/",
+          "coverage": "aktuální skutečnost, prognóza a víceletý plán",
+          "formats": ["HTML", "PDF"],
+          "purpose": "27 výdajových oblastí, příjmy, plán a skutečnost"
+        },
+        {
+          "name": "ESV – outcome of the central government budget",
+          "url": "https://www.statskontoret.se/analys-och-statistik/oppna-data/arsutfall/",
+          "coverage": "historické řady a roční závěrečné účty",
+          "formats": ["XLSX", "PDF", "open data"],
+          "purpose": "původní rozpočet, dodatečný rozpočet, skutečnost a odchylky"
+        }
+      ]
+    },
+    {
+      "country_code": "DNK",
+      "role": "responsible_benchmark",
+      "name_cs": "Dánsko",
+      "name_en": "Denmark",
+      "currency_code": "DKK",
+      "national_scope": "central_and_general_government",
+      "benchmark_reason": "Víceleté výdajové stropy pro stát, regiony a obce a dlouhodobě nízké zadlužení dávají užitečný benchmark rozpočtové disciplíny.",
+      "benchmark_evidence_url": "https://www.oecd.org/en/publications/oecd-economic-surveys-norway-2026_5cc02644-en/full-report/preparing-for-long-term-challenges_b3a8411e.html",
+      "sources": [
+        {
+          "name": "Finansministeriet – Finanslovsdatabasen",
+          "url": "https://fm.dk/arbejdsomraader/finanslov-og-offentlige-finanser/arbejdet-med-finansloven/finanslovsdatabasen/",
+          "coverage": "roční finance acts a supplementary appropriation acts",
+          "formats": ["interactive database", "PDF"],
+          "purpose": "příjmy a výdaje podle ministerstev, provozní výdaje a transfery regionům a obcím"
+        }
+      ]
+    },
+    {
+      "country_code": "NOR",
+      "role": "responsible_benchmark",
+      "name_cs": "Norsko",
+      "name_en": "Norway",
+      "currency_code": "NOK",
+      "national_scope": "central_and_general_government",
+      "benchmark_reason": "Strukturální neropné saldo a fiskální pravidlo oddělují běžný rozpočet od výnosů státního ropného fondu.",
+      "benchmark_evidence_url": "https://www.regjeringen.no/en/topics/the-economy/the-national-budget/previous-national-budgets/id450436/",
+      "sources": [
+        {
+          "name": "Regjeringen – previous national budgets",
+          "url": "https://www.regjeringen.no/en/topics/the-economy/the-national-budget/previous-national-budgets/id450436/",
+          "coverage": "2005–současnost",
+          "formats": ["HTML", "PDF"],
+          "purpose": "návrh, revidovaný rozpočet, kapitoly příjmů a výdajů a neropné saldo"
+        },
+        {
+          "name": "Norský státní závěrečný účet",
+          "url": "https://www.regjeringen.no/no/tema/okonomi-og-budsjett/statsregnskapet/id1438/",
+          "coverage": "roční závěrečné účty",
+          "formats": ["HTML", "PDF"],
+          "purpose": "schválené prostředky a skutečnost po kapitolách a položkách"
+        }
+      ]
+    },
+    {
+      "country_code": "GRC",
+      "role": "stress_benchmark",
+      "name_cs": "Řecko",
+      "name_en": "Greece",
+      "currency_code": "EUR",
+      "national_scope": "state_and_general_government",
+      "benchmark_reason": "Stresový a obnovovací benchmark pro dluhovou krizi, konsolidaci a změny rozpočtové struktury.",
+      "benchmark_evidence_url": "https://minfin.gov.gr/en/budget-execution-bulletins/",
+      "sources": [
+        {
+          "name": "Ministry of Economy and Finance – Budget Execution Bulletins",
+          "url": "https://minfin.gov.gr/en/budget-execution-bulletins/",
+          "coverage": "měsíční plnění a roční souhrny",
+          "formats": ["PDF", "XLSX", "HTML"],
+          "purpose": "plán, plnění příjmů a výdajů, ekonomická klasifikace a tempo čerpání"
+        },
+        {
+          "name": "Hellenic Statistical Authority – government finance",
+          "url": "https://www.statistics.gr/en/statistics/-/publication/SEL03/-",
+          "coverage": "vládní příjmy, výdaje, saldo a funkční členění",
+          "formats": ["XLSX", "CSV", "PDF"],
+          "purpose": "ověření konsolidovaného sektoru a COFOG mapování"
+        }
+      ]
+    }
+  ]
+}

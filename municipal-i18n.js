@@ -122,7 +122,7 @@
       });
       const ordered = ["enacted", "revised", "actual"].map((stage) => stages.find((row) => row.stage === stage));
       if (ordered.some((row) => !row)) throw new Error("Municipal profile has incomplete budget stages");
-      panel.innerHTML = `<div class="budget-stage-scroll"><table class="budget-stage-table">
+      panel.innerHTML = `<div class="budget-stage-scroll" tabindex="0"><table class="budget-stage-table">
         <thead><tr><th scope="col">${labels.stage}</th><th scope="col">${labels.revenue}</th><th scope="col">${labels.expenditure}</th><th scope="col">${labels.balance}</th></tr></thead>
         <tbody>${ordered.map((row) => `<tr class="budget-stage-${row.stage}"><th scope="row">${labels[row.stage]}</th><td>${money.format(row.revenue_czk)}</td><td>${money.format(row.expenditure_czk)}</td><td class="${row.balance_czk >= 0 ? "positive" : "negative"}">${money.format(row.balance_czk)}</td></tr>`).join("")}</tbody>
       </table></div><p class="budget-stage-source">${labels.source}${entity.budget_stage_lineage ? ` · <code>${entity.budget_stage_lineage.ingestion_run_id}</code>` : ""}</p>`;

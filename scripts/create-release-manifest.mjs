@@ -1,0 +1,51 @@
+import { createHash } from "node:crypto";
+import { readdir, readFile, writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import path from "node:path";
+
+const root = process.cwd();
+const selected = [
+  "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-health.v1.json",
+  "data/country-spending-comparison.v1.json", "data/cz-public-entities-2024.json",
+  "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json",
+  "data/czech-budget.v1.json", "data/demography-social.v1.json",
+  "data/eu-capital-budgets.v1.json", "data/municipal-snapshot.v1.json",
+  "lib/data/sovereign-benchmark.v1.json", "sitemap.xml",
+];
+const sha256 = (content) => createHash("sha256").update(content).digest("hex");
+const artifacts = [];
+for (const relative of selected) {
+  const content = await readFile(path.join(root, relative));
+  artifacts.push({ path: relative, bytes: content.length, sha256: sha256(content) });
+}
+const entityHash = createHash("sha256");
+let entityBytes = 0;
+const entityFiles = (await readdir(path.join(root, "data", "entities"))).filter((name) => name.endsWith(".json")).sort();
+for (const name of entityFiles) {
+  const content = await readFile(path.join(root, "data", "entities", name));
+  entityHash.update(name).update("\0").update(content);
+  entityBytes += content.length;
+}
+artifacts.push({ path: "data/entities/*.json", files: entityFiles.length, bytes: entityBytes, sha256: entityHash.digest("hex") });
+let gitCommit = process.env.COMMIT_SHA || null;
+let workingTreeDirty = null;
+if (!gitCommit) {
+  try { gitCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim(); } catch {}
+  try { workingTreeDirty = Boolean(execFileSync("git", ["status", "--porcelain"], { encoding: "utf8" }).trim()); } catch {}
+} else {
+  workingTreeDirty = false;
+}
+const snapshot = JSON.parse(await readFile(path.join(root, "data", "municipal-snapshot.v1.json"), "utf8"));
+const sourceManifest = await readFile(path.join(root, "pipeline", "source-assets.manifest.json"));
+const manifest = {
+  schema_version: "1.0.0",
+  git_commit: gitCommit,
+  working_tree_dirty: workingTreeDirty,
+  cloud_build_id: process.env.BUILD_ID || null,
+  data_generated_at: snapshot.generated_at,
+  municipal_ingestion_run_id: snapshot.provenance?.ingestion_run_id || "cz-finm-2025-all-municipalities-v1",
+  source_assets_manifest_sha256: sha256(sourceManifest),
+  artifacts,
+};
+await writeFile(path.join(root, "data", "release-manifest.v1.json"), `${JSON.stringify(manifest, null, 2)}\n`);
+console.log(`Release manifest recorded ${artifacts.length} artifact groups`);

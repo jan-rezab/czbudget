@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-20T18:47:51.503605+00:00",
+  "generated_at": "2026-08-21T21:17:47Z",
   "period": {
     "fiscal_year": 2025,
     "period_code": "2512",
@@ -41,14 +41,14 @@
       "current_expense": 87031387.27,
       "capital_expense": 126169341.78,
       "budget_balance": -70971212.38,
-      "cash_current": 0.0,
-      "cash_previous": 0.0
+      "cash_current": null,
+      "cash_previous": null
     },
     "ratios": {
       "revenue_execution": 1.11802698,
       "expense_execution": 0.98506315,
       "balance_to_revenue": -0.49899074,
-      "cash_to_expense": 0.0,
+      "cash_to_expense": null,
       "cash_yoy": null,
       "capital_expense_share": 0.59178663,
       "transfer_revenue_share": 0.42665233
@@ -56,6 +56,12 @@
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00259225/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00259225"
+    },
+    "quality": {
+      "cash_data_available": false,
+      "flags": [
+        "cash_balance_sheet_rows_missing"
+      ]
     },
     "seo": {
       "slug": "zbiroh",

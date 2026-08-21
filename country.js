@@ -69,6 +69,12 @@ function translate(){
   document.querySelectorAll("[data-currency]").forEach(b=>b.classList.toggle("active",b.dataset.currency===state.currency));
   const back=$("#back-link"); if(back) back.href=`index.html?lang=${state.lang}#countries`; $("#home-link").href=`index.html?lang=${state.lang}`;
   document.title=`${name()} — Public Spending Data`;
+  const origin="https://czbudget-public-258433468858.europe-west1.run.app";
+  const canonical=`${origin}/country.html?code=${encodeURIComponent(state.code)}`;
+  $("#canonical-url").href=canonical;
+  $("#alternate-cs").href=`${canonical}&lang=cs`;
+  $("#alternate-en").href=`${canonical}&lang=en`;
+  $("#og-url").content=canonical;
 }
 function header(){
   const c=meta(); $("#country-code").innerHTML=`<img src="assets/flags/${flagCodes[c.country_code]}.svg" alt=""><b>${c.country_code}</b>`; $("#country-name").textContent=name(); $("#footer-country").textContent=name();
@@ -108,7 +114,7 @@ function lineChart(id, values, {format=v=>fmt(v,"",false,0),source="IMF World Ec
   if(!clean.length){target.innerHTML="—";return}
   let rawLo=Math.min(...clean.map(v=>v.value)),rawHi=Math.max(...clean.map(v=>v.value)); const pad=Math.max((rawHi-rawLo)*.08,Math.abs(rawHi)*.03,1);rawLo-=pad;rawHi+=pad;if(zero){rawLo=Math.min(0,rawLo);rawHi=Math.max(0,rawHi)}
   const axis=niceAxis(rawLo,rawHi),lo=axis.min,hi=axis.max,plotWidth=W-m.l-m.r,x=i=>m.l+(i+.5)*plotWidth/clean.length,y=v=>m.t+(hi-v)/(hi-lo)*(H-m.t-m.b),path=clean.map((p,i)=>`${i?"L":"M"}${x(i)},${y(p.value)}`).join(" "),last=clean.at(-1);
-  target.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img">${axis.ticks.slice().reverse().map(tick=>`<line x1="${m.l}" x2="${W-m.r}" y1="${y(tick)}" y2="${y(tick)}" class="grid-line"/><text x="${m.l-8}" y="${y(tick)+4}" text-anchor="end" class="axis-label">${format(tick)}</text>`).join("")}${zero&&lo<0&&hi>0?`<line x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}" class="zero-line"/>`:""}<path d="${path}" fill="none" stroke="${color}" stroke-width="3"/>${clean.map((p,i)=>i%5===0||i===clean.length-1?`<text x="${x(i)}" y="${H-10}" text-anchor="middle" class="axis-label">${p.year}</text>`:"").join("")}<circle cx="${x(clean.length-1)}" cy="${y(last.value)}" r="4" fill="${color}"/><text x="${x(clean.length-1)+10}" y="${y(last.value)+4}" class="chart-end-label">${format(last.value)}</text></svg><div class="chart-source">${state.lang==="en"?"Source":"Zdroj"}: ${source}</div>`;
+  target.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${id.replaceAll("-", " ")}">${axis.ticks.slice().reverse().map(tick=>`<line x1="${m.l}" x2="${W-m.r}" y1="${y(tick)}" y2="${y(tick)}" class="grid-line"/><text x="${m.l-8}" y="${y(tick)+4}" text-anchor="end" class="axis-label">${format(tick)}</text>`).join("")}${zero&&lo<0&&hi>0?`<line x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}" class="zero-line"/>`:""}<path d="${path}" fill="none" stroke="${color}" stroke-width="3"/>${clean.map((p,i)=>i%5===0||i===clean.length-1?`<text x="${x(i)}" y="${H-10}" text-anchor="middle" class="axis-label">${p.year}</text>`:"").join("")}<circle cx="${x(clean.length-1)}" cy="${y(last.value)}" r="4" fill="${color}"/><text x="${x(clean.length-1)+10}" y="${y(last.value)+4}" class="chart-end-label">${format(last.value)}</text></svg><div class="chart-source">${state.lang==="en"?"Source":"Zdroj"}: ${source}</div>`;
 }
 function charts(){
   const fiscalLabels={balance_pct_gdp:T[state.lang].balance,gross_debt_pct_gdp:T[state.lang].debt,expenditure_pct_gdp:T[state.lang].expense,revenue_pct_gdp:T[state.lang].revenue};
