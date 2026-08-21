@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "dataset_id": "sovereign-fiscal-benchmark",
-  "generated_at": "2026-08-20T18:41:33.224162+00:00",
+  "generated_at": "2026-08-21T06:37:17.276588+00:00",
   "period": {
     "start_year": 2005,
     "end_year": 2024,
@@ -12,6 +12,62 @@
     "accounting_note": "Comparable IMF WEO macro-fiscal series; national central/federal budget trees are separate layers.",
     "uk_note": "The requested England comparison is represented by the United Kingdom because England has no separate sovereign state budget.",
     "actuality_note": "Each point carries actual/estimate status from the source series. The selected fiscal period is actual through 2024 for all countries."
+  },
+  "fiscal_perimeters": {
+    "comparison_scope": "general_government",
+    "non_additivity_rule_cs": "Rozsahy nejsou sčítatelné. Sektor vládních institucí už konsoliduje zahrnuté veřejné jednotky a vylučuje vzájemné transfery. Obrat veřejných korporací není příjmem státního rozpočtu.",
+    "non_additivity_rule_en": "The perimeters are not additive. General government already consolidates the public units it contains and eliminates internal transfers. Public-corporation turnover is not state-budget revenue.",
+    "market_test_note_cs": "Veřejně ovládaný tržní výrobce se vykazuje jako veřejná korporace mimo sektor vládních institucí. Ovládaná netržní jednotka může být do sektoru vládních institucí zařazena bez ohledu na právní formu.",
+    "market_test_note_en": "A publicly controlled market producer is recorded as a public corporation outside general government. A controlled non-market unit may be classified inside general government regardless of legal form.",
+    "perimeters": [
+      {
+        "perimeter_code": "national_budget",
+        "label_cs": "Národní státní rozpočet",
+        "label_en": "National state budget",
+        "definition_cs": "Roční právní a pokladní plán ústřední nebo federální vlády podle národních pravidel.",
+        "definition_en": "The annual legal and cash plan of central or federal government under national rules.",
+        "includes_cs": "Daně a jiné příjmy přidělené tomuto rozpočtu, výdaje jeho kapitol a hotovostní saldo.",
+        "includes_en": "Taxes and other receipts assigned to this budget, departmental expenditure and its cash balance.",
+        "excludes_cs": "Zpravidla vlastní rozpočty obcí a regionů, samostatné fondy a hrubé tržby veřejných korporací.",
+        "excludes_en": "Normally excludes subnational budgets, separate funds and gross sales of public corporations."
+      },
+      {
+        "perimeter_code": "general_government",
+        "label_cs": "Sektor vládních institucí",
+        "label_en": "General government",
+        "definition_cs": "Harmonizovaný statistický sektor: ústřední, regionální a místní vláda a fondy sociálního zabezpečení.",
+        "definition_en": "The harmonised statistical sector: central, state or regional, and local government plus social-security funds.",
+        "includes_cs": "Netržní veřejné jednotky podle institucionální klasifikace; transakce uvnitř sektoru jsou konsolidovány.",
+        "includes_en": "Non-market public units under institutional classification; transactions within the sector are consolidated.",
+        "excludes_cs": "Veřejně ovládané podniky, které prodávají za ekonomicky významné ceny a projdou tržním testem.",
+        "excludes_en": "Publicly controlled enterprises that sell at economically significant prices and pass the market test."
+      },
+      {
+        "perimeter_code": "public_sector",
+        "label_cs": "Veřejný sektor včetně korporací",
+        "label_en": "Public sector including corporations",
+        "definition_cs": "Sektor vládních institucí rozšířený o veřejné finanční a nefinanční korporace.",
+        "definition_en": "General government plus public financial and non-financial corporations.",
+        "includes_cs": "Samostatné účetní výkazy veřejných podniků, jejich aktiva, závazky, výnosy a náklady.",
+        "includes_en": "Separate financial statements of public enterprises, including their assets, liabilities, revenue and costs.",
+        "excludes_cs": "Není to rozšířená příjmová část státního rozpočtu a nelze jej k rozpočtu přičíst.",
+        "excludes_en": "It is not an expanded state-budget revenue line and cannot be added to the budget."
+      }
+    ],
+    "sources": [
+      {
+        "source_name": "Eurostat — government revenue, expenditure and main aggregates",
+        "source_url": "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10a_main_esms.htm"
+      },
+      {
+        "source_name": "Eurostat — ESA 2010 sector classification",
+        "source_url": "https://ec.europa.eu/eurostat/web/esa-2010"
+      },
+      {
+        "source_name": "EU Directive 2011/85/EU on national budgetary frameworks",
+        "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32011L0085"
+      }
+    ]
   },
   "benchmark_policy": {
     "composite_score": false,
@@ -44,6 +100,29 @@
         "general_government_composition": "Central Government; Local Government; Social Security Funds",
         "debt_valuation": "Nominal value",
         "debt_instruments": "Currency and Deposits; Insurance Technical Reserves; Shares and Other Equity; Loans; Securities Other than Shares"
+      },
+      "fiscal_architecture": {
+        "country_code": "CZE",
+        "eu_status": "member",
+        "national_budget_label_cs": "Státní rozpočet České republiky",
+        "national_budget_label_en": "State budget of the Czech Republic",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "separate_or_supplementary",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Obce a kraje mají vlastní rozpočty. Státní fondy a veřejné zdravotní pojištění tvoří další veřejné účty mimo státní rozpočet.",
+        "architecture_en": "Municipalities and regions have their own budgets. State funds and public health insurance form additional public accounts outside the state budget.",
+        "corporation_note_cs": "Obrat a účetní zisk veřejných podniků se do státního rozpočtu nepřičítají. Příjmem rozpočtu jsou jen skutečně odvedené dividendy, podíly na zisku a další platby vlastníka.",
+        "corporation_note_en": "Turnover and accounting profit of public enterprises are not added to the state budget. Only dividends, profit shares and other owner payments actually remitted are budget revenue.",
+        "sources": [
+          {
+            "source_name": "Monitor Státní pokladny — metodika",
+            "source_url": "https://monitor.statnipokladna.gov.cz/metodika"
+          },
+          {
+            "source_name": "MF ČR — státní rozpočet 2026",
+            "source_url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/mf-zrevidovalo-rozpocet-na-rok-2026-62672"
+          }
+        ]
       }
     },
     {
@@ -57,6 +136,29 @@
         "general_government_composition": "Central Government; Local Government; Social Security Funds",
         "debt_valuation": "Nominal value",
         "debt_instruments": "Currency and Deposits; Loans; Securities Other than Shares"
+      },
+      "fiscal_architecture": {
+        "country_code": "UKR",
+        "eu_status": "candidate",
+        "national_budget_label_cs": "Státní rozpočet Ukrajiny",
+        "national_budget_label_en": "State Budget of Ukraine",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "state_local_and_consolidated_views",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Státní a místní rozpočty jsou samostatné; portál zároveň zveřejňuje konsolidovaný pohled. Obecný a zvláštní fond jsou části příslušného rozpočtu, nikoli další úroveň vlády.",
+        "architecture_en": "State and local budgets are separate and the portal also publishes a consolidated view. General and special funds are components of the relevant budget, not another level of government.",
+        "corporation_note_cs": "Tržby státních podniků zůstávají v jejich účetnictví; dividendy a odvod části čistého zisku jsou příjmem státního rozpočtu.",
+        "corporation_note_en": "State-enterprise sales remain in corporate accounts; dividends and remitted shares of net profit are state-budget revenue.",
+        "sources": [
+          {
+            "source_name": "Open Budget — local budgets",
+            "source_url": "https://openbudget.gov.ua/en/local-budget"
+          },
+          {
+            "source_name": "Ministry of Finance — SOE dividends",
+            "source_url": "https://mof.gov.ua/en/news/minfin_u_chervni_dividendi_derzhpidpriiemstv_zabezpechili_kozhnu_piatu_grivniu_dokhodiv_zagalnogo_fondu_derzhbiudzhetu-4681"
+          }
+        ]
       }
     },
     {
@@ -70,6 +172,29 @@
         "general_government_composition": "Central Government; Local Government; Social Security Funds",
         "debt_valuation": "Face value",
         "debt_instruments": null
+      },
+      "fiscal_architecture": {
+        "country_code": "POL",
+        "eu_status": "member",
+        "national_budget_label_cs": "Státní rozpočet Polska",
+        "national_budget_label_en": "State budget of Poland",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "separate_or_supplementary",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Rozpočty samospráv, sociální a zdravotní fondy, státní účelové fondy a významné fondy BGK jsou sledovány odděleně od státního rozpočtu.",
+        "architecture_en": "Local-government budgets, social and health funds, state special-purpose funds and major BGK funds are tracked separately from the state budget.",
+        "corporation_note_cs": "Hrubé výnosy státních podniků nejsou příjmem rozpočtu; odvody ze zisku a dividendy mezi nedaňové příjmy patří.",
+        "corporation_note_en": "Gross state-enterprise revenue is not budget revenue; profit payments and dividends are non-tax state-budget revenue.",
+        "sources": [
+          {
+            "source_name": "Ministry of Finance — public-finance time series",
+            "source_url": "https://www.gov.pl/web/finanse/szeregi-czasowe--finanse-publiczne"
+          },
+          {
+            "source_name": "Statistics Poland — state-budget revenue definition",
+            "source_url": "https://sdg.gov.pl/en/statistics_glob/17-1-1/"
+          }
+        ]
       }
     },
     {
@@ -83,6 +208,29 @@
         "general_government_composition": "Central Government; State Government; Local Government; Social Security Funds",
         "debt_valuation": "Face value",
         "debt_instruments": "Currency and Deposits; Loans; Securities Other than Shares"
+      },
+      "fiscal_architecture": {
+        "country_code": "DEU",
+        "eu_status": "member",
+        "national_budget_label_cs": "Spolkový rozpočet Německa",
+        "national_budget_label_en": "Federal budget of Germany",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "core_extra_and_subsector_budgets",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Spolek, země, obce a sociální zabezpečení mají odlišné rozpočtové vrstvy; statistika navíc rozlišuje jádrové a mimorozpočtové jednotky.",
+        "architecture_en": "The Federation, Länder, municipalities and social security have distinct budget layers; statistics also distinguish core and extra budgets.",
+        "corporation_note_cs": "Veřejné podniky vedou komerční účetnictví odděleně. Do spolkového rozpočtu vstupují jen platby mezi podnikem a vlastníkem, nikoli celý obrat.",
+        "corporation_note_en": "Public enterprises keep separate commercial accounts. Only flows between the enterprise and its owner enter the federal budget, not total turnover.",
+        "sources": [
+          {
+            "source_name": "Destatis — overall public budget",
+            "source_url": "https://www.destatis.de/EN/Themes/Government/Public-Finance/EU-Directive-Budgetary-Frameworks/Tables/general-government.html"
+          },
+          {
+            "source_name": "Destatis — public funds, institutions and enterprises",
+            "source_url": "https://www.destatis.de/EN/Themes/Government/Public-Finance/Public-Funds-Institutions-And-Enterprises/_node.html"
+          }
+        ]
       }
     },
     {
@@ -96,6 +244,29 @@
         "general_government_composition": "Central Government; Local Government",
         "debt_valuation": "Nominal value",
         "debt_instruments": "Currency and Deposits; Loans; Securities Other than Shares"
+      },
+      "fiscal_architecture": {
+        "country_code": "GBR",
+        "eu_status": "non_member",
+        "national_budget_label_cs": "Rozpočet ústřední vlády Spojeného království",
+        "national_budget_label_en": "United Kingdom central-government budget",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "separate_budgets_broad_public_sector_statistics",
+        "public_corporation_treatment": "excluded_from_departmental_budgets_included_in_public_sector_accounts",
+        "architecture_cs": "Místní samosprávy a devolvované administrativy mají samostatné účty, zatímco statistika Public Sector Finances a Whole of Government Accounts používá širší konsolidaci.",
+        "architecture_en": "Local authorities and devolved administrations have separate accounts, while Public Sector Finances and Whole of Government Accounts use a broader consolidation.",
+        "corporation_note_cs": "Obrat veřejných korporací není příjmem resortního rozpočtu, ale jejich pozice se může objevit v širších statistikách veřejného sektoru a konsolidované účetní závěrce.",
+        "corporation_note_en": "Public-corporation turnover is not departmental-budget revenue, but their position can appear in broader public-sector statistics and consolidated accounts.",
+        "sources": [
+          {
+            "source_name": "ONS — public-sector classification",
+            "source_url": "https://www.ons.gov.uk/economy/governmentpublicsectorandtaxes/publicsectorfinance/methodologies/publicsectorfinancesandgovernmentdeficitanddebtunderthemaastrichttreatyqmi"
+          },
+          {
+            "source_name": "HM Treasury — Whole of Government Accounts",
+            "source_url": "https://www.gov.uk/government/collections/whole-of-government-accounts"
+          }
+        ]
       }
     },
     {
@@ -109,6 +280,29 @@
         "general_government_composition": "Central Government; Local Government; Social Security Funds",
         "debt_valuation": "Face value",
         "debt_instruments": "Currency and Deposits; Securities Other than Shares"
+      },
+      "fiscal_architecture": {
+        "country_code": "FRA",
+        "eu_status": "member",
+        "national_budget_label_cs": "Státní rozpočet Francie",
+        "national_budget_label_en": "State budget of France",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "state_social_security_and_local_budgets",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Francie rozlišuje státní rozpočet, rozpočty sociálního zabezpečení a rozpočty územních samospráv; státní zákon navíc obsahuje vedlejší rozpočty a zvláštní účty.",
+        "architecture_en": "France distinguishes the state budget, social-security budgets and local-authority budgets; the state finance law also contains annexed budgets and special accounts.",
+        "corporation_note_cs": "Tržby státních společností se do rozpočtu nepřičítají; dividendy přijaté státem jsou nedaňovým příjmem.",
+        "corporation_note_en": "State-company sales are not added to the budget; dividends received by the state are non-tax revenue.",
+        "sources": [
+          {
+            "source_name": "Ministry of Economy — three public budget blocks",
+            "source_url": "https://www.economie.gouv.fr/dette-publique-budget-impot?language=fr"
+          },
+          {
+            "source_name": "budget.gouv.fr — 2026 state budget",
+            "source_url": "https://www.budget.gouv.fr/reperes/loi_de_finances/articles/chiffres-cles-budget-etat-2026"
+          }
+        ]
       }
     },
     {
@@ -122,6 +316,29 @@
         "general_government_composition": "Central Government; State Government; Local Government",
         "debt_valuation": "Nominal value",
         "debt_instruments": "Currency and Deposits; Financial Derivatives; Insurance Technical Reserves"
+      },
+      "fiscal_architecture": {
+        "country_code": "USA",
+        "eu_status": "non_member",
+        "national_budget_label_cs": "Federální rozpočet USA",
+        "national_budget_label_en": "United States federal budget",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "on_budget_off_budget_and_unified_views",
+        "public_corporation_treatment": "government_corporation_transactions_included_gses_excluded",
+        "architecture_cs": "Rozpočty států a samospráv jsou mimo federální rozpočet. Federální prezentace rozlišuje on-budget a off-budget aktivity a publikuje jejich sjednocený součet.",
+        "architecture_en": "State and local budgets are outside the federal budget. The federal presentation distinguishes on-budget and off-budget activities and publishes a unified total.",
+        "corporation_note_cs": "Významná výjimka: transakce federálních vládních korporací jsou obecně zahrnuty ve federálním rozpočtu, často čistě. Soukromé government-sponsored enterprises jsou mimo rozpočtové součty.",
+        "corporation_note_en": "Important exception: transactions of Federal Government corporations are generally included in the Federal budget, often on a net basis. Privately owned government-sponsored enterprises are outside budget totals.",
+        "sources": [
+          {
+            "source_name": "OMB — coverage of the Federal budget",
+            "source_url": "https://www.whitehouse.gov/wp-content/uploads/2024/03/ap_17_coverage_fy2025.pdf"
+          },
+          {
+            "source_name": "CBO — Budget and Economic Outlook",
+            "source_url": "https://www.cbo.gov/publication/62105"
+          }
+        ]
       }
     },
     {
@@ -137,6 +354,29 @@
         "general_government_composition": "Central Government; State Government; Local Government; Social Security Funds",
         "debt_valuation": "Nominal value",
         "debt_instruments": null
+      },
+      "fiscal_architecture": {
+        "country_code": "CHE",
+        "eu_status": "non_member",
+        "national_budget_label_cs": "Rozpočet Švýcarské konfederace",
+        "national_budget_label_en": "Swiss Confederation budget",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "confederation_cantons_municipalities_and_social_funds",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Konfederace, kantony, obce a sociální pojištění tvoří samostatné subsektory; federální publikace rozlišuje také oddělené účty.",
+        "architecture_en": "The Confederation, cantons, municipalities and social insurance form separate subsectors; federal publications also distinguish separate accounts.",
+        "corporation_note_cs": "Federální podniky stojí mimo ústřední federální správu. Jejich obrat se do rozpočtu nepřičítá, ale dividendy ze Swisscomu, Pošty a dalších účastí jsou federálním příjmem.",
+        "corporation_note_en": "Federal enterprises sit outside the central Federal Administration. Their turnover is not added to the budget, while dividends from Swisscom, Swiss Post and other holdings are federal receipts.",
+        "sources": [
+          {
+            "source_name": "Federal Finance Administration — financial-statistics FAQ",
+            "source_url": "https://www.efv.admin.ch/en/faq-financial-statistics"
+          },
+          {
+            "source_name": "Federal Finance Administration — receipts",
+            "source_url": "https://www.efv.admin.ch/en/receipts"
+          }
+        ]
       }
     },
     {
@@ -152,6 +392,29 @@
         "general_government_composition": "Central Government; Local Government; Social Security Funds",
         "debt_valuation": "Nominal value",
         "debt_instruments": "Currency and Deposits; Loans; Securities Other than Shares"
+      },
+      "fiscal_architecture": {
+        "country_code": "SWE",
+        "eu_status": "member",
+        "national_budget_label_cs": "Ústřední státní rozpočet Švédska",
+        "national_budget_label_en": "Swedish central-government budget",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "central_local_and_old_age_pension_system",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Obce a regiony mají vlastní účetní závěrky a pravidlo vyrovnaného rozpočtu; důchodový systém se sleduje vedle ústředního rozpočtu.",
+        "architecture_en": "Municipalities and regions have their own financial statements and balanced-budget requirement; the old-age pension system is tracked alongside the central budget.",
+        "corporation_note_cs": "Účetní výnosy státních společností nejsou příjmem ústředního rozpočtu. Dividendy a příjmy z prodeje státních aktiv se vykazují na příjmové straně rozpočtu.",
+        "corporation_note_en": "Accounting revenue of state-owned companies is not central-budget revenue. Dividends and proceeds from sales of state assets are recorded on the budget revenue side.",
+        "sources": [
+          {
+            "source_name": "Statistics Sweden — annual municipal accounts",
+            "source_url": "https://www.scb.se/en/OE0107"
+          },
+          {
+            "source_name": "Government Offices — fiscal-policy framework",
+            "source_url": "https://www.government.se/contentassets/85c0781987124b86a46db8ec61736eba/the-swedish-fiscal-policy-framework.pdf"
+          }
+        ]
       }
     },
     {
@@ -167,6 +430,29 @@
         "general_government_composition": "Central Government; Local Government; Social Security Funds",
         "debt_valuation": "Nominal value",
         "debt_instruments": "Currency and Deposits; Loans; Securities Other than Shares"
+      },
+      "fiscal_architecture": {
+        "country_code": "DNK",
+        "eu_status": "member",
+        "national_budget_label_cs": "Státní rozpočet Dánska",
+        "national_budget_label_en": "Danish central-government budget",
+        "municipal_budget_relation": "separate",
+        "other_public_accounts_relation": "central_local_regional_and_extra_budgetary_units",
+        "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
+        "architecture_cs": "Stát, obce, regiony, sociální fondy a mimorozpočtové jednotky mají oddělené zdrojové účty a konsolidují se až ve statistice vládních institucí.",
+        "architecture_en": "Central government, municipalities, regions, social funds and extra-budgetary units have separate source accounts and are consolidated only in general-government statistics.",
+        "corporation_note_cs": "Přibližně 800 veřejných korporací se statisticky sleduje odděleně. Jejich obrat není státním příjmem; dividendy vyplacené státu ano.",
+        "corporation_note_en": "Around 800 public corporations are statistically tracked separately. Their turnover is not state revenue; dividends paid to the state are.",
+        "sources": [
+          {
+            "source_name": "Statistics Denmark — general-government economy",
+            "source_url": "https://www.dst.dk/en/Statistik/emner/oekonomi/offentlig-oekonomi/offentlig-sektors-oekonomi"
+          },
+          {
+            "source_name": "Ministry of Finance — state-owned companies",
+            "source_url": "https://fm.dk/arbejdsomraader/statens-selskaber/oekonomiske-forhold/"
+          }
+        ]
       }
     }
   ],
