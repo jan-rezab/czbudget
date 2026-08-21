@@ -12,4 +12,6 @@ This Git repository is the only source allowed to deploy the public CZ Budget se
 - Region: `europe-west1`
 - Source identity: `czbudget-public-canonical-v1`
 
-The existing `czbudget-web` service is a separate legacy service and must not be used by this deployment.
+`czbudget-web` was retired on 2026-08-21 after its complete source snapshot was
+compared with this repository. Do not recreate it or any other `czbudget-*`
+Cloud Run service. The build fails when a non-canonical CZ Budget service exists.

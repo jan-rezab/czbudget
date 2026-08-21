@@ -15,6 +15,7 @@ const countryScript = await readFile("country.js", "utf8");
 const czechBudgetPage = await readFile("cesky-rozpocet.html", "utf8");
 const globalNav = await readFile("global-nav.js", "utf8");
 const capitalsScript = await readFile("eu-capitals.js", "utf8");
+const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
 if (snapshot.municipalities.length !== 6254) throw new Error("Expected 6,254 municipalities");
 if (snapshot.scope.combined_unique_entity_count !== 6267) throw new Error("Expected 6,267 unique municipal and regional entities");
 if (history.cities.length !== 27 || history.cities.some((city) => city.series.length !== 20)) throw new Error("Expected 20 annual observations for 27 large cities");
@@ -37,6 +38,7 @@ if (!usaComparison || usaComparison.totals.current < 7000 || usaComparison.total
 if (!homepage.includes('href="eu-capitals.html?lang=cs"') || !homepage.includes('data-i18n="capitalsCta"')) throw new Error("Homepage must expose the European capitals comparison");
 if (!homepage.includes('id="category-comparison-root"') || !homepage.includes('homepage-category.js?v=20260821') || !homepage.includes('homepage-category.css?v=20260821')) throw new Error("Homepage must expose the country category comparison");
 if (!globalNav.includes('data-global-nav="capitals"') || !globalNav.includes('cz/obce/?lang=${lang}') || !globalNav.includes('capitals:"EU cities"')) throw new Error("Global navigation must expose municipalities and EU cities as visible destinations");
+if (!cloudbuild.includes("scripts/assert-single-production.sh") || !cloudbuild.includes("run\n      - deploy\n      - czbudget-public") || cloudbuild.includes("${_SERVICE}") || cloudbuild.includes("czbudget-web")) throw new Error("Cloud Build must be locked to the sole canonical production service");
 if (!capitalsScript.includes('data/large-city-history.v1.json') || !capitalsScript.includes('renderHistory(city)')) throw new Error("European capitals must surface the Prague ten-year history");
 const fiscalFields = ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp", "gross_debt_pct_gdp", "nominal_gdp_local_bn", "nominal_gdp_usd_bn", "inflation_pct"];
 if (sovereign.series.some((country) => fiscalFields.some((field) => !country.metrics[field]?.values?.length))) throw new Error("Country profiles require complete nominal and inflation fiscal series");

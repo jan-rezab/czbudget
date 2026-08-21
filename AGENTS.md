@@ -8,6 +8,8 @@
 - Google Cloud project: `czbudget-janrezab`.
 - Cloud Run service: `czbudget-public`.
 - Region: `europe-west1`.
-- Never deploy this project to the `czbudget-web` service.
+- Never create or deploy `czbudget-web` or any other `czbudget-*` Cloud Run
+  service. `czbudget-public` is the sole production service, and the build
+  enforces this invariant.
 - Never modify or deploy the Riverdata repository or `riverdata.org` from this project.
 - Keep Czech and English navigation available on all municipal and regional pages.
