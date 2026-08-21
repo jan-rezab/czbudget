@@ -28,13 +28,82 @@
     else header.append(switcher);
   }
 
+  const escapeBudgetHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[character]);
+
+  const renderBudgetBreakdown = (panel, entity, codebook, money) => {
+    const breakdown = entity.budget_breakdown;
+    if (!breakdown?.stages) return;
+    const copy = lang === "en" ? {
+      kicker: "Full FIN 2-12 M detail", title: "What sits behind the totals.",
+      intro: "Switch between approved, amended and actual budgets. Every category reconciles to the consolidated headline above.",
+      enacted: "Approved", revised: "Amended", actual: "Actual",
+      purpose: "Where the city spends", purposeNote: "Functional paragraphs · purpose of expenditure",
+      expense: "What the city buys", expenseNote: "Economic expenditure items",
+      revenue: "Where revenue comes from", revenueNote: "Economic revenue items",
+      financing: "Financing items", all: "Show every category", code: "Code", category: "Official Czech category", amount: "Amount", share: "Share",
+      source: "FIN 2-12 M detail from BigQuery", method: "Internal-transfer rows and financing summary rows are excluded.",
+      official: "Detailed labels use the official Czech budget classification.",
+    } : {
+      kicker: "Úplný detail FIN 2-12 M", title: "Co je uvnitř součtů.",
+      intro: "Přepínejte mezi schváleným, upraveným a skutečným rozpočtem. Každá struktura se rovná konsolidovanému součtu výše.",
+      enacted: "Schválený", revised: "Upravený", actual: "Skutečnost",
+      purpose: "Kam město peníze dává", purposeNote: "Funkční paragrafy · účel výdajů",
+      expense: "Za co město platí", expenseNote: "Ekonomické položky výdajů",
+      revenue: "Odkud peníze přicházejí", revenueNote: "Ekonomické položky příjmů",
+      financing: "Položky financování", all: "Zobrazit všechny kategorie", code: "Kód", category: "Oficiální kategorie", amount: "Částka", share: "Podíl",
+      source: "Detail FIN 2-12 M z BigQuery", method: "Vnitřní převody a souhrnné řádky financování jsou vyloučeny.",
+      official: "Názvy odpovídají oficiální české rozpočtové skladbě.",
+    };
+    const locale = lang === "en" ? "en-GB" : "cs-CZ";
+    const currencySuffix = lang === "en" ? "CZK" : "Kč";
+    const percent = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+    const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+    const nameFor = (dimension, code) => codebook.dimensions?.[dimension]?.[code]?.[lang] || codebook.dimensions?.[dimension]?.[code]?.cs || `${copy.code} ${code}`;
+    const panelMarkup = (title, note, entries, dimension, total) => {
+      const maximum = Math.max(...entries.map(([, amount]) => Math.abs(amount)), 1);
+      const rows = entries.slice(0, 9).map(([code, amount]) => {
+        const ratio = total ? amount / total * 100 : 0;
+        return `<div class="breakdown-rank-row"><div class="breakdown-rank-label"><code>${escapeBudgetHtml(code)}</code><strong>${escapeBudgetHtml(nameFor(dimension, code))}</strong><span>${compact.format(amount)} ${currencySuffix} · ${percent.format(ratio)} %</span></div><div class="breakdown-rank-track"><i style="width:${Math.min(100, Math.abs(amount) / maximum * 100).toFixed(2)}%"></i></div></div>`;
+      }).join("");
+      const tableRows = entries.map(([code, amount]) => `<tr><td><code>${escapeBudgetHtml(code)}</code></td><th scope="row">${escapeBudgetHtml(nameFor(dimension, code))}</th><td>${money.format(amount)}</td><td>${total ? `${percent.format(amount / total * 100)} %` : "—"}</td></tr>`).join("");
+      return `<article class="budget-breakdown-panel"><header><div><span>${escapeBudgetHtml(note)}</span><h3>${escapeBudgetHtml(title)}</h3></div><strong>${compact.format(total)} ${currencySuffix}</strong></header><div class="breakdown-ranked">${rows}</div><details class="breakdown-full"><summary>${copy.all} (${entries.length})</summary><div><table><thead><tr><th>${copy.code}</th><th>${copy.category}</th><th>${copy.amount}</th><th>${copy.share}</th></tr></thead><tbody>${tableRows}</tbody></table></div></details></article>`;
+    };
+    const explorer = document.createElement("section");
+    explorer.className = "municipal-breakdown-explorer";
+    explorer.innerHTML = `<div class="breakdown-heading"><div><span class="kicker">${copy.kicker}</span><h2>${copy.title}</h2></div><p>${copy.intro}</p></div><div class="breakdown-stage-tabs" role="group" aria-label="${lang === "en" ? "Budget stage" : "Stav rozpočtu"}">${["enacted", "revised", "actual"].map((stage) => `<button type="button" data-breakdown-stage="${stage}" aria-pressed="${stage === "actual"}">${copy[stage]}</button>`).join("")}</div><div class="budget-breakdown-grid"></div><div class="budget-financing-detail"></div><p class="breakdown-method-note">${copy.source} · ${copy.method}${lang === "en" ? ` ${copy.official}` : ""} <code>${escapeBudgetHtml(breakdown.lineage?.ingestion_run_id || "")}</code></p>`;
+    const detailGrid = document.querySelector("#rozpocet .detail-grid");
+    (detailGrid || panel).insertAdjacentElement("afterend", explorer);
+
+    const renderStage = (stageName) => {
+      const stage = breakdown.stages[stageName];
+      if (!stage) return;
+      explorer.querySelectorAll("[data-breakdown-stage]").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.breakdownStage === stageName)));
+      explorer.querySelector(".budget-breakdown-grid").innerHTML = [
+        panelMarkup(copy.purpose, copy.purposeNote, stage.purpose_expenditure, "purpose", stage.purpose_expenditure_total_czk),
+        panelMarkup(copy.expense, copy.expenseNote, stage.economic_expenditure, "economic", stage.economic_expenditure_total_czk),
+        panelMarkup(copy.revenue, copy.revenueNote, stage.economic_revenue, "economic", stage.economic_revenue_total_czk),
+      ].join("");
+      const financing = stage.economic_financing || [];
+      explorer.querySelector(".budget-financing-detail").innerHTML = financing.length
+        ? panelMarkup(copy.financing, copy.financing, financing, "economic", stage.economic_financing_total_czk)
+        : "";
+    };
+    explorer.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-breakdown-stage]");
+      if (button) renderStage(button.dataset.breakdownStage);
+    });
+    renderStage("actual");
+  };
+
   const renderBudgetStages = async () => {
     const panel = document.querySelector(".detail-page .plan-panel");
     const entityId = document.body.dataset.entityId;
     if (!panel || !entityId) return;
     const ico = entityId.split(":").at(-1);
     try {
-      const response = await fetch(`../../../data/entities/${encodeURIComponent(ico)}.json`);
+      const response = await fetch(`../../../data/entities/${encodeURIComponent(ico)}.json?v=20260821-municipal-breakdown`);
       if (!response.ok) throw new Error(`Municipal profile returned ${response.status}`);
       const payload = await response.json();
       const entity = payload.entity;
@@ -59,6 +128,13 @@
       </table></div><p class="budget-stage-source">${labels.source}${entity.budget_stage_lineage ? ` · <code>${entity.budget_stage_lineage.ingestion_run_id}</code>` : ""}</p>`;
       const heading = document.querySelector("#rozpocet .detail-section-title h2");
       if (heading) heading.textContent = labels.heading;
+      if (entity.budget_breakdown) {
+        const codebookResponse = await fetch(`${root}data/municipal-budget-codebook.v1.json`);
+        if (!codebookResponse.ok) throw new Error(`Municipal codebook returned ${codebookResponse.status}`);
+        renderBudgetBreakdown(panel, entity, await codebookResponse.json(), money);
+        const machineData = document.querySelector('.source-list a[href*="data/entities/"] strong');
+        if (machineData) machineData.textContent = lang === "en" ? "Complete detail JSON ↗" : "Kompletní detail JSON ↗";
+      }
     } catch (error) {
       console.error("Budget-stage integration failed", error);
     }
