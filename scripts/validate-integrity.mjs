@@ -77,10 +77,35 @@ for (const file of entityFiles) {
 assert(entityById.size === 6267, `Expected 6,267 entity files, received ${entityById.size}`);
 
 const cashMissing = [];
+let mergedHeadlineProfiles = 0;
+let mergedBreakdownProfiles = 0;
 const anomalies = { revenue_execution_over_200pct: [], cash_yoy_abs_over_1000pct: [], negative_current_expenditure: [] };
 for (const entity of municipalities) {
   const stored = entityById.get(entity.national_id);
-  assert(stored && JSON.stringify(stored) === JSON.stringify(entity), `Snapshot/entity mismatch for ${entity.national_id}`);
+  const storedSnapshotFields = stored && Object.fromEntries(Object.keys(entity).map((key) => [key, stored[key]]));
+  assert(stored && JSON.stringify(storedSnapshotFields) === JSON.stringify(entity), `Snapshot/entity mismatch for ${entity.national_id}`);
+  if (stored?.budget_stages) {
+    mergedHeadlineProfiles += 1;
+    const expectedKeys = { enacted: ["revenue_approved", "expense_approved"], revised: ["revenue_adjusted", "expense_adjusted"], actual: ["revenue_actual", "expense_actual"] };
+    assert(stored.budget_stages.length === 3, `Merged budget-stage count mismatch for ${entity.national_id}`);
+    for (const stage of stored.budget_stages) {
+      const keys = expectedKeys[stage.stage];
+      assert(keys && close(stage.revenue_czk, entity.amounts[keys[0]]) && close(stage.expenditure_czk, entity.amounts[keys[1]]), `Merged budget headline mismatch for ${entity.national_id}/${stage.stage}`);
+      assert(close(stage.revenue_czk - stage.expenditure_czk, stage.balance_czk), `Merged budget balance mismatch for ${entity.national_id}/${stage.stage}`);
+    }
+  }
+  if (stored?.budget_breakdown) {
+    mergedBreakdownProfiles += 1;
+    for (const stageName of ["enacted", "revised", "actual"]) {
+      const stage = stored.budget_breakdown.stages?.[stageName];
+      const headline = stored.budget_stages?.find((item) => item.stage === stageName);
+      assert(stage && headline, `Merged budget breakdown is incomplete for ${entity.national_id}/${stageName}`);
+      if (stage && headline) {
+        assert(close(stage.purpose_expenditure_total_czk, headline.expenditure_czk) && close(stage.economic_expenditure_total_czk, headline.expenditure_czk), `Purpose/economic expenditure mismatch for ${entity.national_id}/${stageName}`);
+        assert(close(stage.economic_revenue_total_czk, headline.revenue_czk) && close(stage.economic_financing_total_czk, headline.financing_czk), `Revenue/financing breakdown mismatch for ${entity.national_id}/${stageName}`);
+      }
+    }
+  }
   const amounts = entity.amounts;
   assert(close(amounts.revenue_actual - amounts.expense_actual, amounts.budget_balance), `Budget balance mismatch for ${entity.national_id}`);
   assert(close(amounts.tax_revenue + amounts.nontax_revenue + amounts.capital_revenue + amounts.transfer_revenue, amounts.revenue_actual, 0.051), `Revenue components mismatch for ${entity.national_id}`);
@@ -100,6 +125,8 @@ for (const entity of municipalities) {
   if (amounts.current_expense < 0) anomalies.negative_current_expenditure.push({ national_id: entity.national_id, name: entity.name, amount_czk: amounts.current_expense });
 }
 assert(cashMissing.length === 7, `Expected seven explicitly missing municipal cash records, received ${cashMissing.length}`);
+assert([0, municipalities.length].includes(mergedHeadlineProfiles), `BigQuery headlines are only present for ${mergedHeadlineProfiles} municipal profiles`);
+assert([0, municipalities.length].includes(mergedBreakdownProfiles), `BigQuery breakdowns are only present for ${mergedBreakdownProfiles} municipal profiles`);
 
 const capitals = await json("data/eu-capital-budgets.v1.json");
 assert(capitals.cities.length === 28, "Expected 28 European capital records");
@@ -255,6 +282,8 @@ const report = {
     public_entity_financial_statements: publicFinancial.length,
     state_enterprises: enterprises.entities.length,
     state_budget_chapters: spending.chapters.length,
+    municipal_profiles_with_bigquery_headlines: mergedHeadlineProfiles,
+    municipal_profiles_with_bigquery_breakdowns: mergedBreakdownProfiles,
   },
   explicit_missing_data: { cash_balance_sheet_rows_missing: cashMissing },
   reviewed_anomalies: anomalies,
