@@ -6,6 +6,7 @@ if (identity !== "czbudget-public-canonical-v1") throw new Error("Invalid canoni
 const snapshot = JSON.parse(await readFile("data/municipal-snapshot.v1.json", "utf8"));
 const history = JSON.parse(await readFile("data/large-city-history.v1.json", "utf8"));
 const capitals = JSON.parse(await readFile("data/eu-capital-budgets.v1.json", "utf8"));
+const categoryComparison = JSON.parse(await readFile("data/country-spending-comparison.v1.json", "utf8"));
 const sovereign = JSON.parse(await readFile("lib/data/sovereign-benchmark.v1.json", "utf8"));
 const homepage = await readFile("index.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
@@ -23,7 +24,18 @@ if (capitals.cities.length !== 28 || capitals.cities.filter((city) => city.eu_ca
 if (capitals.cities.some((city) => !Number.isFinite(city.budget?.local_amount) || !Number.isFinite(city.budget?.eur_amount) || !city.benchmarks?.population || !city.benchmarks?.tourism)) throw new Error("Incomplete European capitals facts");
 if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fiscal_details?.balance_classification || !Array.isArray(city.fiscal_details?.components))) throw new Error("Incomplete European capital fiscal details");
 if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
+if (categoryComparison.countries.length !== 10 || categoryComparison.categories.length !== 12) throw new Error("Expected ten countries and twelve common spending categories");
+for (const country of categoryComparison.countries) {
+  if (country.groups.length !== categoryComparison.categories.length) throw new Error(`${country.code}: incomplete category groups`);
+  for (const period of ["previous", "current"]) {
+    const grouped = country.groups.reduce((sum, group) => sum + group.amounts[period], 0);
+    if (Math.abs(grouped - country.totals[period]) > 0.01) throw new Error(`${country.code}: category comparison does not reconcile for ${period}`);
+  }
+}
+const usaComparison = categoryComparison.countries.find((country) => country.code === "USA");
+if (!usaComparison || usaComparison.totals.current < 7000 || usaComparison.totals.current > 8000) throw new Error("USA comparison amounts must be normalized from source millions to billions");
 if (!homepage.includes('href="eu-capitals.html?lang=cs"') || !homepage.includes('data-i18n="capitalsCta"')) throw new Error("Homepage must expose the European capitals comparison");
+if (!homepage.includes('id="category-comparison-root"') || !homepage.includes('homepage-category.js?v=20260821') || !homepage.includes('homepage-category.css?v=20260821')) throw new Error("Homepage must expose the country category comparison");
 if (!globalNav.includes('class="capitals-nav-icon"') || !globalNav.includes('data-global-nav="capitals"')) throw new Error("Global navigation must expose the European capitals icon");
 if (!capitalsScript.includes('data/large-city-history.v1.json') || !capitalsScript.includes('renderHistory(city)')) throw new Error("European capitals must surface the Prague ten-year history");
 const fiscalFields = ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp", "gross_debt_pct_gdp", "nominal_gdp_local_bn", "nominal_gdp_usd_bn", "inflation_pct"];
@@ -40,5 +52,5 @@ if (!homepage.includes('styles-v2.css?v=20260821-fiscal-scope') || !homepage.inc
 if (!homepage.includes('class="compare-scope-readout"') || !homepage.includes("General government")) throw new Error("Homepage comparison must state its harmonised fiscal perimeter");
 if (!homepage.includes('id="fiscal-architecture-body"') || !homepageScript.includes("function architectureTable")) throw new Error("Homepage must compare fiscal architecture across all tracked countries");
 if (!countryPage.includes('country-spending.js?v=20260821') || !countryPage.includes('country-health.js?v=20260821-health8') || !countryScript.includes('countryprofilechange')) throw new Error("Fiscal profiles must preserve the spending and healthcare modules");
-for (const required of ["index.html", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "sitemap.xml"]) await stat(required);
+for (const required of ["index.html", "homepage-category.js", "homepage-category.css", "data/country-spending-comparison.v1.json", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "sitemap.xml"]) await stat(required);
 console.log("CZ Budget site validation passed");
