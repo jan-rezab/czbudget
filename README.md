@@ -33,11 +33,35 @@ Volba jazyka se přenáší v URL parametru `lang` a ukládá do `localStorage`.
 Nové texty mají být přidávány do slovníků `I` a `T`, nikoli natvrdo do
 dynamicky generovaného rozhraní.
 
-Celý obsah složky lze nahrát na libovolný statický hosting; build není potřeba.
+Veřejný obsah je statický; produkční obal používá připnutý Nginx image a
+bezpečnostní hlavičky. Složky `pipeline/`, `tests/` a vývojové závislosti se do
+obrazu nekopírují.
 
 České územní stránky se po aktualizaci `data/benchmark.v1.json` regenerují
-skriptem `../scripts/build_czech_site.py`. Proměnná `PUBLIC_ORIGIN` při
+verzovaným skriptem `pipeline/transforms/build_czech_site.py`. Proměnná
+`CZBUDGET_WORKSPACE_ROOT` určuje kořen lokálního datového workspace a
+`PUBLIC_ORIGIN` při
 sestavení určuje produkční canonical URL a adresu sitemap.
+
+## Integrita a reprodukovatelnost
+
+```bash
+npm ci
+npm run validate
+npm run test:browser
+node pipeline/create-source-manifest.mjs --verify
+```
+
+`scripts/validate-integrity.mjs` kontroluje všechny publikované JSON soubory,
+vazbu snapshot ↔ 6 267 profilů, účetní identity, geografii, sitemap, canonical
+URL, JSON-LD a 75 tisíc lokálních odkazů. Výsledek auditu a explicitně
+chybějící hodnoty jsou v `data/data-quality-report.v1.json`. Hashy 105 lokálních
+zdrojových souborů jsou v `pipeline/source-assets.manifest.json`; produkční
+artifacty dostávají `data/release-manifest.v1.json`.
+
+Transformace, registry zdrojů, BigQuery schema a metodika jsou verzované v
+`pipeline/`. Starý duplicitní export `gcp/site` je mimo tento repozitář
+karanténován a nesmí být nasazen.
 
 ## Produkční nasazení
 
@@ -52,7 +76,7 @@ Projekt Riverdata není součástí tohoto deploymentu.
 Lokální kontrola před commitem:
 
 ```bash
-node scripts/validate-site.mjs
+npm test
 ```
 
 Při produkčním buildu se z BigQuery načtou také konsolidované řádky FIN 2-12 M

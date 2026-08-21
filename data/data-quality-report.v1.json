@@ -1,0 +1,142 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "CZ Budget public release",
+  "status": "passed",
+  "counts": {
+    "production_json_files": 6286,
+    "html_files": 6277,
+    "local_references": 75529,
+    "municipalities": 6254,
+    "public_entities": 6267,
+    "european_capitals": 28,
+    "sovereign_countries": 10,
+    "public_entity_registry": 630,
+    "public_entity_financial_statements": 137,
+    "state_enterprises": 38,
+    "state_budget_chapters": 47
+  },
+  "explicit_missing_data": {
+    "cash_balance_sheet_rows_missing": [
+      {
+        "national_id": "00478814",
+        "name": "Obec Cekov"
+      },
+      {
+        "national_id": "00573493",
+        "name": "Obec Hnačov"
+      },
+      {
+        "national_id": "00296678",
+        "name": "Obec Hnojník"
+      },
+      {
+        "national_id": "00303828",
+        "name": "Obec Huslenky"
+      },
+      {
+        "national_id": "00568708",
+        "name": "Městys Pozlovice"
+      },
+      {
+        "national_id": "00257273",
+        "name": "Obec Střížovice"
+      },
+      {
+        "national_id": "00259225",
+        "name": "Město Zbiroh"
+      }
+    ]
+  },
+  "reviewed_anomalies": {
+    "revenue_execution_over_200pct": [
+      {
+        "national_id": "00241091",
+        "name": "Obec Bojanovice",
+        "ratio": 3.14144217
+      },
+      {
+        "national_id": "00579297",
+        "name": "OBEC JAHODOV",
+        "ratio": 2.21224095
+      },
+      {
+        "national_id": "00640760",
+        "name": "Obec Roblín",
+        "ratio": 2.77253581
+      }
+    ],
+    "cash_yoy_abs_over_1000pct": [
+      {
+        "national_id": "00579467",
+        "name": "Obec Biskupice",
+        "ratio": 12.80051138
+      },
+      {
+        "national_id": "00288039",
+        "name": "Obec Bohuslavice",
+        "ratio": 23.68545173
+      },
+      {
+        "national_id": "00253235",
+        "name": "Město Bělá nad Radbuzou",
+        "ratio": 12.24985414
+      },
+      {
+        "national_id": "00376981",
+        "name": "Obec Horní Újezd",
+        "ratio": 16.44673523
+      },
+      {
+        "national_id": "00377732",
+        "name": "Obec Koněšín",
+        "ratio": 11.80226985
+      },
+      {
+        "national_id": "00636398",
+        "name": "Obec Milotice nad Bečvou",
+        "ratio": 14.29524468
+      },
+      {
+        "national_id": "00297054",
+        "name": "Obec Palkovice",
+        "ratio": 21.19055946
+      },
+      {
+        "national_id": "00235695",
+        "name": "Obec Ratboř",
+        "ratio": 11.20382598
+      },
+      {
+        "national_id": "00304310",
+        "name": "Obec Střelná",
+        "ratio": 37.39371011
+      },
+      {
+        "national_id": "00241016",
+        "name": "Obec Všestary",
+        "ratio": 11.91217211
+      },
+      {
+        "national_id": "46276068",
+        "name": "Obec Šanov",
+        "ratio": 77.59012851
+      },
+      {
+        "national_id": "00378704",
+        "name": "Obec Štěměchy",
+        "ratio": 31.9606647
+      }
+    ],
+    "negative_current_expenditure": [
+      {
+        "national_id": "00636541",
+        "name": "Obec Rakov",
+        "amount_czk": -1718038.42
+      }
+    ]
+  },
+  "failures": [],
+  "warnings": [
+    "493 of 630 public entities have no comparable 2024 financial statement; values remain null, not zero."
+  ]
+}

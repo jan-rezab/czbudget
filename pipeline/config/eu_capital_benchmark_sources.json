@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "as_of": "2026-08-20",
+  "methodology": {
+    "population": "Latest available Eurostat City Statistics observation for total population on 1 January. The city label and reference year are retained because several countries report a greater-city boundary or an older vintage.",
+    "tourism": "2024 nights in tourist accommodation establishments for selected cities, NACE I551-I553, from Eurostat. Dublin and London use official local fallbacks because those cities are absent from the Eurostat selected-city table.",
+    "comparison_warning": "Eurostat tourist nights cover registered accommodation establishments and may exclude small establishments. Dublin and London fallbacks cover a broader visitor-survey universe and belong to a different comparability group.",
+    "derived_metrics": "Non-resident share is non-resident nights divided by total nights. Nights per resident divides the tourism-period nights by the latest available population and is flagged when reference years differ."
+  },
+  "sources": {
+    "population": {
+      "source_id": "eurostat-urb-cpop1",
+      "source_name": "Eurostat — Population on 1 January by cities and greater cities",
+      "dataset_code": "urb_cpop1",
+      "indicator_code": "DE1001V",
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/urb_cpop1?lang=en&indic_ur=DE1001V",
+      "archive_filename": "eurostat-urb-cpop1-DE1001V.json"
+    },
+    "tourism": {
+      "source_id": "eurostat-tour-occ-ninc",
+      "source_name": "Eurostat — Nights spent at tourist accommodation establishments for selected cities",
+      "dataset_code": "tour_occ_ninc",
+      "reference_year": 2024,
+      "url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/tour_occ_ninc?lang=en&time=2024&unit=NR&nace_r2=I551-I553",
+      "archive_filename": "eurostat-tour-occ-ninc-2024.json"
+    },
+    "dublin_fallback": {
+      "source_id": "failte-ireland-dublin-2024",
+      "source_name": "Fáilte Ireland — Key Tourism Facts 2024: Dublin",
+      "url": "https://www.failteireland.ie/Research-Insights/National.aspx?view=all",
+      "archive_filename": "failte-ireland-research-2024.html",
+      "reference_year": 2024,
+      "geography_name": "Dublin tourism region",
+      "visitors": {"overseas": 4094000, "domestic": 2823000, "northern_ireland": 276000},
+      "average_nights": {"overseas": 4.8, "domestic": 1.8, "northern_ireland": 1.7}
+    },
+    "london_fallback": {
+      "source_id": "gla-state-of-london-tourism-2024",
+      "source_name": "Greater London Authority — State of London tourism indicators",
+      "url": "https://apps.london.gov.uk/state-of-london/report/global-city-and-culture",
+      "archive_filename": "gla-state-of-london-tourism-2024.html",
+      "reference_year": 2024,
+      "geography_name": "Greater London",
+      "tourist_nights_total": 153800000,
+      "tourist_nights_nonresident": 116600000,
+      "tourist_visits_total": 36000000,
+      "tourist_visits_nonresident": 20900000
+    }
+  },
+  "city_codes": {
+    "brussels-be": "BE001C",
+    "sofia-bg": "BG001C",
+    "prague-cz": "CZ001C",
+    "copenhagen-dk": "DK001C",
+    "berlin-de": "DE001C",
+    "tallinn-ee": "EE001C",
+    "dublin-ie": "IE001C",
+    "athens-gr": "EL001C",
+    "madrid-es": "ES001C",
+    "paris-fr": "FR001C",
+    "zagreb-hr": "HR001C",
+    "rome-it": "IT001C",
+    "nicosia-cy": "CY001C",
+    "riga-lv": "LV001C",
+    "vilnius-lt": "LT001C",
+    "luxembourg-lu": "LU001C",
+    "budapest-hu": "HU001C",
+    "valletta-mt": "MT001C",
+    "amsterdam-nl": "NL001C",
+    "vienna-at": "AT001C",
+    "warsaw-pl": "PL001C",
+    "lisbon-pt": "PT001C",
+    "bucharest-ro": "RO001C",
+    "ljubljana-si": "SI001C",
+    "bratislava-sk": "SK001C",
+    "helsinki-fi": "FI001C",
+    "stockholm-se": "SE001C",
+    "london-gb": "UK001C"
+  }
+}

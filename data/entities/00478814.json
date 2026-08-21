@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-20T18:47:51.503605+00:00",
+  "generated_at": "2026-08-21T21:17:47Z",
   "period": {
     "fiscal_year": 2025,
     "period_code": "2512",
@@ -41,14 +41,14 @@
       "current_expense": 2424148.73,
       "capital_expense": 438260.77,
       "budget_balance": 1677733.25,
-      "cash_current": 0.0,
-      "cash_previous": 0.0
+      "cash_current": null,
+      "cash_previous": null
     },
     "ratios": {
       "revenue_execution": 0.73719688,
       "expense_execution": 0.4647782,
       "balance_to_revenue": 0.36953315,
-      "cash_to_expense": 0.0,
+      "cash_to_expense": null,
       "cash_yoy": null,
       "capital_expense_share": 0.15310904,
       "transfer_revenue_share": 0.02033636
@@ -56,6 +56,12 @@
     "sources": {
       "budget": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00478814/rozpocet/souhrnny?obdobi=2512&rad=t",
       "entity": "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/00478814"
+    },
+    "quality": {
+      "cash_data_available": false,
+      "flags": [
+        "cash_balance_sheet_rows_missing"
+      ]
     },
     "seo": {
       "slug": "cekov",

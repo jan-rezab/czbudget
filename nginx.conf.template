@@ -4,6 +4,14 @@ server {
   root /usr/share/nginx/html;
   index index.html;
 
+  add_header Strict-Transport-Security "max-age=31536000" always;
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header X-Frame-Options "SAMEORIGIN" always;
+  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+  add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+  add_header Cross-Origin-Opener-Policy "same-origin" always;
+  add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
+
   location / {
     sub_filter_once off;
     sub_filter 'cz-budget.css"' 'cz-budget.css?v=20260821-municipal-breakdown"';
@@ -13,7 +21,6 @@ server {
 
   location ~* \.(?:css|js|svg|png|jpg|jpeg|webp|json)$ {
     expires 1h;
-    add_header Cache-Control "public, max-age=3600";
     try_files $uri =404;
   }
 

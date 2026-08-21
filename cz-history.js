@@ -5,6 +5,7 @@ if (historyRoot) {
   const english = new URLSearchParams(location.search).get("lang") === "en" || localStorage.getItem("psd-lang") === "en";
   const select = historyRoot.querySelector("#history-city");
   const chart = historyRoot.querySelector("#history-chart");
+  chart.tabIndex = 0;
   const tableBody = historyRoot.querySelector("#history-table-body");
   const kpis = historyRoot.querySelector("#history-kpis");
   const fmt = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });

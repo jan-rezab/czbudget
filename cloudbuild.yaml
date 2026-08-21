@@ -1,6 +1,6 @@
 steps:
   - id: assert-single-production
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: sh
     args:
       - scripts/assert-single-production.sh
@@ -9,7 +9,7 @@ steps:
       - czbudget-public
 
   - id: export-municipal-headlines
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
       - -ceu
@@ -39,12 +39,12 @@ steps:
           ' > data/.municipal-headlines-query.json
 
   - id: merge-municipal-headlines
-    name: node:22-alpine
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/merge-municipal-headlines.mjs]
 
   - id: export-municipal-breakdowns
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
       - -ceu
@@ -67,45 +67,49 @@ steps:
           > data/.municipal-budget-codebook-query.json
 
   - id: merge-municipal-breakdowns
-    name: node:22-alpine
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/merge-municipal-breakdowns.mjs]
 
-  - id: validate
-    name: node:22-alpine
+  - id: release-manifest
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
-    args: [scripts/validate-site.mjs]
+    args: [scripts/create-release-manifest.mjs]
+    env:
+      - COMMIT_SHA=$COMMIT_SHA
+      - BUILD_ID=$BUILD_ID
+
+  - id: validate
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: sh
+    args: [-ceu, 'node scripts/validate-site.mjs && node scripts/validate-integrity.mjs']
 
   - id: build
-    name: gcr.io/cloud-builders/docker
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
     args:
       - build
       - --tag
-      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
       - .
 
   - id: push
-    name: gcr.io/cloud-builders/docker
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
     args:
       - push
-      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
 
   - id: deploy
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
-    entrypoint: gcloud
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: sh
     args:
-      - run
-      - deploy
+      - scripts/deploy-immutable.sh
+      - $PROJECT_ID
+      - europe-west1
       - czbudget-public
-      - --image=europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA
-      - --region=europe-west1
-      - --platform=managed
-      - --allow-unauthenticated
-      - --labels=app=czbudget-public,source=github
-      - --quiet
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
 
 images:
-  - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA
+  - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
 
 options:
   logging: CLOUD_LOGGING_ONLY

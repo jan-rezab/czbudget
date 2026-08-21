@@ -6,16 +6,16 @@
   <title>Public Spending Data — český rozpočet v čase</title>
   <meta name="description" content="Státní rozpočet ČR 2001–2026, tok peněz ve zdravotnictví, benchmark nemocnic, 30 účelových oblastí, 47 rozpočtových kapitol a demografický tlak do roku 2045.">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <link rel="canonical" href="https://publicspendingdata.org/cesky-rozpocet.html">
+  <link rel="canonical" href="https://czbudget-public-258433468858.europe-west1.run.app/cesky-rozpocet.html">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="cs_CZ">
   <meta property="og:site_name" content="Public Spending Data">
   <meta property="og:title" content="Český rozpočet v čase — Public Spending Data">
   <meta property="og:description" content="25 let rozpočtu, detail výdajů, tok peněz ve zdravotnictví, benchmark nemocnic a model sociálních systémů do roku 2045.">
   <meta property="og:image" content="assets/og-budget.png">
-  <meta property="og:url" content="https://publicspendingdata.org/cesky-rozpocet.html">
+  <meta property="og:url" content="https://czbudget-public-258433468858.europe-west1.run.app/cesky-rozpocet.html">
   <meta name="twitter:card" content="summary_large_image">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Státní rozpočet ČR 2001–2026, zdravotnictví a demografický model 2025–2045","description":"Příjmy, výdaje, účelová struktura a kapitoly státního rozpočtu ČR doplněné tokem peněz ve zdravotnictví, benchmarkem nemocnic a modelem demografického tlaku.","url":"https://publicspendingdata.org/cesky-rozpocet.html","inLanguage":["cs","en"],"temporalCoverage":"2001/2045","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/czech-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-spending-2026.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-health-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/demography-social.v1.json"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Státní rozpočet ČR 2001–2026, zdravotnictví a demografický model 2025–2045","description":"Příjmy, výdaje, účelová struktura a kapitoly státního rozpočtu ČR doplněné tokem peněz ve zdravotnictví, benchmarkem nemocnic a modelem demografického tlaku.","url":"https://czbudget-public-258433468858.europe-west1.run.app/cesky-rozpocet.html","inLanguage":["cs","en"],"temporalCoverage":"2001/2045","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://czbudget-public-258433468858.europe-west1.run.app/data/czech-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://czbudget-public-258433468858.europe-west1.run.app/data/cz-spending-2026.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://czbudget-public-258433468858.europe-west1.run.app/data/cz-health-budget.v1.json"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://czbudget-public-258433468858.europe-west1.run.app/data/demography-social.v1.json"}]}</script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=20260821-fiscal-scope">
   <link rel="stylesheet" href="styles-v2.css?v=20260820-2">
@@ -137,7 +137,7 @@
       </article>
       <article class="spending-panel">
         <header><div><span>H</span><h3>Kdo peníze spravuje</h3></div><small id="spending-chapter-count">47 / 47</small></header>
-        <div class="chapter-toolbar"><input id="spending-chapter-search" type="search" placeholder="Hledat ministerstvo nebo kapitolu"><select id="spending-chapter-sort"><option value="amount">Částka 2026</option><option value="change">Největší změna</option></select></div>
+        <div class="chapter-toolbar"><input id="spending-chapter-search" type="search" placeholder="Hledat ministerstvo nebo kapitolu"><select id="spending-chapter-sort" aria-label="Řazení rozpočtových kapitol"><option value="amount">Částka 2026</option><option value="change">Největší změna</option></select></div>
         <div class="spending-list" id="spending-chapter-rows"></div>
         <div class="spending-detail" id="spending-chapter-detail"></div>
         <div class="spending-source">Zdroj: <a href="https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/snemovna-schvalila-zakon-o-statnim-rozpoctu-2026-63269" target="_blank" rel="noreferrer">MF ČR — schválený rozpočet a všech 47 kapitol ↗</a>. Hodnoty kapitol jsou bez EU/FM.<div class="spending-scope-key"><span><i class="y25"></i>2025</span><span><i class="y26"></i>2026</span></div></div>
@@ -178,7 +178,7 @@
         <label><span>Úroveň vlastníka</span><select id="embed-entity-owner"><option value="all">Všichni veřejní vlastníci</option></select></label>
         <label><span>Seřadit podle</span><select id="embed-entity-sort"><option value="topline">Výnosy / obrat</option><option value="result">Výsledek</option><option value="margin">Čistá marže</option><option value="name">Název</option></select></label>
       </div>
-      <div class="registry-table-wrap"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejný vlastník</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="embed-public-entity-rows"></tbody></table></div>
+      <div class="registry-table-wrap" tabindex="0"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejný vlastník</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="embed-public-entity-rows"></tbody></table></div>
       <div class="registry-footer"><span id="embed-registry-count">—</span><small>Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.</small></div>
       <div class="registry-bottom-tabs" id="embed-entity-tabs" role="tablist" aria-label="Typ veřejného subjektu">
         <button type="button" role="tab" data-category="all" aria-selected="true"><span>Vše</span><small id="embed-tab-all">—</small></button>
@@ -269,7 +269,7 @@
   <section class="methodology" id="metodika">
     <div><span class="kicker">09 / Data & metodika</span><h2>Důvěra začíná<br>u definice.</h2></div>
     <div class="method-grid"><article><span>01</span><h3>Český rozpočet</h3><p>Pokladní plnění státního rozpočtu 2001–2025 a schválený rozpočet 2026. Národní metodika, mld. Kč.</p></article><article><span>02</span><h3>Fiskální perimeter</h3><p>Každá řada nese institucionální rozsah. Státní rozpočet, sektor vládních institucí a veřejné korporace jsou oddělené a nesčítatelné vrstvy.</p></article><article><span>03</span><h3>Výdaje 2026</h3><p>Účelová struktura zahrnuje EU/FM; všech 47 kapitol je srovnáno bez EU/FM. Rozsahy jsou viditelně oddělené.</p></article><article><span>04</span><h3>Mezinárodní benchmark</h3><p>IMF WEO, sektor vládních institucí, podíly na HDP. Transfery uvnitř sektoru jsou konsolidované; tržní veřejné korporace jsou mimo.</p></article></div>
-    <div class="source-links"><a href="https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/snemovna-schvalila-zakon-o-statnim-rozpoctu-2026-63269" target="_blank" rel="noreferrer">MF: schválený rozpočet 2026 ↗</a><a href="https://mf.gov.cz/assets/attachments/2026-04-01_Statni-rozpocet-2026-exekutivni-shrnuti.pdf" target="_blank" rel="noreferrer">MF: účelová struktura výdajů ↗</a><a href="https://csu.gov.cz/produkty/projekce-obyvatelstva-ceske-republiky-2023-2100" target="_blank" rel="noreferrer">ČSÚ: projekce populace ↗</a><a href="https://www.cssz.cz/documents/20143/2955094/4%2BPrijmy_a_vydaje_na_socialni_zabezpeceni_12_2025.pdf/4504ffb7-2a74-0882-7566-37b17802f977?version=1.0" target="_blank" rel="noreferrer">ČSSZ: důchodový účet ↗</a><a href="https://www.imf.org/en/Publications/WEO/weo-database/2026/April" target="_blank" rel="noreferrer">IMF WEO ↗</a></div>
+    <div class="source-links"><a href="https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/snemovna-schvalila-zakon-o-statnim-rozpoctu-2026-63269" target="_blank" rel="noreferrer">MF: schválený rozpočet 2026 ↗</a><a href="https://mf.gov.cz/assets/attachments/2026-04-01_Statni-rozpocet-2026-exekutivni-shrnuti.pdf" target="_blank" rel="noreferrer">MF: účelová struktura výdajů ↗</a><a href="https://csu.gov.cz/produkty/projekce-obyvatelstva-ceske-republiky-2023-2100" target="_blank" rel="noreferrer">ČSÚ: projekce populace ↗</a><a href="https://www.cssz.cz/web/cz/statistiky" target="_blank" rel="noreferrer">ČSSZ: statistiky důchodového účtu ↗</a><a href="https://www.imf.org/en/Publications/WEO/weo-database/2026/April" target="_blank" rel="noreferrer">IMF WEO ↗</a></div>
   </section>
 
     </div>

@@ -9,6 +9,7 @@ const english = new URLSearchParams(location.search).get("lang") === "en" || loc
 
 const money = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });
 const amount = (value) => {
+  if (!Number.isFinite(value)) return "—";
   const absolute = Math.abs(value);
   const sign = value < 0 ? "−" : "";
   if (absolute >= 1e9) return `${sign}${money.format(absolute / 1e9)} mld. Kč`;
@@ -37,7 +38,14 @@ function filtered() {
     return (!query || searchText.includes(query)) && (!region || entity.territory.region_name === region) &&
       (balance === "all" || (balance === "surplus" ? entity.amounts.budget_balance >= 0 : entity.amounts.budget_balance < 0));
   });
-  list.sort((a, b) => sort === "name" ? a.short_name.localeCompare(b.short_name, "cs") : b.amounts[sort] - a.amounts[sort]);
+  list.sort((a, b) => {
+    if (sort === "name") return a.short_name.localeCompare(b.short_name, "cs");
+    const left = a.amounts[sort];
+    const right = b.amounts[sort];
+    if (!Number.isFinite(left)) return Number.isFinite(right) ? 1 : 0;
+    if (!Number.isFinite(right)) return -1;
+    return right - left;
+  });
   return list;
 }
 
