@@ -11,7 +11,7 @@ const chartMeta = {
   "expense-stack-chart": ["column", "Zdroj: MF ČR · ČSÚ"],
   "population-chart": ["line", "Zdroj: ČSÚ · projekce obyvatelstva 2023–2100"],
   "pressure-chart": ["line", "Zdroj: ČSÚ · ČSSZ · model Public Spending Data"],
-  "extra-chart": ["column", "Zdroj: ČSÚ · ČSSZ · model Public Spending Data"],
+  "system-cost-chart": ["column", "Zdroj: ČSÚ · ČSSZ · model Public Spending Data"],
   "pension-chart": ["line", "Zdroj: ČSÚ · ČSSZ · model Public Spending Data"]
 };
 const tooltip = $("#chart-tooltip");
@@ -214,6 +214,12 @@ function renderStack(id, rows, definitions, total, amount) {
 }
 
 function prepareDemography(raw) {
+  const requiredBaseAmounts = ["pension_expense","pension_income","health_expense","care_allowance"];
+  requiredBaseAmounts.forEach((key) => {
+    if (!Number.isFinite(raw.base_2025?.[key]) || raw.base_2025[key] <= 0) {
+      throw new Error(`Demografický model: neplatná výchozí hodnota ${key}`);
+    }
+  });
   const fields=raw.columns;
   const variants={};
   Object.entries(raw.variants).forEach(([variant,points])=>{
@@ -230,22 +236,24 @@ function prepareDemography(raw) {
 
 function modelSeries() {
   const raw=demographicData.variants[demoState.variant],b=raw[0],base=demographicData.base_2025;
-  const healthBase=.7*b.age_0_19+b.age_20_64+2.3*b.age_65_79+4.5*b.age_80_plus;
+  const model=demographicData.model,{pension_age_sensitive_share:pensionAgeShare,health_age_weights:healthWeights,care_age_shares:careShares,retirement_age_phase_in_years:phaseInYears}=model;
+  const pensionPopulationShare=1-pensionAgeShare;
+  const healthBase=healthWeights[0]*b.age_0_19+healthWeights[1]*b.age_20_64+healthWeights[2]*b.age_65_79+healthWeights[3]*b.age_80_plus;
   return raw.map(d=>{
-    const t=d.year-2025,phase=Math.min(1,t/10),target=d[`age_${demoState.retAge}_plus`],effective=d.age_65_plus-phase*(d.age_65_plus-target);
-    const pensionDriver=.84*(effective/b.age_65_plus)+.16*(d.total/b.total);
-    const healthDriver=(.7*d.age_0_19+d.age_20_64+2.3*d.age_65_79+4.5*d.age_80_plus)/healthBase;
-    const careDriver=.15*((d.age_0_19+d.age_20_64)/(b.age_0_19+b.age_20_64))+.25*(d.age_65_79/b.age_65_79)+.60*(d.age_80_plus/b.age_80_plus);
+    const t=d.year-2025,phase=Math.min(1,t/phaseInYears),target=d[`age_${demoState.retAge}_plus`],effective=d.age_65_plus-phase*(d.age_65_plus-target);
+    const pensionDriver=pensionAgeShare*(effective/b.age_65_plus)+pensionPopulationShare*(d.total/b.total);
+    const healthDriver=(healthWeights[0]*d.age_0_19+healthWeights[1]*d.age_20_64+healthWeights[2]*d.age_65_79+healthWeights[3]*d.age_80_plus)/healthBase;
+    const careDriver=careShares[0]*((d.age_0_19+d.age_20_64)/(b.age_0_19+b.age_20_64))+careShares[1]*(d.age_65_79/b.age_65_79)+careShares[2]*(d.age_80_plus/b.age_80_plus);
     const workDriver=d.age_20_64/b.age_20_64,costFactor=(1+demoState.costGrowth/100)**t,wageFactor=(1+demoState.wageGrowth/100)**t;
     const pension=base.pension_expense*pensionDriver*costFactor,health=base.health_expense*healthDriver*costFactor,care=base.care_allowance*careDriver*costFactor,income=base.pension_income*workDriver*wageFactor;
-    return {...d,pensionDriver,healthDriver,careDriver,workDriver,pension,health,care,income,expense:pension,balance:income-pension,pensionExtra:pension-base.pension_expense,healthExtra:health-base.health_expense,careExtra:care-base.care_allowance};
+    return {...d,pensionDriver,healthDriver,careDriver,workDriver,pension,health,care,income,expense:pension,balance:income-pension};
   });
 }
 
-function renderDemography(){const series=modelSeries(),b=series[0],e=series.at(-1),extra=e.pensionExtra+e.healthExtra+e.careExtra;
-  $("#model-ratio").textContent=`${fmt1.format(e.age_65_plus/e.age_20_64*100)} : 100`;$("#model-ratio-note").textContent=`z ${fmt1.format(b.age_65_plus/b.age_20_64*100)} : 100 v roce 2025`;$("#model-80").textContent=`${fmt1.format(e.age_80_plus/1e6)} mil.`;$("#model-80-note").textContent=`+${fmt0.format((e.age_80_plus/b.age_80_plus-1)*100)} % proti 2025`;$("#model-extra").textContent=`${extra>=0?"+":""}${fmt0.format(extra)}`;$("#model-pension-balance").textContent=`${e.balance>=0?"+":""}${fmt0.format(e.balance)}`;
+function renderDemography(){const series=modelSeries(),b=series[0],e=series.at(-1),baseAnnualSystemCost=b.pension+b.health+b.care,annualSystemCost=e.pension+e.health+e.care;
+  $("#model-ratio").textContent=`${fmt1.format(e.age_65_plus/e.age_20_64*100)} : 100`;$("#model-ratio-note").textContent=`z ${fmt1.format(b.age_65_plus/b.age_20_64*100)} : 100 v roce 2025`;$("#model-80").textContent=`${fmt1.format(e.age_80_plus/1e6)} mil.`;$("#model-80-note").textContent=`+${fmt0.format((e.age_80_plus/b.age_80_plus-1)*100)} % proti 2025`;$("#model-system-cost").textContent=fmt0.format(annualSystemCost);$("#model-system-cost-note").textContent=`z ${fmt0.format(baseAnnualSystemCost)} mld. Kč v roce 2025`;$("#model-pension-balance").textContent=`${e.balance>=0?"+":""}${fmt0.format(e.balance)}`;
   $("#headline-ratio").textContent=fmt1.format(e.age_65_plus/e.age_20_64*100);$("#headline-80").textContent=`+${fmt0.format((e.age_80_plus/b.age_80_plus-1)*100)} %`;
-  renderPopulation(series);renderPressure(series);renderExtra(series);renderPension(series);
+  renderPopulation(series);renderPressure(series);renderSystemCosts(series);renderPension(series);
 }
 
 function renderPopulation(series) {
@@ -273,14 +281,14 @@ function renderPressure(series) {
   legend("pressure-legend",defs.map(([k,l])=>[k,l]));
 }
 
-function renderExtra(series) {
-  const f=chartFrame("extra-chart",280),{svg,margin:m,iw,ih}=f,x=timeScale(2025,2045,0,iw),defs=[["pension","Důchody",d=>d.pensionExtra],["health","Zdravotnictví",d=>d.healthExtra],["care","Péče",d=>d.careExtra]],deficit=demographicData.base_2025.budget_deficit_2026,stackedMax=Math.max(...series.map(d=>defs.reduce((sum,[,,get])=>sum+Math.max(0,get(d)),0))),axis=niceAxis(0,Math.max(stackedMax,deficit)*1.06),y=linear(axis.min,axis.max,ih,0),bar=iw/series.length*.62;
+function renderSystemCosts(series) {
+  const f=chartFrame("system-cost-chart",280),{svg,margin:m,iw,ih}=f,x=timeScale(2025,2045,0,iw),defs=[["pension","Důchody",d=>d.pension],["health","Zdravotnictví",d=>d.health],["care","Péče",d=>d.care]],deficit=demographicData.base_2025.budget_deficit_2026,stackedMax=Math.max(...series.map(d=>defs.reduce((sum,[,,get])=>sum+get(d),0))),axis=niceAxis(0,Math.max(stackedMax,deficit)*1.06),y=linear(axis.min,axis.max,ih,0),bar=iw/series.length*.62;
   drawAxes(f,x,y,[2025,2030,2035,2040,2045],axis.ticks,fmt0,"rok","mld. Kč");
-  series.forEach(d=>{let base=0;defs.forEach(([key,,get])=>{const value=Math.max(0,get(d));svg.append(node("rect",{x:m.left+x(d.year)-bar/2,y:m.top+y(base+value),width:bar,height:y(base)-y(base+value),fill:colors[key],opacity:.92}));base+=value})});
+  series.forEach(d=>{let base=0;defs.forEach(([key,,get])=>{const value=get(d);svg.append(node("rect",{x:m.left+x(d.year)-bar/2,y:m.top+y(base+value),width:bar,height:y(base)-y(base+value),fill:colors[key],opacity:.92}));base+=value})});
   svg.append(node("line",{x1:m.left,x2:m.left+iw,y1:m.top+y(deficit),y2:m.top+y(deficit),stroke:"white","stroke-width":1.5,"stroke-dasharray":"4 3"}));
   svg.append(node("text",{x:m.left+iw-3,y:m.top+y(deficit)-7,"text-anchor":"end",class:"chart-axis"},"schodek 2026 · 310 mld."));
-  addHover(f,x,series,year=>series.reduce((a,d)=>Math.abs(d.year-year)<Math.abs(a.year-year)?d:a),d=>defs.map(([,label,get])=>[label,`${fmt1.format(get(d))} mld.`]));
-  legend("extra-legend",defs.map(([k,l])=>[k,l]));
+  addHover(f,x,series,year=>series.reduce((a,d)=>Math.abs(d.year-year)<Math.abs(a.year-year)?d:a),d=>[["Celkem",`${fmt1.format(defs.reduce((sum,[,,get])=>sum+get(d),0))} mld.`],...defs.map(([,label,get])=>[label,`${fmt1.format(get(d))} mld.`])]);
+  legend("system-cost-legend",defs.map(([k,l])=>[k,l]));
 }
 
 function renderPension(series) {
