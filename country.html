@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Profil země — Public Spending Data</title>
   <meta name="description" content="Detailní fiskální profil země, makroekonomické ukazatele a primární rozpočtové zdroje.">
-  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v2.css"><link rel="stylesheet" href="chart-system.css?v=20260820-capitals-history"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260821-health8"><script src="country.js?v=20260821-health8" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-health.js?v=20260821-health8" defer></script><script src="global-nav.js?v=20260820-capitals-history" defer></script>
+  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v2.css?v=20260821-fiscal-scope"><link rel="stylesheet" href="chart-system.css?v=20260820-capitals-history"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260821-health8"><script src="country.js?v=20260821-fiscal-scope-health8" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-health.js?v=20260821-health8" defer></script><script src="global-nav.js?v=20260820-capitals-history" defer></script>
 </head>
 <body class="country-page">
   <header class="site-header compact-header has-global-nav">
@@ -22,10 +22,17 @@
     </section>
     <section class="country-kpis" id="country-kpis"></section>
 
+    <section class="country-section fiscal-scope-section" id="scope">
+      <div class="detail-heading"><div><span class="kicker" data-i18n="scopeKicker">Fiskální perimeter / účetní hranice</span><h2 data-i18n="scopeTitle">Co čísla zahrnují — a co ne.</h2></div><p data-i18n="scopeCopy">Státní rozpočet, sektor vládních institucí a veřejný sektor jsou tři různé účetní hranice. Profil je drží viditelně oddělené.</p></div>
+      <div class="scope-perimeter-grid" id="scope-perimeter-grid"></div>
+      <div class="country-scope-facts" id="country-scope-facts"></div>
+      <p class="scope-nonadditivity" id="scope-nonadditivity"></p>
+    </section>
+
     <section class="country-section" id="trend">
-      <div class="detail-heading"><div><span class="kicker" data-i18n="trendKicker">01 / Dvacetiletý vývoj</span><h2 data-i18n="trendTitle">Rozpočet v čase.</h2></div><p data-i18n="trendCopy">Harmonizované ukazatele IMF umožňují číst dlouhodobý fiskální příběh ve společné definici.</p></div>
+      <div class="detail-heading"><div><span class="kicker" data-i18n="trendKicker">01 / Dvacetiletý vývoj</span><h2 data-i18n="trendTitle">Veřejné finance v čase.</h2></div><p data-i18n="trendCopy">Harmonizované ukazatele IMF umožňují číst dlouhodobý fiskální příběh ve společné definici sektoru vládních institucí.</p></div>
       <div class="country-chart-grid">
-        <article class="country-chart-panel"><div class="chart-tabs"><button data-chart="balance_pct_gdp" class="active" data-i18n="balance">Saldo</button><button data-chart="gross_debt_pct_gdp" data-i18n="debt">Dluh</button><button data-chart="expenditure_pct_gdp" data-i18n="expense">Výdaje</button><button data-chart="revenue_pct_gdp" data-i18n="revenue">Příjmy</button></div><h3 id="fiscal-chart-title">Saldo / % HDP</h3><div id="country-chart"></div></article>
+        <article class="country-chart-panel"><div class="chart-tabs"><button data-chart="balance_pct_gdp" class="active" data-i18n="balance">Saldo</button><button data-chart="gross_debt_pct_gdp" data-i18n="debt">Dluh</button><button data-chart="expenditure_pct_gdp" data-i18n="expense">Výdaje</button><button data-chart="revenue_pct_gdp" data-i18n="revenue">Příjmy</button></div><div class="chart-view-tabs" aria-label="Zobrazení hodnot"><span data-i18n="display">Zobrazení</span><button type="button" data-chart-view="ratio" class="active" aria-pressed="true" data-i18n="ratioView">% HDP</button><button type="button" data-chart-view="nominal" aria-pressed="false" data-i18n="nominalView">Nominálně</button><button type="button" data-chart-view="real" aria-pressed="false" data-i18n="realView">Očištěno o inflaci</button></div><h3 id="fiscal-chart-title">Saldo / % HDP</h3><div id="country-chart"></div></article>
         <article class="country-chart-panel"><div class="chart-label"><span>GDP / CAPITA</span><small id="gdp-unit-label">CZK</small></div><h3 data-i18n="gdpPcTitle">HDP na obyvatele</h3><div id="gdp-per-capita-chart"></div></article>
       </div>
     </section>
