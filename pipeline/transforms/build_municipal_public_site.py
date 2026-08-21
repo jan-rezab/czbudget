@@ -71,11 +71,12 @@ def build_directory(data: dict) -> None:
         "url": PUBLIC_ORIGIN + "/cz/obce/", "inLanguage": "cs", "temporalCoverage": "2025", "spatialCoverage": "CZ",
         "distribution": {"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": PUBLIC_ORIGIN + "/data/municipal-snapshot.v1.json"},
     }
+    page_head = head('Rozpočty všech obcí a krajů ČR 2025', 'Srovnání příjmů, výdajů, výsledku hospodaření a stavu účtů všech 6 254 obcí. Praha je v součtu s kraji započtena jen jednou.', '/cz/obce/', 2, schema).replace('cz-budget.css"', 'cz-budget.css?v=20260822-aggregate-stats"')
     initial = "\n".join(card(entity) for entity in municipalities[:48])
     options = "".join(f'<option value="{esc(region)}">{esc(region)}</option>' for region in regions)
     output = WEB / "cz/obce/index.html"
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(f"""<!doctype html><html lang="cs">{head('Rozpočty všech obcí a krajů ČR 2025', 'Srovnání příjmů, výdajů, výsledku hospodaření a stavu účtů všech 6 254 obcí. Praha je v součtu s kraji započtena jen jednou.', '/cz/obce/', 2, schema)}
+    output.write_text(f"""<!doctype html><html lang="cs">{page_head}
 <body class="cz-budget-page directory-page all-municipalities">{header('../../')}<main id="top">
 <nav class="breadcrumbs"><a href="../../index.html">Domů</a><span>›</span><strong>Obce a kraje</strong></nav>
 <section class="cz-hero compact-cz-hero"><div><span class="eyebrow"><i class="live-dot"></i>České územní rozpočty · skutečnost 2025</span><h1>Obce a kraje<br><em>v jednom obrazu.</em></h1><p>Všechny obecní účetní jednotky, kraje i společný součet. Praha je započtena jen jednou.</p></div><div class="cohort-switch wide-switch"><a class="active" href="../obce/">Obce <b>6 254</b></a><a href="../mesta/">Velká města <b>20 let</b></a><a href="../kraje/">Kraje <b>14</b></a></div></section>
@@ -85,7 +86,7 @@ def build_directory(data: dict) -> None:
 <form class="directory-filters" id="municipality-filters"><label class="filter-search"><span>Hledat</span><input id="municipality-query" type="search" placeholder="Název nebo IČO…" autocomplete="off"></label><label><span>Kraj</span><select id="municipality-region"><option value="">Všechny kraje</option>{options}</select></label><label><span>Výsledek</span><select id="municipality-balance"><option value="all">Přebytek i schodek</option><option value="surplus">Přebytek</option><option value="deficit">Schodek</option></select></label><label><span>Řazení</span><select id="municipality-sort"><option value="revenue_actual">Podle příjmů</option><option value="expense_actual">Podle výdajů</option><option value="cash_current">Podle stavu účtů</option><option value="budget_balance">Podle výsledku</option><option value="name">Podle názvu</option></select></label><button type="reset">Vymazat filtry</button></form>
 <div class="result-meta"><strong id="municipality-count">6 254 obcí</strong><a href="../mesta/">Zobrazit 20letý trend velkých měst →</a></div><div class="entity-grid" id="municipality-grid">{initial}</div><p id="municipality-empty" class="empty-state" hidden>Žádná obec neodpovídá filtrům.</p><button class="load-more" id="municipality-more" type="button">Načíst dalších 48 obcí</button></section>
 <section class="data-contract" id="metodika"><div><span class="kicker">04 / Definice</span><h2>Výsledek i stav účtů.</h2><p>Výsledek = skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci. Stav účtů je součet účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze obce.</p></div><div class="source-list"><a href="../../data/municipal-snapshot.v1.json"><span>Kompletní snapshot</span><strong>JSON · 6 254 obcí ↗</strong></a><a href="https://monitor.statnipokladna.gov.cz/datovy-katalog/" target="_blank" rel="noopener"><span>Primární zdroj</span><strong>Monitor MF ČR ↗</strong></a></div></section>
-</main>{footer('../../')}<script src="../../municipal-i18n.js" defer></script><script src="../../cz-municipal-directory.js" defer></script></body></html>\n""", encoding="utf-8")
+</main>{footer('../../')}<script src="../../municipal-i18n.js?v=20260822-aggregate-stats" defer></script><script src="../../cz-municipal-directory.js" defer></script></body></html>\n""", encoding="utf-8")
 
 
 def history_section(ico: str | None, depth: int) -> str:
