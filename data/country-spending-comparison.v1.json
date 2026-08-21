@@ -1,0 +1,3391 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "COUNTRY_SPENDING_COMPARISON_2025_2026",
+  "generated_at": "2026-08-21",
+  "method": {
+    "id": "explicit_native_line_to_common_psd_category_v1",
+    "note_cs": "Národní položky centrálních nebo státních rozpočtů jsou přiřazeny k širokým společným kategoriím. Nejde o harmonizovanou statistiku COFOG ani o celý sektor vládních institucí. Smíšené a nerozlišitelné položky zůstávají v kategorii Ostatní / nerozdělené.",
+    "note_en": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
+  },
+  "categories": [
+    {
+      "id": "social_protection",
+      "label_cs": "Sociální ochrana",
+      "label_en": "Social protection"
+    },
+    {
+      "id": "health",
+      "label_cs": "Zdravotnictví",
+      "label_en": "Health"
+    },
+    {
+      "id": "education_research",
+      "label_cs": "Vzdělávání a výzkum",
+      "label_en": "Education & research"
+    },
+    {
+      "id": "defence",
+      "label_cs": "Obrana",
+      "label_en": "Defence"
+    },
+    {
+      "id": "public_order_justice",
+      "label_cs": "Bezpečnost a justice",
+      "label_en": "Public order & justice"
+    },
+    {
+      "id": "transport_infrastructure",
+      "label_cs": "Doprava a infrastruktura",
+      "label_en": "Transport & infrastructure"
+    },
+    {
+      "id": "environment_agriculture",
+      "label_cs": "Životní prostředí a zemědělství",
+      "label_en": "Environment & agriculture"
+    },
+    {
+      "id": "housing_community",
+      "label_cs": "Bydlení a místní rozvoj",
+      "label_en": "Housing & community"
+    },
+    {
+      "id": "economic_affairs",
+      "label_cs": "Hospodářství a energie",
+      "label_en": "Economic affairs & energy"
+    },
+    {
+      "id": "general_services_debt",
+      "label_cs": "Všeobecné služby a dluh",
+      "label_en": "General services & debt"
+    },
+    {
+      "id": "culture_recreation",
+      "label_cs": "Kultura a rekreace",
+      "label_en": "Culture & recreation"
+    },
+    {
+      "id": "other_unallocated",
+      "label_cs": "Ostatní / nerozdělené",
+      "label_en": "Other / unallocated"
+    }
+  ],
+  "fx": {
+    "reference_date": "2026-08-18",
+    "local_per_eur": {
+      "EUR": 1,
+      "CZK": 24.179,
+      "DKK": 7.4759,
+      "GBP": 0.85585,
+      "PLN": 4.319,
+      "SEK": 11.045,
+      "CHF": 0.9406,
+      "USD": 1.1576,
+      "UAH": 51.8082
+    },
+    "sources": [
+      {
+        "title": "ECB euro reference rates",
+        "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html"
+      },
+      {
+        "title": "National Bank of Ukraine EUR/UAH official rate",
+        "url": "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=EUR&date=20260818&json"
+      }
+    ]
+  },
+  "countries": [
+    {
+      "code": "CZE",
+      "currency": "CZK",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "administrative",
+      "scope_cs": "Schválené výdaje státního rozpočtu podle kapitol",
+      "scope_en": "Approved state-budget expenditure by chapter",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "schválený rozpočet",
+          "status_en": "approved budget"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "schválený rozpočet",
+          "status_en": "approved budget"
+        }
+      },
+      "totals": {
+        "previous": 2172.8296,
+        "current": 2287.6246
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 952.0592,
+            "current": 994.4025
+          },
+          "shares_pct": {
+            "previous": 43.816561,
+            "current": 43.46878
+          },
+          "source_rows": [
+            {
+              "code": "313",
+              "label_native": "Ministerstvo práce a sociálních věcí"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 10.4034,
+            "current": 10.7814
+          },
+          "shares_pct": {
+            "previous": 0.478795,
+            "current": 0.471292
+          },
+          "source_rows": [
+            {
+              "code": "335",
+              "label_native": "Ministerstvo zdravotnictví"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 293.6471,
+            "current": 286.993
+          },
+          "shares_pct": {
+            "previous": 13.514502,
+            "current": 12.545459
+          },
+          "source_rows": [
+            {
+              "code": "333",
+              "label_native": "Ministerstvo školství, mládeže a tělovýchovy"
+            },
+            {
+              "code": "361",
+              "label_native": "Akademie věd České republiky"
+            },
+            {
+              "code": "377",
+              "label_native": "Technologická agentura České republiky"
+            },
+            {
+              "code": "321",
+              "label_native": "Grantová agentura České republiky"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 154.2717,
+            "current": 154.7908
+          },
+          "shares_pct": {
+            "previous": 7.100037,
+            "current": 6.766442
+          },
+          "source_rows": [
+            {
+              "code": "307",
+              "label_native": "Ministerstvo obrany"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 148.3572,
+            "current": 160.8618
+          },
+          "shares_pct": {
+            "previous": 6.827834,
+            "current": 7.031827
+          },
+          "source_rows": [
+            {
+              "code": "314",
+              "label_native": "Ministerstvo vnitra"
+            },
+            {
+              "code": "336",
+              "label_native": "Ministerstvo spravedlnosti"
+            },
+            {
+              "code": "305",
+              "label_native": "Bezpečnostní informační služba"
+            },
+            {
+              "code": "378",
+              "label_native": "Národní úřad pro kybernetickou a informační bezpečnost"
+            },
+            {
+              "code": "376",
+              "label_native": "Generální inspekce bezpečnostních sborů"
+            },
+            {
+              "code": "375",
+              "label_native": "Státní úřad pro jadernou bezpečnost"
+            },
+            {
+              "code": "308",
+              "label_native": "Národní bezpečnostní úřad"
+            },
+            {
+              "code": "358",
+              "label_native": "Ústavní soud"
+            },
+            {
+              "code": "309",
+              "label_native": "Kancelář veřejného ochránce práv a ochránce práv dětí"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 101.9954,
+            "current": 129.4324
+          },
+          "shares_pct": {
+            "previous": 4.694128,
+            "current": 5.657939
+          },
+          "source_rows": [
+            {
+              "code": "327",
+              "label_native": "Ministerstvo dopravy"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 36.5388,
+            "current": 37.5878
+          },
+          "shares_pct": {
+            "previous": 1.681623,
+            "current": 1.643093
+          },
+          "source_rows": [
+            {
+              "code": "329",
+              "label_native": "Ministerstvo zemědělství"
+            },
+            {
+              "code": "315",
+              "label_native": "Ministerstvo životního prostředí"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 5.9615,
+            "current": 8.1644
+          },
+          "shares_pct": {
+            "previous": 0.274366,
+            "current": 0.356894
+          },
+          "source_rows": [
+            {
+              "code": "317",
+              "label_native": "Ministerstvo pro místní rozvoj"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 21.4472,
+            "current": 46.8054
+          },
+          "shares_pct": {
+            "previous": 0.987063,
+            "current": 2.046026
+          },
+          "source_rows": [
+            {
+              "code": "322",
+              "label_native": "Ministerstvo průmyslu a obchodu"
+            },
+            {
+              "code": "328",
+              "label_native": "Český telekomunikační úřad"
+            },
+            {
+              "code": "349",
+              "label_native": "Energetický regulační úřad"
+            },
+            {
+              "code": "353",
+              "label_native": "Úřad pro ochranu hospodářské soutěže"
+            },
+            {
+              "code": "344",
+              "label_native": "Úřad průmyslového vlastnictví"
+            },
+            {
+              "code": "348",
+              "label_native": "Český báňský úřad"
+            },
+            {
+              "code": "397",
+              "label_native": "Operace státních finančních aktiv"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 412.0637,
+            "current": 422.3126
+          },
+          "shares_pct": {
+            "previous": 18.964382,
+            "current": 18.460747
+          },
+          "source_rows": [
+            {
+              "code": "398",
+              "label_native": "Všeobecná pokladní správa"
+            },
+            {
+              "code": "396",
+              "label_native": "Státní dluh"
+            },
+            {
+              "code": "312",
+              "label_native": "Ministerstvo financí"
+            },
+            {
+              "code": "306",
+              "label_native": "Ministerstvo zahraničních věcí"
+            },
+            {
+              "code": "364",
+              "label_native": "Digitální a informační agentura"
+            },
+            {
+              "code": "302",
+              "label_native": "Poslanecká sněmovna Parlamentu"
+            },
+            {
+              "code": "304",
+              "label_native": "Úřad vlády České republiky"
+            },
+            {
+              "code": "345",
+              "label_native": "Český statistický úřad"
+            },
+            {
+              "code": "303",
+              "label_native": "Senát Parlamentu"
+            },
+            {
+              "code": "381",
+              "label_native": "Nejvyšší kontrolní úřad"
+            },
+            {
+              "code": "301",
+              "label_native": "Kancelář prezidenta republiky"
+            },
+            {
+              "code": "343",
+              "label_native": "Úřad pro ochranu osobních údajů"
+            },
+            {
+              "code": "372",
+              "label_native": "Rada pro rozhlasové a televizní vysílání"
+            },
+            {
+              "code": "371",
+              "label_native": "Úřad pro dohled nad hospodařením politických stran a hnutí"
+            },
+            {
+              "code": "359",
+              "label_native": "Úřad Národní rozpočtové rady"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 27.7875,
+            "current": 25.6999
+          },
+          "shares_pct": {
+            "previous": 1.278862,
+            "current": 1.123432
+          },
+          "source_rows": [
+            {
+              "code": "334",
+              "label_native": "Ministerstvo kultury"
+            },
+            {
+              "code": "362",
+              "label_native": "Národní sportovní agentura"
+            },
+            {
+              "code": "355",
+              "label_native": "Ústav pro studium totalitních režimů"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 8.2969,
+            "current": 9.7926
+          },
+          "shares_pct": {
+            "previous": 0.381848,
+            "current": 0.428068
+          },
+          "source_rows": [
+            {
+              "code": "374",
+              "label_native": "Správa státních hmotných rezerv"
+            },
+            {
+              "code": "346",
+              "label_native": "Český úřad zeměměřický a katastrální"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "DEU",
+      "currency": "EUR",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "administrative",
+      "scope_cs": "Federální rozpočet podle jednotlivých plánů (Einzelpläne)",
+      "scope_en": "Federal budget by departmental section (Einzelplan)",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "schválený plán",
+          "status_en": "approved plan"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "schválený plán",
+          "status_en": "approved plan"
+        }
+      },
+      "totals": {
+        "previous": 642.0919,
+        "current": 694.2683
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 190.3413,
+            "current": 197.341
+          },
+          "shares_pct": {
+            "previous": 29.643934,
+            "current": 28.424314
+          },
+          "source_rows": [
+            {
+              "code": "11",
+              "label_native": "Bundesministerium für Arbeit und Soziales"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 19.2826,
+            "current": 21.7739
+          },
+          "shares_pct": {
+            "previous": 3.00309,
+            "current": 3.136237
+          },
+          "source_rows": [
+            {
+              "code": "15",
+              "label_native": "Bundesministerium für Gesundheit"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 36.5627,
+            "current": 38.4823
+          },
+          "shares_pct": {
+            "previous": 5.694309,
+            "current": 5.542857
+          },
+          "source_rows": [
+            {
+              "code": "30",
+              "label_native": "Bundesministerium für Forschung, Technologie und Raumfahrt"
+            },
+            {
+              "code": "17",
+              "label_native": "Bundesministerium für Bildung, Familie, Senioren, Frauen und Jugend"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 86.7769,
+            "current": 108.6131
+          },
+          "shares_pct": {
+            "previous": 13.514717,
+            "current": 15.644255
+          },
+          "source_rows": [
+            {
+              "code": "14",
+              "label_native": "Bundesministerium der Verteidigung"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 16.4608,
+            "current": 17.0359
+          },
+          "shares_pct": {
+            "previous": 2.563621,
+            "current": 2.453792
+          },
+          "source_rows": [
+            {
+              "code": "06",
+              "label_native": "Bundesministerium des Innern"
+            },
+            {
+              "code": "07",
+              "label_native": "Bundesministerium der Justiz und für Verbraucherschutz"
+            },
+            {
+              "code": "19",
+              "label_native": "Bundesverfassungsgericht"
+            },
+            {
+              "code": "22",
+              "label_native": "Unabhängiger Kontrollrat"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 38.2988,
+            "current": 29.261
+          },
+          "shares_pct": {
+            "previous": 5.964691,
+            "current": 4.214653
+          },
+          "source_rows": [
+            {
+              "code": "12",
+              "label_native": "Bundesministerium für Verkehr"
+            },
+            {
+              "code": "24",
+              "label_native": "Bundesministerium für Digitales und Staatsmodernisierung"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 14.4723,
+            "current": 14.5832
+          },
+          "shares_pct": {
+            "previous": 2.25393,
+            "current": 2.100514
+          },
+          "source_rows": [
+            {
+              "code": "10",
+              "label_native": "Bundesministerium für Landwirtschaft, Ernährung und Heimat"
+            },
+            {
+              "code": "16",
+              "label_native": "Bundesministerium für Umwelt, Klimaschutz, Naturschutz und nukleare Sicherheit"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 7.3699,
+            "current": 7.7457
+          },
+          "shares_pct": {
+            "previous": 1.147795,
+            "current": 1.115664
+          },
+          "source_rows": [
+            {
+              "code": "25",
+              "label_native": "Bundesministerium für Wohnen, Stadtentwicklung und Bauwesen"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 19.3286,
+            "current": 15.959
+          },
+          "shares_pct": {
+            "previous": 3.010254,
+            "current": 2.298679
+          },
+          "source_rows": [
+            {
+              "code": "23",
+              "label_native": "Bundesministerium für wirtschaftliche Zusammenarbeit und Entwicklung"
+            },
+            {
+              "code": "09",
+              "label_native": "Bundesministerium für Wirtschaft und Energie"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 213.198,
+            "current": 243.4732
+          },
+          "shares_pct": {
+            "previous": 33.203658,
+            "current": 35.069036
+          },
+          "source_rows": [
+            {
+              "code": "60",
+              "label_native": "Allgemeine Finanzverwaltung"
+            },
+            {
+              "code": "32",
+              "label_native": "Bundesschuld"
+            },
+            {
+              "code": "08",
+              "label_native": "Bundesministerium der Finanzen"
+            },
+            {
+              "code": "05",
+              "label_native": "Auswärtiges Amt"
+            },
+            {
+              "code": "04",
+              "label_native": "Bundeskanzler und Bundeskanzleramt"
+            },
+            {
+              "code": "02",
+              "label_native": "Deutscher Bundestag"
+            },
+            {
+              "code": "20",
+              "label_native": "Bundesrechnungshof"
+            },
+            {
+              "code": "01",
+              "label_native": "Bundespräsident und Bundespräsidialamt"
+            },
+            {
+              "code": "21",
+              "label_native": "Die Bundesbeauftragte für den Datenschutz und die Informationsfreiheit"
+            },
+            {
+              "code": "03",
+              "label_native": "Bundesrat"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        }
+      ]
+    },
+    {
+      "code": "DNK",
+      "currency": "DKK",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "administrative",
+      "scope_cs": "Finanční zákon podle ministerských paragrafů",
+      "scope_en": "Finance Act by ministerial section",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "rozpočet",
+          "status_en": "budget"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "finanční zákon",
+          "status_en": "Finance Act"
+        }
+      },
+      "totals": {
+        "previous": 901.8524,
+        "current": 957.059
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 306.8715,
+            "current": 316.3838
+          },
+          "shares_pct": {
+            "previous": 34.026799,
+            "current": 33.05792
+          },
+          "source_rows": [
+            {
+              "code": "17",
+              "label_native": "Beskæftigelsesministeriet"
+            },
+            {
+              "code": "36",
+              "label_native": "Pensionsvæsenet"
+            },
+            {
+              "code": "15",
+              "label_native": "Social- og Boligministeriet"
+            },
+            {
+              "code": "14",
+              "label_native": "Udlændinge- og Integrationsministeriet"
+            },
+            {
+              "code": "18",
+              "label_native": "Ældreministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 263.1541,
+            "current": 271.5716
+          },
+          "shares_pct": {
+            "previous": 29.179287,
+            "current": 28.375638
+          },
+          "source_rows": [
+            {
+              "code": "16",
+              "label_native": "Indenrigs- og Sundhedsministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 89.567,
+            "current": 95.4282
+          },
+          "shares_pct": {
+            "previous": 9.931448,
+            "current": 9.970984
+          },
+          "source_rows": [
+            {
+              "code": "19",
+              "label_native": "Uddannelses- og Forskningsministeriet"
+            },
+            {
+              "code": "20",
+              "label_native": "Børne- og Undervisningsministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 59.0824,
+            "current": 92.6044
+          },
+          "shares_pct": {
+            "previous": 6.551227,
+            "current": 9.675934
+          },
+          "source_rows": [
+            {
+              "code": "12",
+              "label_native": "Forsvarsministeriet"
+            },
+            {
+              "code": "13",
+              "label_native": "Ministeriet f. Samfundssikkerhed og Beredskab"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 21.2554,
+            "current": 20.1188
+          },
+          "shares_pct": {
+            "previous": 2.35686,
+            "current": 2.102148
+          },
+          "source_rows": [
+            {
+              "code": "11",
+              "label_native": "Justitsministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 33.7995,
+            "current": 23.7142
+          },
+          "shares_pct": {
+            "previous": 3.747786,
+            "current": 2.47782
+          },
+          "source_rows": [
+            {
+              "code": "28",
+              "label_native": "Transportministeriet"
+            },
+            {
+              "code": "25",
+              "label_native": "Digitaliseringsministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 17.8734,
+            "current": 19.5288
+          },
+          "shares_pct": {
+            "previous": 1.981854,
+            "current": 2.040501
+          },
+          "source_rows": [
+            {
+              "code": "27",
+              "label_native": "Ministeriet for Grøn Trepart"
+            },
+            {
+              "code": "29",
+              "label_native": "Klima-, Energi- og Forsyningsministeriet"
+            },
+            {
+              "code": "24",
+              "label_native": "Fødevareministeriet"
+            },
+            {
+              "code": "23",
+              "label_native": "Miljø- og Ligestillingsministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 1.2598,
+            "current": 1.5127
+          },
+          "shares_pct": {
+            "previous": 0.13969,
+            "current": 0.158057
+          },
+          "source_rows": [
+            {
+              "code": "22",
+              "label_native": "By-, Land- og Kirkeministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 6.8592,
+            "current": 6.8388
+          },
+          "shares_pct": {
+            "previous": 0.760568,
+            "current": 0.714564
+          },
+          "source_rows": [
+            {
+              "code": "08",
+              "label_native": "Erhvervsministeriet"
+            },
+            {
+              "code": "10",
+              "label_native": "Økonomiministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 87.8074,
+            "current": 94.6056
+          },
+          "shares_pct": {
+            "previous": 9.736338,
+            "current": 9.885033
+          },
+          "source_rows": [
+            {
+              "code": "07",
+              "label_native": "Finansministeriet"
+            },
+            {
+              "code": "35",
+              "label_native": "Generelle reserver"
+            },
+            {
+              "code": "06",
+              "label_native": "Udenrigsministeriet"
+            },
+            {
+              "code": "09",
+              "label_native": "Skatteministeriet"
+            },
+            {
+              "code": "05",
+              "label_native": "Statsministeriet"
+            },
+            {
+              "code": "03",
+              "label_native": "Folketinget"
+            },
+            {
+              "code": "01",
+              "label_native": "Kongen"
+            },
+            {
+              "code": "02",
+              "label_native": "Medlemmer af det kongelige hus m.fl."
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 14.3227,
+            "current": 14.7521
+          },
+          "shares_pct": {
+            "previous": 1.588142,
+            "current": 1.541399
+          },
+          "source_rows": [
+            {
+              "code": "21",
+              "label_native": "Kulturministeriet"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        }
+      ]
+    },
+    {
+      "code": "FRA",
+      "currency": "EUR",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "functional",
+      "scope_cs": "Mise rozpočtu státu; bez přímých příspěvků do důchodového účtu CAS",
+      "scope_en": "State-budget missions; excluding direct contributions to the CAS pensions account",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "LFI 2025",
+          "status_en": "2025 initial Finance Act"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "PLF 2026 ve srovnávací tabulce",
+          "status_en": "2026 draft in comparison table"
+        }
+      },
+      "totals": {
+        "previous": 381.1,
+        "current": 391.1
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 58.1,
+            "current": 54.6
+          },
+          "shares_pct": {
+            "previous": 15.245342,
+            "current": 13.960624
+          },
+          "source_rows": [
+            {
+              "code": "28",
+              "label_native": "Solidarité, insertion et égalité des chances"
+            },
+            {
+              "code": "31",
+              "label_native": "Travail, emploi et administration des ministères sociaux"
+            },
+            {
+              "code": "24",
+              "label_native": "Régimes sociaux et de retraite"
+            },
+            {
+              "code": "20",
+              "label_native": "Monde combattant, mémoire et liens avec la nation"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 1.5,
+            "current": 1.7
+          },
+          "shares_pct": {
+            "previous": 0.393597,
+            "current": 0.434671
+          },
+          "source_rows": [
+            {
+              "code": "26",
+              "label_native": "Santé"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 94.9,
+            "current": 95.8
+          },
+          "shares_pct": {
+            "previous": 24.901601,
+            "current": 24.495014
+          },
+          "source_rows": [
+            {
+              "code": "14",
+              "label_native": "Enseignement scolaire"
+            },
+            {
+              "code": "23",
+              "label_native": "Recherche et enseignement supérieur"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 50.5,
+            "current": 57.1
+          },
+          "shares_pct": {
+            "previous": 13.251115,
+            "current": 14.599847
+          },
+          "source_rows": [
+            {
+              "code": "9",
+              "label_native": "Défense"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 29.9,
+            "current": 30.5
+          },
+          "shares_pct": {
+            "previous": 7.84571,
+            "current": 7.798517
+          },
+          "source_rows": [
+            {
+              "code": "27",
+              "label_native": "Sécurités"
+            },
+            {
+              "code": "18",
+              "label_native": "Justice"
+            },
+            {
+              "code": "16",
+              "label_native": "Immigration, asile et intégration"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 17.8,
+            "current": 20.9
+          },
+          "shares_pct": {
+            "previous": 4.67069,
+            "current": 5.343902
+          },
+          "source_rows": [
+            {
+              "code": "11",
+              "label_native": "Écologie, développement et mobilité durables"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 4,
+            "current": 3.8
+          },
+          "shares_pct": {
+            "previous": 1.049593,
+            "current": 0.971619
+          },
+          "source_rows": [
+            {
+              "code": "3",
+              "label_native": "Agriculture, alimentation, forêt et affaires rurales"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 26,
+            "current": 25
+          },
+          "shares_pct": {
+            "previous": 6.822356,
+            "current": 6.392227
+          },
+          "source_rows": [
+            {
+              "code": "5",
+              "label_native": "Cohésion des territoires"
+            },
+            {
+              "code": "21",
+              "label_native": "Outre-mer"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 9,
+            "current": 8.8
+          },
+          "shares_pct": {
+            "previous": 2.361585,
+            "current": 2.250064
+          },
+          "source_rows": [
+            {
+              "code": "17",
+              "label_native": "Investir pour la France de 2030"
+            },
+            {
+              "code": "12",
+              "label_native": "Économie"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 83.5,
+            "current": 87.5
+          },
+          "shares_pct": {
+            "previous": 21.91026,
+            "current": 22.372795
+          },
+          "source_rows": [
+            {
+              "code": "13",
+              "label_native": "Engagements financiers de l’État"
+            },
+            {
+              "code": "15",
+              "label_native": "Gestion des finances publiques"
+            },
+            {
+              "code": "2",
+              "label_native": "Administration générale et territoriale de l’État"
+            },
+            {
+              "code": "25",
+              "label_native": "Relations avec les collectivités territoriales"
+            },
+            {
+              "code": "4",
+              "label_native": "Aide publique au développement"
+            },
+            {
+              "code": "1",
+              "label_native": "Action extérieure de l’État"
+            },
+            {
+              "code": "22",
+              "label_native": "Pouvoirs publics"
+            },
+            {
+              "code": "10",
+              "label_native": "Direction de l’action du Gouvernement"
+            },
+            {
+              "code": "6",
+              "label_native": "Conseil et contrôle de l’État"
+            },
+            {
+              "code": "7",
+              "label_native": "Crédits non répartis"
+            },
+            {
+              "code": "30",
+              "label_native": "Transformation et fonction publiques"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 5.9,
+            "current": 5.4
+          },
+          "shares_pct": {
+            "previous": 1.54815,
+            "current": 1.380721
+          },
+          "source_rows": [
+            {
+              "code": "8",
+              "label_native": "Culture"
+            },
+            {
+              "code": "29",
+              "label_native": "Sport, jeunesse et vie associative"
+            },
+            {
+              "code": "19",
+              "label_native": "Médias, livre et industries culturelles"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        }
+      ]
+    },
+    {
+      "code": "GBR",
+      "currency": "GBP",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "administrative",
+      "scope_cs": "Celkové rezortní výdajové limity (resource + capital DEL)",
+      "scope_en": "Total departmental expenditure limits (resource + capital DEL)",
+      "periods": {
+        "previous": {
+          "label": "2025–26",
+          "status_cs": "skutečnost",
+          "status_en": "outturn"
+        },
+        "current": {
+          "label": "2026–27",
+          "status_cs": "plán",
+          "status_en": "plan"
+        }
+      },
+      "totals": {
+        "previous": 639.808,
+        "current": 671.329
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 14.759,
+            "current": 14.89
+          },
+          "shares_pct": {
+            "previous": 2.306786,
+            "current": 2.217988
+          },
+          "source_rows": [
+            {
+              "code": "17",
+              "label_native": "Work and Pensions"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 217.409,
+            "current": 226.238
+          },
+          "shares_pct": {
+            "previous": 33.98035,
+            "current": 33.700019
+          },
+          "source_rows": [
+            {
+              "code": "1",
+              "label_native": "Health and Social Care"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 112.232,
+            "current": 118.525
+          },
+          "shares_pct": {
+            "previous": 17.541512,
+            "current": 17.655278
+          },
+          "source_rows": [
+            {
+              "code": "2",
+              "label_native": "Education"
+            },
+            {
+              "code": "12",
+              "label_native": "Science, Innovation and Technology"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 61.994,
+            "current": 65.106
+          },
+          "shares_pct": {
+            "previous": 9.689469,
+            "current": 9.698077
+          },
+          "source_rows": [
+            {
+              "code": "6",
+              "label_native": "Defence"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 39.607,
+            "current": 43.886
+          },
+          "shares_pct": {
+            "previous": 6.190451,
+            "current": 6.537182
+          },
+          "source_rows": [
+            {
+              "code": "3",
+              "label_native": "Home Office"
+            },
+            {
+              "code": "4",
+              "label_native": "Justice"
+            },
+            {
+              "code": "7",
+              "label_native": "Single Intelligence Account"
+            },
+            {
+              "code": "5",
+              "label_native": "Law Officers' Departments"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 28.974,
+            "current": 30.188
+          },
+          "shares_pct": {
+            "previous": 4.528546,
+            "current": 4.496752
+          },
+          "source_rows": [
+            {
+              "code": "13",
+              "label_native": "Transport"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 20.612,
+            "current": 18.145
+          },
+          "shares_pct": {
+            "previous": 3.221591,
+            "current": 2.702848
+          },
+          "source_rows": [
+            {
+              "code": "14",
+              "label_native": "Energy Security and Net Zero"
+            },
+            {
+              "code": "15",
+              "label_native": "Environment, Food and Rural Affairs"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 26.833,
+            "current": 32.901
+          },
+          "shares_pct": {
+            "previous": 4.193914,
+            "current": 4.900876
+          },
+          "source_rows": [
+            {
+              "code": "9",
+              "label_native": "MHCLG - Local Government"
+            },
+            {
+              "code": "10",
+              "label_native": "MHCLG - Housing and Communities"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 3.413,
+            "current": 3.21
+          },
+          "shares_pct": {
+            "previous": 0.533441,
+            "current": 0.478156
+          },
+          "source_rows": [
+            {
+              "code": "16",
+              "label_native": "Business and Trade"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 19.946,
+            "current": 20.074
+          },
+          "shares_pct": {
+            "previous": 3.117498,
+            "current": 2.990188
+          },
+          "source_rows": [
+            {
+              "code": "8",
+              "label_native": "Foreign, Commonwealth and Development Office"
+            },
+            {
+              "code": "18",
+              "label_native": "HM Revenue and Customs"
+            },
+            {
+              "code": "20",
+              "label_native": "Cabinet Office"
+            },
+            {
+              "code": "19",
+              "label_native": "HM Treasury"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 2.206,
+            "current": 2.334
+          },
+          "shares_pct": {
+            "previous": 0.344791,
+            "current": 0.347669
+          },
+          "source_rows": [
+            {
+              "code": "11",
+              "label_native": "Culture, Media and Sport"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 91.823,
+            "current": 95.832
+          },
+          "shares_pct": {
+            "previous": 14.351649,
+            "current": 14.274968
+          },
+          "source_rows": [
+            {
+              "code": "21",
+              "label_native": "Scottish Government (2)"
+            },
+            {
+              "code": "22",
+              "label_native": "Welsh Government (3)"
+            },
+            {
+              "code": "23",
+              "label_native": "Northern Ireland Executive"
+            },
+            {
+              "code": "24",
+              "label_native": "Small and Independent Bodies"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "POL",
+      "currency": "PLN",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "functional",
+      "scope_cs": "Státní rozpočet podle funkčních oddílů (działy)",
+      "scope_en": "State budget by functional division (działy)",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "schválený zákon",
+          "status_en": "approved act"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "schválený zákon",
+          "status_en": "approved act"
+        }
+      },
+      "totals": {
+        "previous": 921.6181,
+        "current": 918.9398
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 292.5978,
+            "current": 303.0176
+          },
+          "shares_pct": {
+            "previous": 31.74827,
+            "current": 32.974695
+          },
+          "source_rows": [
+            {
+              "code": "753",
+              "label_native": "Obowiązkowe ubezpieczenia społeczne"
+            },
+            {
+              "code": "855",
+              "label_native": "Rodzina"
+            },
+            {
+              "code": "852",
+              "label_native": "Pomoc społeczna"
+            },
+            {
+              "code": "853",
+              "label_native": "Pozostałe zadania w zakresie polityki społecznej"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 40.5031,
+            "current": 54.2427
+          },
+          "shares_pct": {
+            "previous": 4.394781,
+            "current": 5.902748
+          },
+          "source_rows": [
+            {
+              "code": "851",
+              "label_native": "Ochrona zdrowia"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 44.4974,
+            "current": 46.2325
+          },
+          "shares_pct": {
+            "previous": 4.828182,
+            "current": 5.031069
+          },
+          "source_rows": [
+            {
+              "code": "730",
+              "label_native": "Szkolnictwo wyższe i nauka"
+            },
+            {
+              "code": "801",
+              "label_native": "Oświata i wychowanie"
+            },
+            {
+              "code": "854",
+              "label_native": "Edukacyjna opieka wychowawcza"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 109.5832,
+            "current": 109.2315
+          },
+          "shares_pct": {
+            "previous": 11.890305,
+            "current": 11.886687
+          },
+          "source_rows": [
+            {
+              "code": "752",
+              "label_native": "Obrona narodowa"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 63.2689,
+            "current": 64.5118
+          },
+          "shares_pct": {
+            "previous": 6.86498,
+            "current": 7.020242
+          },
+          "source_rows": [
+            {
+              "code": "754",
+              "label_native": "Bezpieczeństwo publiczne i ochrona przeciwpożarowa"
+            },
+            {
+              "code": "755",
+              "label_native": "Wymiar sprawiedliwości"
+            },
+            {
+              "code": "751",
+              "label_native": "Urzędy naczelnych organów władzy państwowej, kontroli i ochrony prawa oraz sądownictwa"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 25.0739,
+            "current": 22.119
+          },
+          "shares_pct": {
+            "previous": 2.720639,
+            "current": 2.407013
+          },
+          "source_rows": [
+            {
+              "code": "600",
+              "label_native": "Transport i łączność"
+            },
+            {
+              "code": "720",
+              "label_native": "Informatyka"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 14.0599,
+            "current": 12.751
+          },
+          "shares_pct": {
+            "previous": 1.525567,
+            "current": 1.387577
+          },
+          "source_rows": [
+            {
+              "code": "010",
+              "label_native": "Rolnictwo i łowiectwo"
+            },
+            {
+              "code": "900",
+              "label_native": "Gospodarka komunalna i ochrona środowiska"
+            },
+            {
+              "code": "050",
+              "label_native": "Rybołówstwo i rybactwo"
+            },
+            {
+              "code": "925",
+              "label_native": "Ogrody botaniczne i zoologiczne oraz obszary chronione"
+            },
+            {
+              "code": "020",
+              "label_native": "Leśnictwo"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 2.9578,
+            "current": 7.0338
+          },
+          "shares_pct": {
+            "previous": 0.320936,
+            "current": 0.765426
+          },
+          "source_rows": [
+            {
+              "code": "700",
+              "label_native": "Gospodarka mieszkaniowa"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 8.4405,
+            "current": 10.4147
+          },
+          "shares_pct": {
+            "previous": 0.915835,
+            "current": 1.133339
+          },
+          "source_rows": [
+            {
+              "code": "100",
+              "label_native": "Górnictwo i kopalnictwo"
+            },
+            {
+              "code": "150",
+              "label_native": "Przetwórstwo przemysłowe"
+            },
+            {
+              "code": "500",
+              "label_native": "Handel"
+            },
+            {
+              "code": "710",
+              "label_native": "Działalność usługowa"
+            },
+            {
+              "code": "630",
+              "label_native": "Turystyka"
+            },
+            {
+              "code": "550",
+              "label_native": "Hotele i restauracje"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 313.3589,
+            "current": 283.1237
+          },
+          "shares_pct": {
+            "previous": 34.000949,
+            "current": 30.80982
+          },
+          "source_rows": [
+            {
+              "code": "758",
+              "label_native": "Różne rozliczenia"
+            },
+            {
+              "code": "757",
+              "label_native": "Obsługa długu publicznego"
+            },
+            {
+              "code": "750",
+              "label_native": "Administracja publiczna"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 7.2767,
+            "current": 6.2615
+          },
+          "shares_pct": {
+            "previous": 0.789557,
+            "current": 0.681383
+          },
+          "source_rows": [
+            {
+              "code": "921",
+              "label_native": "Kultura i ochrona dziedzictwa narodowego"
+            },
+            {
+              "code": "926",
+              "label_native": "Kultura fizyczna"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        }
+      ]
+    },
+    {
+      "code": "SWE",
+      "currency": "SEK",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "functional",
+      "scope_cs": "27 výdajových oblastí centrálního státního rozpočtu",
+      "scope_en": "27 central-government expenditure areas",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "skutečnost",
+          "status_en": "outcome"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "prognóza",
+          "status_en": "forecast"
+        }
+      },
+      "totals": {
+        "previous": 1402,
+        "current": 1530
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 421,
+            "current": 424
+          },
+          "shares_pct": {
+            "previous": 30.028531,
+            "current": 27.712418
+          },
+          "source_rows": [
+            {
+              "code": "10",
+              "label_native": "Financial security for those with illnesses and disabilities"
+            },
+            {
+              "code": "12",
+              "label_native": "Financial security for families and children"
+            },
+            {
+              "code": "14",
+              "label_native": "Labour market and working life"
+            },
+            {
+              "code": "11",
+              "label_native": "Financial security for the elderly"
+            },
+            {
+              "code": "15",
+              "label_native": "Financial support for students"
+            },
+            {
+              "code": "8",
+              "label_native": "Migration"
+            },
+            {
+              "code": "13",
+              "label_native": "Integration and gender equality"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 116,
+            "current": 127
+          },
+          "shares_pct": {
+            "previous": 8.273894,
+            "current": 8.300654
+          },
+          "source_rows": [
+            {
+              "code": "9",
+              "label_native": "Health care, medical care and social services"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 102,
+            "current": 105
+          },
+          "shares_pct": {
+            "previous": 7.275321,
+            "current": 6.862745
+          },
+          "source_rows": [
+            {
+              "code": "16",
+              "label_native": "Education and academic research"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 164,
+            "current": 221
+          },
+          "shares_pct": {
+            "previous": 11.697575,
+            "current": 14.444444
+          },
+          "source_rows": [
+            {
+              "code": "6",
+              "label_native": "Defence and contingency measures"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 86,
+            "current": 94
+          },
+          "shares_pct": {
+            "previous": 6.134094,
+            "current": 6.143791
+          },
+          "source_rows": [
+            {
+              "code": "4",
+              "label_native": "Justice"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 89,
+            "current": 104
+          },
+          "shares_pct": {
+            "previous": 6.348074,
+            "current": 6.797386
+          },
+          "source_rows": [
+            {
+              "code": "22",
+              "label_native": "Transport and communications"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 34,
+            "current": 40
+          },
+          "shares_pct": {
+            "previous": 2.425107,
+            "current": 2.614379
+          },
+          "source_rows": [
+            {
+              "code": "23",
+              "label_native": "Land- and water-based industries, rural areas and food"
+            },
+            {
+              "code": "20",
+              "label_native": "Climate, environment and nature"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 7,
+            "current": 7
+          },
+          "shares_pct": {
+            "previous": 0.499287,
+            "current": 0.457516
+          },
+          "source_rows": [
+            {
+              "code": "19",
+              "label_native": "Regional development"
+            },
+            {
+              "code": "18",
+              "label_native": "Planning, housing, construction and consumer policy"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 49,
+            "current": 57
+          },
+          "shares_pct": {
+            "previous": 3.495007,
+            "current": 3.72549
+          },
+          "source_rows": [
+            {
+              "code": "2",
+              "label_native": "Economy and financial administration"
+            },
+            {
+              "code": "3",
+              "label_native": "Taxes, customs and enforcement"
+            },
+            {
+              "code": "21",
+              "label_native": "Energy"
+            },
+            {
+              "code": "24",
+              "label_native": "Industry and trade"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 317,
+            "current": 334
+          },
+          "shares_pct": {
+            "previous": 22.610556,
+            "current": 21.830065
+          },
+          "source_rows": [
+            {
+              "code": "25",
+              "label_native": "General grants to local government"
+            },
+            {
+              "code": "27",
+              "label_native": "Contribution to the European Union"
+            },
+            {
+              "code": "7",
+              "label_native": "International development cooperation"
+            },
+            {
+              "code": "26",
+              "label_native": "Interest on central government debt"
+            },
+            {
+              "code": "1",
+              "label_native": "Governance"
+            },
+            {
+              "code": "5",
+              "label_native": "International cooperation"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 17,
+            "current": 17
+          },
+          "shares_pct": {
+            "previous": 1.212553,
+            "current": 1.111111
+          },
+          "source_rows": [
+            {
+              "code": "17",
+              "label_native": "Culture, media, religious communities and leisure"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        }
+      ]
+    },
+    {
+      "code": "CHE",
+      "currency": "CHF",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "functional",
+      "scope_cs": "Běžné výdaje Konfederace podle oblastí úkolů",
+      "scope_en": "Confederation current expenditure by task area",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "rozpočet",
+          "status_en": "budget"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "rozpočet",
+          "status_en": "budget"
+        }
+      },
+      "totals": {
+        "previous": 80.095,
+        "current": 84.292
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 30.106,
+            "current": 31.612
+          },
+          "shares_pct": {
+            "previous": 37.587864,
+            "current": 37.502966
+          },
+          "source_rows": [
+            {
+              "code": "1",
+              "label_native": "Soziale Wohlfahrt"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 8.039,
+            "current": 8.704
+          },
+          "shares_pct": {
+            "previous": 10.036831,
+            "current": 10.32601
+          },
+          "source_rows": [
+            {
+              "code": "4",
+              "label_native": "Bildung und Forschung"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 5.121,
+            "current": 5.372
+          },
+          "shares_pct": {
+            "previous": 6.393658,
+            "current": 6.373084
+          },
+          "source_rows": [
+            {
+              "code": "5",
+              "label_native": "Sicherheit"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 8.566,
+            "current": 8.699
+          },
+          "shares_pct": {
+            "previous": 10.6948,
+            "current": 10.320078
+          },
+          "source_rows": [
+            {
+              "code": "3",
+              "label_native": "Verkehr"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 3.588,
+            "current": 3.597
+          },
+          "shares_pct": {
+            "previous": 4.47968,
+            "current": 4.267309
+          },
+          "source_rows": [
+            {
+              "code": "6",
+              "label_native": "Landwirtschaft und Ernährung"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 17.517,
+            "current": 18.731
+          },
+          "shares_pct": {
+            "previous": 21.870279,
+            "current": 22.221563
+          },
+          "source_rows": [
+            {
+              "code": "2",
+              "label_native": "Finanzen und Steuern"
+            },
+            {
+              "code": "7",
+              "label_native": "Beziehungen zum Ausland – Internationale Zusammenarbeit"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 7.158,
+            "current": 7.577
+          },
+          "shares_pct": {
+            "previous": 8.936887,
+            "current": 8.988991
+          },
+          "source_rows": [
+            {
+              "code": "8",
+              "label_native": "Übrige Aufgabengebiete"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "UKR",
+      "currency": "UAH",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 1,
+      "dimension": "functional",
+      "scope_cs": "Výdaje státního rozpočtu podle funkční klasifikace",
+      "scope_en": "State-budget expenditure by functional classification",
+      "periods": {
+        "previous": {
+          "label": "2025",
+          "status_cs": "zákon po změnách",
+          "status_en": "amended budget act"
+        },
+        "current": {
+          "label": "2026",
+          "status_cs": "zákon po změnách",
+          "status_en": "amended budget act"
+        }
+      },
+      "totals": {
+        "previous": 4654.8486,
+        "current": 6407.0847
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 432.6742,
+            "current": 483.0824
+          },
+          "shares_pct": {
+            "previous": 9.295129,
+            "current": 7.539816
+          },
+          "source_rows": [
+            {
+              "code": "10",
+              "label_native": "Соціальний захист та соціальне забезпечення"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 216.8417,
+            "current": 253.4551
+          },
+          "shares_pct": {
+            "previous": 4.658405,
+            "current": 3.955857
+          },
+          "source_rows": [
+            {
+              "code": "07",
+              "label_native": "Охорона здоров'я"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 71.2371,
+            "current": 147.1688
+          },
+          "shares_pct": {
+            "previous": 1.530385,
+            "current": 2.29697
+          },
+          "source_rows": [
+            {
+              "code": "09",
+              "label_native": "Освіта"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 2253.1885,
+            "current": 3641.4545
+          },
+          "shares_pct": {
+            "previous": 48.405194,
+            "current": 56.834811
+          },
+          "source_rows": [
+            {
+              "code": "02",
+              "label_native": "Оборона"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 708.655,
+            "current": 722.6276
+          },
+          "shares_pct": {
+            "previous": 15.224018,
+            "current": 11.278571
+          },
+          "source_rows": [
+            {
+              "code": "03",
+              "label_native": "Громадський порядок, безпека та судова влада"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 10.9357,
+            "current": 12.1725
+          },
+          "shares_pct": {
+            "previous": 0.234931,
+            "current": 0.189985
+          },
+          "source_rows": [
+            {
+              "code": "05",
+              "label_native": "Охорона навколишнього природного середовища"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 8.6384,
+            "current": 0.6456
+          },
+          "shares_pct": {
+            "previous": 0.185579,
+            "current": 0.010076
+          },
+          "source_rows": [
+            {
+              "code": "06",
+              "label_native": "Житлово-комунальне господарство"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 153.071,
+            "current": 221.375
+          },
+          "shares_pct": {
+            "previous": 3.288421,
+            "current": 3.45516
+          },
+          "source_rows": [
+            {
+              "code": "04",
+              "label_native": "Економічна діяльність"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 783.6448,
+            "current": 904.8251
+          },
+          "shares_pct": {
+            "previous": 16.835022,
+            "current": 14.122259
+          },
+          "source_rows": [
+            {
+              "code": "01",
+              "label_native": "Загальнодержавні функції"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 15.9622,
+            "current": 20.2781
+          },
+          "shares_pct": {
+            "previous": 0.342916,
+            "current": 0.316495
+          },
+          "source_rows": [
+            {
+              "code": "08",
+              "label_native": "Духовний та фізичний розвиток"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": 0,
+            "current": 0
+          },
+          "shares_pct": {
+            "previous": 0,
+            "current": 0
+          },
+          "source_rows": []
+        }
+      ]
+    },
+    {
+      "code": "USA",
+      "currency": "USD",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 0.001,
+      "dimension": "administrative",
+      "scope_cs": "Federální výdaje (outlays) podle agentury, včetně netto kompenzačních příjmů",
+      "scope_en": "Federal outlays by agency, including net offsetting receipts",
+      "periods": {
+        "previous": {
+          "label": "FY 2025",
+          "status_cs": "skutečnost",
+          "status_en": "actual"
+        },
+        "current": {
+          "label": "FY 2026",
+          "status_cs": "odhad",
+          "status_en": "estimate"
+        }
+      },
+      "totals": {
+        "previous": 7011.105,
+        "current": 7540.434
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 1831.446,
+            "current": 1957.945
+          },
+          "shares_pct": {
+            "previous": 26.122073,
+            "current": 25.965946
+          },
+          "source_rows": [
+            {
+              "code": "12",
+              "label_native": "Social Security Administration"
+            },
+            {
+              "code": "21",
+              "label_native": "Office of Personnel Management"
+            },
+            {
+              "code": "9",
+              "label_native": "Department of Labor"
+            },
+            {
+              "code": "166",
+              "label_native": "Railroad Retirement Board"
+            },
+            {
+              "code": "190",
+              "label_native": "United Mine Workers of America Benefit Funds"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 2261.719,
+            "current": 2476.386
+          },
+          "shares_pct": {
+            "previous": 32.259095,
+            "current": 32.841425
+          },
+          "source_rows": [
+            {
+              "code": "6",
+              "label_native": "Department of Health and Human Services"
+            },
+            {
+              "code": "23",
+              "label_native": "Department of Veterans Affairs"
+            },
+            {
+              "code": "234",
+              "label_native": "Patient-Centered Outcomes Research Trust Fund"
+            },
+            {
+              "code": "28",
+              "label_native": "Medical Center Research Organizations"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 69.586,
+            "current": 97.723
+          },
+          "shares_pct": {
+            "previous": 0.992511,
+            "current": 1.295986
+          },
+          "source_rows": [
+            {
+              "code": "13",
+              "label_native": "Department of Education"
+            },
+            {
+              "code": "20",
+              "label_native": "National Aeronautics and Space Administration"
+            },
+            {
+              "code": "145",
+              "label_native": "National Science Foundation"
+            },
+            {
+              "code": "188",
+              "label_native": "Institute of Museum and Library Services"
+            },
+            {
+              "code": "106",
+              "label_native": "James Madison Memorial Fellowship Foundation"
+            },
+            {
+              "code": "48",
+              "label_native": "Barry Goldwater Scholarship and Excellence in Education Foundation"
+            },
+            {
+              "code": "99",
+              "label_native": "Harry S Truman Scholarship Foundation"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 944.938,
+            "current": 990.697
+          },
+          "shares_pct": {
+            "previous": 13.477733,
+            "current": 13.138461
+          },
+          "source_rows": [
+            {
+              "code": "5",
+              "label_native": "Department of Defense--Military Programs"
+            },
+            {
+              "code": "29",
+              "label_native": "Other Defense--Civil Programs"
+            },
+            {
+              "code": "78",
+              "label_native": "Defense Nuclear Facilities Safety Board"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 172.461,
+            "current": 180.837
+          },
+          "shares_pct": {
+            "previous": 2.459826,
+            "current": 2.398231
+          },
+          "source_rows": [
+            {
+              "code": "18",
+              "label_native": "Department of Homeland Security"
+            },
+            {
+              "code": "8",
+              "label_native": "Department of Justice"
+            },
+            {
+              "code": "2",
+              "label_native": "Judicial Branch"
+            },
+            {
+              "code": "182",
+              "label_native": "Intelligence Community Management Account"
+            },
+            {
+              "code": "26",
+              "label_native": "Federal Drug Control Programs"
+            },
+            {
+              "code": "110",
+              "label_native": "Legal Services Corporation"
+            },
+            {
+              "code": "50",
+              "label_native": "Central Intelligence Agency"
+            },
+            {
+              "code": "205",
+              "label_native": "Court Services and Offender Supervision Agency for the District of Columbia"
+            },
+            {
+              "code": "239",
+              "label_native": "Public Defender Service for the District of Columbia"
+            },
+            {
+              "code": "76",
+              "label_native": "United States Court of Appeals for Veterans Claims"
+            },
+            {
+              "code": "172",
+              "label_native": "State Justice Institute"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 139.959,
+            "current": 139.926
+          },
+          "shares_pct": {
+            "previous": 1.996247,
+            "current": 1.855676
+          },
+          "source_rows": [
+            {
+              "code": "16",
+              "label_native": "Department of Transportation"
+            },
+            {
+              "code": "30",
+              "label_native": "Corps of Engineers--Civil Works"
+            },
+            {
+              "code": "147",
+              "label_native": "National Transportation Safety Board"
+            },
+            {
+              "code": "186",
+              "label_native": "Surface Transportation Board"
+            },
+            {
+              "code": "93",
+              "label_native": "Federal Maritime Commission"
+            },
+            {
+              "code": "232",
+              "label_native": "National Railroad Passenger Corporation Office of Inspector General"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 286.91,
+            "current": 285.314
+          },
+          "shares_pct": {
+            "previous": 4.092222,
+            "current": 3.783788
+          },
+          "source_rows": [
+            {
+              "code": "3",
+              "label_native": "Department of Agriculture"
+            },
+            {
+              "code": "7",
+              "label_native": "Department of the Interior"
+            },
+            {
+              "code": "15",
+              "label_native": "Environmental Protection Agency"
+            },
+            {
+              "code": "95",
+              "label_native": "Federal Mine Safety and Health Review Commission"
+            },
+            {
+              "code": "204",
+              "label_native": "Chemical Safety and Hazard Investigation Board"
+            },
+            {
+              "code": "197",
+              "label_native": "Morris K. Udall and Stewart L. Udall Foundation"
+            },
+            {
+              "code": "112",
+              "label_native": "Marine Mammal Commission"
+            },
+            {
+              "code": "238",
+              "label_native": "Gulf Coast Ecosystem Restoration Council"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 51.718,
+            "current": 77.039
+          },
+          "shares_pct": {
+            "previous": 0.737658,
+            "current": 1.021679
+          },
+          "source_rows": [
+            {
+              "code": "19",
+              "label_native": "Department of Housing and Urban Development"
+            },
+            {
+              "code": "219",
+              "label_native": "Affordable Housing Program"
+            },
+            {
+              "code": "223",
+              "label_native": "Federal Housing Finance Agency"
+            },
+            {
+              "code": "150",
+              "label_native": "Neighborhood Reinvestment Corporation"
+            },
+            {
+              "code": "119",
+              "label_native": "National Capital Planning Commission"
+            },
+            {
+              "code": "101",
+              "label_native": "United States Interagency Council on Homelessness"
+            },
+            {
+              "code": "156",
+              "label_native": "Office of Navajo and Hopi Indian Relocation"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 95.459,
+            "current": 107.463
+          },
+          "shares_pct": {
+            "previous": 1.36154,
+            "current": 1.425157
+          },
+          "source_rows": [
+            {
+              "code": "14",
+              "label_native": "Department of Energy"
+            },
+            {
+              "code": "4",
+              "label_native": "Department of Commerce"
+            },
+            {
+              "code": "87",
+              "label_native": "Federal Communications Commission"
+            },
+            {
+              "code": "22",
+              "label_native": "Small Business Administration"
+            },
+            {
+              "code": "236",
+              "label_native": "Bureau of Consumer Financial Protection"
+            },
+            {
+              "code": "169",
+              "label_native": "Securities and Exchange Commission"
+            },
+            {
+              "code": "70",
+              "label_native": "Commodity Futures Trading Commission"
+            },
+            {
+              "code": "103",
+              "label_native": "International Trade Commission"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 1512.503,
+            "current": 1593.797
+          },
+          "shares_pct": {
+            "previous": 21.572962,
+            "current": 21.136675
+          },
+          "source_rows": [
+            {
+              "code": "11",
+              "label_native": "Department of the Treasury"
+            },
+            {
+              "code": "10",
+              "label_native": "Department of State"
+            },
+            {
+              "code": "27",
+              "label_native": "International Assistance Programs"
+            },
+            {
+              "code": "1",
+              "label_native": "Legislative Branch"
+            },
+            {
+              "code": "17",
+              "label_native": "General Services Administration"
+            },
+            {
+              "code": "80",
+              "label_native": "District of Columbia"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 2.49,
+            "current": 2.12
+          },
+          "shares_pct": {
+            "previous": 0.035515,
+            "current": 0.028115
+          },
+          "source_rows": [
+            {
+              "code": "171",
+              "label_native": "Smithsonian Institution"
+            },
+            {
+              "code": "141",
+              "label_native": "National Endowment for the Humanities"
+            },
+            {
+              "code": "140",
+              "label_native": "National Endowment for the Arts"
+            },
+            {
+              "code": "175",
+              "label_native": "United States Holocaust Memorial Museum"
+            },
+            {
+              "code": "100",
+              "label_native": "Institute of American Indian and Alaska Native Culture and Arts Development"
+            },
+            {
+              "code": "55",
+              "label_native": "Commission of Fine Arts"
+            },
+            {
+              "code": "43",
+              "label_native": "Advisory Council on Historic Preservation"
+            },
+            {
+              "code": "75",
+              "label_native": "Corporation for Public Broadcasting"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": -358.084,
+            "current": -368.813
+          },
+          "shares_pct": {
+            "previous": -5.107383,
+            "current": -4.891138
+          },
+          "source_rows": [
+            {
+              "code": "160",
+              "label_native": "Postal Service"
+            },
+            {
+              "code": "195",
+              "label_native": "Corporation for National and Community Service"
+            },
+            {
+              "code": "174",
+              "label_native": "Tennessee Valley Authority"
+            },
+            {
+              "code": "208",
+              "label_native": "U.S. Agency for Global Media"
+            },
+            {
+              "code": "118",
+              "label_native": "National Archives and Records Administration"
+            },
+            {
+              "code": "81",
+              "label_native": "Equal Employment Opportunity Commission"
+            },
+            {
+              "code": "216",
+              "label_native": "Public Company Accounting Oversight Board"
+            },
+            {
+              "code": "143",
+              "label_native": "National Labor Relations Board"
+            },
+            {
+              "code": "45",
+              "label_native": "Appalachian Regional Commission"
+            },
+            {
+              "code": "74",
+              "label_native": "Consumer Product Safety Commission"
+            },
+            {
+              "code": "207",
+              "label_native": "Denali Commission"
+            },
+            {
+              "code": "187",
+              "label_native": "Federal Permitting Improvement Steering Council"
+            },
+            {
+              "code": "151",
+              "label_native": "Nuclear Regulatory Commission"
+            },
+            {
+              "code": "220",
+              "label_native": "Electric Reliability Organization"
+            },
+            {
+              "code": "233",
+              "label_native": "Securities Investor Protection Corporation"
+            },
+            {
+              "code": "206",
+              "label_native": "Presidio Trust"
+            },
+            {
+              "code": "89",
+              "label_native": "Federal Election Commission"
+            },
+            {
+              "code": "215",
+              "label_native": "Election Assistance Commission"
+            },
+            {
+              "code": "176",
+              "label_native": "United States Institute of Peace"
+            },
+            {
+              "code": "60",
+              "label_native": "Payment to Puerto Rico Oversight Board"
+            },
+            {
+              "code": "211",
+              "label_native": "Delta Regional Authority"
+            },
+            {
+              "code": "114",
+              "label_native": "Merit Systems Protection Board"
+            },
+            {
+              "code": "94",
+              "label_native": "Federal Mediation and Conciliation Service"
+            },
+            {
+              "code": "235",
+              "label_native": "Corporation for Travel Promotion"
+            },
+            {
+              "code": "230",
+              "label_native": "Northern Border Regional Commission"
+            },
+            {
+              "code": "90",
+              "label_native": "Federal Financial Institutions Examination Council"
+            },
+            {
+              "code": "157",
+              "label_native": "Office of Special Counsel"
+            },
+            {
+              "code": "92",
+              "label_native": "Federal Labor Relations Authority"
+            },
+            {
+              "code": "217",
+              "label_native": "Standard Setting Body"
+            },
+            {
+              "code": "155",
+              "label_native": "Office of Government Ethics"
+            },
+            {
+              "code": "225",
+              "label_native": "Council of the Inspectors General on Integrity and Efficiency"
+            },
+            {
+              "code": "231",
+              "label_native": "Southeast Crescent Regional Commission"
+            },
+            {
+              "code": "144",
+              "label_native": "National Mediation Board"
+            },
+            {
+              "code": "154",
+              "label_native": "Occupational Safety and Health Review Commission"
+            },
+            {
+              "code": "58",
+              "label_native": "Commission on Civil Rights"
+            },
+            {
+              "code": "222",
+              "label_native": "Privacy and Civil Liberties Oversight Board"
+            },
+            {
+              "code": "69",
+              "label_native": "Committee for Purchase From People Who Are Blind or Severely Disabled"
+            },
+            {
+              "code": "46",
+              "label_native": "Access Board"
+            },
+            {
+              "code": "36",
+              "label_native": "Concrete Masonry Products Board"
+            },
+            {
+              "code": "83",
+              "label_native": "Farm Credit Administration"
+            },
+            {
+              "code": "37",
+              "label_native": "Public Buildings Reform Board"
+            },
+            {
+              "code": "227",
+              "label_native": "National Oilheat Research Alliance"
+            },
+            {
+              "code": "136",
+              "label_native": "National Council on Disability"
+            },
+            {
+              "code": "153",
+              "label_native": "Nuclear Waste Technical Review Board"
+            },
+            {
+              "code": "107",
+              "label_native": "Japan-United States Friendship Commission"
+            },
+            {
+              "code": "39",
+              "label_native": "Administrative Conference of the United States"
+            },
+            {
+              "code": "31",
+              "label_native": "National Commission on Military, National, and Public Service"
+            },
+            {
+              "code": "202",
+              "label_native": "Other Commissions and Boards"
+            },
+            {
+              "code": "33",
+              "label_native": "National Commission on Military Aviation Safety"
+            },
+            {
+              "code": "193",
+              "label_native": "Military Compensation and Retirement Modernization Commission"
+            },
+            {
+              "code": "25",
+              "label_native": "Civil Rights Cold Case Records Review Board"
+            },
+            {
+              "code": "34",
+              "label_native": "400 Years of African-American History Commission"
+            },
+            {
+              "code": "96",
+              "label_native": "Federal Retirement Thrift Investment Board"
+            },
+            {
+              "code": "229",
+              "label_native": "Southwest Border Regional Commission"
+            },
+            {
+              "code": "242",
+              "label_native": "Miscellaneous Receipts Below the Reporting Threshold"
+            },
+            {
+              "code": "240",
+              "label_native": "Allowances"
+            },
+            {
+              "code": "97",
+              "label_native": "Federal Trade Commission"
+            },
+            {
+              "code": "82",
+              "label_native": "Export-Import Bank of the United States"
+            },
+            {
+              "code": "24",
+              "label_native": "Executive Office of the President"
+            },
+            {
+              "code": "86",
+              "label_native": "Farm Credit System Insurance Corporation"
+            },
+            {
+              "code": "138",
+              "label_native": "National Credit Union Administration"
+            },
+            {
+              "code": "88",
+              "label_native": "Federal Deposit Insurance Corporation"
+            },
+            {
+              "code": "241",
+              "label_native": "Undistributed Offsetting Receipts"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
