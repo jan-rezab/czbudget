@@ -5,6 +5,7 @@ const routes = [
   ["homepage", "/?lang=cs"],
   ["country", "/country.html?code=CZE&lang=cs"],
   ["capitals", "/eu-capitals.html?lang=cs"],
+  ["international municipalities", "/municipalities.html?lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/obce/praha/?lang=cs"],
   ["directory", "/cz/obce/?lang=cs"],
@@ -34,6 +35,19 @@ test("language state survives navigation", async ({ page }) => {
   await page.goto("/country.html?code=DEU&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("#country-name")).toContainText("Germany");
+});
+
+test("international municipality directory filters by country, year and search", async ({ page }) => {
+  await page.goto("/municipalities.html?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(7);
+  await expect(page.locator("#total-entities")).not.toHaveText("—");
+  await page.locator("#country-filter").selectOption("DNK");
+  await expect(page.locator("#directory-count")).toContainText("98 entities");
+  await page.locator("#municipality-search").fill("Copenhagen");
+  await expect(page.locator("#municipality-grid .municipality-card")).toHaveCount(1);
+  await expect(page.locator("#municipality-grid")).toContainText("Copenhagen");
+  await page.locator("#year-filter").selectOption("2024");
+  await expect(page.locator("#directory-count")).toContainText("1 entities");
 });
 
 test("country profiles expose sortable ten-year health, social and transport comparisons", async ({ page }) => {
