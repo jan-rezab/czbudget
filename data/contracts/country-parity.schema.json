@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://czbudget-public-258433468858.europe-west1.run.app/data/contracts/country-parity.schema.json",
+  "title": "Public Spending Data country parity contract",
+  "type": "object",
+  "required": ["schema_version", "contract", "generated_at", "country_count", "rules", "datasets", "countries"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "contract": { "const": "country-parity.v1" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "country_count": { "type": "integer", "minimum": 1 },
+    "rules": { "type": "object" },
+    "datasets": { "type": "object", "additionalProperties": { "type": "string" } },
+    "countries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["country_code", "currency_code", "profile", "coverage", "modules", "sources"],
+        "properties": {
+          "country_code": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "currency_code": { "type": "string", "pattern": "^[A-Z]{3}$" },
+          "profile": { "type": "string" },
+          "coverage": {
+            "type": "object",
+            "required": ["loaded_modules", "total_modules", "missing_dimensions"]
+          },
+          "modules": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["status", "coverage", "missing_dimensions"],
+              "properties": {
+                "status": { "enum": ["loaded", "unavailable"] },
+                "coverage": { "type": "string" },
+                "missing_dimensions": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          },
+          "sources": { "type": "array" }
+        }
+      }
+    }
+  }
+}

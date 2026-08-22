@@ -8,7 +8,7 @@
   <link id="alternate-cs" rel="alternate" hreflang="cs" href="https://czbudget-public-258433468858.europe-west1.run.app/country.html?lang=cs">
   <link id="alternate-en" rel="alternate" hreflang="en" href="https://czbudget-public-258433468858.europe-west1.run.app/country.html?lang=en">
   <meta id="og-url" property="og:url" content="https://czbudget-public-258433468858.europe-west1.run.app/country.html">
-  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css?v=20260822-section-rail"><link rel="stylesheet" href="styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="chart-system.css?v=20260821-benchmark-flags"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260822-provider-network"><link rel="stylesheet" href="country-functions.css?v=20260822-transport-deep-dive"><link rel="stylesheet" href="country-cash-in.css?v=20260822-cash-in"><script src="country.js?v=20260821-benchmark-flags" defer></script><script src="country-cash-in.js?v=20260822-cash-in" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-functions.js?v=20260822-transport-deep-dive" defer></script><script src="country-health.js?v=20260822-czech-flow" defer></script><script src="country-providers.js?v=20260822-network" defer></script><script src="sortable-tables.js?v=20260822" defer></script><script src="global-nav.js?v=20260822-international-municipalities" defer></script>
+  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css?v=20260822-section-rail"><link rel="stylesheet" href="styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="chart-system.css?v=20260821-benchmark-flags"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260822-provider-network"><link rel="stylesheet" href="country-functions.css?v=20260822-transport-deep-dive"><link rel="stylesheet" href="country-cash-in.css?v=20260822-cash-in"><link rel="stylesheet" href="country-parity.css?v=20260822-parity-contract"><script src="country.js?v=20260821-benchmark-flags" defer></script><script src="country-parity.js?v=20260822-parity-contract" defer></script><script src="country-cash-in.js?v=20260822-cash-in" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-functions.js?v=20260822-transport-deep-dive" defer></script><script src="country-health.js?v=20260822-czech-flow" defer></script><script src="country-providers.js?v=20260822-network" defer></script><script src="sortable-tables.js?v=20260822" defer></script><script src="global-nav.js?v=20260822-international-municipalities" defer></script>
 </head>
 <body class="country-page">
   <header class="site-header compact-header has-global-nav">
@@ -19,7 +19,8 @@
   <nav class="context-rail country-context-rail" aria-label="Country sections">
     <a href="#top" data-i18n="navOverview">Přehled</a>
     <a href="#scope" data-i18n="navScope">Rozsah</a>
-    <a href="#cash-in" data-i18n="navCashIn">Cash-in</a>
+    <a href="#data-parity" data-i18n="navData">Data</a>
+    <a href="#cash-in" data-i18n="navCashIn">Příjmy</a>
     <a href="#trend" data-i18n="navTrend">Vývoj</a>
     <a href="#macro" data-i18n="navMacro">Makro</a>
     <a href="#spending" data-i18n="navSpending">Výdaje</a>
@@ -46,21 +47,23 @@
       <p class="scope-nonadditivity" id="scope-nonadditivity"></p>
     </section>
 
+    <section class="country-section country-parity-section" id="data-parity" aria-labelledby="country-parity-title"><div id="country-parity-root" aria-live="polite"></div></section>
+
     <section class="country-section country-cash-in-section" id="cash-in" aria-labelledby="country-cash-in-title"><div id="country-cash-in-root" aria-live="polite"></div></section>
 
     <section class="country-section" id="trend">
       <div class="detail-heading"><div><span class="kicker" data-i18n="trendKicker">01 / Dvacetiletý vývoj</span><h2 data-i18n="trendTitle">Veřejné finance v čase.</h2></div><p data-i18n="trendCopy">Harmonizované ukazatele IMF umožňují číst dlouhodobý fiskální příběh ve společné definici sektoru vládních institucí.</p></div>
       <div class="country-chart-grid">
         <article class="country-chart-panel"><div class="chart-tabs"><button data-chart="balance_pct_gdp" class="active" data-i18n="balance">Saldo</button><button data-chart="gross_debt_pct_gdp" data-i18n="debt">Dluh</button><button data-chart="expenditure_pct_gdp" data-i18n="expense">Výdaje</button><button data-chart="revenue_pct_gdp" data-i18n="revenue">Příjmy</button></div><div class="chart-view-tabs" aria-label="Zobrazení hodnot"><span data-i18n="display">Zobrazení</span><button type="button" data-chart-view="ratio" class="active" aria-pressed="true" data-i18n="ratioView">% HDP</button><button type="button" data-chart-view="nominal" aria-pressed="false" data-i18n="nominalView">Nominálně</button><button type="button" data-chart-view="real" aria-pressed="false" data-i18n="realView">Očištěno o inflaci</button></div><h3 id="fiscal-chart-title">Saldo / % HDP</h3><div id="country-chart"></div></article>
-        <article class="country-chart-panel"><div class="chart-label"><span>GDP / CAPITA</span><small id="gdp-unit-label">CZK</small></div><h3 data-i18n="gdpPcTitle">HDP na obyvatele</h3><div id="gdp-per-capita-chart"></div></article>
+        <article class="country-chart-panel"><div class="chart-label"><span data-i18n="gdpTag">HDP / OBYV.</span><small id="gdp-unit-label">CZK</small></div><h3 data-i18n="gdpPcTitle">HDP na obyvatele</h3><div id="gdp-per-capita-chart"></div></article>
       </div>
     </section>
 
     <section class="country-section" id="macro">
       <div class="detail-heading"><div><span class="kicker" data-i18n="macroKicker">02 / Makro kontext</span><h2 data-i18n="macroTitle">Výkon, dluh a kupní síla.</h2></div><p data-i18n="macroCopy">Měnové částky se na detailu zobrazují v místní měně; přepínač je přepočítá na EUR. PPP zůstává v mezinárodních dolarech.</p></div>
       <div class="country-chart-grid">
-        <article class="country-chart-panel"><div class="chart-label"><span>DEBT / GDP</span><small>%</small></div><h3 data-i18n="debtRatioTitle">Hrubý dluh k HDP</h3><div id="debt-ratio-chart"></div></article>
-        <article class="country-chart-panel"><div class="chart-label"><span>PPP / CAPITA</span><small>intl$</small></div><h3 data-i18n="pppTitle">HDP na obyvatele v paritě kupní síly</h3><div id="ppp-chart"></div></article>
+        <article class="country-chart-panel"><div class="chart-label"><span data-i18n="debtTag">DLUH / HDP</span><small>%</small></div><h3 data-i18n="debtRatioTitle">Hrubý dluh k HDP</h3><div id="debt-ratio-chart"></div></article>
+        <article class="country-chart-panel"><div class="chart-label"><span data-i18n="pppTag">PPP / OBYV.</span><small>intl$</small></div><h3 data-i18n="pppTitle">HDP na obyvatele v paritě kupní síly</h3><div id="ppp-chart"></div></article>
       </div>
     </section>
 

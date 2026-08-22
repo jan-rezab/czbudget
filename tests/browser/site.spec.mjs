@@ -3,6 +3,9 @@ import AxeBuilder from "@axe-core/playwright";
 
 const routes = [
   ["homepage", "/?lang=cs"],
+  ["comparison", "/comparison.html?lang=cs"],
+  ["methodology", "/methodology.html?lang=cs"],
+  ["about", "/about.html?lang=cs"],
   ["country", "/country.html?code=CZE&lang=cs"],
   ["capitals", "/eu-capitals.html?lang=cs"],
   ["international municipalities", "/municipalities/?lang=cs"],
@@ -42,6 +45,37 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("comparison and methodology live outside the homepage", async ({ page }) => {
+  await page.goto("/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#compare")).toHaveCount(0);
+  await expect(page.locator("#method")).toHaveCount(0);
+  await expect(page.locator('.home-hero a[href^="comparison.html"]')).toBeVisible();
+  await expect(page.locator(".glorious-footer")).toContainText("Hlídač státu, z.ú.");
+
+  await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#compare-table tr")).toHaveCount(10);
+  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(10);
+  await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
+
+  await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator(".method-grid-expanded article")).toHaveCount(6);
+  await expect(page.locator(".page-hero")).toContainText("Never oversimplify");
+  await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
+});
+
+test("about page and footer credit Hlidac statu in both languages", async ({ page }) => {
+  await page.goto("/about.html?lang=cs", { waitUntil: "networkidle" });
+  await expect(page.locator(".maker-showcase")).toContainText("Hlídač státu, z.ú.");
+  await expect(page.locator(".maker-showcase")).toContainText("nezisková organizace");
+  await expect(page.locator(".glorious-footer")).toContainText("Projekt připravuje");
+
+  await page.locator('[data-lang="en"]').click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator(".maker-showcase")).toContainText("nonprofit watchdog organisation");
+  await expect(page.locator(".glorious-footer")).toContainText("Created by");
+  await expect(page).toHaveURL(/about\.html\?lang=en/);
+});
+
 test("stored English never paints the Czech fallback", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("psd-lang", "en"));
   await page.route("**/lib/data/sovereign-benchmark.v1.json", async (route) => {
@@ -69,11 +103,16 @@ test("deep dives expose a dedicated topic hierarchy and country-filtered transpo
   await page.goto("/deep-dives/transportation/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country")).toHaveValue("CZE");
   await expect(page.locator(".transport-network-year")).toHaveCount(10);
+  await expect(page.locator(".transport-budget-detail")).toContainText("Budget anatomy");
+  await expect(page.locator(".transport-budget-legend > div")).toHaveCount(6);
+  await expect(page.locator(".transport-investment-trend span")).toHaveCount(10);
+  await expect(page.locator(".transport-budget-detail")).toContainText("291,427 mil.");
   await expect(page.locator(".transport-comparison tbody tr")).toHaveCount(10);
   await page.locator("#deep-dive-country").selectOption("POL");
   await expect(page).toHaveURL(/code=POL/);
   await expect(page.locator("#deep-dive-country-name")).toHaveText("Poland");
   await expect(page.locator(".transport-kpis")).toContainText("1,888 km");
+  await expect(page.locator(".transport-budget-detail")).toContainText("125,864 mil.");
 });
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {

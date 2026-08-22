@@ -3,6 +3,7 @@
 import fs from "node:fs/promises";
 
 const NRPZS = "https://datanzis.uzis.gov.cz/data/NR-01-NRPZS/NR-01-06/Otevrena-data-NR-01-06-nrpzs-mista-poskytovani-zdravotnich-sluzeb.csv";
+const CMS_HOSPITALS = "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0?offset=0&limit=6000";
 
 function csvRows(text) {
   const rows=[]; let row=[], field="", quoted=false;
@@ -43,13 +44,26 @@ for(const row of hospitalRows) {
 const records=[...facilities.values()].map(item=>({...item,care_fields:[...item.care_fields].sort(),care_forms:[...item.care_forms].sort()})).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
 const providers=new Set(records.map(item=>item.provider_id).filter(Boolean));
 const regions=Object.fromEntries(Object.entries(Object.groupBy(records,item=>item.region||"—")).map(([key,items])=>[key,items.length]));
+const cmsResponse=await fetch(CMS_HOSPITALS,{headers:{accept:"application/json","user-agent":"PublicSpendingData/1.0"}});
+if(!cmsResponse.ok)throw new Error(`CMS hospitals ${cmsResponse.status}`);
+const cmsPayload=await cmsResponse.json();
+const usRecords=(cmsPayload.results||[]).map(row=>({
+  id:`USA:${row.facility_id}`,provider_id:row.facility_id,name:row.facility_name,provider_name:row.facility_name,
+  facility_type:row.hospital_type,legal_form:row.hospital_ownership,region:row.state,district:row.countyparish,
+  municipality:row.citytown,address:[row.address,row.citytown,row.state,row.zip_code].filter(Boolean).join(" "),
+  coordinates:null,care_fields:[],care_forms:[],website:null,telephone:row.telephone_number||null,
+  emergency_services:row.emergency_services==="Yes",overall_rating:row.hospital_overall_rating||null
+})).sort((a,b)=>a.name.localeCompare(b.name,"en"));
+const usRegions=Object.fromEntries(Object.entries(Object.groupBy(usRecords,item=>item.region||"—")).map(([key,items])=>[key,items.length]));
 const payload={
   schema_version:"1.0.0",generated_at:new Date().toISOString(),
   methodology:{cs:"Síť obsahuje aktivní místa NRPZS, u nichž forma péče zahrnuje lůžkovou péči. Více řádků oborů stejného místa je sloučeno. Počet zařízení není počet budov ani počet nemocničních lůžek.",en:"The network contains active NRPZS locations whose care form includes inpatient care. Multiple specialty rows for the same location are merged. Facility count is neither a building count nor a bed count."},
   countries:{
     CZE:{coverage:"facility_register",facility_count:records.length,provider_count:providers.size,regions,facilities:records,source:{title:"ÚZIS NRPZS · Místa poskytování zdravotních služeb",url:NRPZS,license:"CC BY 4.0",update_frequency:"monthly"},payments:{coverage:"not_open_at_facility_level",note_cs:"NRHZS obsahuje individuální úhrady, veřejný otevřený export na úrovni poskytovatele však není publikován.",note_en:"NRHZS contains individual reimbursements, but no public facility-level open export is published."}},
-    DEU:{coverage:"source_adapter_pending"},DNK:{coverage:"source_adapter_pending"},FRA:{coverage:"source_adapter_pending"},GBR:{coverage:"source_adapter_pending"},POL:{coverage:"source_adapter_pending"},SWE:{coverage:"source_adapter_pending"},CHE:{coverage:"source_adapter_pending"},USA:{coverage:"source_adapter_pending"},UKR:{coverage:"source_adapter_pending"}
+    DEU:{coverage:"source_adapter_pending"},DNK:{coverage:"source_adapter_pending"},FRA:{coverage:"source_adapter_pending"},GBR:{coverage:"source_adapter_pending"},POL:{coverage:"source_adapter_pending"},SWE:{coverage:"source_adapter_pending"},CHE:{coverage:"source_adapter_pending"},
+    USA:{coverage:"medicare_registered_hospitals",facility_count:usRecords.length,provider_count:usRecords.length,regions:usRegions,facilities:usRecords,source:{title:"CMS Provider Data Catalog · Hospital General Information",url:"https://data.cms.gov/provider-data/dataset/xubh-q36u",api_url:CMS_HOSPITALS,update_frequency:"quarterly"},payments:{coverage:"cost_reports_separate_adapter",note_cs:"Registr zařízení je načten; účetní výkazy Medicare HCRIS zůstávají samostatným účetním faktem.",note_en:"The facility register is loaded; Medicare HCRIS cost reports remain a separate accounting fact."}},
+    UKR:{coverage:"source_adapter_pending"}
   }
 };
 await fs.writeFile(new URL("../data/country-provider-networks.v1.json",import.meta.url),`${JSON.stringify(payload,null,2)}\n`);
-console.log(`Wrote ${records.length} Czech inpatient locations across ${providers.size} providers`);
+console.log(`Wrote ${records.length} Czech inpatient locations and ${usRecords.length} Medicare-registered U.S. hospitals`);
