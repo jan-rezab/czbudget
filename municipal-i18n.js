@@ -13,12 +13,15 @@
   const root = location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/")
     ? (location.pathname.split("/").filter(Boolean).length > 2 ? "../../../" : "../../")
     : "../../";
+  if (!document.querySelector('link[href*="section-rail"]')) {
+    const railStyles = document.createElement("link");
+    railStyles.rel = "stylesheet"; railStyles.href = `${root}styles.css?v=20260822-section-rail`; document.head.append(railStyles);
+  }
   const header = document.querySelector(".cz-header");
   if (header) {
+    header.classList.add("has-global-nav");
     const nav = header.querySelector("nav");
-    if (nav) nav.innerHTML = lang === "en"
-      ? `<a href="${root}index.html?lang=en">Overview</a><a href="${root}cesko.html?lang=en">Czechia</a><a href="${root}cz/obce/?lang=en" aria-current="page">Municipalities &amp; regions</a>`
-      : `<a href="${root}index.html?lang=cs">Přehled</a><a href="${root}cesko.html?lang=cs">Česko</a><a href="${root}cz/obce/?lang=cs" aria-current="page">Obce a kraje</a>`;
+    if (nav) { nav.className = "global-nav"; nav.setAttribute("aria-label", lang === "en" ? "Primary navigation" : "Hlavní navigace"); }
     const switcher = document.createElement("div");
     switcher.className = "lang-switch municipal-lang-switch";
     switcher.setAttribute("aria-label", lang === "en" ? "Language" : "Jazyk");
@@ -26,7 +29,44 @@
     const datasetPill = header.querySelector(".dataset-pill");
     if (datasetPill) datasetPill.replaceWith(switcher);
     else header.append(switcher);
+    if (!document.querySelector('script[src*="global-nav.js"]')) {
+      const globalNav = document.createElement("script");
+      globalNav.src = `${root}global-nav.js`;
+      globalNav.defer = true;
+      document.head.append(globalNav);
+    }
   }
+
+  const main = document.querySelector("main");
+  if (main && !document.querySelector(".context-rail")) {
+    const labels = lang === "en"
+      ? { overview:"Overview", combined:"Combined", entities:"Entities", trend:"Trend", budget:"Budget", breakdown:"Breakdown", method:"Method" }
+      : { overview:"Přehled", combined:"Součet", entities:"Subjekty", trend:"Vývoj", budget:"Rozpočet", breakdown:"Členění", method:"Metodika" };
+    const firstSection = main.querySelector("section"); if (firstSection && !firstSection.id) firstSection.id = "overview";
+    const combined = document.querySelector(".territorial-stack"); if (combined) combined.id = "combined";
+    const directory = document.querySelector(".directory"); if (directory && !directory.id) directory.id = "entities";
+    const budget = document.querySelector("#rozpocet");
+    const history = document.querySelector("#history-explorer");
+    const method = document.querySelector("#metodika");
+    const items = [["overview",labels.overview],["combined",labels.combined],[history?.id,labels.trend],[budget?.id,labels.budget],[directory?.id,labels.entities],[method?.id,labels.method]].filter(([id]) => id && document.getElementById(id));
+    const rail = document.createElement("nav"); rail.className = "context-rail municipal-context-rail"; rail.setAttribute("aria-label", lang === "en" ? "Page sections" : "Sekce stránky");
+    rail.innerHTML = items.map(([id,label]) => `<a href="#${id}">${label}</a>`).join("");
+    header.insertAdjacentElement("afterend", rail);
+    const updateRail = () => {
+      const current = [...items].reverse().map(([id]) => document.getElementById(id)).find((section) => section.getBoundingClientRect().top <= 150) || document.getElementById(items[0]?.[0]);
+      rail.querySelectorAll("a").forEach((link) => link.toggleAttribute("aria-current", link.hash === `#${current?.id}`));
+    };
+    addEventListener("scroll", updateRail, { passive:true }); updateRail();
+  }
+
+  document.querySelectorAll(".territorial-stack .layer-row").forEach((row, index, rows) => {
+    row.classList.add(index === rows.length - 1 ? "combined-layer" : index === 0 ? "municipal-layer" : "region-layer");
+    const label = document.createElement("small"); label.className = "consolidation-badge";
+    label.textContent = index === rows.length - 1
+      ? (lang === "en" ? "Deduplicated view · Prague once" : "Deduplikovaný pohled · Praha jednou")
+      : index === 0 ? (lang === "en" ? "Municipal layer" : "Obecní vrstva") : (lang === "en" ? "Regional layer" : "Krajská vrstva");
+    row.querySelector(":scope > div")?.append(label);
+  });
 
   const escapeBudgetHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -68,7 +108,7 @@
         return `<div class="breakdown-rank-row"><div class="breakdown-rank-label"><code>${escapeBudgetHtml(code)}</code><strong>${escapeBudgetHtml(nameFor(dimension, code))}</strong><span>${compact.format(amount)} ${currencySuffix} · ${percent.format(ratio)} %</span></div><div class="breakdown-rank-track"><i style="width:${Math.min(100, Math.abs(amount) / maximum * 100).toFixed(2)}%"></i></div></div>`;
       }).join("");
       const tableRows = entries.map(([code, amount]) => `<tr><td><code>${escapeBudgetHtml(code)}</code></td><th scope="row">${escapeBudgetHtml(nameFor(dimension, code))}</th><td>${money.format(amount)}</td><td>${total ? `${percent.format(amount / total * 100)} %` : "—"}</td></tr>`).join("");
-      return `<article class="budget-breakdown-panel"><header><div><span>${escapeBudgetHtml(note)}</span><h3>${escapeBudgetHtml(title)}</h3></div><strong>${compact.format(total)} ${currencySuffix}</strong></header><div class="breakdown-ranked">${rows}</div><details class="breakdown-full"><summary>${copy.all} (${entries.length})</summary><div><table><thead><tr><th>${copy.code}</th><th>${copy.category}</th><th>${copy.amount}</th><th>${copy.share}</th></tr></thead><tbody>${tableRows}</tbody></table></div></details></article>`;
+      return `<article class="budget-breakdown-panel"><header><div><span>${escapeBudgetHtml(note)} · 2025</span><h3>${escapeBudgetHtml(title)} · 2025</h3></div><strong>${compact.format(total)} ${currencySuffix}</strong></header><div class="breakdown-ranked">${rows}</div><details class="breakdown-full"><summary>${copy.all} (${entries.length})</summary><div><table><caption>${escapeBudgetHtml(title)} · 2025</caption><thead><tr><th>${copy.code}</th><th>${copy.category}</th><th>${copy.amount}</th><th>${copy.share}</th></tr></thead><tbody>${tableRows}</tbody></table></div></details></article>`;
     };
     const explorer = document.createElement("section");
     explorer.className = "municipal-breakdown-explorer";
@@ -122,7 +162,7 @@
       });
       const ordered = ["enacted", "revised", "actual"].map((stage) => stages.find((row) => row.stage === stage));
       if (ordered.some((row) => !row)) throw new Error("Municipal profile has incomplete budget stages");
-      panel.innerHTML = `<div class="budget-stage-scroll" tabindex="0"><table class="budget-stage-table">
+      panel.innerHTML = `<div class="budget-stage-scroll" tabindex="0"><table class="budget-stage-table"><caption>${labels.heading} · 2025</caption>
         <thead><tr><th scope="col">${labels.stage}</th><th scope="col">${labels.revenue}</th><th scope="col">${labels.expenditure}</th><th scope="col">${labels.balance}</th></tr></thead>
         <tbody>${ordered.map((row) => `<tr class="budget-stage-${row.stage}"><th scope="row">${labels[row.stage]}</th><td>${money.format(row.revenue_czk)}</td><td>${money.format(row.expenditure_czk)}</td><td class="${row.balance_czk >= 0 ? "positive" : "negative"}">${money.format(row.balance_czk)}</td></tr>`).join("")}</tbody>
       </table></div><p class="budget-stage-source">${labels.source}${entity.budget_stage_lineage ? ` · <code>${entity.budget_stage_lineage.ingestion_run_id}</code>` : ""}</p>`;
@@ -141,7 +181,10 @@
   };
   void renderBudgetStages();
 
-  if (lang !== "en") return;
+  const appendBudgetYears = () => document.querySelectorAll(".detail-kpis article > span, .detail-panel .panel-title h3, .entity-card dt, .layer-row dt, .aggregate-cohort dt").forEach((label) => {
+    if (!label.textContent.includes("2025")) label.append(" · 2025");
+  });
+  if (lang !== "en") { appendBudgetYears(); return; }
   const dictionary = new Map(Object.entries({
     "Domů": "Home", "Obce": "Municipalities", "Obce a kraje": "Municipalities and regions", "Velká města": "Large cities", "Kraje": "Regions",
     "České územní rozpočty · skutečnost 2025": "Czech local government budgets · 2025 actuals",
@@ -151,7 +194,7 @@
     "6 254 obcí včetně Prahy + 13 krajů bez Prahy = 6 267 unikátních účetních jednotek.": "6,254 municipalities including Prague + 13 regions excluding Prague = 6,267 unique reporting entities.",
     "Obce a města": "Municipalities and cities", "Kraje bez Prahy": "Regions excluding Prague", "Celkem — Praha jen jednou": "Total · Prague counted once",
     "Praha je zde jako obec": "Prague is included as a municipality", "13 krajských účetních jednotek": "13 regional reporting entities", "6 267 unikátních jednotek": "6,267 unique entities",
-    "Příjmy": "Revenue", "Výdaje": "Expenditure", "Výsledek": "Balance", "Stav účtů": "Cash and deposits", "Peníze a vklady": "Cash and deposits", "Saldo": "Balance",
+    "Příjmy": "Revenue", "Výdaje": "Expenditure", "Skutečné příjmy": "Actual revenue", "Skutečné výdaje": "Actual expenditure", "Výsledek": "Balance", "Stav účtů": "Cash and deposits", "Peníze a vklady": "Cash and deposits", "Saldo": "Balance",
     "Pozor na interpretaci:": "Interpretation note:", "Praha není zdvojena, ale součet není konsolidovaný mezi obcemi a kraji — vzájemné transfery mohou zůstávat na obou stranách.": "Prague is not duplicated, but the combined total is not consolidated across municipalities and regions. Intergovernmental transfers may remain on both sides.",
     "02 / Co tvoří výsledek": "02 / What makes the balance", "43,4 mld. Kč vytvořily přebytkové obce.": "Surplus municipalities generated CZK 43.4bn.",
     "Celkové příjmy a souhrnný výsledek podle toho, zda obec rok 2025 uzavřela v přebytku, nebo ve schodku.": "Total revenue and aggregate balance, split by whether each municipality closed 2025 in surplus or deficit.",
@@ -168,12 +211,12 @@
     "04 / Definice": "04 / Definitions", "Výsledek i stav účtů.": "Balance and cash.", "Kompletní snapshot": "Complete snapshot", "Primární zdroj": "Primary source",
     "27 velkých měst · nominální CZK": "27 large cities · nominal CZK", "20 let": "20 years", "Dvacet let\nv jednom trendu.": "Twenty years\nin one trend.",
     "Každý rok od 2006 do 2025: příjmy, výdaje, výsledek hospodaření a stav účtů.": "Every year from 2006 to 2025: revenue, expenditure, fiscal balance and cash.",
-    "20 let / 2006–2025": "20 years / 2006-2025", "Výsledek hospodaření a stav účtů.": "Fiscal balance and cash.", "Vyberte město": "Select a city",
+    "20 let / 2006–2025": "20 years / 2006-2025", "16 let / 2010–2025": "16 years / 2010-2025", "Výsledek hospodaření a stav účtů.": "Fiscal balance and cash.", "Vyberte město": "Select a city",
     "Roční data v tabulce": "Annual data table", "Rok": "Year", "Profily": "Profiles", "Detail každého města.": "Every city in detail.", "Nejnovější rok i celá časová řada na jedné trvalé adrese.": "The latest year and full time series on one permanent URL.",
-    "Obecní účetní jednotka": "Municipal reporting entity", "Rozpočet 2025": "2025 budget", "Trend 20 let": "20-year trend", "Stáhnout JSON": "Download JSON",
+    "Obecní účetní jednotka": "Municipal reporting entity", "Rozpočet 2025": "2025 budget", "Trend 20 let": "20-year trend", "Trend 16 let": "16-year trend", "Stáhnout JSON": "Download JSON",
     "ročních výdajů kryto stavem účtů": "of annual expenditure covered by cash", "upraveného rozpočtu": "of the amended budget", "meziročně": "year on year",
     "Plán a skutečnost.": "Budget and actuals.", "Struktura příjmů": "Revenue mix", "Struktura výdajů": "Expenditure mix", "Daňové příjmy": "Tax revenue", "Přijaté transfery": "Transfers received", "Nedaňové příjmy": "Non-tax revenue", "Kapitálové příjmy": "Capital revenue", "Běžné výdaje": "Current expenditure", "Kapitálové výdaje": "Capital expenditure",
-    "Data a metodika": "Data and methodology", "Auditovatelný profil.": "An auditable profile.", "Rozpočet": "Budget", "Strojová data": "Machine-readable data",
+    "Data a metodika": "Data and methodology", "Auditovatelný profil.": "An auditable profile.", "Rozpočet": "Budget", "Strojová data": "Machine-readable data", "Historická data": "Historical data",
     "České územní rozpočty": "Czech local government budgets"
   }));
 
@@ -186,6 +229,7 @@
     const translated = dictionary.get(value);
     if (translated) node.nodeValue = node.nodeValue.replace(value, translated);
   });
+  appendBudgetYears();
   document.querySelectorAll("input[placeholder]").forEach((input) => {
     const translated = dictionary.get(input.getAttribute("placeholder"));
     if (translated) input.setAttribute("placeholder", translated);

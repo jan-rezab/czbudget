@@ -7,6 +7,8 @@ const T = {
 };
 Object.assign(T.cs,{czechBudgetTitle:"Český státní rozpočet",czechBudgetCta:"Otevřít rozpočet 2001–2045 →",czechViews:"České pohledy"});
 Object.assign(T.en,{czechBudgetTitle:"Czech state budget",czechBudgetCta:"Open the 2001–2045 budget →",czechViews:"Czech views"});
+Object.assign(T.cs,{navOverview:"Přehled",navScope:"Rozsah",navSpending:"Výdaje",navHealthcare:"Zdraví"});
+Object.assign(T.en,{navOverview:"Overview",navScope:"Scope",navSpending:"Spending",navHealthcare:"Health"});
 const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us"};
 const scope={state_budget:{cs:"Státní rozpočet",en:"State budget"},state_and_consolidated_budget:{cs:"Státní a konsolidovaný rozpočet",en:"State and consolidated budget"},federal_budget:{cs:"Federální rozpočet",en:"Federal budget"},public_sector_and_central_government:{cs:"Veřejný sektor a centrální vláda",en:"Public sector and central government"},confederation_and_general_government:{cs:"Konfederace a vládní instituce",en:"Confederation and general government"},central_and_general_government:{cs:"Centrální vláda a vládní instituce",en:"Central and general government"}};
 const loc=()=>state.lang==="en"?"en-GB":"cs-CZ";
@@ -88,7 +90,7 @@ function amountFromPct(key){
 }
 function snapshot(){
   const rows=[[T[state.lang].revenue,"revenue_pct_gdp"],[T[state.lang].expense,"expenditure_pct_gdp"],[T[state.lang].balance,"balance_pct_gdp"],[T[state.lang].debt,"gross_debt_pct_gdp"]];
-  $("#snapshot").innerHTML=rows.map(([label,key])=>`<div><span>${label}</span><strong class="${key==="balance_pct_gdp"?(value(key)>=0?"positive":"negative"):""}">${fmt(value(key),"% HDP",key==="balance_pct_gdp")}</strong><small>${fmt(amountFromPct(key),`mld. ${moneyCode()}`,key==="balance_pct_gdp")}</small></div>`).join("");
+  $("#snapshot").innerHTML=rows.map(([label,key])=>`<div><span>${label} · ${state.year}</span><strong class="${key==="balance_pct_gdp"?(value(key)>=0?"positive":"negative"):""}">${fmt(value(key),state.lang==="en"?"% GDP":"% HDP",key==="balance_pct_gdp")}</strong><small>${fmt(amountFromPct(key),`${T[state.lang].billions} ${moneyCode()}`,key==="balance_pct_gdp")} · ${state.year}</small></div>`).join("");
   const kpis=[[T[state.lang].primary,"primary_balance_pct_gdp","% HDP",true],[T[state.lang].growth,"real_gdp_growth_pct","%",true],[T[state.lang].inflation,"inflation_pct","%",false],[T[state.lang].unemployment,"unemployment_pct","%",false]];
   $("#country-kpis").innerHTML=kpis.map(([label,key,unit,signed])=>`<article><span>${label}</span><strong>${fmt(value(key),unit,signed)}</strong><small>${point(key)?.status==="actual"?T[state.lang].actual:T[state.lang].estimate} · ${state.year}</small></article>`).join("");
 }

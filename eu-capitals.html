@@ -16,9 +16,9 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="styles-v2.css">
   <link rel="stylesheet" href="chart-system.css?v=20260821-city-navigation">
-  <link rel="stylesheet" href="eu-capitals.css?v=20260821-city-navigation">
-  <script src="eu-capitals.js?v=20260821-city-navigation" defer></script>
-<script src="global-nav.js?v=20260821-benchmark-flags" defer></script>
+  <link rel="stylesheet" href="eu-capitals.css?v=20260822-consolidation">
+  <script src="eu-capitals.js?v=20260822-consolidation" defer></script>
+<script src="global-nav.js?v=20260822-unified-nav" defer></script>
 </head>
 <body class="home-v2 capitals-page">
   <header class="site-header compact-header has-global-nav">
@@ -28,6 +28,10 @@
   </header>
 
   <main id="top">
+    <section class="capital-consolidation-overview" aria-labelledby="consolidation-title">
+      <div><span class="kicker" data-i18n="consolidationKicker">00 / Rozsah měst</span><h2 id="consolidation-title" data-i18n="consolidationTitle">Konsolidace je vidět hned.</h2><p data-i18n="consolidationCopy">Barva rozlišuje konsolidovaný městský celek, město se statutem regionu a samostatnou obec bez podřízených rozpočtů.</p></div>
+      <div class="consolidation-cards" id="consolidation-cards"></div>
+    </section>
     <section class="capitals-hero">
       <div class="capitals-hero-copy">
         <span class="eyebrow"><i class="live-dot"></i><span data-i18n="eyebrow">27 hlavních měst EU + Londýn</span></span>
@@ -60,6 +64,11 @@
       <div class="capital-result-line"><span id="capital-count" aria-live="polite">28 měst</span><small data-i18n="resultNote">Hodnoty rozpočtu jsou nominální.</small></div>
       <div class="capital-table-wrap"><table class="capital-table"><thead><tr><th data-i18n="thCity">Město</th><th data-i18n="thBudget">Výdaje</th><th data-i18n="thBalance">Saldo</th><th data-i18n="thPopulation">Obyvatelé</th><th data-i18n="thNights">Přenocování</th><th data-i18n="thIntensity">Noci / obyv.</th><th><span class="sr-only" data-i18n="thDetail">Detail</span></th></tr></thead><tbody id="capital-table-body"></tbody></table></div>
       <div class="capital-empty" id="capital-empty" hidden><strong data-i18n="emptyTitle">Nic jsme nenašli.</strong><span data-i18n="emptyCopy">Zkuste jiné město nebo zemi.</span></div>
+    </section>
+
+    <section class="capital-spending-comparison" id="spending-comparison">
+      <div class="compact-title"><div><span class="kicker" data-i18n="spendingKicker">02 / Kam města utrácejí</span><h2 data-i18n="spendingTitle">Všechny dostupné dílčí rozpočty.</h2></div><p data-i18n="spendingCopy">Každý řádek zachovává původní kategorii, přesný rozpočtový rok a podíl na zveřejněném celku. Hlavičky tabulky řadí data; chybějící profily jsou přiznané.</p></div>
+      <div class="capital-table-wrap spending-table-wrap"><table class="capital-table spending-comparison-table"><thead><tr><th data-i18n="thCity">Město</th><th data-i18n="spendingCategory">Kategorie výdajů</th><th data-i18n="spendingAmount">Částka</th><th data-i18n="spendingShare">Podíl</th><th data-i18n="spendingCoverage">Úplnost</th><th data-i18n="spendingYear">Rok</th></tr></thead><tbody id="capital-spending-body"></tbody></table></div>
     </section>
 
     <section class="capital-detail-section" id="city-detail" aria-live="polite"><div class="detail-empty"><span class="kicker" data-i18n="detailKicker">02 / Detail města</span><h2 data-i18n="detailInitial">Vyberte město v tabulce.</h2></div></section>
