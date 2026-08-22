@@ -10,6 +10,7 @@ const routes = [
   ["Polish municipalities", "/municipalities/poland/?lang=cs"],
   ["deep dives", "/deep-dives/?lang=cs"],
   ["transportation deep dive", "/deep-dives/transportation/?code=CZE&lang=cs"],
+  ["health deep dive", "/deep-dives/health/?code=CZE&lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/obce/praha/?lang=cs"],
   ["directory", "/cz/obce/?lang=cs"],
@@ -60,7 +61,9 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
 test("deep dives expose a dedicated topic hierarchy and country-filtered transportation story", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".deep-card")).toHaveCount(2);
-  await expect(page.locator(".deep-card.available")).toContainText("Transportation");
+  await expect(page.locator(".deep-card.available")).toHaveCount(2);
+  await expect(page.locator(".deep-card.available").first()).toContainText("Transportation");
+  await expect(page.locator(".deep-card.available").last()).toContainText("Health");
   await page.locator(".deep-dive-menu summary").click();
   await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(2);
   await page.goto("/deep-dives/transportation/?code=CZE&lang=en", { waitUntil: "networkidle" });
@@ -134,6 +137,21 @@ test("country profiles expose sortable ten-year health, social and transport com
   await expect(page.locator("#healthcare-system")).toBeVisible();
   await expect(page.locator("#country-function-health-title")).toHaveText("Ten years of health.");
   await expect(transport).toContainText("13,210 km");
+});
+
+test("health deep dive keeps nine system profiles and the ten-country spending comparison", async ({ page }) => {
+  await page.goto("/deep-dives/health/?code=CZE&lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#deep-dive-country option")).toHaveCount(9);
+  await expect(page.locator("#country-function-health tbody tr")).toHaveCount(10);
+  await expect(page.locator("#healthcare-system")).toBeVisible();
+  await expect(page.locator("#hospital-benchmark")).toBeVisible();
+  await expect(page.locator("#country-health-kpis article")).toHaveCount(4);
+  await page.locator("[data-health-mode=provider]").click();
+  await expect(page.locator(".country-health-flow-row")).toHaveCount(5);
+  await page.locator("#deep-dive-country").selectOption("DEU");
+  await expect(page.locator("#deep-dive-country-code")).toHaveText("DEU");
+  await expect(page.locator("#country-health-architecture-copy")).toContainText("Statutory sickness funds");
+  await expect(page.locator("#hospital-budget-unit")).toContainText("EUR");
 });
 
 test("country cash-in keeps municipal and company layers separate", async ({ page }) => {
