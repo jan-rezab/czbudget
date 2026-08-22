@@ -1,12 +1,13 @@
 (() => {
+  const assetRoot=document.currentScript?.src?new URL(".",document.currentScript.src).href:"";
   const T = {
     cs:{
-      flowKicker:"06 / Zdravotní systém",flowTitle:"Kdo platí. Kam peníze míří.",flowCopy:"Harmonizovaný tok běžných výdajů umožňuje číst osm systémů stejným účetním jazykem.",architecture:"Jak systém funguje",financeView:"Kdo platí",providerView:"Kam peníze míří",editable:"Podtržené podíly lze upravit; celkový tok se přepočítá okamžitě.",reset:"Obnovit data",
+      flowKicker:"06 / Zdravotní systém",flowTitle:"Kdo platí. Kam peníze míří.",flowCopy:"Harmonizovaný tok běžných výdajů umožňuje číst devět systémů stejným účetním jazykem.",architecture:"Jak systém funguje",financeView:"Kdo platí",providerView:"Kam peníze míří",editable:"Podtržené podíly lze upravit; celkový tok se přepočítá okamžitě.",reset:"Obnovit data",
       benchKicker:"06B / Benchmark nemocnice",benchTitle:"Váš rozpočet.<br>Národní kontext.",benchCopy:"Zadejte roční rozpočet a počet lůžek. Model porovná výdaje na lůžko s národním systémovým benchmarkem.",budgetInput:"Roční provozní rozpočet",bedsInput:"Dostupná lůžka",beds:"lůžek",yourSpendBed:"Váš rozpočet na lůžko",halfBenchmark:"½ benchmarku",doubleBenchmark:"2× benchmark",
       healthGdp:"Zdravotnictví / HDP",perCapita:"Výdaje na obyvatele",publicShare:"Veřejné + povinné",hospitalShare:"Podíl nemocnic",publicCompulsory:"Veřejné a povinné systémy",voluntaryOther:"Dobrovolné a ostatní",outOfPocket:"Přímé platby domácností",hospitals:"Nemocnice",residentialLtc:"Rezidenční dlouhodobá péče",ambulatory:"Ambulantní péče",retailers:"Lékárny a zdravotnické zboží",other:"Ostatní poskytovatelé",currentHealth:"Běžné výdaje",flowBalanced:"tok uzavřen",flowOver:"nad 100 %",flowUnder:"do 100 % chybí",openOfficial:"Otevřít národní zdroj ↗",source:"Zdroj",nationalBenchmark:"Národní benchmark",above:"nad benchmarkem",below:"pod benchmarkem",atBenchmark:"na benchmarku",bedsDensity:"Lůžka / 1 000 obyvatel",spendPerBed:"Odhad na lůžko",dataYear:"Rok dat",estimated:"odhad OECD",breakSeries:"zlom řady",sourcesKickerShort:"05 / Primární zdroje"
     },
     en:{
-      flowKicker:"06 / Healthcare system",flowTitle:"Who pays. Where the money goes.",flowCopy:"A harmonised current-expenditure flow makes eight systems readable in the same accounting language.",architecture:"How the system works",financeView:"Who pays",providerView:"Where money goes",editable:"Edit any underlined share; the total flow recalculates instantly.",reset:"Reset data",
+      flowKicker:"06 / Healthcare system",flowTitle:"Who pays. Where the money goes.",flowCopy:"A harmonised current-expenditure flow makes nine systems readable in the same accounting language.",architecture:"How the system works",financeView:"Who pays",providerView:"Where money goes",editable:"Edit any underlined share; the total flow recalculates instantly.",reset:"Reset data",
       benchKicker:"06B / Hospital benchmark",benchTitle:"Your budget.<br>National context.",benchCopy:"Enter an annual budget and staffed beds. The model compares spending per bed with the national system benchmark.",budgetInput:"Annual operating budget",bedsInput:"Available beds",beds:"beds",yourSpendBed:"Your budget per bed",halfBenchmark:"½ benchmark",doubleBenchmark:"2× benchmark",
       healthGdp:"Health / GDP",perCapita:"Spending per person",publicShare:"Public + compulsory",hospitalShare:"Hospital share",publicCompulsory:"Government and compulsory schemes",voluntaryOther:"Voluntary and other schemes",outOfPocket:"Household out-of-pocket",hospitals:"Hospitals",residentialLtc:"Residential long-term care",ambulatory:"Ambulatory care",retailers:"Retailers and medical goods",other:"Other providers",currentHealth:"Current health spending",flowBalanced:"flow closes",flowOver:"above 100%",flowUnder:"missing to 100%",openOfficial:"Open national source ↗",source:"Source",nationalBenchmark:"National benchmark",above:"above benchmark",below:"below benchmark",atBenchmark:"at benchmark",bedsDensity:"Beds / 1,000 people",spendPerBed:"Estimated per bed",dataYear:"Data year",estimated:"OECD estimate",breakSeries:"series break",sourcesKickerShort:"05 / Primary sources"
     }
@@ -139,7 +140,7 @@
   });
   addEventListener("countryprofilechange",event=>{state.code=event.detail.code;state.lang=event.detail.lang==="en"?"en":"cs";render()});
 
-  fetch("data/country-health.v1.json")
+  fetch(`${assetRoot}data/country-health.v1.json`)
     .then(response=>{if(!response.ok)throw new Error(response.status);return response.json()})
     .then(data=>{state.data=data;state.code=new URLSearchParams(location.search).get("code")||state.code;state.lang=document.documentElement.lang==="en"?"en":"cs";render()})
     .catch(error=>console.error("Country healthcare data",error));

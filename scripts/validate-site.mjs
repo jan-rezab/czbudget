@@ -10,6 +10,7 @@ const categoryComparison = JSON.parse(await readFile("data/country-spending-comp
 const functionalBudgets = JSON.parse(await readFile("data/country-functional-budgets.v1.json", "utf8"));
 const roadNetworks = JSON.parse(await readFile("data/road-network-history.v1.json", "utf8"));
 const countryCashIn = JSON.parse(await readFile("data/country-cash-in.v1.json", "utf8"));
+const countryHealth = JSON.parse(await readFile("data/country-health.v1.json", "utf8"));
 const sovereign = JSON.parse(await readFile("lib/data/sovereign-benchmark.v1.json", "utf8"));
 const homepage = await readFile("index.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
@@ -18,6 +19,7 @@ const countryScript = await readFile("country.js", "utf8");
 const countryFunctionsScript = await readFile("country-functions.js", "utf8");
 const deepDivePage = await readFile("deep-dives/index.html", "utf8");
 const transportDeepDivePage = await readFile("deep-dives/transportation/index.html", "utf8");
+const healthDeepDivePage = await readFile("deep-dives/health/index.html", "utf8");
 const czechBudgetPage = await readFile("cesky-rozpocet.html", "utf8");
 const czechBudgetScript = await readFile("app.js", "utf8");
 const demography = JSON.parse(await readFile("data/demography-social.v1.json", "utf8"));
@@ -51,6 +53,7 @@ if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fi
 if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
 if (categoryComparison.countries.length !== 10 || categoryComparison.categories.length !== 12) throw new Error("Expected ten countries and twelve common spending categories");
 if (Object.keys(functionalBudgets.countries).length !== 10) throw new Error("Expected functional budgets for all ten countries");
+if (Object.keys(countryHealth.countries).length !== 9 || countryHealth.countries.UKR) throw new Error("Expected nine harmonised health-system profiles with Ukraine excluded");
 if (roadNetworks.countries.length !== 10 || !roadNetworks.construction_history_status.includes("annual net stock change")) throw new Error("Expected ten-country road histories with an explicit construction proxy caveat");
 for (const country of roadNetworks.countries) {
   if (!country.road_network?.series?.length || !country.motorways?.series?.length || country.motorways.series.some((point) => !Number.isFinite(point.km))) throw new Error(`${country.code}: incomplete road or motorway history`);
@@ -77,7 +80,7 @@ if (!homepage.includes('id="category-comparison-root"') || !homepage.includes('h
 if (!homepage.includes("language-bootstrap.js") || !languageBootstrap.includes("data-language-pending") || !languageBootstrap.includes("MutationObserver")) throw new Error("English must be selected before the first visible paint");
 if (!globalNav.includes('municipalities/?lang=${lang}') || globalNav.includes('data-global-nav="capitals"')) throw new Error("Global navigation must expose one consolidated municipality destination");
 if (!globalNav.includes('class="deep-dive-menu"') || !globalNav.includes('deep-dives/transportation/')) throw new Error("Global navigation must expose the dedicated deep-dive hierarchy");
-if (!deepDivePage.includes('class="deep-card available"') || !deepDivePage.includes('id="health"') || !transportDeepDivePage.includes('id="deep-dive-country"') || !transportDeepDivePage.includes('id="country-function-transport"')) throw new Error("Deep dives must expose a topic index and a country-filtered transportation page");
+if (!deepDivePage.includes('href="health/?code=CZE"') || !transportDeepDivePage.includes('id="deep-dive-country"') || !transportDeepDivePage.includes('id="country-function-transport"') || !healthDeepDivePage.includes('data-country-codes="CZE,DEU,DNK,FRA,GBR,POL,SWE,CHE,USA"') || !healthDeepDivePage.includes('id="country-function-health"') || !healthDeepDivePage.includes('id="healthcare-system"') || !healthDeepDivePage.includes('id="hospital-benchmark"')) throw new Error("Deep dives must expose dedicated transportation and nine-country health profiles");
 if (!cloudbuild.includes("scripts/assert-single-production.sh") || !cloudbuild.includes("scripts/deploy-immutable.sh") || !cloudbuild.includes("- czbudget-public") || cloudbuild.includes("${_SERVICE}") || cloudbuild.includes("czbudget-web")) throw new Error("Cloud Build must be locked to the sole canonical production service");
 if (!cloudbuild.includes("scripts/merge-municipal-breakdowns.mjs") || !municipalI18n.includes("renderBudgetBreakdown") || !municipalI18n.includes("municipal-budget-codebook.v1.json")) throw new Error("Municipal profiles must surface the detailed FIN 2-12 M breakdown");
 if (!capitalsScript.includes('data/large-city-history.v1.json') || !capitalsScript.includes('renderHistory(city)')) throw new Error("European capitals must surface the Prague ten-year history");
