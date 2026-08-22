@@ -102,7 +102,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
   <meta name="twitter:title" content="{esc(title)}">
   <meta name="twitter:description" content="{esc(description)}">
   <link rel="icon" href="{root}assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="{root}styles.css">
+  <link rel="stylesheet" href="{root}styles.css?v=20260822-brand">
   <link rel="stylesheet" href="{root}cz-budget.css">
   <link rel="stylesheet" href="{root}chart-system.css">
   <script type="application/ld+json">{schema_json}</script>
@@ -111,7 +111,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
 
 def header(root: str, active: str = "czech") -> str:
     return f"""<header class="site-header compact-header cz-header">
-  <a class="brand" href="{root}index.html"><span class="brand-grid"><i></i><i></i><i></i><i></i></span><span class="wordmark">Public Spending <b>Data</b></span></a>
+  <a class="brand" href="{root}index.html"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a>
   <nav aria-label="Hlavní navigace"><a href="{root}index.html#compare">Země</a><a href="{root}cz/obce/"{' aria-current="page"' if active == 'czech' else ''}>Obce a kraje</a><a href="#metodika">Metodika</a></nav>
   <div class="dataset-pill"><span>CZ</span> · 2025 · CZK</div>
 </header>"""
