@@ -19,7 +19,9 @@
     document.documentElement.lang=state.lang;
     document.querySelectorAll("[data-copy]").forEach(el=>{if(t()[el.dataset.copy])el.textContent=t()[el.dataset.copy];});
     document.querySelectorAll("[data-placeholder]").forEach(el=>el.placeholder=t()[el.dataset.placeholder]);
-    document.querySelectorAll("[data-lang]").forEach(el=>el.classList.toggle("active",el.dataset.lang===state.lang));
+    document.querySelectorAll("[data-lang]").forEach(el=>{const active=el.dataset.lang===state.lang;el.classList.toggle("active",active);el.setAttribute("aria-pressed",String(active));});
+    $(".municipality-lang-switch")?.setAttribute("aria-label",state.lang==="en"?"Language":"Jazyk");
+    $("#municipality-country-switch")?.setAttribute("aria-label",state.lang==="en"?"Municipality country page":"Stránka obcí podle země");
     $('[data-view-link="europe"]').href=`../?lang=${state.lang}`;
     if(state.data)render();
   }
