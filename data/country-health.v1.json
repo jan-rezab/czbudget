@@ -1,12 +1,38 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-20T22:22:00.422Z",
-  "coverage": "Eight non-Czech, non-Ukrainian country profiles in the sovereign benchmark",
+  "generated_at": "2026-08-22T13:36:41.089Z",
+  "coverage": "Nine OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
   "methodology": {
     "cs": "Podíly jsou běžné výdaje na zdravotnictví podle System of Health Accounts 2011. Benchmark na lůžko je odhad: výdaje na obyvatele × podíl nemocnic ÷ lůžka na obyvatele. Nejde o účetní výnos konkrétní nemocnice ani žebříček kvality.",
     "en": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
   },
   "countries": {
+    "CZE": {
+      "currency": "CZK",
+      "architecture_cs": "Veřejné zdravotní pojištění shromažďuje povinné odvody a státní platby. Zdravotní pojišťovny nakupují péči od veřejných i soukromých poskytovatelů; síť zařízení publikuje ÚZIS v registru NRPZS.",
+      "architecture_en": "Compulsory public health insurance pools contributions and state payments. Health insurers purchase care from public and private providers; ÚZIS publishes the facility network through the NRPZS register.",
+      "official_title": "ÚZIS · registr poskytovatelů NRPZS",
+      "official_url": "https://nrpzs.uzis.cz/",
+      "year": 2024,
+      "health_gdp_pct": 8.646,
+      "per_capita_ppp": 4114.07,
+      "per_capita_local": 63889.594,
+      "financing": {
+        "public_compulsory": 85.556,
+        "out_of_pocket": 13.562,
+        "voluntary_other": 0.882
+      },
+      "providers": {
+        "hospitals": 44.901,
+        "residential_ltc": 8.077,
+        "ambulatory": 24.303,
+        "retailers": 12.936,
+        "other": 9.783
+      },
+      "beds_per_1000": 6.39,
+      "bed_year": 2024,
+      "bed_status": ""
+    },
     "DEU": {
       "currency": "EUR",
       "architecture_cs": "Zákonné zdravotní pojišťovny shromažďují pojistné a dostávají prostředky přes Gesundheitsfonds. Provoz nemocnic hradí pojišťovny, zatímco investice mají financovat spolkové země — klasický dvojí tok.",
@@ -227,15 +253,15 @@
     }
   ],
   "api_queries": {
-    "public_compulsory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH.HF1._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "out_of_pocket": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH.HF3._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "hospitals": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP1._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "residential_ltc": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP2._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "ambulatory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP3._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "retailers": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP5._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "gdp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_B1GQ._T._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "per_capita_ppp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.USD_PPP_PS._T._Z._T._T._T._Z._Z.Q?startPeriod=2024&endPeriod=2024",
-    "per_capita_local": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.XDC_PS._T._Z._T._T._T._Z._Z.V?startPeriod=2024&endPeriod=2024",
-    "beds": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_HEALTH_REAC_HOSP@DF_BEDS_FUNC,1.1/DEU+FRA+POL+GBR+USA+CHE+SWE+DNK..10P3HB...._T..?startPeriod=2022&endPeriod=2024"
+    "public_compulsory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH.HF1._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "out_of_pocket": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH.HF3._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "hospitals": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP1._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "residential_ltc": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP2._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "ambulatory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP3._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "retailers": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP5._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "gdp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.PT_B1GQ._T._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "per_capita_ppp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.USD_PPP_PS._T._Z._T._T._T._Z._Z.Q?startPeriod=2024&endPeriod=2024",
+    "per_capita_local": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK.A.EXP_HEALTH.XDC_PS._T._Z._T._T._T._Z._Z.V?startPeriod=2024&endPeriod=2024",
+    "beds": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_HEALTH_REAC_HOSP@DF_BEDS_FUNC,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK..10P3HB...._T..?startPeriod=2022&endPeriod=2024"
   }
 }

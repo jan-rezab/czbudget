@@ -58,7 +58,8 @@ test("country profiles expose sortable ten-year health, social and transport com
     await expect(section.locator("tbody tr")).toHaveCount(10);
     await expect(section.locator(".sortable-header-button")).toHaveCount(5);
   }
-  await expect(page.locator("#healthcare-system")).toBeHidden();
+  await expect(page.locator("#healthcare-system")).toBeVisible();
+  await expect(page.locator("#provider-network")).toBeVisible();
   await page.locator("#country-switch").selectOption("DEU");
   await expect(page.locator("#healthcare-system")).toBeVisible();
   await expect(page.locator("#country-function-health-title")).toHaveText("Ten years of health.");
