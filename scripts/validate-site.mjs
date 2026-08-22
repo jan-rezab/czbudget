@@ -7,6 +7,8 @@ const snapshot = JSON.parse(await readFile("data/municipal-snapshot.v1.json", "u
 const history = JSON.parse(await readFile("data/large-city-history.v1.json", "utf8"));
 const capitals = JSON.parse(await readFile("data/eu-capital-budgets.v1.json", "utf8"));
 const categoryComparison = JSON.parse(await readFile("data/country-spending-comparison.v1.json", "utf8"));
+const functionalBudgets = JSON.parse(await readFile("data/country-functional-budgets.v1.json", "utf8"));
+const countryCashIn = JSON.parse(await readFile("data/country-cash-in.v1.json", "utf8"));
 const sovereign = JSON.parse(await readFile("lib/data/sovereign-benchmark.v1.json", "utf8"));
 const homepage = await readFile("index.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
@@ -29,6 +31,15 @@ if (capitals.cities.some((city) => !Number.isFinite(city.budget?.local_amount) |
 if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fiscal_details?.balance_classification || !Array.isArray(city.fiscal_details?.components))) throw new Error("Incomplete European capital fiscal details");
 if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
 if (categoryComparison.countries.length !== 10 || categoryComparison.categories.length !== 12) throw new Error("Expected ten countries and twelve common spending categories");
+if (Object.keys(functionalBudgets.countries).length !== 10) throw new Error("Expected functional budgets for all ten countries");
+if (Object.keys(countryCashIn.countries).length !== 10 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for ten countries and Czech territorial/company cash-in layers");
+if (countryCashIn.countries.CZE.layers.municipalities.entity_count !== 6254 || countryCashIn.countries.CZE.layers.companies.entity_count !== 38) throw new Error("Unexpected Czech municipality or state-company cash-in coverage");
+for (const [code, country] of Object.entries(functionalBudgets.countries)) {
+  for (const category of ["health", "social", "transport"]) {
+    const series = country.categories[category];
+    if (series.length !== 10 || series[0].year !== 2015 || series.at(-1).year !== 2024 || series.some((point) => !Number.isFinite(point.pct_gdp))) throw new Error(`${code}: incomplete 2015–2024 ${category} series`);
+  }
+}
 for (const country of categoryComparison.countries) {
   if (country.groups.length !== categoryComparison.categories.length) throw new Error(`${country.code}: incomplete category groups`);
   for (const period of ["previous", "current"]) {
@@ -63,6 +74,6 @@ if (!homepage.includes('id="benchmark-overview"') || !homepage.includes('id="ben
 if (globalNav.includes('code === "CZE"') || !globalNav.includes('assets/flags/${flags[code]}.svg') || !countryScript.includes("czech-view-grid")) throw new Error("Country navigation must use shared profiles, SVG flags, and both Czech detail views");
 if (!homepage.includes('class="compare-scope-readout"') || !homepage.includes("General government")) throw new Error("Homepage comparison must state its harmonised fiscal perimeter");
 if (!homepage.includes('id="fiscal-architecture-body"') || !homepageScript.includes("function architectureTable")) throw new Error("Homepage must compare fiscal architecture across all tracked countries");
-if (!countryPage.includes('country-spending.js?v=20260821') || !countryPage.includes('country-health.js?v=20260821-health8') || !countryScript.includes('countryprofilechange')) throw new Error("Fiscal profiles must preserve the spending and healthcare modules");
-for (const required of ["index.html", "homepage-category.js", "homepage-category.css", "data/country-spending-comparison.v1.json", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "scripts/export-municipal-breakdowns.sql", "scripts/export-municipal-budget-codebook.sql", "scripts/merge-municipal-breakdowns.mjs", "sitemap.xml", ...["cz","de","dk","fr","gb","pl","se","ch","ua","us"].map((code)=>`assets/flags/${code}.svg`)]) await stat(required);
+if (!countryPage.includes('country-spending.js?v=20260821') || !countryPage.includes('country-health.js?v=20260821-health8') || !countryPage.includes('country-functions.js?v=20260822-functions10') || !countryPage.includes('country-cash-in.js?v=20260822-cash-in') || !countryPage.includes('id="cash-in"') || !countryPage.includes('id="social-system"') || !countryPage.includes('id="transportation"') || !countryScript.includes('countryprofilechange')) throw new Error("Fiscal profiles must preserve cash-in, spending, healthcare, social and transport modules");
+for (const required of ["index.html", "homepage-category.js", "homepage-category.css", "data/country-spending-comparison.v1.json", "data/country-functional-budgets.v1.json", "data/country-cash-in.v1.json", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "country-functions.js", "country-functions.css", "country-cash-in.js", "country-cash-in.css", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "scripts/build-country-functional-budgets.mjs", "scripts/build-country-cash-in.mjs", "scripts/export-municipal-breakdowns.sql", "scripts/export-municipal-budget-codebook.sql", "scripts/merge-municipal-breakdowns.mjs", "sitemap.xml", ...["cz","de","dk","fr","gb","pl","se","ch","ua","us"].map((code)=>`assets/flags/${code}.svg`)]) await stat(required);
 console.log("CZ Budget site validation passed");

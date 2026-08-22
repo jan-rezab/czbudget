@@ -1,13 +1,13 @@
 (() => {
   const T = {
     cs:{
-      flowKicker:"05 / Zdravotnictví",flowTitle:"Kdo platí. Kam peníze míří.",flowCopy:"Harmonizovaný tok běžných výdajů umožňuje číst osm systémů stejným účetním jazykem.",architecture:"Jak systém funguje",financeView:"Kdo platí",providerView:"Kam peníze míří",editable:"Podtržené podíly lze upravit; celkový tok se přepočítá okamžitě.",reset:"Obnovit data",
-      benchKicker:"06 / Benchmark nemocnice",benchTitle:"Váš rozpočet.<br>Národní kontext.",benchCopy:"Zadejte roční rozpočet a počet lůžek. Model porovná výdaje na lůžko s národním systémovým benchmarkem.",budgetInput:"Roční provozní rozpočet",bedsInput:"Dostupná lůžka",beds:"lůžek",yourSpendBed:"Váš rozpočet na lůžko",halfBenchmark:"½ benchmarku",doubleBenchmark:"2× benchmark",
+      flowKicker:"06 / Zdravotní systém",flowTitle:"Kdo platí. Kam peníze míří.",flowCopy:"Harmonizovaný tok běžných výdajů umožňuje číst osm systémů stejným účetním jazykem.",architecture:"Jak systém funguje",financeView:"Kdo platí",providerView:"Kam peníze míří",editable:"Podtržené podíly lze upravit; celkový tok se přepočítá okamžitě.",reset:"Obnovit data",
+      benchKicker:"06B / Benchmark nemocnice",benchTitle:"Váš rozpočet.<br>Národní kontext.",benchCopy:"Zadejte roční rozpočet a počet lůžek. Model porovná výdaje na lůžko s národním systémovým benchmarkem.",budgetInput:"Roční provozní rozpočet",bedsInput:"Dostupná lůžka",beds:"lůžek",yourSpendBed:"Váš rozpočet na lůžko",halfBenchmark:"½ benchmarku",doubleBenchmark:"2× benchmark",
       healthGdp:"Zdravotnictví / HDP",perCapita:"Výdaje na obyvatele",publicShare:"Veřejné + povinné",hospitalShare:"Podíl nemocnic",publicCompulsory:"Veřejné a povinné systémy",voluntaryOther:"Dobrovolné a ostatní",outOfPocket:"Přímé platby domácností",hospitals:"Nemocnice",residentialLtc:"Rezidenční dlouhodobá péče",ambulatory:"Ambulantní péče",retailers:"Lékárny a zdravotnické zboží",other:"Ostatní poskytovatelé",currentHealth:"Běžné výdaje",flowBalanced:"tok uzavřen",flowOver:"nad 100 %",flowUnder:"do 100 % chybí",openOfficial:"Otevřít národní zdroj ↗",source:"Zdroj",nationalBenchmark:"Národní benchmark",above:"nad benchmarkem",below:"pod benchmarkem",atBenchmark:"na benchmarku",bedsDensity:"Lůžka / 1 000 obyvatel",spendPerBed:"Odhad na lůžko",dataYear:"Rok dat",estimated:"odhad OECD",breakSeries:"zlom řady",sourcesKickerShort:"05 / Primární zdroje"
     },
     en:{
-      flowKicker:"05 / Healthcare",flowTitle:"Who pays. Where the money goes.",flowCopy:"A harmonised current-expenditure flow makes eight systems readable in the same accounting language.",architecture:"How the system works",financeView:"Who pays",providerView:"Where money goes",editable:"Edit any underlined share; the total flow recalculates instantly.",reset:"Reset data",
-      benchKicker:"06 / Hospital benchmark",benchTitle:"Your budget.<br>National context.",benchCopy:"Enter an annual budget and staffed beds. The model compares spending per bed with the national system benchmark.",budgetInput:"Annual operating budget",bedsInput:"Available beds",beds:"beds",yourSpendBed:"Your budget per bed",halfBenchmark:"½ benchmark",doubleBenchmark:"2× benchmark",
+      flowKicker:"06 / Healthcare system",flowTitle:"Who pays. Where the money goes.",flowCopy:"A harmonised current-expenditure flow makes eight systems readable in the same accounting language.",architecture:"How the system works",financeView:"Who pays",providerView:"Where money goes",editable:"Edit any underlined share; the total flow recalculates instantly.",reset:"Reset data",
+      benchKicker:"06B / Hospital benchmark",benchTitle:"Your budget.<br>National context.",benchCopy:"Enter an annual budget and staffed beds. The model compares spending per bed with the national system benchmark.",budgetInput:"Annual operating budget",bedsInput:"Available beds",beds:"beds",yourSpendBed:"Your budget per bed",halfBenchmark:"½ benchmark",doubleBenchmark:"2× benchmark",
       healthGdp:"Health / GDP",perCapita:"Spending per person",publicShare:"Public + compulsory",hospitalShare:"Hospital share",publicCompulsory:"Government and compulsory schemes",voluntaryOther:"Voluntary and other schemes",outOfPocket:"Household out-of-pocket",hospitals:"Hospitals",residentialLtc:"Residential long-term care",ambulatory:"Ambulatory care",retailers:"Retailers and medical goods",other:"Other providers",currentHealth:"Current health spending",flowBalanced:"flow closes",flowOver:"above 100%",flowUnder:"missing to 100%",openOfficial:"Open national source ↗",source:"Source",nationalBenchmark:"National benchmark",above:"above benchmark",below:"below benchmark",atBenchmark:"at benchmark",bedsDensity:"Beds / 1,000 people",spendPerBed:"Estimated per bed",dataYear:"Data year",estimated:"OECD estimate",breakSeries:"series break",sourcesKickerShort:"05 / Primary sources"
     }
   };
@@ -117,7 +117,7 @@
   function render() {
     if(!state.data) return;
     const profile=country(), supported=Boolean(profile);
-    $("#healthcare").hidden=!supported; $("#hospital-benchmark").hidden=!supported;
+    $("#healthcare-system").hidden=!supported; $("#hospital-benchmark").hidden=!supported;
     if(!supported) {
       const sourceKicker=document.querySelector('[data-i18n="sourcesKicker"]');
       if(sourceKicker) sourceKicker.textContent=tr("sourcesKickerShort");

@@ -35,6 +35,34 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("country profiles expose sortable ten-year health, social and transport comparisons", async ({ page }) => {
+  await page.goto("/country.html?code=CZE&lang=en", { waitUntil: "networkidle" });
+  for (const id of ["healthcare", "social-system", "transportation"]) {
+    const section=page.locator(`#${id}`);
+    await expect(section.locator(".function-bar-column")).toHaveCount(10);
+    await expect(section.locator("tbody tr")).toHaveCount(10);
+    await expect(section.locator(".sortable-header-button")).toHaveCount(5);
+  }
+  await expect(page.locator("#healthcare-system")).toBeHidden();
+  await page.locator("#country-switch").selectOption("DEU");
+  await expect(page.locator("#healthcare-system")).toBeVisible();
+  await expect(page.locator("#country-function-health-title")).toHaveText("Ten years of health.");
+});
+
+test("country cash-in keeps municipal and company layers separate", async ({ page }) => {
+  await page.goto("/country.html?code=CZE&lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#cash-in .cash-consolidated")).toContainText("The only comparable total");
+  await expect(page.locator("#cash-in .cash-layer-card")).toHaveCount(4);
+  await expect(page.locator("#cash-in")).toContainText("534.1 bn CZK");
+  await expect(page.locator("#cash-in")).toContainText("689.5 bn CZK");
+  await expect(page.locator("#cash-in .cash-nonadd")).toContainText("Do not add these cards");
+  await expect(page.locator("#cash-in tbody tr")).toHaveCount(20);
+  await expect(page.locator("#cash-in .sortable-header-button")).toHaveCount(5);
+  await page.locator("#country-switch").selectOption("DEU");
+  await expect(page.locator("#cash-in .cash-layer-card")).toHaveCount(0);
+  await expect(page.locator("#cash-in .cash-detail-missing")).toBeVisible();
+});
+
 test("municipal directory explains the aggregate balance in both languages", async ({ page }) => {
   await page.goto("/cz/obce/?lang=cs", { waitUntil: "networkidle" });
   const story = page.locator(".municipal-aggregate-story");
@@ -55,6 +83,8 @@ test("nationwide municipal explorer drives the aggregate story and directory yea
   await expect(page.locator("#municipality-year-coverage")).toContainText("6 245 obcí");
   await expect(page.locator("#nationwide-history-kpis")).toContainText("283,6 mld. Kč");
   await expect(page.locator("#nationwide-history-chart .history-line")).toHaveCount(3);
+  await expect(page.locator("#spending-benchmark-summary")).toContainText("27 295 Kč / obyv.");
+  await expect(page.locator("#spending-benchmark-chart article")).toHaveCount(8);
   await expect(page.locator("#municipality-count")).toContainText("6 245 s daty za 2010");
   await expect(page.locator("#municipality-grid .entity-card").first()).toContainText("2010 · IČO");
 
@@ -68,6 +98,13 @@ test("nationwide municipal explorer drives the aggregate story and directory yea
   await page.locator("#municipality-query").fill("Poličná");
   await expect(page.locator("#municipality-count")).toContainText("0 s daty za 2010");
   await expect(page.locator("#municipality-grid .entity-card")).toContainText("—");
+
+  await page.locator("#municipality-year").selectOption("2025");
+  await page.locator("#municipality-query").fill("Abertamy");
+  await expect(page.locator("#municipality-grid .entity-card")).toContainText("822 obyvatel");
+  await expect(page.locator("#municipality-grid .entity-spending-benchmark")).toContainText("38 856 Kč / obyv.");
+  await page.locator("#municipality-sort").selectOption("expense_per_capita");
+  await expect(page.locator("#municipality-sort")).toHaveValue("expense_per_capita");
 });
 
 test("municipal profiles expose 2010–2025 history and preserve genuine coverage gaps", async ({ page }) => {

@@ -4,6 +4,8 @@
   "private": true,
   "engines": { "node": "22.x" },
   "scripts": {
+    "build:functional-budgets": "node scripts/build-country-functional-budgets.mjs",
+    "build:country-cash-in": "node scripts/build-country-cash-in.mjs",
     "validate": "node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
     "audit:links": "node scripts/check-external-links.mjs --write-report",
