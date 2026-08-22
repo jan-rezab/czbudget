@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-22T20:31:22.510Z",
+  "generated_at": "2026-08-22T20:48:51.053Z",
   "country": {
     "country_code": "GBR",
     "name_cs": "Spojené království",
@@ -32,10 +32,9 @@
     }
   },
   "coverage": {
-    "loaded_modules": 8,
+    "loaded_modules": 9,
     "total_modules": 11,
     "missing_dimensions": [
-      "provider_register",
       "public_entity_accounts",
       "national_demographic_projection"
     ]
@@ -87,12 +86,10 @@
       "missing_dimensions": []
     },
     "providers": {
-      "status": "unavailable",
-      "coverage": "source_adapter_pending",
-      "missing_dimensions": [
-        "facility records"
-      ],
-      "facility_count": 0
+      "status": "loaded",
+      "coverage": "46118 registered provider locations",
+      "missing_dimensions": [],
+      "facility_count": 46118
     },
     "municipalities": {
       "status": "loaded",
@@ -2500,7 +2497,27 @@
       "bed_year": 2024,
       "bed_status": "E"
     },
-    "providers": null,
+    "providers": {
+      "coverage": "nhs_trust_sites",
+      "facility_count": 46118,
+      "provider_count": 274,
+      "regions": {
+        "England and Wales": 46118
+      },
+      "source": {
+        "title": "NHS England ODS · NHS trusts and trust sites",
+        "url": "https://digital.nhs.uk/services/organisation-data-service/data-search-and-export/csv-downloads/other-nhs-organisations",
+        "api_url": "https://www.odsdatasearchandexport.nhs.uk/api/getReport?report=ets",
+        "license": "Open Government Licence",
+        "update_frequency": "nightly"
+      },
+      "payments": {
+        "coverage": "trust_accounts_separate_adapter",
+        "note_cs": "Registr organizací a pracovišť je načten; účetní výkazy jednotlivých trustů jsou samostatná účetní vrstva.",
+        "note_en": "The organisation and site register is loaded; individual trust accounts are a separate accounting layer."
+      },
+      "records": "data/countries/gbr/providers.v1.json"
+    },
     "municipalities": {
       "code": "GBR",
       "alpha2": "GB",

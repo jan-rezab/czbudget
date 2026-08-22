@@ -5,7 +5,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const selected = [
-  "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-health.v1.json", "data/country-provider-networks.v1.json", "data/country-functional-budgets.v1.json", "data/transport-budget-detail.v1.json", "data/country-cash-in.v1.json",
+  "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-parity.v1.json", "data/contracts/country-parity.schema.json", "data/country-health.v1.json", "data/country-provider-networks.v1.json", "data/country-functional-budgets.v1.json", "data/transport-budget-detail.v1.json", "data/country-cash-in.v1.json",
   "data/country-spending-comparison.v1.json", "data/cz-public-entities-2024.json",
   "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json",
   "data/czech-budget.v1.json", "data/demography-social.v1.json",
@@ -17,6 +17,9 @@ try {
   await access(path.join(root, "data", "municipal-budget-codebook.v1.json"));
   selected.push("data/municipal-budget-codebook.v1.json");
 } catch {}
+for (const code of (await readdir(path.join(root, "data", "countries"))).sort()) {
+  for (const name of (await readdir(path.join(root, "data", "countries", code))).filter((item) => item.endsWith(".json")).sort()) selected.push(`data/countries/${code}/${name}`);
+}
 const sha256 = (content) => createHash("sha256").update(content).digest("hex");
 const artifacts = [];
 for (const relative of selected) {
