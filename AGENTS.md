@@ -13,3 +13,6 @@
   enforces this invariant.
 - Never modify or deploy the Riverdata repository or `riverdata.org` from this project.
 - Keep Czech and English navigation available on all municipal and regional pages.
+- Brand assets, the palette and the adopted logo rules are in `BRAND.md`; the
+  chart grammar is in `CHART_SYSTEM.md`. Preserve the primary mark and wordmark
+  rules across hand-written and generated pages.
