@@ -48,7 +48,7 @@ function renderPublicRegistry(data) {
   const owners = [...new Set(data.entities.map(row => row.owner_level))].sort((a, b) => a.localeCompare(b, "cs"));
   owner.insertAdjacentHTML("beforeend", owners.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join(""));
 
-  const tabCounts = {all: "#tab-all", Firma: "#tab-companies", "Vysoká škola": "#tab-universities", Nemocnice: "#tab-hospitals"};
+  const tabCounts = {all: "#tab-all", Firma: "#tab-companies", "Vysoká škola": "#tab-universities", Nemocnice: "#tab-hospitals", "Zdravotní pojišťovna": "#tab-health-insurers"};
   Object.entries(tabCounts).forEach(([key, selector]) => {
     const group = data.summary.groups[key];
     $(selector).textContent = `${number(group.entity_count)} · ${number(group.financial_result_count)} s výsledkem`;
@@ -56,7 +56,7 @@ function renderPublicRegistry(data) {
 
   function updateSummary() {
     const group = data.summary.groups[activeCategory];
-    const label = activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : "nemocnice";
+    const label = activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : activeCategory === "Nemocnice" ? "nemocnice" : "zdravotní pojišťovny";
     const hasFinancials = group.financial_result_count > 0;
     $("#profit-sum").textContent = hasFinancials ? billion(group.positive_net_result_sum_mczk) : "—";
     $("#loss-sum").textContent = hasFinancials ? `−${billion(group.negative_net_result_absolute_sum_mczk)}` : "—";
@@ -90,7 +90,7 @@ function renderPublicRegistry(data) {
       <td class="numeric">${row.top_line.value_mczk == null ? "—" : `${money(row.top_line.value_mczk)} <small>mil. Kč · ${esc(row.top_line.definition)}</small>`}</td>
       <td class="numeric ${row.top_line.net_result_mczk < 0 ? "negative" : ""}">${row.top_line.net_result_mczk == null ? "—" : `${row.top_line.net_result_mczk < 0 ? "−" : "+"}${money(Math.abs(row.top_line.net_result_mczk))} <small>mil. Kč</small>`}</td>
       <td class="numeric ${row.top_line.net_margin_pct < 0 ? "negative" : ""}">${percent(row.top_line.net_margin_pct)}</td>
-      <td>${row.financial_source_kind ? `<span class="data-available">${esc(row.financial_source_kind)}</span>` : '<span class="data-missing">výkaz chybí</span>'}${row.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
+      <td>${row.financial_source_kind ? `<span class="data-available">${esc(row.financial_source_kind)}</span>` : row.category === "Zdravotní pojišťovna" ? '<span class="data-missing">speciální výkaz mimo VZZ</span>' : '<span class="data-missing">výkaz chybí</span>'}${row.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
     </tr>`).join("");
     $("#registry-count").textContent = `Zobrazeno ${number(visible.length)} z ${number(data.summary.groups[activeCategory].entity_count)} subjektů v záložce`;
   }
@@ -108,7 +108,7 @@ function renderPublicRegistry(data) {
 
 Promise.all([
   fetch("data/cz-state-enterprises-2024.json?v=20260820-3"),
-  fetch("data/cz-public-entities-2024.json?v=20260820-3")
+  fetch("data/cz-public-entities-2024.json?v=20260822-1")
 ])
   .then(async responses => {
     for (const response of responses) if (!response.ok) throw new Error(`Dataset odpověděl ${response.status}`);
