@@ -46,17 +46,60 @@
 .capital-card header small { color: #c74c2f; }
 .capital-country-code { width: 31px; height: 21px; display: grid; place-items: center; background: #15201d; color: #fff; font-size: 9px; letter-spacing: .08em; }
 .czechia-hero h1 em { color: #a8b63f; }
-.czechia-municipalities-page .municipality-size-benchmark { padding-block: 96px 104px; background: #171918; color: #fff; }
+.czechia-municipalities-page #insights .section-heading {
+  grid-template-columns: minmax(0, .82fr) minmax(320px, .7fr);
+  gap: clamp(48px, 8vw, 120px);
+  align-items: start;
+  margin-bottom: 52px;
+}
+.czechia-municipalities-page #insights .section-heading h2 {
+  max-width: 650px;
+  font: 500 clamp(44px, 5vw, 68px)/.96 Georgia, serif;
+  letter-spacing: -.055em;
+}
+.czechia-municipalities-page #insights .section-heading p {
+  max-width: 520px;
+  margin: 42px 0 0;
+  color: #69716c;
+  font-size: 16px;
+}
+.czechia-municipalities-page #insights .insight-grid { gap: 12px; }
+.czechia-municipalities-page #insights .insight-grid article {
+  min-width: 0;
+  min-height: 220px;
+  padding: 24px;
+  border: 1px solid #bac1b8;
+  border-top: 4px solid #15201d;
+  background: #fffdf7;
+  display: flex;
+  flex-direction: column;
+}
+.czechia-municipalities-page #insights .insight-grid strong {
+  font-size: clamp(34px, 3.55vw, 52px);
+  line-height: 1;
+  letter-spacing: -.055em;
+  white-space: nowrap;
+}
+.czechia-municipalities-page #insights .insight-grid h3 {
+  margin: 28px 0 8px;
+  font-size: 18px;
+}
+.czechia-municipalities-page #insights .insight-grid p {
+  margin: auto 0 0;
+  color: #69716c;
+  font-size: 12px;
+}
+.czechia-municipalities-page .municipality-size-benchmark { padding: 84px 40px 92px; background: #171918; color: #fff; }
 .benchmark-loading { margin: 0; color: #b9bdb7; font: 11px monospace; text-transform: uppercase; }
-.municipal-size-heading { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(280px,.62fr); gap: 9vw; align-items: end; }
+.municipal-size-heading { display: grid; grid-template-columns: minmax(0,.92fr) minmax(300px,.58fr); gap: clamp(48px,7vw,104px); align-items: start; }
 .municipal-size-heading .kicker { color: #a8b63f; }
-.municipal-size-heading h2 { max-width: 850px; margin: 18px 0 0; font: 500 clamp(48px,6.3vw,86px)/.91 Georgia,serif; letter-spacing: -.055em; }
-.municipal-size-heading p { margin: 0; color: #b9bdb7; font-size: 15px; line-height: 1.65; }
-.municipal-size-kpis { display: grid; grid-template-columns: repeat(4,1fr); margin: 44px 0 24px; border: 1px solid #ffffff32; }
-.municipal-size-kpis article { min-width: 0; padding: 20px 22px; border-right: 1px solid #ffffff32; }
-.municipal-size-kpis article:last-child { border-right: 0; }
+.municipal-size-heading h2 { max-width: 720px; margin: 18px 0 0; font: 500 clamp(44px,5vw,68px)/.96 Georgia,serif; letter-spacing: -.055em; }
+.municipal-size-heading p { max-width: 470px; margin: 44px 0 0; color: #b9bdb7; font-size: 15px; line-height: 1.65; }
+.municipal-size-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 52px 0 32px; }
+.municipal-size-kpis article { min-width: 0; min-height: 158px; padding: 22px; border: 1px solid #ffffff26; border-top: 3px solid #a8b63f; background: #232624; display: flex; flex-direction: column; }
 .municipal-size-kpis span,.municipal-size-kpis small { display: block; color: #aeb2ac; font: 9px/1.35 monospace; text-transform: uppercase; letter-spacing: .06em; }
-.municipal-size-kpis strong { display: block; margin: 13px 0 7px; color: #a8b63f; font: 500 clamp(27px,3vw,43px)/1 Georgia,serif; }
+.municipal-size-kpis strong { display: block; margin: 18px 0 8px; color: #a8b63f; font: 500 clamp(31px,3vw,42px)/1 Georgia,serif; }
+.municipal-size-kpis small { margin-top: auto; }
 .municipal-size-chart-card { background: #faf7ef; color: #171918; box-shadow: 9px 9px 0 #a8b63f; }
 .municipal-size-legend { min-height: 56px; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 22px; border-bottom: 1px solid #d2ccc1; color: #6e716d; font: 9px monospace; text-transform: uppercase; }
 .municipal-size-legend span { display: flex; align-items: center; gap: 7px; }
@@ -119,9 +162,10 @@
   .czechia-destination-grid { grid-template-columns: 1fr; }
   .country-context-grid { grid-template-columns: 1fr; }
   .municipal-size-heading { grid-template-columns: 1fr; gap: 22px; }
+  .municipal-size-heading p { margin-top: 0; }
+  .czechia-municipalities-page #insights .section-heading { grid-template-columns: 1fr; gap: 12px; }
+  .czechia-municipalities-page #insights .section-heading p { margin-top: 0; }
   .municipal-size-kpis { grid-template-columns: 1fr 1fr; }
-  .municipal-size-kpis article:nth-child(2) { border-right: 0; }
-  .municipal-size-kpis article:nth-child(-n+2) { border-bottom: 1px solid #ffffff32; }
 }
 @media (max-width: 650px) {
   .municipality-switch { margin-top: 20px; width: 100%; }
@@ -130,10 +174,12 @@
   .municipal-controls { grid-template-columns: 1fr; }
   .czechia-destination-grid > a { min-height: 280px; }
   .municipality-lang-switch button { min-width: 36px; padding-inline: 8px; }
-  .czechia-municipalities-page .municipality-size-benchmark { padding-block: 70px; }
+  .czechia-municipalities-page .municipality-size-benchmark { padding: 64px 20px 70px; }
+  .czechia-municipalities-page #insights .section-heading { margin-bottom: 34px; }
+  .czechia-municipalities-page #insights .insight-grid article { min-height: 190px; }
+  .czechia-municipalities-page #insights .insight-grid strong { font-size: clamp(38px, 12vw, 52px); }
   .municipal-size-kpis,.municipal-size-outliers { grid-template-columns: 1fr; }
-  .municipal-size-kpis article { border-right: 0; border-bottom: 1px solid #ffffff32; }
-  .municipal-size-kpis article:last-child { border-bottom: 0; }
+  .municipal-size-kpis article { min-height: 142px; }
   .municipal-size-legend { align-items: flex-start; flex-direction: column; gap: 8px; padding-block: 14px; }
   .municipal-size-method { grid-template-columns: 1fr; gap: 14px; }
 }
