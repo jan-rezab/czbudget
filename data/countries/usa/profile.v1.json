@@ -1,0 +1,3874 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "country-profile.v1",
+  "generated_at": "2026-08-22T20:31:22.510Z",
+  "country": {
+    "country_code": "USA",
+    "name_cs": "USA",
+    "name_en": "United States",
+    "currency_code": "USD",
+    "fiscal_architecture": {
+      "country_code": "USA",
+      "eu_status": "non_member",
+      "national_budget_label_cs": "Federální rozpočet USA",
+      "national_budget_label_en": "United States federal budget",
+      "municipal_budget_relation": "separate",
+      "other_public_accounts_relation": "on_budget_off_budget_and_unified_views",
+      "public_corporation_treatment": "government_corporation_transactions_included_gses_excluded",
+      "architecture_cs": "Rozpočty států a samospráv jsou mimo federální rozpočet. Federální prezentace rozlišuje on-budget a off-budget aktivity a publikuje jejich sjednocený součet.",
+      "architecture_en": "State and local budgets are outside the federal budget. The federal presentation distinguishes on-budget and off-budget activities and publishes a unified total.",
+      "corporation_note_cs": "Významná výjimka: transakce federálních vládních korporací jsou obecně zahrnuty ve federálním rozpočtu, často čistě. Soukromé government-sponsored enterprises jsou mimo rozpočtové součty.",
+      "corporation_note_en": "Important exception: transactions of Federal Government corporations are generally included in the Federal budget, often on a net basis. Privately owned government-sponsored enterprises are outside budget totals.",
+      "sources": [
+        {
+          "source_name": "OMB — coverage of the Federal budget",
+          "source_url": "https://www.whitehouse.gov/omb/information-resources/budget/supplemental-materials/"
+        },
+        {
+          "source_name": "CBO — Budget and Economic Outlook",
+          "source_url": "https://www.cbo.gov/publication/62105"
+        }
+      ]
+    }
+  },
+  "coverage": {
+    "loaded_modules": 7,
+    "total_modules": 11,
+    "missing_dimensions": [
+      "municipal_entity_finance",
+      "provider_register",
+      "public_entity_accounts",
+      "national_demographic_projection"
+    ]
+  },
+  "modules": {
+    "sovereign": {
+      "status": "loaded",
+      "coverage": "2005–2024; 15 metrics",
+      "missing_dimensions": [],
+      "period": {
+        "from": 2005,
+        "to": 2024,
+        "years": 20
+      },
+      "metric_count": 15
+    },
+    "revenue": {
+      "status": "loaded",
+      "coverage": "general-government revenue and balance",
+      "missing_dimensions": [],
+      "native_layers": []
+    },
+    "administrative_spending": {
+      "status": "loaded",
+      "coverage": "136 native classification rows; FY 2025 and FY 2026",
+      "missing_dimensions": [],
+      "row_count": 136
+    },
+    "common_spending": {
+      "status": "loaded",
+      "coverage": "12 harmonised categories",
+      "missing_dimensions": [],
+      "category_count": 12
+    },
+    "functional_spending": {
+      "status": "loaded",
+      "coverage": "3 functions; 2015–2024",
+      "missing_dimensions": [],
+      "function_count": 3
+    },
+    "transport": {
+      "status": "loaded",
+      "coverage": "transport function and native detailed budget",
+      "missing_dimensions": []
+    },
+    "health": {
+      "status": "loaded",
+      "coverage": "SHA financing/provider shares; 2024",
+      "missing_dimensions": []
+    },
+    "providers": {
+      "status": "unavailable",
+      "coverage": "source_adapter_pending",
+      "missing_dimensions": [
+        "facility records"
+      ],
+      "facility_count": 0
+    },
+    "municipalities": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "entity census",
+        "budget facts"
+      ],
+      "entity_count": 0,
+      "years": [],
+      "stages": [],
+      "measures": [],
+      "directory": null,
+      "warehouse": []
+    },
+    "public_entities": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "ownership register",
+        "entity accounts"
+      ],
+      "entity_count": 0
+    },
+    "demography": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "population projection",
+        "age structure",
+        "social-system model"
+      ]
+    }
+  },
+  "data": {
+    "sovereign": {
+      "series": {
+        "country_code": "USA",
+        "metrics": {
+          "real_gdp_growth_pct": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 3.483,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 2.785,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 2.004,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 0.114,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -2.576,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 2.695,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 1.564,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 2.289,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 2.118,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 2.524,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 2.946,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 1.82,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 2.458,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 2.967,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 2.584,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": -2.081,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 6.152,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 2.524,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 2.935,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 2.793,
+                "status": "actual"
+              }
+            ]
+          },
+          "nominal_gdp_local_bn": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 13039.2,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 13815.6,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 14474.25,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 14769.85,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 14478.05,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 15048.975,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 15599.725,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 16253.95,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 16880.675,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 17608.125,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 18295,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 18804.9,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 19612.1,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 20656.525,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 21539.975,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 21375.275,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 23725.65,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 26054.6,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 27811.5,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 29298.025,
+                "status": "actual"
+              }
+            ]
+          },
+          "nominal_gdp_usd_bn": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 13039.2,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 13815.6,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 14474.25,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 14769.85,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 14478.05,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 15048.975,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 15599.725,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 16253.95,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 16880.675,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 17608.125,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 18295,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 18804.9,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 19612.1,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 20656.525,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 21539.975,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 21375.275,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 23725.65,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 26054.6,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 27811.5,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 29298.025,
+                "status": "actual"
+              }
+            ]
+          },
+          "gdp_per_capita_local": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 44034.256,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 46216.853,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 47943.353,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 48470.553,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 47102.428,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 48586.288,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 50008.108,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 51736.738,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 53363.904,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 55263.817,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 57006.926,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 58179.697,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 60292.978,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 63165.278,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 65561.32,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 64517.998,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 71365.73,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 77948.992,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 82536.095,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 86173.365,
+                "status": "actual"
+              }
+            ]
+          },
+          "gdp_per_capita_usd": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 44034.256,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 46216.853,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 47943.353,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 48470.553,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 47102.428,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 48586.288,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 50008.108,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 51736.738,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 53363.904,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 55263.817,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 57006.926,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 58179.697,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 60292.978,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 63165.278,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 65561.32,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 64517.998,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 71365.73,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 77948.992,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 82536.095,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 86173.365,
+                "status": "actual"
+              }
+            ]
+          },
+          "gdp_per_capita_ppp": {
+            "latest_actual_year": null,
+            "values": [
+              {
+                "year": 2005,
+                "value": 44034.256,
+                "status": "estimate"
+              },
+              {
+                "year": 2006,
+                "value": 46216.853,
+                "status": "estimate"
+              },
+              {
+                "year": 2007,
+                "value": 47943.353,
+                "status": "estimate"
+              },
+              {
+                "year": 2008,
+                "value": 48470.553,
+                "status": "estimate"
+              },
+              {
+                "year": 2009,
+                "value": 47102.428,
+                "status": "estimate"
+              },
+              {
+                "year": 2010,
+                "value": 48586.288,
+                "status": "estimate"
+              },
+              {
+                "year": 2011,
+                "value": 50008.108,
+                "status": "estimate"
+              },
+              {
+                "year": 2012,
+                "value": 51736.738,
+                "status": "estimate"
+              },
+              {
+                "year": 2013,
+                "value": 53363.904,
+                "status": "estimate"
+              },
+              {
+                "year": 2014,
+                "value": 55263.817,
+                "status": "estimate"
+              },
+              {
+                "year": 2015,
+                "value": 57006.926,
+                "status": "estimate"
+              },
+              {
+                "year": 2016,
+                "value": 58179.697,
+                "status": "estimate"
+              },
+              {
+                "year": 2017,
+                "value": 60292.978,
+                "status": "estimate"
+              },
+              {
+                "year": 2018,
+                "value": 63165.278,
+                "status": "estimate"
+              },
+              {
+                "year": 2019,
+                "value": 65561.32,
+                "status": "estimate"
+              },
+              {
+                "year": 2020,
+                "value": 64517.998,
+                "status": "estimate"
+              },
+              {
+                "year": 2021,
+                "value": 71365.73,
+                "status": "estimate"
+              },
+              {
+                "year": 2022,
+                "value": 77948.992,
+                "status": "estimate"
+              },
+              {
+                "year": 2023,
+                "value": 82536.095,
+                "status": "estimate"
+              },
+              {
+                "year": 2024,
+                "value": 86173.365,
+                "status": "estimate"
+              }
+            ]
+          },
+          "ppp_conversion_factor": {
+            "latest_actual_year": null,
+            "values": [
+              {
+                "year": 2005,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2006,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2007,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2008,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2009,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2010,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2011,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2012,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2013,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2014,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2015,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2016,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2017,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2018,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2019,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2020,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2021,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2022,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2023,
+                "value": 1,
+                "status": "estimate"
+              },
+              {
+                "year": 2024,
+                "value": 1,
+                "status": "estimate"
+              }
+            ]
+          },
+          "inflation_pct": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 3.366,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 3.222,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 2.871,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 3.815,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -0.32,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 1.637,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 3.14,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 2.073,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 1.466,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 1.615,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 0.121,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 1.267,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 2.131,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 2.439,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 1.813,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 1.253,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 4.681,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 7.991,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 4.127,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 2.952,
+                "status": "actual"
+              }
+            ]
+          },
+          "unemployment_pct": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 5.083,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 4.608,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 4.617,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 5.8,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 9.283,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 9.608,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 8.933,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 8.075,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 7.358,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 6.158,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 5.275,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 4.875,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 4.358,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 3.892,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 3.675,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 8.1,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 5.35,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 3.65,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 3.625,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 4.025,
+                "status": "actual"
+              }
+            ]
+          },
+          "revenue_pct_gdp": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 30.853,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 31.656,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 31.649,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 30.532,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 28.222,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 28.77,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 29.08,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 29.109,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 31.222,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 31.298,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 31.501,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 30.977,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 30.4,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 30.014,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 30.014,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 30.609,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 31.762,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 33.075,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 29.622,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 29.879,
+                "status": "actual"
+              }
+            ]
+          },
+          "expenditure_pct_gdp": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 33.928,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 33.692,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 34.562,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 37.144,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 41.399,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 39.763,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 38.796,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 37.223,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 35.782,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 35.324,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 35.031,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 35.333,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 35.194,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 35.349,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 35.819,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 44.735,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 43.223,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 36.797,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 37.51,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 37.738,
+                "status": "actual"
+              }
+            ]
+          },
+          "balance_pct_gdp": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": -3.075,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": -2.036,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": -2.913,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": -6.612,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -13.177,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": -10.993,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": -9.716,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": -8.114,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": -4.561,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": -4.026,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": -3.53,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": -4.356,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": -4.794,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": -5.335,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": -5.805,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": -14.127,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": -11.461,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": -3.722,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": -7.887,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": -7.858,
+                "status": "actual"
+              }
+            ]
+          },
+          "structural_balance_pct_potential_gdp": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": -3.55,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": -2.956,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": -4.047,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": -6.178,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -8.251,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": -10.054,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": -8.472,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": -6.439,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": -4.362,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": -3.546,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": -3.131,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": -3.853,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": -4.338,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": -4.903,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": -5.749,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": -10.454,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": -10.633,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": -6.003,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": -7.789,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": -7.441,
+                "status": "actual"
+              }
+            ]
+          },
+          "primary_balance_pct_gdp": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": -1.084,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": -0.074,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": -0.847,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": -4.589,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -11.288,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": -8.966,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": -7.419,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": -5.905,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": -2.584,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": -2.056,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": -1.692,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": -2.374,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": -2.781,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": -3.101,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": -3.528,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": -12.077,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": -9.193,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": -0.989,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": -4.759,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": -4.371,
+                "status": "actual"
+              }
+            ]
+          },
+          "gross_debt_pct_gdp": {
+            "latest_actual_year": 2025,
+            "values": [
+              {
+                "year": 2005,
+                "value": 65.777,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 64.531,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 64.948,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 73.844,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 87.071,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 95.651,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 100.027,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 103.667,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 105.015,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 104.942,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 105.442,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 107.405,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 106.403,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 107.653,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 108.785,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 132.552,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 125.048,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 119.145,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 119.963,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 122.27,
+                "status": "actual"
+              }
+            ]
+          }
+        }
+      },
+      "summary": {
+        "country_code": "USA",
+        "period_start": 2005,
+        "period_end": 2024,
+        "median_balance_pct_gdp": -5.57,
+        "mean_balance_pct_gdp": -6.705,
+        "balance_volatility_pp": 3.491,
+        "surplus_year_share": 0,
+        "worst_balance_pct_gdp": -14.127,
+        "median_primary_balance_pct_gdp": -3.314,
+        "mean_revenue_pct_gdp": 30.512,
+        "mean_expenditure_pct_gdp": 37.217,
+        "gross_debt_start_pct_gdp": 65.777,
+        "gross_debt_end_pct_gdp": 122.27,
+        "gross_debt_change_pp": 56.493,
+        "gross_debt_peak_pct_gdp": 132.552,
+        "post_2021_debt_change_pp": -2.778
+      }
+    },
+    "revenue": {
+      "name_cs": "USA",
+      "name_en": "United States",
+      "currency": "USD",
+      "consolidated": {
+        "year": 2024,
+        "scope": "general_government",
+        "revenue_pct_gdp": 29.879,
+        "revenue_local_bn": 8753.957,
+        "expense_pct_gdp": 37.738,
+        "balance_pct_gdp": -7.858
+      },
+      "layers": null
+    },
+    "administrative_spending": {
+      "code": "USA",
+      "currency": "USD",
+      "unit": "billion_local_currency",
+      "dimension": "administrative",
+      "scope_cs": "Federální výdaje (outlays) podle agentury, včetně netto kompenzačních příjmů",
+      "scope_en": "Federal outlays by agency, including net offsetting receipts",
+      "periods": {
+        "previous": {
+          "label": "FY 2025",
+          "status_cs": "skutečnost",
+          "status_en": "actual"
+        },
+        "current": {
+          "label": "FY 2026",
+          "status_cs": "odhad",
+          "status_en": "estimate"
+        }
+      },
+      "rows": [
+        {
+          "code": "6",
+          "label_native": "Department of Health and Human Services",
+          "amounts": {
+            "previous": 1884278,
+            "current": 2035980
+          }
+        },
+        {
+          "code": "12",
+          "label_native": "Social Security Administration",
+          "amounts": {
+            "previous": 1646513,
+            "current": 1745811
+          }
+        },
+        {
+          "code": "11",
+          "label_native": "Department of the Treasury",
+          "amounts": {
+            "previous": 1458915,
+            "current": 1522683
+          }
+        },
+        {
+          "code": "5",
+          "label_native": "Department of Defense--Military Programs",
+          "amounts": {
+            "previous": 868406,
+            "current": 913705
+          }
+        },
+        {
+          "code": "23",
+          "label_native": "Department of Veterans Affairs",
+          "amounts": {
+            "previous": 376593,
+            "current": 439752
+          }
+        },
+        {
+          "code": "3",
+          "label_native": "Department of Agriculture",
+          "amounts": {
+            "previous": 227452,
+            "current": 238841
+          }
+        },
+        {
+          "code": "21",
+          "label_native": "Office of Personnel Management",
+          "amounts": {
+            "previous": 128240,
+            "current": 132542
+          }
+        },
+        {
+          "code": "16",
+          "label_native": "Department of Transportation",
+          "amounts": {
+            "previous": 127579,
+            "current": 131545
+          }
+        },
+        {
+          "code": "18",
+          "label_native": "Department of Homeland Security",
+          "amounts": {
+            "previous": 115309,
+            "current": 116341
+          }
+        },
+        {
+          "code": "29",
+          "label_native": "Other Defense--Civil Programs",
+          "amounts": {
+            "previous": 76488,
+            "current": 76950
+          }
+        },
+        {
+          "code": "19",
+          "label_native": "Department of Housing and Urban Development",
+          "amounts": {
+            "previous": 50531,
+            "current": 76031
+          }
+        },
+        {
+          "code": "9",
+          "label_native": "Department of Labor",
+          "amounts": {
+            "previous": 50386,
+            "current": 71579
+          }
+        },
+        {
+          "code": "13",
+          "label_native": "Department of Education",
+          "amounts": {
+            "previous": 34713,
+            "current": 62188
+          }
+        },
+        {
+          "code": "14",
+          "label_native": "Department of Energy",
+          "amounts": {
+            "previous": 52292,
+            "current": 59641
+          }
+        },
+        {
+          "code": "8",
+          "label_native": "Department of Justice",
+          "amounts": {
+            "previous": 44944,
+            "current": 51516
+          }
+        },
+        {
+          "code": "10",
+          "label_native": "Department of State",
+          "amounts": {
+            "previous": 28361,
+            "current": 35351
+          }
+        },
+        {
+          "code": "20",
+          "label_native": "National Aeronautics and Space Administration",
+          "amounts": {
+            "previous": 24576,
+            "current": 24629
+          }
+        },
+        {
+          "code": "27",
+          "label_native": "International Assistance Programs",
+          "amounts": {
+            "previous": 17298,
+            "current": 24477
+          }
+        },
+        {
+          "code": "7",
+          "label_native": "Department of the Interior",
+          "amounts": {
+            "previous": 22443,
+            "current": 24292
+          }
+        },
+        {
+          "code": "15",
+          "label_native": "Environmental Protection Agency",
+          "amounts": {
+            "previous": 36973,
+            "current": 22323
+          }
+        },
+        {
+          "code": "4",
+          "label_native": "Department of Commerce",
+          "amounts": {
+            "previous": 29713,
+            "current": 21170
+          }
+        },
+        {
+          "code": "87",
+          "label_native": "Federal Communications Commission",
+          "amounts": {
+            "previous": 10716,
+            "current": 12848
+          }
+        },
+        {
+          "code": "22",
+          "label_native": "Small Business Administration",
+          "amounts": {
+            "previous": 837,
+            "current": 12142
+          }
+        },
+        {
+          "code": "145",
+          "label_native": "National Science Foundation",
+          "amounts": {
+            "previous": 9951,
+            "current": 10473
+          }
+        },
+        {
+          "code": "2",
+          "label_native": "Judicial Branch",
+          "amounts": {
+            "previous": 9759,
+            "current": 10375
+          }
+        },
+        {
+          "code": "1",
+          "label_native": "Legislative Branch",
+          "amounts": {
+            "previous": 7233,
+            "current": 8499
+          }
+        },
+        {
+          "code": "30",
+          "label_native": "Corps of Engineers--Civil Works",
+          "amounts": {
+            "previous": 12122,
+            "current": 8099
+          }
+        },
+        {
+          "code": "166",
+          "label_native": "Railroad Retirement Board",
+          "amounts": {
+            "previous": 6298,
+            "current": 8015
+          }
+        },
+        {
+          "code": "160",
+          "label_native": "Postal Service",
+          "amounts": {
+            "previous": 5165,
+            "current": 5482
+          }
+        },
+        {
+          "code": "195",
+          "label_native": "Corporation for National and Community Service",
+          "amounts": {
+            "previous": 1359,
+            "current": 2122
+          }
+        },
+        {
+          "code": "17",
+          "label_native": "General Services Administration",
+          "amounts": {
+            "previous": -379,
+            "current": 1760
+          }
+        },
+        {
+          "code": "171",
+          "label_native": "Smithsonian Institution",
+          "amounts": {
+            "previous": 1376,
+            "current": 1646
+          }
+        },
+        {
+          "code": "174",
+          "label_native": "Tennessee Valley Authority",
+          "amounts": {
+            "previous": 2560,
+            "current": 1558
+          }
+        },
+        {
+          "code": "80",
+          "label_native": "District of Columbia",
+          "amounts": {
+            "previous": 1075,
+            "current": 1027
+          }
+        },
+        {
+          "code": "234",
+          "label_native": "Patient-Centered Outcomes Research Trust Fund",
+          "amounts": {
+            "previous": 848,
+            "current": 898
+          }
+        },
+        {
+          "code": "236",
+          "label_native": "Bureau of Consumer Financial Protection",
+          "amounts": {
+            "previous": 2738,
+            "current": 762
+          }
+        },
+        {
+          "code": "208",
+          "label_native": "U.S. Agency for Global Media",
+          "amounts": {
+            "previous": 763,
+            "current": 654
+          }
+        },
+        {
+          "code": "182",
+          "label_native": "Intelligence Community Management Account",
+          "amounts": {
+            "previous": 612,
+            "current": 614
+          }
+        },
+        {
+          "code": "118",
+          "label_native": "National Archives and Records Administration",
+          "amounts": {
+            "previous": 509,
+            "current": 550
+          }
+        },
+        {
+          "code": "26",
+          "label_native": "Federal Drug Control Programs",
+          "amounts": {
+            "previous": 384,
+            "current": 542
+          }
+        },
+        {
+          "code": "110",
+          "label_native": "Legal Services Corporation",
+          "amounts": {
+            "previous": 560,
+            "current": 540
+          }
+        },
+        {
+          "code": "50",
+          "label_native": "Central Intelligence Agency",
+          "amounts": {
+            "previous": 514,
+            "current": 514
+          }
+        },
+        {
+          "code": "219",
+          "label_native": "Affordable Housing Program",
+          "amounts": {
+            "previous": 650,
+            "current": 486
+          }
+        },
+        {
+          "code": "81",
+          "label_native": "Equal Employment Opportunity Commission",
+          "amounts": {
+            "previous": 448,
+            "current": 443
+          }
+        },
+        {
+          "code": "188",
+          "label_native": "Institute of Museum and Library Services",
+          "amounts": {
+            "previous": 337,
+            "current": 426
+          }
+        },
+        {
+          "code": "169",
+          "label_native": "Securities and Exchange Commission",
+          "amounts": {
+            "previous": -1318,
+            "current": 391
+          }
+        },
+        {
+          "code": "70",
+          "label_native": "Commodity Futures Trading Commission",
+          "amounts": {
+            "previous": 350,
+            "current": 369
+          }
+        },
+        {
+          "code": "223",
+          "label_native": "Federal Housing Finance Agency",
+          "amounts": {
+            "previous": 360,
+            "current": 348
+          }
+        },
+        {
+          "code": "216",
+          "label_native": "Public Company Accounting Oversight Board",
+          "amounts": {
+            "previous": 359,
+            "current": 312
+          }
+        },
+        {
+          "code": "143",
+          "label_native": "National Labor Relations Board",
+          "amounts": {
+            "previous": 310,
+            "current": 305
+          }
+        },
+        {
+          "code": "45",
+          "label_native": "Appalachian Regional Commission",
+          "amounts": {
+            "previous": 215,
+            "current": 295
+          }
+        },
+        {
+          "code": "205",
+          "label_native": "Court Services and Offender Supervision Agency for the District of Columbia",
+          "amounts": {
+            "previous": 275,
+            "current": 275
+          }
+        },
+        {
+          "code": "141",
+          "label_native": "National Endowment for the Humanities",
+          "amounts": {
+            "previous": 197,
+            "current": 203
+          }
+        },
+        {
+          "code": "140",
+          "label_native": "National Endowment for the Arts",
+          "amounts": {
+            "previous": 234,
+            "current": 167
+          }
+        },
+        {
+          "code": "150",
+          "label_native": "Neighborhood Reinvestment Corporation",
+          "amounts": {
+            "previous": 158,
+            "current": 158
+          }
+        },
+        {
+          "code": "74",
+          "label_native": "Consumer Product Safety Commission",
+          "amounts": {
+            "previous": 154,
+            "current": 156
+          }
+        },
+        {
+          "code": "147",
+          "label_native": "National Transportation Safety Board",
+          "amounts": {
+            "previous": 148,
+            "current": 155
+          }
+        },
+        {
+          "code": "207",
+          "label_native": "Denali Commission",
+          "amounts": {
+            "previous": -70,
+            "current": 152
+          }
+        },
+        {
+          "code": "103",
+          "label_native": "International Trade Commission",
+          "amounts": {
+            "previous": 131,
+            "current": 140
+          }
+        },
+        {
+          "code": "187",
+          "label_native": "Federal Permitting Improvement Steering Council",
+          "amounts": {
+            "previous": 35,
+            "current": 138
+          }
+        },
+        {
+          "code": "151",
+          "label_native": "Nuclear Regulatory Commission",
+          "amounts": {
+            "previous": 169,
+            "current": 130
+          }
+        },
+        {
+          "code": "220",
+          "label_native": "Electric Reliability Organization",
+          "amounts": {
+            "previous": 116,
+            "current": 116
+          }
+        },
+        {
+          "code": "233",
+          "label_native": "Securities Investor Protection Corporation",
+          "amounts": {
+            "previous": 45,
+            "current": 96
+          }
+        },
+        {
+          "code": "206",
+          "label_native": "Presidio Trust",
+          "amounts": {
+            "previous": 16,
+            "current": 94
+          }
+        },
+        {
+          "code": "89",
+          "label_native": "Federal Election Commission",
+          "amounts": {
+            "previous": 82,
+            "current": 90
+          }
+        },
+        {
+          "code": "215",
+          "label_native": "Election Assistance Commission",
+          "amounts": {
+            "previous": 24,
+            "current": 72
+          }
+        },
+        {
+          "code": "176",
+          "label_native": "United States Institute of Peace",
+          "amounts": {
+            "previous": 45,
+            "current": 67
+          }
+        },
+        {
+          "code": "175",
+          "label_native": "United States Holocaust Memorial Museum",
+          "amounts": {
+            "previous": 66,
+            "current": 65
+          }
+        },
+        {
+          "code": "60",
+          "label_native": "Payment to Puerto Rico Oversight Board",
+          "amounts": {
+            "previous": 59,
+            "current": 59
+          }
+        },
+        {
+          "code": "211",
+          "label_native": "Delta Regional Authority",
+          "amounts": {
+            "previous": 56,
+            "current": 59
+          }
+        },
+        {
+          "code": "239",
+          "label_native": "Public Defender Service for the District of Columbia",
+          "amounts": {
+            "previous": 52,
+            "current": 58
+          }
+        },
+        {
+          "code": "114",
+          "label_native": "Merit Systems Protection Board",
+          "amounts": {
+            "previous": 49,
+            "current": 52
+          }
+        },
+        {
+          "code": "76",
+          "label_native": "United States Court of Appeals for Veterans Claims",
+          "amounts": {
+            "previous": 44,
+            "current": 51
+          }
+        },
+        {
+          "code": "94",
+          "label_native": "Federal Mediation and Conciliation Service",
+          "amounts": {
+            "previous": 49,
+            "current": 51
+          }
+        },
+        {
+          "code": "235",
+          "label_native": "Corporation for Travel Promotion",
+          "amounts": {
+            "previous": 126,
+            "current": 50
+          }
+        },
+        {
+          "code": "186",
+          "label_native": "Surface Transportation Board",
+          "amounts": {
+            "previous": 45,
+            "current": 48
+          }
+        },
+        {
+          "code": "93",
+          "label_native": "Federal Maritime Commission",
+          "amounts": {
+            "previous": 37,
+            "current": 45
+          }
+        },
+        {
+          "code": "230",
+          "label_native": "Northern Border Regional Commission",
+          "amounts": {
+            "previous": 25,
+            "current": 43
+          }
+        },
+        {
+          "code": "78",
+          "label_native": "Defense Nuclear Facilities Safety Board",
+          "amounts": {
+            "previous": 44,
+            "current": 42
+          }
+        },
+        {
+          "code": "232",
+          "label_native": "National Railroad Passenger Corporation Office of Inspector General",
+          "amounts": {
+            "previous": 28,
+            "current": 34
+          }
+        },
+        {
+          "code": "90",
+          "label_native": "Federal Financial Institutions Examination Council",
+          "amounts": {
+            "previous": 30,
+            "current": 31
+          }
+        },
+        {
+          "code": "157",
+          "label_native": "Office of Special Counsel",
+          "amounts": {
+            "previous": 32,
+            "current": 31
+          }
+        },
+        {
+          "code": "92",
+          "label_native": "Federal Labor Relations Authority",
+          "amounts": {
+            "previous": 30,
+            "current": 29
+          }
+        },
+        {
+          "code": "217",
+          "label_native": "Standard Setting Body",
+          "amounts": {
+            "previous": 33,
+            "current": 29
+          }
+        },
+        {
+          "code": "155",
+          "label_native": "Office of Government Ethics",
+          "amounts": {
+            "previous": 21,
+            "current": 24
+          }
+        },
+        {
+          "code": "225",
+          "label_native": "Council of the Inspectors General on Integrity and Efficiency",
+          "amounts": {
+            "previous": 11,
+            "current": 22
+          }
+        },
+        {
+          "code": "231",
+          "label_native": "Southeast Crescent Regional Commission",
+          "amounts": {
+            "previous": 0,
+            "current": 20
+          }
+        },
+        {
+          "code": "95",
+          "label_native": "Federal Mine Safety and Health Review Commission",
+          "amounts": {
+            "previous": 16,
+            "current": 18
+          }
+        },
+        {
+          "code": "144",
+          "label_native": "National Mediation Board",
+          "amounts": {
+            "previous": 15,
+            "current": 18
+          }
+        },
+        {
+          "code": "154",
+          "label_native": "Occupational Safety and Health Review Commission",
+          "amounts": {
+            "previous": 14,
+            "current": 16
+          }
+        },
+        {
+          "code": "58",
+          "label_native": "Commission on Civil Rights",
+          "amounts": {
+            "previous": 15,
+            "current": 15
+          }
+        },
+        {
+          "code": "222",
+          "label_native": "Privacy and Civil Liberties Oversight Board",
+          "amounts": {
+            "previous": 13,
+            "current": 14
+          }
+        },
+        {
+          "code": "69",
+          "label_native": "Committee for Purchase From People Who Are Blind or Severely Disabled",
+          "amounts": {
+            "previous": 13,
+            "current": 13
+          }
+        },
+        {
+          "code": "100",
+          "label_native": "Institute of American Indian and Alaska Native Culture and Arts Development",
+          "amounts": {
+            "previous": 13,
+            "current": 13
+          }
+        },
+        {
+          "code": "204",
+          "label_native": "Chemical Safety and Hazard Investigation Board",
+          "amounts": {
+            "previous": 14,
+            "current": 13
+          }
+        },
+        {
+          "code": "119",
+          "label_native": "National Capital Planning Commission",
+          "amounts": {
+            "previous": 11,
+            "current": 12
+          }
+        },
+        {
+          "code": "46",
+          "label_native": "Access Board",
+          "amounts": {
+            "previous": 9,
+            "current": 11
+          }
+        },
+        {
+          "code": "172",
+          "label_native": "State Justice Institute",
+          "amounts": {
+            "previous": 8,
+            "current": 11
+          }
+        },
+        {
+          "code": "55",
+          "label_native": "Commission of Fine Arts",
+          "amounts": {
+            "previous": 9,
+            "current": 10
+          }
+        },
+        {
+          "code": "36",
+          "label_native": "Concrete Masonry Products Board",
+          "amounts": {
+            "previous": 0,
+            "current": 8
+          }
+        },
+        {
+          "code": "43",
+          "label_native": "Advisory Council on Historic Preservation",
+          "amounts": {
+            "previous": 9,
+            "current": 8
+          }
+        },
+        {
+          "code": "75",
+          "label_native": "Corporation for Public Broadcasting",
+          "amounts": {
+            "previous": 586,
+            "current": 8
+          }
+        },
+        {
+          "code": "197",
+          "label_native": "Morris K. Udall and Stewart L. Udall Foundation",
+          "amounts": {
+            "previous": 7,
+            "current": 8
+          }
+        },
+        {
+          "code": "83",
+          "label_native": "Farm Credit Administration",
+          "amounts": {
+            "previous": -5,
+            "current": 7
+          }
+        },
+        {
+          "code": "37",
+          "label_native": "Public Buildings Reform Board",
+          "amounts": {
+            "previous": 3,
+            "current": 6
+          }
+        },
+        {
+          "code": "227",
+          "label_native": "National Oilheat Research Alliance",
+          "amounts": {
+            "previous": 6,
+            "current": 6
+          }
+        },
+        {
+          "code": "136",
+          "label_native": "National Council on Disability",
+          "amounts": {
+            "previous": 3,
+            "current": 5
+          }
+        },
+        {
+          "code": "153",
+          "label_native": "Nuclear Waste Technical Review Board",
+          "amounts": {
+            "previous": 4,
+            "current": 5
+          }
+        },
+        {
+          "code": "101",
+          "label_native": "United States Interagency Council on Homelessness",
+          "amounts": {
+            "previous": 3,
+            "current": 4
+          }
+        },
+        {
+          "code": "107",
+          "label_native": "Japan-United States Friendship Commission",
+          "amounts": {
+            "previous": 2,
+            "current": 4
+          }
+        },
+        {
+          "code": "39",
+          "label_native": "Administrative Conference of the United States",
+          "amounts": {
+            "previous": 3,
+            "current": 3
+          }
+        },
+        {
+          "code": "106",
+          "label_native": "James Madison Memorial Fellowship Foundation",
+          "amounts": {
+            "previous": 3,
+            "current": 3
+          }
+        },
+        {
+          "code": "112",
+          "label_native": "Marine Mammal Commission",
+          "amounts": {
+            "previous": 5,
+            "current": 3
+          }
+        },
+        {
+          "code": "31",
+          "label_native": "National Commission on Military, National, and Public Service",
+          "amounts": {
+            "previous": 0,
+            "current": 2
+          }
+        },
+        {
+          "code": "48",
+          "label_native": "Barry Goldwater Scholarship and Excellence in Education Foundation",
+          "amounts": {
+            "previous": 3,
+            "current": 2
+          }
+        },
+        {
+          "code": "99",
+          "label_native": "Harry S Truman Scholarship Foundation",
+          "amounts": {
+            "previous": 3,
+            "current": 2
+          }
+        },
+        {
+          "code": "202",
+          "label_native": "Other Commissions and Boards",
+          "amounts": {
+            "previous": 0,
+            "current": 2
+          }
+        },
+        {
+          "code": "33",
+          "label_native": "National Commission on Military Aviation Safety",
+          "amounts": {
+            "previous": 0,
+            "current": 1
+          }
+        },
+        {
+          "code": "193",
+          "label_native": "Military Compensation and Retirement Modernization Commission",
+          "amounts": {
+            "previous": 0,
+            "current": 1
+          }
+        },
+        {
+          "code": "25",
+          "label_native": "Civil Rights Cold Case Records Review Board",
+          "amounts": {
+            "previous": 1,
+            "current": 0
+          }
+        },
+        {
+          "code": "34",
+          "label_native": "400 Years of African-American History Commission",
+          "amounts": {
+            "previous": 5,
+            "current": 0
+          }
+        },
+        {
+          "code": "96",
+          "label_native": "Federal Retirement Thrift Investment Board",
+          "amounts": {
+            "previous": -33,
+            "current": 0
+          }
+        },
+        {
+          "code": "156",
+          "label_native": "Office of Navajo and Hopi Indian Relocation",
+          "amounts": {
+            "previous": 5,
+            "current": 0
+          }
+        },
+        {
+          "code": "229",
+          "label_native": "Southwest Border Regional Commission",
+          "amounts": {
+            "previous": 1,
+            "current": 0
+          }
+        },
+        {
+          "code": "242",
+          "label_native": "Miscellaneous Receipts Below the Reporting Threshold",
+          "amounts": {
+            "previous": -1,
+            "current": 0
+          }
+        },
+        {
+          "code": "190",
+          "label_native": "United Mine Workers of America Benefit Funds",
+          "amounts": {
+            "previous": 9,
+            "current": -2
+          }
+        },
+        {
+          "code": "240",
+          "label_native": "Allowances",
+          "amounts": {
+            "previous": 0,
+            "current": -26
+          }
+        },
+        {
+          "code": "97",
+          "label_native": "Federal Trade Commission",
+          "amounts": {
+            "previous": 119,
+            "current": -69
+          }
+        },
+        {
+          "code": "82",
+          "label_native": "Export-Import Bank of the United States",
+          "amounts": {
+            "previous": -112,
+            "current": -130
+          }
+        },
+        {
+          "code": "238",
+          "label_native": "Gulf Coast Ecosystem Restoration Council",
+          "amounts": {
+            "previous": 0,
+            "current": -184
+          }
+        },
+        {
+          "code": "28",
+          "label_native": "Medical Center Research Organizations",
+          "amounts": {
+            "previous": 0,
+            "current": -244
+          }
+        },
+        {
+          "code": "24",
+          "label_native": "Executive Office of the President",
+          "amounts": {
+            "previous": -506,
+            "current": -327
+          }
+        },
+        {
+          "code": "86",
+          "label_native": "Farm Credit System Insurance Corporation",
+          "amounts": {
+            "previous": -518,
+            "current": -736
+          }
+        },
+        {
+          "code": "138",
+          "label_native": "National Credit Union Administration",
+          "amounts": {
+            "previous": -982,
+            "current": -810
+          }
+        },
+        {
+          "code": "88",
+          "label_native": "Federal Deposit Insurance Corporation",
+          "amounts": {
+            "previous": -31163,
+            "current": -21219
+          }
+        },
+        {
+          "code": "241",
+          "label_native": "Undistributed Offsetting Receipts",
+          "amounts": {
+            "previous": -337815,
+            "current": -358965
+          }
+        }
+      ],
+      "totals": {
+        "previous": 7011105,
+        "current": 7540434
+      },
+      "note_cs": "Záporné částky jsou zachovány: jde o netto kompenzační příjmy a úvěrové operace v oficiální databázi OMB.",
+      "note_en": "Negative values are retained: they are net offsetting receipts and credit operations in the official OMB database.",
+      "sources": [
+        {
+          "title": "OMB — Public Budget Database, Outlays",
+          "url": "https://www.whitehouse.gov/omb/information-resources/budget/supplemental-materials/"
+        }
+      ]
+    },
+    "common_spending": {
+      "code": "USA",
+      "currency": "USD",
+      "unit": "billion_local_currency",
+      "source_amount_scale_to_billions": 0.001,
+      "dimension": "administrative",
+      "scope_cs": "Federální výdaje (outlays) podle agentury, včetně netto kompenzačních příjmů",
+      "scope_en": "Federal outlays by agency, including net offsetting receipts",
+      "periods": {
+        "previous": {
+          "label": "FY 2025",
+          "status_cs": "skutečnost",
+          "status_en": "actual"
+        },
+        "current": {
+          "label": "FY 2026",
+          "status_cs": "odhad",
+          "status_en": "estimate"
+        }
+      },
+      "totals": {
+        "previous": 7011.105,
+        "current": 7540.434
+      },
+      "groups": [
+        {
+          "category_id": "social_protection",
+          "amounts": {
+            "previous": 1831.446,
+            "current": 1957.945
+          },
+          "shares_pct": {
+            "previous": 26.122073,
+            "current": 25.965946
+          },
+          "source_rows": [
+            {
+              "code": "12",
+              "label_native": "Social Security Administration"
+            },
+            {
+              "code": "21",
+              "label_native": "Office of Personnel Management"
+            },
+            {
+              "code": "9",
+              "label_native": "Department of Labor"
+            },
+            {
+              "code": "166",
+              "label_native": "Railroad Retirement Board"
+            },
+            {
+              "code": "190",
+              "label_native": "United Mine Workers of America Benefit Funds"
+            }
+          ]
+        },
+        {
+          "category_id": "health",
+          "amounts": {
+            "previous": 2261.719,
+            "current": 2476.386
+          },
+          "shares_pct": {
+            "previous": 32.259095,
+            "current": 32.841425
+          },
+          "source_rows": [
+            {
+              "code": "6",
+              "label_native": "Department of Health and Human Services"
+            },
+            {
+              "code": "23",
+              "label_native": "Department of Veterans Affairs"
+            },
+            {
+              "code": "234",
+              "label_native": "Patient-Centered Outcomes Research Trust Fund"
+            },
+            {
+              "code": "28",
+              "label_native": "Medical Center Research Organizations"
+            }
+          ]
+        },
+        {
+          "category_id": "education_research",
+          "amounts": {
+            "previous": 69.586,
+            "current": 97.723
+          },
+          "shares_pct": {
+            "previous": 0.992511,
+            "current": 1.295986
+          },
+          "source_rows": [
+            {
+              "code": "13",
+              "label_native": "Department of Education"
+            },
+            {
+              "code": "20",
+              "label_native": "National Aeronautics and Space Administration"
+            },
+            {
+              "code": "145",
+              "label_native": "National Science Foundation"
+            },
+            {
+              "code": "188",
+              "label_native": "Institute of Museum and Library Services"
+            },
+            {
+              "code": "106",
+              "label_native": "James Madison Memorial Fellowship Foundation"
+            },
+            {
+              "code": "48",
+              "label_native": "Barry Goldwater Scholarship and Excellence in Education Foundation"
+            },
+            {
+              "code": "99",
+              "label_native": "Harry S Truman Scholarship Foundation"
+            }
+          ]
+        },
+        {
+          "category_id": "defence",
+          "amounts": {
+            "previous": 944.938,
+            "current": 990.697
+          },
+          "shares_pct": {
+            "previous": 13.477733,
+            "current": 13.138461
+          },
+          "source_rows": [
+            {
+              "code": "5",
+              "label_native": "Department of Defense--Military Programs"
+            },
+            {
+              "code": "29",
+              "label_native": "Other Defense--Civil Programs"
+            },
+            {
+              "code": "78",
+              "label_native": "Defense Nuclear Facilities Safety Board"
+            }
+          ]
+        },
+        {
+          "category_id": "public_order_justice",
+          "amounts": {
+            "previous": 172.461,
+            "current": 180.837
+          },
+          "shares_pct": {
+            "previous": 2.459826,
+            "current": 2.398231
+          },
+          "source_rows": [
+            {
+              "code": "18",
+              "label_native": "Department of Homeland Security"
+            },
+            {
+              "code": "8",
+              "label_native": "Department of Justice"
+            },
+            {
+              "code": "2",
+              "label_native": "Judicial Branch"
+            },
+            {
+              "code": "182",
+              "label_native": "Intelligence Community Management Account"
+            },
+            {
+              "code": "26",
+              "label_native": "Federal Drug Control Programs"
+            },
+            {
+              "code": "110",
+              "label_native": "Legal Services Corporation"
+            },
+            {
+              "code": "50",
+              "label_native": "Central Intelligence Agency"
+            },
+            {
+              "code": "205",
+              "label_native": "Court Services and Offender Supervision Agency for the District of Columbia"
+            },
+            {
+              "code": "239",
+              "label_native": "Public Defender Service for the District of Columbia"
+            },
+            {
+              "code": "76",
+              "label_native": "United States Court of Appeals for Veterans Claims"
+            },
+            {
+              "code": "172",
+              "label_native": "State Justice Institute"
+            }
+          ]
+        },
+        {
+          "category_id": "transport_infrastructure",
+          "amounts": {
+            "previous": 139.959,
+            "current": 139.926
+          },
+          "shares_pct": {
+            "previous": 1.996247,
+            "current": 1.855676
+          },
+          "source_rows": [
+            {
+              "code": "16",
+              "label_native": "Department of Transportation"
+            },
+            {
+              "code": "30",
+              "label_native": "Corps of Engineers--Civil Works"
+            },
+            {
+              "code": "147",
+              "label_native": "National Transportation Safety Board"
+            },
+            {
+              "code": "186",
+              "label_native": "Surface Transportation Board"
+            },
+            {
+              "code": "93",
+              "label_native": "Federal Maritime Commission"
+            },
+            {
+              "code": "232",
+              "label_native": "National Railroad Passenger Corporation Office of Inspector General"
+            }
+          ]
+        },
+        {
+          "category_id": "environment_agriculture",
+          "amounts": {
+            "previous": 286.91,
+            "current": 285.314
+          },
+          "shares_pct": {
+            "previous": 4.092222,
+            "current": 3.783788
+          },
+          "source_rows": [
+            {
+              "code": "3",
+              "label_native": "Department of Agriculture"
+            },
+            {
+              "code": "7",
+              "label_native": "Department of the Interior"
+            },
+            {
+              "code": "15",
+              "label_native": "Environmental Protection Agency"
+            },
+            {
+              "code": "95",
+              "label_native": "Federal Mine Safety and Health Review Commission"
+            },
+            {
+              "code": "204",
+              "label_native": "Chemical Safety and Hazard Investigation Board"
+            },
+            {
+              "code": "197",
+              "label_native": "Morris K. Udall and Stewart L. Udall Foundation"
+            },
+            {
+              "code": "112",
+              "label_native": "Marine Mammal Commission"
+            },
+            {
+              "code": "238",
+              "label_native": "Gulf Coast Ecosystem Restoration Council"
+            }
+          ]
+        },
+        {
+          "category_id": "housing_community",
+          "amounts": {
+            "previous": 51.718,
+            "current": 77.039
+          },
+          "shares_pct": {
+            "previous": 0.737658,
+            "current": 1.021679
+          },
+          "source_rows": [
+            {
+              "code": "19",
+              "label_native": "Department of Housing and Urban Development"
+            },
+            {
+              "code": "219",
+              "label_native": "Affordable Housing Program"
+            },
+            {
+              "code": "223",
+              "label_native": "Federal Housing Finance Agency"
+            },
+            {
+              "code": "150",
+              "label_native": "Neighborhood Reinvestment Corporation"
+            },
+            {
+              "code": "119",
+              "label_native": "National Capital Planning Commission"
+            },
+            {
+              "code": "101",
+              "label_native": "United States Interagency Council on Homelessness"
+            },
+            {
+              "code": "156",
+              "label_native": "Office of Navajo and Hopi Indian Relocation"
+            }
+          ]
+        },
+        {
+          "category_id": "economic_affairs",
+          "amounts": {
+            "previous": 95.459,
+            "current": 107.463
+          },
+          "shares_pct": {
+            "previous": 1.36154,
+            "current": 1.425157
+          },
+          "source_rows": [
+            {
+              "code": "14",
+              "label_native": "Department of Energy"
+            },
+            {
+              "code": "4",
+              "label_native": "Department of Commerce"
+            },
+            {
+              "code": "87",
+              "label_native": "Federal Communications Commission"
+            },
+            {
+              "code": "22",
+              "label_native": "Small Business Administration"
+            },
+            {
+              "code": "236",
+              "label_native": "Bureau of Consumer Financial Protection"
+            },
+            {
+              "code": "169",
+              "label_native": "Securities and Exchange Commission"
+            },
+            {
+              "code": "70",
+              "label_native": "Commodity Futures Trading Commission"
+            },
+            {
+              "code": "103",
+              "label_native": "International Trade Commission"
+            }
+          ]
+        },
+        {
+          "category_id": "general_services_debt",
+          "amounts": {
+            "previous": 1512.503,
+            "current": 1593.797
+          },
+          "shares_pct": {
+            "previous": 21.572962,
+            "current": 21.136675
+          },
+          "source_rows": [
+            {
+              "code": "11",
+              "label_native": "Department of the Treasury"
+            },
+            {
+              "code": "10",
+              "label_native": "Department of State"
+            },
+            {
+              "code": "27",
+              "label_native": "International Assistance Programs"
+            },
+            {
+              "code": "1",
+              "label_native": "Legislative Branch"
+            },
+            {
+              "code": "17",
+              "label_native": "General Services Administration"
+            },
+            {
+              "code": "80",
+              "label_native": "District of Columbia"
+            }
+          ]
+        },
+        {
+          "category_id": "culture_recreation",
+          "amounts": {
+            "previous": 2.49,
+            "current": 2.12
+          },
+          "shares_pct": {
+            "previous": 0.035515,
+            "current": 0.028115
+          },
+          "source_rows": [
+            {
+              "code": "171",
+              "label_native": "Smithsonian Institution"
+            },
+            {
+              "code": "141",
+              "label_native": "National Endowment for the Humanities"
+            },
+            {
+              "code": "140",
+              "label_native": "National Endowment for the Arts"
+            },
+            {
+              "code": "175",
+              "label_native": "United States Holocaust Memorial Museum"
+            },
+            {
+              "code": "100",
+              "label_native": "Institute of American Indian and Alaska Native Culture and Arts Development"
+            },
+            {
+              "code": "55",
+              "label_native": "Commission of Fine Arts"
+            },
+            {
+              "code": "43",
+              "label_native": "Advisory Council on Historic Preservation"
+            },
+            {
+              "code": "75",
+              "label_native": "Corporation for Public Broadcasting"
+            }
+          ]
+        },
+        {
+          "category_id": "other_unallocated",
+          "amounts": {
+            "previous": -358.084,
+            "current": -368.813
+          },
+          "shares_pct": {
+            "previous": -5.107383,
+            "current": -4.891138
+          },
+          "source_rows": [
+            {
+              "code": "160",
+              "label_native": "Postal Service"
+            },
+            {
+              "code": "195",
+              "label_native": "Corporation for National and Community Service"
+            },
+            {
+              "code": "174",
+              "label_native": "Tennessee Valley Authority"
+            },
+            {
+              "code": "208",
+              "label_native": "U.S. Agency for Global Media"
+            },
+            {
+              "code": "118",
+              "label_native": "National Archives and Records Administration"
+            },
+            {
+              "code": "81",
+              "label_native": "Equal Employment Opportunity Commission"
+            },
+            {
+              "code": "216",
+              "label_native": "Public Company Accounting Oversight Board"
+            },
+            {
+              "code": "143",
+              "label_native": "National Labor Relations Board"
+            },
+            {
+              "code": "45",
+              "label_native": "Appalachian Regional Commission"
+            },
+            {
+              "code": "74",
+              "label_native": "Consumer Product Safety Commission"
+            },
+            {
+              "code": "207",
+              "label_native": "Denali Commission"
+            },
+            {
+              "code": "187",
+              "label_native": "Federal Permitting Improvement Steering Council"
+            },
+            {
+              "code": "151",
+              "label_native": "Nuclear Regulatory Commission"
+            },
+            {
+              "code": "220",
+              "label_native": "Electric Reliability Organization"
+            },
+            {
+              "code": "233",
+              "label_native": "Securities Investor Protection Corporation"
+            },
+            {
+              "code": "206",
+              "label_native": "Presidio Trust"
+            },
+            {
+              "code": "89",
+              "label_native": "Federal Election Commission"
+            },
+            {
+              "code": "215",
+              "label_native": "Election Assistance Commission"
+            },
+            {
+              "code": "176",
+              "label_native": "United States Institute of Peace"
+            },
+            {
+              "code": "60",
+              "label_native": "Payment to Puerto Rico Oversight Board"
+            },
+            {
+              "code": "211",
+              "label_native": "Delta Regional Authority"
+            },
+            {
+              "code": "114",
+              "label_native": "Merit Systems Protection Board"
+            },
+            {
+              "code": "94",
+              "label_native": "Federal Mediation and Conciliation Service"
+            },
+            {
+              "code": "235",
+              "label_native": "Corporation for Travel Promotion"
+            },
+            {
+              "code": "230",
+              "label_native": "Northern Border Regional Commission"
+            },
+            {
+              "code": "90",
+              "label_native": "Federal Financial Institutions Examination Council"
+            },
+            {
+              "code": "157",
+              "label_native": "Office of Special Counsel"
+            },
+            {
+              "code": "92",
+              "label_native": "Federal Labor Relations Authority"
+            },
+            {
+              "code": "217",
+              "label_native": "Standard Setting Body"
+            },
+            {
+              "code": "155",
+              "label_native": "Office of Government Ethics"
+            },
+            {
+              "code": "225",
+              "label_native": "Council of the Inspectors General on Integrity and Efficiency"
+            },
+            {
+              "code": "231",
+              "label_native": "Southeast Crescent Regional Commission"
+            },
+            {
+              "code": "144",
+              "label_native": "National Mediation Board"
+            },
+            {
+              "code": "154",
+              "label_native": "Occupational Safety and Health Review Commission"
+            },
+            {
+              "code": "58",
+              "label_native": "Commission on Civil Rights"
+            },
+            {
+              "code": "222",
+              "label_native": "Privacy and Civil Liberties Oversight Board"
+            },
+            {
+              "code": "69",
+              "label_native": "Committee for Purchase From People Who Are Blind or Severely Disabled"
+            },
+            {
+              "code": "46",
+              "label_native": "Access Board"
+            },
+            {
+              "code": "36",
+              "label_native": "Concrete Masonry Products Board"
+            },
+            {
+              "code": "83",
+              "label_native": "Farm Credit Administration"
+            },
+            {
+              "code": "37",
+              "label_native": "Public Buildings Reform Board"
+            },
+            {
+              "code": "227",
+              "label_native": "National Oilheat Research Alliance"
+            },
+            {
+              "code": "136",
+              "label_native": "National Council on Disability"
+            },
+            {
+              "code": "153",
+              "label_native": "Nuclear Waste Technical Review Board"
+            },
+            {
+              "code": "107",
+              "label_native": "Japan-United States Friendship Commission"
+            },
+            {
+              "code": "39",
+              "label_native": "Administrative Conference of the United States"
+            },
+            {
+              "code": "31",
+              "label_native": "National Commission on Military, National, and Public Service"
+            },
+            {
+              "code": "202",
+              "label_native": "Other Commissions and Boards"
+            },
+            {
+              "code": "33",
+              "label_native": "National Commission on Military Aviation Safety"
+            },
+            {
+              "code": "193",
+              "label_native": "Military Compensation and Retirement Modernization Commission"
+            },
+            {
+              "code": "25",
+              "label_native": "Civil Rights Cold Case Records Review Board"
+            },
+            {
+              "code": "34",
+              "label_native": "400 Years of African-American History Commission"
+            },
+            {
+              "code": "96",
+              "label_native": "Federal Retirement Thrift Investment Board"
+            },
+            {
+              "code": "229",
+              "label_native": "Southwest Border Regional Commission"
+            },
+            {
+              "code": "242",
+              "label_native": "Miscellaneous Receipts Below the Reporting Threshold"
+            },
+            {
+              "code": "240",
+              "label_native": "Allowances"
+            },
+            {
+              "code": "97",
+              "label_native": "Federal Trade Commission"
+            },
+            {
+              "code": "82",
+              "label_native": "Export-Import Bank of the United States"
+            },
+            {
+              "code": "24",
+              "label_native": "Executive Office of the President"
+            },
+            {
+              "code": "86",
+              "label_native": "Farm Credit System Insurance Corporation"
+            },
+            {
+              "code": "138",
+              "label_native": "National Credit Union Administration"
+            },
+            {
+              "code": "88",
+              "label_native": "Federal Deposit Insurance Corporation"
+            },
+            {
+              "code": "241",
+              "label_native": "Undistributed Offsetting Receipts"
+            }
+          ]
+        }
+      ]
+    },
+    "functional_spending": {
+      "name_cs": "Spojené státy",
+      "name_en": "United States",
+      "currency": "USD",
+      "scope": "mixed_by_category",
+      "categories": {
+        "health": [
+          {
+            "year": 2015,
+            "amount_local_mn": 1667615.193,
+            "pct_gdp": 9.115,
+            "status": "A"
+          },
+          {
+            "year": 2016,
+            "amount_local_mn": 1748010.775,
+            "pct_gdp": 9.296,
+            "status": "A"
+          },
+          {
+            "year": 2017,
+            "amount_local_mn": 1818221.045,
+            "pct_gdp": 9.271,
+            "status": "A"
+          },
+          {
+            "year": 2018,
+            "amount_local_mn": 1917122.684,
+            "pct_gdp": 9.281,
+            "status": "A"
+          },
+          {
+            "year": 2019,
+            "amount_local_mn": 2049103.632,
+            "pct_gdp": 9.513,
+            "status": "A"
+          },
+          {
+            "year": 2020,
+            "amount_local_mn": 2267812.493,
+            "pct_gdp": 10.61,
+            "status": "A"
+          },
+          {
+            "year": 2021,
+            "amount_local_mn": 2454450.411,
+            "pct_gdp": 10.345,
+            "status": "A"
+          },
+          {
+            "year": 2022,
+            "amount_local_mn": 2642968.524,
+            "pct_gdp": 10.144,
+            "status": "A"
+          },
+          {
+            "year": 2023,
+            "amount_local_mn": 2793736.109,
+            "pct_gdp": 10.045,
+            "status": "A"
+          },
+          {
+            "year": 2024,
+            "amount_local_mn": 3011464.429,
+            "pct_gdp": 10.279,
+            "status": "A"
+          }
+        ],
+        "social": [
+          {
+            "year": 2015,
+            "amount_local_mn": 1417046.568,
+            "pct_gdp": 7.746,
+            "status": "A"
+          },
+          {
+            "year": 2016,
+            "amount_local_mn": 1445979.763,
+            "pct_gdp": 7.689,
+            "status": "A"
+          },
+          {
+            "year": 2017,
+            "amount_local_mn": 1484863.708,
+            "pct_gdp": 7.571,
+            "status": "A"
+          },
+          {
+            "year": 2018,
+            "amount_local_mn": 1543280.817,
+            "pct_gdp": 7.471,
+            "status": "A"
+          },
+          {
+            "year": 2019,
+            "amount_local_mn": 1628795.931,
+            "pct_gdp": 7.562,
+            "status": "A"
+          },
+          {
+            "year": 2020,
+            "amount_local_mn": 2559086.275,
+            "pct_gdp": 11.972,
+            "status": "A"
+          },
+          {
+            "year": 2021,
+            "amount_local_mn": 2835416.63,
+            "pct_gdp": 11.951,
+            "status": "A"
+          },
+          {
+            "year": 2022,
+            "amount_local_mn": 2163431.605,
+            "pct_gdp": 8.303,
+            "status": "A"
+          },
+          {
+            "year": 2023,
+            "amount_local_mn": 2190269.166,
+            "pct_gdp": 7.875,
+            "status": "A"
+          },
+          {
+            "year": 2024,
+            "amount_local_mn": 2284747.742,
+            "pct_gdp": 7.798,
+            "status": "A"
+          }
+        ],
+        "transport": [
+          {
+            "year": 2015,
+            "amount_local_mn": 89533,
+            "pct_gdp": 0.489,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2016,
+            "amount_local_mn": 92566,
+            "pct_gdp": 0.492,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2017,
+            "amount_local_mn": 93552,
+            "pct_gdp": 0.477,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2018,
+            "amount_local_mn": 92785,
+            "pct_gdp": 0.449,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2019,
+            "amount_local_mn": 95756,
+            "pct_gdp": 0.445,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2020,
+            "amount_local_mn": 145623,
+            "pct_gdp": 0.681,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2021,
+            "amount_local_mn": 154291,
+            "pct_gdp": 0.65,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2022,
+            "amount_local_mn": 131024,
+            "pct_gdp": 0.503,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2023,
+            "amount_local_mn": 126417,
+            "pct_gdp": 0.455,
+            "status": "federal_scope"
+          },
+          {
+            "year": 2024,
+            "amount_local_mn": 136582,
+            "pct_gdp": 0.466,
+            "status": "federal_scope"
+          }
+        ]
+      }
+    },
+    "transport": {
+      "name_cs": "Spojené státy",
+      "name_en": "United States",
+      "currency": "USD",
+      "coverage": "unavailable",
+      "reason_cs": "Eurostat COFOG II tuto zemi nepokrývá.",
+      "reason_en": "Eurostat COFOG II does not cover this country."
+    },
+    "health": {
+      "currency": "USD",
+      "architecture_cs": "Peníze tečou paralelně přes Medicare, Medicaid, zaměstnavatelské a individuální pojištění i přímé platby. Nemocnice jsou veřejné, neziskové i ziskové; CMS zveřejňuje standardizované cost reports po zařízeních.",
+      "architecture_en": "Money flows in parallel through Medicare, Medicaid, employer and individual insurance, and direct payments. Hospitals can be public, non-profit or for-profit; CMS publishes standardised facility cost reports.",
+      "official_title": "CMS · hospital cost reports",
+      "official_url": "https://www.cms.gov/data-research/statistics-trends-and-reports/cost-reports",
+      "year": 2024,
+      "health_gdp_pct": 17.202,
+      "per_capita_ppp": 12550.859,
+      "per_capita_local": 14823.139,
+      "financing": {
+        "public_compulsory": 83.142,
+        "out_of_pocket": 11.043,
+        "voluntary_other": 5.815
+      },
+      "providers": {
+        "hospitals": 32.436,
+        "residential_ltc": 4.363,
+        "ambulatory": 32.8,
+        "retailers": 13.533,
+        "other": 16.868
+      },
+      "beds_per_1000": 2.74,
+      "bed_year": 2022,
+      "bed_status": ""
+    },
+    "providers": null,
+    "municipalities": null,
+    "public_entities": null,
+    "demography": null
+  },
+  "sources": [
+    {
+      "source_id": "usa-omb-public-budget-database-a-historical-tables-1317d003",
+      "country_code": "USA",
+      "source_name": "OMB – Public Budget Database a Historical Tables",
+      "source_url": "https://www.whitehouse.gov/omb/information-resources/budget/supplemental-materials/",
+      "coverage": "účty od 1962, budget authority od 1976",
+      "formats": [
+        "XLSX",
+        "XLS",
+        "PDF"
+      ],
+      "purpose": "příjmy, outlays a budget authority po agentuře, účtu, funkci a programu",
+      "active": true,
+      "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+    },
+    {
+      "source_id": "usa-u-s-treasury-fiscal-data-51764372",
+      "country_code": "USA",
+      "source_name": "U.S. Treasury Fiscal Data",
+      "source_url": "https://fiscaldata.treasury.gov/",
+      "coverage": "měsíční a roční fiskální data",
+      "formats": [
+        "JSON API",
+        "CSV",
+        "PDF"
+      ],
+      "purpose": "skutečné příjmy, výdaje, deficit, dluh a účty",
+      "active": true,
+      "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+    },
+    {
+      "source_id": "usa-usaspending-dde71429",
+      "country_code": "USA",
+      "source_name": "USAspending",
+      "source_url": "https://www.usaspending.gov/",
+      "coverage": "federální awards a subawards",
+      "formats": [
+        "JSON API",
+        "CSV"
+      ],
+      "purpose": "příjemci, kontrakty, granty, půjčky a geografický detail",
+      "active": true,
+      "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+    }
+  ]
+}

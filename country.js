@@ -9,8 +9,12 @@ T.cs.sourcesKicker="10 / Primární zdroje";
 T.en.sourcesKicker="10 / Primary sources";
 Object.assign(T.cs,{czechBudgetTitle:"Český státní rozpočet",czechBudgetCta:"Otevřít rozpočet 2001–2045 →",czechViews:"České pohledy"});
 Object.assign(T.en,{czechBudgetTitle:"Czech state budget",czechBudgetCta:"Open the 2001–2045 budget →",czechViews:"Czech views"});
-Object.assign(T.cs,{navOverview:"Přehled",navScope:"Rozsah",navCashIn:"Cash-in",navSpending:"Výdaje",navHealthcare:"Zdraví",navSocial:"Sociální",navTransport:"Doprava"});
-Object.assign(T.en,{navOverview:"Overview",navScope:"Scope",navCashIn:"Cash-in",navSpending:"Spending",navHealthcare:"Health",navSocial:"Social",navTransport:"Transport"});
+Object.assign(T.cs,{navOverview:"Přehled",navScope:"Rozsah",navCashIn:"Příjmy",navSpending:"Výdaje",navHealthcare:"Zdraví",navSocial:"Sociální",navTransport:"Doprava"});
+Object.assign(T.en,{navOverview:"Overview",navScope:"Scope",navCashIn:"Revenue",navSpending:"Spending",navHealthcare:"Health",navSocial:"Social",navTransport:"Transport"});
+Object.assign(T.cs,{navData:"Data"});
+Object.assign(T.en,{navData:"Data"});
+Object.assign(T.cs,{gdpTag:"HDP / OBYV.",debtTag:"DLUH / HDP",pppTag:"PPP / OBYV."});
+Object.assign(T.en,{gdpTag:"GDP / CAPITA",debtTag:"DEBT / GDP",pppTag:"PPP / CAPITA"});
 const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us"};
 const scope={state_budget:{cs:"Státní rozpočet",en:"State budget"},state_and_consolidated_budget:{cs:"Státní a konsolidovaný rozpočet",en:"State and consolidated budget"},federal_budget:{cs:"Federální rozpočet",en:"Federal budget"},public_sector_and_central_government:{cs:"Veřejný sektor a centrální vláda",en:"Public sector and central government"},confederation_and_general_government:{cs:"Konfederace a vládní instituce",en:"Confederation and general government"},central_and_general_government:{cs:"Centrální vláda a vládní instituce",en:"Central and general government"}};
 const loc=()=>state.lang==="en"?"en-GB":"cs-CZ";
@@ -82,7 +86,7 @@ function translate(){
 }
 function header(){
   const c=meta(); $("#country-code").innerHTML=`<img src="assets/flags/${flagCodes[c.country_code]}.svg" alt=""><b>${c.country_code}</b>`; $("#country-name").textContent=name(); $("#footer-country").textContent=name();
-  $("#country-subtitle").textContent=`${c.currency_code} · General government / ${state.lang==="en"?"harmonised sector":"sektor vládních institucí"} · IMF WEO 2005–2024 · ${state.currency==="local"?(state.lang==="en"?"local-currency view":"zobrazení v místní měně"):"EUR"}`;
+  $("#country-subtitle").textContent=state.lang==="en"?`${c.currency_code} · General government / harmonised scope · IMF WEO 2005–2024 · ${state.currency==="local"?"local-currency view":"EUR view"}`:`${c.currency_code} · Sektor vládních institucí / harmonizované vymezení · IMF WEO 2005–2024 · ${state.currency==="local"?"zobrazení v místní měně":"zobrazení v EUR"}`;
   $("#country-switch").innerHTML=state.data.countries.map(x=>`<option value="${x.country_code}">${state.lang==="en"?x.name_en:x.name_cs}</option>`).join(""); $("#country-switch").value=state.code;
   $("#year-switch").innerHTML=Array.from({length:20},(_,i)=>`<option>${2024-i}</option>`).join(""); $("#year-switch").value=state.year;
 }
@@ -93,7 +97,7 @@ function amountFromPct(key){
 function snapshot(){
   const rows=[[T[state.lang].revenue,"revenue_pct_gdp"],[T[state.lang].expense,"expenditure_pct_gdp"],[T[state.lang].balance,"balance_pct_gdp"],[T[state.lang].debt,"gross_debt_pct_gdp"]];
   $("#snapshot").innerHTML=rows.map(([label,key])=>`<div><span>${label} · ${state.year}</span><strong class="${key==="balance_pct_gdp"?(value(key)>=0?"positive":"negative"):""}">${fmt(value(key),state.lang==="en"?"% GDP":"% HDP",key==="balance_pct_gdp")}</strong><small>${fmt(amountFromPct(key),`${T[state.lang].billions} ${moneyCode()}`,key==="balance_pct_gdp")} · ${state.year}</small></div>`).join("");
-  const kpis=[[T[state.lang].primary,"primary_balance_pct_gdp","% HDP",true],[T[state.lang].growth,"real_gdp_growth_pct","%",true],[T[state.lang].inflation,"inflation_pct","%",false],[T[state.lang].unemployment,"unemployment_pct","%",false]];
+  const kpis=[[T[state.lang].primary,"primary_balance_pct_gdp",state.lang==="en"?"% GDP":"% HDP",true],[T[state.lang].growth,"real_gdp_growth_pct","%",true],[T[state.lang].inflation,"inflation_pct","%",false],[T[state.lang].unemployment,"unemployment_pct","%",false]];
   $("#country-kpis").innerHTML=kpis.map(([label,key,unit,signed])=>`<article><span>${label}</span><strong>${fmt(value(key),unit,signed)}</strong><small>${point(key)?.status==="actual"?T[state.lang].actual:T[state.lang].estimate} · ${state.year}</small></article>`).join("");
 }
 function scopeProfile(){

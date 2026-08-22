@@ -188,7 +188,7 @@
 }
 
 .hero-bar {
-  min-height: 57px;
+  min-height: 34px;
 }
 
 .hero-bar > i,
@@ -340,7 +340,9 @@
 .home-macro-panel header span { color:var(--muted); font:700 8px/1 monospace; text-transform:uppercase; }
 .home-macro-panel h3 { margin:12px 0 4px; font:500 23px/1.05 Georgia,serif; }
 .home-macro-panel p { margin:0 0 12px; color:var(--muted); font-size:9px; line-height:1.45; }
-.home-macro-chart .macro-row { display:grid; grid-template-columns:38px 1fr 76px; gap:9px; align-items:center; min-height:31px; border-top:1px solid var(--chart-grid); font:8px/1 monospace; }
+.home-macro-chart .macro-row { display:grid; grid-template-columns:38px 1fr 76px; gap:9px; align-items:center; min-height:31px; border-top:1px solid var(--chart-grid); color:var(--chart-ink); font:8px/1 monospace; text-decoration:none; transition:background-color .15s; }
+.home-macro-chart .macro-row:hover { background:#a8b63f14; }
+.home-macro-chart .macro-row:focus-visible { outline:2px solid var(--chart-red); outline-offset:-2px; }
 .home-macro-chart .macro-row i { height:7px; background:#e2ddd3; }
 .home-macro-chart .macro-row i b { display:block; height:100%; background:var(--chart-green); }
 .home-macro-panel:nth-child(even) .macro-row i b { background:var(--chart-red); }

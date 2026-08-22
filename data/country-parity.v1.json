@@ -1,0 +1,1573 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "country-parity.v1",
+  "generated_at": "2026-08-22T20:31:22.510Z",
+  "country_count": 10,
+  "rules": {
+    "native_first": "National classifications, stages, currencies and accounting scopes are retained without coercion.",
+    "harmonised_layer": "Cross-country comparisons use separately identified IMF, OECD/COFOG or SHA observations.",
+    "missingness": "Unavailable, pending and not-applicable values are explicit and are never encoded as zero.",
+    "non_additivity": "National, local, social-insurance and public-corporation layers must not be added without eliminating internal transfers.",
+    "lineage": "Every module names its production artifact and official source registry."
+  },
+  "datasets": {
+    "sovereign": "lib/data/sovereign-benchmark.v1.json",
+    "revenue": "data/country-cash-in.v1.json",
+    "administrative_spending": "data/country-spending-2025-2026.v1.json",
+    "common_spending": "data/country-spending-comparison.v1.json",
+    "functional_spending": "data/country-functional-budgets.v1.json",
+    "transport": "data/transport-budget-detail.v1.json",
+    "health": "data/country-health.v1.json",
+    "providers": "data/country-provider-networks.v1.json",
+    "municipalities": "data/international-municipalities.v1.json",
+    "public_entities_czechia": "data/cz-public-entities-2024.json",
+    "demography_czechia": "data/demography-social.v1.json"
+  },
+  "warehouse_bundles": [
+    {
+      "label": "international core",
+      "source_manifest": "outputs/20260822-international-municipal-2024-2025-full/international_municipal_manifest.json",
+      "countries": [
+        "POL",
+        "DNK",
+        "FRA",
+        "SWE",
+        "GBR"
+      ],
+      "output_rows": {
+        "public_entities": 6863,
+        "classification_versions": 18,
+        "budget_nodes": 10860,
+        "municipal_budget_line_facts": 11905720,
+        "ingestion_runs": 18,
+        "public_entity_sources": 20,
+        "public_entity_balance_sheet_facts": 5971453
+      },
+      "validation": {
+        "status": "passed",
+        "fact_rows_checked": 17877173,
+        "errors": []
+      }
+    },
+    {
+      "label": "France census",
+      "source_manifest": "outputs/20260822-international-municipal-france-complete/international_municipal_manifest.json",
+      "countries": [
+        "FRA"
+      ],
+      "output_rows": {
+        "classification_versions": 4,
+        "public_entities": 35041,
+        "budget_nodes": 6316,
+        "public_entity_balance_sheet_facts": 14147797,
+        "municipal_budget_line_facts": 10438699,
+        "ingestion_runs": 4,
+        "public_entity_sources": 4
+      },
+      "validation": {
+        "status": "passed",
+        "fact_rows_checked": 24586496,
+        "errors": []
+      }
+    },
+    {
+      "label": "Ukraine communities",
+      "source_manifest": "outputs/20260822-ukraine-municipal-2024-2025-final/international_municipal_manifest.json",
+      "countries": [
+        "UKR"
+      ],
+      "output_rows": {
+        "public_entities": 1467,
+        "public_entity_sources": 6,
+        "classification_versions": 6,
+        "budget_nodes": 620,
+        "municipal_budget_line_facts": 4120319,
+        "ingestion_runs": 4
+      },
+      "validation": {
+        "status": "passed",
+        "fact_rows_checked": 4120319,
+        "errors": []
+      }
+    }
+  ],
+  "countries": [
+    {
+      "country_code": "CZE",
+      "name_cs": "Česko",
+      "name_en": "Czechia",
+      "currency_code": "CZK",
+      "profile": "data/countries/cze/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 11,
+        "total_modules": 11,
+        "missing_dimensions": []
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general government plus native institutional layers",
+          "missing_dimensions": [],
+          "native_layers": [
+            "state_budget",
+            "municipalities",
+            "regions",
+            "companies"
+          ]
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "47 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 47
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "loaded",
+          "coverage": "642 registered inpatient locations",
+          "missing_dimensions": [],
+          "facility_count": 642
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "All 6,254 municipalities",
+          "missing_dimensions": [],
+          "entity_count": 6254,
+          "years": [
+            2025
+          ],
+          "stages": [
+            "enacted",
+            "revised",
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "balance",
+            "cash"
+          ],
+          "directory": "data/countries/cze/municipalities.v1.json",
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "loaded",
+          "coverage": "637 selected controlled entities",
+          "missing_dimensions": [],
+          "entity_count": 637
+        },
+        "demography": {
+          "status": "loaded",
+          "coverage": "undefined–undefined",
+          "missing_dimensions": []
+        }
+      },
+      "sources": [
+        {
+          "source_id": "cze-ministerstvo-financ-r-pln-n-st-tn-ho-rozpo-tu-37bcf6d5",
+          "country_code": "CZE",
+          "source_name": "Ministerstvo financí ČR – plnění státního rozpočtu",
+          "source_url": "https://www.mfcr.cz/cs/rozpoctova-politika/statni-rozpocet/plneni-statniho-rozpoctu",
+          "coverage": "2001–současnost",
+          "formats": [
+            "HTML",
+            "XLSX",
+            "PDF"
+          ],
+          "purpose": "schválený rozpočet, pokladní plnění, příjmy, výdaje a saldo",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "cze-monitor-st-tn-pokladny-1b4e8982",
+          "country_code": "CZE",
+          "source_name": "Monitor státní pokladny",
+          "source_url": "https://monitor.statnipokladna.gov.cz/",
+          "coverage": "účetní a rozpočtová data veřejného sektoru",
+          "formats": [
+            "CSV",
+            "XML",
+            "HTML"
+          ],
+          "purpose": "kapitoly, organizace, druhové a odvětvové členění, skutečnost",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "UKR",
+      "name_cs": "Ukrajina",
+      "name_en": "Ukraine",
+      "currency_code": "UAH",
+      "profile": "data/countries/ukr/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 7,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection",
+          "harmonised_health_financing"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "10 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 10
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "unavailable",
+          "coverage": "functional expenditure only",
+          "missing_dimensions": [
+            "SHA financing and provider split"
+          ]
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
+          "missing_dimensions": [],
+          "entity_count": 1467,
+          "years": [
+            2024,
+            2025
+          ],
+          "stages": [
+            "enacted",
+            "revised",
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure"
+          ],
+          "directory": "data/countries/ukr/municipalities.v1.json",
+          "warehouse": [
+            {
+              "bundle": "Ukraine communities",
+              "years": {
+                "2024": 1467,
+                "2025": 1467
+              },
+              "output_rows": {
+                "public_entities": 1467,
+                "public_entity_sources": 6,
+                "classification_versions": 6,
+                "budget_nodes": 620,
+                "municipal_budget_line_facts": 4120319,
+                "ingestion_runs": 4
+              },
+              "validation": "passed"
+            }
+          ]
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "ukr-open-budget-budget-for-citizens-e0d95ded",
+          "country_code": "UKR",
+          "source_name": "Open Budget – Budget for Citizens",
+          "source_url": "https://openbudget.gov.ua/en",
+          "coverage": "státní, místní a konsolidovaný rozpočet",
+          "formats": [
+            "HTML",
+            "open data"
+          ],
+          "purpose": "upravený plán, plnění, hierarchie příjmů a výdajů, měsíční dynamika",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "ukr-e-data-spending-2c5c42e5",
+          "country_code": "UKR",
+          "source_name": "E-data Spending",
+          "source_url": "https://spending.gov.ua/",
+          "coverage": "veřejné platby a smlouvy",
+          "formats": [
+            "HTML",
+            "API"
+          ],
+          "purpose": "transakční detail použití veřejných prostředků",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "POL",
+      "name_cs": "Polsko",
+      "name_en": "Poland",
+      "currency_code": "PLN",
+      "profile": "data/countries/pol/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 8,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "31 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 31
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "All gminas in annual Rb-27S and Rb-28S returns",
+          "missing_dimensions": [],
+          "entity_count": 2486,
+          "years": [
+            2024,
+            2025
+          ],
+          "stages": [
+            "revised",
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure"
+          ],
+          "directory": "data/countries/pol/municipalities.v1.json",
+          "warehouse": [
+            {
+              "bundle": "international core",
+              "years": {
+                "2024": 2477,
+                "2025": 2479
+              },
+              "output_rows": {
+                "public_entities": 6863,
+                "classification_versions": 18,
+                "budget_nodes": 10860,
+                "municipal_budget_line_facts": 11905720,
+                "ingestion_runs": 18,
+                "public_entity_sources": 20,
+                "public_entity_balance_sheet_facts": 5971453
+              },
+              "validation": "passed"
+            }
+          ]
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "pol-ministerstwo-finans-w-ro-n-zpr-vy-o-pln-n-07b7a0f9",
+          "country_code": "POL",
+          "source_name": "Ministerstwo Finansów – roční zprávy o plnění",
+          "source_url": "https://www.gov.pl/web/finanse/sprawozdania-roczne",
+          "coverage": "2018–současnost, starší roky v archivu",
+          "formats": [
+            "XLSX",
+            "PDF",
+            "HTML"
+          ],
+          "purpose": "zákonný plán, plán po změnách a skutečné plnění",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "pol-ministerstwo-finans-w-m-s-n-pln-n-p-jm-a-v-daj-e2014fc0",
+          "country_code": "POL",
+          "source_name": "Ministerstwo Finansów – měsíční plnění příjmů a výdajů",
+          "source_url": "https://www.gov.pl/web/finance/revenue-expenditure-execution",
+          "coverage": "2018–současnost, starší roky v archivu",
+          "formats": [
+            "XLSX",
+            "PDF"
+          ],
+          "purpose": "měsíční plnění podle hlavních příjmových a výdajových tříd",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "DEU",
+      "name_cs": "Německo",
+      "name_en": "Germany",
+      "currency_code": "EUR",
+      "profile": "data/countries/deu/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 7,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "26 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 26
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "deu-bundeshaushalt-download-portal-173ded3b",
+          "country_code": "DEU",
+          "source_name": "Bundeshaushalt – Download-Portal",
+          "source_url": "https://www.bundeshaushalt.de/DE/Download-Portal/download-portal.html",
+          "coverage": "2005–současnost",
+          "formats": [
+            "CSV",
+            "XML",
+            "PDF"
+          ],
+          "purpose": "federální plán a skutečnost podle kapitol, skupin a položek",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "GBR",
+      "name_cs": "Spojené království",
+      "name_en": "United Kingdom",
+      "currency_code": "GBP",
+      "profile": "data/countries/gbr/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 8,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "24 native classification rows; 2025–26 and 2026–27",
+          "missing_dimensions": [],
+          "row_count": 24
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "Submitted English council and GLA returns; excludes police and fire",
+          "missing_dimensions": [],
+          "entity_count": 318,
+          "years": [
+            2024,
+            2025
+          ],
+          "stages": [
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "financing"
+          ],
+          "directory": "data/countries/gbr/municipalities.v1.json",
+          "warehouse": [
+            {
+              "bundle": "international core",
+              "years": {
+                "2024": 478,
+                "2025": 478
+              },
+              "output_rows": {
+                "public_entities": 6863,
+                "classification_versions": 18,
+                "budget_nodes": 10860,
+                "municipal_budget_line_facts": 11905720,
+                "ingestion_runs": 18,
+                "public_entity_sources": 20,
+                "public_entity_balance_sheet_facts": 5971453
+              },
+              "validation": "passed"
+            }
+          ]
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "gbr-hm-treasury-public-expenditure-statistical-analy-2276f3f7",
+          "country_code": "GBR",
+          "source_name": "HM Treasury – Public Expenditure Statistical Analyses",
+          "source_url": "https://www.gov.uk/government/collections/public-expenditure-statistical-analyses-pesa",
+          "coverage": "dlouhé časové řady; každoroční sešity",
+          "formats": [
+            "XLSX",
+            "PDF"
+          ],
+          "purpose": "plány a skutečnost podle resortu, funkce, ekonomické kategorie a území",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "gbr-office-for-budget-responsibility-data-6a89def4",
+          "country_code": "GBR",
+          "source_name": "Office for Budget Responsibility – Data",
+          "source_url": "https://obr.uk/data/",
+          "coverage": "historické skutečnosti a vintages prognóz",
+          "formats": [
+            "XLSX"
+          ],
+          "purpose": "daně, výdaje, saldo, dluh, revize prognóz a dopady politik",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "FRA",
+      "name_cs": "Francie",
+      "name_en": "France",
+      "currency_code": "EUR",
+      "profile": "data/countries/fra/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 8,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "31 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 31
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "All communes; functional detail where reported; main and supplementary budgets",
+          "missing_dimensions": [],
+          "entity_count": 35041,
+          "years": [
+            2024,
+            2025
+          ],
+          "stages": [
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "balance"
+          ],
+          "directory": "data/countries/fra/municipalities.v1.json",
+          "warehouse": [
+            {
+              "bundle": "international core",
+              "years": {
+                "2024": 3484,
+                "2025": 3493
+              },
+              "output_rows": {
+                "public_entities": 6863,
+                "classification_versions": 18,
+                "budget_nodes": 10860,
+                "municipal_budget_line_facts": 11905720,
+                "ingestion_runs": 18,
+                "public_entity_sources": 20,
+                "public_entity_balance_sheet_facts": 5971453
+              },
+              "validation": "passed"
+            },
+            {
+              "bundle": "France census",
+              "years": {
+                "2024": 35031,
+                "2025": 34877
+              },
+              "output_rows": {
+                "classification_versions": 4,
+                "public_entities": 35041,
+                "budget_nodes": 6316,
+                "public_entity_balance_sheet_facts": 14147797,
+                "municipal_budget_line_facts": 10438699,
+                "ingestion_runs": 4,
+                "public_entity_sources": 4
+              },
+              "validation": "passed"
+            }
+          ]
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "fra-budget-gouv-fr-st-tn-rozpo-et-podle-mis-523c9f87",
+          "country_code": "FRA",
+          "source_name": "budget.gouv.fr – státní rozpočet podle misí",
+          "source_url": "https://www.budget.gouv.fr/budget-etat/mission",
+          "coverage": "LOLF struktura od poloviny 2000s",
+          "formats": [
+            "HTML",
+            "CSV"
+          ],
+          "purpose": "mise, programy, akce, ukazatele výkonu",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "fra-data-economie-gouv-fr-plf-a-plrg-78ad8e9a",
+          "country_code": "FRA",
+          "source_name": "data.economie.gouv.fr – PLF a PLRG",
+          "source_url": "https://www.data.economie.gouv.fr/",
+          "coverage": "roční návrhy a závěrečné účty",
+          "formats": [
+            "CSV",
+            "JSON API",
+            "XLSX"
+          ],
+          "purpose": "AE/CP, plán, otevřené kredity a plnění podle mise, programu a titulu",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "USA",
+      "name_cs": "USA",
+      "name_en": "United States",
+      "currency_code": "USD",
+      "profile": "data/countries/usa/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 7,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "136 native classification rows; FY 2025 and FY 2026",
+          "missing_dimensions": [],
+          "row_count": 136
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "usa-omb-public-budget-database-a-historical-tables-1317d003",
+          "country_code": "USA",
+          "source_name": "OMB – Public Budget Database a Historical Tables",
+          "source_url": "https://www.whitehouse.gov/omb/information-resources/budget/supplemental-materials/",
+          "coverage": "účty od 1962, budget authority od 1976",
+          "formats": [
+            "XLSX",
+            "XLS",
+            "PDF"
+          ],
+          "purpose": "příjmy, outlays a budget authority po agentuře, účtu, funkci a programu",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "usa-u-s-treasury-fiscal-data-51764372",
+          "country_code": "USA",
+          "source_name": "U.S. Treasury Fiscal Data",
+          "source_url": "https://fiscaldata.treasury.gov/",
+          "coverage": "měsíční a roční fiskální data",
+          "formats": [
+            "JSON API",
+            "CSV",
+            "PDF"
+          ],
+          "purpose": "skutečné příjmy, výdaje, deficit, dluh a účty",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "usa-usaspending-dde71429",
+          "country_code": "USA",
+          "source_name": "USAspending",
+          "source_url": "https://www.usaspending.gov/",
+          "coverage": "federální awards a subawards",
+          "formats": [
+            "JSON API",
+            "CSV"
+          ],
+          "purpose": "příjemci, kontrakty, granty, půjčky a geografický detail",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "CHE",
+      "name_cs": "Švýcarsko",
+      "name_en": "Switzerland",
+      "currency_code": "CHF",
+      "profile": "data/countries/che/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 7,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "8 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 8
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "che-federal-finance-administration-open-government-d-435e1fca",
+          "country_code": "CHE",
+          "source_name": "Federal Finance Administration – Open Government Data",
+          "source_url": "https://www.efv.admin.ch/de/open-government-data-de",
+          "coverage": "časové řady federálního rozpočtu a účtů",
+          "formats": [
+            "CSV",
+            "XLSX"
+          ],
+          "purpose": "plán, finanční plán, schválený rozpočet a závěrečný účet",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "SWE",
+      "name_cs": "Švédsko",
+      "name_en": "Sweden",
+      "currency_code": "SEK",
+      "profile": "data/countries/swe/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 8,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "27 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 27
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "All 290 municipalities; costs, income and balance sheet",
+          "missing_dimensions": [],
+          "entity_count": 290,
+          "years": [
+            2024,
+            2025
+          ],
+          "stages": [
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "balance"
+          ],
+          "directory": "data/countries/swe/municipalities.v1.json",
+          "warehouse": [
+            {
+              "bundle": "international core",
+              "years": {
+                "2024": 290,
+                "2025": 290
+              },
+              "output_rows": {
+                "public_entities": 6863,
+                "classification_versions": 18,
+                "budget_nodes": 10860,
+                "municipal_budget_line_facts": 11905720,
+                "ingestion_runs": 18,
+                "public_entity_sources": 20,
+                "public_entity_balance_sheet_facts": 5971453
+              },
+              "validation": "passed"
+            }
+          ]
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "swe-government-se-central-government-budget-in-figur-4743cd46",
+          "country_code": "SWE",
+          "source_name": "Government.se – central government budget in figures",
+          "source_url": "https://www.government.se/government-of-sweden/ministry-of-finance/central-government-budget/central-government-budget-in-figures/",
+          "coverage": "aktuální skutečnost, prognóza a víceletý plán",
+          "formats": [
+            "HTML",
+            "PDF"
+          ],
+          "purpose": "27 výdajových oblastí, příjmy, plán a skutečnost",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "swe-esv-outcome-of-the-central-government-budget-fdbe5942",
+          "country_code": "SWE",
+          "source_name": "ESV – outcome of the central government budget",
+          "source_url": "https://www.statskontoret.se/analys-och-statistik/oppna-data/arsutfall/",
+          "coverage": "historické řady a roční závěrečné účty",
+          "formats": [
+            "XLSX",
+            "PDF",
+            "open data"
+          ],
+          "purpose": "původní rozpočet, dodatečný rozpočet, skutečnost a odchylky",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "DNK",
+      "name_cs": "Dánsko",
+      "name_en": "Denmark",
+      "currency_code": "DKK",
+      "profile": "data/countries/dnk/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 8,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "29 native classification rows; 2025 and 2026",
+          "missing_dimensions": [],
+          "row_count": 29
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing/provider shares; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "source_adapter_pending",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": 0
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "All 98 municipalities; budgets and final accounts",
+          "missing_dimensions": [],
+          "entity_count": 98,
+          "years": [
+            2024,
+            2025
+          ],
+          "stages": [
+            "enacted",
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "financing"
+          ],
+          "directory": "data/countries/dnk/municipalities.v1.json",
+          "warehouse": [
+            {
+              "bundle": "international core",
+              "years": {
+                "2024": 99,
+                "2025": 99
+              },
+              "output_rows": {
+                "public_entities": 6863,
+                "classification_versions": 18,
+                "budget_nodes": 10860,
+                "municipal_budget_line_facts": 11905720,
+                "ingestion_runs": 18,
+                "public_entity_sources": 20,
+                "public_entity_balance_sheet_facts": 5971453
+              },
+              "validation": "passed"
+            }
+          ]
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "age structure",
+            "social-system model"
+          ]
+        }
+      },
+      "sources": [
+        {
+          "source_id": "dnk-finansministeriet-finanslovsdatabasen-4d558b76",
+          "country_code": "DNK",
+          "source_name": "Finansministeriet – Finanslovsdatabasen",
+          "source_url": "https://fm.dk/arbejdsomraader/finanslov-og-offentlige-finanser/arbejdet-med-finansloven/finanslovsdatabasen/",
+          "coverage": "roční finance acts a supplementary appropriation acts",
+          "formats": [
+            "interactive database",
+            "PDF"
+          ],
+          "purpose": "příjmy a výdaje podle ministerstev, provozní výdaje a transfery regionům a obcím",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    }
+  ]
+}

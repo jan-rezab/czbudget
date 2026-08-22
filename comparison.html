@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Srovnání veřejných rozpočtů — Public Spending Data</title>
+    <meta
+      name="description"
+      content="Porovnejte dvacet let harmonizovaných ukazatelů veřejných financí deseti zemí."
+    />
+    <link rel="canonical" href="https://czbudget-public-258433468858.europe-west1.run.app/comparison.html" />
+    <link rel="alternate" hreflang="cs" href="https://czbudget-public-258433468858.europe-west1.run.app/comparison.html?lang=cs" />
+    <link rel="alternate" hreflang="en" href="https://czbudget-public-258433468858.europe-west1.run.app/comparison.html?lang=en" />
+    <link rel="icon" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
+    <link
+      rel="stylesheet"
+      href="site-pages.css?v=20260822-information-architecture"
+    />
+    <link rel="stylesheet" href="global-footer.css?v=20260822-hlidac" />
+    <script src="homepage-v2.js?v=20260822-separate-pages" defer></script>
+    <script src="global-nav.js?v=20260822-separate-pages" defer></script>
+    <script src="global-footer.js?v=20260822-hlidac" defer></script>
+  </head>
+  <body class="home-v2 comparison-page" data-page="comparison">
+    <header class="site-header compact-header has-global-nav">
+      <a class="brand" href="index.html"
+        ><span class="brand-grid" aria-hidden="true"></span
+        ><span class="wordmark">Public Spending <b>Data</b></span></a
+      >
+      <nav class="global-nav" aria-label="Primary navigation"></nav>
+      <div class="lang-switch">
+        <button data-lang="cs" class="active">CS</button><span>/</span
+        ><button data-lang="en">EN</button>
+      </div>
+    </header>
+    <main id="top">
+      <section class="page-hero">
+        <div>
+          <span class="kicker" data-i18n="compareKicker">Srovnání zemí</span>
+          <h1 data-i18n="compareTitle">Veřejné finance vedle sebe.</h1>
+          <p data-i18n="compareCopy">
+            Jedna harmonizovaná tabulka sektoru vládních institucí. Národní
+            státní rozpočty a veřejné korporace jsou popsané odděleně v profilu
+            každé země.
+          </p>
+        </div>
+        <aside>
+          <strong>10 × 20</strong><span>zemí × let harmonizovaných dat</span>
+        </aside>
+      </section>
+      <section class="compare-compact" id="compare">
+        <div class="compact-controls">
+          <label
+            ><span data-i18n="year">Rok</span
+            ><select id="year-select"></select></label
+          ><label
+            ><span data-i18n="metric">Ukazatel</span
+            ><select id="metric-select"></select></label
+          ><label
+            ><span data-i18n="group">Skupina</span
+            ><select id="group-select">
+              <option value="all" data-i18n="groupAll">Všechny země</option>
+              <option value="requested" data-i18n="groupCore">
+                Základní srovnání
+              </option>
+              <option value="responsible_benchmark" data-i18n="groupBenchmark">
+                Fiskální benchmark
+              </option>
+            </select></label
+          ><label
+            ><span data-i18n="benchmarkCountry">Benchmark země</span
+            ><select id="benchmark-country"></select
+          ></label>
+          <div class="compare-scope-readout">
+            <span data-i18n="scopeLabel">Rozsah</span
+            ><strong>General government</strong
+            ><small data-i18n="scopeSmall"
+              >konsolidováno · bez tržních veřejných korporací</small
+            >
+          </div>
+        </div>
+        <div
+          class="benchmark-overview"
+          id="benchmark-overview"
+          aria-live="polite"
+        ></div>
+        <div class="compact-table-wrap">
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th data-i18n="country">Země</th>
+                <th data-i18n="value">Hodnota</th>
+                <th data-i18n="balance">Saldo</th>
+                <th data-i18n="debt">Dluh</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="compare-table"></tbody>
+          </table>
+        </div>
+        <div class="architecture-heading">
+          <div>
+            <span class="kicker" data-i18n="architectureKicker"
+              >Účetní hranice / všech 10 zemí</span
+            >
+            <h3 data-i18n="architectureTitle">
+              Jak jsou veřejné účty oddělené.
+            </h3>
+          </div>
+          <p data-i18n="architectureCopy">
+            Tabulka popisuje institucionální uspořádání; není to další součet
+            příjmů. Podrobnosti a primární zdroje jsou v profilu země.
+          </p>
+        </div>
+        <div class="fiscal-architecture-table-wrap">
+          <table class="fiscal-architecture-table">
+            <thead>
+              <tr>
+                <th data-i18n="country">Země</th>
+                <th data-i18n="nationalBudget">Národní rozpočet</th>
+                <th data-i18n="municipalBudgets">Obce a regiony</th>
+                <th data-i18n="otherAccounts">Další veřejné účty</th>
+                <th data-i18n="stateCompanies">Veřejné korporace</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="fiscal-architecture-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <footer data-global-footer></footer>
+  </body>
+</html>

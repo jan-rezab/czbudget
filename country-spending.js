@@ -10,7 +10,7 @@
       previous: "Předchozí období", current: "Aktuální období", local: "místní měna", eur: "přepočet EUR",
       showAll: "Zobrazit všechny položky", showLess: "Zobrazit největší položky", source: "Primární zdroje",
       method: "Jak číst graf", methodText: "Délka čáry odpovídá částce v daném období. Změnový graf řadí absolutně největší přírůstky a poklesy; nejde o harmonizované srovnání mezi státy.",
-      topShare: "Podíl 5 největších", total: "Součet zobrazeného členění", up: "růst", down: "pokles",
+      topShare: "Podíl 5 největších", total: "Součet zobrazeného členění", up: "růst", down: "pokles", functional: "FUNKCE", department: "KAPITOLA",
       unavailable: "Detailní členění pro tuto zemi se nepodařilo načíst.", rows: "položek", fx: "Kurz pro orientační přepočet",
     },
     en: {
@@ -20,7 +20,7 @@
       previous: "Previous period", current: "Current period", local: "local currency", eur: "EUR conversion",
       showAll: "Show every line", showLess: "Show largest lines", source: "Primary sources",
       method: "How to read this", methodText: "Line length represents the amount in each period. The change chart ranks the largest absolute increases and decreases; it is not a harmonised cross-country comparison.",
-      topShare: "Top-five share", total: "Classified total", up: "increase", down: "decrease",
+      topShare: "Top-five share", total: "Classified total", up: "increase", down: "decrease", functional: "FUNCTION", department: "DEPARTMENT",
       unavailable: "Detailed spending data could not be loaded for this country.", rows: "lines", fx: "Indicative conversion rate",
     }
   };
@@ -69,7 +69,7 @@
       </div>
       <div class="spending-chart-grid">
         <article class="spending-panel spending-distribution">
-          <header><div><span>01 / ${c.dimension === "functional" ? "FUNCTION" : "DEPARTMENT"}</span><h3>${t.distribution}</h3></div><div class="spending-legend"><i class="previous"></i>${esc(previous.label)}<i class="current"></i>${esc(currentPeriod.label)}</div></header>
+          <header><div><span>01 / ${c.dimension === "functional" ? t.functional : t.department}</span><h3>${t.distribution}</h3></div><div class="spending-legend"><i class="previous"></i>${esc(previous.label)}<i class="current"></i>${esc(currentPeriod.label)}</div></header>
           <div class="spending-bars">
             ${visible.map((row,index) => `<div class="spending-row">
               <div class="spending-row-label"><span>${String(index+1).padStart(2,"0")}</span><strong title="${esc(row.label_native)}">${esc(row.label_native)}</strong></div>
