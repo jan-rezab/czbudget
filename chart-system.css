@@ -365,7 +365,7 @@
 .site-header .global-nav details.active summary,
 .site-header .global-nav details[open] summary { background:var(--chart-ink); color:#fff; }
 .site-header .global-nav summary::-webkit-details-marker { display:none; }
-.site-header .country-menu { position:relative; align-self:stretch; }
+.site-header .country-menu,.site-header .deep-dive-menu { position:relative; align-self:stretch; }
 .site-header .country-menu-panel { position:absolute; z-index:30; top:calc(100% + 1px); left:0; width:420px; padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:1px; border:1px solid var(--chart-ink); background:var(--chart-ink); box-shadow:8px 8px 0 #17191822; }
 .site-header .country-menu:not([open]) .country-menu-panel { display:none; }
 .site-header .country-menu-panel > a { min-height:46px; padding:9px 11px; display:grid; grid-template-columns:30px 34px 1fr; align-items:center; background:var(--chart-paper); color:var(--chart-ink); text-decoration:none; }
@@ -379,6 +379,15 @@
 .site-header .country-menu-head { grid-column:1/-1; min-height:42px; padding:6px 10px; display:flex; align-items:center; justify-content:space-between; background:var(--chart-ink); color:#fff; }
 .site-header .country-menu-head span { color:#aaa9a1; font:700 8px/1 monospace; text-transform:uppercase; }
 .site-header .country-menu-head a { color:var(--chart-green); font:700 9px/1 Arial,sans-serif; text-decoration:none; }
+.site-header .deep-dive-menu-panel { position:absolute; z-index:30; top:calc(100% + 1px); left:0; width:370px; padding:10px; display:grid; gap:1px; border:1px solid var(--chart-ink); background:var(--chart-ink); box-shadow:8px 8px 0 #17191822; }
+.site-header .deep-dive-menu:not([open]) .deep-dive-menu-panel { display:none; }
+.site-header .deep-dive-menu-panel>a { min-height:64px; padding:11px 13px; display:grid; grid-template-columns:38px 1fr; align-items:center; background:var(--chart-paper); color:var(--chart-ink); text-decoration:none; }
+.site-header .deep-dive-menu-panel>a:hover { background:#f0efc9; }
+.site-header .deep-dive-menu-panel>a>b { color:var(--chart-red); font:700 9px/1 monospace; }
+.site-header .deep-dive-menu-panel>a span,.site-header .deep-dive-menu-panel>a strong,.site-header .deep-dive-menu-panel>a small { display:block; }
+.site-header .deep-dive-menu-panel>a strong { font:600 12px/1.2 Arial,sans-serif; }
+.site-header .deep-dive-menu-panel>a small { margin-top:5px; color:#777970; font:8px/1.3 monospace; }
+.site-header .deep-dive-menu-panel>a.coming { background:#e8e4da; }
 
 /* Czech budget as an advanced workspace rather than a second homepage. */
 .budget-workspace-page .budget-hero-compact { min-height:310px; padding:38px 4vw 34px; display:grid; grid-template-columns:minmax(0,1.2fr) minmax(330px,.8fr); grid-template-rows:auto auto auto auto; column-gap:4vw; align-items:start; background:var(--paper); }
@@ -427,9 +436,9 @@
   .site-header.has-global-nav .global-nav { grid-column:1/-1; grid-row:2; width:calc(100% + 8vw); margin-left:-4vw; overflow-x:auto; overflow-y:visible; justify-content:flex-start; border-top:1px solid var(--line); scrollbar-width:none; }
   .site-header.has-global-nav .global-nav::-webkit-scrollbar { display:none; }
   .site-header.has-global-nav .global-nav > a,.site-header.has-global-nav .global-nav summary { min-width:max-content; flex:0 0 auto; padding-inline:14px; border-left:0; border-right:1px solid var(--line); font-size:8px; }
-  .site-header .country-menu { flex:0 0 auto; }
-  .site-header .country-menu summary { width:100%; }
-  .site-header .country-menu-panel { position:fixed; top:112px; left:4vw; right:4vw; width:auto; }
+  .site-header .country-menu,.site-header .deep-dive-menu { flex:0 0 auto; }
+  .site-header .country-menu summary,.site-header .deep-dive-menu summary { width:100%; }
+  .site-header .country-menu-panel,.site-header .deep-dive-menu-panel { position:fixed; top:112px; left:4vw; right:4vw; width:auto; }
   .budget-workspace-page .budget-hero-compact { min-height:0; padding:28px 4vw; grid-template-columns:1fr; }
   .budget-workspace-page .budget-hero-compact .hero-budget-card { grid-column:1; grid-row:auto; margin-top:24px; min-height:220px; }
   .budget-workspace { display:block; }

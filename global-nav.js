@@ -16,23 +16,24 @@
   const flags = {CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us"};
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const copy = {
-    cs:{home:"Domů",compare:"Srovnání",cities:"Obce a města",country:"Země",method:"Metodika",all:"Všechny profily",czechBudget:"Český státní rozpočet"},
-    en:{home:"Home",compare:"Compare",cities:"Municipalities",country:"Country",method:"Methodology",all:"All profiles",czechBudget:"Czech state budget"}
+    cs:{home:"Domů",compare:"Srovnání",cities:"Obce a města",country:"Země",deepDives:"Hloubkové profily",method:"Metodika",all:"Všechny profily",allDeepDives:"Všechny profily",transport:"Doprava",transportCopy:"Rozpočty, silnice a tempo výstavby",health:"Zdraví",healthCopy:"Financování a kapacita systému",coming:"Připravujeme",czechBudget:"Český státní rozpočet"},
+    en:{home:"Home",compare:"Compare",cities:"Municipalities",country:"Country",deepDives:"Deep dives",method:"Methodology",all:"All profiles",allDeepDives:"All deep dives",transport:"Transportation",transportCopy:"Budgets, roads and build pace",health:"Health",healthCopy:"Funding and system capacity",coming:"Coming next",czechBudget:"Czech state budget"}
   };
   function render() {
     const lang = language(), t = copy[lang], page = location.pathname.split("/").pop() || "index.html";
     document.querySelectorAll(".global-nav").forEach(nav => {
       const countryHref = code => `${assetRoot}country.html?code=${code}&lang=${lang}`;
-      nav.innerHTML = `<a href="${assetRoot}index.html?lang=${lang}" data-global-nav="home">${t.home}</a><a href="${assetRoot}index.html?lang=${lang}#compare" data-global-nav="compare">${t.compare}</a><a href="${assetRoot}municipalities/?lang=${lang}" data-global-nav="cities">${t.cities}</a><details class="country-menu"><summary>${t.country}<span aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}index.html?lang=${lang}#countries">${t.all} →</a></div><a class="capital-menu-feature" href="${assetRoot}cesky-rozpocet.html?lang=${lang}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countries.map(([code,cs,en])=>`<a href="${countryHref(code)}"><img src="${assetRoot}assets/flags/${flags[code]}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("")}</div></details><a href="${assetRoot}index.html?lang=${lang}#method" data-global-nav="method">${t.method}</a>`;
-      const active = page === "municipalities.html" || location.pathname.includes("/municipalities/") || page === "eu-capitals.html" || location.pathname.includes("/cz/mesta/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/") ? "cities" : page === "country.html" || page === "cesky-rozpocet.html" ? "country" : location.hash === "#compare" ? "compare" : location.hash === "#method" ? "method" : page === "index.html" || page === "" ? "home" : "";
+      nav.innerHTML = `<a href="${assetRoot}index.html?lang=${lang}" data-global-nav="home">${t.home}</a><a href="${assetRoot}index.html?lang=${lang}#compare" data-global-nav="compare">${t.compare}</a><a href="${assetRoot}municipalities/?lang=${lang}" data-global-nav="cities">${t.cities}</a><details class="country-menu"><summary>${t.country}<span aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}index.html?lang=${lang}#countries">${t.all} →</a></div><a class="capital-menu-feature" href="${assetRoot}cesky-rozpocet.html?lang=${lang}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countries.map(([code,cs,en])=>`<a href="${countryHref(code)}"><img src="${assetRoot}assets/flags/${flags[code]}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("")}</div></details><details class="deep-dive-menu"><summary>${t.deepDives}<span aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${assetRoot}deep-dives/?lang=${lang}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a class="coming" href="${assetRoot}deep-dives/?lang=${lang}#health"><b>02</b><span><strong>${t.health}</strong><small>${t.coming}</small></span></a></div></details><a href="${assetRoot}index.html?lang=${lang}#method" data-global-nav="method">${t.method}</a>`;
+      const active = location.pathname.includes("/deep-dives/") ? "deep-dives" : page === "municipalities.html" || location.pathname.includes("/municipalities/") || page === "eu-capitals.html" || location.pathname.includes("/cz/mesta/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/") ? "cities" : page === "country.html" || page === "cesky-rozpocet.html" ? "country" : location.hash === "#compare" ? "compare" : location.hash === "#method" ? "method" : page === "index.html" || page === "" ? "home" : "";
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
-      const details = nav.querySelector("details");
-      details?.addEventListener("toggle", () => {
+      if (active === "deep-dives") nav.querySelector(".deep-dive-menu")?.classList.add("active");
+      nav.querySelectorAll("details").forEach(details=>details.addEventListener("toggle", () => {
         if (!details.open) return;
+        nav.querySelectorAll("details[open]").forEach(other=>{if(other!==details)other.open=false});
         const close = event => { if (!details.contains(event.target)) { details.open = false; document.removeEventListener("pointerdown", close); } };
         setTimeout(() => document.addEventListener("pointerdown", close), 0);
-      });
+      }));
     });
   }
   document.addEventListener("click", event => {
