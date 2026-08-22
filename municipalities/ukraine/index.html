@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ukrainian municipalities — Public Spending Data</title>
+  <meta name="description" content="Import status, coverage and a searchable directory of Ukrainian territorial communities.">
+  <link rel="canonical" href="https://czbudget-public-258433468858.europe-west1.run.app/municipalities/ukraine/">
+  <link rel="alternate" hreflang="cs" href="https://czbudget-public-258433468858.europe-west1.run.app/municipalities/ukraine/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://czbudget-public-258433468858.europe-west1.run.app/municipalities/ukraine/?lang=en">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../styles.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../chart-system.css?v=20260822-country-municipalities">
+  <link rel="stylesheet" href="../../municipalities.css?v=20260822-country-municipalities">
+  <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260822-country-municipalities">
+  <script src="../../global-nav.js?v=20260822-country-municipalities" defer></script>
+  <script src="../../municipalities-country.js?v=20260822-country-municipalities" defer></script>
+</head>
+<body class="municipalities-page country-municipalities-page" data-country-code="UKR" data-country-slug="ukraine">
+  <header class="site-header compact-header has-global-nav"><a class="brand" href="../../index.html"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a><nav class="global-nav" aria-label="Primary navigation"></nav><div class="lang-switch"><button data-lang="cs" class="active">CS</button><span>/</span><button data-lang="en">EN</button></div></header>
+  <main id="top">
+    <nav class="municipality-switch" aria-label="Municipality views"><a href="../?lang=cs" data-view-link="europe" data-copy="viewEurope">Evropa</a><label class="active"><span data-copy="countryHomepage">Stránka země</span><select id="municipality-country-switch" aria-label="Stránka obcí podle země"></select></label></nav>
+    <section class="municipal-hero"><div><span class="eyebrow"><i class="live-dot"></i><span id="country-eyebrow">—</span></span><h1 id="country-title">—</h1><p id="country-intro">—</p></div><div class="municipal-hero-stat"><span data-copy="covered">Pokryté místní jednotky</span><strong id="country-total">—</strong><small id="country-coverage">—</small></div></section>
+    <nav class="municipal-rail"><a href="#insights" data-copy="navInsights">Co data říkají</a><a href="#directory" data-copy="navDirectory">Adresář</a><a href="#context" data-copy="navContext">Kontext a zdroj</a></nav>
+    <section id="insights" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="insightsKicker">01 / Datový profil</span><h2 id="insights-title">—</h2></div><p id="insights-copy">—</p></div><div id="country-insight-grid" class="insight-grid"></div></section>
+    <section id="directory" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="directoryKicker">02 / Místní úroveň</span><h2 data-copy="directoryTitle">Najděte konkrétní obec.</h2></div><p id="country-directory-count">—</p></div><div class="municipal-controls country-directory-controls"><label><span data-copy="search">Hledat</span><input id="country-municipality-search" type="search" autocomplete="off" data-placeholder="searchPlaceholder" placeholder="Název nebo národní kód…"></label><label><span data-copy="year">Rok</span><select id="country-year-filter"></select></label><button id="country-reset" type="button" data-copy="reset">Vymazat filtry</button></div><div id="country-municipality-grid" class="municipality-grid"></div><button id="country-load-more" class="load-more" type="button" data-copy="more">Načíst další</button></section>
+    <section id="context" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="contextKicker">03 / Co je uvnitř</span><h2 data-copy="contextTitle">Rozsah zůstává viditelný.</h2></div><p data-copy="contextCopy">Národní zdroj a účetní hranice jsou součástí výsledku, ne poznámka pod čarou.</p></div><div id="country-context-grid" class="country-context-grid"></div></section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small id="country-footer">Municipal finance · official national source</small></div><a href="#top" data-copy="top">Nahoru ↑</a></footer>
+</body>
+</html>
