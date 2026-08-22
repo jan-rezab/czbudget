@@ -8,7 +8,7 @@
   <link id="alternate-cs" rel="alternate" hreflang="cs" href="https://czbudget-public-258433468858.europe-west1.run.app/country.html?lang=cs">
   <link id="alternate-en" rel="alternate" hreflang="en" href="https://czbudget-public-258433468858.europe-west1.run.app/country.html?lang=en">
   <meta id="og-url" property="og:url" content="https://czbudget-public-258433468858.europe-west1.run.app/country.html">
-  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css?v=20260822-section-rail"><link rel="stylesheet" href="styles-v2.css?v=20260822-country-metrics"><link rel="stylesheet" href="chart-system.css?v=20260821-benchmark-flags"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260821-health8"><script src="country.js?v=20260821-benchmark-flags" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-health.js?v=20260821-health8" defer></script><script src="global-nav.js?v=20260822-unified-nav" defer></script>
+  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css?v=20260822-section-rail"><link rel="stylesheet" href="styles-v2.css?v=20260822-country-metrics"><link rel="stylesheet" href="chart-system.css?v=20260821-benchmark-flags"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260821-health8"><link rel="stylesheet" href="country-functions.css?v=20260822-functions10"><link rel="stylesheet" href="country-cash-in.css?v=20260822-cash-in"><script src="country.js?v=20260821-benchmark-flags" defer></script><script src="country-cash-in.js?v=20260822-cash-in" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-functions.js?v=20260822-functions10" defer></script><script src="country-health.js?v=20260821-health8" defer></script><script src="sortable-tables.js?v=20260822" defer></script><script src="global-nav.js?v=20260822-unified-nav" defer></script>
 </head>
 <body class="country-page">
   <header class="site-header compact-header has-global-nav">
@@ -19,10 +19,13 @@
   <nav class="context-rail country-context-rail" aria-label="Country sections">
     <a href="#top" data-i18n="navOverview">Přehled</a>
     <a href="#scope" data-i18n="navScope">Rozsah</a>
+    <a href="#cash-in" data-i18n="navCashIn">Cash-in</a>
     <a href="#trend" data-i18n="navTrend">Vývoj</a>
     <a href="#macro" data-i18n="navMacro">Makro</a>
     <a href="#spending" data-i18n="navSpending">Výdaje</a>
     <a href="#healthcare" data-i18n="navHealthcare">Zdraví</a>
+    <a href="#social-system" data-i18n="navSocial">Sociální</a>
+    <a href="#transportation" data-i18n="navTransport">Doprava</a>
     <a href="#specifics" data-i18n="navSpecifics">Specifika</a>
     <a href="#sources" data-i18n="navSources">Zdroje</a>
   </nav>
@@ -42,6 +45,8 @@
       <div class="country-scope-facts" id="country-scope-facts"></div>
       <p class="scope-nonadditivity" id="scope-nonadditivity"></p>
     </section>
+
+    <section class="country-section country-cash-in-section" id="cash-in" aria-labelledby="country-cash-in-title"><div id="country-cash-in-root" aria-live="polite"></div></section>
 
     <section class="country-section" id="trend">
       <div class="detail-heading"><div><span class="kicker" data-i18n="trendKicker">01 / Dvacetiletý vývoj</span><h2 data-i18n="trendTitle">Veřejné finance v čase.</h2></div><p data-i18n="trendCopy">Harmonizované ukazatele IMF umožňují číst dlouhodobý fiskální příběh ve společné definici sektoru vládních institucí.</p></div>
@@ -63,10 +68,10 @@
       <div id="country-spending-root" aria-live="polite"></div>
     </section>
 
-    <section class="country-section specifics-section" id="specifics"><div class="detail-heading"><div><span class="kicker" data-i18n="specificKicker">04 / Národní specifika</span><h2 data-i18n="specificTitle">Jak země hlídá rozpočet.</h2></div><p data-i18n="specificCopy">Vedle výsledku ukazujeme institucionální pravidla a četnost přebytku, ne jen jeden vybraný rok.</p></div><div class="specific-grid" id="specific-grid"></div></section>
+    <section class="country-section country-function-section function-health" id="healthcare" aria-labelledby="country-function-health-title"><div id="country-function-health" aria-live="polite"></div></section>
 
-    <section class="country-section country-health-section" id="healthcare" hidden>
-      <div class="detail-heading"><div><span class="kicker" data-health-key="flowKicker">05 / Zdravotnictví</span><h2 data-health-key="flowTitle">Kdo platí. Kam peníze míří.</h2></div><p data-health-key="flowCopy">Harmonizovaný tok běžných výdajů umožňuje číst osm systémů stejným účetním jazykem.</p></div>
+    <section class="country-section country-health-section" id="healthcare-system" hidden>
+      <div class="detail-heading"><div><span class="kicker" data-health-key="flowKicker">06 / Zdravotní systém</span><h2 data-health-key="flowTitle">Kdo platí. Kam peníze míří.</h2></div><p data-health-key="flowCopy">Harmonizovaný tok běžných výdajů umožňuje číst osm systémů stejným účetním jazykem.</p></div>
       <div class="country-health-kpis" id="country-health-kpis"></div>
       <div class="country-health-architecture"><span data-health-key="architecture">Jak systém funguje</span><p id="country-health-architecture-copy"></p><a id="country-health-official" target="_blank" rel="noreferrer"></a></div>
       <div class="country-health-mode" role="tablist" aria-label="Health flow view"><button type="button" data-health-mode="finance" role="tab" aria-selected="true" data-health-key="financeView">Kdo platí</button><button type="button" data-health-mode="provider" role="tab" aria-selected="false" data-health-key="providerView">Kam peníze míří</button></div>
@@ -74,6 +79,12 @@
       <div class="country-health-flow-footer"><span data-health-key="editable">Podtržené podíly lze upravit; celkový tok se přepočítá okamžitě.</span><button type="button" id="country-health-reset" data-health-key="reset">Obnovit data</button></div>
       <div class="country-health-sources" id="country-health-sources"></div>
     </section>
+
+    <section class="country-section country-function-section function-social" id="social-system" aria-labelledby="country-function-social-title"><div id="country-function-social" aria-live="polite"></div></section>
+
+    <section class="country-section country-function-section function-transport" id="transportation" aria-labelledby="country-function-transport-title"><div id="country-function-transport" aria-live="polite"></div></section>
+
+    <section class="country-section specifics-section" id="specifics"><div class="detail-heading"><div><span class="kicker" data-i18n="specificKicker">09 / Národní specifika</span><h2 data-i18n="specificTitle">Jak země hlídá rozpočet.</h2></div><p data-i18n="specificCopy">Vedle výsledku ukazujeme institucionální pravidla a četnost přebytku, ne jen jeden vybraný rok.</p></div><div class="specific-grid" id="specific-grid"></div></section>
 
     <section class="country-section country-hospital-section" id="hospital-benchmark" hidden>
       <div class="detail-heading"><div><span class="kicker" data-health-key="benchKicker">06 / Benchmark nemocnice</span><h2 data-health-key="benchTitle">Váš rozpočet.<br>Národní kontext.</h2></div><p data-health-key="benchCopy">Zadejte roční rozpočet a počet lůžek. Model porovná výdaje na lůžko s národním systémovým benchmarkem.</p></div>
