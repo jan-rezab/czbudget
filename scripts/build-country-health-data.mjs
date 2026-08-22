@@ -2,12 +2,13 @@
 
 import fs from "node:fs/promises";
 
-const AREAS = ["DEU","FRA","POL","GBR","USA","CHE","SWE","DNK"];
+const AREAS = ["CZE","DEU","FRA","POL","GBR","USA","CHE","SWE","DNK"];
 const AREA_KEY = AREAS.join("+");
 const SHA = "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1";
 const BEDS = "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_HEALTH_REAC_HOSP@DF_BEDS_FUNC,1.1";
 
 const profiles = {
+  CZE:{currency:"CZK",architecture_cs:"Veřejné zdravotní pojištění shromažďuje povinné odvody a státní platby. Zdravotní pojišťovny nakupují péči od veřejných i soukromých poskytovatelů; síť zařízení publikuje ÚZIS v registru NRPZS.",architecture_en:"Compulsory public health insurance pools contributions and state payments. Health insurers purchase care from public and private providers; ÚZIS publishes the facility network through the NRPZS register.",official_title:"ÚZIS · registr poskytovatelů NRPZS",official_url:"https://nrpzs.uzis.cz/"},
   POL:{currency:"PLN",architecture_cs:"Povinné veřejné pojištění soustřeďuje Národní fond zdraví (NFZ). Pojistné a státní transfery se mění v celostátní plán úhrad; nemocnice vlastní stát, kraje, okresy i obce.",architecture_en:"Compulsory public insurance is pooled by the National Health Fund (NFZ). Contributions and state transfers become a national purchasing plan; hospitals are owned by central, regional, county and municipal authorities.",official_title:"NFZ · finance and plans",official_url:"https://www.nfz.gov.pl/bip/finanse-nfz/"},
   DEU:{currency:"EUR",architecture_cs:"Zákonné zdravotní pojišťovny shromažďují pojistné a dostávají prostředky přes Gesundheitsfonds. Provoz nemocnic hradí pojišťovny, zatímco investice mají financovat spolkové země — klasický dvojí tok.",architecture_en:"Statutory sickness funds collect contributions and receive allocations through the Gesundheitsfonds. Insurers fund hospital operations while the Länder are responsible for capital investment — the classic dual-financing flow.",official_title:"BMG · statutory health financing",official_url:"https://www.bundesgesundheitsministerium.de/finanzierung-gkv.html"},
   GBR:{currency:"GBP",architecture_cs:"Daňové příjmy proudí přes čtyři decentralizované systémy NHS. Agregát OECD pokrývá celé Spojené království; veřejné účty jednotlivých poskytovatelů jsou nejsnáze dostupné pro NHS England.",architecture_en:"Tax revenue flows through four devolved NHS systems. The OECD aggregate covers the whole United Kingdom; provider-level public accounts are most readily available for NHS England.",official_title:"NHS England · financial accounting",official_url:"https://www.england.nhs.uk/financial-accounting-and-reporting/"},
@@ -73,7 +74,7 @@ const countries = Object.fromEntries(AREAS.map(code=>{
 const payload = {
   schema_version:"1.0.0",
   generated_at:new Date().toISOString(),
-  coverage:"Eight non-Czech, non-Ukrainian country profiles in the sovereign benchmark",
+  coverage:"Nine OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
   methodology:{
     cs:"Podíly jsou běžné výdaje na zdravotnictví podle System of Health Accounts 2011. Benchmark na lůžko je odhad: výdaje na obyvatele × podíl nemocnic ÷ lůžka na obyvatele. Nejde o účetní výnos konkrétní nemocnice ani žebříček kvality.",
     en:"Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
