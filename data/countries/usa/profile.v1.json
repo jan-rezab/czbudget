@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-22T20:31:22.510Z",
+  "generated_at": "2026-08-22T20:48:51.053Z",
   "country": {
     "country_code": "USA",
     "name_cs": "USA",
@@ -32,11 +32,10 @@
     }
   },
   "coverage": {
-    "loaded_modules": 7,
+    "loaded_modules": 8,
     "total_modules": 11,
     "missing_dimensions": [
       "municipal_entity_finance",
-      "provider_register",
       "public_entity_accounts",
       "national_demographic_projection"
     ]
@@ -88,12 +87,10 @@
       "missing_dimensions": []
     },
     "providers": {
-      "status": "unavailable",
-      "coverage": "source_adapter_pending",
-      "missing_dimensions": [
-        "facility records"
-      ],
-      "facility_count": 0
+      "status": "loaded",
+      "coverage": "5419 registered provider locations",
+      "missing_dimensions": [],
+      "facility_count": 5419
     },
     "municipalities": {
       "status": "unavailable",
@@ -3820,7 +3817,81 @@
       "bed_year": 2022,
       "bed_status": ""
     },
-    "providers": null,
+    "providers": {
+      "coverage": "medicare_registered_hospitals",
+      "facility_count": 5419,
+      "provider_count": 5419,
+      "regions": {
+        "CA": 377,
+        "AK": 25,
+        "MS": 109,
+        "OH": 193,
+        "FL": 221,
+        "NV": 46,
+        "SC": 66,
+        "LA": 161,
+        "MN": 136,
+        "IL": 193,
+        "AZ": 108,
+        "PA": 186,
+        "TX": 467,
+        "KS": 139,
+        "IA": 118,
+        "IN": 148,
+        "MA": 84,
+        "NY": 192,
+        "NC": 120,
+        "CO": 96,
+        "GA": 149,
+        "KY": 103,
+        "HI": 23,
+        "OR": 62,
+        "MD": 56,
+        "TN": 121,
+        "NJ": 78,
+        "CT": 36,
+        "NH": 27,
+        "OK": 136,
+        "NM": 45,
+        "ND": 47,
+        "UT": 52,
+        "WI": 140,
+        "AL": 99,
+        "NE": 93,
+        "WA": 100,
+        "AR": 90,
+        "MI": 149,
+        "PR": 59,
+        "VA": 96,
+        "SD": 61,
+        "WY": 31,
+        "MO": 120,
+        "MT": 63,
+        "DE": 13,
+        "ID": 48,
+        "WV": 55,
+        "VT": 17,
+        "ME": 36,
+        "RI": 13,
+        "DC": 10,
+        "MP": 1,
+        "VI": 2,
+        "GU": 2,
+        "AS": 1
+      },
+      "source": {
+        "title": "CMS Provider Data Catalog · Hospital General Information",
+        "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u",
+        "api_url": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+        "update_frequency": "quarterly"
+      },
+      "payments": {
+        "coverage": "cost_reports_separate_adapter",
+        "note_cs": "Registr zařízení je načten; účetní výkazy Medicare HCRIS zůstávají samostatným účetním faktem.",
+        "note_en": "The facility register is loaded; Medicare HCRIS cost reports remain a separate accounting fact."
+      },
+      "records": "data/countries/usa/providers.v1.json"
+    },
     "municipalities": null,
     "public_entities": null,
     "demography": null
