@@ -5,7 +5,8 @@ const routes = [
   ["homepage", "/?lang=cs"],
   ["country", "/country.html?code=CZE&lang=cs"],
   ["capitals", "/eu-capitals.html?lang=cs"],
-  ["international municipalities", "/municipalities.html?lang=cs"],
+  ["international municipalities", "/municipalities/?lang=cs"],
+  ["Czech municipalities", "/municipalities/czechia/?lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/obce/praha/?lang=cs"],
   ["directory", "/cz/obce/?lang=cs"],
@@ -38,7 +39,7 @@ test("language state survives navigation", async ({ page }) => {
 });
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {
-  await page.goto("/municipalities.html?lang=en", { waitUntil: "networkidle" });
+  await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(7);
   await expect(page.locator("#total-entities")).not.toHaveText("—");
   await page.locator("#country-filter").selectOption("DNK");
@@ -48,21 +49,34 @@ test("international municipality directory filters by country, year and search",
   await expect(page.locator("#municipality-grid")).toContainText("Copenhagen");
   await page.locator("#year-filter").selectOption("2024");
   await expect(page.locator("#directory-count")).toContainText("1 entities");
+  await page.locator("#type-filter").selectOption("capital");
+  await page.locator("#municipality-search").fill("");
+  await expect(page.locator("#directory-count")).toContainText("27 entities");
+  await expect(page.locator("#municipality-grid .capital-card")).toHaveCount(27);
 });
 
 test("country profiles expose sortable ten-year health, social and transport comparisons", async ({ page }) => {
   await page.goto("/country.html?code=CZE&lang=en", { waitUntil: "networkidle" });
-  for (const id of ["healthcare", "social-system", "transportation"]) {
+  for (const id of ["healthcare", "social-system"]) {
     const section=page.locator(`#${id}`);
     await expect(section.locator(".function-bar-column")).toHaveCount(10);
     await expect(section.locator("tbody tr")).toHaveCount(10);
     await expect(section.locator(".sortable-header-button")).toHaveCount(5);
   }
+  const transport=page.locator("#transportation");
+  await expect(transport.locator(".function-bar-column")).toHaveCount(10);
+  await expect(transport.locator(".transport-network-year")).toHaveCount(10);
+  await expect(transport.locator(".transport-kpis article")).toHaveCount(5);
+  await expect(transport.locator("tbody tr")).toHaveCount(10);
+  await expect(transport.locator(".sortable-header-button")).toHaveCount(7);
+  await expect(transport.locator(".transport-contract")).toContainText("Absolute kilometres alone are not a quality ranking");
+  await expect(transport).toContainText("1,486 km");
   await expect(page.locator("#healthcare-system")).toBeVisible();
   await expect(page.locator("#provider-network")).toBeVisible();
   await page.locator("#country-switch").selectOption("DEU");
   await expect(page.locator("#healthcare-system")).toBeVisible();
   await expect(page.locator("#country-function-health-title")).toHaveText("Ten years of health.");
+  await expect(transport).toContainText("13,210 km");
 });
 
 test("country cash-in keeps municipal and company layers separate", async ({ page }) => {
@@ -155,8 +169,8 @@ test("all representative page menus resolve and primary navigation routes correc
   }
 
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
-  await page.locator('[data-global-nav="capitals"]').click();
-  await expect(page).toHaveURL(/\/eu-capitals\.html\?lang=cs/);
+  await page.locator('[data-global-nav="cities"]').click();
+  await expect(page).toHaveURL(/\/municipalities\/\?lang=cs/);
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
   await page.locator(".country-menu summary").click();
   await expect(page.locator(".country-menu-panel a")).toHaveCount(12);

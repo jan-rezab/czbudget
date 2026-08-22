@@ -8,12 +8,14 @@ const history = JSON.parse(await readFile("data/large-city-history.v1.json", "ut
 const capitals = JSON.parse(await readFile("data/eu-capital-budgets.v1.json", "utf8"));
 const categoryComparison = JSON.parse(await readFile("data/country-spending-comparison.v1.json", "utf8"));
 const functionalBudgets = JSON.parse(await readFile("data/country-functional-budgets.v1.json", "utf8"));
+const roadNetworks = JSON.parse(await readFile("data/road-network-history.v1.json", "utf8"));
 const countryCashIn = JSON.parse(await readFile("data/country-cash-in.v1.json", "utf8"));
 const sovereign = JSON.parse(await readFile("lib/data/sovereign-benchmark.v1.json", "utf8"));
 const homepage = await readFile("index.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
 const countryPage = await readFile("country.html", "utf8");
 const countryScript = await readFile("country.js", "utf8");
+const countryFunctionsScript = await readFile("country-functions.js", "utf8");
 const czechBudgetPage = await readFile("cesky-rozpocet.html", "utf8");
 const czechBudgetScript = await readFile("app.js", "utf8");
 const demography = JSON.parse(await readFile("data/demography-social.v1.json", "utf8"));
@@ -22,11 +24,13 @@ const capitalsScript = await readFile("eu-capitals.js", "utf8");
 const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
 const municipalI18n = await readFile("municipal-i18n.js", "utf8");
 const internationalMunicipalities = JSON.parse(await readFile("data/international-municipalities.v1.json", "utf8"));
-const internationalMunicipalPage = await readFile("municipalities.html", "utf8");
+const internationalMunicipalPage = await readFile("municipalities/index.html", "utf8");
+const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
 const internationalMunicipalScript = await readFile("municipalities.js", "utf8");
 if (snapshot.municipalities.length !== 6254) throw new Error("Expected 6,254 municipalities");
 if (internationalMunicipalities.countries.length !== 7 || internationalMunicipalities.entities.length < 14000) throw new Error("Expected seven-country municipality directory with at least 14,000 entities");
-if (!internationalMunicipalPage.includes('id="country-filter"') || !internationalMunicipalPage.includes('id="municipality-grid"') || !internationalMunicipalScript.includes("renderDirectory")) throw new Error("International municipality page must expose country filters and directory rendering");
+if (!internationalMunicipalPage.includes('id="type-filter"') || !internationalMunicipalPage.includes('value="capital"') || !internationalMunicipalPage.includes('id="country-filter"') || !internationalMunicipalPage.includes('id="municipality-grid"') || !internationalMunicipalScript.includes("renderDirectory") || !internationalMunicipalScript.includes("city.eu_capital")) throw new Error("Municipality hub must expose country and EU-capital filters");
+if (!czechMunicipalPage.includes('id="cz-insight-grid"') || !czechMunicipalPage.includes('data-destination="directory"') || !czechMunicipalPage.includes('data-destination="cities"')) throw new Error("Czechia municipality detail must expose insights and downstream municipal views");
 if (snapshot.scope.combined_unique_entity_count !== 6267) throw new Error("Expected 6,267 unique municipal and regional entities");
 if (history.cities.length !== 27 || history.cities.some((city) => city.series.length !== 20)) throw new Error("Expected 20 annual observations for 27 large cities");
 const pragueHistory = history.cities.find((city) => city.entity_id === "CZ:00064581")?.series.slice(-10);
@@ -37,6 +41,10 @@ if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fi
 if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
 if (categoryComparison.countries.length !== 10 || categoryComparison.categories.length !== 12) throw new Error("Expected ten countries and twelve common spending categories");
 if (Object.keys(functionalBudgets.countries).length !== 10) throw new Error("Expected functional budgets for all ten countries");
+if (roadNetworks.countries.length !== 10 || !roadNetworks.construction_history_status.includes("annual net stock change")) throw new Error("Expected ten-country road histories with an explicit construction proxy caveat");
+for (const country of roadNetworks.countries) {
+  if (!country.road_network?.series?.length || !country.motorways?.series?.length || country.motorways.series.some((point) => !Number.isFinite(point.km))) throw new Error(`${country.code}: incomplete road or motorway history`);
+}
 if (Object.keys(countryCashIn.countries).length !== 10 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for ten countries and Czech territorial/company cash-in layers");
 if (countryCashIn.countries.CZE.layers.municipalities.entity_count !== 6254 || countryCashIn.countries.CZE.layers.companies.entity_count !== 38) throw new Error("Unexpected Czech municipality or state-company cash-in coverage");
 for (const [code, country] of Object.entries(functionalBudgets.countries)) {
@@ -54,9 +62,9 @@ for (const country of categoryComparison.countries) {
 }
 const usaComparison = categoryComparison.countries.find((country) => country.code === "USA");
 if (!usaComparison || usaComparison.totals.current < 7000 || usaComparison.totals.current > 8000) throw new Error("USA comparison amounts must be normalized from source millions to billions");
-if (!homepage.includes('href="eu-capitals.html?lang=cs"') || !homepage.includes('data-i18n="capitalsCta"')) throw new Error("Homepage must expose the European capitals comparison");
+if (homepage.includes('data-i18n="capitalsCta"') || homepage.includes('data-i18n="citiesCta"') || homepage.includes('data-i18n="intlMunicipalCta"')) throw new Error("Municipality destinations must live on the municipality hub, not the homepage");
 if (!homepage.includes('id="category-comparison-root"') || !homepage.includes('homepage-category.js?v=20260821-benchmark-flags') || !homepage.includes('homepage-category.css?v=20260821-benchmark-flags')) throw new Error("Homepage must expose the country category comparison");
-if (!globalNav.includes('data-global-nav="capitals"') || !globalNav.includes('municipalities.html?lang=${lang}') || !globalNav.includes('capitals:"EU cities"')) throw new Error("Global navigation must expose municipalities and EU cities as visible destinations");
+if (!globalNav.includes('municipalities/?lang=${lang}') || globalNav.includes('data-global-nav="capitals"')) throw new Error("Global navigation must expose one consolidated municipality destination");
 if (!cloudbuild.includes("scripts/assert-single-production.sh") || !cloudbuild.includes("scripts/deploy-immutable.sh") || !cloudbuild.includes("- czbudget-public") || cloudbuild.includes("${_SERVICE}") || cloudbuild.includes("czbudget-web")) throw new Error("Cloud Build must be locked to the sole canonical production service");
 if (!cloudbuild.includes("scripts/merge-municipal-breakdowns.mjs") || !municipalI18n.includes("renderBudgetBreakdown") || !municipalI18n.includes("municipal-budget-codebook.v1.json")) throw new Error("Municipal profiles must surface the detailed FIN 2-12 M breakdown");
 if (!capitalsScript.includes('data/large-city-history.v1.json') || !capitalsScript.includes('renderHistory(city)')) throw new Error("European capitals must surface the Prague ten-year history");
@@ -73,12 +81,13 @@ if (!czechBudgetScript.includes('d=>d.pension],["health","Zdravotnictví",d=>d.h
 for (const key of ["pension_expense", "pension_income", "health_expense", "care_allowance"]) if (!Number.isFinite(demography.base_2025?.[key]) || demography.base_2025[key] <= 0) throw new Error(`Demographic base amount ${key} must be positive`);
 if (!czechBudgetScript.includes("requiredBaseAmounts") || !czechBudgetScript.includes("pension_age_sensitive_share:pensionAgeShare")) throw new Error("Demographic calculations must validate base amounts and use declared model assumptions");
 if (!homepageScript.includes("country.html?code=") || homepageScript.includes('code==="CZE"?')) throw new Error("Every country card must use the shared dynamic country profile");
-if (!homepage.includes('href="cz/mesta/?lang=cs"') || !homepage.includes('data-i18n="citiesCta"') || !homepage.includes('data-i18n="cityHeroCta"')) throw new Error("Homepage must prominently expose Czech cities");
+if (!czechMunicipalPage.includes('municipalities-czechia.js') || !internationalMunicipalPage.includes('czechia/?lang=cs')) throw new Error("Municipality hub must link to the Czechia detail route");
 if (!homepage.includes('styles-v2.css?v=20260821-benchmark-flags') || !homepage.includes('homepage-v2.js?v=20260822-international-municipalities') || !homepage.includes('global-nav.js?v=20260822-international-municipalities')) throw new Error("Homepage assets must be cache-busted for the current municipality release");
 if (!homepage.includes('id="benchmark-overview"') || !homepage.includes('id="benchmark-country"') || !homepageScript.includes("function benchmark")) throw new Error("Homepage must expose the selectable fiscal benchmark overview");
 if (globalNav.includes('code === "CZE"') || !globalNav.includes('assets/flags/${flags[code]}.svg') || !countryScript.includes("czech-view-grid")) throw new Error("Country navigation must use shared profiles, SVG flags, and both Czech detail views");
 if (!homepage.includes('class="compare-scope-readout"') || !homepage.includes("General government")) throw new Error("Homepage comparison must state its harmonised fiscal perimeter");
 if (!homepage.includes('id="fiscal-architecture-body"') || !homepageScript.includes("function architectureTable")) throw new Error("Homepage must compare fiscal architecture across all tracked countries");
 if (!countryPage.includes('country-spending.js?v=20260821') || !countryPage.includes('country-health.js?v=20260822-czech-flow') || !countryPage.includes('country-providers.js?v=20260822-network') || !countryPage.includes('country-functions.js?v=20260822-transport-deep-dive') || !countryPage.includes('country-cash-in.js?v=20260822-cash-in') || !countryPage.includes('id="cash-in"') || !countryPage.includes('id="provider-network"') || !countryPage.includes('id="social-system"') || !countryPage.includes('id="transportation"') || !countryScript.includes('countryprofilechange')) throw new Error("Fiscal profiles must preserve cash-in, spending, healthcare, provider, social and transport modules");
-for (const required of ["index.html", "homepage-category.js", "homepage-category.css", "data/country-spending-comparison.v1.json", "data/country-functional-budgets.v1.json", "data/country-cash-in.v1.json", "data/country-provider-networks.v1.json", "data/international-municipalities.v1.json", "municipalities.html", "municipalities.js", "municipalities.css", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "country-providers.js", "country-functions.js", "country-functions.css", "country-cash-in.js", "country-cash-in.css", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "scripts/build-country-functional-budgets.mjs", "scripts/build-country-cash-in.mjs", "scripts/build-country-provider-networks.mjs", "scripts/export-municipal-breakdowns.sql", "scripts/export-municipal-budget-codebook.sql", "scripts/merge-municipal-breakdowns.mjs", "sitemap.xml", ...["cz","de","dk","fr","gb","pl","se","ch","ua","us"].map((code)=>`assets/flags/${code}.svg`)]) await stat(required);
+if (!countryFunctionsScript.includes("function renderTransport") || !countryFunctionsScript.includes("transport-comparison") || !countryFunctionsScript.includes("stockNotBuild")) throw new Error("Transportation must expose the network deep dive and net-stock caveat");
+for (const required of ["index.html", "homepage-category.js", "homepage-category.css", "data/country-spending-comparison.v1.json", "data/country-functional-budgets.v1.json", "data/road-network-history.v1.json", "data/country-cash-in.v1.json", "data/country-provider-networks.v1.json", "data/international-municipalities.v1.json", "municipalities.html", "municipalities/index.html", "municipalities/czechia/index.html", "municipalities.js", "municipalities-czechia.js", "municipalities.css", "municipalities-navigator.css", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-spending.js", "country-health.js", "country-providers.js", "country-functions.js", "country-functions.css", "country-cash-in.js", "country-cash-in.css", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "scripts/build-country-functional-budgets.mjs", "pipeline/transforms/prepare_road_network_history.py", "scripts/build-country-cash-in.mjs", "scripts/build-country-provider-networks.mjs", "scripts/export-municipal-breakdowns.sql", "scripts/export-municipal-budget-codebook.sql", "scripts/merge-municipal-breakdowns.mjs", "sitemap.xml", ...["cz","de","dk","fr","gb","pl","se","ch","ua","us"].map((code)=>`assets/flags/${code}.svg`)]) await stat(required);
 console.log("CZ Budget site validation passed");
