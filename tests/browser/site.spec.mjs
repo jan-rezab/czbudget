@@ -61,6 +61,11 @@ test("international municipality directory filters by country, year and search",
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(7);
   await expect(page.locator("#total-entities")).not.toHaveText("—");
+  await expect(page.locator("#type-filter option[value='all']")).toHaveText("Municipalities + capitals");
+  await expect(page.locator("#municipality-grid .capital-card")).toHaveCount(27);
+  await expect(page.locator("#about-project")).toContainText("Created by");
+  await expect(page.locator("#about-project")).toContainText("Hlídač státu, z.ú.");
+  await expect(page.locator("#about-project")).toContainText("05965527");
   await page.locator("#country-filter").selectOption("DNK");
   await expect(page.locator("#directory-count")).toContainText("98 entities");
   await page.locator("#municipality-search").fill("Copenhagen");
