@@ -30,9 +30,13 @@
     table.classList.add("sortable-table");
     headers.forEach((header, column) => {
       if (header.dataset.noSort === "true" || !header.textContent.trim()) return;
-      header.tabIndex = 0;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "sortable-header-button";
+      button.textContent = header.textContent.trim();
       header.setAttribute("aria-sort", "none");
-      header.title = document.documentElement.lang === "en" ? "Sort this column" : "Seřadit podle sloupce";
+      button.title = document.documentElement.lang === "en" ? "Sort this column" : "Seřadit podle sloupce";
+      header.replaceChildren(button);
       const sort = () => {
         const descending = header.getAttribute("aria-sort") !== "descending";
         headers.forEach((item) => item.setAttribute("aria-sort", "none"));
@@ -42,10 +46,7 @@
           .sort((a, b) => compare(a.key, b.key, descending ? -1 : 1) || a.index - b.index)
           .forEach(({ row }) => body.append(row));
       };
-      header.addEventListener("click", sort);
-      header.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); sort(); }
-      });
+      button.addEventListener("click", sort);
     });
   };
   const scan = (root = document) => root.querySelectorAll?.("table").forEach(enhance);

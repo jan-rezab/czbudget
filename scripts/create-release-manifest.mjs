@@ -9,7 +9,7 @@ const selected = [
   "data/country-spending-comparison.v1.json", "data/cz-public-entities-2024.json",
   "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json",
   "data/czech-budget.v1.json", "data/demography-social.v1.json",
-  "data/eu-capital-budgets.v1.json", "data/municipal-snapshot.v1.json",
+  "data/eu-capital-budgets.v1.json", "data/municipal-snapshot.v1.json", "data/municipal-history-directory.v1.json",
   "lib/data/sovereign-benchmark.v1.json", "sitemap.xml",
 ];
 try {
@@ -24,13 +24,22 @@ for (const relative of selected) {
 }
 const entityHash = createHash("sha256");
 let entityBytes = 0;
-const entityFiles = (await readdir(path.join(root, "data", "entities"))).filter((name) => name.endsWith(".json")).sort();
+const entityFiles = (await readdir(path.join(root, "data", "entities"))).filter((name) => /^\d{8}\.json$/.test(name)).sort();
 for (const name of entityFiles) {
   const content = await readFile(path.join(root, "data", "entities", name));
   entityHash.update(name).update("\0").update(content);
   entityBytes += content.length;
 }
 artifacts.push({ path: "data/entities/*.json", files: entityFiles.length, bytes: entityBytes, sha256: entityHash.digest("hex") });
+const historyHash = createHash("sha256");
+let historyBytes = 0;
+const historyFiles = (await readdir(path.join(root, "data", "municipal-history"))).filter((name) => name === "index.json" || /^\d{8}\.json$/.test(name)).sort();
+for (const name of historyFiles) {
+  const content = await readFile(path.join(root, "data", "municipal-history", name));
+  historyHash.update(name).update("\0").update(content);
+  historyBytes += content.length;
+}
+artifacts.push({ path: "data/municipal-history/*.json", files: historyFiles.length, bytes: historyBytes, sha256: historyHash.digest("hex") });
 let gitCommit = process.env.COMMIT_SHA || null;
 let workingTreeDirty = null;
 if (!gitCommit) {
