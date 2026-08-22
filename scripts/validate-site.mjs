@@ -25,6 +25,7 @@ const globalNav = await readFile("global-nav.js", "utf8");
 const capitalsScript = await readFile("eu-capitals.js", "utf8");
 const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
 const municipalI18n = await readFile("municipal-i18n.js", "utf8");
+const languageBootstrap = await readFile("language-bootstrap.js", "utf8");
 const internationalMunicipalities = JSON.parse(await readFile("data/international-municipalities.v1.json", "utf8"));
 const internationalMunicipalPage = await readFile("municipalities/index.html", "utf8");
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
@@ -73,6 +74,7 @@ const usaComparison = categoryComparison.countries.find((country) => country.cod
 if (!usaComparison || usaComparison.totals.current < 7000 || usaComparison.totals.current > 8000) throw new Error("USA comparison amounts must be normalized from source millions to billions");
 if (homepage.includes('data-i18n="capitalsCta"') || homepage.includes('data-i18n="citiesCta"') || homepage.includes('data-i18n="intlMunicipalCta"')) throw new Error("Municipality destinations must live on the municipality hub, not the homepage");
 if (!homepage.includes('id="category-comparison-root"') || !homepage.includes('homepage-category.js?v=20260821-benchmark-flags') || !homepage.includes('homepage-category.css?v=20260821-benchmark-flags')) throw new Error("Homepage must expose the country category comparison");
+if (!homepage.includes("language-bootstrap.js") || !languageBootstrap.includes("data-language-pending") || !languageBootstrap.includes("MutationObserver")) throw new Error("English must be selected before the first visible paint");
 if (!globalNav.includes('municipalities/?lang=${lang}') || globalNav.includes('data-global-nav="capitals"')) throw new Error("Global navigation must expose one consolidated municipality destination");
 if (!globalNav.includes('class="deep-dive-menu"') || !globalNav.includes('deep-dives/transportation/')) throw new Error("Global navigation must expose the dedicated deep-dive hierarchy");
 if (!deepDivePage.includes('class="deep-card available"') || !deepDivePage.includes('id="health"') || !transportDeepDivePage.includes('id="deep-dive-country"') || !transportDeepDivePage.includes('id="country-function-transport"')) throw new Error("Deep dives must expose a topic index and a country-filtered transportation page");

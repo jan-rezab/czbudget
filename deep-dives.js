@@ -1,6 +1,7 @@
 (() => {
   const params=new URLSearchParams(location.search);
-  const lang=params.get("lang")==="en"?"en":"cs";
+  const requestedLanguage=params.get("lang");
+  const lang=["cs","en"].includes(requestedLanguage)?requestedLanguage:(document.documentElement.lang==="en"?"en":"cs");
   document.documentElement.lang=lang;
   const countries=[
     ["CZE","Česko","Czechia"],["DEU","Německo","Germany"],["DNK","Dánsko","Denmark"],

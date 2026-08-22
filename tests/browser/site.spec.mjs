@@ -41,6 +41,22 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("stored English never paints the Czech fallback", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("psd-lang", "en"));
+  await page.route("**/lib/data/sovereign-benchmark.v1.json", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await route.continue();
+  });
+
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator("html")).toHaveAttribute("data-language-pending", "en");
+  await expect(page.locator("body")).toBeHidden();
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Public money.");
+  await expect(page.locator("html")).not.toHaveAttribute("data-language-pending", /.+/);
+  await expect(page.locator("body")).toBeVisible();
+});
+
 test("deep dives expose a dedicated topic hierarchy and country-filtered transportation story", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".deep-card")).toHaveCount(2);

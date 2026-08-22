@@ -15,6 +15,7 @@ for(const [slug,page] of Object.entries(pages)){
   const html=`<!doctype html>
 <html lang="cs">
 <head>
+  <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${page.title} — Public Spending Data</title>
