@@ -7,8 +7,9 @@ import csv
 import io
 import json
 import os
+import unicodedata
 import zipfile
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -19,11 +20,13 @@ ANNUAL = ROOT / "data/source_cache/annual"
 SNAPSHOT = WEB / "data/municipal-snapshot.v1.json"
 OUTPUT = WEB / "data/municipal-history"
 DIRECTORY_OUTPUT = WEB / "data/municipal-history-directory.v1.json"
+POPULATION = ROOT / "data/source_cache/csu_municipal_population_2010_2025.csv"
 
 YEARS = range(2010, 2026)
 CASH_ACCOUNTS = {"068", "231", "236", "241", "244", "261", "262"}
 CONSOLIDATED_REVENUE_ITEMS = {"4133", "4134", "4137", "4138", "4139", "4251"}
 CONSOLIDATED_EXPENSE_ITEMS = {"5342", "5344", "5345", "5347", "5348", "5349", "6363"}
+MUNICIPALITY_CODE_OVERRIDES = {"04498682": 500101, "00640506": 571512, "01265741": 500071}
 
 
 def number(value: str | None) -> float:
@@ -40,6 +43,38 @@ def number(value: str | None) -> float:
 def normalize_ico(value: str) -> str:
     digits = "".join(character for character in value if character.isdigit())
     return str(int(digits or "0")).zfill(8)[-8:]
+
+
+def normalize_name(value: str) -> str:
+    return " ".join(
+        "".join(character for character in unicodedata.normalize("NFKD", value.casefold()) if not unicodedata.combining(character)).split()
+    )
+
+
+def load_population(municipalities: dict[str, dict]) -> dict[tuple[str, int], int]:
+    if not POPULATION.exists():
+        raise RuntimeError(f"Missing CZSO population extract: run {WEB / 'pipeline/transforms/fetch_municipal_population.py'}")
+    code_counts = Counter(str(entity["territory"]["municipality_code"]) for entity in municipalities.values())
+    by_code: dict[tuple[int, str], int] = {}
+    by_name: dict[tuple[int, str], int] = {}
+    with POPULATION.open(encoding="utf-8-sig", newline="") as source:
+        for row in csv.DictReader(source):
+            code = row.get("UZ25.OBEC") or ""
+            value = row.get("Hodnota") or ""
+            year = int(row["CasR"])
+            if code and value and year in YEARS:
+                population = int(float(value.replace(" ", "").replace(",", ".")))
+                by_code[year, code] = population
+                by_name[year, normalize_name(row["Kraje a obce-Obec"])] = population
+    result: dict[tuple[str, int], int] = {}
+    for ico, entity in municipalities.items():
+        code = str(entity["territory"]["municipality_code"])
+        name = normalize_name(entity["short_name"])
+        for year in YEARS:
+            value = by_name.get((year, name)) if code_counts[code] > 1 else by_code.get((year, code))
+            if value is not None:
+                result[ico, year] = value
+    return result
 
 
 def archive_path(year: int, report: str) -> Path:
@@ -70,6 +105,23 @@ def rounded(values: dict[str, float], key: str) -> float:
 def main() -> None:
     snapshot = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
     municipalities = {item["national_id"]: item for item in snapshot["municipalities"]}
+    for ico, code in MUNICIPALITY_CODE_OVERRIDES.items():
+        municipalities[ico]["territory"]["municipality_code"] = code
+    population = load_population(municipalities)
+    for ico, entity in municipalities.items():
+        entity["population"] = {
+            "value": population.get((ico, 2025)),
+            "reference_date": "2025-07-01",
+            "source_id": "CZSO_DATASTAT_OBY01B01_9379W",
+        }
+    snapshot["definitions"]["population"] = "Počet obyvatel k 1. 7. 2025 podle ČSÚ DataStat, ukazatel 9379W, pohlaví celkem."
+    if not any(source.get("source_id") == "CZSO_DATASTAT_OBY01B01_9379W" for source in snapshot["sources"]):
+        snapshot["sources"].append({
+            "source_id": "CZSO_DATASTAT_OBY01B01_9379W",
+            "label_cs": "ČSÚ DataStat — počet obyvatel k 1. 7.",
+            "url": "https://data.csu.gov.cz/datastat/info/SADA/OBY01B01",
+        })
+    SNAPSHOT.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     targets = set(municipalities)
     history: dict[str, dict[int, dict[str, float | bool]]] = {
         ico: {year: defaultdict(float) for year in YEARS} for ico in targets
@@ -143,7 +195,7 @@ def main() -> None:
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
     generated_at = os.environ.get("CZBUDGET_GENERATED_AT") or datetime.now(timezone.utc).isoformat()
-    coverage_by_year = {year: {"budget": 0, "cash": 0} for year in YEARS}
+    coverage_by_year = {year: {"budget": 0, "cash": 0, "population": 0} for year in YEARS}
     complete_series = 0
     total_rows = 0
     directory_rows = []
@@ -161,6 +213,7 @@ def main() -> None:
             revenue = rounded(values, "revenue_actual")
             expense = rounded(values, "expense_actual")
             cash_available = bool(values.get("cash_available"))
+            residents = population.get((ico, year))
             row = {
                 "year": year,
                 "revenue_approved": rounded(values, "revenue_approved"),
@@ -178,6 +231,8 @@ def main() -> None:
                 "budget_balance": round(revenue - expense, 2),
                 "cash_current": rounded(values, "cash_current") if cash_available else None,
                 "cash_previous": rounded(values, "cash_previous") if cash_available else None,
+                "population_mid_year": residents,
+                "expense_per_capita": round(expense / residents, 2) if residents else None,
                 "source_kind": "Monitor CSV extract",
                 "comparability": "historical_budget_cash_break_2012" if year <= 2011 else "consistent_2012_plus",
             }
@@ -189,6 +244,7 @@ def main() -> None:
                 expense,
                 row["budget_balance"],
                 row["cash_current"],
+                residents,
             ])
             annual = annual_summary[year]
             annual["entity_count"] += 1
@@ -198,6 +254,9 @@ def main() -> None:
             if cash_available:
                 annual["cash_entity_count"] += 1
                 annual["cash_current"] += row["cash_current"]
+            if residents is not None:
+                annual["population_entity_count"] += 1
+                annual["population_total"] += residents
             if row["budget_balance"] >= 0:
                 annual["surplus_count"] += 1
                 annual["surplus_revenue"] += revenue
@@ -209,6 +268,8 @@ def main() -> None:
             coverage_by_year[year]["budget"] += 1
             if cash_available:
                 coverage_by_year[year]["cash"] += 1
+            if residents is not None:
+                coverage_by_year[year]["population"] += 1
         total_rows += len(series)
         if len(series) == len(YEARS):
             complete_series += 1
@@ -220,6 +281,7 @@ def main() -> None:
             "definitions": {
                 "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
                 "cash": "2010–2011: stav běžných účtů ve FIN 2-12 M; od 2012: součet účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky.",
+                "population": "Počet obyvatel k 1. 7. daného roku podle ČSÚ DataStat; používá se jako jmenovatel ročních částek na obyvatele.",
                 "missing_year": "Chybějící rok znamená, že pro současné IČO nebyly ve zdrojovém FIN 2-12 M nalezeny rozpočtové řádky; nejde o nulový rozpočet.",
             },
             "municipality": {
@@ -250,6 +312,7 @@ def main() -> None:
         "sources": [
             {"label_cs": "Monitor státní pokladny — datové extrakty", "url": "https://monitor.statnipokladna.gov.cz/datovy-katalog/"},
             {"label_cs": "Monitor — historický archiv", "url": "https://monitor.statnipokladna.gov.cz/datovy-archiv/"},
+            {"label_cs": "ČSÚ DataStat — stav a pohyb obyvatel podle obcí", "url": "https://data.csu.gov.cz/datastat/info/SADA/OBY01B01"},
         ],
     }
     (OUTPUT / "index.json").write_text(
@@ -262,13 +325,15 @@ def main() -> None:
         "generated_at": generated_at,
         "period": {"from": 2010, "to": 2025, "years": 16},
         "currency_code": "CZK",
-        "columns": ["national_id", "year", "revenue_actual", "expense_actual", "budget_balance", "cash_current"],
+        "columns": ["national_id", "year", "revenue_actual", "expense_actual", "budget_balance", "cash_current", "population_mid_year"],
         "rows": directory_rows,
         "annual": [
             {
                 "year": year,
                 "entity_count": int(annual_summary[year]["entity_count"]),
                 "cash_entity_count": int(annual_summary[year]["cash_entity_count"]),
+                "population_entity_count": int(annual_summary[year]["population_entity_count"]),
+                "population_total": int(annual_summary[year]["population_total"]),
                 "surplus_count": int(annual_summary[year]["surplus_count"]),
                 "deficit_count": int(annual_summary[year]["deficit_count"]),
                 **{
@@ -278,13 +343,17 @@ def main() -> None:
                         "surplus_revenue", "surplus_balance", "deficit_revenue", "deficit_balance",
                     )
                 },
+                "expense_per_capita": round(annual_summary[year]["expense_actual"] / annual_summary[year]["population_total"], 2),
             }
             for year in YEARS
         ],
         "definitions": {
             "coverage": "Řádky obsahují dnešní obecní IČO dostupná v daném ročním extraktu; chybějící obec není nulová hodnota.",
             "cash": "Součet stavu účtů pouze za obce s dostupnými řádky: 2010–2011 FIN 2-12 M, od 2012 rozvaha.",
+            "population": "Počet obyvatel k 1. 7. daného roku podle ČSÚ DataStat, ukazatel 9379W, pohlaví celkem. Částky na obyvatele dělí roční tok středním stavem obyvatel.",
+            "benchmark": "Národní hodnota na obyvatele je vážený průměr. Srovnání podobně velkých obcí používá medián osmi populačních pásem.",
         },
+        "sources": [{"source_id": "CZSO_DATASTAT_OBY01B01_9379W", "label_cs": "ČSÚ DataStat — počet obyvatel k 1. 7.", "url": "https://data.csu.gov.cz/datastat/info/SADA/OBY01B01"}],
     }
     DIRECTORY_OUTPUT.write_text(
         json.dumps(directory_payload, ensure_ascii=False, separators=(",", ":")) + "\n",

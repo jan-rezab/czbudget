@@ -80,20 +80,21 @@ const municipalHistoryFiles = (await readdir(path.join(root, "data", "municipal-
 assert(municipalHistoryIndex.period.from === 2010 && municipalHistoryIndex.period.to === 2025, "Municipal history period must be 2010–2025");
 assert(municipalHistoryIndex.municipality_count === municipalities.length, "Municipal history index count mismatch");
 assert(municipalHistoryFiles.length === municipalities.length, `Expected ${municipalities.length} municipal history files, received ${municipalHistoryFiles.length}`);
-assert(JSON.stringify(municipalDirectoryHistory.columns) === JSON.stringify(["national_id", "year", "revenue_actual", "expense_actual", "budget_balance", "cash_current"]), "Municipal directory-history columns mismatch");
+assert(JSON.stringify(municipalDirectoryHistory.columns) === JSON.stringify(["national_id", "year", "revenue_actual", "expense_actual", "budget_balance", "cash_current", "population_mid_year"]), "Municipal directory-history columns mismatch");
 assert(municipalDirectoryHistory.rows.length === municipalHistoryIndex.annual_record_count, "Municipal directory-history row count mismatch");
 const directoryHistoryRows = new Map();
 for (const row of municipalDirectoryHistory.rows) {
-  const [ico, year, revenue, expense, balance, cash] = row;
+  const [ico, year, revenue, expense, balance, cash, population] = row;
   assert(municipalityById.has(ico) && year >= 2010 && year <= 2025, `Municipal directory-history identity/year mismatch for ${ico}/${year}`);
   assert(close(revenue - expense, balance), `Municipal directory-history balance mismatch for ${ico}/${year}`);
   const key = `${ico}/${year}`;
   assert(!directoryHistoryRows.has(key), `Duplicate municipal directory-history row for ${key}`);
-  directoryHistoryRows.set(key, { revenue_actual: revenue, expense_actual: expense, budget_balance: balance, cash_current: cash });
+  assert(population === null || (Number.isInteger(population) && population >= 0), `Municipal population is invalid for ${ico}/${year}`);
+  directoryHistoryRows.set(key, { revenue_actual: revenue, expense_actual: expense, budget_balance: balance, cash_current: cash, population_mid_year: population });
 }
 let municipalHistoryRows = 0;
 let completeMunicipalHistories = 0;
-const municipalHistoryCoverage = new Map(Array.from({ length: 16 }, (_, index) => [2010 + index, { budget: 0, cash: 0 }]));
+const municipalHistoryCoverage = new Map(Array.from({ length: 16 }, (_, index) => [2010 + index, { budget: 0, cash: 0, population: 0 }]));
 for (const entity of municipalities) {
   const history = await json(`data/municipal-history/${entity.national_id}.json`);
   assert(history.municipality?.national_id === entity.national_id, `Municipal history ID mismatch for ${entity.national_id}`);
@@ -110,8 +111,11 @@ for (const entity of municipalities) {
     coverage.budget += 1;
     if (Number.isFinite(row.cash_current) && Number.isFinite(row.cash_previous)) coverage.cash += 1;
     else assert(row.cash_current === null && row.cash_previous === null, `Historical cash availability is ambiguous for ${entity.national_id}/${row.year}`);
+    if (Number.isInteger(row.population_mid_year) && row.population_mid_year >= 0) coverage.population += 1;
+    else assert(row.population_mid_year === null, `Historical population availability is ambiguous for ${entity.national_id}/${row.year}`);
+    assert(row.population_mid_year > 0 ? close(row.expense_actual / row.population_mid_year, row.expense_per_capita, 0.011) : row.expense_per_capita === null, `Historical per-capita expenditure mismatch for ${entity.national_id}/${row.year}`);
     const directoryRow = directoryHistoryRows.get(`${entity.national_id}/${row.year}`);
-    assert(directoryRow && ["revenue_actual", "expense_actual", "budget_balance", "cash_current"].every((key) => directoryRow[key] === row[key]), `Directory/profile history mismatch for ${entity.national_id}/${row.year}`);
+    assert(directoryRow && ["revenue_actual", "expense_actual", "budget_balance", "cash_current", "population_mid_year"].every((key) => directoryRow[key] === row[key]), `Directory/profile history mismatch for ${entity.national_id}/${row.year}`);
   }
   const latest = history.series.find((row) => row.year === 2025);
   for (const key of ["revenue_approved", "revenue_adjusted", "revenue_actual", "expense_approved", "expense_adjusted", "expense_actual", "tax_revenue", "nontax_revenue", "capital_revenue", "transfer_revenue", "current_expense", "capital_expense", "budget_balance", "cash_current", "cash_previous"]) {
@@ -128,6 +132,10 @@ for (const row of municipalDirectoryHistory.annual) {
     const total = yearRows.reduce((sum, value) => sum + (Number.isFinite(value[key]) ? value[key] : 0), 0);
     assert(close(total, row[key], 1), `Municipal directory annual ${key} mismatch for ${row.year}`);
   }
+  const populationRows = yearRows.filter((value) => Number.isInteger(value.population_mid_year));
+  const populationTotal = populationRows.reduce((sum, value) => sum + value.population_mid_year, 0);
+  assert(populationRows.length === row.population_entity_count && populationTotal === row.population_total, `Municipal directory annual population mismatch for ${row.year}`);
+  assert(close(row.expense_actual / populationTotal, row.expense_per_capita, 0.011), `Municipal directory annual per-capita expenditure mismatch for ${row.year}`);
 }
 
 const entityFiles = await filesBelow(path.join(root, "data", "entities"), (file) => /^\d{8}\.json$/.test(path.basename(file)));

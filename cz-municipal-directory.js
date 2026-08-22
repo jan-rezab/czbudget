@@ -11,6 +11,8 @@ const explorerTable = document.querySelector("#nationwide-history-table-body");
 const aggregateStory = document.querySelector("#municipal-aggregate-story");
 const directoryYear = document.querySelector("#municipality-directory-year");
 const resultYear = document.querySelector("#municipality-result-year");
+const benchmarkSummary = document.querySelector("#spending-benchmark-summary");
+const benchmarkChart = document.querySelector("#spending-benchmark-chart");
 if (explorerChart) {
   explorerChart.tabIndex = 0;
   explorerChart.setAttribute("role", "region");
@@ -44,16 +46,41 @@ const amount = (value) => {
   return `${sign}${integer.format(absolute)} Kč`;
 };
 const signedAmount = (value) => `${value > 0 ? "+" : ""}${amount(value)}`;
+const perPerson = (value) => Number.isFinite(value)
+  ? (english ? `CZK ${integer.format(value)} / person` : `${integer.format(value)} Kč / obyv.`)
+  : "—";
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const metric = (entity) => activeMetrics.get(entity.national_id);
+const median = (values) => {
+  const ordered = values.filter(Number.isFinite).sort((a, b) => a - b);
+  if (!ordered.length) return null;
+  const middle = Math.floor(ordered.length / 2);
+  return ordered.length % 2 ? ordered[middle] : (ordered[middle - 1] + ordered[middle]) / 2;
+};
+const peerBands = [
+  { max: 499, cs: "Do 499", en: "Under 500" },
+  { max: 999, cs: "500–999", en: "500–999" },
+  { max: 2499, cs: "1 000–2 499", en: "1,000–2,499" },
+  { max: 4999, cs: "2 500–4 999", en: "2,500–4,999" },
+  { max: 9999, cs: "5 000–9 999", en: "5,000–9,999" },
+  { max: 19999, cs: "10 000–19 999", en: "10,000–19,999" },
+  { max: 49999, cs: "20 000–49 999", en: "20,000–49,999" },
+  { max: Infinity, cs: "50 000 a více", en: "50,000 and over" },
+];
+const bandFor = (population) => peerBands.find((band) => population <= band.max);
 
 const card = (entity) => {
   const values = metric(entity);
   const href = `${entity.seo.path}${english ? "?lang=en" : ""}`;
   const balanceClass = !values ? "" : values.budget_balance >= 0 ? "positive" : "negative";
+  const residents = Number.isFinite(values?.population_mid_year) ? `${integer.format(values.population_mid_year)} ${english ? "people" : "obyvatel"}` : "—";
+  const peerDelta = Number.isFinite(values?.peer_delta_pct)
+    ? `${values.peer_delta_pct > 0 ? "+" : ""}${decimal.format(values.peer_delta_pct)} % ${english ? "vs similar-sized municipalities" : "proti podobně velkým obcím"}`
+    : (english ? "No per-person comparison" : "Bez srovnání na obyvatele");
   return `<article class="entity-card compact-entity-card">
     <div class="entity-card-top"><span>${escapeHtml(entity.territory.region_name || (english ? "Czechia" : "Česko"))}</span><small>${activeYear} · IČO ${escapeHtml(entity.national_id)}</small></div>
     <h2><a href="${escapeHtml(href)}">${escapeHtml(entity.short_name)}</a></h2>
+    <p class="entity-spending-benchmark"><span>${residents}</span><strong>${perPerson(values?.expense_per_capita)}</strong><small>${peerDelta}</small></p>
     <dl><div><dt>${english ? "Revenue" : "Příjmy"}</dt><dd>${amount(values?.revenue_actual)}</dd></div><div><dt>${english ? "Expenditure" : "Výdaje"}</dt><dd>${amount(values?.expense_actual)}</dd></div><div><dt>${english ? "Cash and deposits" : "Stav účtů"}</dt><dd>${amount(values?.cash_current)}</dd></div><div><dt>${english ? "Balance" : "Výsledek"}</dt><dd class="${balanceClass}">${amount(values?.budget_balance)}</dd></div></dl>
     <a class="entity-detail-link" href="${escapeHtml(href)}">${english ? "Profile and data" : "Detail a data"} <span>↗</span></a>
   </article>`;
@@ -79,6 +106,35 @@ function filtered() {
     return right - left;
   });
   return list;
+}
+
+function enrichBenchmarks() {
+  const groups = new Map(peerBands.map((band) => [band, []]));
+  for (const values of activeMetrics.values()) {
+    values.expense_per_capita = values.population_mid_year > 0 ? values.expense_actual / values.population_mid_year : null;
+    const band = bandFor(values.population_mid_year);
+    if (band && Number.isFinite(values.expense_per_capita)) groups.get(band).push(values.expense_per_capita);
+  }
+  for (const [band, values] of groups) band.median = median(values);
+  for (const values of activeMetrics.values()) {
+    const peerMedian = bandFor(values.population_mid_year)?.median;
+    values.peer_median = peerMedian;
+    values.peer_delta_pct = Number.isFinite(values.expense_per_capita) && peerMedian
+      ? (values.expense_per_capita / peerMedian - 1) * 100
+      : null;
+  }
+}
+
+function renderSpendingBenchmark(selected) {
+  if (!benchmarkSummary || !benchmarkChart) return;
+  const valid = [...activeMetrics.values()].filter((values) => Number.isFinite(values.expense_per_capita));
+  const municipalMedian = median(valid.map((values) => values.expense_per_capita));
+  benchmarkSummary.innerHTML = `<article><span>${english ? "National weighted average" : "Celostátní vážený průměr"}</span><strong>${perPerson(selected.expense_per_capita)}</strong><small>${activeYear}</small></article><article><span>${english ? "Median municipality" : "Medián obce"}</span><strong>${perPerson(municipalMedian)}</strong><small>${english ? "Each municipality has equal weight" : "Každá obec má stejnou váhu"}</small></article><article><span>${english ? "Population coverage" : "Pokrytí populace"}</span><strong>${selected.population_entity_count.toLocaleString(locale)}</strong><small>${integer.format(selected.population_total)} ${english ? "people" : "obyvatel"}</small></article>`;
+  const maximum = Math.max(...peerBands.map((band) => band.median || 0), 1);
+  benchmarkChart.innerHTML = peerBands.map((band) => {
+    const values = valid.filter((item) => bandFor(item.population_mid_year) === band);
+    return `<article><header><span>${english ? band.en : band.cs} ${english ? "people" : "obyvatel"}</span><strong>${perPerson(band.median)}</strong><small>${values.length.toLocaleString(locale)} ${english ? "municipalities" : "obcí"}</small></header><div><i style="width:${((band.median || 0) / maximum * 100).toFixed(2)}%"></i></div></article>`;
+  }).join("");
 }
 
 function renderDirectory() {
@@ -148,8 +204,8 @@ function renderExplorer() {
   const selected = annual.find((row) => row.year === activeYear);
   if (!selected) return;
   coverage.textContent = english
-    ? `${selected.entity_count.toLocaleString("en-US")} municipalities with budget data · cash for ${selected.cash_entity_count.toLocaleString("en-US")}`
-    : `${selected.entity_count.toLocaleString("cs-CZ")} obcí s rozpočtovými daty · stav účtů u ${selected.cash_entity_count.toLocaleString("cs-CZ")}`;
+    ? `${selected.entity_count.toLocaleString("en-US")} municipalities with budget data · population for ${selected.population_entity_count.toLocaleString("en-US")} · cash for ${selected.cash_entity_count.toLocaleString("en-US")}`
+    : `${selected.entity_count.toLocaleString("cs-CZ")} obcí s rozpočtovými daty · populace u ${selected.population_entity_count.toLocaleString("cs-CZ")} · stav účtů u ${selected.cash_entity_count.toLocaleString("cs-CZ")}`;
   explorerKpis.innerHTML = `<article><span>${english ? "Revenue" : "Příjmy"} ${activeYear}</span><strong>${amount(selected.revenue_actual)}</strong></article><article><span>${english ? "Expenditure" : "Výdaje"} ${activeYear}</span><strong>${amount(selected.expense_actual)}</strong></article><article><span>${english ? "Balance" : "Výsledek"} ${activeYear}</span><strong class="${selected.budget_balance >= 0 ? "positive" : "negative"}">${signedAmount(selected.budget_balance)}</strong></article><article><span>${english ? "Municipalities in surplus" : "Obce v přebytku"}</span><strong>${selected.surplus_count.toLocaleString(locale)}</strong><small>${decimal.format(selected.surplus_count / selected.entity_count * 100)} %</small></article>`;
 
   const width = 1120, height = 450, left = 76, right = 28, top = 28, bottom = 58;
@@ -163,12 +219,14 @@ function renderExplorer() {
   const hits = annual.map((row, index) => `<circle class="nationwide-year-hit" data-year="${row.year}" cx="${x(index)}" cy="${y(row.revenue_actual)}" r="15"><title>${row.year}: ${amount(row.revenue_actual)}</title></circle>`).join("");
   explorerChart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${english ? "Nationwide municipal revenue, expenditure and cash from 2010 to 2025" : "Celostátní vývoj obecních příjmů, výdajů a stavu účtů 2010 až 2025"}"><g class="history-grid">${gridLines}${yearLabels}<text x="18" y="22">${english ? "CZK bn" : "mld. Kč"}</text></g><line class="nationwide-selected-year" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height - bottom}"/><path class="history-line revenue-line" d="${line("revenue_actual")}"/><path class="history-line expense-line" d="${line("expense_actual")}"/><path class="history-line cash-line" d="${line("cash_current")}"/>${hits}</svg>`;
   explorerTable.innerHTML = [...annual].reverse().map((row) => `<tr${row.year === activeYear ? ' class="selected-history-row"' : ""}><th>${row.year}</th><td>${row.entity_count.toLocaleString(locale)}</td><td>${amount(row.revenue_actual)}</td><td>${amount(row.expense_actual)}</td><td class="${row.budget_balance >= 0 ? "positive" : "negative"}">${signedAmount(row.budget_balance)}</td><td>${amount(row.cash_current)}</td></tr>`).join("");
+  renderSpendingBenchmark(selected);
 }
 
 function selectYear(year, updateUrl = true) {
   if (!rowsByYear.has(year)) return;
   activeYear = year;
   activeMetrics = rowsByYear.get(year);
+  enrichBenchmarks();
   shown = 48;
   yearSelect.value = String(year);
   directoryYear.textContent = year;
@@ -214,6 +272,7 @@ Promise.all([
       expense_actual: row[index.expense_actual],
       budget_balance: row[index.budget_balance],
       cash_current: row[index.cash_current],
+      population_mid_year: row[index.population_mid_year],
     });
     rowsByYear.set(year, yearRows);
   }

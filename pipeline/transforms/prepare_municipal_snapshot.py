@@ -20,10 +20,12 @@ ROZV = ROOT / "data/source_cache/2025_12_ROZV.zip"
 ARES = ROOT / "data/source_cache/ares_finm_entities_2025.json"
 BENCHMARK = ROOT / "website/data/benchmark.v1.json"
 OUTPUT = ROOT / "website/data/municipal-snapshot.v1.json"
+POPULATION = ROOT / "data/source_cache/csu_municipal_population_2010_2025.csv"
 
 CASH_ACCOUNTS = {"068", "231", "236", "241", "244", "261", "262"}
 CONSOLIDATED_REVENUE_ITEMS = {"4133", "4134", "4137", "4138", "4139", "4251"}
 CONSOLIDATED_EXPENSE_ITEMS = {"5342", "5344", "5345", "5347", "5348", "5349", "6363"}
+MUNICIPALITY_CODE_OVERRIDES = {"04498682": 500101, "00640506": 571512, "01265741": 500071}
 
 
 def number(value: str | None) -> float:
@@ -148,7 +150,7 @@ def main() -> None:
             "territory": {
                 "region_name": address.get("nazevKraje"),
                 "district_name": address.get("nazevOkresu"),
-                "municipality_code": address.get("kodObce"),
+                "municipality_code": MUNICIPALITY_CODE_OVERRIDES.get(ico, address.get("kodObce")),
             },
             "amounts": {
                 "revenue_approved": round(values["revenue_approved"], 2),
@@ -187,6 +189,18 @@ def main() -> None:
         })
 
     municipalities.sort(key=lambda item: (item["short_name"].casefold(), item["national_id"]))
+    if not POPULATION.exists():
+        raise RuntimeError(f"Missing CZSO population extract: run {ROOT / 'website/pipeline/transforms/fetch_municipal_population.py'}")
+    population_2025 = {}
+    with POPULATION.open(encoding="utf-8-sig", newline="") as source:
+        for row in csv.DictReader(source):
+            if row["CasR"] == "2025" and row.get("UZ25.OBEC") and row.get("Hodnota"):
+                population_2025[int(row["UZ25.OBEC"])] = int(float(row["Hodnota"].replace(" ", "").replace(",", ".")))
+    for entity in municipalities:
+        value = population_2025.get(entity["territory"]["municipality_code"])
+        if value is None:
+            raise RuntimeError(f"Missing 2025 CZSO population for {entity['national_id']} / {entity['short_name']}")
+        entity["population"] = {"value": value, "reference_date": "2025-07-01", "source_id": "CZSO_DATASTAT_OBY01B01_9379W"}
     regions = [
         entity for entity in benchmark["entities"]
         if "region" in entity.get("administrative_levels", []) and entity["national_id"] != "00064581"
@@ -210,6 +224,7 @@ def main() -> None:
         "definitions": {
             "budget_result": "Skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci.",
             "cash": "Součet syntetických účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze účetní jednotky; bez samostatných příspěvkových organizací.",
+            "population": "Počet obyvatel k 1. 7. 2025 podle ČSÚ DataStat, ukazatel 9379W, pohlaví celkem.",
         },
         "summary": {
             "municipalities": {"entity_count": len(municipalities), **municipal_summary},
@@ -221,6 +236,10 @@ def main() -> None:
             "source_id": "ARES_2025",
             "label_cs": "ARES — identita účetních jednotek",
             "url": "https://ares.gov.cz/swagger-ui/",
+        }, {
+            "source_id": "CZSO_DATASTAT_OBY01B01_9379W",
+            "label_cs": "ČSÚ DataStat — počet obyvatel k 1. 7.",
+            "url": "https://data.csu.gov.cz/datastat/info/SADA/OBY01B01",
         }],
     }
     OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

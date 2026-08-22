@@ -44,15 +44,20 @@ verzovaným skriptem `pipeline/transforms/build_czech_site.py`. Proměnná
 `PUBLIC_ORIGIN` při
 sestavení určuje produkční canonical URL a adresu sitemap.
 
-Historie všech obcí se připravuje z ročních extraktů FIN 2-12 M a rozvahy:
+Historie všech obcí se připravuje z ročních extraktů FIN 2-12 M a rozvahy.
+Roční počet obyvatel k 1. červenci se načítá z oficiální datové sady ČSÚ
+DataStat `OBY01B01` (ukazatel `9379W`, pohlaví celkem):
 
 ```bash
+python3 pipeline/transforms/fetch_municipal_population.py
 python3 pipeline/transforms/prepare_municipal_history.py
 ```
 
 Chybějící rok v historii není interpretován jako nulový rozpočet. Znamená,
 že dnešní IČO v daném ročním extraktu nemá rozpočtové řádky; typicky jde o
-obec vzniklou později. Stav účtů má metodický zlom v roce 2012.
+obec vzniklou později. Stav účtů má metodický zlom v roce 2012. Výdajový
+benchmark dělí skutečné roční výdaje středním stavem obyvatel a srovnává obec
+s mediánem jejího populačního pásma; nejde o žebříček kvality služeb.
 
 ## Integrita a reprodukovatelnost
 
