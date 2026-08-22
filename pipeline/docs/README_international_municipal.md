@@ -48,7 +48,7 @@ Use `--gzip` for national-scale runs. The warehouse loader accepts both
 | Poland | revised and actual revenue/expenditure | Rb-27S/Rb-28S Q4 does not expose the original enacted plan |
 | Denmark | enacted and actual revenue/expenditure/financing | source values in DKK thousands are converted to DKK |
 | Ukraine | enacted, revised, and actual revenue/expenditure | 1,473 territorial-community budgets including Kyiv; official API is downloaded per budget |
-| France | actual debit/credit execution and signed closing balances | main and supplementary budgets remain separate scopes |
+| France | actual debit/credit execution and signed closing balances for all communes; function detail where published | main and supplementary budgets remain separate scopes |
 | Sweden | actual costs/income and closing balance sheet | latest annual SCB values are marked preliminary |
 | United Kingdom | England council revenue outturn actuals | police, fire, parks, waste and combined-authority returns are excluded; Scotland, Wales, and Northern Ireland need separate adapters before claiming full UK coverage |
 
@@ -56,6 +56,11 @@ Ukraine uses the documented public API at `api.openbudget.gov.ua` and the
 official `BUDG` directory. Year-end cumulative fourth-quarter rows are retained;
 oblast and district budgets are excluded from the municipality comparison tier.
 Use `--api-workers` to control concurrent per-budget downloads (default: 4).
+
+France combines the DGFiP commune census balances with the separate
+nature-function publication. The functional file is used wherever a commune
+appears in it; the census file fills the remaining communes. This preserves
+functional detail without loading the same account execution twice.
 
 ## Warehouse load
 

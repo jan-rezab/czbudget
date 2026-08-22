@@ -17,10 +17,15 @@ Potom otevřete <http://localhost:3000/>.
 - `homepage-v2.js` — filtry srovnání a česká/anglická lokalizace homepage
 - `country.html?code=CZE&lang=cs` — sdílená šablona detailu každé země
 - `country.js` — dlouhodobé řady, národní specifika, zdroje a CS/EN překlady
+- `municipalities/` — centrální evropský obecní rozcestník s filtrem všech 27 hlavních měst EU
+- `municipalities/czechia/` — český obecní přehled, celostátní insighty a navigace na úplný adresář a velká města
+- `municipalities.html` — zpětně kompatibilní přesměrování na `municipalities/`
 - `eu-capitals.html` — rozpočty 27 hlavních měst EU a Londýna s přepínačem EUR / místní měna
 - `eu-capitals.js` a `eu-capitals.css` — filtry, fiskální profily, rozpočtová salda, struktura výdajů/příjmů, obyvatelé a cestovní ruch
 - `data/eu-capital-budgets.v1.json` — auditovatelný zdroj městských rozpočtů, komponent, sald a benchmarků
 - `styles-v2.css` — vizuální systém homepage a detailů zemí
+- `BRAND.md` a `brand-preview.html` — pravidla značky, paleta a referenční list
+  (interní reference, nenasazuje se do produkčního obrazu)
 - `cz/obce/` a `cz/kraje/` — filtrovatelné české územní benchmarky
 - `cz/obce/<slug>/` a `cz/kraje/<slug>/` — indexovatelné detailní profily
 - `data/entities/<ico>.json` — strojově čitelný detail účetní jednotky

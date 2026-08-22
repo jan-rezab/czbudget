@@ -550,64 +550,89 @@ def french_insee(row: dict[str, Any]) -> str:
     return department + commune
 
 
-def run_france(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
-    year, currency = cfg["year"], cfg["currency"]
-    source = cfg["sources"][0]
-    path = ctx.download(country, source)
-    function_class, economic_class = f"FR_DGFIP_FUNCTION_{year}", f"FR_DGFIP_ACCOUNT_{year}"
-    ctx.bundle.classification(classification_row(country, function_class, "mixed", "DGFiP functional classification", source["url"], year, ctx.loaded_at))
-    ctx.bundle.classification(classification_row(country, economic_class, "mixed", "DGFiP local chart of accounts", source["url"], year, ctx.loaded_at))
-    run_id = f"{source['id']}-v1"
-    rows_read = rows_loaded = 0
-    selected: set[str] = set()
+def french_csv_rows(path: Path) -> Iterator[tuple[int, str, dict[str, Any]]]:
     with zipfile.ZipFile(path) as archive:
         member = next(name for name in archive.namelist() if name.lower().endswith(".csv"))
         with archive.open(member) as raw:
             reader = csv.DictReader(io.TextIOWrapper(raw, encoding="cp1252", newline=""), delimiter=";")
             for row_number, row in enumerate(reader, 2):
-                if row.get("CATEG") != "Commune":
+                yield row_number, member, row
+
+
+def run_france(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    year, currency = cfg["year"], cfg["currency"]
+    sources = {source.get("detail"): source for source in cfg["sources"]}
+    census_source, function_source = sources.get("census"), sources.get("function")
+    if not census_source or not function_source:
+        raise ValueError(f"France {year} requires census and function sources")
+    census_path = ctx.download(country, census_source)
+    function_path = ctx.download(country, function_source)
+    function_class, economic_class = f"FR_DGFIP_FUNCTION_{year}", f"FR_DGFIP_ACCOUNT_{year}"
+    ctx.bundle.classification(classification_row(country, function_class, "mixed", "DGFiP functional classification", function_source["url"], year, ctx.loaded_at))
+    ctx.bundle.classification(classification_row(country, economic_class, "mixed", "DGFiP local chart of accounts", census_source["url"], year, ctx.loaded_at))
+    selected: set[str] = set()
+    functional_codes: set[str] = set()
+    run_counts: dict[str, list[int]] = {source["id"]: [0, 0] for source in (function_source, census_source)}
+
+    def load(source: dict[str, Any], path: Path, *, functional: bool) -> None:
+        run_id = f"{source['id']}-v1"
+        for row_number, member, row in french_csv_rows(path):
+            if row.get("CATEG") != "Commune":
+                continue
+            code = french_insee(row)
+            if code not in selected:
+                if ctx.args.max_entities and len(selected) >= ctx.args.max_entities:
                     continue
-                code = french_insee(row)
-                if code not in selected:
-                    if ctx.args.max_entities and len(selected) >= ctx.args.max_entities:
-                        continue
-                    selected.add(code)
-                    ctx.bundle.entity(entity_row(country, code, stable_code(row.get("LBUDG")) or code, currency, ctx.loaded_at, code_type="FR_CODE_INSEE", region_code=row.get("CREGI"), district_code=row.get("NDEPT")))
-                rows_read += 1
-                ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, member, row, ctx.loaded_at))
-                function, account = stable_code(row.get("FONCTION")) or "UNSPECIFIED", stable_code(row.get("COMPTE"))
-                if not account:
-                    continue
-                scope = "main_budget" if stable_code(row.get("CBUDG")) == "1" else "supplementary_budget"
+                selected.add(code)
+                ctx.bundle.entity(entity_row(country, code, stable_code(row.get("LBUDG")) or code, currency, ctx.loaded_at, code_type="FR_CODE_INSEE", region_code=row.get("CREGI"), district_code=row.get("NDEPT")))
+            if functional:
+                functional_codes.add(code)
+            elif code in functional_codes:
+                continue
+            run_counts[source["id"]][0] += 1
+            ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, member, row, ctx.loaded_at))
+            function = stable_code(row.get("FONCTION")) or ("UNSPECIFIED" if functional else None)
+            account = stable_code(row.get("COMPTE"))
+            if not account:
+                continue
+            scope = "main_budget" if stable_code(row.get("CBUDG")) == "1" else "supplementary_budget"
+            if function:
                 ctx.bundle.node(node_row(country, function_class, "mixed", function, function, year, ctx.loaded_at))
-                ctx.bundle.node(node_row(country, economic_class, "mixed", account, account, year, ctx.loaded_at))
-                for side, column in (("expenditure", "OBNETDEB"), ("revenue", "OBNETCRE")):
-                    amount = decimal_value(row.get(column))
-                    if not amount:
-                        continue
-                    ctx.bundle.write("municipal_budget_line_facts", fact_row(
-                        country, f"FR:{code}", year, "actual", side, function, account, amount,
-                        currency, source, run_id, ctx.loaded_at, function_class, economic_class,
-                        row_number=row_number, sheet=member, scope=scope,
-                        quality_flags=[f"nomenclature:{stable_code(row.get('NOMEN'))}", "accounting_balance_execution"],
-                    ))
-                    rows_loaded += 1
-                debit, credit = decimal_value(row.get("SD")), decimal_value(row.get("SC"))
-                if debit or credit:
-                    signed = debit - credit
-                    ctx.bundle.write("public_entity_balance_sheet_facts", {
-                        "public_entity_id": f"FR:{code}", "statement_date": f"{year}-12-31", "reporting_scope": scope,
-                        "statement_line_code": function, "account_code": account, "account_name": None,
-                        "balance_measure": "current_net_signed_debit", "amount_local": numeric_json(signed),
-                        "currency_code": currency, "amount_eur": numeric_json(signed), "fx_date": f"{year}-12-31",
-                        "source_id": source["id"], "ingestion_run_id": run_id, "source_row_number": row_number,
-                        "source_sheet": member, "coverage_type": "census", "is_imputed": False,
-                        "quality_flags": ["debit_minus_credit", f"nomenclature:{stable_code(row.get('NOMEN'))}"], "loaded_at": ctx.loaded_at,
-                    })
-                    rows_loaded += 1
-    write_run(ctx, run_id, source, year, path, rows_read, rows_loaded)
-    ctx.source_row(None, source, country, cfg["coverage"])
-    return {"entities": len(selected)}
+            ctx.bundle.node(node_row(country, economic_class, "mixed", account, account, year, ctx.loaded_at))
+            flags = [f"nomenclature:{stable_code(row.get('NOMEN'))}", "accounting_balance_execution"]
+            if not functional:
+                flags.append("functional_detail_not_published")
+            for side, column in (("expenditure", "OBNETDEB"), ("revenue", "OBNETCRE")):
+                amount = decimal_value(row.get(column))
+                if not amount:
+                    continue
+                ctx.bundle.write("municipal_budget_line_facts", fact_row(
+                    country, f"FR:{code}", year, "actual", side, function, account, amount,
+                    currency, source, run_id, ctx.loaded_at, function_class if function else None, economic_class,
+                    row_number=row_number, sheet=member, scope=scope, quality_flags=flags,
+                ))
+                run_counts[source["id"]][1] += 1
+            debit, credit = decimal_value(row.get("SD")), decimal_value(row.get("SC"))
+            if debit or credit:
+                signed = debit - credit
+                ctx.bundle.write("public_entity_balance_sheet_facts", {
+                    "public_entity_id": f"FR:{code}", "statement_date": f"{year}-12-31", "reporting_scope": scope,
+                    "statement_line_code": function or account, "account_code": account, "account_name": None,
+                    "balance_measure": "current_net_signed_debit", "amount_local": numeric_json(signed),
+                    "currency_code": currency, "amount_eur": numeric_json(signed), "fx_date": f"{year}-12-31",
+                    "source_id": source["id"], "ingestion_run_id": run_id, "source_row_number": row_number,
+                    "source_sheet": member, "coverage_type": "census", "is_imputed": False,
+                    "quality_flags": ["debit_minus_credit", *flags], "loaded_at": ctx.loaded_at,
+                })
+                run_counts[source["id"]][1] += 1
+
+    load(function_source, function_path, functional=True)
+    load(census_source, census_path, functional=False)
+    for source, path in ((function_source, function_path), (census_source, census_path)):
+        rows_read, rows_loaded = run_counts[source["id"]]
+        write_run(ctx, f"{source['id']}-v1", source, year, path, rows_read, rows_loaded)
+        ctx.source_row(None, source, country, cfg["coverage"])
+    return {"entities": len(selected), "functional_entities": len(functional_codes)}
 
 
 def uk_side(variable: str) -> str:

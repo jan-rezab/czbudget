@@ -13,6 +13,15 @@ const directoryYear = document.querySelector("#municipality-directory-year");
 const resultYear = document.querySelector("#municipality-result-year");
 const benchmarkSummary = document.querySelector("#spending-benchmark-summary");
 const benchmarkChart = document.querySelector("#spending-benchmark-chart");
+const municipalSizeBenchmark = (() => {
+  const section = document.createElement("section");
+  section.id = "municipal-size-benchmark";
+  section.className = "municipal-size-benchmark";
+  section.setAttribute("aria-label", "International municipality-size benchmark");
+  section.innerHTML = '<p class="benchmark-loading">Načítám mezinárodní benchmark…</p>';
+  document.querySelector(".nationwide-history")?.insertAdjacentElement("afterend", section);
+  return section;
+})();
 if (explorerChart) {
   explorerChart.tabIndex = 0;
   explorerChart.setAttribute("role", "region");
@@ -135,6 +144,56 @@ function renderSpendingBenchmark(selected) {
     const values = valid.filter((item) => bandFor(item.population_mid_year) === band);
     return `<article><header><span>${english ? band.en : band.cs} ${english ? "people" : "obyvatel"}</span><strong>${perPerson(band.median)}</strong><small>${values.length.toLocaleString(locale)} ${english ? "municipalities" : "obcí"}</small></header><div><i style="width:${((band.median || 0) / maximum * 100).toFixed(2)}%"></i></div></article>`;
   }).join("");
+}
+
+function renderMunicipalSizeBenchmark(dataset, expanded = false) {
+  const czech = dataset.countries.find((country) => country.iso3 === "CZE");
+  const regular = dataset.countries.filter((country) => country.mean < 70000);
+  const visible = expanded ? regular : regular.slice(0, 13);
+  const outliers = dataset.countries.filter((country) => country.mean >= 70000);
+  const width = 1080, left = 178, right = 100, top = 54, rowHeight = 34, bottom = 34;
+  const height = top + visible.length * rowHeight + bottom, max = 70000;
+  const x = (value) => left + value / max * (width - left - right);
+  const ticks = [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000];
+  const axis = ticks.map((value) => `<g><line x1="${x(value)}" x2="${x(value)}" y1="${top - 22}" y2="${height - bottom + 4}"/><text x="${x(value)}" y="${top - 31}" text-anchor="middle">${value ? integer.format(value / 1000) + (english ? "k" : " tis.") : "0"}</text></g>`).join("");
+  const rows = visible.map((country, index) => {
+    const y = top + index * rowHeight + rowHeight / 2;
+    const active = country.iso3 === "CZE";
+    const name = english ? country.name_en : country.name_cs;
+    return `<g class="municipal-size-row${active ? " active" : ""}">
+      <text class="municipal-size-rank" x="0" y="${y + 4}">${String(index + 1).padStart(2, "0")}</text>
+      <text class="municipal-size-name" x="30" y="${y + 4}">${escapeHtml(name)}</text>
+      <rect class="municipal-size-track" x="${left}" y="${y - 6}" width="${width - left - right}" height="12"/>
+      <rect class="municipal-size-mean" x="${left}" y="${y - 6}" width="${Math.max(2, x(country.mean) - left)}" height="12"><title>${escapeHtml(name)} · ${integer.format(country.mean)} ${english ? "people per municipality" : "obyvatel na obec"}</title></rect>
+      <circle class="municipal-size-median" cx="${x(country.median)}" cy="${y}" r="5"><title>${english ? "Median" : "Medián"}: ${integer.format(country.median)}</title></circle>
+      <text class="municipal-size-value" x="${width - 2}" y="${y + 4}" text-anchor="end">${integer.format(country.mean)}</text>
+    </g>`;
+  }).join("");
+  const cards = outliers.map((country) => `<article><span>${escapeHtml(english ? country.name_en : country.name_cs)}</span><strong>${integer.format(country.mean)}</strong><small>${english ? "people per municipality · outside chart scale" : "obyvatel na obec · mimo měřítko grafu"}</small></article>`).join("");
+  const copy = english ? {
+    kicker: `04 / International benchmark · OECD ${dataset.reference_year}`,
+    title: "Czechia has Europe's smallest municipalities.",
+    intro: "The average municipality has 1,741 people. The median is only 453 — a clearer picture of how fragmented the system really is.",
+    mean: "People per municipality", median: "Median municipality", small: "Municipalities under 2,000", eu: "Of the EU27 average",
+    meanLegend: "Average population", medianLegend: "Median", euLegend: "EU27 average",
+    more: "Show all countries", less: "Show compact view",
+    note: "A smaller value means a more fragmented municipal structure. This indicator does not measure staff numbers, service quality or administrative efficiency. Competences differ across countries.",
+    source: "Source: OECD · Municipal level government by population size"
+  } : {
+    kicker: `04 / Mezinárodní benchmark · OECD ${dataset.reference_year}`,
+    title: "Česko má nejmenší obce v Evropě.",
+    intro: "Průměrná obec má 1 741 obyvatel. Medián je jen 453 — a ukazuje ještě přesněji, jak roztříštěný český systém je.",
+    mean: "Obyvatel na obec", median: "Medián obce", small: "Obcí pod 2 000 obyvatel", eu: "Průměru EU27",
+    meanLegend: "Průměrný počet obyvatel", medianLegend: "Medián", euLegend: "Průměr EU27",
+    more: "Zobrazit všechny země", less: "Zobrazit kratší výběr",
+    note: "Nižší hodnota znamená roztříštěnější obecní strukturu. Ukazatel neměří počet úředníků, kvalitu služeb ani efektivitu správy. Kompetence obcí se mezi zeměmi liší.",
+    source: "Zdroj: OECD · Municipal level government by population size"
+  };
+  municipalSizeBenchmark.innerHTML = `<div class="municipal-size-heading"><div><span class="kicker">${copy.kicker}</span><h2>${copy.title}</h2></div><p>${copy.intro}</p></div>
+    <div class="municipal-size-kpis"><article><span>${copy.mean}</span><strong>${integer.format(czech.mean)}</strong><small>№ 1 / ${dataset.countries.length}</small></article><article><span>${copy.median}</span><strong>${integer.format(czech.median)}</strong><small>${english ? "people" : "obyvatel"}</small></article><article><span>${copy.small}</span><strong>${integer.format(czech.under_2000_pct)} %</strong><small>${english ? "of all municipalities" : "všech obcí"}</small></article><article><span>${copy.eu}</span><strong>${integer.format(czech.mean / dataset.eu27_mean * 100)} %</strong><small>EU27 · ${integer.format(dataset.eu27_mean)}</small></article></div>
+    <div class="municipal-size-chart-card"><div class="municipal-size-legend"><span><i class="mean-key"></i>${copy.meanLegend}</span><span><i class="median-key"></i>${copy.medianLegend}</span><span><i class="eu-key"></i>${copy.euLegend}</span></div><div class="municipal-size-chart-scroll" tabindex="0" role="region" aria-label="${escapeHtml(copy.title)}"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(copy.title)}"><g class="municipal-size-axis">${axis}</g><line class="municipal-size-eu" x1="${x(dataset.eu27_mean)}" x2="${x(dataset.eu27_mean)}" y1="${top - 22}" y2="${height - bottom + 4}"/>${rows}</svg></div><button class="municipal-size-toggle" type="button">${expanded ? copy.less : copy.more}</button></div>
+    <div class="municipal-size-outliers">${cards}</div><div class="municipal-size-method"><p>${copy.note}</p><a href="${escapeHtml(dataset.source.explorer_url)}" target="_blank" rel="noopener">${copy.source} ↗</a></div>`;
+  municipalSizeBenchmark.querySelector(".municipal-size-toggle")?.addEventListener("click", () => renderMunicipalSizeBenchmark(dataset, !expanded));
 }
 
 function renderDirectory() {
@@ -283,3 +342,14 @@ Promise.all([
   count.textContent = english ? "Data could not be loaded" : "Data se nepodařilo načíst";
   coverage.textContent = english ? "Historical data could not be loaded" : "Historická data se nepodařilo načíst";
 });
+
+fetch("../../data/municipal-size-benchmark.v1.json")
+  .then((response) => {
+    if (!response.ok) throw new Error(`Municipal size benchmark returned ${response.status}`);
+    return response.json();
+  })
+  .then((dataset) => renderMunicipalSizeBenchmark(dataset))
+  .catch((error) => {
+    console.error("Municipal size benchmark failed", error);
+    municipalSizeBenchmark.innerHTML = `<p class="benchmark-loading">${english ? "International benchmark could not be loaded." : "Mezinárodní benchmark se nepodařilo načíst."}</p>`;
+  });
