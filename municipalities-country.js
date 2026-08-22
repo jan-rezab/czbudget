@@ -1,6 +1,7 @@
 (()=>{
   const assetRoot=document.currentScript?.src?new URL(".",document.currentScript.src).href:"../../";
-  const state={lang:new URLSearchParams(location.search).get("lang")==="en"?"en":"cs",data:null,country:null,query:"",year:"all",shown:48};
+  const requestedLanguage=new URLSearchParams(location.search).get("lang"), initialLanguage=["cs","en"].includes(requestedLanguage)?requestedLanguage:(document.documentElement.lang==="en"?"en":"cs");
+  const state={lang:initialLanguage,data:null,country:null,query:"",year:"all",shown:48};
   const code=document.body.dataset.countryCode;
   const slug=document.body.dataset.countrySlug;
   const slugs={CZE:"czechia",POL:"poland",DNK:"denmark",FRA:"france",SWE:"sweden",GBR:"england",UKR:"ukraine"};

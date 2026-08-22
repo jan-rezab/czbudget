@@ -83,7 +83,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
     root = "../" * depth
     canonical = PUBLIC_ORIGIN + canonical_path
     schema_json = json.dumps(schema, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    return f"""<head>
+    return f"""<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{esc(title)}</title>
