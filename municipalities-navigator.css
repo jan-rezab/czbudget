@@ -15,8 +15,11 @@
   text-transform: uppercase;
   letter-spacing: .08em;
 }
-.municipality-switch a + a { border-left: 1px solid #15201d; }
+.municipality-switch label { min-width: 230px; padding: 8px 14px; border-left: 1px solid #15201d; display: grid; gap: 2px; }
+.municipality-switch label span { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; }
+.municipality-switch select { border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .municipality-switch a.active { background: #15201d; color: #fff; }
+.municipality-switch label.active { background: #15201d; color: #fff; }
 .municipal-controls { grid-template-columns: .8fr 1fr 1.35fr .65fr auto; }
 .municipal-controls .control-disabled { opacity: .42; }
 .capital-card { border-top: 4px solid #c74c2f; }
@@ -44,13 +47,21 @@
 .czechia-destination-grid h3 { margin: 35px 0 10px; font-size: 28px; }
 .czechia-destination-grid p { font-size: 14px; line-height: 1.55; }
 .czechia-destination-grid b { margin-top: auto; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.country-context-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 1px; border: 1px solid #aeb6ac; background: #aeb6ac; }
+.country-context-grid > article { min-height: 270px; padding: 30px; background: #fffdf7; display: flex; flex-direction: column; }
+.country-context-grid h3 { margin: 8px 0 14px; font-size: 30px; }
+.country-context-grid p { max-width: 680px; font-size: 15px; line-height: 1.6; }
+.country-context-grid a { margin-top: auto; color: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.country-flag { width: 54px; height: 36px; object-fit: cover; border: 1px solid #aeb6ac; margin-bottom: 16px; }
 @media (max-width: 1000px) {
   .municipal-controls { grid-template-columns: 1fr 1fr; }
   .czechia-destination-grid { grid-template-columns: 1fr; }
+  .country-context-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 650px) {
   .municipality-switch { margin-top: 20px; width: 100%; }
-  .municipality-switch a { min-width: 0; flex: 1; }
+  .municipality-switch a { min-width: 95px; }
+  .municipality-switch label { min-width: 0; flex: 1; }
   .municipal-controls { grid-template-columns: 1fr; }
   .czechia-destination-grid > a { min-height: 280px; }
 }

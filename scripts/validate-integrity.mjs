@@ -329,10 +329,11 @@ if (!dataOnly) {
 
   const sitemap = await readFile("sitemap.xml", "utf8");
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  const expectedSitemapUrls = municipalities.length + 14 + 9;
+  const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/"];
+  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
-  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", "/municipalities/", "/municipalities/czechia/", "/cz/obce/", "/cz/mesta/", "/cz/kraje/"]) {
+  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", "/municipalities/", ...municipalityCountryPaths, "/cz/obce/", "/cz/mesta/", "/cz/kraje/"]) {
     assert(locations.includes(`https://czbudget-public-258433468858.europe-west1.run.app${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);
