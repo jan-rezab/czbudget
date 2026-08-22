@@ -104,6 +104,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
   <link rel="icon" href="{root}assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{root}styles.css">
   <link rel="stylesheet" href="{root}cz-budget.css">
+  <link rel="stylesheet" href="{root}chart-system.css">
   <script type="application/ld+json">{schema_json}</script>
 </head>"""
 
