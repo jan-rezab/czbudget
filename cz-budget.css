@@ -270,6 +270,22 @@
 .nationwide-history-controls label span { color: var(--cz-muted); font: 9px monospace; text-transform: uppercase; letter-spacing: .08em; }
 .nationwide-history-controls select { padding: 13px 15px; border: 1px solid var(--cz-line); background: white; color: var(--cz-ink); font-size: 15px; font-weight: 750; }
 .nationwide-history-controls p { margin: 0 0 13px; color: var(--cz-muted); font-size: 12px; }
+.spending-benchmark { margin-top: 64px; padding-top: 56px; border-top: 1px solid var(--cz-line); }
+.benchmark-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; margin: 28px 0; padding: 1px; background: var(--cz-line); }
+.benchmark-summary article { padding: 20px; background: white; }
+.benchmark-summary span,.benchmark-summary small { display: block; color: var(--cz-muted); font-size: 10px; }
+.benchmark-summary strong { display: block; margin: 10px 0 4px; font: 500 clamp(20px,2.2vw,32px) Georgia,serif; }
+.spending-benchmark-chart { display: grid; gap: 14px; padding: 24px; border: 1px solid var(--cz-line); background: white; }
+.spending-benchmark-chart article { display: grid; grid-template-columns: minmax(220px,.9fr) 2fr; align-items: center; gap: 22px; }
+.spending-benchmark-chart header { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 4px 14px; }
+.spending-benchmark-chart header span { color: var(--cz-ink); font-size: 12px; font-weight: 750; }
+.spending-benchmark-chart header strong { font: 500 17px Georgia,serif; }
+.spending-benchmark-chart header small { grid-column: 1/-1; color: var(--cz-muted); font-size: 10px; }
+.spending-benchmark-chart article > div { height: 13px; background: #e4e7e1; overflow: hidden; }
+.spending-benchmark-chart article > div i { display: block; height: 100%; background: var(--cz-green); }
+.entity-spending-benchmark { display: grid; gap: 4px; margin: 14px 0 18px; padding: 12px 0; border-block: 1px solid var(--cz-line); }
+.entity-spending-benchmark span,.entity-spending-benchmark small { color: var(--cz-muted); font-size: 10px; }
+.entity-spending-benchmark strong { font: 500 18px Georgia,serif; }
 .history-select { min-width: 280px; display: grid; gap: 7px; }
 .history-select span { color: var(--cz-muted); font: 9px monospace; text-transform: uppercase; }
 .history-select select { padding: 13px 15px; border: 1px solid var(--cz-line); background: white; font-weight: 700; }
@@ -305,6 +321,8 @@
   .equation-sign { min-height: 48px; }
   .piggy-panel { grid-template-columns: 1fr; }
   .history-kpis { grid-template-columns: 1fr 1fr; }
+  .benchmark-summary { grid-template-columns: 1fr 1fr 1fr; }
+  .spending-benchmark-chart article { grid-template-columns: minmax(190px,.9fr) 2fr; }
 }
 
 @media (max-width: 760px) {
@@ -315,6 +333,10 @@
   .piggy-panel { gap: 28px; padding: 25px 20px; }
   .piggy-panel li a { align-items: baseline; }
   .history-kpis { grid-template-columns: 1fr; }
+  .benchmark-summary { grid-template-columns: 1fr; }
+  .spending-benchmark { margin-top: 46px; padding-top: 42px; }
+  .spending-benchmark-chart { padding: 18px; }
+  .spending-benchmark-chart article { grid-template-columns: 1fr; gap: 8px; }
   .nationwide-history-controls { align-items: stretch; flex-direction: column; }
   .nationwide-history-controls label { min-width: 0; }
   .nationwide-history-controls p { margin: 0; }

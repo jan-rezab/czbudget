@@ -14,7 +14,10 @@ Reproducibility contract:
 
 1. Install Python dependencies from `requirements.lock` and use Node 22.
 2. Verify raw inputs with `node pipeline/create-source-manifest.mjs --verify`.
-3. Build the 2010–2025 per-municipality history with `python3 pipeline/transforms/prepare_municipal_history.py`.
+3. Fetch the filtered 2010–2025 CZSO mid-year municipal population series with
+   `python3 pipeline/transforms/fetch_municipal_population.py`, then build the
+   per-municipality fiscal and per-capita history with
+   `python3 pipeline/transforms/prepare_municipal_history.py`.
 4. Run transformations from the workspace root using the versioned scripts in
    `pipeline/transforms`.
 5. Run `npm run validate` before publishing.
