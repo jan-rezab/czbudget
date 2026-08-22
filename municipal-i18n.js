@@ -46,7 +46,7 @@
     const combined = document.querySelector(".territorial-stack"); if (combined) combined.id = "combined";
     const directory = document.querySelector(".directory"); if (directory && !directory.id) directory.id = "entities";
     const budget = document.querySelector("#rozpocet");
-    const history = document.querySelector("#history-explorer");
+    const history = document.querySelector("#history-explorer") || document.querySelector("#municipal-history-explorer");
     const method = document.querySelector("#metodika");
     const items = [["overview",labels.overview],["combined",labels.combined],[history?.id,labels.trend],[budget?.id,labels.budget],[directory?.id,labels.entities],[method?.id,labels.method]].filter(([id]) => id && document.getElementById(id));
     const rail = document.createElement("nav"); rail.className = "context-rail municipal-context-rail"; rail.setAttribute("aria-label", lang === "en" ? "Page sections" : "Sekce stránky");
@@ -197,6 +197,11 @@
     "Příjmy": "Revenue", "Výdaje": "Expenditure", "Skutečné příjmy": "Actual revenue", "Skutečné výdaje": "Actual expenditure", "Výsledek": "Balance", "Stav účtů": "Cash and deposits", "Peníze a vklady": "Cash and deposits", "Saldo": "Balance",
     "Pozor na interpretaci:": "Interpretation note:", "Praha není zdvojena, ale součet není konsolidovaný mezi obcemi a kraji — vzájemné transfery mohou zůstávat na obou stranách.": "Prague is not duplicated, but the combined total is not consolidated across municipalities and regions. Intergovernmental transfers may remain on both sides.",
     "02 / Co tvoří výsledek": "02 / What makes the balance", "43,4 mld. Kč vytvořily přebytkové obce.": "Surplus municipalities generated CZK 43.4bn.",
+    "01 / Snapshot 2025 · deduplikovaný součet": "01 / 2025 snapshot · deduplicated total", "02 / Celá země · 2010–2025": "02 / Nationwide · 2010–2025",
+    "Obecní rozpočty v čase.": "Municipal budgets over time.", "Součet všech obcí dostupných v daném roce. Vybraný rok řídí také rozdělení přebytků a schodků i celý adresář níže.": "Totals for all municipalities available in each year. The selected year also drives the surplus/deficit analysis and the directory below.",
+    "Vybraný rok": "Selected year", "6 254 obcí s rozpočtovými daty": "6,254 municipalities with budget data", "Obce v přebytku": "Municipalities in surplus",
+    "Celostátní roční součty v tabulce": "Nationwide annual totals table", "Obce s daty": "Municipalities with data", "Historický adresář": "Historical directory",
+    "04 / Všechny obce ·": "04 / All municipalities ·", "Rok 2025": "Year 2025", "05 / Definice": "05 / Definitions",
     "Celkové příjmy a souhrnný výsledek podle toho, zda obec rok 2025 uzavřela v přebytku, nebo ve schodku.": "Total revenue and aggregate balance, split by whether each municipality closed 2025 in surplus or deficit.",
     "Přebytkové obce": "Surplus municipalities", "Schodkové obce": "Deficit municipalities", "Všechny obce čistě": "All municipalities · net",
     "všech obcí": "of all municipalities", "Celkové příjmy": "Total revenue", "Souhrnný výsledek": "Aggregate balance", "Výsledek po započtení": "Net balance", "příjmy": "revenue",

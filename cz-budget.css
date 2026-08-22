@@ -220,7 +220,7 @@
 /* All-municipality and long-term fiscal views */
 .wide-switch { min-width: min(520px,100%); }
 .wide-switch a { flex: 1; }
-.territorial-stack,.municipal-aggregate-story,.history-explorer { padding: 90px 5vw; border-bottom: 1px solid var(--cz-line); }
+.territorial-stack,.municipal-aggregate-story,.history-explorer,.nationwide-history { padding: 90px 5vw; border-bottom: 1px solid var(--cz-line); }
 .layer-row { display: grid; grid-template-columns: 260px 1fr; gap: 30px; align-items: center; padding: 24px 26px; margin-top: 10px; background: white; border: 1px solid var(--cz-line); box-shadow: 0 5px 0 rgba(23,26,25,.04); }
 .layer-row>div>span,.layer-row>div>small { display: block; color: var(--cz-muted); }
 .layer-row>div>span { font: 700 11px monospace; text-transform: uppercase; letter-spacing: .08em; }
@@ -264,6 +264,12 @@
 .load-more:hover { background: var(--cz-ink); color: white; }
 .result-meta a { font-weight: 700; text-underline-offset: 3px; }
 .history-explorer { background: #f4f1e9; }
+.nationwide-history { background: #eef1ec; scroll-margin-top: 150px; }
+.nationwide-history-controls { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin: 28px 0 0; }
+.nationwide-history-controls label { min-width: 220px; display: grid; gap: 7px; }
+.nationwide-history-controls label span { color: var(--cz-muted); font: 9px monospace; text-transform: uppercase; letter-spacing: .08em; }
+.nationwide-history-controls select { padding: 13px 15px; border: 1px solid var(--cz-line); background: white; color: var(--cz-ink); font-size: 15px; font-weight: 750; }
+.nationwide-history-controls p { margin: 0 0 13px; color: var(--cz-muted); font-size: 12px; }
 .history-select { min-width: 280px; display: grid; gap: 7px; }
 .history-select span { color: var(--cz-muted); font: 9px monospace; text-transform: uppercase; }
 .history-select select { padding: 13px 15px; border: 1px solid var(--cz-line); background: white; font-weight: 700; }
@@ -281,6 +287,10 @@
 .history-line { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
 .revenue-line { stroke: #47735c; }.expense-line { stroke: #d2674d; }.cash-line { stroke: #315ba6; }
 .history-point circle { fill: white; stroke: #315ba6; stroke-width: 3; }
+.nationwide-selected-year { stroke: #171a19; stroke-width: 2; stroke-dasharray: 5 5; opacity: .6; pointer-events: none; }
+.nationwide-year-hit { fill: transparent; stroke: transparent; cursor: pointer; pointer-events: all; }
+.selected-year-label { fill: #171a19!important; font-weight: 800!important; }
+.selected-history-row { background: #f0f6dc; }
 .history-table { margin-top: 15px; border: 1px solid var(--cz-line); background: white; }
 .history-table summary { padding: 16px 20px; cursor: pointer; font-weight: 700; }
 .history-table>div { overflow-x: auto; }
@@ -298,11 +308,15 @@
 }
 
 @media (max-width: 760px) {
-  .territorial-stack,.municipal-aggregate-story,.history-explorer { padding: 70px 20px; }
+  .territorial-stack,.municipal-aggregate-story,.history-explorer,.nationwide-history { padding: 70px 20px; }
   .wide-switch { display: grid; grid-template-columns: 1fr; }
   .layer-row dl { grid-template-columns: 1fr; }
   .layer-row dl div { border-left: 0; border-top: 1px solid #dedad1; padding: 12px 0 0; }
   .piggy-panel { gap: 28px; padding: 25px 20px; }
   .piggy-panel li a { align-items: baseline; }
   .history-kpis { grid-template-columns: 1fr; }
+  .nationwide-history-controls { align-items: stretch; flex-direction: column; }
+  .nationwide-history-controls label { min-width: 0; }
+  .nationwide-history-controls p { margin: 0; }
+  .nationwide-history { scroll-margin-top: 130px; }
 }

@@ -24,6 +24,7 @@ Potom otevřete <http://localhost:3000/>.
 - `cz/obce/` a `cz/kraje/` — filtrovatelné české územní benchmarky
 - `cz/obce/<slug>/` a `cz/kraje/<slug>/` — indexovatelné detailní profily
 - `data/entities/<ico>.json` — strojově čitelný detail účetní jednotky
+- `data/municipal-history/<ico>.json` — roční snapshoty rozpočtu a stavu účtů každé současné obce za období 2010–2025
 - `cz-obce.html` — zpětně kompatibilní přesměrování na `cz/obce/`
 - `cesky-rozpocet.html` a `cesko.html` — připravené české tematické vrstvy
 - `lib/data/sovereign-benchmark.v1.json` — harmonizované fiskální řady
@@ -42,6 +43,16 @@ verzovaným skriptem `pipeline/transforms/build_czech_site.py`. Proměnná
 `CZBUDGET_WORKSPACE_ROOT` určuje kořen lokálního datového workspace a
 `PUBLIC_ORIGIN` při
 sestavení určuje produkční canonical URL a adresu sitemap.
+
+Historie všech obcí se připravuje z ročních extraktů FIN 2-12 M a rozvahy:
+
+```bash
+python3 pipeline/transforms/prepare_municipal_history.py
+```
+
+Chybějící rok v historii není interpretován jako nulový rozpočet. Znamená,
+že dnešní IČO v daném ročním extraktu nemá rozpočtové řádky; typicky jde o
+obec vzniklou později. Stav účtů má metodický zlom v roce 2012.
 
 ## Integrita a reprodukovatelnost
 

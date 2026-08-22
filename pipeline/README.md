@@ -14,12 +14,17 @@ Reproducibility contract:
 
 1. Install Python dependencies from `requirements.lock` and use Node 22.
 2. Verify raw inputs with `node pipeline/create-source-manifest.mjs --verify`.
-3. Run transformations from the workspace root using the versioned scripts in
+3. Build the 2010–2025 per-municipality history with `python3 pipeline/transforms/prepare_municipal_history.py`.
+4. Run transformations from the workspace root using the versioned scripts in
    `pipeline/transforms`.
-4. Run `npm run validate` before publishing.
-5. Production builds record `data/release-manifest.v1.json` and deploy the
+5. Run `npm run validate` before publishing.
+6. Production builds record `data/release-manifest.v1.json` and deploy the
    pushed image by digest.
 
 `transforms/` contains preparation and generation code, `warehouse/` contains
 the BigQuery schema/load definitions, `config/` contains reviewed source and
 fiscal-scope registries, and `docs/` contains methodology notes.
+
+The six-country municipal expansion is documented in
+`docs/README_international_municipal.md`. Its source registry is
+`config/international_municipal_sources.json`.
