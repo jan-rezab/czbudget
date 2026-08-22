@@ -8,7 +8,7 @@
   <link id="alternate-cs" rel="alternate" hreflang="cs" href="https://czbudget-public-258433468858.europe-west1.run.app/country.html?lang=cs">
   <link id="alternate-en" rel="alternate" hreflang="en" href="https://czbudget-public-258433468858.europe-west1.run.app/country.html?lang=en">
   <meta id="og-url" property="og:url" content="https://czbudget-public-258433468858.europe-west1.run.app/country.html">
-  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v2.css?v=20260821-benchmark-flags"><link rel="stylesheet" href="chart-system.css?v=20260821-benchmark-flags"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260821-health8"><script src="country.js?v=20260821-benchmark-flags" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-health.js?v=20260821-health8" defer></script><script src="global-nav.js?v=20260821-benchmark-flags" defer></script>
+  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css?v=20260822-section-rail"><link rel="stylesheet" href="styles-v2.css?v=20260822-country-metrics"><link rel="stylesheet" href="chart-system.css?v=20260821-benchmark-flags"><link rel="stylesheet" href="country-spending.css?v=20260821"><link rel="stylesheet" href="country-health.css?v=20260821-health8"><script src="country.js?v=20260821-benchmark-flags" defer></script><script src="country-spending.js?v=20260821" defer></script><script src="country-health.js?v=20260821-health8" defer></script><script src="global-nav.js?v=20260822-unified-nav" defer></script>
 </head>
 <body class="country-page">
   <header class="site-header compact-header has-global-nav">
@@ -16,8 +16,18 @@
     <nav class="global-nav" aria-label="Primary navigation"></nav>
     <div class="lang-switch"><button data-lang="cs" class="active">CS</button><span>/</span><button data-lang="en">EN</button></div>
   </header>
+  <nav class="context-rail country-context-rail" aria-label="Country sections">
+    <a href="#top" data-i18n="navOverview">Přehled</a>
+    <a href="#scope" data-i18n="navScope">Rozsah</a>
+    <a href="#trend" data-i18n="navTrend">Vývoj</a>
+    <a href="#macro" data-i18n="navMacro">Makro</a>
+    <a href="#spending" data-i18n="navSpending">Výdaje</a>
+    <a href="#healthcare" data-i18n="navHealthcare">Zdraví</a>
+    <a href="#specifics" data-i18n="navSpecifics">Specifika</a>
+    <a href="#sources" data-i18n="navSources">Zdroje</a>
+  </nav>
   <main>
-    <section class="country-hero">
+    <section class="country-hero" id="top">
       <div><span class="country-code-large" id="country-code">CZE</span><span class="eyebrow" data-i18n="profileEyebrow">Detail země · veřejné finance</span><h1 id="country-name">Česko</h1><p id="country-subtitle">—</p>
         <div class="country-switch-wrap"><label><span data-i18n="switchCountry">Změnit zemi</span><select id="country-switch"></select></label><label><span data-i18n="switchYear">Rok profilu</span><select id="year-switch"></select></label></div>
         <div class="currency-toggle" aria-label="Currency display"><span data-i18n="currencyView">Měna</span><button data-currency="local" class="active" data-i18n="localCurrency">Místní</button><button data-currency="eur">EUR</button></div>

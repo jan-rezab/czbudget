@@ -29,6 +29,8 @@ const I = {
     methodKicker: "03 / How to read the data", methodTitle: "Comparison with visible boundaries.", methodCopy: "Every value retains its year, geographic definition and primary source. Future city profiles can build on it without losing the original meaning.", methodBudgetTitle: "Budgets", methodBudgetCopy: "The broadest official expenditure figure available on 20 August 2026. The exact definition and scope appear in each city detail.", methodFxTitle: "Currency conversion", methodFxCopy: "EUR values use ECB reference rates from 20 August 2026. The original local-currency amount remains stored unchanged.", methodPopulationTitle: "Population", methodPopulationCopy: "Latest available Eurostat observation. The year and any wider ‘greater city’ boundary are shown alongside the value.", methodTourismTitle: "Tourism", methodTourismCopy: "Tourist nights for 2024. Dublin and London use broader local sources and are explicitly flagged in the city detail.", footerScope: "European cities", footerSource: "Sources: city budgets · Eurostat · ECB", backTop: "Back to top ↑", citiesCount: (n) => `${n} ${n === 1 ? "city" : "cities"}`
   }
 };
+Object.assign(I.cs,{consolidationKicker:"00 / Rozsah měst",consolidationTitle:"Konsolidace je vidět hned.",consolidationCopy:"Barva rozlišuje konsolidovaný městský celek, město se statutem regionu a samostatnou obec bez podřízených rozpočtů.",scopeConsolidated:"Konsolidovaný celek",scopeCityState:"Město + region",scopeMunicipality:"Samostatná obec",spendingKicker:"02 / Kam města utrácejí",spendingTitle:"Všechny dostupné dílčí rozpočty.",spendingCopy:"Každý řádek zachovává původní kategorii, přesný rozpočtový rok a podíl na zveřejněném celku. Hlavičky tabulky řadí data; chybějící profily jsou přiznané.",spendingCategory:"Kategorie výdajů",spendingAmount:"Částka",spendingShare:"Podíl",spendingCoverage:"Úplnost",spendingYear:"Rok",functionalProfile:"funkční členění",componentProfile:"dílčí členění",missingProfile:"profil výdajů chybí"});
+Object.assign(I.en,{consolidationKicker:"00 / City scope",consolidationTitle:"Consolidation is visible first.",consolidationCopy:"Colour separates a consolidated city group, a city with regional status, and a standalone municipality without subordinate budgets.",scopeConsolidated:"Consolidated group",scopeCityState:"City + region",scopeMunicipality:"Standalone municipality",spendingKicker:"02 / Where cities spend",spendingTitle:"Every available sub-budget.",spendingCopy:"Each row retains its source category, exact budget year and share of the published total. Sort from any table heading; missing profiles remain explicit.",spendingCategory:"Spending category",spendingAmount:"Amount",spendingShare:"Share",spendingCoverage:"Completeness",spendingYear:"Year",functionalProfile:"functional breakdown",componentProfile:"component breakdown",missingProfile:"spending profile missing"});
 
 const CZECH_CITY_NAMES = {
   "amsterdam-nl":"Amsterdam","athens-gr":"Athény","berlin-de":"Berlín","bratislava-sk":"Bratislava","brussels-be":"Brusel","bucharest-ro":"Bukurešť","budapest-hu":"Budapešť","copenhagen-dk":"Kodaň","dublin-ie":"Dublin","helsinki-fi":"Helsinky","lisbon-pt":"Lisabon","ljubljana-si":"Lublaň","luxembourg-lu":"Lucemburk","madrid-es":"Madrid","nicosia-cy":"Nikósie","paris-fr":"Paříž","prague-cz":"Praha","riga-lv":"Riga","rome-it":"Řím","sofia-bg":"Sofie","stockholm-se":"Stockholm","tallinn-ee":"Tallinn","valletta-mt":"Valletta","vienna-at":"Vídeň","vilnius-lt":"Vilnius","warsaw-pl":"Varšava","zagreb-hr":"Záhřeb","london-gb":"Londýn"
@@ -86,6 +88,17 @@ const historyPercent = (value) => Number.isFinite(value) ? `${value >= 0 ? "+" :
 const CITY_HISTORY_ENTITY = {"prague-cz":"CZ:00064581"};
 const isStalePopulation = (city) => city.benchmarks.population.reference_year < 2022 || city.benchmarks.population.quality_flags?.length > 0;
 const tourismIsLocal = (city) => !String(city.benchmarks.tourism.comparability_group).startsWith("eurostat");
+const consolidationKind = (city) => {
+  const scope = String(city.scope).toLowerCase();
+  if (/consolidat|including districts|organizational units|all 58/.test(scope)) return "consolidated";
+  if (/city-state|city and state|commune and department/.test(scope)) return "city-state";
+  return "municipality";
+};
+const spendingProfile = (city) => {
+  const components = visibleComponents(city).filter((item) => item.component_kind !== "revenue");
+  if (components.some((item) => item.component_kind === "functional")) return "functional";
+  return components.length ? "component" : "missing";
+};
 
 function translate() {
   document.documentElement.lang = state.lang;
@@ -115,8 +128,9 @@ function renderTable() {
   $("#capital-table-body").innerHTML = cities.map((city) => {
     const population = city.benchmarks.population, tourism = city.benchmarks.tourism, fiscal = city.fiscal_details, selected = city.city_id === state.selected;
     const balanceClass = fiscal.balance_classification === "surplus" ? "positive" : fiscal.balance_classification === "deficit" ? "negative" : "";
-    return `<tr data-city-id="${esc(city.city_id)}" class="${selected ? "active" : ""}" tabindex="0" aria-selected="${selected}">
-      <td class="capital-city-cell"><div class="capital-city"><span class="capital-city-code">${esc(city.country_code)}</span><strong>${esc(cityName(city))}</strong><small>${esc(countryName(city))}${city.extra_city ? " · UK" : ""}</small></div></td>
+    const scopeKind = consolidationKind(city);
+    return `<tr data-city-id="${esc(city.city_id)}" class="scope-${scopeKind} ${selected ? "active" : ""}" tabindex="0" aria-selected="${selected}">
+      <td class="capital-city-cell"><div class="capital-city"><span class="capital-city-code">${esc(city.country_code)}</span><strong>${esc(cityName(city))}</strong><small>${esc(countryName(city))}${city.extra_city ? " · UK" : ""} · ${esc(I[state.lang][scopeKind === "city-state" ? "scopeCityState" : scopeKind === "consolidated" ? "scopeConsolidated" : "scopeMunicipality"])}</small></div></td>
       <td><strong class="capital-value">${esc(money(city))}</strong><small class="capital-period">${esc(city.period)} · ${esc(city.currency_code)}</small></td>
       <td><strong class="capital-value ${balanceClass}">${esc(moneyPayload(fiscal.balance, true))}</strong><small class="capital-period">${esc(balanceLabel(fiscal.balance_classification))}</small></td>
       <td><strong class="capital-value">${esc(compactNumber(population.value))}</strong><small class="capital-period ${isStalePopulation(city) ? "data-warning" : ""}">${esc(population.reference_year)}${isStalePopulation(city) ? " · !" : ""}</small></td>
@@ -128,6 +142,29 @@ function renderTable() {
     row.addEventListener("click", select);
     row.addEventListener("keydown", (event) => { if (["Enter", " "].includes(event.key)) { event.preventDefault(); select(); } });
   });
+  renderSpendingTable();
+}
+
+function renderSpendingTable() {
+  const t = I[state.lang], rows = [];
+  filteredCities().forEach((city) => {
+    const profile = spendingProfile(city);
+    const items = visibleComponents(city).filter((item) => item.component_kind !== "revenue");
+    if (!items.length) {
+      rows.push(`<tr class="scope-${consolidationKind(city)}"><td class="capital-city-cell"><strong>${esc(cityName(city))}</strong><small>${esc(city.country_code)}</small></td><td>—</td><td>—</td><td>—</td><td>${esc(t.missingProfile)}</td><td data-sort-value="${esc(city.period)}">${esc(city.period)}</td></tr>`);
+      return;
+    }
+    items.forEach((item) => {
+      const amount = state.currency === "eur" ? item.eur_amount : item.local_amount;
+      rows.push(`<tr class="scope-${consolidationKind(city)}"><td class="capital-city-cell"><strong>${esc(cityName(city))}</strong><small>${esc(city.country_code)} · ${esc(I[state.lang][consolidationKind(city) === "city-state" ? "scopeCityState" : consolidationKind(city) === "consolidated" ? "scopeConsolidated" : "scopeMunicipality"])}</small></td><td><strong>${esc(componentLabel(item.component_code))}</strong><small>${esc(item.component_kind)}</small></td><td data-sort-value="${amount}">${esc(componentMoney(item))}</td><td data-sort-value="${item.share_of_headline_pct}">${esc(decimal(item.share_of_headline_pct))} %</td><td>${esc(t[profile === "functional" ? "functionalProfile" : "componentProfile"])}</td><td data-sort-value="${esc(city.period)}">${esc(city.period)}</td></tr>`);
+    });
+  });
+  $("#capital-spending-body").innerHTML = rows.join("");
+}
+
+function renderConsolidationOverview() {
+  const t = I[state.lang], definitions = [["consolidated","scopeConsolidated"],["city-state","scopeCityState"],["municipality","scopeMunicipality"]];
+  $("#consolidation-cards").innerHTML = definitions.map(([kind,label]) => `<article class="scope-${kind}"><span>${esc(t[label])}</span><strong>${state.data.cities.filter((city) => consolidationKind(city) === kind).length}</strong><small>${esc(I[state.lang].citiesCount(state.data.cities.filter((city) => consolidationKind(city) === kind).length))}</small></article>`).join("");
 }
 
 function selectCity(cityId, scroll = false) {
@@ -169,12 +206,12 @@ function renderDetail(city) {
   const mix = (title, items) => {
     if (!items.length) return `<article class="capital-mix-panel empty-mix"><h4>${esc(title)}</h4><p>${esc(t.noBreakdown)}</p></article>`;
     const max = Math.max(...items.map((item) => state.currency === "eur" ? item.eur_amount : item.local_amount));
-    return `<article class="capital-mix-panel"><h4>${esc(title)}</h4><div class="capital-mix-list">${items.map((item) => { const value = state.currency === "eur" ? item.eur_amount : item.local_amount; return `<div class="capital-mix-row" data-kind="${esc(item.component_kind)}"><div><span>${esc(componentLabel(item.component_code))}</span><strong>${esc(componentMoney(item))}</strong></div><i><b style="width:${Math.max(2, value / max * 100)}%"></b></i><small>${esc(decimal(item.share_of_headline_pct))} % ${esc(t.ofDisplayedTotal)}</small></div>`; }).join("")}</div></article>`;
+    return `<article class="capital-mix-panel"><h4>${esc(title)} · ${esc(city.period)}</h4><div class="capital-mix-list">${items.map((item) => { const value = state.currency === "eur" ? item.eur_amount : item.local_amount; return `<div class="capital-mix-row" data-kind="${esc(item.component_kind)}"><div><span>${esc(componentLabel(item.component_code))}</span><strong>${esc(componentMoney(item))}</strong></div><i><b style="width:${Math.max(2, value / max * 100)}%"></b></i><small>${esc(decimal(item.share_of_headline_pct))} % ${esc(t.ofDisplayedTotal)} · ${esc(city.period)}</small></div>`; }).join("")}</div></article>`;
   };
   const margin = Number.isFinite(fiscal.balance_margin_pct) ? `${fiscal.balance_margin_pct > 0 ? "+" : ""}${decimal(fiscal.balance_margin_pct)} % ${t.marginLabel}` : balanceLabel(fiscal.balance_classification);
   $("#city-detail").innerHTML = `<div class="capital-detail-head"><div><span class="kicker">${esc(t.detailKicker)} · ${esc(city.country_code)}</span><h2>${esc(cityName(city))}</h2><p>${esc(countryName(city))} · ${esc(flags.join(" · "))}</p></div><div class="capital-detail-actions"><a href="${esc(city.landing_page_url)}" target="_blank" rel="noopener">${esc(t.officialSource)}</a><a href="${esc(city.download_url)}" target="_blank" rel="noopener">${esc(t.budgetDocument)}</a></div></div>
     <div class="capital-detail-label"><span>${esc(t.fiscalOverview)}</span><small>${esc(city.period)} · ${esc(city.status.replaceAll("_", " "))}</small></div>
-    <div class="capital-detail-grid fiscal-kpis"><article><span>${esc(t.revenueLabel)}</span><strong>${esc(moneyPayload(fiscal.revenue))}</strong><small>${fiscal.revenue ? esc(t.period + " " + city.period) : esc(t.unavailable)}</small></article><article><span>${esc(t.expenditureLabel)}</span><strong>${esc(moneyPayload(fiscal.expenditure))}</strong><small>${esc(componentLabel(city.measure))}</small></article><article><span>${esc(t.balanceLabel)}</span><strong class="${balanceClass}">${esc(moneyPayload(fiscal.balance, true))}</strong><small>${esc(margin)}</small></article><article><span>${esc(t.perResidentLabel)}</span><strong>${esc(moneyPerResident(city))}</strong><small>${esc(population.reference_year)} · ${esc(population.geography_name)}</small></article></div>
+    <div class="capital-detail-grid fiscal-kpis"><article><span>${esc(t.revenueLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPayload(fiscal.revenue))}</strong><small>${fiscal.revenue ? esc(t.period + " " + city.period) : esc(t.unavailable)}</small></article><article><span>${esc(t.expenditureLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPayload(fiscal.expenditure))}</strong><small>${esc(componentLabel(city.measure))} · ${esc(city.period)}</small></article><article><span>${esc(t.balanceLabel)} · ${esc(city.period)}</span><strong class="${balanceClass}">${esc(moneyPayload(fiscal.balance, true))}</strong><small>${esc(margin)} · ${esc(city.period)}</small></article><article><span>${esc(t.perResidentLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPerResident(city))}</strong><small>${esc(city.period)} · ${esc(population.reference_year)} ${esc(population.geography_name)}</small></article></div>
     <div class="capital-balance-story ${balanceClass || "unavailable"}"><span>${esc(balanceLabel(fiscal.balance_classification))}</span><p>${esc(balanceNote)}</p></div>
     ${renderHistory(city)}
     <div class="capital-detail-label"><span>${esc(t.spendingStructure)}</span><small>${esc(t.sourceCoverage)} · ${esc(completeness)}</small></div>
@@ -188,7 +225,7 @@ function render() {
   translate(); if (!state.data) return;
   $("#stat-cities").textContent = state.data.coverage.city_count;
   $("#stat-currencies").textContent = new Set(state.data.cities.map((city) => city.currency_code)).size;
-  renderTable(); if (state.selected) renderDetail(state.data.cities.find((city) => city.city_id === state.selected));
+  renderConsolidationOverview(); renderTable(); if (state.selected) renderDetail(state.data.cities.find((city) => city.city_id === state.selected));
 }
 
 function bindControls() {
