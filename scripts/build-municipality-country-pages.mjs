@@ -7,7 +7,7 @@ const pages={
   france:{code:"FRA",title:"French municipalities",description:"Coverage, accounting scope and a searchable directory of French communes."},
   sweden:{code:"SWE",title:"Swedish municipalities",description:"Costs, income, balance sheets and a searchable directory of all 290 Swedish municipalities."},
   england:{code:"GBR",title:"English local authorities",description:"Revenue outturn coverage and a searchable directory of English councils and the GLA."},
-  ukraine:{code:"UKR",title:"Ukrainian municipalities",description:"Import status, coverage and a searchable directory of Ukrainian territorial communities."}
+  ukraine:{code:"UKR",title:"Ukrainian municipalities",description:"Complete 2024–2025 coverage and a searchable directory of 1,467 Ukrainian territorial communities."}
 };
 
 for(const [slug,page] of Object.entries(pages)){
