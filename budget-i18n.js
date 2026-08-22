@@ -1,6 +1,6 @@
 (() => {
   const csToEn = {
-    "Domů":"Home","Rozpočet":"Budget","Firmy státu":"State firms","Struktura":"Structure","Na co":"Spending","Demografie":"Demography","Srovnání":"Comparison","Metodika":"Methodology","Přehled":"Overview","Veřejné subjekty":"Public entities","Země":"Countries","Příjmy / výdaje":"Revenue / expenditure","30 účelů / 47 kapitol":"30 purposes / 47 chapters","630 organizací":"630 organisations","10 profilů":"10 profiles","Zdroje":"Sources",
+    "Domů":"Home","Rozpočet":"Budget","Firmy státu":"State firms","Struktura":"Structure","Na co":"Spending","Demografie":"Demography","Srovnání":"Comparison","Metodika":"Methodology","Přehled":"Overview","Veřejné subjekty":"Public entities","Země":"Countries","Příjmy / výdaje":"Revenue / expenditure","30 účelů / 47 kapitol":"30 purposes / 47 chapters","637 organizací":"637 organisations","10 profilů":"10 profiles","Zdroje":"Sources",
     "Státní rozpočet ČR · skutečnost, schválený plán a výhled":"Czech state budget · outturn, approved plan and outlook",
     "Státní rozpočet ČR · skutečnost, návrh a výhled":"Czech state budget · outturn, proposal and outlook",
     "Český rozpočet.":"The Czech budget.","Bez krátké paměti.":"With a long memory.",

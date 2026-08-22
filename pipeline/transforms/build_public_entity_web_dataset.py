@@ -119,17 +119,17 @@ def main() -> None:
         }
 
     groups = {"all": group_summary(entities)}
-    for category in ("Firma", "Vysoká škola", "Nemocnice"):
+    for category in ("Firma", "Vysoká škola", "Nemocnice", "Zdravotní pojišťovna"):
         groups[category] = group_summary([row for row in entities if row["category"] == category])
 
     payload = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "country_code": "CZ",
         "year": 2024,
         "currency_code": "CZK",
         "units": "mil. Kč",
-        "scope": "Veřejně ovládané firmy, veřejné vysoké školy a nemocnice evidované pro rok 2024; přímé rozpočty obcí a krajů nejsou subjekty této tabulky.",
-        "coverage_note": "Účetní součty zahrnují pouze subjekty s doloženými částkami v otevřeném VZZ nebo ve zprávě MF o strategických subjektech. Chybějící výkaz není nula.",
+        "scope": "Vybrané kategorie veřejných subjektů evidované pro rok 2024: veřejně ovládané firmy, veřejné vysoké školy, nemocnice a zdravotní pojišťovny. Přímé rozpočty obcí a krajů nejsou subjekty této tabulky.",
+        "coverage_note": "Účetní součty zahrnují pouze subjekty s doloženými částkami v otevřeném VZZ nebo ve zprávě MF o strategických subjektech. Zdravotní pojišťovny používají speciální výkazy; jejich pojistné a úhrady nejsou zaměňovány za firemní obrat a náklady.",
         "summary": {
             "entity_count": len(entities),
             "strategic_highlight_count": len(strategic_by_ico),

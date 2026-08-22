@@ -39,6 +39,8 @@ COMPANY_FORM_CODES = {
     "211", "231", "232", "233", "234", "241", "242", "301", "302",
     "341", "343", "351", "352", "411", "431", "435", "436", "437", "438",
 }
+HEALTH_INSURER_LEGAL_FORM = "Zdravotní pojišťovna"
+CATEGORIES = ["Firma", "Vysoká škola", "Nemocnice", "Zdravotní pojišťovna"]
 
 
 def norm_ico(value: str | None) -> str:
@@ -145,11 +147,17 @@ def is_university(unit: dict) -> bool:
     return unit.get("unit_type") == "30" and unit.get("unit_subtype") == "10" and unit.get("nace") == "85420"
 
 
+def is_health_insurer_registry_row(row: dict) -> bool:
+    return row.get("legal_form") == HEALTH_INSURER_LEGAL_FORM
+
+
 def is_partial_public_company(unit: dict) -> bool:
     return unit.get("legal_form_code") in COMPANY_FORM_CODES and unit.get("sector") in {"13110", "13130"}
 
 
 def classify_owner(parent_form: str, entity_form: str, sector: str, category: str) -> str:
+    if category == "Zdravotní pojišťovna":
+        return "Veřejné zdravotní pojištění"
     p = parent_form.lower()
     if "kraj" in p:
         return "Kraj"
@@ -253,16 +261,25 @@ def main() -> None:
                 ),
             }
 
-    # From 2016 onward the consolidation register supplies the complete in-scope company universe.
+    # From 2016 onward the consolidation register supplies the complete in-scope
+    # company universe and the seven active public health insurers. The accounting
+    # unit master alone retains obsolete insurer intervals, so it is not used to
+    # define the current insurer universe.
     for year in range(2016, 2026):
         type_map = {row["ico"]: row["legal_form"] for row in registries[year]}
         unit_map = accounting_units[year]
         for row in registries[year]:
-            if row["legal_form"] not in COMPANY_LEGAL_FORMS:
+            is_company = row["legal_form"] in COMPANY_LEGAL_FORMS
+            is_health_insurer = is_health_insurer_registry_row(row)
+            if not is_company and not is_health_insurer:
                 continue
             ico = row["ico"]
             unit = unit_map.get(ico, {})
-            category = "Nemocnice" if is_hospital(unit) else "Firma"
+            category = (
+                "Zdravotní pojišťovna"
+                if is_health_insurer
+                else ("Nemocnice" if is_hospital(unit) else "Firma")
+            )
             parent_form = type_map.get(row["parent_ico"], "")
             entity_years[(year, ico)] = {
                 "year": year,
@@ -294,6 +311,13 @@ def main() -> None:
                 "cost": fin["cost"],
                 "financial_status": "VZZ dostupný",
                 "source_financial": fin["source_url"],
+            })
+        elif item["category"] == "Zdravotní pojišťovna":
+            item.update({
+                "revenue": None,
+                "cost": None,
+                "financial_status": "Speciální výkazy zdravotních pojišťoven nejsou součástí otevřeného VZZ",
+                "source_financial": "",
             })
         elif item["category"] == "Firma" or item["pkp"]:
             item.update({
@@ -352,15 +376,17 @@ def main() -> None:
     coverage = []
     for year in YEARS:
         rows = [row for row in annual_rows if row["year"] == year]
-        for category in ["Firma", "Vysoká škola", "Nemocnice"]:
+        for category in CATEGORIES:
             subset = [row for row in rows if row["category"] == category]
             available = [row for row in subset if row["revenue"] is not None]
             if category == "Firma" and year < 2016:
                 universe = "Částečný – pouze jednotky veřejného sektoru v kmeni ČSÚIS"
             elif category == "Firma":
                 universe = "Úplný dle konsolidačního výčtu pro daný rok"
-            else:
+            elif category in {"Vysoká škola", "Nemocnice"}:
                 universe = "Účetní jednotky identifikované dle kmenových dat ČSÚIS"
+            else:
+                universe = "Aktivní zdravotní pojišťovny dle konsolidačního výčtu"
             coverage.append({
                 "year": year,
                 "category": category,
@@ -408,11 +434,11 @@ def main() -> None:
 
     output = {
         "metadata": {
-            "title": "Vedlejší veřejné příjmy – firmy, veřejné vysoké školy a nemocnice",
+            "title": "Veřejné subjekty – firmy, vysoké školy, nemocnice a zdravotní pojišťovny",
             "period": "2006–2025",
             "units": "Kč",
             "prepared_on": "2026-08-20",
-            "scope": "Obce a kraje jako samostatné rozpočtové jednotky jsou vyloučeny; jejich ovládané firmy a nemocnice zůstávají zahrnuty.",
+            "scope": "Obce a kraje jako samostatné rozpočtové jednotky jsou vyloučeny; jejich ovládané firmy a nemocnice zůstávají zahrnuty. Zdravotní pojišťovny tvoří samostatnou kategorii bez srovnávání pojistného s firemním obratem.",
             "interpretation": "Výnosy subjektů nejsou automaticky příjmem státního rozpočtu. Hrubé výnosy mohou obsahovat veřejné transfery a nesmějí být bez konsolidace přičteny k příjmům veřejných rozpočtů.",
             "status": "PARTIAL – registr firem je systematický od 2016; jednotlivé firemní výkazy a roky 2006–2009 vyžadují doplnění z výročních zpráv.",
             "financial_rows": sum(1 for row in annual_rows if row["revenue"] is not None),
@@ -428,7 +454,7 @@ def main() -> None:
         "output": str(OUTPUT_PATH),
         "entities": len(entities),
         "annual_rows": len(annual_rows),
-        "by_category": {category: sum(1 for row in entities if row["category"] == category) for category in ["Firma", "Vysoká škola", "Nemocnice"]},
+        "by_category": {category: sum(1 for row in entities if row["category"] == category) for category in CATEGORIES},
         "financial_rows": sum(1 for row in annual_rows if row["revenue"] is not None),
     }, ensure_ascii=False, indent=2))
 

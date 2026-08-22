@@ -40,7 +40,8 @@
       all: "#embed-tab-all",
       Firma: "#embed-tab-companies",
       "Vysoká škola": "#embed-tab-universities",
-      Nemocnice: "#embed-tab-hospitals"
+      Nemocnice: "#embed-tab-hospitals",
+      "Zdravotní pojišťovna": "#embed-tab-health-insurers"
     };
     Object.entries(tabCounts).forEach(([key, selector]) => {
       const group = data.summary.groups[key];
@@ -49,7 +50,7 @@
 
     function updateSummary() {
       const group = data.summary.groups[activeCategory];
-      const label = activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : "nemocnice";
+      const label = activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : activeCategory === "Nemocnice" ? "nemocnice" : "zdravotní pojišťovny";
       const hasFinancials = group.financial_result_count > 0;
       select("#embed-profit-sum").textContent = hasFinancials ? billions(group.positive_net_result_sum_mczk) : "—";
       select("#embed-loss-sum").textContent = hasFinancials ? `−${billions(group.negative_net_result_absolute_sum_mczk)}` : "—";
@@ -83,7 +84,7 @@
         <td class="numeric">${item.top_line.value_mczk == null ? "—" : `${money(item.top_line.value_mczk)} <small>mil. Kč · ${escapeHtml(item.top_line.definition)}</small>`}</td>
         <td class="numeric ${item.top_line.net_result_mczk < 0 ? "negative" : ""}">${item.top_line.net_result_mczk == null ? "—" : `${signedMoney(item.top_line.net_result_mczk)} <small>mil. Kč</small>`}</td>
         <td class="numeric ${item.top_line.net_margin_pct < 0 ? "negative" : ""}">${percent(item.top_line.net_margin_pct)}</td>
-        <td>${item.financial_source_kind ? `<span class="data-available">${escapeHtml(item.financial_source_kind)}</span>` : '<span class="data-missing">výkaz chybí</span>'}${item.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
+        <td>${item.financial_source_kind ? `<span class="data-available">${escapeHtml(item.financial_source_kind)}</span>` : item.category === "Zdravotní pojišťovna" ? '<span class="data-missing">speciální výkaz mimo VZZ</span>' : '<span class="data-missing">výkaz chybí</span>'}${item.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
       </tr>`).join("");
       select("#embed-registry-count").textContent = `Zobrazeno ${format(visible.length)} z ${format(data.summary.groups[activeCategory].entity_count)} subjektů v záložce`;
     }
@@ -101,7 +102,7 @@
 
   Promise.all([
     fetch("data/cz-state-enterprises-2024.json?v=20260820-3"),
-    fetch("data/cz-public-entities-2024.json?v=20260820-3")
+    fetch("data/cz-public-entities-2024.json?v=20260822-1")
   ])
     .then(async responses => {
       for (const response of responses) if (!response.ok) throw new Error(`Dataset odpověděl ${response.status}`);

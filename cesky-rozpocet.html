@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="health-budget.css?v=20260820-1">
   <script src="app.js?v=20260821-annual-system-cost-baseline" defer></script>
   <script src="budget-i18n.js?v=20260821-annual-system-cost-baseline" defer></script>
-  <script src="cz-firmy-embed.js?v=20260820-3" defer></script>
+  <script src="cz-firmy-embed.js?v=20260822-1" defer></script>
 <script src="global-nav.js?v=20260821-benchmark-flags" defer></script>
   <script src="budget-shell.js?v=20260820-1" defer></script>
   <script src="cz-spending.js?v=20260820-1" defer></script>
@@ -61,7 +61,7 @@
         <a href="#cesko"><span>01</span><b>Rozpočet</b><small>2001–26</small></a>
         <a href="#struktura"><span>02</span><b>Struktura</b><small>Příjmy / výdaje</small></a>
         <a href="#utraceni"><span>03</span><b>Na co</b><small>30 účelů / 47 kapitol</small></a>
-        <a href="#statni-firmy"><span>04</span><b>Veřejné subjekty</b><small>630 organizací</small></a>
+        <a href="#statni-firmy"><span>04</span><b>Veřejné subjekty</b><small>637 organizací</small></a>
         <a href="#zdravotni-system"><span>05</span><b data-health-key="navHealth">Zdravotnictví</b><small data-health-key="navHealthFlow">Tok peněz</small></a>
         <a href="#nemocnice-benchmark"><span>06</span><b data-health-key="navHospitals">Nemocnice</b><small data-health-key="navHospitalBench">Benchmark 2024</small></a>
         <a href="#demografie"><span>07</span><b>Demografie</b><small>Model 2045</small></a>
@@ -148,7 +148,7 @@
   <section class="budget-enterprises-embed" id="statni-firmy">
     <div class="section-heading compact-heading">
       <div><span class="kicker">04 / Stát jako vlastník</span><h2>Zisk není<br>příjem rozpočtu.</h2></div>
-      <p>Úplný registr pro rok 2024 spojuje veřejně ovládané firmy, veřejné vysoké školy a nemocnice. TOP 20 strategických subjektů je zvýraznění; pod ním je filtrovatelná tabulka všech evidovaných organizací.</p>
+      <p>Registr vybraných kategorií pro rok 2024 spojuje veřejně ovládané firmy, veřejné vysoké školy, nemocnice a sedm zdravotních pojišťoven. TOP 20 strategických subjektů je zvýraznění; pod ním je filtrovatelná tabulka evidovaných organizací.</p>
     </div>
     <p class="enterprise-nonadditivity-note"><b>Účetní hranice:</b> obrat ani zisk těchto subjektů nepřičítáme k příjmům státního rozpočtu. Rozpočtovým příjmem je pouze skutečně odvedená dividenda, podíl na zisku nebo jiná platba; dotace a kapitálové vklady naopak proudí z rozpočtu do subjektu.</p>
     <div class="enterprise-bridge-kpis" aria-label="Součty dostupných výkazů veřejných subjektů">
@@ -172,19 +172,20 @@
       <a class="primary-button" href="cesko.html">Otevřít úplný profil <span>↗</span></a>
     </div>
     <section class="public-entity-registry" aria-labelledby="embed-registry-title">
-      <header><div><span>Úplný registr · 2024</span><h3 id="embed-registry-title">Firmy, školy a nemocnice</h3></div><strong id="embed-registry-coverage">—</strong></header>
+      <header><div><span>Registr vybraných kategorií · 2024</span><h3 id="embed-registry-title">Firmy, školy, nemocnice a zdravotní pojišťovny</h3></div><strong id="embed-registry-coverage">—</strong></header>
       <div class="registry-controls">
         <label><span>Hledat název nebo IČO</span><input id="embed-entity-search" type="search" placeholder="např. univerzita, nemocnice, ČEZ"></label>
-        <label><span>Úroveň vlastníka</span><select id="embed-entity-owner"><option value="all">Všichni veřejní vlastníci</option></select></label>
+        <label><span>Veřejná úroveň / systém</span><select id="embed-entity-owner"><option value="all">Všechny veřejné úrovně</option></select></label>
         <label><span>Seřadit podle</span><select id="embed-entity-sort"><option value="topline">Výnosy / obrat</option><option value="result">Výsledek</option><option value="margin">Čistá marže</option><option value="name">Název</option></select></label>
       </div>
-      <div class="registry-table-wrap" tabindex="0"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejný vlastník</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="embed-public-entity-rows"></tbody></table></div>
+      <div class="registry-table-wrap" tabindex="0"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejná úroveň / systém</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="embed-public-entity-rows"></tbody></table></div>
       <div class="registry-footer"><span id="embed-registry-count">—</span><small>Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.</small></div>
       <div class="registry-bottom-tabs" id="embed-entity-tabs" role="tablist" aria-label="Typ veřejného subjektu">
         <button type="button" role="tab" data-category="all" aria-selected="true"><span>Vše</span><small id="embed-tab-all">—</small></button>
         <button type="button" role="tab" data-category="Firma" aria-selected="false"><span>Firmy</span><small id="embed-tab-companies">—</small></button>
         <button type="button" role="tab" data-category="Vysoká škola" aria-selected="false"><span>Vysoké školy</span><small id="embed-tab-universities">—</small></button>
         <button type="button" role="tab" data-category="Nemocnice" aria-selected="false"><span>Nemocnice</span><small id="embed-tab-hospitals">—</small></button>
+        <button type="button" role="tab" data-category="Zdravotní pojišťovna" aria-selected="false"><span>Zdravotní pojišťovny</span><small id="embed-tab-health-insurers">—</small></button>
       </div>
     </section>
   </section>

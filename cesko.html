@@ -18,7 +18,7 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Česko: stát jako vlastník 2024","description":"Výsledky hospodaření a odvody 38 strategických společností a organizací ovládaných státem.","url":"https://czbudget-public-258433468858.europe-west1.run.app/cesko.html","inLanguage":"cs","temporalCoverage":"2024","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"isBasedOn":"https://www.mfcr.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf","distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://czbudget-public-258433468858.europe-west1.run.app/data/cz-state-enterprises-2024.json"}}</script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=20260820-3">
-  <script src="cz-firmy.js?v=20260820-3" defer></script>
+  <script src="cz-firmy.js?v=20260822-1" defer></script>
 </head>
 <body class="cz-enterprises-page">
   <header class="site-header">
@@ -69,19 +69,20 @@
       <article class="ranking-card focused-ranking"><header><span id="ranking-heading">Nejziskovější strategické subjekty</span><strong id="ranking-count">TOP 20</strong></header><div id="enterprise-list"></div></article>
       <aside class="reading-note"><strong id="ranking-note-title">Jak číst pořadí</strong><p id="ranking-note">ČEZ je uveden individuálně za mateřskou společnost. Správa železnic, ŘSD nebo Česká pošta plní veřejné služby; jejich výsledky proto nelze mechanicky porovnávat s čistě komerční firmou.</p><small id="reconciliation-note"></small></aside>
       <section class="public-entity-registry" aria-labelledby="registry-title">
-        <header><div><span>Úplný registr · 2024</span><h3 id="registry-title">Firmy, školy a nemocnice</h3></div><strong id="registry-coverage">—</strong></header>
+        <header><div><span>Registr vybraných kategorií · 2024</span><h3 id="registry-title">Firmy, školy, nemocnice a zdravotní pojišťovny</h3></div><strong id="registry-coverage">—</strong></header>
         <div class="registry-controls">
           <label><span>Hledat název nebo IČO</span><input id="entity-search" type="search" placeholder="např. univerzita, nemocnice, ČEZ"></label>
-          <label><span>Úroveň vlastníka</span><select id="entity-owner"><option value="all">Všichni veřejní vlastníci</option></select></label>
+          <label><span>Veřejná úroveň / systém</span><select id="entity-owner"><option value="all">Všechny veřejné úrovně</option></select></label>
           <label><span>Seřadit podle</span><select id="entity-sort"><option value="topline">Výnosy / obrat</option><option value="result">Výsledek</option><option value="margin">Čistá marže</option><option value="name">Název</option></select></label>
         </div>
-        <div class="registry-table-wrap" tabindex="0"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejný vlastník</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="public-entity-rows"></tbody></table></div>
+        <div class="registry-table-wrap" tabindex="0"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejná úroveň / systém</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="public-entity-rows"></tbody></table></div>
         <div class="registry-footer"><span id="registry-count">—</span><small>Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.</small></div>
         <div class="registry-bottom-tabs" id="entity-tabs" role="tablist" aria-label="Typ veřejného subjektu">
           <button type="button" role="tab" data-category="all" aria-selected="true"><span>Vše</span><small id="tab-all">—</small></button>
           <button type="button" role="tab" data-category="Firma" aria-selected="false"><span>Firmy</span><small id="tab-companies">—</small></button>
           <button type="button" role="tab" data-category="Vysoká škola" aria-selected="false"><span>Vysoké školy</span><small id="tab-universities">—</small></button>
           <button type="button" role="tab" data-category="Nemocnice" aria-selected="false"><span>Nemocnice</span><small id="tab-hospitals">—</small></button>
+          <button type="button" role="tab" data-category="Zdravotní pojišťovna" aria-selected="false"><span>Zdravotní pojišťovny</span><small id="tab-health-insurers">—</small></button>
         </div>
       </section>
     </section>
