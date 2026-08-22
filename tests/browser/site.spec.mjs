@@ -8,6 +8,8 @@ const routes = [
   ["international municipalities", "/municipalities/?lang=cs"],
   ["Czech municipalities", "/municipalities/czechia/?lang=cs"],
   ["Polish municipalities", "/municipalities/poland/?lang=cs"],
+  ["deep dives", "/deep-dives/?lang=cs"],
+  ["transportation deep dive", "/deep-dives/transportation/?code=CZE&lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/obce/praha/?lang=cs"],
   ["directory", "/cz/obce/?lang=cs"],
@@ -37,6 +39,22 @@ test("language state survives navigation", async ({ page }) => {
   await page.goto("/country.html?code=DEU&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("#country-name")).toContainText("Germany");
+});
+
+test("deep dives expose a dedicated topic hierarchy and country-filtered transportation story", async ({ page }) => {
+  await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator(".deep-card")).toHaveCount(2);
+  await expect(page.locator(".deep-card.available")).toContainText("Transportation");
+  await page.locator(".deep-dive-menu summary").click();
+  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(2);
+  await page.goto("/deep-dives/transportation/?code=CZE&lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#deep-dive-country")).toHaveValue("CZE");
+  await expect(page.locator(".transport-network-year")).toHaveCount(10);
+  await expect(page.locator(".transport-comparison tbody tr")).toHaveCount(10);
+  await page.locator("#deep-dive-country").selectOption("POL");
+  await expect(page).toHaveURL(/code=POL/);
+  await expect(page.locator("#deep-dive-country-name")).toHaveText("Poland");
+  await expect(page.locator(".transport-kpis")).toContainText("1,888 km");
 });
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {

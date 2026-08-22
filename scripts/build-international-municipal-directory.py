@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT.parent
 MAIN = WORKSPACE / "outputs/20260822-international-municipal-2024-2025-full"
 CORRECTIONS = WORKSPACE / "outputs/20260822-international-municipal-2024-2025-corrections"
+FRANCE = WORKSPACE / "outputs/20260822-international-municipal-france-complete"
 UA_DIRECTORY = WORKSPACE / "data/source_cache/international_municipal/UKR/local_budget_directory_2025.json"
 OUTPUT = ROOT / "data/international-municipalities.v1.json"
 
@@ -16,7 +17,7 @@ COUNTRIES = {
     "CZE": {"alpha2":"CZ","name_cs":"Česko","name_en":"Czechia","currency":"CZK","years":[2025],"counts":{"2025":6254},"stages":["enacted","revised","actual"],"measures":["revenue","expenditure","balance","cash"],"coverage_cs":"Všech 6 254 obcí","coverage_en":"All 6,254 municipalities","status":"complete","source":"https://monitor.statnipokladna.gov.cz/"},
     "POL": {"alpha2":"PL","name_cs":"Polsko","name_en":"Poland","currency":"PLN","years":[2024,2025],"counts":{"2024":2477,"2025":2479},"stages":["revised","actual"],"measures":["revenue","expenditure"],"coverage_cs":"Všechny gminy v ročních výkazech Rb-27S a Rb-28S","coverage_en":"All gminas in annual Rb-27S and Rb-28S returns","status":"complete","source":"https://www.gov.pl/web/finanse/bazy-danych8"},
     "DNK": {"alpha2":"DK","name_cs":"Dánsko","name_en":"Denmark","currency":"DKK","years":[2024,2025],"counts":{"2024":98,"2025":98},"stages":["enacted","actual"],"measures":["revenue","expenditure","financing"],"coverage_cs":"Všech 98 obcí; rozpočty i závěrečné účty","coverage_en":"All 98 municipalities; budgets and final accounts","status":"complete","source":"https://www.statbank.dk/BUDK32"},
-    "FRA": {"alpha2":"FR","name_cs":"Francie","name_en":"France","currency":"EUR","years":[2024,2025],"counts":{"2024":3484,"2025":3493},"stages":["actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Obce zveřejňující křížení účet × funkce; hlavní i vedlejší rozpočty","coverage_en":"Communes publishing account × function detail; main and supplementary budgets","status":"partial","source":"https://data.economie.gouv.fr/"},
+    "FRA": {"alpha2":"FR","name_cs":"Francie","name_en":"France","currency":"EUR","years":[2024,2025],"counts":{"2024":35031,"2025":34877},"stages":["actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všechny obce; funkční detail tam, kde jej obec vykazuje; hlavní i vedlejší rozpočty","coverage_en":"All communes; functional detail where reported; main and supplementary budgets","status":"complete","source":"https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/"},
     "SWE": {"alpha2":"SE","name_cs":"Švédsko","name_en":"Sweden","currency":"SEK","years":[2024,2025],"counts":{"2024":290,"2025":290},"stages":["actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 290 obcí; náklady, výnosy a rozvaha","coverage_en":"All 290 municipalities; costs, income and balance sheet","status":"complete","source":"https://www.scb.se/en/OE0107"},
     "GBR": {"alpha2":"GB","name_cs":"Anglie","name_en":"England","currency":"GBP","years":[2024,2025],"counts":{"2024":318,"2025":317},"stages":["actual"],"measures":["revenue","expenditure","financing"],"coverage_cs":"Odevzdané výkazy anglických obcí a GLA; bez policie a hasičů","coverage_en":"Submitted English council and GLA returns; excludes police and fire","status":"complete","source":"https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set"},
     "UKR": {"alpha2":"UA","name_cs":"Ukrajina","name_en":"Ukraine","currency":"UAH","years":[2024,2025],"counts":{"2024":1473,"2025":1473},"stages":["enacted","revised","actual"],"measures":["revenue","expenditure"],"coverage_cs":"Rozpočty územních komunit včetně Kyjeva; bez oblastí a rajónů","coverage_en":"Territorial-community budgets including Kyiv; excludes oblast and district budgets","status":"downloading","source":"https://api.openbudget.gov.ua/swagger-ui.html"},
@@ -55,7 +56,7 @@ def main():
         "balance":row["amounts"].get("budget_balance"), "population":row.get("population",{}).get("value"),
         "url":row.get("seo",{}).get("path"),
     } for row in snapshot["municipalities"]]
-    sources = [(MAIN,"POL"),(MAIN,"FRA"),(MAIN,"SWE"),(CORRECTIONS,"DNK"),(CORRECTIONS,"GBR")]
+    sources = [(MAIN,"POL"),(FRANCE,"FRA"),(MAIN,"SWE"),(CORRECTIONS,"DNK"),(CORRECTIONS,"GBR")]
     seen = {row["id"] for row in entities}
     for bundle, country in sources:
         for row in read_jsonl(bundle / "public_entities.jsonl.gz"):

@@ -1,9 +1,12 @@
 import importlib.util
+import csv
 import io
 import json
 import struct
 import tempfile
 import unittest
+import zipfile
+from argparse import Namespace
 from decimal import Decimal
 from pathlib import Path
 
@@ -59,6 +62,47 @@ class InternationalMunicipalHelpersTest(unittest.TestCase):
         self.assertEqual(MODULE.french_insee({"NDEPT": "002", "INSEE": "123"}), "02123")
         self.assertEqual(MODULE.french_insee({"NDEPT": "034", "INSEE": "172"}), "34172")
         self.assertEqual(MODULE.french_insee({"NDEPT": "971", "INSEE": "05"}), "971005")
+
+    def test_french_csv_rows_reads_semicolon_cp1252_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "balance.zip"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr("balance.csv", "CATEG;NDEPT;INSEE;LBUDG\r\nCommune;034;172;Béziers\r\n".encode("cp1252"))
+            rows = list(MODULE.french_csv_rows(path))
+            self.assertEqual(rows, [(2, "balance.csv", {"CATEG": "Commune", "NDEPT": "034", "INSEE": "172", "LBUDG": "Béziers"})])
+
+    def test_france_census_fills_communes_without_duplicate_function_facts(self):
+        fields = ["CATEG", "NDEPT", "INSEE", "LBUDG", "CREGI", "FONCTION", "COMPTE", "CBUDG", "NOMEN", "OBNETDEB", "OBNETCRE", "SD", "SC"]
+        functional = [dict(zip(fields, ["Commune", "001", "001", "Alpha", "84", "01", "641", "1", "M57", "10", "0", "10", "0"]))]
+        census = [
+            dict(zip(fields, ["Commune", "001", "001", "Alpha", "84", "", "641", "1", "M57", "10", "0", "10", "0"])),
+            dict(zip(fields, ["Commune", "001", "002", "Beta", "84", "", "641", "1", "M57", "20", "0", "20", "0"])),
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths = {}
+            for detail, rows in (("function", functional), ("census", census)):
+                path = root / f"{detail}.zip"
+                stream = io.StringIO(newline="")
+                writer = csv.DictWriter(stream, fieldnames=fields, delimiter=";", lineterminator="\r\n")
+                writer.writeheader(); writer.writerows(rows)
+                with zipfile.ZipFile(path, "w") as archive:
+                    archive.writestr(f"{detail}.csv", stream.getvalue().encode("cp1252"))
+                paths[detail] = path
+            sources = [
+                {"id": "census", "kind": "actual_and_balance", "detail": "census", "url": "https://example.test/census", "filename": "census.zip"},
+                {"id": "function", "kind": "actual_and_balance", "detail": "function", "url": "https://example.test/function", "filename": "function.zip"},
+            ]
+            args = Namespace(source_file=[f"census={paths['census']}", f"function={paths['function']}"], refresh=False, offline=True, cache_dir=root, api_workers=1, openbudget_token=None, max_entities=None)
+            bundle = MODULE.JsonlBundle(root / "output", "none", 0)
+            context = MODULE.Context({}, args, bundle)
+            result = MODULE.run_france(context, "FRA", {"year": 2025, "currency": "EUR", "sources": sources, "coverage": "test"})
+            bundle.close()
+            entities = [json.loads(line) for line in (root / "output/public_entities.jsonl").read_text().splitlines()]
+            facts = [json.loads(line) for line in (root / "output/municipal_budget_line_facts.jsonl").read_text().splitlines()]
+            self.assertEqual(result, {"entities": 2, "functional_entities": 1})
+            self.assertEqual({row["public_entity_id"] for row in entities}, {"FR:01001", "FR:01002"})
+            self.assertEqual([(row["public_entity_id"], row["source_id"]) for row in facts], [("FR:01001", "function"), ("FR:01002", "census")])
 
     def test_english_variable_side_is_deterministic(self):
         self.assertEqual(MODULE.uk_side("RO1_sales_fees_income"), "revenue")
