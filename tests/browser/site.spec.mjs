@@ -8,6 +8,7 @@ const routes = [
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/obce/praha/?lang=cs"],
   ["directory", "/cz/obce/?lang=cs"],
+  ["cities", "/cz/mesta/?lang=cs"],
 ];
 
 for (const [name, path] of routes) {
@@ -146,4 +147,22 @@ test("all representative page menus resolve and primary navigation routes correc
   await expect(page.locator(".country-menu-panel a")).toHaveCount(12);
   await page.locator('.country-menu-panel a[href*="code=CZE"]').click();
   await expect(page).toHaveURL(/\/country\.html\?code=CZE&lang=cs/);
+});
+
+test("cities use the functional unified menu on desktop and mobile", async ({ page }) => {
+  await page.goto("/cz/mesta/?lang=cs", { waitUntil: "networkidle" });
+  const countryMenu = page.locator(".country-menu");
+  await countryMenu.locator("summary").click();
+  await expect(countryMenu).toHaveAttribute("open", "");
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(12);
+  const panelBox = await countryMenu.locator(".country-menu-panel").boundingBox();
+  expect(panelBox?.width).toBeLessThanOrEqual(430);
+  expect(panelBox?.height).toBeLessThan(700);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.locator(".global-nav")).toBeVisible();
+  await expect(page.locator('[data-global-nav="cities"]')).toBeVisible();
+  await page.locator('[data-global-nav="home"]').click();
+  await expect(page).toHaveURL(/\/index\.html\?lang=cs/);
 });

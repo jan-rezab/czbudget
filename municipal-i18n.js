@@ -17,6 +17,12 @@
     const railStyles = document.createElement("link");
     railStyles.rel = "stylesheet"; railStyles.href = `${root}styles.css?v=20260822-section-rail`; document.head.append(railStyles);
   }
+  if (!document.querySelector('link[href*="chart-system.css"]')) {
+    const navigationStyles = document.createElement("link");
+    navigationStyles.rel = "stylesheet";
+    navigationStyles.href = `${root}chart-system.css?v=20260822-municipal-nav`;
+    document.head.append(navigationStyles);
+  }
   const header = document.querySelector(".cz-header");
   if (header) {
     header.classList.add("has-global-nav");
