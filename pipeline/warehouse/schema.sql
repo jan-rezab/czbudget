@@ -266,6 +266,8 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.municipal_budget_lin
   source_budget_item_type_code STRING,
   functional_paragraph_code STRING OPTIONS(description = 'Functional paragraph on the same fact row as economic item'),
   economic_item_code STRING NOT NULL OPTIONS(description = 'Economic item on the same fact row as functional paragraph'),
+  functional_classification_id STRING OPTIONS(description = 'Country-specific classification version for functional_paragraph_code'),
+  economic_classification_id STRING OPTIONS(description = 'Country-specific classification version for economic_item_code'),
   amount_local NUMERIC NOT NULL,
   currency_code STRING NOT NULL,
   amount_eur NUMERIC,
@@ -277,6 +279,8 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.municipal_budget_lin
   source_sheet STRING,
   source_id STRING NOT NULL,
   ingestion_run_id STRING NOT NULL,
+  coverage_type STRING DEFAULT 'census' NOT NULL OPTIONS(description = 'census, survey, published_subset or administrative_return'),
+  is_imputed BOOL DEFAULT FALSE NOT NULL,
   quality_flags ARRAY<STRING>,
   loaded_at TIMESTAMP NOT NULL
 )
@@ -300,6 +304,8 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.public_entity_balanc
   ingestion_run_id STRING NOT NULL,
   source_row_number INT64,
   source_sheet STRING,
+  coverage_type STRING DEFAULT 'census' NOT NULL,
+  is_imputed BOOL DEFAULT FALSE NOT NULL,
   quality_flags ARRAY<STRING>,
   loaded_at TIMESTAMP NOT NULL
 )
@@ -321,6 +327,8 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.public_entity_cash_f
   ingestion_run_id STRING NOT NULL,
   source_row_number INT64,
   source_sheet STRING,
+  coverage_type STRING DEFAULT 'census' NOT NULL,
+  is_imputed BOOL DEFAULT FALSE NOT NULL,
   quality_flags ARRAY<STRING>,
   loaded_at TIMESTAMP NOT NULL
 )
@@ -358,17 +366,25 @@ ALTER TABLE `czbudget-janrezab.budget_detail.public_entities`
 
 ALTER TABLE `czbudget-janrezab.budget_detail.municipal_budget_line_facts`
   ADD COLUMN IF NOT EXISTS source_budget_item_type_code STRING,
-  ADD COLUMN IF NOT EXISTS is_summary_row BOOL;
+  ADD COLUMN IF NOT EXISTS is_summary_row BOOL,
+  ADD COLUMN IF NOT EXISTS functional_classification_id STRING,
+  ADD COLUMN IF NOT EXISTS economic_classification_id STRING,
+  ADD COLUMN IF NOT EXISTS coverage_type STRING DEFAULT 'census' NOT NULL,
+  ADD COLUMN IF NOT EXISTS is_imputed BOOL DEFAULT FALSE NOT NULL;
 
 ALTER TABLE `czbudget-janrezab.budget_detail.public_entity_balance_sheet_facts`
   ADD COLUMN IF NOT EXISTS statement_line_code STRING,
   ADD COLUMN IF NOT EXISTS balance_measure STRING,
   ADD COLUMN IF NOT EXISTS source_row_number INT64,
-  ADD COLUMN IF NOT EXISTS source_sheet STRING;
+  ADD COLUMN IF NOT EXISTS source_sheet STRING,
+  ADD COLUMN IF NOT EXISTS coverage_type STRING DEFAULT 'census' NOT NULL,
+  ADD COLUMN IF NOT EXISTS is_imputed BOOL DEFAULT FALSE NOT NULL;
 
 ALTER TABLE `czbudget-janrezab.budget_detail.public_entity_cash_facts`
   ADD COLUMN IF NOT EXISTS source_row_number INT64,
-  ADD COLUMN IF NOT EXISTS source_sheet STRING;
+  ADD COLUMN IF NOT EXISTS source_sheet STRING,
+  ADD COLUMN IF NOT EXISTS coverage_type STRING DEFAULT 'census' NOT NULL,
+  ADD COLUMN IF NOT EXISTS is_imputed BOOL DEFAULT FALSE NOT NULL;
 
 ALTER TABLE `czbudget-janrezab.budget_detail.municipal_budget_line_facts`
   SET OPTIONS (require_partition_filter = TRUE);
@@ -438,6 +454,42 @@ GROUP BY
   fact.fiscal_period,
   fact.budget_stage,
   fact.currency_code;
+
+CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.international_municipal_budget_line_details` AS
+SELECT
+  fact.public_entity_id,
+  entity.entity_name,
+  entity.country_code_alpha3 AS country_code,
+  entity.national_entity_code,
+  fact.fiscal_year,
+  fact.fiscal_period,
+  fact.reporting_scope,
+  fact.budget_stage,
+  fact.budget_side,
+  fact.functional_classification_id,
+  fact.functional_paragraph_code,
+  function_node.node_name_native AS functional_name_native,
+  fact.economic_classification_id,
+  fact.economic_item_code,
+  economic_node.node_name_native AS economic_name_native,
+  fact.amount_local,
+  fact.currency_code,
+  fact.coverage_type,
+  fact.is_imputed,
+  fact.source_id,
+  fact.ingestion_run_id,
+  fact.quality_flags
+FROM `czbudget-janrezab.budget_detail.municipal_budget_line_facts` AS fact
+JOIN `czbudget-janrezab.budget_detail.public_entities` AS entity
+  USING (public_entity_id)
+LEFT JOIN `czbudget-janrezab.budget_detail.budget_nodes` AS function_node
+  ON function_node.classification_id = fact.functional_classification_id
+  AND function_node.node_code = fact.functional_paragraph_code
+  AND fact.fiscal_year BETWEEN function_node.effective_from_year AND COALESCE(function_node.effective_to_year, 9999)
+LEFT JOIN `czbudget-janrezab.budget_detail.budget_nodes` AS economic_node
+  ON economic_node.classification_id = fact.economic_classification_id
+  AND economic_node.node_code = fact.economic_item_code
+  AND fact.fiscal_year BETWEEN economic_node.effective_from_year AND COALESCE(economic_node.effective_to_year, 9999);
 
 CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.city_latest_metrics` AS
 SELECT

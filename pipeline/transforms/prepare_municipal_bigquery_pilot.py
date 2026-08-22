@@ -352,10 +352,13 @@ def write_pilot_facts(
                 "reporting_scope": "standalone_accounting_unit", "budget_stage": stage, "budget_side": side,
                 "source_budget_item_type_code": row[7].strip() or None,
                 "functional_paragraph_code": paragraph, "economic_item_code": item,
+                "functional_classification_id": "CZ_RS_PARAGRAPH_2025",
+                "economic_classification_id": "CZ_RS_ITEM_2025",
                 "amount_local": numeric_json(amount), "currency_code": "CZK", "amount_eur": None, "fx_date": None,
                 "is_consolidation_item": item in CONSOLIDATION_ITEMS, "is_financing": False, "is_summary_row": False,
                 "source_row_number": line_number, "source_sheet": "FINM201_2025012.csv",
                 "source_id": "cz-monitor-finm-2025-12", "ingestion_run_id": finm_run_id,
+                "coverage_type": "census", "is_imputed": False,
                 "quality_flags": [], "loaded_at": loaded_at,
             })
 
@@ -379,10 +382,12 @@ def write_pilot_facts(
                 "public_entity_id": entity_id(row[4]), "fiscal_year": 2025, "fiscal_period": "2025-12",
                 "reporting_scope": "standalone_accounting_unit", "budget_stage": stage, "budget_side": "financing",
                 "source_budget_item_type_code": None, "functional_paragraph_code": None, "economic_item_code": item,
+                "functional_classification_id": None, "economic_classification_id": "CZ_RS_ITEM_2025",
                 "amount_local": numeric_json(amount), "currency_code": "CZK", "amount_eur": None, "fx_date": None,
                 "is_consolidation_item": False, "is_financing": True, "is_summary_row": summary,
                 "source_row_number": line_number, "source_sheet": "FINM202_2025012.csv",
                 "source_id": "cz-monitor-finm-2025-12", "ingestion_run_id": finm_run_id,
+                "coverage_type": "census", "is_imputed": False,
                 "quality_flags": ["reported_financing_total"] if summary else [], "loaded_at": loaded_at,
             })
 
@@ -410,6 +415,7 @@ def write_pilot_facts(
                     "amount_local": numeric_json(amount), "currency_code": "CZK", "amount_eur": None, "fx_date": None,
                     "source_id": "cz-monitor-rozv-2025-12", "ingestion_run_id": rozv_run_id,
                     "source_row_number": line_number, "source_sheet": member, "quality_flags": [], "loaded_at": loaded_at,
+                    "coverage_type": "census", "is_imputed": False,
                 })
             if account in CASH_ACCOUNTS:
                 for index, statement_date in ((12, "2025-12-31"), (13, "2024-12-31")):
@@ -423,6 +429,7 @@ def write_pilot_facts(
                         "currency_code": "CZK", "amount_eur": None, "fx_date": None,
                         "source_id": "cz-monitor-rozv-2025-12", "ingestion_run_id": rozv_run_id,
                         "source_row_number": line_number, "source_sheet": member, "quality_flags": [], "loaded_at": loaded_at,
+                        "coverage_type": "census", "is_imputed": False,
                     })
 
     for writer in (raw, budget, balance, cash):
