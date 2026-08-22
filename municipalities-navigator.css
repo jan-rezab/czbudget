@@ -1,0 +1,56 @@
+.municipality-switch {
+  display: inline-flex;
+  margin-top: 32px;
+  border: 1px solid #15201d;
+  background: #fffdf7;
+}
+.municipality-switch a {
+  min-width: 130px;
+  padding: 13px 22px;
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.municipality-switch a + a { border-left: 1px solid #15201d; }
+.municipality-switch a.active { background: #15201d; color: #fff; }
+.municipal-controls { grid-template-columns: .8fr 1fr 1.35fr .65fr auto; }
+.municipal-controls .control-disabled { opacity: .42; }
+.capital-card { border-top: 4px solid #c74c2f; }
+.capital-card header small { color: #c74c2f; }
+.capital-country-code { width: 31px; height: 21px; display: grid; place-items: center; background: #15201d; color: #fff; font-size: 9px; letter-spacing: .08em; }
+.czechia-hero h1 em { color: #a8b63f; }
+.czechia-destination-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: #aeb6ac;
+  border: 1px solid #aeb6ac;
+}
+.czechia-destination-grid > a {
+  min-height: 330px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  background: #fffdf7;
+  color: inherit;
+  text-decoration: none;
+}
+.czechia-destination-grid > a:hover { background: #f0efc9; }
+.czechia-destination-grid span { font-size: 58px; letter-spacing: -.05em; }
+.czechia-destination-grid h3 { margin: 35px 0 10px; font-size: 28px; }
+.czechia-destination-grid p { font-size: 14px; line-height: 1.55; }
+.czechia-destination-grid b { margin-top: auto; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+@media (max-width: 1000px) {
+  .municipal-controls { grid-template-columns: 1fr 1fr; }
+  .czechia-destination-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 650px) {
+  .municipality-switch { margin-top: 20px; width: 100%; }
+  .municipality-switch a { min-width: 0; flex: 1; }
+  .municipal-controls { grid-template-columns: 1fr; }
+  .czechia-destination-grid > a { min-height: 280px; }
+}
