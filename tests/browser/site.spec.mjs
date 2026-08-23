@@ -49,6 +49,15 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("state budget translates its Czech static body on an initial English visit", async ({ page }) => {
+  await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator(".budget-hero h1")).toHaveText("The Czech budget.");
+  await expect(page.locator(".budget-hero")).toContainText("Twenty-five years of revenue and expenditure");
+  await expect(page.locator(".fiscal-perimeter-map")).toContainText("Three perimeters.");
+  await expect(page.locator(".fiscal-perimeter-map")).not.toContainText("Tři účty.");
+});
+
 test("comparison and methodology live outside the homepage", async ({ page }) => {
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#compare")).toHaveCount(0);

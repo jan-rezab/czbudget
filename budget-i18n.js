@@ -33,6 +33,10 @@
   };
   const enToCs = Object.fromEntries(Object.entries(csToEn).map(([cs,en]) => [en,cs]));
   let lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("psd-lang") || "cs";
+  // The HTML shipped by this page is always Czech. language-bootstrap.js sets
+  // <html lang> before this deferred script runs, so it cannot be used as a
+  // proxy for the language currently rendered in the body.
+  let renderedLang = "cs";
   let translating = false;
   const replaceText = (text, dictionary) => {
     const trimmed = text.trim();
@@ -46,8 +50,10 @@
   }
   function applyLanguage(next) {
     if (translating) return; translating = true;
-    const previous = document.documentElement.lang === "en" ? "en" : "cs";
-    if (previous !== next) translateTree(document.body, next === "en" ? csToEn : enToCs);
+    if (renderedLang !== next) {
+      translateTree(document.body, next === "en" ? csToEn : enToCs);
+      renderedLang = next;
+    }
     lang = next; document.documentElement.lang = lang; localStorage.setItem("psd-lang", lang);
     document.querySelectorAll("[data-budget-lang]").forEach(button => button.classList.toggle("active", button.dataset.budgetLang === lang));
     const home = document.getElementById("budget-home-link"); if (home) home.href = `index.html?lang=${lang}`;
