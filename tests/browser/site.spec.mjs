@@ -11,6 +11,9 @@ const routes = [
   ["international municipalities", "/municipalities/?lang=cs"],
   ["Czech municipalities", "/municipalities/czechia/?lang=cs"],
   ["Polish municipalities", "/municipalities/poland/?lang=cs"],
+  ["Norwegian municipalities", "/municipalities/norway/?lang=en"],
+  ["Dutch municipalities", "/municipalities/netherlands/?lang=en"],
+  ["Finnish municipalities", "/municipalities/finland/?lang=en"],
   ["deep dives", "/deep-dives/?lang=cs"],
   ["transportation deep dive", "/deep-dives/transportation/?code=CZE&lang=cs"],
   ["health deep dive", "/deep-dives/health/?code=CZE&lang=cs"],
@@ -118,7 +121,7 @@ test("deep dives expose a dedicated topic hierarchy and country-filtered transpo
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(7);
+  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(10);
   await expect(page.locator("#total-entities")).not.toHaveText("—");
   await expect(page.locator("#type-filter option[value='all']")).toHaveText("Municipalities + capitals");
   await expect(page.locator("#municipality-grid .capital-card")).toHaveCount(27);
@@ -139,7 +142,7 @@ test("international municipality directory filters by country, year and search",
 });
 
 test("every covered country has a municipality homepage and the navigator connects them", async ({ page, request }) => {
-  const countries = ["czechia", "poland", "denmark", "france", "sweden", "england", "ukraine"];
+  const countries = ["czechia", "poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland"];
   for (const slug of countries) {
     const response = await request.get(`/municipalities/${slug}/?lang=en`);
     expect(response.ok(), `${slug} municipality homepage failed`).toBeTruthy();

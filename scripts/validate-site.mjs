@@ -35,6 +35,7 @@ const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
 const municipalI18n = await readFile("municipal-i18n.js", "utf8");
 const languageBootstrap = await readFile("language-bootstrap.js", "utf8");
 const internationalMunicipalities = JSON.parse(await readFile("data/international-municipalities.v1.json", "utf8"));
+const benchmarkMunicipalities = await Promise.all(["nor", "nld", "fin"].map((code) => readFile(`data/municipal-benchmarks/${code}.json`, "utf8").then(JSON.parse)));
 const internationalMunicipalPage = await readFile("municipalities/index.html", "utf8");
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
 const internationalMunicipalScript = await readFile("municipalities.js", "utf8");
@@ -42,12 +43,13 @@ const municipalityCountryScript = await readFile("municipalities-country.js", "u
 const municipalityCountrySlugs = ["poland", "denmark", "france", "sweden", "england", "ukraine"];
 const municipalityCountryPages = await Promise.all(municipalityCountrySlugs.map((slug) => readFile(`municipalities/${slug}/index.html`, "utf8")));
 if (snapshot.municipalities.length !== 6254) throw new Error("Expected 6,254 municipalities");
-if (internationalMunicipalities.countries.length !== 7 || internationalMunicipalities.entities.length < 14000) throw new Error("Expected seven-country municipality directory with at least 14,000 entities");
+if (internationalMunicipalities.countries.length !== 10 || internationalMunicipalities.entities.length < 46000) throw new Error("Expected ten-country municipality directory with at least 46,000 entities");
+if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.length, 0) !== 1010) throw new Error("Expected 1,010 Nordic and Dutch municipal benchmark profiles");
 const franceMunicipalities = internationalMunicipalities.countries.find((country) => country.code === "FRA");
 if (franceMunicipalities?.status !== "complete" || franceMunicipalities.directory_count < 34000) throw new Error("Expected complete French commune coverage");
 if (!internationalMunicipalPage.includes('id="type-filter"') || !internationalMunicipalPage.includes('value="capital"') || !internationalMunicipalPage.includes('id="country-filter"') || !internationalMunicipalPage.includes('id="municipality-grid"') || !internationalMunicipalScript.includes("renderDirectory") || !internationalMunicipalScript.includes("city.eu_capital")) throw new Error("Municipality hub must expose country and EU-capital filters");
 if (!czechMunicipalPage.includes('id="cz-insight-grid"') || !czechMunicipalPage.includes('data-destination="directory"') || !czechMunicipalPage.includes('data-destination="cities"')) throw new Error("Czechia municipality detail must expose insights and downstream municipal views");
-if (!internationalMunicipalPage.includes('id="municipality-country-switch"') || !czechMunicipalPage.includes('id="municipality-country-switch"')) throw new Error("Municipality hub and Czechia detail must expose the seven-country navigator");
+if (!internationalMunicipalPage.includes('id="municipality-country-switch"') || !czechMunicipalPage.includes('id="municipality-country-switch"')) throw new Error("Municipality hub and Czechia detail must expose the ten-country navigator");
 if (municipalityCountryPages.some((page) => !page.includes('municipalities-country.js') || !page.includes('id="country-insight-grid"') || !page.includes('id="country-municipality-grid"')) || !municipalityCountryScript.includes("const profiles=") || !municipalityCountryScript.includes("renderDirectory")) throw new Error("Every covered country must have an insight-led municipality homepage and directory");
 if (snapshot.scope.combined_unique_entity_count !== 6267) throw new Error("Expected 6,267 unique municipal and regional entities");
 if (history.cities.length !== 27 || history.cities.some((city) => city.series.length !== 20)) throw new Error("Expected 20 annual observations for 27 large cities");
@@ -138,6 +140,7 @@ for (const path of await htmlFiles()) {
 }
 for (const required of ["index.html", "comparison.html", "methodology.html", "about.html", "site-header.css", "site-pages.js", "site-pages.css", "global-footer.js", "global-footer.css", "homepage-category.js", "homepage-category.css", "deep-dives/index.html", "deep-dives/transportation/index.html", "deep-dives.js", "deep-dives.css", "data/country-parity.v1.json", "data/contracts/country-parity.schema.json", "data/country-spending-comparison.v1.json", "data/country-functional-budgets.v1.json", "data/road-network-history.v1.json", "data/country-cash-in.v1.json", "data/country-provider-networks.v1.json", "data/international-municipalities.v1.json", "data/municipal-size-benchmark.v1.json", "municipalities.html", "municipalities/index.html", "municipalities/czechia/index.html", "municipalities.js", "municipalities-czechia.js", "municipalities.css", "municipalities-navigator.css", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-parity.js", "country-parity.css", "country-spending.js", "country-health.js", "country-providers.js", "country-functions.js", "country-functions.css", "country-cash-in.js", "country-cash-in.css", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/obce/index.html", "cz/mesta/index.html", "municipal-i18n.js", "scripts/build-country-parity.mjs", "scripts/build-country-functional-budgets.mjs", "pipeline/transforms/prepare_road_network_history.py", "scripts/build-country-cash-in.mjs", "scripts/build-country-provider-networks.mjs", "scripts/export-municipal-breakdowns.sql", "scripts/export-municipal-budget-codebook.sql", "scripts/merge-municipal-breakdowns.mjs", "sitemap.xml", ...["cz","de","dk","fr","gb","pl","se","ch","ua","us"].map((code)=>`assets/flags/${code}.svg`)]) await stat(required);
 await stat("scripts/build-municipality-country-pages.mjs");
+for (const required of ["municipalities/norway/index.html", "municipalities/netherlands/index.html", "municipalities/finland/index.html", "municipality-benchmark-country.js", "municipal-benchmark-profile.css", ...["no", "nl", "fi"].map((code) => `assets/flags/${code}.svg`)]) await stat(required);
 await stat("data/transport-budget-detail.v1.json");
 await stat("scripts/build-transport-budget-detail.mjs");
 console.log("CZ Budget site validation passed");
