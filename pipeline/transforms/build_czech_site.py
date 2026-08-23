@@ -16,7 +16,7 @@ from urllib.parse import quote
 ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[3]))
 WEB = ROOT / "website"
 DATASET = WEB / "data/benchmark.v1.json"
-PUBLIC_ORIGIN = os.environ.get("PUBLIC_ORIGIN", "https://czbudget-public-258433468858.europe-west1.run.app").rstrip("/")
+PUBLIC_ORIGIN = os.environ.get("PUBLIC_ORIGIN", "https://publicspendingdata.org").rstrip("/")
 METRICS = {
     "revenue_actual": ("Příjmy", "amounts"),
     "expense_actual": ("Výdaje", "amounts"),

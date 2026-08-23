@@ -94,6 +94,9 @@ chybou, pokud v projektu existuje jiná služba `czbudget-*`. Legacy služba
 `czbudget-web` byla po úplném porovnání zdrojů zrušena; nesmí se znovu vytvořit.
 Projekt Riverdata není součástí tohoto deploymentu.
 
+Veřejná canonical adresa je `https://publicspendingdata.org`. Jednorázové
+připojení domény a následnou kontrolu popisuje `PUBLIC_DOMAIN_DEPLOYMENT.md`.
+
 Lokální kontrola před commitem:
 
 ```bash

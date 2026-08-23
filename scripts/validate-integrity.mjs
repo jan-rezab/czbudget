@@ -275,7 +275,6 @@ assert(close(componentTotal(health.system_2023.sources), health.system_2023.tota
 assert(close(componentTotal(health.system_2023.destinations), health.system_2023.total_bn, 0.001), "Health-system destination total mismatch");
 
 const knownDead = [
-  "publicspendingdata.org",
   "dublincity.ie/council/council-spending-revenue/budgets",
   "madrid.es/portales/munimadrid/es/Informacion-financiera/",
   "statskontoret.se/english/outcome-of-the-central-government-budget/",
@@ -291,6 +290,7 @@ const nginx = await readFile("nginx.conf.template", "utf8");
 for (const header of ["Strict-Transport-Security", "X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy", "Permissions-Policy", "Content-Security-Policy"]) {
   assert(nginx.includes(`add_header ${header}`), `Nginx is missing ${header}`);
 }
+assert(nginx.includes("return 308 https://publicspendingdata.org$request_uri;"), "Nginx must redirect www to the canonical apex domain");
 const dockerfile = await readFile("Dockerfile", "utf8");
 assert(/^FROM\s+\S+@sha256:[a-f0-9]{64}$/m.test(dockerfile), "Docker base image is not pinned by digest");
 const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
@@ -309,7 +309,7 @@ if (!dataOnly) {
     assert(new Set(ids).size === ids.length, `Duplicate HTML IDs in ${relative}`);
     const canonical = content.match(/<link\s+[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)/i)?.[1];
     assert(Boolean(canonical), `Missing canonical URL in ${relative}`);
-    if (canonical) assert(canonical.startsWith("https://czbudget-public-258433468858.europe-west1.run.app"), `Non-canonical host in ${relative}`);
+    if (canonical) assert(canonical.startsWith("https://publicspendingdata.org"), `Non-canonical host in ${relative}`);
     for (const match of content.matchAll(/<(?:a|link|script|img)\b[^>]*(?:href|src)=["']([^"']+)["']/gi)) {
       const reference = match[1];
       if (!reference || /^(?:https?:|mailto:|tel:|data:|javascript:|#|\/\/)/.test(reference)) continue;
@@ -336,7 +336,7 @@ if (!dataOnly) {
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
   for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
-    assert(locations.includes(`https://czbudget-public-258433468858.europe-west1.run.app${publicPath}`), `Sitemap missing ${publicPath}`);
+    assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);
   for (const entity of benchmarkMunicipalities) assert(locations.some((url) => url.endsWith(entity.url)), `Sitemap missing ${entity.url}`);

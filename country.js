@@ -79,7 +79,7 @@ function translate(){
   document.querySelectorAll("[data-currency]").forEach(b=>b.classList.toggle("active",b.dataset.currency===state.currency));
   const back=$("#back-link"); if(back) back.href=`index.html?lang=${state.lang}#countries`; $("#home-link").href=`index.html?lang=${state.lang}`;
   document.title=`${name()} — Public Spending Data`;
-  const origin="https://czbudget-public-258433468858.europe-west1.run.app";
+  const origin="https://publicspendingdata.org";
   const canonical=`${origin}/country.html?code=${encodeURIComponent(state.code)}`;
   $("#canonical-url").href=canonical;
   $("#alternate-cs").href=`${canonical}&lang=cs`;

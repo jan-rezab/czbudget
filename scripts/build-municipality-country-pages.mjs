@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 
-const origin="https://czbudget-public-258433468858.europe-west1.run.app";
+const origin="https://publicspendingdata.org";
 const pages={
   poland:{code:"POL",title:"Polish municipalities",description:"Coverage, accounting stages and a searchable directory of all Polish gminas."},
   denmark:{code:"DNK",title:"Danish municipalities",description:"Budgets, final accounts and a searchable directory of all 98 Danish municipalities."},
