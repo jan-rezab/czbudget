@@ -104,6 +104,68 @@
   color: #69716c;
   font-size: 12px;
 }
+.municipal-budget-rankings { background: #e9ece3; }
+.municipal-balance-split { display: grid; grid-template-columns: 240px 240px 1fr; gap: 1px; margin: 0 0 28px; border: 1px solid #aeb6ac; background: #aeb6ac; }
+.municipal-balance-split article,.municipal-balance-split>p { min-height: 126px; margin: 0; padding: 20px 22px; background: #fffdf7; }
+.municipal-balance-split article { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+.municipal-balance-split article span { grid-column: 1/-1; color: #69716c; font: 700 11px/1.35 monospace; text-transform: uppercase; letter-spacing: .06em; }
+.municipal-balance-split article strong { font: 500 36px/1 Georgia,serif; }
+.municipal-balance-split article small { color: #69716c; font: 700 13px monospace; }
+.municipal-balance-split article:first-child strong { color: #287158; }
+.municipal-balance-split article:nth-child(2) strong { color: #c93237; }
+.municipal-balance-split>p { display: flex; align-items: center; color: #4f5954; font-size: 16px; line-height: 1.55; }
+.municipal-balance-split>p strong { margin-left: .35em; color: #287158; font-size: 20px; }
+.municipal-ranking-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.municipal-ranking-card { min-width: 0; border: 1px solid #aeb6ac; background: #fffdf7; }
+.municipal-ranking-card>header { min-height: 92px; padding: 19px 20px; border-top: 4px solid #171918; border-bottom: 1px solid #d4d6cf; }
+.municipal-ranking-card.surplus>header { border-top-color: #287158; }
+.municipal-ranking-card.deficit>header { border-top-color: #c93237; }
+.municipal-ranking-card>header span,.municipal-ranking-card>header small { display: block; }
+.municipal-ranking-card>header span { font: 500 25px/1.05 Georgia,serif; }
+.municipal-ranking-card>header small { margin-top: 8px; color: #69716c; font: 11px monospace; text-transform: uppercase; }
+.municipal-ranking-card ol { margin: 0; padding: 5px 18px 14px; list-style: none; }
+.municipal-ranking-card li+li { border-top: 1px solid #e1e0da; }
+.municipal-ranking-card li a { min-height: 68px; display: grid; grid-template-columns: 24px minmax(0,1fr) 70px; grid-template-rows: 1fr 5px; gap: 5px 9px; align-items: center; color: inherit; text-decoration: none; }
+.municipal-ranking-card li a:hover .municipal-rank-name strong { text-decoration: underline; text-decoration-color: #a8b63f; text-underline-offset: 4px; }
+.municipal-rank-number { color: #8b918d; font: 11px monospace; }
+.municipal-rank-name { min-width: 0; }
+.municipal-rank-name strong,.municipal-rank-name small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.municipal-rank-name strong { font-size: 13px; }
+.municipal-rank-name small { margin-top: 3px; color: #7b817d; font-size: 10px; }
+.municipal-ranking-card li em { font: 700 11px monospace; text-align: right; white-space: nowrap; }
+.municipal-ranking-card li i { grid-column: 2/4; height: 5px; background: #e5e5de; }
+.municipal-ranking-card li i b { display: block; height: 100%; background: #171918; }
+.municipal-ranking-card.surplus li i b { background: #287158; }
+.municipal-ranking-card.deficit li i b { background: #c93237; }
+.czechia-inline-directory { background: #f7f4ed; }
+.municipal-inline-search { margin-bottom: 22px; }
+.municipal-inline-search>label { display: block; margin-bottom: 9px; color: #59635e; font: 700 11px monospace; text-transform: uppercase; letter-spacing: .08em; }
+.municipal-inline-search>div { display: grid; grid-template-columns: 1fr auto; border: 1px solid #171918; background: #fff; box-shadow: 7px 7px 0 #a8b63f; }
+.municipal-inline-search input { min-width: 0; height: 66px; padding: 0 21px; border: 0; outline: 0; background: transparent; color: #171918; font-size: 17px; }
+.municipal-inline-search input:focus { box-shadow: inset 0 -4px #a8b63f; }
+.municipal-inline-search button { padding: 0 22px; border: 0; border-left: 1px solid #171918; background: #171918; color: #fff; font-weight: 700; cursor: pointer; }
+.municipal-inline-search button:hover { background: #35403b; }
+.municipal-inline-search>p { min-height: 18px; margin: 16px 0 0; color: #69716c; font: 12px monospace; }
+.municipal-inline-results { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+.municipal-inline-results>article { min-width: 0; min-height: 275px; padding: 22px; display: flex; flex-direction: column; border: 1px solid #bac1b8; background: #fffdf7; }
+.municipal-inline-results header { display: flex; justify-content: space-between; gap: 16px; color: #69716c; font: 10px monospace; text-transform: uppercase; }
+.municipal-inline-results header span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.municipal-inline-results h3 { margin: 27px 0 20px; font: 500 26px/1.05 Georgia,serif; }
+.municipal-inline-results h3 a { color: inherit; text-decoration: none; }
+.municipal-inline-results h3 a:hover { text-decoration: underline; text-decoration-color: #a8b63f; text-underline-offset: 5px; }
+.municipal-inline-results dl { display: grid; grid-template-columns: 1fr 1fr; margin: 0 0 22px; border-top: 1px solid #dedad1; }
+.municipal-inline-results dl div { padding: 12px 7px 8px 0; }
+.municipal-inline-results dt { color: #69716c; font-size: 10px; text-transform: uppercase; }
+.municipal-inline-results dd { margin: 5px 0 0; font: 700 12px Arial,sans-serif; }
+.municipal-inline-results .positive { color: #287158; }
+.municipal-inline-results .negative { color: #c93237; }
+.municipal-inline-profile { margin-top: auto; color: inherit; font: 700 11px monospace; text-transform: uppercase; text-underline-offset: 4px; }
+.municipal-inline-empty { padding: 36px; border: 1px solid #bac1b8; background: #fffdf7; text-align: center; }
+.municipal-inline-more { width: 100%; margin-top: 16px; padding: 16px; border: 1px solid #171918; background: transparent; color: #171918; font: 700 12px monospace; text-transform: uppercase; letter-spacing: .07em; cursor: pointer; }
+.municipal-inline-more:hover { background: #171918; color: #fff; }
+.municipal-advanced-link { margin-top: 28px; padding: 20px 22px; display: flex; justify-content: space-between; gap: 22px; border: 1px solid #171918; background: #171918; color: #fff; text-decoration: none; }
+.municipal-advanced-link span { color: #bec5c0; }
+.municipal-advanced-link b { color: #a8b63f; }
 .czechia-municipalities-page .municipality-size-benchmark { padding: 84px 40px 92px; background: #171918; color: #fff; }
 .benchmark-loading { margin: 0; color: #b9bdb7; font: 14px monospace; text-transform: uppercase; }
 .municipal-size-heading { display: grid; grid-template-columns: minmax(0,.92fr) minmax(300px,.58fr); gap: clamp(48px,7vw,104px); align-items: start; }
@@ -181,6 +243,10 @@
   .czechia-municipalities-page #insights .section-heading { grid-template-columns: 1fr; gap: 12px; }
   .czechia-municipalities-page #insights .section-heading p { margin-top: 0; }
   .municipal-size-kpis { grid-template-columns: 1fr 1fr; }
+  .municipal-ranking-grid,.municipal-inline-results { grid-template-columns: 1fr 1fr; }
+  .municipal-ranking-card:last-child { grid-column: 1/-1; }
+  .municipal-balance-split { grid-template-columns: 1fr 1fr; }
+  .municipal-balance-split>p { grid-column: 1/-1; min-height: 90px; }
 }
 @media (max-width: 650px) {
   .municipality-switch { margin-top: 20px; width: 100%; }
@@ -198,4 +264,9 @@
   .municipal-size-kpis article { min-height: 142px; }
   .municipal-size-legend { align-items: flex-start; flex-direction: column; gap: 8px; padding-block: 14px; }
   .municipal-size-method { grid-template-columns: 1fr; gap: 14px; }
+  .municipal-ranking-grid,.municipal-inline-results,.municipal-balance-split { grid-template-columns: 1fr; }
+  .municipal-ranking-card:last-child,.municipal-balance-split>p { grid-column: auto; }
+  .municipal-inline-search>div { grid-template-columns: 1fr; }
+  .municipal-inline-search button { min-height: 48px; border-top: 1px solid #171918; border-left: 0; }
+  .municipal-advanced-link { align-items: flex-start; flex-direction: column; }
 }
