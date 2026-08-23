@@ -263,7 +263,37 @@ test("country cash-in keeps municipal and company layers separate", async ({ pag
   await expect(page.locator("#cash-in .sortable-header-button")).toHaveCount(5);
   await page.locator("#country-switch").selectOption("DEU");
   await expect(page.locator("#cash-in .cash-layer-card")).toHaveCount(0);
-  await expect(page.locator("#cash-in .cash-detail-missing")).toBeVisible();
+  await expect(page.locator("#cash-in .cash-loaded-grid article")).toHaveCount(3);
+  await expect(page.locator("#cash-in")).toContainText("Loaded national budget");
+  await expect(page.locator("#cash-in")).toContainText("Official public-sector universe");
+  await expect(page.locator("#cash-in .cash-detail-missing")).toHaveCount(0);
+});
+
+test("all countries use the Czech-style dashboard chapters and loaded-data sections", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === "mobile-chromium", "Ten-country data wiring is covered once on desktop; responsive rendering is covered by the route suite.");
+  test.setTimeout(180_000);
+  const countries = ["CZE", "DEU", "DNK", "FRA", "GBR", "POL", "SWE", "CHE", "UKR", "USA"];
+  for (const lang of ["cs", "en"]) {
+    for (const code of countries) {
+      const failures = [];
+      page.removeAllListeners("pageerror");
+      page.removeAllListeners("console");
+      page.on("pageerror", error => failures.push(error.message));
+      page.on("console", message => { if (message.type() === "error") failures.push(message.text()); });
+      await page.goto(`/country.html?code=${code}&lang=${lang}`, {waitUntil:"networkidle"});
+      await expect(page.locator("#country-dashboard-index a")).toHaveCount(8);
+      await expect(page.locator(".country-context-rail a")).toHaveCount(9);
+      await expect(page.locator("#budget-map .budget-map-row").first()).toBeVisible();
+      await expect(page.locator("#public-entities .pe-directory")).toBeVisible();
+      await expect(page.locator("#demography .demography-year")).toHaveCount(5);
+      await expect(page.locator("#data-parity")).toBeVisible();
+      const order = await page.locator("main > section").evaluateAll(sections => sections.map(section => section.id));
+      expect(order.indexOf("data-parity"), `${code}/${lang}: methodology belongs after insight chapters`).toBeGreaterThan(order.indexOf("demography"));
+      if (code === "CZE") await expect(page.locator("#cash-in .cash-layer-card")).toHaveCount(4);
+      else await expect(page.locator("#cash-in .cash-loaded-grid article")).toHaveCount(3);
+      expect(failures, `${code}/${lang}: runtime errors`).toEqual([]);
+    }
+  }
 });
 
 test("municipal directory explains the aggregate balance in both languages", async ({ page }) => {

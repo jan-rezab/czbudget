@@ -1,0 +1,167 @@
+.country-page main {
+  background: var(--paper);
+}
+
+.country-dashboard-index {
+  padding: 34px 4vw 38px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ink);
+  color: #fff;
+}
+
+.country-dashboard-index > header {
+  display: grid;
+  grid-template-columns: minmax(150px, .55fr) minmax(280px, 1.45fr);
+  gap: 5vw;
+  align-items: start;
+  margin-bottom: 24px;
+}
+
+.country-dashboard-index > header span,
+.dashboard-chapter-start::before {
+  color: var(--acid);
+  font: 700 9px/1.2 monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.country-dashboard-index > header p {
+  max-width: 760px;
+  margin: 0;
+  color: #c2cbc6;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.country-dashboard-index > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid #ffffff2c;
+}
+
+.country-dashboard-index a {
+  min-height: 100px;
+  padding: 17px;
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+  border-right: 1px solid #ffffff2c;
+  border-bottom: 1px solid #ffffff2c;
+}
+
+.country-dashboard-index a:nth-child(4n) { border-right: 0; }
+.country-dashboard-index a:nth-child(n+5) { border-bottom: 0; }
+.country-dashboard-index a:hover { background: #ffffff0c; }
+.country-dashboard-index a b { color: var(--acid); font: 700 10px/1 monospace; }
+.country-dashboard-index a span { display: grid; align-content: start; gap: 7px; }
+.country-dashboard-index a strong { font: 500 17px/1.1 Georgia, serif; }
+.country-dashboard-index a small { color: #aeb8b2; font-size: 9px; line-height: 1.4; }
+
+.country-page .dashboard-chapter-start {
+  position: relative;
+  padding-top: 130px;
+}
+
+.country-page .dashboard-chapter-start::before {
+  content: attr(data-dashboard-label);
+  position: absolute;
+  top: 76px;
+  left: 4vw;
+}
+
+.country-page #trend,
+.country-page #spending,
+.country-page #healthcare,
+.country-page #social-system,
+.country-page #transportation,
+.country-page #data-parity {
+  border-top: 8px solid var(--ink);
+}
+
+.country-page #cash-in,
+.country-page #budget-map,
+.country-page #provider-network,
+.country-page #demography,
+.country-page #specifics,
+.country-page #sources {
+  border-top: 0;
+}
+
+.country-page #cash-in,
+.country-page #macro,
+.country-page #budget-map {
+  background: #e7e1d6;
+}
+
+.country-page #public-entities,
+.country-page #specifics,
+.country-page #data-parity,
+.country-page #sources {
+  background-color: var(--ink);
+  color: #f8f4e9;
+  background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.country-page #demography {
+  background-color: #102c52;
+  color: #fff;
+  background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.country-page #demography .detail-heading p,
+.country-page #demography .demography-source span,
+.country-page #demography .demography-source small,
+.country-page #demography .insight-kpis small,
+.country-page #demography .insight-kpis span { color: #b9c7d1; }
+.country-page #demography .insight-kpis { background: #ffffff24; border-color: #ffffff24; }
+.country-page #demography .insight-kpis article,
+.country-page #demography .demography-structure,
+.country-page #demography .demography-source { background: #173d6d; border-color: #ffffff2b; }
+.country-page #demography .demography-year { border-color: #ffffff24; }
+.country-page #demography .demography-year strong,
+.country-page #demography .demography-source a { color: #fff; }
+
+.country-page #data-parity .detail-heading p,
+.country-page #sources .detail-heading p,
+.country-page #data-parity .kicker,
+.country-page #sources .kicker { color: #b9c6bf; }
+.country-page #data-parity .parity-card,
+.country-page #data-parity .parity-ledger,
+.country-page #sources .source-cards article,
+.country-page #sources #ministry-source > * { background: #22332c; color: #f8f4e9; border-color: #ffffff28; }
+
+.cash-loaded-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.cash-loaded-grid article { min-height: 180px; padding: 20px; display: flex; flex-direction: column; background: #fffdf8; }
+.cash-loaded-grid span { color: var(--muted); font: 700 9px/1.25 monospace; letter-spacing: .08em; text-transform: uppercase; }
+.cash-loaded-grid strong { margin-top: auto; font: 500 clamp(27px, 3vw, 44px)/1 Georgia, serif; }
+.cash-loaded-grid small { margin-top: 10px; color: var(--muted); font-size: 10px; line-height: 1.45; }
+.cash-loaded-sources { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 16px; }
+.cash-loaded-sources a { color: inherit; font-size: 11px; font-weight: 700; text-underline-offset: 3px; }
+
+@media (max-width: 900px) {
+  .country-dashboard-index > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .country-dashboard-index a:nth-child(2n) { border-right: 0; }
+  .country-dashboard-index a:nth-child(n+5) { border-bottom: 1px solid #ffffff2c; }
+  .country-dashboard-index a:nth-child(n+7) { border-bottom: 0; }
+  .cash-loaded-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .country-dashboard-index > header { grid-template-columns: 1fr; gap: 12px; }
+  .country-dashboard-index > div { grid-template-columns: 1fr; }
+  .country-dashboard-index a { min-height: 80px; border-right: 0; border-bottom: 1px solid #ffffff2c !important; }
+  .country-dashboard-index a:last-child { border-bottom: 0 !important; }
+  .country-page .dashboard-chapter-start { padding-top: 112px; }
+  .country-page .dashboard-chapter-start::before { top: 66px; }
+}
