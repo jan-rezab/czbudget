@@ -328,6 +328,15 @@
 .municipal-currency-control select:hover { background: #f0f6dc; }
 .municipal-currency-control select:focus-visible { outline: 3px solid #d9ff69; outline-offset: 2px; }
 .municipal-currency-control small { grid-column: 1 / -1; color: var(--cz-muted); font-size: 9px; }
+.detail-kpis article,.plan-row,.mix-row,.breakdown-rank-row { transition: background-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+.detail-kpis article:hover,.detail-kpis article:focus-within,
+.plan-row:hover,.plan-row:focus-within,
+.mix-row:hover,.mix-row:focus-within,
+.breakdown-rank-row:hover,.breakdown-rank-row:focus-within { background: #f0f6dc; box-shadow: inset 4px 0 0 #a8b63f; }
+.plan-row:hover .plan-track > i,.mix-row:hover .mix-track > i,.breakdown-rank-row:hover .breakdown-rank-track > i { filter: saturate(1.25) contrast(1.08); }
+.history-line { transition: opacity .16s ease, stroke-width .16s ease; }
+.history-chart:hover .history-line { opacity: .55; }
+.history-chart:has(.history-year-interaction:hover) .history-line { opacity: 1; stroke-width: 4.5; }
 .nationwide-selected-year { stroke: #171a19; stroke-width: 2; stroke-dasharray: 5 5; opacity: .6; pointer-events: none; }
 .nationwide-year-hit { fill: transparent; stroke: transparent; cursor: pointer; pointer-events: all; }
 .selected-year-label { fill: #171a19!important; font-weight: 800!important; }
