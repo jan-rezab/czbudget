@@ -112,6 +112,9 @@ test("deep dives expose a dedicated topic hierarchy and country-filtered transpo
   await expect(page.locator(".transport-investment-trend span")).toHaveCount(10);
   await expect(page.locator(".transport-budget-detail")).toContainText("291,427 mil.");
   await expect(page.locator(".transport-comparison tbody tr")).toHaveCount(10);
+  await expect(page.locator(".transport-coverage-matrix tbody tr")).toHaveCount(10);
+  await expect(page.locator(".transport-coverage-audit")).toContainText("Public data and gaps");
+  await expect(page.locator(".transport-comparison tr.scope-exception")).toHaveCount(2);
   await page.locator("#deep-dive-country").selectOption("POL");
   await expect(page).toHaveURL(/code=POL/);
   await expect(page.locator("#deep-dive-country-name")).toHaveText("Poland");

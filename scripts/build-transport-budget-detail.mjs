@@ -19,6 +19,18 @@ const COMPONENTS = {
 };
 const LEVELS = {central:"S1311",state:"S1312",local:"S1313",social_security:"S1314"};
 const BASE = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10a_exp";
+const PUBLIC_DATA = {
+  CZE:{detail_status:"harmonised",level_status:"harmonised",note_cs:"Harmonizované členění doplňují transakční data české Státní pokladny.",note_en:"The harmonised breakdown can be extended with transaction-level Czech Treasury data.",next_step_cs:"Doplnit projekty, kapitoly, fondy a obce bez dvojího započtení transferů.",next_step_en:"Add projects, budget chapters, funds and municipalities without double-counting transfers.",sources:[{title:"ČSÚ · Vládní finanční statistika",url:"https://csu.gov.cz/vladni-financni-statistika"},{title:"Monitor · otevřená data",url:"https://monitor.statnipokladna.gov.cz/datovy-katalog/open-data"}]},
+  DEU:{detail_status:"harmonised",level_status:"national_bridge",note_cs:"Ekonomická skladba je harmonizovaná; funkční členění podle úrovní vlády je nutné doplnit z německých tabulek.",note_en:"The economic breakdown is harmonised; functional spending by government level needs a German-data bridge.",next_step_cs:"Napojit dopravu v GENESIS na spolkovou, zemskou a místní úroveň.",next_step_en:"Connect GENESIS transport data to federal, state and local government levels.",sources:[{title:"Destatis GENESIS · výdaje podle COFOG",url:"https://genesis.destatis.de/datenbank/online/statistic/81000/table/81000-0413"}]},
+  DNK:{detail_status:"harmonised",level_status:"harmonised",note_cs:"StatBank zveřejňuje COFOG podle druhu transakce a umožňuje národní kontrolu Eurostatu.",note_en:"StatBank publishes COFOG by transaction type and supports a national cross-check of Eurostat.",next_step_cs:"Přidat dlouhou řadu a stálé ceny z tabulek OFF25/OFF29.",next_step_en:"Add a longer history and constant-price series from OFF25/OFF29.",sources:[{title:"Statistics Denmark · veřejné finance",url:"https://www.dst.dk/en/Statistik/udgivelser/nyt/relateret?pid=841"}]},
+  FRA:{detail_status:"harmonised",level_status:"harmonised",note_cs:"INSEE zveřejňuje COFOG za celek i centrální, místní a sociální subsektory v tabulkách ke stažení.",note_en:"INSEE publishes downloadable COFOG tables for total, central, local and social-security government.",next_step_cs:"Propojit delší historii od roku 1995 a národní revizní poznámky.",next_step_en:"Connect the history from 1995 and national revision notes.",sources:[{title:"INSEE · výdaje podle funkce",url:"https://www.insee.fr/en/statistiques/8068562"}]},
+  POL:{detail_status:"harmonised",level_status:"harmonised",note_cs:"Harmonizovaný celek lze doplnit detailními obecními výdaji na dopravu a spoje.",note_en:"The harmonised total can be extended with detailed municipal transport and communications expenditure.",next_step_cs:"Mapovat polskou rozpočtovou klasifikaci na COFOG a konsolidovat transfery.",next_step_en:"Map Polish budget classifications to COFOG and consolidate transfers.",sources:[{title:"Statistics Poland · Local Data Bank",url:"https://bdl.stat.gov.pl/bdl/dane/podgrup/wymiary/27/425/2635"}]},
+  SWE:{detail_status:"harmonised",level_status:"harmonised",note_cs:"SCB nabízí spotřebu i investice podle COFOG, úrovně vlády a cenové báze.",note_en:"SCB provides consumption and investment by COFOG, government level and price basis.",next_step_cs:"Přidat stálé ceny a oddělenou národní investiční řadu.",next_step_en:"Add constant prices and the separate national investment series.",sources:[{title:"Statistics Sweden · COFOG PxWeb",url:"https://www.statistikdatabasen.scb.se/pxweb/en/ssd/START__NR__NR0103__NR0103E/NR0103ENS2010T05NA/"}]},
+  CHE:{detail_status:"harmonised",level_status:"harmonised",note_cs:"Federální finanční správa publikuje funkční výdaje konfederace, kantonů, obcí a sociálních fondů.",note_en:"The Federal Finance Administration publishes functional spending for the Confederation, cantons, municipalities and social funds.",next_step_cs:"Doplnit čerstvější celkovou délku silnic; fiskální pokrytí je silné.",next_step_en:"Refresh total-road length; fiscal coverage is already strong.",sources:[{title:"Swiss FFA · financial statistics",url:"https://www.efv.admin.ch/en/data-fs"}]},
+  GBR:{detail_status:"national_bridge",level_status:"national_bridge",note_cs:"Britská data rozlišují běžné a kapitálové výdaje, funkce, regiony a autoritu; používají však fiskální rok a rámec TES.",note_en:"UK data separates current and capital spending, function, region and authority, but uses financial years and the TES framework.",next_step_cs:"Postavit převod PESA/CRA na kalendářní COFOG bez smíchání metodik.",next_step_en:"Build a PESA/CRA-to-calendar-year COFOG bridge without mixing accounting frameworks.",sources:[{title:"DfT · transport expenditure TSGB13",url:"https://www.gov.uk/government/statistical-data-sets/transport-expenditure-tsgb13"},{title:"HM Treasury · Country and Regional Analysis",url:"https://www.gov.uk/government/statistics/country-and-regional-analysis-2025"}]},
+  UKR:{detail_status:"national_bridge",level_status:"national_bridge",note_cs:"Open Budget zveřejňuje plnění státního i místních rozpočtů podle funkční, ekonomické a programové klasifikace.",note_en:"Open Budget publishes state and local execution by functional, economic and programme classifications.",next_step_cs:"Konsolidovat stát a obce, odstranit transfery a dokumentovat válečné revize.",next_step_en:"Consolidate national and local budgets, remove transfers and document wartime revisions.",sources:[{title:"Ukraine Open Budget · výdaje",url:"https://openbudget.gov.ua/en/national-budget/expenses?class=functional"},{title:"Ukraine Open Budget · klasifikace a API",url:"https://openbudget.gov.ua/en/budget-literacy/budget-system/classification/functional"}]},
+  USA:{detail_status:"fragmented",level_status:"fragmented",note_cs:"Federální výdaje OMB a státní i místní finance Census jsou veřejné, ale nejsou jedním konsolidovaným COFOG souborem.",note_en:"OMB federal outlays and Census state/local finances are public, but they are not one consolidated COFOG dataset.",next_step_cs:"Sloučit federální, státní a místní dopravu a odečíst federální granty, aby nevzniklo dvojí započtení.",next_step_en:"Combine federal, state and local transport and net out federal grants to avoid double counting.",sources:[{title:"OMB · Historical Tables",url:"https://www.whitehouse.gov/omb/information-resources/budget/historical-tables/"},{title:"U.S. Census · state and local finances",url:"https://www.census.gov/data/developers/data-sets/govslocalfin.html"}]}
+};
 
 function valueAt(dataset, selections) {
   let index=0;
@@ -43,7 +55,7 @@ async function fetchCountry(country) {
 const countries={};
 for(const [code,country] of Object.entries(COUNTRIES)) {
   if(!country.geo) {
-    countries[code]={...country,coverage:"unavailable",reason_cs:"Eurostat COFOG II tuto zemi nepokrývá.",reason_en:"Eurostat COFOG II does not cover this country."};
+    countries[code]={...country,coverage:"unavailable",reason_cs:"Eurostat COFOG II tuto zemi nepokrývá.",reason_en:"Eurostat COFOG II does not cover this country.",public_data:PUBLIC_DATA[code]};
     continue;
   }
   const dataset=await fetchCountry(country);
@@ -58,11 +70,12 @@ for(const [code,country] of Object.entries(COUNTRIES)) {
     const levels=Object.fromEntries(Object.entries(LEVELS).map(([key,sector])=>[key,valueAt(dataset,{sector,na_item:"TE",time:String(year)})]));
     records.push({year,total,components,levels});
   }
-  countries[code]={...country,coverage:records.length?"available":"unavailable",latest_year:records.at(-1)?.year??null,records};
+  const levelValues=records.flatMap(record=>Object.values(record.levels)).filter(Number.isFinite);
+  countries[code]={...country,coverage:records.length?"available":"unavailable",latest_year:records.at(-1)?.year??null,records,level_coverage:levelValues.length?"available":"unavailable",public_data:PUBLIC_DATA[code]};
 }
 
 const payload={
-  schema_version:"1.0.0",
+  schema_version:"1.1.0",
   generated_at:new Date().toISOString(),
   unit:"million_national_currency",
   function:{code:"GF0405",label_cs:"Doprava",label_en:"Transport"},
