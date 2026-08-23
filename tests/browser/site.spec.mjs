@@ -16,6 +16,7 @@ const routes = [
   ["health deep dive", "/deep-dives/health/?code=CZE&lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/obce/praha/?lang=cs"],
+  ["region", "/cz/kraje/praha/?lang=cs"],
   ["directory", "/cz/obce/?lang=cs"],
   ["cities", "/cz/mesta/?lang=cs"],
 ];
@@ -269,6 +270,7 @@ test("municipal profiles expose 2010–2025 history and preserve genuine coverag
 });
 
 test("all representative page menus resolve and primary navigation routes correctly", async ({ page, request }) => {
+  test.setTimeout(120_000);
   for (const route of routes.map(([, path]) => path)) {
     await page.goto(route, { waitUntil: "networkidle" });
     const hrefs = await page.locator("header a[href], header nav a[href], .detail-nav a[href], .breadcrumbs a[href]").evaluateAll((links) =>
@@ -290,6 +292,31 @@ test("all representative page menus resolve and primary navigation routes correc
   await expect(page.locator(".country-menu-panel a")).toHaveCount(12);
   await page.locator('.country-menu-panel a[href*="code=CZE"]').click();
   await expect(page).toHaveURL(/\/country\.html\?code=CZE&lang=cs/);
+});
+
+test("every page family renders the same shared header component", async ({ page }) => {
+  const representatives = [
+    "/?lang=en",
+    "/comparison.html?lang=en",
+    "/methodology.html?lang=en",
+    "/about.html?lang=en",
+    "/country.html?code=CZE&lang=en",
+    "/municipalities/?lang=en",
+    "/deep-dives/transportation/?code=CZE&lang=en",
+    "/cz/obce/praha/?lang=en",
+    "/cz/kraje/praha/?lang=en",
+    "/cz/mesta/?lang=en",
+  ];
+  const expectedItems = ["Home", "Compare", "Municipalities", "Country⌄", "Deep dives⌄", "Methodology", "About"];
+  for (const route of representatives) {
+    await page.goto(route, { waitUntil: "networkidle" });
+    await expect(page.locator("psd-site-header")).toHaveCount(1);
+    await expect(page.locator("psd-site-header > .site-header")).toHaveCount(1);
+    await expect(page.locator("psd-site-header .global-nav")).toBeVisible();
+    await expect(page.locator('link[data-psd-site-header]')).toHaveCount(1);
+    const items = await page.locator(".global-nav > a, .global-nav > details > summary").allTextContents();
+    expect(items.map((item) => item.replace(/\s+/g, ""))).toEqual(expectedItems.map((item) => item.replace(/\s+/g, "")));
+  }
 });
 
 test("cities use the functional unified menu on desktop and mobile", async ({ page }) => {

@@ -1,16 +1,17 @@
 <!doctype html>
 <html lang="cs">
-<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script><link rel="stylesheet" href="../../site-header.css?v=20260822-component" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260822-component" defer></script>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Health deep dive — Public Spending Data</title>
   <meta name="description" content="Compare health spending, financing, providers, hospital beds and system capacity across nine countries.">
   <link rel="canonical" href="https://czbudget-public-258433468858.europe-west1.run.app/deep-dives/health/">
   <link rel="alternate" hreflang="cs" href="https://czbudget-public-258433468858.europe-west1.run.app/deep-dives/health/?lang=cs"><link rel="alternate" hreflang="en" href="https://czbudget-public-258433468858.europe-west1.run.app/deep-dives/health/?lang=en">
   <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../country-functions.css?v=20260822-health-deep-dive"><link rel="stylesheet" href="../../country-health.css?v=20260822-health-deep-dive"><link rel="stylesheet" href="../../deep-dives.css?v=20260822-health-deep-dive">
-  <script src="../../deep-dives.js?v=20260822-health-deep-dive" defer></script><script src="../../country-functions.js?v=20260822-health-deep-dive" defer></script><script src="../../country-health.js?v=20260822-health-deep-dive" defer></script><script src="../../sortable-tables.js?v=20260822" defer></script><script src="../../global-nav.js?v=20260822-health-deep-dive" defer></script>
+  <script src="../../deep-dives.js?v=20260822-health-deep-dive" defer></script><script src="../../country-functions.js?v=20260822-health-deep-dive" defer></script><script src="../../country-health.js?v=20260822-health-deep-dive" defer></script><script src="../../sortable-tables.js?v=20260822" defer></script>
 </head>
 <body class="deep-dives-page deep-health-page">
-  <header class="site-header compact-header has-global-nav"><a class="brand" href="../../index.html"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a><nav class="global-nav" aria-label="Primary navigation"></nav><div class="lang-switch"><button data-deep-lang="cs" class="active">CS</button><span>/</span><button data-deep-lang="en">EN</button></div></header>
+  <psd-site-header></psd-site-header>
   <main id="top">
     <section class="deep-hero deep-topic-hero" id="overview"><div><span class="eyebrow" data-deep-copy="healthEyebrow">Hloubkový profil / Zdraví</span><h1 data-deep-copy="healthTitle">Peníze, péče a kapacita systému.</h1><p data-deep-copy="healthIntro">Devět zemí sdílí harmonizovaný profil financování, poskytovatelů a lůžek. Srovnání veřejných výdajů zachovává všech deset zemí.</p></div><div class="deep-hero-aside deep-filter-panel"><label><span data-deep-copy="selectCountry">Filtrovat podle země</span><select id="deep-dive-country" data-country-codes="CZE,DEU,DNK,FRA,GBR,POL,SWE,CHE,USA"></select></label><div class="deep-country-readout"><b id="deep-dive-country-code">CZE</b><strong id="deep-dive-country-name">Česko</strong><a id="deep-dive-country-profile" href="../../country.html?code=CZE&amp;lang=cs" data-deep-copy="countryProfile">Otevřít celý profil země</a></div></div></section>
     <nav class="deep-topic-rail" aria-label="Health sections"><a href="#overview" data-deep-copy="overview">Přehled</a><a href="#spending" data-deep-copy="spending">Výdaje</a><a href="#healthcare-system" data-deep-copy="system">Tok systému</a><a href="#hospital-benchmark" data-deep-copy="benchmark">Benchmark</a><a href="#country-health-sources" data-deep-copy="sources">Zdroje</a></nav>

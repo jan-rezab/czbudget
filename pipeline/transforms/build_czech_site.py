@@ -84,6 +84,8 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
     canonical = PUBLIC_ORIGIN + canonical_path
     schema_json = json.dumps(schema, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     return f"""<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+  <link rel="stylesheet" href="{root}site-header.css?v=20260822-component" data-psd-site-header>
+  <script src="{root}global-nav.js?v=20260822-component" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{esc(title)}</title>
@@ -110,11 +112,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
 
 
 def header(root: str, active: str = "czech") -> str:
-    return f"""<header class="site-header compact-header cz-header">
-  <a class="brand" href="{root}index.html"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a>
-  <nav aria-label="Hlavní navigace"><a href="{root}index.html#compare">Země</a><a href="{root}cz/obce/"{' aria-current="page"' if active == 'czech' else ''}>Obce a kraje</a><a href="#metodika">Metodika</a></nav>
-  <div class="dataset-pill"><span>CZ</span> · 2025 · CZK</div>
-</header>"""
+    return "<psd-site-header data-section=\"cities\"></psd-site-header>"
 
 
 def footer(root: str) -> str:

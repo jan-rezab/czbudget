@@ -24,7 +24,7 @@
     document.head.append(navigationStyles);
   }
   const header = document.querySelector(".cz-header");
-  if (header) {
+  if (header && !header.closest("psd-site-header")) {
     header.classList.add("has-global-nav");
     const nav = header.querySelector("nav");
     if (nav) { nav.className = "global-nav"; nav.setAttribute("aria-label", lang === "en" ? "Primary navigation" : "Hlavní navigace"); }
@@ -57,7 +57,7 @@
     const items = [["overview",labels.overview],["combined",labels.combined],[history?.id,labels.trend],[budget?.id,labels.budget],[directory?.id,labels.entities],[method?.id,labels.method]].filter(([id]) => id && document.getElementById(id));
     const rail = document.createElement("nav"); rail.className = "context-rail municipal-context-rail"; rail.setAttribute("aria-label", lang === "en" ? "Page sections" : "Sekce stránky");
     rail.innerHTML = items.map(([id,label]) => `<a href="#${id}">${label}</a>`).join("");
-    header.insertAdjacentElement("afterend", rail);
+    (header.closest("psd-site-header") || header).insertAdjacentElement("afterend", rail);
     const updateRail = () => {
       const current = [...items].reverse().map(([id]) => document.getElementById(id)).find((section) => section.getBoundingClientRect().top <= 150) || document.getElementById(items[0]?.[0]);
       rail.querySelectorAll("a").forEach((link) => link.toggleAttribute("aria-current", link.hash === `#${current?.id}`));

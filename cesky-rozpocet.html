@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="cs">
-<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script><link rel="stylesheet" href="site-header.css?v=20260822-component" data-psd-site-header>
+  <script src="global-nav.js?v=20260822-component" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Public Spending Data — český rozpočet v čase</title>
@@ -25,18 +26,14 @@
   <script src="app.js?v=20260821-annual-system-cost-baseline" defer></script>
   <script src="budget-i18n.js?v=20260821-annual-system-cost-baseline" defer></script>
   <script src="cz-firmy-embed.js?v=20260822-1" defer></script>
-<script src="global-nav.js?v=20260822-international-municipalities" defer></script>
+
   <script src="budget-shell.js?v=20260820-1" defer></script>
   <script src="cz-spending.js?v=20260820-1" defer></script>
   <script src="health-budget.js?v=20260820-1" defer></script>
 </head>
 <body class="budget-workspace-page">
 <main>
-  <header class="site-header has-global-nav">
-    <a class="brand" id="budget-home-link" href="index.html" aria-label="Public Spending Data — začátek stránky"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a>
-    <nav class="global-nav" aria-label="Primary navigation"></nav>
-    <div class="budget-header-tools"><div class="lang-switch"><button type="button" data-budget-lang="cs" class="active">CS</button><span>/</span><button type="button" data-budget-lang="en">EN</button></div></div>
-  </header>
+  <psd-site-header></psd-site-header>
 
   <section class="hero budget-hero budget-hero-compact" id="overview">
     <div class="eyebrow"><span class="live-dot"></span> Státní rozpočet ČR · skutečnost, schválený plán a výhled</div>

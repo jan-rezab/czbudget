@@ -1,52 +1,116 @@
 (() => {
-  const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "";
-  if (!document.querySelector('script[data-sortable-tables]')) {
-    const sortable = document.createElement("script");
-    sortable.src = `${assetRoot}sortable-tables.js`;
-    sortable.defer = true;
-    sortable.dataset.sortableTables = "true";
-    document.head.append(sortable);
-  }
+  const scriptUrl = document.currentScript?.src || new URL("global-nav.js", location.href).href;
+  const assetRoot = new URL(".", scriptUrl).href;
+  const HEADER_TAG = "psd-site-header";
   const countries = [
-    ["CZE","Česko","Czechia"],["DEU","Německo","Germany"],["DNK","Dánsko","Denmark"],
-    ["FRA","Francie","France"],["GBR","Spojené království","United Kingdom"],["POL","Polsko","Poland"],
-    ["SWE","Švédsko","Sweden"],["CHE","Švýcarsko","Switzerland"],["UKR","Ukrajina","Ukraine"],
-    ["USA","Spojené státy","United States"]
+    ["CZE", "Česko", "Czechia", "cz"], ["DEU", "Německo", "Germany", "de"],
+    ["DNK", "Dánsko", "Denmark", "dk"], ["FRA", "Francie", "France", "fr"],
+    ["GBR", "Spojené království", "United Kingdom", "gb"], ["POL", "Polsko", "Poland", "pl"],
+    ["SWE", "Švédsko", "Sweden", "se"], ["CHE", "Švýcarsko", "Switzerland", "ch"],
+    ["UKR", "Ukrajina", "Ukraine", "ua"], ["USA", "Spojené státy", "United States", "us"],
   ];
-  const flags = {CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us"};
-  const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const copy = {
-    cs:{home:"Domů",compare:"Srovnání",cities:"Obce a města",country:"Země",deepDives:"Hloubkové profily",method:"Metodika",about:"O projektu",all:"Všechny profily",allDeepDives:"Všechny profily",transport:"Doprava",transportCopy:"Rozpočty, silnice a tempo výstavby",health:"Zdraví",healthCopy:"Financování a kapacita systému",coming:"Připravujeme",czechBudget:"Český státní rozpočet"},
-    en:{home:"Home",compare:"Compare",cities:"Municipalities",country:"Country",deepDives:"Deep dives",method:"Methodology",about:"About",all:"All profiles",allDeepDives:"All deep dives",transport:"Transportation",transportCopy:"Budgets, roads and build pace",health:"Health",healthCopy:"Funding and system capacity",coming:"Coming next",czechBudget:"Czech state budget"}
+    cs: { home:"Domů", compare:"Srovnání", cities:"Obce a města", country:"Země", deepDives:"Hloubkové profily", method:"Metodika", about:"O projektu", all:"Všechny profily", allDeepDives:"Všechny profily", transport:"Doprava", transportCopy:"Rozpočty, silnice a tempo výstavby", health:"Zdraví", healthCopy:"Financování a kapacita systému", czechBudget:"Český státní rozpočet", navigation:"Hlavní navigace", language:"Jazyk" },
+    en: { home:"Home", compare:"Compare", cities:"Municipalities", country:"Country", deepDives:"Deep dives", method:"Methodology", about:"About", all:"All profiles", allDeepDives:"All deep dives", transport:"Transportation", transportCopy:"Budgets, roads and build pace", health:"Health", healthCopy:"Funding and system capacity", czechBudget:"Czech state budget", navigation:"Primary navigation", language:"Language" },
   };
-  function render() {
-    const lang = language(), t = copy[lang], page = location.pathname.split("/").pop() || "index.html";
-    document.querySelectorAll("a.brand").forEach(link => link.setAttribute("aria-label", "Public Spending Data"));
-    document.querySelectorAll(".global-nav").forEach(nav => {
-      const countryHref = code => `${assetRoot}country.html?code=${code}&lang=${lang}`;
-      nav.innerHTML = `<a href="${assetRoot}index.html?lang=${lang}" data-global-nav="home">${t.home}</a><a href="${assetRoot}comparison.html?lang=${lang}" data-global-nav="compare">${t.compare}</a><a href="${assetRoot}municipalities/?lang=${lang}" data-global-nav="cities">${t.cities}</a><details class="country-menu"><summary>${t.country}<span aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}index.html?lang=${lang}#countries">${t.all} →</a></div><a class="capital-menu-feature" href="${assetRoot}cesky-rozpocet.html?lang=${lang}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countries.map(([code,cs,en])=>`<a href="${countryHref(code)}"><img src="${assetRoot}assets/flags/${flags[code]}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("")}</div></details><details class="deep-dive-menu"><summary>${t.deepDives}<span aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${assetRoot}deep-dives/?lang=${lang}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a href="${assetRoot}deep-dives/health/?code=CZE&lang=${lang}"><b>02</b><span><strong>${t.health}</strong><small>${t.healthCopy}</small></span></a></div></details><a href="${assetRoot}methodology.html?lang=${lang}" data-global-nav="method">${t.method}</a><a href="${assetRoot}about.html?lang=${lang}" data-global-nav="about">${t.about}</a>`;
-      const active = location.pathname.includes("/deep-dives/") ? "deep-dives" : page === "municipalities.html" || location.pathname.includes("/municipalities/") || page === "eu-capitals.html" || location.pathname.includes("/cz/mesta/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/") ? "cities" : page === "country.html" || page === "cesky-rozpocet.html" ? "country" : page === "comparison.html" ? "compare" : page === "methodology.html" ? "method" : page === "about.html" ? "about" : page === "index.html" || page === "" ? "home" : "";
+  const language = () => document.documentElement.lang === "en" ? "en" : "cs";
+  const href = (path, lang = language()) => `${assetRoot}${path}${path.includes("?") ? "&" : "?"}lang=${lang}`;
+
+  function activeSection(host) {
+    if (host.dataset.section) return host.dataset.section;
+    const path = location.pathname;
+    const page = path.split("/").pop() || "index.html";
+    if (path.includes("/deep-dives/")) return "deep-dives";
+    if (path.includes("/municipalities/") || path.includes("/cz/mesta/") || path.includes("/cz/obce/") || path.includes("/cz/kraje/") || ["municipalities.html", "eu-capitals.html", "cz-obce.html"].includes(page)) return "cities";
+    if (["country.html", "cesky-rozpocet.html", "cesko.html"].includes(page)) return "country";
+    if (page === "comparison.html") return "compare";
+    if (page === "methodology.html") return "method";
+    if (page === "about.html") return "about";
+    return "home";
+  }
+
+  class PsdSiteHeader extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = "true";
+      this.renderShell();
+      this.renderNavigation();
+    }
+
+    renderShell() {
+      const municipal = document.body.classList.contains("cz-budget-page");
+      const budget = location.pathname.endsWith("/cesky-rozpocet.html");
+      this.innerHTML = `<header class="site-header compact-header has-global-nav${municipal ? " cz-header" : ""}">
+        <a class="brand" id="${budget ? "budget-home-link" : "home-link"}" href="${href("index.html")}" aria-label="Public Spending Data"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a>
+        <nav class="global-nav" aria-label=""></nav>
+        <div class="lang-switch municipality-lang-switch municipal-lang-switch" role="group" aria-label=""><button type="button" data-lang="cs" data-budget-lang="cs" data-deep-lang="cs" aria-pressed="false">CS</button><span aria-hidden="true">/</span><button type="button" data-lang="en" data-budget-lang="en" data-deep-lang="en" aria-pressed="false">EN</button></div>
+      </header>`;
+    }
+
+    renderNavigation() {
+      const lang = language();
+      const t = copy[lang];
+      const nav = this.querySelector(".global-nav");
+      if (!nav) return;
+      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${assetRoot}country.html?code=${code}&lang=${lang}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("");
+      nav.setAttribute("aria-label", t.navigation);
+      nav.innerHTML = `<a href="${href("index.html", lang)}" data-global-nav="home">${t.home}</a><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("municipalities/", lang)}" data-global-nav="cities">${t.cities}</a><details class="country-menu"><summary>${t.country}<span aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}index.html?lang=${lang}#countries">${t.all} →</a></div><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countryLinks}</div></details><details class="deep-dive-menu"><summary>${t.deepDives}<span aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${href("deep-dives/", lang)}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a href="${assetRoot}deep-dives/health/?code=CZE&lang=${lang}"><b>02</b><span><strong>${t.health}</strong><small>${t.healthCopy}</small></span></a></div></details><a href="${href("methodology.html", lang)}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
+      const active = activeSection(this);
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
       if (active === "deep-dives") nav.querySelector(".deep-dive-menu")?.classList.add("active");
-      nav.querySelectorAll("details").forEach(details=>details.addEventListener("toggle", () => {
+      this.querySelector(".lang-switch")?.setAttribute("aria-label", t.language);
+      const languagePending = document.documentElement.hasAttribute("data-language-pending");
+      this.querySelectorAll("[data-lang]").forEach((button) => {
+        const selected = button.dataset.lang === lang;
+        // The paint guard treats an active language control as proof that the
+        // page translator has finished. Do not claim readiness on its behalf.
+        button.classList.toggle("active", selected && !languagePending);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+      this.querySelector(".brand")?.setAttribute("href", href("index.html", lang));
+      nav.querySelectorAll("details").forEach((details) => details.addEventListener("toggle", () => {
         if (!details.open) return;
-        nav.querySelectorAll("details[open]").forEach(other=>{if(other!==details)other.open=false});
-        const close = event => { if (!details.contains(event.target)) { details.open = false; document.removeEventListener("pointerdown", close); } };
+        nav.querySelectorAll("details[open]").forEach((other) => { if (other !== details) other.open = false; });
+        const close = (event) => { if (!details.contains(event.target)) { details.open = false; document.removeEventListener("pointerdown", close); } };
         setTimeout(() => document.addEventListener("pointerdown", close), 0);
       }));
-    });
+    }
   }
-  document.addEventListener("click", event => {
-    if (event.target.closest("[data-lang],[data-budget-lang]")) setTimeout(render, 0);
+
+  if (!document.querySelector("link[data-psd-site-header]")) {
+    const styles = document.createElement("link");
+    styles.rel = "stylesheet";
+    styles.href = `${assetRoot}site-header.css?v=20260822-component`;
+    styles.dataset.psdSiteHeader = "true";
+    document.head.append(styles);
+  }
+  if (!customElements.get(HEADER_TAG)) customElements.define(HEADER_TAG, PsdSiteHeader);
+
+  document.querySelectorAll("header.site-header.has-global-nav, header.site-header.cz-header").forEach((legacy) => {
+    if (legacy.closest(HEADER_TAG)) return;
+    const host = document.createElement(HEADER_TAG);
+    legacy.replaceWith(host);
+  });
+  document.addEventListener("click", (event) => {
+    const languageControl = event.target.closest("[data-lang],[data-budget-lang],[data-deep-lang]");
+    if (!languageControl) return;
+    if (location.pathname.startsWith("/cz/") && languageControl.dataset.lang) {
+      localStorage.setItem("psd-lang", languageControl.dataset.lang);
+      const next = new URL(location.href);
+      next.searchParams.set("lang", languageControl.dataset.lang);
+      location.href = `${next.pathname}${next.search}${next.hash}`;
+      return;
+    }
+    setTimeout(() => document.querySelectorAll(HEADER_TAG).forEach((host) => host.renderNavigation()), 0);
   });
   new MutationObserver(() => {
-    if (document.documentElement.lang !== document.documentElement.dataset.navLang) {
-      document.documentElement.dataset.navLang = document.documentElement.lang; render();
-    }
-  }).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+    if (document.documentElement.lang === document.documentElement.dataset.navLang) return;
+    document.documentElement.dataset.navLang = document.documentElement.lang;
+    document.querySelectorAll(HEADER_TAG).forEach((host) => host.renderNavigation());
+  }).observe(document.documentElement, { attributes:true, attributeFilter:["lang"] });
   document.documentElement.dataset.navLang = document.documentElement.lang;
-  render();
+
   const railLinks = [...document.querySelectorAll(".context-rail a[href^='#']")];
   if (railLinks.length) {
     const sections = railLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
@@ -54,6 +118,7 @@
       const current = [...sections].reverse().find((section) => section.getBoundingClientRect().top <= 150) || sections[0];
       railLinks.forEach((link) => link.toggleAttribute("aria-current", link.getAttribute("href") === `#${current?.id}`));
     };
-    addEventListener("scroll", updateRail, { passive: true }); updateRail();
+    addEventListener("scroll", updateRail, { passive:true });
+    updateRail();
   }
 })();

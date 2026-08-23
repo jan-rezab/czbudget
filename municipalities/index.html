@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="cs">
-<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script><link rel="stylesheet" href="../site-header.css?v=20260822-component" data-psd-site-header>
+  <script src="../global-nav.js?v=20260822-component" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Municipality budgets across Europe — Public Spending Data</title>
@@ -15,12 +16,12 @@
   <link rel="stylesheet" href="../municipalities-navigator.css?v=20260822-municipality-size">
   <link rel="stylesheet" href="../municipalities-credits.css?v=20260822-hlidac-statu">
   <link rel="stylesheet" href="../global-footer.css?v=20260822-hlidac">
-  <script src="../global-nav.js?v=20260822-municipal-navigator" defer></script>
+
   <script src="../municipalities.js?v=20260822-municipal-navigator" defer></script>
   <script src="../global-footer.js?v=20260822-hlidac" defer></script>
 </head>
 <body class="municipalities-page">
-  <header class="site-header compact-header has-global-nav"><a class="brand" href="../index.html"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a><nav class="global-nav" aria-label="Primary navigation"></nav><div class="municipality-lang-switch" role="group" aria-label="Jazyk"><button data-lang="cs" class="active" aria-pressed="true">CZ</button><button data-lang="en" aria-pressed="false">EN</button></div></header>
+  <psd-site-header></psd-site-header>
   <main id="top">
     <nav class="municipality-switch" aria-label="Municipality views"><a class="active" href="./?lang=cs" data-view-link="europe" data-copy="viewEurope">Evropa</a><label><span data-copy="countryHomepage">Stránka země</span><select id="municipality-country-switch" aria-label="Stránka obcí podle země"></select></label></nav>
     <section class="municipal-hero"><div><span class="eyebrow"><i class="live-dot"></i><span data-copy="eyebrow">Místní rozpočty · 2024 + 2025</span></span><h1 data-copy="title">Obce napříč<br><em>sedmi zeměmi.</em></h1><p data-copy="intro">Jedno místo pro dohledání obcí, kontrolu dostupných let a pochopení, co lze mezi zeměmi opravdu srovnávat.</p></div><div class="municipal-hero-stat"><span data-copy="covered">Pokryté obecní jednotky</span><strong id="total-entities">—</strong><small>2024 + 2025 · national sources</small></div></section>
