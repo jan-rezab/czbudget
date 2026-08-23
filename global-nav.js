@@ -1,7 +1,10 @@
 (() => {
   const scriptUrl = document.currentScript?.src || new URL("global-nav.js", location.href).href;
   const assetRoot = new URL(".", scriptUrl).href;
-  if (!document.querySelector("link[data-portal-ui]")) { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = `${assetRoot}portal-ui.css?v=20260823-compare-align`; styles.dataset.portalUi = "true"; document.head.append(styles); }
+  const portalStylesHref = `${assetRoot}portal-ui.css?v=20260824-header-lockup`;
+  const existingPortalStyles = document.querySelector("link[data-portal-ui]");
+  if (existingPortalStyles) existingPortalStyles.href = portalStylesHref;
+  else { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = portalStylesHref; styles.dataset.portalUi = "true"; document.head.append(styles); }
   if (!document.querySelector("script[data-portal-ui]")) { const script = document.createElement("script"); script.src = `${assetRoot}portal-ui.js?v=20260823`; script.defer = true; script.dataset.portalUi = "true"; document.head.append(script); }
   const HEADER_TAG = "psd-site-header";
   const countries = [
@@ -43,7 +46,7 @@
       const municipal = document.body.classList.contains("cz-budget-page");
       const budget = location.pathname.endsWith("/cesky-rozpocet.html");
       this.innerHTML = `<header class="site-header compact-header has-global-nav${municipal ? " cz-header" : ""}">
-        <a class="brand" id="${budget ? "budget-home-link" : "home-link"}" href="${href("index.html")}" aria-label="Public Spending Data"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a>
+        <a class="brand" id="${budget ? "budget-home-link" : "home-link"}" href="${href("index.html")}" aria-label="Public Spending Data"><img class="brand-logo" src="${assetRoot}assets/logo-lockup.svg" width="190" height="48" alt="" aria-hidden="true"></a>
         <nav class="global-nav" aria-label=""></nav>
         <div class="lang-switch municipality-lang-switch municipal-lang-switch" role="group" aria-label=""><button type="button" data-lang="cs" data-budget-lang="cs" data-deep-lang="cs" aria-pressed="false">CS</button><span aria-hidden="true">/</span><button type="button" data-lang="en" data-budget-lang="en" data-deep-lang="en" aria-pressed="false">EN</button></div>
       </header>`;
@@ -56,7 +59,7 @@
       if (!nav) return;
       const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${assetRoot}country.html?code=${code}&lang=${lang}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("");
       nav.setAttribute("aria-label", t.navigation);
-      nav.innerHTML = `<a href="${href("index.html", lang)}" data-global-nav="home">${t.home}</a><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("municipalities/", lang)}" data-global-nav="cities">${t.cities}</a><details class="country-menu"><summary>${t.country}<span aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}index.html?lang=${lang}#countries">${t.all} →</a></div><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countryLinks}</div></details><details class="deep-dive-menu"><summary>${t.deepDives}<span aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${href("deep-dives/", lang)}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a href="${assetRoot}deep-dives/health/?code=CZE&lang=${lang}"><b>02</b><span><strong>${t.health}</strong><small>${t.healthCopy}</small></span></a></div></details><a href="${href("methodology.html", lang)}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
+      nav.innerHTML = `<a href="${href("index.html", lang)}" data-global-nav="home">${t.home}</a><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("municipalities/", lang)}" data-global-nav="cities">${t.cities}</a><details class="country-menu"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}index.html?lang=${lang}#countries">${t.all} →</a></div><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countryLinks}</div></details><details class="deep-dive-menu"><summary><span class="menu-label">${t.deepDives}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${href("deep-dives/", lang)}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a href="${assetRoot}deep-dives/health/?code=CZE&lang=${lang}"><b>02</b><span><strong>${t.health}</strong><small>${t.healthCopy}</small></span></a></div></details><a href="${href("methodology.html", lang)}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
       const active = activeSection(this);
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
@@ -80,10 +83,14 @@
     }
   }
 
-  if (!document.querySelector("link[data-psd-site-header]")) {
+  const headerStylesHref = `${assetRoot}site-header.css?v=20260824-header-lockup`;
+  const existingHeaderStyles = document.querySelector("link[data-psd-site-header]");
+  if (existingHeaderStyles) {
+    existingHeaderStyles.href = headerStylesHref;
+  } else {
     const styles = document.createElement("link");
     styles.rel = "stylesheet";
-    styles.href = `${assetRoot}site-header.css?v=20260822-component`;
+    styles.href = headerStylesHref;
     styles.dataset.psdSiteHeader = "true";
     document.head.append(styles);
   }
