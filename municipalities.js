@@ -18,7 +18,7 @@
   const name = (country) => country[`name_${state.lang}`];
   const fmt = (number) => new Intl.NumberFormat(state.lang === "en" ? "en-GB" : "cs-CZ").format(number);
   const currency = (number, code) => new Intl.NumberFormat(state.lang === "en" ? "en-GB" : "cs-CZ", {style:"currency",currency:code,notation:"compact",maximumFractionDigits:1}).format(number);
-  const slugs={CZE:"czechia",POL:"poland",DNK:"denmark",FRA:"france",SWE:"sweden",GBR:"england",UKR:"ukraine"};
+  const slugs={CZE:"czechia",POL:"poland",DNK:"denmark",FRA:"france",SWE:"sweden",GBR:"england",UKR:"ukraine",NOR:"norway",NLD:"netherlands",FIN:"finland"};
 
   function renderCountrySwitch(){
     const select=$("#municipality-country-switch"); if(!select||!state.data)return;

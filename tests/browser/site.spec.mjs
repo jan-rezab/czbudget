@@ -122,6 +122,9 @@ test("deep dives expose a dedicated topic hierarchy and country-filtered transpo
 test("international municipality directory filters by country, year and search", async ({ page }) => {
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(10);
+  await expect(page.locator(".municipality-lang-switch button.active")).toHaveCSS("color", "rgb(250, 247, 239)");
+  await expect(page.locator(".municipal-country-card footer").first()).toHaveCSS("margin-left", "0px");
+  await expect(page.locator('.municipal-country-card[data-country="NOR"] footer a').first()).toHaveAttribute("href", /\/municipalities\/norway\/\?lang=en$/);
   await expect(page.locator("#total-entities")).not.toHaveText("—");
   await expect(page.locator("#type-filter option[value='all']")).toHaveText("Municipalities + capitals");
   await expect(page.locator("#municipality-grid .capital-card")).toHaveCount(27);

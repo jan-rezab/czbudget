@@ -22,7 +22,7 @@
   letter-spacing: .1em;
   cursor: pointer;
 }
-.municipality-lang-switch button.active { background: #171918; color: #faf7ef; }
+.site-header .municipality-lang-switch button.active { background: #171918; color: #faf7ef; box-shadow: none; }
 .municipality-lang-switch button:focus-visible { outline: 2px solid #c93237; outline-offset: 2px; }
 .municipality-switch a {
   min-width: 130px;
@@ -38,8 +38,12 @@
 .municipality-switch label { min-width: 230px; padding: 8px 14px; border-left: 1px solid #15201d; display: grid; gap: 2px; }
 .municipality-switch label span { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; }
 .municipality-switch select { border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.municipality-switch select:focus-visible { outline: 2px solid #c93237; outline-offset: 3px; }
 .municipality-switch a.active { background: #15201d; color: #fff; }
 .municipality-switch label.active { background: #15201d; color: #fff; }
+.municipal-country-card footer { gap: 18px; align-items: center; }
+.municipal-country-card footer a { padding: 8px 0; font-weight: 700; text-underline-offset: 4px; }
+.municipal-country-card footer a:last-child { margin-left: auto; text-align: right; }
 .municipal-controls { grid-template-columns: .8fr 1fr 1.35fr .65fr auto; }
 .municipal-controls .control-disabled { opacity: .42; }
 .capital-card { border-top: 4px solid #c74c2f; }
