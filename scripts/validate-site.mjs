@@ -9,6 +9,7 @@ const capitals = JSON.parse(await readFile("data/eu-capital-budgets.v1.json", "u
 const categoryComparison = JSON.parse(await readFile("data/country-spending-comparison.v1.json", "utf8"));
 const functionalBudgets = JSON.parse(await readFile("data/country-functional-budgets.v1.json", "utf8"));
 const roadNetworks = JSON.parse(await readFile("data/road-network-history.v1.json", "utf8"));
+const transportPerformance = JSON.parse(await readFile("data/transport-performance.v1.json", "utf8"));
 const countryCashIn = JSON.parse(await readFile("data/country-cash-in.v1.json", "utf8"));
 const countryHealth = JSON.parse(await readFile("data/country-health.v1.json", "utf8"));
 const countryHealthPerformance = JSON.parse(await readFile("data/country-health-performance.v1.json", "utf8"));
@@ -78,6 +79,13 @@ if (roadNetworks.countries.length !== 10 || !roadNetworks.construction_history_s
 for (const country of roadNetworks.countries) {
   if (!country.road_network?.series?.length || !country.motorways?.series?.length || country.motorways.series.some((point) => !Number.isFinite(point.km))) throw new Error(`${country.code}: incomplete road or motorway history`);
 }
+if (transportPerformance.schema_version !== "1.0.0" || Object.keys(transportPerformance.countries).length !== 10) throw new Error("Expected ten-country transport performance data");
+if (transportPerformance.projects.length < 2 || transportPerformance.projects.some((project) => !project.source?.url || !Number.isFinite(project.cost_per_route_km_local_million))) throw new Error("Transport project costs require sourced, calculable records");
+for (const [code, country] of Object.entries(transportPerformance.countries)) {
+  if (!country.condition_and_repairs?.sources?.length) throw new Error(`${code}: transport condition/repair sources are missing`);
+  if (!["CZE", "DEU", "DNK", "FRA", "GBR", "POL", "SWE", "CHE"].includes(code)) continue;
+  if (!country.rail.network.length || !country.infrastructure_spending.road.investment_constant_eur.length) throw new Error(`${code}: expected official rail and road-investment series`);
+}
 if (Object.keys(countryCashIn.countries).length !== 10 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for ten countries and Czech territorial/company cash-in layers");
 if (countryCashIn.countries.CZE.layers.municipalities.entity_count !== 6254 || countryCashIn.countries.CZE.layers.companies.entity_count !== 38) throw new Error("Unexpected Czech municipality or state-company cash-in coverage");
 for (const [code, country] of Object.entries(functionalBudgets.countries)) {
@@ -128,7 +136,7 @@ if (!comparisonPage.includes('class="compare-scope-readout"') || !comparisonPage
 if (!comparisonPage.includes('id="fiscal-architecture-body"') || !homepageScript.includes("function architectureTable")) throw new Error("Comparison page must compare fiscal architecture across all tracked countries");
 if (!methodologyPage.includes('class="method-grid-expanded"') || !aboutPage.includes("Hlídač státu, z.ú.") || !homepage.includes("data-global-footer") || !internationalMunicipalPage.includes("data-global-footer")) throw new Error("Dedicated methodology, About, and global project credits must be present");
 if (!countryPage.includes('country-spending.js?v=20260823-english-labels') || !countryPage.includes('country-health.js?v=20260822-czech-flow') || !countryPage.includes('country-providers.js?v=20260822-network') || !countryPage.includes('country-functions.js?v=20260822-transport-deep-dive') || !countryPage.includes('country-cash-in.js?v=20260822-cash-in') || !countryPage.includes('country-parity.js?v=20260822-parity-contract') || !countryPage.includes('id="data-parity"') || !countryPage.includes('id="cash-in"') || !countryPage.includes('id="provider-network"') || !countryPage.includes('id="social-system"') || !countryPage.includes('id="transportation"') || !countryScript.includes('countryprofilechange')) throw new Error("Fiscal profiles must preserve parity, cash-in, spending, healthcare, provider, social and transport modules");
-if (!countryFunctionsScript.includes("function renderTransport") || !countryFunctionsScript.includes("transport-comparison") || !countryFunctionsScript.includes("stockNotBuild") || !countryFunctionsScript.includes("function transportBudgetDetail")) throw new Error("Transportation must expose the network and detailed-budget deep dive with the net-stock caveat");
+if (!countryFunctionsScript.includes("function renderTransport") || !countryFunctionsScript.includes("transport-comparison") || !countryFunctionsScript.includes("stockNotBuild") || !countryFunctionsScript.includes("function transportBudgetDetail") || !countryFunctionsScript.includes("function infrastructurePerformance")) throw new Error("Transportation must expose network, budget and infrastructure-performance deep dives with the net-stock caveat");
 async function htmlFiles(directory = ".") {
   const entries = await readdir(directory, { withFileTypes: true });
   const nested = await Promise.all(entries.filter((entry) => ![".git", "node_modules", "test-results"].includes(entry.name)).map((entry) => {
@@ -152,4 +160,6 @@ await stat("scripts/build-municipality-country-pages.mjs");
 for (const required of ["municipalities/norway/index.html", "municipalities/netherlands/index.html", "municipalities/finland/index.html", "municipality-benchmark-country.js", "municipal-benchmark-profile.css", ...["no", "nl", "fi"].map((code) => `assets/flags/${code}.svg`)]) await stat(required);
 await stat("data/transport-budget-detail.v1.json");
 await stat("scripts/build-transport-budget-detail.mjs");
+await stat("data/transport-performance.v1.json");
+await stat("scripts/build-transport-performance.mjs");
 console.log("CZ Budget site validation passed");
