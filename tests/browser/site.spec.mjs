@@ -205,9 +205,9 @@ test("country profiles expose sortable ten-year health, social and transport com
   await expect(transport).toContainText("13,210 km");
 });
 
-test("health deep dive keeps nine system profiles and the ten-country spending comparison", async ({ page }) => {
+test("health deep dive keeps ten system profiles and the ten-country spending comparison", async ({ page }) => {
   await page.goto("/deep-dives/health/?code=CZE&lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#deep-dive-country option")).toHaveCount(9);
+  await expect(page.locator("#deep-dive-country option")).toHaveCount(10);
   await expect(page.locator("#country-function-health tbody tr")).toHaveCount(10);
   await expect(page.locator("#healthcare-system")).toBeVisible();
   await expect(page.locator("#hospital-benchmark")).toBeVisible();
