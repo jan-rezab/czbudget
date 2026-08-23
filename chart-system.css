@@ -314,6 +314,16 @@
 .country-chart-panel .chart-tabs { margin-inline: -18px; padding-inline: 0; border-top: 0; }
 .chart-label { display:flex; justify-content:space-between; padding-top:12px; color:var(--chart-muted); font:700 8px/1 monospace; letter-spacing:.08em; }
 .zero-line { stroke:var(--chart-ink); stroke-width:1.2; }
+.fiscal-view-control { width:max-content; margin:0 0 18px auto; border:1px solid var(--line); background:var(--chart-paper); }
+.country-chart-panel > div[id$="chart"] { position:relative; }
+.country-chart-hit { fill:transparent; stroke:transparent; stroke-width:2; cursor:crosshair; outline:none; }
+.country-chart-hit:hover,.country-chart-hit:focus,.country-chart-hit.active { fill:var(--chart-paper); stroke:var(--chart-ink); }
+.country-chart-tooltip { position:absolute; z-index:4; min-width:112px; padding:8px 10px; pointer-events:none; opacity:0; transform:translate(-50%,calc(-100% - 12px)); border:1px solid #ffffff38; background:#171918f3; color:#fff; box-shadow:5px 5px 0 #17191824; font:10px/1.25 var(--chart-font); transition:opacity .12s ease; }
+.country-chart-tooltip.visible { opacity:1; }
+.country-chart-tooltip strong,.country-chart-tooltip span,.country-chart-tooltip b { display:block; }
+.country-chart-tooltip strong { margin-bottom:3px; color:var(--chart-green); }
+.country-chart-tooltip span { max-width:180px; color:#c8c5bd; }
+.country-chart-tooltip b { margin-top:3px; font-size:11px; font-variant-numeric:tabular-nums; }
 
 .currency-toggle { display:flex; align-items:center; width:max-content; gap:0; margin-top:14px; border:1px solid var(--line); background:var(--white); }
 .currency-toggle > span { padding:0 11px; color:var(--muted); font:700 7px/1 monospace; text-transform:uppercase; }
