@@ -18,7 +18,7 @@
   border: 0;
   background: transparent;
   color: #6e716d;
-  font: 800 10px/1 Arial, sans-serif;
+  font: 800 13px/1 Arial, sans-serif;
   letter-spacing: .1em;
   cursor: pointer;
 }
@@ -36,7 +36,7 @@
   letter-spacing: .08em;
 }
 .municipality-switch label { min-width: 230px; padding: 8px 14px; border-left: 1px solid #15201d; display: grid; gap: 2px; }
-.municipality-switch label span { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; }
+.municipality-switch label span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; }
 .municipality-switch select { border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .municipality-switch select:focus-visible { outline: 2px solid #c93237; outline-offset: 3px; }
 .municipality-switch a.active { background: #15201d; color: #fff; }
@@ -47,7 +47,7 @@
 .country-picker-readout img { width: 30px; height: 20px; object-fit: cover; border: 1px solid #ffffff66; }
 .country-picker-readout > span { min-width: 0; display: grid; gap: 2px; }
 .country-picker-readout strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
-.country-picker-readout small { color: #c7ccc6; font-size: 9px; font-weight: 500; }
+.country-picker-readout small { color: #c7ccc6; font-size: 12px; font-weight: 500; }
 .country-picker-readout > b { margin-left: auto; color: #d9ff69; font-size: 18px; }
 .municipality-switch .dynamic-country-picker select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .municipality-switch .dynamic-country-picker:hover,
@@ -59,7 +59,7 @@
 .municipal-controls .control-disabled { opacity: .42; }
 .capital-card { border-top: 4px solid #c74c2f; }
 .capital-card header small { color: #c74c2f; }
-.capital-country-code { width: 31px; height: 21px; display: grid; place-items: center; background: #15201d; color: #fff; font-size: 9px; letter-spacing: .08em; }
+.capital-country-code { width: 31px; height: 21px; display: grid; place-items: center; background: #15201d; color: #fff; font-size: 12px; letter-spacing: .08em; }
 .czechia-hero h1 em { color: #a8b63f; }
 .czechia-municipalities-page #insights .section-heading {
   grid-template-columns: minmax(0, .82fr) minmax(320px, .7fr);
@@ -105,18 +105,18 @@
   font-size: 12px;
 }
 .czechia-municipalities-page .municipality-size-benchmark { padding: 84px 40px 92px; background: #171918; color: #fff; }
-.benchmark-loading { margin: 0; color: #b9bdb7; font: 11px monospace; text-transform: uppercase; }
+.benchmark-loading { margin: 0; color: #b9bdb7; font: 14px monospace; text-transform: uppercase; }
 .municipal-size-heading { display: grid; grid-template-columns: minmax(0,.92fr) minmax(300px,.58fr); gap: clamp(48px,7vw,104px); align-items: start; }
 .municipal-size-heading .kicker { color: #a8b63f; }
 .municipal-size-heading h2 { max-width: 720px; margin: 18px 0 0; font: 500 clamp(44px,5vw,68px)/.96 Georgia,serif; letter-spacing: -.055em; }
 .municipal-size-heading p { max-width: 470px; margin: 44px 0 0; color: #b9bdb7; font-size: 15px; line-height: 1.65; }
 .municipal-size-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 52px 0 32px; }
 .municipal-size-kpis article { min-width: 0; min-height: 158px; padding: 22px; border: 1px solid #ffffff26; border-top: 3px solid #a8b63f; background: #232624; display: flex; flex-direction: column; }
-.municipal-size-kpis span,.municipal-size-kpis small { display: block; color: #aeb2ac; font: 9px/1.35 monospace; text-transform: uppercase; letter-spacing: .06em; }
+.municipal-size-kpis span,.municipal-size-kpis small { display: block; color: #aeb2ac; font: 12px/1.35 monospace; text-transform: uppercase; letter-spacing: .06em; }
 .municipal-size-kpis strong { display: block; margin: 18px 0 8px; color: #a8b63f; font: 500 clamp(31px,3vw,42px)/1 Georgia,serif; }
 .municipal-size-kpis small { margin-top: auto; }
 .municipal-size-chart-card { background: #faf7ef; color: #171918; box-shadow: 9px 9px 0 #a8b63f; }
-.municipal-size-legend { min-height: 56px; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 22px; border-bottom: 1px solid #d2ccc1; color: #6e716d; font: 9px monospace; text-transform: uppercase; }
+.municipal-size-legend { min-height: 56px; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 22px; border-bottom: 1px solid #d2ccc1; color: #6e716d; font: 12px monospace; text-transform: uppercase; }
 .municipal-size-legend span { display: flex; align-items: center; gap: 7px; }
 .municipal-size-legend i { position: relative; display: inline-block; width: 22px; height: 8px; }
 .municipal-size-legend .mean-key { background: #171918; }
@@ -125,26 +125,26 @@
 .municipal-size-chart-scroll { overflow-x: auto; padding: 10px 18px 0; }
 .municipal-size-chart-scroll svg { display: block; width: 100%; min-width: 820px; height: auto; font-family: Arial,sans-serif; }
 .municipal-size-axis line { stroke: #d9d4ca; stroke-width: 1; }
-.municipal-size-axis text { fill: #6e716d; font: 9px monospace; }
+.municipal-size-axis text { fill: #6e716d; font: 12px monospace; }
 .municipal-size-eu { stroke: #c93237; stroke-width: 2; stroke-dasharray: 5 5; }
 .municipal-size-track { fill: #e8e3d9; }
 .municipal-size-mean { fill: #171918; }
 .municipal-size-median { fill: #faf7ef; stroke: #171918; stroke-width: 2; }
 .municipal-size-name { fill: #171918; font-size: 12px; font-weight: 700; }
-.municipal-size-rank { fill: #9a9b95; font: 9px monospace; }
-.municipal-size-value { fill: #171918; font: 700 11px monospace; }
+.municipal-size-rank { fill: #9a9b95; font: 12px monospace; }
+.municipal-size-value { fill: #171918; font: 700 14px monospace; }
 .municipal-size-row.active .municipal-size-mean { fill: #a8b63f; }
 .municipal-size-row.active .municipal-size-median { fill: #171918; stroke: #a8b63f; stroke-width: 3; }
 .municipal-size-row.active .municipal-size-name,.municipal-size-row.active .municipal-size-value,.municipal-size-row.active .municipal-size-rank { fill: #c93237; font-weight: 800; }
-.municipal-size-toggle { width: 100%; padding: 15px 20px; border: 0; border-top: 1px solid #d2ccc1; background: transparent; color: #171918; font: 700 10px monospace; text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
+.municipal-size-toggle { width: 100%; padding: 15px 20px; border: 0; border-top: 1px solid #d2ccc1; background: transparent; color: #171918; font: 700 13px monospace; text-transform: uppercase; letter-spacing: .08em; cursor: pointer; }
 .municipal-size-toggle:hover { background: #a8b63f; }
 .municipal-size-outliers { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-top: 26px; background: #ffffff32; border: 1px solid #ffffff32; }
 .municipal-size-outliers article { padding: 22px 24px; background: #232624; }
-.municipal-size-outliers span,.municipal-size-outliers small { display: block; color: #aeb2ac; font: 9px/1.35 monospace; text-transform: uppercase; }
+.municipal-size-outliers span,.municipal-size-outliers small { display: block; color: #aeb2ac; font: 12px/1.35 monospace; text-transform: uppercase; }
 .municipal-size-outliers strong { display: block; margin: 10px 0 5px; font: 500 clamp(27px,3vw,41px)/1 Georgia,serif; }
 .municipal-size-method { display: grid; grid-template-columns: 1fr auto; gap: 35px; align-items: end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #ffffff32; }
-.municipal-size-method p { max-width: 850px; margin: 0; color: #b9bdb7; font-size: 11px; line-height: 1.65; }
-.municipal-size-method a { color: #a8b63f; font: 700 9px/1.4 monospace; text-decoration: none; text-transform: uppercase; }
+.municipal-size-method p { max-width: 850px; margin: 0; color: #b9bdb7; font-size: 14px; line-height: 1.65; }
+.municipal-size-method a { color: #a8b63f; font: 700 12px/1.4 monospace; text-decoration: none; text-transform: uppercase; }
 .czechia-destination-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
