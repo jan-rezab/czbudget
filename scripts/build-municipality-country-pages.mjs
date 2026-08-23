@@ -20,7 +20,7 @@ for(const [slug,page] of Object.entries(pages)){
 <head>
   <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
   <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
-  <script src="../../global-nav.js?v=20260824-header-lockup" defer></script>
+  <script src="../../global-nav.js?v=20260824-identity-outlines" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${page.title} — Public Spending Data</title>

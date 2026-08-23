@@ -86,7 +86,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
     og_locale = "en_GB" if language == "en" else "cs_CZ"
     return f"""<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
   <link rel="stylesheet" href="{root}site-header.css?v=20260824-header-lockup" data-psd-site-header>
-  <script src="{root}global-nav.js?v=20260824-header-lockup" defer></script>
+  <script src="{root}global-nav.js?v=20260824-identity-outlines" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{esc(title)}</title>

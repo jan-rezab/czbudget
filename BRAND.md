@@ -14,8 +14,14 @@ from the four-square grid; a paper slash between them turns the grid into a
 percent sign that still reads at favicon size.
 
 - `assets/logo.svg` — the mark, 64 grid, rounded tile
+- `assets/logo-1024.png`, `logo-512.png`, `logo-256.png`, `logo-64.png` — the
+  same mark exported to PNG, transparent outside the tile, for decks, avatars
+  and anywhere SVG is not accepted
 - `assets/logo-lockup.svg` — mark and wordmark for paper backgrounds
 - `assets/logo-lockup-dark.svg` — the same lockup for ink backgrounds, tile in `#242724`
+- `assets/logo-lockup-1520.png`, `logo-lockup-760.png` and their
+  `logo-lockup-dark-*` twins — the full lockup as PNG, at exact 8x and 4x of
+  the 190x48 artwork so nothing is resampled
 
 Open `brand-preview.html` for the rendered sheet, the size ladder and the chart
 treatment. That page is internal: it is excluded from the container image and
@@ -51,6 +57,13 @@ Two lines, set in Arial to match the site body font. "Public Spending" in ink at
 regular weight, "Data" underneath in deficit red at bold. Never set the wordmark
 on one line, never letterspace it, never restate the name next to a lockup that
 already contains it.
+
+The wordmark in both lockup SVGs is converted to outlines, not live text. That
+is deliberate: the header loads the lockup through `background-image` and an
+`<img>`, and an SVG used as an image cannot reach a webfont, so live text falls
+back to whatever sans-serif the visitor happens to have. Android ships no Arial.
+Outlines guarantee the real letterforms everywhere. To change the wording,
+regenerate the paths from Arial at 17px rather than editing a text node.
 
 Clear space is half the tile height on every side. Minimum sizes: 16px for the
 mark on its own, 120px wide for a lockup. Below that, use the mark.
