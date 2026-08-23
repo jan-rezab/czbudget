@@ -1,0 +1,399 @@
+.country-budget-map-section,
+.country-demography-section {
+  background: #f3f0e8;
+}
+
+.country-public-entities-section {
+  background: #17241f;
+  color: #f8f4e9;
+}
+
+.country-public-entities-section .detail-heading p,
+.country-public-entities-section .kicker {
+  color: #b9c6bf;
+}
+
+.insight-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 42px 0;
+  background: rgba(20, 28, 25, .16);
+  border: 1px solid rgba(20, 28, 25, .16);
+}
+
+.insight-kpis article {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px;
+  background: #faf8f1;
+}
+
+.insight-kpis span,
+.entity-scope-card span,
+.demography-source span {
+  color: #59645f;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.insight-kpis strong {
+  font-family: var(--font-display, Georgia, serif);
+  font-size: clamp(28px, 3vw, 46px);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.insight-kpis small {
+  color: #66706b;
+  line-height: 1.45;
+}
+
+.budget-map-list,
+.entity-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.entity-inventory > header,
+.demography-structure > header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(20, 28, 25, .25);
+}
+
+.entity-inventory > header span,
+.demography-structure > header span {
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.entity-inventory > header small {
+  max-width: 360px;
+  color: #69726e;
+  text-align: right;
+}
+
+.budget-map-row {
+  min-height: 205px;
+  padding: 18px;
+  border: 1px solid rgba(20, 28, 25, .13);
+  background: rgba(255, 255, 255, .58);
+}
+
+.budget-map-row > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.budget-map-row h3 {
+  margin: 5px 0 0;
+  font-size: 17px;
+}
+
+.budget-map-row header > div:last-child {
+  text-align: right;
+}
+
+.budget-map-row header span,
+.budget-source-lines > span {
+  color: #69726e;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.budget-map-row header strong {
+  display: block;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-map-row header small {
+  display: block;
+  margin-top: 6px;
+  color: #5f6964;
+  line-height: 1.35;
+}
+
+.budget-map-track,
+.entity-coverage-track {
+  overflow: hidden;
+  height: 4px;
+  margin: 16px 0;
+  background: rgba(20, 28, 25, .12);
+}
+
+.budget-map-track i,
+.entity-coverage-track i {
+  display: block;
+  height: 100%;
+  background: #2d6c57;
+}
+
+.budget-source-lines {
+  display: grid;
+  gap: 6px;
+}
+
+.budget-source-lines > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(20, 28, 25, .08);
+  font-size: 12px;
+}
+
+.budget-source-lines b {
+  line-height: 1.35;
+}
+
+.budget-source-lines small {
+  flex: 0 1 46%;
+  color: #5f6964;
+  text-align: right;
+  line-height: 1.35;
+}
+
+.budget-source-lines em {
+  color: #69726e;
+  font-size: 11px;
+}
+
+.insight-method {
+  max-width: 760px;
+  margin: 28px 0 0;
+  color: #5f6964;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.entity-scope-card a,
+.demography-source a {
+  color: inherit;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.entity-kpis {
+  background: rgba(255, 255, 255, .18);
+  border-color: rgba(255, 255, 255, .18);
+}
+
+.entity-kpis article {
+  background: #22332c;
+}
+
+.entity-kpis span,
+.entity-kpis small {
+  color: #bdc9c2;
+}
+
+.entity-scope-card,
+.entity-inventory {
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(255, 255, 255, .045);
+}
+
+.entity-scope-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.entity-scope-card p {
+  margin: 0;
+  color: #d1dad5;
+  line-height: 1.65;
+}
+
+.entity-scope-card > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: auto;
+}
+
+.entity-scope-card a {
+  color: #f8f4e9;
+}
+
+.entity-inventory > header {
+  border-color: rgba(255, 255, 255, .18);
+}
+
+.entity-inventory > header small {
+  color: #bdc9c2;
+}
+
+.entity-inventory > div {
+  overflow-x: auto;
+}
+
+.entity-inventory table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.entity-inventory th,
+.entity-inventory td {
+  padding: 11px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, .11);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.entity-inventory th:first-child,
+.entity-inventory td:first-child {
+  text-align: left;
+}
+
+.entity-inventory th {
+  color: #bdc9c2;
+  font-size: 10px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.entity-inventory tr.selected {
+  background: rgba(244, 194, 68, .12);
+  color: #ffe6a2;
+}
+
+.demography-structure {
+  margin-top: 8px;
+  padding: 28px;
+  border: 1px solid rgba(20, 28, 25, .16);
+  background: #faf8f1;
+}
+
+.demography-structure h3 {
+  max-width: 700px;
+  margin: 6px 0 0;
+  font-size: 18px;
+}
+
+.age-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.age-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #59645f;
+  font-size: 11px;
+}
+
+.age-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.demography-years {
+  display: grid;
+  gap: 20px;
+  margin-top: 26px;
+}
+
+.demography-year {
+  display: grid;
+  grid-template-columns: 48px minmax(160px, 1fr) 110px 170px;
+  align-items: center;
+  gap: 16px;
+}
+
+.demography-year > strong,
+.demography-year > small {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.demography-year > small {
+  color: #66706b;
+}
+
+.demography-stack {
+  display: flex;
+  overflow: hidden;
+  height: 24px;
+  border-radius: 2px;
+  background: #e4e0d7;
+}
+
+.demography-stack i {
+  height: 100%;
+}
+
+.age_0_19 i,
+.demography-stack .age_0_19 { background: #e4ae45; }
+.age_20_64 i,
+.demography-stack .age_20_64 { background: #2d6c57; }
+.age_65_79 i,
+.demography-stack .age_65_79 { background: #768b83; }
+.age_80_plus i,
+.demography-stack .age_80_plus { background: #9a574b; }
+
+.demography-source {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 20px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(20, 28, 25, .2);
+  border-bottom: 1px solid rgba(20, 28, 25, .2);
+}
+
+.demography-source > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.demography-source strong,
+.demography-source small {
+  line-height: 1.45;
+}
+
+@media (max-width: 980px) {
+  .insight-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .budget-map-list,
+  .entity-insight-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .insight-kpis { grid-template-columns: 1fr; }
+  .insight-kpis article { min-height: 120px; }
+  .demography-source,
+  .demography-structure > header { align-items: flex-start; flex-direction: column; }
+  .entity-inventory > header { align-items: flex-start; flex-direction: column; }
+  .entity-inventory > header small { text-align: left; }
+  .demography-year { grid-template-columns: 42px 1fr 90px; gap: 10px; }
+  .demography-year > small { grid-column: 2 / 4; }
+  .age-legend { justify-content: flex-start; }
+  .entity-scope-card,
+  .entity-inventory,
+  .demography-structure { padding: 18px; }
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-parity.v1",
-  "generated_at": "2026-08-22T21:26:02.799Z",
+  "generated_at": "2026-08-23T17:36:03.771Z",
   "country_count": 10,
   "rules": {
     "native_first": "National classifications, stages, currencies and accounting scopes are retained without coercion.",
@@ -20,8 +20,8 @@
     "health": "data/country-health.v1.json",
     "providers": "data/country-provider-networks.v1.json",
     "municipalities": "data/international-municipalities.v1.json",
-    "public_entities_czechia": "data/cz-public-entities-2024.json",
-    "demography_czechia": "data/demography-social.v1.json"
+    "public_entities": "data/country-public-entities.v1.json",
+    "demography": "data/country-demography.v1.json"
   },
   "warehouse_bundles": [
     {
@@ -151,20 +151,22 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
           "status": "loaded",
           "coverage": "642 registered provider locations",
           "missing_dimensions": [],
-          "facility_count": 642
+          "facility_count": 642,
+          "coverage_level": "facility_register"
         },
         "municipalities": {
           "status": "loaded",
           "coverage": "All 6,254 municipalities",
           "missing_dimensions": [],
           "entity_count": 6254,
+          "fact_count": 6254,
           "years": [
             2025
           ],
@@ -179,19 +181,27 @@
             "balance",
             "cash"
           ],
+          "coverage_level": "complete",
           "directory": "data/countries/cze/municipalities.v1.json",
           "warehouse": []
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "637 selected controlled entities",
-          "missing_dimensions": [],
-          "entity_count": 637
+          "coverage": "637 entities; 137 with accounts",
+          "missing_dimensions": [
+            "účetní výkazy pro 500 subjektů / financial statements for 500 entities"
+          ],
+          "entity_count": 637,
+          "financial_statement_count": 137,
+          "coverage_level": "entity_register_and_selected_accounts"
         },
         "demography": {
           "status": "loaded",
-          "coverage": "undefined–undefined",
-          "missing_dimensions": []
+          "coverage": "2023–2101; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "ČSÚ 2023–2100, střední varianta",
+          "detail": "data/countries/cze/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [
@@ -234,14 +244,9 @@
       "currency_code": "UAH",
       "profile": "data/countries/ukr/profile.v1.json",
       "coverage": {
-        "loaded_modules": 7,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "public_entity_accounts",
-          "national_demographic_projection",
-          "harmonised_health_financing",
-          "provider_register"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -285,25 +290,28 @@
           "missing_dimensions": []
         },
         "health": {
-          "status": "unavailable",
-          "coverage": "functional expenditure only",
+          "status": "loaded",
+          "coverage": "SHA financing profile; 2021",
           "missing_dimensions": [
-            "SHA financing and provider split"
+            "SHA provider split (HP)",
+            "comparable bed benchmark"
           ]
         },
         "providers": {
-          "status": "unavailable",
-          "coverage": "source_adapter_pending",
+          "status": "loaded",
+          "coverage": "official bulk registered provider locations",
           "missing_dimensions": [
-            "facility records"
+            "complete facility census"
           ],
-          "facility_count": 0
+          "facility_count": null,
+          "coverage_level": "nhsu_contracting_provider_open_data"
         },
         "municipalities": {
           "status": "loaded",
           "coverage": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
           "missing_dimensions": [],
           "entity_count": 1467,
+          "fact_count": 1467,
           "years": [
             2024,
             2025
@@ -317,6 +325,7 @@
             "revenue",
             "expenditure"
           ],
+          "coverage_level": "complete",
           "directory": "data/countries/ukr/municipalities.v1.json",
           "warehouse": [
             {
@@ -338,22 +347,22 @@
           ]
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
+          "status": "loaded",
+          "coverage": "3009 entities; 0 with accounts",
           "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
+            "standardizované účetní výkazy / standardised financial statements"
           ],
-          "entity_count": 0
+          "entity_count": 3009,
+          "financial_statement_count": 0,
+          "coverage_level": "state_sector_enterprise_register"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2024–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "UN World Population Prospects 2024, medium variant",
+          "detail": "data/countries/ukr/demography.v1.json",
+          "detail_row_count": 7777
         }
       },
       "sources": [
@@ -394,13 +403,9 @@
       "currency_code": "PLN",
       "profile": "data/countries/pol/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "public_entity_accounts",
-          "national_demographic_projection",
-          "provider_register"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -445,22 +450,22 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
-          "status": "unavailable",
-          "coverage": "source_adapter_pending",
-          "missing_dimensions": [
-            "facility records"
-          ],
-          "facility_count": 0
+          "status": "loaded",
+          "coverage": "official bulk registered provider locations",
+          "missing_dimensions": [],
+          "facility_count": null,
+          "coverage_level": "rpwdl_active_healthcare_provider_ledgers"
         },
         "municipalities": {
           "status": "loaded",
           "coverage": "All gminas in annual Rb-27S and Rb-28S returns",
           "missing_dimensions": [],
           "entity_count": 2486,
+          "fact_count": 2479,
           "years": [
             2024,
             2025
@@ -473,6 +478,7 @@
             "revenue",
             "expenditure"
           ],
+          "coverage_level": "complete",
           "directory": "data/countries/pol/municipalities.v1.json",
           "warehouse": [
             {
@@ -495,22 +501,22 @@
           ]
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
+          "status": "loaded",
+          "coverage": "406 entities; 0 with accounts",
           "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
+            "standardizované účetní výkazy / standardised financial statements"
           ],
-          "entity_count": 0
+          "entity_count": 406,
+          "financial_statement_count": 0,
+          "coverage_level": "ownership_register"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/pol/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [
@@ -552,14 +558,9 @@
       "currency_code": "EUR",
       "profile": "data/countries/deu/profile.v1.json",
       "coverage": {
-        "loaded_modules": 7,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "municipal_entity_finance",
-          "public_entity_accounts",
-          "national_demographic_projection",
-          "provider_register"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -604,48 +605,52 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
-          "status": "unavailable",
-          "coverage": "source_adapter_pending",
-          "missing_dimensions": [
-            "facility records"
-          ],
-          "facility_count": 0
+          "status": "loaded",
+          "coverage": "1841 registered provider locations",
+          "missing_dimensions": [],
+          "facility_count": 1841,
+          "coverage_level": "destatis_hospital_directory"
         },
         "municipalities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "entity census",
-            "budget facts"
+          "status": "loaded",
+          "coverage": "10,756 municipal core budgets; adjusted receipts and payments excluding financing",
+          "missing_dimensions": [],
+          "entity_count": 10756,
+          "fact_count": 10756,
+          "years": [
+            2025
           ],
-          "entity_count": 0,
-          "years": [],
-          "stages": [],
-          "measures": [],
-          "directory": null,
+          "stages": [
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "balance"
+          ],
+          "coverage_level": "complete",
+          "directory": "data/countries/deu/municipalities.v1.json",
           "warehouse": []
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
-          ],
-          "entity_count": 0
+          "status": "loaded",
+          "coverage": "119 entities; 119 with accounts",
+          "missing_dimensions": [],
+          "entity_count": 119,
+          "financial_statement_count": 119,
+          "coverage_level": "federal_holdings_report"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/deu/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [
@@ -673,12 +678,9 @@
       "currency_code": "GBP",
       "profile": "data/countries/gbr/profile.v1.json",
       "coverage": {
-        "loaded_modules": 9,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "public_entity_accounts",
-          "national_demographic_projection"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -723,20 +725,22 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
           "status": "loaded",
           "coverage": "46118 registered provider locations",
           "missing_dimensions": [],
-          "facility_count": 46118
+          "facility_count": 46118,
+          "coverage_level": "nhs_trust_sites"
         },
         "municipalities": {
           "status": "loaded",
           "coverage": "Submitted English council and GLA returns; excludes police and fire",
           "missing_dimensions": [],
           "entity_count": 318,
+          "fact_count": 317,
           "years": [
             2024,
             2025
@@ -749,6 +753,7 @@
             "expenditure",
             "financing"
           ],
+          "coverage_level": "complete",
           "directory": "data/countries/gbr/municipalities.v1.json",
           "warehouse": [
             {
@@ -771,22 +776,20 @@
           ]
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
-          ],
-          "entity_count": 0
+          "status": "loaded",
+          "coverage": "252 entities; 252 with accounts",
+          "missing_dimensions": [],
+          "entity_count": 252,
+          "financial_statement_count": 252,
+          "coverage_level": "public_bodies_directory"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2024–2124; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "ONS 2024-based principal projection",
+          "detail": "data/countries/gbr/demography.v1.json",
+          "detail_row_count": 10807
         }
       },
       "sources": [
@@ -826,12 +829,9 @@
       "currency_code": "EUR",
       "profile": "data/countries/fra/profile.v1.json",
       "coverage": {
-        "loaded_modules": 9,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "public_entity_accounts",
-          "national_demographic_projection"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -876,20 +876,22 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
           "status": "loaded",
           "coverage": "5979 registered provider locations",
           "missing_dimensions": [],
-          "facility_count": 5979
+          "facility_count": 5979,
+          "coverage_level": "finess_hospital_activity_establishments"
         },
         "municipalities": {
           "status": "loaded",
           "coverage": "All communes; functional detail where reported; main and supplementary budgets",
           "missing_dimensions": [],
           "entity_count": 35041,
+          "fact_count": 34877,
           "years": [
             2024,
             2025
@@ -902,6 +904,7 @@
             "expenditure",
             "balance"
           ],
+          "coverage_level": "complete",
           "directory": "data/countries/fra/municipalities.v1.json",
           "warehouse": [
             {
@@ -941,22 +944,20 @@
           ]
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
-          ],
-          "entity_count": 0
+          "status": "loaded",
+          "coverage": "87 entities; 87 with accounts",
+          "missing_dimensions": [],
+          "entity_count": 87,
+          "financial_statement_count": 87,
+          "coverage_level": "state_shareholder_portfolio_and_combined_accounts"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/fra/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [
@@ -998,13 +999,9 @@
       "currency_code": "USD",
       "profile": "data/countries/usa/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "municipal_entity_finance",
-          "public_entity_accounts",
-          "national_demographic_projection"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -1049,46 +1046,54 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
           "status": "loaded",
           "coverage": "5419 registered provider locations",
           "missing_dimensions": [],
-          "facility_count": 5419
+          "facility_count": 5419,
+          "coverage_level": "medicare_registered_hospitals"
         },
         "municipalities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "entity census",
-            "budget facts"
+          "status": "loaded",
+          "coverage": "All city/municipality government units in the Census of Governments file; thousands of USD converted to USD",
+          "missing_dimensions": [],
+          "entity_count": 19401,
+          "fact_count": 19401,
+          "years": [
+            2022
           ],
-          "entity_count": 0,
-          "years": [],
-          "stages": [],
-          "measures": [],
-          "directory": null,
+          "stages": [
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "balance"
+          ],
+          "coverage_level": "complete",
+          "directory": "data/countries/usa/municipalities.v1.json",
           "warehouse": []
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
+          "status": "loaded",
+          "coverage": "167 entities; 38 with accounts",
           "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
+            "samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"
           ],
-          "entity_count": 0
+          "entity_count": 167,
+          "financial_statement_count": 38,
+          "coverage_level": "governmentwide_reporting_entities"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "2023 National Population Projections, middle series",
+          "detail": "data/countries/usa/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [
@@ -1145,14 +1150,9 @@
       "currency_code": "CHF",
       "profile": "data/countries/che/profile.v1.json",
       "coverage": {
-        "loaded_modules": 7,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "municipal_entity_finance",
-          "public_entity_accounts",
-          "national_demographic_projection",
-          "provider_register"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -1197,48 +1197,54 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
-          "status": "unavailable",
-          "coverage": "source_adapter_pending",
-          "missing_dimensions": [
-            "facility records"
-          ],
-          "facility_count": 0
+          "status": "loaded",
+          "coverage": "230 registered provider locations",
+          "missing_dimensions": [],
+          "facility_count": 230,
+          "coverage_level": "foph_acute_hospital_sites"
         },
         "municipalities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
+          "status": "loaded",
+          "coverage": "Complete municipal subsector in the harmonised EFV model; the federal public workbook is an aggregate, not a 2,121-commune extract",
           "missing_dimensions": [
-            "entity census",
-            "budget facts"
+            "entity-level municipality financial facts"
           ],
-          "entity_count": 0,
-          "years": [],
-          "stages": [],
-          "measures": [],
-          "directory": null,
+          "entity_count": 2121,
+          "fact_count": 0,
+          "years": [
+            2023
+          ],
+          "stages": [
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "balance"
+          ],
+          "coverage_level": "aggregate_only",
+          "directory": "data/countries/che/municipalities.v1.json",
           "warehouse": []
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
-          ],
-          "entity_count": 0
+          "status": "loaded",
+          "coverage": "22 entities; 22 with accounts",
+          "missing_dimensions": [],
+          "entity_count": 22,
+          "financial_statement_count": 22,
+          "coverage_level": "federal_enterprises_and_institutions"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/che/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [
@@ -1265,13 +1271,9 @@
       "currency_code": "SEK",
       "profile": "data/countries/swe/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "public_entity_accounts",
-          "national_demographic_projection",
-          "provider_register"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -1316,22 +1318,24 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
-          "status": "unavailable",
-          "coverage": "source_adapter_pending",
+          "status": "loaded",
+          "coverage": "21 registered provider locations",
           "missing_dimensions": [
-            "facility records"
+            "facility-level public bulk register"
           ],
-          "facility_count": 0
+          "facility_count": 21,
+          "coverage_level": "regional_provider_authorities"
         },
         "municipalities": {
           "status": "loaded",
           "coverage": "All 290 municipalities; costs, income and balance sheet",
           "missing_dimensions": [],
           "entity_count": 290,
+          "fact_count": 290,
           "years": [
             2024,
             2025
@@ -1344,6 +1348,7 @@
             "expenditure",
             "balance"
           ],
+          "coverage_level": "complete",
           "directory": "data/countries/swe/municipalities.v1.json",
           "warehouse": [
             {
@@ -1366,22 +1371,20 @@
           ]
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
-          ],
-          "entity_count": 0
+          "status": "loaded",
+          "coverage": "38 entities; 38 with accounts",
+          "missing_dimensions": [],
+          "entity_count": 38,
+          "financial_statement_count": 38,
+          "coverage_level": "state_owned_company_portfolio"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/swe/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [
@@ -1423,13 +1426,9 @@
       "currency_code": "DKK",
       "profile": "data/countries/dnk/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 11,
         "total_modules": 11,
-        "missing_dimensions": [
-          "public_entity_accounts",
-          "national_demographic_projection",
-          "provider_register"
-        ]
+        "missing_dimensions": []
       },
       "modules": {
         "sovereign": {
@@ -1474,22 +1473,22 @@
         },
         "health": {
           "status": "loaded",
-          "coverage": "SHA financing/provider shares; 2024",
+          "coverage": "SHA financing profile; 2024",
           "missing_dimensions": []
         },
         "providers": {
-          "status": "unavailable",
-          "coverage": "source_adapter_pending",
-          "missing_dimensions": [
-            "facility records"
-          ],
-          "facility_count": 0
+          "status": "loaded",
+          "coverage": "135 registered provider locations",
+          "missing_dimensions": [],
+          "facility_count": 135,
+          "coverage_level": "sor_active_hospitals"
         },
         "municipalities": {
           "status": "loaded",
           "coverage": "All 98 municipalities; budgets and final accounts",
           "missing_dimensions": [],
           "entity_count": 98,
+          "fact_count": 98,
           "years": [
             2024,
             2025
@@ -1503,6 +1502,7 @@
             "expenditure",
             "financing"
           ],
+          "coverage_level": "complete",
           "directory": "data/countries/dnk/municipalities.v1.json",
           "warehouse": [
             {
@@ -1525,22 +1525,20 @@
           ]
         },
         "public_entities": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "ownership register",
-            "entity accounts"
-          ],
-          "entity_count": 0
+          "status": "loaded",
+          "coverage": "24 entities; 24 with accounts",
+          "missing_dimensions": [],
+          "entity_count": 24,
+          "financial_statement_count": 24,
+          "coverage_level": "state_company_portfolio"
         },
         "demography": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": [
-            "population projection",
-            "age structure",
-            "social-system model"
-          ]
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/dnk/demography.v1.json",
+          "detail_row_count": 7979
         }
       },
       "sources": [

@@ -13,11 +13,11 @@ if (process.argv.includes("--providers-only")) {
   const providerData = read("data/country-provider-networks.v1.json");
   for (const country of parity.countries) {
     const provider = providerData.countries[country.country_code];
-    const loaded = Array.isArray(provider?.facilities) || Boolean(provider?.records);
+    const loaded = Boolean(provider && provider.coverage !== "source_adapter_pending");
     country.modules.providers = {
       status: loaded ? "loaded" : "unavailable",
       coverage: loaded ? `${provider.facility_count} registered provider locations` : provider?.coverage || "not loaded",
-      missing_dimensions: loaded ? [] : ["facility records"],
+      missing_dimensions: loaded ? (provider.missing_dimensions || []) : ["facility records"],
       facility_count: provider?.facility_count || 0,
     };
     country.coverage.loaded_modules = Object.values(country.modules).filter((module) => module.status === "loaded").length;
@@ -46,8 +46,8 @@ const transport = read("data/transport-budget-detail.v1.json");
 const health = read("data/country-health.v1.json");
 const providers = read("data/country-provider-networks.v1.json");
 const municipalities = read("data/international-municipalities.v1.json");
-const publicEntities = read("data/cz-public-entities-2024.json");
-const demography = read("data/demography-social.v1.json");
+const publicEntities = read("data/country-public-entities.v1.json");
+const demography = read("data/country-demography.v1.json");
 
 const volumeBundles = [
   ["international core", "outputs/20260822-international-municipal-2024-2025-full/international_municipal_manifest.json"],
@@ -105,8 +105,8 @@ const manifest = {
     health: "data/country-health.v1.json",
     providers: "data/country-provider-networks.v1.json",
     municipalities: "data/international-municipalities.v1.json",
-    public_entities_czechia: "data/cz-public-entities-2024.json",
-    demography_czechia: "data/demography-social.v1.json",
+    public_entities: "data/country-public-entities.v1.json",
+    demography: "data/country-demography.v1.json",
   },
   warehouse_bundles: warehouseBundles.map((bundle) => ({
     label: bundle.label,
@@ -130,9 +130,9 @@ for (const code of countryCodes) {
   const functionProfile = functions.countries[code];
   const transportProfile = transport.countries[code];
   const municipalityRows = municipalities.entities.filter((entity) => entity.country === code);
-  const publicEntityProfile = code === "CZE" ? publicEntities : null;
-  const demographyProfile = code === "CZE" ? demography : null;
-  const providerLoaded = Array.isArray(provider?.facilities) || Boolean(provider?.records);
+  const publicEntityProfile = publicEntities.countries[code] || null;
+  const demographyProfile = demography.countries[code] || null;
+  const providerLoaded = Boolean(provider && provider.coverage !== "source_adapter_pending");
   const providerSummary = providerLoaded ? Object.fromEntries(Object.entries(provider).filter(([key]) => key !== "facilities")) : null;
   const periods = metricYears(series);
   const missing = [];
@@ -149,11 +149,11 @@ for (const code of countryCodes) {
     common_spending: { ...status(Boolean(common), common ? `${comparison.categories.length} harmonised categories` : "not loaded"), category_count: common ? comparison.categories.length : 0 },
     functional_spending: { ...status(Boolean(functionProfile), functionProfile ? `${Object.keys(functionProfile.categories).length} functions; ${functions.period.start}–${functions.period.end}` : "not loaded"), function_count: Object.keys(functionProfile?.categories || {}).length },
     transport: { ...status(Boolean(transportProfile), transportProfile ? "transport function and native detailed budget" : "not loaded") },
-    health: { ...status(Boolean(healthProfile), healthProfile ? `SHA financing/provider shares; ${healthProfile.year}` : "functional expenditure only", healthProfile ? [] : ["SHA financing and provider split"]) },
-    providers: { ...status(providerLoaded, providerLoaded ? `${provider.facility_count} registered inpatient locations` : provider?.coverage || "not loaded", providerLoaded ? [] : ["facility records"]), facility_count: provider?.facility_count || 0 },
-    municipalities: { ...status(Boolean(municipal), municipal?.coverage_en || "not loaded", municipal ? [] : ["entity census", "budget facts"]), entity_count: municipal?.directory_count || 0, years: municipal?.years || [], stages: municipal?.stages || [], measures: municipal?.measures || [], directory: municipal ? `data/countries/${countrySlug(code)}/municipalities.v1.json` : null, warehouse: warehouseVolume(code) },
-    public_entities: { ...status(Boolean(publicEntityProfile), publicEntityProfile ? `${publicEntityProfile.entities.length} selected controlled entities` : "not loaded", publicEntityProfile ? [] : ["ownership register", "entity accounts"]), entity_count: publicEntityProfile?.entities.length || 0 },
-    demography: { ...status(Boolean(demographyProfile), demographyProfile ? `${demographyProfile.projection.from}–${demographyProfile.projection.to}` : "not loaded", demographyProfile ? [] : ["population projection", "age structure", "social-system model"]) },
+    health: { ...status(Boolean(healthProfile), healthProfile ? `SHA financing profile; ${healthProfile.year}` : "functional expenditure only", healthProfile?.missing_dimensions || (healthProfile ? [] : ["SHA financing and provider split"])) },
+    providers: { ...status(providerLoaded, providerLoaded ? `${provider.facility_count ?? "official bulk"} registered provider locations` : provider?.coverage || "not loaded", providerLoaded ? (provider.missing_dimensions || []) : ["facility records"]), facility_count: provider?.facility_count ?? null, coverage_level: provider?.coverage || null },
+    municipalities: { ...status(Boolean(municipal), municipal?.coverage_en || "not loaded", municipal?.missing_dimensions || (municipal ? [] : ["entity census", "budget facts"])), entity_count: municipal?.directory_count || 0, fact_count: municipal?.counts?.[municipal?.years?.at(-1)] ?? 0, years: municipal?.years || [], stages: municipal?.stages || [], measures: municipal?.measures || [], coverage_level: municipal?.status || null, directory: municipal ? `data/countries/${countrySlug(code)}/municipalities.v1.json` : null, warehouse: warehouseVolume(code) },
+    public_entities: { ...status(Boolean(publicEntityProfile), publicEntityProfile ? `${publicEntityProfile.entity_count} entities; ${publicEntityProfile.financial_statement_count} with accounts` : "not loaded", publicEntityProfile?.missing_dimensions || (publicEntityProfile ? [] : ["ownership register", "entity accounts"])), entity_count: publicEntityProfile?.entity_count || 0, financial_statement_count: publicEntityProfile?.financial_statement_count || 0, coverage_level: publicEntityProfile?.coverage || null },
+    demography: { ...status(Boolean(demographyProfile), demographyProfile ? `${demographyProfile.period.from}–${demographyProfile.period.to}; annual age/sex detail plus ${demographyProfile.years.length} common-year aggregates` : "not loaded", demographyProfile ? [] : ["population projection", "annual age structure", "sex breakdown"]), projection: demographyProfile?.projection || null, detail: demographyProfile?.detail || null, detail_row_count: demographyProfile?.detail_row_count || 0 },
   };
   const loadedCount = Object.values(modules).filter((module) => module.status === "loaded").length;
   const entry = {

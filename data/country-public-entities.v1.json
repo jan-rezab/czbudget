@@ -1,0 +1,162 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "country-public-entities.v1",
+  "generated_at": "2026-08-23T15:15:00.000Z",
+  "methodology": {
+    "cs": "Vrstva zachovává oficiální národní vymezení portfolia nebo registru. Počet identifikovaných subjektů se neprezentuje jako počet s kompletními účetními výkazy; účetní pokrytí je uvedeno samostatně.",
+    "en": "The layer preserves each official national portfolio or register boundary. The number of identified entities is not presented as the number with complete financial statements; accounts coverage is reported separately."
+  },
+  "countries": {
+    "CZE": {
+      "period": "2024",
+      "scope_cs": "Vybraný registr veřejně ovládaných firem, nemocnic, vysokých škol a zdravotních pojišťoven.",
+      "scope_en": "Selected register of publicly controlled companies, hospitals, universities and health insurers.",
+      "entity_count": 637,
+      "financial_statement_count": 137,
+      "coverage": "entity_register_and_selected_accounts",
+      "records": "data/cz-public-entities-2024.json",
+      "missing_dimensions": ["účetní výkazy pro 500 subjektů / financial statements for 500 entities"],
+      "source": {
+        "publisher": "Ministerstvo financí ČR",
+        "dataset": "Konsolidační výčet veřejných subjektů + ČSÚIS VZZ",
+        "url": "https://mf.gov.cz/cs/dane-a-ucetnictvi/ucetnictvi/ucetni-reforma-verejnych-financi-ucetnic/ucetni-vykaznictvi-statu/vycet-konsolidovanych-jednotek-statu-a-d",
+        "location": "konsolidační výčet → ovládané jednotky; MONITOR/ČSÚIS → CIS_UCJED.CSV a výkaz zisku a ztráty; strategické subjekty → zpráva MF za rok 2024"
+      }
+    },
+    "POL": {
+      "period": "2025-03-31",
+      "scope_cs": "Společnosti s přímým nebo nepřímým podílem polského státu v oficiálním seznamu.",
+      "scope_en": "Companies with a direct or indirect Polish State Treasury holding in the official list.",
+      "entity_count": 406,
+      "financial_statement_count": 0,
+      "coverage": "ownership_register",
+      "missing_dimensions": ["standardizované účetní výkazy / standardised financial statements"],
+      "source": {
+        "publisher": "Ministerstwo Aktywów Państwowych / dane.gov.pl",
+        "dataset": "Wykaz spółek z udziałem Skarbu Państwa 2025-03-31",
+        "url": "https://dane.gov.pl/pl/dataset/1198/resource/66957",
+        "location": "resource 66957 → CSV → 406 data rows; fields NIP, company, seat, status, Treasury share and representing authority"
+      }
+    },
+    "DEU": {
+      "period": "2024 (reference date 2024-12-31)",
+      "scope_cs": "Přímé účasti spolku a jeho zvláštních fondů; zpráva uvádí také kvalifikované nepřímé účasti.",
+      "scope_en": "Direct holdings of the Federation and its special funds; the report also identifies qualifying indirect holdings.",
+      "entity_count": 119,
+      "financial_statement_count": 119,
+      "coverage": "federal_holdings_report",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "Bundesministerium der Finanzen",
+        "dataset": "Beteiligungsbericht des Bundes 2024",
+        "url": "https://www.bundesfinanzministerium.de/Content/DE/Downloads/Broschueren_Bestellservice/beteiligungsbericht-des-bundes-2024.pdf?__blob=publicationFile&v=10",
+        "location": "company profiles and financial indicators; summary chart/table of direct and qualifying indirect federal holdings"
+      }
+    },
+    "GBR": {
+      "period": "2023/24",
+      "scope_cs": "Neministerské veřejné orgány, výkonné agentury a neministerská ministerstva v adresáři Cabinet Office.",
+      "scope_en": "Non-departmental public bodies, executive agencies and non-ministerial departments in the Cabinet Office directory.",
+      "entity_count": 252,
+      "financial_statement_count": 252,
+      "coverage": "public_bodies_directory",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "UK Cabinet Office",
+        "dataset": "Public Bodies Directory 2023/24",
+        "url": "https://www.gov.uk/government/publications/public-bodies-2024",
+        "location": "Public_Bodies_Directory_2023_24.xlsx → table data (A7:AZ258); finance fields include gross expenditure, government funding, income and staff costs"
+      }
+    },
+    "FRA": {
+      "period": "2024 accounts / portfolio at 2025-06-30",
+      "scope_cs": "Portfolio Agence des participations de l'État.",
+      "scope_en": "Agence des participations de l'État portfolio.",
+      "entity_count": 87,
+      "financial_statement_count": 87,
+      "coverage": "state_shareholder_portfolio_and_combined_accounts",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "Agence des participations de l'État",
+        "dataset": "Rapport d'activité 2024–2025 + Rapport financier 2025 (comptes combinés 2024)",
+        "url": "https://www.economie.gouv.fr/agence-participations-etat/ressources-documentaires/rapports-financiers",
+        "location": "Rapport financier 2025 → comptes combinés 2024; portfolio page → 87 entities and listed/unlisted split"
+      }
+    },
+    "USA": {
+      "period": "FY 2024",
+      "scope_cs": "Konsolidační jednotky federální vlády uvedené v příloze A celovládního finančního výkazu.",
+      "scope_en": "Federal consolidation entities listed in Appendix A of the government-wide Financial Report.",
+      "entity_count": 167,
+      "financial_statement_count": 38,
+      "coverage": "governmentwide_reporting_entities",
+      "missing_dimensions": ["samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"],
+      "source": {
+        "publisher": "U.S. Department of the Treasury, Bureau of the Fiscal Service",
+        "dataset": "Financial Report of the United States Government 2024",
+        "url": "https://fiscal.treasury.gov/accounting/us-financial-report/2024-report",
+        "location": "Appendix A → 24 CFO Act agencies + 16 significant consolidation entities + 127 other consolidation entities; related-resources page → individual reports for 38 significant entities"
+      }
+    },
+    "CHE": {
+      "period": "2024",
+      "scope_cs": "Podniky a instituce mimo centrální federální správu, které federace ovládá nebo zřídila zákonem.",
+      "scope_en": "Enterprises and institutions outside the central federal administration that are controlled by the Federation or created by federal law.",
+      "entity_count": 22,
+      "financial_statement_count": 22,
+      "coverage": "federal_enterprises_and_institutions",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "Eidgenössische Finanzverwaltung",
+        "dataset": "Unternehmen und Anstalten des Bundes + Aggregierter Bericht 2024",
+        "url": "https://www.efv.admin.ch/de/unternehmen-anstalten",
+        "location": "list of 22 controlled/statutory entities; Aggregierter Bericht 2024 → financial and governance indicators"
+      }
+    },
+    "SWE": {
+      "period": "2024",
+      "scope_cs": "Portfolio společností se státním vlastnictvím spravované švédskou vládou.",
+      "scope_en": "Portfolio of state-owned companies managed by the Swedish Government.",
+      "entity_count": 38,
+      "financial_statement_count": 38,
+      "coverage": "state_owned_company_portfolio",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "Regeringskansliet",
+        "dataset": "Verksamhetsberättelse för bolag med statligt ägande 2024",
+        "url": "https://www.regeringen.se/rapporter/2025/06/verksamhetsberattelse-for-bolag-med-statligt-agande-2024/",
+        "location": "portfolio company profiles and aggregate 2024 revenue, operating profit, dividends and employment"
+      }
+    },
+    "DNK": {
+      "period": "2024",
+      "scope_cs": "Společnosti s majetkovou účastí dánského státu spravované ministerstvy.",
+      "scope_en": "Companies with a Danish state ownership interest managed by ministries.",
+      "entity_count": 24,
+      "financial_statement_count": 24,
+      "coverage": "state_company_portfolio",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "Finansministeriet",
+        "dataset": "Statens selskaber — økonomiske forhold",
+        "url": "https://fm.dk/arbejdsomraader/statens-selskaber/oekonomiske-forhold/",
+        "location": "2024 portfolio summary: 24 companies; revenue, equity and employment aggregates; links to company reports"
+      }
+    },
+    "UKR": {
+      "period": "2026-04-01",
+      "scope_cs": "Subjekty státního sektoru: státní podniky, jejich seskupení, dceřiné podniky a společnosti s podílem státu nad 50 %.",
+      "scope_en": "State-sector enterprises: state enterprises, associations, subsidiaries and companies with a state share above 50%.",
+      "entity_count": 3009,
+      "financial_statement_count": 0,
+      "coverage": "state_sector_enterprise_register",
+      "missing_dimensions": ["standardizované účetní výkazy / standardised financial statements"],
+      "source": {
+        "publisher": "Фонд державного майна України",
+        "dataset": "Реєстр суб’єктів господарювання державного сектору економіки",
+        "url": "https://www.spfu.gov.ua/ua/content/civil-access-data--Edinij-reestr-ob-ektiv-derzhavnoi-vlasnosti.html",
+        "location": "snapshot 01.04.2026 → perelik-sg-01-04-2026-n_20127.csv → 3,009 rows; entity name, managing body and organisational form"
+      }
+    }
+  }
+}

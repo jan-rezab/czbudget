@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-22T20:48:51.053Z",
+  "generated_at": "2026-08-23T17:36:03.771Z",
   "country": {
     "country_code": "USA",
     "name_cs": "USA",
@@ -32,13 +32,9 @@
     }
   },
   "coverage": {
-    "loaded_modules": 8,
+    "loaded_modules": 11,
     "total_modules": 11,
-    "missing_dimensions": [
-      "municipal_entity_finance",
-      "public_entity_accounts",
-      "national_demographic_projection"
-    ]
+    "missing_dimensions": []
   },
   "modules": {
     "sovereign": {
@@ -83,46 +79,54 @@
     },
     "health": {
       "status": "loaded",
-      "coverage": "SHA financing/provider shares; 2024",
+      "coverage": "SHA financing profile; 2024",
       "missing_dimensions": []
     },
     "providers": {
       "status": "loaded",
       "coverage": "5419 registered provider locations",
       "missing_dimensions": [],
-      "facility_count": 5419
+      "facility_count": 5419,
+      "coverage_level": "medicare_registered_hospitals"
     },
     "municipalities": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "entity census",
-        "budget facts"
+      "status": "loaded",
+      "coverage": "All city/municipality government units in the Census of Governments file; thousands of USD converted to USD",
+      "missing_dimensions": [],
+      "entity_count": 19401,
+      "fact_count": 19401,
+      "years": [
+        2022
       ],
-      "entity_count": 0,
-      "years": [],
-      "stages": [],
-      "measures": [],
-      "directory": null,
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_level": "complete",
+      "directory": "data/countries/usa/municipalities.v1.json",
       "warehouse": []
     },
     "public_entities": {
-      "status": "unavailable",
-      "coverage": "not loaded",
+      "status": "loaded",
+      "coverage": "167 entities; 38 with accounts",
       "missing_dimensions": [
-        "ownership register",
-        "entity accounts"
+        "samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"
       ],
-      "entity_count": 0
+      "entity_count": 167,
+      "financial_statement_count": 38,
+      "coverage_level": "governmentwide_reporting_entities"
     },
     "demography": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "population projection",
-        "age structure",
-        "social-system model"
-      ]
+      "status": "loaded",
+      "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+      "missing_dimensions": [],
+      "projection": "2023 National Population Projections, middle series",
+      "detail": "data/countries/usa/demography.v1.json",
+      "detail_row_count": 7979
     }
   },
   "data": {
@@ -1766,7 +1770,8 @@
           "amounts": {
             "previous": 1884278,
             "current": 2035980
-          }
+          },
+          "label_en": "Department of Health and Human Services"
         },
         {
           "code": "12",
@@ -1774,7 +1779,8 @@
           "amounts": {
             "previous": 1646513,
             "current": 1745811
-          }
+          },
+          "label_en": "Social Security Administration"
         },
         {
           "code": "11",
@@ -1782,7 +1788,8 @@
           "amounts": {
             "previous": 1458915,
             "current": 1522683
-          }
+          },
+          "label_en": "Department of the Treasury"
         },
         {
           "code": "5",
@@ -1790,7 +1797,8 @@
           "amounts": {
             "previous": 868406,
             "current": 913705
-          }
+          },
+          "label_en": "Department of Defense--Military Programs"
         },
         {
           "code": "23",
@@ -1798,7 +1806,8 @@
           "amounts": {
             "previous": 376593,
             "current": 439752
-          }
+          },
+          "label_en": "Department of Veterans Affairs"
         },
         {
           "code": "3",
@@ -1806,7 +1815,8 @@
           "amounts": {
             "previous": 227452,
             "current": 238841
-          }
+          },
+          "label_en": "Department of Agriculture"
         },
         {
           "code": "21",
@@ -1814,7 +1824,8 @@
           "amounts": {
             "previous": 128240,
             "current": 132542
-          }
+          },
+          "label_en": "Office of Personnel Management"
         },
         {
           "code": "16",
@@ -1822,7 +1833,8 @@
           "amounts": {
             "previous": 127579,
             "current": 131545
-          }
+          },
+          "label_en": "Department of Transportation"
         },
         {
           "code": "18",
@@ -1830,7 +1842,8 @@
           "amounts": {
             "previous": 115309,
             "current": 116341
-          }
+          },
+          "label_en": "Department of Homeland Security"
         },
         {
           "code": "29",
@@ -1838,7 +1851,8 @@
           "amounts": {
             "previous": 76488,
             "current": 76950
-          }
+          },
+          "label_en": "Other Defense--Civil Programs"
         },
         {
           "code": "19",
@@ -1846,7 +1860,8 @@
           "amounts": {
             "previous": 50531,
             "current": 76031
-          }
+          },
+          "label_en": "Department of Housing and Urban Development"
         },
         {
           "code": "9",
@@ -1854,7 +1869,8 @@
           "amounts": {
             "previous": 50386,
             "current": 71579
-          }
+          },
+          "label_en": "Department of Labor"
         },
         {
           "code": "13",
@@ -1862,7 +1878,8 @@
           "amounts": {
             "previous": 34713,
             "current": 62188
-          }
+          },
+          "label_en": "Department of Education"
         },
         {
           "code": "14",
@@ -1870,7 +1887,8 @@
           "amounts": {
             "previous": 52292,
             "current": 59641
-          }
+          },
+          "label_en": "Department of Energy"
         },
         {
           "code": "8",
@@ -1878,7 +1896,8 @@
           "amounts": {
             "previous": 44944,
             "current": 51516
-          }
+          },
+          "label_en": "Department of Justice"
         },
         {
           "code": "10",
@@ -1886,7 +1905,8 @@
           "amounts": {
             "previous": 28361,
             "current": 35351
-          }
+          },
+          "label_en": "Department of State"
         },
         {
           "code": "20",
@@ -1894,7 +1914,8 @@
           "amounts": {
             "previous": 24576,
             "current": 24629
-          }
+          },
+          "label_en": "National Aeronautics and Space Administration"
         },
         {
           "code": "27",
@@ -1902,7 +1923,8 @@
           "amounts": {
             "previous": 17298,
             "current": 24477
-          }
+          },
+          "label_en": "International Assistance Programs"
         },
         {
           "code": "7",
@@ -1910,7 +1932,8 @@
           "amounts": {
             "previous": 22443,
             "current": 24292
-          }
+          },
+          "label_en": "Department of the Interior"
         },
         {
           "code": "15",
@@ -1918,7 +1941,8 @@
           "amounts": {
             "previous": 36973,
             "current": 22323
-          }
+          },
+          "label_en": "Environmental Protection Agency"
         },
         {
           "code": "4",
@@ -1926,7 +1950,8 @@
           "amounts": {
             "previous": 29713,
             "current": 21170
-          }
+          },
+          "label_en": "Department of Commerce"
         },
         {
           "code": "87",
@@ -1934,7 +1959,8 @@
           "amounts": {
             "previous": 10716,
             "current": 12848
-          }
+          },
+          "label_en": "Federal Communications Commission"
         },
         {
           "code": "22",
@@ -1942,7 +1968,8 @@
           "amounts": {
             "previous": 837,
             "current": 12142
-          }
+          },
+          "label_en": "Small Business Administration"
         },
         {
           "code": "145",
@@ -1950,7 +1977,8 @@
           "amounts": {
             "previous": 9951,
             "current": 10473
-          }
+          },
+          "label_en": "National Science Foundation"
         },
         {
           "code": "2",
@@ -1958,7 +1986,8 @@
           "amounts": {
             "previous": 9759,
             "current": 10375
-          }
+          },
+          "label_en": "Judicial Branch"
         },
         {
           "code": "1",
@@ -1966,7 +1995,8 @@
           "amounts": {
             "previous": 7233,
             "current": 8499
-          }
+          },
+          "label_en": "Legislative Branch"
         },
         {
           "code": "30",
@@ -1974,7 +2004,8 @@
           "amounts": {
             "previous": 12122,
             "current": 8099
-          }
+          },
+          "label_en": "Corps of Engineers--Civil Works"
         },
         {
           "code": "166",
@@ -1982,7 +2013,8 @@
           "amounts": {
             "previous": 6298,
             "current": 8015
-          }
+          },
+          "label_en": "Railroad Retirement Board"
         },
         {
           "code": "160",
@@ -1990,7 +2022,8 @@
           "amounts": {
             "previous": 5165,
             "current": 5482
-          }
+          },
+          "label_en": "Postal Service"
         },
         {
           "code": "195",
@@ -1998,7 +2031,8 @@
           "amounts": {
             "previous": 1359,
             "current": 2122
-          }
+          },
+          "label_en": "Corporation for National and Community Service"
         },
         {
           "code": "17",
@@ -2006,7 +2040,8 @@
           "amounts": {
             "previous": -379,
             "current": 1760
-          }
+          },
+          "label_en": "General Services Administration"
         },
         {
           "code": "171",
@@ -2014,7 +2049,8 @@
           "amounts": {
             "previous": 1376,
             "current": 1646
-          }
+          },
+          "label_en": "Smithsonian Institution"
         },
         {
           "code": "174",
@@ -2022,7 +2058,8 @@
           "amounts": {
             "previous": 2560,
             "current": 1558
-          }
+          },
+          "label_en": "Tennessee Valley Authority"
         },
         {
           "code": "80",
@@ -2030,7 +2067,8 @@
           "amounts": {
             "previous": 1075,
             "current": 1027
-          }
+          },
+          "label_en": "District of Columbia"
         },
         {
           "code": "234",
@@ -2038,7 +2076,8 @@
           "amounts": {
             "previous": 848,
             "current": 898
-          }
+          },
+          "label_en": "Patient-Centered Outcomes Research Trust Fund"
         },
         {
           "code": "236",
@@ -2046,7 +2085,8 @@
           "amounts": {
             "previous": 2738,
             "current": 762
-          }
+          },
+          "label_en": "Bureau of Consumer Financial Protection"
         },
         {
           "code": "208",
@@ -2054,7 +2094,8 @@
           "amounts": {
             "previous": 763,
             "current": 654
-          }
+          },
+          "label_en": "U.S. Agency for Global Media"
         },
         {
           "code": "182",
@@ -2062,7 +2103,8 @@
           "amounts": {
             "previous": 612,
             "current": 614
-          }
+          },
+          "label_en": "Intelligence Community Management Account"
         },
         {
           "code": "118",
@@ -2070,7 +2112,8 @@
           "amounts": {
             "previous": 509,
             "current": 550
-          }
+          },
+          "label_en": "National Archives and Records Administration"
         },
         {
           "code": "26",
@@ -2078,7 +2121,8 @@
           "amounts": {
             "previous": 384,
             "current": 542
-          }
+          },
+          "label_en": "Federal Drug Control Programs"
         },
         {
           "code": "110",
@@ -2086,7 +2130,8 @@
           "amounts": {
             "previous": 560,
             "current": 540
-          }
+          },
+          "label_en": "Legal Services Corporation"
         },
         {
           "code": "50",
@@ -2094,7 +2139,8 @@
           "amounts": {
             "previous": 514,
             "current": 514
-          }
+          },
+          "label_en": "Central Intelligence Agency"
         },
         {
           "code": "219",
@@ -2102,7 +2148,8 @@
           "amounts": {
             "previous": 650,
             "current": 486
-          }
+          },
+          "label_en": "Affordable Housing Program"
         },
         {
           "code": "81",
@@ -2110,7 +2157,8 @@
           "amounts": {
             "previous": 448,
             "current": 443
-          }
+          },
+          "label_en": "Equal Employment Opportunity Commission"
         },
         {
           "code": "188",
@@ -2118,7 +2166,8 @@
           "amounts": {
             "previous": 337,
             "current": 426
-          }
+          },
+          "label_en": "Institute of Museum and Library Services"
         },
         {
           "code": "169",
@@ -2126,7 +2175,8 @@
           "amounts": {
             "previous": -1318,
             "current": 391
-          }
+          },
+          "label_en": "Securities and Exchange Commission"
         },
         {
           "code": "70",
@@ -2134,7 +2184,8 @@
           "amounts": {
             "previous": 350,
             "current": 369
-          }
+          },
+          "label_en": "Commodity Futures Trading Commission"
         },
         {
           "code": "223",
@@ -2142,7 +2193,8 @@
           "amounts": {
             "previous": 360,
             "current": 348
-          }
+          },
+          "label_en": "Federal Housing Finance Agency"
         },
         {
           "code": "216",
@@ -2150,7 +2202,8 @@
           "amounts": {
             "previous": 359,
             "current": 312
-          }
+          },
+          "label_en": "Public Company Accounting Oversight Board"
         },
         {
           "code": "143",
@@ -2158,7 +2211,8 @@
           "amounts": {
             "previous": 310,
             "current": 305
-          }
+          },
+          "label_en": "National Labor Relations Board"
         },
         {
           "code": "45",
@@ -2166,7 +2220,8 @@
           "amounts": {
             "previous": 215,
             "current": 295
-          }
+          },
+          "label_en": "Appalachian Regional Commission"
         },
         {
           "code": "205",
@@ -2174,7 +2229,8 @@
           "amounts": {
             "previous": 275,
             "current": 275
-          }
+          },
+          "label_en": "Court Services and Offender Supervision Agency for the District of Columbia"
         },
         {
           "code": "141",
@@ -2182,7 +2238,8 @@
           "amounts": {
             "previous": 197,
             "current": 203
-          }
+          },
+          "label_en": "National Endowment for the Humanities"
         },
         {
           "code": "140",
@@ -2190,7 +2247,8 @@
           "amounts": {
             "previous": 234,
             "current": 167
-          }
+          },
+          "label_en": "National Endowment for the Arts"
         },
         {
           "code": "150",
@@ -2198,7 +2256,8 @@
           "amounts": {
             "previous": 158,
             "current": 158
-          }
+          },
+          "label_en": "Neighborhood Reinvestment Corporation"
         },
         {
           "code": "74",
@@ -2206,7 +2265,8 @@
           "amounts": {
             "previous": 154,
             "current": 156
-          }
+          },
+          "label_en": "Consumer Product Safety Commission"
         },
         {
           "code": "147",
@@ -2214,7 +2274,8 @@
           "amounts": {
             "previous": 148,
             "current": 155
-          }
+          },
+          "label_en": "National Transportation Safety Board"
         },
         {
           "code": "207",
@@ -2222,7 +2283,8 @@
           "amounts": {
             "previous": -70,
             "current": 152
-          }
+          },
+          "label_en": "Denali Commission"
         },
         {
           "code": "103",
@@ -2230,7 +2292,8 @@
           "amounts": {
             "previous": 131,
             "current": 140
-          }
+          },
+          "label_en": "International Trade Commission"
         },
         {
           "code": "187",
@@ -2238,7 +2301,8 @@
           "amounts": {
             "previous": 35,
             "current": 138
-          }
+          },
+          "label_en": "Federal Permitting Improvement Steering Council"
         },
         {
           "code": "151",
@@ -2246,7 +2310,8 @@
           "amounts": {
             "previous": 169,
             "current": 130
-          }
+          },
+          "label_en": "Nuclear Regulatory Commission"
         },
         {
           "code": "220",
@@ -2254,7 +2319,8 @@
           "amounts": {
             "previous": 116,
             "current": 116
-          }
+          },
+          "label_en": "Electric Reliability Organization"
         },
         {
           "code": "233",
@@ -2262,7 +2328,8 @@
           "amounts": {
             "previous": 45,
             "current": 96
-          }
+          },
+          "label_en": "Securities Investor Protection Corporation"
         },
         {
           "code": "206",
@@ -2270,7 +2337,8 @@
           "amounts": {
             "previous": 16,
             "current": 94
-          }
+          },
+          "label_en": "Presidio Trust"
         },
         {
           "code": "89",
@@ -2278,7 +2346,8 @@
           "amounts": {
             "previous": 82,
             "current": 90
-          }
+          },
+          "label_en": "Federal Election Commission"
         },
         {
           "code": "215",
@@ -2286,7 +2355,8 @@
           "amounts": {
             "previous": 24,
             "current": 72
-          }
+          },
+          "label_en": "Election Assistance Commission"
         },
         {
           "code": "176",
@@ -2294,7 +2364,8 @@
           "amounts": {
             "previous": 45,
             "current": 67
-          }
+          },
+          "label_en": "United States Institute of Peace"
         },
         {
           "code": "175",
@@ -2302,7 +2373,8 @@
           "amounts": {
             "previous": 66,
             "current": 65
-          }
+          },
+          "label_en": "United States Holocaust Memorial Museum"
         },
         {
           "code": "60",
@@ -2310,7 +2382,8 @@
           "amounts": {
             "previous": 59,
             "current": 59
-          }
+          },
+          "label_en": "Payment to Puerto Rico Oversight Board"
         },
         {
           "code": "211",
@@ -2318,7 +2391,8 @@
           "amounts": {
             "previous": 56,
             "current": 59
-          }
+          },
+          "label_en": "Delta Regional Authority"
         },
         {
           "code": "239",
@@ -2326,7 +2400,8 @@
           "amounts": {
             "previous": 52,
             "current": 58
-          }
+          },
+          "label_en": "Public Defender Service for the District of Columbia"
         },
         {
           "code": "114",
@@ -2334,7 +2409,8 @@
           "amounts": {
             "previous": 49,
             "current": 52
-          }
+          },
+          "label_en": "Merit Systems Protection Board"
         },
         {
           "code": "76",
@@ -2342,7 +2418,8 @@
           "amounts": {
             "previous": 44,
             "current": 51
-          }
+          },
+          "label_en": "United States Court of Appeals for Veterans Claims"
         },
         {
           "code": "94",
@@ -2350,7 +2427,8 @@
           "amounts": {
             "previous": 49,
             "current": 51
-          }
+          },
+          "label_en": "Federal Mediation and Conciliation Service"
         },
         {
           "code": "235",
@@ -2358,7 +2436,8 @@
           "amounts": {
             "previous": 126,
             "current": 50
-          }
+          },
+          "label_en": "Corporation for Travel Promotion"
         },
         {
           "code": "186",
@@ -2366,7 +2445,8 @@
           "amounts": {
             "previous": 45,
             "current": 48
-          }
+          },
+          "label_en": "Surface Transportation Board"
         },
         {
           "code": "93",
@@ -2374,7 +2454,8 @@
           "amounts": {
             "previous": 37,
             "current": 45
-          }
+          },
+          "label_en": "Federal Maritime Commission"
         },
         {
           "code": "230",
@@ -2382,7 +2463,8 @@
           "amounts": {
             "previous": 25,
             "current": 43
-          }
+          },
+          "label_en": "Northern Border Regional Commission"
         },
         {
           "code": "78",
@@ -2390,7 +2472,8 @@
           "amounts": {
             "previous": 44,
             "current": 42
-          }
+          },
+          "label_en": "Defense Nuclear Facilities Safety Board"
         },
         {
           "code": "232",
@@ -2398,7 +2481,8 @@
           "amounts": {
             "previous": 28,
             "current": 34
-          }
+          },
+          "label_en": "National Railroad Passenger Corporation Office of Inspector General"
         },
         {
           "code": "90",
@@ -2406,7 +2490,8 @@
           "amounts": {
             "previous": 30,
             "current": 31
-          }
+          },
+          "label_en": "Federal Financial Institutions Examination Council"
         },
         {
           "code": "157",
@@ -2414,7 +2499,8 @@
           "amounts": {
             "previous": 32,
             "current": 31
-          }
+          },
+          "label_en": "Office of Special Counsel"
         },
         {
           "code": "92",
@@ -2422,7 +2508,8 @@
           "amounts": {
             "previous": 30,
             "current": 29
-          }
+          },
+          "label_en": "Federal Labor Relations Authority"
         },
         {
           "code": "217",
@@ -2430,7 +2517,8 @@
           "amounts": {
             "previous": 33,
             "current": 29
-          }
+          },
+          "label_en": "Standard Setting Body"
         },
         {
           "code": "155",
@@ -2438,7 +2526,8 @@
           "amounts": {
             "previous": 21,
             "current": 24
-          }
+          },
+          "label_en": "Office of Government Ethics"
         },
         {
           "code": "225",
@@ -2446,7 +2535,8 @@
           "amounts": {
             "previous": 11,
             "current": 22
-          }
+          },
+          "label_en": "Council of the Inspectors General on Integrity and Efficiency"
         },
         {
           "code": "231",
@@ -2454,7 +2544,8 @@
           "amounts": {
             "previous": 0,
             "current": 20
-          }
+          },
+          "label_en": "Southeast Crescent Regional Commission"
         },
         {
           "code": "95",
@@ -2462,7 +2553,8 @@
           "amounts": {
             "previous": 16,
             "current": 18
-          }
+          },
+          "label_en": "Federal Mine Safety and Health Review Commission"
         },
         {
           "code": "144",
@@ -2470,7 +2562,8 @@
           "amounts": {
             "previous": 15,
             "current": 18
-          }
+          },
+          "label_en": "National Mediation Board"
         },
         {
           "code": "154",
@@ -2478,7 +2571,8 @@
           "amounts": {
             "previous": 14,
             "current": 16
-          }
+          },
+          "label_en": "Occupational Safety and Health Review Commission"
         },
         {
           "code": "58",
@@ -2486,7 +2580,8 @@
           "amounts": {
             "previous": 15,
             "current": 15
-          }
+          },
+          "label_en": "Commission on Civil Rights"
         },
         {
           "code": "222",
@@ -2494,7 +2589,8 @@
           "amounts": {
             "previous": 13,
             "current": 14
-          }
+          },
+          "label_en": "Privacy and Civil Liberties Oversight Board"
         },
         {
           "code": "69",
@@ -2502,7 +2598,8 @@
           "amounts": {
             "previous": 13,
             "current": 13
-          }
+          },
+          "label_en": "Committee for Purchase From People Who Are Blind or Severely Disabled"
         },
         {
           "code": "100",
@@ -2510,7 +2607,8 @@
           "amounts": {
             "previous": 13,
             "current": 13
-          }
+          },
+          "label_en": "Institute of American Indian and Alaska Native Culture and Arts Development"
         },
         {
           "code": "204",
@@ -2518,7 +2616,8 @@
           "amounts": {
             "previous": 14,
             "current": 13
-          }
+          },
+          "label_en": "Chemical Safety and Hazard Investigation Board"
         },
         {
           "code": "119",
@@ -2526,7 +2625,8 @@
           "amounts": {
             "previous": 11,
             "current": 12
-          }
+          },
+          "label_en": "National Capital Planning Commission"
         },
         {
           "code": "46",
@@ -2534,7 +2634,8 @@
           "amounts": {
             "previous": 9,
             "current": 11
-          }
+          },
+          "label_en": "Access Board"
         },
         {
           "code": "172",
@@ -2542,7 +2643,8 @@
           "amounts": {
             "previous": 8,
             "current": 11
-          }
+          },
+          "label_en": "State Justice Institute"
         },
         {
           "code": "55",
@@ -2550,7 +2652,8 @@
           "amounts": {
             "previous": 9,
             "current": 10
-          }
+          },
+          "label_en": "Commission of Fine Arts"
         },
         {
           "code": "36",
@@ -2558,7 +2661,8 @@
           "amounts": {
             "previous": 0,
             "current": 8
-          }
+          },
+          "label_en": "Concrete Masonry Products Board"
         },
         {
           "code": "43",
@@ -2566,7 +2670,8 @@
           "amounts": {
             "previous": 9,
             "current": 8
-          }
+          },
+          "label_en": "Advisory Council on Historic Preservation"
         },
         {
           "code": "75",
@@ -2574,7 +2679,8 @@
           "amounts": {
             "previous": 586,
             "current": 8
-          }
+          },
+          "label_en": "Corporation for Public Broadcasting"
         },
         {
           "code": "197",
@@ -2582,7 +2688,8 @@
           "amounts": {
             "previous": 7,
             "current": 8
-          }
+          },
+          "label_en": "Morris K. Udall and Stewart L. Udall Foundation"
         },
         {
           "code": "83",
@@ -2590,7 +2697,8 @@
           "amounts": {
             "previous": -5,
             "current": 7
-          }
+          },
+          "label_en": "Farm Credit Administration"
         },
         {
           "code": "37",
@@ -2598,7 +2706,8 @@
           "amounts": {
             "previous": 3,
             "current": 6
-          }
+          },
+          "label_en": "Public Buildings Reform Board"
         },
         {
           "code": "227",
@@ -2606,7 +2715,8 @@
           "amounts": {
             "previous": 6,
             "current": 6
-          }
+          },
+          "label_en": "National Oilheat Research Alliance"
         },
         {
           "code": "136",
@@ -2614,7 +2724,8 @@
           "amounts": {
             "previous": 3,
             "current": 5
-          }
+          },
+          "label_en": "National Council on Disability"
         },
         {
           "code": "153",
@@ -2622,7 +2733,8 @@
           "amounts": {
             "previous": 4,
             "current": 5
-          }
+          },
+          "label_en": "Nuclear Waste Technical Review Board"
         },
         {
           "code": "101",
@@ -2630,7 +2742,8 @@
           "amounts": {
             "previous": 3,
             "current": 4
-          }
+          },
+          "label_en": "United States Interagency Council on Homelessness"
         },
         {
           "code": "107",
@@ -2638,7 +2751,8 @@
           "amounts": {
             "previous": 2,
             "current": 4
-          }
+          },
+          "label_en": "Japan-United States Friendship Commission"
         },
         {
           "code": "39",
@@ -2646,7 +2760,8 @@
           "amounts": {
             "previous": 3,
             "current": 3
-          }
+          },
+          "label_en": "Administrative Conference of the United States"
         },
         {
           "code": "106",
@@ -2654,7 +2769,8 @@
           "amounts": {
             "previous": 3,
             "current": 3
-          }
+          },
+          "label_en": "James Madison Memorial Fellowship Foundation"
         },
         {
           "code": "112",
@@ -2662,7 +2778,8 @@
           "amounts": {
             "previous": 5,
             "current": 3
-          }
+          },
+          "label_en": "Marine Mammal Commission"
         },
         {
           "code": "31",
@@ -2670,7 +2787,8 @@
           "amounts": {
             "previous": 0,
             "current": 2
-          }
+          },
+          "label_en": "National Commission on Military, National, and Public Service"
         },
         {
           "code": "48",
@@ -2678,7 +2796,8 @@
           "amounts": {
             "previous": 3,
             "current": 2
-          }
+          },
+          "label_en": "Barry Goldwater Scholarship and Excellence in Education Foundation"
         },
         {
           "code": "99",
@@ -2686,7 +2805,8 @@
           "amounts": {
             "previous": 3,
             "current": 2
-          }
+          },
+          "label_en": "Harry S Truman Scholarship Foundation"
         },
         {
           "code": "202",
@@ -2694,7 +2814,8 @@
           "amounts": {
             "previous": 0,
             "current": 2
-          }
+          },
+          "label_en": "Other Commissions and Boards"
         },
         {
           "code": "33",
@@ -2702,7 +2823,8 @@
           "amounts": {
             "previous": 0,
             "current": 1
-          }
+          },
+          "label_en": "National Commission on Military Aviation Safety"
         },
         {
           "code": "193",
@@ -2710,7 +2832,8 @@
           "amounts": {
             "previous": 0,
             "current": 1
-          }
+          },
+          "label_en": "Military Compensation and Retirement Modernization Commission"
         },
         {
           "code": "25",
@@ -2718,7 +2841,8 @@
           "amounts": {
             "previous": 1,
             "current": 0
-          }
+          },
+          "label_en": "Civil Rights Cold Case Records Review Board"
         },
         {
           "code": "34",
@@ -2726,7 +2850,8 @@
           "amounts": {
             "previous": 5,
             "current": 0
-          }
+          },
+          "label_en": "400 Years of African-American History Commission"
         },
         {
           "code": "96",
@@ -2734,7 +2859,8 @@
           "amounts": {
             "previous": -33,
             "current": 0
-          }
+          },
+          "label_en": "Federal Retirement Thrift Investment Board"
         },
         {
           "code": "156",
@@ -2742,7 +2868,8 @@
           "amounts": {
             "previous": 5,
             "current": 0
-          }
+          },
+          "label_en": "Office of Navajo and Hopi Indian Relocation"
         },
         {
           "code": "229",
@@ -2750,7 +2877,8 @@
           "amounts": {
             "previous": 1,
             "current": 0
-          }
+          },
+          "label_en": "Southwest Border Regional Commission"
         },
         {
           "code": "242",
@@ -2758,7 +2886,8 @@
           "amounts": {
             "previous": -1,
             "current": 0
-          }
+          },
+          "label_en": "Miscellaneous Receipts Below the Reporting Threshold"
         },
         {
           "code": "190",
@@ -2766,7 +2895,8 @@
           "amounts": {
             "previous": 9,
             "current": -2
-          }
+          },
+          "label_en": "United Mine Workers of America Benefit Funds"
         },
         {
           "code": "240",
@@ -2774,7 +2904,8 @@
           "amounts": {
             "previous": 0,
             "current": -26
-          }
+          },
+          "label_en": "Allowances"
         },
         {
           "code": "97",
@@ -2782,7 +2913,8 @@
           "amounts": {
             "previous": 119,
             "current": -69
-          }
+          },
+          "label_en": "Federal Trade Commission"
         },
         {
           "code": "82",
@@ -2790,7 +2922,8 @@
           "amounts": {
             "previous": -112,
             "current": -130
-          }
+          },
+          "label_en": "Export-Import Bank of the United States"
         },
         {
           "code": "238",
@@ -2798,7 +2931,8 @@
           "amounts": {
             "previous": 0,
             "current": -184
-          }
+          },
+          "label_en": "Gulf Coast Ecosystem Restoration Council"
         },
         {
           "code": "28",
@@ -2806,7 +2940,8 @@
           "amounts": {
             "previous": 0,
             "current": -244
-          }
+          },
+          "label_en": "Medical Center Research Organizations"
         },
         {
           "code": "24",
@@ -2814,7 +2949,8 @@
           "amounts": {
             "previous": -506,
             "current": -327
-          }
+          },
+          "label_en": "Executive Office of the President"
         },
         {
           "code": "86",
@@ -2822,7 +2958,8 @@
           "amounts": {
             "previous": -518,
             "current": -736
-          }
+          },
+          "label_en": "Farm Credit System Insurance Corporation"
         },
         {
           "code": "138",
@@ -2830,7 +2967,8 @@
           "amounts": {
             "previous": -982,
             "current": -810
-          }
+          },
+          "label_en": "National Credit Union Administration"
         },
         {
           "code": "88",
@@ -2838,7 +2976,8 @@
           "amounts": {
             "previous": -31163,
             "current": -21219
-          }
+          },
+          "label_en": "Federal Deposit Insurance Corporation"
         },
         {
           "code": "241",
@@ -2846,7 +2985,8 @@
           "amounts": {
             "previous": -337815,
             "current": -358965
-          }
+          },
+          "label_en": "Undistributed Offsetting Receipts"
         }
       ],
       "totals": {
@@ -2900,23 +3040,28 @@
           "source_rows": [
             {
               "code": "12",
-              "label_native": "Social Security Administration"
+              "label_native": "Social Security Administration",
+              "label_en": "Social Security Administration"
             },
             {
               "code": "21",
-              "label_native": "Office of Personnel Management"
+              "label_native": "Office of Personnel Management",
+              "label_en": "Office of Personnel Management"
             },
             {
               "code": "9",
-              "label_native": "Department of Labor"
+              "label_native": "Department of Labor",
+              "label_en": "Department of Labor"
             },
             {
               "code": "166",
-              "label_native": "Railroad Retirement Board"
+              "label_native": "Railroad Retirement Board",
+              "label_en": "Railroad Retirement Board"
             },
             {
               "code": "190",
-              "label_native": "United Mine Workers of America Benefit Funds"
+              "label_native": "United Mine Workers of America Benefit Funds",
+              "label_en": "United Mine Workers of America Benefit Funds"
             }
           ]
         },
@@ -2933,19 +3078,23 @@
           "source_rows": [
             {
               "code": "6",
-              "label_native": "Department of Health and Human Services"
+              "label_native": "Department of Health and Human Services",
+              "label_en": "Department of Health and Human Services"
             },
             {
               "code": "23",
-              "label_native": "Department of Veterans Affairs"
+              "label_native": "Department of Veterans Affairs",
+              "label_en": "Department of Veterans Affairs"
             },
             {
               "code": "234",
-              "label_native": "Patient-Centered Outcomes Research Trust Fund"
+              "label_native": "Patient-Centered Outcomes Research Trust Fund",
+              "label_en": "Patient-Centered Outcomes Research Trust Fund"
             },
             {
               "code": "28",
-              "label_native": "Medical Center Research Organizations"
+              "label_native": "Medical Center Research Organizations",
+              "label_en": "Medical Center Research Organizations"
             }
           ]
         },
@@ -2962,31 +3111,38 @@
           "source_rows": [
             {
               "code": "13",
-              "label_native": "Department of Education"
+              "label_native": "Department of Education",
+              "label_en": "Department of Education"
             },
             {
               "code": "20",
-              "label_native": "National Aeronautics and Space Administration"
+              "label_native": "National Aeronautics and Space Administration",
+              "label_en": "National Aeronautics and Space Administration"
             },
             {
               "code": "145",
-              "label_native": "National Science Foundation"
+              "label_native": "National Science Foundation",
+              "label_en": "National Science Foundation"
             },
             {
               "code": "188",
-              "label_native": "Institute of Museum and Library Services"
+              "label_native": "Institute of Museum and Library Services",
+              "label_en": "Institute of Museum and Library Services"
             },
             {
               "code": "106",
-              "label_native": "James Madison Memorial Fellowship Foundation"
+              "label_native": "James Madison Memorial Fellowship Foundation",
+              "label_en": "James Madison Memorial Fellowship Foundation"
             },
             {
               "code": "48",
-              "label_native": "Barry Goldwater Scholarship and Excellence in Education Foundation"
+              "label_native": "Barry Goldwater Scholarship and Excellence in Education Foundation",
+              "label_en": "Barry Goldwater Scholarship and Excellence in Education Foundation"
             },
             {
               "code": "99",
-              "label_native": "Harry S Truman Scholarship Foundation"
+              "label_native": "Harry S Truman Scholarship Foundation",
+              "label_en": "Harry S Truman Scholarship Foundation"
             }
           ]
         },
@@ -3003,15 +3159,18 @@
           "source_rows": [
             {
               "code": "5",
-              "label_native": "Department of Defense--Military Programs"
+              "label_native": "Department of Defense--Military Programs",
+              "label_en": "Department of Defense--Military Programs"
             },
             {
               "code": "29",
-              "label_native": "Other Defense--Civil Programs"
+              "label_native": "Other Defense--Civil Programs",
+              "label_en": "Other Defense--Civil Programs"
             },
             {
               "code": "78",
-              "label_native": "Defense Nuclear Facilities Safety Board"
+              "label_native": "Defense Nuclear Facilities Safety Board",
+              "label_en": "Defense Nuclear Facilities Safety Board"
             }
           ]
         },
@@ -3028,47 +3187,58 @@
           "source_rows": [
             {
               "code": "18",
-              "label_native": "Department of Homeland Security"
+              "label_native": "Department of Homeland Security",
+              "label_en": "Department of Homeland Security"
             },
             {
               "code": "8",
-              "label_native": "Department of Justice"
+              "label_native": "Department of Justice",
+              "label_en": "Department of Justice"
             },
             {
               "code": "2",
-              "label_native": "Judicial Branch"
+              "label_native": "Judicial Branch",
+              "label_en": "Judicial Branch"
             },
             {
               "code": "182",
-              "label_native": "Intelligence Community Management Account"
+              "label_native": "Intelligence Community Management Account",
+              "label_en": "Intelligence Community Management Account"
             },
             {
               "code": "26",
-              "label_native": "Federal Drug Control Programs"
+              "label_native": "Federal Drug Control Programs",
+              "label_en": "Federal Drug Control Programs"
             },
             {
               "code": "110",
-              "label_native": "Legal Services Corporation"
+              "label_native": "Legal Services Corporation",
+              "label_en": "Legal Services Corporation"
             },
             {
               "code": "50",
-              "label_native": "Central Intelligence Agency"
+              "label_native": "Central Intelligence Agency",
+              "label_en": "Central Intelligence Agency"
             },
             {
               "code": "205",
-              "label_native": "Court Services and Offender Supervision Agency for the District of Columbia"
+              "label_native": "Court Services and Offender Supervision Agency for the District of Columbia",
+              "label_en": "Court Services and Offender Supervision Agency for the District of Columbia"
             },
             {
               "code": "239",
-              "label_native": "Public Defender Service for the District of Columbia"
+              "label_native": "Public Defender Service for the District of Columbia",
+              "label_en": "Public Defender Service for the District of Columbia"
             },
             {
               "code": "76",
-              "label_native": "United States Court of Appeals for Veterans Claims"
+              "label_native": "United States Court of Appeals for Veterans Claims",
+              "label_en": "United States Court of Appeals for Veterans Claims"
             },
             {
               "code": "172",
-              "label_native": "State Justice Institute"
+              "label_native": "State Justice Institute",
+              "label_en": "State Justice Institute"
             }
           ]
         },
@@ -3085,27 +3255,33 @@
           "source_rows": [
             {
               "code": "16",
-              "label_native": "Department of Transportation"
+              "label_native": "Department of Transportation",
+              "label_en": "Department of Transportation"
             },
             {
               "code": "30",
-              "label_native": "Corps of Engineers--Civil Works"
+              "label_native": "Corps of Engineers--Civil Works",
+              "label_en": "Corps of Engineers--Civil Works"
             },
             {
               "code": "147",
-              "label_native": "National Transportation Safety Board"
+              "label_native": "National Transportation Safety Board",
+              "label_en": "National Transportation Safety Board"
             },
             {
               "code": "186",
-              "label_native": "Surface Transportation Board"
+              "label_native": "Surface Transportation Board",
+              "label_en": "Surface Transportation Board"
             },
             {
               "code": "93",
-              "label_native": "Federal Maritime Commission"
+              "label_native": "Federal Maritime Commission",
+              "label_en": "Federal Maritime Commission"
             },
             {
               "code": "232",
-              "label_native": "National Railroad Passenger Corporation Office of Inspector General"
+              "label_native": "National Railroad Passenger Corporation Office of Inspector General",
+              "label_en": "National Railroad Passenger Corporation Office of Inspector General"
             }
           ]
         },
@@ -3122,35 +3298,43 @@
           "source_rows": [
             {
               "code": "3",
-              "label_native": "Department of Agriculture"
+              "label_native": "Department of Agriculture",
+              "label_en": "Department of Agriculture"
             },
             {
               "code": "7",
-              "label_native": "Department of the Interior"
+              "label_native": "Department of the Interior",
+              "label_en": "Department of the Interior"
             },
             {
               "code": "15",
-              "label_native": "Environmental Protection Agency"
+              "label_native": "Environmental Protection Agency",
+              "label_en": "Environmental Protection Agency"
             },
             {
               "code": "95",
-              "label_native": "Federal Mine Safety and Health Review Commission"
+              "label_native": "Federal Mine Safety and Health Review Commission",
+              "label_en": "Federal Mine Safety and Health Review Commission"
             },
             {
               "code": "204",
-              "label_native": "Chemical Safety and Hazard Investigation Board"
+              "label_native": "Chemical Safety and Hazard Investigation Board",
+              "label_en": "Chemical Safety and Hazard Investigation Board"
             },
             {
               "code": "197",
-              "label_native": "Morris K. Udall and Stewart L. Udall Foundation"
+              "label_native": "Morris K. Udall and Stewart L. Udall Foundation",
+              "label_en": "Morris K. Udall and Stewart L. Udall Foundation"
             },
             {
               "code": "112",
-              "label_native": "Marine Mammal Commission"
+              "label_native": "Marine Mammal Commission",
+              "label_en": "Marine Mammal Commission"
             },
             {
               "code": "238",
-              "label_native": "Gulf Coast Ecosystem Restoration Council"
+              "label_native": "Gulf Coast Ecosystem Restoration Council",
+              "label_en": "Gulf Coast Ecosystem Restoration Council"
             }
           ]
         },
@@ -3167,31 +3351,38 @@
           "source_rows": [
             {
               "code": "19",
-              "label_native": "Department of Housing and Urban Development"
+              "label_native": "Department of Housing and Urban Development",
+              "label_en": "Department of Housing and Urban Development"
             },
             {
               "code": "219",
-              "label_native": "Affordable Housing Program"
+              "label_native": "Affordable Housing Program",
+              "label_en": "Affordable Housing Program"
             },
             {
               "code": "223",
-              "label_native": "Federal Housing Finance Agency"
+              "label_native": "Federal Housing Finance Agency",
+              "label_en": "Federal Housing Finance Agency"
             },
             {
               "code": "150",
-              "label_native": "Neighborhood Reinvestment Corporation"
+              "label_native": "Neighborhood Reinvestment Corporation",
+              "label_en": "Neighborhood Reinvestment Corporation"
             },
             {
               "code": "119",
-              "label_native": "National Capital Planning Commission"
+              "label_native": "National Capital Planning Commission",
+              "label_en": "National Capital Planning Commission"
             },
             {
               "code": "101",
-              "label_native": "United States Interagency Council on Homelessness"
+              "label_native": "United States Interagency Council on Homelessness",
+              "label_en": "United States Interagency Council on Homelessness"
             },
             {
               "code": "156",
-              "label_native": "Office of Navajo and Hopi Indian Relocation"
+              "label_native": "Office of Navajo and Hopi Indian Relocation",
+              "label_en": "Office of Navajo and Hopi Indian Relocation"
             }
           ]
         },
@@ -3208,35 +3399,43 @@
           "source_rows": [
             {
               "code": "14",
-              "label_native": "Department of Energy"
+              "label_native": "Department of Energy",
+              "label_en": "Department of Energy"
             },
             {
               "code": "4",
-              "label_native": "Department of Commerce"
+              "label_native": "Department of Commerce",
+              "label_en": "Department of Commerce"
             },
             {
               "code": "87",
-              "label_native": "Federal Communications Commission"
+              "label_native": "Federal Communications Commission",
+              "label_en": "Federal Communications Commission"
             },
             {
               "code": "22",
-              "label_native": "Small Business Administration"
+              "label_native": "Small Business Administration",
+              "label_en": "Small Business Administration"
             },
             {
               "code": "236",
-              "label_native": "Bureau of Consumer Financial Protection"
+              "label_native": "Bureau of Consumer Financial Protection",
+              "label_en": "Bureau of Consumer Financial Protection"
             },
             {
               "code": "169",
-              "label_native": "Securities and Exchange Commission"
+              "label_native": "Securities and Exchange Commission",
+              "label_en": "Securities and Exchange Commission"
             },
             {
               "code": "70",
-              "label_native": "Commodity Futures Trading Commission"
+              "label_native": "Commodity Futures Trading Commission",
+              "label_en": "Commodity Futures Trading Commission"
             },
             {
               "code": "103",
-              "label_native": "International Trade Commission"
+              "label_native": "International Trade Commission",
+              "label_en": "International Trade Commission"
             }
           ]
         },
@@ -3253,27 +3452,33 @@
           "source_rows": [
             {
               "code": "11",
-              "label_native": "Department of the Treasury"
+              "label_native": "Department of the Treasury",
+              "label_en": "Department of the Treasury"
             },
             {
               "code": "10",
-              "label_native": "Department of State"
+              "label_native": "Department of State",
+              "label_en": "Department of State"
             },
             {
               "code": "27",
-              "label_native": "International Assistance Programs"
+              "label_native": "International Assistance Programs",
+              "label_en": "International Assistance Programs"
             },
             {
               "code": "1",
-              "label_native": "Legislative Branch"
+              "label_native": "Legislative Branch",
+              "label_en": "Legislative Branch"
             },
             {
               "code": "17",
-              "label_native": "General Services Administration"
+              "label_native": "General Services Administration",
+              "label_en": "General Services Administration"
             },
             {
               "code": "80",
-              "label_native": "District of Columbia"
+              "label_native": "District of Columbia",
+              "label_en": "District of Columbia"
             }
           ]
         },
@@ -3290,35 +3495,43 @@
           "source_rows": [
             {
               "code": "171",
-              "label_native": "Smithsonian Institution"
+              "label_native": "Smithsonian Institution",
+              "label_en": "Smithsonian Institution"
             },
             {
               "code": "141",
-              "label_native": "National Endowment for the Humanities"
+              "label_native": "National Endowment for the Humanities",
+              "label_en": "National Endowment for the Humanities"
             },
             {
               "code": "140",
-              "label_native": "National Endowment for the Arts"
+              "label_native": "National Endowment for the Arts",
+              "label_en": "National Endowment for the Arts"
             },
             {
               "code": "175",
-              "label_native": "United States Holocaust Memorial Museum"
+              "label_native": "United States Holocaust Memorial Museum",
+              "label_en": "United States Holocaust Memorial Museum"
             },
             {
               "code": "100",
-              "label_native": "Institute of American Indian and Alaska Native Culture and Arts Development"
+              "label_native": "Institute of American Indian and Alaska Native Culture and Arts Development",
+              "label_en": "Institute of American Indian and Alaska Native Culture and Arts Development"
             },
             {
               "code": "55",
-              "label_native": "Commission of Fine Arts"
+              "label_native": "Commission of Fine Arts",
+              "label_en": "Commission of Fine Arts"
             },
             {
               "code": "43",
-              "label_native": "Advisory Council on Historic Preservation"
+              "label_native": "Advisory Council on Historic Preservation",
+              "label_en": "Advisory Council on Historic Preservation"
             },
             {
               "code": "75",
-              "label_native": "Corporation for Public Broadcasting"
+              "label_native": "Corporation for Public Broadcasting",
+              "label_en": "Corporation for Public Broadcasting"
             }
           ]
         },
@@ -3335,255 +3548,318 @@
           "source_rows": [
             {
               "code": "160",
-              "label_native": "Postal Service"
+              "label_native": "Postal Service",
+              "label_en": "Postal Service"
             },
             {
               "code": "195",
-              "label_native": "Corporation for National and Community Service"
+              "label_native": "Corporation for National and Community Service",
+              "label_en": "Corporation for National and Community Service"
             },
             {
               "code": "174",
-              "label_native": "Tennessee Valley Authority"
+              "label_native": "Tennessee Valley Authority",
+              "label_en": "Tennessee Valley Authority"
             },
             {
               "code": "208",
-              "label_native": "U.S. Agency for Global Media"
+              "label_native": "U.S. Agency for Global Media",
+              "label_en": "U.S. Agency for Global Media"
             },
             {
               "code": "118",
-              "label_native": "National Archives and Records Administration"
+              "label_native": "National Archives and Records Administration",
+              "label_en": "National Archives and Records Administration"
             },
             {
               "code": "81",
-              "label_native": "Equal Employment Opportunity Commission"
+              "label_native": "Equal Employment Opportunity Commission",
+              "label_en": "Equal Employment Opportunity Commission"
             },
             {
               "code": "216",
-              "label_native": "Public Company Accounting Oversight Board"
+              "label_native": "Public Company Accounting Oversight Board",
+              "label_en": "Public Company Accounting Oversight Board"
             },
             {
               "code": "143",
-              "label_native": "National Labor Relations Board"
+              "label_native": "National Labor Relations Board",
+              "label_en": "National Labor Relations Board"
             },
             {
               "code": "45",
-              "label_native": "Appalachian Regional Commission"
+              "label_native": "Appalachian Regional Commission",
+              "label_en": "Appalachian Regional Commission"
             },
             {
               "code": "74",
-              "label_native": "Consumer Product Safety Commission"
+              "label_native": "Consumer Product Safety Commission",
+              "label_en": "Consumer Product Safety Commission"
             },
             {
               "code": "207",
-              "label_native": "Denali Commission"
+              "label_native": "Denali Commission",
+              "label_en": "Denali Commission"
             },
             {
               "code": "187",
-              "label_native": "Federal Permitting Improvement Steering Council"
+              "label_native": "Federal Permitting Improvement Steering Council",
+              "label_en": "Federal Permitting Improvement Steering Council"
             },
             {
               "code": "151",
-              "label_native": "Nuclear Regulatory Commission"
+              "label_native": "Nuclear Regulatory Commission",
+              "label_en": "Nuclear Regulatory Commission"
             },
             {
               "code": "220",
-              "label_native": "Electric Reliability Organization"
+              "label_native": "Electric Reliability Organization",
+              "label_en": "Electric Reliability Organization"
             },
             {
               "code": "233",
-              "label_native": "Securities Investor Protection Corporation"
+              "label_native": "Securities Investor Protection Corporation",
+              "label_en": "Securities Investor Protection Corporation"
             },
             {
               "code": "206",
-              "label_native": "Presidio Trust"
+              "label_native": "Presidio Trust",
+              "label_en": "Presidio Trust"
             },
             {
               "code": "89",
-              "label_native": "Federal Election Commission"
+              "label_native": "Federal Election Commission",
+              "label_en": "Federal Election Commission"
             },
             {
               "code": "215",
-              "label_native": "Election Assistance Commission"
+              "label_native": "Election Assistance Commission",
+              "label_en": "Election Assistance Commission"
             },
             {
               "code": "176",
-              "label_native": "United States Institute of Peace"
+              "label_native": "United States Institute of Peace",
+              "label_en": "United States Institute of Peace"
             },
             {
               "code": "60",
-              "label_native": "Payment to Puerto Rico Oversight Board"
+              "label_native": "Payment to Puerto Rico Oversight Board",
+              "label_en": "Payment to Puerto Rico Oversight Board"
             },
             {
               "code": "211",
-              "label_native": "Delta Regional Authority"
+              "label_native": "Delta Regional Authority",
+              "label_en": "Delta Regional Authority"
             },
             {
               "code": "114",
-              "label_native": "Merit Systems Protection Board"
+              "label_native": "Merit Systems Protection Board",
+              "label_en": "Merit Systems Protection Board"
             },
             {
               "code": "94",
-              "label_native": "Federal Mediation and Conciliation Service"
+              "label_native": "Federal Mediation and Conciliation Service",
+              "label_en": "Federal Mediation and Conciliation Service"
             },
             {
               "code": "235",
-              "label_native": "Corporation for Travel Promotion"
+              "label_native": "Corporation for Travel Promotion",
+              "label_en": "Corporation for Travel Promotion"
             },
             {
               "code": "230",
-              "label_native": "Northern Border Regional Commission"
+              "label_native": "Northern Border Regional Commission",
+              "label_en": "Northern Border Regional Commission"
             },
             {
               "code": "90",
-              "label_native": "Federal Financial Institutions Examination Council"
+              "label_native": "Federal Financial Institutions Examination Council",
+              "label_en": "Federal Financial Institutions Examination Council"
             },
             {
               "code": "157",
-              "label_native": "Office of Special Counsel"
+              "label_native": "Office of Special Counsel",
+              "label_en": "Office of Special Counsel"
             },
             {
               "code": "92",
-              "label_native": "Federal Labor Relations Authority"
+              "label_native": "Federal Labor Relations Authority",
+              "label_en": "Federal Labor Relations Authority"
             },
             {
               "code": "217",
-              "label_native": "Standard Setting Body"
+              "label_native": "Standard Setting Body",
+              "label_en": "Standard Setting Body"
             },
             {
               "code": "155",
-              "label_native": "Office of Government Ethics"
+              "label_native": "Office of Government Ethics",
+              "label_en": "Office of Government Ethics"
             },
             {
               "code": "225",
-              "label_native": "Council of the Inspectors General on Integrity and Efficiency"
+              "label_native": "Council of the Inspectors General on Integrity and Efficiency",
+              "label_en": "Council of the Inspectors General on Integrity and Efficiency"
             },
             {
               "code": "231",
-              "label_native": "Southeast Crescent Regional Commission"
+              "label_native": "Southeast Crescent Regional Commission",
+              "label_en": "Southeast Crescent Regional Commission"
             },
             {
               "code": "144",
-              "label_native": "National Mediation Board"
+              "label_native": "National Mediation Board",
+              "label_en": "National Mediation Board"
             },
             {
               "code": "154",
-              "label_native": "Occupational Safety and Health Review Commission"
+              "label_native": "Occupational Safety and Health Review Commission",
+              "label_en": "Occupational Safety and Health Review Commission"
             },
             {
               "code": "58",
-              "label_native": "Commission on Civil Rights"
+              "label_native": "Commission on Civil Rights",
+              "label_en": "Commission on Civil Rights"
             },
             {
               "code": "222",
-              "label_native": "Privacy and Civil Liberties Oversight Board"
+              "label_native": "Privacy and Civil Liberties Oversight Board",
+              "label_en": "Privacy and Civil Liberties Oversight Board"
             },
             {
               "code": "69",
-              "label_native": "Committee for Purchase From People Who Are Blind or Severely Disabled"
+              "label_native": "Committee for Purchase From People Who Are Blind or Severely Disabled",
+              "label_en": "Committee for Purchase From People Who Are Blind or Severely Disabled"
             },
             {
               "code": "46",
-              "label_native": "Access Board"
+              "label_native": "Access Board",
+              "label_en": "Access Board"
             },
             {
               "code": "36",
-              "label_native": "Concrete Masonry Products Board"
+              "label_native": "Concrete Masonry Products Board",
+              "label_en": "Concrete Masonry Products Board"
             },
             {
               "code": "83",
-              "label_native": "Farm Credit Administration"
+              "label_native": "Farm Credit Administration",
+              "label_en": "Farm Credit Administration"
             },
             {
               "code": "37",
-              "label_native": "Public Buildings Reform Board"
+              "label_native": "Public Buildings Reform Board",
+              "label_en": "Public Buildings Reform Board"
             },
             {
               "code": "227",
-              "label_native": "National Oilheat Research Alliance"
+              "label_native": "National Oilheat Research Alliance",
+              "label_en": "National Oilheat Research Alliance"
             },
             {
               "code": "136",
-              "label_native": "National Council on Disability"
+              "label_native": "National Council on Disability",
+              "label_en": "National Council on Disability"
             },
             {
               "code": "153",
-              "label_native": "Nuclear Waste Technical Review Board"
+              "label_native": "Nuclear Waste Technical Review Board",
+              "label_en": "Nuclear Waste Technical Review Board"
             },
             {
               "code": "107",
-              "label_native": "Japan-United States Friendship Commission"
+              "label_native": "Japan-United States Friendship Commission",
+              "label_en": "Japan-United States Friendship Commission"
             },
             {
               "code": "39",
-              "label_native": "Administrative Conference of the United States"
+              "label_native": "Administrative Conference of the United States",
+              "label_en": "Administrative Conference of the United States"
             },
             {
               "code": "31",
-              "label_native": "National Commission on Military, National, and Public Service"
+              "label_native": "National Commission on Military, National, and Public Service",
+              "label_en": "National Commission on Military, National, and Public Service"
             },
             {
               "code": "202",
-              "label_native": "Other Commissions and Boards"
+              "label_native": "Other Commissions and Boards",
+              "label_en": "Other Commissions and Boards"
             },
             {
               "code": "33",
-              "label_native": "National Commission on Military Aviation Safety"
+              "label_native": "National Commission on Military Aviation Safety",
+              "label_en": "National Commission on Military Aviation Safety"
             },
             {
               "code": "193",
-              "label_native": "Military Compensation and Retirement Modernization Commission"
+              "label_native": "Military Compensation and Retirement Modernization Commission",
+              "label_en": "Military Compensation and Retirement Modernization Commission"
             },
             {
               "code": "25",
-              "label_native": "Civil Rights Cold Case Records Review Board"
+              "label_native": "Civil Rights Cold Case Records Review Board",
+              "label_en": "Civil Rights Cold Case Records Review Board"
             },
             {
               "code": "34",
-              "label_native": "400 Years of African-American History Commission"
+              "label_native": "400 Years of African-American History Commission",
+              "label_en": "400 Years of African-American History Commission"
             },
             {
               "code": "96",
-              "label_native": "Federal Retirement Thrift Investment Board"
+              "label_native": "Federal Retirement Thrift Investment Board",
+              "label_en": "Federal Retirement Thrift Investment Board"
             },
             {
               "code": "229",
-              "label_native": "Southwest Border Regional Commission"
+              "label_native": "Southwest Border Regional Commission",
+              "label_en": "Southwest Border Regional Commission"
             },
             {
               "code": "242",
-              "label_native": "Miscellaneous Receipts Below the Reporting Threshold"
+              "label_native": "Miscellaneous Receipts Below the Reporting Threshold",
+              "label_en": "Miscellaneous Receipts Below the Reporting Threshold"
             },
             {
               "code": "240",
-              "label_native": "Allowances"
+              "label_native": "Allowances",
+              "label_en": "Allowances"
             },
             {
               "code": "97",
-              "label_native": "Federal Trade Commission"
+              "label_native": "Federal Trade Commission",
+              "label_en": "Federal Trade Commission"
             },
             {
               "code": "82",
-              "label_native": "Export-Import Bank of the United States"
+              "label_native": "Export-Import Bank of the United States",
+              "label_en": "Export-Import Bank of the United States"
             },
             {
               "code": "24",
-              "label_native": "Executive Office of the President"
+              "label_native": "Executive Office of the President",
+              "label_en": "Executive Office of the President"
             },
             {
               "code": "86",
-              "label_native": "Farm Credit System Insurance Corporation"
+              "label_native": "Farm Credit System Insurance Corporation",
+              "label_en": "Farm Credit System Insurance Corporation"
             },
             {
               "code": "138",
-              "label_native": "National Credit Union Administration"
+              "label_native": "National Credit Union Administration",
+              "label_en": "National Credit Union Administration"
             },
             {
               "code": "88",
-              "label_native": "Federal Deposit Insurance Corporation"
+              "label_native": "Federal Deposit Insurance Corporation",
+              "label_en": "Federal Deposit Insurance Corporation"
             },
             {
               "code": "241",
-              "label_native": "Undistributed Offsetting Receipts"
+              "label_native": "Undistributed Offsetting Receipts",
+              "label_en": "Undistributed Offsetting Receipts"
             }
           ]
         }
@@ -3789,7 +4065,25 @@
       "currency": "USD",
       "coverage": "unavailable",
       "reason_cs": "Eurostat COFOG II tuto zemi nepokrývá.",
-      "reason_en": "Eurostat COFOG II does not cover this country."
+      "reason_en": "Eurostat COFOG II does not cover this country.",
+      "public_data": {
+        "detail_status": "fragmented",
+        "level_status": "fragmented",
+        "note_cs": "Federální výdaje OMB a státní i místní finance Census jsou veřejné, ale nejsou jedním konsolidovaným COFOG souborem.",
+        "note_en": "OMB federal outlays and Census state/local finances are public, but they are not one consolidated COFOG dataset.",
+        "next_step_cs": "Sloučit federální, státní a místní dopravu a odečíst federální granty, aby nevzniklo dvojí započtení.",
+        "next_step_en": "Combine federal, state and local transport and net out federal grants to avoid double counting.",
+        "sources": [
+          {
+            "title": "OMB · Historical Tables",
+            "url": "https://www.whitehouse.gov/omb/information-resources/budget/historical-tables/"
+          },
+          {
+            "title": "U.S. Census · state and local finances",
+            "url": "https://www.census.gov/data/developers/data-sets/govslocalfin.html"
+          }
+        ]
+      }
     },
     "health": {
       "currency": "USD",
@@ -3892,9 +4186,689 @@
       },
       "records": "data/countries/usa/providers.v1.json"
     },
-    "municipalities": null,
-    "public_entities": null,
-    "demography": null
+    "municipalities": {
+      "code": "USA",
+      "alpha2": "US",
+      "name_cs": "Spojené státy",
+      "name_en": "United States",
+      "currency": "USD",
+      "years": [
+        2022
+      ],
+      "counts": {
+        "2022": 19401
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všechny jednotky typu city/municipality v souboru Census of Governments; částky v tisících USD převedeny na USD",
+      "coverage_en": "All city/municipality government units in the Census of Governments file; thousands of USD converted to USD",
+      "status": "complete",
+      "source": "https://www.census.gov/data/datasets/2022/econ/local/public-use-datasets.html",
+      "source_detail": {
+        "publisher": "U.S. Census Bureau",
+        "dataset": "2022 Census of Governments — Individual Unit Public Use File",
+        "location": "Fin_PID_2022.txt → type-of-government digit 2; 2022FinEstDAT → item amounts; revenue prefixes A/B/C/D/T/U and expenditure prefixes E/F/I/J/L/M/S",
+        "period": "2022"
+      },
+      "directory_count": 19401,
+      "missing_dimensions": []
+    },
+    "public_entities": {
+      "period": "FY 2024",
+      "scope_cs": "Konsolidační jednotky federální vlády uvedené v příloze A celovládního finančního výkazu.",
+      "scope_en": "Federal consolidation entities listed in Appendix A of the government-wide Financial Report.",
+      "entity_count": 167,
+      "financial_statement_count": 38,
+      "coverage": "governmentwide_reporting_entities",
+      "missing_dimensions": [
+        "samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"
+      ],
+      "source": {
+        "publisher": "U.S. Department of the Treasury, Bureau of the Fiscal Service",
+        "dataset": "Financial Report of the United States Government 2024",
+        "url": "https://fiscal.treasury.gov/accounting/us-financial-report/2024-report",
+        "location": "Appendix A → 24 CFO Act agencies + 16 significant consolidation entities + 127 other consolidation entities; related-resources page → individual reports for 38 significant entities"
+      }
+    },
+    "demography": {
+      "coverage": "national_middle_series_full_age_sex",
+      "projection": "2023 National Population Projections, middle series",
+      "reference_date": "1 July",
+      "period": {
+        "from": 2022,
+        "to": 2100
+      },
+      "detail": "data/countries/usa/demography.v1.json",
+      "detail_row_count": 7979,
+      "age_group_count": 101,
+      "years": [
+        {
+          "year": 2025,
+          "total": 338016259,
+          "male": 167543554,
+          "female": 170472705,
+          "age_0_19": 79774423,
+          "age_20_64": 194915233,
+          "age_65_79": 48581124,
+          "age_80_plus": 14745479,
+          "male_by_age": {
+            "age_0_19": 40814135,
+            "age_20_64": 98134298,
+            "age_65_79": 22702827,
+            "age_80_plus": 5892294
+          },
+          "female_by_age": {
+            "age_0_19": 38960288,
+            "age_20_64": 96780935,
+            "age_65_79": 25878297,
+            "age_80_plus": 8853185
+          },
+          "shares_pct": {
+            "age_0_19": 23.6008,
+            "age_20_64": 57.6645,
+            "age_65_79": 14.3724,
+            "age_80_plus": 4.3624
+          },
+          "old_age_dependency_per_100_working_age": 32.4893
+        },
+        {
+          "year": 2026,
+          "total": 339513045,
+          "male": 168252393,
+          "female": 171260652,
+          "age_0_19": 79296480,
+          "age_20_64": 195109933,
+          "age_65_79": 49897790,
+          "age_80_plus": 15208842,
+          "male_by_age": {
+            "age_0_19": 40567352,
+            "age_20_64": 98242114,
+            "age_65_79": 23328105,
+            "age_80_plus": 6114822
+          },
+          "female_by_age": {
+            "age_0_19": 38729128,
+            "age_20_64": 96867819,
+            "age_65_79": 26569685,
+            "age_80_plus": 9094020
+          },
+          "shares_pct": {
+            "age_0_19": 23.3559,
+            "age_20_64": 57.4676,
+            "age_65_79": 14.6969,
+            "age_80_plus": 4.4796
+          },
+          "old_age_dependency_per_100_working_age": 33.3692
+        },
+        {
+          "year": 2027,
+          "total": 340970496,
+          "male": 168939434,
+          "female": 172031062,
+          "age_0_19": 78740924,
+          "age_20_64": 195430726,
+          "age_65_79": 50480662,
+          "age_80_plus": 16318184,
+          "male_by_age": {
+            "age_0_19": 40279067,
+            "age_20_64": 98416414,
+            "age_65_79": 23609548,
+            "age_80_plus": 6634405
+          },
+          "female_by_age": {
+            "age_0_19": 38461857,
+            "age_20_64": 97014312,
+            "age_65_79": 26871114,
+            "age_80_plus": 9683779
+          },
+          "shares_pct": {
+            "age_0_19": 23.0932,
+            "age_20_64": 57.316,
+            "age_65_79": 14.805,
+            "age_80_plus": 4.7858
+          },
+          "old_age_dependency_per_100_working_age": 34.1803
+        },
+        {
+          "year": 2028,
+          "total": 342384777,
+          "male": 169603165,
+          "female": 172781612,
+          "age_0_19": 78172411,
+          "age_20_64": 195829556,
+          "age_65_79": 51193857,
+          "age_80_plus": 17188953,
+          "male_by_age": {
+            "age_0_19": 39984841,
+            "age_20_64": 98631616,
+            "age_65_79": 23957604,
+            "age_80_plus": 7029104
+          },
+          "female_by_age": {
+            "age_0_19": 38187570,
+            "age_20_64": 97197940,
+            "age_65_79": 27236253,
+            "age_80_plus": 10159849
+          },
+          "shares_pct": {
+            "age_0_19": 22.8317,
+            "age_20_64": 57.1958,
+            "age_65_79": 14.9521,
+            "age_80_plus": 5.0204
+          },
+          "old_age_dependency_per_100_working_age": 34.9196
+        },
+        {
+          "year": 2029,
+          "total": 343753791,
+          "male": 170242992,
+          "female": 173510799,
+          "age_0_19": 77759414,
+          "age_20_64": 196120389,
+          "age_65_79": 51864732,
+          "age_80_plus": 18009256,
+          "male_by_age": {
+            "age_0_19": 39771268,
+            "age_20_64": 98788356,
+            "age_65_79": 24291785,
+            "age_80_plus": 7391583
+          },
+          "female_by_age": {
+            "age_0_19": 37988146,
+            "age_20_64": 97332033,
+            "age_65_79": 27572947,
+            "age_80_plus": 10617673
+          },
+          "shares_pct": {
+            "age_0_19": 22.6207,
+            "age_20_64": 57.0526,
+            "age_65_79": 15.0878,
+            "age_80_plus": 5.239
+          },
+          "old_age_dependency_per_100_working_age": 35.6281
+        },
+        {
+          "year": 2030,
+          "total": 345073565,
+          "male": 170857443,
+          "female": 174216122,
+          "age_0_19": 77427596,
+          "age_20_64": 196462471,
+          "age_65_79": 52389965,
+          "age_80_plus": 18793533,
+          "male_by_age": {
+            "age_0_19": 39598712,
+            "age_20_64": 98970467,
+            "age_65_79": 24555568,
+            "age_80_plus": 7732696
+          },
+          "female_by_age": {
+            "age_0_19": 37828884,
+            "age_20_64": 97492004,
+            "age_65_79": 27834397,
+            "age_80_plus": 11060837
+          },
+          "shares_pct": {
+            "age_0_19": 22.438,
+            "age_20_64": 56.9335,
+            "age_65_79": 15.1823,
+            "age_80_plus": 5.4462
+          },
+          "old_age_dependency_per_100_working_age": 36.2326
+        },
+        {
+          "year": 2031,
+          "total": 346339264,
+          "male": 171444642,
+          "female": 174894622,
+          "age_0_19": 77171135,
+          "age_20_64": 196906800,
+          "age_65_79": 52668917,
+          "age_80_plus": 19592412,
+          "male_by_age": {
+            "age_0_19": 39461265,
+            "age_20_64": 99198369,
+            "age_65_79": 24709726,
+            "age_80_plus": 8075282
+          },
+          "female_by_age": {
+            "age_0_19": 37709870,
+            "age_20_64": 97708431,
+            "age_65_79": 27959191,
+            "age_80_plus": 11517130
+          },
+          "shares_pct": {
+            "age_0_19": 22.2819,
+            "age_20_64": 56.8537,
+            "age_65_79": 15.2073,
+            "age_80_plus": 5.657
+          },
+          "old_age_dependency_per_100_working_age": 36.6982
+        },
+        {
+          "year": 2032,
+          "total": 347545098,
+          "male": 172002366,
+          "female": 175542732,
+          "age_0_19": 76948475,
+          "age_20_64": 197394514,
+          "age_65_79": 52788068,
+          "age_80_plus": 20414041,
+          "male_by_age": {
+            "age_0_19": 39345868,
+            "age_20_64": 99442424,
+            "age_65_79": 24785599,
+            "age_80_plus": 8428475
+          },
+          "female_by_age": {
+            "age_0_19": 37602607,
+            "age_20_64": 97952090,
+            "age_65_79": 28002469,
+            "age_80_plus": 11985566
+          },
+          "shares_pct": {
+            "age_0_19": 22.1406,
+            "age_20_64": 56.7968,
+            "age_65_79": 15.1888,
+            "age_80_plus": 5.8738
+          },
+          "old_age_dependency_per_100_working_age": 37.0842
+        },
+        {
+          "year": 2033,
+          "total": 348701812,
+          "male": 172536576,
+          "female": 176165236,
+          "age_0_19": 76721582,
+          "age_20_64": 197928033,
+          "age_65_79": 52817807,
+          "age_80_plus": 21234390,
+          "male_by_age": {
+            "age_0_19": 39231297,
+            "age_20_64": 99702499,
+            "age_65_79": 24825160,
+            "age_80_plus": 8777620
+          },
+          "female_by_age": {
+            "age_0_19": 37490285,
+            "age_20_64": 98225534,
+            "age_65_79": 27992647,
+            "age_80_plus": 12456770
+          },
+          "shares_pct": {
+            "age_0_19": 22.0021,
+            "age_20_64": 56.7614,
+            "age_65_79": 15.147,
+            "age_80_plus": 6.0896
+          },
+          "old_age_dependency_per_100_working_age": 37.4137
+        },
+        {
+          "year": 2034,
+          "total": 349807647,
+          "male": 173046937,
+          "female": 176760710,
+          "age_0_19": 76467969,
+          "age_20_64": 198433159,
+          "age_65_79": 52836977,
+          "age_80_plus": 22069542,
+          "male_by_age": {
+            "age_0_19": 39098881,
+            "age_20_64": 99953747,
+            "age_65_79": 24862273,
+            "age_80_plus": 9132036
+          },
+          "female_by_age": {
+            "age_0_19": 37369088,
+            "age_20_64": 98479412,
+            "age_65_79": 27974704,
+            "age_80_plus": 12937506
+          },
+          "shares_pct": {
+            "age_0_19": 21.86,
+            "age_20_64": 56.7264,
+            "age_65_79": 15.1046,
+            "age_80_plus": 6.3091
+          },
+          "old_age_dependency_per_100_working_age": 37.749
+        },
+        {
+          "year": 2035,
+          "total": 350861084,
+          "male": 173533158,
+          "female": 177327926,
+          "age_0_19": 76187739,
+          "age_20_64": 198844934,
+          "age_65_79": 52923725,
+          "age_80_plus": 22904686,
+          "male_by_age": {
+            "age_0_19": 38957585,
+            "age_20_64": 100154751,
+            "age_65_79": 24933629,
+            "age_80_plus": 9487193
+          },
+          "female_by_age": {
+            "age_0_19": 37230154,
+            "age_20_64": 98690183,
+            "age_65_79": 27990096,
+            "age_80_plus": 13417493
+          },
+          "shares_pct": {
+            "age_0_19": 21.7145,
+            "age_20_64": 56.6734,
+            "age_65_79": 15.084,
+            "age_80_plus": 6.5281
+          },
+          "old_age_dependency_per_100_working_age": 38.1344
+        },
+        {
+          "year": 2036,
+          "total": 351860944,
+          "male": 173995103,
+          "female": 177865841,
+          "age_0_19": 75925235,
+          "age_20_64": 199201352,
+          "age_65_79": 53024905,
+          "age_80_plus": 23709452,
+          "male_by_age": {
+            "age_0_19": 38824054,
+            "age_20_64": 100330951,
+            "age_65_79": 25011614,
+            "age_80_plus": 9828484
+          },
+          "female_by_age": {
+            "age_0_19": 37101181,
+            "age_20_64": 98870401,
+            "age_65_79": 28013291,
+            "age_80_plus": 13880968
+          },
+          "shares_pct": {
+            "age_0_19": 21.5782,
+            "age_20_64": 56.6137,
+            "age_65_79": 15.0698,
+            "age_80_plus": 6.7383
+          },
+          "old_age_dependency_per_100_working_age": 38.521
+        },
+        {
+          "year": 2037,
+          "total": 352806047,
+          "male": 174432478,
+          "female": 178373569,
+          "age_0_19": 75744818,
+          "age_20_64": 199711702,
+          "age_65_79": 52800705,
+          "age_80_plus": 24548822,
+          "male_by_age": {
+            "age_0_19": 38729674,
+            "age_20_64": 100590810,
+            "age_65_79": 24923367,
+            "age_80_plus": 10188627
+          },
+          "female_by_age": {
+            "age_0_19": 37015144,
+            "age_20_64": 99120892,
+            "age_65_79": 27877338,
+            "age_80_plus": 14360195
+          },
+          "shares_pct": {
+            "age_0_19": 21.4693,
+            "age_20_64": 56.6067,
+            "age_65_79": 14.9659,
+            "age_80_plus": 6.9582
+          },
+          "old_age_dependency_per_100_working_age": 38.7306
+        },
+        {
+          "year": 2038,
+          "total": 353695674,
+          "male": 174845258,
+          "female": 178850416,
+          "age_0_19": 75619597,
+          "age_20_64": 200345820,
+          "age_65_79": 52382175,
+          "age_80_plus": 25348082,
+          "male_by_age": {
+            "age_0_19": 38665543,
+            "age_20_64": 100912792,
+            "age_65_79": 24734864,
+            "age_80_plus": 10532059
+          },
+          "female_by_age": {
+            "age_0_19": 36954054,
+            "age_20_64": 99433028,
+            "age_65_79": 27647311,
+            "age_80_plus": 14816023
+          },
+          "shares_pct": {
+            "age_0_19": 21.3798,
+            "age_20_64": 56.6436,
+            "age_65_79": 14.81,
+            "age_80_plus": 7.1666
+          },
+          "old_age_dependency_per_100_working_age": 38.798
+        },
+        {
+          "year": 2039,
+          "total": 354529853,
+          "male": 175233660,
+          "female": 179296193,
+          "age_0_19": 75557883,
+          "age_20_64": 200965391,
+          "age_65_79": 51923403,
+          "age_80_plus": 26083176,
+          "male_by_age": {
+            "age_0_19": 38635829,
+            "age_20_64": 101223410,
+            "age_65_79": 24527582,
+            "age_80_plus": 10846839
+          },
+          "female_by_age": {
+            "age_0_19": 36922054,
+            "age_20_64": 99741981,
+            "age_65_79": 27395821,
+            "age_80_plus": 15236337
+          },
+          "shares_pct": {
+            "age_0_19": 21.3121,
+            "age_20_64": 56.685,
+            "age_65_79": 14.6457,
+            "age_80_plus": 7.3571
+          },
+          "old_age_dependency_per_100_working_age": 38.8159
+        },
+        {
+          "year": 2040,
+          "total": 355309062,
+          "male": 175598130,
+          "female": 179710932,
+          "age_0_19": 75520015,
+          "age_20_64": 201495147,
+          "age_65_79": 51503658,
+          "age_80_plus": 26790242,
+          "male_by_age": {
+            "age_0_19": 38616336,
+            "age_20_64": 101491398,
+            "age_65_79": 24338738,
+            "age_80_plus": 11151658
+          },
+          "female_by_age": {
+            "age_0_19": 36903679,
+            "age_20_64": 100003749,
+            "age_65_79": 27164920,
+            "age_80_plus": 15638584
+          },
+          "shares_pct": {
+            "age_0_19": 21.2547,
+            "age_20_64": 56.7098,
+            "age_65_79": 14.4955,
+            "age_80_plus": 7.54
+          },
+          "old_age_dependency_per_100_working_age": 38.8565
+        },
+        {
+          "year": 2041,
+          "total": 356033543,
+          "male": 175938871,
+          "female": 180094672,
+          "age_0_19": 75559348,
+          "age_20_64": 201982163,
+          "age_65_79": 51021294,
+          "age_80_plus": 27470738,
+          "male_by_age": {
+            "age_0_19": 38636353,
+            "age_20_64": 101736994,
+            "age_65_79": 24121248,
+            "age_80_plus": 11444276
+          },
+          "female_by_age": {
+            "age_0_19": 36922995,
+            "age_20_64": 100245169,
+            "age_65_79": 26900046,
+            "age_80_plus": 16026462
+          },
+          "shares_pct": {
+            "age_0_19": 21.2225,
+            "age_20_64": 56.7312,
+            "age_65_79": 14.3305,
+            "age_80_plus": 7.7158
+          },
+          "old_age_dependency_per_100_working_age": 38.8609
+        },
+        {
+          "year": 2042,
+          "total": 356705435,
+          "male": 176256999,
+          "female": 180448436,
+          "age_0_19": 75479559,
+          "age_20_64": 202458521,
+          "age_65_79": 50685382,
+          "age_80_plus": 28081973,
+          "male_by_age": {
+            "age_0_19": 38595652,
+            "age_20_64": 101980943,
+            "age_65_79": 23973712,
+            "age_80_plus": 11706692
+          },
+          "female_by_age": {
+            "age_0_19": 36883907,
+            "age_20_64": 100477578,
+            "age_65_79": 26711670,
+            "age_80_plus": 16375281
+          },
+          "shares_pct": {
+            "age_0_19": 21.1602,
+            "age_20_64": 56.7579,
+            "age_65_79": 14.2093,
+            "age_80_plus": 7.8726
+          },
+          "old_age_dependency_per_100_working_age": 38.9054
+        },
+        {
+          "year": 2043,
+          "total": 357327409,
+          "male": 176553803,
+          "female": 180773606,
+          "age_0_19": 75417498,
+          "age_20_64": 202861386,
+          "age_65_79": 50435384,
+          "age_80_plus": 28613141,
+          "male_by_age": {
+            "age_0_19": 38563501,
+            "age_20_64": 102185092,
+            "age_65_79": 23872393,
+            "age_80_plus": 11932817
+          },
+          "female_by_age": {
+            "age_0_19": 36853997,
+            "age_20_64": 100676294,
+            "age_65_79": 26562991,
+            "age_80_plus": 16680324
+          },
+          "shares_pct": {
+            "age_0_19": 21.106,
+            "age_20_64": 56.7719,
+            "age_65_79": 14.1146,
+            "age_80_plus": 8.0075
+          },
+          "old_age_dependency_per_100_working_age": 38.9668
+        },
+        {
+          "year": 2044,
+          "total": 357903394,
+          "male": 176831174,
+          "female": 181072220,
+          "age_0_19": 75332027,
+          "age_20_64": 203193361,
+          "age_65_79": 50297745,
+          "age_80_plus": 29080261,
+          "male_by_age": {
+            "age_0_19": 38519377,
+            "age_20_64": 102354511,
+            "age_65_79": 23824097,
+            "age_80_plus": 12133189
+          },
+          "female_by_age": {
+            "age_0_19": 36812650,
+            "age_20_64": 100838850,
+            "age_65_79": 26473648,
+            "age_80_plus": 16947072
+          },
+          "shares_pct": {
+            "age_0_19": 21.0481,
+            "age_20_64": 56.7732,
+            "age_65_79": 14.0534,
+            "age_80_plus": 8.1252
+          },
+          "old_age_dependency_per_100_working_age": 39.0653
+        },
+        {
+          "year": 2045,
+          "total": 358437973,
+          "male": 177091148,
+          "female": 181346825,
+          "age_0_19": 75224378,
+          "age_20_64": 203381327,
+          "age_65_79": 50407613,
+          "age_80_plus": 29424655,
+          "male_by_age": {
+            "age_0_19": 38463917,
+            "age_20_64": 102449737,
+            "age_65_79": 23898828,
+            "age_80_plus": 12278666
+          },
+          "female_by_age": {
+            "age_0_19": 36760461,
+            "age_20_64": 100931590,
+            "age_65_79": 26508785,
+            "age_80_plus": 17145989
+          },
+          "shares_pct": {
+            "age_0_19": 20.9867,
+            "age_20_64": 56.741,
+            "age_65_79": 14.0631,
+            "age_80_plus": 8.2091
+          },
+          "old_age_dependency_per_100_working_age": 39.2525
+        }
+      ],
+      "source": {
+        "publisher": "U.S. Census Bureau",
+        "dataset": "2023 National Population Projections — Main Series",
+        "url": "https://www.census.gov/data/tables/2023/demo/popproj/2023-summary-tables.html",
+        "download_urls": [
+          "https://www2.census.gov/programs-surveys/popproj/datasets/2023/2023-popproj/np2023_d1_mid.csv"
+        ],
+        "location": "np2023_d1_mid.csv; ORIGIN=0; RACE=0; SEX=0/1/2; every annual row; POP_0…POP_99 and POP_100 (100+)",
+        "period": "2022–2100"
+      }
+    }
   },
   "sources": [
     {

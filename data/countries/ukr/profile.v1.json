@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-22T20:31:22.510Z",
+  "generated_at": "2026-08-23T17:36:03.771Z",
   "country": {
     "country_code": "UKR",
     "name_cs": "Ukrajina",
@@ -32,14 +32,9 @@
     }
   },
   "coverage": {
-    "loaded_modules": 7,
+    "loaded_modules": 11,
     "total_modules": 11,
-    "missing_dimensions": [
-      "provider_register",
-      "public_entity_accounts",
-      "national_demographic_projection",
-      "harmonised_health_financing"
-    ]
+    "missing_dimensions": []
   },
   "modules": {
     "sovereign": {
@@ -83,25 +78,28 @@
       "missing_dimensions": []
     },
     "health": {
-      "status": "unavailable",
-      "coverage": "functional expenditure only",
+      "status": "loaded",
+      "coverage": "SHA financing profile; 2021",
       "missing_dimensions": [
-        "SHA financing and provider split"
+        "SHA provider split (HP)",
+        "comparable bed benchmark"
       ]
     },
     "providers": {
-      "status": "unavailable",
-      "coverage": "source_adapter_pending",
+      "status": "loaded",
+      "coverage": "official bulk registered provider locations",
       "missing_dimensions": [
-        "facility records"
+        "complete facility census"
       ],
-      "facility_count": 0
+      "facility_count": null,
+      "coverage_level": "nhsu_contracting_provider_open_data"
     },
     "municipalities": {
       "status": "loaded",
       "coverage": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
       "missing_dimensions": [],
       "entity_count": 1467,
+      "fact_count": 1467,
       "years": [
         2024,
         2025
@@ -115,6 +113,7 @@
         "revenue",
         "expenditure"
       ],
+      "coverage_level": "complete",
       "directory": "data/countries/ukr/municipalities.v1.json",
       "warehouse": [
         {
@@ -136,22 +135,22 @@
       ]
     },
     "public_entities": {
-      "status": "unavailable",
-      "coverage": "not loaded",
+      "status": "loaded",
+      "coverage": "3009 entities; 0 with accounts",
       "missing_dimensions": [
-        "ownership register",
-        "entity accounts"
+        "standardizované účetní výkazy / standardised financial statements"
       ],
-      "entity_count": 0
+      "entity_count": 3009,
+      "financial_statement_count": 0,
+      "coverage_level": "state_sector_enterprise_register"
     },
     "demography": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "population projection",
-        "age structure",
-        "social-system model"
-      ]
+      "status": "loaded",
+      "coverage": "2024–2100; annual age/sex detail plus 21 common-year aggregates",
+      "missing_dimensions": [],
+      "projection": "UN World Population Prospects 2024, medium variant",
+      "detail": "data/countries/ukr/demography.v1.json",
+      "detail_row_count": 7777
     }
   },
   "data": {
@@ -1795,7 +1794,8 @@
           "amounts": {
             "previous": 2253.1885,
             "current": 3641.4545
-          }
+          },
+          "label_en": "Defence"
         },
         {
           "code": "01",
@@ -1803,7 +1803,8 @@
           "amounts": {
             "previous": 783.6448,
             "current": 904.8251
-          }
+          },
+          "label_en": "General public services"
         },
         {
           "code": "03",
@@ -1811,7 +1812,8 @@
           "amounts": {
             "previous": 708.655,
             "current": 722.6276
-          }
+          },
+          "label_en": "Public order, security and the judiciary"
         },
         {
           "code": "10",
@@ -1819,7 +1821,8 @@
           "amounts": {
             "previous": 432.6742,
             "current": 483.0824
-          }
+          },
+          "label_en": "Social protection and social security"
         },
         {
           "code": "07",
@@ -1827,7 +1830,8 @@
           "amounts": {
             "previous": 216.8417,
             "current": 253.4551
-          }
+          },
+          "label_en": "Health care"
         },
         {
           "code": "04",
@@ -1835,7 +1839,8 @@
           "amounts": {
             "previous": 153.071,
             "current": 221.375
-          }
+          },
+          "label_en": "Economic affairs"
         },
         {
           "code": "09",
@@ -1843,7 +1848,8 @@
           "amounts": {
             "previous": 71.2371,
             "current": 147.1688
-          }
+          },
+          "label_en": "Education"
         },
         {
           "code": "08",
@@ -1851,7 +1857,8 @@
           "amounts": {
             "previous": 15.9622,
             "current": 20.2781
-          }
+          },
+          "label_en": "Culture, religion and physical development"
         },
         {
           "code": "05",
@@ -1859,7 +1866,8 @@
           "amounts": {
             "previous": 10.9357,
             "current": 12.1725
-          }
+          },
+          "label_en": "Environmental protection"
         },
         {
           "code": "06",
@@ -1867,7 +1875,8 @@
           "amounts": {
             "previous": 8.6384,
             "current": 0.6456
-          }
+          },
+          "label_en": "Housing and communal services"
         }
       ],
       "totals": {
@@ -1929,7 +1938,8 @@
           "source_rows": [
             {
               "code": "10",
-              "label_native": "Соціальний захист та соціальне забезпечення"
+              "label_native": "Соціальний захист та соціальне забезпечення",
+              "label_en": "Social protection and social security"
             }
           ]
         },
@@ -1946,7 +1956,8 @@
           "source_rows": [
             {
               "code": "07",
-              "label_native": "Охорона здоров'я"
+              "label_native": "Охорона здоров'я",
+              "label_en": "Health care"
             }
           ]
         },
@@ -1963,7 +1974,8 @@
           "source_rows": [
             {
               "code": "09",
-              "label_native": "Освіта"
+              "label_native": "Освіта",
+              "label_en": "Education"
             }
           ]
         },
@@ -1980,7 +1992,8 @@
           "source_rows": [
             {
               "code": "02",
-              "label_native": "Оборона"
+              "label_native": "Оборона",
+              "label_en": "Defence"
             }
           ]
         },
@@ -1997,7 +2010,8 @@
           "source_rows": [
             {
               "code": "03",
-              "label_native": "Громадський порядок, безпека та судова влада"
+              "label_native": "Громадський порядок, безпека та судова влада",
+              "label_en": "Public order, security and the judiciary"
             }
           ]
         },
@@ -2026,7 +2040,8 @@
           "source_rows": [
             {
               "code": "05",
-              "label_native": "Охорона навколишнього природного середовища"
+              "label_native": "Охорона навколишнього природного середовища",
+              "label_en": "Environmental protection"
             }
           ]
         },
@@ -2043,7 +2058,8 @@
           "source_rows": [
             {
               "code": "06",
-              "label_native": "Житлово-комунальне господарство"
+              "label_native": "Житлово-комунальне господарство",
+              "label_en": "Housing and communal services"
             }
           ]
         },
@@ -2060,7 +2076,8 @@
           "source_rows": [
             {
               "code": "04",
-              "label_native": "Економічна діяльність"
+              "label_native": "Економічна діяльність",
+              "label_en": "Economic affairs"
             }
           ]
         },
@@ -2077,7 +2094,8 @@
           "source_rows": [
             {
               "code": "01",
-              "label_native": "Загальнодержавні функції"
+              "label_native": "Загальнодержавні функції",
+              "label_en": "General public services"
             }
           ]
         },
@@ -2094,7 +2112,8 @@
           "source_rows": [
             {
               "code": "08",
-              "label_native": "Духовний та фізичний розвиток"
+              "label_native": "Духовний та фізичний розвиток",
+              "label_en": "Culture, religion and physical development"
             }
           ]
         },
@@ -2312,10 +2331,77 @@
       "currency": "UAH",
       "coverage": "unavailable",
       "reason_cs": "Eurostat COFOG II tuto zemi nepokrývá.",
-      "reason_en": "Eurostat COFOG II does not cover this country."
+      "reason_en": "Eurostat COFOG II does not cover this country.",
+      "public_data": {
+        "detail_status": "national_bridge",
+        "level_status": "national_bridge",
+        "note_cs": "Open Budget zveřejňuje plnění státního i místních rozpočtů podle funkční, ekonomické a programové klasifikace.",
+        "note_en": "Open Budget publishes state and local execution by functional, economic and programme classifications.",
+        "next_step_cs": "Konsolidovat stát a obce, odstranit transfery a dokumentovat válečné revize.",
+        "next_step_en": "Consolidate national and local budgets, remove transfers and document wartime revisions.",
+        "sources": [
+          {
+            "title": "Ukraine Open Budget · výdaje",
+            "url": "https://openbudget.gov.ua/en/national-budget/expenses?class=functional"
+          },
+          {
+            "title": "Ukraine Open Budget · klasifikace a API",
+            "url": "https://openbudget.gov.ua/en/budget-literacy/budget-system/classification/functional"
+          }
+        ]
+      }
     },
-    "health": null,
-    "providers": null,
+    "health": {
+      "currency": "UAH",
+      "architecture_cs": "Státní program zdravotních garancí nakupuje Národní zdravotní služba Ukrajiny (NHSU). Profil financování používá poslední úplný ukrajinský řádek v databázi WHO GHED; novější válečné roky v tomto exportu úplné hodnoty nemají.",
+      "architecture_en": "The National Health Service of Ukraine (NHSU) purchases the state Programme of Medical Guarantees. The financing profile uses Ukraine's latest complete row in WHO GHED; newer wartime years do not contain complete values in that export.",
+      "official_title": "WHO · Global Health Expenditure Database",
+      "official_url": "https://apps.who.int/nha/database/Select/Indicators/en",
+      "year": 2021,
+      "health_gdp_pct": 8.203,
+      "per_capita_ppp": null,
+      "per_capita_local": null,
+      "per_capita_usd": 369.905,
+      "financing": {
+        "public_compulsory": 52.123,
+        "out_of_pocket": 45.294,
+        "voluntary_other": 2.583
+      },
+      "providers": {
+        "hospitals": null,
+        "residential_ltc": null,
+        "ambulatory": null,
+        "retailers": null,
+        "other": null
+      },
+      "beds_per_1000": null,
+      "bed_year": null,
+      "bed_status": "",
+      "missing_dimensions": [
+        "SHA provider split (HP)",
+        "comparable bed benchmark"
+      ],
+      "source_location": "WHO GHED full workbook → Data → code=UKR, year=2021 → che_gdp, gghed_che, oops_che and vpp_che; voluntary_other is the remainder to 100%"
+    },
+    "providers": {
+      "coverage": "nhsu_contracting_provider_open_data",
+      "facility_count": null,
+      "provider_count": null,
+      "source": {
+        "title": "НСЗУ · open datasets of medical-service providers",
+        "url": "https://data.gov.ua/dataset?organization=natsionalna-sluzhba-zdorovia-ukrainy&res_format=CSV",
+        "location": "data.gov.ua → National Health Service of Ukraine organisation → CSV provider/contract datasets; wartime publication caveats retained",
+        "update_frequency": "as published"
+      },
+      "payments": {
+        "coverage": "programme_contracts_separate",
+        "note_cs": "Zdroj pokrývá smluvní poskytovatele programu zdravotních garancí; úplný licenční registr zařízení a úhrady jsou samostatné vrstvy.",
+        "note_en": "The source covers providers contracted under the Programme of Medical Guarantees; the complete licensing register and payments are separate layers."
+      },
+      "missing_dimensions": [
+        "complete facility census"
+      ]
+    },
     "municipalities": {
       "code": "UKR",
       "alpha2": "UA",
@@ -2345,8 +2431,656 @@
       "source": "https://api.openbudget.gov.ua/swagger-ui.html",
       "directory_count": 1467
     },
-    "public_entities": null,
-    "demography": null
+    "public_entities": {
+      "period": "2026-04-01",
+      "scope_cs": "Subjekty státního sektoru: státní podniky, jejich seskupení, dceřiné podniky a společnosti s podílem státu nad 50 %.",
+      "scope_en": "State-sector enterprises: state enterprises, associations, subsidiaries and companies with a state share above 50%.",
+      "entity_count": 3009,
+      "financial_statement_count": 0,
+      "coverage": "state_sector_enterprise_register",
+      "missing_dimensions": [
+        "standardizované účetní výkazy / standardised financial statements"
+      ],
+      "source": {
+        "publisher": "Фонд державного майна України",
+        "dataset": "Реєстр суб’єктів господарювання державного сектору економіки",
+        "url": "https://www.spfu.gov.ua/ua/content/civil-access-data--Edinij-reestr-ob-ektiv-derzhavnoi-vlasnosti.html",
+        "location": "snapshot 01.04.2026 → perelik-sg-01-04-2026-n_20127.csv → 3,009 rows; entity name, managing body and organisational form"
+      }
+    },
+    "demography": {
+      "coverage": "un_medium_variant_full_age_sex",
+      "projection": "UN World Population Prospects 2024, medium variant",
+      "reference_date": "1 July",
+      "period": {
+        "from": 2024,
+        "to": 2100
+      },
+      "detail": "data/countries/ukr/demography.v1.json",
+      "detail_row_count": 7777,
+      "age_group_count": 101,
+      "years": [
+        {
+          "year": 2025,
+          "total": 38980374,
+          "male": 18137510,
+          "female": 20842864,
+          "age_0_19": 7542097,
+          "age_20_64": 24043020,
+          "age_65_79": 5678931,
+          "age_80_plus": 1716326,
+          "male_by_age": {
+            "age_0_19": 3864885,
+            "age_20_64": 11715806,
+            "age_65_79": 2127029,
+            "age_80_plus": 429790
+          },
+          "female_by_age": {
+            "age_0_19": 3677212,
+            "age_20_64": 12327214,
+            "age_65_79": 3551902,
+            "age_80_plus": 1286536
+          },
+          "shares_pct": {
+            "age_0_19": 19.3484,
+            "age_20_64": 61.6798,
+            "age_65_79": 14.5687,
+            "age_80_plus": 4.4031
+          },
+          "old_age_dependency_per_100_working_age": 30.7584
+        },
+        {
+          "year": 2026,
+          "total": 39535857,
+          "male": 18406440,
+          "female": 21129417,
+          "age_0_19": 7589406,
+          "age_20_64": 24381401,
+          "age_65_79": 5895072,
+          "age_80_plus": 1669978,
+          "male_by_age": {
+            "age_0_19": 3882965,
+            "age_20_64": 11883439,
+            "age_65_79": 2222986,
+            "age_80_plus": 417050
+          },
+          "female_by_age": {
+            "age_0_19": 3706441,
+            "age_20_64": 12497962,
+            "age_65_79": 3672086,
+            "age_80_plus": 1252928
+          },
+          "shares_pct": {
+            "age_0_19": 19.1963,
+            "age_20_64": 61.6691,
+            "age_65_79": 14.9107,
+            "age_80_plus": 4.224
+          },
+          "old_age_dependency_per_100_working_age": 31.028
+        },
+        {
+          "year": 2027,
+          "total": 39245210,
+          "male": 18269986,
+          "female": 20975224,
+          "age_0_19": 7379365,
+          "age_20_64": 24152581,
+          "age_65_79": 6023006,
+          "age_80_plus": 1690258,
+          "male_by_age": {
+            "age_0_19": 3777645,
+            "age_20_64": 11775659,
+            "age_65_79": 2290560,
+            "age_80_plus": 426122
+          },
+          "female_by_age": {
+            "age_0_19": 3601720,
+            "age_20_64": 12376922,
+            "age_65_79": 3732446,
+            "age_80_plus": 1264136
+          },
+          "shares_pct": {
+            "age_0_19": 18.8032,
+            "age_20_64": 61.5427,
+            "age_65_79": 15.3471,
+            "age_80_plus": 4.3069
+          },
+          "old_age_dependency_per_100_working_age": 31.9356
+        },
+        {
+          "year": 2028,
+          "total": 38952089,
+          "male": 18132658,
+          "female": 20819431,
+          "age_0_19": 7154988,
+          "age_20_64": 23939305,
+          "age_65_79": 6153360,
+          "age_80_plus": 1704436,
+          "male_by_age": {
+            "age_0_19": 3663657,
+            "age_20_64": 11670609,
+            "age_65_79": 2364231,
+            "age_80_plus": 434161
+          },
+          "female_by_age": {
+            "age_0_19": 3491331,
+            "age_20_64": 12268696,
+            "age_65_79": 3789129,
+            "age_80_plus": 1270275
+          },
+          "shares_pct": {
+            "age_0_19": 18.3687,
+            "age_20_64": 61.4583,
+            "age_65_79": 15.7973,
+            "age_80_plus": 4.3757
+          },
+          "old_age_dependency_per_100_working_age": 32.8238
+        },
+        {
+          "year": 2029,
+          "total": 38654413,
+          "male": 17993449,
+          "female": 20660964,
+          "age_0_19": 6918321,
+          "age_20_64": 23747053,
+          "age_65_79": 6247109,
+          "age_80_plus": 1741930,
+          "male_by_age": {
+            "age_0_19": 3542459,
+            "age_20_64": 11582797,
+            "age_65_79": 2417447,
+            "age_80_plus": 450746
+          },
+          "female_by_age": {
+            "age_0_19": 3375862,
+            "age_20_64": 12164256,
+            "age_65_79": 3829662,
+            "age_80_plus": 1291184
+          },
+          "shares_pct": {
+            "age_0_19": 17.8979,
+            "age_20_64": 61.4343,
+            "age_65_79": 16.1614,
+            "age_80_plus": 4.5064
+          },
+          "old_age_dependency_per_100_working_age": 33.6422
+        },
+        {
+          "year": 2030,
+          "total": 38353851,
+          "male": 17853203,
+          "female": 20500648,
+          "age_0_19": 6692279,
+          "age_20_64": 23556466,
+          "age_65_79": 6275625,
+          "age_80_plus": 1829481,
+          "male_by_age": {
+            "age_0_19": 3426633,
+            "age_20_64": 11496893,
+            "age_65_79": 2445958,
+            "age_80_plus": 483719
+          },
+          "female_by_age": {
+            "age_0_19": 3265646,
+            "age_20_64": 12059573,
+            "age_65_79": 3829667,
+            "age_80_plus": 1345762
+          },
+          "shares_pct": {
+            "age_0_19": 17.4488,
+            "age_20_64": 61.4188,
+            "age_65_79": 16.3624,
+            "age_80_plus": 4.77
+          },
+          "old_age_dependency_per_100_working_age": 34.4071
+        },
+        {
+          "year": 2031,
+          "total": 38050627,
+          "male": 17712038,
+          "female": 20338589,
+          "age_0_19": 6469263,
+          "age_20_64": 23402272,
+          "age_65_79": 6282694,
+          "age_80_plus": 1896398,
+          "male_by_age": {
+            "age_0_19": 3312490,
+            "age_20_64": 11430192,
+            "age_65_79": 2459637,
+            "age_80_plus": 509719
+          },
+          "female_by_age": {
+            "age_0_19": 3156773,
+            "age_20_64": 11972080,
+            "age_65_79": 3823057,
+            "age_80_plus": 1386679
+          },
+          "shares_pct": {
+            "age_0_19": 17.0017,
+            "age_20_64": 61.503,
+            "age_65_79": 16.5114,
+            "age_80_plus": 4.9839
+          },
+          "old_age_dependency_per_100_working_age": 34.95
+        },
+        {
+          "year": 2032,
+          "total": 37746698,
+          "male": 17570875,
+          "female": 20175823,
+          "age_0_19": 6231771,
+          "age_20_64": 23292935,
+          "age_65_79": 6253973,
+          "age_80_plus": 1968019,
+          "male_by_age": {
+            "age_0_19": 3190789,
+            "age_20_64": 11383131,
+            "age_65_79": 2459815,
+            "age_80_plus": 537140
+          },
+          "female_by_age": {
+            "age_0_19": 3040982,
+            "age_20_64": 11909804,
+            "age_65_79": 3794158,
+            "age_80_plus": 1430879
+          },
+          "shares_pct": {
+            "age_0_19": 16.5094,
+            "age_20_64": 61.7085,
+            "age_65_79": 16.5683,
+            "age_80_plus": 5.2138
+          },
+          "old_age_dependency_per_100_working_age": 35.2982
+        },
+        {
+          "year": 2033,
+          "total": 37442090,
+          "male": 17429746,
+          "female": 20012344,
+          "age_0_19": 5992740,
+          "age_20_64": 23206178,
+          "age_65_79": 6214138,
+          "age_80_plus": 2029034,
+          "male_by_age": {
+            "age_0_19": 3068434,
+            "age_20_64": 11352129,
+            "age_65_79": 2449217,
+            "age_80_plus": 559966
+          },
+          "female_by_age": {
+            "age_0_19": 2924306,
+            "age_20_64": 11854049,
+            "age_65_79": 3764921,
+            "age_80_plus": 1469068
+          },
+          "shares_pct": {
+            "age_0_19": 16.0054,
+            "age_20_64": 61.9789,
+            "age_65_79": 16.5967,
+            "age_80_plus": 5.4191
+          },
+          "old_age_dependency_per_100_working_age": 35.5215
+        },
+        {
+          "year": 2034,
+          "total": 37135849,
+          "male": 17288206,
+          "female": 19847643,
+          "age_0_19": 5771964,
+          "age_20_64": 23068551,
+          "age_65_79": 6206602,
+          "age_80_plus": 2088732,
+          "male_by_age": {
+            "age_0_19": 2955674,
+            "age_20_64": 11295638,
+            "age_65_79": 2454247,
+            "age_80_plus": 582647
+          },
+          "female_by_age": {
+            "age_0_19": 2816290,
+            "age_20_64": 11772913,
+            "age_65_79": 3752355,
+            "age_80_plus": 1506085
+          },
+          "shares_pct": {
+            "age_0_19": 15.5428,
+            "age_20_64": 62.1194,
+            "age_65_79": 16.7132,
+            "age_80_plus": 5.6246
+          },
+          "old_age_dependency_per_100_working_age": 35.9595
+        },
+        {
+          "year": 2035,
+          "total": 36828148,
+          "male": 17146332,
+          "female": 19681816,
+          "age_0_19": 5577209,
+          "age_20_64": 22853039,
+          "age_65_79": 6238367,
+          "age_80_plus": 2159533,
+          "male_by_age": {
+            "age_0_19": 2856211,
+            "age_20_64": 11190823,
+            "age_65_79": 2489938,
+            "age_80_plus": 609360
+          },
+          "female_by_age": {
+            "age_0_19": 2720998,
+            "age_20_64": 11662216,
+            "age_65_79": 3748429,
+            "age_80_plus": 1550173
+          },
+          "shares_pct": {
+            "age_0_19": 15.1439,
+            "age_20_64": 62.0532,
+            "age_65_79": 16.9391,
+            "age_80_plus": 5.8638
+          },
+          "old_age_dependency_per_100_working_age": 36.7474
+        },
+        {
+          "year": 2036,
+          "total": 36519759,
+          "male": 17004505,
+          "female": 19515254,
+          "age_0_19": 5399586,
+          "age_20_64": 22670757,
+          "age_65_79": 6215296,
+          "age_80_plus": 2234120,
+          "male_by_age": {
+            "age_0_19": 2765518,
+            "age_20_64": 11112470,
+            "age_65_79": 2489546,
+            "age_80_plus": 636971
+          },
+          "female_by_age": {
+            "age_0_19": 2634068,
+            "age_20_64": 11558287,
+            "age_65_79": 3725750,
+            "age_80_plus": 1597149
+          },
+          "shares_pct": {
+            "age_0_19": 14.7854,
+            "age_20_64": 62.0781,
+            "age_65_79": 17.019,
+            "age_80_plus": 6.1176
+          },
+          "old_age_dependency_per_100_working_age": 37.2701
+        },
+        {
+          "year": 2037,
+          "total": 36209689,
+          "male": 16862206,
+          "female": 19347483,
+          "age_0_19": 5239634,
+          "age_20_64": 22519795,
+          "age_65_79": 6132949,
+          "age_80_plus": 2317311,
+          "male_by_age": {
+            "age_0_19": 2684221,
+            "age_20_64": 11056180,
+            "age_65_79": 2452489,
+            "age_80_plus": 669316
+          },
+          "female_by_age": {
+            "age_0_19": 2555413,
+            "age_20_64": 11463615,
+            "age_65_79": 3680460,
+            "age_80_plus": 1647995
+          },
+          "shares_pct": {
+            "age_0_19": 14.4703,
+            "age_20_64": 62.1927,
+            "age_65_79": 16.9373,
+            "age_80_plus": 6.3997
+          },
+          "old_age_dependency_per_100_working_age": 37.5237
+        },
+        {
+          "year": 2038,
+          "total": 35897708,
+          "male": 16719375,
+          "female": 19178333,
+          "age_0_19": 5107299,
+          "age_20_64": 22350197,
+          "age_65_79": 6046914,
+          "age_80_plus": 2393298,
+          "male_by_age": {
+            "age_0_19": 2617273,
+            "age_20_64": 10984831,
+            "age_65_79": 2415286,
+            "age_80_plus": 701985
+          },
+          "female_by_age": {
+            "age_0_19": 2490026,
+            "age_20_64": 11365366,
+            "age_65_79": 3631628,
+            "age_80_plus": 1691313
+          },
+          "shares_pct": {
+            "age_0_19": 14.2274,
+            "age_20_64": 62.2608,
+            "age_65_79": 16.8448,
+            "age_80_plus": 6.667
+          },
+          "old_age_dependency_per_100_working_age": 37.7635
+        },
+        {
+          "year": 2039,
+          "total": 35584256,
+          "male": 16576200,
+          "female": 19008056,
+          "age_0_19": 4988994,
+          "age_20_64": 22137762,
+          "age_65_79": 5979253,
+          "age_80_plus": 2478247,
+          "male_by_age": {
+            "age_0_19": 2557561,
+            "age_20_64": 10889586,
+            "age_65_79": 2391395,
+            "age_80_plus": 737658
+          },
+          "female_by_age": {
+            "age_0_19": 2431433,
+            "age_20_64": 11248176,
+            "age_65_79": 3587858,
+            "age_80_plus": 1740589
+          },
+          "shares_pct": {
+            "age_0_19": 14.0202,
+            "age_20_64": 62.2122,
+            "age_65_79": 16.8031,
+            "age_80_plus": 6.9644
+          },
+          "old_age_dependency_per_100_working_age": 38.204
+        },
+        {
+          "year": 2040,
+          "total": 35270919,
+          "male": 16433378,
+          "female": 18837541,
+          "age_0_19": 4878186,
+          "age_20_64": 21884814,
+          "age_65_79": 5945352,
+          "age_80_plus": 2562567,
+          "male_by_age": {
+            "age_0_19": 2501899,
+            "age_20_64": 10772688,
+            "age_65_79": 2384372,
+            "age_80_plus": 774419
+          },
+          "female_by_age": {
+            "age_0_19": 2376287,
+            "age_20_64": 11112126,
+            "age_65_79": 3560980,
+            "age_80_plus": 1788148
+          },
+          "shares_pct": {
+            "age_0_19": 13.8306,
+            "age_20_64": 62.0478,
+            "age_65_79": 16.8562,
+            "age_80_plus": 7.2654
+          },
+          "old_age_dependency_per_100_working_age": 38.8759
+        },
+        {
+          "year": 2041,
+          "total": 34957584,
+          "male": 16290820,
+          "female": 18666764,
+          "age_0_19": 4781866,
+          "age_20_64": 21620332,
+          "age_65_79": 5926707,
+          "age_80_plus": 2628679,
+          "male_by_age": {
+            "age_0_19": 2453885,
+            "age_20_64": 10648970,
+            "age_65_79": 2384629,
+            "age_80_plus": 803336
+          },
+          "female_by_age": {
+            "age_0_19": 2327981,
+            "age_20_64": 10971362,
+            "age_65_79": 3542078,
+            "age_80_plus": 1825343
+          },
+          "shares_pct": {
+            "age_0_19": 13.6791,
+            "age_20_64": 61.8473,
+            "age_65_79": 16.954,
+            "age_80_plus": 7.5196
+          },
+          "old_age_dependency_per_100_working_age": 39.571
+        },
+        {
+          "year": 2042,
+          "total": 34641783,
+          "male": 16147285,
+          "female": 18494498,
+          "age_0_19": 4728654,
+          "age_20_64": 21316020,
+          "age_65_79": 5899987,
+          "age_80_plus": 2697122,
+          "male_by_age": {
+            "age_0_19": 2428255,
+            "age_20_64": 10504064,
+            "age_65_79": 2379560,
+            "age_80_plus": 835406
+          },
+          "female_by_age": {
+            "age_0_19": 2300399,
+            "age_20_64": 10811956,
+            "age_65_79": 3520427,
+            "age_80_plus": 1861716
+          },
+          "shares_pct": {
+            "age_0_19": 13.6501,
+            "age_20_64": 61.5327,
+            "age_65_79": 17.0314,
+            "age_80_plus": 7.7857
+          },
+          "old_age_dependency_per_100_working_age": 40.3317
+        },
+        {
+          "year": 2043,
+          "total": 34324134,
+          "male": 16003074,
+          "female": 18321060,
+          "age_0_19": 4695286,
+          "age_20_64": 20988182,
+          "age_65_79": 5879442,
+          "age_80_plus": 2761224,
+          "male_by_age": {
+            "age_0_19": 2413024,
+            "age_20_64": 10346704,
+            "age_65_79": 2373817,
+            "age_80_plus": 869529
+          },
+          "female_by_age": {
+            "age_0_19": 2282262,
+            "age_20_64": 10641478,
+            "age_65_79": 3505625,
+            "age_80_plus": 1891695
+          },
+          "shares_pct": {
+            "age_0_19": 13.6793,
+            "age_20_64": 61.147,
+            "age_65_79": 17.1292,
+            "age_80_plus": 8.0446
+          },
+          "old_age_dependency_per_100_working_age": 41.1692
+        },
+        {
+          "year": 2044,
+          "total": 34004079,
+          "male": 15857926,
+          "female": 18146153,
+          "age_0_19": 4646359,
+          "age_20_64": 20659447,
+          "age_65_79": 5880760,
+          "age_80_plus": 2817513,
+          "male_by_age": {
+            "age_0_19": 2390006,
+            "age_20_64": 10188001,
+            "age_65_79": 2382749,
+            "age_80_plus": 897170
+          },
+          "female_by_age": {
+            "age_0_19": 2256353,
+            "age_20_64": 10471446,
+            "age_65_79": 3498011,
+            "age_80_plus": 1920343
+          },
+          "shares_pct": {
+            "age_0_19": 13.6641,
+            "age_20_64": 60.7558,
+            "age_65_79": 17.2943,
+            "age_80_plus": 8.2858
+          },
+          "old_age_dependency_per_100_working_age": 42.1031
+        },
+        {
+          "year": 2045,
+          "total": 33680443,
+          "male": 15711320,
+          "female": 17969123,
+          "age_0_19": 4598511,
+          "age_20_64": 20311336,
+          "age_65_79": 5906271,
+          "age_80_plus": 2864325,
+          "male_by_age": {
+            "age_0_19": 2367233,
+            "age_20_64": 10020252,
+            "age_65_79": 2403519,
+            "age_80_plus": 920316
+          },
+          "female_by_age": {
+            "age_0_19": 2231278,
+            "age_20_64": 10291084,
+            "age_65_79": 3502752,
+            "age_80_plus": 1944009
+          },
+          "shares_pct": {
+            "age_0_19": 13.6534,
+            "age_20_64": 60.306,
+            "age_65_79": 17.5362,
+            "age_80_plus": 8.5044
+          },
+          "old_age_dependency_per_100_working_age": 43.1808
+        }
+      ],
+      "source": {
+        "publisher": "United Nations, Population Division",
+        "dataset": "World Population Prospects 2024",
+        "url": "https://population.un.org/wpp/Download/Standard/CSV/",
+        "download_urls": [
+          "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz"
+        ],
+        "location": "WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code=UKR; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
+        "period": "2024–2100"
+      }
+    }
   },
   "sources": [
     {

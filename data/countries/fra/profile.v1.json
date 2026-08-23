@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-22T20:48:51.053Z",
+  "generated_at": "2026-08-23T17:36:03.771Z",
   "country": {
     "country_code": "FRA",
     "name_cs": "Francie",
@@ -32,12 +32,9 @@
     }
   },
   "coverage": {
-    "loaded_modules": 9,
+    "loaded_modules": 11,
     "total_modules": 11,
-    "missing_dimensions": [
-      "public_entity_accounts",
-      "national_demographic_projection"
-    ]
+    "missing_dimensions": []
   },
   "modules": {
     "sovereign": {
@@ -82,20 +79,22 @@
     },
     "health": {
       "status": "loaded",
-      "coverage": "SHA financing/provider shares; 2024",
+      "coverage": "SHA financing profile; 2024",
       "missing_dimensions": []
     },
     "providers": {
       "status": "loaded",
       "coverage": "5979 registered provider locations",
       "missing_dimensions": [],
-      "facility_count": 5979
+      "facility_count": 5979,
+      "coverage_level": "finess_hospital_activity_establishments"
     },
     "municipalities": {
       "status": "loaded",
       "coverage": "All communes; functional detail where reported; main and supplementary budgets",
       "missing_dimensions": [],
       "entity_count": 35041,
+      "fact_count": 34877,
       "years": [
         2024,
         2025
@@ -108,6 +107,7 @@
         "expenditure",
         "balance"
       ],
+      "coverage_level": "complete",
       "directory": "data/countries/fra/municipalities.v1.json",
       "warehouse": [
         {
@@ -147,22 +147,20 @@
       ]
     },
     "public_entities": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "ownership register",
-        "entity accounts"
-      ],
-      "entity_count": 0
+      "status": "loaded",
+      "coverage": "87 entities; 87 with accounts",
+      "missing_dimensions": [],
+      "entity_count": 87,
+      "financial_statement_count": 87,
+      "coverage_level": "state_shareholder_portfolio_and_combined_accounts"
     },
     "demography": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "population projection",
-        "age structure",
-        "social-system model"
-      ]
+      "status": "loaded",
+      "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+      "missing_dimensions": [],
+      "projection": "EUROPOP2023 baseline scenario",
+      "detail": "data/countries/fra/demography.v1.json",
+      "detail_row_count": 7979
     }
   },
   "data": {
@@ -1806,7 +1804,8 @@
           "amounts": {
             "previous": 64.3,
             "current": 64.5
-          }
+          },
+          "label_en": "School education"
         },
         {
           "code": "13",
@@ -1814,7 +1813,8 @@
           "amounts": {
             "previous": 55.9,
             "current": 60.4
-          }
+          },
+          "label_en": "State financial commitments"
         },
         {
           "code": "9",
@@ -1822,7 +1822,8 @@
           "amounts": {
             "previous": 50.5,
             "current": 57.1
-          }
+          },
+          "label_en": "Defence"
         },
         {
           "code": "23",
@@ -1830,7 +1831,8 @@
           "amounts": {
             "previous": 30.6,
             "current": 31.3
-          }
+          },
+          "label_en": "Research and higher education"
         },
         {
           "code": "28",
@@ -1838,7 +1840,8 @@
           "amounts": {
             "previous": 30.3,
             "current": 29.5
-          }
+          },
+          "label_en": "Solidarity, inclusion and equal opportunities"
         },
         {
           "code": "5",
@@ -1846,7 +1849,8 @@
           "amounts": {
             "previous": 23.1,
             "current": 22.2
-          }
+          },
+          "label_en": "Territorial cohesion"
         },
         {
           "code": "11",
@@ -1854,7 +1858,8 @@
           "amounts": {
             "previous": 17.8,
             "current": 20.9
-          }
+          },
+          "label_en": "Ecology, sustainable development and mobility"
         },
         {
           "code": "27",
@@ -1862,7 +1867,8 @@
           "amounts": {
             "previous": 17.3,
             "current": 17.7
-          }
+          },
+          "label_en": "Security"
         },
         {
           "code": "31",
@@ -1870,7 +1876,8 @@
           "amounts": {
             "previous": 19.9,
             "current": 17.4
-          }
+          },
+          "label_en": "Labour, employment and social-ministry administration"
         },
         {
           "code": "18",
@@ -1878,7 +1885,8 @@
           "amounts": {
             "previous": 10.5,
             "current": 10.6
-          }
+          },
+          "label_en": "Justice"
         },
         {
           "code": "15",
@@ -1886,7 +1894,8 @@
           "amounts": {
             "previous": 8.1,
             "current": 8.2
-          }
+          },
+          "label_en": "Public-finance management"
         },
         {
           "code": "24",
@@ -1894,7 +1903,8 @@
           "amounts": {
             "previous": 6,
             "current": 6
-          }
+          },
+          "label_en": "Social and pension schemes"
         },
         {
           "code": "17",
@@ -1902,7 +1912,8 @@
           "amounts": {
             "previous": 5.5,
             "current": 5.5
-          }
+          },
+          "label_en": "Investing for France 2030"
         },
         {
           "code": "2",
@@ -1910,7 +1921,8 @@
           "amounts": {
             "previous": 4.1,
             "current": 4.2
-          }
+          },
+          "label_en": "General and territorial state administration"
         },
         {
           "code": "25",
@@ -1918,7 +1930,8 @@
           "amounts": {
             "previous": 4,
             "current": 3.9
-          }
+          },
+          "label_en": "Relations with local authorities"
         },
         {
           "code": "3",
@@ -1926,7 +1939,8 @@
           "amounts": {
             "previous": 4,
             "current": 3.8
-          }
+          },
+          "label_en": "Agriculture, food, forestry and rural affairs"
         },
         {
           "code": "4",
@@ -1934,7 +1948,8 @@
           "amounts": {
             "previous": 4.4,
             "current": 3.7
-          }
+          },
+          "label_en": "Official development assistance"
         },
         {
           "code": "8",
@@ -1942,7 +1957,8 @@
           "amounts": {
             "previous": 3.7,
             "current": 3.5
-          }
+          },
+          "label_en": "Culture"
         },
         {
           "code": "1",
@@ -1950,7 +1966,8 @@
           "amounts": {
             "previous": 3.3,
             "current": 3.3
-          }
+          },
+          "label_en": "State external action"
         },
         {
           "code": "12",
@@ -1958,7 +1975,8 @@
           "amounts": {
             "previous": 3.5,
             "current": 3.3
-          }
+          },
+          "label_en": "Economic affairs"
         },
         {
           "code": "21",
@@ -1966,7 +1984,8 @@
           "amounts": {
             "previous": 2.9,
             "current": 2.8
-          }
+          },
+          "label_en": "Overseas territories"
         },
         {
           "code": "16",
@@ -1974,7 +1993,8 @@
           "amounts": {
             "previous": 2.1,
             "current": 2.2
-          }
+          },
+          "label_en": "Immigration, asylum and integration"
         },
         {
           "code": "20",
@@ -1982,7 +2002,8 @@
           "amounts": {
             "previous": 1.9,
             "current": 1.7
-          }
+          },
+          "label_en": "Veterans, remembrance and links with the nation"
         },
         {
           "code": "26",
@@ -1990,7 +2011,8 @@
           "amounts": {
             "previous": 1.5,
             "current": 1.7
-          }
+          },
+          "label_en": "Health"
         },
         {
           "code": "29",
@@ -1998,7 +2020,8 @@
           "amounts": {
             "previous": 1.5,
             "current": 1.2
-          }
+          },
+          "label_en": "Sport, youth and community life"
         },
         {
           "code": "22",
@@ -2006,7 +2029,8 @@
           "amounts": {
             "previous": 1.1,
             "current": 1.1
-          }
+          },
+          "label_en": "Constitutional public authorities"
         },
         {
           "code": "10",
@@ -2014,7 +2038,8 @@
           "amounts": {
             "previous": 1,
             "current": 1
-          }
+          },
+          "label_en": "Direction of government action"
         },
         {
           "code": "6",
@@ -2022,7 +2047,8 @@
           "amounts": {
             "previous": 0.7,
             "current": 0.7
-          }
+          },
+          "label_en": "State advisory and oversight bodies"
         },
         {
           "code": "19",
@@ -2030,7 +2056,8 @@
           "amounts": {
             "previous": 0.7,
             "current": 0.7
-          }
+          },
+          "label_en": "Media, books and cultural industries"
         },
         {
           "code": "7",
@@ -2038,7 +2065,8 @@
           "amounts": {
             "previous": 0.2,
             "current": 0.5
-          }
+          },
+          "label_en": "Unallocated appropriations"
         },
         {
           "code": "30",
@@ -2046,7 +2074,8 @@
           "amounts": {
             "previous": 0.7,
             "current": 0.5
-          }
+          },
+          "label_en": "Public-sector transformation and civil service"
         }
       ],
       "totals": {
@@ -2104,19 +2133,23 @@
           "source_rows": [
             {
               "code": "28",
-              "label_native": "Solidarité, insertion et égalité des chances"
+              "label_native": "Solidarité, insertion et égalité des chances",
+              "label_en": "Solidarity, inclusion and equal opportunities"
             },
             {
               "code": "31",
-              "label_native": "Travail, emploi et administration des ministères sociaux"
+              "label_native": "Travail, emploi et administration des ministères sociaux",
+              "label_en": "Labour, employment and social-ministry administration"
             },
             {
               "code": "24",
-              "label_native": "Régimes sociaux et de retraite"
+              "label_native": "Régimes sociaux et de retraite",
+              "label_en": "Social and pension schemes"
             },
             {
               "code": "20",
-              "label_native": "Monde combattant, mémoire et liens avec la nation"
+              "label_native": "Monde combattant, mémoire et liens avec la nation",
+              "label_en": "Veterans, remembrance and links with the nation"
             }
           ]
         },
@@ -2133,7 +2166,8 @@
           "source_rows": [
             {
               "code": "26",
-              "label_native": "Santé"
+              "label_native": "Santé",
+              "label_en": "Health"
             }
           ]
         },
@@ -2150,11 +2184,13 @@
           "source_rows": [
             {
               "code": "14",
-              "label_native": "Enseignement scolaire"
+              "label_native": "Enseignement scolaire",
+              "label_en": "School education"
             },
             {
               "code": "23",
-              "label_native": "Recherche et enseignement supérieur"
+              "label_native": "Recherche et enseignement supérieur",
+              "label_en": "Research and higher education"
             }
           ]
         },
@@ -2171,7 +2207,8 @@
           "source_rows": [
             {
               "code": "9",
-              "label_native": "Défense"
+              "label_native": "Défense",
+              "label_en": "Defence"
             }
           ]
         },
@@ -2188,15 +2225,18 @@
           "source_rows": [
             {
               "code": "27",
-              "label_native": "Sécurités"
+              "label_native": "Sécurités",
+              "label_en": "Security"
             },
             {
               "code": "18",
-              "label_native": "Justice"
+              "label_native": "Justice",
+              "label_en": "Justice"
             },
             {
               "code": "16",
-              "label_native": "Immigration, asile et intégration"
+              "label_native": "Immigration, asile et intégration",
+              "label_en": "Immigration, asylum and integration"
             }
           ]
         },
@@ -2213,7 +2253,8 @@
           "source_rows": [
             {
               "code": "11",
-              "label_native": "Écologie, développement et mobilité durables"
+              "label_native": "Écologie, développement et mobilité durables",
+              "label_en": "Ecology, sustainable development and mobility"
             }
           ]
         },
@@ -2230,7 +2271,8 @@
           "source_rows": [
             {
               "code": "3",
-              "label_native": "Agriculture, alimentation, forêt et affaires rurales"
+              "label_native": "Agriculture, alimentation, forêt et affaires rurales",
+              "label_en": "Agriculture, food, forestry and rural affairs"
             }
           ]
         },
@@ -2247,11 +2289,13 @@
           "source_rows": [
             {
               "code": "5",
-              "label_native": "Cohésion des territoires"
+              "label_native": "Cohésion des territoires",
+              "label_en": "Territorial cohesion"
             },
             {
               "code": "21",
-              "label_native": "Outre-mer"
+              "label_native": "Outre-mer",
+              "label_en": "Overseas territories"
             }
           ]
         },
@@ -2268,11 +2312,13 @@
           "source_rows": [
             {
               "code": "17",
-              "label_native": "Investir pour la France de 2030"
+              "label_native": "Investir pour la France de 2030",
+              "label_en": "Investing for France 2030"
             },
             {
               "code": "12",
-              "label_native": "Économie"
+              "label_native": "Économie",
+              "label_en": "Economic affairs"
             }
           ]
         },
@@ -2289,47 +2335,58 @@
           "source_rows": [
             {
               "code": "13",
-              "label_native": "Engagements financiers de l’État"
+              "label_native": "Engagements financiers de l’État",
+              "label_en": "State financial commitments"
             },
             {
               "code": "15",
-              "label_native": "Gestion des finances publiques"
+              "label_native": "Gestion des finances publiques",
+              "label_en": "Public-finance management"
             },
             {
               "code": "2",
-              "label_native": "Administration générale et territoriale de l’État"
+              "label_native": "Administration générale et territoriale de l’État",
+              "label_en": "General and territorial state administration"
             },
             {
               "code": "25",
-              "label_native": "Relations avec les collectivités territoriales"
+              "label_native": "Relations avec les collectivités territoriales",
+              "label_en": "Relations with local authorities"
             },
             {
               "code": "4",
-              "label_native": "Aide publique au développement"
+              "label_native": "Aide publique au développement",
+              "label_en": "Official development assistance"
             },
             {
               "code": "1",
-              "label_native": "Action extérieure de l’État"
+              "label_native": "Action extérieure de l’État",
+              "label_en": "State external action"
             },
             {
               "code": "22",
-              "label_native": "Pouvoirs publics"
+              "label_native": "Pouvoirs publics",
+              "label_en": "Constitutional public authorities"
             },
             {
               "code": "10",
-              "label_native": "Direction de l’action du Gouvernement"
+              "label_native": "Direction de l’action du Gouvernement",
+              "label_en": "Direction of government action"
             },
             {
               "code": "6",
-              "label_native": "Conseil et contrôle de l’État"
+              "label_native": "Conseil et contrôle de l’État",
+              "label_en": "State advisory and oversight bodies"
             },
             {
               "code": "7",
-              "label_native": "Crédits non répartis"
+              "label_native": "Crédits non répartis",
+              "label_en": "Unallocated appropriations"
             },
             {
               "code": "30",
-              "label_native": "Transformation et fonction publiques"
+              "label_native": "Transformation et fonction publiques",
+              "label_en": "Public-sector transformation and civil service"
             }
           ]
         },
@@ -2346,15 +2403,18 @@
           "source_rows": [
             {
               "code": "8",
-              "label_native": "Culture"
+              "label_native": "Culture",
+              "label_en": "Culture"
             },
             {
               "code": "29",
-              "label_native": "Sport, jeunesse et vie associative"
+              "label_native": "Sport, jeunesse et vie associative",
+              "label_en": "Sport, youth and community life"
             },
             {
               "code": "19",
-              "label_native": "Médias, livre et industries culturelles"
+              "label_native": "Médias, livre et industries culturelles",
+              "label_en": "Media, books and cultural industries"
             }
           ]
         },
@@ -2754,7 +2814,22 @@
             "social_security": 0
           }
         }
-      ]
+      ],
+      "level_coverage": "available",
+      "public_data": {
+        "detail_status": "harmonised",
+        "level_status": "harmonised",
+        "note_cs": "INSEE zveřejňuje COFOG za celek i centrální, místní a sociální subsektory v tabulkách ke stažení.",
+        "note_en": "INSEE publishes downloadable COFOG tables for total, central, local and social-security government.",
+        "next_step_cs": "Propojit delší historii od roku 1995 a národní revizní poznámky.",
+        "next_step_en": "Connect the history from 1995 and national revision notes.",
+        "sources": [
+          {
+            "title": "INSEE · výdaje podle funkce",
+            "url": "https://www.insee.fr/en/statistiques/8068562"
+          }
+        ]
+      }
     },
     "health": {
       "currency": "EUR",
@@ -2931,8 +3006,652 @@
       "source": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
       "directory_count": 35041
     },
-    "public_entities": null,
-    "demography": null
+    "public_entities": {
+      "period": "2024 accounts / portfolio at 2025-06-30",
+      "scope_cs": "Portfolio Agence des participations de l'État.",
+      "scope_en": "Agence des participations de l'État portfolio.",
+      "entity_count": 87,
+      "financial_statement_count": 87,
+      "coverage": "state_shareholder_portfolio_and_combined_accounts",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "Agence des participations de l'État",
+        "dataset": "Rapport d'activité 2024–2025 + Rapport financier 2025 (comptes combinés 2024)",
+        "url": "https://www.economie.gouv.fr/agence-participations-etat/ressources-documentaires/rapports-financiers",
+        "location": "Rapport financier 2025 → comptes combinés 2024; portfolio page → 87 entities and listed/unlisted split"
+      }
+    },
+    "demography": {
+      "coverage": "eurostat_baseline_full_age_sex",
+      "projection": "EUROPOP2023 baseline scenario",
+      "reference_date": "1 January",
+      "period": {
+        "from": 2022,
+        "to": 2100
+      },
+      "detail": "data/countries/fra/demography.v1.json",
+      "detail_row_count": 7979,
+      "age_group_count": 101,
+      "years": [
+        {
+          "year": 2025,
+          "total": 68658223,
+          "male": 33205036,
+          "female": 35453187,
+          "age_0_19": 15979083,
+          "age_20_64": 37683453,
+          "age_65_79": 10797925,
+          "age_80_plus": 4197762,
+          "male_by_age": {
+            "age_0_19": 8188296,
+            "age_20_64": 18516742,
+            "age_65_79": 4947042,
+            "age_80_plus": 1552956
+          },
+          "female_by_age": {
+            "age_0_19": 7790787,
+            "age_20_64": 19166711,
+            "age_65_79": 5850883,
+            "age_80_plus": 2644806
+          },
+          "shares_pct": {
+            "age_0_19": 23.2734,
+            "age_20_64": 54.8856,
+            "age_65_79": 15.7271,
+            "age_80_plus": 6.114
+          },
+          "old_age_dependency_per_100_working_age": 39.7938
+        },
+        {
+          "year": 2026,
+          "total": 68828579,
+          "male": 33286145,
+          "female": 35542434,
+          "age_0_19": 15891245,
+          "age_20_64": 37679319,
+          "age_65_79": 11003424,
+          "age_80_plus": 4254591,
+          "male_by_age": {
+            "age_0_19": 8144254,
+            "age_20_64": 18520933,
+            "age_65_79": 5038082,
+            "age_80_plus": 1582876
+          },
+          "female_by_age": {
+            "age_0_19": 7746991,
+            "age_20_64": 19158386,
+            "age_65_79": 5965342,
+            "age_80_plus": 2671715
+          },
+          "shares_pct": {
+            "age_0_19": 23.0881,
+            "age_20_64": 54.7437,
+            "age_65_79": 15.9867,
+            "age_80_plus": 6.1814
+          },
+          "old_age_dependency_per_100_working_age": 40.4944
+        },
+        {
+          "year": 2027,
+          "total": 68981139,
+          "male": 33356910,
+          "female": 35624229,
+          "age_0_19": 15783226,
+          "age_20_64": 37682298,
+          "age_65_79": 11067354,
+          "age_80_plus": 4448261,
+          "male_by_age": {
+            "age_0_19": 8089394,
+            "age_20_64": 18527802,
+            "age_65_79": 5067251,
+            "age_80_plus": 1672463
+          },
+          "female_by_age": {
+            "age_0_19": 7693832,
+            "age_20_64": 19154496,
+            "age_65_79": 6000103,
+            "age_80_plus": 2775798
+          },
+          "shares_pct": {
+            "age_0_19": 22.8805,
+            "age_20_64": 54.627,
+            "age_65_79": 16.044,
+            "age_80_plus": 6.4485
+          },
+          "old_age_dependency_per_100_working_age": 41.1748
+        },
+        {
+          "year": 2028,
+          "total": 69115954,
+          "male": 33417690,
+          "female": 35698264,
+          "age_0_19": 15684667,
+          "age_20_64": 37666394,
+          "age_65_79": 11101081,
+          "age_80_plus": 4663812,
+          "male_by_age": {
+            "age_0_19": 8040595,
+            "age_20_64": 18524008,
+            "age_65_79": 5082491,
+            "age_80_plus": 1770596
+          },
+          "female_by_age": {
+            "age_0_19": 7644072,
+            "age_20_64": 19142386,
+            "age_65_79": 6018590,
+            "age_80_plus": 2893216
+          },
+          "shares_pct": {
+            "age_0_19": 22.6933,
+            "age_20_64": 54.4974,
+            "age_65_79": 16.0615,
+            "age_80_plus": 6.7478
+          },
+          "old_age_dependency_per_100_working_age": 41.854
+        },
+        {
+          "year": 2029,
+          "total": 69251760,
+          "male": 33478616,
+          "female": 35773144,
+          "age_0_19": 15582880,
+          "age_20_64": 37632993,
+          "age_65_79": 11154726,
+          "age_80_plus": 4881161,
+          "male_by_age": {
+            "age_0_19": 7988310,
+            "age_20_64": 18514347,
+            "age_65_79": 5108672,
+            "age_80_plus": 1867287
+          },
+          "female_by_age": {
+            "age_0_19": 7594570,
+            "age_20_64": 19118646,
+            "age_65_79": 6046054,
+            "age_80_plus": 3013874
+          },
+          "shares_pct": {
+            "age_0_19": 22.5018,
+            "age_20_64": 54.3423,
+            "age_65_79": 16.1075,
+            "age_80_plus": 7.0484
+          },
+          "old_age_dependency_per_100_working_age": 42.6112
+        },
+        {
+          "year": 2030,
+          "total": 69386211,
+          "male": 33538679,
+          "female": 35847532,
+          "age_0_19": 15486123,
+          "age_20_64": 37588765,
+          "age_65_79": 11224350,
+          "age_80_plus": 5086973,
+          "male_by_age": {
+            "age_0_19": 7940323,
+            "age_20_64": 18497368,
+            "age_65_79": 5144692,
+            "age_80_plus": 1956296
+          },
+          "female_by_age": {
+            "age_0_19": 7545800,
+            "age_20_64": 19091397,
+            "age_65_79": 6079658,
+            "age_80_plus": 3130677
+          },
+          "shares_pct": {
+            "age_0_19": 22.3187,
+            "age_20_64": 54.1732,
+            "age_65_79": 16.1766,
+            "age_80_plus": 7.3314
+          },
+          "old_age_dependency_per_100_working_age": 43.3941
+        },
+        {
+          "year": 2031,
+          "total": 69519142,
+          "male": 33597630,
+          "female": 35921512,
+          "age_0_19": 15381282,
+          "age_20_64": 37567546,
+          "age_65_79": 11276650,
+          "age_80_plus": 5293664,
+          "male_by_age": {
+            "age_0_19": 7888163,
+            "age_20_64": 18490772,
+            "age_65_79": 5173649,
+            "age_80_plus": 2045046
+          },
+          "female_by_age": {
+            "age_0_19": 7493119,
+            "age_20_64": 19076774,
+            "age_65_79": 6103001,
+            "age_80_plus": 3248618
+          },
+          "shares_pct": {
+            "age_0_19": 22.1252,
+            "age_20_64": 54.0391,
+            "age_65_79": 16.2209,
+            "age_80_plus": 7.6147
+          },
+          "old_age_dependency_per_100_working_age": 44.1081
+        },
+        {
+          "year": 2032,
+          "total": 69650285,
+          "male": 33655458,
+          "female": 35994827,
+          "age_0_19": 15299163,
+          "age_20_64": 37532970,
+          "age_65_79": 11351399,
+          "age_80_plus": 5466753,
+          "male_by_age": {
+            "age_0_19": 7848118,
+            "age_20_64": 18476982,
+            "age_65_79": 5213441,
+            "age_80_plus": 2116917
+          },
+          "female_by_age": {
+            "age_0_19": 7451045,
+            "age_20_64": 19055988,
+            "age_65_79": 6137958,
+            "age_80_plus": 3349836
+          },
+          "shares_pct": {
+            "age_0_19": 21.9657,
+            "age_20_64": 53.8877,
+            "age_65_79": 16.2977,
+            "age_80_plus": 7.8489
+          },
+          "old_age_dependency_per_100_working_age": 44.809
+        },
+        {
+          "year": 2033,
+          "total": 69777352,
+          "male": 33711289,
+          "female": 36066063,
+          "age_0_19": 15220695,
+          "age_20_64": 37520902,
+          "age_65_79": 11390013,
+          "age_80_plus": 5645742,
+          "male_by_age": {
+            "age_0_19": 7809264,
+            "age_20_64": 18473919,
+            "age_65_79": 5239052,
+            "age_80_plus": 2189054
+          },
+          "female_by_age": {
+            "age_0_19": 7411431,
+            "age_20_64": 19046983,
+            "age_65_79": 6150961,
+            "age_80_plus": 3456688
+          },
+          "shares_pct": {
+            "age_0_19": 21.8132,
+            "age_20_64": 53.7723,
+            "age_65_79": 16.3234,
+            "age_80_plus": 8.0911
+          },
+          "old_age_dependency_per_100_working_age": 45.4034
+        },
+        {
+          "year": 2034,
+          "total": 69901472,
+          "male": 33765328,
+          "female": 36136144,
+          "age_0_19": 15158016,
+          "age_20_64": 37494887,
+          "age_65_79": 11445485,
+          "age_80_plus": 5803084,
+          "male_by_age": {
+            "age_0_19": 7779851,
+            "age_20_64": 18463884,
+            "age_65_79": 5270735,
+            "age_80_plus": 2250858
+          },
+          "female_by_age": {
+            "age_0_19": 7378165,
+            "age_20_64": 19031003,
+            "age_65_79": 6174750,
+            "age_80_plus": 3552226
+          },
+          "shares_pct": {
+            "age_0_19": 21.6848,
+            "age_20_64": 53.6396,
+            "age_65_79": 16.3737,
+            "age_80_plus": 8.3018
+          },
+          "old_age_dependency_per_100_working_age": 46.0025
+        },
+        {
+          "year": 2035,
+          "total": 70026306,
+          "male": 33819745,
+          "female": 36206561,
+          "age_0_19": 15102580,
+          "age_20_64": 37460086,
+          "age_65_79": 11501875,
+          "age_80_plus": 5961765,
+          "male_by_age": {
+            "age_0_19": 7755938,
+            "age_20_64": 18446559,
+            "age_65_79": 5305012,
+            "age_80_plus": 2312236
+          },
+          "female_by_age": {
+            "age_0_19": 7346642,
+            "age_20_64": 19013527,
+            "age_65_79": 6196863,
+            "age_80_plus": 3649529
+          },
+          "shares_pct": {
+            "age_0_19": 21.567,
+            "age_20_64": 53.4943,
+            "age_65_79": 16.4251,
+            "age_80_plus": 8.5136
+          },
+          "old_age_dependency_per_100_working_age": 46.6193
+        },
+        {
+          "year": 2036,
+          "total": 70146754,
+          "male": 33872614,
+          "female": 36274140,
+          "age_0_19": 15072473,
+          "age_20_64": 37394320,
+          "age_65_79": 11568229,
+          "age_80_plus": 6111732,
+          "male_by_age": {
+            "age_0_19": 7743240,
+            "age_20_64": 18414923,
+            "age_65_79": 5346604,
+            "age_80_plus": 2367847
+          },
+          "female_by_age": {
+            "age_0_19": 7329233,
+            "age_20_64": 18979397,
+            "age_65_79": 6221625,
+            "age_80_plus": 3743885
+          },
+          "shares_pct": {
+            "age_0_19": 21.4871,
+            "age_20_64": 53.3087,
+            "age_65_79": 16.4915,
+            "age_80_plus": 8.7128
+          },
+          "old_age_dependency_per_100_working_age": 47.2798
+        },
+        {
+          "year": 2037,
+          "total": 70260672,
+          "male": 33922959,
+          "female": 36337713,
+          "age_0_19": 15061486,
+          "age_20_64": 37292721,
+          "age_65_79": 11650025,
+          "age_80_plus": 6256440,
+          "male_by_age": {
+            "age_0_19": 7740502,
+            "age_20_64": 18364687,
+            "age_65_79": 5395873,
+            "age_80_plus": 2421897
+          },
+          "female_by_age": {
+            "age_0_19": 7320984,
+            "age_20_64": 18928034,
+            "age_65_79": 6254152,
+            "age_80_plus": 3834543
+          },
+          "shares_pct": {
+            "age_0_19": 21.4366,
+            "age_20_64": 53.0777,
+            "age_65_79": 16.5811,
+            "age_80_plus": 8.9046
+          },
+          "old_age_dependency_per_100_working_age": 48.016
+        },
+        {
+          "year": 2038,
+          "total": 70361168,
+          "male": 33967065,
+          "female": 36394103,
+          "age_0_19": 15069001,
+          "age_20_64": 37164016,
+          "age_65_79": 11733491,
+          "age_80_plus": 6394660,
+          "male_by_age": {
+            "age_0_19": 7747142,
+            "age_20_64": 18301558,
+            "age_65_79": 5444129,
+            "age_80_plus": 2474236
+          },
+          "female_by_age": {
+            "age_0_19": 7321859,
+            "age_20_64": 18862458,
+            "age_65_79": 6289362,
+            "age_80_plus": 3920424
+          },
+          "shares_pct": {
+            "age_0_19": 21.4166,
+            "age_20_64": 52.8189,
+            "age_65_79": 16.6761,
+            "age_80_plus": 9.0883
+          },
+          "old_age_dependency_per_100_working_age": 48.7788
+        },
+        {
+          "year": 2039,
+          "total": 70451362,
+          "male": 34007112,
+          "female": 36444250,
+          "age_0_19": 15089184,
+          "age_20_64": 37042577,
+          "age_65_79": 11796195,
+          "age_80_plus": 6523406,
+          "male_by_age": {
+            "age_0_19": 7758527,
+            "age_20_64": 18244691,
+            "age_65_79": 5481544,
+            "age_80_plus": 2522350
+          },
+          "female_by_age": {
+            "age_0_19": 7330657,
+            "age_20_64": 18797886,
+            "age_65_79": 6314651,
+            "age_80_plus": 4001056
+          },
+          "shares_pct": {
+            "age_0_19": 21.4179,
+            "age_20_64": 52.5789,
+            "age_65_79": 16.7437,
+            "age_80_plus": 9.2594
+          },
+          "old_age_dependency_per_100_working_age": 49.4555
+        },
+        {
+          "year": 2040,
+          "total": 70527060,
+          "male": 34041472,
+          "female": 36485588,
+          "age_0_19": 15113386,
+          "age_20_64": 36950462,
+          "age_65_79": 11806363,
+          "age_80_plus": 6656849,
+          "male_by_age": {
+            "age_0_19": 7773118,
+            "age_20_64": 18199396,
+            "age_65_79": 5495236,
+            "age_80_plus": 2573722
+          },
+          "female_by_age": {
+            "age_0_19": 7340268,
+            "age_20_64": 18751066,
+            "age_65_79": 6311127,
+            "age_80_plus": 4083127
+          },
+          "shares_pct": {
+            "age_0_19": 21.4292,
+            "age_20_64": 52.3919,
+            "age_65_79": 16.7402,
+            "age_80_plus": 9.4387
+          },
+          "old_age_dependency_per_100_working_age": 49.9675
+        },
+        {
+          "year": 2041,
+          "total": 70587568,
+          "male": 34069658,
+          "female": 36517910,
+          "age_0_19": 15149939,
+          "age_20_64": 36879163,
+          "age_65_79": 11777025,
+          "age_80_plus": 6781441,
+          "male_by_age": {
+            "age_0_19": 7794824,
+            "age_20_64": 18164353,
+            "age_65_79": 5487812,
+            "age_80_plus": 2622669
+          },
+          "female_by_age": {
+            "age_0_19": 7355115,
+            "age_20_64": 18714810,
+            "age_65_79": 6289213,
+            "age_80_plus": 4158772
+          },
+          "shares_pct": {
+            "age_0_19": 21.4626,
+            "age_20_64": 52.246,
+            "age_65_79": 16.6843,
+            "age_80_plus": 9.6071
+          },
+          "old_age_dependency_per_100_working_age": 50.3224
+        },
+        {
+          "year": 2042,
+          "total": 70634002,
+          "male": 34092328,
+          "female": 36541674,
+          "age_0_19": 15178156,
+          "age_20_64": 36833784,
+          "age_65_79": 11723793,
+          "age_80_plus": 6898269,
+          "male_by_age": {
+            "age_0_19": 7812166,
+            "age_20_64": 18143157,
+            "age_65_79": 5467297,
+            "age_80_plus": 2669708
+          },
+          "female_by_age": {
+            "age_0_19": 7365990,
+            "age_20_64": 18690627,
+            "age_65_79": 6256496,
+            "age_80_plus": 4228561
+          },
+          "shares_pct": {
+            "age_0_19": 21.4885,
+            "age_20_64": 52.1474,
+            "age_65_79": 16.5979,
+            "age_80_plus": 9.7662
+          },
+          "old_age_dependency_per_100_working_age": 50.557
+        },
+        {
+          "year": 2043,
+          "total": 70670568,
+          "male": 34111603,
+          "female": 36558965,
+          "age_0_19": 15154903,
+          "age_20_64": 36816378,
+          "age_65_79": 11694032,
+          "age_80_plus": 7005255,
+          "male_by_age": {
+            "age_0_19": 7800190,
+            "age_20_64": 18140605,
+            "age_65_79": 5457911,
+            "age_80_plus": 2712897
+          },
+          "female_by_age": {
+            "age_0_19": 7354713,
+            "age_20_64": 18675773,
+            "age_65_79": 6236121,
+            "age_80_plus": 4292358
+          },
+          "shares_pct": {
+            "age_0_19": 21.4444,
+            "age_20_64": 52.0958,
+            "age_65_79": 16.5472,
+            "age_80_plus": 9.9125
+          },
+          "old_age_dependency_per_100_working_age": 50.7907
+        },
+        {
+          "year": 2044,
+          "total": 70695165,
+          "male": 34126385,
+          "female": 36568780,
+          "age_0_19": 15144753,
+          "age_20_64": 36780871,
+          "age_65_79": 11642796,
+          "age_80_plus": 7126745,
+          "male_by_age": {
+            "age_0_19": 7795105,
+            "age_20_64": 18129676,
+            "age_65_79": 5438194,
+            "age_80_plus": 2763410
+          },
+          "female_by_age": {
+            "age_0_19": 7349648,
+            "age_20_64": 18651195,
+            "age_65_79": 6204602,
+            "age_80_plus": 4363335
+          },
+          "shares_pct": {
+            "age_0_19": 21.4226,
+            "age_20_64": 52.0274,
+            "age_65_79": 16.469,
+            "age_80_plus": 10.081
+          },
+          "old_age_dependency_per_100_working_age": 51.0307
+        },
+        {
+          "year": 2045,
+          "total": 70709758,
+          "male": 34137431,
+          "female": 36572327,
+          "age_0_19": 15131418,
+          "age_20_64": 36727845,
+          "age_65_79": 11600823,
+          "age_80_plus": 7249672,
+          "male_by_age": {
+            "age_0_19": 7788289,
+            "age_20_64": 18112249,
+            "age_65_79": 5420759,
+            "age_80_plus": 2816134
+          },
+          "female_by_age": {
+            "age_0_19": 7343129,
+            "age_20_64": 18615596,
+            "age_65_79": 6180064,
+            "age_80_plus": 4433538
+          },
+          "shares_pct": {
+            "age_0_19": 21.3993,
+            "age_20_64": 51.9417,
+            "age_65_79": 16.4063,
+            "age_80_plus": 10.2527
+          },
+          "old_age_dependency_per_100_working_age": 51.3248
+        }
+      ],
+      "source": {
+        "publisher": "Eurostat",
+        "dataset": "Population projections in the EU (proj_23np)",
+        "url": "https://ec.europa.eu/eurostat/databrowser/view/proj_23np/default/table",
+        "api_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/proj_23np",
+        "location": "API proj_23np; geo=FR; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100",
+        "period": "2022–2100"
+      }
+    }
   },
   "sources": [
     {

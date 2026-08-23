@@ -51,8 +51,9 @@
   };
   const rowLabel = row => {
     const translated = row.label_en || ENGLISH_LABELS[row.label_native];
-    const subtitle = lang() === "en" && translated && translated.toLocaleLowerCase("en") !== row.label_native.toLocaleLowerCase("en") ? `<small>${esc(translated)}</small>` : "";
-    return `<strong title="${esc(row.label_native)}">${esc(row.label_native)}</strong>${subtitle}`;
+    const differs = translated && translated.toLocaleLowerCase("en") !== row.label_native.toLocaleLowerCase("en");
+    if (lang() === "en" && differs) return `<strong title="${esc(row.label_native)}">${esc(translated)}</strong><small>${esc(row.label_native)}</small>`;
+    return `<strong>${esc(row.label_native)}</strong>${differs ? `<small>${esc(translated)}</small>` : ""}`;
   };
 
   function render() {

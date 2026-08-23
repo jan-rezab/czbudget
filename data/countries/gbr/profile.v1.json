@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-22T20:48:51.053Z",
+  "generated_at": "2026-08-23T17:36:03.771Z",
   "country": {
     "country_code": "GBR",
     "name_cs": "Spojené království",
@@ -32,12 +32,9 @@
     }
   },
   "coverage": {
-    "loaded_modules": 9,
+    "loaded_modules": 11,
     "total_modules": 11,
-    "missing_dimensions": [
-      "public_entity_accounts",
-      "national_demographic_projection"
-    ]
+    "missing_dimensions": []
   },
   "modules": {
     "sovereign": {
@@ -82,20 +79,22 @@
     },
     "health": {
       "status": "loaded",
-      "coverage": "SHA financing/provider shares; 2024",
+      "coverage": "SHA financing profile; 2024",
       "missing_dimensions": []
     },
     "providers": {
       "status": "loaded",
       "coverage": "46118 registered provider locations",
       "missing_dimensions": [],
-      "facility_count": 46118
+      "facility_count": 46118,
+      "coverage_level": "nhs_trust_sites"
     },
     "municipalities": {
       "status": "loaded",
       "coverage": "Submitted English council and GLA returns; excludes police and fire",
       "missing_dimensions": [],
       "entity_count": 318,
+      "fact_count": 317,
       "years": [
         2024,
         2025
@@ -108,6 +107,7 @@
         "expenditure",
         "financing"
       ],
+      "coverage_level": "complete",
       "directory": "data/countries/gbr/municipalities.v1.json",
       "warehouse": [
         {
@@ -130,22 +130,20 @@
       ]
     },
     "public_entities": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "ownership register",
-        "entity accounts"
-      ],
-      "entity_count": 0
+      "status": "loaded",
+      "coverage": "252 entities; 252 with accounts",
+      "missing_dimensions": [],
+      "entity_count": 252,
+      "financial_statement_count": 252,
+      "coverage_level": "public_bodies_directory"
     },
     "demography": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "population projection",
-        "age structure",
-        "social-system model"
-      ]
+      "status": "loaded",
+      "coverage": "2024–2124; annual age/sex detail plus 21 common-year aggregates",
+      "missing_dimensions": [],
+      "projection": "ONS 2024-based principal projection",
+      "detail": "data/countries/gbr/demography.v1.json",
+      "detail_row_count": 10807
     }
   },
   "data": {
@@ -1789,7 +1787,8 @@
           "amounts": {
             "previous": 217.409,
             "current": 226.238
-          }
+          },
+          "label_en": "Health and Social Care"
         },
         {
           "code": "2",
@@ -1797,7 +1796,8 @@
           "amounts": {
             "previous": 97.262,
             "current": 102.398
-          }
+          },
+          "label_en": "Education"
         },
         {
           "code": "6",
@@ -1805,7 +1805,8 @@
           "amounts": {
             "previous": 61.994,
             "current": 65.106
-          }
+          },
+          "label_en": "Defence"
         },
         {
           "code": "21",
@@ -1813,7 +1814,8 @@
           "amounts": {
             "previous": 47.757,
             "current": 50.535
-          }
+          },
+          "label_en": "Scottish Government (2)"
         },
         {
           "code": "13",
@@ -1821,7 +1823,8 @@
           "amounts": {
             "previous": 28.974,
             "current": 30.188
-          }
+          },
+          "label_en": "Transport"
         },
         {
           "code": "22",
@@ -1829,7 +1832,8 @@
           "amounts": {
             "previous": 21.609,
             "current": 22.559
-          }
+          },
+          "label_en": "Welsh Government (3)"
         },
         {
           "code": "3",
@@ -1837,7 +1841,8 @@
           "amounts": {
             "previous": 19.622,
             "current": 22.099
-          }
+          },
+          "label_en": "Home Office"
         },
         {
           "code": "23",
@@ -1845,7 +1850,8 @@
           "amounts": {
             "previous": 19.115,
             "current": 19.141
-          }
+          },
+          "label_en": "Northern Ireland Executive"
         },
         {
           "code": "9",
@@ -1853,7 +1859,8 @@
           "amounts": {
             "previous": 13.813,
             "current": 18.401
-          }
+          },
+          "label_en": "MHCLG - Local Government"
         },
         {
           "code": "12",
@@ -1861,7 +1868,8 @@
           "amounts": {
             "previous": 14.97,
             "current": 16.127
-          }
+          },
+          "label_en": "Science, Innovation and Technology"
         },
         {
           "code": "4",
@@ -1869,7 +1877,8 @@
           "amounts": {
             "previous": 14.071,
             "current": 15.056
-          }
+          },
+          "label_en": "Justice"
         },
         {
           "code": "17",
@@ -1877,7 +1886,8 @@
           "amounts": {
             "previous": 14.759,
             "current": 14.89
-          }
+          },
+          "label_en": "Work and Pensions"
         },
         {
           "code": "10",
@@ -1885,7 +1895,8 @@
           "amounts": {
             "previous": 13.02,
             "current": 14.5
-          }
+          },
+          "label_en": "MHCLG - Housing and Communities"
         },
         {
           "code": "14",
@@ -1893,7 +1904,8 @@
           "amounts": {
             "previous": 13.299,
             "current": 10.568
-          }
+          },
+          "label_en": "Energy Security and Net Zero"
         },
         {
           "code": "8",
@@ -1901,7 +1913,8 @@
           "amounts": {
             "previous": 10.89,
             "current": 9.427
-          }
+          },
+          "label_en": "Foreign, Commonwealth and Development Office"
         },
         {
           "code": "18",
@@ -1909,7 +1922,8 @@
           "amounts": {
             "previous": 6.727,
             "current": 7.611
-          }
+          },
+          "label_en": "HM Revenue and Customs"
         },
         {
           "code": "15",
@@ -1917,7 +1931,8 @@
           "amounts": {
             "previous": 7.313,
             "current": 7.577
-          }
+          },
+          "label_en": "Environment, Food and Rural Affairs"
         },
         {
           "code": "7",
@@ -1925,7 +1940,8 @@
           "amounts": {
             "previous": 4.932,
             "current": 5.539
-          }
+          },
+          "label_en": "Single Intelligence Account"
         },
         {
           "code": "24",
@@ -1933,7 +1949,8 @@
           "amounts": {
             "previous": 3.342,
             "current": 3.597
-          }
+          },
+          "label_en": "Small and Independent Bodies"
         },
         {
           "code": "16",
@@ -1941,7 +1958,8 @@
           "amounts": {
             "previous": 3.413,
             "current": 3.21
-          }
+          },
+          "label_en": "Business and Trade"
         },
         {
           "code": "11",
@@ -1949,7 +1967,8 @@
           "amounts": {
             "previous": 2.206,
             "current": 2.334
-          }
+          },
+          "label_en": "Culture, Media and Sport"
         },
         {
           "code": "20",
@@ -1957,7 +1976,8 @@
           "amounts": {
             "previous": 1.134,
             "current": 1.777
-          }
+          },
+          "label_en": "Cabinet Office"
         },
         {
           "code": "19",
@@ -1965,7 +1985,8 @@
           "amounts": {
             "previous": 1.195,
             "current": 1.259
-          }
+          },
+          "label_en": "HM Treasury"
         },
         {
           "code": "5",
@@ -1973,7 +1994,8 @@
           "amounts": {
             "previous": 0.982,
             "current": 1.192
-          }
+          },
+          "label_en": "Law Officers' Departments"
         }
       ],
       "totals": {
@@ -2027,7 +2049,8 @@
           "source_rows": [
             {
               "code": "17",
-              "label_native": "Work and Pensions"
+              "label_native": "Work and Pensions",
+              "label_en": "Work and Pensions"
             }
           ]
         },
@@ -2044,7 +2067,8 @@
           "source_rows": [
             {
               "code": "1",
-              "label_native": "Health and Social Care"
+              "label_native": "Health and Social Care",
+              "label_en": "Health and Social Care"
             }
           ]
         },
@@ -2061,11 +2085,13 @@
           "source_rows": [
             {
               "code": "2",
-              "label_native": "Education"
+              "label_native": "Education",
+              "label_en": "Education"
             },
             {
               "code": "12",
-              "label_native": "Science, Innovation and Technology"
+              "label_native": "Science, Innovation and Technology",
+              "label_en": "Science, Innovation and Technology"
             }
           ]
         },
@@ -2082,7 +2108,8 @@
           "source_rows": [
             {
               "code": "6",
-              "label_native": "Defence"
+              "label_native": "Defence",
+              "label_en": "Defence"
             }
           ]
         },
@@ -2099,19 +2126,23 @@
           "source_rows": [
             {
               "code": "3",
-              "label_native": "Home Office"
+              "label_native": "Home Office",
+              "label_en": "Home Office"
             },
             {
               "code": "4",
-              "label_native": "Justice"
+              "label_native": "Justice",
+              "label_en": "Justice"
             },
             {
               "code": "7",
-              "label_native": "Single Intelligence Account"
+              "label_native": "Single Intelligence Account",
+              "label_en": "Single Intelligence Account"
             },
             {
               "code": "5",
-              "label_native": "Law Officers' Departments"
+              "label_native": "Law Officers' Departments",
+              "label_en": "Law Officers' Departments"
             }
           ]
         },
@@ -2128,7 +2159,8 @@
           "source_rows": [
             {
               "code": "13",
-              "label_native": "Transport"
+              "label_native": "Transport",
+              "label_en": "Transport"
             }
           ]
         },
@@ -2145,11 +2177,13 @@
           "source_rows": [
             {
               "code": "14",
-              "label_native": "Energy Security and Net Zero"
+              "label_native": "Energy Security and Net Zero",
+              "label_en": "Energy Security and Net Zero"
             },
             {
               "code": "15",
-              "label_native": "Environment, Food and Rural Affairs"
+              "label_native": "Environment, Food and Rural Affairs",
+              "label_en": "Environment, Food and Rural Affairs"
             }
           ]
         },
@@ -2166,11 +2200,13 @@
           "source_rows": [
             {
               "code": "9",
-              "label_native": "MHCLG - Local Government"
+              "label_native": "MHCLG - Local Government",
+              "label_en": "MHCLG - Local Government"
             },
             {
               "code": "10",
-              "label_native": "MHCLG - Housing and Communities"
+              "label_native": "MHCLG - Housing and Communities",
+              "label_en": "MHCLG - Housing and Communities"
             }
           ]
         },
@@ -2187,7 +2223,8 @@
           "source_rows": [
             {
               "code": "16",
-              "label_native": "Business and Trade"
+              "label_native": "Business and Trade",
+              "label_en": "Business and Trade"
             }
           ]
         },
@@ -2204,19 +2241,23 @@
           "source_rows": [
             {
               "code": "8",
-              "label_native": "Foreign, Commonwealth and Development Office"
+              "label_native": "Foreign, Commonwealth and Development Office",
+              "label_en": "Foreign, Commonwealth and Development Office"
             },
             {
               "code": "18",
-              "label_native": "HM Revenue and Customs"
+              "label_native": "HM Revenue and Customs",
+              "label_en": "HM Revenue and Customs"
             },
             {
               "code": "20",
-              "label_native": "Cabinet Office"
+              "label_native": "Cabinet Office",
+              "label_en": "Cabinet Office"
             },
             {
               "code": "19",
-              "label_native": "HM Treasury"
+              "label_native": "HM Treasury",
+              "label_en": "HM Treasury"
             }
           ]
         },
@@ -2233,7 +2274,8 @@
           "source_rows": [
             {
               "code": "11",
-              "label_native": "Culture, Media and Sport"
+              "label_native": "Culture, Media and Sport",
+              "label_en": "Culture, Media and Sport"
             }
           ]
         },
@@ -2250,19 +2292,23 @@
           "source_rows": [
             {
               "code": "21",
-              "label_native": "Scottish Government (2)"
+              "label_native": "Scottish Government (2)",
+              "label_en": "Scottish Government (2)"
             },
             {
               "code": "22",
-              "label_native": "Welsh Government (3)"
+              "label_native": "Welsh Government (3)",
+              "label_en": "Welsh Government (3)"
             },
             {
               "code": "23",
-              "label_native": "Northern Ireland Executive"
+              "label_native": "Northern Ireland Executive",
+              "label_en": "Northern Ireland Executive"
             },
             {
               "code": "24",
-              "label_native": "Small and Independent Bodies"
+              "label_native": "Small and Independent Bodies",
+              "label_en": "Small and Independent Bodies"
             }
           ]
         }
@@ -2469,7 +2515,26 @@
       "currency": "GBP",
       "coverage": "unavailable",
       "latest_year": null,
-      "records": []
+      "records": [],
+      "level_coverage": "unavailable",
+      "public_data": {
+        "detail_status": "national_bridge",
+        "level_status": "national_bridge",
+        "note_cs": "Britská data rozlišují běžné a kapitálové výdaje, funkce, regiony a autoritu; používají však fiskální rok a rámec TES.",
+        "note_en": "UK data separates current and capital spending, function, region and authority, but uses financial years and the TES framework.",
+        "next_step_cs": "Postavit převod PESA/CRA na kalendářní COFOG bez smíchání metodik.",
+        "next_step_en": "Build a PESA/CRA-to-calendar-year COFOG bridge without mixing accounting frameworks.",
+        "sources": [
+          {
+            "title": "DfT · transport expenditure TSGB13",
+            "url": "https://www.gov.uk/government/statistical-data-sets/transport-expenditure-tsgb13"
+          },
+          {
+            "title": "HM Treasury · Country and Regional Analysis",
+            "url": "https://www.gov.uk/government/statistics/country-and-regional-analysis-2025"
+          }
+        ]
+      }
     },
     "health": {
       "currency": "GBP",
@@ -2546,8 +2611,654 @@
       "source": "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set",
       "directory_count": 318
     },
-    "public_entities": null,
-    "demography": null
+    "public_entities": {
+      "period": "2023/24",
+      "scope_cs": "Neministerské veřejné orgány, výkonné agentury a neministerská ministerstva v adresáři Cabinet Office.",
+      "scope_en": "Non-departmental public bodies, executive agencies and non-ministerial departments in the Cabinet Office directory.",
+      "entity_count": 252,
+      "financial_statement_count": 252,
+      "coverage": "public_bodies_directory",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "UK Cabinet Office",
+        "dataset": "Public Bodies Directory 2023/24",
+        "url": "https://www.gov.uk/government/publications/public-bodies-2024",
+        "location": "Public_Bodies_Directory_2023_24.xlsx → table data (A7:AZ258); finance fields include gross expenditure, government funding, income and staff costs"
+      }
+    },
+    "demography": {
+      "coverage": "national_principal_full_age_sex",
+      "projection": "ONS 2024-based principal projection",
+      "reference_date": "mid-year",
+      "period": {
+        "from": 2024,
+        "to": 2124
+      },
+      "detail": "data/countries/gbr/demography.v1.json",
+      "detail_row_count": 10807,
+      "age_group_count": 107,
+      "years": [
+        {
+          "year": 2025,
+          "total": 69502341,
+          "male": 34035961,
+          "female": 35466380,
+          "age_0_19": 15784909,
+          "age_20_64": 40295299,
+          "age_65_79": 9713460,
+          "age_80_plus": 3708673,
+          "male_by_age": {
+            "age_0_19": 8089632,
+            "age_20_64": 19775224,
+            "age_65_79": 4627410,
+            "age_80_plus": 1543695
+          },
+          "female_by_age": {
+            "age_0_19": 7695277,
+            "age_20_64": 20520075,
+            "age_65_79": 5086050,
+            "age_80_plus": 2164978
+          },
+          "shares_pct": {
+            "age_0_19": 22.7113,
+            "age_20_64": 57.9769,
+            "age_65_79": 13.9757,
+            "age_80_plus": 5.336
+          },
+          "old_age_dependency_per_100_working_age": 33.3094
+        },
+        {
+          "year": 2026,
+          "total": 69627595,
+          "male": 34093000,
+          "female": 35534595,
+          "age_0_19": 15664628,
+          "age_20_64": 40281897,
+          "age_65_79": 9864544,
+          "age_80_plus": 3816526,
+          "male_by_age": {
+            "age_0_19": 8025664,
+            "age_20_64": 19772175,
+            "age_65_79": 4699190,
+            "age_80_plus": 1595971
+          },
+          "female_by_age": {
+            "age_0_19": 7638964,
+            "age_20_64": 20509722,
+            "age_65_79": 5165354,
+            "age_80_plus": 2220555
+          },
+          "shares_pct": {
+            "age_0_19": 22.4977,
+            "age_20_64": 57.8534,
+            "age_65_79": 14.1676,
+            "age_80_plus": 5.4813
+          },
+          "old_age_dependency_per_100_working_age": 33.9633
+        },
+        {
+          "year": 2027,
+          "total": 69836073,
+          "male": 34193864,
+          "female": 35642209,
+          "age_0_19": 15540178,
+          "age_20_64": 40332354,
+          "age_65_79": 9905232,
+          "age_80_plus": 4058309,
+          "male_by_age": {
+            "age_0_19": 7960214,
+            "age_20_64": 19805831,
+            "age_65_79": 4718868,
+            "age_80_plus": 1708951
+          },
+          "female_by_age": {
+            "age_0_19": 7579964,
+            "age_20_64": 20526523,
+            "age_65_79": 5186364,
+            "age_80_plus": 2349358
+          },
+          "shares_pct": {
+            "age_0_19": 22.2524,
+            "age_20_64": 57.7529,
+            "age_65_79": 14.1835,
+            "age_80_plus": 5.8112
+          },
+          "old_age_dependency_per_100_working_age": 34.6212
+        },
+        {
+          "year": 2028,
+          "total": 70035138,
+          "male": 34289232,
+          "female": 35745906,
+          "age_0_19": 15378272,
+          "age_20_64": 40399192,
+          "age_65_79": 10018762,
+          "age_80_plus": 4238912,
+          "male_by_age": {
+            "age_0_19": 7877813,
+            "age_20_64": 19847312,
+            "age_65_79": 4772529,
+            "age_80_plus": 1791578
+          },
+          "female_by_age": {
+            "age_0_19": 7500459,
+            "age_20_64": 20551880,
+            "age_65_79": 5246233,
+            "age_80_plus": 2447334
+          },
+          "shares_pct": {
+            "age_0_19": 21.9579,
+            "age_20_64": 57.6842,
+            "age_65_79": 14.3053,
+            "age_80_plus": 6.0526
+          },
+          "old_age_dependency_per_100_working_age": 35.292
+        },
+        {
+          "year": 2029,
+          "total": 70223783,
+          "male": 34378822,
+          "female": 35844961,
+          "age_0_19": 15216413,
+          "age_20_64": 40446663,
+          "age_65_79": 10184069,
+          "age_80_plus": 4376638,
+          "male_by_age": {
+            "age_0_19": 7795630,
+            "age_20_64": 19880254,
+            "age_65_79": 4849061,
+            "age_80_plus": 1853877
+          },
+          "female_by_age": {
+            "age_0_19": 7420783,
+            "age_20_64": 20566409,
+            "age_65_79": 5335008,
+            "age_80_plus": 2522761
+          },
+          "shares_pct": {
+            "age_0_19": 21.6685,
+            "age_20_64": 57.5968,
+            "age_65_79": 14.5023,
+            "age_80_plus": 6.2324
+          },
+          "old_age_dependency_per_100_working_age": 35.9998
+        },
+        {
+          "year": 2030,
+          "total": 70402014,
+          "male": 34462823,
+          "female": 35939191,
+          "age_0_19": 15042545,
+          "age_20_64": 40495966,
+          "age_65_79": 10374962,
+          "age_80_plus": 4488541,
+          "male_by_age": {
+            "age_0_19": 7707999,
+            "age_20_64": 19914223,
+            "age_65_79": 4938224,
+            "age_80_plus": 1902377
+          },
+          "female_by_age": {
+            "age_0_19": 7334546,
+            "age_20_64": 20581743,
+            "age_65_79": 5436738,
+            "age_80_plus": 2586164
+          },
+          "shares_pct": {
+            "age_0_19": 21.3666,
+            "age_20_64": 57.521,
+            "age_65_79": 14.7367,
+            "age_80_plus": 6.3756
+          },
+          "old_age_dependency_per_100_working_age": 36.7037
+        },
+        {
+          "year": 2031,
+          "total": 70570169,
+          "male": 34541564,
+          "female": 36028605,
+          "age_0_19": 14853349,
+          "age_20_64": 40567428,
+          "age_65_79": 10568403,
+          "age_80_plus": 4580989,
+          "male_by_age": {
+            "age_0_19": 7611555,
+            "age_20_64": 19961259,
+            "age_65_79": 5026856,
+            "age_80_plus": 1941894
+          },
+          "female_by_age": {
+            "age_0_19": 7241794,
+            "age_20_64": 20606169,
+            "age_65_79": 5541547,
+            "age_80_plus": 2639095
+          },
+          "shares_pct": {
+            "age_0_19": 21.0476,
+            "age_20_64": 57.4852,
+            "age_65_79": 14.9757,
+            "age_80_plus": 6.4914
+          },
+          "old_age_dependency_per_100_working_age": 37.3437
+        },
+        {
+          "year": 2032,
+          "total": 70728035,
+          "male": 34615087,
+          "female": 36112948,
+          "age_0_19": 14659846,
+          "age_20_64": 40641659,
+          "age_65_79": 10768513,
+          "age_80_plus": 4658017,
+          "male_by_age": {
+            "age_0_19": 7513514,
+            "age_20_64": 20007876,
+            "age_65_79": 5120556,
+            "age_80_plus": 1973141
+          },
+          "female_by_age": {
+            "age_0_19": 7146332,
+            "age_20_64": 20633783,
+            "age_65_79": 5647957,
+            "age_80_plus": 2684876
+          },
+          "shares_pct": {
+            "age_0_19": 20.7271,
+            "age_20_64": 57.4619,
+            "age_65_79": 15.2252,
+            "age_80_plus": 6.5858
+          },
+          "old_age_dependency_per_100_working_age": 37.9574
+        },
+        {
+          "year": 2033,
+          "total": 70875765,
+          "male": 34683606,
+          "female": 36192159,
+          "age_0_19": 14482514,
+          "age_20_64": 40707100,
+          "age_65_79": 10946861,
+          "age_80_plus": 4739290,
+          "male_by_age": {
+            "age_0_19": 7423634,
+            "age_20_64": 20051729,
+            "age_65_79": 5201174,
+            "age_80_plus": 2007069
+          },
+          "female_by_age": {
+            "age_0_19": 7058880,
+            "age_20_64": 20655371,
+            "age_65_79": 5745687,
+            "age_80_plus": 2732221
+          },
+          "shares_pct": {
+            "age_0_19": 20.4337,
+            "age_20_64": 57.4344,
+            "age_65_79": 15.4451,
+            "age_80_plus": 6.6868
+          },
+          "old_age_dependency_per_100_working_age": 38.5342
+        },
+        {
+          "year": 2034,
+          "total": 71013837,
+          "male": 34747468,
+          "female": 36266369,
+          "age_0_19": 14320608,
+          "age_20_64": 40758163,
+          "age_65_79": 11117202,
+          "age_80_plus": 4817864,
+          "male_by_age": {
+            "age_0_19": 7341760,
+            "age_20_64": 20088420,
+            "age_65_79": 5278240,
+            "age_80_plus": 2039048
+          },
+          "female_by_age": {
+            "age_0_19": 6978848,
+            "age_20_64": 20669743,
+            "age_65_79": 5838962,
+            "age_80_plus": 2778816
+          },
+          "shares_pct": {
+            "age_0_19": 20.1659,
+            "age_20_64": 57.3947,
+            "age_65_79": 15.655,
+            "age_80_plus": 6.7844
+          },
+          "old_age_dependency_per_100_working_age": 39.0966
+        },
+        {
+          "year": 2035,
+          "total": 71143153,
+          "male": 34807271,
+          "female": 36335882,
+          "age_0_19": 14159537,
+          "age_20_64": 40831462,
+          "age_65_79": 11265950,
+          "age_80_plus": 4886204,
+          "male_by_age": {
+            "age_0_19": 7260139,
+            "age_20_64": 20136674,
+            "age_65_79": 5343770,
+            "age_80_plus": 2066688
+          },
+          "female_by_age": {
+            "age_0_19": 6899398,
+            "age_20_64": 20694788,
+            "age_65_79": 5922180,
+            "age_80_plus": 2819516
+          },
+          "shares_pct": {
+            "age_0_19": 19.9029,
+            "age_20_64": 57.3934,
+            "age_65_79": 15.8356,
+            "age_80_plus": 6.8681
+          },
+          "old_age_dependency_per_100_working_age": 39.5581
+        },
+        {
+          "year": 2036,
+          "total": 71264846,
+          "male": 34863702,
+          "female": 36401144,
+          "age_0_19": 13991535,
+          "age_20_64": 40894457,
+          "age_65_79": 11413840,
+          "age_80_plus": 4965014,
+          "male_by_age": {
+            "age_0_19": 7174752,
+            "age_20_64": 20181451,
+            "age_65_79": 5407285,
+            "age_80_plus": 2100214
+          },
+          "female_by_age": {
+            "age_0_19": 6816783,
+            "age_20_64": 20713006,
+            "age_65_79": 6006555,
+            "age_80_plus": 2864800
+          },
+          "shares_pct": {
+            "age_0_19": 19.6332,
+            "age_20_64": 57.3838,
+            "age_65_79": 16.0161,
+            "age_80_plus": 6.967
+          },
+          "old_age_dependency_per_100_working_age": 40.0515
+        },
+        {
+          "year": 2037,
+          "total": 71379937,
+          "male": 34917354,
+          "female": 36462583,
+          "age_0_19": 13845045,
+          "age_20_64": 40971599,
+          "age_65_79": 11509073,
+          "age_80_plus": 5054220,
+          "male_by_age": {
+            "age_0_19": 7100774,
+            "age_20_64": 20230878,
+            "age_65_79": 5447507,
+            "age_80_plus": 2138195
+          },
+          "female_by_age": {
+            "age_0_19": 6744271,
+            "age_20_64": 20740721,
+            "age_65_79": 6061566,
+            "age_80_plus": 2916025
+          },
+          "shares_pct": {
+            "age_0_19": 19.3963,
+            "age_20_64": 57.3993,
+            "age_65_79": 16.1237,
+            "age_80_plus": 7.0807
+          },
+          "old_age_dependency_per_100_working_age": 40.4263
+        },
+        {
+          "year": 2038,
+          "total": 71489413,
+          "male": 34968792,
+          "female": 36520621,
+          "age_0_19": 13716737,
+          "age_20_64": 41064893,
+          "age_65_79": 11550119,
+          "age_80_plus": 5157664,
+          "male_by_age": {
+            "age_0_19": 7036006,
+            "age_20_64": 20287412,
+            "age_65_79": 5461991,
+            "age_80_plus": 2183383
+          },
+          "female_by_age": {
+            "age_0_19": 6680731,
+            "age_20_64": 20777481,
+            "age_65_79": 6088128,
+            "age_80_plus": 2974281
+          },
+          "shares_pct": {
+            "age_0_19": 19.1871,
+            "age_20_64": 57.4419,
+            "age_65_79": 16.1564,
+            "age_80_plus": 7.2146
+          },
+          "old_age_dependency_per_100_working_age": 40.6863
+        },
+        {
+          "year": 2039,
+          "total": 71594113,
+          "male": 35018510,
+          "female": 36575603,
+          "age_0_19": 13598532,
+          "age_20_64": 41181823,
+          "age_65_79": 11546258,
+          "age_80_plus": 5267500,
+          "male_by_age": {
+            "age_0_19": 6975962,
+            "age_20_64": 20355890,
+            "age_65_79": 5455375,
+            "age_80_plus": 2231283
+          },
+          "female_by_age": {
+            "age_0_19": 6622570,
+            "age_20_64": 20825933,
+            "age_65_79": 6090883,
+            "age_80_plus": 3036217
+          },
+          "shares_pct": {
+            "age_0_19": 18.9939,
+            "age_20_64": 57.5212,
+            "age_65_79": 16.1274,
+            "age_80_plus": 7.3574
+          },
+          "old_age_dependency_per_100_working_age": 40.8281
+        },
+        {
+          "year": 2040,
+          "total": 71694769,
+          "male": 35066876,
+          "female": 36627893,
+          "age_0_19": 13496328,
+          "age_20_64": 41295376,
+          "age_65_79": 11519908,
+          "age_80_plus": 5383157,
+          "male_by_age": {
+            "age_0_19": 6924787,
+            "age_20_64": 20421529,
+            "age_65_79": 5438490,
+            "age_80_plus": 2282070
+          },
+          "female_by_age": {
+            "age_0_19": 6571541,
+            "age_20_64": 20873847,
+            "age_65_79": 6081418,
+            "age_80_plus": 3101087
+          },
+          "shares_pct": {
+            "age_0_19": 18.8247,
+            "age_20_64": 57.5989,
+            "age_65_79": 16.068,
+            "age_80_plus": 7.5084
+          },
+          "old_age_dependency_per_100_working_age": 40.9321
+        },
+        {
+          "year": 2041,
+          "total": 71791876,
+          "male": 35114167,
+          "female": 36677709,
+          "age_0_19": 13421803,
+          "age_20_64": 41397733,
+          "age_65_79": 11458073,
+          "age_80_plus": 5514267,
+          "male_by_age": {
+            "age_0_19": 6887261,
+            "age_20_64": 20482076,
+            "age_65_79": 5405100,
+            "age_80_plus": 2339730
+          },
+          "female_by_age": {
+            "age_0_19": 6534542,
+            "age_20_64": 20915657,
+            "age_65_79": 6052973,
+            "age_80_plus": 3174537
+          },
+          "shares_pct": {
+            "age_0_19": 18.6954,
+            "age_20_64": 57.6635,
+            "age_65_79": 15.9601,
+            "age_80_plus": 7.6809
+          },
+          "old_age_dependency_per_100_working_age": 40.9982
+        },
+        {
+          "year": 2042,
+          "total": 71885674,
+          "male": 35160439,
+          "female": 36725235,
+          "age_0_19": 13343168,
+          "age_20_64": 41521939,
+          "age_65_79": 11360941,
+          "age_80_plus": 5659626,
+          "male_by_age": {
+            "age_0_19": 6847629,
+            "age_20_64": 20553498,
+            "age_65_79": 5356677,
+            "age_80_plus": 2402635
+          },
+          "female_by_age": {
+            "age_0_19": 6495539,
+            "age_20_64": 20968441,
+            "age_65_79": 6004264,
+            "age_80_plus": 3256991
+          },
+          "shares_pct": {
+            "age_0_19": 18.5617,
+            "age_20_64": 57.7611,
+            "age_65_79": 15.8042,
+            "age_80_plus": 7.8731
+          },
+          "old_age_dependency_per_100_working_age": 40.9917
+        },
+        {
+          "year": 2043,
+          "total": 71976128,
+          "male": 35205668,
+          "female": 36770460,
+          "age_0_19": 13304033,
+          "age_20_64": 41593567,
+          "age_65_79": 11266209,
+          "age_80_plus": 5812319,
+          "male_by_age": {
+            "age_0_19": 6827243,
+            "age_20_64": 20600578,
+            "age_65_79": 5309696,
+            "age_80_plus": 2468151
+          },
+          "female_by_age": {
+            "age_0_19": 6476790,
+            "age_20_64": 20992989,
+            "age_65_79": 5956513,
+            "age_80_plus": 3344168
+          },
+          "shares_pct": {
+            "age_0_19": 18.484,
+            "age_20_64": 57.788,
+            "age_65_79": 15.6527,
+            "age_80_plus": 8.0753
+          },
+          "old_age_dependency_per_100_working_age": 41.0605
+        },
+        {
+          "year": 2044,
+          "total": 72062914,
+          "male": 35249658,
+          "female": 36813256,
+          "age_0_19": 13284344,
+          "age_20_64": 41588798,
+          "age_65_79": 11218749,
+          "age_80_plus": 5971023,
+          "male_by_age": {
+            "age_0_19": 6817303,
+            "age_20_64": 20610255,
+            "age_65_79": 5286409,
+            "age_80_plus": 2535691
+          },
+          "female_by_age": {
+            "age_0_19": 6467041,
+            "age_20_64": 20978543,
+            "age_65_79": 5932340,
+            "age_80_plus": 3435332
+          },
+          "shares_pct": {
+            "age_0_19": 18.4344,
+            "age_20_64": 57.7118,
+            "age_65_79": 15.568,
+            "age_80_plus": 8.2858
+          },
+          "old_age_dependency_per_100_working_age": 41.3327
+        },
+        {
+          "year": 2045,
+          "total": 72145028,
+          "male": 35291852,
+          "female": 36853176,
+          "age_0_19": 13281863,
+          "age_20_64": 41531293,
+          "age_65_79": 11202548,
+          "age_80_plus": 6129324,
+          "male_by_age": {
+            "age_0_19": 6816052,
+            "age_20_64": 20595650,
+            "age_65_79": 5277418,
+            "age_80_plus": 2602732
+          },
+          "female_by_age": {
+            "age_0_19": 6465811,
+            "age_20_64": 20935643,
+            "age_65_79": 5925130,
+            "age_80_plus": 3526592
+          },
+          "shares_pct": {
+            "age_0_19": 18.4099,
+            "age_20_64": 57.5664,
+            "age_65_79": 15.5278,
+            "age_80_plus": 8.4958
+          },
+          "old_age_dependency_per_100_working_age": 41.7321
+        }
+      ],
+      "source": {
+        "publisher": "Office for National Statistics",
+        "dataset": "National population projections: 2024-based",
+        "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/datasets/z1zippedpopulationprojectionsdatafilesuk",
+        "download_urls": [
+          "https://www.ons.gov.uk/file?uri=%2Fpeoplepopulationandcommunity%2Fpopulationandmigration%2Fpopulationprojections%2Fdatasets%2Fz1zippedpopulationprojectionsdatafilesuk%2F2024based%2Fuk1.zip"
+        ],
+        "location": "UK1.zip → uk_ppp_machine_readable.xlsx → Population; males/females; annual columns; ages 0–104, 105–109 and 110+",
+        "period": "2024–2124"
+      }
+    }
   },
   "sources": [
     {

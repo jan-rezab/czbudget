@@ -9,7 +9,7 @@
   <link id="alternate-cs" rel="alternate" hreflang="cs" href="https://publicspendingdata.org/country.html?lang=cs">
   <link id="alternate-en" rel="alternate" hreflang="en" href="https://publicspendingdata.org/country.html?lang=en">
   <meta id="og-url" property="og:url" content="https://publicspendingdata.org/country.html">
-  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css?v=20260822-section-rail"><link rel="stylesheet" href="styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="chart-system.css?v=20260823-country-hover"><link rel="stylesheet" href="country-spending.css?v=20260823-english-labels"><link rel="stylesheet" href="country-health.css?v=20260822-provider-network"><link rel="stylesheet" href="country-functions.css?v=20260822-transport-deep-dive"><link rel="stylesheet" href="country-cash-in.css?v=20260822-cash-in"><link rel="stylesheet" href="country-parity.css?v=20260822-parity-contract"><script src="country.js?v=20260823-country-hover" defer></script><script src="country-parity.js?v=20260822-parity-contract" defer></script><script src="country-cash-in.js?v=20260822-cash-in" defer></script><script src="country-spending.js?v=20260823-english-labels" defer></script><script src="country-functions.js?v=20260822-transport-deep-dive" defer></script><script src="country-health.js?v=20260822-czech-flow" defer></script><script src="country-providers.js?v=20260822-network" defer></script><script src="sortable-tables.js?v=20260822" defer></script>
+  <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css?v=20260822-section-rail"><link rel="stylesheet" href="styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="chart-system.css?v=20260823-country-hover"><link rel="stylesheet" href="country-spending.css?v=20260823-dashboard-parity"><link rel="stylesheet" href="country-health.css?v=20260822-provider-network"><link rel="stylesheet" href="country-functions.css?v=20260822-transport-deep-dive"><link rel="stylesheet" href="country-cash-in.css?v=20260822-cash-in"><link rel="stylesheet" href="country-parity.css?v=20260822-parity-contract"><link rel="stylesheet" href="country-insights.css?v=20260823-dashboard-parity"><script src="country.js?v=20260823-country-hover" defer></script><script src="country-parity.js?v=20260822-parity-contract" defer></script><script src="country-cash-in.js?v=20260822-cash-in" defer></script><script src="country-spending.js?v=20260823-dashboard-parity" defer></script><script src="country-insights.js?v=20260823-dashboard-parity" defer></script><script src="country-functions.js?v=20260822-transport-deep-dive" defer></script><script src="country-health.js?v=20260822-czech-flow" defer></script><script src="country-providers.js?v=20260822-network" defer></script><script src="sortable-tables.js?v=20260822" defer></script>
 </head>
 <body class="country-page">
   <psd-site-header></psd-site-header>
@@ -21,8 +21,11 @@
     <a href="#trend" data-i18n="navTrend">Vývoj</a>
     <a href="#macro" data-i18n="navMacro">Makro</a>
     <a href="#spending" data-i18n="navSpending">Výdaje</a>
+    <a href="#budget-map" data-insight-nav="budget">Překlad</a>
+    <a href="#public-entities" data-insight-nav="entities">Subjekty</a>
     <a href="#healthcare" data-i18n="navHealthcare">Zdraví</a>
     <a href="#social-system" data-i18n="navSocial">Sociální</a>
+    <a href="#demography" data-insight-nav="demography">Demografie</a>
     <a href="#transportation" data-i18n="navTransport">Doprava</a>
     <a href="#specifics" data-i18n="navSpecifics">Specifika</a>
     <a href="#sources" data-i18n="navSources">Zdroje</a>
@@ -71,6 +74,10 @@
       <div id="country-spending-root" aria-live="polite"></div>
     </section>
 
+    <section class="country-section country-budget-map-section" id="budget-map" aria-labelledby="country-budget-map-title"><div id="country-budget-map-root" aria-live="polite"></div></section>
+
+    <section class="country-section country-public-entities-section" id="public-entities" aria-labelledby="country-public-entities-title"><div id="country-public-entities-root" aria-live="polite"></div></section>
+
     <section class="country-section country-function-section function-health" id="healthcare" aria-labelledby="country-function-health-title"><div id="country-function-health" aria-live="polite"></div></section>
 
     <section class="country-section country-health-section" id="healthcare-system" hidden>
@@ -86,6 +93,8 @@
     <section class="country-section country-provider-section" id="provider-network" hidden><div id="country-provider-root" aria-live="polite"></div></section>
 
     <section class="country-section country-function-section function-social" id="social-system" aria-labelledby="country-function-social-title"><div id="country-function-social" aria-live="polite"></div></section>
+
+    <section class="country-section country-demography-section" id="demography" aria-labelledby="country-demography-title"><div id="country-demography-root" aria-live="polite"></div></section>
 
     <section class="country-section country-function-section function-transport" id="transportation" aria-labelledby="country-function-transport-title"><div id="country-function-transport" aria-live="polite"></div></section>
 

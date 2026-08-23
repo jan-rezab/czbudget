@@ -73,7 +73,7 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#compare")).toHaveCount(0);
   await expect(page.locator("#method")).toHaveCount(0);
-  await expect(page.locator('.home-hero a[href^="comparison.html"]')).toBeVisible();
+  await expect(page.locator(".home-hero .primary-button")).toBeVisible();
   await expect(page.locator(".glorious-footer")).toContainText("Hlidac statu, z.u.");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });

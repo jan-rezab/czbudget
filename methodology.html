@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
     <link
       rel="stylesheet"
-      href="site-pages.css?v=20260822-information-architecture"
+      href="site-pages.css?v=20260823-methodology-lineage"
     />
     <link rel="stylesheet" href="global-footer.css?v=20260822-hlidac" />
     <script src="global-nav.js?v=20260822-component" defer></script>
-    <script src="site-pages.js?v=20260822-separate-pages" defer></script>
+    <script src="site-pages.js?v=20260823-methodology-lineage" defer></script>
     <script src="global-footer.js?v=20260822-hlidac" defer></script>
   </head>
   <body class="standalone-page" data-page="methodology">
@@ -81,6 +81,38 @@
         ><a href="comparison.html" data-language-link data-page-copy="methodCta"
           >Otevřít srovnání →</a
         >
+      </section>
+      <section class="method-ledger" aria-labelledby="method-ledger-title">
+        <header class="method-ledger-head">
+          <div>
+            <span class="kicker" data-page-copy="ledgerEyebrow">Datová linie · 110 záznamů</span>
+            <h2 id="method-ledger-title" data-page-copy="ledgerTitle">Úplná tabulka zdrojů</h2>
+            <p data-page-copy="ledgerLead">Každá země a každý modul: rozsah, období, artefakt, primární zdroj, přesné místo výběru, transformace a známé mezery.</p>
+          </div>
+          <a class="method-ledger-json" href="data/methodology-sources.v1.json" download data-page-copy="ledgerJson">Stáhnout JSON ↓</a>
+        </header>
+        <div class="method-ledger-controls" aria-label="Methodology table filters">
+          <label><span data-page-copy="ledgerCountry">Země</span><select id="method-country-filter"><option value="">Všechny země</option></select></label>
+          <label><span data-page-copy="ledgerModule">Modul</span><select id="method-module-filter"><option value="">Všechny moduly</option></select></label>
+          <label><span data-page-copy="ledgerStatus">Pokrytí</span><select id="method-status-filter"><option value="">Všechny stavy</option></select></label>
+          <label class="method-ledger-search"><span data-page-copy="ledgerSearch">Hledat</span><input id="method-source-search" type="search" placeholder="zdroj, tabulka, soubor…" data-page-placeholder="ledgerSearchPlaceholder" /></label>
+          <button id="method-download-csv" type="button" data-page-copy="ledgerCsv">Stáhnout CSV ↓</button>
+        </div>
+        <p id="method-ledger-summary" class="method-ledger-summary" aria-live="polite">Načítám zdrojovou tabulku…</p>
+        <div class="method-table-wrap" tabindex="0">
+          <table class="method-table">
+            <thead><tr>
+              <th data-page-copy="ledgerCountry">Země</th>
+              <th data-page-copy="ledgerModule">Modul</th>
+              <th data-page-copy="ledgerHave">Co máme</th>
+              <th data-page-copy="ledgerPeriodScope">Období · rozsah</th>
+              <th data-page-copy="ledgerSourceExact">Zdroj · přesné místo</th>
+              <th data-page-copy="ledgerTransform">Artefakt · transformace</th>
+              <th data-page-copy="ledgerLimits">Mezery a hranice</th>
+            </tr></thead>
+            <tbody id="method-source-rows"></tbody>
+          </table>
+        </div>
       </section>
     </main>
     <footer data-global-footer></footer>

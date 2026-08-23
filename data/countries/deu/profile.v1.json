@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-22T20:31:22.510Z",
+  "generated_at": "2026-08-23T17:36:03.771Z",
   "country": {
     "country_code": "DEU",
     "name_cs": "Německo",
@@ -32,14 +32,9 @@
     }
   },
   "coverage": {
-    "loaded_modules": 7,
+    "loaded_modules": 11,
     "total_modules": 11,
-    "missing_dimensions": [
-      "municipal_entity_finance",
-      "provider_register",
-      "public_entity_accounts",
-      "national_demographic_projection"
-    ]
+    "missing_dimensions": []
   },
   "modules": {
     "sovereign": {
@@ -84,48 +79,52 @@
     },
     "health": {
       "status": "loaded",
-      "coverage": "SHA financing/provider shares; 2024",
+      "coverage": "SHA financing profile; 2024",
       "missing_dimensions": []
     },
     "providers": {
-      "status": "unavailable",
-      "coverage": "source_adapter_pending",
-      "missing_dimensions": [
-        "facility records"
-      ],
-      "facility_count": 0
+      "status": "loaded",
+      "coverage": "1841 registered provider locations",
+      "missing_dimensions": [],
+      "facility_count": 1841,
+      "coverage_level": "destatis_hospital_directory"
     },
     "municipalities": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "entity census",
-        "budget facts"
+      "status": "loaded",
+      "coverage": "10,756 municipal core budgets; adjusted receipts and payments excluding financing",
+      "missing_dimensions": [],
+      "entity_count": 10756,
+      "fact_count": 10756,
+      "years": [
+        2025
       ],
-      "entity_count": 0,
-      "years": [],
-      "stages": [],
-      "measures": [],
-      "directory": null,
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_level": "complete",
+      "directory": "data/countries/deu/municipalities.v1.json",
       "warehouse": []
     },
     "public_entities": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "ownership register",
-        "entity accounts"
-      ],
-      "entity_count": 0
+      "status": "loaded",
+      "coverage": "119 entities; 119 with accounts",
+      "missing_dimensions": [],
+      "entity_count": 119,
+      "financial_statement_count": 119,
+      "coverage_level": "federal_holdings_report"
     },
     "demography": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": [
-        "population projection",
-        "age structure",
-        "social-system model"
-      ]
+      "status": "loaded",
+      "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+      "missing_dimensions": [],
+      "projection": "EUROPOP2023 baseline scenario",
+      "detail": "data/countries/deu/demography.v1.json",
+      "detail_row_count": 7979
     }
   },
   "data": {
@@ -1769,7 +1768,8 @@
           "amounts": {
             "previous": 190.3413,
             "current": 197.341
-          }
+          },
+          "label_en": "Federal Ministry of Labour and Social Affairs"
         },
         {
           "code": "60",
@@ -1777,7 +1777,8 @@
           "amounts": {
             "previous": 156.9371,
             "current": 186.3383
-          }
+          },
+          "label_en": "General financial administration"
         },
         {
           "code": "14",
@@ -1785,7 +1786,8 @@
           "amounts": {
             "previous": 86.7769,
             "current": 108.6131
-          }
+          },
+          "label_en": "Federal Ministry of Defence"
         },
         {
           "code": "32",
@@ -1793,7 +1795,8 @@
           "amounts": {
             "previous": 34.172,
             "current": 33.6494
-          }
+          },
+          "label_en": "Federal debt"
         },
         {
           "code": "12",
@@ -1801,7 +1804,8 @@
           "amounts": {
             "previous": 38.2876,
             "current": 27.9014
-          }
+          },
+          "label_en": "Federal Ministry of Transport"
         },
         {
           "code": "30",
@@ -1809,7 +1813,8 @@
           "amounts": {
             "previous": 22.3637,
             "current": 21.8183
-          }
+          },
+          "label_en": "Federal Ministry of Research, Technology and Space"
         },
         {
           "code": "15",
@@ -1817,7 +1822,8 @@
           "amounts": {
             "previous": 19.2826,
             "current": 21.7739
-          }
+          },
+          "label_en": "Federal Ministry of Health"
         },
         {
           "code": "17",
@@ -1825,7 +1831,8 @@
           "amounts": {
             "previous": 14.199,
             "current": 16.664
-          }
+          },
+          "label_en": "Federal Ministry of Education, Family Affairs, Senior Citizens, Women and Youth"
         },
         {
           "code": "06",
@@ -1833,7 +1840,8 @@
           "amounts": {
             "previous": 15.2416,
             "current": 15.7616
-          }
+          },
+          "label_en": "Federal Ministry of the Interior"
         },
         {
           "code": "10",
@@ -1841,7 +1849,8 @@
           "amounts": {
             "previous": 11.7794,
             "current": 11.8111
-          }
+          },
+          "label_en": "Federal Ministry of Agriculture, Food and Regional Identity"
         },
         {
           "code": "08",
@@ -1849,7 +1858,8 @@
           "amounts": {
             "previous": 10.5628,
             "current": 10.8231
-          }
+          },
+          "label_en": "Federal Ministry of Finance"
         },
         {
           "code": "23",
@@ -1857,7 +1867,8 @@
           "amounts": {
             "previous": 10.307,
             "current": 10.0557
-          }
+          },
+          "label_en": "Federal Ministry for Economic Cooperation and Development"
         },
         {
           "code": "25",
@@ -1865,7 +1876,8 @@
           "amounts": {
             "previous": 7.3699,
             "current": 7.7457
-          }
+          },
+          "label_en": "Federal Ministry for Housing, Urban Development and Building"
         },
         {
           "code": "05",
@@ -1873,7 +1885,8 @@
           "amounts": {
             "previous": 5.8933,
             "current": 6.0253
-          }
+          },
+          "label_en": "Federal Foreign Office"
         },
         {
           "code": "09",
@@ -1881,7 +1894,8 @@
           "amounts": {
             "previous": 9.0216,
             "current": 5.9033
-          }
+          },
+          "label_en": "Federal Ministry for Economic Affairs and Energy"
         },
         {
           "code": "04",
@@ -1889,7 +1903,8 @@
           "amounts": {
             "previous": 4.0432,
             "current": 4.9983
-          }
+          },
+          "label_en": "Federal Chancellor and Federal Chancellery"
         },
         {
           "code": "16",
@@ -1897,7 +1912,8 @@
           "amounts": {
             "previous": 2.6929,
             "current": 2.7721
-          }
+          },
+          "label_en": "Federal Ministry for the Environment, Climate Action, Nature Conservation and Nuclear Safety"
         },
         {
           "code": "24",
@@ -1905,7 +1921,8 @@
           "amounts": {
             "previous": 0.0112,
             "current": 1.3596
-          }
+          },
+          "label_en": "Federal Ministry for Digital Transformation and Government Modernisation"
         },
         {
           "code": "02",
@@ -1913,7 +1930,8 @@
           "amounts": {
             "previous": 1.2488,
             "current": 1.276
-          }
+          },
+          "label_en": "German Bundestag"
         },
         {
           "code": "07",
@@ -1921,7 +1939,8 @@
           "amounts": {
             "previous": 1.1628,
             "current": 1.2133
-          }
+          },
+          "label_en": "Federal Ministry of Justice and Consumer Protection"
         },
         {
           "code": "20",
@@ -1929,7 +1948,8 @@
           "amounts": {
             "previous": 0.196,
             "current": 0.2022
-          }
+          },
+          "label_en": "Federal Court of Audit"
         },
         {
           "code": "01",
@@ -1937,7 +1957,8 @@
           "amounts": {
             "previous": 0.0589,
             "current": 0.0674
-          }
+          },
+          "label_en": "Federal President and Office of the Federal President"
         },
         {
           "code": "21",
@@ -1945,7 +1966,8 @@
           "amounts": {
             "previous": 0.0474,
             "current": 0.0522
-          }
+          },
+          "label_en": "Federal Commissioner for Data Protection and Freedom of Information"
         },
         {
           "code": "19",
@@ -1953,7 +1975,8 @@
           "amounts": {
             "previous": 0.0448,
             "current": 0.0464
-          }
+          },
+          "label_en": "Federal Constitutional Court"
         },
         {
           "code": "03",
@@ -1961,7 +1984,8 @@
           "amounts": {
             "previous": 0.0385,
             "current": 0.041
-          }
+          },
+          "label_en": "Federal Council"
         },
         {
           "code": "22",
@@ -1969,7 +1993,8 @@
           "amounts": {
             "previous": 0.0116,
             "current": 0.0146
-          }
+          },
+          "label_en": "Independent Oversight Council"
         }
       ],
       "totals": {
@@ -2023,7 +2048,8 @@
           "source_rows": [
             {
               "code": "11",
-              "label_native": "Bundesministerium für Arbeit und Soziales"
+              "label_native": "Bundesministerium für Arbeit und Soziales",
+              "label_en": "Federal Ministry of Labour and Social Affairs"
             }
           ]
         },
@@ -2040,7 +2066,8 @@
           "source_rows": [
             {
               "code": "15",
-              "label_native": "Bundesministerium für Gesundheit"
+              "label_native": "Bundesministerium für Gesundheit",
+              "label_en": "Federal Ministry of Health"
             }
           ]
         },
@@ -2057,11 +2084,13 @@
           "source_rows": [
             {
               "code": "30",
-              "label_native": "Bundesministerium für Forschung, Technologie und Raumfahrt"
+              "label_native": "Bundesministerium für Forschung, Technologie und Raumfahrt",
+              "label_en": "Federal Ministry of Research, Technology and Space"
             },
             {
               "code": "17",
-              "label_native": "Bundesministerium für Bildung, Familie, Senioren, Frauen und Jugend"
+              "label_native": "Bundesministerium für Bildung, Familie, Senioren, Frauen und Jugend",
+              "label_en": "Federal Ministry of Education, Family Affairs, Senior Citizens, Women and Youth"
             }
           ]
         },
@@ -2078,7 +2107,8 @@
           "source_rows": [
             {
               "code": "14",
-              "label_native": "Bundesministerium der Verteidigung"
+              "label_native": "Bundesministerium der Verteidigung",
+              "label_en": "Federal Ministry of Defence"
             }
           ]
         },
@@ -2095,19 +2125,23 @@
           "source_rows": [
             {
               "code": "06",
-              "label_native": "Bundesministerium des Innern"
+              "label_native": "Bundesministerium des Innern",
+              "label_en": "Federal Ministry of the Interior"
             },
             {
               "code": "07",
-              "label_native": "Bundesministerium der Justiz und für Verbraucherschutz"
+              "label_native": "Bundesministerium der Justiz und für Verbraucherschutz",
+              "label_en": "Federal Ministry of Justice and Consumer Protection"
             },
             {
               "code": "19",
-              "label_native": "Bundesverfassungsgericht"
+              "label_native": "Bundesverfassungsgericht",
+              "label_en": "Federal Constitutional Court"
             },
             {
               "code": "22",
-              "label_native": "Unabhängiger Kontrollrat"
+              "label_native": "Unabhängiger Kontrollrat",
+              "label_en": "Independent Oversight Council"
             }
           ]
         },
@@ -2124,11 +2158,13 @@
           "source_rows": [
             {
               "code": "12",
-              "label_native": "Bundesministerium für Verkehr"
+              "label_native": "Bundesministerium für Verkehr",
+              "label_en": "Federal Ministry of Transport"
             },
             {
               "code": "24",
-              "label_native": "Bundesministerium für Digitales und Staatsmodernisierung"
+              "label_native": "Bundesministerium für Digitales und Staatsmodernisierung",
+              "label_en": "Federal Ministry for Digital Transformation and Government Modernisation"
             }
           ]
         },
@@ -2145,11 +2181,13 @@
           "source_rows": [
             {
               "code": "10",
-              "label_native": "Bundesministerium für Landwirtschaft, Ernährung und Heimat"
+              "label_native": "Bundesministerium für Landwirtschaft, Ernährung und Heimat",
+              "label_en": "Federal Ministry of Agriculture, Food and Regional Identity"
             },
             {
               "code": "16",
-              "label_native": "Bundesministerium für Umwelt, Klimaschutz, Naturschutz und nukleare Sicherheit"
+              "label_native": "Bundesministerium für Umwelt, Klimaschutz, Naturschutz und nukleare Sicherheit",
+              "label_en": "Federal Ministry for the Environment, Climate Action, Nature Conservation and Nuclear Safety"
             }
           ]
         },
@@ -2166,7 +2204,8 @@
           "source_rows": [
             {
               "code": "25",
-              "label_native": "Bundesministerium für Wohnen, Stadtentwicklung und Bauwesen"
+              "label_native": "Bundesministerium für Wohnen, Stadtentwicklung und Bauwesen",
+              "label_en": "Federal Ministry for Housing, Urban Development and Building"
             }
           ]
         },
@@ -2183,11 +2222,13 @@
           "source_rows": [
             {
               "code": "23",
-              "label_native": "Bundesministerium für wirtschaftliche Zusammenarbeit und Entwicklung"
+              "label_native": "Bundesministerium für wirtschaftliche Zusammenarbeit und Entwicklung",
+              "label_en": "Federal Ministry for Economic Cooperation and Development"
             },
             {
               "code": "09",
-              "label_native": "Bundesministerium für Wirtschaft und Energie"
+              "label_native": "Bundesministerium für Wirtschaft und Energie",
+              "label_en": "Federal Ministry for Economic Affairs and Energy"
             }
           ]
         },
@@ -2204,43 +2245,53 @@
           "source_rows": [
             {
               "code": "60",
-              "label_native": "Allgemeine Finanzverwaltung"
+              "label_native": "Allgemeine Finanzverwaltung",
+              "label_en": "General financial administration"
             },
             {
               "code": "32",
-              "label_native": "Bundesschuld"
+              "label_native": "Bundesschuld",
+              "label_en": "Federal debt"
             },
             {
               "code": "08",
-              "label_native": "Bundesministerium der Finanzen"
+              "label_native": "Bundesministerium der Finanzen",
+              "label_en": "Federal Ministry of Finance"
             },
             {
               "code": "05",
-              "label_native": "Auswärtiges Amt"
+              "label_native": "Auswärtiges Amt",
+              "label_en": "Federal Foreign Office"
             },
             {
               "code": "04",
-              "label_native": "Bundeskanzler und Bundeskanzleramt"
+              "label_native": "Bundeskanzler und Bundeskanzleramt",
+              "label_en": "Federal Chancellor and Federal Chancellery"
             },
             {
               "code": "02",
-              "label_native": "Deutscher Bundestag"
+              "label_native": "Deutscher Bundestag",
+              "label_en": "German Bundestag"
             },
             {
               "code": "20",
-              "label_native": "Bundesrechnungshof"
+              "label_native": "Bundesrechnungshof",
+              "label_en": "Federal Court of Audit"
             },
             {
               "code": "01",
-              "label_native": "Bundespräsident und Bundespräsidialamt"
+              "label_native": "Bundespräsident und Bundespräsidialamt",
+              "label_en": "Federal President and Office of the Federal President"
             },
             {
               "code": "21",
-              "label_native": "Die Bundesbeauftragte für den Datenschutz und die Informationsfreiheit"
+              "label_native": "Die Bundesbeauftragte für den Datenschutz und die Informationsfreiheit",
+              "label_en": "Federal Commissioner for Data Protection and Freedom of Information"
             },
             {
               "code": "03",
-              "label_native": "Bundesrat"
+              "label_native": "Bundesrat",
+              "label_en": "Federal Council"
             }
           ]
         },
@@ -2652,7 +2703,22 @@
             "social_security": null
           }
         }
-      ]
+      ],
+      "level_coverage": "unavailable",
+      "public_data": {
+        "detail_status": "harmonised",
+        "level_status": "national_bridge",
+        "note_cs": "Ekonomická skladba je harmonizovaná; funkční členění podle úrovní vlády je nutné doplnit z německých tabulek.",
+        "note_en": "The economic breakdown is harmonised; functional spending by government level needs a German-data bridge.",
+        "next_step_cs": "Napojit dopravu v GENESIS na spolkovou, zemskou a místní úroveň.",
+        "next_step_en": "Connect GENESIS transport data to federal, state and local government levels.",
+        "sources": [
+          {
+            "title": "Destatis GENESIS · výdaje podle COFOG",
+            "url": "https://genesis.destatis.de/datenbank/online/statistic/81000/table/81000-0413"
+          }
+        ]
+      }
     },
     "health": {
       "currency": "EUR",
@@ -2680,10 +2746,701 @@
       "bed_year": 2024,
       "bed_status": ""
     },
-    "providers": null,
-    "municipalities": null,
-    "public_entities": null,
-    "demography": null
+    "providers": {
+      "coverage": "destatis_hospital_directory",
+      "facility_count": 1841,
+      "provider_count": null,
+      "source": {
+        "title": "Destatis · Verzeichnis der Krankenhäuser 2024",
+        "url": "https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Gesundheit/Krankenhauser/Publikationen/Downloads-Krankenhaeuser/krankenhausverzeichnis-3500100247005.html",
+        "location": "XLSX hospital directory; institution, address, ownership, beds and departments; 2024 reference year",
+        "update_frequency": "annual"
+      },
+      "payments": {
+        "coverage": "accounts_not_joined",
+        "note_cs": "Adresář nemocnic je pokryt; účetní výkazy nejsou v tomto souboru jednotně propojeny.",
+        "note_en": "The hospital directory is covered; standardised accounts are not joined in this file."
+      }
+    },
+    "municipalities": {
+      "code": "DEU",
+      "alpha2": "DE",
+      "name_cs": "Německo",
+      "name_en": "Germany",
+      "currency": "EUR",
+      "years": [
+        2025
+      ],
+      "counts": {
+        "2025": 10756
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "10 756 obecních jádrových rozpočtů; očištěné příjmy a výdaje bez financování",
+      "coverage_en": "10,756 municipal core budgets; adjusted receipts and payments excluding financing",
+      "status": "complete",
+      "source": "https://www.regionalstatistik.de/genesis/online?operation=table&code=71717-Z-01",
+      "source_detail": {
+        "publisher": "Statistische Ämter des Bundes und der Länder",
+        "dataset": "Regionaldatenbank table 71717-Z-01",
+        "location": "flat CSV → FAMTGEM; AUSZ001 and EINZ001; administrative associations removed by source-label classification",
+        "period": "2025"
+      },
+      "directory_count": 10756,
+      "missing_dimensions": []
+    },
+    "public_entities": {
+      "period": "2024 (reference date 2024-12-31)",
+      "scope_cs": "Přímé účasti spolku a jeho zvláštních fondů; zpráva uvádí také kvalifikované nepřímé účasti.",
+      "scope_en": "Direct holdings of the Federation and its special funds; the report also identifies qualifying indirect holdings.",
+      "entity_count": 119,
+      "financial_statement_count": 119,
+      "coverage": "federal_holdings_report",
+      "missing_dimensions": [],
+      "source": {
+        "publisher": "Bundesministerium der Finanzen",
+        "dataset": "Beteiligungsbericht des Bundes 2024",
+        "url": "https://www.bundesfinanzministerium.de/Content/DE/Downloads/Broschueren_Bestellservice/beteiligungsbericht-des-bundes-2024.pdf?__blob=publicationFile&v=10",
+        "location": "company profiles and financial indicators; summary chart/table of direct and qualifying indirect federal holdings"
+      }
+    },
+    "demography": {
+      "coverage": "eurostat_baseline_full_age_sex",
+      "projection": "EUROPOP2023 baseline scenario",
+      "reference_date": "1 January",
+      "period": {
+        "from": 2022,
+        "to": 2100
+      },
+      "detail": "data/countries/deu/demography.v1.json",
+      "detail_row_count": 7979,
+      "age_group_count": 101,
+      "years": [
+        {
+          "year": 2025,
+          "total": 85207514,
+          "male": 42018384,
+          "female": 43189130,
+          "age_0_19": 16283715,
+          "age_20_64": 49745126,
+          "age_65_79": 13042372,
+          "age_80_plus": 6136301,
+          "male_by_age": {
+            "age_0_19": 8397295,
+            "age_20_64": 25145490,
+            "age_65_79": 6083974,
+            "age_80_plus": 2391625
+          },
+          "female_by_age": {
+            "age_0_19": 7886420,
+            "age_20_64": 24599636,
+            "age_65_79": 6958398,
+            "age_80_plus": 3744676
+          },
+          "shares_pct": {
+            "age_0_19": 19.1107,
+            "age_20_64": 58.3811,
+            "age_65_79": 15.3066,
+            "age_80_plus": 7.2016
+          },
+          "old_age_dependency_per_100_working_age": 38.5539
+        },
+        {
+          "year": 2026,
+          "total": 85309747,
+          "male": 42105898,
+          "female": 43203849,
+          "age_0_19": 16375481,
+          "age_20_64": 49457588,
+          "age_65_79": 13515889,
+          "age_80_plus": 5960789,
+          "male_by_age": {
+            "age_0_19": 8446639,
+            "age_20_64": 25031780,
+            "age_65_79": 6308986,
+            "age_80_plus": 2318493
+          },
+          "female_by_age": {
+            "age_0_19": 7928842,
+            "age_20_64": 24425808,
+            "age_65_79": 7206903,
+            "age_80_plus": 3642296
+          },
+          "shares_pct": {
+            "age_0_19": 19.1953,
+            "age_20_64": 57.9741,
+            "age_65_79": 15.8433,
+            "age_80_plus": 6.9872
+          },
+          "old_age_dependency_per_100_working_age": 39.3806
+        },
+        {
+          "year": 2027,
+          "total": 85351038,
+          "male": 42156371,
+          "female": 43194667,
+          "age_0_19": 16450911,
+          "age_20_64": 49090827,
+          "age_65_79": 13961667,
+          "age_80_plus": 5847633,
+          "male_by_age": {
+            "age_0_19": 8484610,
+            "age_20_64": 24875561,
+            "age_65_79": 6521567,
+            "age_80_plus": 2274633
+          },
+          "female_by_age": {
+            "age_0_19": 7966301,
+            "age_20_64": 24215266,
+            "age_65_79": 7440100,
+            "age_80_plus": 3573000
+          },
+          "shares_pct": {
+            "age_0_19": 19.2744,
+            "age_20_64": 57.5164,
+            "age_65_79": 16.3579,
+            "age_80_plus": 6.8513
+          },
+          "old_age_dependency_per_100_working_age": 40.3523
+        },
+        {
+          "year": 2028,
+          "total": 85324918,
+          "male": 42166901,
+          "female": 43158017,
+          "age_0_19": 16487828,
+          "age_20_64": 48680832,
+          "age_65_79": 14345336,
+          "age_80_plus": 5810922,
+          "male_by_age": {
+            "age_0_19": 8501938,
+            "age_20_64": 24691624,
+            "age_65_79": 6708810,
+            "age_80_plus": 2264529
+          },
+          "female_by_age": {
+            "age_0_19": 7985890,
+            "age_20_64": 23989208,
+            "age_65_79": 7636526,
+            "age_80_plus": 3546393
+          },
+          "shares_pct": {
+            "age_0_19": 19.3236,
+            "age_20_64": 57.0535,
+            "age_65_79": 16.8126,
+            "age_80_plus": 6.8103
+          },
+          "old_age_dependency_per_100_working_age": 41.4049
+        },
+        {
+          "year": 2029,
+          "total": 85304262,
+          "male": 42178733,
+          "female": 43125529,
+          "age_0_19": 16515984,
+          "age_20_64": 48248218,
+          "age_65_79": 14730078,
+          "age_80_plus": 5809982,
+          "male_by_age": {
+            "age_0_19": 8516053,
+            "age_20_64": 24492897,
+            "age_65_79": 6899046,
+            "age_80_plus": 2270737
+          },
+          "female_by_age": {
+            "age_0_19": 7999931,
+            "age_20_64": 23755321,
+            "age_65_79": 7831032,
+            "age_80_plus": 3539245
+          },
+          "shares_pct": {
+            "age_0_19": 19.3613,
+            "age_20_64": 56.5601,
+            "age_65_79": 17.2677,
+            "age_80_plus": 6.8109
+          },
+          "old_age_dependency_per_100_working_age": 42.5716
+        },
+        {
+          "year": 2030,
+          "total": 85284256,
+          "male": 42189515,
+          "female": 43094741,
+          "age_0_19": 16560008,
+          "age_20_64": 47791925,
+          "age_65_79": 15065574,
+          "age_80_plus": 5866749,
+          "male_by_age": {
+            "age_0_19": 8537884,
+            "age_20_64": 24281467,
+            "age_65_79": 7069697,
+            "age_80_plus": 2300467
+          },
+          "female_by_age": {
+            "age_0_19": 8022124,
+            "age_20_64": 23510458,
+            "age_65_79": 7995877,
+            "age_80_plus": 3566282
+          },
+          "shares_pct": {
+            "age_0_19": 19.4174,
+            "age_20_64": 56.0384,
+            "age_65_79": 17.6651,
+            "age_80_plus": 6.8791
+          },
+          "old_age_dependency_per_100_working_age": 43.7989
+        },
+        {
+          "year": 2031,
+          "total": 85263378,
+          "male": 42198553,
+          "female": 43064825,
+          "age_0_19": 16583191,
+          "age_20_64": 47380996,
+          "age_65_79": 15354356,
+          "age_80_plus": 5944835,
+          "male_by_age": {
+            "age_0_19": 8549989,
+            "age_20_64": 24090599,
+            "age_65_79": 7220589,
+            "age_80_plus": 2337376
+          },
+          "female_by_age": {
+            "age_0_19": 8033202,
+            "age_20_64": 23290397,
+            "age_65_79": 8133767,
+            "age_80_plus": 3607459
+          },
+          "shares_pct": {
+            "age_0_19": 19.4494,
+            "age_20_64": 55.5702,
+            "age_65_79": 18.0081,
+            "age_80_plus": 6.9723
+          },
+          "old_age_dependency_per_100_working_age": 44.953
+        },
+        {
+          "year": 2032,
+          "total": 85242159,
+          "male": 42206082,
+          "female": 43036077,
+          "age_0_19": 16616444,
+          "age_20_64": 46963822,
+          "age_65_79": 15640513,
+          "age_80_plus": 6021380,
+          "male_by_age": {
+            "age_0_19": 8567278,
+            "age_20_64": 23896856,
+            "age_65_79": 7369605,
+            "age_80_plus": 2372343
+          },
+          "female_by_age": {
+            "age_0_19": 8049166,
+            "age_20_64": 23066966,
+            "age_65_79": 8270908,
+            "age_80_plus": 3649037
+          },
+          "shares_pct": {
+            "age_0_19": 19.4932,
+            "age_20_64": 55.0946,
+            "age_65_79": 18.3483,
+            "age_80_plus": 7.0639
+          },
+          "old_age_dependency_per_100_working_age": 46.1246
+        },
+        {
+          "year": 2033,
+          "total": 85221140,
+          "male": 42212191,
+          "female": 43008949,
+          "age_0_19": 16625654,
+          "age_20_64": 46602888,
+          "age_65_79": 15881011,
+          "age_80_plus": 6111587,
+          "male_by_age": {
+            "age_0_19": 8571929,
+            "age_20_64": 23731938,
+            "age_65_79": 7495697,
+            "age_80_plus": 2412627
+          },
+          "female_by_age": {
+            "age_0_19": 8053725,
+            "age_20_64": 22870950,
+            "age_65_79": 8385314,
+            "age_80_plus": 3698960
+          },
+          "shares_pct": {
+            "age_0_19": 19.5088,
+            "age_20_64": 54.6847,
+            "age_65_79": 18.6351,
+            "age_80_plus": 7.1714
+          },
+          "old_age_dependency_per_100_working_age": 47.1915
+        },
+        {
+          "year": 2034,
+          "total": 85200309,
+          "male": 42217050,
+          "female": 42983259,
+          "age_0_19": 16623748,
+          "age_20_64": 46282545,
+          "age_65_79": 16091781,
+          "age_80_plus": 6202235,
+          "male_by_age": {
+            "age_0_19": 8571031,
+            "age_20_64": 23586722,
+            "age_65_79": 7606677,
+            "age_80_plus": 2452620
+          },
+          "female_by_age": {
+            "age_0_19": 8052717,
+            "age_20_64": 22695823,
+            "age_65_79": 8485104,
+            "age_80_plus": 3749615
+          },
+          "shares_pct": {
+            "age_0_19": 19.5114,
+            "age_20_64": 54.322,
+            "age_65_79": 18.887,
+            "age_80_plus": 7.2796
+          },
+          "old_age_dependency_per_100_working_age": 48.1694
+        },
+        {
+          "year": 2035,
+          "total": 85216229,
+          "male": 42234024,
+          "female": 42982205,
+          "age_0_19": 16593278,
+          "age_20_64": 46073050,
+          "age_65_79": 16231759,
+          "age_80_plus": 6318142,
+          "male_by_age": {
+            "age_0_19": 8555930,
+            "age_20_64": 23493444,
+            "age_65_79": 7680677,
+            "age_80_plus": 2503973
+          },
+          "female_by_age": {
+            "age_0_19": 8037348,
+            "age_20_64": 22579606,
+            "age_65_79": 8551082,
+            "age_80_plus": 3814169
+          },
+          "shares_pct": {
+            "age_0_19": 19.472,
+            "age_20_64": 54.0661,
+            "age_65_79": 19.0477,
+            "age_80_plus": 7.4142
+          },
+          "old_age_dependency_per_100_working_age": 48.9438
+        },
+        {
+          "year": 2036,
+          "total": 85222956,
+          "male": 42245349,
+          "female": 42977607,
+          "age_0_19": 16542541,
+          "age_20_64": 45952528,
+          "age_65_79": 16280454,
+          "age_80_plus": 6447433,
+          "male_by_age": {
+            "age_0_19": 8530174,
+            "age_20_64": 23446778,
+            "age_65_79": 7705136,
+            "age_80_plus": 2563261
+          },
+          "female_by_age": {
+            "age_0_19": 8012367,
+            "age_20_64": 22505750,
+            "age_65_79": 8575318,
+            "age_80_plus": 3884172
+          },
+          "shares_pct": {
+            "age_0_19": 19.4109,
+            "age_20_64": 53.9204,
+            "age_65_79": 19.1034,
+            "age_80_plus": 7.5654
+          },
+          "old_age_dependency_per_100_working_age": 49.4595
+        },
+        {
+          "year": 2037,
+          "total": 85222134,
+          "male": 42252148,
+          "female": 42969986,
+          "age_0_19": 16455939,
+          "age_20_64": 45897601,
+          "age_65_79": 16269187,
+          "age_80_plus": 6599407,
+          "male_by_age": {
+            "age_0_19": 8487477,
+            "age_20_64": 23432162,
+            "age_65_79": 7698956,
+            "age_80_plus": 2633553
+          },
+          "female_by_age": {
+            "age_0_19": 7968462,
+            "age_20_64": 22465439,
+            "age_65_79": 8570231,
+            "age_80_plus": 3965854
+          },
+          "shares_pct": {
+            "age_0_19": 19.3095,
+            "age_20_64": 53.8564,
+            "age_65_79": 19.0903,
+            "age_80_plus": 7.7438
+          },
+          "old_age_dependency_per_100_working_age": 49.8252
+        },
+        {
+          "year": 2038,
+          "total": 85214796,
+          "male": 42255209,
+          "female": 42959587,
+          "age_0_19": 16367810,
+          "age_20_64": 45929832,
+          "age_65_79": 16147058,
+          "age_80_plus": 6770096,
+          "male_by_age": {
+            "age_0_19": 8443165,
+            "age_20_64": 23462426,
+            "age_65_79": 7637213,
+            "age_80_plus": 2712405
+          },
+          "female_by_age": {
+            "age_0_19": 7924645,
+            "age_20_64": 22467406,
+            "age_65_79": 8509845,
+            "age_80_plus": 4057691
+          },
+          "shares_pct": {
+            "age_0_19": 19.2077,
+            "age_20_64": 53.8989,
+            "age_65_79": 18.9487,
+            "age_80_plus": 7.9447
+          },
+          "old_age_dependency_per_100_working_age": 49.896
+        },
+        {
+          "year": 2039,
+          "total": 85201421,
+          "male": 42255942,
+          "female": 42945479,
+          "age_0_19": 16278570,
+          "age_20_64": 46029543,
+          "age_65_79": 15932835,
+          "age_80_plus": 6960473,
+          "male_by_age": {
+            "age_0_19": 8398837,
+            "age_20_64": 23528112,
+            "age_65_79": 7530939,
+            "age_80_plus": 2798054
+          },
+          "female_by_age": {
+            "age_0_19": 7879733,
+            "age_20_64": 22501431,
+            "age_65_79": 8401896,
+            "age_80_plus": 4162419
+          },
+          "shares_pct": {
+            "age_0_19": 19.106,
+            "age_20_64": 54.0244,
+            "age_65_79": 18.7002,
+            "age_80_plus": 8.1694
+          },
+          "old_age_dependency_per_100_working_age": 49.7361
+        },
+        {
+          "year": 2040,
+          "total": 85183945,
+          "male": 42254209,
+          "female": 42929736,
+          "age_0_19": 16197735,
+          "age_20_64": 46123840,
+          "age_65_79": 15672139,
+          "age_80_plus": 7190231,
+          "male_by_age": {
+            "age_0_19": 8358744,
+            "age_20_64": 23590739,
+            "age_65_79": 7403344,
+            "age_80_plus": 2901382
+          },
+          "female_by_age": {
+            "age_0_19": 7838991,
+            "age_20_64": 22533101,
+            "age_65_79": 8268795,
+            "age_80_plus": 4288849
+          },
+          "shares_pct": {
+            "age_0_19": 19.015,
+            "age_20_64": 54.1462,
+            "age_65_79": 18.398,
+            "age_80_plus": 8.4408
+          },
+          "old_age_dependency_per_100_working_age": 49.5674
+        },
+        {
+          "year": 2041,
+          "total": 85161965,
+          "male": 42250007,
+          "female": 42911958,
+          "age_0_19": 16119631,
+          "age_20_64": 46223614,
+          "age_65_79": 15381502,
+          "age_80_plus": 7437218,
+          "male_by_age": {
+            "age_0_19": 8319227,
+            "age_20_64": 23655318,
+            "age_65_79": 7264093,
+            "age_80_plus": 3011369
+          },
+          "female_by_age": {
+            "age_0_19": 7800404,
+            "age_20_64": 22568296,
+            "age_65_79": 8117409,
+            "age_80_plus": 4425849
+          },
+          "shares_pct": {
+            "age_0_19": 18.9282,
+            "age_20_64": 54.2773,
+            "age_65_79": 18.0615,
+            "age_80_plus": 8.733
+          },
+          "old_age_dependency_per_100_working_age": 49.3659
+        },
+        {
+          "year": 2042,
+          "total": 85135219,
+          "male": 42243451,
+          "female": 42891768,
+          "age_0_19": 16026949,
+          "age_20_64": 46311805,
+          "age_65_79": 15091308,
+          "age_80_plus": 7705157,
+          "male_by_age": {
+            "age_0_19": 8272884,
+            "age_20_64": 23715205,
+            "age_65_79": 7125130,
+            "age_80_plus": 3130232
+          },
+          "female_by_age": {
+            "age_0_19": 7754065,
+            "age_20_64": 22596600,
+            "age_65_79": 7966178,
+            "age_80_plus": 4574925
+          },
+          "shares_pct": {
+            "age_0_19": 18.8253,
+            "age_20_64": 54.3979,
+            "age_65_79": 17.7263,
+            "age_80_plus": 9.0505
+          },
+          "old_age_dependency_per_100_working_age": 49.2239
+        },
+        {
+          "year": 2043,
+          "total": 85104193,
+          "male": 42234754,
+          "female": 42869439,
+          "age_0_19": 15984610,
+          "age_20_64": 46331838,
+          "age_65_79": 14811280,
+          "age_80_plus": 7976465,
+          "male_by_age": {
+            "age_0_19": 8251106,
+            "age_20_64": 23740435,
+            "age_65_79": 6991964,
+            "age_80_plus": 3251249
+          },
+          "female_by_age": {
+            "age_0_19": 7733504,
+            "age_20_64": 22591403,
+            "age_65_79": 7819316,
+            "age_80_plus": 4725216
+          },
+          "shares_pct": {
+            "age_0_19": 18.7824,
+            "age_20_64": 54.4413,
+            "age_65_79": 17.4037,
+            "age_80_plus": 9.3726
+          },
+          "old_age_dependency_per_100_working_age": 49.1838
+        },
+        {
+          "year": 2044,
+          "total": 85069388,
+          "male": 42224195,
+          "female": 42845193,
+          "age_0_19": 15919525,
+          "age_20_64": 46365702,
+          "age_65_79": 14518153,
+          "age_80_plus": 8266008,
+          "male_by_age": {
+            "age_0_19": 8217517,
+            "age_20_64": 23772901,
+            "age_65_79": 6852539,
+            "age_80_plus": 3381238
+          },
+          "female_by_age": {
+            "age_0_19": 7702008,
+            "age_20_64": 22592801,
+            "age_65_79": 7665614,
+            "age_80_plus": 4884770
+          },
+          "shares_pct": {
+            "age_0_19": 18.7136,
+            "age_20_64": 54.5034,
+            "age_65_79": 17.0662,
+            "age_80_plus": 9.7168
+          },
+          "old_age_dependency_per_100_working_age": 49.1401
+        },
+        {
+          "year": 2045,
+          "total": 85031168,
+          "male": 42212074,
+          "female": 42819094,
+          "age_0_19": 15859062,
+          "age_20_64": 46383404,
+          "age_65_79": 14238019,
+          "age_80_plus": 8550683,
+          "male_by_age": {
+            "age_0_19": 8186202,
+            "age_20_64": 23797126,
+            "age_65_79": 6719996,
+            "age_80_plus": 3508750
+          },
+          "female_by_age": {
+            "age_0_19": 7672860,
+            "age_20_64": 22586278,
+            "age_65_79": 7518023,
+            "age_80_plus": 5041933
+          },
+          "shares_pct": {
+            "age_0_19": 18.6509,
+            "age_20_64": 54.5487,
+            "age_65_79": 16.7445,
+            "age_80_plus": 10.0559
+          },
+          "old_age_dependency_per_100_working_age": 49.1312
+        }
+      ],
+      "source": {
+        "publisher": "Eurostat",
+        "dataset": "Population projections in the EU (proj_23np)",
+        "url": "https://ec.europa.eu/eurostat/databrowser/view/proj_23np/default/table",
+        "api_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/proj_23np",
+        "location": "API proj_23np; geo=DE; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100",
+        "period": "2022–2100"
+      }
+    }
   },
   "sources": [
     {

@@ -104,7 +104,7 @@ const countries = source.countries.map(country => {
         previous: round(previous / totals.previous * 100),
         current: round(current / totals.current * 100),
       },
-      source_rows: rows.map(row => ({code: row.code, label_native: row.label_native})),
+      source_rows: rows.map(row => ({code: row.code, label_native: row.label_native, label_en: row.label_en})),
     };
   });
   for (const period of ["previous", "current"]) {
