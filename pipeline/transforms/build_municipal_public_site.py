@@ -76,7 +76,7 @@ def build_directory(data: dict) -> None:
         "url": PUBLIC_ORIGIN + "/cz/obce/", "inLanguage": "cs", "temporalCoverage": "2010/2025", "spatialCoverage": "CZ",
         "distribution": {"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": PUBLIC_ORIGIN + "/data/municipal-history-directory.v1.json"},
     }
-    page_head = head('Rozpočty měst a obcí ČR 2010–2025 — příjmy, výdaje a účty', 'Vyhledávání a srovnání rozpočtů všech 6 254 českých měst a obcí: příjmy, výdaje, výsledek, stav účtů a výdaje na obyvatele.', '/cz/obce/', 2, schema).replace('cz-budget.css"', 'cz-budget.css?v=20260823-municipal-ux"')
+    page_head = head('Rozpočty měst a obcí ČR 2010–2025 — příjmy, výdaje a účty', 'Vyhledávání a srovnání rozpočtů všech 6 254 českých měst a obcí: příjmy, výdaje, výsledek, stav účtů a výdaje na obyvatele.', '/cz/obce/', 2, schema).replace('cz-budget.css"', 'cz-budget.css?v=20260823-municipal-ux2"')
     initial = "\n".join(card(entity) for entity in municipalities[:48])
     options = "".join(f'<option value="{esc(region)}">{esc(region)}</option>' for region in regions)
     output = WEB / "cz/obce/index.html"
