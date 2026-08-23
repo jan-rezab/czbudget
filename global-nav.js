@@ -1,7 +1,7 @@
 (() => {
   const scriptUrl = document.currentScript?.src || new URL("global-nav.js", location.href).href;
   const assetRoot = new URL(".", scriptUrl).href;
-  if (!document.querySelector("link[data-portal-ui]")) { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = `${assetRoot}portal-ui.css?v=20260823`; styles.dataset.portalUi = "true"; document.head.append(styles); }
+  if (!document.querySelector("link[data-portal-ui]")) { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = `${assetRoot}portal-ui.css?v=20260823-compare-align`; styles.dataset.portalUi = "true"; document.head.append(styles); }
   if (!document.querySelector("script[data-portal-ui]")) { const script = document.createElement("script"); script.src = `${assetRoot}portal-ui.js?v=20260823`; script.defer = true; script.dataset.portalUi = "true"; document.head.append(script); }
   const HEADER_TAG = "psd-site-header";
   const countries = [
