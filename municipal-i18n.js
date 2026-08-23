@@ -1,7 +1,8 @@
 (() => {
   const params = new URLSearchParams(location.search);
   const requested = params.get("lang");
-  const lang = requested === "en" || requested === "cs" ? requested : (localStorage.getItem("psd-lang") || "cs");
+  const routeDefault = location.pathname.includes("/cz/municipalities/") ? "en" : "cs";
+  const lang = requested === "en" || requested === "cs" ? requested : (localStorage.getItem("psd-lang") || routeDefault);
   localStorage.setItem("psd-lang", lang);
   document.documentElement.lang = lang;
 
@@ -10,7 +11,7 @@
     next.searchParams.set("lang", code);
     return `${next.pathname}${next.search}${next.hash}`;
   };
-  const root = location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/")
+  const root = location.pathname.includes("/cz/municipalities/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/")
     ? (location.pathname.split("/").filter(Boolean).length > 2 ? "../../../" : "../../")
     : "../../";
   if (!document.querySelector('link[href*="section-rail"]')) {

@@ -26,11 +26,11 @@ Potom otevřete <http://localhost:3000/>.
 - `styles-v2.css` — vizuální systém homepage a detailů zemí
 - `BRAND.md` a `brand-preview.html` — pravidla značky, paleta a referenční list
   (interní reference, nenasazuje se do produkčního obrazu)
-- `cz/obce/` a `cz/kraje/` — filtrovatelné české územní benchmarky
-- `cz/obce/<slug>/` a `cz/kraje/<slug>/` — indexovatelné detailní profily
+- `cz/municipalities/` a `cz/kraje/` — filtrovatelné české územní benchmarky
+- `cz/municipalities/<slug>/` a `cz/kraje/<slug>/` — indexovatelné detailní profily
 - `data/entities/<ico>.json` — strojově čitelný detail účetní jednotky
 - `data/municipal-history/<ico>.json` — roční snapshoty rozpočtu a stavu účtů každé současné obce za období 2010–2025
-- `cz-obce.html` — zpětně kompatibilní přesměrování na `cz/obce/`
+- `cz-obce.html` — zpětně kompatibilní přesměrování na `cz/municipalities/`
 - `cesky-rozpocet.html` a `cesko.html` — připravené české tematické vrstvy
 - `lib/data/sovereign-benchmark.v1.json` — harmonizované fiskální řady
 - `data/catalog.v1.json` — katalog národních zdrojů a rozpočtových specifik

@@ -21,7 +21,7 @@
     const path = location.pathname;
     const page = path.split("/").pop() || "index.html";
     if (path.includes("/deep-dives/")) return "deep-dives";
-    if (path.includes("/municipalities/") || path.includes("/cz/mesta/") || path.includes("/cz/obce/") || path.includes("/cz/kraje/") || ["municipalities.html", "eu-capitals.html", "cz-obce.html"].includes(page)) return "cities";
+    if (path.includes("/municipalities/") || path.includes("/cz/mesta/") || path.includes("/cz/municipalities/") || path.includes("/cz/kraje/") || ["municipalities.html", "eu-capitals.html", "cz-obce.html"].includes(page)) return "cities";
     if (["country.html", "cesky-rozpocet.html", "cesko.html"].includes(page)) return "country";
     if (page === "comparison.html") return "compare";
     if (page === "methodology.html") return "method";

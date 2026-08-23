@@ -30,7 +30,7 @@
       const count=state.data?.summary?.municipalities?.entity_count||6254;
       readout.innerHTML=`<img src="${assetRoot}assets/flags/cz.svg" alt=""><span><strong>${english()?"Czechia":"Česko"}</strong><small>${integer(count)} ${english()?"entities":"jednotek"} · 2025</small></span><b aria-hidden="true">⌄</b>`;
     }
-    document.querySelector('[data-destination="directory"]')?.setAttribute("href",`${assetRoot}cz/obce/?lang=${state.lang}`);
+    document.querySelector('[data-destination="directory"]')?.setAttribute("href",`${assetRoot}cz/municipalities/?lang=${state.lang}`);
     document.querySelector('[data-destination="cities"]')?.setAttribute("href",`${assetRoot}cz/mesta/?lang=${state.lang}`);
     document.querySelector('[data-destination="prague"]')?.setAttribute("href",`${assetRoot}eu-capitals.html?lang=${state.lang}&city=prague-cz#city-detail`);
     if(state.data)renderInsights();

@@ -31,6 +31,7 @@ const english = params.get("lang") === "en" || localStorage.getItem("psd-lang") 
 const locale = english ? "en-GB" : "cs-CZ";
 const decimal = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
 const integer = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
+const municipalityHref = (path) => path.replace("/cz/obce/", "/cz/municipalities/");
 
 const amount = (value) => {
   if (!Number.isFinite(value)) return "—";
@@ -71,7 +72,7 @@ const bandFor = (population) => peerBands.find((band) => population <= band.max)
 
 const card = (entity) => {
   const values = metric(entity);
-  const href = `${entity.seo.path}${english ? "?lang=en" : ""}`;
+  const href = `${municipalityHref(entity.seo.path)}${english ? "?lang=en" : ""}`;
   const balanceClass = !values ? "" : values.budget_balance >= 0 ? "positive" : "negative";
   const residents = Number.isFinite(values?.population_mid_year) ? `${integer.format(values.population_mid_year)} ${english ? "people" : "obyvatel"}` : "—";
   const peerDelta = Number.isFinite(values?.peer_delta_pct)
@@ -163,7 +164,7 @@ function renderAggregateStory() {
   const share = (group) => decimal.format(group.length / entities.length * 100);
   const countText = (value) => value.toLocaleString(locale);
   const worstCards = worst.map(({ entity, values }, index) => {
-    const href = `${entity.seo.path}${english ? "?lang=en" : ""}`;
+    const href = `${municipalityHref(entity.seo.path)}${english ? "?lang=en" : ""}`;
     return `<li><a href="${escapeHtml(href)}"><span>${index + 1}. ${escapeHtml(entity.short_name)}</span><strong>${amount(values.budget_balance)}</strong></a></li>`;
   }).join("");
   const copy = english ? {

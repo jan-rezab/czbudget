@@ -12,11 +12,20 @@ server {
   add_header Cross-Origin-Opener-Policy "same-origin" always;
   add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
 
+  location ~ ^/cz/obce(?:/(.*))?$ {
+    return 301 /cz/municipalities/$1$is_args$args;
+  }
+
+  location = /cz-obce.html {
+    return 301 /cz/municipalities/$is_args$args;
+  }
+
   location / {
     sub_filter_once off;
     sub_filter '<head>' '<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>';
     sub_filter 'cz-budget.css"' 'cz-budget.css?v=20260823-municipal-ux2"';
-    sub_filter 'municipal-i18n.js"' 'municipal-i18n.js?v=20260823-municipal-ux"';
+    sub_filter 'municipal-i18n.js"' 'municipal-i18n.js?v=20260823-english-route"';
+    sub_filter 'cz-municipal-directory.js"' 'cz-municipal-directory.js?v=20260823-english-route"';
     sub_filter 'cz-history.js"' 'cz-history.js?v=20260823-municipal-ux"';
     try_files $uri $uri/ $uri/index.html =404;
   }

@@ -67,7 +67,7 @@ def number(value: float | None) -> str:
 
 
 def entity_path(entity: dict, level: str) -> str:
-    group = "obce" if level == "municipality" else "kraje"
+    group = "municipalities" if level == "municipality" else "kraje"
     return f"/cz/{group}/{entity['seo']['slug']}/"
 
 
@@ -79,10 +79,11 @@ def percentile(entity: dict, cohort: list[dict], metric: str, section: str) -> i
     return round((below + 0.5 * equal) / len(values) * 100)
 
 
-def head(title: str, description: str, canonical_path: str, depth: int, schema: dict) -> str:
+def head(title: str, description: str, canonical_path: str, depth: int, schema: dict, language: str = "cs") -> str:
     root = "../" * depth
     canonical = PUBLIC_ORIGIN + canonical_path
     schema_json = json.dumps(schema, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    og_locale = "en_GB" if language == "en" else "cs_CZ"
     return f"""<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
   <link rel="stylesheet" href="{root}site-header.css?v=20260822-component" data-psd-site-header>
   <script src="{root}global-nav.js?v=20260822-component" defer></script>
@@ -95,7 +96,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
   <link rel="alternate" hreflang="cs" href="{esc(canonical)}?lang=cs">
   <link rel="alternate" hreflang="en" href="{esc(canonical)}?lang=en">
   <meta property="og:type" content="website">
-  <meta property="og:locale" content="cs_CZ">
+  <meta property="og:locale" content="{og_locale}">
   <meta property="og:site_name" content="Public Spending Data">
   <meta property="og:title" content="{esc(title)}">
   <meta property="og:description" content="{esc(description)}">
@@ -116,7 +117,7 @@ def header(root: str, active: str = "czech") -> str:
 
 
 def footer(root: str) -> str:
-    return f"""<footer><div><span>Public Spending Data</span><small>České územní rozpočty</small></div><p>Zdroj: Monitor státní pokladny MF ČR · stav k 31. 12. 2025</p><a href="{root}cz/obce/">Obce a kraje ↑</a></footer>"""
+    return f"""<footer><div><span>Public Spending Data</span><small>České územní rozpočty</small></div><p>Zdroj: Monitor státní pokladny MF ČR · stav k 31. 12. 2025</p><a href="{root}cz/municipalities/">Obce a kraje ↑</a></footer>"""
 
 
 def prepare_entities(data: dict) -> list[dict]:
@@ -132,7 +133,7 @@ def prepare_entities(data: dict) -> list[dict]:
         used.add(slug)
         entity["seo"] = {
             "slug": slug,
-            "municipality_path": f"/cz/obce/{slug}/" if "municipality" in entity["administrative_levels"] else None,
+            "municipality_path": f"/cz/municipalities/{slug}/" if "municipality" in entity["administrative_levels"] else None,
             "region_path": f"/cz/kraje/{slug}/" if "region" in entity["administrative_levels"] else None,
         }
     return entities
@@ -158,7 +159,7 @@ def build_listing(data: dict, entities: list[dict], level: str) -> None:
     noun = "krajů" if is_region else "statutárních měst"
     title = ("Rozpočty krajů ČR 2025" if is_region else "Rozpočty obcí a měst ČR 2025") + " — Public Spending Data"
     description = f"Srovnání příjmů, výdajů, salda a peněz na účtech {len(cohort)} {noun}. Filtry, benchmarky a detailní rozpočtové profily."
-    canonical_path = "/cz/kraje/" if is_region else "/cz/obce/"
+    canonical_path = "/cz/kraje/" if is_region else "/cz/municipalities/"
     totals = {key: sum(e["amounts"][key] for e in cohort) for key in ("revenue_actual", "expense_actual", "cash_current")}
     schema = {
         "@context": "https://schema.org",
@@ -176,7 +177,7 @@ def build_listing(data: dict, entities: list[dict], level: str) -> None:
     cards = "\n".join(listing_card(entity, level) for entity in cohort)
     active_obce = " active" if not is_region else ""
     active_kraje = " active" if is_region else ""
-    output = WEB / ("cz/kraje/index.html" if is_region else "cz/obce/index.html")
+    output = WEB / ("cz/kraje/index.html" if is_region else "cz/municipalities/index.html")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(f"""<!doctype html>
 <html lang="cs">
@@ -187,7 +188,7 @@ def build_listing(data: dict, entities: list[dict], level: str) -> None:
   <nav class="breadcrumbs" aria-label="Drobečková navigace"><a href="../../index.html">Domů</a><span>›</span><span>Česko</span><span>›</span><strong>{'Kraje' if is_region else 'Obce a města'}</strong></nav>
   <section class="cz-hero compact-cz-hero">
     <div><span class="eyebrow"><i class="live-dot"></i>České územní rozpočty · skutečnost 2025</span><h1>{'Kraje' if is_region else 'Obce a města'}<br><em>pod lupou.</em></h1><p>{description}</p></div>
-    <div class="cohort-switch" aria-label="Úroveň samosprávy"><a class="{active_obce.strip()}" href="../obce/">Města <b>27</b></a><a class="{active_kraje.strip()}" href="../kraje/">Kraje <b>14</b></a></div>
+    <div class="cohort-switch" aria-label="Úroveň samosprávy"><a class="{active_obce.strip()}" href="../municipalities/">Města <b>27</b></a><a class="{active_kraje.strip()}" href="../kraje/">Kraje <b>14</b></a></div>
   </section>
   <section class="cz-totals" aria-label="Souhrn kohorty"><article><span>Příjmy</span><strong>{amount(totals['revenue_actual'])}</strong><small>{len(cohort)} účetních jednotek</small></article><article><span>Výdaje</span><strong>{amount(totals['expense_actual'])}</strong><small>{pct(totals['expense_actual']/totals['revenue_actual'])} příjmů</small></article><article><span>Peníze a vklady</span><strong>{amount(totals['cash_current'])}</strong><small>{pct(totals['cash_current']/totals['expense_actual'])} ročních výdajů</small></article></section>
   <section class="directory" id="subjekty">
@@ -225,7 +226,7 @@ def mix_row(label: str, value: float, total: float, color: str) -> str:
 def build_detail(data: dict, entity: dict, entities: list[dict], level: str) -> None:
     a, r = entity["amounts"], entity["ratios"]
     is_region = level == "region"
-    group = "kraje" if is_region else "obce"
+    group = "kraje" if is_region else "municipalities"
     label = "kraj" if is_region else "město"
     cohort = [e for e in entities if level in e["administrative_levels"]]
     cohort.sort(key=lambda e: e["short_name"])
@@ -317,7 +318,7 @@ def build_machine_data(data: dict, entities: list[dict]) -> None:
 
 
 def build_sitemap(entities: list[dict]) -> None:
-    paths = ["/", "/eu-capitals.html", "/cz/obce/", "/cz/kraje/"]
+    paths = ["/", "/eu-capitals.html", "/cz/municipalities/", "/cz/kraje/"]
     for entity in entities:
         for level in entity["administrative_levels"]:
             paths.append(entity_path(entity, level))
