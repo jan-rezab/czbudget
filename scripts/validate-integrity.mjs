@@ -239,6 +239,33 @@ assert(close(publicFinancial.reduce((sum, item) => sum + item.revenue_mczk, 0), 
 assert(close(publicFinancial.reduce((sum, item) => sum + item.net_result_mczk, 0), publicEntities.summary.net_result_sum_mczk, 0.011), "Public-entity result summary mismatch");
 warnings.push(`${publicEntities.entities.length - publicFinancial.length} of ${publicEntities.entities.length} public entities have no comparable 2024 financial statement; values remain null, not zero.`);
 
+const publicEntityCoverage = await json("data/public-entity-coverage.v1.json");
+const publicEntityAggregates = await json("data/public-entity-aggregates.v1.json");
+const publicEntityDirectory = await json("data/public-entity-directory/manifest.v1.json");
+const expectedPublicEntityCounts = {CZE:18238,POL:406,DEU:124,GBR:2267,FRA:87,USA:96984,CHE:22,SWE:38,DNK:24,UKR:3009};
+assert(publicEntityCoverage.contract === "public-entity-coverage.v1", "Unexpected public-entity coverage contract");
+assert(publicEntityAggregates.contract === "public-entity-aggregates.v1" && publicEntityAggregates.observations.length === 355, "Unexpected public-entity aggregate contract");
+assert(publicEntityDirectory.contract === "public-entity-directory-manifest.v1" && publicEntityDirectory.total_record_count === 121199, "Unexpected public-entity directory total");
+for (const [code, expected] of Object.entries(expectedPublicEntityCounts)) {
+  const country = publicEntityDirectory.countries.find((item) => item.country_code === code);
+  const coverage = publicEntityCoverage.countries[code];
+  assert(country?.record_count === expected && coverage?.registry_record_count === expected, `${code}: public-entity registry count mismatch`);
+  const shard = await json(`data/public-entity-directory/${code}.v1.json`);
+  assert(shard.country_code === code && shard.records.length === expected && shard.fields.length === 27, `${code}: invalid browser directory shard`);
+  const idIndex = shard.fields.indexOf("record_id"), nameIndex = shard.fields.indexOf("name");
+  assert(new Set(shard.records.map((row) => row[idIndex])).size === expected, `${code}: duplicate source-scoped record IDs`);
+  assert(shard.records.every((row) => row.length === shard.fields.length && row[nameIndex] && !/^\d+$/.test(row[nameIndex])), `${code}: malformed, unnamed or numeric-heading registry row`);
+  for (const field of shard.dictionary_fields) {
+    const index = shard.fields.indexOf(field), dictionary = shard.dictionaries[field];
+    assert(index >= 0 && Array.isArray(dictionary) && shard.records.every((row) => Number.isInteger(row[index]) && row[index] >= 0 && row[index] < dictionary.length), `${code}/${field}: invalid dictionary reference`);
+  }
+}
+assert(publicEntityCoverage.countries.POL.broad_entity_count === 112145, "Polish broad public-sector count mismatch");
+assert(publicEntityCoverage.countries.DEU.broad_entity_count === 20658, "German all-level public-enterprise count mismatch");
+assert(publicEntityCoverage.countries.CHE.broad_entity_count === 5152, "Swiss all-level public-sector count mismatch");
+assert(publicEntityCoverage.countries.SWE.broad_entity_count === 3204, "Swedish all-level public-enterprise count mismatch");
+warnings.push("Cross-country public-entity counts remain perimeter-sensitive and are not an efficiency ranking.");
+
 const enterprises = await json("data/cz-state-enterprises-2024.json");
 assert(enterprises.entities.length === enterprises.summary.entity_count, "State-enterprise summary count mismatch");
 assert(new Set(enterprises.entities.map((item) => item.ico)).size === enterprises.entities.length, "Duplicate state-enterprise ICOs");
@@ -357,7 +384,7 @@ const report = {
     public_entities: entityById.size,
     european_capitals: capitals.cities.length,
     sovereign_countries: sovereign.series.length,
-    public_entity_registry: publicEntities.entities.length,
+    public_entity_registry: publicEntityDirectory.total_record_count,
     public_entity_financial_statements: publicFinancial.length,
     state_enterprises: enterprises.entities.length,
     state_budget_chapters: spending.chapters.length,

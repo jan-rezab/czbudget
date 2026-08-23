@@ -46,7 +46,8 @@ const transport = read("data/transport-budget-detail.v1.json");
 const health = read("data/country-health.v1.json");
 const providers = read("data/country-provider-networks.v1.json");
 const municipalities = read("data/international-municipalities.v1.json");
-const publicEntities = read("data/country-public-entities.v1.json");
+const publicEntityCoverage = read("data/public-entity-coverage.v1.json");
+const publicEntityDirectory = read("data/public-entity-directory/manifest.v1.json");
 const demography = read("data/country-demography.v1.json");
 
 const volumeBundles = [
@@ -105,7 +106,9 @@ const manifest = {
     health: "data/country-health.v1.json",
     providers: "data/country-provider-networks.v1.json",
     municipalities: "data/international-municipalities.v1.json",
-    public_entities: "data/country-public-entities.v1.json",
+    public_entities: "data/public-entity-coverage.v1.json",
+    public_entity_directory: "data/public-entity-directory/manifest.v1.json",
+    public_entity_aggregates: "data/public-entity-aggregates.v1.json",
     demography: "data/country-demography.v1.json",
   },
   warehouse_bundles: warehouseBundles.map((bundle) => ({
@@ -130,7 +133,8 @@ for (const code of countryCodes) {
   const functionProfile = functions.countries[code];
   const transportProfile = transport.countries[code];
   const municipalityRows = municipalities.entities.filter((entity) => entity.country === code);
-  const publicEntityProfile = publicEntities.countries[code] || null;
+  const publicEntityProfile = publicEntityCoverage.countries[code] || null;
+  const publicEntityRows = publicEntityDirectory.countries.find((country) => country.country_code === code) || null;
   const demographyProfile = demography.countries[code] || null;
   const providerLoaded = Boolean(provider && provider.coverage !== "source_adapter_pending");
   const providerSummary = providerLoaded ? Object.fromEntries(Object.entries(provider).filter(([key]) => key !== "facilities")) : null;
@@ -152,7 +156,7 @@ for (const code of countryCodes) {
     health: { ...status(Boolean(healthProfile), healthProfile ? `SHA financing profile; ${healthProfile.year}` : "functional expenditure only", healthProfile?.missing_dimensions || (healthProfile ? [] : ["SHA financing and provider split"])) },
     providers: { ...status(providerLoaded, providerLoaded ? `${provider.facility_count ?? "official bulk"} registered provider locations` : provider?.coverage || "not loaded", providerLoaded ? (provider.missing_dimensions || []) : ["facility records"]), facility_count: provider?.facility_count ?? null, coverage_level: provider?.coverage || null },
     municipalities: { ...status(Boolean(municipal), municipal?.coverage_en || "not loaded", municipal?.missing_dimensions || (municipal ? [] : ["entity census", "budget facts"])), entity_count: municipal?.directory_count || 0, fact_count: municipal?.counts?.[municipal?.years?.at(-1)] ?? 0, years: municipal?.years || [], stages: municipal?.stages || [], measures: municipal?.measures || [], coverage_level: municipal?.status || null, directory: municipal ? `data/countries/${countrySlug(code)}/municipalities.v1.json` : null, warehouse: warehouseVolume(code) },
-    public_entities: { ...status(Boolean(publicEntityProfile), publicEntityProfile ? `${publicEntityProfile.entity_count} entities; ${publicEntityProfile.financial_statement_count} with accounts` : "not loaded", publicEntityProfile?.missing_dimensions || (publicEntityProfile ? [] : ["ownership register", "entity accounts"])), entity_count: publicEntityProfile?.entity_count || 0, financial_statement_count: publicEntityProfile?.financial_statement_count || 0, coverage_level: publicEntityProfile?.coverage || null },
+    public_entities: { ...status(Boolean(publicEntityProfile && publicEntityRows), publicEntityProfile ? `${publicEntityRows.record_count} registry rows; ${publicEntityRows.financial_record_count} with economic fields; reference perimeter ${publicEntityProfile.comparison_perimeter}` : "not loaded", publicEntityProfile?.unresolved_layers || (publicEntityProfile ? [] : ["ownership register", "entity accounts"])), entity_count: publicEntityRows?.record_count || 0, represented_entity_count: publicEntityRows?.represented_entity_count || 0, broad_entity_count: publicEntityProfile?.broad_entity_count ?? null, financial_statement_count: publicEntityRows?.financial_record_count || 0, coverage_level: Object.values(publicEntityProfile?.perimeters || {}).some((perimeter) => perimeter.coverage_status === "aggregate_only") ? "aggregate_and_entity_registry" : "entity_registry" },
     demography: { ...status(Boolean(demographyProfile), demographyProfile ? `${demographyProfile.period.from}–${demographyProfile.period.to}; annual age/sex detail plus ${demographyProfile.years.length} common-year aggregates` : "not loaded", demographyProfile ? [] : ["population projection", "annual age structure", "sex breakdown"]), projection: demographyProfile?.projection || null, detail: demographyProfile?.detail || null, detail_row_count: demographyProfile?.detail_row_count || 0 },
   };
   const loadedCount = Object.values(modules).filter((module) => module.status === "loaded").length;
@@ -185,7 +189,7 @@ for (const code of countryCodes) {
       health: healthProfile || null,
       providers: providerSummary ? { ...providerSummary } : null,
       municipalities: municipal || null,
-      public_entities: publicEntityProfile,
+      public_entities: publicEntityProfile && publicEntityRows ? {coverage:publicEntityProfile,directory:publicEntityRows} : null,
       demography: demographyProfile,
     },
     sources: sourceCatalog?.sources || [],

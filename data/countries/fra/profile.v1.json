@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T17:36:03.771Z",
+  "generated_at": "2026-08-23T19:05:11.426Z",
   "country": {
     "country_code": "FRA",
     "name_cs": "Francie",
@@ -148,11 +148,15 @@
     },
     "public_entities": {
       "status": "loaded",
-      "coverage": "87 entities; 87 with accounts",
-      "missing_dimensions": [],
+      "coverage": "87 registry rows; 0 with economic fields; reference perimeter state_majority_controlled_enterprises_including_indirect_subsidiaries",
+      "missing_dimensions": [
+        "The current RECME release reports the complete count and aggregates but does not expose the current entity list as a bulk file."
+      ],
       "entity_count": 87,
-      "financial_statement_count": 87,
-      "coverage_level": "state_shareholder_portfolio_and_combined_accounts"
+      "represented_entity_count": 87,
+      "broad_entity_count": 1897,
+      "financial_statement_count": 0,
+      "coverage_level": "aggregate_and_entity_registry"
     },
     "demography": {
       "status": "loaded",
@@ -3007,18 +3011,69 @@
       "directory_count": 35041
     },
     "public_entities": {
-      "period": "2024 accounts / portfolio at 2025-06-30",
-      "scope_cs": "Portfolio Agence des participations de l'État.",
-      "scope_en": "Agence des participations de l'État portfolio.",
-      "entity_count": 87,
-      "financial_statement_count": 87,
-      "coverage": "state_shareholder_portfolio_and_combined_accounts",
-      "missing_dimensions": [],
-      "source": {
-        "publisher": "Agence des participations de l'État",
-        "dataset": "Rapport d'activité 2024–2025 + Rapport financier 2025 (comptes combinés 2024)",
-        "url": "https://www.economie.gouv.fr/agence-participations-etat/ressources-documentaires/rapports-financiers",
-        "location": "Rapport financier 2025 → comptes combinés 2024; portfolio page → 87 entities and listed/unlisted split"
+      "coverage": {
+        "comparison_perimeter": "state_majority_controlled_enterprises_including_indirect_subsidiaries",
+        "broad_entity_count": 1897,
+        "registry_file": "data/public-entities/FRA.v1.csv.gz",
+        "registry_record_count": 87,
+        "perimeters": {
+          "state_shareholder_portfolio": {
+            "record_count": 87,
+            "represented_entity_count": 87,
+            "financial_record_count": 0
+          },
+          "state_majority_controlled_enterprises_including_indirect_subsidiaries": {
+            "record_count": 0,
+            "represented_entity_count": 1897,
+            "financial_record_count": 0,
+            "coverage_status": "aggregate_only"
+          }
+        },
+        "sources": [
+          {
+            "source_id": "fra_ape_portfolio_2025",
+            "period": "2025-06-30",
+            "publisher": "fra ape portfolio 2025",
+            "url": "https://www.economie.gouv.fr/agence-participations-etat/comprendre-lape/les-entreprises-de-lape",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          }
+        ],
+        "unresolved_layers": [
+          "The current RECME release reports the complete count and aggregates but does not expose the current entity list as a bulk file."
+        ]
+      },
+      "directory": {
+        "country_code": "FRA",
+        "file": "data/public-entity-directory/FRA.v1.json",
+        "bytes": 15161,
+        "record_count": 87,
+        "represented_entity_count": 87,
+        "financial_record_count": 0,
+        "perimeters": {
+          "state_shareholder_portfolio": 87
+        },
+        "entity_classes": {
+          "state_shareholder_portfolio_entity": 87
+        },
+        "diagnostics": {
+          "net_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "operating_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "return_on_assets_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "revenue_per_employee": {
+            "value": null,
+            "record_count": 0
+          }
+        }
       }
     },
     "demography": {

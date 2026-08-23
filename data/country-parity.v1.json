@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-parity.v1",
-  "generated_at": "2026-08-23T17:36:03.771Z",
+  "generated_at": "2026-08-23T19:05:11.426Z",
   "country_count": 10,
   "rules": {
     "native_first": "National classifications, stages, currencies and accounting scopes are retained without coercion.",
@@ -20,7 +20,9 @@
     "health": "data/country-health.v1.json",
     "providers": "data/country-provider-networks.v1.json",
     "municipalities": "data/international-municipalities.v1.json",
-    "public_entities": "data/country-public-entities.v1.json",
+    "public_entities": "data/public-entity-coverage.v1.json",
+    "public_entity_directory": "data/public-entity-directory/manifest.v1.json",
+    "public_entity_aggregates": "data/public-entity-aggregates.v1.json",
     "demography": "data/country-demography.v1.json"
   },
   "warehouse_bundles": [
@@ -187,13 +189,13 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "637 entities; 137 with accounts",
-          "missing_dimensions": [
-            "účetní výkazy pro 500 subjektů / financial statements for 500 entities"
-          ],
-          "entity_count": 637,
-          "financial_statement_count": 137,
-          "coverage_level": "entity_register_and_selected_accounts"
+          "coverage": "18238 registry rows; 134 with economic fields; reference perimeter public_sector_consolidation_units",
+          "missing_dimensions": [],
+          "entity_count": 18238,
+          "represented_entity_count": 18238,
+          "broad_entity_count": 18238,
+          "financial_statement_count": 134,
+          "coverage_level": "entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -348,13 +350,15 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "3009 entities; 0 with accounts",
+          "coverage": "3009 registry rows; 0 with economic fields; reference perimeter state_sector_enterprises_and_majority_companies",
           "missing_dimensions": [
-            "standardizované účetní výkazy / standardised financial statements"
+            "The downloaded state-sector register does not cover the full municipal public-enterprise universe."
           ],
           "entity_count": 3009,
+          "represented_entity_count": 3009,
+          "broad_entity_count": 3009,
           "financial_statement_count": 0,
-          "coverage_level": "state_sector_enterprise_register"
+          "coverage_level": "entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -502,13 +506,15 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "406 entities; 0 with accounts",
+          "coverage": "406 registry rows; 0 with economic fields; reference perimeter public_sector_registered_units_all_levels",
           "missing_dimensions": [
-            "standardizované účetní výkazy / standardised financial statements"
+            "REGON publishes all-level counts by legal category, but no single open entity-level bulk register combining state, regional and municipal units was identified."
           ],
           "entity_count": 406,
+          "represented_entity_count": 406,
+          "broad_entity_count": 112145,
           "financial_statement_count": 0,
-          "coverage_level": "ownership_register"
+          "coverage_level": "aggregate_and_entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -638,11 +644,15 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "119 entities; 119 with accounts",
-          "missing_dimensions": [],
-          "entity_count": 119,
-          "financial_statement_count": 119,
-          "coverage_level": "federal_holdings_report"
+          "coverage": "124 registry rows; 0 with economic fields; reference perimeter active_federal_direct_holding",
+          "missing_dimensions": [
+            "Destatis publishes the all-level universe and aggregates, but the entity-level list was not found as an open bulk download."
+          ],
+          "entity_count": 124,
+          "represented_entity_count": 124,
+          "broad_entity_count": 20658,
+          "financial_statement_count": 0,
+          "coverage_level": "aggregate_and_entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -777,11 +787,13 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "252 entities; 252 with accounts",
+          "coverage": "2267 registry rows; 251 with economic fields; reference perimeter national_accounts_public_sector_classifications",
           "missing_dimensions": [],
-          "entity_count": 252,
-          "financial_statement_count": 252,
-          "coverage_level": "public_bodies_directory"
+          "entity_count": 2267,
+          "represented_entity_count": 2320,
+          "broad_entity_count": null,
+          "financial_statement_count": 251,
+          "coverage_level": "entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -945,11 +957,15 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "87 entities; 87 with accounts",
-          "missing_dimensions": [],
+          "coverage": "87 registry rows; 0 with economic fields; reference perimeter state_majority_controlled_enterprises_including_indirect_subsidiaries",
+          "missing_dimensions": [
+            "The current RECME release reports the complete count and aggregates but does not expose the current entity list as a bulk file."
+          ],
           "entity_count": 87,
-          "financial_statement_count": 87,
-          "coverage_level": "state_shareholder_portfolio_and_combined_accounts"
+          "represented_entity_count": 87,
+          "broad_entity_count": 1897,
+          "financial_statement_count": 0,
+          "coverage_level": "aggregate_and_entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -1079,13 +1095,13 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "167 entities; 38 with accounts",
-          "missing_dimensions": [
-            "samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"
-          ],
-          "entity_count": 167,
-          "financial_statement_count": 38,
-          "coverage_level": "governmentwide_reporting_entities"
+          "coverage": "96984 registry rows; 0 with economic fields; reference perimeter state_and_local_independent_government_units",
+          "missing_dimensions": [],
+          "entity_count": 96984,
+          "represented_entity_count": 96984,
+          "broad_entity_count": null,
+          "financial_statement_count": 0,
+          "coverage_level": "entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -1232,11 +1248,15 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "22 entities; 22 with accounts",
-          "missing_dimensions": [],
+          "coverage": "22 registry rows; 20 with economic fields; reference perimeter public_sector_market_and_nonmarket_units",
+          "missing_dimensions": [
+            "BFS publishes all-level unit and employment totals, but a harmonised open entity-level register of cantonal and municipal enterprises was not identified."
+          ],
           "entity_count": 22,
-          "financial_statement_count": 22,
-          "coverage_level": "federal_enterprises_and_institutions"
+          "represented_entity_count": 22,
+          "broad_entity_count": 5152,
+          "financial_statement_count": 20,
+          "coverage_level": "aggregate_and_entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -1372,11 +1392,15 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "38 entities; 38 with accounts",
-          "missing_dimensions": [],
+          "coverage": "38 registry rows; 38 with economic fields; reference perimeter state_region_and_municipal_owned_entities",
+          "missing_dimensions": [
+            "SCB publishes complete category totals and financial aggregates, but not the underlying entity list as open bulk data."
+          ],
           "entity_count": 38,
+          "represented_entity_count": 38,
+          "broad_entity_count": 3204,
           "financial_statement_count": 38,
-          "coverage_level": "state_owned_company_portfolio"
+          "coverage_level": "aggregate_and_entity_registry"
         },
         "demography": {
           "status": "loaded",
@@ -1526,11 +1550,15 @@
         },
         "public_entities": {
           "status": "loaded",
-          "coverage": "24 entities; 24 with accounts",
-          "missing_dimensions": [],
+          "coverage": "24 registry rows; 0 with economic fields; reference perimeter public_enterprises_all_government_levels",
+          "missing_dimensions": [
+            "The official all-level workbook link was broken at crawl time; only the documented population perimeter is recorded."
+          ],
           "entity_count": 24,
-          "financial_statement_count": 24,
-          "coverage_level": "state_company_portfolio"
+          "represented_entity_count": 24,
+          "broad_entity_count": 800,
+          "financial_statement_count": 0,
+          "coverage_level": "aggregate_and_entity_registry"
         },
         "demography": {
           "status": "loaded",

@@ -1,7 +1,6 @@
 (() => {
   const roots = {
     budget: document.querySelector("#country-budget-map-root"),
-    entities: document.querySelector("#country-public-entities-root"),
     demography: document.querySelector("#country-demography-root"),
   };
   if (!Object.values(roots).every(Boolean)) return;
@@ -12,7 +11,6 @@
     currencyView: "local",
     native: null,
     common: null,
-    entities: null,
     demography: null,
   };
   const copy = {
@@ -78,22 +76,6 @@
       }).join("")}</div><p class="insight-method">${t.classificationNote}</p>`;
   }
 
-  function bilingual(value) {
-    if (!value) return "—";
-    const pieces = value.split(" / ");
-    return pieces.length > 1 ? pieces[state.lang === "en" ? pieces.length - 1 : 0] : value;
-  }
-  function renderEntities() {
-    const t = copy[state.lang], profile = state.entities?.countries[state.code];
-    if (!profile) return;
-    const coverage = profile.entity_count ? profile.financial_statement_count / profile.entity_count * 100 : 0;
-    const comparison = Object.entries(state.entities.countries).map(([code, item]) => ({code, ...item})).sort((a, b) => b.entity_count - a.entity_count);
-    roots.entities.innerHTML = `<div class="detail-heading"><div><span class="kicker">${t.entitiesKicker}</span><h2 id="country-public-entities-title">${t.entitiesTitle}</h2></div><p>${t.entitiesCopy}</p></div>
-      <div class="insight-kpis entity-kpis"><article><span>${t.officialPortfolio}</span><strong>${integer(profile.entity_count)}</strong><small>${t.entities}</small></article><article><span>${t.statements}</span><strong>${integer(profile.financial_statement_count)}</strong><small>${t.accounts}</small></article><article><span>${t.statementCoverage}</span><strong>${number(coverage)}%</strong><small>${profile.financial_statement_count} / ${profile.entity_count}</small></article><article><span>${t.period}</span><strong>${esc(profile.period)}</strong><small>${esc(profile.coverage.replaceAll("_", " "))}</small></article></div>
-      <div class="entity-insight-grid"><article class="entity-scope-card"><span>${t.scope}</span><h3>${esc(profile[`scope_${state.lang}`])}</h3><div class="entity-coverage-track"><i style="width:${coverage}%"></i></div><p>${(profile.missing_dimensions || []).map(bilingual).map(esc).join(" · ") || t.fullRoster}</p><div><b>${profile.records ? t.fullRoster : t.sourceOnly}</b>${profile.records ? `<a href="${esc(profile.records)}">${t.records} ↗</a>` : ""}<a href="${esc(profile.source.url)}" target="_blank" rel="noreferrer">${t.source} ↗</a></div></article>
-      <article class="entity-inventory"><header><span>${t.inventory}</span><small>${t.notRanking}</small></header><div><table><thead><tr><th>ISO</th><th>${t.officialPortfolio}</th><th>${t.statements}</th><th>${t.statementCoverage}</th></tr></thead><tbody>${comparison.map(item => `<tr class="${item.code === state.code ? "selected" : ""}"><td><b>${item.code}</b></td><td>${integer(item.entity_count)}</td><td>${integer(item.financial_statement_count)}</td><td><span>${number(item.entity_count ? item.financial_statement_count / item.entity_count * 100 : 0)}%</span></td></tr>`).join("")}</tbody></table></div></article></div>`;
-  }
-
   function renderDemography() {
     const t = copy[state.lang], profile = state.demography?.countries[state.code];
     if (!profile) return;
@@ -111,7 +93,6 @@
     document.querySelector('[data-insight-nav="entities"]')?.replaceChildren(document.createTextNode(copy[state.lang].navEntities));
     document.querySelector('[data-insight-nav="demography"]')?.replaceChildren(document.createTextNode(copy[state.lang].navDemography));
     if (state.native && state.common) renderBudgetMap();
-    if (state.entities) renderEntities();
     if (state.demography) renderDemography();
   }
   addEventListener("countryprofilechange", event => {
@@ -122,10 +103,10 @@
   });
   Promise.all([
     fetch("data/country-spending-2025-2026.v1.json"), fetch("data/country-spending-comparison.v1.json"),
-    fetch("data/country-public-entities.v1.json"), fetch("data/country-demography.v1.json"),
+    fetch("data/country-demography.v1.json"),
   ]).then(async responses => {
     for (const response of responses) if (!response.ok) throw new Error(response.status);
-    [state.native, state.common, state.entities, state.demography] = await Promise.all(responses.map(response => response.json()));
+    [state.native, state.common, state.demography] = await Promise.all(responses.map(response => response.json()));
     render();
   }).catch(error => console.error("Country insight parity", error));
 })();

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T17:36:03.771Z",
+  "generated_at": "2026-08-23T19:05:11.426Z",
   "country": {
     "country_code": "USA",
     "name_cs": "USA",
@@ -112,13 +112,13 @@
     },
     "public_entities": {
       "status": "loaded",
-      "coverage": "167 entities; 38 with accounts",
-      "missing_dimensions": [
-        "samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"
-      ],
-      "entity_count": 167,
-      "financial_statement_count": 38,
-      "coverage_level": "governmentwide_reporting_entities"
+      "coverage": "96984 registry rows; 0 with economic fields; reference perimeter state_and_local_independent_government_units",
+      "missing_dimensions": [],
+      "entity_count": 96984,
+      "represented_entity_count": 96984,
+      "broad_entity_count": null,
+      "financial_statement_count": 0,
+      "coverage_level": "entity_registry"
     },
     "demography": {
       "status": "loaded",
@@ -4220,20 +4220,100 @@
       "missing_dimensions": []
     },
     "public_entities": {
-      "period": "FY 2024",
-      "scope_cs": "Konsolidační jednotky federální vlády uvedené v příloze A celovládního finančního výkazu.",
-      "scope_en": "Federal consolidation entities listed in Appendix A of the government-wide Financial Report.",
-      "entity_count": 167,
-      "financial_statement_count": 38,
-      "coverage": "governmentwide_reporting_entities",
-      "missing_dimensions": [
-        "samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"
-      ],
-      "source": {
-        "publisher": "U.S. Department of the Treasury, Bureau of the Fiscal Service",
-        "dataset": "Financial Report of the United States Government 2024",
-        "url": "https://fiscal.treasury.gov/accounting/us-financial-report/2024-report",
-        "location": "Appendix A → 24 CFO Act agencies + 16 significant consolidation entities + 127 other consolidation entities; related-resources page → individual reports for 38 significant entities"
+      "coverage": {
+        "comparison_perimeter": "state_and_local_independent_government_units",
+        "broad_entity_count": null,
+        "registry_file": "data/public-entities/USA.v1.csv.gz",
+        "registry_record_count": 96984,
+        "perimeters": {
+          "federal_financial_report_reporting_entities": {
+            "record_count": 167,
+            "represented_entity_count": 167,
+            "financial_record_count": 0
+          },
+          "federal_financial_report_disclosure_entities": {
+            "record_count": 5,
+            "represented_entity_count": 5,
+            "financial_record_count": 0
+          },
+          "federal_financial_report_related_parties": {
+            "record_count": 2,
+            "represented_entity_count": 2,
+            "financial_record_count": 0
+          },
+          "state_and_local_independent_government_units": {
+            "record_count": 91009,
+            "represented_entity_count": 91009,
+            "financial_record_count": 0
+          },
+          "state_and_local_dependent_major_agencies": {
+            "record_count": 5801,
+            "represented_entity_count": 5801,
+            "financial_record_count": 0
+          }
+        },
+        "sources": [
+          {
+            "source_id": "usa_treasury_reporting_entities_fy2024",
+            "period": "FY2024",
+            "publisher": "usa treasury reporting entities fy2024",
+            "url": "https://fiscal.treasury.gov/reports-statements/financial-report/2024report.html",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          },
+          {
+            "source_id": "usa_census_government_units_2025",
+            "period": "2025",
+            "publisher": "usa census government units 2025",
+            "url": "https://www.census.gov/data/datasets/2025/econ/gus/public-use-files.html",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          }
+        ],
+        "unresolved_layers": []
+      },
+      "directory": {
+        "country_code": "USA",
+        "file": "data/public-entity-directory/USA.v1.json",
+        "bytes": 18913209,
+        "record_count": 96984,
+        "represented_entity_count": 96984,
+        "financial_record_count": 0,
+        "perimeters": {
+          "federal_financial_report_disclosure_entities": 5,
+          "federal_financial_report_related_parties": 2,
+          "federal_financial_report_reporting_entities": 167,
+          "state_and_local_dependent_major_agencies": 5801,
+          "state_and_local_independent_government_units": 91009
+        },
+        "entity_classes": {
+          "special_district": 39854,
+          "general_purpose_government": 38620,
+          "independent_school_district": 12535,
+          "public_pension_system": 4483,
+          "dependent_school_agency": 1318,
+          "cfo_act_consolidation_entity": 167,
+          "disclosure_entity": 5,
+          "related_party": 2
+        },
+        "diagnostics": {
+          "net_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "operating_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "return_on_assets_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "revenue_per_employee": {
+            "value": null,
+            "record_count": 0
+          }
+        }
       }
     },
     "demography": {

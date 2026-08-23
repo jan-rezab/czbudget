@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T17:36:03.771Z",
+  "generated_at": "2026-08-23T19:05:11.426Z",
   "country": {
     "country_code": "UKR",
     "name_cs": "Ukrajina",
@@ -136,13 +136,15 @@
     },
     "public_entities": {
       "status": "loaded",
-      "coverage": "3009 entities; 0 with accounts",
+      "coverage": "3009 registry rows; 0 with economic fields; reference perimeter state_sector_enterprises_and_majority_companies",
       "missing_dimensions": [
-        "standardizované účetní výkazy / standardised financial statements"
+        "The downloaded state-sector register does not cover the full municipal public-enterprise universe."
       ],
       "entity_count": 3009,
+      "represented_entity_count": 3009,
+      "broad_entity_count": 3009,
       "financial_statement_count": 0,
-      "coverage_level": "state_sector_enterprise_register"
+      "coverage_level": "entity_registry"
     },
     "demography": {
       "status": "loaded",
@@ -2432,20 +2434,63 @@
       "directory_count": 1467
     },
     "public_entities": {
-      "period": "2026-04-01",
-      "scope_cs": "Subjekty státního sektoru: státní podniky, jejich seskupení, dceřiné podniky a společnosti s podílem státu nad 50 %.",
-      "scope_en": "State-sector enterprises: state enterprises, associations, subsidiaries and companies with a state share above 50%.",
-      "entity_count": 3009,
-      "financial_statement_count": 0,
-      "coverage": "state_sector_enterprise_register",
-      "missing_dimensions": [
-        "standardizované účetní výkazy / standardised financial statements"
-      ],
-      "source": {
-        "publisher": "Фонд державного майна України",
-        "dataset": "Реєстр суб’єктів господарювання державного сектору економіки",
-        "url": "https://www.spfu.gov.ua/ua/content/civil-access-data--Edinij-reestr-ob-ektiv-derzhavnoi-vlasnosti.html",
-        "location": "snapshot 01.04.2026 → perelik-sg-01-04-2026-n_20127.csv → 3,009 rows; entity name, managing body and organisational form"
+      "coverage": {
+        "comparison_perimeter": "state_sector_enterprises_and_majority_companies",
+        "broad_entity_count": 3009,
+        "registry_file": "data/public-entities/UKR.v1.csv.gz",
+        "registry_record_count": 3009,
+        "perimeters": {
+          "state_sector_enterprises_and_majority_companies": {
+            "record_count": 3009,
+            "represented_entity_count": 3009,
+            "financial_record_count": 0
+          }
+        },
+        "sources": [
+          {
+            "source_id": "ukr_state_sector_enterprises_2026_04_01",
+            "period": "2026-04-01",
+            "publisher": "ukr state sector enterprises 2026 04 01",
+            "url": "https://www.spfu.gov.ua/ua/content/civil-access-data--Edinij-reestr-ob-ektiv-derzhavnoi-vlasnosti.html",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          }
+        ],
+        "unresolved_layers": [
+          "The downloaded state-sector register does not cover the full municipal public-enterprise universe."
+        ]
+      },
+      "directory": {
+        "country_code": "UKR",
+        "file": "data/public-entity-directory/UKR.v1.json",
+        "bytes": 950351,
+        "record_count": 3009,
+        "represented_entity_count": 3009,
+        "financial_record_count": 0,
+        "perimeters": {
+          "state_sector_enterprises_and_majority_companies": 3009
+        },
+        "entity_classes": {
+          "state_enterprise": 3009
+        },
+        "diagnostics": {
+          "net_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "operating_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "return_on_assets_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "revenue_per_employee": {
+            "value": null,
+            "record_count": 0
+          }
+        }
       }
     },
     "demography": {

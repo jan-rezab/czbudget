@@ -219,6 +219,24 @@ test("country profiles expose sortable ten-year health, social and transport com
   await expect(transport).toContainText("13,210 km");
 });
 
+test("public-entity profiles expose broad perimeters, economics and the full searchable registry", async ({ page }) => {
+  await page.goto("/country.html?code=CHE&lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#country-public-entities-title")).toHaveText("Public entities, without blind spots.");
+  await expect(page.locator("#public-entities .pe-kpis")).toContainText("5,152");
+  await expect(page.locator("#public-entities .pe-kpis")).toContainText("22");
+  await expect(page.locator("#public-entities .pe-comparison tbody tr")).toHaveCount(10);
+  await expect(page.locator("#public-entities .pe-aggregate-table tbody tr")).toHaveCount(6);
+  await page.locator("[data-pe-search]").fill("Swisscom");
+  await expect(page.locator("#public-entities .pe-directory tbody tr")).toHaveCount(1);
+  await page.locator("#public-entities [data-record]").click();
+  await expect(page.locator("#public-entities .pe-inspector")).toContainText("Swisscom");
+  await expect(page.locator("#public-entities .pe-inspector")).toContainText("11036");
+  await expect(page.locator("#public-entities .pe-inspector a")).toHaveAttribute("href", /efv\.admin\.ch/);
+  await page.locator("#country-switch").selectOption("CZE");
+  await expect(page.locator("#public-entities .pe-kpis")).toContainText("18,238");
+  await expect(page.locator("#public-entities .pe-directory-meta")).toContainText("18,238 matching rows");
+});
+
 test("health deep dive keeps ten system profiles and the ten-country spending comparison", async ({ page }) => {
   await page.goto("/deep-dives/health/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country option")).toHaveCount(10);

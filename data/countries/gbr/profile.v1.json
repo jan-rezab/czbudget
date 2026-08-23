@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T17:36:03.771Z",
+  "generated_at": "2026-08-23T19:05:11.426Z",
   "country": {
     "country_code": "GBR",
     "name_cs": "Spojené království",
@@ -131,11 +131,13 @@
     },
     "public_entities": {
       "status": "loaded",
-      "coverage": "252 entities; 252 with accounts",
+      "coverage": "2267 registry rows; 251 with economic fields; reference perimeter national_accounts_public_sector_classifications",
       "missing_dimensions": [],
-      "entity_count": 252,
-      "financial_statement_count": 252,
-      "coverage_level": "public_bodies_directory"
+      "entity_count": 2267,
+      "represented_entity_count": 2320,
+      "broad_entity_count": null,
+      "financial_statement_count": 251,
+      "coverage_level": "entity_registry"
     },
     "demography": {
       "status": "loaded",
@@ -2612,18 +2614,82 @@
       "directory_count": 318
     },
     "public_entities": {
-      "period": "2023/24",
-      "scope_cs": "Neministerské veřejné orgány, výkonné agentury a neministerská ministerstva v adresáři Cabinet Office.",
-      "scope_en": "Non-departmental public bodies, executive agencies and non-ministerial departments in the Cabinet Office directory.",
-      "entity_count": 252,
-      "financial_statement_count": 252,
-      "coverage": "public_bodies_directory",
-      "missing_dimensions": [],
-      "source": {
-        "publisher": "UK Cabinet Office",
-        "dataset": "Public Bodies Directory 2023/24",
-        "url": "https://www.gov.uk/government/publications/public-bodies-2024",
-        "location": "Public_Bodies_Directory_2023_24.xlsx → table data (A7:AZ258); finance fields include gross expenditure, government funding, income and staff costs"
+      "coverage": {
+        "comparison_perimeter": "national_accounts_public_sector_classifications",
+        "broad_entity_count": null,
+        "registry_file": "data/public-entities/GBR.v1.csv.gz",
+        "registry_record_count": 2267,
+        "perimeters": {
+          "national_accounts_public_sector_classifications": {
+            "record_count": 2016,
+            "represented_entity_count": 2016,
+            "financial_record_count": 0
+          },
+          "central_government_arms_length_bodies": {
+            "record_count": 251,
+            "represented_entity_count": 304,
+            "financial_record_count": 251
+          }
+        },
+        "sources": [
+          {
+            "source_id": "gbr_ons_public_sector_classification_2026_08",
+            "period": "2026-08-21",
+            "publisher": "gbr ons public sector classification 2026 08",
+            "url": "https://www.ons.gov.uk/methodology/classificationsandstandards/economicstatisticsclassifications/introductiontoeconomicstatisticsclassifications",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          },
+          {
+            "source_id": "gbr_cabinet_office_public_bodies_2023_24",
+            "period": "2023/24",
+            "publisher": "gbr cabinet office public bodies 2023 24",
+            "url": "https://www.gov.uk/government/publications/public-bodies-2024",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          }
+        ],
+        "unresolved_layers": []
+      },
+      "directory": {
+        "country_code": "GBR",
+        "file": "data/public-entity-directory/GBR.v1.json",
+        "bytes": 569331,
+        "record_count": 2267,
+        "represented_entity_count": 2320,
+        "financial_record_count": 251,
+        "perimeters": {
+          "central_government_arms_length_bodies": 251,
+          "national_accounts_public_sector_classifications": 2016
+        },
+        "entity_classes": {
+          "government_unit": 1674,
+          "public_corporation": 342,
+          "Executive NDPB": 116,
+          "Advisory NDPB": 64,
+          "Executive Agency": 39,
+          "Non-Ministerial Department": 20,
+          "Tribunal NDPB": 8,
+          "Crown NDPB": 4
+        },
+        "diagnostics": {
+          "net_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "operating_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "return_on_assets_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "revenue_per_employee": {
+            "value": 122384.36983056137,
+            "record_count": 190
+          }
+        }
       }
     },
     "demography": {

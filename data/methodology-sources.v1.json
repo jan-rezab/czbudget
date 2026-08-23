@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-23T17:36:04.622Z",
+  "generated_at": "2026-08-23T19:05:11.682Z",
   "row_count": 110,
   "countries": [
     {
@@ -2643,21 +2643,26 @@
       "module_order": 10,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
-      "status": "full",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "22 entities; 22 with accounts",
-      "period": "2024",
-      "scope": "Enterprises and institutions outside the central federal administration that are controlled by the Federation or created by federal law.",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "22 registry rows; 20 with economic fields; reference perimeter public_sector_market_and_nonmarket_units",
+      "period": "2025-02-05, 2024",
+      "scope": "public_sector_market_and_nonmarket_units",
       "sources": [
         {
-          "title": "Unternehmen und Anstalten des Bundes + Aggregierter Bericht 2024",
+          "title": "che_federal_enterprises_institutions_2025",
           "url": "https://www.efv.admin.ch/de/unternehmen-anstalten",
-          "location": "list of 22 controlled/statutory entities; Aggregierter Bericht 2024 → financial and governance indicators"
+          "location": "data/public-entities/CHE.v1.csv.gz → che_federal_enterprises_institutions_2025"
+        },
+        {
+          "title": "che_bfs_public_sector_units_2024",
+          "url": "https://www.pxweb.bfs.admin.ch/pxweb/de/px-x-0602010000_108/px-x-0602010000_108/",
+          "location": "data/public-entity-aggregates.v1.json → CHE → entity_count"
         }
       ],
-      "exact_extraction": "list of 22 controlled/statutory entities; Aggregierter Bericht 2024 → financial and governance indicators",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "Entity counts follow the national portfolio definition and are not cross-country rankings."
+      "exact_extraction": "data/public-entities/CHE.v1.csv.gz → che_federal_enterprises_institutions_2025 · data/public-entity-aggregates.v1.json → CHE → entity_count",
+      "transformation": "Normalize official source rows into data/public-entities/CHE.v1.csv.gz; expose 22 source-scoped records in data/public-entity-directory/CHE.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "BFS publishes all-level unit and employment totals, but a harmonised open entity-level register of cantonal and municipal enterprises was not identified."
     },
     {
       "country_code": "CZE",
@@ -2668,21 +2673,21 @@
       "module_order": 10,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
-      "status": "partial",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "637 entities; 137 with accounts",
-      "period": "2024",
-      "scope": "Selected register of publicly controlled companies, hospitals, universities and health insurers.",
+      "status": "full",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "18238 registry rows; 134 with economic fields; reference perimeter public_sector_consolidation_units",
+      "period": "2026",
+      "scope": "public_sector_consolidation_units",
       "sources": [
         {
-          "title": "Konsolidační výčet veřejných subjektů + ČSÚIS VZZ",
+          "title": "cze_mf_consolidation_units_2026",
           "url": "https://mf.gov.cz/cs/dane-a-ucetnictvi/ucetnictvi/ucetni-reforma-verejnych-financi-ucetnic/ucetni-vykaznictvi-statu/vycet-konsolidovanych-jednotek-statu-a-d",
-          "location": "konsolidační výčet → ovládané jednotky; MONITOR/ČSÚIS → CIS_UCJED.CSV a výkaz zisku a ztráty; strategické subjekty → zpráva MF za rok 2024"
+          "location": "data/public-entities/CZE.v1.csv.gz → cze_mf_consolidation_units_2026"
         }
       ],
-      "exact_extraction": "konsolidační výčet → ovládané jednotky; MONITOR/ČSÚIS → CIS_UCJED.CSV a výkaz zisku a ztráty; strategické subjekty → zpráva MF za rok 2024",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "účetní výkazy pro 500 subjektů / financial statements for 500 entities"
+      "exact_extraction": "data/public-entities/CZE.v1.csv.gz → cze_mf_consolidation_units_2026",
+      "transformation": "Normalize official source rows into data/public-entities/CZE.v1.csv.gz; expose 18238 source-scoped records in data/public-entity-directory/CZE.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "Perimeters are source-scoped and non-additive; missing financial values are unavailable, not zero."
     },
     {
       "country_code": "DEU",
@@ -2693,21 +2698,26 @@
       "module_order": 10,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
-      "status": "full",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "119 entities; 119 with accounts",
-      "period": "2024 (reference date 2024-12-31)",
-      "scope": "Direct holdings of the Federation and its special funds; the report also identifies qualifying indirect holdings.",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "124 registry rows; 0 with economic fields; reference perimeter active_federal_direct_holding",
+      "period": "2023-12-31, 2023",
+      "scope": "active_federal_direct_holding",
       "sources": [
         {
-          "title": "Beteiligungsbericht des Bundes 2024",
-          "url": "https://www.bundesfinanzministerium.de/Content/DE/Downloads/Broschueren_Bestellservice/beteiligungsbericht-des-bundes-2024.pdf?__blob=publicationFile&v=10",
-          "location": "company profiles and financial indicators; summary chart/table of direct and qualifying indirect federal holdings"
+          "title": "deu_federal_holdings_report_2024",
+          "url": "https://www.bundesfinanzministerium.de/Content/DE/Standardartikel/Themen/Bundesvermoegen/Privatisierungs_und_Beteiligungspolitik/Beteiligungspolitik/Beteiligungsberichte/beteiligungsbericht-des-bundes-2024.pdf?__blob=publicationFile&v=2",
+          "location": "data/public-entities/DEU.v1.csv.gz → deu_federal_holdings_report_2024"
+        },
+        {
+          "title": "deu_destatis_public_funds_enterprises_2023",
+          "url": "https://www.destatis.de/DE/Themen/Staat/Oeffentliche-Finanzen/Fonds-Einrichtungen-Unternehmen/_inhalt.html",
+          "location": "data/public-entity-aggregates.v1.json → DEU → entity_count"
         }
       ],
-      "exact_extraction": "company profiles and financial indicators; summary chart/table of direct and qualifying indirect federal holdings",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "Entity counts follow the national portfolio definition and are not cross-country rankings."
+      "exact_extraction": "data/public-entities/DEU.v1.csv.gz → deu_federal_holdings_report_2024 · data/public-entity-aggregates.v1.json → DEU → entity_count",
+      "transformation": "Normalize official source rows into data/public-entities/DEU.v1.csv.gz; expose 124 source-scoped records in data/public-entity-directory/DEU.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "Destatis publishes the all-level universe and aggregates, but the entity-level list was not found as an open bulk download."
     },
     {
       "country_code": "DNK",
@@ -2718,21 +2728,26 @@
       "module_order": 10,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
-      "status": "full",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "24 entities; 24 with accounts",
-      "period": "2024",
-      "scope": "Companies with a Danish state ownership interest managed by ministries.",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "24 registry rows; 0 with economic fields; reference perimeter public_enterprises_all_government_levels",
+      "period": "2026-01-31, 2024",
+      "scope": "public_enterprises_all_government_levels",
       "sources": [
         {
-          "title": "Statens selskaber — økonomiske forhold",
-          "url": "https://fm.dk/arbejdsomraader/statens-selskaber/oekonomiske-forhold/",
-          "location": "2024 portfolio summary: 24 companies; revenue, equity and employment aggregates; links to company reports"
+          "title": "dnk_state_company_portfolio_2026_01_31",
+          "url": "https://fm.dk/arbejdsomraader/statens-selskaber/organisering-af-statens-selskaber/",
+          "location": "data/public-entities/DNK.v1.csv.gz → dnk_state_company_portfolio_2026_01_31"
+        },
+        {
+          "title": "dnk_dst_public_enterprises_2024",
+          "url": "https://www.dst.dk/da/Statistik/dokumentation/statistikdokumentation/den-offentlige-sektors-finanser",
+          "location": "data/public-entity-aggregates.v1.json → DNK → entity_count"
         }
       ],
-      "exact_extraction": "2024 portfolio summary: 24 companies; revenue, equity and employment aggregates; links to company reports",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "Entity counts follow the national portfolio definition and are not cross-country rankings."
+      "exact_extraction": "data/public-entities/DNK.v1.csv.gz → dnk_state_company_portfolio_2026_01_31 · data/public-entity-aggregates.v1.json → DNK → entity_count",
+      "transformation": "Normalize official source rows into data/public-entities/DNK.v1.csv.gz; expose 24 source-scoped records in data/public-entity-directory/DNK.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "The official all-level workbook link was broken at crawl time; only the documented population perimeter is recorded."
     },
     {
       "country_code": "FRA",
@@ -2743,21 +2758,31 @@
       "module_order": 10,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
-      "status": "full",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "87 entities; 87 with accounts",
-      "period": "2024 accounts / portfolio at 2025-06-30",
-      "scope": "Agence des participations de l'État portfolio.",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "87 registry rows; 0 with economic fields; reference perimeter state_majority_controlled_enterprises_including_indirect_subsidiaries",
+      "period": "2025-06-30, 2024, 2023",
+      "scope": "state_majority_controlled_enterprises_including_indirect_subsidiaries",
       "sources": [
         {
-          "title": "Rapport d'activité 2024–2025 + Rapport financier 2025 (comptes combinés 2024)",
-          "url": "https://www.economie.gouv.fr/agence-participations-etat/ressources-documentaires/rapports-financiers",
-          "location": "Rapport financier 2025 → comptes combinés 2024; portfolio page → 87 entities and listed/unlisted split"
+          "title": "fra_ape_portfolio_2025",
+          "url": "https://www.economie.gouv.fr/agence-participations-etat/comprendre-lape/les-entreprises-de-lape",
+          "location": "data/public-entities/FRA.v1.csv.gz → fra_ape_portfolio_2025"
+        },
+        {
+          "title": "fra_ape_combined_accounts_2024",
+          "url": "https://www.economie.gouv.fr/files/files/directions_services/agence-participations-etat/Documents/Rapports-de-l-Etat-actionnaire/2025/RAPPORT%20FINANCIER%202025.pdf",
+          "location": "data/public-entity-aggregates.v1.json → FRA → revenue"
+        },
+        {
+          "title": "fra_insee_recme_2023",
+          "url": "https://www.insee.fr/fr/statistiques/8642383",
+          "location": "data/public-entity-aggregates.v1.json → FRA → entity_count"
         }
       ],
-      "exact_extraction": "Rapport financier 2025 → comptes combinés 2024; portfolio page → 87 entities and listed/unlisted split",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "Entity counts follow the national portfolio definition and are not cross-country rankings."
+      "exact_extraction": "data/public-entities/FRA.v1.csv.gz → fra_ape_portfolio_2025 · data/public-entity-aggregates.v1.json → FRA → revenue · data/public-entity-aggregates.v1.json → FRA → entity_count",
+      "transformation": "Normalize official source rows into data/public-entities/FRA.v1.csv.gz; expose 87 source-scoped records in data/public-entity-directory/FRA.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "The current RECME release reports the complete count and aggregates but does not expose the current entity list as a bulk file."
     },
     {
       "country_code": "GBR",
@@ -2769,20 +2794,25 @@
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "full",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "252 entities; 252 with accounts",
-      "period": "2023/24",
-      "scope": "Non-departmental public bodies, executive agencies and non-ministerial departments in the Cabinet Office directory.",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "2267 registry rows; 251 with economic fields; reference perimeter national_accounts_public_sector_classifications",
+      "period": "2026-08-21, 2023/24",
+      "scope": "national_accounts_public_sector_classifications",
       "sources": [
         {
-          "title": "Public Bodies Directory 2023/24",
+          "title": "gbr_ons_public_sector_classification_2026_08",
+          "url": "https://www.ons.gov.uk/methodology/classificationsandstandards/economicstatisticsclassifications/introductiontoeconomicstatisticsclassifications",
+          "location": "data/public-entities/GBR.v1.csv.gz → gbr_ons_public_sector_classification_2026_08"
+        },
+        {
+          "title": "gbr_cabinet_office_public_bodies_2023_24",
           "url": "https://www.gov.uk/government/publications/public-bodies-2024",
-          "location": "Public_Bodies_Directory_2023_24.xlsx → table data (A7:AZ258); finance fields include gross expenditure, government funding, income and staff costs"
+          "location": "data/public-entities/GBR.v1.csv.gz → gbr_cabinet_office_public_bodies_2023_24"
         }
       ],
-      "exact_extraction": "Public_Bodies_Directory_2023_24.xlsx → table data (A7:AZ258); finance fields include gross expenditure, government funding, income and staff costs",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "Entity counts follow the national portfolio definition and are not cross-country rankings."
+      "exact_extraction": "data/public-entities/GBR.v1.csv.gz → gbr_ons_public_sector_classification_2026_08 · data/public-entities/GBR.v1.csv.gz → gbr_cabinet_office_public_bodies_2023_24",
+      "transformation": "Normalize official source rows into data/public-entities/GBR.v1.csv.gz; expose 2267 source-scoped records in data/public-entity-directory/GBR.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "Perimeters are source-scoped and non-additive; missing financial values are unavailable, not zero."
     },
     {
       "country_code": "POL",
@@ -2794,20 +2824,20 @@
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "406 entities; 0 with accounts",
-      "period": "2025-03-31",
-      "scope": "Companies with a direct or indirect Polish State Treasury holding in the official list.",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "406 registry rows; 0 with economic fields; reference perimeter public_sector_registered_units_all_levels",
+      "period": "2025-03-31, 2025",
+      "scope": "public_sector_registered_units_all_levels",
       "sources": [
         {
-          "title": "Wykaz spółek z udziałem Skarbu Państwa 2025-03-31",
+          "title": "pol_state_treasury_holdings_2025_03_31",
           "url": "https://dane.gov.pl/pl/dataset/1198/resource/66957",
-          "location": "resource 66957 → CSV → 406 data rows; fields NIP, company, seat, status, Treasury share and representing authority"
+          "location": "data/public-entities/POL.v1.csv.gz → pol_state_treasury_holdings_2025_03_31"
         }
       ],
-      "exact_extraction": "resource 66957 → CSV → 406 data rows; fields NIP, company, seat, status, Treasury share and representing authority",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "standardizované účetní výkazy / standardised financial statements"
+      "exact_extraction": "data/public-entities/POL.v1.csv.gz → pol_state_treasury_holdings_2025_03_31",
+      "transformation": "Normalize official source rows into data/public-entities/POL.v1.csv.gz; expose 406 source-scoped records in data/public-entity-directory/POL.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "REGON publishes all-level counts by legal category, but no single open entity-level bulk register combining state, regional and municipal units was identified."
     },
     {
       "country_code": "SWE",
@@ -2818,21 +2848,26 @@
       "module_order": 10,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
-      "status": "full",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "38 entities; 38 with accounts",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "38 registry rows; 38 with economic fields; reference perimeter state_region_and_municipal_owned_entities",
       "period": "2024",
-      "scope": "Portfolio of state-owned companies managed by the Swedish Government.",
+      "scope": "state_region_and_municipal_owned_entities",
       "sources": [
         {
-          "title": "Verksamhetsberättelse för bolag med statligt ägande 2024",
+          "title": "swe_state_owned_companies_2024",
           "url": "https://www.regeringen.se/rapporter/2025/06/verksamhetsberattelse-for-bolag-med-statligt-agande-2024/",
-          "location": "portfolio company profiles and aggregate 2024 revenue, operating profit, dividends and employment"
+          "location": "data/public-entities/SWE.v1.csv.gz → swe_state_owned_companies_2024"
+        },
+        {
+          "title": "swe_scb_public_owned_enterprises_2024",
+          "url": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0108/OffFtg/",
+          "location": "data/public-entity-aggregates.v1.json → SWE → entity_count"
         }
       ],
-      "exact_extraction": "portfolio company profiles and aggregate 2024 revenue, operating profit, dividends and employment",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "Entity counts follow the national portfolio definition and are not cross-country rankings."
+      "exact_extraction": "data/public-entities/SWE.v1.csv.gz → swe_state_owned_companies_2024 · data/public-entity-aggregates.v1.json → SWE → entity_count",
+      "transformation": "Normalize official source rows into data/public-entities/SWE.v1.csv.gz; expose 38 source-scoped records in data/public-entity-directory/SWE.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "SCB publishes complete category totals and financial aggregates, but not the underlying entity list as open bulk data."
     },
     {
       "country_code": "UKR",
@@ -2844,20 +2879,20 @@
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "3009 entities; 0 with accounts",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "3009 registry rows; 0 with economic fields; reference perimeter state_sector_enterprises_and_majority_companies",
       "period": "2026-04-01",
-      "scope": "State-sector enterprises: state enterprises, associations, subsidiaries and companies with a state share above 50%.",
+      "scope": "state_sector_enterprises_and_majority_companies",
       "sources": [
         {
-          "title": "Реєстр суб’єктів господарювання державного сектору економіки",
+          "title": "ukr_state_sector_enterprises_2026_04_01",
           "url": "https://www.spfu.gov.ua/ua/content/civil-access-data--Edinij-reestr-ob-ektiv-derzhavnoi-vlasnosti.html",
-          "location": "snapshot 01.04.2026 → perelik-sg-01-04-2026-n_20127.csv → 3,009 rows; entity name, managing body and organisational form"
+          "location": "data/public-entities/UKR.v1.csv.gz → ukr_state_sector_enterprises_2026_04_01"
         }
       ],
-      "exact_extraction": "snapshot 01.04.2026 → perelik-sg-01-04-2026-n_20127.csv → 3,009 rows; entity name, managing body and organisational form",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "standardizované účetní výkazy / standardised financial statements"
+      "exact_extraction": "data/public-entities/UKR.v1.csv.gz → ukr_state_sector_enterprises_2026_04_01",
+      "transformation": "Normalize official source rows into data/public-entities/UKR.v1.csv.gz; expose 3009 source-scoped records in data/public-entity-directory/UKR.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "The downloaded state-sector register does not cover the full municipal public-enterprise universe."
     },
     {
       "country_code": "USA",
@@ -2868,21 +2903,26 @@
       "module_order": 10,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
-      "status": "partial",
-      "artifact": "data/country-public-entities.v1.json",
-      "coverage": "167 entities; 38 with accounts",
-      "period": "FY 2024",
-      "scope": "Federal consolidation entities listed in Appendix A of the government-wide Financial Report.",
+      "status": "full",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "96984 registry rows; 0 with economic fields; reference perimeter state_and_local_independent_government_units",
+      "period": "FY2024, 2025",
+      "scope": "state_and_local_independent_government_units",
       "sources": [
         {
-          "title": "Financial Report of the United States Government 2024",
-          "url": "https://fiscal.treasury.gov/accounting/us-financial-report/2024-report",
-          "location": "Appendix A → 24 CFO Act agencies + 16 significant consolidation entities + 127 other consolidation entities; related-resources page → individual reports for 38 significant entities"
+          "title": "usa_treasury_reporting_entities_fy2024",
+          "url": "https://fiscal.treasury.gov/reports-statements/financial-report/2024report.html",
+          "location": "data/public-entities/USA.v1.csv.gz → usa_treasury_reporting_entities_fy2024"
+        },
+        {
+          "title": "usa_census_government_units_2025",
+          "url": "https://www.census.gov/data/datasets/2025/econ/gus/public-use-files.html",
+          "location": "data/public-entities/USA.v1.csv.gz → usa_census_government_units_2025"
         }
       ],
-      "exact_extraction": "Appendix A → 24 CFO Act agencies + 16 significant consolidation entities + 127 other consolidation entities; related-resources page → individual reports for 38 significant entities",
-      "transformation": "Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-      "limitations": "samostatné standardizované výkazy pro 129 jednotek / separate standardised statements for 129 entities"
+      "exact_extraction": "data/public-entities/USA.v1.csv.gz → usa_treasury_reporting_entities_fy2024 · data/public-entities/USA.v1.csv.gz → usa_census_government_units_2025",
+      "transformation": "Normalize official source rows into data/public-entities/USA.v1.csv.gz; expose 96984 source-scoped records in data/public-entity-directory/USA.v1.json; keep broader aggregate-only populations separate.",
+      "limitations": "Perimeters are source-scoped and non-additive; missing financial values are unavailable, not zero."
     },
     {
       "country_code": "CHE",

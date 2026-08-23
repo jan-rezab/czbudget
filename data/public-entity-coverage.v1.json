@@ -1,0 +1,364 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "public-entity-coverage.v1",
+  "generated_at": "2026-08-23T20:12:23+02:00",
+  "comparison_warning": "Perimeters are source-scoped and non-additive; missing financial values are unavailable, not zero.",
+  "methodology": {
+    "record_id": "source-scoped identity",
+    "financial_nulls": "unavailable, never zero"
+  },
+  "countries": {
+    "CZE": {
+      "comparison_perimeter": "public_sector_consolidation_units",
+      "broad_entity_count": 18238,
+      "registry_file": "data/public-entities/CZE.v1.csv.gz",
+      "registry_record_count": 18238,
+      "perimeters": {
+        "public_sector_consolidation_units": {
+          "record_count": 18238,
+          "represented_entity_count": 18238,
+          "financial_record_count": 134
+        }
+      },
+      "sources": [
+        {
+          "source_id": "cze_mf_consolidation_units_2026",
+          "period": "2026",
+          "publisher": "cze mf consolidation units 2026",
+          "url": "https://mf.gov.cz/cs/dane-a-ucetnictvi/ucetnictvi/ucetni-reforma-verejnych-financi-ucetnic/ucetni-vykaznictvi-statu/vycet-konsolidovanych-jednotek-statu-a-d",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": []
+    },
+    "POL": {
+      "comparison_perimeter": "public_sector_registered_units_all_levels",
+      "broad_entity_count": 112145,
+      "registry_file": "data/public-entities/POL.v1.csv.gz",
+      "registry_record_count": 406,
+      "perimeters": {
+        "state_treasury_direct_and_indirect_holdings": {
+          "record_count": 406,
+          "represented_entity_count": 406,
+          "financial_record_count": 0
+        },
+        "public_sector_registered_units_all_levels": {
+          "record_count": 0,
+          "represented_entity_count": 112145,
+          "financial_record_count": 0,
+          "coverage_status": "aggregate_only"
+        }
+      },
+      "sources": [
+        {
+          "source_id": "pol_state_treasury_holdings_2025_03_31",
+          "period": "2025-03-31",
+          "publisher": "pol state treasury holdings 2025 03 31",
+          "url": "https://dane.gov.pl/pl/dataset/1198/resource/66957",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": [
+        "REGON publishes all-level counts by legal category, but no single open entity-level bulk register combining state, regional and municipal units was identified."
+      ]
+    },
+    "DEU": {
+      "comparison_perimeter": "active_federal_direct_holding",
+      "broad_entity_count": 20658,
+      "registry_file": "data/public-entities/DEU.v1.csv.gz",
+      "registry_record_count": 124,
+      "perimeters": {
+        "active_federal_direct_holding": {
+          "record_count": 74,
+          "represented_entity_count": 74,
+          "financial_record_count": 0
+        },
+        "inactive_federal_direct_holding": {
+          "record_count": 4,
+          "represented_entity_count": 4,
+          "financial_record_count": 0
+        },
+        "federal_public_law_institution": {
+          "record_count": 3,
+          "represented_entity_count": 3,
+          "financial_record_count": 0
+        },
+        "federal_cooperative_membership": {
+          "record_count": 14,
+          "represented_entity_count": 14,
+          "financial_record_count": 0
+        },
+        "special_fund_direct_holding": {
+          "record_count": 29,
+          "represented_entity_count": 29,
+          "financial_record_count": 0
+        },
+        "public_funds_institutions_and_enterprises_all_levels": {
+          "record_count": 0,
+          "represented_entity_count": 20658,
+          "financial_record_count": 0,
+          "coverage_status": "aggregate_only"
+        }
+      },
+      "sources": [
+        {
+          "source_id": "deu_federal_holdings_report_2024",
+          "period": "2023-12-31",
+          "publisher": "deu federal holdings report 2024",
+          "url": "https://www.bundesfinanzministerium.de/Content/DE/Standardartikel/Themen/Bundesvermoegen/Privatisierungs_und_Beteiligungspolitik/Beteiligungspolitik/Beteiligungsberichte/beteiligungsbericht-des-bundes-2024.pdf?__blob=publicationFile&v=2",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": [
+        "Destatis publishes the all-level universe and aggregates, but the entity-level list was not found as an open bulk download."
+      ]
+    },
+    "GBR": {
+      "comparison_perimeter": "national_accounts_public_sector_classifications",
+      "broad_entity_count": null,
+      "registry_file": "data/public-entities/GBR.v1.csv.gz",
+      "registry_record_count": 2267,
+      "perimeters": {
+        "national_accounts_public_sector_classifications": {
+          "record_count": 2016,
+          "represented_entity_count": 2016,
+          "financial_record_count": 0
+        },
+        "central_government_arms_length_bodies": {
+          "record_count": 251,
+          "represented_entity_count": 304,
+          "financial_record_count": 251
+        }
+      },
+      "sources": [
+        {
+          "source_id": "gbr_ons_public_sector_classification_2026_08",
+          "period": "2026-08-21",
+          "publisher": "gbr ons public sector classification 2026 08",
+          "url": "https://www.ons.gov.uk/methodology/classificationsandstandards/economicstatisticsclassifications/introductiontoeconomicstatisticsclassifications",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        },
+        {
+          "source_id": "gbr_cabinet_office_public_bodies_2023_24",
+          "period": "2023/24",
+          "publisher": "gbr cabinet office public bodies 2023 24",
+          "url": "https://www.gov.uk/government/publications/public-bodies-2024",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": []
+    },
+    "FRA": {
+      "comparison_perimeter": "state_majority_controlled_enterprises_including_indirect_subsidiaries",
+      "broad_entity_count": 1897,
+      "registry_file": "data/public-entities/FRA.v1.csv.gz",
+      "registry_record_count": 87,
+      "perimeters": {
+        "state_shareholder_portfolio": {
+          "record_count": 87,
+          "represented_entity_count": 87,
+          "financial_record_count": 0
+        },
+        "state_majority_controlled_enterprises_including_indirect_subsidiaries": {
+          "record_count": 0,
+          "represented_entity_count": 1897,
+          "financial_record_count": 0,
+          "coverage_status": "aggregate_only"
+        }
+      },
+      "sources": [
+        {
+          "source_id": "fra_ape_portfolio_2025",
+          "period": "2025-06-30",
+          "publisher": "fra ape portfolio 2025",
+          "url": "https://www.economie.gouv.fr/agence-participations-etat/comprendre-lape/les-entreprises-de-lape",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": [
+        "The current RECME release reports the complete count and aggregates but does not expose the current entity list as a bulk file."
+      ]
+    },
+    "USA": {
+      "comparison_perimeter": "state_and_local_independent_government_units",
+      "broad_entity_count": null,
+      "registry_file": "data/public-entities/USA.v1.csv.gz",
+      "registry_record_count": 96984,
+      "perimeters": {
+        "federal_financial_report_reporting_entities": {
+          "record_count": 167,
+          "represented_entity_count": 167,
+          "financial_record_count": 0
+        },
+        "federal_financial_report_disclosure_entities": {
+          "record_count": 5,
+          "represented_entity_count": 5,
+          "financial_record_count": 0
+        },
+        "federal_financial_report_related_parties": {
+          "record_count": 2,
+          "represented_entity_count": 2,
+          "financial_record_count": 0
+        },
+        "state_and_local_independent_government_units": {
+          "record_count": 91009,
+          "represented_entity_count": 91009,
+          "financial_record_count": 0
+        },
+        "state_and_local_dependent_major_agencies": {
+          "record_count": 5801,
+          "represented_entity_count": 5801,
+          "financial_record_count": 0
+        }
+      },
+      "sources": [
+        {
+          "source_id": "usa_treasury_reporting_entities_fy2024",
+          "period": "FY2024",
+          "publisher": "usa treasury reporting entities fy2024",
+          "url": "https://fiscal.treasury.gov/reports-statements/financial-report/2024report.html",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        },
+        {
+          "source_id": "usa_census_government_units_2025",
+          "period": "2025",
+          "publisher": "usa census government units 2025",
+          "url": "https://www.census.gov/data/datasets/2025/econ/gus/public-use-files.html",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": []
+    },
+    "CHE": {
+      "comparison_perimeter": "public_sector_market_and_nonmarket_units",
+      "broad_entity_count": 5152,
+      "registry_file": "data/public-entities/CHE.v1.csv.gz",
+      "registry_record_count": 22,
+      "perimeters": {
+        "federal_controlled_or_statutory_entities": {
+          "record_count": 22,
+          "represented_entity_count": 22,
+          "financial_record_count": 20
+        },
+        "public_sector_market_and_nonmarket_units": {
+          "record_count": 0,
+          "represented_entity_count": 5152,
+          "financial_record_count": 0,
+          "coverage_status": "aggregate_only"
+        }
+      },
+      "sources": [
+        {
+          "source_id": "che_federal_enterprises_institutions_2025",
+          "period": "2025-02-05",
+          "publisher": "che federal enterprises institutions 2025",
+          "url": "https://www.efv.admin.ch/de/unternehmen-anstalten",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": [
+        "BFS publishes all-level unit and employment totals, but a harmonised open entity-level register of cantonal and municipal enterprises was not identified."
+      ]
+    },
+    "SWE": {
+      "comparison_perimeter": "state_region_and_municipal_owned_entities",
+      "broad_entity_count": 3204,
+      "registry_file": "data/public-entities/SWE.v1.csv.gz",
+      "registry_record_count": 38,
+      "perimeters": {
+        "government_managed_state_owned_company_portfolio": {
+          "record_count": 38,
+          "represented_entity_count": 38,
+          "financial_record_count": 38
+        },
+        "state_region_and_municipal_owned_entities": {
+          "record_count": 0,
+          "represented_entity_count": 3204,
+          "financial_record_count": 0,
+          "coverage_status": "aggregate_only"
+        }
+      },
+      "sources": [
+        {
+          "source_id": "swe_state_owned_companies_2024",
+          "period": "2024",
+          "publisher": "swe state owned companies 2024",
+          "url": "https://www.regeringen.se/rapporter/2025/06/verksamhetsberattelse-for-bolag-med-statligt-agande-2024/",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": [
+        "SCB publishes complete category totals and financial aggregates, but not the underlying entity list as open bulk data."
+      ]
+    },
+    "DNK": {
+      "comparison_perimeter": "public_enterprises_all_government_levels",
+      "broad_entity_count": 800,
+      "registry_file": "data/public-entities/DNK.v1.csv.gz",
+      "registry_record_count": 24,
+      "perimeters": {
+        "central_state_company_portfolio": {
+          "record_count": 24,
+          "represented_entity_count": 24,
+          "financial_record_count": 0
+        },
+        "public_enterprises_all_government_levels": {
+          "record_count": 0,
+          "represented_entity_count": 800,
+          "financial_record_count": 0,
+          "coverage_status": "aggregate_only"
+        }
+      },
+      "sources": [
+        {
+          "source_id": "dnk_state_company_portfolio_2026_01_31",
+          "period": "2026-01-31",
+          "publisher": "dnk state company portfolio 2026 01 31",
+          "url": "https://fm.dk/arbejdsomraader/statens-selskaber/organisering-af-statens-selskaber/",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": [
+        "The official all-level workbook link was broken at crawl time; only the documented population perimeter is recorded."
+      ],
+      "broad_count_is_approximate": true
+    },
+    "UKR": {
+      "comparison_perimeter": "state_sector_enterprises_and_majority_companies",
+      "broad_entity_count": 3009,
+      "registry_file": "data/public-entities/UKR.v1.csv.gz",
+      "registry_record_count": 3009,
+      "perimeters": {
+        "state_sector_enterprises_and_majority_companies": {
+          "record_count": 3009,
+          "represented_entity_count": 3009,
+          "financial_record_count": 0
+        }
+      },
+      "sources": [
+        {
+          "source_id": "ukr_state_sector_enterprises_2026_04_01",
+          "period": "2026-04-01",
+          "publisher": "ukr state sector enterprises 2026 04 01",
+          "url": "https://www.spfu.gov.ua/ua/content/civil-access-data--Edinij-reestr-ob-ektiv-derzhavnoi-vlasnosti.html",
+          "coverage_status": "official_published_source",
+          "record_granularity": "entity"
+        }
+      ],
+      "unresolved_layers": [
+        "The downloaded state-sector register does not cover the full municipal public-enterprise universe."
+      ]
+    }
+  }
+}

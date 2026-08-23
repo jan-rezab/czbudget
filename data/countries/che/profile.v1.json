@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T17:36:03.771Z",
+  "generated_at": "2026-08-23T19:05:11.426Z",
   "country": {
     "country_code": "CHE",
     "name_cs": "Švýcarsko",
@@ -114,11 +114,15 @@
     },
     "public_entities": {
       "status": "loaded",
-      "coverage": "22 entities; 22 with accounts",
-      "missing_dimensions": [],
+      "coverage": "22 registry rows; 20 with economic fields; reference perimeter public_sector_market_and_nonmarket_units",
+      "missing_dimensions": [
+        "BFS publishes all-level unit and employment totals, but a harmonised open entity-level register of cantonal and municipal enterprises was not identified."
+      ],
       "entity_count": 22,
-      "financial_statement_count": 22,
-      "coverage_level": "federal_enterprises_and_institutions"
+      "represented_entity_count": 22,
+      "broad_entity_count": 5152,
+      "financial_statement_count": 20,
+      "coverage_level": "aggregate_and_entity_registry"
     },
     "demography": {
       "status": "loaded",
@@ -2546,18 +2550,70 @@
       ]
     },
     "public_entities": {
-      "period": "2024",
-      "scope_cs": "Podniky a instituce mimo centrální federální správu, které federace ovládá nebo zřídila zákonem.",
-      "scope_en": "Enterprises and institutions outside the central federal administration that are controlled by the Federation or created by federal law.",
-      "entity_count": 22,
-      "financial_statement_count": 22,
-      "coverage": "federal_enterprises_and_institutions",
-      "missing_dimensions": [],
-      "source": {
-        "publisher": "Eidgenössische Finanzverwaltung",
-        "dataset": "Unternehmen und Anstalten des Bundes + Aggregierter Bericht 2024",
-        "url": "https://www.efv.admin.ch/de/unternehmen-anstalten",
-        "location": "list of 22 controlled/statutory entities; Aggregierter Bericht 2024 → financial and governance indicators"
+      "coverage": {
+        "comparison_perimeter": "public_sector_market_and_nonmarket_units",
+        "broad_entity_count": 5152,
+        "registry_file": "data/public-entities/CHE.v1.csv.gz",
+        "registry_record_count": 22,
+        "perimeters": {
+          "federal_controlled_or_statutory_entities": {
+            "record_count": 22,
+            "represented_entity_count": 22,
+            "financial_record_count": 20
+          },
+          "public_sector_market_and_nonmarket_units": {
+            "record_count": 0,
+            "represented_entity_count": 5152,
+            "financial_record_count": 0,
+            "coverage_status": "aggregate_only"
+          }
+        },
+        "sources": [
+          {
+            "source_id": "che_federal_enterprises_institutions_2025",
+            "period": "2025-02-05",
+            "publisher": "che federal enterprises institutions 2025",
+            "url": "https://www.efv.admin.ch/de/unternehmen-anstalten",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          }
+        ],
+        "unresolved_layers": [
+          "BFS publishes all-level unit and employment totals, but a harmonised open entity-level register of cantonal and municipal enterprises was not identified."
+        ]
+      },
+      "directory": {
+        "country_code": "CHE",
+        "file": "data/public-entity-directory/CHE.v1.json",
+        "bytes": 7678,
+        "record_count": 22,
+        "represented_entity_count": 22,
+        "financial_record_count": 20,
+        "perimeters": {
+          "federal_controlled_or_statutory_entities": 22
+        },
+        "entity_classes": {
+          "statutory_public_body": 14,
+          "controlled_enterprise": 8
+        },
+        "diagnostics": {
+          "net_margin_pct": {
+            "value": -3.728638011393061,
+            "record_count": 3
+          },
+          "operating_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "return_on_assets_pct": {
+            "value": -0.3768927570682308,
+            "record_count": 2
+          },
+          "revenue_per_employee": {
+            "value": 0.2680869951176209,
+            "record_count": 17
+          }
+        }
       }
     },
     "demography": {

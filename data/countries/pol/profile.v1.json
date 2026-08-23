@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T17:36:03.771Z",
+  "generated_at": "2026-08-23T19:05:11.426Z",
   "country": {
     "country_code": "POL",
     "name_cs": "Polsko",
@@ -131,13 +131,15 @@
     },
     "public_entities": {
       "status": "loaded",
-      "coverage": "406 entities; 0 with accounts",
+      "coverage": "406 registry rows; 0 with economic fields; reference perimeter public_sector_registered_units_all_levels",
       "missing_dimensions": [
-        "standardizované účetní výkazy / standardised financial statements"
+        "REGON publishes all-level counts by legal category, but no single open entity-level bulk register combining state, regional and municipal units was identified."
       ],
       "entity_count": 406,
+      "represented_entity_count": 406,
+      "broad_entity_count": 112145,
       "financial_statement_count": 0,
-      "coverage_level": "ownership_register"
+      "coverage_level": "aggregate_and_entity_registry"
     },
     "demography": {
       "status": "loaded",
@@ -2888,20 +2890,69 @@
       "directory_count": 2486
     },
     "public_entities": {
-      "period": "2025-03-31",
-      "scope_cs": "Společnosti s přímým nebo nepřímým podílem polského státu v oficiálním seznamu.",
-      "scope_en": "Companies with a direct or indirect Polish State Treasury holding in the official list.",
-      "entity_count": 406,
-      "financial_statement_count": 0,
-      "coverage": "ownership_register",
-      "missing_dimensions": [
-        "standardizované účetní výkazy / standardised financial statements"
-      ],
-      "source": {
-        "publisher": "Ministerstwo Aktywów Państwowych / dane.gov.pl",
-        "dataset": "Wykaz spółek z udziałem Skarbu Państwa 2025-03-31",
-        "url": "https://dane.gov.pl/pl/dataset/1198/resource/66957",
-        "location": "resource 66957 → CSV → 406 data rows; fields NIP, company, seat, status, Treasury share and representing authority"
+      "coverage": {
+        "comparison_perimeter": "public_sector_registered_units_all_levels",
+        "broad_entity_count": 112145,
+        "registry_file": "data/public-entities/POL.v1.csv.gz",
+        "registry_record_count": 406,
+        "perimeters": {
+          "state_treasury_direct_and_indirect_holdings": {
+            "record_count": 406,
+            "represented_entity_count": 406,
+            "financial_record_count": 0
+          },
+          "public_sector_registered_units_all_levels": {
+            "record_count": 0,
+            "represented_entity_count": 112145,
+            "financial_record_count": 0,
+            "coverage_status": "aggregate_only"
+          }
+        },
+        "sources": [
+          {
+            "source_id": "pol_state_treasury_holdings_2025_03_31",
+            "period": "2025-03-31",
+            "publisher": "pol state treasury holdings 2025 03 31",
+            "url": "https://dane.gov.pl/pl/dataset/1198/resource/66957",
+            "coverage_status": "official_published_source",
+            "record_granularity": "entity"
+          }
+        ],
+        "unresolved_layers": [
+          "REGON publishes all-level counts by legal category, but no single open entity-level bulk register combining state, regional and municipal units was identified."
+        ]
+      },
+      "directory": {
+        "country_code": "POL",
+        "file": "data/public-entity-directory/POL.v1.json",
+        "bytes": 86723,
+        "record_count": 406,
+        "represented_entity_count": 406,
+        "financial_record_count": 0,
+        "perimeters": {
+          "state_treasury_direct_and_indirect_holdings": 406
+        },
+        "entity_classes": {
+          "controlled_enterprise": 406
+        },
+        "diagnostics": {
+          "net_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "operating_margin_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "return_on_assets_pct": {
+            "value": null,
+            "record_count": 0
+          },
+          "revenue_per_employee": {
+            "value": null,
+            "record_count": 0
+          }
+        }
       }
     },
     "demography": {

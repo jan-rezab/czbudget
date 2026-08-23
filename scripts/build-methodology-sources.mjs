@@ -3,11 +3,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 const read = async path => JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"));
-const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, publicEntities, demography] = await Promise.all([
+const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, publicEntityCoverage, publicEntityDirectory, publicEntityAggregates, demography] = await Promise.all([
   read("data/country-parity.v1.json"), read("lib/data/sovereign-benchmark.v1.json"), read("data/country-cash-in.v1.json"),
   read("data/country-spending-2025-2026.v1.json"), read("data/country-spending-comparison.v1.json"), read("data/country-functional-budgets.v1.json"),
   read("data/transport-budget-detail.v1.json"), read("data/country-health.v1.json"), read("data/country-provider-networks.v1.json"),
-  read("data/international-municipalities.v1.json"), read("data/country-public-entities.v1.json"), read("data/country-demography.v1.json")
+  read("data/international-municipalities.v1.json"), read("data/public-entity-coverage.v1.json"), read("data/public-entity-directory/manifest.v1.json"), read("data/public-entity-aggregates.v1.json"), read("data/country-demography.v1.json")
 ]);
 
 const moduleMeta = {
@@ -20,7 +20,7 @@ const moduleMeta = {
   health:{order:7,cs:"Zdravotnictví",en:"Healthcare",artifact:"data/country-health.v1.json"},
   providers:{order:8,cs:"Síť poskytovatelů",en:"Provider network",artifact:"data/country-provider-networks.v1.json"},
   municipalities:{order:9,cs:"Obecní finance",en:"Municipal finance",artifact:"data/international-municipalities.v1.json"},
-  public_entities:{order:10,cs:"Veřejné subjekty",en:"Public entities",artifact:"data/country-public-entities.v1.json"},
+  public_entities:{order:10,cs:"Veřejné subjekty",en:"Public entities",artifact:"data/public-entity-coverage.v1.json"},
   demography:{order:11,cs:"Demografie",en:"Demography",artifact:"data/country-demography.v1.json"}
 };
 const alpha2 = {CZE:"CZ",UKR:"UA",POL:"PL",DEU:"DE",GBR:"UK",FRA:"FR",USA:"US",CHE:"CH",SWE:"SE",DNK:"DK"};
@@ -31,7 +31,7 @@ const municipalByCode = code => municipalities.countries.find(country=>country.c
 const transportByCode = code => transport.countries[code];
 
 function lineage(code,module) {
-  const admin=adminByCode(code), healthProfile=health.countries[code], provider=providers.countries[code], municipal=municipalByCode(code), entity=publicEntities.countries[code], demographic=demography.countries[code], transportProfile=transportByCode(code);
+  const admin=adminByCode(code), healthProfile=health.countries[code], provider=providers.countries[code], municipal=municipalByCode(code), entity=publicEntityCoverage.countries[code], entityDirectory=publicEntityDirectory.countries.find(item=>item.country_code===code), entityAggregates=publicEntityAggregates.observations.filter(item=>item.country_code===code), demographic=demography.countries[code], transportProfile=transportByCode(code);
   if(module==="sovereign") return {
     period:parity.countries.find(c=>c.country_code===code).modules.sovereign.coverage,
     scope:"General government (WEO)",
@@ -90,10 +90,10 @@ function lineage(code,module) {
     caveat:(municipal.missing_dimensions||[]).join("; ")||"Coverage is the entity population stated by the national source."
   };
   if(module==="public_entities") return {
-    period:entity.period,scope:entity.scope_en,
-    sources:[source(entity.source.dataset,entity.source.url,entity.source.location)],
-    transform:"Preserve the official portfolio/register boundary; report identified entities separately from entities with financial statements.",
-    caveat:(entity.missing_dimensions||[]).join("; ")||"Entity counts follow the national portfolio definition and are not cross-country rankings."
+    period:[...new Set([...(entity.sources||[]).map(item=>item.period),...entityAggregates.map(item=>item.period)])].filter(Boolean).join(", "),scope:entity.comparison_perimeter,
+    sources:cleanSources([...(entity.sources||[]).map(item=>source(item.source_id,item.url,`${entity.registry_file} → ${item.source_id}`)),...entityAggregates.map(item=>source(item.source_id,item.source_url,`data/public-entity-aggregates.v1.json → ${code} → ${item.metric}`))]),
+    transform:`Normalize official source rows into ${entity.registry_file}; expose ${entityDirectory.record_count} source-scoped records in ${entityDirectory.file}; keep broader aggregate-only populations separate.`,
+    caveat:(entity.unresolved_layers||[]).join("; ")||publicEntityCoverage.comparison_warning
   };
   return {
     period:demographic.source.period,scope:demographic.projection,

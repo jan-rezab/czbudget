@@ -13,6 +13,8 @@
     "build:country-spending": "python3 scripts/build-country-spending.py && node scripts/build-country-spending-comparison.mjs",
     "build:country-demography": "python3 scripts/build-country-demography.py",
     "build:country-parity": "node scripts/build-country-parity.mjs",
+    "build:public-entities-web": "python3 pipeline/transforms/build_public_entity_frontend.py",
+    "fix:benchmark-canonicals": "node scripts/backfill-benchmark-canonicals.mjs",
     "build:methodology": "node scripts/build-methodology-sources.mjs",
     "validate": "node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
