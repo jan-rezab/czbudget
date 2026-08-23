@@ -41,6 +41,17 @@
 .municipality-switch select:focus-visible { outline: 2px solid #c93237; outline-offset: 3px; }
 .municipality-switch a.active { background: #15201d; color: #fff; }
 .municipality-switch label.active { background: #15201d; color: #fff; }
+.municipality-switch label.dynamic-country-picker { position: relative; min-width: 330px; padding: 8px 14px 10px; transition: background .16s ease, color .16s ease; }
+.dynamic-country-picker > span:first-child { color: #c7ccc6; }
+.country-picker-readout { display: flex; align-items: center; gap: 10px; margin-top: 4px; pointer-events: none; }
+.country-picker-readout img { width: 30px; height: 20px; object-fit: cover; border: 1px solid #ffffff66; }
+.country-picker-readout > span { min-width: 0; display: grid; gap: 2px; }
+.country-picker-readout strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.country-picker-readout small { color: #c7ccc6; font-size: 9px; font-weight: 500; }
+.country-picker-readout > b { margin-left: auto; color: #d9ff69; font-size: 18px; }
+.municipality-switch .dynamic-country-picker select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.municipality-switch .dynamic-country-picker:hover,
+.municipality-switch .dynamic-country-picker:focus-within { background: #293630; box-shadow: inset 0 -4px 0 #d9ff69; }
 .municipal-country-card footer { gap: 18px; align-items: center; }
 .municipal-country-card footer a { padding: 8px 0; font-weight: 700; text-underline-offset: 4px; }
 .municipal-country-card footer a:last-child { margin-left: auto; text-align: right; }
@@ -175,6 +186,7 @@
   .municipality-switch { margin-top: 20px; width: 100%; }
   .municipality-switch a { min-width: 95px; }
   .municipality-switch label { min-width: 0; flex: 1; }
+  .municipality-switch label.dynamic-country-picker { min-width: 0; }
   .municipal-controls { grid-template-columns: 1fr; }
   .czechia-destination-grid > a { min-height: 280px; }
   .municipality-lang-switch button { min-width: 36px; padding-inline: 8px; }

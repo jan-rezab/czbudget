@@ -74,6 +74,71 @@
     row.querySelector(":scope > div")?.append(label);
   });
 
+  const currencyRates = { CZK: 1, EUR: 1 / 24.179, USD: 1.1576 / 24.179 };
+  const allowedCurrencies = Object.keys(currencyRates);
+  const storedCurrency = localStorage.getItem("psd-municipal-currency");
+  let selectedCurrency = allowedCurrencies.includes(storedCurrency) ? storedCurrency : "CZK";
+  const locale = lang === "en" ? "en-GB" : "cs-CZ";
+  const number = (value, digits = 1) => new Intl.NumberFormat(locale, { maximumFractionDigits: digits }).format(value);
+  const currencySymbol = { CZK: lang === "en" ? "CZK" : "Kč", EUR: "€", USD: "$" };
+  const formatMunicipalMoney = (czk, { adaptive = false } = {}) => {
+    if (!Number.isFinite(czk)) return "—";
+    const converted = czk * currencyRates[selectedCurrency];
+    const absolute = Math.abs(converted);
+    const sign = converted < 0 ? "−" : "";
+    let divisor = 1, suffix = "";
+    if (adaptive && absolute >= 1e9) { divisor = 1e9; suffix = lang === "en" ? "bn" : " mld."; }
+    else if (adaptive && absolute >= 1e6) { divisor = 1e6; suffix = lang === "en" ? "m" : " mil."; }
+    else if (adaptive && absolute >= 1e3) { divisor = 1e3; suffix = lang === "en" ? "k" : " tis."; }
+    const formatted = number(absolute / divisor, divisor === 1 ? 0 : 1);
+    if (lang === "en") return `${sign}${selectedCurrency === "CZK" ? "CZK " : currencySymbol[selectedCurrency]}${formatted}${suffix}`;
+    return `${sign}${formatted}${suffix} ${currencySymbol[selectedCurrency]}`;
+  };
+  window.MunicipalCurrency = {
+    get current() { return selectedCurrency; },
+    convert: (czk) => czk * currencyRates[selectedCurrency],
+    format: formatMunicipalMoney,
+    rates: { ...currencyRates },
+  };
+
+  const currencyTextNodes = [];
+  const moneyPattern = /([+−-]?)(\d[\d\s]*(?:[,.]\d+)?)\s*(mld\.|mil\.)?\s*Kč/g;
+  const parseCzk = (sign, raw, unit) => {
+    const numeric = Number(raw.replace(/\s/g, "").replace(",", "."));
+    const multiplier = unit === "mld." ? 1e9 : unit === "mil." ? 1e6 : 1;
+    return (sign === "−" || sign === "-" ? -1 : 1) * numeric * multiplier;
+  };
+  const collectCurrencyText = () => {
+    if (!document.body.classList.contains("detail-page")) return;
+    const moneyWalker = document.createTreeWalker(document.querySelector("main"), NodeFilter.SHOW_TEXT);
+    while (moneyWalker.nextNode()) {
+      const node = moneyWalker.currentNode;
+      if (node.parentElement?.closest("#history-explorer,.municipal-breakdown-explorer,script,style")) continue;
+      moneyPattern.lastIndex = 0;
+      if (!moneyPattern.test(node.nodeValue)) continue;
+      currencyTextNodes.push({ node, original: node.nodeValue });
+    }
+  };
+  const refreshCurrencyText = () => {
+    currencyTextNodes.forEach(({ node, original }) => {
+      moneyPattern.lastIndex = 0;
+      node.nodeValue = original.replace(moneyPattern, (_match, sign, raw, unit) => formatMunicipalMoney(parseCzk(sign, raw, unit), { adaptive: true }));
+    });
+  };
+  const detailHero = document.querySelector(".detail-page .detail-hero");
+  if (detailHero) {
+    const control = document.createElement("label");
+    control.className = "municipal-currency-control";
+    control.innerHTML = `<span>${lang === "en" ? "Recalculate values" : "Přepočítat částky"}</span><select aria-label="${lang === "en" ? "Display currency" : "Měna zobrazení"}">${allowedCurrencies.map((currency) => `<option value="${currency}"${currency === selectedCurrency ? " selected" : ""}>${currency}</option>`).join("")}</select><small>${lang === "en" ? "Reference rates · 18 Aug 2026" : "Referenční kurzy · 18. 8. 2026"}</small>`;
+    detailHero.querySelector(":scope > div")?.append(control);
+    control.querySelector("select").addEventListener("change", (event) => {
+      selectedCurrency = event.target.value;
+      localStorage.setItem("psd-municipal-currency", selectedCurrency);
+      refreshCurrencyText();
+      dispatchEvent(new CustomEvent("municipal-currency-change", { detail: { currency: selectedCurrency } }));
+    });
+  }
+
   const escapeBudgetHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   })[character]);
@@ -102,19 +167,17 @@
       source: "Detail FIN 2-12 M z BigQuery", method: "Vnitřní převody a souhrnné řádky financování jsou vyloučeny.",
       official: "Názvy odpovídají oficiální české rozpočtové skladbě.",
     };
-    const locale = lang === "en" ? "en-GB" : "cs-CZ";
-    const currencySuffix = lang === "en" ? "CZK" : "Kč";
     const percent = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
-    const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+    const compact = { format: (value) => formatMunicipalMoney(value, { adaptive: true }) };
     const nameFor = (dimension, code) => codebook.dimensions?.[dimension]?.[code]?.[lang] || codebook.dimensions?.[dimension]?.[code]?.cs || `${copy.code} ${code}`;
     const panelMarkup = (title, note, entries, dimension, total) => {
       const maximum = Math.max(...entries.map(([, amount]) => Math.abs(amount)), 1);
       const rows = entries.slice(0, 9).map(([code, amount]) => {
         const ratio = total ? amount / total * 100 : 0;
-        return `<div class="breakdown-rank-row"><div class="breakdown-rank-label"><code>${escapeBudgetHtml(code)}</code><strong>${escapeBudgetHtml(nameFor(dimension, code))}</strong><span>${compact.format(amount)} ${currencySuffix} · ${percent.format(ratio)} %</span></div><div class="breakdown-rank-track"><i style="width:${Math.min(100, Math.abs(amount) / maximum * 100).toFixed(2)}%"></i></div></div>`;
+        return `<div class="breakdown-rank-row"><div class="breakdown-rank-label"><code>${escapeBudgetHtml(code)}</code><strong>${escapeBudgetHtml(nameFor(dimension, code))}</strong><span>${compact.format(amount)} · ${percent.format(ratio)} %</span></div><div class="breakdown-rank-track"><i style="width:${Math.min(100, Math.abs(amount) / maximum * 100).toFixed(2)}%"></i></div></div>`;
       }).join("");
       const tableRows = entries.map(([code, amount]) => `<tr><td><code>${escapeBudgetHtml(code)}</code></td><th scope="row">${escapeBudgetHtml(nameFor(dimension, code))}</th><td>${money.format(amount)}</td><td>${total ? `${percent.format(amount / total * 100)} %` : "—"}</td></tr>`).join("");
-      return `<article class="budget-breakdown-panel"><header><div><span>${escapeBudgetHtml(note)} · 2025</span><h3>${escapeBudgetHtml(title)} · 2025</h3></div><strong>${compact.format(total)} ${currencySuffix}</strong></header><div class="breakdown-ranked">${rows}</div><details class="breakdown-full"><summary>${copy.all} (${entries.length})</summary><div><table><caption>${escapeBudgetHtml(title)} · 2025</caption><thead><tr><th>${copy.code}</th><th>${copy.category}</th><th>${copy.amount}</th><th>${copy.share}</th></tr></thead><tbody>${tableRows}</tbody></table></div></details></article>`;
+      return `<article class="budget-breakdown-panel"><header><div><span>${escapeBudgetHtml(note)} · 2025</span><h3>${escapeBudgetHtml(title)} · 2025</h3></div><strong>${compact.format(total)}</strong></header><div class="breakdown-ranked">${rows}</div><details class="breakdown-full"><summary>${copy.all} (${entries.length})</summary><div><table><caption>${escapeBudgetHtml(title)} · 2025</caption><thead><tr><th>${copy.code}</th><th>${copy.category}</th><th>${copy.amount}</th><th>${copy.share}</th></tr></thead><tbody>${tableRows}</tbody></table></div></details></article>`;
     };
     const explorer = document.createElement("section");
     explorer.className = "municipal-breakdown-explorer";
@@ -147,6 +210,7 @@
     const panel = document.querySelector(".detail-page .plan-panel");
     const entityId = document.body.dataset.entityId;
     if (!panel || !entityId) return;
+    document.querySelector(".municipal-breakdown-explorer")?.remove();
     const ico = entityId.split(":").at(-1);
     try {
       const response = await fetch(`../../../data/entities/${encodeURIComponent(ico)}.json?v=20260821-municipal-breakdown`);
@@ -163,9 +227,7 @@
       const labels = lang === "en"
         ? { enacted: "Approved", revised: "Amended", actual: "Actual", stage: "Budget stage", revenue: "Revenue", expenditure: "Expenditure", balance: "Balance", heading: "Approved, amended and actual.", source: "BigQuery headline · FIN 2-12 M" }
         : { enacted: "Schválený", revised: "Upravený", actual: "Skutečnost", stage: "Stav rozpočtu", revenue: "Příjmy", expenditure: "Výdaje", balance: "Saldo", heading: "Schválený, upravený a skutečnost.", source: "BigQuery headline · FIN 2-12 M" };
-      const money = new Intl.NumberFormat(lang === "en" ? "en-GB" : "cs-CZ", {
-        style: "currency", currency: "CZK", maximumFractionDigits: 0,
-      });
+      const money = { format: (value) => formatMunicipalMoney(value) };
       const ordered = ["enacted", "revised", "actual"].map((stage) => stages.find((row) => row.stage === stage));
       if (ordered.some((row) => !row)) throw new Error("Municipal profile has incomplete budget stages");
       panel.innerHTML = `<div class="budget-stage-scroll" tabindex="0"><table class="budget-stage-table"><caption>${labels.heading} · 2025</caption>
@@ -186,11 +248,12 @@
     }
   };
   void renderBudgetStages();
+  addEventListener("municipal-currency-change", () => { void renderBudgetStages(); });
 
   const appendBudgetYears = () => document.querySelectorAll(".detail-kpis article > span, .detail-panel .panel-title h3, .entity-card dt, .layer-row dt, .aggregate-cohort dt").forEach((label) => {
     if (!label.textContent.includes("2025")) label.append(" · 2025");
   });
-  if (lang !== "en") { appendBudgetYears(); return; }
+  if (lang !== "en") { appendBudgetYears(); collectCurrencyText(); refreshCurrencyText(); return; }
   const dictionary = new Map(Object.entries({
     "Domů": "Home", "Obce": "Municipalities", "Obce a kraje": "Municipalities and regions", "Velká města": "Large cities", "Kraje": "Regions",
     "České územní rozpočty · skutečnost 2025": "Czech local government budgets · 2025 actuals",
@@ -249,9 +312,25 @@
     if (translated) input.setAttribute("placeholder", translated);
   });
   document.title = document.title
-    .replace("Rozpočty všech obcí a krajů ČR", "Budgets of all Czech municipalities and regions")
+    .replace("Rozpočty všech obcí a krajů ČR", "Czech town and municipality budgets")
+    .replace("Rozpočty měst a obcí ČR", "Czech town and municipality budgets")
     .replace("Rozpočty velkých měst", "Large-city budgets")
-    .replace("Rozpočet obce", "Municipal budget")
+    .replace("Rozpočet obce", "Town and municipality budget")
     .replace("příjmy, výdaje a účty", "revenue, expenditure and cash")
     .replace("trend a stav účtů", "trend and cash");
+  const entityName = document.querySelector(".detail-page h1")?.textContent.trim();
+  if (entityName) document.title = `${entityName} town and municipality budget 2025 — revenue, expenditure and cash`;
+  const englishDescription = entityName
+    ? `${entityName} town and municipality budget for 2025: revenue, expenditure, fiscal balance, cash and a 16-year interactive history.`
+    : document.body.classList.contains("all-municipalities")
+      ? "Search and compare revenue, expenditure, fiscal balances, cash and per-person spending for every Czech town and municipality from 2010 to 2025."
+      : null;
+  if (englishDescription) {
+    document.querySelector('meta[name="description"]')?.setAttribute("content", englishDescription);
+    document.querySelector('meta[property="og:title"]')?.setAttribute("content", document.title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute("content", englishDescription);
+    document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", document.title);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", englishDescription);
+  }
+  collectCurrencyText(); refreshCurrencyText();
 })();

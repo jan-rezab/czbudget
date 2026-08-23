@@ -27,7 +27,13 @@
     if(state.data)render();
   }
   function renderSwitch(){
-    $("#municipality-country-switch").innerHTML=state.data.countries.map(c=>`<option value="${slugs[c.code]}"${c.code===code?" selected":""}>${esc(c[`name_${state.lang}`])}</option>`).join("");
+    const select=$("#municipality-country-switch"), wrapper=select.closest("label"), country=state.country;
+    select.innerHTML=state.data.countries.map(c=>`<option value="${slugs[c.code]}"${c.code===code?" selected":""}>${esc(c[`name_${state.lang}`])} · ${fmt(c.directory_count)}</option>`).join("");
+    wrapper.classList.add("dynamic-country-picker");
+    wrapper.querySelector(":scope > span")?.replaceChildren(state.lang==="en"?"Choose a country":"Vyberte zemi");
+    let readout=wrapper.querySelector(".country-picker-readout");
+    if(!readout){readout=document.createElement("span");readout.className="country-picker-readout";select.before(readout);}
+    readout.innerHTML=`<img src="${assetRoot}assets/flags/${country.alpha2.toLowerCase()}.svg" alt=""><span><strong>${esc(country[`name_${state.lang}`])}</strong><small>${fmt(country.directory_count)} ${t().entities} · ${country.years.join(" + ")}</small></span><b aria-hidden="true">⌄</b>`;
   }
   function render(){
     const c=state.country, profile=p();

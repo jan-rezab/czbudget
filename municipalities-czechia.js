@@ -21,7 +21,15 @@
     const countrySelect=document.querySelector("#municipality-country-switch");
     countrySelect?.setAttribute("aria-label",english()?"Municipality country page":"Stránka obcí podle země");
     document.querySelector('[data-view-link="europe"]')?.setAttribute("href",`../?lang=${state.lang}`);
-    if(countrySelect)countrySelect.innerHTML=Object.entries(routes).map(([slug,names])=>`<option value="${slug}"${slug==="czechia"?" selected":""}>${names[english()?1:0]}</option>`).join("");
+    if(countrySelect){
+      countrySelect.innerHTML=Object.entries(routes).map(([slug,names])=>`<option value="${slug}"${slug==="czechia"?" selected":""}>${names[english()?1:0]}</option>`).join("");
+      const wrapper=countrySelect.closest("label");wrapper.classList.add("dynamic-country-picker");
+      wrapper.querySelector(":scope > span")?.replaceChildren(english()?"Choose a country":"Vyberte zemi");
+      let readout=wrapper.querySelector(".country-picker-readout");
+      if(!readout){readout=document.createElement("span");readout.className="country-picker-readout";countrySelect.before(readout);}
+      const count=state.data?.summary?.municipalities?.entity_count||6254;
+      readout.innerHTML=`<img src="${assetRoot}assets/flags/cz.svg" alt=""><span><strong>${english()?"Czechia":"Česko"}</strong><small>${integer(count)} ${english()?"entities":"jednotek"} · 2025</small></span><b aria-hidden="true">⌄</b>`;
+    }
     document.querySelector('[data-destination="directory"]')?.setAttribute("href",`${assetRoot}cz/obce/?lang=${state.lang}`);
     document.querySelector('[data-destination="cities"]')?.setAttribute("href",`${assetRoot}cz/mesta/?lang=${state.lang}`);
     document.querySelector('[data-destination="prague"]')?.setAttribute("href",`${assetRoot}eu-capitals.html?lang=${state.lang}&city=prague-cz#city-detail`);

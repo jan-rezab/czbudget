@@ -164,6 +164,9 @@ test("every covered country has a municipality homepage and the navigator connec
   }
   await page.goto("/municipalities/denmark/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-title")).toContainText("Danish municipalities");
+  await expect(page.locator(".dynamic-country-picker")).toContainText("Choose a country");
+  await expect(page.locator(".country-picker-readout")).toContainText("Denmark");
+  await expect(page.locator("#municipality-country-switch option")).toHaveCount(10);
   await expect(page.locator("#country-insight-grid article")).toHaveCount(4);
   await expect(page.locator("#country-directory-count")).toContainText("98 entities");
   await page.locator("#country-municipality-search").fill("Copenhagen");
@@ -285,6 +288,22 @@ test("municipal profiles expose 2010–2025 history and preserve genuine coverag
   await expect(page.locator("#history-table-body tr")).toHaveCount(13);
   await expect(page.locator("#history-kpis")).toContainText("Součet výsledků za 13 let");
   await expect(page.locator("#history-table-body")).not.toContainText("2010");
+});
+
+test("municipal detail charts use meaningful units, hover values and currency recalculation", async ({ page }) => {
+  await page.goto("/cz/obce/arnoltice/?lang=en", { waitUntil: "networkidle" });
+  await expect(page).toHaveTitle(/Arnoltice town and municipality budget/);
+  await expect(page.locator("#history-kpis article").first()).toContainText("CZK 18.6m");
+  await expect(page.locator("#history-kpis")).not.toContainText("CZK 0bn");
+  await expect(page.locator(".history-year-hit")).toHaveCount(16);
+  await page.locator(".history-year-hit").last().hover();
+  await expect(page.locator(".history-tooltip")).toBeVisible();
+  await expect(page.locator(".history-tooltip")).toContainText("2025");
+  await expect(page.locator(".history-tooltip")).toContainText("CZK 18.6m");
+  await page.locator(".municipal-currency-control select").selectOption("EUR");
+  await expect(page.locator(".detail-kpis article").first()).toContainText("€769.3k");
+  await expect(page.locator("#history-kpis article").first()).toContainText("€770.3k");
+  await expect(page.locator("#history-chart .history-grid")).toContainText("EUR m");
 });
 
 test("all representative page menus resolve and primary navigation routes correctly", async ({ page, request }) => {
