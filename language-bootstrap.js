@@ -2,6 +2,10 @@
   if (window.__psdLanguageBootstrap) return;
   window.__psdLanguageBootstrap = true;
 
+  const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "/";
+  if (!document.querySelector("link[data-portal-ui]")) { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = `${assetRoot}portal-ui.css?v=20260823`; styles.dataset.portalUi = "true"; document.head.append(styles); }
+  if (!document.querySelector("script[data-portal-ui]")) { const script = document.createElement("script"); script.src = `${assetRoot}portal-ui.js?v=20260823`; script.defer = true; script.dataset.portalUi = "true"; document.head.append(script); }
+
   const supported = new Set(["cs", "en"]);
   const requested = new URLSearchParams(location.search).get("lang");
   let stored = null;

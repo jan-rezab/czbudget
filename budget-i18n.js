@@ -31,6 +31,17 @@
     "Každá řada nese institucionální rozsah. Státní rozpočet, sektor vládních institucí a veřejné korporace jsou oddělené a nesčítatelné vrstvy.":"Every series states its institutional scope. The state budget, general government and public corporations are separate, non-additive layers.","Pokladní plnění státního rozpočtu 2001–2025 a schválený rozpočet 2026. Národní metodika, mld. Kč.":"State-budget cash outturn for 2001–2025 and the approved 2026 budget. National methodology, CZK bn.","Účelová struktura zahrnuje EU/FM; všech 47 kapitol je srovnáno bez EU/FM. Rozsahy jsou viditelně oddělené.":"The purpose structure includes EU/FM; all 47 chapters are compared without EU/FM. The scopes are visibly separated.","IMF WEO, sektor vládních institucí, podíly na HDP. Transfery uvnitř sektoru jsou konsolidované; tržní veřejné korporace jsou mimo.":"IMF WEO, general government, shares of GDP. Intra-sector transfers are consolidated; market public corporations are excluded.",
     "Každý rok má stejnou klasifikaci. „Ostatní příjmy“ jsou reziduální příjmová kategorie uvnitř státního rozpočtu — zejména nedaňové a kapitálové příjmy a přijaté transfery. Nejde o příjmy dalšího veřejného sektoru.":"Every year uses the same classification. ‘Other revenue’ is a residual category inside the state budget—mainly non-tax and capital revenue and transfers received. It is not revenue of another public-sector perimeter.","Harmonizovaný rozsah IMF zahrnuje ústřední, regionální a místní vládu i fondy sociálního zabezpečení po konsolidaci. Tržní veřejné korporace jsou mimo; řada není totožná s národním státním či federálním rozpočtem.":"The harmonised IMF scope includes central, regional and local government plus social-security funds after consolidation. Market public corporations are excluded; the series is not the national state or federal budget."
   };
+  Object.assign(csToEn, {
+    "Český státní rozpočet": "Czech state budget",
+    "Rozsah dat": "Data scope",
+    "Tři účetní hranice": "Three accounting boundaries",
+    "Příjmy a výdaje podle kategorií": "Revenue and expenditure by category",
+    "Veřejné firmy a rozpočet": "Public companies and the state budget",
+    "Výhled důchodů, zdraví a péče": "Pensions, health and care outlook",
+    "Srovnání deseti zemí": "Comparison of ten countries",
+    "09 / Data a metodika": "09 / Data and methodology",
+    "Zdroje a definice": "Sources and definitions"
+  });
   const enToCs = Object.fromEntries(Object.entries(csToEn).map(([cs,en]) => [en,cs]));
   let lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("psd-lang") || "cs";
   // The HTML shipped by this page is always Czech. language-bootstrap.js sets

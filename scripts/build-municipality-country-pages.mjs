@@ -7,7 +7,10 @@ const pages={
   france:{code:"FRA",title:"French municipalities",description:"Coverage, accounting scope and a searchable directory of French communes."},
   sweden:{code:"SWE",title:"Swedish municipalities",description:"Costs, income, balance sheets and a searchable directory of all 290 Swedish municipalities."},
   england:{code:"GBR",title:"English local authorities",description:"Revenue outturn coverage and a searchable directory of English councils and the GLA."},
-  ukraine:{code:"UKR",title:"Ukrainian municipalities",description:"Complete 2024–2025 coverage and a searchable directory of 1,467 Ukrainian territorial communities."}
+  ukraine:{code:"UKR",title:"Ukrainian municipalities",description:"Complete 2024–2025 coverage and a searchable directory of 1,467 Ukrainian territorial communities."},
+  norway:{code:"NOR",title:"Norwegian municipalities",description:"Official municipal accounts and a searchable directory of Norwegian municipalities."},
+  netherlands:{code:"NLD",title:"Dutch municipalities",description:"Official budget data and a searchable directory of Dutch municipalities."},
+  finland:{code:"FIN",title:"Finnish municipalities",description:"Official municipal accounts and a searchable directory of Finnish municipalities."}
 };
 
 for(const [slug,page] of Object.entries(pages)){
@@ -16,6 +19,8 @@ for(const [slug,page] of Object.entries(pages)){
 <html lang="cs">
 <head>
   <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+  <link rel="stylesheet" href="../../site-header.css?v=20260822-component" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260822-component" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>${page.title} — Public Spending Data</title>
@@ -28,11 +33,10 @@ for(const [slug,page] of Object.entries(pages)){
   <link rel="stylesheet" href="../../chart-system.css?v=20260822-country-municipalities">
   <link rel="stylesheet" href="../../municipalities.css?v=20260823-layout-fix">
   <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260823-municipal-ux">
-  <script src="../../global-nav.js?v=20260822-country-municipalities" defer></script>
   <script src="../../municipalities-country.js?v=20260823-municipal-ux" defer></script>
 </head>
 <body class="municipalities-page country-municipalities-page" data-country-code="${page.code}" data-country-slug="${slug}">
-  <header class="site-header compact-header has-global-nav"><a class="brand" href="../../index.html"><span class="brand-grid" aria-hidden="true"></span><span class="wordmark">Public Spending <b>Data</b></span></a><nav class="global-nav" aria-label="Primary navigation"></nav><div class="municipality-lang-switch" role="group" aria-label="Jazyk"><button data-lang="cs" class="active" aria-pressed="true">CZ</button><button data-lang="en" aria-pressed="false">EN</button></div></header>
+  <psd-site-header></psd-site-header>
   <main id="top">
     <nav class="municipality-switch" aria-label="Municipality views"><a href="../?lang=cs" data-view-link="europe" data-copy="viewEurope">Evropa</a><label class="active"><span data-copy="countryHomepage">Stránka země</span><select id="municipality-country-switch" aria-label="Stránka obcí podle země"></select></label></nav>
     <section class="municipal-hero"><div><span class="eyebrow"><i class="live-dot"></i><span id="country-eyebrow">—</span></span><h1 id="country-title">—</h1><p id="country-intro">—</p></div><div class="municipal-hero-stat"><span data-copy="covered">Pokryté místní jednotky</span><strong id="country-total">—</strong><small id="country-coverage">—</small></div></section>
@@ -41,7 +45,8 @@ for(const [slug,page] of Object.entries(pages)){
     <section id="directory" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="directoryKicker">02 / Místní úroveň</span><h2 data-copy="directoryTitle">Najděte konkrétní obec.</h2></div><p id="country-directory-count">—</p></div><div class="municipal-controls country-directory-controls"><label><span data-copy="search">Hledat</span><input id="country-municipality-search" type="search" autocomplete="off" data-placeholder="searchPlaceholder" placeholder="Název nebo národní kód…"></label><label><span data-copy="year">Rok</span><select id="country-year-filter"></select></label><button id="country-reset" type="button" data-copy="reset">Vymazat filtry</button></div><div id="country-municipality-grid" class="municipality-grid"></div><button id="country-load-more" class="load-more" type="button" data-copy="more">Načíst další</button></section>
     <section id="context" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="contextKicker">03 / Co je uvnitř</span><h2 data-copy="contextTitle">Rozsah zůstává viditelný.</h2></div><p data-copy="contextCopy">Národní zdroj a účetní hranice jsou součástí výsledku, ne poznámka pod čarou.</p></div><div id="country-context-grid" class="country-context-grid"></div></section>
   </main>
-  <footer><div><span>Public Spending Data</span><small id="country-footer">Municipal finance · official national source</small></div><a href="#top" data-copy="top">Nahoru ↑</a></footer>
+  <footer data-global-footer></footer>
+  <script src="../../global-footer.js?v=20260823-footer" defer></script>
 </body>
 </html>`;
   await mkdir(new URL(`../municipalities/${slug}/`,import.meta.url),{recursive:true});

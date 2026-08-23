@@ -254,6 +254,15 @@
   const appendBudgetYears = () => document.querySelectorAll(".detail-kpis article > span, .detail-panel .panel-title h3, .entity-card dt, .layer-row dt, .aggregate-cohort dt").forEach((label) => {
     if (!label.textContent.includes("2025")) label.append(" · 2025");
   });
+  const simpleHeadings = new Map([
+    ["Dvacet let\nv jednom trendu.", "Rozpočty měst v letech 2006–2025"],
+    ["Detail každého města.", "Profily měst"],
+    ["Auditovatelný profil.", "Zdroje a data"]
+  ]);
+  document.querySelectorAll("h1,h2,h3").forEach((heading) => {
+    const replacement = simpleHeadings.get(heading.textContent.trim());
+    if (replacement) heading.textContent = replacement;
+  });
   if (lang !== "en") { appendBudgetYears(); collectCurrencyText(); refreshCurrencyText(); return; }
   const dictionary = new Map(Object.entries({
     "Domů": "Home", "Obce": "Municipalities", "Obce a kraje": "Municipalities and regions", "Velká města": "Large cities", "Kraje": "Regions",
@@ -287,14 +296,14 @@
     "Hledat": "Search", "Název nebo IČO…": "Name or registration ID…", "Kraj": "Region", "Všechny kraje": "All regions", "Přebytek i schodek": "Surplus and deficit", "Přebytek": "Surplus", "Schodek": "Deficit", "Řazení": "Sort", "Podle příjmů": "By revenue", "Podle výdajů": "By expenditure", "Podle výdajů na obyvatele": "By expenditure per person", "Podle počtu obyvatel": "By population", "Podle stavu účtů": "By cash", "Podle výsledku": "By balance", "Podle názvu": "By name", "Vymazat filtry": "Reset filters", "Načíst dalších 48 obcí": "Load 48 more municipalities",
     "Zobrazit 20letý trend velkých měst →": "View the 20-year large-city trend →", "Detail a data": "Profile and data", "Detail rozpočtu": "Budget profile",
     "Výsledek, stav účtů i počet obyvatel.": "Balance, cash and population.", "Výsledek = skutečné příjmy po konsolidaci minus skutečné výdaje po konsolidaci. Stav účtů je součet účtů 068, 231, 236, 241, 244, 261 a 262 v rozvaze obce. Výdaje na obyvatele používají střední stav obyvatel k 1. červenci daného roku.": "Balance equals actual consolidated revenue minus actual consolidated expenditure. Cash is the sum of accounts 068, 231, 236, 241, 244, 261 and 262. Expenditure per person uses mid-year population on 1 July.", "Kompletní snapshot": "Complete snapshot", "Rozpočtový zdroj": "Budget source", "Počet obyvatel": "Population",
-    "27 velkých měst · nominální CZK": "27 large cities · nominal CZK", "20 let": "20 years", "Dvacet let\nv jednom trendu.": "Twenty years\nin one trend.",
+    "27 velkých měst · nominální CZK": "27 large cities · nominal CZK", "20 let": "20 years", "Rozpočty měst v letech 2006–2025": "City budgets, 2006–2025",
     "Každý rok od 2006 do 2025: příjmy, výdaje, výsledek hospodaření a stav účtů.": "Every year from 2006 to 2025: revenue, expenditure, fiscal balance and cash.",
     "20 let / 2006–2025": "20 years / 2006-2025", "16 let / 2010–2025": "16 years / 2010-2025", "Výsledek hospodaření a stav účtů.": "Fiscal balance and cash.", "Vyberte město": "Select a city",
-    "Roční data v tabulce": "Annual data table", "Rok": "Year", "Profily": "Profiles", "Detail každého města.": "Every city in detail.", "Nejnovější rok i celá časová řada na jedné trvalé adrese.": "The latest year and full time series on one permanent URL.",
+    "Roční data v tabulce": "Annual data table", "Rok": "Year", "Profily": "Profiles", "Profily měst": "City profiles", "Nejnovější rok i celá časová řada na jedné trvalé adrese.": "The latest year and full time series on one permanent URL.",
     "Obecní účetní jednotka": "Municipal reporting entity", "Rozpočet 2025": "2025 budget", "Trend 20 let": "20-year trend", "Trend 16 let": "16-year trend", "Stáhnout JSON": "Download JSON",
     "ročních výdajů kryto stavem účtů": "of annual expenditure covered by cash", "upraveného rozpočtu": "of the amended budget", "meziročně": "year on year",
     "Plán a skutečnost.": "Budget and actuals.", "Struktura příjmů": "Revenue mix", "Struktura výdajů": "Expenditure mix", "Daňové příjmy": "Tax revenue", "Přijaté transfery": "Transfers received", "Nedaňové příjmy": "Non-tax revenue", "Kapitálové příjmy": "Capital revenue", "Běžné výdaje": "Current expenditure", "Kapitálové výdaje": "Capital expenditure",
-    "Data a metodika": "Data and methodology", "Auditovatelný profil.": "An auditable profile.", "Rozpočet": "Budget", "Strojová data": "Machine-readable data", "Historická data": "Historical data",
+    "Data a metodika": "Data and methodology", "Zdroje a data": "Sources and data", "Rozpočet": "Budget", "Strojová data": "Machine-readable data", "Historická data": "Historical data",
     "České územní rozpočty": "Czech local government budgets"
   }));
 

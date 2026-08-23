@@ -49,13 +49,24 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("English remains selected when a municipality card is opened", async ({ page }) => {
+  await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
+  await page.locator("#country-filter").selectOption("CZE");
+  await page.locator("#municipality-search").fill("Abertamy");
+  const card = page.locator("#municipality-grid .municipality-card");
+  await expect(card).toHaveCount(1);
+  await card.click({ position: { x: 12, y: 12 } });
+  await expect(page).toHaveURL(/\/cz\/municipalities\/abertamy\/\?lang=en/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+});
+
 test("state budget translates its Czech static body on an initial English visit", async ({ page }) => {
   await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.locator(".budget-hero h1")).toHaveText("The Czech budget.");
+  await expect(page.locator(".budget-hero h1")).toHaveText("Czech state budget");
   await expect(page.locator(".budget-hero")).toContainText("Twenty-five years of revenue and expenditure");
-  await expect(page.locator(".fiscal-perimeter-map")).toContainText("Three perimeters.");
-  await expect(page.locator(".fiscal-perimeter-map")).not.toContainText("Tři účty.");
+  await expect(page.locator(".fiscal-perimeter-map")).toContainText("Three accounting boundaries");
+  await expect(page.locator(".fiscal-perimeter-map")).not.toContainText("Tři účetní hranice");
 });
 
 test("comparison and methodology live outside the homepage", async ({ page }) => {
@@ -63,7 +74,7 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#compare")).toHaveCount(0);
   await expect(page.locator("#method")).toHaveCount(0);
   await expect(page.locator('.home-hero a[href^="comparison.html"]')).toBeVisible();
-  await expect(page.locator(".glorious-footer")).toContainText("Hlídač státu, z.ú.");
+  await expect(page.locator(".glorious-footer")).toContainText("Hlidac statu, z.u.");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#compare-table tr")).toHaveCount(10);
@@ -72,19 +83,19 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".method-grid-expanded article")).toHaveCount(6);
-  await expect(page.locator(".page-hero")).toContainText("Never oversimplify");
+  await expect(page.locator(".page-hero")).toContainText("How we compare the data");
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });
 
 test("about page and footer credit Hlidac statu in both languages", async ({ page }) => {
   await page.goto("/about.html?lang=cs", { waitUntil: "networkidle" });
-  await expect(page.locator(".maker-showcase")).toContainText("Hlídač státu, z.ú.");
+  await expect(page.locator(".maker-showcase")).toContainText("Hlidac statu, z.u.");
   await expect(page.locator(".maker-showcase")).toContainText("nezisková organizace");
   await expect(page.locator(".glorious-footer")).toContainText("Projekt připravuje");
 
   await page.locator('[data-lang="en"]').click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.locator(".maker-showcase")).toContainText("nonprofit watchdog organisation");
+  await expect(page.locator(".maker-showcase")).toContainText("nonprofit organisation");
   await expect(page.locator(".glorious-footer")).toContainText("Created by");
   await expect(page).toHaveURL(/about\.html\?lang=en/);
 });
@@ -100,7 +111,7 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("html")).toHaveAttribute("data-language-pending", "en");
   await expect(page.locator("body")).toBeHidden();
-  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Public money.");
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Public budgets.");
   await expect(page.locator("html")).not.toHaveAttribute("data-language-pending", /.+/);
   await expect(page.locator("body")).toBeVisible();
 });
@@ -139,6 +150,9 @@ test("deep dives expose a dedicated topic hierarchy and country-filtered transpo
 test("international municipality directory filters by country, year and search", async ({ page }) => {
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(10);
+  await expect(page.locator("#country-filter + .custom-select-button")).toBeVisible();
+  await expect(page.locator("#year-filter + .custom-select-button")).toBeVisible();
+  await expect(page.locator("#type-filter + .custom-select-button")).toBeVisible();
   await expect(page.locator(".municipality-lang-switch button.active")).toHaveCSS("color", "rgb(250, 247, 239)");
   await expect(page.locator(".municipal-country-card footer").first()).toHaveCSS("margin-left", "0px");
   await expect(page.locator('.municipal-country-card[data-country="NOR"] footer a').first()).toHaveAttribute("href", /\/municipalities\/norway\/\?lang=en$/);
@@ -146,7 +160,7 @@ test("international municipality directory filters by country, year and search",
   await expect(page.locator("#type-filter option[value='all']")).toHaveText("Municipalities + capitals");
   await expect(page.locator("#municipality-grid .capital-card")).toHaveCount(27);
   await expect(page.locator("#about-project")).toContainText("Created by");
-  await expect(page.locator("#about-project")).toContainText("Hlídač státu, z.ú.");
+  await expect(page.locator("#about-project")).toContainText("Hlidac statu, z.u.");
   await expect(page.locator("#about-project")).toContainText("05965527");
   await page.locator("#country-filter").selectOption("DNK");
   await expect(page.locator("#directory-count")).toContainText("98 entities");
@@ -168,7 +182,7 @@ test("every covered country has a municipality homepage and the navigator connec
     expect(response.ok(), `${slug} municipality homepage failed`).toBeTruthy();
   }
   await page.goto("/municipalities/denmark/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#country-title")).toContainText("Danish municipalities");
+  await expect(page.locator("#country-title")).toContainText("Budgets of Danish municipalities");
   await expect(page.locator(".dynamic-country-picker")).toContainText("Choose a country");
   await expect(page.locator(".country-picker-readout")).toContainText("Denmark");
   await expect(page.locator("#municipality-country-switch option")).toHaveCount(10);
@@ -178,7 +192,7 @@ test("every covered country has a municipality homepage and the navigator connec
   await expect(page.locator("#country-municipality-grid .municipality-card")).toHaveCount(1);
   await page.locator("#municipality-country-switch").selectOption("france");
   await expect(page).toHaveURL(/\/municipalities\/france\/\?lang=en/);
-  await expect(page.locator("#country-title")).toContainText("French communes");
+  await expect(page.locator("#country-title")).toContainText("Budgets of French municipalities");
 });
 
 test("country profiles expose sortable ten-year health, social and transport comparisons", async ({ page }) => {
@@ -201,7 +215,7 @@ test("country profiles expose sortable ten-year health, social and transport com
   await expect(page.locator("#provider-network")).toBeVisible();
   await page.locator("#country-switch").selectOption("DEU");
   await expect(page.locator("#healthcare-system")).toBeVisible();
-  await expect(page.locator("#country-function-health-title")).toHaveText("Ten years of health.");
+  await expect(page.locator("#country-function-health-title")).toHaveText("Health spending, 2015–2024");
   await expect(transport).toContainText("13,210 km");
 });
 
