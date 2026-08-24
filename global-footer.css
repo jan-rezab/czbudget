@@ -10,30 +10,35 @@
   gap: 28px !important;
   align-items: center;
   border-top: 1px solid #171918 !important;
-  background: #faf7ef !important;
-  color: #171918 !important;
+  background: #171918 !important;
+  color: #faf7ef !important;
   text-align: left !important;
 }
 .glorious-footer a { color: inherit; text-decoration: none; }
 .glorious-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .footer-brand { display: block; line-height: 0; }
-.footer-brand img { display: block; width: 142px; height: auto; }
+.footer-brand img {
+  display: block;
+  width: 142px;
+  height: auto;
+  filter: invert(1);
+}
 .footer-formalities {
   display: flex;
   flex-wrap: wrap;
   gap: 3px 14px;
   align-items: baseline;
-  color: #5f625e;
+  color: #b9bbb6;
   font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
-.footer-formalities strong { flex-basis: 100%; color: #171918; font-size: 12px; }
+.footer-formalities strong { flex-basis: 100%; color: #faf7ef; font-size: 12px; }
 .footer-formalities a { text-decoration: underline; text-underline-offset: 3px; }
 .footer-hlidac { display: block; width: 96px; line-height: 0; }
 .footer-hlidac img {
   display: block;
   width: 96px;
   height: auto;
-  filter: grayscale(1) contrast(2.25);
+  filter: invert(1);
 }
 .footer-links {
   display: flex;

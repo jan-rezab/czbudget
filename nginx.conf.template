@@ -77,7 +77,7 @@ server {
   location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states)$ {
     sub_filter_once off;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
-    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260824-footer-universal';
+    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260824-dark-footer';
     sub_filter 'country.js?v=20260823-country-hover' 'country.js?v=20260824-readable-country-routes';
     sub_filter 'country-parity.css?v=20260822-parity-contract' 'country-parity.css?v=20260824-readable-country-routes';
     sub_filter 'country-parity.js?v=20260822-parity-contract' 'country-parity.js?v=20260824-readable-country-routes';
@@ -100,9 +100,9 @@ server {
     sub_filter 'cz-municipal-directory.js"' 'cz-municipal-directory.js?v=20260823-english-route"';
     sub_filter 'cz-history.js"' 'cz-history.js?v=20260824-history-views"';
     sub_filter 'municipal-benchmark-profile.css"' 'municipal-benchmark-profile.css?v=20260824-box-sizing"';
-    sub_filter 'global-nav.js?v=20260822-component"' 'global-nav.js?v=20260824-footer-universal"';
-    sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260824-footer-universal"';
-    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260824-footer-universal';
+    sub_filter 'global-nav.js?v=20260822-component"' 'global-nav.js?v=20260824-dark-footer"';
+    sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260824-dark-footer"';
+    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260824-dark-footer';
     sub_filter 'homepage-v2.js?v=20260822-separate-pages' 'homepage-v2.js?v=20260824-language-contract';
     sub_filter 'homepage-category.js?v=20260821-benchmark-flags' 'homepage-category.js?v=20260824-language-contract';
     sub_filter 'homepage-health-performance.js?v=20260824-topline-compare' 'homepage-health-performance.js?v=20260824-language-contract';

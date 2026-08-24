@@ -7,7 +7,7 @@
     document.body.append(globalFooter);
   }
   globalFooter.setAttribute("data-global-footer", "");
-  const compactFooterStyles = `${assetRoot}global-footer.css?v=20260824-compact`;
+  const compactFooterStyles = `${assetRoot}global-footer.css?v=20260824-dark`;
   const existingFooterStyles = document.querySelector('link[href*="global-footer.css"]');
   if (existingFooterStyles) existingFooterStyles.href = compactFooterStyles;
   else {
