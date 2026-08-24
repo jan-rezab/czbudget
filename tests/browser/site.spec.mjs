@@ -152,6 +152,27 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
   await expect(page.locator("body")).toBeVisible();
 });
 
+test("homepage defaults every independently rendered module to English", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator('[data-lang="en"]')).toHaveClass(/active/);
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Public budgets.");
+  await expect(page.locator("#category-comparison-root")).toContainText("Spending by category");
+  await expect(page.locator("#category-comparison-root")).toContainText("Country profile");
+  await expect(page.locator("#category-comparison-root")).not.toContainText("Výdaje podle kategorií");
+  await expect(page.locator("#homepage-health-performance-root")).toContainText("Health-system performance");
+  await expect(page.locator(".glorious-footer")).toContainText("Public budgets in one place");
+
+  await page.locator('[data-lang="cs"]').click();
+  await expect(page.locator("#category-comparison-root")).toContainText("Výdaje podle kategorií");
+  await expect(page.locator("#homepage-health-performance-root")).toContainText("Výkon zdravotních systémů");
+
+  await page.locator('[data-lang="en"]').click();
+  await expect(page.locator("#category-comparison-root")).toContainText("Spending by category");
+  await expect(page.locator("#homepage-health-performance-root")).toContainText("Health-system performance");
+});
+
 test("deep dives expose dedicated topic hierarchies for countries and capital cities", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".deep-card")).toHaveCount(6);

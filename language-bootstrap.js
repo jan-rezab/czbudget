@@ -24,8 +24,25 @@
   try { stored = localStorage.getItem("psd-lang"); } catch {}
 
   const initial = document.documentElement.lang || "cs";
-  const language = supported.has(requested) ? requested : (supported.has(stored) ? stored : initial);
+  const isHomepage = location.pathname === "/" || location.pathname === "/index.html";
+  const defaultLanguage = isHomepage ? "en" : (supported.has(initial) ? initial : "cs");
+  const language = supported.has(requested) ? requested : (supported.has(stored) ? stored : defaultLanguage);
   document.documentElement.lang = language;
+
+  // This is the single language authority for independently rendered modules.
+  // Page scripts should read the resolved document language instead of
+  // re-resolving URL, storage and fallback rules on their own.
+  const current = () => document.documentElement.lang === "en" ? "en" : "cs";
+  const set = (next, { persist = false } = {}) => {
+    if (!supported.has(next)) return current();
+    document.documentElement.lang = next;
+    if (persist) {
+      try { localStorage.setItem("psd-lang", next); } catch {}
+    }
+    dispatchEvent(new CustomEvent("psdlanguagechange", { detail: { lang: next } }));
+    return next;
+  };
+  window.PSDLanguage = Object.freeze({ current, set, defaultLanguage });
 
   // Keep the document metadata bilingual as well as the visible page. Most of
   // the site is static HTML enhanced by page-specific translators, so without

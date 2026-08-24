@@ -13,7 +13,7 @@
     cs:{kicker:"02 / Výdaje podle kategorií",title:"Stejná otázka. Deset rozpočtů.",intro:"Vyberte společnou kategorii a porovnejte její podíl v národních rozpočtech. Každý řádek zároveň zachovává částku v místní měně i orientační přepočet do EUR.",category:"Kategorie",period:"Období",current:"Aktuální",previous:"Předchozí",scale:"Měřítko",share:"Podíl rozpočtu",eur:"Částka v EUR",leader:"Nejvyšší podíl",median:"Medián zemí",coverage:"Pokrytí",countries:"10 zemí",matrix:"Celá mapa kategorií",matrixCopy:"Podíl kategorie na součtu publikovaného národního členění. Kliknutím na řádek změníte hlavní srovnání.",profile:"Detail země",sourceLine:"zdrojová položka",mapped:"zdrojových položek",notSeparate:"ve zdroji není samostatně vidět",method:"Jak srovnání vzniká",local:"místní měna",nominal:"nominální",loading:"Načítám srovnání…"},
     en:{kicker:"02 / Spending by category",title:"One question. Ten budgets.",intro:"Choose a common category and compare its share of national budgets. Every row also retains the local-currency amount and an indicative EUR conversion.",category:"Category",period:"Period",current:"Current",previous:"Previous",scale:"Scale",share:"Budget share",eur:"EUR amount",leader:"Highest share",median:"Country median",coverage:"Coverage",countries:"10 countries",matrix:"The complete category map",matrixCopy:"Category share of each published national classification total. Select a row to update the main comparison.",profile:"Country profile",sourceLine:"source line",mapped:"source lines",notSeparate:"not separately visible in source",method:"How the comparison is built",local:"local currency",nominal:"nominal",loading:"Loading comparison…"},
   };
-  const state = {lang:new URLSearchParams(location.search).get("lang") === "en" ? "en" : "cs", category:"social_protection", period:"current", measure:"share", data:null};
+  const state = {lang:window.PSDLanguage?.current() || (document.documentElement.lang === "en" ? "en" : "cs"), category:"social_protection", period:"current", measure:"share", data:null};
   const esc = value => String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
   const locale = () => state.lang === "en" ? "en-GB" : "cs-CZ";
   const category = id => state.data.categories.find(item => item.id === id);
@@ -69,5 +69,5 @@
     .then(response => { if (!response.ok) throw new Error(`Category comparison HTTP ${response.status}`); return response.json(); })
     .then(data => { state.data=data; render(); })
     .catch(error => { console.error(error); root.innerHTML="<p class=\"category-loading\">Data could not be loaded.</p>"; });
-  document.querySelectorAll("[data-lang]").forEach(button => button.addEventListener("click",()=>{state.lang=button.dataset.lang;setTimeout(render,0);}));
+  addEventListener("psdlanguagechange", event => { state.lang=event.detail?.lang === "en" ? "en" : "cs"; render(); });
 })();
