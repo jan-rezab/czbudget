@@ -88,6 +88,23 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });
 
+test("homepage compares all fifteen health-system topline metrics", async ({ page }) => {
+  await page.goto("/?lang=en", { waitUntil: "networkidle" });
+  const comparison = page.locator("#health-performance-compare");
+  await expect(comparison).toBeVisible();
+  await expect(comparison.locator(".health-compare-tabs button")).toHaveCount(5);
+  await expect(comparison.locator(".health-compare-matrix [data-home-health-matrix-metric]")).toHaveCount(15);
+  await expect(comparison.locator(".health-compare-rank-row")).toHaveCount(10);
+  await comparison.locator('[data-home-health-group="workforce"]').click();
+  await expect(comparison.locator(".health-compare-cards button")).toHaveCount(2);
+  await comparison.locator("#home-health-anchor").selectOption("DEU");
+  await expect(comparison.locator(".health-compare-rank-row.selected")).toContainText("Germany");
+  await comparison.locator('[data-home-health-group="outcomes"]').click();
+  await comparison.locator('[data-home-health-metric="suicide_rate_per_100k"]').click();
+  await expect(comparison.locator("#home-health-metric")).toHaveValue("suicide_rate_per_100k");
+  await expect(comparison).toContainText("Suicide mortality");
+});
+
 test("about page and footer credit Hlidac statu in both languages", async ({ page }) => {
   await page.goto("/about.html?lang=cs", { waitUntil: "networkidle" });
   await expect(page.locator(".maker-showcase")).toContainText("Hlidac statu, z.u.");
