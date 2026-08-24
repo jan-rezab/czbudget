@@ -508,12 +508,19 @@ test("all representative page menus resolve and primary navigation routes correc
   }
 
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
-  await page.locator('[data-global-nav="cities"]').click();
+  const navItems = page.locator(".global-nav > *");
+  await expect(navItems.nth(0)).toHaveAttribute("data-global-nav", "country");
+  await expect(navItems.nth(1)).toHaveAttribute("data-global-nav", "cities");
+  const municipalityMenu = page.locator(".municipality-menu");
+  await municipalityMenu.locator("summary").click();
+  await expect(municipalityMenu.locator(".country-menu-panel a")).toHaveCount(11);
+  await municipalityMenu.locator(".country-menu-head a").click();
   await expect(page).toHaveURL(/\/municipalities\/\?lang=cs/);
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
-  await page.locator(".country-menu summary").click();
-  await expect(page.locator(".country-menu-panel a")).toHaveCount(12);
-  await page.locator('.country-menu-panel a[href="/countries/czechia?lang=cs"]').click();
+  const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
+  await countryMenu.locator("summary").click();
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(12);
+  await countryMenu.locator('.country-menu-panel a[href="/countries/czechia?lang=cs"]').click();
   await expect(page).toHaveURL(/\/countries\/czechia\?lang=cs/);
 });
 
@@ -574,7 +581,7 @@ test("state-owned enterprise catalogue ranks, filters and translates thirty sour
 
 test("cities use the functional unified menu on desktop and mobile", async ({ page }) => {
   await page.goto("/cz/mesta/?lang=cs", { waitUntil: "networkidle" });
-  const countryMenu = page.locator(".country-menu");
+  const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
   await expect(countryMenu).toHaveAttribute("open", "");
   await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(12);
@@ -586,6 +593,6 @@ test("cities use the functional unified menu on desktop and mobile", async ({ pa
   await page.reload({ waitUntil: "networkidle" });
   await expect(page.locator(".global-nav")).toBeVisible();
   await expect(page.locator('[data-global-nav="cities"]')).toBeVisible();
-  await page.locator('[data-global-nav="home"]').click();
+  await page.locator(".site-header .brand").click();
   await expect(page).toHaveURL(/\/index\.html\?lang=cs/);
 });

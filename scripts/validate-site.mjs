@@ -55,6 +55,8 @@ const czechBudgetPage = await readFile("cesky-rozpocet.html", "utf8");
 const czechBudgetScript = await readFile("app.js", "utf8");
 const demography = JSON.parse(await readFile("data/demography-social.v1.json", "utf8"));
 const globalNav = await readFile("global-nav.js", "utf8");
+const globalFooter = await readFile("global-footer.js", "utf8");
+const globalFooterStyles = await readFile("global-footer.css", "utf8");
 const countryRoutes = await readFile("country-routes.js", "utf8");
 const countryParityStyles = await readFile("country-parity.css", "utf8");
 const nginx = await readFile("nginx.conf.template", "utf8");
@@ -158,7 +160,8 @@ if (homepage.includes('data-i18n="capitalsCta"') || homepage.includes('data-i18n
 if (!homepage.includes('id="category-comparison-root"') || !homepage.includes('homepage-category.js?v=20260821-benchmark-flags') || !homepage.includes('homepage-category.css?v=20260821-benchmark-flags')) throw new Error("Homepage must expose the country category comparison");
 if (!homepage.includes('id="homepage-health-performance-root"') || !homepage.includes('homepage-health-performance.js?v=20260824-topline-compare') || !homepage.includes('homepage-health-performance.css?v=20260824-topline-compare')) throw new Error("Homepage must expose the fifteen-metric health-performance comparison");
 if (!homepage.includes("language-bootstrap.js") || !languageBootstrap.includes("data-language-pending") || !languageBootstrap.includes("MutationObserver") || !languageBootstrap.includes("window.PSDLanguage") || !languageBootstrap.includes('defaultLanguage = isHomepage ? "en"')) throw new Error("English must be selected from the shared language contract before the first visible paint");
-if (!globalNav.includes('href("municipalities/", lang)') || globalNav.includes('data-global-nav="capitals"')) throw new Error("Global navigation must expose one consolidated municipality destination");
+if (!globalNav.includes('href("municipalities/", lang)') || !globalNav.includes('class="country-menu municipality-menu"') || !globalNav.includes('municipalities/${slug}/?lang=${lang}') || globalNav.indexOf('data-global-nav="country"') > globalNav.indexOf('data-global-nav="cities"') || globalNav.includes('data-global-nav="capitals"')) throw new Error("Global navigation must place the Country and Municipality dropdowns first");
+if (!globalFooter.includes("assets/logo-lockup-dark.svg") || globalFooter.includes('href="#top"') || !globalFooterStyles.includes("object-fit: contain") || !globalFooterStyles.includes("background: #171918")) throw new Error("Global footer must use the inverted brand lockup, a fitted Hlidac logo, and no back-to-top link");
 if (!globalNav.includes('class="deep-dive-menu"') || !globalNav.includes('deep-dives/transportation/')) throw new Error("Global navigation must expose the dedicated deep-dive hierarchy");
 if (!globalNav.includes("class PsdSiteHeader extends HTMLElement") || !globalNav.includes("customElements.define(HEADER_TAG, PsdSiteHeader)") || !globalNav.includes("site-header.css")) throw new Error("Global navigation must be implemented as the shared site-header component");
 if (!headerStyles.includes("psd-site-header") || !headerStyles.includes(".global-nav") || !headerStyles.includes(".country-menu-panel")) throw new Error("The shared header must own its complete visual contract");
