@@ -40,7 +40,26 @@
     "Výhled důchodů, zdraví a péče": "Pensions, health and care outlook",
     "Srovnání deseti zemí": "Comparison of ten countries",
     "09 / Data a metodika": "09 / Data and methodology",
-    "Zdroje a definice": "Sources and definitions"
+    "Zdroje a definice": "Sources and definitions",
+    "Registr vybraných kategorií pro rok 2024 spojuje veřejně ovládané firmy, veřejné vysoké školy, nemocnice a sedm zdravotních pojišťoven. TOP 20 strategických subjektů je zvýraznění; pod ním je filtrovatelná tabulka evidovaných organizací.": "The 2024 register combines publicly controlled companies, public universities, hospitals and seven health insurers. The strategic top 20 is highlighted above a filterable table of registered organisations.",
+    "Registr vybraných kategorií · 2024": "Register of selected categories · 2024",
+    "Firmy, školy, nemocnice a zdravotní pojišťovny": "Companies, universities, hospitals and health insurers",
+    "Hledat název nebo IČO": "Search name or national ID",
+    "např. univerzita, nemocnice, ČEZ": "e.g. university, hospital, ČEZ",
+    "Veřejná úroveň / systém": "Public tier / system",
+    "Všechny veřejné úrovně": "All public tiers",
+    "Seřadit podle": "Sort by",
+    "Výnosy / obrat": "Revenue / turnover",
+    "Výsledek": "Result",
+    "Čistá marže": "Net margin",
+    "Název": "Name",
+    "Subjekt": "Entity",
+    "Typ": "Type",
+    "Firmy": "Companies",
+    "Vysoké školy": "Universities",
+    "Nemocnice": "Hospitals",
+    "Zdravotní pojišťovny": "Health insurers",
+    "Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.": "Top line means turnover for strategic companies and total revenue for CSUIS entities. A missing statement is not zero."
   });
   const enToCs = Object.fromEntries(Object.entries(csToEn).map(([cs,en]) => [en,cs]));
   let lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("psd-lang") || "cs";
@@ -61,11 +80,17 @@
   }
   function applyLanguage(next) {
     if (translating) return; translating = true;
+    const dictionary = next === "en" ? csToEn : enToCs;
     if (renderedLang !== next) {
-      translateTree(document.body, next === "en" ? csToEn : enToCs);
+      translateTree(document.body, dictionary);
       renderedLang = next;
     }
     lang = next; document.documentElement.lang = lang; localStorage.setItem("psd-lang", lang);
+    document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(node => {
+      for (const attribute of ["placeholder","aria-label","title"]) {
+        const value=node.getAttribute(attribute); if(value&&dictionary[value])node.setAttribute(attribute,dictionary[value]);
+      }
+    });
     document.querySelectorAll("[data-budget-lang]").forEach(button => button.classList.toggle("active", button.dataset.budgetLang === lang));
     const home = document.getElementById("budget-home-link"); if (home) home.href = `index.html?lang=${lang}`;
     document.title = lang === "en" ? "Public Spending Data — Czech budget over time" : "Public Spending Data — český rozpočet v čase";

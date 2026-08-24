@@ -460,6 +460,11 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
   await page.locator('[data-global-nav="cities"]').click();
   await expect(page).toHaveURL(/\/municipalities\/\?lang=cs/);
+  await page.goto("/?lang=cs", { waitUntil: "networkidle" });
+  await page.locator(".country-menu summary").click();
+  await expect(page.locator(".country-menu-panel a")).toHaveCount(12);
+  await page.locator('.country-menu-panel a[href="/countries/czechia?lang=cs"]').click();
+  await expect(page).toHaveURL(/\/countries\/czechia\?lang=cs/);
 });
 
 test("every page family renders the same shared header component", async ({ page }) => {

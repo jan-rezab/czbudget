@@ -21,6 +21,8 @@
 
   function translate(){
     document.documentElement.lang=state.lang;
+    document.title=english()?"Czech municipalities — Public Spending Data":"České obce — Public Spending Data";
+    document.querySelector('meta[name="description"]')?.setAttribute("content",english()?"Insights, long-run city budgets and a complete directory of all 6,254 Czech municipalities.":"Přehledy, dlouhé rozpočtové řady měst a úplný adresář všech 6 254 českých obcí.");
     document.querySelectorAll("[data-copy]").forEach((element)=>{const value=t()[element.dataset.copy];if(value)element.innerHTML=value;});
     document.querySelectorAll("[data-placeholder]").forEach((element)=>{const value=t()[element.dataset.placeholder];if(value)element.placeholder=value;});
     document.querySelectorAll("[data-lang]").forEach((button)=>{const active=button.dataset.lang===state.lang;button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));});

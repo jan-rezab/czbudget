@@ -1,12 +1,21 @@
 (() => {
   const select = selector => document.querySelector(selector);
   const escapeHtml = value => String(value ?? "—").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-  const format = value => new Intl.NumberFormat("cs-CZ", {maximumFractionDigits: 0}).format(value);
-  const money = value => value == null ? "—" : new Intl.NumberFormat("cs-CZ", {minimumFractionDigits: 0, maximumFractionDigits: 1}).format(value);
-  const percent = value => value == null ? "—" : `${new Intl.NumberFormat("cs-CZ", {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(value)} %`;
-  const billions = value => new Intl.NumberFormat("cs-CZ", {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(value / 1000);
+  const language = document.documentElement.lang === "en" ? "en" : "cs";
+  const english = language === "en", locale = english ? "en-GB" : "cs-CZ";
+  const format = value => new Intl.NumberFormat(locale, {maximumFractionDigits: 0}).format(value);
+  const money = value => value == null ? "—" : new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 1}).format(value);
+  const percent = value => value == null ? "—" : `${new Intl.NumberFormat(locale, {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(value)} %`;
+  const billions = value => new Intl.NumberFormat(locale, {minimumFractionDigits: 1, maximumFractionDigits: 1}).format(value / 1000);
   const signed = value => value < 0 ? `−${format(Math.abs(value))}` : `+${format(value)}`;
   const signedMoney = value => value < 0 ? `−${money(Math.abs(value))}` : `+${money(value)}`;
+  const translations={
+    category:{Firma:"Company",Nemocnice:"Hospital","Vysoká škola":"University","Zdravotní pojišťovna":"Health insurer"},
+    owner:{"Jiný veřejný vlastník":"Other public owner",Obec:"Municipality",Kraj:"Region",Stát:"State",DSO:"Municipal association","Územní veřejná úroveň":"Territorial public tier","Stát / ústřední úroveň":"State / central tier","Veřejné zdravotní pojištění":"Public health insurance"},
+    sector:{Energetika:"Energy","Doprava a infrastruktura":"Transport and infrastructure","Finance a rozvoj":"Finance and development","Reality a cestovní ruch":"Real estate and tourism","Digitální a veřejné služby":"Digital and public services","Obrana a strategický průmysl":"Defence and strategic industry","Přírodní zdroje a sanace":"Natural resources and remediation","Zemědělství a potraviny":"Agriculture and food","Vodní hospodářství":"Water management"},
+    topLine:{obrat:"turnover",výnosy:"revenue"},source:{"MF strategické subjekty":"Ministry of Finance strategic entities","ČSÚIS VZZ":"CSUIS income statement"}
+  };
+  const tr=(group,value)=>english?(translations[group]?.[value]||value):value;
 
   function rows(items, metric, kind) {
     const maximum = Math.max(...items.map(item => Math.abs(item.metrics[metric])));
@@ -14,13 +23,13 @@
       const value = item.metrics[metric];
       const rowKind = value < 0 ? "loss" : kind;
       const context = metric === "total_assets"
-        ? `Výsledek ${signed(item.metrics.net_result)} mil. Kč · ${format(item.metrics.employees)} zaměstnanců`
-        : `Aktiva ${format(item.metrics.total_assets)} mil. Kč · obrat ${format(item.metrics.turnover)} mil. Kč`;
+        ? `${english ? "Result" : "Výsledek"} ${signed(item.metrics.net_result)} ${english ? "CZK m" : "mil. Kč"} · ${format(item.metrics.employees)} ${english ? "employees" : "zaměstnanců"}`
+        : `${english ? "Assets" : "Aktiva"} ${format(item.metrics.total_assets)} ${english ? "CZK m" : "mil. Kč"} · ${english ? "turnover" : "obrat"} ${format(item.metrics.turnover)} ${english ? "CZK m" : "mil. Kč"}`;
       return `<article class="enterprise-row ${rowKind}">
         <span class="enterprise-rank">${String(index + 1).padStart(2, "0")}</span>
-        <div class="enterprise-name"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.classification?.sector_name)} · IČO ${escapeHtml(item.ico)}</small></div>
+        <div class="enterprise-name"><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(tr("sector",item.classification?.sector_name))} · ${english ? "ID" : "IČO"} ${escapeHtml(item.ico)}</small></div>
         <div class="enterprise-bar" aria-hidden="true"><i style="width:${(Math.abs(value) / maximum * 100).toFixed(1)}%"></i></div>
-        <strong class="enterprise-value">${metric === "net_result" ? signed(value) : format(value)}<small>mil. Kč</small></strong>
+        <strong class="enterprise-value">${metric === "net_result" ? signed(value) : format(value)}<small>${english ? "CZK m" : "mil. Kč"}</small></strong>
         <p>${context}</p>
       </article>`;
     }).join("");
@@ -33,8 +42,8 @@
     const body = select("#embed-public-entity-rows");
     const tabs = [...document.querySelectorAll("#embed-entity-tabs button")];
     let activeCategory = "all";
-    const owners = [...new Set(data.entities.map(item => item.owner_level))].sort((a, b) => a.localeCompare(b, "cs"));
-    owner.insertAdjacentHTML("beforeend", owners.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join(""));
+    const owners = [...new Set(data.entities.map(item => item.owner_level))].sort((a, b) => tr("owner",a).localeCompare(tr("owner",b),locale));
+    owner.insertAdjacentHTML("beforeend", owners.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(tr("owner",value))}</option>`).join(""));
 
     const tabCounts = {
       all: "#embed-tab-all",
@@ -45,19 +54,19 @@
     };
     Object.entries(tabCounts).forEach(([key, selector]) => {
       const group = data.summary.groups[key];
-      select(selector).textContent = `${format(group.entity_count)} · ${format(group.financial_result_count)} s výsledkem`;
+      select(selector).textContent = `${format(group.entity_count)} · ${format(group.financial_result_count)} ${english ? "with results" : "s výsledkem"}`;
     });
 
     function updateSummary() {
       const group = data.summary.groups[activeCategory];
-      const label = activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : activeCategory === "Nemocnice" ? "nemocnice" : "zdravotní pojišťovny";
+      const label = english ? (activeCategory === "all" ? "all entities" : activeCategory === "Firma" ? "companies" : activeCategory === "Vysoká škola" ? "universities" : activeCategory === "Nemocnice" ? "hospitals" : "health insurers") : (activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : activeCategory === "Nemocnice" ? "nemocnice" : "zdravotní pojišťovny");
       const hasFinancials = group.financial_result_count > 0;
       select("#embed-profit-sum").textContent = hasFinancials ? billions(group.positive_net_result_sum_mczk) : "—";
       select("#embed-loss-sum").textContent = hasFinancials ? `−${billions(group.negative_net_result_absolute_sum_mczk)}` : "—";
       select("#embed-net-sum").textContent = hasFinancials ? billions(group.net_result_sum_mczk) : "—";
       select("#embed-turnover-sum").textContent = hasFinancials ? billions(group.revenue_sum_mczk) : "—";
-      select("#embed-aggregate-scope").textContent = `Součty za ${label}: ${format(group.financial_result_count)} z ${format(group.entity_count)} subjektů s dostupným výsledkem za rok 2024.`;
-      select("#embed-registry-coverage").textContent = `${format(group.financial_result_count)} / ${format(group.entity_count)} s výsledkem`;
+      select("#embed-aggregate-scope").textContent = english ? `Totals for ${label}: ${format(group.financial_result_count)} of ${format(group.entity_count)} entities have an available 2024 result.` : `Součty za ${label}: ${format(group.financial_result_count)} z ${format(group.entity_count)} subjektů s dostupným výsledkem za rok 2024.`;
+      select("#embed-registry-coverage").textContent = `${format(group.financial_result_count)} / ${format(group.entity_count)} ${english ? "with results" : "s výsledkem"}`;
     }
 
     function renderTable() {
@@ -78,15 +87,15 @@
         return right - left || a.name.localeCompare(b.name, "cs");
       });
       body.innerHTML = visible.map(item => `<tr${item.strategic_highlight ? ' class="strategic-highlight"' : ""}>
-        <td><strong>${escapeHtml(item.name)}</strong><small>IČO ${escapeHtml(item.ico)} · ${escapeHtml(item.legal_form)}</small></td>
-        <td><span class="entity-type">${escapeHtml(item.category)}</span></td>
-        <td>${escapeHtml(item.owner_level)}</td>
-        <td class="numeric">${item.top_line.value_mczk == null ? "—" : `${money(item.top_line.value_mczk)} <small>mil. Kč · ${escapeHtml(item.top_line.definition)}</small>`}</td>
-        <td class="numeric ${item.top_line.net_result_mczk < 0 ? "negative" : ""}">${item.top_line.net_result_mczk == null ? "—" : `${signedMoney(item.top_line.net_result_mczk)} <small>mil. Kč</small>`}</td>
+        <td><strong>${escapeHtml(item.name)}</strong><small>${english ? "ID" : "IČO"} ${escapeHtml(item.ico)} · ${escapeHtml(item.legal_form)}</small></td>
+        <td><span class="entity-type">${escapeHtml(tr("category",item.category))}</span></td>
+        <td>${escapeHtml(tr("owner",item.owner_level))}</td>
+        <td class="numeric">${item.top_line.value_mczk == null ? "—" : `${money(item.top_line.value_mczk)} <small>${english ? "CZK m" : "mil. Kč"} · ${escapeHtml(tr("topLine",item.top_line.definition))}</small>`}</td>
+        <td class="numeric ${item.top_line.net_result_mczk < 0 ? "negative" : ""}">${item.top_line.net_result_mczk == null ? "—" : `${signedMoney(item.top_line.net_result_mczk)} <small>${english ? "CZK m" : "mil. Kč"}</small>`}</td>
         <td class="numeric ${item.top_line.net_margin_pct < 0 ? "negative" : ""}">${percent(item.top_line.net_margin_pct)}</td>
-        <td>${item.financial_source_kind ? `<span class="data-available">${escapeHtml(item.financial_source_kind)}</span>` : item.category === "Zdravotní pojišťovna" ? '<span class="data-missing">speciální výkaz mimo VZZ</span>' : '<span class="data-missing">výkaz chybí</span>'}${item.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
+        <td>${item.financial_source_kind ? `<span class="data-available">${escapeHtml(tr("source",item.financial_source_kind))}</span>` : item.category === "Zdravotní pojišťovna" ? `<span class="data-missing">${english ? "special statement outside the income-statement dataset" : "speciální výkaz mimo VZZ"}</span>` : `<span class="data-missing">${english ? "statement unavailable" : "výkaz chybí"}</span>`}${item.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
       </tr>`).join("");
-      select("#embed-registry-count").textContent = `Zobrazeno ${format(visible.length)} z ${format(data.summary.groups[activeCategory].entity_count)} subjektů v záložce`;
+      select("#embed-registry-count").textContent = english ? `Showing ${format(visible.length)} of ${format(data.summary.groups[activeCategory].entity_count)} entities in this tab` : `Zobrazeno ${format(visible.length)} z ${format(data.summary.groups[activeCategory].entity_count)} subjektů v záložce`;
     }
 
     tabs.forEach(tab => tab.addEventListener("click", () => {
@@ -111,28 +120,28 @@
     .then(([data, publicData]) => {
       const modes = {
         profit: {
-          heading: "Nejziskovější",
+          heading: english ? "Most profitable" : "Nejziskovější",
           count: "TOP 20",
           metric: "net_result",
           kind: "profit",
           items: [...data.entities].sort((a, b) => b.metrics.net_result - a.metrics.net_result).slice(0, 20),
-          note: "Pořadí podle individuálního výsledku po zdanění; ČEZ je mateřská společnost, nikoli konsolidovaná skupina."
+          note: english ? "Ranked by each entity's individual result after tax; ČEZ is the parent company, not the consolidated group." : "Pořadí podle individuálního výsledku po zdanění; ČEZ je mateřská společnost, nikoli konsolidovaná skupina."
         },
         weakest: {
-          heading: "Nejslabší hospodářský výsledek",
-          count: `BOTTOM 20 · ${data.summary.loss_making_count} ztrát`,
+          heading: english ? "Weakest financial result" : "Nejslabší hospodářský výsledek",
+          count: `BOTTOM 20 · ${data.summary.loss_making_count} ${english ? "losses" : "ztrát"}`,
           metric: "net_result",
           kind: "loss",
           items: [...data.entities].sort((a, b) => a.metrics.net_result - b.metrics.net_result).slice(0, 20),
-          note: `Záporný výsledek má jen ${data.summary.loss_making_count} subjektů. Další pozice jsou nejnižší kladné výsledky, nikoli ztráty.`
+          note: english ? `Only ${data.summary.loss_making_count} entities report a loss. The remaining positions are the lowest positive results, not losses.` : `Záporný výsledek má jen ${data.summary.loss_making_count} subjektů. Další pozice jsou nejnižší kladné výsledky, nikoli ztráty.`
         },
         largest: {
-          heading: "Největší podle aktiv",
+          heading: english ? "Largest by assets" : "Největší podle aktiv",
           count: "TOP 20",
           metric: "total_assets",
           kind: "largest",
           items: [...data.entities].sort((a, b) => b.metrics.total_assets - a.metrics.total_assets).slice(0, 20),
-          note: "Velikost měříme aktivy celkem, protože obrat ani počet zaměstnanců nejsou napříč energetikou, bankami a infrastrukturou srovnatelné."
+          note: english ? "Scale is measured by total assets because neither turnover nor employee count is comparable across energy, banking and infrastructure." : "Velikost měříme aktivy celkem, protože obrat ani počet zaměstnanců nejsou napříč energetikou, bankami a infrastrukturou srovnatelné."
         }
       };
 
@@ -150,7 +159,7 @@
       render("profit");
     })
     .catch(error => {
-      select("#embed-enterprise-list").innerHTML = `<p class="load-error">Data firem se nepodařilo načíst: ${escapeHtml(error.message)}</p>`;
+      select("#embed-enterprise-list").innerHTML = `<p class="load-error">${english ? "Company data could not be loaded" : "Data firem se nepodařilo načíst"}: ${escapeHtml(error.message)}</p>`;
       console.error(error);
     });
 })();

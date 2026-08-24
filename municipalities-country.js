@@ -44,6 +44,9 @@
   }
   function render(){
     const c=state.country, profile=p();
+    const plainTitle=profile.title.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
+    document.title=`${plainTitle} — Public Spending Data`;
+    document.querySelector('meta[name="description"]')?.setAttribute("content",profile.intro);
     renderSwitch(); $("#country-eyebrow").textContent=profile.eyebrow; $("#country-title").innerHTML=profile.title; $("#country-intro").textContent=profile.intro;
     $("#country-total").textContent=fmt(c.directory_count); $("#country-coverage").textContent=`${t()[c.status]} · ${c.years.join(" + ")}`;
     $("#insights-title").textContent=profile.insights; $("#insights-copy").textContent=profile.copy;

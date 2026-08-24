@@ -21,6 +21,7 @@
     "validate": "node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
     "audit:links": "node scripts/check-external-links.mjs --write-report",
+    "backfill:social-previews": "node scripts/backfill-social-previews.mjs",
     "test:browser": "playwright test",
     "test": "npm run validate && npm run test:browser"
   },

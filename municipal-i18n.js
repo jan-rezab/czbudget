@@ -58,7 +58,9 @@
     const items = [["overview",labels.overview],["combined",labels.combined],[history?.id,labels.trend],[budget?.id,labels.budget],[directory?.id,labels.entities],[method?.id,labels.method]].filter(([id]) => id && document.getElementById(id));
     const rail = document.createElement("nav"); rail.className = "context-rail municipal-context-rail"; rail.setAttribute("aria-label", lang === "en" ? "Page sections" : "Sekce stránky");
     rail.innerHTML = items.map(([id,label]) => `<a href="#${id}">${label}</a>`).join("");
-    (header.closest("psd-site-header") || header).insertAdjacentElement("afterend", rail);
+    const railAnchor = header?.closest("psd-site-header") || header || document.querySelector("psd-site-header") || document.querySelector(".site-header");
+    if (railAnchor) railAnchor.insertAdjacentElement("afterend", rail);
+    else main.insertAdjacentElement("beforebegin", rail);
     const updateRail = () => {
       const current = [...items].reverse().map(([id]) => document.getElementById(id)).find((section) => section.getBoundingClientRect().top <= 150) || document.getElementById(items[0]?.[0]);
       rail.querySelectorAll("a").forEach((link) => link.toggleAttribute("aria-current", link.hash === `#${current?.id}`));
@@ -263,7 +265,18 @@
     const replacement = simpleHeadings.get(heading.textContent.trim());
     if (replacement) heading.textContent = replacement;
   });
-  if (lang !== "en") { appendBudgetYears(); collectCurrencyText(); refreshCurrencyText(); return; }
+  if (lang !== "en") {
+    const entityName = document.querySelector(".detail-page h1")?.textContent.trim();
+    const czechDescription = entityName
+      ? `${entityName}: rozpočet obce pro rok 2025, příjmy, výdaje, výsledek hospodaření, stav účtů a interaktivní historie.`
+      : document.body.classList.contains("all-municipalities")
+        ? "Vyhledávání a srovnání příjmů, výdajů, výsledků hospodaření, stavu účtů a výdajů na obyvatele všech českých obcí v letech 2010–2025."
+        : null;
+    if (entityName) document.title = `${entityName} — rozpočet obce 2025, příjmy, výdaje a stav účtů`;
+    else if (document.body.classList.contains("all-municipalities")) document.title = "Rozpočty všech českých obcí — Public Spending Data";
+    if (czechDescription) document.querySelector('meta[name="description"]')?.setAttribute("content", czechDescription);
+    appendBudgetYears(); collectCurrencyText(); refreshCurrencyText(); return;
+  }
   const dictionary = new Map(Object.entries({
     "Domů": "Home", "Obce": "Municipalities", "Obce a kraje": "Municipalities and regions", "Velká města": "Large cities", "Kraje": "Regions",
     "České územní rozpočty · skutečnost 2025": "Czech local government budgets · 2025 actuals",
