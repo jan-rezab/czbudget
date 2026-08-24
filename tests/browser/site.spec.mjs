@@ -544,6 +544,19 @@ test("every page family renders the same shared header component", async ({ page
 
 test("state-owned enterprise catalogue ranks, filters and translates thirty sourced records", async ({ page }) => {
   await page.goto("/deep-dives/state-owned-enterprises/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#soe-map .map-company-link")).toHaveCount(30);
+  await expect(page.locator("#soe-map-total")).toContainText("€625.6 bn");
+  await expect(page.locator("#soe-map-detail-name")).toHaveText("EDF Group");
+  await page.locator('[data-map-value="weighted"]').click();
+  await expect(page.locator("#soe-map-total")).toContainText("€567.0 bn");
+  await page.locator('[data-map-group="sector"]').click();
+  await expect(page.locator("#soe-map .map-group-frame")).toHaveCount(7);
+  await page.locator("#soe-map-country").selectOption("SWE");
+  await expect(page.locator("#soe-map .map-company-link")).toHaveCount(3);
+  await expect(page.locator("#soe-country")).toHaveValue("SWE");
+  await page.locator("#soe-map .map-company-link").first().click();
+  await expect(page.locator("#soe-map-detail-name")).not.toHaveText("EDF Group");
+  await page.locator("#soe-map-country").selectOption("all");
   await expect(page.locator("#soe-body tr")).toHaveCount(30);
   await expect(page.locator("#soe-body tr").first()).toContainText("EDF Group");
   await expect(page.locator("#soe-body tr").first()).toContainText("€118.7 bn");
