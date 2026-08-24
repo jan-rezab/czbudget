@@ -1,24 +1,24 @@
 <!doctype html>
 <html lang="cs">
 <head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script><link rel="stylesheet" href="site-header.css?v=20260824-header-lockup" data-psd-site-header>
-  <script src="global-nav.js?v=20260824-logo-120" defer></script>
+  <script src="global-nav.js?v=20260824-budget-stages" defer></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Evropská hlavní města — rozpočty, obyvatelé a cestovní ruch</title>
-  <meta name="description" content="Rozpočty 27 hlavních měst EU a Londýna v eurech i místních měnách, doplněné o počet obyvatel a statistiky cestovního ruchu.">
+  <title>Evropská hlavní města — rozpočtové plány, obyvatelé a cestovní ruch</title>
+  <meta name="description" content="Oficiální rozpočtové plány 27 hlavních měst EU a Londýna, oddělené od skutečných výsledků a doplněné datovanou populací a cestovním ruchem.">
   <link rel="canonical" href="https://publicspendingdata.org/eu-capitals.html">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/eu-capitals.html?lang=cs">
   <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/eu-capitals.html?lang=en">
   <meta property="og:url" content="https://publicspendingdata.org/eu-capitals.html">
   <meta property="og:title" content="Evropská hlavní města — Public Spending Data">
-  <meta property="og:description" content="Městské rozpočty, obyvatelé a cestovní ruch na jednom místě.">
+  <meta property="og:description" content="Městské rozpočtové plány oddělené od skutečnosti, s datovanou populací a cestovním ruchem.">
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <link rel="icon" href="assets/favicon.svg">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="styles-v2.css?v=20260822-brand">
   <link rel="stylesheet" href="chart-system.css?v=20260821-city-navigation">
-  <link rel="stylesheet" href="eu-capitals.css?v=20260822-consolidation">
-  <script src="eu-capitals.js?v=20260822-consolidation" defer></script>
+  <link rel="stylesheet" href="eu-capitals.css?v=20260824-budget-stages">
+  <script src="eu-capitals.js?v=20260824-budget-stages" defer></script>
 
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -37,8 +37,8 @@
     <section class="capitals-hero">
       <div class="capitals-hero-copy">
         <span class="eyebrow"><i class="live-dot"></i><span data-i18n="eyebrow">27 hlavních měst EU + Londýn</span></span>
-        <h1><span data-i18n="hero1">Města v číslech.</span><br><em data-i18n="hero2">Rozpočet i kontext.</em></h1>
-        <p data-i18n="heroCopy">Nejnovější oficiální rozpočty evropských metropolí, přepínatelné mezi eurem a místní měnou. Vedle nich počet obyvatel a turistická přenocování.</p>
+        <h1><span data-i18n="hero1">Města v číslech.</span><br><em data-i18n="hero2">Plány v kontextu.</em></h1>
+        <p data-i18n="heroCopy">Nejnovější oficiální rozpočtové plány evropských metropolí, oddělené od skutečných výsledků a doplněné datovanou populací a turistickými přenocováními.</p>
         <a class="primary-button" href="#atlas"><span data-i18n="heroCta">Otevřít atlas měst</span> <b>↘</b></a>
       </div>
       <aside class="capitals-ledger" aria-label="Přehled dat">
@@ -49,22 +49,24 @@
           <div><dt data-i18n="statEu">Členské státy EU</dt><dd>27</dd></div>
           <div><dt data-i18n="statTourism">Turistika</dt><dd>2024</dd></div>
         </dl>
-        <p data-i18n="ledgerNote">Rozpočtové období je 2026, s označenými výjimkami pro Vallettu a Londýn.</p>
+        <p data-i18n="ledgerNote">Fiskální vrstvu tvoří převážně plány 2026; odlišný rok nebo stav je uveden u města.</p>
       </aside>
     </section>
 
-    <section class="capitals-note" aria-label="Upozornění ke srovnání"><strong data-i18n="warningLabel">Čtěte rozsah.</strong><p data-i18n="warningCopy">Městské struktury a účetní definice se liší. Částky zachovávají nejširší oficiální výdajový údaj každého města; nejsou bez dalšího vhodné jako žebříček.</p></section>
+    <section class="capitals-note" aria-label="Upozornění ke srovnání"><strong data-i18n="warningLabel">Plán není skutečnost.</strong><p data-i18n="warningCopy">Všechny fiskální částky v meziměstském atlasu jsou oficiální rozpočtové plány, nikoli skutečné plnění. Městské struktury a účetní definice se navíc liší.</p></section>
+
+    <section class="capital-stage-guide" aria-labelledby="capital-atlas-stage-title"><h2 id="capital-atlas-stage-title" data-i18n="stageTitle">Plán a skutečnost jsou oddělené.</h2><div><article class="plan"><span data-i18n="planBadge">ROZPOČTOVÝ PLÁN</span><strong data-i18n="stagePlanTitle">Oficiální rozpočtové plány</strong><p data-i18n="stagePlanCopy">Atlas používá plány pro srovnání zamýšlené kapacity. U každého města zobrazuje rok, stav a přesný rozsah.</p></article><article class="actual"><span data-i18n="actualBadge">SKUTEČNOST</span><strong data-i18n="stageActualTitle">Skutečné fiskální výsledky</strong><p data-i18n="stageActualCopy">Skutečné příjmy a výdaje zobrazujeme v samostatné historické vrstvě pouze tam, kde je k dispozici kompatibilní řada.</p></article></div></section>
 
     <section class="capitals-atlas" id="atlas">
-      <div class="compact-title"><div><span class="kicker" data-i18n="atlasKicker">01 / Městský atlas</span><h2 data-i18n="atlasTitle">Jedno místo. Čtyři měřítka.</h2></div><p data-i18n="atlasCopy">Rozpočet, obyvatelé, turistická přenocování a intenzita cestovního ruchu. Kliknutím na řádek otevřete přesný rozsah a původ hodnoty.</p></div>
+      <div class="compact-title"><div><span class="kicker" data-i18n="atlasKicker">01 / Městský atlas</span><h2 data-i18n="atlasTitle">Plány odděleně od pozorovaného kontextu.</h2></div><p data-i18n="atlasCopy">Tabulka porovnává rozpočtové plány. Populace a turistika mají vlastní referenční roky; skutečné fiskální výsledky se zobrazují samostatně.</p></div>
       <div class="capital-controls">
         <label class="search-control"><span data-i18n="searchLabel">Hledat město nebo zemi</span><input id="capital-search" type="search" autocomplete="off" placeholder="Praha, France…" data-i18n-placeholder="searchPlaceholder"></label>
         <fieldset><legend data-i18n="currencyLabel">Zobrazená měna</legend><button type="button" class="active" data-currency="eur" data-i18n="currencyEur">EUR</button><button type="button" data-currency="local" data-i18n="currencyLocal">Místní měna</button></fieldset>
         <label><span data-i18n="sortLabel">Seřadit podle</span><select id="capital-sort"><option value="city" data-i18n="sortCity">Města A–Z</option><option value="budget" data-i18n="sortBudget">Rozpočtu</option><option value="balance" data-i18n="sortBalance">Salda</option><option value="population" data-i18n="sortPopulation">Počtu obyvatel</option><option value="nights" data-i18n="sortNights">Přenocování</option><option value="intensity" data-i18n="sortIntensity">Přenocování / obyv.</option></select></label>
         <label><span data-i18n="coverageLabel">Výběr</span><select id="capital-coverage"><option value="all" data-i18n="coverageAll">EU + Londýn</option><option value="eu" data-i18n="coverageEu">Pouze EU</option></select></label>
       </div>
-      <div class="capital-result-line"><span id="capital-count" aria-live="polite">28 měst</span><small data-i18n="resultNote">Hodnoty rozpočtu jsou nominální.</small></div>
-      <div class="capital-table-wrap" tabindex="0" role="region" aria-label="Srovnání rozpočtů evropských hlavních měst"><table class="capital-table"><thead><tr><th data-i18n="thCity">Město</th><th data-i18n="thBudget">Výdaje</th><th data-i18n="thBalance">Saldo</th><th data-i18n="thPopulation">Obyvatelé</th><th data-i18n="thNights">Přenocování</th><th data-i18n="thIntensity">Noci / obyv.</th><th><span class="sr-only" data-i18n="thDetail">Detail</span></th></tr></thead><tbody id="capital-table-body"></tbody></table></div>
+      <div class="capital-result-line"><span id="capital-count" aria-live="polite">28 měst</span><small data-i18n="resultNote">Fiskální hodnoty jsou nominální plány, nikoli skutečné plnění.</small></div>
+      <div class="capital-table-wrap" tabindex="0" role="region" aria-label="Srovnání rozpočtových plánů evropských hlavních měst"><table class="capital-table"><thead><tr><th data-i18n="thCity">Město</th><th data-i18n="thBudget">Plánované výdaje</th><th data-i18n="thBalance">Plánované saldo</th><th data-i18n="thPopulation">Obyvatelé</th><th data-i18n="thNights">Přenocování</th><th data-i18n="thIntensity">Noci / obyv.</th><th><span class="sr-only" data-i18n="thDetail">Detail</span></th></tr></thead><tbody id="capital-table-body"></tbody></table></div>
       <div class="capital-empty" id="capital-empty" hidden><strong data-i18n="emptyTitle">Nic jsme nenašli.</strong><span data-i18n="emptyCopy">Zkuste jiné město nebo zemi.</span></div>
     </section>
 
@@ -78,7 +80,7 @@
     <section class="capitals-method" id="method">
       <div class="compact-title"><div><span class="kicker" data-i18n="methodKicker">03 / Jak data číst</span><h2 data-i18n="methodTitle">Srovnání s přiznanými hranicemi.</h2></div><p data-i18n="methodCopy">Každá hodnota si nese rok, územní vymezení a primární zdroj. To umožní později stavět městské profily bez ztráty původního významu.</p></div>
       <div class="capital-method-grid">
-        <article><b>01</b><h3 data-i18n="methodBudgetTitle">Rozpočty</h3><p data-i18n="methodBudgetCopy">Nejširší oficiální výdajová částka dostupná k 20. srpnu 2026. Přesná definice a rozsah jsou v detailu města.</p></article>
+        <article><b>01</b><h3 data-i18n="methodBudgetTitle">Rozpočtové plány</h3><p data-i18n="methodBudgetCopy">Nejširší oficiální plán výdajů dostupný k 20. srpnu 2026. Nejde o skutečné plnění; rok, stav a rozsah jsou v detailu města.</p></article>
         <article><b>02</b><h3 data-i18n="methodFxTitle">Přepočet měn</h3><p data-i18n="methodFxCopy">EUR hodnoty používají referenční kurzy ECB z 20. srpna 2026. Místní částka zůstává uložená beze změny.</p></article>
         <article><b>03</b><h3 data-i18n="methodPopulationTitle">Obyvatelé</h3><p data-i18n="methodPopulationCopy">Nejnovější dostupný údaj Eurostatu. Rok a případné širší území „greater city“ zobrazujeme přímo u hodnoty.</p></article>
         <article><b>04</b><h3 data-i18n="methodTourismTitle">Cestovní ruch</h3><p data-i18n="methodTourismCopy">Přenocování za rok 2024. Dublin a Londýn používají širší místní zdroje, proto jsou v detailu zvlášť označené.</p></article>
