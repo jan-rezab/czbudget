@@ -5,7 +5,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const selected = [
-  "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-parity.v1.json", "data/contracts/country-parity.schema.json", "data/country-health.v1.json", "data/country-health-performance.v1.json", "data/country-provider-networks.v1.json", "data/country-functional-budgets.v1.json", "data/transport-budget-detail.v1.json", "data/transport-performance.v1.json", "data/country-cash-in.v1.json",
+  "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-parity.v1.json", "data/contracts/country-parity.schema.json", "data/country-health.v1.json", "data/country-health-performance.v1.json", "data/country-provider-networks.v1.json", "data/country-functional-budgets.v1.json", "data/transport-budget-detail.v1.json", "data/transport-performance.v1.json", "data/country-cash-in.v1.json", "data/country-revenue.v1.json",
   "data/country-spending-2025-2026.v1.json", "data/country-spending-comparison.v1.json",
   "data/country-demography.v1.json", "data/public-entity-coverage.v1.json", "data/public-entity-aggregates.v1.json", "data/public-entity-directory/manifest.v1.json", "data/methodology-sources.v1.json", "data/data-quality-report.v1.json",
   "data/cz-public-entities-2024.json", "data/cz-public-entity-history.v1.json",

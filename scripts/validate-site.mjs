@@ -12,6 +12,7 @@ const functionalBudgets = JSON.parse(await readFile("data/country-functional-bud
 const roadNetworks = JSON.parse(await readFile("data/road-network-history.v1.json", "utf8"));
 const transportPerformance = JSON.parse(await readFile("data/transport-performance.v1.json", "utf8"));
 const countryCashIn = JSON.parse(await readFile("data/country-cash-in.v1.json", "utf8"));
+const countryRevenue = JSON.parse(await readFile("data/country-revenue.v1.json", "utf8"));
 const countryHealth = JSON.parse(await readFile("data/country-health.v1.json", "utf8"));
 const countryHealthPerformance = JSON.parse(await readFile("data/country-health-performance.v1.json", "utf8"));
 const dataQuality = JSON.parse(await readFile("data/data-quality-report.v1.json", "utf8"));
@@ -46,6 +47,8 @@ const stateEnterpriseDeepDivePage = await readFile("deep-dives/state-owned-enter
 const capitalCitiesDeepDivePage = await readFile("deep-dives/capital-cities/index.html", "utf8");
 const capitalCitiesDeepDiveScript = await readFile("capital-cities-deep-dive.js", "utf8");
 const stateEnterpriseCatalogue = JSON.parse(await readFile("data/state-owned-enterprises.v1.json", "utf8"));
+const revenueDeepDivePage = await readFile("deep-dives/revenue/index.html", "utf8");
+const revenueDeepDiveScript = await readFile("revenue-deep-dive.js", "utf8");
 const czechBudgetPage = await readFile("cesky-rozpocet.html", "utf8");
 const czechBudgetScript = await readFile("app.js", "utf8");
 const demography = JSON.parse(await readFile("data/demography-social.v1.json", "utf8"));
@@ -124,6 +127,13 @@ for (const [code, country] of Object.entries(transportPerformance.countries)) {
 }
 if (Object.keys(countryCashIn.countries).length !== 10 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for ten countries and Czech territorial/company cash-in layers");
 if (countryCashIn.countries.CZE.layers.municipalities.entity_count !== 6254 || countryCashIn.countries.CZE.layers.companies.entity_count !== 38) throw new Error("Unexpected Czech municipality or state-company cash-in coverage");
+if (countryRevenue.contract !== "country-revenue.v1" || Object.keys(countryRevenue.countries).length !== 10 || countryRevenue.sources.length !== 3) throw new Error("Expected a ten-country revenue contract with three primary source pipelines");
+for (const [code, profile] of Object.entries(countryRevenue.countries)) {
+  const taxMixTotal = Object.values(profile.tax_mix).reduce((sum, value) => sum + value, 0);
+  const governmentLevelTotal = Object.values(profile.government_levels).filter(Number.isFinite).reduce((sum, value) => sum + value, 0);
+  if (Math.abs(taxMixTotal - 100) > 0.1 || Math.abs(governmentLevelTotal - 100) > 0.1 || profile.timeline.length < 12) throw new Error(`${code}: revenue mix, recipient levels or stability timeline is incomplete`);
+}
+if (Object.values(countryRevenue.countries).filter((profile) => profile.environmental_taxes).length < 7 || Object.values(countryRevenue.countries).filter((profile) => profile.municipal_transfers).length < 8) throw new Error("Revenue profiles must preserve source-backed environmental-tax and municipal-transfer coverage");
 for (const [code, country] of Object.entries(functionalBudgets.countries)) {
   for (const category of ["health", "social", "transport"]) {
     const series = country.categories[category];
@@ -150,6 +160,7 @@ if (!headerStyles.includes("psd-site-header") || !headerStyles.includes(".global
 if (!czechSiteGenerator.includes('<psd-site-header data-section=\\"cities\\"></psd-site-header>') || !czechSiteGenerator.includes("site-header.css?v=20260824-header-lockup") || !czechSiteGenerator.includes("global-nav.js?v=20260824-logo-120")) throw new Error("Generated municipal pages must use the shared header component");
 if (!deepDivePage.includes('href="health/?code=CZE"') || !deepDivePage.includes('href="state-owned-enterprises/"') || !deepDivePage.includes('href="capital-cities/?city=prague-cz"') || !transportDeepDivePage.includes('id="deep-dive-country"') || !transportDeepDivePage.includes('id="country-function-transport"') || !healthDeepDivePage.includes('data-country-codes="CZE,DEU,DNK,FRA,GBR,POL,SWE,CHE,UKR,USA"') || !healthDeepDivePage.includes('id="country-function-health"') || !healthDeepDivePage.includes('id="healthcare-system"') || !healthDeepDivePage.includes('id="hospital-benchmark"') || !healthDeepDivePage.includes('id="health-performance"') || !healthDeepDivePage.includes('health-performance.js') || !stateEnterpriseDeepDivePage.includes('id="soe-body"') || !capitalCitiesDeepDivePage.includes('id="capital-bubble-chart"') || !capitalCitiesDeepDivePage.includes('id="visitor-load"') || !capitalCitiesDeepDivePage.includes('id="budget-capacity"') || !capitalCitiesDeepDivePage.includes('id="balance"') || !capitalCitiesDeepDivePage.includes('id="cohorts"') || !capitalCitiesDeepDiveScript.includes("budgetPerResident") || !capitalCitiesDeepDiveScript.includes("guestLoad")) throw new Error("Deep dives must expose dedicated transportation, health-performance, state-enterprise and capital-city profiles");
 if (stateEnterpriseCatalogue.records.length !== 30 || new Set(stateEnterpriseCatalogue.records.map(record => record.country_code)).size !== 10 || stateEnterpriseCatalogue.records.some(record => !Number.isFinite(record.source_revenue_m) || !stateEnterpriseCatalogue.fx.rates[record.currency] || !record.source_url)) throw new Error("State-enterprise catalogue must contain three sourced and convertible records for each tracked country");
+if (!deepDivePage.includes('href="revenue/?code=CZE"') || !globalNav.includes('deep-dives/revenue/') || !revenueDeepDivePage.includes('id="hundred-flow"') || !revenueDeepDivePage.includes('id="base-composition"') || !revenueDeepDivePage.includes('id="stability-chart"') || !revenueDeepDivePage.includes('id="transfer-path"') || !revenueDeepDiveScript.includes('environmentNote')) throw new Error("Revenue deep dive must expose tax sources, government levels, downturn stability and municipal transfers");
 if (!cloudbuild.includes("scripts/assert-single-production.sh") || !cloudbuild.includes("scripts/deploy-immutable.sh") || !cloudbuild.includes("- czbudget-public") || cloudbuild.includes("${_SERVICE}") || cloudbuild.includes("czbudget-web")) throw new Error("Cloud Build must be locked to the sole canonical production service");
 if (!cloudbuild.includes("scripts/merge-municipal-breakdowns.mjs") || !municipalI18n.includes("renderBudgetBreakdown") || !municipalI18n.includes("municipal-budget-codebook.v1.json")) throw new Error("Municipal profiles must surface the detailed FIN 2-12 M breakdown");
 if (!capitalsScript.includes('data/large-city-history.v1.json') || !capitalsScript.includes('renderHistory(city)')) throw new Error("European capitals must surface the Prague ten-year history");
@@ -204,4 +215,5 @@ await stat("scripts/build-transport-performance.mjs");
 await stat("deep-dives/capital-cities/index.html");
 await stat("capital-cities-deep-dive.js");
 await stat("capital-cities-deep-dive.css");
+for (const required of ["deep-dives/revenue/index.html", "revenue-deep-dive.js", "revenue-deep-dive.css", "data/country-revenue.v1.json", "scripts/build-country-revenue.py"]) await stat(required);
 console.log("CZ Budget site validation passed");

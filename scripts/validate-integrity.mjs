@@ -359,10 +359,10 @@ if (!dataOnly) {
   const sitemap = await readFile("sitemap.xml", "utf8");
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/"];
-  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6 + 5 + benchmarkMunicipalities.length + 3;
+  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6 + 6 + benchmarkMunicipalities.length + 3;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
-  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
+  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
     assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);

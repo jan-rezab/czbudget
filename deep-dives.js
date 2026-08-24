@@ -23,6 +23,8 @@
   Object.assign(copy.en,{stateCompanies:"State-owned enterprises",stateCompaniesCopy:"A catalogue of the thirty largest nationally controlled enterprises, with revenue converted to euros."});
   Object.assign(copy.cs,{capitalCities:"Hlavní města",capitalCitiesCopy:"Rozpočet na obyvatele, turistický tlak, salda a pět srovnatelných skupin."});
   Object.assign(copy.en,{capitalCities:"Capital cities",capitalCitiesCopy:"Budget per resident, visitor pressure, balances and five comparable city clusters."});
+  Object.assign(copy.cs,{revenue:"Kdo financuje stát?",revenueCopy:"Daňový mix, úrovně vlády, odolnost příjmů a cesta k obecním transferům."});
+  Object.assign(copy.en,{revenue:"Who actually funds the state?",revenueCopy:"The tax mix, government levels, revenue resilience and the path to municipal transfers."});
   const t=copy[lang];
   const name=(code)=>{const row=countries.find(item=>item[0]===code);return row?.[lang==="en"?2:1]??code};
   function translate(){
