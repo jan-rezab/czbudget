@@ -1,7 +1,7 @@
 (() => {
   const scriptUrl = document.currentScript?.src || new URL("global-nav.js", location.href).href;
   const assetRoot = new URL(".", scriptUrl).href;
-  const portalStylesHref = `${assetRoot}portal-ui.css?v=20260824-header-lockup`;
+  const portalStylesHref = `${assetRoot}portal-ui.css?v=20260824-logo-120`;
   const existingPortalStyles = document.querySelector("link[data-portal-ui]");
   if (existingPortalStyles) existingPortalStyles.href = portalStylesHref;
   else { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = portalStylesHref; styles.dataset.portalUi = "true"; document.head.append(styles); }
@@ -83,7 +83,7 @@
     }
   }
 
-  const headerStylesHref = `${assetRoot}site-header.css?v=20260824-header-lockup`;
+  const headerStylesHref = `${assetRoot}site-header.css?v=20260824-logo-120`;
   const existingHeaderStyles = document.querySelector("link[data-psd-site-header]");
   if (existingHeaderStyles) {
     existingHeaderStyles.href = headerStylesHref;
