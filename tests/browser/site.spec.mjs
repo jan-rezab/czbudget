@@ -18,6 +18,7 @@ const routes = [
   ["transportation deep dive", "/deep-dives/transportation/?code=CZE&lang=cs"],
   ["health deep dive", "/deep-dives/health/?code=CZE&lang=cs"],
   ["state-owned enterprises deep dive", "/deep-dives/state-owned-enterprises/?lang=cs"],
+  ["ageing deep dive", "/deep-dives/ageing/?code=CZE&lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/municipalities/praha/?lang=cs"],
   ["region", "/cz/kraje/praha/?lang=cs"],
@@ -136,15 +137,16 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
 
 test("deep dives expose dedicated topic hierarchies for countries and capital cities", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".deep-card")).toHaveCount(5);
-  await expect(page.locator(".deep-card.available")).toHaveCount(5);
+  await expect(page.locator(".deep-card")).toHaveCount(6);
+  await expect(page.locator(".deep-card.available")).toHaveCount(6);
   await expect(page.locator(".deep-card.available").first()).toContainText("Transportation");
   await expect(page.locator(".deep-card.available").nth(1)).toContainText("Health");
   await expect(page.locator(".deep-card.available").nth(2)).toContainText("State-owned enterprises");
   await expect(page.locator(".deep-card.available").nth(3)).toContainText("Capital cities");
-  await expect(page.locator(".deep-card.available").last()).toContainText("Who actually funds the state?");
+  await expect(page.locator(".deep-card.available").nth(4)).toContainText("Who actually funds the state?");
+  await expect(page.locator(".deep-card.available").last()).toContainText("The Ageing Bill");
   await page.locator(".deep-dive-menu summary").click();
-  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(5);
+  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(6);
   await page.goto("/deep-dives/capital-cities/?city=prague-cz&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("h1")).toContainText("Capital Cities Under Pressure");
   await expect(page.locator("#capital-pressure-city")).toHaveValue("prague-cz");
@@ -171,6 +173,23 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   await expect(page.locator("#deep-dive-country-name")).toHaveText("Poland");
   await expect(page.locator(".transport-kpis")).toContainText("1,888 km");
   await expect(page.locator(".transport-budget-detail")).toContainText("125,864 mil.");
+});
+
+test("ageing deep dive stays inside official projections and transparent arithmetic", async ({ page }) => {
+  await page.goto("/deep-dives/ageing/?code=CZE&lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#deep-dive-country option")).toHaveCount(10);
+  await expect(page.locator(".aging-kpis article")).toHaveCount(4);
+  await expect(page.locator(".aging-table tbody tr")).toHaveCount(10);
+  await expect(page.locator("#aging-calculator-results")).toContainText("This is not a forecast of employment, pensions, healthcare costs, taxes or public debt");
+  await expect(page.locator("#aging-calculator-results")).toContainText("5,936,188");
+  await page.locator("#aging-boundary").fill("70");
+  await expect(page.locator("#aging-boundary-output")).toHaveText("70+");
+  await page.locator("#aging-year").fill("2035");
+  await expect(page.locator("#aging-year-output")).toHaveText("2035");
+  await page.locator("#deep-dive-country").selectOption("POL");
+  await expect(page).toHaveURL(/code=POL/);
+  await expect(page.locator("#deep-dive-country-name")).toHaveText("Poland");
+  await expect(page.locator(".aging-source-card").first()).toContainText("EUROPOP2023 baseline scenario");
 });
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {
