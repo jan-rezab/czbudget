@@ -134,15 +134,22 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
   await expect(page.locator("body")).toBeVisible();
 });
 
-test("deep dives expose a dedicated topic hierarchy and country-filtered transportation story", async ({ page }) => {
+test("deep dives expose dedicated topic hierarchies for countries and capital cities", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".deep-card")).toHaveCount(3);
-  await expect(page.locator(".deep-card.available")).toHaveCount(3);
+  await expect(page.locator(".deep-card")).toHaveCount(5);
+  await expect(page.locator(".deep-card.available")).toHaveCount(5);
   await expect(page.locator(".deep-card.available").first()).toContainText("Transportation");
   await expect(page.locator(".deep-card.available").nth(1)).toContainText("Health");
-  await expect(page.locator(".deep-card.available").last()).toContainText("State-owned enterprises");
+  await expect(page.locator(".deep-card.available").nth(2)).toContainText("State-owned enterprises");
+  await expect(page.locator(".deep-card.available").nth(3)).toContainText("Capital cities");
+  await expect(page.locator(".deep-card.available").last()).toContainText("Who actually funds the state?");
   await page.locator(".deep-dive-menu summary").click();
-  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(3);
+  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(5);
+  await page.goto("/deep-dives/capital-cities/?city=prague-cz&lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("h1")).toContainText("Capital Cities Under Pressure");
+  await expect(page.locator("#capital-pressure-city")).toHaveValue("prague-cz");
+  await expect(page.locator(".capital-bubble-group")).toHaveCount(28);
+  await expect(page.locator("#capital-city-readout")).toContainText("Prague");
   await page.goto("/deep-dives/transportation/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country")).toHaveValue("CZE");
   await expect(page.locator(".transport-network-year")).toHaveCount(10);
