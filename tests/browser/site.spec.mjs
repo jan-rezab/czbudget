@@ -269,6 +269,13 @@ test("international municipality directory filters by country, year and search",
   await expect(page.locator(".municipal-country-card footer").first()).toHaveCSS("margin-left", "0px");
   await expect(page.locator('.municipal-country-card[data-country="NOR"] footer a').first()).toHaveAttribute("href", /\/municipalities\/norway\/\?lang=en$/);
   await expect(page.locator("#total-entities")).not.toHaveText("—");
+  await expect(page.locator("#municipal-benchmark-content .benchmark-kpis article")).toHaveCount(4);
+  await expect(page.locator("#municipal-benchmark-content .benchmark-row")).toHaveCount(27);
+  await expect(page.locator("#municipal-benchmark-content .benchmark-method")).toContainText("OECD");
+  await page.locator('[data-benchmark-metric="under_2000_pct"]').click();
+  await expect(page.locator('[data-benchmark-metric="under_2000_pct"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#municipal-benchmark-content .benchmark-row").first()).toContainText("Czechia");
+  await expect(page.locator("#municipal-benchmark-content .benchmark-row").first()).toContainText("88 %");
   await expect(page.locator("#type-filter option[value='all']")).toHaveText("Municipalities + capitals");
   await expect(page.locator("#municipality-grid .capital-card")).toHaveCount(27);
   await expect(page.locator("#about-project")).toContainText("Created by");
