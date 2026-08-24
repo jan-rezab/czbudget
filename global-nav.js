@@ -1,6 +1,34 @@
 (() => {
   const scriptUrl = document.currentScript?.src || new URL("global-nav.js", location.href).href;
   const assetRoot = new URL(".", scriptUrl).href;
+  let globalFooter = document.querySelector("body > footer");
+  if (!globalFooter) {
+    globalFooter = document.createElement("footer");
+    document.body.append(globalFooter);
+  }
+  globalFooter.setAttribute("data-global-footer", "");
+  const compactFooterStyles = `${assetRoot}global-footer.css?v=20260824-compact`;
+  const existingFooterStyles = document.querySelector('link[href*="global-footer.css"]');
+  if (existingFooterStyles) existingFooterStyles.href = compactFooterStyles;
+  else {
+    const footerStyles = document.createElement("link");
+    footerStyles.rel = "stylesheet";
+    footerStyles.href = compactFooterStyles;
+    document.head.append(footerStyles);
+  }
+  const loadCompactFooter = () => {
+    if (document.querySelector('script[data-compact-footer]')) return;
+    const footerScript = document.createElement("script");
+    footerScript.src = `${assetRoot}global-footer.js?v=20260824-compact`;
+    footerScript.dataset.compactFooter = "true";
+    document.head.append(footerScript);
+  };
+  const existingFooterScript = document.querySelector('script[src*="global-footer.js"]');
+  if (!existingFooterScript) loadCompactFooter();
+  else if (!existingFooterScript.src.includes("20260824-compact")) {
+    if (document.readyState === "complete") loadCompactFooter();
+    else window.addEventListener("load", loadCompactFooter, { once: true });
+  }
   const portalStylesHref = `${assetRoot}portal-ui.css?v=20260824-logo-120`;
   const existingPortalStyles = document.querySelector("link[data-portal-ui]");
   if (existingPortalStyles) existingPortalStyles.href = portalStylesHref;

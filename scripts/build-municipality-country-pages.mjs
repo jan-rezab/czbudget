@@ -46,7 +46,7 @@ for(const [slug,page] of Object.entries(pages)){
     <section id="context" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="contextKicker">03 / Co je uvnitř</span><h2 data-copy="contextTitle">Rozsah zůstává viditelný.</h2></div><p data-copy="contextCopy">Národní zdroj a účetní hranice jsou součástí výsledku, ne poznámka pod čarou.</p></div><div id="country-context-grid" class="country-context-grid"></div></section>
   </main>
   <footer data-global-footer></footer>
-  <script src="../../global-footer.js?v=20260823-footer" defer></script>
+  <script src="../../global-footer.js?v=20260824-compact" defer></script>
 </body>
 </html>`;
   await mkdir(new URL(`../municipalities/${slug}/`,import.meta.url),{recursive:true});

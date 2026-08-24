@@ -162,7 +162,7 @@ test("homepage defaults every independently rendered module to English", async (
   await expect(page.locator("#category-comparison-root")).toContainText("Country profile");
   await expect(page.locator("#category-comparison-root")).not.toContainText("Výdaje podle kategorií");
   await expect(page.locator("#homepage-health-performance-root")).toContainText("Health-system performance");
-  await expect(page.locator(".glorious-footer")).toContainText("Public budgets in one place");
+  await expect(page.locator(".glorious-footer")).toContainText("Created by Hlidac statu, z.u.");
 
   await page.locator('[data-lang="cs"]').click();
   await expect(page.locator("#category-comparison-root")).toContainText("Výdaje podle kategorií");

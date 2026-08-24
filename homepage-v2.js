@@ -14,6 +14,8 @@ Object.assign(I.cs,{architectureKicker:"Účetní hranice / všech 10 zemí",arc
 Object.assign(I.en,{architectureKicker:"Accounting boundaries / all 10 countries",architectureTitle:"How public accounts are separated.",architectureCopy:"This table describes institutional architecture; it is not another revenue total. Details and primary sources are in each country profile.",nationalBudget:"National budget",municipalBudgets:"Municipalities and regions",otherAccounts:"Other public accounts",stateCompanies:"Public corporations",separateBudgets:"Own budgets · separate"});
 Object.assign(I.cs,{benchmarkCountry:"Benchmark země",benchmarkTitle:"Přehled benchmarku",benchmarkCopy:"Vybraná země vůči mediánu a rozpětí všech zobrazených zemí.",peerMedian:"Medián",rank:"Pořadí",of:"z",range:"Rozpětí"});
 Object.assign(I.en,{benchmarkCountry:"Benchmark country",benchmarkTitle:"Benchmark overview",benchmarkCopy:"Selected country against the median and range of all visible countries.",peerMedian:"Median",rank:"Rank",of:"of",range:"Range"});
+Object.assign(I.cs,{compareCoverage:"zemí × let harmonizovaných dat"});
+Object.assign(I.en,{compareCoverage:"countries × years of harmonised data"});
 Object.assign(I.cs,{heroChartNote:"Všech 10 zemí · hodnoty za rok 2024",unemployment:"Nezaměstnanost",growth:"Růst HDP",inflation:"Inflace",yearShort:"rok",macroTitle:"Deset zemí. Čtyři pohledy na výkon."});
 Object.assign(I.en,{heroChartNote:"All 10 countries · 2024 values",unemployment:"Unemployment",growth:"GDP growth",inflation:"Inflation",yearShort:"year"});
 Object.assign(I.cs,{gdpTag:"HDP / OBYV.",debtTag:"DLUH / HDP",pppTag:"PPP / OBYV.",surplusTag:"ROKY S PŘEBYTKEM",imfDateSource:"IMF WEO · duben 2026",calculationSource:"IMF WEO · výpočet PSD"});

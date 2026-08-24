@@ -117,7 +117,7 @@ def header(root: str, active: str = "czech") -> str:
 
 
 def footer(root: str) -> str:
-    return f"""<footer><div><span>Public Spending Data</span><small>České územní rozpočty</small></div><p>Zdroj: Monitor státní pokladny MF ČR · stav k 31. 12. 2025</p><a href="{root}cz/municipalities/">Obce a kraje ↑</a></footer>"""
+    return f"""<footer data-global-footer></footer><script src="{root}global-footer.js?v=20260824-compact" defer></script>"""
 
 
 def prepare_entities(data: dict) -> list[dict]:
