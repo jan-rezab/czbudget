@@ -13,7 +13,8 @@ share of GDP, so the unit becomes the mark. The green and red squares carry over
 from the four-square grid; a paper slash between them turns the grid into a
 percent sign that still reads at favicon size.
 
-- `assets/logo.svg` — the mark, 64 grid, rounded tile
+- `assets/logo.svg` — the mark, 64 grid, squircle tile (rx 22.5% of the side),
+  squares at 25% with a 3% corner radius, slash at 10% stroke
 - `assets/logo-1024.png`, `logo-512.png`, `logo-256.png`, `logo-64.png` — the
   same mark exported to PNG, transparent outside the tile, for decks, avatars
   and anywhere SVG is not accepted
@@ -53,8 +54,8 @@ Known inconsistency worth folding in while adopting: the white square is
 
 ## Wordmark
 
-Two lines, set in Arial to match the site body font. "Public Spending" in ink at
-regular weight, "Data" underneath in deficit red at bold. Never set the wordmark
+Two lines in Archivo ExtraBold (800), tracked at -0.02em. "Public Spending" in
+ink, "Data" underneath in deficit red. Never set the wordmark
 on one line, never letterspace it, never restate the name next to a lockup that
 already contains it.
 
@@ -63,7 +64,10 @@ is deliberate: the header loads the lockup through `background-image` and an
 `<img>`, and an SVG used as an image cannot reach a webfont, so live text falls
 back to whatever sans-serif the visitor happens to have. Android ships no Arial.
 Outlines guarantee the real letterforms everywhere. To change the wording,
-regenerate the paths from Arial at 17px rather than editing a text node.
+regenerate the paths from Archivo ExtraBold at 15.7px, tracking -0.02em,
+baselines at y=21.06 and y=37.71 in the 190x48 box, rather than editing a text
+node. The face is Google Fonts Archivo, weight 800; the site itself loads no
+webfont and does not need to, because the letterforms are paths.
 
 Clear space is half the tile height on every side. Minimum sizes: 16px for the
 mark on its own, 120px wide for a lockup. Below that, use the mark.

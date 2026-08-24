@@ -46,7 +46,7 @@
       const municipal = document.body.classList.contains("cz-budget-page");
       const budget = location.pathname.endsWith("/cesky-rozpocet.html");
       this.innerHTML = `<header class="site-header compact-header has-global-nav${municipal ? " cz-header" : ""}">
-        <a class="brand" id="${budget ? "budget-home-link" : "home-link"}" href="${href("index.html")}" aria-label="Public Spending Data"><img class="brand-logo" src="${assetRoot}assets/logo-lockup.svg?v=20260824-identity-outlines" width="190" height="48" alt="" aria-hidden="true"></a>
+        <a class="brand" id="${budget ? "budget-home-link" : "home-link"}" href="${href("index.html")}" aria-label="Public Spending Data"><img class="brand-logo" src="${assetRoot}assets/logo-lockup.svg?v=20260824-archivo-lockup" width="190" height="48" alt="" aria-hidden="true"></a>
         <nav class="global-nav" aria-label=""></nav>
         <div class="lang-switch municipality-lang-switch municipal-lang-switch" role="group" aria-label=""><button type="button" data-lang="cs" data-budget-lang="cs" data-deep-lang="cs" aria-pressed="false">CS</button><span aria-hidden="true">/</span><button type="button" data-lang="en" data-budget-lang="en" data-deep-lang="en" aria-pressed="false">EN</button></div>
       </header>`;
