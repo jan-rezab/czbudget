@@ -155,7 +155,7 @@
     if (selector) selector.value = code;
     const url = new URL(location.href); url.searchParams.set("code", code); url.searchParams.set("lang", state.lang); history.replaceState({}, "", url);
     const title = document.querySelector("#deep-dive-country-name"), badge = document.querySelector("#deep-dive-country-code"), link = document.querySelector("#deep-dive-country-profile");
-    if (title) title.textContent = countryName(code); if (badge) badge.textContent = code; if (link) link.href = `../../country.html?code=${code}&lang=${state.lang}`;
+    if (title) title.textContent = countryName(code); if (badge) badge.textContent = code; if (link) link.href = window.PSDCountryRoutes.href(code,state.lang);
     render(); loadDetail().catch(showError);
   }
 

@@ -42,7 +42,7 @@
   const number = (value,digits) => new Intl.NumberFormat(locale(),{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(Number(value));
   const valueLabel = (item,key) => finiteEntry(item) ? `${number(item.value,metrics[key].digits)} ${unit(key)}` : "—";
   const flag = code => `<span class="health-compare-flag"><img src="assets/flags/${flags[code]}.svg" alt="" loading="lazy"><b>${code}</b></span>`;
-  const profileUrl = code => `country.html?code=${code}&lang=${state.lang}#health-performance`;
+  const profileUrl = code => window.PSDCountryRoutes.href(code,state.lang,"health-performance");
   const median = values => {
     const sorted = [...values].sort((a,b)=>a-b),middle = Math.floor(sorted.length / 2);
     return sorted.length % 2 ? sorted[middle] : (sorted[middle-1] + sorted[middle]) / 2;

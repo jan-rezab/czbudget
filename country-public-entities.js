@@ -3,7 +3,7 @@
   if (!root) return;
 
   const state = {
-    code: (new URLSearchParams(location.search).get("code") || "CZE").toUpperCase(),
+    code: window.PSDCountryRoutes.codeFromLocation(),
     lang: document.documentElement.lang === "en" ? "en" : "cs",
     coverage: null, aggregates: null, manifest: null, shard: null,
     query: "", perimeter: "", entityClass: "", sort: "name", page: 1, selected: null,

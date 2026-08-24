@@ -51,6 +51,23 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("country links are readable and data-layer cards keep accessible contrast", async ({ page }) => {
+  await page.goto("/country.html?code=CHE&lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://publicspendingdata.org/countries/switzerland");
+  const colors = await page.locator(".parity-grid article").first().evaluate((card) => ({
+    background: getComputedStyle(card).backgroundColor,
+    foreground: getComputedStyle(card).color,
+    detail: getComputedStyle(card.querySelector("p")).color,
+  }));
+  expect(colors).toEqual({background:"rgb(255, 255, 255)",foreground:"rgb(23, 36, 31)",detail:"rgb(79, 90, 85)"});
+  await page.locator("#country-switch").selectOption("DEU");
+  await expect(page).toHaveURL(/\/countries\/germany\?lang=en$/);
+  await expect(page.locator("#country-name")).toContainText("Germany");
+  await page.goto("/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#country-cards a").first()).toHaveAttribute("href", "/countries/czechia?lang=en");
+  await expect(page.locator('a[href*="country.html?code="]')).toHaveCount(0);
+});
+
 test("English remains selected when a municipality card is opened", async ({ page }) => {
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
   await page.locator("#country-filter").selectOption("CZE");

@@ -41,7 +41,7 @@
     if(selector)selector.value=selected;
     const title=document.querySelector("#deep-dive-country-name");if(title)title.textContent=name(selected);
     const badge=document.querySelector("#deep-dive-country-code");if(badge)badge.textContent=selected;
-    const profile=document.querySelector("#deep-dive-country-profile");if(profile)profile.href=`../../country.html?code=${selected}&lang=${lang}`;
+    const profile=document.querySelector("#deep-dive-country-profile");if(profile)profile.href=window.PSDCountryRoutes.href(selected,lang);
     dispatchEvent(new CustomEvent("countryprofilechange",{detail:{code:selected,lang}}));
   }
   addEventListener("DOMContentLoaded",()=>{

@@ -326,6 +326,7 @@ assert(cloudbuild.includes("scripts/deploy-immutable.sh"), "Cloud Build does not
 
 let htmlCount = 0;
 let localReferenceCount = 0;
+const countryPaths = ["/countries/czechia", "/countries/germany", "/countries/denmark", "/countries/france", "/countries/united-kingdom", "/countries/poland", "/countries/sweden", "/countries/switzerland", "/countries/ukraine", "/countries/united-states"];
 if (!dataOnly) {
   const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html"));
   htmlCount = htmlFiles.length;
@@ -347,7 +348,7 @@ if (!dataOnly) {
         ? path.resolve(root, clean.slice(1))
         : path.resolve(path.dirname(file), clean);
       const candidates = [target, `${target}.html`, path.join(target, "index.html")];
-      let exists = false;
+      let exists = countryPaths.includes(clean);
       for (const candidate of candidates) { try { if ((await stat(candidate)).isFile()) { exists = true; break; } } catch {} }
       assert(exists, `Broken local reference ${relative} -> ${reference}`);
     }
@@ -359,10 +360,10 @@ if (!dataOnly) {
   const sitemap = await readFile("sitemap.xml", "utf8");
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
   const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/"];
-  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6 + 6 + benchmarkMunicipalities.length + 4;
+  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
-  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
+  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
     assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);

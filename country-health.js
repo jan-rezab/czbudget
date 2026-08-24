@@ -19,7 +19,7 @@
   };
   const labels = {public_compulsory:"publicCompulsory",voluntary_other:"voluntaryOther",out_of_pocket:"outOfPocket",hospitals:"hospitals",residential_ltc:"residentialLtc",ambulatory:"ambulatory",retailers:"retailers",other:"other"};
   const colors = ["#496f5a","#c6b13f","#d66b52","#315ba6","#855d9b"];
-  const state = {data:null,code:new URLSearchParams(location.search).get("code")||"CZE",lang:document.documentElement.lang==="en"?"en":"cs",mode:"finance",edited:{},hospitals:{}};
+  const state = {data:null,code:window.PSDCountryRoutes.codeFromLocation(),lang:document.documentElement.lang==="en"?"en":"cs",mode:"finance",edited:{},hospitals:{}};
   const $ = selector => document.querySelector(selector);
   const tr = key => T[state.lang][key]||key;
   const locale = () => state.lang==="en"?"en-GB":"cs-CZ";
@@ -142,6 +142,6 @@
 
   fetch(`${assetRoot}data/country-health.v1.json`)
     .then(response=>{if(!response.ok)throw new Error(response.status);return response.json()})
-    .then(data=>{state.data=data;state.code=new URLSearchParams(location.search).get("code")||state.code;state.lang=document.documentElement.lang==="en"?"en":"cs";render()})
+    .then(data=>{state.data=data;state.code=window.PSDCountryRoutes.codeFromLocation(state.code);state.lang=document.documentElement.lang==="en"?"en":"cs";render()})
     .catch(error=>console.error("Country healthcare data",error));
 })();

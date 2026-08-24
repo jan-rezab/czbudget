@@ -1,3 +1,44 @@
+map "$arg_code:$arg_lang" $legacy_country_path {
+  default "/countries/czechia";
+  ":cs" "/countries/czechia?lang=cs";
+  ":en" "/countries/czechia?lang=en";
+  "CZE:" "/countries/czechia";
+  "CZE:cs" "/countries/czechia?lang=cs";
+  "CZE:en" "/countries/czechia?lang=en";
+  "DEU:" "/countries/germany";
+  "DEU:cs" "/countries/germany?lang=cs";
+  "DEU:en" "/countries/germany?lang=en";
+  "DNK:" "/countries/denmark";
+  "DNK:cs" "/countries/denmark?lang=cs";
+  "DNK:en" "/countries/denmark?lang=en";
+  "FRA:" "/countries/france";
+  "FRA:cs" "/countries/france?lang=cs";
+  "FRA:en" "/countries/france?lang=en";
+  "GBR:" "/countries/united-kingdom";
+  "GBR:cs" "/countries/united-kingdom?lang=cs";
+  "GBR:en" "/countries/united-kingdom?lang=en";
+  "POL:" "/countries/poland";
+  "POL:cs" "/countries/poland?lang=cs";
+  "POL:en" "/countries/poland?lang=en";
+  "SWE:" "/countries/sweden";
+  "SWE:cs" "/countries/sweden?lang=cs";
+  "SWE:en" "/countries/sweden?lang=en";
+  "CHE:" "/countries/switzerland";
+  "CHE:cs" "/countries/switzerland?lang=cs";
+  "CHE:en" "/countries/switzerland?lang=en";
+  "UKR:" "/countries/ukraine";
+  "UKR:cs" "/countries/ukraine?lang=cs";
+  "UKR:en" "/countries/ukraine?lang=en";
+  "USA:" "/countries/united-states";
+  "USA:cs" "/countries/united-states?lang=cs";
+  "USA:en" "/countries/united-states?lang=en";
+}
+
+map $request_uri $country_canonical_path {
+  default "/countries/czechia";
+  ~^(?<country_path>/countries/(?:czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states))(?:\?|$) $country_path;
+}
+
 server {
   listen ${PORT};
   server_name publicspendingdata.org www.publicspendingdata.org _;
@@ -23,6 +64,20 @@ server {
 
   location = /cz-obce.html {
     return 301 /cz/municipalities/$is_args$args;
+  }
+
+  location = /country.html {
+    return 301 $legacy_country_path;
+  }
+
+  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states)/$ {
+    return 301 /countries/$1$is_args$args;
+  }
+
+  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states)$ {
+    sub_filter_once off;
+    sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
+    try_files /country.html =404;
   }
 
   location / {

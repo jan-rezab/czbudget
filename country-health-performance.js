@@ -22,7 +22,7 @@
     en:{kicker:"06C / Capacity, use and outcomes",title:"What the system delivers for its spending.",lead:"Fifteen indicators connect spending, workforce, capacity, hospital use and health outcomes. Every value carries its own latest available year.",groups:{spending:"Spending",workforce:"Workforce",capacity:"Capacity",utilisation:"Utilisation",outcomes:"Outcomes"},trend:"Country trend",peers:"Latest value across 10 countries",latest:"latest year",noData:"No data are available for this indicator.",method:"Different reference years are neither imputed nor treated as zero.",sources:"Primary data sources"}
   };
   const names={CZE:"Czechia",DEU:"Germany",DNK:"Denmark",FRA:"France",GBR:"United Kingdom",POL:"Poland",SWE:"Sweden",CHE:"Switzerland",USA:"United States",UKR:"Ukraine"};
-  const state={data:null,code:new URLSearchParams(location.search).get("code")||"CZE",lang:document.documentElement.lang==="en"?"en":"cs",group:"outcomes",metric:"life_expectancy_years"};
+  const state={data:null,code:window.PSDCountryRoutes.codeFromLocation(),lang:document.documentElement.lang==="en"?"en":"cs",group:"outcomes",metric:"life_expectancy_years"};
   const esc=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
   const locale=()=>state.lang==="en"?"en-GB":"cs-CZ";
   const fmt=(value,digits=1)=>Number.isFinite(Number(value))?new Intl.NumberFormat(locale(),{maximumFractionDigits:digits,minimumFractionDigits:digits}).format(Number(value)):"—";

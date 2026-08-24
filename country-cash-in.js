@@ -1,5 +1,5 @@
 (() => {
-  const state={code:new URLSearchParams(location.search).get("code")||"CZE",lang:document.documentElement.lang==="en"?"en":"cs",data:null,spending:null,coverage:null,manifest:null};
+  const state={code:window.PSDCountryRoutes.codeFromLocation(),lang:document.documentElement.lang==="en"?"en":"cs",data:null,spending:null,coverage:null,manifest:null};
   const $=selector=>document.querySelector(selector);
   const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   const t={

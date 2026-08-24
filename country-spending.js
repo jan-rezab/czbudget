@@ -38,7 +38,7 @@
   };
   const esc = value => String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
   const lang = () => document.documentElement.lang === "en" ? "en" : "cs";
-  const code = () => new URLSearchParams(location.search).get("code") || document.querySelector("#country-code")?.textContent?.trim() || "CZE";
+  const code = () => window.PSDCountryRoutes.codeFromLocation(document.querySelector("#country-code")?.textContent?.trim() || "CZE");
   const eurMode = () => document.querySelector('[data-currency="eur"]')?.classList.contains("active");
   const current = () => payload?.countries.find(country => country.code === code());
   const amount = (value, country) => eurMode() ? value / payload.fx.local_per_eur[country.currency] : value;
