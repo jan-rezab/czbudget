@@ -14,6 +14,7 @@ ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().p
 INVENTORY_PATH = ROOT / "data" / "public_entity_revenues_2006_2025.json"
 STRATEGIC_PATH = ROOT / "website" / "data" / "cz-state-enterprises-2024.json"
 OUTPUT_PATH = ROOT / "website" / "data" / "cz-public-entities-2024.json"
+HISTORY_OUTPUT_PATH = ROOT / "website" / "data" / "cz-public-entity-history.v1.json"
 
 
 def mczk(value: float | None) -> float | None:
@@ -148,6 +149,58 @@ def main() -> None:
         "sources": inventory["sources"] + strategic["sources"],
     }
     OUTPUT_PATH.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+
+    financial_series: dict[str, list[dict]] = {}
+    for row in inventory["annual"]:
+        if row.get("revenue") is None and row.get("cost") is None:
+            continue
+        revenue = mczk(row.get("revenue"))
+        cost = mczk(row.get("cost"))
+        financial_series.setdefault(row["ico"], []).append({
+            "year": row["year"],
+            "revenue_mczk": revenue,
+            "cost_mczk": cost,
+            "net_result_mczk": None if revenue is None or cost is None else round(revenue - cost, 3),
+            "financial_status": row.get("financial_status"),
+            "source_financial": row.get("source_financial"),
+        })
+
+    history_entities = []
+    for ico, series in sorted(financial_series.items()):
+        master_row = master.get(ico, {})
+        series.sort(key=lambda row: row["year"])
+        history_entities.append({
+            "ico": ico,
+            "name": master_row.get("name") or series[-1].get("name") or ico,
+            "category": master_row.get("category"),
+            "owner_level": master_row.get("owner_level"),
+            "first_financial_year": series[0]["year"],
+            "last_financial_year": series[-1]["year"],
+            "series": series,
+        })
+
+    history_payload = {
+        "schema_version": "1.0.0",
+        "country_code": "CZ",
+        "period": inventory["metadata"]["period"],
+        "currency_code": "CZK",
+        "units": "mil. Kč",
+        "prepared_on": inventory["metadata"]["prepared_on"],
+        "scope": inventory["metadata"]["scope"],
+        "status": inventory["metadata"]["status"],
+        "interpretation": inventory["metadata"]["interpretation"],
+        "summary": {
+            "entity_count": len(inventory["entities"]),
+            "entities_with_financial_series": len(history_entities),
+            "financial_rows": sum(len(row["series"]) for row in history_entities),
+            "first_year": min(row["year"] for row in inventory["annual"]),
+            "last_year": max(row["year"] for row in inventory["annual"]),
+        },
+        "coverage": inventory["coverage"],
+        "entities": history_entities,
+        "sources": inventory["sources"],
+    }
+    HISTORY_OUTPUT_PATH.write_text(json.dumps(history_payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

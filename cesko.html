@@ -18,7 +18,7 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Česko: stát jako vlastník 2024","description":"Výsledky hospodaření a odvody 38 strategických společností a organizací ovládaných státem.","url":"https://publicspendingdata.org/cesko.html","inLanguage":"cs","temporalCoverage":"2024","spatialCoverage":{"@type":"Country","name":"Česko"},"creator":{"@type":"Organization","name":"Public Spending Data"},"isBasedOn":"https://www.mfcr.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf","distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/cz-state-enterprises-2024.json"}}</script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css?v=20260822-brand">
-  <script src="cz-firmy.js?v=20260822-1" defer></script>
+  <script src="cz-firmy.js?v=20260824-history-axis" defer></script>
 <link rel="stylesheet" href="site-header.css?v=20260822-component" data-psd-site-header>
   <script src="global-nav.js?v=20260822-component" defer></script></head>
 <body class="cz-enterprises-page">
@@ -84,9 +84,17 @@
       </section>
     </section>
 
+    <section class="public-entity-history" id="historie-subjektu" aria-labelledby="public-history-title">
+      <div class="section-heading">
+        <div><span class="kicker">02 / Účetní řady 2010–2025</span><h2 id="public-history-title">Jeden subjekt.<br>Celá dostupná řada.</h2></div>
+        <p>Výnosy, náklady a účetní výsledek po jednotlivých letech. Pokrytí otevřeného výkazu zisku a ztráty se mění podle roku a kategorie; chybějící rok není nula.</p>
+      </div>
+      <div id="public-entity-history-root" aria-live="polite"><p class="load-error">Načítám historické účetní řady…</p></div>
+    </section>
+
     <section class="budget-return" id="odvody">
       <div class="section-heading light-heading">
-        <div><span class="kicker">02 / Peníze pro stát</span><h2>Co skutečně<br>přiteklo státu.</h2></div>
+        <div><span class="kicker">03 / Peníze pro stát</span><h2>Co skutečně<br>přiteklo státu.</h2></div>
         <p>Dividendy a odvody ze zisku v roce 2024. Teprve tato vrstva představuje výnos vlastníka nebo příjem veřejných rozpočtů — nikoli celý zisk firem.</p>
       </div>
       <article class="return-panel">
@@ -97,7 +105,7 @@
 
     <section class="enterprise-context">
       <div class="section-heading compact-heading">
-        <div><span class="kicker">03 / Kontext</span><h2>Jedno vlastnictví.<br>Tři různé logiky.</h2></div>
+        <div><span class="kicker">04 / Kontext</span><h2>Jedno vlastnictví.<br>Tři různé logiky.</h2></div>
         <p>Portfolio státu není jednolitá skupina. Pro smysluplné srovnání budeme subjekty v dalších letech držet odděleně podle jejich veřejné a komerční role.</p>
       </div>
       <div class="context-grid">
@@ -117,7 +125,7 @@
     </section>
 
     <section class="methodology" id="metodika">
-      <div><span class="kicker">04 / Data & metodika</span><h2>Bez dvojího<br>započítání.</h2></div>
+      <div><span class="kicker">05 / Data & metodika</span><h2>Bez dvojího<br>započítání.</h2></div>
       <div class="method-grid">
         <article><span>01</span><h3>Účetní výsledek</h3><p>Zisk nebo ztráta po zdanění za jednotlivý subjekt. Není automaticky příjmem státního rozpočtu.</p></article>
         <article><span>02</span><h3>Odvod vlastníkovi</h3><p>Dividenda nebo odvod do fondu zakladatele v daném roce. Načasování se může lišit od roku, kdy zisk vznikl.</p></article>

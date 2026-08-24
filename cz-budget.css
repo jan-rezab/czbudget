@@ -289,6 +289,14 @@
 .history-select { min-width: 280px; display: grid; gap: 7px; }
 .history-select span { color: var(--cz-muted); font: 12px monospace; text-transform: uppercase; }
 .history-select select { padding: 13px 15px; border: 1px solid var(--cz-line); background: white; font-weight: 700; }
+.history-view-controls { display: flex; justify-content: space-between; gap: 18px; align-items: stretch; margin-top: 28px; }
+.history-view-tabs { display: flex; flex: 1; gap: 1px; padding: 1px; background: var(--cz-ink); }
+.history-view-tabs button { flex: 1; min-height: 45px; padding: 10px 14px; border: 0; background: white; color: var(--cz-ink); cursor: pointer; font: 700 9px monospace; text-transform: uppercase; }
+.history-view-tabs button[aria-selected="true"] { background: var(--cz-ink); color: white; }
+.history-focus { min-width: 220px; display: grid; grid-template-columns: auto minmax(130px,1fr); align-items: center; gap: 12px; padding: 8px 12px; border: 1px solid var(--cz-line); background: white; }
+.history-focus[hidden] { display: none; }
+.history-focus span { color: var(--cz-muted); font: 700 8px monospace; text-transform: uppercase; }
+.history-focus select { min-width: 0; padding: 7px 9px; border: 1px solid var(--cz-line); background: white; font-weight: 700; }
 .history-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; margin: 28px 0; padding: 1px; background: var(--cz-line); }
 .history-kpis article { padding: 20px; background: white; }
 .history-kpis span,.history-kpis small { display: block; color: var(--cz-muted); font-size: 13px; }
@@ -301,6 +309,8 @@
 .history-chart svg { display: block; width: 100%; min-width: 780px; }
 .history-grid line { stroke: #ddd9d0; stroke-width: 1; }.history-grid text { fill: #77746d; font: 14px monospace; }
 .history-line { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.history-series .history-line { stroke: var(--series-color); }
+.history-series circle { fill: white; stroke: var(--series-color); stroke-width: 2.5; }
 .revenue-line { stroke: #47735c; }.expense-line { stroke: #d2674d; }.cash-line { stroke: #315ba6; }
 .history-point circle { fill: white; stroke: #315ba6; stroke-width: 3; }
 .history-year-hit { fill: transparent; cursor: crosshair; outline: none; }
@@ -367,6 +377,9 @@
   .piggy-panel { gap: 28px; padding: 25px 20px; }
   .piggy-panel li a { align-items: baseline; }
   .history-kpis { grid-template-columns: 1fr; }
+  .history-view-controls { flex-direction: column; }
+  .history-view-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+  .history-focus { min-width: 0; }
   .benchmark-summary { grid-template-columns: 1fr; }
   .spending-benchmark { margin-top: 46px; padding-top: 42px; }
   .spending-benchmark-chart { padding: 18px; }

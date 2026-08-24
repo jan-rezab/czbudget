@@ -14,6 +14,8 @@ const transportPerformance = JSON.parse(await readFile("data/transport-performan
 const countryCashIn = JSON.parse(await readFile("data/country-cash-in.v1.json", "utf8"));
 const countryHealth = JSON.parse(await readFile("data/country-health.v1.json", "utf8"));
 const countryHealthPerformance = JSON.parse(await readFile("data/country-health-performance.v1.json", "utf8"));
+const dataQuality = JSON.parse(await readFile("data/data-quality-report.v1.json", "utf8"));
+const publicEntityHistory = JSON.parse(await readFile("data/cz-public-entity-history.v1.json", "utf8"));
 const countryParity = JSON.parse(await readFile("data/country-parity.v1.json", "utf8"));
 const countryDemography = JSON.parse(await readFile("data/country-demography.v1.json", "utf8"));
 const publicEntityCoverage = JSON.parse(await readFile("data/public-entity-coverage.v1.json", "utf8"));
@@ -27,6 +29,10 @@ const methodologyPage = await readFile("methodology.html", "utf8");
 const aboutPage = await readFile("about.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
 const countryPage = await readFile("country.html", "utf8");
+const countryHealthPerformanceScript = await readFile("country-health-performance.js", "utf8");
+const czechHistoryScript = await readFile("cz-history.js", "utf8");
+const czechEnterprisePage = await readFile("cesko.html", "utf8");
+const czechEnterpriseScript = await readFile("cz-firmy.js", "utf8");
 const countryScript = await readFile("country.js", "utf8");
 const countryFunctionsScript = await readFile("country-functions.js", "utf8");
 const countryInsightsScript = await readFile("country-insights.js", "utf8");
@@ -48,6 +54,9 @@ const municipalI18n = await readFile("municipal-i18n.js", "utf8");
 const languageBootstrap = await readFile("language-bootstrap.js", "utf8");
 const internationalMunicipalities = JSON.parse(await readFile("data/international-municipalities.v1.json", "utf8"));
 const benchmarkMunicipalities = await Promise.all(["nor", "nld", "fin"].map((code) => readFile(`data/municipal-benchmarks/${code}.json`, "utf8").then(JSON.parse)));
+const norwayBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nor/0301.json", "utf8"));
+const netherlandsBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nld/0363.json", "utf8"));
+const finlandBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/fin/091.json", "utf8"));
 const internationalMunicipalPage = await readFile("municipalities/index.html", "utf8");
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
 const internationalMunicipalScript = await readFile("municipalities.js", "utf8");
@@ -81,6 +90,13 @@ for (const [code, country] of Object.entries(countryHealthPerformance.countries)
   }
 }
 if (Object.values(countryHealthPerformance.countries).filter((country) => Number.isFinite(country.outcomes?.treatable_mortality_per_100k?.value)).length !== 9) throw new Error("Expected nine-country OECD treatable-mortality coverage");
+if (dataQuality.status !== "passed" || dataQuality.failures.length || dataQuality.counts.municipalities !== 6254) throw new Error("Expected a passing, machine-readable release quality report");
+if (publicEntityHistory.summary.financial_rows !== 1043 || publicEntityHistory.entities.length < 100 || publicEntityHistory.entities.some((entity) => !entity.series.length)) throw new Error("Expected Czech public-entity financial history with all available annual statements");
+if (!methodologyPage.includes('id="data-health-root"')) throw new Error("Methodology page must surface release health");
+if (!countryPage.includes('id="health-performance"') || !countryPage.includes("country-health-performance.js") || !countryHealthPerformanceScript.includes("peerBars")) throw new Error("Country profiles must surface health capacity, utilisation and outcomes");
+if (!czechHistoryScript.includes('view="overview"') || !czechHistoryScript.includes('view==="execution"') || !czechHistoryScript.includes('view==="structure"') || !czechHistoryScript.includes('expense_per_capita')) throw new Error("Municipal profiles must surface execution, structure and per-capita history views");
+if (!czechEnterprisePage.includes('id="public-entity-history-root"') || !czechEnterpriseScript.includes("renderPublicHistory")) throw new Error("Czech public-entity profiles must surface annual financial histories");
+if (norwayBenchmarkProfile.breakdown_kind !== "native_measures" || norwayBenchmarkProfile.breakdown.length < 70 || finlandBenchmarkProfile.breakdown_kind !== "native_measures" || finlandBenchmarkProfile.breakdown.length < 150 || netherlandsBenchmarkProfile.breakdown.length < 30) throw new Error("European benchmark profiles must expose complete latest native accounting detail");
 if (countryParity.contract !== "country-parity.v1" || countryParity.countries.length !== 10) throw new Error("Expected the ten-country parity contract");
 if (countryParity.countries.some((country) => country.modules.sovereign.status !== "loaded" || country.modules.administrative_spending.status !== "loaded" || country.modules.functional_spending.status !== "loaded" || country.modules.transport.status !== "loaded")) throw new Error("Every country must load the shared national fiscal modules");
 if (countryParity.countries.some((country) => country.coverage.loaded_modules !== 11 || country.coverage.total_modules !== 11 || country.coverage.missing_dimensions.length)) throw new Error("Expected all eleven dashboard modules for every country");
@@ -171,7 +187,7 @@ for (const path of await htmlFiles()) {
   if (page.includes('<header class="site-header')) throw new Error(`${path}: contains a duplicated legacy header`);
 }
 for (const required of ["index.html", "comparison.html", "methodology.html", "about.html", "site-header.css", "site-pages.js", "site-pages.css", "global-footer.js", "global-footer.css", "homepage-category.js", "homepage-category.css", "deep-dives/index.html", "deep-dives/transportation/index.html", "deep-dives.js", "deep-dives.css", "data/country-parity.v1.json", "data/contracts/country-parity.schema.json", "data/country-spending-comparison.v1.json", "data/country-functional-budgets.v1.json", "data/country-demography.v1.json", "data/public-entity-coverage.v1.json", "data/public-entity-aggregates.v1.json", "data/public-entity-directory/manifest.v1.json", "data/methodology-sources.v1.json", "data/road-network-history.v1.json", "data/country-cash-in.v1.json", "data/country-provider-networks.v1.json", "data/international-municipalities.v1.json", "data/municipal-size-benchmark.v1.json", "municipalities.html", "municipalities/index.html", "municipalities/czechia/index.html", "municipalities.js", "municipalities-czechia.js", "municipalities.css", "municipalities-navigator.css", "eu-capitals.html", "eu-capitals.js", "eu-capitals.css", "country-parity.js", "country-parity.css", "country-insights.js", "country-insights.css", "country-public-entities.js", "country-public-entities.css", "country-spending.js", "country-health.js", "country-providers.js", "country-functions.js", "country-functions.css", "country-cash-in.js", "country-cash-in.css", "data/country-spending-2025-2026.v1.json", "data/country-health.v1.json", "cz/municipalities/index.html", "cz/mesta/index.html", "municipal-i18n.js", "scripts/build-country-parity.mjs", "scripts/build-country-demography.py", "scripts/build-methodology-sources.mjs", "scripts/build-country-functional-budgets.mjs", "pipeline/transforms/prepare_road_network_history.py", "pipeline/transforms/prepare_public_entity_registry.py", "pipeline/transforms/build_public_entity_frontend.py", "scripts/build-country-cash-in.mjs", "scripts/build-country-provider-networks.mjs", "scripts/export-municipal-breakdowns.sql", "scripts/export-municipal-budget-codebook.sql", "scripts/merge-municipal-breakdowns.mjs", "sitemap.xml", ...["CZE","POL","DEU","GBR","FRA","USA","CHE","SWE","DNK","UKR"].flatMap((code)=>[`data/public-entities/${code}.v1.csv.gz`,`data/public-entity-directory/${code}.v1.json`]), ...["cz","de","dk","fr","gb","pl","se","ch","ua","us"].map((code)=>`assets/flags/${code}.svg`)]) await stat(required);
-for (const required of ["health-performance.js", "data/country-health-performance.v1.json", "scripts/build-country-health-performance.mjs"]) await stat(required);
+for (const required of ["health-performance.js", "country-health-performance.js", "data/country-health-performance.v1.json", "data/cz-public-entity-history.v1.json", "municipal-benchmark-native.css", "scripts/build-country-health-performance.mjs"]) await stat(required);
 await stat("scripts/build-municipality-country-pages.mjs");
 for (const required of ["municipalities/norway/index.html", "municipalities/netherlands/index.html", "municipalities/finland/index.html", "municipality-benchmark-country.js", "municipal-benchmark-profile.css", ...["no", "nl", "fi"].map((code) => `assets/flags/${code}.svg`)]) await stat(required);
 await stat("data/transport-budget-detail.v1.json");
