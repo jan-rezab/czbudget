@@ -17,6 +17,7 @@ const routes = [
   ["deep dives", "/deep-dives/?lang=cs"],
   ["transportation deep dive", "/deep-dives/transportation/?code=CZE&lang=cs"],
   ["health deep dive", "/deep-dives/health/?code=CZE&lang=cs"],
+  ["state-owned enterprises deep dive", "/deep-dives/state-owned-enterprises/?lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/municipalities/praha/?lang=cs"],
   ["region", "/cz/kraje/praha/?lang=cs"],
@@ -118,12 +119,13 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
 
 test("deep dives expose a dedicated topic hierarchy and country-filtered transportation story", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".deep-card")).toHaveCount(2);
-  await expect(page.locator(".deep-card.available")).toHaveCount(2);
+  await expect(page.locator(".deep-card")).toHaveCount(3);
+  await expect(page.locator(".deep-card.available")).toHaveCount(3);
   await expect(page.locator(".deep-card.available").first()).toContainText("Transportation");
-  await expect(page.locator(".deep-card.available").last()).toContainText("Health");
+  await expect(page.locator(".deep-card.available").nth(1)).toContainText("Health");
+  await expect(page.locator(".deep-card.available").last()).toContainText("State-owned enterprises");
   await page.locator(".deep-dive-menu summary").click();
-  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(2);
+  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(3);
   await page.goto("/deep-dives/transportation/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country")).toHaveValue("CZE");
   await expect(page.locator(".transport-network-year")).toHaveCount(10);
@@ -424,6 +426,23 @@ test("every page family renders the same shared header component", async ({ page
     const items = await page.locator(".global-nav > a, .global-nav > details > summary").allTextContents();
     expect(items.map((item) => item.replace(/\s+/g, ""))).toEqual(expectedItems.map((item) => item.replace(/\s+/g, "")));
   }
+});
+
+test("state-owned enterprise catalogue ranks, filters and translates thirty sourced records", async ({ page }) => {
+  await page.goto("/deep-dives/state-owned-enterprises/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#soe-body tr")).toHaveCount(30);
+  await expect(page.locator("#soe-body tr").first()).toContainText("EDF Group");
+  await expect(page.locator("#soe-body tr").first()).toContainText("€118.7 bn");
+  await expect(page.locator("#soe-country-grid article")).toHaveCount(10);
+  await page.locator("#soe-country").selectOption("SWE");
+  await expect(page.locator("#soe-body tr")).toHaveCount(3);
+  await expect(page.locator("#soe-body")).toContainText("Vattenfall");
+  await page.locator("#soe-reset").click();
+  await page.locator("#soe-search").fill("postal");
+  await expect(page.locator("#soe-body tr")).toHaveCount(3);
+  await page.locator('[data-lang="cs"]').click();
+  await expect(page).toHaveURL(/lang=cs/);
+  await expect(page.locator("#catalogue h2")).toHaveText("Jedna účetní řádka. Jedna měna.");
 });
 
 test("cities use the functional unified menu on desktop and mobile", async ({ page }) => {

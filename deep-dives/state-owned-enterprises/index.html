@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="cs">
+<head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script><link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Největší státní podniky — Public Spending Data</title>
+  <meta name="description" content="A sourced catalogue of the largest state-controlled companies across ten countries, with 2024 revenue converted to euros.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/state-owned-enterprises/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/state-owned-enterprises/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/state-owned-enterprises/?lang=en">
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-state-enterprises"><link rel="stylesheet" href="../../state-owned-enterprises.css?v=20260824-catalogue">
+  <script src="../../state-owned-enterprises.js?v=20260824-catalogue" defer></script><script src="../../global-nav.js?v=20260824-identity-outlines" defer></script>
+</head>
+<body class="deep-dives-page soe-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <section class="deep-hero deep-topic-hero soe-hero"><div><span class="eyebrow" data-copy="eyebrow">Hloubkový profil / Státní podniky</span><h1 data-copy="title">Stát jako <em>vlastník.</em></h1><p data-copy="intro">Katalog největších celostátně ovládaných podniků v deseti zemích. Výnosy za rok 2024 převádíme na eura jedním kurzem a necháváme viditelnou původní hodnotu i zdroj.</p></div><div class="deep-hero-aside soe-hero-aside"><span data-copy="largestLabel">Největší podnik v katalogu</span><div><strong id="largest-value">—</strong><b id="largest-name">—</b></div><small data-copy="heroNote">30 podniků · 10 zemí · výnosy 2024 · EUR podle průměrného ročního kurzu</small></div></section>
+    <nav class="deep-topic-rail" aria-label="Section navigation"><a href="#catalogue" data-copy="catalogue">Katalog</a><a href="#countries" data-copy="countries">Země</a><a href="#method" data-copy="method">Metodika</a><a href="#sources" data-copy="sources">Zdroje</a></nav>
+
+    <section class="soe-section" id="catalogue">
+      <div class="deep-section-heading"><div><span class="kicker" data-copy="catalogueKicker">30 podniků / seřazeno podle výnosů</span><h2 data-copy="catalogueTitle">Jedna účetní řádka. Jedna měna.</h2></div><p data-copy="catalogueIntro">Pořadí měří velikost provozu, nikoli hodnotu firmy, ziskovost nebo přínos veřejným rozpočtům. U každé položky uvádíme typ veřejné kontroly a případnou odchylku v účetním rozsahu.</p></div>
+      <div class="soe-controls" aria-label="Catalogue filters">
+        <label><span data-copy="search">Hledat</span><input id="soe-search" type="search" autocomplete="off" placeholder="Podnik nebo odvětví"></label>
+        <label><span data-copy="countryFilter">Země</span><select id="soe-country"></select></label>
+        <label><span data-copy="sectorFilter">Odvětví</span><select id="soe-sector"></select></label>
+        <label><span data-copy="sort">Řazení</span><select id="soe-sort"><option value="revenue" data-copy="sortRevenue">Výnosy: nejvyšší</option><option value="country" data-copy="sortCountry">Země A–Z</option></select></label>
+      </div>
+      <div class="soe-readout"><span id="soe-count">—</span><span data-copy="displayed">zobrazených podniků</span><button id="soe-reset" type="button" data-copy="reset">Zrušit filtry</button></div>
+      <div class="soe-table-wrap"><table class="soe-table"><thead><tr><th data-copy="rank">#</th><th data-copy="company">Podnik</th><th data-copy="ownership">Veřejná kontrola</th><th data-copy="reported">Vykázané výnosy</th><th data-copy="eur">Výnosy v EUR</th><th data-copy="source">Zdroj</th></tr></thead><tbody id="soe-body"></tbody></table><div class="soe-empty" id="soe-empty" hidden data-copy="empty">Tomuto filtru neodpovídá žádný podnik.</div></div>
+    </section>
+
+    <section class="soe-section soe-country-section" id="countries"><div class="deep-section-heading"><div><span class="kicker" data-copy="countryKicker">První tři v každé zemi</span><h2 data-copy="countryTitle">Kde sídlí největší státní hráči?</h2></div><p data-copy="countryIntro">Součet je pouze součtem tří položek v tomto katalogu. Není to velikost celého státního portfolia a mezi zeměmi se nesmí zaměňovat za fiskální expozici státu.</p></div><div class="soe-country-grid" id="soe-country-grid"></div></section>
+
+    <section class="soe-section soe-method-section" id="method"><div class="deep-section-heading"><div><span class="kicker" data-copy="methodKicker">Jak katalog číst</span><h2 data-copy="methodTitle">Srovnatelný žebříček, přiznané výjimky.</h2></div><p data-copy="methodIntro">Výnosy jsou nejdostupnější společný ukazatel rozsahu. Ani ten však není ekonomicky totožný mezi energetikou, železnicí, poštou a veřejnoprávní televizí.</p></div><div class="soe-method-grid" id="soe-method-grid"></div></section>
+
+    <section class="soe-section soe-sources-section" id="sources"><div class="deep-section-heading"><div><span class="kicker" data-copy="sourceKicker">Primární dokumenty</span><h2 data-copy="sourceTitle">Zdroj za každým číslem.</h2></div><p data-copy="sourceIntro">Odkazy vedou na výroční zprávy, auditované účetní závěrky, výsledkové zprávy a oficiální dokumenty vlastníka. Přepočet používá průměrné kurzy za rok 2024.</p></div><div class="soe-source-list" id="soe-source-list"></div></section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small data-copy="footer">State-owned enterprises · official company and government sources</small></div><a href="#top">↑</a></footer>
+</body>
+</html>

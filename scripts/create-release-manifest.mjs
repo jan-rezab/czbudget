@@ -9,7 +9,7 @@ const selected = [
   "data/country-spending-2025-2026.v1.json", "data/country-spending-comparison.v1.json",
   "data/country-demography.v1.json", "data/public-entity-coverage.v1.json", "data/public-entity-aggregates.v1.json", "data/public-entity-directory/manifest.v1.json", "data/methodology-sources.v1.json", "data/data-quality-report.v1.json",
   "data/cz-public-entities-2024.json", "data/cz-public-entity-history.v1.json",
-  "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json",
+  "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json", "data/state-owned-enterprises.v1.json",
   "data/czech-budget.v1.json", "data/demography-social.v1.json",
   "data/eu-capital-budgets.v1.json", "data/municipal-snapshot.v1.json", "data/municipal-history-directory.v1.json",
   "data/international-municipalities.v1.json",
