@@ -21,6 +21,8 @@
   Object.assign(copy.en,{transportCopy:"Spending, its investment and operating mix, government levels, network scale and ten-year history.",transportTitle:"The transport budget, layer by layer.",transportIntro:"Actual spending is split into investment, operations, payroll, subsidies and transfers, alongside ten years of network history and cross-country context.",budget:"Budget",insights:"Insights",performance:"Performance",healthCopy:"Spending, workforce, hospital use and health outcomes.",healthIntro:"Ten countries connect spending with workforce, hospital use and outcomes. Detailed financing flows are available for nine systems."});
   Object.assign(copy.cs,{stateCompanies:"Státní podniky",stateCompaniesCopy:"Katalog třiceti největších celostátně ovládaných podniků, s výnosy přepočtenými na eura."});
   Object.assign(copy.en,{stateCompanies:"State-owned enterprises",stateCompaniesCopy:"A catalogue of the thirty largest nationally controlled enterprises, with revenue converted to euros."});
+  Object.assign(copy.cs,{capitalCities:"Hlavní města",capitalCitiesCopy:"Rozpočet na obyvatele, turistický tlak, salda a pět srovnatelných skupin."});
+  Object.assign(copy.en,{capitalCities:"Capital cities",capitalCitiesCopy:"Budget per resident, visitor pressure, balances and five comparable city clusters."});
   const t=copy[lang];
   const name=(code)=>{const row=countries.find(item=>item[0]===code);return row?.[lang==="en"?2:1]??code};
   function translate(){
