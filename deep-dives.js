@@ -44,6 +44,45 @@
     const profile=document.querySelector("#deep-dive-country-profile");if(profile)profile.href=window.PSDCountryRoutes.href(selected,lang);
     dispatchEvent(new CustomEvent("countryprofilechange",{detail:{code:selected,lang}}));
   }
+  function setupStickyFilter(){
+    const rail=document.querySelector(".deep-topic-rail[data-sticky-filter]");
+    if(!rail)return;
+    const source=document.querySelector(rail.dataset.stickyFilter);
+    if(!source)return;
+    const kind=rail.dataset.stickyFilterKind==="city"?"city":"country";
+    const label=document.createElement("label");
+    label.className="deep-sticky-filter";
+    const labelText=document.createElement("span");
+    labelText.textContent=kind==="city"?(lang==="en"?"City":"Město"):(lang==="en"?"Country":"Země");
+    const select=document.createElement("select");
+    select.setAttribute("aria-label",kind==="city"?(lang==="en"?"Compare another city":"Porovnat jiné město"):(lang==="en"?"Compare another country":"Porovnat jinou zemi"));
+    label.append(labelText,select);
+    const links=document.createElement("div");
+    links.className="deep-topic-links";
+    [...rail.children].forEach(node=>links.append(node));
+    rail.append(links,label);
+    rail.classList.add("has-sticky-filter");
+    let optionsSignature="";
+    const sync=()=>{
+      const nextSignature=[...source.options].map(option=>`${option.value}:${option.textContent}`).join("|");
+      if(nextSignature!==optionsSignature){
+        select.replaceChildren(...[...source.options].map(option=>option.cloneNode(true)));
+        optionsSignature=nextSignature;
+      }
+      select.value=source.value;
+      select.disabled=source.disabled;
+      label.hidden=source.options.length===0;
+    };
+    select.addEventListener("change",()=>{
+      source.value=select.value;
+      source.dispatchEvent(new Event("change",{bubbles:true}));
+      sync();
+    });
+    source.addEventListener("change",sync);
+    addEventListener("deepfilterchange",sync);
+    new MutationObserver(sync).observe(source,{attributes:true,childList:true,subtree:true});
+    sync();
+  }
   addEventListener("DOMContentLoaded",()=>{
     translate();
     const selector=document.querySelector("#deep-dive-country");
@@ -53,6 +92,7 @@
       setCountry(params.get("code")||"CZE");
       selector.addEventListener("change",()=>{const url=new URL(location.href);url.searchParams.set("code",selector.value);url.searchParams.set("lang",lang);history.replaceState({},"",url);setCountry(selector.value)});
     }
+    setupStickyFilter();
     document.querySelectorAll("[data-deep-lang]").forEach(button=>button.addEventListener("click",()=>{const url=new URL(location.href);url.searchParams.set("lang",button.dataset.deepLang);location.href=url.href}));
   });
 })();

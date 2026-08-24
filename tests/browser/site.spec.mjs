@@ -213,6 +213,35 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   await expect(page.locator(".transport-budget-detail")).toContainText("125,864 mil.");
 });
 
+test("every deep dive keeps its comparison selector in the sticky section rail", async ({ page }) => {
+  const profiles = [
+    ["/deep-dives/transportation/?code=CZE&lang=en", "#deep-dive-country", "POL"],
+    ["/deep-dives/health/?code=CZE&lang=en", "#deep-dive-country", "POL"],
+    ["/deep-dives/ageing/?code=CZE&lang=en", "#deep-dive-country", "POL"],
+    ["/deep-dives/revenue/?code=CZE&lang=en", "#deep-dive-country", "POL"],
+    ["/deep-dives/capital-cities/?city=prague-cz&lang=en", "#capital-pressure-city", "warsaw-pl"],
+    ["/deep-dives/state-owned-enterprises/?lang=en", "#soe-country", "SWE"],
+  ];
+
+  for (const [route, sourceSelector, nextValue] of profiles) {
+    await page.goto(route, { waitUntil: "networkidle" });
+    const rail = page.locator(".deep-topic-rail.has-sticky-filter");
+    const stickySelect = rail.locator(".deep-sticky-filter select");
+    await expect(stickySelect).toBeVisible();
+    await expect(stickySelect.locator("option")).not.toHaveCount(0);
+
+    await page.evaluate(() => window.scrollTo(0, Math.max(700, document.body.scrollHeight * 0.45)));
+    const railBox = await rail.boundingBox();
+    const selectBox = await stickySelect.boundingBox();
+    expect(railBox?.y).toBeLessThan(130);
+    expect(selectBox?.x).toBeGreaterThan((page.viewportSize()?.width ?? 0) * 0.45);
+
+    await stickySelect.selectOption(nextValue);
+    await expect(page.locator(sourceSelector)).toHaveValue(nextValue);
+    await expect(stickySelect).toHaveValue(nextValue);
+  }
+});
+
 test("ageing deep dive stays inside official projections and transparent arithmetic", async ({ page }) => {
   await page.goto("/deep-dives/ageing/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country option")).toHaveCount(10);

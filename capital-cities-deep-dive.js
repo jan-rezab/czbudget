@@ -42,7 +42,7 @@
   function updateUrl(){const url=new URL(location.href);url.searchParams.set("city",state.selected);url.searchParams.set("lang",lang);history.replaceState(null,"",url)}
   function setSelected(id, scroll=false){
     const city=cityById(id);if(!city)return;
-    state.selected=id;state.cohort=cohortByCity(city).id;$("#capital-pressure-city").value=id;updateUrl();render();
+    state.selected=id;state.cohort=cohortByCity(city).id;$("#capital-pressure-city").value=id;dispatchEvent(new Event("deepfilterchange"));updateUrl();render();
     if(scroll) $("#pressure-map").scrollIntoView({behavior:"smooth",block:"start"});
   }
   function bindCityButtons(root=document){root.querySelectorAll("[data-select-city]").forEach((button)=>button.addEventListener("click",()=>setSelected(button.dataset.selectCity)))}
@@ -90,7 +90,7 @@
   }
   function renderCohorts(){
     $("#cohort-cards").innerHTML=cohortDefinitions.map((cohort)=>{const cities=cohortCities(cohort.id);return `<button type="button" class="cohort-card ${cohort.id===state.cohort?"active":""}" data-select-cohort="${cohort.id}"><span>${esc(t.citiesCount(cities.length))}</span><h3>${esc(cohortName(cohort.id))}</h3><p>${esc(cohortDesc(cohort.id))}</p><dl><div><dt>${esc(t.medianPopulation)}</dt><dd>${compact(median(cities.map(population)))}</dd></div><div><dt>${esc(t.medianPressure)}</dt><dd>${number(median(cities.map(nights)),1)}</dd></div></dl></button>`}).join("");
-    $("#cohort-cards").querySelectorAll("[data-select-cohort]").forEach((button)=>button.addEventListener("click",()=>{state.cohort=button.dataset.selectCohort;const selectedCohort=cohortDefinitions.find((cohort)=>cohort.id===state.cohort);if(!selectedCohort.cityIds.includes(state.selected))state.selected=selectedCohort.cityIds[0];$("#capital-pressure-city").value=state.selected;updateUrl();render()}));
+    $("#cohort-cards").querySelectorAll("[data-select-cohort]").forEach((button)=>button.addEventListener("click",()=>{state.cohort=button.dataset.selectCohort;const selectedCohort=cohortDefinitions.find((cohort)=>cohort.id===state.cohort);if(!selectedCohort.cityIds.includes(state.selected))state.selected=selectedCohort.cityIds[0];$("#capital-pressure-city").value=state.selected;dispatchEvent(new Event("deepfilterchange"));updateUrl();render()}));
     const cities=cohortCities();
     $("#cohort-table-body").innerHTML=cities.map((city)=>{const margin=balance(city);return `<tr class="${city.city_id===state.selected?"selected":""}"><td><button type="button" data-select-city="${esc(city.city_id)}">${esc(cityName(city))}</button><br><small>${esc(city.country_code)}</small></td><td>${esc(euros(budgetPerResident(city)))}</td><td>${number(nights(city),1)}</td><td>${number(guestLoad(city),1)}</td><td class="${margin<0?"negative":margin>0?"positive":""}">${Number.isFinite(margin)?`${margin>0?"+":""}${number(margin,1)} %`:"—"}</td></tr>`}).join("");bindCityButtons($("#cohort-table-body"));
   }

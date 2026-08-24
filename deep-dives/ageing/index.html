@@ -7,8 +7,8 @@
   <meta name="description" content="Official population projections and a transparent demographic dependency calculator for ten countries. No fiscal forecast.">
   <link rel="canonical" href="https://publicspendingdata.org/deep-dives/ageing/">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/ageing/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/ageing/?lang=en">
-  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-ageing"><link rel="stylesheet" href="../../ageing-bill.css?v=20260824-ageing">
-  <script src="../../deep-dives.js?v=20260824-ageing" defer></script><script src="../../ageing-bill.js?v=20260824-ageing" defer></script>
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../ageing-bill.css?v=20260824-ageing">
+  <script src="../../deep-dives.js?v=20260824-sticky-filter" defer></script><script src="../../ageing-bill.js?v=20260824-ageing" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -20,7 +20,7 @@
   <psd-site-header data-section="deep-dives"></psd-site-header>
   <main id="top">
     <section class="deep-hero deep-topic-hero aging-hero" id="overview"><div><span class="eyebrow" data-deep-copy="ageingEyebrow">Hloubkový profil / Stárnutí</span><h1 data-deep-copy="ageingTitle">Účet stárnutí.</h1><p data-deep-copy="ageingIntro">Žádná cenovka. Jen oficiální populační projekce a transparentní demografická aritmetika.</p></div><div class="deep-hero-aside deep-filter-panel"><label><span data-deep-copy="selectCountry">Filtrovat podle země</span><select id="deep-dive-country" data-country-codes="CZE,DEU,DNK,FRA,GBR,POL,SWE,CHE,UKR,USA"></select></label><div class="deep-country-readout"><b id="deep-dive-country-code">CZE</b><strong id="deep-dive-country-name">Česko</strong><a id="deep-dive-country-profile" href="/countries/czechia?lang=cs" data-deep-copy="countryProfile">Otevřít celý profil země</a></div></div></section>
-    <nav class="deep-topic-rail" aria-label="Ageing sections"><a href="#overview" data-deep-copy="overview">Přehled</a><a href="#projection" data-deep-copy="projectionStats">Projekce</a><a href="#calculator" data-deep-copy="calculator">Kalkulačka</a><a href="#comparison" data-deep-copy="comparison">Srovnání</a><a href="#method" data-deep-copy="method">Metodika</a></nav>
+    <nav class="deep-topic-rail" aria-label="Ageing sections" data-sticky-filter="#deep-dive-country" data-sticky-filter-kind="country"><a href="#overview" data-deep-copy="overview">Přehled</a><a href="#projection" data-deep-copy="projectionStats">Projekce</a><a href="#calculator" data-deep-copy="calculator">Kalkulačka</a><a href="#comparison" data-deep-copy="comparison">Srovnání</a><a href="#method" data-deep-copy="method">Metodika</a></nav>
     <div id="ageing-bill-root" aria-live="polite"><p class="aging-loading">Načítám projekce…</p></div>
   </main>
   <footer><div><span>Public Spending Data</span><small>Ageing deep dive · official principal and middle population projections</small></div><a href="#top">↑</a></footer>

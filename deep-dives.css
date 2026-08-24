@@ -42,3 +42,23 @@
 
 .deep-dives-page .deep-card-grid{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
 @media(max-width:700px){.deep-dives-page .deep-card-grid{grid-template-columns:1fr}}
+
+/* Keep the active comparison control beside the sticky section rail. */
+.deep-topic-rail.has-sticky-filter{justify-content:stretch;overflow:visible;backdrop-filter:blur(12px)}
+.deep-topic-links{min-width:0;display:flex;flex:1;justify-content:center;overflow-x:auto;scrollbar-width:none}
+.deep-topic-links::-webkit-scrollbar{display:none}
+.deep-topic-rail.has-sticky-filter a{flex:none}
+.deep-sticky-filter{flex:none;min-width:230px;display:flex;align-items:center;gap:10px;padding:6px max(5vw,18px) 6px 14px;border-left:1px solid var(--line);background:var(--deep-blue);color:#fff}
+.deep-sticky-filter[hidden]{display:none}
+.deep-sticky-filter>span:first-child{font:700 10px monospace;text-transform:uppercase;letter-spacing:.07em}
+.deep-sticky-filter>.custom-select{min-width:0;flex:1}
+.deep-sticky-filter .custom-select-button{min-height:34px;padding:0 9px;font-size:12px}
+.deep-sticky-filter select{width:150px;min-width:0;padding:7px 28px 7px 9px;border:1px solid #ffffff70;border-radius:0;background:#fff;color:var(--ink);font:700 12px Arial,sans-serif;cursor:pointer}
+.deep-sticky-filter select:focus-visible{outline:3px solid var(--acid);outline-offset:-3px}
+@media(max-width:700px){
+  .deep-topic-rail.has-sticky-filter{overflow:visible}
+  .deep-topic-links{justify-content:flex-start}
+  .deep-sticky-filter{min-width:min(47vw,190px);padding-right:10px}
+  .deep-sticky-filter>span:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .deep-sticky-filter select{width:100%;font-size:11px}
+}

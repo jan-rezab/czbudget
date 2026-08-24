@@ -95,7 +95,7 @@
       return {code, name:countryName(items[0]), items, total:items.reduce((sum,item)=>sum+eurBn(item),0)};
     }).sort((a,b)=>b.items[0] && eurBn(b.items[0])-eurBn(a.items[0]));
     document.querySelector("#soe-country-grid").innerHTML = grouped.map((group,index)=>`<article class="soe-country-card"><header><span>${String(index+1).padStart(2,"0")}</span><img src="../../assets/flags/${flag[group.code]}.svg" alt=""><h3>${escape(group.name)}</h3></header><dl><div><dt>${t.leader}</dt><dd><b>${escape(group.items[0].company)}</b><strong>${formatEur(eurBn(group.items[0]))}</strong></dd></div><div><dt>${t.topThree}</dt><dd><strong>${formatEur(group.total)}</strong></dd></div></dl><button type="button" data-country-pick="${group.code}">${t.openCountry} →</button></article>`).join("");
-    document.querySelectorAll("[data-country-pick]").forEach(button=>button.addEventListener("click",()=>{state.country=button.dataset.countryPick;document.querySelector("#soe-country").value=state.country;renderTable();document.querySelector("#catalogue").scrollIntoView({behavior:"smooth"});}));
+    document.querySelectorAll("[data-country-pick]").forEach(button=>button.addEventListener("click",()=>{state.country=button.dataset.countryPick;document.querySelector("#soe-country").value=state.country;dispatchEvent(new Event("deepfilterchange"));renderTable();document.querySelector("#catalogue").scrollIntoView({behavior:"smooth"});}));
   }
 
   function renderMethods() {
@@ -115,7 +115,7 @@
     document.querySelector("#soe-country").addEventListener("change",event=>{state.country=event.target.value;renderTable();});
     document.querySelector("#soe-sector").addEventListener("change",event=>{state.sector=event.target.value;renderTable();});
     document.querySelector("#soe-sort").addEventListener("change",event=>{state.sort=event.target.value;renderTable();});
-    document.querySelector("#soe-reset").addEventListener("click",()=>{Object.assign(state,{country:"all",sector:"all",query:"",sort:"revenue"});document.querySelector("#soe-search").value="";document.querySelector("#soe-country").value="all";document.querySelector("#soe-sector").value="all";document.querySelector("#soe-sort").value="revenue";renderTable();});
+    document.querySelector("#soe-reset").addEventListener("click",()=>{Object.assign(state,{country:"all",sector:"all",query:"",sort:"revenue"});document.querySelector("#soe-search").value="";document.querySelector("#soe-country").value="all";document.querySelector("#soe-sector").value="all";document.querySelector("#soe-sort").value="revenue";dispatchEvent(new Event("deepfilterchange"));renderTable();});
     document.querySelectorAll("[data-soe-lang],[data-lang]").forEach(button=>button.addEventListener("click",()=>{const url=new URL(location.href);url.searchParams.set("lang",button.dataset.soeLang || button.dataset.lang);location.href=url.href;}));
   }
 
