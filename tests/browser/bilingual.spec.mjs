@@ -106,6 +106,25 @@ test("high-risk static and generated templates switch their visible copy", async
   }
 });
 
+test("shared page modules do not retain Czech UI copy in English", async ({ page }) => {
+  await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText("What countries publish — and what is missing from the national layer.");
+  await expect(page.locator(".atlas-table thead th").first()).toHaveText("Country");
+
+  await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator(".hero-deficit small")).toHaveText("12.8% of expenditure");
+  await expect(page.locator(".section-heading h2").first()).toHaveText("Revenue and expenditure over time");
+  await expect(page.locator("body")).not.toContainText("Příjmy a výdaje v čase");
+
+  await page.goto("/cesko.html?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#reconciliation-note")).not.toContainText("Součet 38 individuálních karet");
+
+  await page.goto("/cz/municipalities/praha/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator(".detail-hero .eyebrow")).toContainText("Municipal reporting entity · ID");
+  await expect(page.locator(".method-warning")).toContainText("The fiscal balance is consolidated throughout the series.");
+  await expect(page.locator(".data-contract p")).toContainText("A separate municipal reporting entity");
+});
+
 test("representative pages contain no standalone labels from the other language", async ({ page }) => {
   test.setTimeout(180_000);
   const forbidden = {

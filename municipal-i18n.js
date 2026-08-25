@@ -57,7 +57,8 @@
   const currencyRates = { CZK: 1, EUR: 1 / 24.179, USD: 1.1576 / 24.179 };
   const allowedCurrencies = Object.keys(currencyRates);
   const storedCurrency = localStorage.getItem("psd-municipal-currency");
-  let selectedCurrency = allowedCurrencies.includes(storedCurrency) ? storedCurrency : "CZK";
+  const isDetailPage = document.body.classList.contains("detail-page");
+  let selectedCurrency = isDetailPage && allowedCurrencies.includes(storedCurrency) ? storedCurrency : "CZK";
   const locale = lang === "en" ? "en-GB" : "cs-CZ";
   const number = (value, digits = 1) => new Intl.NumberFormat(locale, { maximumFractionDigits: digits }).format(value);
   const currencySymbol = { CZK: lang === "en" ? "CZK" : "Kč", EUR: "€", USD: "$" };
@@ -89,7 +90,6 @@
     return (sign === "−" || sign === "-" ? -1 : 1) * numeric * multiplier;
   };
   const collectCurrencyText = () => {
-    if (!document.body.classList.contains("detail-page")) return;
     const moneyWalker = document.createTreeWalker(document.querySelector("main"), NodeFilter.SHOW_TEXT);
     while (moneyWalker.nextNode()) {
       const node = moneyWalker.currentNode;
@@ -293,6 +293,11 @@
     "Obecní účetní jednotka": "Municipal reporting entity", "Rozpočet 2025": "2025 budget", "Trend 20 let": "20-year trend", "Trend 16 let": "16-year trend", "Stáhnout JSON": "Download JSON",
     "ročních výdajů kryto stavem účtů": "of annual expenditure covered by cash", "upraveného rozpočtu": "of the amended budget", "meziročně": "year on year",
     "Plán a skutečnost.": "Budget and actuals.", "Struktura příjmů": "Revenue mix", "Struktura výdajů": "Expenditure mix", "Daňové příjmy": "Tax revenue", "Přijaté transfery": "Transfers received", "Nedaňové příjmy": "Non-tax revenue", "Kapitálové příjmy": "Capital revenue", "Běžné výdaje": "Current expenditure", "Kapitálové výdaje": "Capital expenditure",
+    "Nominální Kč. Počet obcí odpovídá dnešním IČO nalezeným v ročním extraktu. Stav účtů 2010–2011 vychází z FIN 2-12 M; od roku 2012 z rozvahy, proto je v roce 2012 metodický zlom.": "Nominal CZK. Municipality counts reflect current registration IDs found in each annual extract. Cash for 2010–2011 comes from FIN 2-12 M and from the balance sheet from 2012, creating a methodological break in 2012.",
+    "Rozpočtový výsledek je po konsolidaci v celé řadě. Stav účtů 2010–2011 vychází z běžných účtů ve FIN 2-12M; od 2012 z širšího součtu účtů rozvahy. Chybějící rok není nula — pro současné IČO tehdy nebyla nalezena data.": "The fiscal balance is consolidated throughout the series. Cash for 2010–2011 comes from current accounts in FIN 2-12 M and from a broader balance-sheet account total from 2012. A missing year is not zero—no data were found for the current registration ID in that year.",
+    "Rozpočtový výsledek je po konsolidaci v celé řadě. Stav účtů 2006–2011 vychází z běžných účtů ve FIN 2-12M; od 2012 z širšího součtu účtů rozvahy. Rok 2012 je proto metodický zlom.": "The fiscal balance is consolidated throughout the series. Cash for 2006–2011 comes from current accounts in FIN 2-12 M and from a broader balance-sheet account total from 2012, creating a methodological break in 2012.",
+    "Samostatná účetní jednotka obce; příspěvkové organizace nejsou přičítány. Výsledek je po konsolidaci uvnitř rozpočtu obce.": "A separate municipal reporting entity; subsidiary public organisations are not added. The balance is consolidated within the municipal budget.",
+    "Zdroj: Monitor státní pokladny MF ČR · stav k 31. 12. 2025": "Source: Czech Ministry of Finance Treasury Monitor · as of 31 December 2025",
     "Data a metodika": "Data and methodology", "Zdroje a data": "Sources and data", "Rozpočet": "Budget", "Strojová data": "Machine-readable data", "Historická data": "Historical data",
     "České územní rozpočty": "Czech local government budgets"
   }));
@@ -305,6 +310,20 @@
     if (!value) return;
     const translated = dictionary.get(value);
     if (translated) node.nodeValue = node.nodeValue.replace(value, translated);
+  });
+  const translatePhrases = (selector, replacements) => document.querySelectorAll(selector).forEach((node) => {
+    for (const [source, translation] of replacements) node.textContent = node.textContent.replace(source, translation);
+  });
+  translatePhrases(".detail-hero .eyebrow, .detail-score small, .detail-kpis small", [
+    ["Obecní účetní jednotka", "Municipal reporting entity"],
+    ["IČO", "ID"],
+    ["ročních výdajů kryto stavem účtů", "of annual expenditure covered by cash"],
+    ["upraveného rozpočtu", "of the amended budget"],
+    ["příjmů", "of revenue"],
+    ["meziročně", "year on year"],
+  ]);
+  document.querySelectorAll(".detail-score strong, .detail-kpis small").forEach((node) => {
+    node.textContent = node.textContent.replace(/(\d),(\d)/g, "$1.$2");
   });
   appendBudgetYears();
   document.querySelectorAll("input[placeholder]").forEach((input) => {

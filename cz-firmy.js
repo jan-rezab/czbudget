@@ -194,7 +194,10 @@ Promise.all([
     $("#hero-result").textContent = `${billion(data.summary.net_result_portfolio_reported)} mld.`;
     $("#hero-transfer").textContent = `${billion(data.summary.budget_transfers_total)} mld.`;
     $("#return-chart").innerHTML = returnChart(data.budget_transfers);
-    $("#reconciliation-note").textContent = `${english ? "Reconciliation check" : "Kontrola součtů"}: ${data.summary.reconciliation_note}`;
+    const reconciliationNote = english
+      ? "The total of the 38 individual profiles differs from the Ministry of Finance portfolio aggregate by CZK 490m in result and 1,191 employees; both figures are therefore published separately."
+      : data.summary.reconciliation_note;
+    $("#reconciliation-note").textContent = `${english ? "Reconciliation check" : "Kontrola součtů"}: ${reconciliationNote}`;
     $("#schema-version").textContent = data.schema_version;
     $("#source-links").innerHTML = data.sources.map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.publisher)}: ${esc(source.title)} ↗</a>`).join("");
     document.querySelectorAll("#ranking-mode button").forEach(button => button.addEventListener("click", () => renderRanking(button.dataset.mode)));

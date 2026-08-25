@@ -12,7 +12,7 @@
       status: {loaded:"Loaded",loaded_partial:"Partly loaded",upgrading:"Detail upgrade running",crawling:"Crawl started",candidate:"Recommended next",assessed:"Assessed"},
       source: "Official source ↗", caveat: "Important: grey means not assessed. The hatched category does not mean municipalities publish nothing—it means we found no single national, comparable, item-level budget lifecycle.",
       targetTitle: "The requested crawl queue", gapTitle: "Where adopted budgets remain decentralized", tableTitle: "Evidence matrix",
-      yes: "Published", no: "Not in the national layer", unknown: "Needs verification"
+      country: "Country", yes: "Published", no: "Not in the national layer", unknown: "Needs verification"
     },
     cs: {
       assessed: "posouzených zemí", full: "Úplný národní životní cyklus", paired: "Rozpočet + závěrečné účty",
@@ -21,7 +21,7 @@
       status: {loaded:"Načteno",loaded_partial:"Částečně načteno",upgrading:"Běží detailní upgrade",crawling:"Crawl spuštěn",candidate:"Doporučený další",assessed:"Posouzeno"},
       source: "Oficiální zdroj ↗", caveat: "Důležité: šedá znamená neposouzeno. Šrafovaná kategorie neříká, že obce nic nezveřejňují—říká, že jsme nenalezli jednotný národní, srovnatelný položkový životní cyklus rozpočtu.",
       targetTitle: "Požadovaná fronta crawlů", gapTitle: "Kde schválené rozpočty zůstávají decentralizované", tableTitle: "Matice důkazů",
-      yes: "Zveřejněno", no: "Není v národní vrstvě", unknown: "Nutno ověřit"
+      country: "Země", yes: "Zveřejněno", no: "Není v národní vrstvě", unknown: "Nutno ověřit"
     }
   };
   const categoryOrder = ["full_lifecycle", "budget_and_accounts", "accounts_only", "decentralized"];
@@ -51,7 +51,7 @@
       <div class="atlas-map-panel"><div class="atlas-map-wrap"><svg class="atlas-map" viewBox="${geometry.viewBox}" role="img" aria-label="${esc(t.assessed)}"><defs><pattern id="atlas-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#d2ccc1"></rect><line x1="0" y1="0" x2="0" y2="8" stroke="#8b8d83" stroke-width="2"></line></pattern></defs>${paths}</svg></div><ol class="atlas-legend">${legend}</ol></div>
       <p class="atlas-caveat">${esc(t.caveat)}</p>
       <h3 class="atlas-subtitle">${esc(t.targetTitle)}</h3><div class="atlas-targets">${targetCards}</div>
-      <div class="atlas-lower"><section><h3>${esc(t.gapTitle)}</h3><ul class="atlas-gap-list">${gaps}</ul></section><section><h3>${esc(t.tableTitle)}</h3><div class="atlas-table-wrap" tabindex="0"><table class="atlas-table"><thead><tr><th>Country</th>${t.stages.map((label) => `<th>${esc(label)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></section></div>`;
+      <div class="atlas-lower"><section><h3>${esc(t.gapTitle)}</h3><ul class="atlas-gap-list">${gaps}</ul></section><section><h3>${esc(t.tableTitle)}</h3><div class="atlas-table-wrap" tabindex="0"><table class="atlas-table"><thead><tr><th>${esc(t.country)}</th>${t.stages.map((label) => `<th>${esc(label)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></section></div>`;
     root.querySelectorAll(".atlas-country[tabindex='0']").forEach((path) => {
       const activate = () => { const row = root.querySelector(`#atlas-row-${path.dataset.iso}`); row?.scrollIntoView({behavior:"smooth",block:"center"}); row?.classList.add("is-highlighted"); setTimeout(() => row?.classList.remove("is-highlighted"), 1800); };
       path.addEventListener("click", activate); path.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") activate(); });
@@ -61,6 +61,6 @@
   Promise.all([
     fetch(`${assetRoot}data/municipal-transparency.v1.json`).then((response) => response.json()),
     fetch(`${assetRoot}data/world-map.v1.json`).then((response) => response.json())
-  ]).then(([data, map]) => { registry = data; geometry = map; render(); }).catch((error) => { console.error(error); root.textContent = "Transparency atlas could not be loaded."; });
+  ]).then(([data, map]) => { registry = data; geometry = map; render(); }).catch((error) => { console.error(error); root.textContent = language() === "en" ? "Transparency atlas could not be loaded." : "Atlas transparentnosti se nepodařilo načíst."; });
   document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => setTimeout(render)));
 })();
