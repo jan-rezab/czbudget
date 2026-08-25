@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Developer access · Public Spending Data</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <style>
+    :root{--ink:#18242b;--muted:#607077;--paper:#f5f3ed;--card:#fff;--line:#d8ddd9;--green:#0b6b55;--green2:#075443;--red:#a6362d}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--green)}.shell{min-height:100vh;display:grid;grid-template-columns:minmax(320px,1fr) minmax(360px,560px)}.brand{padding:clamp(2rem,8vw,7rem);display:flex;flex-direction:column;justify-content:space-between;background:#143a34;color:#f9f5e9}.brand img{width:min(360px,80%);height:auto}.brand h1{font:600 clamp(2.2rem,5vw,4.8rem)/1.02 Georgia,serif;max-width:11ch;margin:3rem 0 1.5rem}.brand p{max-width:52ch;color:#d6e2dc}.access{display:flex;align-items:center;padding:clamp(1.5rem,5vw,5rem);background:var(--card)}.panel{width:100%;max-width:430px;margin:auto}.eyebrow{text-transform:uppercase;letter-spacing:.13em;color:var(--green);font-weight:700;font-size:.76rem}.panel h2{font:600 2.3rem/1.1 Georgia,serif;margin:.5rem 0}.lede{color:var(--muted);margin:0 0 2rem}.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:1.5rem}.tabs button{border:0;background:none;padding:.8rem 0;margin-right:1.5rem;font:inherit;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer}.tabs button[aria-selected=true]{color:var(--green);border-color:var(--green)}label{display:block;font-size:.84rem;font-weight:700;margin:.9rem 0 .35rem}input{width:100%;padding:.85rem .9rem;border:1px solid #aeb9b4;border-radius:6px;font:inherit}input:focus{outline:3px solid #a9d7cb;outline-offset:1px;border-color:var(--green)}button[type=submit]{width:100%;border:0;border-radius:6px;background:var(--green);color:white;padding:.9rem 1rem;font:700 1rem/1.2 inherit;margin-top:1.25rem;cursor:pointer}button[type=submit]:hover{background:var(--green2)}button[disabled]{opacity:.65;cursor:wait}.message{display:none;padding:.85rem 1rem;border-radius:6px;margin:1rem 0}.message.show{display:block}.message.error{background:#fae7e4;color:var(--red)}.message.success{background:#e1f2eb;color:var(--green2)}.fine{font-size:.82rem;color:var(--muted);margin-top:1.25rem}.reset{border:0;background:none;padding:.6rem 0;color:var(--green);cursor:pointer;font:inherit;font-size:.88rem}@media(max-width:800px){.shell{display:block}.brand{min-height:260px;padding:2rem}.brand h1{font-size:2.6rem;margin:2rem 0 1rem}.access{padding:2rem 1.25rem}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="brand">
+      <a href="/" aria-label="Public Spending Data home"><img src="/assets/logo-lockup-dark.svg" alt="Public Spending Data"></a>
+      <div><h1>Data with its accounting context intact.</h1><p>Verified developer accounts can use the documented API for national budgets, municipalities, capital cities, health, demography, transport, and public entities.</p></div>
+    </section>
+    <section class="access">
+      <div class="panel">
+        <div class="eyebrow">Developer portal</div>
+        <h2>API access</h2>
+        <p class="lede">Sign in with a verified email, or create an account and verify it from your inbox.</p>
+        <div id="message" class="message" role="status" aria-live="polite"></div>
+        <div class="tabs" role="tablist">
+          <button id="login-tab" role="tab" aria-selected="true" type="button">Sign in</button>
+          <button id="register-tab" role="tab" aria-selected="false" type="button">Create account</button>
+        </div>
+        <form id="access-form">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" minlength="6" maxlength="128" autocomplete="current-password" required>
+          <button id="submit" type="submit">Sign in</button>
+        </form>
+        <button class="reset" id="reset" type="button">Forgot your password?</button>
+        <p class="fine">Access is rate-limited. API responses preserve source units, periods, scopes, and explicit missing values.</p>
+      </div>
+    </section>
+  </main>
+  <script>
+    (()=>{let mode="login";const form=document.querySelector("#access-form"),email=document.querySelector("#email"),password=document.querySelector("#password"),submit=document.querySelector("#submit"),message=document.querySelector("#message"),loginTab=document.querySelector("#login-tab"),registerTab=document.querySelector("#register-tab"),next=new URLSearchParams(location.search).get("next")||"/docs";function notice(text,type){message.textContent=text;message.className=`message show ${type}`}function setMode(value){mode=value;const login=value==="login";loginTab.setAttribute("aria-selected",login);registerTab.setAttribute("aria-selected",!login);submit.textContent=login?"Sign in":"Create account";password.autocomplete=login?"current-password":"new-password";message.className="message"}loginTab.onclick=()=>setMode("login");registerTab.onclick=()=>setMode("register");if(new URLSearchParams(location.search).has("verified"))notice("Email verified. You can sign in now.","success");form.onsubmit=async(event)=>{event.preventDefault();submit.disabled=true;try{const response=await fetch(mode==="login"?"/auth/login":"/auth/register",{method:"POST",headers:{"content-type":"application/json"},credentials:"include",body:JSON.stringify({email:email.value,password:password.value})});const payload=await response.json();if(!response.ok)throw new Error(payload.error?.message||"Request failed.");if(mode==="login")location.assign(next);else{notice(payload.data.message,"success");setMode("login")}}catch(error){notice(error.message,"error")}finally{submit.disabled=false}};document.querySelector("#reset").onclick=async()=>{if(!email.checkValidity()){email.reportValidity();return}try{const response=await fetch("/auth/password/reset",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({email:email.value})});const payload=await response.json();if(!response.ok)throw new Error(payload.error?.message||"Request failed.");notice(payload.data.message,"success")}catch(error){notice(error.message,"error")}}})();
+  </script>
+</body>
+</html>
+

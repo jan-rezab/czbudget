@@ -39,6 +39,32 @@ Volba jazyka se přenáší v URL parametru `lang` a ukládá do `localStorage`.
 Nové texty mají být přidávány do slovníků `I` a `T`, nikoli natvrdo do
 dynamicky generovaného rozhraní.
 
+## Autentizované API
+
+Produkční kontejner provozuje vedle statického webu API v téže Cloud Run
+službě `czbudget-public`. Nginx obsluhuje veřejný web a předává cesty `/api`,
+`/auth`, `/developers` a `/docs` internímu Node procesu.
+
+- `/developers/login` — přihlášení a registrace vývojářů
+- `/docs` — dokumentace pouze pro přihlášené uživatele s ověřeným e-mailem
+- `/docs/openapi.json` — chráněný OpenAPI 3.1 kontrakt
+- `/api/v1` — verzované JSON API; přijímá session cookie nebo
+  `Authorization: Bearer <Identity Platform ID token>`
+
+Produkční proměnné služby:
+
+```text
+IDENTITY_PLATFORM_API_KEY=<restricted Identity Toolkit API key>
+IDENTITY_PLATFORM_PROJECT_ID=czbudget-janrezab
+PUBLIC_ORIGIN=https://publicspendingdata.org
+API_CORS_ORIGINS=https://publicspendingdata.org
+NODE_ENV=production
+```
+
+Server přijme pouze podepsaný, neprošlý ID token se správným issuerem,
+audience a claimem `email_verified=true`. Dokumentace používá `HttpOnly`,
+`Secure` a `SameSite=Lax` cookies.
+
 Veřejný obsah je statický; produkční obal používá připnutý Nginx image a
 bezpečnostní hlavičky. Složky `pipeline/`, `tests/` a vývojové závislosti se do
 obrazu nekopírují.

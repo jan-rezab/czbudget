@@ -14,7 +14,9 @@ const json = async (file) => JSON.parse(await readFile(file, "utf8"));
 async function filesBelow(directory, predicate = () => true) {
   const output = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
-    if ([".git", "dist", "node_modules", "test-results", "playwright-report"].includes(entry.name)) continue;
+    // Authenticated templates live in /app inside the container and are not
+    // served from Nginx's public document root.
+    if ([".git", "dist", "node_modules", "server", "test-results", "playwright-report"].includes(entry.name)) continue;
     const target = path.join(directory, entry.name);
     if (entry.isDirectory()) output.push(...await filesBelow(target, predicate));
     else if (predicate(target)) output.push(target);

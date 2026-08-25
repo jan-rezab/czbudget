@@ -22,8 +22,9 @@
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
     "audit:links": "node scripts/check-external-links.mjs --write-report",
     "backfill:social-previews": "node scripts/backfill-social-previews.mjs",
+    "test:api": "node --test tests/api/*.spec.mjs",
     "test:browser": "playwright test",
-    "test": "npm run validate && npm run test:browser"
+    "test": "npm run validate && npm run test:api && npm run test:browser"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

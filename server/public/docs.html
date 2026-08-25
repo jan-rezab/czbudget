@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>API documentation · Public Spending Data</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/docs/assets/docs.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand"><img src="/assets/logo-lockup-dark.svg" alt="Public Spending Data"></a>
+    <nav><a href="#quickstart">Quickstart</a><a href="#endpoints">Endpoints</a><a href="/docs/openapi.json">OpenAPI JSON</a><button id="logout" type="button">Sign out</button></nav>
+  </header>
+  <div class="layout">
+    <aside>
+      <div class="account" id="account">Verified account</div>
+      <label class="search-label" for="search">Filter endpoints</label>
+      <input id="search" type="search" placeholder="Try “municipalities”">
+      <nav id="side-nav" aria-label="API endpoint groups"></nav>
+    </aside>
+    <main>
+      <section class="hero">
+        <span class="pill">API v1 · verified access</span>
+        <h1>Public Spending Data API</h1>
+        <p>Source-traceable public finance data with currencies, periods, accounting perimeters, budget stages, and missingness preserved.</p>
+      </section>
+      <section id="quickstart" class="quickstart">
+        <div><span class="kicker">Base URL</span><code>https://publicspendingdata.org/api/v1</code></div>
+        <div><span class="kicker">Authentication</span><p>Pass the Identity Platform ID token returned by <code>POST /auth/login</code> as a Bearer token. Refresh it before its one-hour expiry.</p></div>
+        <pre><button class="copy" type="button">Copy</button><code>curl https://publicspendingdata.org/api/v1/countries/CZE/fiscal \
+  -H "Authorization: Bearer $PSD_ID_TOKEN"</code></pre>
+      </section>
+      <section id="principles" class="principles"><h2>Interpretation rules</h2><div class="rule-grid"><article><b>Native first</b><p>National classifications and currencies are not silently coerced.</p></article><article><b>Missing is not zero</b><p>Unavailable and not-applicable values remain explicit.</p></article><article><b>Perimeters matter</b><p>National, local, social-insurance, and corporation layers are not automatically additive.</p></article></div></section>
+      <section id="endpoints"><div class="section-head"><div><span class="kicker">Reference</span><h2>Endpoints</h2></div><span id="endpoint-count"></span></div><div id="endpoint-list" class="endpoint-list"><p>Loading API specification…</p></div></section>
+    </main>
+  </div>
+  <script type="module" src="/docs/assets/docs.js"></script>
+</body>
+</html>
+

@@ -39,6 +39,11 @@ map $request_uri $country_canonical_path {
   ~^(?<country_path>/countries/(?:czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states))(?:\?|$) $country_path;
 }
 
+upstream public_spending_api {
+  server 127.0.0.1:8081;
+  keepalive 32;
+}
+
 server {
   listen ${PORT};
   server_name publicspendingdata.org www.publicspendingdata.org _;
@@ -57,6 +62,72 @@ server {
   add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
   add_header Cross-Origin-Opener-Policy "same-origin" always;
   add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self' https://cloud.umami.is https://gateway.umami.is; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
+
+  client_max_body_size 32k;
+
+  location = /healthz {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location = /api {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location ^~ /api/ {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location ^~ /auth/ {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location = /docs {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location ^~ /docs/ {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location = /developers {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location ^~ /developers/ {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
 
   location ~ ^/cz/obce(?:/(.*))?$ {
     return 301 /cz/municipalities/$1$is_args$args;

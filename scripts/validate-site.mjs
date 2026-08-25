@@ -202,7 +202,7 @@ if (!countryPage.includes('country-spending.js?v=20260824-dashboard-sections') |
 if (!countryFunctionsScript.includes("function renderTransport") || !countryFunctionsScript.includes("transport-comparison") || !countryFunctionsScript.includes("stockNotBuild") || !countryFunctionsScript.includes("function transportBudgetDetail") || !countryFunctionsScript.includes("function infrastructurePerformance")) throw new Error("Transportation must expose network, budget and infrastructure-performance deep dives with the net-stock caveat");
 async function htmlFiles(directory = ".") {
   const entries = await readdir(directory, { withFileTypes: true });
-  const nested = await Promise.all(entries.filter((entry) => ![".git", "node_modules", "test-results"].includes(entry.name)).map((entry) => {
+  const nested = await Promise.all(entries.filter((entry) => ![".git", "node_modules", "server", "test-results"].includes(entry.name)).map((entry) => {
     const path = directory === "." ? entry.name : `${directory}/${entry.name}`;
     return entry.isDirectory() ? htmlFiles(path) : path.endsWith(".html") ? [path] : [];
   }));
