@@ -18,12 +18,12 @@
     <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
     <link
       rel="stylesheet"
-      href="site-pages.css?v=20260825-entry-count"
+      href="site-pages.css?v=20260826-source-availability"
     />
     <link rel="stylesheet" href="municipal-transparency.css?v=20260825-methodology-atlas" />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
-    <script src="site-pages.js?v=20260825-atlas-i18n" defer></script>
+    <script src="site-pages.js?v=20260826-source-availability" defer></script>
     <script src="municipal-transparency.js?v=20260825-localization-audit" defer></script>
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
@@ -58,6 +58,13 @@
           <h2 id="coverage-overview-title" data-status-copy="coverageTitle">Pokrytí podle země</h2>
           <span data-status-copy="coverageHint">Kliknutím na buňku zobrazíte zdroje</span>
         </header>
+        <p class="coverage-contract" data-status-copy="coverageContract">Tabulka odděluje publikovaná data PSD od dat, která existují u oficiálního zdroje, ale ještě nejsou načtená. Stav „nenalezeno“ znamená pouze výsledek zdokumentovaného průzkumu, nikoli důkaz neexistence.</p>
+        <div class="coverage-legend" aria-label="Coverage status legend">
+          <span><i class="loaded"></i><b data-status-copy="legendLoaded">Načteno v PSD</b></span>
+          <span><i class="available"></i><b data-status-copy="legendAvailable">Zdroj existuje · nenačteno</b></span>
+          <span><i class="fragmented"></i><b data-status-copy="legendFragmented">Existuje · roztříštěné / nesrovnatelné</b></span>
+          <span><i class="not-found"></i><b data-status-copy="legendNotFound">V průzkumu nenalezeno</b></span>
+        </div>
         <div class="coverage-matrix-wrap" tabindex="0" aria-label="Country data coverage table">
           <table class="coverage-matrix">
             <thead><tr>
@@ -92,7 +99,8 @@
           <div><dt data-status-copy="defMunicipal">Obce</dt><dd data-status-copy="defMunicipalValue">Počet jednotek v rozsahu obecního zdroje; agregát není vydáván za jednotlivé obce.</dd></div>
           <div><dt data-status-copy="defItemized">Položkové rozpočty obcí</dt><dd data-status-copy="defItemizedValue">Počet obecních profilů s ekonomickými, funkčními nebo původními účetními položkami; souhrnné částky se nepočítají.</dd></div>
           <div><dt data-status-copy="defTransport">Doprava</dt><dd data-status-copy="defTransportValue">Roky výkonových řad / roky funkčních výdajů COFOG 04.5.</dd></div>
-          <div><dt data-status-copy="defMissing">Chybějící data</dt><dd data-status-copy="defMissingValue">Pomlčka znamená, že dataset není publikován; nejde o nulu.</dd></div>
+          <div><dt data-status-copy="defMissing">Chybějící data</dt><dd data-status-copy="defMissingValue">Pomlčka bez barevného stavu znamená, že vrstva není v PSD a dostupnost zdroje zatím nebyla ověřena; nejde o nulu.</dd></div>
+          <div><dt data-status-copy="defAvailability">Dostupnost zdroje</dt><dd data-status-copy="defAvailabilityValue">„Zdroj existuje“ není publikované pokrytí PSD. Kliknutí otevře důkaz, cestu k načtení a hranice srovnatelnosti.</dd></div>
         </dl>
       </details>
       <section class="method-ledger" aria-labelledby="method-ledger-title">

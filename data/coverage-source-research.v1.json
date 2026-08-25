@@ -1,0 +1,222 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "coverage-source-research.v1",
+  "reviewed_at": "2026-08-26",
+  "scope": "Official-source audit for national modules that are visible as gaps in the methodology matrix.",
+  "status_definitions": {
+    "source_available": "An official or harmonised source exists, but Public Spending Data has not loaded the module.",
+    "fragmented": "Relevant official data exists, but not as one directly comparable national dataset.",
+    "not_found": "No suitable national or harmonised source was found in the documented review; this is not proof that no data exists."
+  },
+  "review_note_en": "Every blank national cell reviewed here has an official acquisition route. None is currently classified as not_found. Brazil transport remains fragmented across official systems.",
+  "review_note_cs": "Pro každou zde prověřenou prázdnou národní buňku existuje oficiální cesta k datům. Žádná nyní není vedena jako nenalezená. Brazilská dopravní data zůstávají roztříštěná mezi oficiální systémy.",
+  "countries": {
+    "BRA": {
+      "fiscal": {
+        "status": "source_available",
+        "evidence_en": "The downloaded April 2026 WEO workbook already contains 44 indicator series for Brazil.",
+        "evidence_cs": "Stažený sešit WEO z dubna 2026 už obsahuje 44 ukazatelových řad pro Brazílii.",
+        "ingestion_en": "Extend the existing WEO country filter and run the sovereign-series validation.",
+        "ingestion_cs": "Rozšířit existující filtr zemí WEO a spustit validaci národních řad.",
+        "sources": [{"title": "IMF · World Economic Outlook Database, April 2026", "url": "https://data.imf.org/Datasets/WEO", "location": "Countries sheet → COUNTRY.ID=BRA; 44 indicator series"}]
+      },
+      "health": {
+        "status": "source_available",
+        "evidence_en": "WHO GHED publishes downloadable country health-expenditure data under SHA 2011, including Brazil.",
+        "evidence_cs": "WHO GHED zveřejňuje stažitelná data zdravotních výdajů podle SHA 2011 včetně Brazílie.",
+        "ingestion_en": "Reuse the SHA adapter, then disclose indicator-level gaps rather than imputing them.",
+        "ingestion_cs": "Použít adaptér SHA a mezery uvádět po jednotlivých ukazatelích bez imputace.",
+        "sources": [{"title": "WHO · Global Health Expenditure Database", "url": "https://apps.who.int/nha/database/DocumentationCentre/en", "location": "GHED all data, March 2026 → Brazil"}]
+      },
+      "geo": {
+        "status": "source_available",
+        "evidence_en": "IBGE publishes annual national, state and municipality population estimates, with downloadable 2025 tables.",
+        "evidence_cs": "IBGE zveřejňuje roční odhady populace za stát, spolkové státy i obce včetně stažitelných tabulek 2025.",
+        "ingestion_en": "Load the IBGE table and retain its 1 July reference date and municipal codes.",
+        "ingestion_cs": "Načíst tabulku IBGE a zachovat referenční datum 1. července i obecní kódy.",
+        "sources": [{"title": "IBGE · Population Estimates", "url": "https://www.ibge.gov.br/en/statistics/social/population/18448-estimates-of-resident-population-for-municipalities-and-federation-units.html", "location": "2025 tables → Brazil, federation units and municipalities"}]
+      },
+      "transport": {
+        "status": "fragmented",
+        "evidence_en": "Official road and rail performance, concession, investment and safety data exist, but are split across ANTT panels and open datasets; general-government transport spending is separate in Treasury COFOG.",
+        "evidence_cs": "Oficiální výkonová, koncesní, investiční a bezpečnostní data pro silnice a železnice existují, ale jsou rozdělena mezi panely a datasety ANTT; výdaje vládních institucí na dopravu jsou zvlášť v COFOG státní pokladny.",
+        "ingestion_en": "Build separate road, rail and COFOG adapters; publish each perimeter before attempting a combined transport module.",
+        "ingestion_cs": "Vytvořit oddělené adaptéry pro silnice, železnice a COFOG; před spojením zveřejnit hranice každé vrstvy.",
+        "sources": [
+          {"title": "ANTT · Interactive transport panels and open data", "url": "https://www.gov.br/antt/pt-br/assuntos/informacoes-estrategicas/paineis_interativos", "location": "Road concessions, railways, freight and passenger transport panels"},
+          {"title": "Brazilian Treasury · General Government Fiscal Statistics", "url": "https://www.gov.br/tesouronacional/en/fiscal-policy/harmonized-fiscal-statistics", "location": "COFOG General Government → transport expenditure"}
+        ]
+      }
+    },
+    "ESP": {
+      "fiscal": {
+        "status": "source_available",
+        "evidence_en": "The downloaded April 2026 WEO workbook already contains 44 indicator series for Spain.",
+        "evidence_cs": "Stažený sešit WEO z dubna 2026 už obsahuje 44 ukazatelových řad pro Španělsko.",
+        "ingestion_en": "Extend the existing WEO country filter and run the sovereign-series validation.",
+        "ingestion_cs": "Rozšířit existující filtr zemí WEO a spustit validaci národních řad.",
+        "sources": [{"title": "IMF · World Economic Outlook Database, April 2026", "url": "https://data.imf.org/Datasets/WEO", "location": "Countries sheet → COUNTRY.ID=ESP; 44 indicator series"}]
+      },
+      "health": {
+        "status": "source_available",
+        "evidence_en": "OECD Health Statistics 2026 provides comparable health expenditure, resources, use and outcomes for Spain.",
+        "evidence_cs": "OECD Health Statistics 2026 nabízí pro Španělsko srovnatelné výdaje, kapacity, využití a výsledky zdravotnictví.",
+        "ingestion_en": "Add ESP to the existing OECD SHA and health-performance extracts.",
+        "ingestion_cs": "Přidat ESP do existujících výběrů OECD SHA a zdravotních výsledků.",
+        "sources": [{"title": "OECD · Health Statistics 2026", "url": "https://www.oecd.org/en/data/datasets/oecd-health-statistics.html", "location": "Health expenditure and financing; status; resources; utilisation; quality and outcomes → Spain"}]
+      },
+      "geo": {
+        "status": "source_available",
+        "evidence_en": "Eurostat publishes harmonised population and demography tables for Spain.",
+        "evidence_cs": "Eurostat zveřejňuje harmonizované tabulky populace a demografie pro Španělsko.",
+        "ingestion_en": "Extend the Eurostat geography adapter and preserve reference year and territorial level.",
+        "ingestion_cs": "Rozšířit adaptér Eurostatu a zachovat referenční rok i územní úroveň.",
+        "sources": [{"title": "Eurostat · Population and demography database", "url": "https://ec.europa.eu/eurostat/web/population-demography/demography-population-stock-balance/database", "location": "Population stock and balance → Spain"}]
+      },
+      "transport": {
+        "status": "source_available",
+        "evidence_en": "Eurostat publishes annual road and rail infrastructure, performance and expenditure data for Spain; COFOG 04.5 provides transport spending.",
+        "evidence_cs": "Eurostat zveřejňuje pro Španělsko roční data infrastruktury, výkonu a výdajů na silnice a železnice; COFOG 04.5 pokrývá dopravní výdaje.",
+        "ingestion_en": "Add ESP to the existing Eurostat transport and COFOG adapters and retain source break flags.",
+        "ingestion_cs": "Přidat ESP do existujících adaptérů Eurostatu pro dopravu a COFOG a zachovat příznaky zlomů řad.",
+        "sources": [{"title": "Eurostat · Transport database", "url": "https://ec.europa.eu/eurostat/web/transport/database", "location": "Road transport; railway transport → Spain"}, {"title": "Eurostat · General government expenditure by function", "url": "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10a_exp_esms.htm", "location": "gov_10a_exp → GF04.5 → Spain"}]
+      }
+    },
+    "FIN": {
+      "fiscal": {
+        "status": "source_available",
+        "evidence_en": "The downloaded April 2026 WEO workbook already contains 44 indicator series for Finland.",
+        "evidence_cs": "Stažený sešit WEO z dubna 2026 už obsahuje 44 ukazatelových řad pro Finsko.",
+        "ingestion_en": "Extend the existing WEO country filter and run the sovereign-series validation.",
+        "ingestion_cs": "Rozšířit existující filtr zemí WEO a spustit validaci národních řad.",
+        "sources": [{"title": "IMF · World Economic Outlook Database, April 2026", "url": "https://data.imf.org/Datasets/WEO", "location": "Countries sheet → COUNTRY.ID=FIN; 44 indicator series"}]
+      },
+      "health": {
+        "status": "source_available",
+        "evidence_en": "OECD Health Statistics 2026 provides comparable health-system data for Finland.",
+        "evidence_cs": "OECD Health Statistics 2026 nabízí srovnatelná data zdravotního systému pro Finsko.",
+        "ingestion_en": "Add FIN to the existing OECD SHA and health-performance extracts.",
+        "ingestion_cs": "Přidat FIN do existujících výběrů OECD SHA a zdravotních výsledků.",
+        "sources": [{"title": "OECD · Health Statistics 2026", "url": "https://www.oecd.org/en/data/datasets/oecd-health-statistics.html", "location": "Comparable health datasets → Finland"}]
+      },
+      "geo": {
+        "status": "source_available",
+        "evidence_en": "Eurostat publishes harmonised population and demography tables for Finland.",
+        "evidence_cs": "Eurostat zveřejňuje harmonizované tabulky populace a demografie pro Finsko.",
+        "ingestion_en": "Extend the Eurostat geography adapter and preserve reference year and territorial level.",
+        "ingestion_cs": "Rozšířit adaptér Eurostatu a zachovat referenční rok i územní úroveň.",
+        "sources": [{"title": "Eurostat · Population and demography database", "url": "https://ec.europa.eu/eurostat/web/population-demography/demography-population-stock-balance/database", "location": "Population stock and balance → Finland"}]
+      },
+      "transport": {
+        "status": "source_available",
+        "evidence_en": "Eurostat publishes annual road and rail data for Finland and harmonised COFOG transport spending.",
+        "evidence_cs": "Eurostat zveřejňuje pro Finsko roční silniční a železniční data i harmonizované dopravní výdaje COFOG.",
+        "ingestion_en": "Add FIN to the existing Eurostat transport and COFOG adapters.",
+        "ingestion_cs": "Přidat FIN do existujících adaptérů Eurostatu pro dopravu a COFOG.",
+        "sources": [{"title": "Eurostat · Transport database", "url": "https://ec.europa.eu/eurostat/web/transport/database", "location": "Road transport; railway transport → Finland"}, {"title": "Eurostat · General government expenditure by function", "url": "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10a_exp_esms.htm", "location": "gov_10a_exp → GF04.5 → Finland"}]
+      }
+    },
+    "JPN": {
+      "fiscal": {
+        "status": "source_available",
+        "evidence_en": "The downloaded April 2026 WEO workbook already contains 44 indicator series for Japan.",
+        "evidence_cs": "Stažený sešit WEO z dubna 2026 už obsahuje 44 ukazatelových řad pro Japonsko.",
+        "ingestion_en": "Extend the existing WEO country filter and run the sovereign-series validation.",
+        "ingestion_cs": "Rozšířit existující filtr zemí WEO a spustit validaci národních řad.",
+        "sources": [{"title": "IMF · World Economic Outlook Database, April 2026", "url": "https://data.imf.org/Datasets/WEO", "location": "Countries sheet → COUNTRY.ID=JPN; 44 indicator series"}]
+      },
+      "health": {
+        "status": "source_available",
+        "evidence_en": "OECD Health Statistics 2026 provides comparable health-system data for Japan.",
+        "evidence_cs": "OECD Health Statistics 2026 nabízí srovnatelná data zdravotního systému pro Japonsko.",
+        "ingestion_en": "Add JPN to the existing OECD SHA and health-performance extracts.",
+        "ingestion_cs": "Přidat JPN do existujících výběrů OECD SHA a zdravotních výsledků.",
+        "sources": [{"title": "OECD · Health Statistics 2026", "url": "https://www.oecd.org/en/data/datasets/oecd-health-statistics.html", "location": "Comparable health datasets → Japan"}]
+      },
+      "geo": {
+        "status": "source_available",
+        "evidence_en": "Japan's Statistics Bureau publishes the census, population estimates and long time series through e-Stat.",
+        "evidence_cs": "Japonský statistický úřad zveřejňuje sčítání, odhady populace a dlouhé řady přes e-Stat.",
+        "ingestion_en": "Load national and prefectural series from e-Stat; keep census and estimate vintages distinct.",
+        "ingestion_cs": "Načíst národní a prefekturní řady z e-Stat; oddělit ročníky sčítání a odhadů.",
+        "sources": [{"title": "Statistics Bureau of Japan · Population Census", "url": "https://www.stat.go.jp/english/data/kokusei/", "location": "Population census and e-Stat tables → Japan"}]
+      },
+      "transport": {
+        "status": "source_available",
+        "evidence_en": "MLIT publishes road statistics and annual rail and transport-performance tables, with many tables linked through e-Stat.",
+        "evidence_cs": "MLIT zveřejňuje silniční statistiky a roční tabulky železničního a dopravního výkonu, často přes e-Stat.",
+        "ingestion_en": "Create MLIT/e-Stat adapters for network, traffic and rail performance; keep differing publication frequencies visible.",
+        "ingestion_cs": "Vytvořit adaptéry MLIT/e-Stat pro síť, provoz a železniční výkon; zobrazit rozdílnou četnost publikace.",
+        "sources": [{"title": "Japan MLIT · Statistics", "url": "https://www.mlit.go.jp/english/statistics.html", "location": "Transportation statistics and road statistics"}, {"title": "Japan MLIT · Railway statistics", "url": "https://www.mlit.go.jp/statistics/details/tetsudo_list.html", "location": "Railway Transport Statistics Survey and annual report"}]
+      }
+    },
+    "NLD": {
+      "fiscal": {
+        "status": "source_available",
+        "evidence_en": "The downloaded April 2026 WEO workbook already contains 44 indicator series for the Netherlands.",
+        "evidence_cs": "Stažený sešit WEO z dubna 2026 už obsahuje 44 ukazatelových řad pro Nizozemsko.",
+        "ingestion_en": "Extend the existing WEO country filter and run the sovereign-series validation.",
+        "ingestion_cs": "Rozšířit existující filtr zemí WEO a spustit validaci národních řad.",
+        "sources": [{"title": "IMF · World Economic Outlook Database, April 2026", "url": "https://data.imf.org/Datasets/WEO", "location": "Countries sheet → COUNTRY.ID=NLD; 44 indicator series"}]
+      },
+      "health": {
+        "status": "source_available",
+        "evidence_en": "OECD Health Statistics 2026 provides comparable health-system data for the Netherlands.",
+        "evidence_cs": "OECD Health Statistics 2026 nabízí srovnatelná data zdravotního systému pro Nizozemsko.",
+        "ingestion_en": "Add NLD to the existing OECD SHA and health-performance extracts.",
+        "ingestion_cs": "Přidat NLD do existujících výběrů OECD SHA a zdravotních výsledků.",
+        "sources": [{"title": "OECD · Health Statistics 2026", "url": "https://www.oecd.org/en/data/datasets/oecd-health-statistics.html", "location": "Comparable health datasets → Netherlands"}]
+      },
+      "geo": {
+        "status": "source_available",
+        "evidence_en": "Eurostat publishes harmonised population and demography tables for the Netherlands.",
+        "evidence_cs": "Eurostat zveřejňuje harmonizované tabulky populace a demografie pro Nizozemsko.",
+        "ingestion_en": "Extend the Eurostat geography adapter and preserve reference year and territorial level.",
+        "ingestion_cs": "Rozšířit adaptér Eurostatu a zachovat referenční rok i územní úroveň.",
+        "sources": [{"title": "Eurostat · Population and demography database", "url": "https://ec.europa.eu/eurostat/web/population-demography/demography-population-stock-balance/database", "location": "Population stock and balance → Netherlands"}]
+      },
+      "transport": {
+        "status": "source_available",
+        "evidence_en": "Eurostat publishes annual road and rail data for the Netherlands and harmonised COFOG transport spending.",
+        "evidence_cs": "Eurostat zveřejňuje pro Nizozemsko roční silniční a železniční data i harmonizované dopravní výdaje COFOG.",
+        "ingestion_en": "Add NLD to the existing Eurostat transport and COFOG adapters.",
+        "ingestion_cs": "Přidat NLD do existujících adaptérů Eurostatu pro dopravu a COFOG.",
+        "sources": [{"title": "Eurostat · Transport database", "url": "https://ec.europa.eu/eurostat/web/transport/database", "location": "Road transport; railway transport → Netherlands"}, {"title": "Eurostat · General government expenditure by function", "url": "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10a_exp_esms.htm", "location": "gov_10a_exp → GF04.5 → Netherlands"}]
+      }
+    },
+    "NOR": {
+      "fiscal": {
+        "status": "source_available",
+        "evidence_en": "The downloaded April 2026 WEO workbook already contains 44 indicator series for Norway.",
+        "evidence_cs": "Stažený sešit WEO z dubna 2026 už obsahuje 44 ukazatelových řad pro Norsko.",
+        "ingestion_en": "Extend the existing WEO country filter and run the sovereign-series validation.",
+        "ingestion_cs": "Rozšířit existující filtr zemí WEO a spustit validaci národních řad.",
+        "sources": [{"title": "IMF · World Economic Outlook Database, April 2026", "url": "https://data.imf.org/Datasets/WEO", "location": "Countries sheet → COUNTRY.ID=NOR; 44 indicator series"}]
+      },
+      "health": {
+        "status": "source_available",
+        "evidence_en": "OECD Health Statistics 2026 provides comparable health-system data for Norway.",
+        "evidence_cs": "OECD Health Statistics 2026 nabízí srovnatelná data zdravotního systému pro Norsko.",
+        "ingestion_en": "Add NOR to the existing OECD SHA and health-performance extracts.",
+        "ingestion_cs": "Přidat NOR do existujících výběrů OECD SHA a zdravotních výsledků.",
+        "sources": [{"title": "OECD · Health Statistics 2026", "url": "https://www.oecd.org/en/data/datasets/oecd-health-statistics.html", "location": "Comparable health datasets → Norway"}]
+      },
+      "geo": {
+        "status": "source_available",
+        "evidence_en": "Eurostat publishes harmonised population and demography tables for Norway as an EFTA country.",
+        "evidence_cs": "Eurostat zveřejňuje harmonizované tabulky populace a demografie pro Norsko jako zemi EFTA.",
+        "ingestion_en": "Extend the Eurostat geography adapter and preserve reference year and territorial level.",
+        "ingestion_cs": "Rozšířit adaptér Eurostatu a zachovat referenční rok i územní úroveň.",
+        "sources": [{"title": "Eurostat · Population and demography database", "url": "https://ec.europa.eu/eurostat/web/population-demography/demography-population-stock-balance/database", "location": "Population stock and balance → Norway"}]
+      },
+      "transport": {
+        "status": "source_available",
+        "evidence_en": "Norway submits road and rail statistics to Eurostat; harmonised COFOG transport spending is also available.",
+        "evidence_cs": "Norsko předává silniční a železniční statistiky Eurostatu; dostupné jsou také harmonizované dopravní výdaje COFOG.",
+        "ingestion_en": "Add NOR to the existing Eurostat transport and COFOG adapters and retain voluntary-series gaps.",
+        "ingestion_cs": "Přidat NOR do existujících adaptérů Eurostatu pro dopravu a COFOG a zachovat mezery dobrovolných řad.",
+        "sources": [{"title": "Eurostat · Transport database", "url": "https://ec.europa.eu/eurostat/web/transport/database", "location": "Road transport; railway transport → Norway"}, {"title": "Eurostat · General government expenditure by function", "url": "https://ec.europa.eu/eurostat/cache/metadata/en/gov_10a_exp_esms.htm", "location": "gov_10a_exp → GF04.5 → Norway"}]
+      }
+    }
+  }
+}
