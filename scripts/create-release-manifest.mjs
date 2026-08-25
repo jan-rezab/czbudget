@@ -12,7 +12,7 @@ const selected = [
   "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json", "data/state-owned-enterprises.v1.json",
   "data/czech-budget.v1.json", "data/demography-social.v1.json",
   "data/eu-capital-budgets.v1.json", "data/municipal-snapshot.v1.json", "data/municipal-history-directory.v1.json",
-  "data/international-municipalities.v1.json",
+  "data/international-municipalities.v1.json", "data/municipal-itemized-coverage.v1.json",
   "lib/data/sovereign-benchmark.v1.json", "sitemap.xml",
 ];
 try {

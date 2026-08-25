@@ -120,6 +120,9 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
   await expect(page.locator('[data-coverage-country="NOR"][data-coverage-node="municipalHistory"]')).toContainText("2015–2025");
   await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="municipalHistory"]')).toContainText("2010–2025");
+  await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="budgetDetail"]')).toContainText("6,254");
+  await expect(page.locator('[data-coverage-country="NLD"][data-coverage-node="budgetDetail"]')).toContainText("342");
+  await expect(page.locator('[data-coverage-country="USA"][data-coverage-node="budgetDetail"]')).toContainText("not published");
   await page.locator('[data-coverage-country="SWE"][data-coverage-node="municipalities"]').click();
   await expect(page.locator("#coverage-selection-title")).toContainText("Sweden · Municipal entities");
   await expect(page.locator("#coverage-source-list article")).toHaveCount(1);
