@@ -62,19 +62,42 @@ function countryFromDataset(dataset, countryCode) {
 }
 
 function pageParams(searchParams) {
-  const requested = Number(searchParams.get("limit") || 50);
-  const limit = Number.isInteger(requested) ? Math.min(200, Math.max(1, requested)) : 50;
+  if (searchParams.getAll("limit").length > 1) throw new DataError(400, "duplicate_parameter", "The limit parameter may only be provided once.");
+  const rawLimit = searchParams.get("limit");
+  if (rawLimit !== null && !/^\d{1,3}$/.test(rawLimit)) {
+    throw new DataError(400, "invalid_limit", "The page limit must be an integer between 1 and 200.");
+  }
+  const limit = rawLimit === null ? 50 : Number(rawLimit);
+  if (limit < 1 || limit > 200) throw new DataError(400, "invalid_limit", "The page limit must be between 1 and 200.");
   let offset = 0;
+  if (searchParams.getAll("cursor").length > 1) throw new DataError(400, "duplicate_parameter", "The cursor parameter may only be provided once.");
   const cursor = searchParams.get("cursor");
   if (cursor) {
+    if (!/^[A-Za-z0-9_-]{1,32}$/.test(cursor)) throw new DataError(400, "invalid_cursor", "The pagination cursor is invalid.");
     try {
-      offset = Number(Buffer.from(cursor, "base64url").toString("utf8"));
+      const decoded = Buffer.from(cursor, "base64url").toString("utf8");
+      if (!/^(?:0|[1-9]\d{0,9})$/.test(decoded)) throw new Error("invalid cursor payload");
+      offset = Number(decoded);
     } catch {
       throw new DataError(400, "invalid_cursor", "The pagination cursor is invalid.");
     }
     if (!Number.isSafeInteger(offset) || offset < 0) throw new DataError(400, "invalid_cursor", "The pagination cursor is invalid.");
   }
   return { limit, offset };
+}
+
+function optionalQuery(searchParams, name, maxLength) {
+  const values = searchParams.getAll(name);
+  if (values.length > 1) throw new DataError(400, "duplicate_parameter", `The ${name} parameter may only be provided once.`);
+  const value = values[0]?.trim();
+  if (value && value.length > maxLength) throw new DataError(400, "query_too_long", `The ${name} parameter must not exceed ${maxLength} characters.`);
+  return value;
+}
+
+function optionalCountry(searchParams) {
+  const value = optionalQuery(searchParams, "country", 3)?.toUpperCase();
+  if (value && !/^[A-Z]{3}$/.test(value)) throw new DataError(400, "invalid_country", "The country parameter must be a three-letter country code.");
+  return value;
 }
 
 function paginate(items, searchParams) {
@@ -164,7 +187,7 @@ export async function countryModule(countryCode, module) {
 export async function listCapitalCities(searchParams) {
   const dataset = await readJSON(DATASETS["capital-cities"]);
   let items = dataset.cities;
-  const country = searchParams.get("country")?.toUpperCase();
+  const country = optionalCountry(searchParams);
   if (country) items = items.filter((item) => item.country_code === country);
   return { ...paginate(items, searchParams), dataset: datasetMetadata(dataset) };
 }
@@ -179,8 +202,8 @@ export async function capitalCity(cityID) {
 export async function listMunicipalities(searchParams) {
   const dataset = await readJSON(DATASETS.municipalities);
   let items = dataset.entities;
-  const country = searchParams.get("country")?.toUpperCase();
-  const query = searchParams.get("q")?.trim().toLocaleLowerCase();
+  const country = optionalCountry(searchParams);
+  const query = optionalQuery(searchParams, "q", 100)?.toLocaleLowerCase();
   if (country) items = items.filter((item) => item.country === country);
   if (query) items = items.filter((item) => `${item.name} ${item.code || ""} ${item.region || ""}`.toLocaleLowerCase().includes(query));
   return { ...paginate(items, searchParams), dataset: datasetMetadata(dataset) };
@@ -208,11 +231,11 @@ export async function czechMunicipalityHistory(municipalityID) {
 }
 
 export async function listPublicEntities(searchParams) {
-  const countryCode = code(searchParams.get("country"));
+  const countryCode = code(optionalCountry(searchParams));
   const dataset = await readJSON(`data/public-entity-directory/${countryCode}.v1.json`);
   let items = decodeDirectory(dataset);
-  const query = searchParams.get("q")?.trim().toLocaleLowerCase();
-  const entityClass = searchParams.get("entity_class")?.trim().toLocaleLowerCase();
+  const query = optionalQuery(searchParams, "q", 100)?.toLocaleLowerCase();
+  const entityClass = optionalQuery(searchParams, "entity_class", 100)?.toLocaleLowerCase();
   if (query) items = items.filter((item) => `${item.name || ""} ${item.national_id || ""} ${item.region || ""}`.toLocaleLowerCase().includes(query));
   if (entityClass) items = items.filter((item) => String(item.entity_class || "").toLocaleLowerCase() === entityClass);
   return { ...paginate(items, searchParams), dataset: datasetMetadata(dataset) };
@@ -231,10 +254,9 @@ export async function publicEntity(countryCode, recordID) {
 export async function publicEntityAggregates(searchParams) {
   const dataset = await readJSON(DATASETS["public-entity-aggregates"]);
   let observations = dataset.observations;
-  const country = searchParams.get("country")?.toUpperCase();
-  const metric = searchParams.get("metric")?.toLowerCase();
+  const country = optionalCountry(searchParams);
+  const metric = optionalQuery(searchParams, "metric", 100)?.toLowerCase();
   if (country) observations = observations.filter((item) => item.country_code === country);
   if (metric) observations = observations.filter((item) => item.metric.toLowerCase() === metric);
   return { ...paginate(observations, searchParams), dataset: datasetMetadata(dataset) };
 }
-

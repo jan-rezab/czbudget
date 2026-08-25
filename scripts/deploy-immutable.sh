@@ -19,6 +19,10 @@ gcloud run deploy "$service" \
   --region="$region" \
   --platform=managed \
   --allow-unauthenticated \
+  --min-instances=0 \
+  --max-instances=5 \
+  --concurrency=80 \
+  --timeout=30s \
   --labels=app=czbudget-public,source=github \
   --quiet
 

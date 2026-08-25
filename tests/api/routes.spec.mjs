@@ -60,6 +60,23 @@ test("paginates municipality and public-entity searches", async () => {
   assert.match(entityPage.data[0].name, /Lesn/i);
 });
 
+test("rejects abusive pagination and search parameters", async () => {
+  for (const pathname of [
+    "/api/v1/municipalities?limit=0",
+    "/api/v1/municipalities?limit=201",
+    "/api/v1/municipalities?limit=1.5",
+    "/api/v1/municipalities?limit=1&limit=2",
+    "/api/v1/municipalities?cursor=not-a-valid-cursor",
+    "/api/v1/municipalities?country=CZECHIA",
+    `/api/v1/municipalities?q=${"x".repeat(101)}`,
+    "/api/v1/public-entities?country=CZE&q=one&q=two",
+  ]) {
+    const response = await get(pathname);
+    assert.equal(response.status, 400, pathname);
+    assert.match((await response.json()).error.code, /invalid_|query_too_long|duplicate_parameter/);
+  }
+});
+
 test("serves Czech municipal current and historical detail", async () => {
   const current = await get("/api/v1/municipalities/CZE/00064581/budget");
   assert.equal(current.status, 200);
@@ -77,4 +94,3 @@ test("returns stable JSON errors", async () => {
   assert.equal(payload.error.code, "country_not_found");
   assert.ok(payload.error.request_id);
 });
-

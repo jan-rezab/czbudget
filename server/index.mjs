@@ -6,12 +6,32 @@ import { fileURLToPath } from "node:url";
 import { AuthError, handleAuth, requestToken, verifyIdToken } from "./auth.mjs";
 import { DataError, apiIndex, capitalCity, countryModule, countryProfile, czechMunicipalityBudget, czechMunicipalityHistory, datasetInfo, listCapitalCities, listCountries, listDatasets, listMunicipalities, listPublicEntities, municipality, publicEntity, publicEntityAggregates } from "./data-store.mjs";
 import { openapi } from "./openapi.mjs";
+import { FixedWindowRateLimiter } from "./rate-limit.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
+const MAX_REQUEST_URL_BYTES = integerSetting("API_MAX_REQUEST_URL_BYTES", 4 * 1024, 1024, 32 * 1024);
+const MAX_RESPONSE_BYTES = integerSetting("API_MAX_RESPONSE_BYTES", 2 * 1024 * 1024, 64 * 1024, 32 * 1024 * 1024);
+const MAX_IN_FLIGHT = integerSetting("API_MAX_IN_FLIGHT", 32, 1, 1_000);
+const API_IP_MINUTE_LIMIT = integerSetting("API_IP_MINUTE_LIMIT", 300, 1, 100_000);
+const API_USER_MINUTE_LIMIT = integerSetting("API_USER_MINUTE_LIMIT", 300, 1, 100_000);
+const API_USER_DAY_LIMIT = integerSetting("API_USER_DAY_LIMIT", 10_000, 1, 10_000_000);
+const AUTH_IP_WINDOW_LIMIT = integerSetting("AUTH_IP_WINDOW_LIMIT", 20, 1, 100_000);
+const RATE_LIMIT_BUCKETS = integerSetting("RATE_LIMIT_BUCKETS", 50_000, 100, 1_000_000);
 const PAGE_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "public");
 const CORS_ORIGINS = new Set((process.env.API_CORS_ORIGINS || "").split(",").map((value) => value.trim()).filter(Boolean));
-const rateBuckets = new Map();
+const rateLimiter = new FixedWindowRateLimiter({ maxBuckets: RATE_LIMIT_BUCKETS });
+let apiRequestsInFlight = 0;
+
+function integerSetting(name, fallback, minimum, maximum) {
+  const raw = process.env[name];
+  if (raw === undefined || raw === "") return fallback;
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value < minimum || value > maximum) {
+    throw new Error(`${name} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return value;
+}
 
 function requestID(request) {
   const incoming = request.headers["x-request-id"];
@@ -19,7 +39,17 @@ function requestID(request) {
 }
 
 export function sendJSON(response, status, payload, extraHeaders = {}) {
-  const body = JSON.stringify(payload);
+  let body = JSON.stringify(payload);
+  if (status < 400 && Buffer.byteLength(body) > MAX_RESPONSE_BYTES) {
+    status = 500;
+    body = JSON.stringify({
+      error: {
+        code: "response_limit_exceeded",
+        message: "The response exceeds the API safety limit. Use a paginated or narrower endpoint.",
+        request_id: String(response.getHeader("X-Request-ID") || ""),
+      },
+    });
+  }
   response.writeHead(status, {
     "content-type": "application/json; charset=utf-8",
     "content-length": Buffer.byteLength(body),
@@ -48,20 +78,27 @@ function clientIP(request) {
   return String(request.headers["x-forwarded-for"] || request.socket.remoteAddress || "unknown").split(",")[0].trim();
 }
 
-function enforceRateLimit(request, response, id, { limit, windowMs, group }) {
-  const key = `${group}:${clientIP(request)}`;
+function enforceRateLimit(response, id, { key, limit, windowMs, group }) {
   const now = Date.now();
-  let bucket = rateBuckets.get(key);
-  if (!bucket || now >= bucket.resetAt) bucket = { count: 0, resetAt: now + windowMs };
-  bucket.count += 1;
-  rateBuckets.set(key, bucket);
-  response.setHeader("RateLimit-Limit", String(limit));
-  response.setHeader("RateLimit-Remaining", String(Math.max(0, limit - bucket.count)));
-  response.setHeader("RateLimit-Reset", String(Math.ceil(bucket.resetAt / 1000)));
-  if (bucket.count <= limit) return true;
-  response.setHeader("Retry-After", String(Math.ceil((bucket.resetAt - now) / 1000)));
+  const result = rateLimiter.consume(`${group}:${key}`, { limit, windowMs }, now);
+  response.setHeader("RateLimit-Limit", String(result.limit));
+  response.setHeader("RateLimit-Remaining", String(result.remaining));
+  response.setHeader("RateLimit-Reset", String(Math.ceil(result.resetAt / 1000)));
+  response.setHeader("RateLimit-Policy", `\"${group}\";q=${limit};w=${Math.ceil(windowMs / 1000)}`);
+  if (result.allowed) return true;
+  response.setHeader("Retry-After", String(Math.max(1, Math.ceil((result.resetAt - now) / 1000))));
   sendError(response, 429, "rate_limit_exceeded", "Too many requests. Try again after the rate-limit window resets.", id);
   return false;
+}
+
+function acquireAPISlot(response, id) {
+  if (apiRequestsInFlight >= MAX_IN_FLIGHT) {
+    response.setHeader("Retry-After", "1");
+    sendError(response, 503, "api_capacity_exceeded", "The API is temporarily at capacity. Try again shortly.", id);
+    return false;
+  }
+  apiRequestsInFlight += 1;
+  return true;
 }
 
 async function readBody(request) {
@@ -152,10 +189,13 @@ export async function handler(request, response) {
     return;
   }
 
+  if (Buffer.byteLength(request.url || "") > MAX_REQUEST_URL_BYTES) {
+    return sendError(response, 414, "request_uri_too_long", "The request URL exceeds the API safety limit.", id);
+  }
   const url = new URL(request.url, "http://api.internal");
   try {
     if (url.pathname.startsWith("/auth/")) {
-      if (!enforceRateLimit(request, response, id, { limit: 20, windowMs: 15 * 60 * 1000, group: "auth" })) return;
+      if (!enforceRateLimit(response, id, { key: clientIP(request), limit: AUTH_IP_WINDOW_LIMIT, windowMs: 15 * 60 * 1000, group: "auth-ip" })) return;
       const handled = await handleAuth(request, response, url.pathname.replace(/\/$/, ""), await readBody(request), sendJSON);
       if (handled) return;
       throw new DataError(404, "endpoint_not_found", "Authentication endpoint does not exist.");
@@ -185,11 +225,19 @@ export async function handler(request, response) {
     }
 
     if (url.pathname === "/api" || url.pathname.startsWith("/api/")) {
-      if (!enforceRateLimit(request, response, id, { limit: 300, windowMs: 60 * 1000, group: "api" })) return;
+      if (!enforceRateLimit(response, id, { key: clientIP(request), limit: API_IP_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-ip" })) return;
       const claims = await requireUser(request);
+      const userID = String(claims.user_id || claims.sub);
+      if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_DAY_LIMIT, windowMs: 24 * 60 * 60 * 1000, group: "api-user-day" })) return;
+      if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-user-minute" })) return;
+      if (!acquireAPISlot(response, id)) return;
       response.setHeader("X-Authenticated-User", claims.user_id || claims.sub);
       response.setHeader("Cache-Control", "private, max-age=60");
-      return await routeAPI(request, response, url);
+      try {
+        return await routeAPI(request, response, url);
+      } finally {
+        apiRequestsInFlight -= 1;
+      }
     }
 
     throw new DataError(404, "not_found", "Resource does not exist.");
