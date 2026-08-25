@@ -82,6 +82,42 @@
       "sources": [
         {"id": "gb-england-revenue-outturn-timeseries", "kind": "actual", "filename": "Revenue_Outturn_time_series_data_v3.2.csv", "url": "https://assets.publishing.service.gov.uk/media/6a7ada920a700895e2d7a07b/Revenue_Outturn_time_series_data_v3.2.csv"}
       ]
+    },
+    "USA": {
+      "name": "United States municipal portal sample",
+      "year": 2026,
+      "years": [2026],
+      "currency": "USD",
+      "adapter": "us_socrata_cities",
+      "coverage": "Published subset: New York City, Chicago, Los Angeles and San Francisco itemized budget portals",
+      "sources": [
+        {"id":"us-nyc-expense-budget","kind":"budget","city_code":"NYC","city_name":"New York City","dataset":"39g5-gbp3","domain":"https://data.cityofnewyork.us","url":"https://data.cityofnewyork.us/resource/39g5-gbp3.json"},
+        {"id":"us-chicago-budget-ordinance","kind":"budget","city_code":"CHI","city_name":"Chicago","dataset":"6694-f78c","domain":"https://data.cityofchicago.org","url":"https://data.cityofchicago.org/resource/6694-f78c.json"},
+        {"id":"us-la-budget-expenditures","kind":"budget","city_code":"LA","city_name":"Los Angeles","dataset":"uyzw-yi8n","domain":"https://controllerdata.lacity.org","url":"https://controllerdata.lacity.org/resource/uyzw-yi8n.json"},
+        {"id":"us-sf-budget","kind":"budget","city_code":"SF","city_name":"San Francisco","dataset":"xdgd-c79v","domain":"https://data.sfgov.org","url":"https://data.sfgov.org/resource/xdgd-c79v.json"}
+      ]
+    },
+    "CHE": {
+      "name": "Switzerland (Canton Lucerne collection)",
+      "year": 2026,
+      "years": [2026],
+      "currency": "CHF",
+      "adapter": "switzerland_lucerne",
+      "coverage": "Published subset: every municipality in Canton Lucerne with HRM2 itemized annual budgets",
+      "sources": [
+        {"id":"ch-lustat-lucerne-municipal-budgets","kind":"enacted","filename":"gefis-lu-bg.csv","url":"https://www.data.lustat.ch/gefis-lu-bg.csv"}
+      ]
+    },
+    "DEU": {
+      "name": "Germany (Bremen city collection)",
+      "year": 2026,
+      "years": [2026],
+      "currency": "EUR",
+      "adapter": "germany_bremen",
+      "coverage": "Published scatter: enacted 2026 and 2027 itemized budgets for the Stadtgemeinde Bremen",
+      "sources": [
+        {"id":"de-bremen-city-budget-2026-2027","kind":"enacted","filename":"Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv","url":"https://www.finanzen.bremen.de/sixcms/media.php/bremen02.a.13.de/download/Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv"}
+      ]
     }
   }
 }

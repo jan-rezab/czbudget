@@ -369,22 +369,22 @@ ALTER TABLE `czbudget-janrezab.budget_detail.municipal_budget_line_facts`
   ADD COLUMN IF NOT EXISTS is_summary_row BOOL,
   ADD COLUMN IF NOT EXISTS functional_classification_id STRING,
   ADD COLUMN IF NOT EXISTS economic_classification_id STRING,
-  ADD COLUMN IF NOT EXISTS coverage_type STRING DEFAULT 'census' NOT NULL,
-  ADD COLUMN IF NOT EXISTS is_imputed BOOL DEFAULT FALSE NOT NULL;
+  ADD COLUMN IF NOT EXISTS coverage_type STRING,
+  ADD COLUMN IF NOT EXISTS is_imputed BOOL;
 
 ALTER TABLE `czbudget-janrezab.budget_detail.public_entity_balance_sheet_facts`
   ADD COLUMN IF NOT EXISTS statement_line_code STRING,
   ADD COLUMN IF NOT EXISTS balance_measure STRING,
   ADD COLUMN IF NOT EXISTS source_row_number INT64,
   ADD COLUMN IF NOT EXISTS source_sheet STRING,
-  ADD COLUMN IF NOT EXISTS coverage_type STRING DEFAULT 'census' NOT NULL,
-  ADD COLUMN IF NOT EXISTS is_imputed BOOL DEFAULT FALSE NOT NULL;
+  ADD COLUMN IF NOT EXISTS coverage_type STRING,
+  ADD COLUMN IF NOT EXISTS is_imputed BOOL;
 
 ALTER TABLE `czbudget-janrezab.budget_detail.public_entity_cash_facts`
   ADD COLUMN IF NOT EXISTS source_row_number INT64,
   ADD COLUMN IF NOT EXISTS source_sheet STRING,
-  ADD COLUMN IF NOT EXISTS coverage_type STRING DEFAULT 'census' NOT NULL,
-  ADD COLUMN IF NOT EXISTS is_imputed BOOL DEFAULT FALSE NOT NULL;
+  ADD COLUMN IF NOT EXISTS coverage_type STRING,
+  ADD COLUMN IF NOT EXISTS is_imputed BOOL;
 
 ALTER TABLE `czbudget-janrezab.budget_detail.municipal_budget_line_facts`
   SET OPTIONS (require_partition_filter = TRUE);

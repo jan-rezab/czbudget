@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download and normalize municipal finance data for six benchmark countries.
+"""Download and normalize official international municipal finance data.
 
 The adapters preserve national codes and classifications.  They do not invent
 missing budget stages, consolidate supplementary budgets, or claim census
@@ -226,7 +226,7 @@ class Context:
 
 
 def entity_row(country: str, code: str, name: str, currency: str, loaded_at: str, **extra: Any) -> dict[str, Any]:
-    alpha2 = {"POL": "PL", "DNK": "DK", "UKR": "UA", "FRA": "FR", "SWE": "SE", "GBR": "GB"}[country]
+    alpha2 = {"POL": "PL", "DNK": "DK", "UKR": "UA", "FRA": "FR", "SWE": "SE", "GBR": "GB", "USA": "US", "CHE": "CH", "DEU": "DE"}[country]
     return {
         "public_entity_id": f"{alpha2}:{code}", "entity_name": name,
         "entity_type": extra.pop("entity_type", "municipality"),
@@ -919,6 +919,209 @@ def write_run(ctx: Context, run_id: str, source: dict[str, Any], year: int, path
     })
 
 
+def _socrata_pages(ctx: Context, source: dict[str, Any], where: str | None = None) -> Iterator[dict[str, Any]]:
+    offset, limit = 0, 50000
+    while True:
+        params: dict[str, Any] = {"$limit": limit, "$offset": offset}
+        if where:
+            params["$where"] = where
+        rows = ctx.api_json("GET", source["url"], params=params)
+        if not rows:
+            break
+        yield from rows
+        if len(rows) < limit:
+            break
+        offset += limit
+
+
+def run_us_socrata(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    currency = cfg["currency"]
+    sources = cfg["sources"][:ctx.args.max_entities or None]
+    total_rows = total_facts = 0
+    for source in sources:
+        city_code, city_name = source["city_code"], source["city_name"]
+        entity_id = f"US:{city_code}"
+        ctx.bundle.entity(entity_row(country, city_code, city_name, currency, ctx.loaded_at, code_type="US_CITY_PORTAL_CODE"))
+        function_class = f"US_{city_code}_FUNCTION"
+        economic_class = f"US_{city_code}_ECONOMIC"
+        ctx.bundle.classification(classification_row(country, function_class, "mixed", f"{city_name} department/program classification", source["url"], 2026, ctx.loaded_at))
+        ctx.bundle.classification(classification_row(country, economic_class, "mixed", f"{city_name} appropriation/account classification", source["url"], 2026, ctx.loaded_at))
+        run_id = f"{source['id']}-v1"
+        rows_read = rows_loaded = 0
+        where = None
+        if city_code == "NYC":
+            # Financial-plan rows are republished as snapshots. Keep only the
+            # newest publication for each fiscal year so a budget line is not
+            # counted repeatedly merely because the plan was refreshed.
+            publications = ctx.api_json("GET", source["url"], params={
+                "$select": "fiscal_year,max(publication_date) as max_date",
+                "$where": "fiscal_year >= 2026",
+                "$group": "fiscal_year",
+            })
+            where = " OR ".join(
+                f"(fiscal_year = {int(item['fiscal_year'])} AND publication_date = '{item['max_date']}')"
+                for item in publications
+            )
+        elif city_code == "LA":
+            where = "budget_fiscal_year >= '2026'"
+        elif city_code == "SF":
+            where = "fiscal_year >= '2026'"
+        for row_number, row in enumerate(_socrata_pages(ctx, source, where), 1):
+            rows_read += 1
+            if city_code == "NYC":
+                year = int(row.get("fiscal_year") or 2026)
+                function = stable_code(row.get("agency_number")) or "UNSPECIFIED"
+                function_name = stable_code(row.get("agency_name")) or function
+                economic = stable_code(row.get("unit_appropriation_number")) or "UNSPECIFIED"
+                economic_name = stable_code(row.get("unit_appropriation_name")) or economic
+                measures = (("proposal", "total_financial_plan_amount"), ("enacted", "total_adopted_budget_amount"), ("revised", "total_current_budget_amount"))
+                side = "expenditure"
+            elif city_code == "CHI":
+                year = 2026
+                function = stable_code(row.get("department_number")) or "UNSPECIFIED"
+                function_name = stable_code(row.get("department_description")) or function
+                economic = stable_code(row.get("appropriation_account")) or "UNSPECIFIED"
+                economic_name = stable_code(row.get("appropriation_account_description")) or economic
+                measures = (("enacted", "_ordinance_amount_"),)
+                side = "expenditure"
+            elif city_code == "LA":
+                year = int(row.get("budget_fiscal_year") or 2026)
+                function = stable_code(row.get("department")) or "UNSPECIFIED"
+                function_name = stable_code(row.get("department_name")) or function
+                economic = stable_code(row.get("account")) or "UNSPECIFIED"
+                economic_name = stable_code(row.get("account_name")) or economic
+                measures = (("enacted", "adopted_budget_amount"), ("revised", "total_budget"), ("actual", "actual_expense"))
+                side = "expenditure"
+            else:
+                year = int(row.get("fiscal_year") or 2026)
+                function = ":".join(filter(None, (stable_code(row.get("department_code")), stable_code(row.get("program_code"))))) or "UNSPECIFIED"
+                function_name = " · ".join(filter(None, (stable_code(row.get("department")), stable_code(row.get("program"))))) or function
+                economic = stable_code(row.get("sub_object_code") or row.get("object_code")) or "UNSPECIFIED"
+                economic_name = stable_code(row.get("sub_object") or row.get("object")) or economic
+                measures = (("enacted", "budget"),)
+                side = "revenue" if stable_code(row.get("revenue_or_spending")).lower() == "revenue" else "expenditure"
+            ctx.bundle.node(node_row(country, function_class, side, function, function_name, year, ctx.loaded_at))
+            ctx.bundle.node(node_row(country, economic_class, side, economic, economic_name, year, ctx.loaded_at))
+            ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, source["dataset"], row, ctx.loaded_at))
+            for stage, field in measures:
+                amount = decimal_value(row.get(field))
+                if not amount:
+                    continue
+                ctx.bundle.write("municipal_budget_line_facts", fact_row(
+                    country, entity_id, year, stage, side, function, economic, amount,
+                    currency, source, run_id, ctx.loaded_at, function_class, economic_class,
+                    row_number=row_number, sheet=source["dataset"], coverage_type="published_subset",
+                    quality_flags=["official_city_open_data", "non_national_coverage"],
+                ))
+                rows_loaded += 1
+        write_run(ctx, run_id, source, cfg["year"], None, rows_read, rows_loaded)
+        ctx.source_row(entity_id, source, country, cfg["coverage"])
+        total_rows += rows_read
+        total_facts += rows_loaded
+    return {"entities": len(sources), "rows": total_rows, "facts": total_facts}
+
+
+def run_switzerland_lucerne(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    year, currency = cfg["year"], cfg["currency"]
+    source = cfg["sources"][0]
+    path = ctx.download(country, source)
+    function_class = f"CH_LU_HRM2_FUNCTION_{year}"
+    economic_class = f"CH_LU_HRM2_ACCOUNT_{year}"
+    ctx.bundle.classification(classification_row(country, function_class, "mixed", "Canton Lucerne HRM2 function", source["url"], year, ctx.loaded_at))
+    ctx.bundle.classification(classification_row(country, economic_class, "mixed", "Canton Lucerne HRM2 account type", source["url"], year, ctx.loaded_at))
+    run_id = f"{source['id']}-{year}-v1"
+    entities: set[str] = set()
+    rows_read = rows_loaded = 0
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        for row_number, row in enumerate(csv.DictReader(handle, delimiter=";"), 2):
+            if stable_code(row.get("jahr")) != str(year):
+                continue
+            code = stable_code(row.get("gnr"))
+            if not code:
+                continue
+            if ctx.args.max_entities and code not in entities and len(entities) >= ctx.args.max_entities:
+                continue
+            entities.add(code)
+            entity_id = f"CH:{code}"
+            ctx.bundle.entity(entity_row(country, code, stable_code(row.get("gemeinde")) or code, currency, ctx.loaded_at, code_type="CH_BFS_MUNICIPALITY_NUMBER", region_name="Luzern"))
+            rows_read += 1
+            function = stable_code(row.get("fkt_nr")) or "UNSPECIFIED"
+            economic = stable_code(row.get("art_nr")) or "UNSPECIFIED"
+            first = economic[:1]
+            side = "expenditure" if first in {"3", "5"} else "revenue" if first in {"4", "6"} else None
+            if side is None:
+                continue
+            amount = abs(decimal_value(row.get("saldo")))
+            if not amount:
+                continue
+            ctx.bundle.node(node_row(country, function_class, side, function, stable_code(row.get("fkt_name")) or function, year, ctx.loaded_at))
+            ctx.bundle.node(node_row(country, economic_class, side, economic, stable_code(row.get("art_name")) or economic, year, ctx.loaded_at))
+            ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, "gefis-lu-bg.csv", row, ctx.loaded_at))
+            ctx.bundle.write("municipal_budget_line_facts", fact_row(
+                country, entity_id, year, "enacted", side, function, economic, amount,
+                currency, source, run_id, ctx.loaded_at, function_class, economic_class,
+                row_number=row_number, sheet="gefis-lu-bg.csv", coverage_type="published_subset",
+                quality_flags=["official_lustat_hrm2", "reported_sign_normalized_to_budget_side"],
+            ))
+            rows_loaded += 1
+    write_run(ctx, run_id, source, year, path, rows_read, rows_loaded)
+    ctx.source_row(None, source, country, cfg["coverage"])
+    return {"entities": len(entities), "facts": rows_loaded}
+
+
+def run_germany_bremen(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    """Load the machine-readable enacted budget of the Stadtgemeinde Bremen.
+
+    Germany has no single open municipal itemized-budget census. This adapter
+    deliberately publishes one official city scatter and labels it as such.
+    """
+    currency = cfg["currency"]
+    source = cfg["sources"][0]
+    path = ctx.download(country, source)
+    entity_code = "04011000"
+    entity_id = f"DE:{entity_code}"
+    ctx.bundle.entity(entity_row(
+        country, entity_code, "Bremen", currency, ctx.loaded_at,
+        code_type="DE_AGS", region_name="Bremen",
+    ))
+    function_class = "DE_HB_PRODUCT_GROUP_2026_2027"
+    economic_class = "DE_HB_BUDGET_POSITION_2026_2027"
+    ctx.bundle.classification(classification_row(country, function_class, "mixed", "Bremen product-group budget classification", source["url"], 2026, ctx.loaded_at))
+    ctx.bundle.classification(classification_row(country, economic_class, "mixed", "Bremen kameral budget-position classification", source["url"], 2026, ctx.loaded_at))
+    run_id = f"{source['id']}-v1"
+    rows_read = rows_loaded = 0
+    with path.open(encoding="latin-1", newline="") as handle:
+        for row_number, row in enumerate(csv.DictReader(handle, delimiter=";"), 2):
+            rows_read += 1
+            aggregate = stable_code(row.get("Aggregat"))
+            side = "expenditure" if aggregate.startswith("AUSG.") else "revenue" if aggregate.startswith("EINN.") else None
+            if side is None:
+                continue
+            function = stable_code(row.get("PGR")) or "UNSPECIFIED"
+            economic = stable_code(row.get("Haushaltsstelle")) or "UNSPECIFIED"
+            purpose = stable_code(row.get("Zweckbestimmung")) or economic
+            ctx.bundle.node(node_row(country, function_class, side, function, f"Produktgruppe {function}", 2026, ctx.loaded_at))
+            ctx.bundle.node(node_row(country, economic_class, side, economic, purpose, 2026, ctx.loaded_at))
+            for year in (2026, 2027):
+                raw_amount = stable_code(row.get(f"Anschlag  {year}"))
+                if not raw_amount:
+                    continue
+                amount = Decimal(raw_amount.replace(".", "").replace(",", "."))
+                if not amount:
+                    continue
+                ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, "Stadtgemeinde Bremen", row, ctx.loaded_at))
+                ctx.bundle.write("municipal_budget_line_facts", fact_row(
+                    country, entity_id, year, "enacted", side, function, economic, amount,
+                    currency, source, run_id, ctx.loaded_at, function_class, economic_class,
+                    row_number=row_number, sheet="Stadtgemeinde Bremen", coverage_type="published_subset",
+                    quality_flags=["official_bremen_city_budget", "non_national_coverage"],
+                ))
+                rows_loaded += 1
+    write_run(ctx, run_id, source, 2026, path, rows_read, rows_loaded)
+    ctx.source_row(entity_id, source, country, cfg["coverage"])
+    return {"entities": 1, "rows": rows_read, "facts": rows_loaded, "fiscal_years": [2026, 2027]}
+
+
 ADAPTERS = {
     "poland_dbf": run_poland,
     "denmark_statbank": run_denmark,
@@ -927,6 +1130,9 @@ ADAPTERS = {
     "france_dgfip": run_france,
     "sweden_pxweb": run_sweden,
     "england_mhclg": run_england,
+    "us_socrata_cities": run_us_socrata,
+    "switzerland_lucerne": run_switzerland_lucerne,
+    "germany_bremen": run_germany_bremen,
 }
 
 
@@ -993,7 +1199,7 @@ def validate_bundle(output: Path) -> dict[str, Any]:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--countries", default="POL,DNK,UKR,FRA,SWE,GBR", help="Comma-separated ISO alpha-3 list")
+    parser.add_argument("--countries", default="POL,DNK,UKR,FRA,SWE,GBR,DEU,USA,CHE", help="Comma-separated ISO alpha-3 list")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--cache-dir", type=Path, default=DEFAULT_CACHE)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
@@ -1049,7 +1255,7 @@ def main() -> None:
         "schema_version": "1.0.0", "generated_at": context.loaded_at, "countries_requested": requested,
         "country_results": results, "failures": failures, "output_rows": dict(bundle.counts), "validation": validation,
         "raw_mode": args.raw_mode, "max_entities": args.max_entities, "gzip": args.gzip,
-        "coverage_warning": "GBR currently represents England only. Ukraine includes territorial-community budgets and Kyiv, not oblast or district budgets.",
+        "coverage_warning": "GBR currently represents England only. Ukraine includes territorial-community budgets and Kyiv, not oblast or district budgets. DEU, USA and CHE are explicitly partial subnational collections.",
     }
     (args.output_dir / "international_municipal_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(manifest, ensure_ascii=False, indent=2))

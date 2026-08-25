@@ -5,6 +5,8 @@ import { readFile, writeFile } from "node:fs/promises";
 const read = async (path) => JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"));
 
 const municipalities = await read("data/international-municipalities.v1.json");
+const internationalWarehouse = await read("data/international-itemized-warehouse.v1.json");
+const warehouseByCountry = Object.fromEntries(internationalWarehouse.countries.map((country) => [country.code, country]));
 const benchmarkCodes = { FIN: "fin", NLD: "nld", NOR: "nor" };
 const benchmarkLabels = {
   FIN: { en: "native financial-statement measures", cs: "původní položky finančních výkazů" },
@@ -34,6 +36,33 @@ const countries = municipalities.countries.map((country) => {
       source_title: "Monitor · FIN 2-12 M",
       source_url: country.source,
       note: "Economic and functional breakdowns for enacted, revised and actual stages are merged into every published Czech municipal profile during the production build."
+    };
+  }
+
+  const warehouse = warehouseByCountry[country.code];
+  if (warehouse) {
+    return {
+      code: country.code,
+      municipal_scope: country.directory_count,
+      profile_count: warehouse.profile_count,
+      status: warehouse.force_status || (warehouse.profile_count === country.directory_count ? "full" : "partial"),
+      period: warehouse.period,
+      stages: warehouse.stages,
+      detail_kind_en: warehouse.detail_kind_en,
+      detail_kind_cs: warehouse.detail_kind_cs,
+      line_fact_count: warehouse.line_fact_count,
+      balance_fact_count: warehouse.balance_fact_count,
+      source_title: warehouse.source_title,
+      source_url: warehouse.source_url,
+      note: country.code === "DEU"
+        ? "This is a verified one-city scatter for the Stadtgemeinde Bremen, not nationwide German municipal coverage."
+        : country.code === "GBR"
+          ? "The warehouse currently covers all 318 England authorities in this directory; Scotland, Wales and Northern Ireland are not yet included."
+          : country.code === "USA"
+          ? "This is a verified four-city scatter, not nationwide municipal coverage."
+          : country.code === "CHE"
+            ? "This is complete for the 79 Lucerne municipalities in the official cantonal file, not nationwide Swiss coverage."
+            : "Every counted profile has native itemized facts loaded in the production warehouse."
     };
   }
 
@@ -95,7 +124,7 @@ const countries = municipalities.countries.map((country) => {
 
 const payload = {
   schema_version: "1.0.0",
-  generated_at: "2026-08-25",
+  generated_at: internationalWarehouse.generated_at,
   definition: "A profile counts only when municipality-level economic, functional or native accounting line items are published on this site; headline totals alone do not count.",
   countries
 };

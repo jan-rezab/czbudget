@@ -49,13 +49,15 @@ merge_dimension() {
 
 merge_fact() {
   local table_name="$1"
+  local partition_filter="$2"
   load_stage "$table_name"
   if [[ ! -s "$input_dir/${table_name}.jsonl" && ! -s "$input_dir/${table_name}.jsonl.gz" ]]; then
     return
   fi
   bq query --project_id="$project_id" --use_legacy_sql=false "
     DELETE FROM \`${project_id}.${dataset_id}.${table_name}\` AS target
-    WHERE target.ingestion_run_id IN (
+    WHERE ${partition_filter}
+      AND target.ingestion_run_id IN (
       SELECT DISTINCT ingestion_run_id
       FROM \`${project_id}.${dataset_id}._international_load_${table_name}\`
     );
@@ -69,16 +71,17 @@ merge_dimension "public_entity_sources" "target.source_id = source.source_id AND
 merge_dimension "classification_versions" "target.classification_id = source.classification_id"
 merge_dimension "budget_nodes" "target.budget_node_id = source.budget_node_id"
 
-merge_fact "raw_budget_lines"
-merge_fact "municipal_budget_line_facts"
-merge_fact "public_entity_balance_sheet_facts"
-merge_fact "public_entity_cash_facts"
+merge_fact "raw_budget_lines" "target.fiscal_year BETWEEN 2000 AND 2100"
+merge_fact "municipal_budget_line_facts" "target.fiscal_year BETWEEN 2000 AND 2100"
+merge_fact "public_entity_balance_sheet_facts" "target.statement_date BETWEEN DATE '2000-01-01' AND DATE '2100-12-31'"
+merge_fact "public_entity_cash_facts" "target.statement_date BETWEEN DATE '2000-01-01' AND DATE '2100-12-31'"
 
 load_stage "ingestion_runs"
 if [[ -s "$input_dir/ingestion_runs.jsonl" || -s "$input_dir/ingestion_runs.jsonl.gz" ]]; then
   bq query --project_id="$project_id" --use_legacy_sql=false "
     DELETE FROM \`${project_id}.${dataset_id}.ingestion_runs\` AS target
-    WHERE target.ingestion_run_id IN (
+    WHERE DATE(target.started_at) BETWEEN DATE '2000-01-01' AND DATE '2100-12-31'
+      AND target.ingestion_run_id IN (
       SELECT ingestion_run_id
       FROM \`${project_id}.${dataset_id}._international_load_ingestion_runs\`
     );

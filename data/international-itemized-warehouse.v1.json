@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-26",
+  "warehouse": "czbudget-janrezab.budget_detail",
+  "definition": "Counts verified after loading official municipality-level itemized facts into the production BigQuery warehouse.",
+  "countries": [
+    {
+      "code": "POL",
+      "profile_count": 2486,
+      "period": "2024–2025",
+      "stages": ["actual", "revised"],
+      "line_fact_count": 6033974,
+      "balance_fact_count": 0,
+      "detail_kind_en": "native Rb-27S and Rb-28S budget-reporting items",
+      "detail_kind_cs": "původní položky rozpočtových výkazů Rb-27S a Rb-28S",
+      "source_title": "Polish Ministry of Finance · local-government budget reports",
+      "source_url": "https://www.gov.pl/web/finanse/sprawozdania-budzetowe"
+    },
+    {
+      "code": "DNK",
+      "profile_count": 98,
+      "period": "2024–2025",
+      "stages": ["actual", "enacted"],
+      "line_fact_count": 303760,
+      "balance_fact_count": 0,
+      "detail_kind_en": "native BUDK100 and REGK100 account items",
+      "detail_kind_cs": "původní účetní položky BUDK100 a REGK100",
+      "source_title": "Statistics Denmark · StatBank",
+      "source_url": "https://www.statbank.dk/BUDK100"
+    },
+    {
+      "code": "UKR",
+      "profile_count": 1467,
+      "period": "2024–2025",
+      "stages": ["actual", "enacted", "revised"],
+      "line_fact_count": 4120319,
+      "balance_fact_count": 0,
+      "detail_kind_en": "territorial-community revenue and expenditure classification items",
+      "detail_kind_cs": "položky příjmů a výdajů územních komunit",
+      "source_title": "Open Budget Ukraine · localBudgetData",
+      "source_url": "https://openbudget.gov.ua/"
+    },
+    {
+      "code": "FRA",
+      "profile_count": 35041,
+      "period": "2024–2025",
+      "stages": ["actual"],
+      "line_fact_count": 10438699,
+      "balance_fact_count": 14147797,
+      "detail_kind_en": "DGFiP itemized actual accounts and balance-sheet items",
+      "detail_kind_cs": "položky skutečných účtů a rozvah DGFiP",
+      "source_title": "French Ministry of Economy · DGFiP commune accounts",
+      "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/"
+    },
+    {
+      "code": "SWE",
+      "profile_count": 290,
+      "period": "2024–2025",
+      "stages": ["actual"],
+      "line_fact_count": 43892,
+      "balance_fact_count": 31365,
+      "detail_kind_en": "SCB municipal cost, income and balance-sheet measures",
+      "detail_kind_cs": "ukazatele obecních nákladů, příjmů a rozvah SCB",
+      "source_title": "Statistics Sweden · municipal finances",
+      "source_url": "https://www.statistikdatabasen.scb.se/"
+    },
+    {
+      "code": "GBR",
+      "profile_count": 318,
+      "period": "2024–2025",
+      "stages": ["actual"],
+      "line_fact_count": 494568,
+      "balance_fact_count": 0,
+      "force_status": "partial",
+      "detail_kind_en": "England local-authority revenue-outturn items",
+      "detail_kind_cs": "položky plnění příjmů anglických místních úřadů",
+      "source_title": "UK Ministry of Housing, Communities and Local Government",
+      "source_url": "https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing"
+    },
+    {
+      "code": "DEU",
+      "profile_count": 1,
+      "period": "2026–2027",
+      "stages": ["enacted"],
+      "line_fact_count": 4861,
+      "balance_fact_count": 0,
+      "force_status": "partial",
+      "detail_kind_en": "Bremen product-group and kameral budget-position items",
+      "detail_kind_cs": "brémské položky podle produktových skupin a kamerálních rozpočtových pozic",
+      "source_title": "Bremen Transparency Portal · Stadtgemeinde budget",
+      "source_url": "https://www.transparenz.bremen.de/daten/haushalt-des-landes-und-der-stadtgemeinde-bremen-2026-2027-335598"
+    },
+    {
+      "code": "USA",
+      "profile_count": 4,
+      "period": "2026–2028",
+      "stages": ["actual", "enacted", "proposal", "revised"],
+      "line_fact_count": 47142,
+      "balance_fact_count": 0,
+      "force_status": "partial",
+      "detail_kind_en": "official city appropriation, agency, program and account items",
+      "detail_kind_cs": "oficiální městské položky podle apropriačních jednotek, odborů, programů a účtů",
+      "source_title": "NYC, Chicago, Los Angeles and San Francisco open-data portals",
+      "source_url": "https://data.cityofnewyork.us/resource/39g5-gbp3"
+    },
+    {
+      "code": "CHE",
+      "profile_count": 79,
+      "period": "2026",
+      "stages": ["enacted"],
+      "line_fact_count": 59978,
+      "balance_fact_count": 0,
+      "force_status": "partial",
+      "detail_kind_en": "Lucerne HRM2 functional and account budget items",
+      "detail_kind_cs": "funkční a účetní rozpočtové položky HRM2 kantonu Lucern",
+      "source_title": "LUSTAT · Lucerne municipality budgets",
+      "source_url": "https://www.data.lustat.ch/gefis-lu-bg.csv"
+    }
+  ]
+}
