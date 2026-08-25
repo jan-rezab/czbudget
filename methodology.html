@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
     <link
       rel="stylesheet"
-      href="site-pages.css?v=20260825-itemized-budgets"
+      href="site-pages.css?v=20260825-data-volume"
     />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
-    <script src="site-pages.js?v=20260825-itemized-budgets" defer></script>
+    <script src="site-pages.js?v=20260825-data-volume" defer></script>
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -39,7 +39,11 @@
           <h1 data-status-copy="pageTitle">Stav dat</h1>
           <p data-status-copy="pageIntro">Pokrytí podle země, období a primárního zdroje.</p>
         </div>
-        <p id="status-meta">—</p>
+        <a class="status-volume" href="data/release-manifest.v1.json" target="_blank" rel="noreferrer">
+          <span data-status-copy="publishedData">Publikovaná strukturovaná data</span>
+          <strong id="status-data-total">—</strong>
+          <small id="status-meta">—</small>
+        </a>
       </header>
       <section class="data-health" aria-labelledby="data-health-title">
         <header class="section-bar">

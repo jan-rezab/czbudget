@@ -104,7 +104,11 @@ body[data-page="methodology"] main{padding-top:28px}
 body[data-page="methodology"] .status-header{display:flex;justify-content:space-between;gap:36px;align-items:end;padding:18px 0 16px;border-bottom:1px solid #171918}
 body[data-page="methodology"] .status-header h1{margin:0;font:750 24px/1.1 system-ui,sans-serif;letter-spacing:-.025em}
 body[data-page="methodology"] .status-header div>p{margin:6px 0 0;color:#656963;font:12px/1.45 system-ui,sans-serif}
-body[data-page="methodology"] .status-header>p{margin:0;color:#656963;font:700 10px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-align:right;text-transform:uppercase}
+body[data-page="methodology"] .status-volume{display:grid;min-width:350px;padding:13px 15px 12px;border-left:4px solid #cbd76a;background:#171918;color:#faf7ef;text-align:right;text-decoration:none;transition:background .16s ease}
+body[data-page="methodology"] .status-volume:hover{background:#292c29}
+body[data-page="methodology"] .status-volume span{color:#cbd76a;font:700 9px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase}
+body[data-page="methodology"] .status-volume strong{margin-top:3px;font:750 31px/1 system-ui,sans-serif;letter-spacing:-.04em}
+body[data-page="methodology"] .status-volume small{margin-top:5px;color:#c9cbc5;font:700 9px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase}
 body[data-page="methodology"] .section-bar h2,body[data-page="methodology"] .method-ledger-head h2{font:750 16px/1.2 system-ui,sans-serif;letter-spacing:-.015em}
 body[data-page="methodology"] .data-health{margin-top:18px}
-@media(max-width:600px){body[data-page="methodology"] .status-header{align-items:flex-start;flex-direction:column;gap:12px;padding:12px 0 16px}body[data-page="methodology"] .status-header>p{text-align:left}body[data-page="methodology"] .method-ledger-head h2{font-size:16px}body[data-page="about"] .maker-logo-panel{min-height:190px;padding:38px}}
+@media(max-width:600px){body[data-page="methodology"] .status-header{align-items:flex-start;flex-direction:column;gap:12px;padding:12px 0 16px}body[data-page="methodology"] .status-volume{box-sizing:border-box;min-width:0;width:100%;text-align:left}body[data-page="methodology"] .method-ledger-head h2{font-size:16px}body[data-page="about"] .maker-logo-panel{min-height:190px;padding:38px}}
