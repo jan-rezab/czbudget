@@ -35,7 +35,7 @@
   }
   function renderSwitch(){
     const select=$("#municipality-country-switch"), wrapper=select.closest("label"), country=state.country;
-    select.innerHTML=state.data.countries.map(c=>`<option value="${slugs[c.code]}"${c.code===code?" selected":""}>${esc(c[`name_${state.lang}`])} · ${fmt(c.directory_count)}</option>`).join("");
+    select.innerHTML=state.data.countries.filter(c=>slugs[c.code]).map(c=>`<option value="${slugs[c.code]}"${c.code===code?" selected":""}>${esc(c[`name_${state.lang}`])} · ${fmt(c.directory_count)}</option>`).join("");
     wrapper.classList.add("dynamic-country-picker");
     wrapper.querySelector(":scope > span")?.replaceChildren(state.lang==="en"?"Choose a country":"Vyberte zemi");
     let readout=wrapper.querySelector(".country-picker-readout");

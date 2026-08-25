@@ -284,7 +284,7 @@ test("ageing deep dive stays inside official projections and transparent arithme
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(10);
+  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(13);
   await expect(page.locator("#country-filter + .custom-select-button")).toBeVisible();
   await expect(page.locator("#year-filter + .custom-select-button")).toBeVisible();
   await expect(page.locator("#type-filter + .custom-select-button")).toBeVisible();

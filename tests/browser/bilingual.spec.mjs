@@ -92,7 +92,7 @@ test("high-risk static and generated templates switch their visible copy", async
     ["/cesky-rozpocet.html", ".budget-hero", "Český státní rozpočet", "Czech state budget"],
     ["/deep-dives/", ".deep-hero", "Jedno téma. Více zemí.", "One topic. More countries."],
     ["/deep-dives/transportation/?code=CZE", ".deep-hero", "Doprava", "Transportation"],
-    ["/municipalities/", ".municipal-hero", "Rozpočty obcí v deseti zemích", "Municipal budgets in ten countries"],
+    ["/municipalities/", ".municipal-hero", "Rozpočty obcí v 13 zemích", "Municipal budgets in 13 countries"],
     ["/municipalities/czechia/", ".municipal-hero", "Rozpočty českých obcí", "Budgets of Czech municipalities"],
     ["/cz/municipalities/praha/", "main", "Příjmy", "Revenue"],
     ["/cz/municipalities/abertamy/", "main", "Příjmy", "Revenue"],
