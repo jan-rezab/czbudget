@@ -33,7 +33,7 @@ for(const [slug,page] of Object.entries(pages)){
   <link rel="stylesheet" href="../../chart-system.css?v=20260822-country-municipalities">
   <link rel="stylesheet" href="../../municipalities.css?v=20260823-layout-fix">
   <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260823-municipal-ux">
-  <script src="../../municipalities-country.js?v=20260823-municipal-ux" defer></script>
+  <script src="../../municipalities-country.js?v=20260825-expanded-coverage" defer></script>
 </head>
 <body class="municipalities-page country-municipalities-page" data-country-code="${page.code}" data-country-slug="${slug}">
   <psd-site-header></psd-site-header>
