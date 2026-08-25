@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
     <link
       rel="stylesheet"
-      href="site-pages.css?v=20260824-ledger-strong"
+      href="site-pages.css?v=20260825-coverage-matrix"
     />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
-    <script src="site-pages.js?v=20260824-data-health" defer></script>
+    <script src="site-pages.js?v=20260825-coverage-matrix" defer></script>
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -87,6 +87,47 @@
         ><a href="comparison.html" data-language-link data-page-copy="methodCta"
           >Otevřít srovnání →</a
         >
+      </section>
+      <section class="coverage-overview" aria-labelledby="coverage-overview-title">
+        <header class="coverage-overview-head">
+          <div>
+            <span class="kicker" data-coverage-copy="eyebrow">Mapa datového pokrytí</span>
+            <h2 id="coverage-overview-title" data-coverage-copy="title">Kolik toho o každé zemi skutečně ukazujeme.</h2>
+          </div>
+          <p data-coverage-copy="lead">Orientační skóre shrnuje šíři zveřejněných vrstev. Zvolte libovolné pole a pod tabulkou se zobrazí přesné zdroje, ze kterých je složené.</p>
+        </header>
+        <div class="coverage-matrix-wrap" tabindex="0" aria-label="Country data coverage table">
+          <table class="coverage-matrix">
+            <thead>
+              <tr>
+                <th scope="col" data-coverage-copy="country">Země</th>
+                <th scope="col" data-coverage-category="country"></th>
+                <th scope="col" data-coverage-category="health"></th>
+                <th scope="col" data-coverage-category="geo"></th>
+                <th scope="col" data-coverage-category="municipalities"></th>
+              </tr>
+            </thead>
+            <tbody id="coverage-matrix-body"></tbody>
+          </table>
+        </div>
+        <div class="coverage-scale" aria-hidden="true">
+          <span data-coverage-copy="less">Méně pokryto</span><i></i><i></i><i></i><i></i><span data-coverage-copy="more">Více pokryto</span>
+        </div>
+        <div class="coverage-method-note">
+          <b data-coverage-copy="methodTitle">Jak odhad počítáme</b>
+          <p data-coverage-copy="methodCopy">Každá očekávaná datová vrstva má stejnou váhu. Plné pokrytí = 100 bodů, částečné = 60, pouze agregát = 35 a chybějící = 0. Procento je zaokrouhlený průměr vrstev v dané kategorii. Počet vrstev a zdrojů měří rozsah na tomto webu, nikoli kvalitu nebo otevřenost veřejných dat dané země.</p>
+        </div>
+        <section class="coverage-selection" aria-labelledby="coverage-selection-title">
+          <header>
+            <div>
+              <span data-coverage-copy="selectionEyebrow">Zdroje vybraného pole</span>
+              <h3 id="coverage-selection-title" data-coverage-copy="selectionEmpty">Klikněte na procento v tabulce.</h3>
+            </div>
+            <button id="coverage-clear" type="button" hidden data-coverage-copy="clear">Zobrazit všech 110 záznamů</button>
+          </header>
+          <p id="coverage-selection-summary" data-coverage-copy="selectionLead">Výběr propojí souhrnné skóre s primárními zdroji a současně omezí úplnou tabulku zdrojů níže.</p>
+          <div id="coverage-source-list" class="coverage-source-list" aria-live="polite"></div>
+        </section>
       </section>
       <section class="data-health" aria-labelledby="data-health-title">
         <header class="data-health-head">

@@ -12,17 +12,29 @@
       aboutEyebrow:"About",aboutTitle:"About Public Spending Data",aboutLead:"We publish budget data, long time series and links to original sources in one place.",aboutAside:"data · sources · methods",aboutMission:"What we do",aboutMissionCopy:"Budget data is often split across portals, files and accounting definitions. We make it easier to read while preserving a clear link to the original source.",aboutPrinciples:"Our rules",p1:"An official source for every value",p2:"A clear scope for every dataset",p3:"Open data and permanent links",p4:"No hidden scoring or false league tables",releaseKicker:"Release notes",releaseTitle:"Four days. Four alpha releases.",releaseLead:"A running record of what changed during the public alpha.",releaseDate24:"24 August 2026",releaseTitle24:"Health outcomes and state-owned enterprises",releaseCopy24:"The homepage gained a health-system performance comparison, alongside a new state-owned enterprise deep dive.",releaseDate23:"23 August 2026",releaseTitle23:"Complete public entity register",releaseCopy23:"We published a register of 121,199 entities, aligned all ten country profiles and expanded transport performance data.",releaseDate22:"22 August 2026",releaseTitle22:"Municipalities, cities and new deep dives",releaseCopy22:"A new international municipality hub, country landing pages, budget and transport views, and unified navigation went live.",releaseDate21:"21 August 2026",releaseTitle21:"Deeper budgets and stronger checks",releaseCopy21:"Municipal profiles gained line-item detail, ten-country comparisons gained new budget views, and the production build gained stricter integrity checks.",makerKicker:"Created by",makerTitle:"Hlidac statu, z.u.",makerCopy:"An independent Czech nonprofit organisation that connects public data and monitors contracts, procurement, subsidies and other public spending.",legal:"registered institute · nonprofit organisation",office:"Velenovského 648, 251 64 Mnichovice, Czechia",official:"Official website ↗",impact:"Results and impact ↗",support:"Support Hlidac statu, z.u. ↗"
     }
   };
+  const coverageCopy={
+    cs:{eyebrow:"Mapa datového pokrytí",title:"Kolik toho o každé zemi skutečně ukazujeme.",lead:"Orientační skóre shrnuje šíři zveřejněných vrstev. Zvolte libovolné pole a pod tabulkou se zobrazí přesné zdroje, ze kterých je složené.",country:"Země",less:"Méně pokryto",more:"Více pokryto",methodTitle:"Jak odhad počítáme",methodCopy:"Každá očekávaná datová vrstva má stejnou váhu. Plné pokrytí = 100 bodů, částečné = 60, pouze agregát = 35 a chybějící = 0. Procento je zaokrouhlený průměr vrstev v dané kategorii. Počet vrstev a zdrojů měří rozsah na tomto webu, nikoli kvalitu nebo otevřenost veřejných dat dané země.",selectionEyebrow:"Zdroje vybraného pole",selectionEmpty:"Klikněte na procento v tabulce.",selectionLead:"Výběr propojí souhrnné skóre s primárními zdroji a současně omezí úplnou tabulku zdrojů níže.",clear:"Zobrazit všech 110 záznamů",layers:"vrstev",sources:"zdrojů",sourceLinks:"unikátních zdrojů",filterNote:"Úplná tabulka níže nyní zobrazuje jen záznamy tohoto pole.",openSource:"Otevřít primární zdroj"},
+    en:{eyebrow:"Data coverage map",title:"How much we actually show for each country.",lead:"This indicative score summarises the breadth of published layers. Select any cell to reveal the exact sources from which it is compiled.",country:"Country",less:"Less coverage",more:"More coverage",methodTitle:"How the estimate is calculated",methodCopy:"Each expected data layer has equal weight. Full coverage = 100 points, partial = 60, aggregate only = 35 and missing = 0. The percentage is the rounded mean of the layers in that category. Layer and source counts measure breadth on this website, not the quality or openness of a country’s public data.",selectionEyebrow:"Sources for selected cell",selectionEmpty:"Select a percentage in the table.",selectionLead:"The selection connects the summary score to its primary evidence and filters the complete source table below at the same time.",clear:"Show all 110 records",layers:"layers",sources:"sources",sourceLinks:"unique sources",filterNote:"The complete table below now shows only the records used by this cell.",openSource:"Open primary source"}
+  };
+  const coverageCategories=[
+    {id:"country",cs:"Data o zemi",en:"Country data",modules:["sovereign","revenue","administrative_spending","common_spending","functional_spending","transport","public_entities"]},
+    {id:"health",cs:"Zdravotní data",en:"Health data",modules:["health","providers"]},
+    {id:"geo",cs:"Geo data",en:"Geo data",modules:["demography"]},
+    {id:"municipalities",cs:"Data obcí",en:"Municipalities data",modules:["municipalities"]}
+  ];
+  const coverageStatusPoints={full:100,partial:60,aggregate:35};
   let current = lang === "en" ? "en" : "cs";
-  let methodologyData=null,qualityData=null,releaseData=null;
+  let methodologyData=null,qualityData=null,releaseData=null,activeCoverageNode=null;
   const esc=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
   const statusLabel=status=>copy[current][status==="full"?"ledgerFull":status==="partial"?"ledgerPartial":"ledgerAggregate"];
-  function methodFilters(){return {country:document.querySelector("#method-country-filter")?.value||"",module:document.querySelector("#method-module-filter")?.value||"",status:document.querySelector("#method-status-filter")?.value||"",search:(document.querySelector("#method-source-search")?.value||"").trim().toLocaleLowerCase(current==="cs"?"cs":"en")};}
+  function methodFilters(){return {country:document.querySelector("#method-country-filter")?.value||"",module:document.querySelector("#method-module-filter")?.value||"",status:document.querySelector("#method-status-filter")?.value||"",search:(document.querySelector("#method-source-search")?.value||"").trim().toLocaleLowerCase(current==="cs"?"cs":"en"),modules:activeCoverageNode?.modules||null};}
   function filteredMethodRows(){
     if(!methodologyData)return [];
     const filters=methodFilters();
     return methodologyData.rows.filter(row=>{
       if(filters.country&&row.country_code!==filters.country)return false;
       if(filters.module&&row.module!==filters.module)return false;
+      if(filters.modules&&!filters.modules.includes(row.module))return false;
       if(filters.status&&row.status!==filters.status)return false;
       if(filters.search&&!JSON.stringify(row).toLocaleLowerCase(current==="cs"?"cs":"en").includes(filters.search))return false;
       return true;
@@ -34,6 +46,47 @@
     select.innerHTML=`<option value="">${esc(allLabel)}</option>${items.map(item=>`<option value="${esc(item.value)}">${esc(item[label])}</option>`).join("")}`;
     if([...select.options].some(option=>option.value===selected))select.value=selected;
   }
+  const uniqueSources=rows=>{
+    const sources=new Map();
+    rows.forEach(row=>row.sources.forEach(source=>{
+      const key=source.url||source.title;
+      if(!sources.has(key))sources.set(key,{...source,modules:new Set()});
+      sources.get(key).modules.add(current==="cs"?row.module_label_cs:row.module_label_en);
+    }));
+    return [...sources.values()];
+  };
+  function coverageNode(countryCode,category){
+    const rows=methodologyData.rows.filter(row=>row.country_code===countryCode&&category.modules.includes(row.module));
+    const byModule=new Map(rows.map(row=>[row.module,row]));
+    const score=Math.round(category.modules.reduce((sum,module)=>sum+(coverageStatusPoints[byModule.get(module)?.status]||0),0)/category.modules.length);
+    return {rows,score,sources:uniqueSources(rows)};
+  }
+  const coverageTone=score=>score>=90?"high":score>=60?"medium":"low";
+  function renderCoverageMatrix(){
+    if(!methodologyData)return;
+    const cc=coverageCopy[current],body=document.querySelector("#coverage-matrix-body");
+    document.querySelectorAll("[data-coverage-copy]").forEach(node=>{const value=cc[node.dataset.coverageCopy];if(value)node.textContent=value;});
+    document.querySelectorAll("[data-coverage-category]").forEach(node=>{const category=coverageCategories.find(item=>item.id===node.dataset.coverageCategory);if(category)node.innerHTML=`<span>${esc(category[current])}</span><small>${category.modules.length} ${esc(cc.layers)}</small>`;});
+    if(body)body.innerHTML=methodologyData.countries.map(country=>{
+      const cells=coverageCategories.map(category=>{
+        const node=coverageNode(country.code,category),selected=activeCoverageNode?.country===country.code&&activeCoverageNode?.category===category.id;
+        const label=`${country[current==="cs"?"name_cs":"name_en"]}, ${category[current]}, ${node.score}%, ${node.rows.length} ${cc.layers}, ${node.sources.length} ${cc.sources}`;
+        return `<td><button type="button" class="coverage-cell coverage-cell-${coverageTone(node.score)}${selected?" selected":""}" data-coverage-country="${esc(country.code)}" data-coverage-node="${esc(category.id)}" aria-label="${esc(label)}" aria-pressed="${selected}"><strong>${node.score}<sup>%</sup></strong><span>${node.rows.length}/${category.modules.length} ${esc(cc.layers)} · ${node.sources.length} ${esc(cc.sources)}</span><i aria-hidden="true"><b style="width:${node.score}%"></b></i></button></td>`;
+      }).join("");
+      return `<tr><th scope="row"><b>${esc(current==="cs"?country.name_cs:country.name_en)}</b><small>${esc(country.code)}</small></th>${cells}</tr>`;
+    }).join("");
+    renderCoverageSelection();
+  }
+  function renderCoverageSelection(){
+    const title=document.querySelector("#coverage-selection-title"),summary=document.querySelector("#coverage-selection-summary"),list=document.querySelector("#coverage-source-list"),clear=document.querySelector("#coverage-clear"),cc=coverageCopy[current];
+    if(!title||!summary||!list||!clear||!methodologyData)return;
+    clear.hidden=!activeCoverageNode;
+    if(!activeCoverageNode){title.textContent=cc.selectionEmpty;summary.textContent=cc.selectionLead;list.innerHTML="";return;}
+    const country=methodologyData.countries.find(item=>item.code===activeCoverageNode.country),category=coverageCategories.find(item=>item.id===activeCoverageNode.category),node=coverageNode(country.code,category);
+    title.textContent=`${current==="cs"?country.name_cs:country.name_en} · ${category[current]} · ${node.score} %`;
+    summary.textContent=`${node.rows.length}/${category.modules.length} ${cc.layers} · ${node.sources.length} ${cc.sourceLinks}. ${cc.filterNote}`;
+    list.innerHTML=node.sources.map(source=>`<article><span>${[...source.modules].map(esc).join(" · ")}</span><h4>${esc(source.title)}</h4>${source.location?`<p>${esc(source.location)}</p>`:""}<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(cc.openSource)} ↗</a></article>`).join("");
+  }
   function renderMethodology(){
     if(!methodologyData)return;
     fillSelect("#method-country-filter",methodologyData.countries.map(item=>({value:item.code,cs:item.name_cs,en:item.name_en})),copy[current].ledgerAllCountries,current);
@@ -42,6 +95,7 @@
     const rows=filteredMethodRows(),body=document.querySelector("#method-source-rows");
     if(body)body.innerHTML=rows.map(row=>`<tr><td><b>${esc(current==="cs"?row.country_name_cs:row.country_name_en)}</b><small>${esc(row.country_code)}</small></td><td><b>${esc(current==="cs"?row.module_label_cs:row.module_label_en)}</b><code>${esc(row.module)}</code></td><td><span class="method-status method-status-${esc(row.status)}">${esc(statusLabel(row.status))}</span><p>${esc(row.coverage)}</p></td><td><b>${esc(row.period)}</b><p>${esc(row.scope)}</p></td><td>${row.sources.map(item=>`<a href="${esc(item.url)}" target="_blank" rel="noreferrer">${esc(item.title)} ↗</a>`).join("")}<p>${esc(row.exact_extraction)}</p></td><td><code>${esc(row.artifact)}</code><p>${esc(row.transformation)}</p></td><td>${row.limitations?`<p>${esc(row.limitations)}</p>`:"—"}</td></tr>`).join("");
     const summary=document.querySelector("#method-ledger-summary"); if(summary)summary.textContent=`${rows.length} ${copy[current].ledgerRows} ${methodologyData.row_count}`;
+    renderCoverageMatrix();
   }
   function downloadMethodCsv(){
     const headings=["country_code","country","module","status","coverage","period","scope","sources","exact_extraction","artifact","transformation","limitations"],quote=value=>`"${String(value??"").replaceAll('"','""')}"`;
@@ -73,7 +127,18 @@
     history.replaceState(null,"",`${location.pathname}?lang=${current}${location.hash}`);
   }
   document.querySelectorAll("[data-lang]").forEach(button => button.addEventListener("click",()=>{current=button.dataset.lang;render();}));
-  ["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>document.querySelector(selector)?.addEventListener("input",renderMethodology));
+  ["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>document.querySelector(selector)?.addEventListener("input",()=>{activeCoverageNode=null;renderMethodology();}));
+  document.querySelector("#coverage-matrix-body")?.addEventListener("click",event=>{
+    const button=event.target.closest("[data-coverage-node]");if(!button||!methodologyData)return;
+    const category=coverageCategories.find(item=>item.id===button.dataset.coverageNode);if(!category)return;
+    activeCoverageNode={country:button.dataset.coverageCountry,category:category.id,modules:category.modules};
+    const countryFilter=document.querySelector("#method-country-filter"),moduleFilter=document.querySelector("#method-module-filter"),statusFilter=document.querySelector("#method-status-filter"),search=document.querySelector("#method-source-search");
+    if(countryFilter)countryFilter.value=activeCoverageNode.country;if(moduleFilter)moduleFilter.value="";if(statusFilter)statusFilter.value="";if(search)search.value="";
+    renderMethodology();document.querySelector(".coverage-selection")?.scrollIntoView({behavior:"smooth",block:"nearest"});
+  });
+  document.querySelector("#coverage-clear")?.addEventListener("click",()=>{
+    activeCoverageNode=null;["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>{const control=document.querySelector(selector);if(control)control.value="";});renderMethodology();
+  });
   document.querySelector("#method-download-csv")?.addEventListener("click",downloadMethodCsv);
   render();
   if(document.body.dataset.page==="methodology")Promise.all([
