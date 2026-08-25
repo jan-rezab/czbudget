@@ -51,6 +51,14 @@ test("language state survives navigation", async ({ page }) => {
   await expect(page.locator("#country-name")).toContainText("Germany");
 });
 
+test("header logo links to the canonical homepage URL", async ({ page }) => {
+  await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
+  const logo = page.locator("psd-site-header a.brand");
+  await expect(logo).toHaveAttribute("href", "/?lang=en");
+  await logo.click();
+  await expect(page).toHaveURL("http://127.0.0.1:4173/?lang=en");
+});
+
 test("country links are readable and data-layer cards keep accessible contrast", async ({ page }) => {
   await page.goto("/country.html?code=CHE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://publicspendingdata.org/countries/switzerland");
