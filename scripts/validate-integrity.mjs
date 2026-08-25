@@ -74,8 +74,9 @@ try {
 }
 
 const snapshot = await json("data/municipal-snapshot.v1.json");
-const municipalities = snapshot.municipalities;
 const internationalMunicipalities = await json("data/international-municipalities.v1.json");
+const municipalItemizedCoverage = await json("data/municipal-itemized-coverage.v1.json");
+const municipalities = snapshot.municipalities;
 const benchmarkMunicipalityIndexes = await Promise.all(["nor", "nld", "fin"].map((code) => json(`data/municipal-benchmarks/${code}.json`)));
 const benchmarkMunicipalities = benchmarkMunicipalityIndexes.flatMap((country) => country.entities);
 const municipalityById = new Map(municipalities.map((item) => [item.national_id, item]));
@@ -380,6 +381,14 @@ if (!dataOnly) {
   for (const entity of benchmarkMunicipalities) assert(locations.some((url) => url.endsWith(entity.url)), `Sitemap missing ${entity.url}`);
 }
 
+const publishedEntryComponents = {
+  public_entity_registry: publicEntityDirectory.total_record_count,
+  municipal_history_records: municipalHistoryRows,
+  municipal_directory_entries: internationalMunicipalities.entities.length,
+  itemized_municipal_profiles: municipalItemizedCoverage.countries.reduce((sum, country) => sum + country.profile_count, 0),
+};
+const publishedDataEntries = Object.values(publishedEntryComponents).reduce((sum, count) => sum + count, 0);
+
 const report = {
   schema_version: "1.0.0",
   dataset: "CZ Budget public release",
@@ -399,9 +408,11 @@ const report = {
     public_entity_financial_statements: publicFinancial.length,
     state_enterprises: enterprises.entities.length,
     state_budget_chapters: spending.chapters.length,
+    published_data_entries: publishedDataEntries,
     municipal_profiles_with_bigquery_headlines: mergedHeadlineProfiles,
     municipal_profiles_with_bigquery_breakdowns: mergedBreakdownProfiles,
   },
+  published_entry_components: publishedEntryComponents,
   explicit_missing_data: { cash_balance_sheet_rows_missing: cashMissing },
   reviewed_anomalies: anomalies,
   failures,

@@ -110,9 +110,8 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".status-header")).toContainText("Data status");
-  await expect(page.locator(".status-volume")).toContainText("Published structured data");
-  await expect(page.locator("#status-data-total")).toContainText("MB");
-  await expect(page.locator("#status-meta")).toContainText("100,021 municipal-year records");
+  await expect(page.locator(".status-volume")).toContainText("Published data entries");
+  await expect(page.locator("#status-data-total")).toContainText("332,708");
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(4);
   await expect(page.locator("#data-health-root")).toContainText("Checks passed");
   await expect(page.locator("#data-health-root")).toContainText("92,751");

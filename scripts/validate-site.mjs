@@ -86,6 +86,7 @@ const municipalityCountryPages = await Promise.all(municipalityCountrySlugs.map(
 if (snapshot.municipalities.length !== 6254) throw new Error("Expected 6,254 municipalities");
 if (internationalMunicipalities.countries.length !== 16 || internationalMunicipalities.entities.length !== 90630) throw new Error("Expected sixteen-country municipality directory with 90,630 entity rows");
 if (municipalItemizedCoverage.countries.length !== 16 || municipalItemizedCoverage.countries.reduce((sum, country) => sum + country.profile_count, 0) !== 20858) throw new Error("Expected 20,858 itemized municipal profiles across sixteen countries");
+if (dataQuality.counts.published_data_entries !== 332708 || Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== 332708) throw new Error("Expected 332,708 published registry, history, directory and itemized-profile entries");
 if (municipalItemizedCoverage.countries.find((country) => country.code === "CZE")?.profile_count !== 6254 || municipalItemizedCoverage.countries.find((country) => country.code === "USA")?.profile_count !== 0) throw new Error("Itemized municipal coverage must distinguish profile-level detail from directory-only coverage");
 if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.length, 0) !== 1010) throw new Error("Expected 1,010 Nordic and Dutch municipal benchmark profiles");
 for (const [code, expected] of [["DNK",98],["ESP",6198],["JPN",1741]]) {
