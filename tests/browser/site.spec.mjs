@@ -101,7 +101,7 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#compare")).toHaveCount(0);
   await expect(page.locator("#method")).toHaveCount(0);
   await expect(page.locator(".home-hero .primary-button")).toBeVisible();
-  await expect(page.locator(".glorious-footer")).toContainText("Hlidac statu, z.u.");
+  await expect(page.locator(".glorious-footer .footer-hlidac")).toHaveAttribute("href", "https://www.hlidacstatu.cz/");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#compare-table tr")).toHaveCount(10);
@@ -135,12 +135,13 @@ test("about page and footer credit Hlidac statu in both languages", async ({ pag
   await page.goto("/about.html?lang=cs", { waitUntil: "networkidle" });
   await expect(page.locator(".maker-showcase")).toContainText("Hlidac statu, z.u.");
   await expect(page.locator(".maker-showcase")).toContainText("nezisková organizace");
-  await expect(page.locator(".glorious-footer")).toContainText("Projekt připravuje");
+  await expect(page.locator(".glorious-footer .footer-hlidac")).toHaveAttribute("aria-label", "Hlídač státu, z. ú.");
+  await expect(page.locator(".glorious-footer .footer-links")).toContainText("O projektu");
 
   await page.locator('[data-lang="en"]').click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator(".maker-showcase")).toContainText("nonprofit organisation");
-  await expect(page.locator(".glorious-footer")).toContainText("Created by");
+  await expect(page.locator(".glorious-footer .footer-links")).toContainText("About");
   await expect(page).toHaveURL(/about\.html\?lang=en/);
 });
 
@@ -170,7 +171,7 @@ test("homepage defaults every independently rendered module to English", async (
   await expect(page.locator("#category-comparison-root")).toContainText("Country profile");
   await expect(page.locator("#category-comparison-root")).not.toContainText("Výdaje podle kategorií");
   await expect(page.locator("#homepage-health-performance-root")).toContainText("Health-system performance");
-  await expect(page.locator(".glorious-footer")).toContainText("Created by Hlidac statu, z.u.");
+  await expect(page.locator(".glorious-footer .footer-hlidac img")).toHaveAttribute("alt", "Hlídač státu");
 
   await page.locator('[data-lang="cs"]').click();
   await expect(page.locator("#category-comparison-root")).toContainText("Výdaje podle kategorií");
@@ -552,7 +553,7 @@ test("every page family renders the same shared header component", async ({ page
     "/cz/kraje/praha/?lang=en",
     "/cz/mesta/?lang=en",
   ];
-  const expectedItems = ["Home", "Compare", "Municipalities", "Country⌄", "Deep dives⌄", "Methodology", "About"];
+  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Deep dives⌄", "Methodology", "About"];
   for (const route of representatives) {
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator("psd-site-header")).toHaveCount(1);
@@ -609,5 +610,5 @@ test("cities use the functional unified menu on desktop and mobile", async ({ pa
   await expect(page.locator(".global-nav")).toBeVisible();
   await expect(page.locator('[data-global-nav="cities"]')).toBeVisible();
   await page.locator(".site-header .brand").click();
-  await expect(page).toHaveURL(/\/index\.html\?lang=cs/);
+  await expect(page).toHaveURL("http://127.0.0.1:4173/?lang=cs");
 });

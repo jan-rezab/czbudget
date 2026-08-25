@@ -87,7 +87,7 @@ function translate(){
   $("#og-url").content=canonical;
 }
 function header(){
-  const c=meta(); $("#country-code").innerHTML=`<img src="assets/flags/${flagCodes[c.country_code]}.svg" alt=""><b>${c.country_code}</b>`; $("#country-name").textContent=name(); $("#footer-country").textContent=name();
+  const c=meta(); $("#country-code").innerHTML=`<img src="assets/flags/${flagCodes[c.country_code]}.svg" alt=""><b>${c.country_code}</b>`; $("#country-name").textContent=name(); const footerCountry=$("#footer-country"); if(footerCountry)footerCountry.textContent=name();
   $("#country-subtitle").textContent=state.lang==="en"?`${c.currency_code} · General government / harmonised scope · IMF WEO 2005–2024 · ${state.currency==="local"?"local-currency view":"EUR view"}`:`${c.currency_code} · Sektor vládních institucí / harmonizované vymezení · IMF WEO 2005–2024 · ${state.currency==="local"?"zobrazení v místní měně":"zobrazení v EUR"}`;
   $("#country-switch").innerHTML=state.data.countries.map(x=>`<option value="${x.country_code}">${state.lang==="en"?x.name_en:x.name_cs}</option>`).join(""); $("#country-switch").value=state.code;
   $("#year-switch").innerHTML=Array.from({length:20},(_,i)=>`<option>${2024-i}</option>`).join(""); $("#year-switch").value=state.year;
