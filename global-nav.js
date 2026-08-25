@@ -1,13 +1,29 @@
 (() => {
+  const sharedComponents = window.PSDSharedComponents ||= {};
+  if (sharedComponents.navigation?.refresh) {
+    sharedComponents.navigation.refresh();
+    return;
+  }
   const scriptUrl = document.currentScript?.src || new URL("global-nav.js", location.href).href;
   const assetRoot = new URL(".", scriptUrl).href;
-  let globalFooter = document.querySelector("body > footer");
-  if (!globalFooter) {
-    globalFooter = document.createElement("footer");
-    document.body.append(globalFooter);
+  function ensureSharedFooter() {
+    const existing = document.querySelector("body > footer[data-global-footer]");
+    if (existing) return existing;
+    const legacyFooters = [...document.querySelectorAll("body > footer:not([data-global-footer])")];
+    const footer = document.createElement("footer");
+    footer.setAttribute("data-global-footer", "");
+    legacyFooters.forEach((legacy) => {
+      legacy.hidden = true;
+      legacy.dataset.sharedComponentLegacy = "footer";
+    });
+    const anchor = legacyFooters.at(-1);
+    if (anchor) anchor.insertAdjacentElement("afterend", footer);
+    else document.body.append(footer);
+    return footer;
   }
-  globalFooter.setAttribute("data-global-footer", "");
-  const compactFooterStyles = `${assetRoot}global-footer.css?v=20260825-inverted-lockup`;
+  const globalFooter = ensureSharedFooter();
+  globalFooter.dataset.sharedComponent = "footer";
+  const compactFooterStyles = `${assetRoot}global-footer.css?v=20260825-shared-lifecycle`;
   const existingFooterStyles = document.querySelector('link[href*="global-footer.css"]');
   if (existingFooterStyles) existingFooterStyles.href = compactFooterStyles;
   else {
@@ -17,18 +33,17 @@
     document.head.append(footerStyles);
   }
   const loadCompactFooter = () => {
-    if (document.querySelector('script[data-compact-footer]')) return;
+    if (sharedComponents.footer?.render) {
+      sharedComponents.footer.render();
+      return;
+    }
+    if (document.querySelector('script[src*="global-footer.js"]')) return;
     const footerScript = document.createElement("script");
-    footerScript.src = `${assetRoot}global-footer.js?v=20260825-inverted-lockup`;
-    footerScript.dataset.compactFooter = "true";
+    footerScript.src = `${assetRoot}global-footer.js?v=20260825-shared-lifecycle`;
+    footerScript.dataset.sharedComponentLoader = "footer";
     document.head.append(footerScript);
   };
-  const existingFooterScript = document.querySelector('script[src*="global-footer.js"]');
-  if (!existingFooterScript) loadCompactFooter();
-  else if (!existingFooterScript.src.includes("20260825-inverted-lockup")) {
-    if (document.readyState === "complete") loadCompactFooter();
-    else window.addEventListener("load", loadCompactFooter, { once: true });
-  }
+  loadCompactFooter();
   const portalStylesHref = `${assetRoot}portal-ui.css?v=20260824-logo-120`;
   const existingPortalStyles = document.querySelector("link[data-portal-ui]");
   if (existingPortalStyles) existingPortalStyles.href = portalStylesHref;
@@ -118,6 +133,7 @@
         const close = (event) => { if (!details.contains(event.target)) { details.open = false; document.removeEventListener("pointerdown", close); } };
         setTimeout(() => document.addEventListener("pointerdown", close), 0);
       }));
+      document.dispatchEvent(new CustomEvent("psd:shared-header-ready", { detail: { host: this } }));
     }
   }
 
@@ -134,11 +150,29 @@
   }
   if (!customElements.get(HEADER_TAG)) customElements.define(HEADER_TAG, PsdSiteHeader);
 
-  document.querySelectorAll("header.site-header.has-global-nav, header.site-header.cz-header").forEach((legacy) => {
-    if (legacy.closest(HEADER_TAG)) return;
+  function ensureSharedHeader() {
+    const existing = document.querySelector(HEADER_TAG);
+    if (existing) return existing;
+    const legacy = document.querySelector("body > header.site-header.has-global-nav, body > header.site-header.cz-header");
     const host = document.createElement(HEADER_TAG);
-    legacy.replaceWith(host);
-  });
+    if (legacy) {
+      legacy.hidden = true;
+      legacy.dataset.sharedComponentLegacy = "header";
+      legacy.insertAdjacentElement("beforebegin", host);
+    } else {
+      const main = document.querySelector("body > main");
+      if (main) main.insertAdjacentElement("beforebegin", host);
+      else document.body.prepend(host);
+    }
+    return host;
+  }
+  ensureSharedHeader();
+  const refresh = () => {
+    ensureSharedFooter();
+    ensureSharedHeader();
+    document.querySelectorAll(HEADER_TAG).forEach((host) => host.renderNavigation());
+    sharedComponents.footer?.render?.();
+  };
   document.addEventListener("click", (event) => {
     const languageControl = event.target.closest("[data-lang],[data-budget-lang],[data-deep-lang]");
     if (!languageControl) return;
@@ -151,12 +185,14 @@
     }
     setTimeout(() => document.querySelectorAll(HEADER_TAG).forEach((host) => host.renderNavigation()), 0);
   });
-  new MutationObserver(() => {
+  const languageObserver = new MutationObserver(() => {
     if (document.documentElement.lang === document.documentElement.dataset.navLang) return;
     document.documentElement.dataset.navLang = document.documentElement.lang;
     document.querySelectorAll(HEADER_TAG).forEach((host) => host.renderNavigation());
-  }).observe(document.documentElement, { attributes:true, attributeFilter:["lang"] });
+  });
+  languageObserver.observe(document.documentElement, { attributes:true, attributeFilter:["lang"] });
   document.documentElement.dataset.navLang = document.documentElement.lang;
+  sharedComponents.navigation = { refresh, observer: languageObserver };
 
   const railLinks = [...document.querySelectorAll(".context-rail a[href^='#']")];
   if (railLinks.length) {

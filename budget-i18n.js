@@ -92,7 +92,6 @@
       }
     });
     document.querySelectorAll("[data-budget-lang]").forEach(button => button.classList.toggle("active", button.dataset.budgetLang === lang));
-    const home = document.getElementById("budget-home-link"); if (home) home.href = `index.html?lang=${lang}`;
     document.title = lang === "en" ? "Public Spending Data — Czech budget over time" : "Public Spending Data — český rozpočet v čase";
     const url = new URL(location.href); url.searchParams.set("lang", lang); history.replaceState(null,"",url);
     translating = false;

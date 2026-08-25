@@ -162,6 +162,9 @@ if (!homepage.includes('id="homepage-health-performance-root"') || !homepage.inc
 if (!homepage.includes("language-bootstrap.js") || !languageBootstrap.includes("data-language-pending") || !languageBootstrap.includes("MutationObserver") || !languageBootstrap.includes("window.PSDLanguage") || !languageBootstrap.includes('defaultLanguage = isHomepage ? "en"')) throw new Error("English must be selected from the shared language contract before the first visible paint");
 if (!globalNav.includes('href("municipalities/", lang)') || !globalNav.includes('class="country-menu municipality-menu"') || !globalNav.includes('municipalities/${slug}/?lang=${lang}') || globalNav.indexOf('data-global-nav="country"') > globalNav.indexOf('data-global-nav="cities"') || globalNav.includes('data-global-nav="capitals"')) throw new Error("Global navigation must place the Country and Municipality dropdowns first");
 if (!globalFooter.includes("assets/logo-lockup-dark.svg") || !globalFooter.includes("assets/hlidac-statu-horizontal-inverted-bw.svg") || !globalFooter.includes('class="footer-formalities"') || !globalFooter.includes("IČO 05965527") || !globalFooter.includes("info@hlidacstatu.cz") || globalFooter.includes("Velenovského") || globalFooter.includes('href="#top"') || !globalFooterStyles.includes("background: #171918")) throw new Error("Global footer must use both inverted brand lockups, retain the organisation details and email, omit the postal address, and omit the back-to-top link");
+if (!globalNav.includes("window.PSDSharedComponents") || !globalNav.includes('footer:not([data-global-footer])') || !globalNav.includes('legacy.dataset.sharedComponentLegacy = "footer"') || !globalNav.includes('legacy.dataset.sharedComponentLegacy = "header"') || globalNav.includes("legacy.replaceWith(host)")) throw new Error("Shared components must initialize once and preserve legacy header/footer DOM instead of replacing it");
+if (!globalFooter.includes("window.PSDSharedComponents") || !globalFooter.includes("psd:shared-footer-ready") || !globalNav.includes("psd:shared-header-ready")) throw new Error("Shared header and footer must expose an idempotent lifecycle contract");
+if (!countryPage.includes("<footer data-global-footer></footer>") || countryPage.includes("footer-country") || countryScript.includes("footer-country")) throw new Error("Country pages must use the public shared-footer boundary without private legacy nodes");
 if (!globalNav.includes('class="deep-dive-menu"') || !globalNav.includes('deep-dives/transportation/')) throw new Error("Global navigation must expose the dedicated deep-dive hierarchy");
 if (!globalNav.includes("class PsdSiteHeader extends HTMLElement") || !globalNav.includes("customElements.define(HEADER_TAG, PsdSiteHeader)") || !globalNav.includes("site-header.css")) throw new Error("Global navigation must be implemented as the shared site-header component");
 if (globalNav.includes('href("index.html"') || globalNav.includes("assetRoot}index.html") || !globalNav.includes('setAttribute("href", href("", lang))')) throw new Error("Header logos and shared navigation must use the canonical homepage URL without index.html");
@@ -207,6 +210,21 @@ async function htmlFiles(directory = ".") {
     return entry.isDirectory() ? htmlFiles(path) : path.endsWith(".html") ? [path] : [];
   }));
   return nested.flat();
+}
+async function javascriptFiles(directory = ".") {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const nested = await Promise.all(entries.filter((entry) => ![".git", "node_modules", "data", "scripts", "server", "test-results", "tests"].includes(entry.name)).map((entry) => {
+    const path = directory === "." ? entry.name : `${directory}/${entry.name}`;
+    return entry.isDirectory() ? javascriptFiles(path) : path.endsWith(".js") ? [path] : [];
+  }));
+  return nested.flat();
+}
+const privateSharedComponentTokens = ["footer-country", "budget-home-link", "#home-link", ".site-header", ".global-nav", "data-global-footer", ".glorious-footer", ".footer-brand", ".footer-hlidac", ".footer-links"];
+for (const path of await javascriptFiles()) {
+  if (["global-nav.js", "global-footer.js"].includes(path)) continue;
+  const source = await readFile(path, "utf8");
+  const leakedToken = privateSharedComponentTokens.find((token) => source.includes(token));
+  if (leakedToken) throw new Error(`${path}: reaches into private shared-component DOM via ${leakedToken}`);
 }
 const headerlessPages = new Set(["brand-preview.html", "cz-obce.html", "municipalities.html"]);
 for (const path of await htmlFiles()) {

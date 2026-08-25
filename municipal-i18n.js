@@ -6,11 +6,6 @@
   localStorage.setItem("psd-lang", lang);
   document.documentElement.lang = lang;
 
-  const withLang = (code) => {
-    const next = new URL(location.href);
-    next.searchParams.set("lang", code);
-    return `${next.pathname}${next.search}${next.hash}`;
-  };
   const root = location.pathname.includes("/cz/municipalities/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/")
     ? (location.pathname.split("/").filter(Boolean).length > 2 ? "../../../" : "../../")
     : "../../";
@@ -24,25 +19,7 @@
     navigationStyles.href = `${root}chart-system.css?v=20260822-municipal-nav`;
     document.head.append(navigationStyles);
   }
-  const header = document.querySelector(".cz-header");
-  if (header && !header.closest("psd-site-header")) {
-    header.classList.add("has-global-nav");
-    const nav = header.querySelector("nav");
-    if (nav) { nav.className = "global-nav"; nav.setAttribute("aria-label", lang === "en" ? "Primary navigation" : "Hlavní navigace"); }
-    const switcher = document.createElement("div");
-    switcher.className = "lang-switch municipal-lang-switch";
-    switcher.setAttribute("aria-label", lang === "en" ? "Language" : "Jazyk");
-    switcher.innerHTML = `<a href="${withLang("cs")}"${lang === "cs" ? ' aria-current="true"' : ""}>CZ</a><a href="${withLang("en")}"${lang === "en" ? ' aria-current="true"' : ""}>EN</a>`;
-    const datasetPill = header.querySelector(".dataset-pill");
-    if (datasetPill) datasetPill.replaceWith(switcher);
-    else header.append(switcher);
-    if (!document.querySelector('script[src*="global-nav.js"]')) {
-      const globalNav = document.createElement("script");
-      globalNav.src = `${root}global-nav.js`;
-      globalNav.defer = true;
-      document.head.append(globalNav);
-    }
-  }
+  const header = document.querySelector("psd-site-header");
 
   const main = document.querySelector("main");
   if (main && !document.querySelector(".context-rail")) {
@@ -58,7 +35,7 @@
     const items = [["overview",labels.overview],["combined",labels.combined],[history?.id,labels.trend],[budget?.id,labels.budget],[directory?.id,labels.entities],[method?.id,labels.method]].filter(([id]) => id && document.getElementById(id));
     const rail = document.createElement("nav"); rail.className = "context-rail municipal-context-rail"; rail.setAttribute("aria-label", lang === "en" ? "Page sections" : "Sekce stránky");
     rail.innerHTML = items.map(([id,label]) => `<a href="#${id}">${label}</a>`).join("");
-    const railAnchor = header?.closest("psd-site-header") || header || document.querySelector("psd-site-header") || document.querySelector(".site-header");
+    const railAnchor = header;
     if (railAnchor) railAnchor.insertAdjacentElement("afterend", rail);
     else main.insertAdjacentElement("beforebegin", rail);
     const updateRail = () => {
