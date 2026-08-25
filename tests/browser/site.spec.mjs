@@ -109,7 +109,7 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".status-hero")).toContainText("Coverage and sources");
+  await expect(page.locator(".status-header")).toContainText("Data status");
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(4);
   await expect(page.locator("#data-health-root")).toContainText("Checks passed");
   await expect(page.locator("#data-health-root")).toContainText("79,242");

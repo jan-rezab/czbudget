@@ -62,8 +62,8 @@
       en: ["Compare public budgets — Public Spending Data", "Compare twenty years of harmonised public-finance indicators across ten countries."],
     },
     "/methodology.html": {
-      cs: ["Pokrytí a zdroje — Public Spending Data", "Technický stav dat: pokrytí podle země, období a primární zdroje."],
-      en: ["Coverage and sources — Public Spending Data", "Technical data status by country, period and primary source."],
+      cs: ["Stav dat — Public Spending Data", "Pokrytí podle země, období a primárního zdroje."],
+      en: ["Data status — Public Spending Data", "Coverage by country, period and primary source."],
     },
     "/about.html": {
       cs: ["O projektu — Public Spending Data", "O projektu Public Spending Data a neziskové organizaci Hlidac statu, z.u."],

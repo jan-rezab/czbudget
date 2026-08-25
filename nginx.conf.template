@@ -187,9 +187,12 @@ server {
     sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260825-shared-lifecycle"';
     sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260825-shared-lifecycle';
     sub_filter 'global-nav.js?v=20260825-canonical-home' 'global-nav.js?v=20260825-shared-lifecycle';
-    sub_filter 'global-footer.js?v=20260822-hlidac' 'global-footer.js?v=20260825-shared-lifecycle';
-    sub_filter 'global-footer.js?v=20260823-footer' 'global-footer.js?v=20260825-shared-lifecycle';
-    sub_filter 'global-footer.js?v=20260824-compact' 'global-footer.js?v=20260825-shared-lifecycle';
+    sub_filter 'global-footer.js?v=20260822-hlidac' 'global-footer.js?v=20260825-footer-align';
+    sub_filter 'global-footer.js?v=20260823-footer' 'global-footer.js?v=20260825-footer-align';
+    sub_filter 'global-footer.js?v=20260824-compact' 'global-footer.js?v=20260825-footer-align';
+    sub_filter 'global-footer.js?v=20260825-shared-lifecycle' 'global-footer.js?v=20260825-footer-align';
+    sub_filter 'global-footer.css?v=20260822-hlidac' 'global-footer.css?v=20260825-footer-align';
+    sub_filter 'global-footer.css?v=20260824-dark' 'global-footer.css?v=20260825-footer-align';
     sub_filter 'homepage-v2.js?v=20260822-separate-pages' 'homepage-v2.js?v=20260824-language-contract';
     sub_filter 'homepage-category.js?v=20260821-benchmark-flags' 'homepage-category.js?v=20260824-language-contract';
     sub_filter 'homepage-health-performance.js?v=20260824-topline-compare' 'homepage-health-performance.js?v=20260824-language-contract';

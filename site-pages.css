@@ -89,3 +89,22 @@ body[data-page="methodology"] .method-ledger-controls{margin-top:12px}
 body[data-page="methodology"] .method-table-wrap{height:70vh;min-height:560px;border:1px solid #171918;box-shadow:none}
 @media(max-width:900px){body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-matrix-wrap{box-shadow:none}}
 @media(max-width:600px){body[data-page="methodology"] main{padding-top:20px}body[data-page="methodology"] .status-hero{align-items:flex-start;flex-direction:column;padding:30px 0 20px}body[data-page="methodology"] .status-hero>p{text-align:left}body[data-page="methodology"] .section-bar{align-items:flex-start;flex-direction:column;gap:7px}body[data-page="methodology"] .data-health-kpis{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-overview{margin-top:36px;padding-top:0}body[data-page="methodology"] .coverage-matrix{min-width:1340px}body[data-page="methodology"] .coverage-matrix tbody th,body[data-page="methodology"] .coverage-matrix thead th:first-child{width:145px}body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr}body[data-page="methodology"] .method-ledger-head{align-items:center;flex-direction:row}body[data-page="methodology"] .method-ledger-head h2{font-size:29px}body[data-page="methodology"] .method-table-wrap{height:68vh;min-height:500px;box-shadow:none}}
+
+/* About uses the official vector lockup in an active, linkable panel. */
+body[data-page="about"] .maker-logo-panel{position:relative;min-height:240px;padding:52px;display:grid;place-items:center;overflow:hidden;background:#171918;border:1px solid #171918;box-shadow:none;text-decoration:none}
+body[data-page="about"] .maker-logo-panel::after{content:"";position:absolute;left:-30%;bottom:0;width:30%;height:4px;background:#a8b63f;animation:maker-signal 4s ease-in-out infinite}
+body[data-page="about"] .maker-logo-panel img{width:min(100%,440px);height:auto;transition:transform .2s ease}
+body[data-page="about"] .maker-logo-panel:hover img{transform:translateY(-3px)}
+body[data-page="about"] .maker-logo-panel:focus-visible{outline:4px solid #c93237;outline-offset:4px}
+@keyframes maker-signal{0%,15%{transform:translateX(0)}70%,100%{transform:translateX(440%)}}
+@media(prefers-reduced-motion:reduce){body[data-page="about"] .maker-logo-panel::after{animation:none;left:0;width:100%}body[data-page="about"] .maker-logo-panel img{transition:none}}
+
+/* Methodology begins as a data header, not an editorial hero. */
+body[data-page="methodology"] main{padding-top:28px}
+body[data-page="methodology"] .status-header{display:flex;justify-content:space-between;gap:36px;align-items:end;padding:18px 0 16px;border-bottom:1px solid #171918}
+body[data-page="methodology"] .status-header h1{margin:0;font:750 24px/1.1 system-ui,sans-serif;letter-spacing:-.025em}
+body[data-page="methodology"] .status-header div>p{margin:6px 0 0;color:#656963;font:12px/1.45 system-ui,sans-serif}
+body[data-page="methodology"] .status-header>p{margin:0;color:#656963;font:700 10px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-align:right;text-transform:uppercase}
+body[data-page="methodology"] .section-bar h2,body[data-page="methodology"] .method-ledger-head h2{font:750 16px/1.2 system-ui,sans-serif;letter-spacing:-.015em}
+body[data-page="methodology"] .data-health{margin-top:18px}
+@media(max-width:600px){body[data-page="methodology"] .status-header{align-items:flex-start;flex-direction:column;gap:12px;padding:12px 0 16px}body[data-page="methodology"] .status-header>p{text-align:left}body[data-page="methodology"] .method-ledger-head h2{font-size:16px}body[data-page="about"] .maker-logo-panel{min-height:190px;padding:38px}}
