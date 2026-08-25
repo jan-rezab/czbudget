@@ -203,7 +203,7 @@
   render();
   if(document.body.dataset.page==="methodology")Promise.all([
     fetch("data/methodology-sources.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/data-quality-report.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/data-quality-report.v1.json?v=20260825-entry-count").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/release-manifest.v1.json").then(response=>response.ok?response.json():null),
     fetch("data/international-municipalities.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/municipal-itemized-coverage.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
