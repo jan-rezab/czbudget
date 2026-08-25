@@ -115,11 +115,11 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#status-meta")).toContainText("100,021 municipal-year records");
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(4);
   await expect(page.locator("#data-health-root")).toContainText("Checks passed");
-  await expect(page.locator("#data-health-root")).toContainText("79,242");
-  await expect(page.locator("#data-health-root")).toContainText("13 countries");
-  await expect(page.locator("#data-health-root")).toContainText("50");
-  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(13);
-  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(91);
+  await expect(page.locator("#data-health-root")).toContainText("92,751");
+  await expect(page.locator("#data-health-root")).toContainText("16 countries");
+  await expect(page.locator("#data-health-root")).toContainText("54");
+  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(16);
+  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(112);
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
   await expect(page.locator('[data-coverage-country="NOR"][data-coverage-node="municipalHistory"]')).toContainText("2015–2025");
   await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="municipalHistory"]')).toContainText("2010–2025");
@@ -131,6 +131,8 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#coverage-source-list article")).toHaveCount(1);
   await expect(page.locator("#method-source-rows tr")).toHaveCount(1);
   await expect(page.locator("#method-country-filter")).toHaveValue("SWE");
+  await expect(page.locator("#municipal-transparency")).toContainText("23");
+  await expect(page.locator("#municipal-transparency")).toContainText("South Korea");
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });
 
@@ -290,7 +292,7 @@ test("ageing deep dive stays inside official projections and transparent arithme
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(13);
+  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(16);
   await expect(page.locator("#country-filter + .custom-select-button")).toBeVisible();
   await expect(page.locator("#year-filter + .custom-select-button")).toBeVisible();
   await expect(page.locator("#type-filter + .custom-select-button")).toBeVisible();
@@ -316,7 +318,7 @@ test("international municipality directory filters by country, year and search",
   await expect(page.locator("#municipality-grid .municipality-card")).toHaveCount(1);
   await expect(page.locator("#municipality-grid")).toContainText("Copenhagen");
   await page.locator("#year-filter").selectOption("2024");
-  await expect(page.locator("#directory-count")).toContainText("1 entities");
+  await expect(page.locator("#directory-count")).toContainText("0 entities");
   await page.locator("#type-filter").selectOption("capital");
   await page.locator("#municipality-search").fill("");
   await expect(page.locator("#directory-count")).toContainText("27 entities");
@@ -324,7 +326,7 @@ test("international municipality directory filters by country, year and search",
 });
 
 test("every covered country has a municipality homepage and the navigator connects them", async ({ page, request }) => {
-  const countries = ["czechia", "poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland"];
+  const countries = ["czechia", "poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan"];
   for (const slug of countries) {
     const response = await request.get(`/municipalities/${slug}/?lang=en`);
     expect(response.ok(), `${slug} municipality homepage failed`).toBeTruthy();
@@ -333,7 +335,7 @@ test("every covered country has a municipality homepage and the navigator connec
   await expect(page.locator("#country-title")).toContainText("Budgets of Danish municipalities");
   await expect(page.locator(".dynamic-country-picker")).toContainText("Choose a country");
   await expect(page.locator(".country-picker-readout")).toContainText("Denmark");
-  await expect(page.locator("#municipality-country-switch option")).toHaveCount(10);
+  await expect(page.locator("#municipality-country-switch option")).toHaveCount(13);
   await expect(page.locator("#country-insight-grid article")).toHaveCount(4);
   await expect(page.locator("#country-directory-count")).toContainText("98 entities");
   await page.locator("#country-municipality-search").fill("Copenhagen");
@@ -549,7 +551,7 @@ test("all representative page menus resolve and primary navigation routes correc
   await expect(navItems.nth(1)).toHaveAttribute("data-global-nav", "cities");
   const municipalityMenu = page.locator(".municipality-menu");
   await municipalityMenu.locator("summary").click();
-  await expect(municipalityMenu.locator(".country-menu-panel a")).toHaveCount(11);
+  await expect(municipalityMenu.locator(".country-menu-panel a")).toHaveCount(14);
   await municipalityMenu.locator(".country-menu-head a").click();
   await expect(page).toHaveURL(/\/municipalities\/\?lang=cs/);
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });

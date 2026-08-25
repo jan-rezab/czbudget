@@ -11,6 +11,12 @@ const benchmarkLabels = {
   NLD: { en: "native Iv3 task fields", cs: "původní položky úloh Iv3" },
   NOR: { en: "native KOSTRA measures", cs: "původní ukazatele KOSTRA" }
 };
+const expansionLabels = {
+  BRA: { en: "native RREO or DCA budget-execution items", cs: "původní položky plnění RREO nebo DCA" },
+  DNK: { en: "native BUDK100 and REGK100 account items", cs: "původní účetní položky BUDK100 a REGK100" },
+  ESP: { en: "native CONPREL budget and liquidation items", cs: "původní rozpočtové a likvidační položky CONPREL" },
+  JPN: { en: "native Local Public Finance Survey items", cs: "původní položky Local Public Finance Survey" },
+};
 const benchmarkData = Object.fromEntries(await Promise.all(
   Object.entries(benchmarkCodes).map(async ([code, slug]) => [code, await read(`data/municipal-benchmarks/${slug}.json`)])
 ));
@@ -51,6 +57,25 @@ const countries = municipalities.countries.map((country) => {
       source_title: benchmark.country.source_title || `Official ${country.name_en} municipal source`,
       source_url: benchmark.country.source,
       note: "Each counted profile publishes its native itemized accounting breakdown."
+    };
+  }
+
+  const expansion = expansionLabels[country.code];
+  if (expansion) {
+    const profileCount = country.code === "BRA" ? country.directory_count - country.missing_finance_count : country.directory_count;
+    return {
+      code: country.code,
+      municipal_scope: country.directory_count,
+      profile_count: profileCount,
+      status: profileCount === country.directory_count ? "full" : "partial",
+      period: String(Math.max(...country.years)),
+      detail_kind_en: expansion.en,
+      detail_kind_cs: expansion.cs,
+      source_title: `Official ${country.name_en} municipal source`,
+      source_url: country.source,
+      note: country.code === "BRA"
+        ? `${country.missing_finance_count} directory entities have no rows in either the 2025 RREO or 2024 DCA fallback layer.`
+        : "Every counted profile publishes the native itemized classifications retained from the national source."
     };
   }
 

@@ -16,7 +16,7 @@ async function filesBelow(directory, predicate = () => true) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     // Authenticated templates live in /app inside the container and are not
     // served from Nginx's public document root.
-    if ([".git", "dist", "node_modules", "server", "test-results", "playwright-report"].includes(entry.name)) continue;
+    if (/ \d+\.[^/]+$/.test(entry.name) || [".git", "dist", "node_modules", "server", "test-results", "playwright-report"].includes(entry.name)) continue;
     const target = path.join(directory, entry.name);
     if (entry.isDirectory()) output.push(...await filesBelow(target, predicate));
     else if (predicate(target)) output.push(target);
@@ -49,11 +49,15 @@ for (const file of productionJson) {
 try {
   const release = await json("data/release-manifest.v1.json");
   for (const artifact of release.artifacts) {
-    if (["data/entities/*.json", "data/municipal-history/*.json"].includes(artifact.path)) {
+    if (artifact.path.endsWith("/*.json")) {
       const digest = createHash("sha256");
       let bytes = 0;
       const directory = artifact.path.slice(0, -"/*.json".length);
-      const names = (await readdir(path.join(root, directory))).filter((name) => directory.endsWith("entities") ? /^\d{8}\.json$/.test(name) : name === "index.json" || /^\d{8}\.json$/.test(name)).sort();
+      const names = (await readdir(path.join(root, directory))).filter((name) => {
+        if (directory.endsWith("entities")) return /^\d{8}\.json$/.test(name);
+        if (directory.endsWith("municipal-history")) return name === "index.json" || /^\d{8}\.json$/.test(name);
+        return name.endsWith(".json");
+      }).sort();
       for (const name of names) {
         const content = await readFile(path.join(root, directory, name));
         digest.update(name).update("\0").update(content);
@@ -71,6 +75,7 @@ try {
 
 const snapshot = await json("data/municipal-snapshot.v1.json");
 const municipalities = snapshot.municipalities;
+const internationalMunicipalities = await json("data/international-municipalities.v1.json");
 const benchmarkMunicipalityIndexes = await Promise.all(["nor", "nld", "fin"].map((code) => json(`data/municipal-benchmarks/${code}.json`)));
 const benchmarkMunicipalities = benchmarkMunicipalityIndexes.flatMap((country) => country.entities);
 const municipalityById = new Map(municipalities.map((item) => [item.national_id, item]));
@@ -361,14 +366,17 @@ if (!dataOnly) {
 
   const sitemap = await readFile("sitemap.xml", "utf8");
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/"];
-  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length;
+  const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/", "/municipalities/brazil/", "/municipalities/spain/", "/municipalities/japan/"];
+  const expansionCodes = new Set(["BRA", "DNK", "ESP", "JPN"]);
+  const expansionProfiles = internationalMunicipalities.entities.filter((entity) => expansionCodes.has(entity.country) && entity.url);
+  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 3;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
   for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
     assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);
+  for (const entity of expansionProfiles) assert(locations.includes(`https://publicspendingdata.org${entity.url}`), `Sitemap missing ${entity.url}`);
   for (const entity of benchmarkMunicipalities) assert(locations.some((url) => url.endsWith(entity.url)), `Sitemap missing ${entity.url}`);
 }
 

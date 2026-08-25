@@ -12,7 +12,7 @@ const selected = [
   "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json", "data/state-owned-enterprises.v1.json",
   "data/czech-budget.v1.json", "data/demography-social.v1.json",
   "data/eu-capital-budgets.v1.json", "data/municipal-snapshot.v1.json", "data/municipal-history-directory.v1.json",
-  "data/international-municipalities.v1.json", "data/municipal-itemized-coverage.v1.json",
+  "data/international-municipalities.v1.json", "data/municipal-itemized-coverage.v1.json", "data/municipal-transparency.v1.json", "data/world-map.v1.json",
   "lib/data/sovereign-benchmark.v1.json", "sitemap.xml",
 ];
 try {
@@ -47,6 +47,20 @@ for (const name of historyFiles) {
   historyBytes += content.length;
 }
 artifacts.push({ path: "data/municipal-history/*.json", files: historyFiles.length, bytes: historyBytes, sha256: historyHash.digest("hex") });
+for (const directory of [
+  "data/municipal-expansion/bra", "data/municipal-expansion/dnk", "data/municipal-expansion/esp", "data/municipal-expansion/jpn",
+  "data/municipal-benchmarks/nld", "data/municipal-benchmarks/nor", "data/municipal-benchmarks/fin",
+]) {
+  const digest = createHash("sha256");
+  let bytes = 0;
+  const names = (await readdir(path.join(root, directory))).filter((name) => name.endsWith(".json")).sort();
+  for (const name of names) {
+    const content = await readFile(path.join(root, directory, name));
+    digest.update(name).update("\0").update(content);
+    bytes += content.length;
+  }
+  artifacts.push({ path: `${directory}/*.json`, files: names.length, bytes, sha256: digest.digest("hex") });
+}
 let gitCommit = process.env.COMMIT_SHA || null;
 let workingTreeDirty = null;
 if (!gitCommit) {

@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-25T12:10:23.529Z",
-  "row_count": 110,
+  "generated_at": "2026-08-25T17:02:37.475Z",
+  "row_count": 116,
   "countries": [
     {
       "code": "CZE",
@@ -26,8 +26,8 @@
     },
     {
       "code": "GBR",
-      "name_cs": "Spojené království",
-      "name_en": "United Kingdom"
+      "name_cs": "Anglie",
+      "name_en": "England"
     },
     {
       "code": "FRA",
@@ -36,7 +36,7 @@
     },
     {
       "code": "USA",
-      "name_cs": "USA",
+      "name_cs": "Spojené státy",
       "name_en": "United States"
     },
     {
@@ -53,6 +53,36 @@
       "code": "DNK",
       "name_cs": "Dánsko",
       "name_en": "Denmark"
+    },
+    {
+      "code": "BRA",
+      "name_cs": "Brazílie",
+      "name_en": "Brazil"
+    },
+    {
+      "code": "FIN",
+      "name_cs": "Finsko",
+      "name_en": "Finland"
+    },
+    {
+      "code": "JPN",
+      "name_cs": "Japonsko",
+      "name_en": "Japan"
+    },
+    {
+      "code": "NLD",
+      "name_cs": "Nizozemsko",
+      "name_en": "Netherlands"
+    },
+    {
+      "code": "NOR",
+      "name_cs": "Norsko",
+      "name_en": "Norway"
+    },
+    {
+      "code": "ESP",
+      "name_cs": "Španělsko",
+      "name_en": "Spain"
     }
   ],
   "modules": [
@@ -2385,6 +2415,31 @@
       "limitations": "The facility register is loaded; Medicare HCRIS cost reports remain a separate accounting fact."
     },
     {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "municipalities",
+      "module_order": 9,
+      "module_label_cs": "Obecní finance",
+      "module_label_en": "Municipal finance",
+      "status": "partial",
+      "artifact": "data/international-municipalities.v1.json",
+      "coverage": "All 5,570 municipalities in the SICONFI directory; 2025 regular or simplified RREO Annex 01 for 5,513, 2024 DCA I-C/I-D fallback for 44, 13 without either return",
+      "period": "2024, 2025",
+      "scope": "All 5,570 municipalities in the SICONFI directory; 2025 regular or simplified RREO Annex 01 for 5,513, 2024 DCA I-C/I-D fallback for 44, 13 without either return",
+      "sources": [
+        {
+          "title": "Official municipal-finance source",
+          "url": "https://apidatalake.tesouro.gov.br/docs/siconfi",
+          "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
+        }
+      ],
+      "exact_extraction": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json",
+      "transformation": "Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+      "limitations": "Coverage is the entity population stated by the national source."
+    },
+    {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
       "country_name_en": "Switzerland",
@@ -2471,12 +2526,62 @@
       "status": "full",
       "artifact": "data/international-municipalities.v1.json",
       "coverage": "All 98 municipalities; budgets and final accounts",
-      "period": "2024, 2025",
-      "scope": "All 98 municipalities; budgets and final accounts",
+      "period": "2025",
+      "scope": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
       "sources": [
         {
           "title": "Official municipal-finance source",
-          "url": "https://www.statbank.dk/BUDK32",
+          "url": "https://www.statbank.dk/BUDK100",
+          "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
+        }
+      ],
+      "exact_extraction": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json",
+      "transformation": "Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+      "limitations": "Coverage is the entity population stated by the national source."
+    },
+    {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "municipalities",
+      "module_order": 9,
+      "module_label_cs": "Obecní finance",
+      "module_label_en": "Municipal finance",
+      "status": "full",
+      "artifact": "data/international-municipalities.v1.json",
+      "coverage": "6,198 reporting municipalities in CONPREL; 2026 adopted budgets and 2025 liquidations with economic accounts",
+      "period": "2025, 2026",
+      "scope": "6,198 reporting municipalities in CONPREL; 2026 adopted budgets and 2025 liquidations with economic accounts",
+      "sources": [
+        {
+          "title": "Official municipal-finance source",
+          "url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
+          "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
+        }
+      ],
+      "exact_extraction": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json",
+      "transformation": "Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+      "limitations": "Coverage is the entity population stated by the national source."
+    },
+    {
+      "country_code": "FIN",
+      "country_name_cs": "Finsko",
+      "country_name_en": "Finland",
+      "flag": "FI",
+      "module": "municipalities",
+      "module_order": 9,
+      "module_label_cs": "Obecní finance",
+      "module_label_en": "Municipal finance",
+      "status": "full",
+      "artifact": "data/international-municipalities.v1.json",
+      "coverage": "All 310 municipalities in the 2020 census; 203 financial-statement measures, 2015–2020 archive",
+      "period": "2015, 2016, 2017, 2018, 2019, 2020",
+      "scope": "All 310 municipalities in the 2020 census; 203 financial-statement measures, 2015–2020 archive",
+      "sources": [
+        {
+          "title": "Official municipal-finance source",
+          "url": "https://pxdata.stat.fi/PxWeb/pxweb/en/Kuntien_talous_ja_toiminta/",
           "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
         }
       ],
@@ -2527,6 +2632,81 @@
         {
           "title": "Official municipal-finance source",
           "url": "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set",
+          "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
+        }
+      ],
+      "exact_extraction": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json",
+      "transformation": "Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+      "limitations": "Coverage is the entity population stated by the national source."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "municipalities",
+      "module_order": 9,
+      "module_label_cs": "Obecní finance",
+      "module_label_en": "Municipal finance",
+      "status": "full",
+      "artifact": "data/international-municipalities.v1.json",
+      "coverage": "All 1,741 municipalities and Tokyo wards; 16 e-Stat tables covering revenue, expenditure, debt, funds and ageing-related finance",
+      "period": "2024",
+      "scope": "All 1,741 municipalities and Tokyo wards; 16 e-Stat tables covering revenue, expenditure, debt, funds and ageing-related finance",
+      "sources": [
+        {
+          "title": "Official municipal-finance source",
+          "url": "https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755",
+          "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
+        }
+      ],
+      "exact_extraction": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json",
+      "transformation": "Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+      "limitations": "Coverage is the entity population stated by the national source."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "municipalities",
+      "module_order": 9,
+      "module_label_cs": "Obecní finance",
+      "module_label_en": "Municipal finance",
+      "status": "full",
+      "artifact": "data/international-municipalities.v1.json",
+      "coverage": "All municipalities in CBS Iv3 annual accounts; native task fields and economic categories",
+      "period": "2024, 2025",
+      "scope": "All municipalities in CBS Iv3 annual accounts; native task fields and economic categories",
+      "sources": [
+        {
+          "title": "Official municipal-finance source",
+          "url": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3",
+          "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
+        }
+      ],
+      "exact_extraction": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json",
+      "transformation": "Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+      "limitations": "Coverage is the entity population stated by the national source."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "municipalities",
+      "module_order": 9,
+      "module_label_cs": "Obecní finance",
+      "module_label_en": "Municipal finance",
+      "status": "full",
+      "artifact": "data/international-municipalities.v1.json",
+      "coverage": "All 357 municipalities plus Longyearbyen; 2015–2025 headline accounts and 2025 detail across 97 KOSTRA functions",
+      "period": "2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025",
+      "scope": "All 357 municipalities plus Longyearbyen; 2015–2025 headline accounts and 2025 detail across 97 KOSTRA functions",
+      "sources": [
+        {
+          "title": "Official municipal-finance source",
+          "url": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap",
           "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
         }
       ],

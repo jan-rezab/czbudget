@@ -4,6 +4,18 @@
   "definition": "A profile counts only when municipality-level economic, functional or native accounting line items are published on this site; headline totals alone do not count.",
   "countries": [
     {
+      "code": "BRA",
+      "municipal_scope": 5570,
+      "profile_count": 5557,
+      "status": "partial",
+      "period": "2025",
+      "detail_kind_en": "native RREO or DCA budget-execution items",
+      "detail_kind_cs": "původní položky plnění RREO nebo DCA",
+      "source_title": "Official Brazil municipal source",
+      "source_url": "https://apidatalake.tesouro.gov.br/docs/siconfi",
+      "note": "13 directory entities have no rows in either the 2025 RREO or 2024 DCA fallback layer."
+    },
+    {
       "code": "CZE",
       "municipal_scope": 6254,
       "profile_count": 6254,
@@ -16,52 +28,16 @@
       "note": "Economic and functional breakdowns for enacted, revised and actual stages are merged into every published Czech municipal profile during the production build."
     },
     {
-      "code": "POL",
-      "municipal_scope": 2486,
-      "profile_count": 0,
-      "status": "missing",
-      "period": null,
-      "detail_kind_en": null,
-      "detail_kind_cs": null,
-      "source_title": "Official Poland municipal source",
-      "source_url": "https://www.gov.pl/web/finanse/bazy-danych8",
-      "note": "No itemized municipality-level budget profile is currently published on this site."
-    },
-    {
       "code": "DNK",
       "municipal_scope": 98,
-      "profile_count": 0,
-      "status": "missing",
-      "period": null,
-      "detail_kind_en": null,
-      "detail_kind_cs": null,
+      "profile_count": 98,
+      "status": "full",
+      "period": "2025",
+      "detail_kind_en": "native BUDK100 and REGK100 account items",
+      "detail_kind_cs": "původní účetní položky BUDK100 a REGK100",
       "source_title": "Official Denmark municipal source",
-      "source_url": "https://www.statbank.dk/BUDK32",
-      "note": "No itemized municipality-level budget profile is currently published on this site."
-    },
-    {
-      "code": "FRA",
-      "municipal_scope": 35041,
-      "profile_count": 0,
-      "status": "missing",
-      "period": null,
-      "detail_kind_en": null,
-      "detail_kind_cs": null,
-      "source_title": "Official France municipal source",
-      "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
-      "note": "No itemized municipality-level budget profile is currently published on this site."
-    },
-    {
-      "code": "SWE",
-      "municipal_scope": 290,
-      "profile_count": 0,
-      "status": "missing",
-      "period": null,
-      "detail_kind_en": null,
-      "detail_kind_cs": null,
-      "source_title": "Official Sweden municipal source",
-      "source_url": "https://www.scb.se/en/OE0107",
-      "note": "No itemized municipality-level budget profile is currently published on this site."
+      "source_url": "https://www.statbank.dk/BUDK100",
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
       "code": "GBR",
@@ -74,46 +50,6 @@
       "source_title": "Official England municipal source",
       "source_url": "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set",
       "note": "No itemized municipality-level budget profile is currently published on this site."
-    },
-    {
-      "code": "UKR",
-      "municipal_scope": 1467,
-      "profile_count": 0,
-      "status": "missing",
-      "period": null,
-      "detail_kind_en": null,
-      "detail_kind_cs": null,
-      "source_title": "Official Ukraine municipal source",
-      "source_url": "https://api.openbudget.gov.ua/swagger-ui.html",
-      "note": "No itemized municipality-level budget profile is currently published on this site."
-    },
-    {
-      "code": "NOR",
-      "municipal_scope": 358,
-      "profile_count": 358,
-      "status": "full",
-      "period": "2025",
-      "detail_kind_en": "native KOSTRA measures",
-      "detail_kind_cs": "původní ukazatele KOSTRA",
-      "measure_count_min": 80,
-      "measure_count_max": 80,
-      "source_title": "Official Norway municipal source",
-      "source_url": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap",
-      "note": "Each counted profile publishes its native itemized accounting breakdown."
-    },
-    {
-      "code": "NLD",
-      "municipal_scope": 342,
-      "profile_count": 342,
-      "status": "full",
-      "period": "2025",
-      "detail_kind_en": "native Iv3 task fields",
-      "detail_kind_cs": "původní položky úloh Iv3",
-      "measure_count_min": 78,
-      "measure_count_max": 78,
-      "source_title": "Official Netherlands municipal source",
-      "source_url": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3",
-      "note": "Each counted profile publishes its native itemized accounting breakdown."
     },
     {
       "code": "FIN",
@@ -130,6 +66,18 @@
       "note": "Each counted profile publishes its native itemized accounting breakdown."
     },
     {
+      "code": "FRA",
+      "municipal_scope": 35041,
+      "profile_count": 0,
+      "status": "missing",
+      "period": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
+      "source_title": "Official France municipal source",
+      "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+      "note": "No itemized municipality-level budget profile is currently published on this site."
+    },
+    {
       "code": "DEU",
       "municipal_scope": 10756,
       "profile_count": 0,
@@ -142,15 +90,79 @@
       "note": "No itemized municipality-level budget profile is currently published on this site."
     },
     {
-      "code": "USA",
-      "municipal_scope": 19401,
+      "code": "JPN",
+      "municipal_scope": 1741,
+      "profile_count": 1741,
+      "status": "full",
+      "period": "2024",
+      "detail_kind_en": "native Local Public Finance Survey items",
+      "detail_kind_cs": "původní položky Local Public Finance Survey",
+      "source_title": "Official Japan municipal source",
+      "source_url": "https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755",
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "code": "NLD",
+      "municipal_scope": 342,
+      "profile_count": 342,
+      "status": "full",
+      "period": "2025",
+      "detail_kind_en": "native Iv3 task fields",
+      "detail_kind_cs": "původní položky úloh Iv3",
+      "measure_count_min": 78,
+      "measure_count_max": 78,
+      "source_title": "Official Netherlands municipal source",
+      "source_url": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3",
+      "note": "Each counted profile publishes its native itemized accounting breakdown."
+    },
+    {
+      "code": "NOR",
+      "municipal_scope": 358,
+      "profile_count": 358,
+      "status": "full",
+      "period": "2025",
+      "detail_kind_en": "native KOSTRA measures",
+      "detail_kind_cs": "původní ukazatele KOSTRA",
+      "measure_count_min": 114,
+      "measure_count_max": 175,
+      "source_title": "Official Norway municipal source",
+      "source_url": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap",
+      "note": "Each counted profile publishes its native itemized accounting breakdown."
+    },
+    {
+      "code": "POL",
+      "municipal_scope": 2486,
       "profile_count": 0,
       "status": "missing",
       "period": null,
       "detail_kind_en": null,
       "detail_kind_cs": null,
-      "source_title": "Official United States municipal source",
-      "source_url": "https://www.census.gov/data/datasets/2022/econ/local/public-use-datasets.html",
+      "source_title": "Official Poland municipal source",
+      "source_url": "https://www.gov.pl/web/finanse/bazy-danych8",
+      "note": "No itemized municipality-level budget profile is currently published on this site."
+    },
+    {
+      "code": "ESP",
+      "municipal_scope": 6198,
+      "profile_count": 6198,
+      "status": "full",
+      "period": "2026",
+      "detail_kind_en": "native CONPREL budget and liquidation items",
+      "detail_kind_cs": "původní rozpočtové a likvidační položky CONPREL",
+      "source_title": "Official Spain municipal source",
+      "source_url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "code": "SWE",
+      "municipal_scope": 290,
+      "profile_count": 0,
+      "status": "missing",
+      "period": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
+      "source_title": "Official Sweden municipal source",
+      "source_url": "https://www.scb.se/en/OE0107",
       "note": "No itemized municipality-level budget profile is currently published on this site."
     },
     {
@@ -163,6 +175,30 @@
       "detail_kind_cs": null,
       "source_title": "Official Switzerland municipal source",
       "source_url": "https://www.efv.admin.ch/de/fs-daten",
+      "note": "No itemized municipality-level budget profile is currently published on this site."
+    },
+    {
+      "code": "UKR",
+      "municipal_scope": 1467,
+      "profile_count": 0,
+      "status": "missing",
+      "period": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
+      "source_title": "Official Ukraine municipal source",
+      "source_url": "https://api.openbudget.gov.ua/swagger-ui.html",
+      "note": "No itemized municipality-level budget profile is currently published on this site."
+    },
+    {
+      "code": "USA",
+      "municipal_scope": 19401,
+      "profile_count": 0,
+      "status": "missing",
+      "period": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
+      "source_title": "Official United States municipal source",
+      "source_url": "https://www.census.gov/data/datasets/2022/econ/local/public-use-datasets.html",
       "note": "No itemized municipality-level budget profile is currently published on this site."
     }
   ]

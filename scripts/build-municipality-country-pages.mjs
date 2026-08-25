@@ -10,7 +10,10 @@ const pages={
   ukraine:{code:"UKR",title:"Ukrainian municipalities",description:"Complete 2024–2025 coverage and a searchable directory of 1,467 Ukrainian territorial communities."},
   norway:{code:"NOR",title:"Norwegian municipalities",description:"Official municipal accounts and a searchable directory of Norwegian municipalities."},
   netherlands:{code:"NLD",title:"Dutch municipalities",description:"Official budget data and a searchable directory of Dutch municipalities."},
-  finland:{code:"FIN",title:"Finnish municipalities",description:"Official municipal accounts and a searchable directory of Finnish municipalities."}
+  finland:{code:"FIN",title:"Finnish municipalities",description:"Official municipal accounts and a searchable directory of Finnish municipalities."},
+  brazil:{code:"BRA",title:"Brazilian municipalities",description:"SICONFI budget execution and a searchable directory of Brazilian municipalities."},
+  spain:{code:"ESP",title:"Spanish municipalities",description:"CONPREL adopted budgets, liquidations and a searchable directory of Spanish municipalities."},
+  japan:{code:"JPN",title:"Japanese municipalities",description:"Official e-Stat local public-finance settlements and a searchable directory of Japanese municipalities."}
 };
 
 for(const [slug,page] of Object.entries(pages)){

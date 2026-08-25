@@ -1,0 +1,478 @@
+{
+  "schema_version": "1.0.0",
+  "updated": "2026-08-25",
+  "methodology": {
+    "unit": "municipality or closest general-purpose local government tier",
+    "rule": "A country is scored only from an official national source. A blank country is unassessed, not non-publishing.",
+    "categories": [
+      "full_lifecycle",
+      "budget_and_accounts",
+      "accounts_only",
+      "decentralized",
+      "unassessed"
+    ],
+    "map_geometry": "@svg-maps/world, CC BY 4.0"
+  },
+  "countries": [
+    {
+      "iso2": "cz",
+      "iso3": "CZE",
+      "name_en": "Czechia",
+      "name_cs": "Česko",
+      "category": "full_lifecycle",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": true,
+        "revised": true,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "National open-data lifecycle with item-level municipal records.",
+      "note_cs": "Národní otevřený životní cyklus s položkovými záznamy obcí.",
+      "source": "https://monitor.statnipokladna.cz/datovy-katalog/"
+    },
+    {
+      "iso2": "nl",
+      "iso3": "NLD",
+      "name_en": "Netherlands",
+      "name_cs": "Nizozemsko",
+      "category": "full_lifecycle",
+      "pipeline": "loaded_partial",
+      "features": {
+        "enacted": true,
+        "revised": true,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Iv3 provides budget, four quarterly reports and annual accounts through OData and bulk files.",
+      "note_cs": "Iv3 poskytuje rozpočet, čtyři čtvrtletní výkazy a roční účty přes OData i hromadné soubory.",
+      "source": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3"
+    },
+    {
+      "iso2": "br",
+      "iso3": "BRA",
+      "name_en": "Brazil",
+      "name_cs": "Brazílie",
+      "category": "full_lifecycle",
+      "pipeline": "loaded_partial",
+      "features": {
+        "enacted": true,
+        "revised": true,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Loaded: 5,513 municipalities with 2025 regular or simplified RREO, 44 with paired 2024 DCA revenue/expenditure fallback, and 13 directory entities with no rows in either filing layer.",
+      "note_cs": "Načteno: 5 513 obcí s běžným nebo zjednodušeným RREO 2025, 44 s náhradní dvojicí DCA 2024 pro příjmy a výdaje a 13 jednotek adresáře bez řádků v obou vrstvách.",
+      "source": "https://apidatalake.tesouro.gov.br/docs/siconfi"
+    },
+    {
+      "iso2": "kr",
+      "iso3": "KOR",
+      "name_en": "South Korea",
+      "name_cs": "Jižní Korea",
+      "category": "full_lifecycle",
+      "pipeline": "candidate",
+      "features": {
+        "enacted": true,
+        "revised": null,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Local Finance 365 centrally publishes budgets, settlements, disclosures and Open APIs. It is more machine-accessible than Japan for budget-stage analysis.",
+      "note_cs": "Local Finance 365 centrálně zveřejňuje rozpočty, závěrečné účty, povinná zveřejnění a Open API. Pro analýzu fází rozpočtu je strojově dostupnější než Japonsko.",
+      "source": "https://www.lofin365.go.kr/portal/LF2100000.do"
+    },
+    {
+      "iso2": "pl",
+      "iso3": "POL",
+      "name_en": "Poland",
+      "name_cs": "Polsko",
+      "category": "full_lifecycle",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": null,
+        "revised": true,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": false
+      },
+      "note_en": "Detailed standardized local-government returns expose revised plans and execution; original enacted-plan coverage still needs a separate national source.",
+      "note_cs": "Detailní standardizované výkazy ukazují upravené plány a plnění; původní schválený plán ještě vyžaduje samostatný národní zdroj.",
+      "source": "https://www.gov.pl/web/finanse/sprawozdania-budzetowe"
+    },
+    {
+      "iso2": "ua",
+      "iso3": "UKR",
+      "name_en": "Ukraine",
+      "name_cs": "Ukrajina",
+      "category": "full_lifecycle",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": true,
+        "revised": true,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "The Open Budget API publishes local plans and execution for territorial communities.",
+      "note_cs": "Open Budget API zveřejňuje místní plány a plnění územních komunit.",
+      "source": "https://openbudget.gov.ua/"
+    },
+    {
+      "iso2": "dk",
+      "iso3": "DNK",
+      "name_en": "Denmark",
+      "name_cs": "Dánsko",
+      "category": "budget_and_accounts",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": true,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "The BUDK100/REGK100 pair gives exceptionally deep function × kind × ownership × grouping detail for all 98 municipalities.",
+      "note_cs": "Dvojice BUDK100/REGK100 nabízí mimořádný detail funkce × druh × vlastnictví × seskupení pro všech 98 obcí.",
+      "source": "https://www.statbank.dk/BUDK100"
+    },
+    {
+      "iso2": "es",
+      "iso3": "ESP",
+      "name_en": "Spain",
+      "name_cs": "Španělsko",
+      "category": "budget_and_accounts",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": true,
+        "revised": null,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": false
+      },
+      "note_en": "CONPREL publishes adopted budgets and liquidations at maximum entity detail, but the national downloads are Access/Excel rather than an API.",
+      "note_cs": "CONPREL zveřejňuje schválené rozpočty a plnění v maximálním detailu za entity, ale národní soubory jsou v Access/Excel místo API.",
+      "source": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel"
+    },
+    {
+      "iso2": "gb",
+      "iso3": "GBR",
+      "name_en": "United Kingdom",
+      "name_cs": "Spojené království",
+      "category": "budget_and_accounts",
+      "pipeline": "loaded_partial",
+      "features": {
+        "enacted": true,
+        "revised": null,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": false
+      },
+      "note_en": "England has standardized revenue budget and outturn collections; the current loader covers England only.",
+      "note_cs": "Anglie má standardizované výkazy rozpočtu a skutečnosti; současný import pokrývá pouze Anglii.",
+      "source": "https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing"
+    },
+    {
+      "iso2": "jp",
+      "iso3": "JPN",
+      "name_en": "Japan",
+      "name_cs": "Japonsko",
+      "category": "accounts_only",
+      "pipeline": "loaded_partial",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "e-Stat has a rich standardized Local Public Finance Survey—roughly 98 settlement tables per municipality. Adopted budgets remain in individual municipal documents.",
+      "note_cs": "e-Stat má bohaté standardizované šetření místních financí — přibližně 98 tabulek závěrečných účtů na obec. Schválené rozpočty zůstávají v dokumentech jednotlivých obcí.",
+      "source": "https://www.e-stat.go.jp/stat-search/files?cycle=7&layout=datalist&toukei=00200251&tstat=000001077755"
+    },
+    {
+      "iso2": "no",
+      "iso3": "NOR",
+      "name_en": "Norway",
+      "name_cs": "Norsko",
+      "category": "accounts_only",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "KOSTRA table 12367 exposes 97 functions and 35 accounting types, but it is an accounts—not adopted-budget—dataset.",
+      "note_cs": "Tabulka KOSTRA 12367 nabízí 97 funkcí a 35 účetních druhů, jde však o účetní skutečnost, nikoli schválený rozpočet.",
+      "source": "https://www.ssb.no/en/statbank/table/12367"
+    },
+    {
+      "iso2": "fr",
+      "iso3": "FRA",
+      "name_en": "France",
+      "name_cs": "Francie",
+      "category": "accounts_only",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "DGFiP publishes detailed commune accounting balances nationally; adopted budgets are not in the same national open-data layer.",
+      "note_cs": "DGFiP celostátně zveřejňuje detailní účetní obraty obcí; schválené rozpočty nejsou ve stejné národní otevřené vrstvě.",
+      "source": "https://data.economie.gouv.fr/pages/accueil/"
+    },
+    {
+      "iso2": "se",
+      "iso3": "SWE",
+      "name_en": "Sweden",
+      "name_cs": "Švédsko",
+      "category": "accounts_only",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Statistics Sweden exposes annual costs, income and balance sheets for all 290 municipalities.",
+      "note_cs": "Statistics Sweden zpřístupňuje roční náklady, příjmy a rozvahy všech 290 obcí.",
+      "source": "https://www.scb.se/en/finding-statistics/statistics-by-subject-area/public-finances/local-government-finances/"
+    },
+    {
+      "iso2": "fi",
+      "iso3": "FIN",
+      "name_en": "Finland",
+      "name_cs": "Finsko",
+      "category": "accounts_only",
+      "pipeline": "loaded",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "National PxWeb tables provide detailed quarterly and annual municipal finances; adopted budgets are not the central product loaded here.",
+      "note_cs": "Národní tabulky PxWeb poskytují detailní čtvrtletní a roční finance obcí; schválené rozpočty nejsou centrálním produktem načteným zde.",
+      "source": "https://stat.fi/en/statistics/kta"
+    },
+    {
+      "iso2": "it",
+      "iso3": "ITA",
+      "name_en": "Italy",
+      "name_cs": "Itálie",
+      "category": "accounts_only",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": null,
+        "revised": null,
+        "execution": true,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "SIOPE is a strong national cash-flow source; full adopted-budget comparability requires a separate BDAP assessment.",
+      "note_cs": "SIOPE je silný národní zdroj peněžních toků; úplná srovnatelnost schválených rozpočtů vyžaduje samostatné posouzení BDAP.",
+      "source": "https://www.siope.it/"
+    },
+    {
+      "iso2": "de",
+      "iso3": "DEU",
+      "name_en": "Germany",
+      "name_cs": "Německo",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": null,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Municipal budgets are published by Länder and municipalities; national statistics do not reproduce one comparable item-level budget lifecycle.",
+      "note_cs": "Obecní rozpočty zveřejňují spolkové země a obce; národní statistika nereprodukuje jednotný položkový životní cyklus rozpočtu.",
+      "source": "https://www.destatis.de/EN/Themes/Government/Public-Finance/_node.html"
+    },
+    {
+      "iso2": "us",
+      "iso3": "USA",
+      "name_en": "United States",
+      "name_cs": "Spojené státy",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "The Census of Governments standardizes finance statistics, but adopted item-level budgets remain decentralized across tens of thousands of governments.",
+      "note_cs": "Census of Governments standardizuje finanční statistiky, ale schválené položkové rozpočty zůstávají rozptýlené mezi desítkami tisíc samospráv.",
+      "source": "https://www.census.gov/programs-surveys/gov-finances.html"
+    },
+    {
+      "iso2": "ca",
+      "iso3": "CAN",
+      "name_en": "Canada",
+      "name_cs": "Kanada",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": null,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Municipal budget documents are local/provincial; national statistics do not provide the same item-level adopted-to-actual census.",
+      "note_cs": "Rozpočtové dokumenty jsou místní či provinční; národní statistika neposkytuje stejný položkový census od plánu po skutečnost.",
+      "source": "https://www.statcan.gc.ca/en/subjects-start/government"
+    },
+    {
+      "iso2": "au",
+      "iso3": "AUS",
+      "name_en": "Australia",
+      "name_cs": "Austrálie",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": null,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Local-government finance is collected through states and national aggregates; item-level adopted budgets remain decentralized.",
+      "note_cs": "Finance místních samospráv se sbírají přes státy a národní agregáty; položkové schválené rozpočty zůstávají decentralizované.",
+      "source": "https://www.abs.gov.au/statistics/economy/government"
+    },
+    {
+      "iso2": "nz",
+      "iso3": "NZL",
+      "name_en": "New Zealand",
+      "name_cs": "Nový Zéland",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": null,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Councils publish long-term plans, annual plans and reports individually; national data are standardized summaries rather than item-level budgets.",
+      "note_cs": "Rady zveřejňují dlouhodobé plány, roční plány a zprávy jednotlivě; národní data jsou standardizované souhrny, nikoli položkové rozpočty.",
+      "source": "https://www.stats.govt.nz/topics/local-government"
+    },
+    {
+      "iso2": "ch",
+      "iso3": "CHE",
+      "name_en": "Switzerland",
+      "name_cs": "Švýcarsko",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Harmonized financial statistics exist, while adopted municipal budget documents remain cantonal/local.",
+      "note_cs": "Existují harmonizované finanční statistiky, schválené obecní rozpočty však zůstávají kantonální či místní.",
+      "source": "https://www.efv.admin.ch/efv/en/home/themen/finanzstatistik.html"
+    },
+    {
+      "iso2": "at",
+      "iso3": "AUT",
+      "name_en": "Austria",
+      "name_cs": "Rakousko",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": true,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "National municipal accounts are available, but one item-level adopted-to-actual budget lifecycle is not centrally published.",
+      "note_cs": "Národní obecní účty jsou dostupné, jednotný položkový životní cyklus od plánu po skutečnost však centrálně zveřejněn není.",
+      "source": "https://www.statistik.at/en/statistics/national-economy-and-public-finance/public-finance"
+    },
+    {
+      "iso2": "be",
+      "iso3": "BEL",
+      "name_en": "Belgium",
+      "name_cs": "Belgie",
+      "category": "decentralized",
+      "pipeline": "assessed",
+      "features": {
+        "enacted": false,
+        "revised": false,
+        "execution": false,
+        "actual": true,
+        "function": null,
+        "economic": true,
+        "api": true
+      },
+      "note_en": "Regional systems publish local-finance data under different models; there is no single Belgian item-level municipal budget lifecycle.",
+      "note_cs": "Regionální systémy zveřejňují místní finance odlišně; jednotný belgický položkový životní cyklus obecních rozpočtů neexistuje.",
+      "source": "https://statbel.fgov.be/en/themes/public-authorities"
+    }
+  ]
+}

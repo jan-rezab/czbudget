@@ -23,7 +23,7 @@ const moduleMeta = {
   public_entities:{order:10,cs:"Veřejné subjekty",en:"Public entities",artifact:"data/public-entity-coverage.v1.json"},
   demography:{order:11,cs:"Demografie",en:"Demography",artifact:"data/country-demography.v1.json"}
 };
-const alpha2 = {CZE:"CZ",UKR:"UA",POL:"PL",DEU:"DE",GBR:"UK",FRA:"FR",USA:"US",CHE:"CH",SWE:"SE",DNK:"DK"};
+const alpha2 = {CZE:"CZ",UKR:"UA",POL:"PL",DEU:"DE",GBR:"UK",FRA:"FR",USA:"US",CHE:"CH",SWE:"SE",DNK:"DK",FIN:"FI",NLD:"NL",NOR:"NO",BRA:"BR",ESP:"ES",JPN:"JP"};
 const source = (title,url,location="") => ({title,url,location});
 const cleanSources = values => values.filter(Boolean).filter((item,index,array)=>item?.url&&array.findIndex(other=>other?.url===item.url)===index);
 const adminByCode = code => administrative.countries.find(country=>country.code===code);
@@ -117,16 +117,31 @@ for(const country of parity.countries) for(const [module,moduleCoverage] of Obje
   });
 }
 
+// Municipality coverage extends beyond the ten-country sovereign comparison.
+// Add those national municipal sources to the same auditable ledger instead of
+// leaving them visible only in the directory JSON.
+const parityCodes=new Set(parity.countries.map(country=>country.country_code));
+for(const municipal of municipalities.countries.filter(country=>!parityCodes.has(country.code))){
+  const detail=lineage(municipal.code,"municipalities");
+  rows.push({
+    country_code:municipal.code,country_name_cs:municipal.name_cs,country_name_en:municipal.name_en,flag:alpha2[municipal.code],
+    module:"municipalities",module_order:moduleMeta.municipalities.order,module_label_cs:moduleMeta.municipalities.cs,module_label_en:moduleMeta.municipalities.en,
+    status:municipal.status==="aggregate_only"?"aggregate":municipal.status==="complete"?"full":"partial",
+    artifact:detail.artifact||moduleMeta.municipalities.artifact,coverage:municipal.coverage_en,period:detail.period,scope:detail.scope,sources:detail.sources,
+    exact_extraction:detail.sources.map(item=>item.location).filter(Boolean).join(" · "),transformation:detail.transform,limitations:detail.caveat
+  });
+}
+
 rows.sort((a,b)=>a.module_order-b.module_order||a.country_code.localeCompare(b.country_code));
 const payload={
   schema_version:"1.0.0",contract:"methodology-sources.v1",generated_at:new Date().toISOString(),row_count:rows.length,
-  countries:parity.countries.map(country=>({code:country.country_code,name_cs:country.name_cs,name_en:country.name_en})),
+  countries:[...new Map([...parity.countries.map(country=>({code:country.country_code,name_cs:country.name_cs,name_en:country.name_en})),...municipalities.countries.map(country=>({code:country.code,name_cs:country.name_cs,name_en:country.name_en}))].map(country=>[country.code,country])).values()],
   modules:Object.entries(moduleMeta).map(([id,value])=>({id,label_cs:value.cs,label_en:value.en,order:value.order})),
   status_definitions:{full:"Source-backed layer with no missing dimensions recorded in the parity contract.",partial:"Source-backed layer with one or more disclosed missing dimensions.",aggregate:"Official aggregate layer without entity-level facts."},
   rows
 };
 
-if(rows.length!==parity.country_count*Object.keys(moduleMeta).length) throw new Error(`Expected 110 lineage rows, got ${rows.length}`);
+if(rows.length!==parity.country_count*Object.keys(moduleMeta).length+municipalities.countries.filter(country=>!parityCodes.has(country.code)).length) throw new Error(`Unexpected lineage row count: ${rows.length}`);
 for(const row of rows) if(!row.sources.length||row.sources.some(item=>!item.url)||!row.exact_extraction) throw new Error(`${row.country_code}/${row.module}: incomplete lineage`);
 await writeFile(new URL("../data/methodology-sources.v1.json",import.meta.url),`${JSON.stringify(payload,null,2)}\n`);
 console.log(`Wrote ${rows.length} methodology lineage rows`);

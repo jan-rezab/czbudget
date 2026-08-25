@@ -63,6 +63,8 @@
     ["SWE", "Švédsko", "Sweden", "se", "sweden"], ["GBR", "Anglie", "England", "gb", "england"],
     ["UKR", "Ukrajina", "Ukraine", "ua", "ukraine"], ["NOR", "Norsko", "Norway", "no", "norway"],
     ["NLD", "Nizozemsko", "Netherlands", "nl", "netherlands"], ["FIN", "Finsko", "Finland", "fi", "finland"],
+    ["BRA", "Brazílie", "Brazil", "br", "brazil"], ["ESP", "Španělsko", "Spain", "es", "spain"],
+    ["JPN", "Japonsko", "Japan", "jp", "japan"],
   ];
   const countrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states"};
   const copy = {

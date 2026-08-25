@@ -396,7 +396,8 @@ def statbank_metadata(ctx: Context, table: str) -> dict[str, Any]:
 
 def run_denmark(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
     year, currency = cfg["year"], cfg["currency"]
-    budget_meta = statbank_metadata(ctx, "BUDK32")
+    budget_table = next(source["table"] for source in cfg["sources"] if source["kind"] == "enacted")
+    budget_meta = statbank_metadata(ctx, budget_table)
     region_var = budget_meta["variables"][0]
     aggregate_codes = {"000", "081", "082", "083", "084", "085", "910", "920", "930", "940", "960"}
     municipalities = [value for value in region_var["values"] if value["id"] not in aggregate_codes]
@@ -408,11 +409,16 @@ def run_denmark(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, An
         variables = {item["id"]: item for item in meta["variables"]}
         region_code = meta["variables"][0]["id"]
         function_class = f"DK_{source['table']}_FUNCTION"
-        economic_class = f"DK_{source['table']}_ART"
+        # The 100-series tables expose the authorized account below the older
+        # function x kind cube. Keep ownership and grouping in the normalized
+        # economic key so equal ART codes are not silently collapsed.
+        economic_class = f"DK_{source['table']}_ACCOUNT"
         ctx.bundle.classification(classification_row(country, function_class, "mixed", meta["text"] + " functions", source["url"], year, ctx.loaded_at))
         ctx.bundle.classification(classification_row(country, economic_class, "mixed", meta["text"] + " kinds", source["url"], year, ctx.loaded_at))
         function_names = {item["id"]: item["text"] for item in variables["FUNKTION"]["values"]}
         art_names = {item["id"]: item["text"] for item in variables["ART"]["values"]}
+        owner_names = {item["id"]: item["text"] for item in variables.get("EJER", {}).get("values", [])}
+        grouping_names = {item["id"]: item["text"] for item in variables.get("GRUPPERING", {}).get("values", [])}
         leaf_art = [code for code in art_names if code not in {"TOT", "UE", "I", "U"} and not code.startswith("S")]
         run_id = f"{source['id']}-{year}-v1"
         rows_read = rows_loaded = 0
@@ -437,18 +443,23 @@ def run_denmark(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, An
             for row_number, row in enumerate(reader, 2):
                 rows_read += 1
                 function, art = stable_code(row.get("FUNKTION")), stable_code(row.get("ART"))
+                dranst = stable_code(row.get("DRANST"))
+                owner = stable_code(row.get("EJER"))
+                grouping = stable_code(row.get("GRUPPERING"))
                 amount = decimal_value(row.get("INDHOLD")) * Decimal(1000)
                 if not amount or not function or not art:
                     continue
-                side = "revenue" if art.startswith(("7", "8")) else ("financing" if stable_code(row.get("DRANST")) in {"5", "6", "7"} else "expenditure")
+                account = ".".join(part for part in (dranst, owner, grouping, art) if part)
+                account_name = " · ".join(part for part in (owner_names.get(owner), grouping_names.get(grouping), art_names.get(art)) if part)
+                side = "revenue" if art.startswith(("7", "8")) else ("financing" if dranst in {"5", "6", "7"} else "expenditure")
                 ctx.bundle.node(node_row(country, function_class, side, function, function_names.get(function, function), year, ctx.loaded_at))
-                ctx.bundle.node(node_row(country, economic_class, side, art, art_names.get(art, art), year, ctx.loaded_at))
+                ctx.bundle.node(node_row(country, economic_class, side, account, account_name or account, year, ctx.loaded_at))
                 payload = dict(row)
                 ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, source["table"], payload, ctx.loaded_at))
                 ctx.bundle.write("municipal_budget_line_facts", fact_row(
-                    country, f"DK:{municipality['id']}", year, source["kind"], side, function, art, amount,
+                    country, f"DK:{municipality['id']}", year, source["kind"], side, function, account, amount,
                     currency, source, run_id, ctx.loaded_at, function_class, economic_class,
-                    row_number=row_number, sheet=source["table"], item_type=stable_code(row.get("DRANST")), quality_flags=["source_unit_dkk_thousands"],
+                    row_number=row_number, sheet=source["table"], item_type=dranst, quality_flags=["source_unit_dkk_thousands", "authorized_account_detail"],
                 ))
                 rows_loaded += 1
         write_run(ctx, run_id, source, year, None, rows_read, rows_loaded)
