@@ -6,7 +6,7 @@
   margin: 0 !important;
   padding: 24px 5vw !important;
   display: grid !important;
-  grid-template-columns: 190px minmax(320px, 1fr) 154px auto !important;
+  grid-template-columns: 190px minmax(260px, 1fr) 190px auto !important;
   gap: 32px !important;
   align-items: center;
   border-top: 4px solid #a8b63f !important;
@@ -18,33 +18,21 @@
 .glorious-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .footer-brand { display: block; line-height: 0; }
 .footer-brand img { display: block; width: 190px; height: auto; }
-.footer-formalities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px 14px;
-  align-items: baseline;
+.footer-address {
+  margin: 0;
   color: #aeb2ad;
+  font-style: normal;
   font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
-.footer-formalities strong { flex-basis: 100%; color: #faf7ef; font-size: 12px; }
-.footer-formalities a { text-decoration: underline; text-underline-offset: 3px; }
 .footer-hlidac {
-  box-sizing: border-box;
-  width: 154px;
-  height: 76px;
-  padding: 8px 10px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 2px;
-  background: #fff;
+  display: block;
+  width: 190px;
   line-height: 0;
 }
 .footer-hlidac img {
   display: block;
-  width: 134px;
-  height: 64px;
-  object-fit: contain;
+  width: 190px;
+  height: auto;
 }
 .footer-links {
   display: flex;
@@ -56,14 +44,14 @@
   text-transform: uppercase;
 }
 @media (max-width: 900px) {
-  .glorious-footer { grid-template-columns: 190px 1fr 154px !important; gap: 20px 24px !important; }
+  .glorious-footer { grid-template-columns: 190px 1fr 190px !important; gap: 20px 24px !important; }
   .footer-links { grid-column: 1 / -1; justify-content: flex-start; }
 }
 @media (max-width: 600px) {
   .glorious-footer { padding: 22px !important; grid-template-columns: 1fr auto !important; gap: 18px 20px !important; }
   .footer-brand img { width: 160px; }
-  .footer-formalities { grid-column: 1 / -1; grid-row: 2; }
-  .footer-hlidac { grid-column: 2; grid-row: 1; width: 132px; height: 66px; padding: 7px 9px; }
-  .footer-hlidac img { width: 114px; height: 54px; }
+  .footer-address { grid-column: 1 / -1; grid-row: 2; }
+  .footer-hlidac { grid-column: 2; grid-row: 1; width: 150px; }
+  .footer-hlidac img { width: 150px; }
   .footer-links { grid-column: 1 / -1; grid-row: 3; }
 }
