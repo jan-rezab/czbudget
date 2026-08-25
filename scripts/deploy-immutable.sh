@@ -5,6 +5,12 @@ project="${1:?project is required}"
 region="${2:?region is required}"
 service="${3:?service is required}"
 tag="${4:?image tag is required}"
+deploy_marker="${5:?current-main deployment marker is required}"
+
+if [ ! -f "$deploy_marker" ]; then
+  echo "Skipping deployment because this build is no longer the current main commit"
+  exit 0
+fi
 
 digest="$(gcloud artifacts docker images describe "$tag" --project="$project" --format='value(image_summary.digest)')"
 if [ -z "$digest" ]; then
