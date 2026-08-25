@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-22T13:36:41.089Z",
-  "coverage": "Nine OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
+  "generated_at": "2026-08-23T15:09:53.269Z",
+  "coverage": "Nine OECD SHA profiles plus the latest complete WHO GHED financing row for Ukraine",
   "methodology": {
     "cs": "Podíly jsou běžné výdaje na zdravotnictví podle System of Health Accounts 2011. Benchmark na lůžko je odhad: výdaje na obyvatele × podíl nemocnic ÷ lůžka na obyvatele. Nejde o účetní výnos konkrétní nemocnice ani žebříček kvality.",
     "en": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
@@ -240,6 +240,38 @@
       "beds_per_1000": 2.26,
       "bed_year": 2024,
       "bed_status": ""
+    },
+    "UKR": {
+      "currency": "UAH",
+      "architecture_cs": "Státní program zdravotních garancí nakupuje Národní zdravotní služba Ukrajiny (NHSU). Profil financování používá poslední úplný ukrajinský řádek v databázi WHO GHED; novější válečné roky v tomto exportu úplné hodnoty nemají.",
+      "architecture_en": "The National Health Service of Ukraine (NHSU) purchases the state Programme of Medical Guarantees. The financing profile uses Ukraine's latest complete row in WHO GHED; newer wartime years do not contain complete values in that export.",
+      "official_title": "WHO · Global Health Expenditure Database",
+      "official_url": "https://apps.who.int/nha/database/Select/Indicators/en",
+      "year": 2021,
+      "health_gdp_pct": 8.203,
+      "per_capita_ppp": null,
+      "per_capita_local": null,
+      "per_capita_usd": 369.905,
+      "financing": {
+        "public_compulsory": 52.123,
+        "out_of_pocket": 45.294,
+        "voluntary_other": 2.583
+      },
+      "providers": {
+        "hospitals": null,
+        "residential_ltc": null,
+        "ambulatory": null,
+        "retailers": null,
+        "other": null
+      },
+      "beds_per_1000": null,
+      "bed_year": null,
+      "bed_status": "",
+      "missing_dimensions": [
+        "SHA provider split (HP)",
+        "comparable bed benchmark"
+      ],
+      "source_location": "WHO GHED full workbook → Data → code=UKR, year=2021 → che_gdp, gghed_che, oops_che and vpp_che; voluntary_other is the remainder to 100%"
     }
   },
   "sources": [
@@ -250,6 +282,10 @@
     {
       "title": "OECD Hospital beds by function",
       "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_HEALTH_REAC_HOSP%40DF_BEDS_FUNC&df%5Bvs%5D=1.1"
+    },
+    {
+      "title": "WHO Global Health Expenditure Database",
+      "url": "https://apps.who.int/nha/database/Select/Indicators/en"
     }
   ],
   "api_queries": {

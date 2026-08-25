@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-22T20:50:03.726Z",
+  "generated_at": "2026-08-23T15:08:46.703Z",
   "methodology": {
     "cs": "Síť obsahuje aktivní místa NRPZS, u nichž forma péče zahrnuje lůžkovou péči. Více řádků oborů stejného místa je sloučeno. Počet zařízení není počet budov ani počet nemocničních lůžek.",
     "en": "The network contains active NRPZS locations whose care form includes inpatient care. Multiple specialty rows for the same location are merged. Facility count is neither a building count nor a bed count."
@@ -40,10 +40,37 @@
       "records": "data/countries/cze/providers.v1.json"
     },
     "DEU": {
-      "coverage": "source_adapter_pending"
+      "coverage": "destatis_hospital_directory",
+      "facility_count": 1841,
+      "provider_count": null,
+      "source": {
+        "title": "Destatis · Verzeichnis der Krankenhäuser 2024",
+        "url": "https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Gesundheit/Krankenhauser/Publikationen/Downloads-Krankenhaeuser/krankenhausverzeichnis-3500100247005.html",
+        "location": "XLSX hospital directory; institution, address, ownership, beds and departments; 2024 reference year",
+        "update_frequency": "annual"
+      },
+      "payments": {
+        "coverage": "accounts_not_joined",
+        "note_cs": "Adresář nemocnic je pokryt; účetní výkazy nejsou v tomto souboru jednotně propojeny.",
+        "note_en": "The hospital directory is covered; standardised accounts are not joined in this file."
+      }
     },
     "DNK": {
-      "coverage": "source_adapter_pending"
+      "coverage": "sor_active_hospitals",
+      "facility_count": 135,
+      "provider_count": null,
+      "source": {
+        "title": "Sundhedsdatastyrelsen · SOR",
+        "url": "https://sundhedsdatastyrelsen.dk/data-og-registre/nationale-sundhedsregistre/sundhedsvaesenets-organisationsregister/brug-sor-data",
+        "download_url": "https://sor-filer.sundhedsdata.dk/sor_produktion/data/sor/sorcsv/V_1_2_1_19/sor.csv",
+        "location": "current SOR CSV; 98,606 active units; Enhedstype=hospital gives 135 hospital units",
+        "update_frequency": "nightly"
+      },
+      "payments": {
+        "coverage": "accounts_not_joined",
+        "note_cs": "SOR je organizační registr; regionální účetní výkazy zůstávají samostatné.",
+        "note_en": "SOR is an organisation register; regional accounts remain separate."
+      }
     },
     "FRA": {
       "coverage": "finess_hospital_activity_establishments",
@@ -188,13 +215,57 @@
       "records": "data/countries/gbr/providers.v1.json"
     },
     "POL": {
-      "coverage": "source_adapter_pending"
+      "coverage": "rpwdl_active_healthcare_provider_ledgers",
+      "facility_count": null,
+      "provider_count": null,
+      "source": {
+        "title": "RPWDL · active healthcare-provider ledgers",
+        "url": "https://rpwdl.ezdrowie.gov.pl/",
+        "download_url": "https://rpwdl2-eva.ezdrowie.gov.pl/api/rpwdl-public-resource/ledgers-zip/initial?fileTypeInsideZip=CSV&activityType=HEALTHCARE_PROVIDER&activeLedgers=true",
+        "location": "RPWDL public bulk API; CSV inside ZIP; activityType=HEALTHCARE_PROVIDER; activeLedgers=true",
+        "update_frequency": "current extract"
+      },
+      "payments": {
+        "coverage": "contracts_not_joined",
+        "note_cs": "Pokryt je oficiální hromadný registr; smlouvy NFZ jsou samostatná vrstva.",
+        "note_en": "The official bulk register is covered; NFZ contracts are a separate layer."
+      }
     },
     "SWE": {
-      "coverage": "source_adapter_pending"
+      "coverage": "regional_provider_authorities",
+      "facility_count": 21,
+      "provider_count": 21,
+      "source": {
+        "title": "SKR · Sveriges regioner",
+        "url": "https://skr.se/kommunerochregioner/regionerlista.8289.html",
+        "location": "official list of all 21 regional healthcare authorities; updated 8 January 2026",
+        "update_frequency": "as changed"
+      },
+      "payments": {
+        "coverage": "facility_register_not_public_in_bulk",
+        "note_cs": "Načtena je úplná síť 21 regionálních poskytovatelských systémů. Registr IVO vyžaduje hromadný výpis na žádost, proto zde není tvrzeno úplné pokrytí pracovišť.",
+        "note_en": "The complete network of 21 regional provider systems is covered. IVO supplies bulk facility extracts on request, so full site coverage is not claimed."
+      },
+      "missing_dimensions": [
+        "facility-level public bulk register"
+      ]
     },
     "CHE": {
-      "coverage": "source_adapter_pending"
+      "coverage": "foph_acute_hospital_sites",
+      "facility_count": 230,
+      "provider_count": null,
+      "source": {
+        "title": "FOPH · Quality indicators of Swiss acute care hospitals 2024",
+        "url": "https://opendata.swiss/en/dataset/qualitatsindikatoren-der-schweizer-akutspitaler-2024",
+        "download_url": "https://opendata.bagnet.ch/?r=/download&path=L3FpcDI0L3FpcDI0X3RhYmRhdGVuX3N0YW8uY3N2",
+        "location": "qip24_tabdaten_stao.csv; 230 unique institution/site strings; 2024",
+        "update_frequency": "annual"
+      },
+      "payments": {
+        "coverage": "activity_not_accounts",
+        "note_cs": "Soubor pokrývá akutní nemocniční pracoviště a výkony, nikoli jejich účetní výkazy.",
+        "note_en": "The file covers acute hospital sites and activity, not their financial statements."
+      }
     },
     "USA": {
       "coverage": "medicare_registered_hospitals",
@@ -272,7 +343,23 @@
       "records": "data/countries/usa/providers.v1.json"
     },
     "UKR": {
-      "coverage": "source_adapter_pending"
+      "coverage": "nhsu_contracting_provider_open_data",
+      "facility_count": null,
+      "provider_count": null,
+      "source": {
+        "title": "НСЗУ · open datasets of medical-service providers",
+        "url": "https://data.gov.ua/dataset?organization=natsionalna-sluzhba-zdorovia-ukrainy&res_format=CSV",
+        "location": "data.gov.ua → National Health Service of Ukraine organisation → CSV provider/contract datasets; wartime publication caveats retained",
+        "update_frequency": "as published"
+      },
+      "payments": {
+        "coverage": "programme_contracts_separate",
+        "note_cs": "Zdroj pokrývá smluvní poskytovatele programu zdravotních garancí; úplný licenční registr zařízení a úhrady jsou samostatné vrstvy.",
+        "note_en": "The source covers providers contracted under the Programme of Medical Guarantees; the complete licensing register and payments are separate layers."
+      },
+      "missing_dimensions": [
+        "complete facility census"
+      ]
     }
   }
 }

@@ -26,3 +26,66 @@
 .coverage-overview{margin-top:100px;padding-top:84px;border-top:1px solid #a9aaa4}.coverage-overview-head{display:grid;grid-template-columns:1.12fr .88fr;gap:7vw;align-items:end}.coverage-overview-head h2{max-width:850px;margin:14px 0 0;font:500 clamp(46px,5vw,76px)/.95 Georgia,serif;letter-spacing:-.055em}.coverage-overview-head>p{max-width:620px;margin:0;color:#656963;font-size:16px;line-height:1.65}.coverage-matrix-wrap{margin-top:36px;overflow:auto;border:2px solid #171918;background:#faf7ef;box-shadow:8px 8px 0 #a8b63f;scrollbar-gutter:stable}.coverage-matrix{width:100%;min-width:980px;border-collapse:collapse;table-layout:fixed}.coverage-matrix th,.coverage-matrix td{border-right:1px solid #a9aaa4;border-bottom:1px solid #a9aaa4}.coverage-matrix thead th{position:sticky;top:0;z-index:2;height:92px;padding:15px 17px;background:#171918;color:#faf7ef;text-align:left}.coverage-matrix thead th:first-child{left:0;z-index:4;width:210px}.coverage-matrix thead th span,.coverage-matrix thead th small{display:block}.coverage-matrix thead th span{font:500 21px/1.05 Georgia,serif}.coverage-matrix thead th small{margin-top:11px;color:#cbd76a;font:700 11px/1.3 monospace;text-transform:uppercase}.coverage-matrix tbody th{position:sticky;left:0;z-index:1;width:210px;padding:17px;background:#f1ede3;text-align:left}.coverage-matrix tbody th b,.coverage-matrix tbody th small{display:block}.coverage-matrix tbody th b{font:500 20px/1.1 Georgia,serif}.coverage-matrix tbody th small{margin-top:7px;color:#656963;font:700 11px monospace;letter-spacing:.08em}.coverage-matrix td{padding:0;background:#faf7ef}.coverage-cell{position:relative;display:grid;width:100%;min-height:112px;padding:15px 16px 14px;border:0;background:transparent;color:#171918;text-align:left;cursor:pointer;transition:background-color .18s ease,box-shadow .18s ease}.coverage-cell:hover{background:#fffbdc}.coverage-cell:focus-visible{z-index:1;outline:3px solid #c93237;outline-offset:-3px}.coverage-cell.selected{background:#171918;color:#faf7ef;box-shadow:inset 0 0 0 3px #cbd76a}.coverage-cell strong{font:500 36px/1 Georgia,serif;letter-spacing:-.055em}.coverage-cell sup{margin-left:2px;font:700 12px monospace;vertical-align:top}.coverage-cell span{align-self:end;margin-top:11px;color:#656963;font:700 10px/1.35 monospace;text-transform:uppercase}.coverage-cell.selected span{color:#d8d4c9}.coverage-cell>i{display:block;height:5px;margin-top:9px;background:#d8d4c9;overflow:hidden}.coverage-cell>i b{display:block;height:100%}.coverage-cell-high>i b{background:#899d2a}.coverage-cell-medium>i b{background:#d89226}.coverage-cell-low>i b{background:#c93237}.coverage-cell.selected>i{background:#454743}.coverage-cell.selected>i b{background:#cbd76a}.coverage-scale{display:flex;justify-content:flex-end;gap:5px;align-items:center;margin:16px 0 0;color:#656963;font:700 10px monospace;text-transform:uppercase}.coverage-scale i{width:25px;height:8px}.coverage-scale i:nth-of-type(1){background:#c93237}.coverage-scale i:nth-of-type(2){background:#d89226}.coverage-scale i:nth-of-type(3){background:#a8b63f}.coverage-scale i:nth-of-type(4){background:#63731e}.coverage-method-note{display:grid;grid-template-columns:220px 1fr;gap:28px;margin-top:22px;padding:21px 24px;border-left:5px solid #a8b63f;background:#e5e2d8}.coverage-method-note b{font:700 12px/1.4 monospace;text-transform:uppercase}.coverage-method-note p{max-width:980px;margin:0;color:#545852;font-size:13px;line-height:1.6}.coverage-selection{margin-top:30px;border:1px solid #171918;background:#faf7ef}.coverage-selection>header{display:flex;justify-content:space-between;gap:30px;align-items:end;padding:20px 22px;border-bottom:1px solid #a9aaa4}.coverage-selection>header span{display:block;margin-bottom:9px;color:#c93237;font:700 11px monospace;text-transform:uppercase}.coverage-selection h3{margin:0;font:500 clamp(26px,3vw,39px)/1 Georgia,serif;letter-spacing:-.035em}.coverage-selection button{flex:0 0 auto;padding:11px 14px;border:1px solid #171918;background:transparent;color:#171918;font:700 11px monospace;text-transform:uppercase;cursor:pointer}.coverage-selection button:hover{background:#171918;color:#faf7ef}.coverage-selection>p{margin:0;padding:14px 22px;color:#656963;font:700 11px/1.5 monospace;text-transform:uppercase}.coverage-source-list{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#c7c1b6}.coverage-source-list:empty{display:none}.coverage-source-list article{min-width:0;padding:18px 20px;background:#f3efe6}.coverage-source-list article>span{display:block;color:#69726e;font:700 10px/1.4 monospace;text-transform:uppercase}.coverage-source-list h4{margin:14px 0 9px;font:650 14px/1.35 system-ui,sans-serif}.coverage-source-list p{margin:0 0 15px;color:#656963;font-size:11px;line-height:1.5;overflow-wrap:anywhere}.coverage-source-list a{color:#171918;font:750 11px monospace;text-transform:uppercase}.coverage-source-list a:hover{color:#c93237}
 @media(max-width:900px){.coverage-overview-head{grid-template-columns:1fr}.coverage-overview-head>p{margin-top:18px}.coverage-source-list{grid-template-columns:1fr 1fr}.coverage-method-note{grid-template-columns:1fr}.coverage-matrix-wrap{box-shadow:5px 5px 0 #a8b63f}}
 @media(max-width:600px){.coverage-overview{margin-top:78px;padding-top:64px}.coverage-source-list{grid-template-columns:1fr}.coverage-selection>header{align-items:flex-start;flex-direction:column}.coverage-selection button{width:100%}.coverage-scale{justify-content:flex-start}.coverage-matrix tbody th,.coverage-matrix thead th:first-child{width:170px}.coverage-matrix{min-width:860px}}
+
+/* Methodology is a compact technical status page. */
+body[data-page="methodology"] main{max-width:1680px;padding-top:42px}
+body[data-page="methodology"] .status-hero{display:flex;justify-content:space-between;gap:40px;align-items:end;padding:44px 0 26px;border-bottom:2px solid #171918}
+body[data-page="methodology"] .status-hero .kicker{font:700 11px/1.3 monospace;letter-spacing:.08em;text-transform:uppercase}
+body[data-page="methodology"] .status-hero h1{margin:8px 0 0;font:500 clamp(42px,5vw,70px)/.94 Georgia,serif;letter-spacing:-.055em}
+body[data-page="methodology"] .status-hero>p{margin:0;color:#656963;font:700 11px/1.5 monospace;text-align:right;text-transform:uppercase}
+body[data-page="methodology"] .section-bar{display:flex;justify-content:space-between;gap:28px;align-items:baseline;padding:17px 0 12px;border-bottom:1px solid #a9aaa4}
+body[data-page="methodology"] .section-bar h2{margin:0;font:500 29px/1 Georgia,serif;letter-spacing:-.035em}
+body[data-page="methodology"] .section-bar>span{color:#656963;font:700 10px/1.4 monospace;text-align:right;text-transform:uppercase}
+body[data-page="methodology"] .data-health{margin-top:28px}
+body[data-page="methodology"] .data-health-status{margin-top:12px;padding:10px 13px;font-size:10px}
+body[data-page="methodology"] .data-health-kpis article{min-height:105px;padding:15px 16px}
+body[data-page="methodology"] .data-health-kpis strong{margin:15px 0 7px;font-size:32px}
+body[data-page="methodology"] .data-health-downloads{justify-content:flex-end;margin-top:8px;padding:0;border:0;background:transparent;font-size:10px}
+body[data-page="methodology"] .data-health-downloads a{padding:7px 9px;border:1px solid #a9aaa4;text-decoration:none}
+body[data-page="methodology"] .coverage-overview{margin-top:44px;padding-top:0;border-top:0}
+body[data-page="methodology"] .coverage-matrix-wrap{margin-top:12px;border:1px solid #171918;box-shadow:none}
+body[data-page="methodology"] .coverage-matrix{min-width:1460px}
+body[data-page="methodology"] .coverage-matrix thead th{height:auto;padding:12px 13px;font:700 10px/1.35 monospace;letter-spacing:.04em;text-transform:uppercase}
+body[data-page="methodology"] .coverage-matrix thead th:first-child{width:165px}
+body[data-page="methodology"] .coverage-matrix thead th:nth-child(2){width:160px}
+body[data-page="methodology"] .coverage-matrix thead th:nth-child(3){width:105px}
+body[data-page="methodology"] .coverage-matrix thead th:nth-child(4){width:130px}
+body[data-page="methodology"] .coverage-matrix thead th:nth-child(5){width:140px}
+body[data-page="methodology"] .coverage-matrix thead th:nth-child(6){width:135px}
+body[data-page="methodology"] .coverage-matrix thead th:nth-child(7){width:175px}
+body[data-page="methodology"] .coverage-matrix thead th:nth-child(8){width:260px}
+body[data-page="methodology"] .coverage-matrix tbody th{width:165px;padding:12px 13px}
+body[data-page="methodology"] .coverage-matrix tbody th b{font:650 15px/1.15 system-ui,sans-serif}
+body[data-page="methodology"] .coverage-matrix tbody th small{margin-top:4px;font-size:9px}
+body[data-page="methodology"] .coverage-cell{min-height:76px;padding:11px 12px 10px;box-shadow:inset 3px 0 #d2ccc1}
+body[data-page="methodology"] .coverage-cell:hover{background:#fffbdc}
+body[data-page="methodology"] .coverage-cell strong{font:650 18px/1.05 system-ui,sans-serif;letter-spacing:-.025em}
+body[data-page="methodology"] .coverage-cell span{margin-top:8px;font-size:9px;line-height:1.3;text-transform:none}
+body[data-page="methodology"] .coverage-status-full{box-shadow:inset 3px 0 #899d2a}
+body[data-page="methodology"] .coverage-status-partial{box-shadow:inset 3px 0 #d89226}
+body[data-page="methodology"] .coverage-status-aggregate{box-shadow:inset 3px 0 #7774a7}
+body[data-page="methodology"] .coverage-status-missing{box-shadow:inset 3px 0 #c7c1b6;color:#858880}
+body[data-page="methodology"] .coverage-cell.selected{background:#171918;color:#faf7ef;box-shadow:inset 3px 0 #cbd76a,inset 0 0 0 2px #cbd76a}
+body[data-page="methodology"] .coverage-selection{margin-top:12px}
+body[data-page="methodology"] .coverage-selection>header{align-items:center;padding:13px 15px}
+body[data-page="methodology"] .coverage-selection>header span{margin-bottom:4px;font-size:9px}
+body[data-page="methodology"] .coverage-selection h3{font:650 17px/1.2 system-ui,sans-serif;letter-spacing:-.02em}
+body[data-page="methodology"] .coverage-selection button{padding:8px 10px;font-size:10px}
+body[data-page="methodology"] .coverage-selection>p{padding:9px 15px;font-size:9px}
+body[data-page="methodology"] .coverage-source-list article{padding:14px 15px}
+body[data-page="methodology"] .coverage-source-list h4{margin:8px 0 6px;font-size:13px}
+body[data-page="methodology"] .coverage-no-source{margin:0;padding:14px 15px;background:#f3efe6;font:700 10px monospace;text-transform:uppercase}
+body[data-page="methodology"] .status-definitions{margin-top:18px;border:1px solid #a9aaa4;background:#f7f3ea}
+body[data-page="methodology"] .status-definitions summary{padding:11px 14px;cursor:pointer;font:700 10px monospace;text-transform:uppercase}
+body[data-page="methodology"] .status-definitions dl{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin:0;background:#c7c1b6;border-top:1px solid #c7c1b6}
+body[data-page="methodology"] .status-definitions dl>div{padding:13px 14px;background:#f7f3ea}
+body[data-page="methodology"] .status-definitions dt{font:700 10px/1.4 monospace;text-transform:uppercase}
+body[data-page="methodology"] .status-definitions dd{margin:6px 0 0;color:#656963;font-size:11px;line-height:1.45}
+body[data-page="methodology"] .method-ledger{margin-top:44px}
+body[data-page="methodology"] .method-ledger-head{display:flex;margin:0;align-items:center}
+body[data-page="methodology"] .method-ledger-head h2{font:500 29px/1 Georgia,serif;letter-spacing:-.035em}
+body[data-page="methodology"] .method-ledger-json{padding:8px 10px;font-size:10px}
+body[data-page="methodology"] .method-ledger-controls{margin-top:12px}
+body[data-page="methodology"] .method-table-wrap{height:70vh;min-height:560px;border:1px solid #171918;box-shadow:none}
+@media(max-width:900px){body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-matrix-wrap{box-shadow:none}}
+@media(max-width:600px){body[data-page="methodology"] main{padding-top:20px}body[data-page="methodology"] .status-hero{align-items:flex-start;flex-direction:column;padding:30px 0 20px}body[data-page="methodology"] .status-hero>p{text-align:left}body[data-page="methodology"] .section-bar{align-items:flex-start;flex-direction:column;gap:7px}body[data-page="methodology"] .data-health-kpis{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-overview{margin-top:36px;padding-top:0}body[data-page="methodology"] .coverage-matrix{min-width:1340px}body[data-page="methodology"] .coverage-matrix tbody th,body[data-page="methodology"] .coverage-matrix thead th:first-child{width:145px}body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr}body[data-page="methodology"] .method-ledger-head{align-items:center;flex-direction:row}body[data-page="methodology"] .method-ledger-head h2{font-size:29px}body[data-page="methodology"] .method-table-wrap{height:68vh;min-height:500px;box-shadow:none}}

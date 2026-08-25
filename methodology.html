@@ -4,10 +4,10 @@
     <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Metodika — Public Spending Data</title>
+    <title>Pokrytí a zdroje — Public Spending Data</title>
     <meta
       name="description"
-      content="Definice, zdroje a hranice srovnání na Public Spending Data."
+      content="Technický stav dat: pokrytí podle země, období a primární zdroje."
     />
     <link rel="canonical" href="https://publicspendingdata.org/methodology.html" />
     <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/methodology.html?lang=cs" />
@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
     <link
       rel="stylesheet"
-      href="site-pages.css?v=20260825-coverage-matrix"
+      href="site-pages.css?v=20260825-technical-status"
     />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
-    <script src="site-pages.js?v=20260825-coverage-matrix" defer></script>
+    <script src="site-pages.js?v=20260825-technical-status" defer></script>
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -34,119 +34,65 @@
   <body class="standalone-page" data-page="methodology">
     <psd-site-header></psd-site-header>
     <main id="top">
-      <section class="page-hero">
+      <section class="status-hero">
         <div>
-          <span class="kicker" data-page-copy="methodEyebrow"
-            >Metodika · datová smlouva</span
-          >
-          <h1 data-page-copy="methodTitle">Jak data srovnáváme.</h1>
-          <p data-page-copy="methodLead">
-            Každé číslo držíme u jeho definice, období a původního zdroje.
-          </p>
+          <span class="kicker" data-status-copy="eyebrow">Technický stav dat</span>
+          <h1 data-status-copy="pageTitle">Pokrytí a zdroje</h1>
         </div>
-        <aside>
-          <strong>01—06</strong><span data-page-copy="methodAside">6 pravidel pro srovnání</span>
-        </aside>
+        <p id="status-meta">—</p>
       </section>
-      <section class="method-grid-expanded">
-        <article>
-          <b>01</b>
-          <h2 data-page-copy="m1">Stejný sektor</h2>
-          <p data-page-copy="m1c"></p>
-        </article>
-        <article>
-          <b>02</b>
-          <h2 data-page-copy="m2">Stejná jednotka</h2>
-          <p data-page-copy="m2c"></p>
-        </article>
-        <article>
-          <b>03</b>
-          <h2 data-page-copy="m3">Viditelný rok</h2>
-          <p data-page-copy="m3c"></p>
-        </article>
-        <article>
-          <b>04</b>
-          <h2 data-page-copy="m4">Měny bez iluze</h2>
-          <p data-page-copy="m4c"></p>
-        </article>
-        <article>
-          <b>05</b>
-          <h2 data-page-copy="m5">Účetní hranice</h2>
-          <p data-page-copy="m5c"></p>
-        </article>
-        <article>
-          <b>06</b>
-          <h2 data-page-copy="m6">Zdroj až k řádku</h2>
-          <p data-page-copy="m6c"></p>
-        </article>
-      </section>
-      <section class="method-source-band">
-        <span data-page-copy="methodSource">Hlavní harmonizovaný zdroj</span
-        ><strong data-page-copy="methodSourceValue"
-          >IMF World Economic Outlook · duben 2026</strong
-        ><a href="comparison.html" data-language-link data-page-copy="methodCta"
-          >Otevřít srovnání →</a
-        >
+      <section class="data-health" aria-labelledby="data-health-title">
+        <header class="section-bar">
+          <h2 id="data-health-title" data-status-copy="releaseTitle">Stav vydání</h2>
+          <span data-status-copy="releaseNote">Souhrn všech obecních dat</span>
+        </header>
+        <div id="data-health-root" aria-live="polite"><p class="data-health-loading">Načítám…</p></div>
       </section>
       <section class="coverage-overview" aria-labelledby="coverage-overview-title">
-        <header class="coverage-overview-head">
-          <div>
-            <span class="kicker" data-coverage-copy="eyebrow">Mapa datového pokrytí</span>
-            <h2 id="coverage-overview-title" data-coverage-copy="title">Kolik toho o každé zemi skutečně ukazujeme.</h2>
-          </div>
-          <p data-coverage-copy="lead">Orientační skóre shrnuje šíři zveřejněných vrstev. Zvolte libovolné pole a pod tabulkou se zobrazí přesné zdroje, ze kterých je složené.</p>
+        <header class="section-bar">
+          <h2 id="coverage-overview-title" data-status-copy="coverageTitle">Pokrytí podle země</h2>
+          <span data-status-copy="coverageHint">Kliknutím na buňku zobrazíte zdroje</span>
         </header>
         <div class="coverage-matrix-wrap" tabindex="0" aria-label="Country data coverage table">
           <table class="coverage-matrix">
-            <thead>
-              <tr>
-                <th scope="col" data-coverage-copy="country">Země</th>
-                <th scope="col" data-coverage-category="country"></th>
-                <th scope="col" data-coverage-category="health"></th>
-                <th scope="col" data-coverage-category="geo"></th>
-                <th scope="col" data-coverage-category="municipalities"></th>
-              </tr>
-            </thead>
+            <thead><tr>
+              <th scope="col" data-status-copy="country">Země</th>
+              <th scope="col" data-coverage-category="fiscal"></th>
+              <th scope="col" data-coverage-category="health"></th>
+              <th scope="col" data-coverage-category="geo"></th>
+              <th scope="col" data-coverage-category="municipalities"></th>
+              <th scope="col" data-coverage-category="municipalHistory"></th>
+              <th scope="col" data-coverage-category="transport"></th>
+              <th scope="col" data-coverage-category="budgetDetail"></th>
+            </tr></thead>
             <tbody id="coverage-matrix-body"></tbody>
           </table>
-        </div>
-        <div class="coverage-scale" aria-hidden="true">
-          <span data-coverage-copy="less">Méně pokryto</span><i></i><i></i><i></i><i></i><span data-coverage-copy="more">Více pokryto</span>
-        </div>
-        <div class="coverage-method-note">
-          <b data-coverage-copy="methodTitle">Jak odhad počítáme</b>
-          <p data-coverage-copy="methodCopy">Každá očekávaná datová vrstva má stejnou váhu. Plné pokrytí = 100 bodů, částečné = 60, pouze agregát = 35 a chybějící = 0. Procento je zaokrouhlený průměr vrstev v dané kategorii. Počet vrstev a zdrojů měří rozsah na tomto webu, nikoli kvalitu nebo otevřenost veřejných dat dané země.</p>
         </div>
         <section class="coverage-selection" aria-labelledby="coverage-selection-title">
           <header>
             <div>
-              <span data-coverage-copy="selectionEyebrow">Zdroje vybraného pole</span>
-              <h3 id="coverage-selection-title" data-coverage-copy="selectionEmpty">Klikněte na procento v tabulce.</h3>
+              <span data-status-copy="selectedSource">Vybraný zdroj</span>
+              <h3 id="coverage-selection-title" data-status-copy="selectionEmpty">Vyberte buňku tabulky</h3>
             </div>
-            <button id="coverage-clear" type="button" hidden data-coverage-copy="clear">Zobrazit všech 110 záznamů</button>
+            <button id="coverage-clear" type="button" hidden data-status-copy="clear">Zrušit filtr</button>
           </header>
-          <p id="coverage-selection-summary" data-coverage-copy="selectionLead">Výběr propojí souhrnné skóre s primárními zdroji a současně omezí úplnou tabulku zdrojů níže.</p>
+          <p id="coverage-selection-summary"></p>
           <div id="coverage-source-list" class="coverage-source-list" aria-live="polite"></div>
         </section>
       </section>
-      <section class="data-health" aria-labelledby="data-health-title">
-        <header class="data-health-head">
-          <div>
-            <span class="kicker" data-page-copy="healthEyebrow">Kontrola vydání</span>
-            <h2 id="data-health-title" data-page-copy="healthTitle">Co je úplné. Co chybí. Co prověřujeme.</h2>
-          </div>
-          <p data-page-copy="healthLead">Strojově čitelná kontrola každého vydání zpřístupňuje pokrytí, výslovně chybějící data a prověřované anomálie.</p>
-        </header>
-        <div id="data-health-root" aria-live="polite"><p class="data-health-loading">Načítám kontrolu vydání…</p></div>
-      </section>
+      <details class="status-definitions">
+        <summary data-status-copy="definitions">Definice</summary>
+        <dl>
+          <div><dt data-status-copy="defFiscal">Fiskální historie země</dt><dd data-status-copy="defFiscalValue">Harmonizované řady sektoru vládních institucí.</dd></div>
+          <div><dt data-status-copy="defMunicipal">Obce</dt><dd data-status-copy="defMunicipalValue">Počet jednotek v rozsahu obecního zdroje; agregát není vydáván za jednotlivé obce.</dd></div>
+          <div><dt data-status-copy="defTransport">Doprava</dt><dd data-status-copy="defTransportValue">Roky výkonových řad / roky funkčních výdajů COFOG 04.5.</dd></div>
+          <div><dt data-status-copy="defMissing">Chybějící data</dt><dd data-status-copy="defMissingValue">Pomlčka znamená, že dataset není publikován; nejde o nulu.</dd></div>
+        </dl>
+      </details>
       <section class="method-ledger" aria-labelledby="method-ledger-title">
-        <header class="method-ledger-head">
-          <div>
-            <span class="kicker" data-page-copy="ledgerEyebrow">Datová linie · 110 záznamů</span>
-            <h2 id="method-ledger-title" data-page-copy="ledgerTitle">Úplná tabulka zdrojů</h2>
-            <p data-page-copy="ledgerLead">Každá země a každý modul: rozsah, období, artefakt, primární zdroj, přesné místo výběru, transformace a známé mezery.</p>
-          </div>
-          <a class="method-ledger-json" href="data/methodology-sources.v1.json" download data-page-copy="ledgerJson">Stáhnout JSON ↓</a>
+        <header class="section-bar method-ledger-head">
+          <h2 id="method-ledger-title" data-status-copy="ledgerTitle">Registr zdrojů</h2>
+          <a class="method-ledger-json" href="data/methodology-sources.v1.json" download data-status-copy="ledgerJson">JSON ↓</a>
         </header>
         <div class="method-ledger-controls" aria-label="Methodology table filters">
           <label><span data-page-copy="ledgerCountry">Země</span><select id="method-country-filter"><option value="">Všechny země</option></select></label>

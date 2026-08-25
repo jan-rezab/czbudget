@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-23T19:05:11.682Z",
+  "generated_at": "2026-08-25T12:10:23.529Z",
   "row_count": 110,
   "countries": [
     {
@@ -2419,9 +2419,9 @@
       "module_label_cs": "Obecní finance",
       "module_label_en": "Municipal finance",
       "status": "full",
-      "artifact": "data/international-municipalities.v1.json",
+      "artifact": "data/international-municipalities.v1.json · data/municipal-history-directory.v1.json",
       "coverage": "All 6,254 municipalities",
-      "period": "2025",
+      "period": "2010–2025",
       "scope": "All 6,254 municipalities",
       "sources": [
         {
@@ -2431,7 +2431,7 @@
         }
       ],
       "exact_extraction": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json",
-      "transformation": "Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+      "transformation": "Join the current entity directory to the 2010–2025 municipal budget history by national identifier; retain missing years as missing.",
       "limitations": "Coverage is the entity population stated by the national source."
     },
     {

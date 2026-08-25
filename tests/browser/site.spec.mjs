@@ -109,8 +109,22 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".method-grid-expanded article")).toHaveCount(6);
-  await expect(page.locator(".page-hero")).toContainText("How we compare the data");
+  await expect(page.locator(".status-hero")).toContainText("Coverage and sources");
+  await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(4);
+  await expect(page.locator("#data-health-root")).toContainText("Checks passed");
+  await expect(page.locator("#data-health-root")).toContainText("79,242");
+  await expect(page.locator("#data-health-root")).toContainText("13 countries");
+  await expect(page.locator("#data-health-root")).toContainText("50");
+  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(13);
+  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(91);
+  await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
+  await expect(page.locator('[data-coverage-country="NOR"][data-coverage-node="municipalHistory"]')).toContainText("2015–2025");
+  await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="municipalHistory"]')).toContainText("2010–2025");
+  await page.locator('[data-coverage-country="SWE"][data-coverage-node="municipalities"]').click();
+  await expect(page.locator("#coverage-selection-title")).toContainText("Sweden · Municipal entities");
+  await expect(page.locator("#coverage-source-list article")).toHaveCount(1);
+  await expect(page.locator("#method-source-rows tr")).toHaveCount(1);
+  await expect(page.locator("#method-country-filter")).toHaveValue("SWE");
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });
 

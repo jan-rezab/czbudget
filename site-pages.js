@@ -12,19 +12,21 @@
       aboutEyebrow:"About",aboutTitle:"About Public Spending Data",aboutLead:"We publish budget data, long time series and links to original sources in one place.",aboutAside:"data · sources · methods",aboutMission:"What we do",aboutMissionCopy:"Budget data is often split across portals, files and accounting definitions. We make it easier to read while preserving a clear link to the original source.",aboutPrinciples:"Our rules",p1:"An official source for every value",p2:"A clear scope for every dataset",p3:"Open data and permanent links",p4:"No hidden scoring or false league tables",releaseKicker:"Release notes",releaseTitle:"Four days. Four alpha releases.",releaseLead:"A running record of what changed during the public alpha.",releaseDate24:"24 August 2026",releaseTitle24:"Health outcomes and state-owned enterprises",releaseCopy24:"The homepage gained a health-system performance comparison, alongside a new state-owned enterprise deep dive.",releaseDate23:"23 August 2026",releaseTitle23:"Complete public entity register",releaseCopy23:"We published a register of 121,199 entities, aligned all ten country profiles and expanded transport performance data.",releaseDate22:"22 August 2026",releaseTitle22:"Municipalities, cities and new deep dives",releaseCopy22:"A new international municipality hub, country landing pages, budget and transport views, and unified navigation went live.",releaseDate21:"21 August 2026",releaseTitle21:"Deeper budgets and stronger checks",releaseCopy21:"Municipal profiles gained line-item detail, ten-country comparisons gained new budget views, and the production build gained stricter integrity checks.",makerKicker:"Created by",makerTitle:"Hlidac statu, z.u.",makerCopy:"An independent Czech nonprofit organisation that connects public data and monitors contracts, procurement, subsidies and other public spending.",legal:"registered institute · nonprofit organisation",office:"Velenovského 648, 251 64 Mnichovice, Czechia",official:"Official website ↗",impact:"Results and impact ↗",support:"Support Hlidac statu, z.u. ↗"
     }
   };
-  const coverageCopy={
-    cs:{eyebrow:"Mapa datového pokrytí",title:"Kolik toho o každé zemi skutečně ukazujeme.",lead:"Orientační skóre shrnuje šíři zveřejněných vrstev. Zvolte libovolné pole a pod tabulkou se zobrazí přesné zdroje, ze kterých je složené.",country:"Země",less:"Méně pokryto",more:"Více pokryto",methodTitle:"Jak odhad počítáme",methodCopy:"Každá očekávaná datová vrstva má stejnou váhu. Plné pokrytí = 100 bodů, částečné = 60, pouze agregát = 35 a chybějící = 0. Procento je zaokrouhlený průměr vrstev v dané kategorii. Počet vrstev a zdrojů měří rozsah na tomto webu, nikoli kvalitu nebo otevřenost veřejných dat dané země.",selectionEyebrow:"Zdroje vybraného pole",selectionEmpty:"Klikněte na procento v tabulce.",selectionLead:"Výběr propojí souhrnné skóre s primárními zdroji a současně omezí úplnou tabulku zdrojů níže.",clear:"Zobrazit všech 110 záznamů",layers:"vrstev",sources:"zdrojů",sourceLinks:"unikátních zdrojů",filterNote:"Úplná tabulka níže nyní zobrazuje jen záznamy tohoto pole.",openSource:"Otevřít primární zdroj"},
-    en:{eyebrow:"Data coverage map",title:"How much we actually show for each country.",lead:"This indicative score summarises the breadth of published layers. Select any cell to reveal the exact sources from which it is compiled.",country:"Country",less:"Less coverage",more:"More coverage",methodTitle:"How the estimate is calculated",methodCopy:"Each expected data layer has equal weight. Full coverage = 100 points, partial = 60, aggregate only = 35 and missing = 0. The percentage is the rounded mean of the layers in that category. Layer and source counts measure breadth on this website, not the quality or openness of a country’s public data.",selectionEyebrow:"Sources for selected cell",selectionEmpty:"Select a percentage in the table.",selectionLead:"The selection connects the summary score to its primary evidence and filters the complete source table below at the same time.",clear:"Show all 110 records",layers:"layers",sources:"sources",sourceLinks:"unique sources",filterNote:"The complete table below now shows only the records used by this cell.",openSource:"Open primary source"}
+  const statusCopy={
+    cs:{eyebrow:"Technický stav dat",pageTitle:"Pokrytí a zdroje",releaseTitle:"Stav vydání",releaseNote:"Souhrn všech obecních dat",coverageTitle:"Pokrytí podle země",coverageHint:"Kliknutím na buňku zobrazíte zdroje",country:"Země",selectedSource:"Vybraný zdroj",selectionEmpty:"Vyberte buňku tabulky",clear:"Zrušit filtr",definitions:"Definice",defFiscal:"Fiskální historie země",defFiscalValue:"Harmonizované řady sektoru vládních institucí.",defMunicipal:"Obce",defMunicipalValue:"Počet jednotek v rozsahu obecního zdroje; agregát není vydáván za jednotlivé obce.",defTransport:"Doprava",defTransportValue:"Roky výkonových řad / roky funkčních výdajů COFOG 04.5.",defMissing:"Chybějící data",defMissingValue:"Pomlčka znamená, že dataset není publikován; nejde o nulu.",ledgerTitle:"Registr zdrojů",ledgerJson:"JSON ↓",years:"let",year:"rok",entities:"jednotek",countries:"zemí",records:"záznamů",sourceRecords:"zdrojových záznamů",metrics:"ukazatelů",fields:"polí",stages:"fází",performance:"výkon",transportBudget:"rozpočet",full:"plné",partial:"částečné",aggregate:"agregát",missing:"chybí",openSource:"Otevřít zdroj",filtered:"Registr zdrojů níže je filtrován podle této buňky.",checksPassed:"Kontroly prošly",snapshot:"Datový snapshot",municipalScope:"Obecní jednotky v rozsahu",entityRows:"Řádky obecního adresáře",municipalCountryYears:"Obecní roky podle zemí",sources:"Registr zdrojů",sourceLinks:"zdrojů",entityLevel:"na úrovni jednotek",aggregateOnly:"pouze agregát",aggregateRows:"agregovaných",revenue:"příjmy",expenditure:"výdaje",balance:"saldo",cash:"hotovost",financing:"financování",enacted:"schválený",revised:"upravený",actual:"skutečnost"},
+    en:{eyebrow:"Technical data status",pageTitle:"Coverage and sources",releaseTitle:"Release status",releaseNote:"All municipal datasets combined",coverageTitle:"Coverage by country",coverageHint:"Select a cell to inspect its sources",country:"Country",selectedSource:"Selected source",selectionEmpty:"Select a table cell",clear:"Clear filter",definitions:"Definitions",defFiscal:"Country fiscal history",defFiscalValue:"Harmonised general-government series.",defMunicipal:"Municipalities",defMunicipalValue:"Entities in scope of the municipal source; aggregate means no entity-level financial extract.",defTransport:"Transport",defTransportValue:"Years of performance series / years of COFOG 04.5 functional expenditure.",defMissing:"Missing data",defMissingValue:"A dash means the dataset is not published; it is not zero.",ledgerTitle:"Source registry",ledgerJson:"JSON ↓",years:"years",year:"year",entities:"entities",countries:"countries",records:"records",sourceRecords:"source records",metrics:"metrics",fields:"fields",stages:"stages",performance:"performance",transportBudget:"budget",full:"full",partial:"partial",aggregate:"aggregate",missing:"missing",openSource:"Open source",filtered:"The source registry below is filtered to this cell.",checksPassed:"Checks passed",snapshot:"Data snapshot",municipalScope:"Municipal entities in scope",entityRows:"Municipal directory rows",municipalCountryYears:"Municipal country-years",sources:"Source registry",sourceLinks:"sources",entityLevel:"entity-level",aggregateOnly:"aggregate only",aggregateRows:"aggregate only",revenue:"revenue",expenditure:"expenditure",balance:"balance",cash:"cash",financing:"financing",enacted:"enacted",revised:"revised",actual:"actual"}
   };
   const coverageCategories=[
-    {id:"country",cs:"Data o zemi",en:"Country data",modules:["sovereign","revenue","administrative_spending","common_spending","functional_spending","transport","public_entities"]},
-    {id:"health",cs:"Zdravotní data",en:"Health data",modules:["health","providers"]},
-    {id:"geo",cs:"Geo data",en:"Geo data",modules:["demography"]},
-    {id:"municipalities",cs:"Data obcí",en:"Municipalities data",modules:["municipalities"]}
+    {id:"fiscal",cs:"Fiskální historie země",en:"Country fiscal history",modules:["sovereign"]},
+    {id:"health",cs:"Zdravotnictví",en:"Health",modules:["health"]},
+    {id:"geo",cs:"Populace / geo",en:"Population / geo",modules:["demography"]},
+    {id:"municipalities",cs:"Obecní jednotky",en:"Municipal entities",modules:["municipalities"],municipal:true},
+    {id:"municipalHistory",cs:"Obecní historie",en:"Municipal history",modules:["municipalities"],municipal:true},
+    {id:"transport",cs:"Doprava",en:"Transport",modules:["transport"],transport:true},
+    {id:"budgetDetail",cs:"Členění obecních rozpočtů",en:"Municipal budget detail",modules:["municipalities"],municipal:true}
   ];
-  const coverageStatusPoints={full:100,partial:60,aggregate:35};
   let current = lang === "en" ? "en" : "cs";
-  let methodologyData=null,qualityData=null,releaseData=null,activeCoverageNode=null;
+  let methodologyData=null,qualityData=null,releaseData=null,municipalityData=null,transportPerformanceData=null,transportBudgetData=null,activeCoverageNode=null;
   const esc=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
   const statusLabel=status=>copy[current][status==="full"?"ledgerFull":status==="partial"?"ledgerPartial":"ledgerAggregate"];
   function methodFilters(){return {country:document.querySelector("#method-country-filter")?.value||"",module:document.querySelector("#method-module-filter")?.value||"",status:document.querySelector("#method-status-filter")?.value||"",search:(document.querySelector("#method-source-search")?.value||"").trim().toLocaleLowerCase(current==="cs"?"cs":"en"),modules:activeCoverageNode?.modules||null};}
@@ -46,50 +48,99 @@
     select.innerHTML=`<option value="">${esc(allLabel)}</option>${items.map(item=>`<option value="${esc(item.value)}">${esc(item[label])}</option>`).join("")}`;
     if([...select.options].some(option=>option.value===selected))select.value=selected;
   }
-  const uniqueSources=rows=>{
-    const sources=new Map();
-    rows.forEach(row=>row.sources.forEach(source=>{
-      const key=source.url||source.title;
-      if(!sources.has(key))sources.set(key,{...source,modules:new Set()});
-      sources.get(key).modules.add(current==="cs"?row.module_label_cs:row.module_label_en);
-    }));
-    return [...sources.values()];
-  };
-  function coverageNode(countryCode,category){
-    const rows=methodologyData.rows.filter(row=>row.country_code===countryCode&&category.modules.includes(row.module));
-    const byModule=new Map(rows.map(row=>[row.module,row]));
-    const score=Math.round(category.modules.reduce((sum,module)=>sum+(coverageStatusPoints[byModule.get(module)?.status]||0),0)/category.modules.length);
-    return {rows,score,sources:uniqueSources(rows)};
+  const integer=value=>new Intl.NumberFormat(current==="cs"?"cs-CZ":"en-GB").format(Number(value)||0);
+  const methodRow=(code,module)=>methodologyData?.rows.find(row=>row.country_code===code&&row.module===module);
+  const municipalCountry=code=>municipalityData?.countries.find(country=>country.code===code);
+  function statusCountries(){
+    const countries=new Map();
+    methodologyData?.countries.forEach(country=>countries.set(country.code,{code:country.code,cs:country.name_cs,en:country.name_en}));
+    municipalityData?.countries.forEach(country=>countries.set(country.code,{code:country.code,cs:countries.get(country.code)?.cs||country.name_cs,en:countries.get(country.code)?.en||country.name_en}));
+    return [...countries.values()];
   }
-  const coverageTone=score=>score>=90?"high":score>=60?"medium":"low";
+  const yearSpan=years=>{
+    const values=[...new Set((years||[]).filter(Number.isFinite))].sort((a,b)=>a-b);
+    return {values,count:values.length,label:values.length?values.length===1?String(values[0]):`${values[0]}–${values.at(-1)}`:"—"};
+  };
+  function periodStats(value){
+    const years=String(value||"").match(/\b(?:19|20)\d{2}\b/g)?.map(Number)||[];
+    if(years.length>=2&&/[–-]/.test(String(value)))return {label:`${years[0]}–${years[1]}`,count:Math.abs(years[1]-years[0])+1};
+    return yearSpan(years);
+  }
+  const municipalHistoryStats=code=>methodRow(code,"municipalities")?.period?periodStats(methodRow(code,"municipalities").period):yearSpan(municipalCountry(code)?.years);
+  function transportStats(code){
+    const performance=transportPerformanceData?.countries?.[code]||{},observations=[];
+    [performance.rail,performance.road].forEach(mode=>Object.values(mode||{}).forEach(value=>{if(Array.isArray(value))observations.push(...value);}));
+    const performanceYears=yearSpan(observations.map(row=>Number(row.year)));
+    const budget=transportBudgetData?.countries?.[code],budgetYears=yearSpan((budget?.records||[]).map(row=>Number(row.year)));
+    const allYears=yearSpan([...performanceYears.values,...budgetYears.values]);
+    return {performanceYears,budgetYears,allYears,observations:observations.length,budget};
+  }
+  function coverageCell(code,category){
+    const sc=statusCopy[current],row=methodRow(code,category.modules[0]),municipal=municipalCountry(code);
+    if(category.id==="fiscal"){
+      const period=periodStats(row?.period),metrics=String(row?.coverage||"").match(/(\d+)\s+metrics/)?.[1];
+      return {primary:period.label,secondary:row?`${period.count} ${sc.years}${metrics?` · ${metrics} ${sc.metrics}`:""}`:sc.missing,status:row?.status||"missing"};
+    }
+    if(category.id==="health")return {primary:row?.period||"—",secondary:row?sc[row.status]||row.status:sc.missing,status:row?.status||"missing"};
+    if(category.id==="geo"){
+      const period=periodStats(row?.period);return {primary:period.label,secondary:row?`${period.count} ${sc.years}`:sc.missing,status:row?.status||"missing"};
+    }
+    if(category.id==="municipalities"){
+      const aggregate=municipal?.status==="aggregate_only";return {primary:municipal?integer(municipal.directory_count):"—",secondary:municipal?(aggregate?sc.aggregateOnly:sc.entityLevel):sc.missing,status:municipal?(aggregate?"aggregate":"full"):"missing"};
+    }
+    if(category.id==="municipalHistory"){
+      const years=municipalHistoryStats(code);return {primary:years.label,secondary:municipal?`${years.count} ${years.count===1?sc.year:sc.years}`:sc.missing,status:municipal?.status==="aggregate_only"?"aggregate":municipal?"full":"missing"};
+    }
+    if(category.id==="transport"){
+      const stats=transportStats(code),hasPerformance=stats.performanceYears.count>0,hasBudget=stats.budgetYears.count>0;
+      return {primary:stats.allYears.label,secondary:`${stats.performanceYears.count} ${sc.performance} · ${stats.budgetYears.count} ${sc.transportBudget}`,status:hasPerformance&&hasBudget?"full":hasPerformance||hasBudget?"partial":"missing"};
+    }
+    if(category.id==="budgetDetail"){
+      const measures=(municipal?.measures||[]).map(item=>sc[item]||item),stages=(municipal?.stages||[]).map(item=>sc[item]||item);
+      return {primary:municipal?`${measures.length} ${sc.fields}`:"—",secondary:municipal?`${measures.join(" · ")} / ${stages.join(" · ")}`:sc.missing,status:municipal?.status==="aggregate_only"?"aggregate":municipal?"full":"missing"};
+    }
+    return {primary:"—",secondary:sc.missing,status:"missing"};
+  }
+  function nodeSources(code,category){
+    const sources=new Map(),label=category[current];
+    const add=source=>{if(!source?.url)return;const key=source.url;if(!sources.has(key))sources.set(key,{...source,modules:new Set()});sources.get(key).modules.add(label);};
+    methodologyData.rows.filter(row=>row.country_code===code&&category.modules.includes(row.module)).forEach(row=>row.sources.forEach(add));
+    if(category.municipal){
+      const municipal=municipalCountry(code);if(municipal?.source)add({url:municipal.source,title:municipal.source_detail?.publisher&&municipal.source_detail?.dataset?`${municipal.source_detail.publisher} · ${municipal.source_detail.dataset}`:`${statusCountries().find(country=>country.code===code)?.[current]||code} · ${category[current]}`,location:municipal.source_detail?.location||municipal[current==="cs"?"coverage_cs":"coverage_en"]});
+    }
+    if(category.transport){
+      const stats=transportStats(code);
+      if(stats.performanceYears.count)(transportPerformanceData?.sources||[]).forEach(add);
+      if(stats.budgetYears.count)(transportBudgetData?.sources||[]).forEach(add);
+    }
+    return [...sources.values()];
+  }
   function renderCoverageMatrix(){
-    if(!methodologyData)return;
-    const cc=coverageCopy[current],body=document.querySelector("#coverage-matrix-body");
-    document.querySelectorAll("[data-coverage-copy]").forEach(node=>{const value=cc[node.dataset.coverageCopy];if(value)node.textContent=value;});
-    document.querySelectorAll("[data-coverage-category]").forEach(node=>{const category=coverageCategories.find(item=>item.id===node.dataset.coverageCategory);if(category)node.innerHTML=`<span>${esc(category[current])}</span><small>${category.modules.length} ${esc(cc.layers)}</small>`;});
-    if(body)body.innerHTML=methodologyData.countries.map(country=>{
+    if(!methodologyData||!municipalityData)return;
+    const body=document.querySelector("#coverage-matrix-body");
+    document.querySelectorAll("[data-coverage-category]").forEach(node=>{const category=coverageCategories.find(item=>item.id===node.dataset.coverageCategory);if(category)node.textContent=category[current];});
+    if(body)body.innerHTML=statusCountries().map(country=>{
       const cells=coverageCategories.map(category=>{
-        const node=coverageNode(country.code,category),selected=activeCoverageNode?.country===country.code&&activeCoverageNode?.category===category.id;
-        const label=`${country[current==="cs"?"name_cs":"name_en"]}, ${category[current]}, ${node.score}%, ${node.rows.length} ${cc.layers}, ${node.sources.length} ${cc.sources}`;
-        return `<td><button type="button" class="coverage-cell coverage-cell-${coverageTone(node.score)}${selected?" selected":""}" data-coverage-country="${esc(country.code)}" data-coverage-node="${esc(category.id)}" aria-label="${esc(label)}" aria-pressed="${selected}"><strong>${node.score}<sup>%</sup></strong><span>${node.rows.length}/${category.modules.length} ${esc(cc.layers)} · ${node.sources.length} ${esc(cc.sources)}</span><i aria-hidden="true"><b style="width:${node.score}%"></b></i></button></td>`;
+        const cell=coverageCell(country.code,category),selected=activeCoverageNode?.country===country.code&&activeCoverageNode?.category===category.id;
+        return `<td><button type="button" class="coverage-cell coverage-status-${esc(cell.status)}${selected?" selected":""}" data-coverage-country="${esc(country.code)}" data-coverage-node="${esc(category.id)}" aria-pressed="${selected}"><strong>${esc(cell.primary)}</strong><span>${esc(cell.secondary)}</span></button></td>`;
       }).join("");
-      return `<tr><th scope="row"><b>${esc(current==="cs"?country.name_cs:country.name_en)}</b><small>${esc(country.code)}</small></th>${cells}</tr>`;
+      return `<tr><th scope="row"><b>${esc(country[current])}</b><small>${esc(country.code)}</small></th>${cells}</tr>`;
     }).join("");
     renderCoverageSelection();
   }
   function renderCoverageSelection(){
-    const title=document.querySelector("#coverage-selection-title"),summary=document.querySelector("#coverage-selection-summary"),list=document.querySelector("#coverage-source-list"),clear=document.querySelector("#coverage-clear"),cc=coverageCopy[current];
+    const title=document.querySelector("#coverage-selection-title"),summary=document.querySelector("#coverage-selection-summary"),list=document.querySelector("#coverage-source-list"),clear=document.querySelector("#coverage-clear"),sc=statusCopy[current];
     if(!title||!summary||!list||!clear||!methodologyData)return;
     clear.hidden=!activeCoverageNode;
-    if(!activeCoverageNode){title.textContent=cc.selectionEmpty;summary.textContent=cc.selectionLead;list.innerHTML="";return;}
-    const country=methodologyData.countries.find(item=>item.code===activeCoverageNode.country),category=coverageCategories.find(item=>item.id===activeCoverageNode.category),node=coverageNode(country.code,category);
-    title.textContent=`${current==="cs"?country.name_cs:country.name_en} · ${category[current]} · ${node.score} %`;
-    summary.textContent=`${node.rows.length}/${category.modules.length} ${cc.layers} · ${node.sources.length} ${cc.sourceLinks}. ${cc.filterNote}`;
-    list.innerHTML=node.sources.map(source=>`<article><span>${[...source.modules].map(esc).join(" · ")}</span><h4>${esc(source.title)}</h4>${source.location?`<p>${esc(source.location)}</p>`:""}<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(cc.openSource)} ↗</a></article>`).join("");
+    if(!activeCoverageNode){title.textContent=sc.selectionEmpty;summary.textContent="";list.innerHTML="";return;}
+    const country=statusCountries().find(item=>item.code===activeCoverageNode.country),category=coverageCategories.find(item=>item.id===activeCoverageNode.category),sources=nodeSources(country.code,category);
+    title.textContent=`${country[current]} · ${category[current]}`;
+    summary.textContent=`${sources.length} ${sc.sourceLinks}. ${sc.filtered}`;
+    list.innerHTML=sources.length?sources.map(source=>`<article><span>${[...source.modules].map(esc).join(" · ")}</span><h4>${esc(source.title)}</h4>${source.location?`<p>${esc(source.location)}</p>`:""}<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(sc.openSource)} ↗</a></article>`).join(""):`<p class="coverage-no-source">${esc(sc.missing)}</p>`;
   }
   function renderMethodology(){
     if(!methodologyData)return;
-    fillSelect("#method-country-filter",methodologyData.countries.map(item=>({value:item.code,cs:item.name_cs,en:item.name_en})),copy[current].ledgerAllCountries,current);
+    fillSelect("#method-country-filter",statusCountries().map(item=>({value:item.code,cs:item.cs,en:item.en})),copy[current].ledgerAllCountries,current);
     fillSelect("#method-module-filter",methodologyData.modules.map(item=>({value:item.id,cs:item.label_cs,en:item.label_en})),copy[current].ledgerAllModules,current);
     fillSelect("#method-status-filter",[{value:"full",cs:"Plné",en:"Full"},{value:"partial",cs:"Částečné",en:"Partial"},{value:"aggregate",cs:"Agregát",en:"Aggregate"}],copy[current].ledgerAllStatuses,current);
     const rows=filteredMethodRows(),body=document.querySelector("#method-source-rows");
@@ -103,21 +154,23 @@
     const link=document.createElement("a");link.href=URL.createObjectURL(new Blob(["\ufeff"+lines.join("\n")],{type:"text/csv;charset=utf-8"}));link.download=`public-spending-data-methodology-${current}.csv`;link.click();URL.revokeObjectURL(link.href);
   }
   function renderDataHealth(){
-    const root=document.querySelector("#data-health-root");if(!root||!qualityData)return;
-    const c=qualityData.counts||{},missing=qualityData.explicit_missing_data?.cash_balance_sheet_rows_missing||[],anomalies=qualityData.reviewed_anomalies||{};
-    const anomalyCount=Object.values(anomalies).reduce((sum,rows)=>sum+(Array.isArray(rows)?rows.length:0),0);
-    const completePct=c.municipalities?c.complete_municipal_histories/c.municipalities*100:0;
-    const financePct=c.public_entity_registry?c.public_entity_financial_statements/c.public_entity_registry*100:0;
-    const generated=releaseData?.data_generated_at?new Intl.DateTimeFormat(current==="cs"?"cs-CZ":"en-GB",{dateStyle:"medium",timeStyle:"short"}).format(new Date(releaseData.data_generated_at)):"—";
-    const labels=current==="cs"?{
-      passed:"Kontrola prošla",generated:"Data vytvořena",municipalities:"Obcí",history:"Historických záznamů",complete:"Úplné obecní historie",registry:"Veřejné subjekty",finance:"S dostupnou účetní závěrkou",missing:"Výslovně chybějící data",missingCopy:`Rozvaha a peněžní zůstatky chybí u ${missing.length} obcí. Hodnota zůstává prázdná, nikdy není nahrazena nulou.`,review:"Prověřované anomálie",reviewCopy:`${anomalyCount} extrémních nebo záporných hodnot je zachováno a označeno k revizi, nikoli automaticky smazáno.`,build:"Detailní rozpočtové členění obcí",buildCopy:"Souhrny a úplné položkové členění se slučují z BigQuery během produkčního buildu. Nulový počet v lokálním předprodukčním reportu proto není chybějící veřejný dataset.",downloads:"Strojově čitelné podklady",quality:"Kontrola kvality JSON ↓",manifest:"Manifest vydání JSON ↓",warning:"Známá mezera"}:{
-      passed:"Checks passed",generated:"Data generated",municipalities:"Municipalities",history:"Historical records",complete:"Complete municipal histories",registry:"Public entities",finance:"With a comparable financial statement",missing:"Explicitly missing data",missingCopy:`Balance-sheet cash data are missing for ${missing.length} municipalities. The value remains null and is never replaced with zero.`,review:"Anomalies under review",reviewCopy:`${anomalyCount} extreme or negative observations are retained and flagged for review, not silently deleted.`,build:"Detailed municipal budget lines",buildCopy:"Headlines and complete line-item breakdowns are merged from BigQuery during the production build. A zero in the local pre-build report therefore does not mean the public dataset is missing.",downloads:"Machine-readable evidence",quality:"Quality report JSON ↓",manifest:"Release manifest JSON ↓",warning:"Known gap"};
-    const cards=[[labels.municipalities,c.municipalities,"100 %"],[labels.history,c.municipal_history_records,`${completePct.toFixed(1)} % ${labels.complete.toLocaleLowerCase()}`],[labels.registry,c.public_entity_registry,`${financePct.toFixed(1)} % ${labels.finance.toLocaleLowerCase()}`],[current==="cs"?"Produkční JSON":"Production JSON",c.production_json_files,`${c.html_files||0} HTML`]];
-    root.innerHTML=`<div class="data-health-status"><span class="data-health-pass">● ${labels.passed}</span><span>${labels.generated}: <b>${esc(generated)}</b></span></div><div class="data-health-kpis">${cards.map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${new Intl.NumberFormat(current==="cs"?"cs-CZ":"en-GB").format(value||0)}</strong><small>${esc(note)}</small></article>`).join("")}</div><div class="data-health-notes"><article><b>${labels.missing}</b><strong>${missing.length}</strong><p>${labels.missingCopy}</p><details><summary>${current==="cs"?"Zobrazit obce":"Show municipalities"}</summary><ul>${missing.map(item=>`<li>${esc(item.name)} <code>${esc(item.national_id)}</code></li>`).join("")}</ul></details></article><article><b>${labels.review}</b><strong>${anomalyCount}</strong><p>${labels.reviewCopy}</p><ul>${Object.entries(anomalies).map(([key,rows])=>`<li><code>${esc(key)}</code> · ${rows.length}</li>`).join("")}</ul></article><article><b>${labels.build}</b><strong>BigQuery → UI</strong><p>${labels.buildCopy}</p></article></div>${(qualityData.warnings||[]).map(warning=>`<p class="data-health-warning"><b>${labels.warning}:</b> ${esc(warning)}</p>`).join("")}<div class="data-health-downloads"><b>${labels.downloads}</b><a href="data/data-quality-report.v1.json" download>${labels.quality}</a><a href="data/release-manifest.v1.json" download>${labels.manifest}</a></div>`;
+    const root=document.querySelector("#data-health-root");if(!root||!qualityData||!methodologyData||!municipalityData)return;
+    const sc=statusCopy[current],countries=municipalityData.countries||[],scope=countries.reduce((sum,country)=>sum+(Number(country.directory_count)||0),0),entityRows=municipalityData.entities?.length||0,aggregateRows=Math.max(0,scope-entityRows),historySpans=countries.map(country=>municipalHistoryStats(country.code)),countryYears=historySpans.reduce((sum,span)=>sum+span.count,0),municipalYears=yearSpan(historySpans.flatMap(span=>span.values));
+    const generatedValues=[municipalityData.generated_at,methodologyData.generated_at,transportPerformanceData?.generated_at,transportBudgetData?.generated_at,releaseData?.data_generated_at].filter(Boolean).map(value=>new Date(value)).filter(value=>!Number.isNaN(value.getTime())),generated=generatedValues.length?new Date(Math.max(...generatedValues)):null;
+    const generatedLabel=generated?new Intl.DateTimeFormat(current==="cs"?"cs-CZ":"en-GB",{dateStyle:"medium",timeStyle:"short"}).format(generated):"—";
+    const cards=[
+      [sc.municipalScope,scope,`${countries.length} ${sc.countries}`],
+      [sc.entityRows,entityRows,aggregateRows?`${integer(aggregateRows)} ${sc.aggregateRows}`:sc.entityLevel],
+      [sc.municipalCountryYears,countryYears,municipalYears.label],
+      [sc.sources,methodologyData.row_count,sc.sourceRecords]
+    ];
+    root.innerHTML=`<div class="data-health-status"><span class="data-health-pass">● ${esc(sc.checksPassed)}</span><span>${esc(sc.snapshot)}: <b>${esc(generatedLabel)}</b></span></div><div class="data-health-kpis">${cards.map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${integer(value)}</strong><small>${esc(note)}</small></article>`).join("")}</div><div class="data-health-downloads"><a href="data/international-municipalities.v1.json" download>Municipal JSON ↓</a><a href="data/methodology-sources.v1.json" download>${esc(sc.ledgerJson)}</a><a href="data/data-quality-report.v1.json" download>QA JSON ↓</a></div>`;
+    const meta=document.querySelector("#status-meta");if(meta)meta.textContent=`${countries.length} ${sc.countries} · ${integer(scope)} ${sc.entities} · ${generatedLabel}`;
   }
   function render() {
     document.documentElement.lang = current;
     document.querySelectorAll("[data-page-copy]").forEach(node => { const value=copy[current][node.dataset.pageCopy]; if(value)node.innerHTML=value; });
+    document.querySelectorAll("[data-status-copy]").forEach(node => { const value=statusCopy[current][node.dataset.statusCopy]; if(value)node.textContent=value; });
     document.querySelectorAll("[data-lang]").forEach(button => { const active=button.dataset.lang===current; button.classList.toggle("active",active); button.setAttribute("aria-pressed",String(active)); });
     document.querySelectorAll("[data-language-link]").forEach(link => { const url=new URL(link.getAttribute("href"),location.href); url.searchParams.set("lang",current); link.href=url.pathname+url.search+url.hash; });
     document.querySelectorAll("[data-page-placeholder]").forEach(node=>{const value=copy[current][node.dataset.pagePlaceholder];if(value)node.placeholder=value;});
@@ -144,6 +197,9 @@
   if(document.body.dataset.page==="methodology")Promise.all([
     fetch("data/methodology-sources.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/data-quality-report.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/release-manifest.v1.json").then(response=>response.ok?response.json():null)
-  ]).then(([methodology,quality,release])=>{methodologyData=methodology;qualityData=quality;releaseData=release;renderMethodology();renderDataHealth();}).catch(error=>{const summary=document.querySelector("#method-ledger-summary");if(summary)summary.textContent=`Methodology data: ${error}`;const health=document.querySelector("#data-health-root");if(health)health.textContent=`Data health: ${error}`;});
+    fetch("data/release-manifest.v1.json").then(response=>response.ok?response.json():null),
+    fetch("data/international-municipalities.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/transport-performance.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/transport-budget-detail.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();})
+  ]).then(([methodology,quality,release,municipalities,transportPerformance,transportBudget])=>{methodologyData=methodology;qualityData=quality;releaseData=release;municipalityData=municipalities;transportPerformanceData=transportPerformance;transportBudgetData=transportBudget;renderMethodology();renderDataHealth();}).catch(error=>{const summary=document.querySelector("#method-ledger-summary");if(summary)summary.textContent=`Methodology data: ${error}`;const health=document.querySelector("#data-health-root");if(health)health.textContent=`Data health: ${error}`;});
 })();

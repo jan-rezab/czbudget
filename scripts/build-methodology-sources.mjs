@@ -3,11 +3,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 const read = async path => JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"));
-const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, publicEntityCoverage, publicEntityDirectory, publicEntityAggregates, demography] = await Promise.all([
+const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, municipalHistory, publicEntityCoverage, publicEntityDirectory, publicEntityAggregates, demography] = await Promise.all([
   read("data/country-parity.v1.json"), read("lib/data/sovereign-benchmark.v1.json"), read("data/country-cash-in.v1.json"),
   read("data/country-spending-2025-2026.v1.json"), read("data/country-spending-comparison.v1.json"), read("data/country-functional-budgets.v1.json"),
   read("data/transport-budget-detail.v1.json"), read("data/country-health.v1.json"), read("data/country-provider-networks.v1.json"),
-  read("data/international-municipalities.v1.json"), read("data/public-entity-coverage.v1.json"), read("data/public-entity-directory/manifest.v1.json"), read("data/public-entity-aggregates.v1.json"), read("data/country-demography.v1.json")
+  read("data/international-municipalities.v1.json"), read("data/municipal-history-directory.v1.json"), read("data/public-entity-coverage.v1.json"), read("data/public-entity-directory/manifest.v1.json"), read("data/public-entity-aggregates.v1.json"), read("data/country-demography.v1.json")
 ]);
 
 const moduleMeta = {
@@ -84,9 +84,10 @@ function lineage(code,module) {
     caveat:[...(provider.missing_dimensions||[]),provider.payments?.note_en].filter(Boolean).join("; ")
   };
   if(module==="municipalities") return {
-    period:(municipal.years||[]).join(", "),scope:municipal.coverage_en,
+    period:code==="CZE"?`${municipalHistory.period.from}–${municipalHistory.period.to}`:(municipal.years||[]).join(", "),scope:municipal.coverage_en,
+    artifact:code==="CZE"?"data/international-municipalities.v1.json · data/municipal-history-directory.v1.json":moduleMeta.municipalities.artifact,
     sources:[source(municipal.source_detail?.dataset||"Official municipal-finance source",municipal.source,municipal.source_detail?.location||"source adapter and table/file listed in pipeline/config/international_municipal_sources.json")],
-    transform:municipal.source_detail?.location||"Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
+    transform:code==="CZE"?"Join the current entity directory to the 2010–2025 municipal budget history by national identifier; retain missing years as missing.":municipal.source_detail?.location||"Load entity identifiers and native revenue/expenditure facts; keep source currency, stage and year.",
     caveat:(municipal.missing_dimensions||[]).join("; ")||"Coverage is the entity population stated by the national source."
   };
   if(module==="public_entities") return {
@@ -110,7 +111,7 @@ for(const country of parity.countries) for(const [module,moduleCoverage] of Obje
   rows.push({
     country_code:country.country_code,country_name_cs:country.name_cs,country_name_en:country.name_en,flag:alpha2[country.country_code],
     module,module_order:moduleMeta[module].order,module_label_cs:moduleMeta[module].cs,module_label_en:moduleMeta[module].en,status,
-    artifact:moduleMeta[module].artifact,coverage:moduleCoverage.coverage,period:detail.period,scope:detail.scope,sources:detail.sources,
+    artifact:detail.artifact||moduleMeta[module].artifact,coverage:moduleCoverage.coverage,period:detail.period,scope:detail.scope,sources:detail.sources,
     exact_extraction:detail.sources.map(item=>item.location).filter(Boolean).join(" · "),transformation:detail.transform,
     limitations:[...new Set([...missing,detail.caveat].filter(Boolean))].join(" · ")
   });
