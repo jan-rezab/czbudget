@@ -334,7 +334,7 @@ assert(cloudbuild.includes("scripts/deploy-immutable.sh"), "Cloud Build does not
 
 let htmlCount = 0;
 let localReferenceCount = 0;
-const countryPaths = ["/countries/czechia", "/countries/germany", "/countries/denmark", "/countries/france", "/countries/united-kingdom", "/countries/poland", "/countries/sweden", "/countries/switzerland", "/countries/ukraine", "/countries/united-states"];
+const countryPaths = ["/countries/czechia", "/countries/germany", "/countries/denmark", "/countries/france", "/countries/united-kingdom", "/countries/poland", "/countries/sweden", "/countries/switzerland", "/countries/ukraine", "/countries/united-states", "/countries/brazil", "/countries/spain", "/countries/japan", "/countries/netherlands", "/countries/norway"];
 if (!dataOnly) {
   const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html"));
   htmlCount = htmlFiles.length;

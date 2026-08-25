@@ -6,6 +6,7 @@ const previewRoutes = [
   "/methodology.html",
   "/about.html",
   "/country.html?code=CZE",
+  "/countries/japan/",
   "/eu-capitals.html",
   "/municipalities/",
   "/municipalities/czechia/",
@@ -94,6 +95,7 @@ test("high-risk static and generated templates switch their visible copy", async
     ["/deep-dives/transportation/?code=CZE", ".deep-hero", "Doprava", "Transportation"],
     ["/municipalities/", ".municipal-hero", "Rozpočty obcí ve 16 zemích", "Municipal budgets in 16 countries"],
     ["/municipalities/czechia/", ".municipal-hero", "Rozpočty českých obcí", "Budgets of Czech municipalities"],
+    ["/countries/japan/", ".coverage-hero", "Profil země", "Country profile"],
     ["/cz/municipalities/praha/", "main", "Příjmy", "Revenue"],
     ["/cz/municipalities/abertamy/", "main", "Příjmy", "Revenue"],
   ];

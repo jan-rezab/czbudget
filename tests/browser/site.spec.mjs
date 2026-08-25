@@ -7,6 +7,7 @@ const routes = [
   ["methodology", "/methodology.html?lang=cs"],
   ["about", "/about.html?lang=cs"],
   ["country", "/country.html?code=CZE&lang=cs"],
+  ["Brazil country coverage", "/countries/brazil/?lang=en"],
   ["capitals", "/eu-capitals.html?lang=cs"],
   ["international municipalities", "/municipalities/?lang=cs"],
   ["Czech municipalities", "/municipalities/czechia/?lang=cs"],
@@ -73,7 +74,22 @@ test("country links are readable and data-layer cards keep accessible contrast",
   await expect(page.locator("#country-name")).toContainText("Germany");
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-cards a").first()).toHaveAttribute("href", "/countries/czechia?lang=en");
+  await expect(page.locator("#country-cards a")).toHaveCount(15);
+  await expect(page.locator('#country-cards a[href="/countries/japan?lang=en"]')).toContainText("Japan");
   await expect(page.locator('a[href*="country.html?code="]')).toHaveCount(0);
+});
+
+test("municipal-first additions are real country profiles with explicit coverage gaps", async ({ page }) => {
+  for (const [slug, code, profiles] of [["brazil","BRA","5,557"],["spain","ESP","6,198"],["japan","JPN","1,741"],["netherlands","NLD","342"],["norway","NOR","358"]]) {
+    await page.goto(`/countries/${slug}/?lang=en`, {waitUntil:"networkidle"});
+    await expect(page.locator("#coverage-code")).toHaveText(code);
+    await expect(page.locator("#coverage-kpis")).toContainText(profiles);
+    await expect(page.locator("#coverage-table")).toContainText("Municipal budgets");
+    await expect(page.locator("#coverage-table")).toContainText("Harmonised national macro");
+    await expect(page.locator("#coverage-table .coverage-status.loaded")).toHaveCount(1);
+    await expect(page.locator("#coverage-table .coverage-status.missing")).toHaveCount(4);
+    await expect(page.locator("#coverage-municipal-link")).toHaveAttribute("href", new RegExp(`/municipalities/${slug}/\\?lang=en$`));
+  }
 });
 
 test("English remains selected when a municipality card is opened", async ({ page }) => {
@@ -536,7 +552,7 @@ test("all representative page menus resolve and primary navigation routes correc
     for (const href of hrefs) {
       const target = new URL(href); target.hash = "";
       if (target.pathname.startsWith("/countries/")) {
-        expect(["czechia","germany","denmark","france","united-kingdom","poland","sweden","switzerland","ukraine","united-states"]).toContain(target.pathname.split("/").filter(Boolean).at(-1));
+        expect(["czechia","germany","denmark","france","united-kingdom","poland","sweden","switzerland","ukraine","united-states","brazil","spain","japan","netherlands","norway"]).toContain(target.pathname.split("/").filter(Boolean).at(-1));
         continue;
       }
       const response = await request.get(target.href);
@@ -556,7 +572,7 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(12);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(17);
   await countryMenu.locator('.country-menu-panel a[href="/countries/czechia?lang=cs"]').click();
   await expect(page).toHaveURL(/\/countries\/czechia\?lang=cs/);
 });
@@ -568,6 +584,7 @@ test("every page family renders the same shared header component", async ({ page
     "/methodology.html?lang=en",
     "/about.html?lang=en",
     "/country.html?code=CZE&lang=en",
+    "/countries/japan/?lang=en",
     "/municipalities/?lang=en",
     "/deep-dives/transportation/?code=CZE&lang=en",
     "/cz/municipalities/praha/?lang=en",
@@ -621,7 +638,7 @@ test("cities use the functional unified menu on desktop and mobile", async ({ pa
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
   await expect(countryMenu).toHaveAttribute("open", "");
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(12);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(17);
   const panelBox = await countryMenu.locator(".country-menu-panel").boundingBox();
   expect(panelBox?.width).toBeLessThanOrEqual(430);
   expect(panelBox?.height).toBeLessThan(700);

@@ -20,7 +20,7 @@ try {
   selected.push("data/municipal-budget-codebook.v1.json");
 } catch {}
 for (const code of (await readdir(path.join(root, "data", "countries"))).sort()) {
-  for (const name of (await readdir(path.join(root, "data", "countries", code))).filter((item) => item.endsWith(".json")).sort()) selected.push(`data/countries/${code}/${name}`);
+  for (const name of (await readdir(path.join(root, "data", "countries", code))).filter((item) => item.endsWith(".json") && !/\s\d+\.json$/.test(item)).sort()) selected.push(`data/countries/${code}/${name}`);
 }
 for (const code of ["CZE","POL","DEU","GBR","FRA","USA","CHE","SWE","DNK","UKR"]) selected.push(`data/public-entity-directory/${code}.v1.json`);
 const sha256 = (content) => createHash("sha256").update(content).digest("hex");

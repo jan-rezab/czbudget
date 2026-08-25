@@ -10,6 +10,11 @@
     CHE: "switzerland",
     UKR: "ukraine",
     USA: "united-states",
+    BRA: "brazil",
+    ESP: "spain",
+    JPN: "japan",
+    NLD: "netherlands",
+    NOR: "norway",
   });
   const codes = Object.freeze(Object.fromEntries(Object.entries(slugs).map(([code, slug]) => [slug, code])));
 
