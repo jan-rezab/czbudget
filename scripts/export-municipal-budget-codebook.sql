@@ -5,6 +5,7 @@ WITH used_codes AS (
     ANY_VALUE(functional_paragraph_name) AS name_cs
   FROM `czbudget-janrezab.budget_detail.municipal_budget_line_details`
   WHERE fiscal_year = 2025
+    AND ingestion_run_id = "cz-finm-2025-all-municipalities-v1"
     AND functional_paragraph_code IS NOT NULL
   GROUP BY code
 
@@ -16,6 +17,7 @@ WITH used_codes AS (
     ANY_VALUE(economic_item_name) AS name_cs
   FROM `czbudget-janrezab.budget_detail.municipal_budget_line_details`
   WHERE fiscal_year = 2025
+    AND ingestion_run_id = "cz-finm-2025-all-municipalities-v1"
   GROUP BY code
 )
 SELECT
