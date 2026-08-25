@@ -44,6 +44,13 @@ upstream public_spending_api {
   keepalive 32;
 }
 
+# $request_uri remains the browser's original request during internal file
+# resolution, so clean URLs that resolve to index.html do not redirect-loop.
+map $request_uri $index_redirect_path {
+  default "";
+  ~^(?<index_directory>.*/)index\.html(?:\?|$) $index_directory;
+}
+
 server {
   listen ${PORT};
   server_name publicspendingdata.org www.publicspendingdata.org _;
@@ -53,6 +60,10 @@ server {
 
   if ($host = www.publicspendingdata.org) {
     return 308 https://publicspendingdata.org$request_uri;
+  }
+
+  if ($index_redirect_path != "") {
+    return 301 $index_redirect_path$is_args$args;
   }
 
   add_header Strict-Transport-Security "max-age=31536000" always;
@@ -161,10 +172,6 @@ server {
     sub_filter 'country-health-performance.js?v=20260824-performance' 'country-health-performance.js?v=20260824-readable-country-routes';
     sub_filter 'country-providers.js?v=20260822-network' 'country-providers.js?v=20260824-readable-country-routes';
     try_files /country.html =404;
-  }
-
-  location ~ ^(.*/)index\.html$ {
-    return 301 $1$is_args$args;
   }
 
   location / {
