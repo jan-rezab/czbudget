@@ -16,6 +16,7 @@ WITH filtered_facts AS (
   JOIN `czbudget-janrezab.budget_detail.public_entities` AS entity
     USING (public_entity_id)
   WHERE fact.fiscal_year = 2025
+    AND fact.ingestion_run_id = "cz-finm-2025-all-municipalities-v1"
 ),
 aggregated AS (
   SELECT
