@@ -56,7 +56,7 @@ server {
   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
   add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
   add_header Cross-Origin-Opener-Policy "same-origin" always;
-  add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
+  add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self' https://cloud.umami.is https://gateway.umami.is; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
 
   location ~ ^/cz/obce(?:/(.*))?$ {
     return 301 /cz/municipalities/$1$is_args$args;
@@ -94,7 +94,7 @@ server {
 
   location / {
     sub_filter_once off;
-    sub_filter '<head>' '<head><script src="/language-bootstrap.js?v=20260824-english-home-default"></script>';
+    sub_filter '<head>' '<head><script defer src="https://cloud.umami.is/script.js" data-website-id="b80e941b-3a25-40ef-bdf4-3ecb0e91e053" data-domains="publicspendingdata.org,www.publicspendingdata.org" data-do-not-track="true" data-exclude-search="true"></script><script src="/language-bootstrap.js?v=20260824-english-home-default"></script>';
     sub_filter 'cz-budget.css"' 'cz-budget.css?v=20260823-municipal-ux2"';
     sub_filter 'municipal-i18n.js"' 'municipal-i18n.js?v=20260823-english-route"';
     sub_filter 'cz-municipal-directory.js"' 'cz-municipal-directory.js?v=20260823-english-route"';
