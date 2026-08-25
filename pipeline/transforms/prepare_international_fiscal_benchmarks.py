@@ -40,7 +40,7 @@ DEFAULT_WEB_JSON = ROOT / "website/lib/data/sovereign-benchmark.v1.json"
 START_YEAR = 2005
 END_YEAR = 2024
 
-COUNTRY_ORDER = ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK"]
+COUNTRY_ORDER = ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "BRA", "ESP", "JPN", "NLD", "NOR"]
 
 METRICS = {
     "revenue_pct_gdp": {

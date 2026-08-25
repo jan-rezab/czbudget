@@ -2,7 +2,7 @@
 
 import fs from "node:fs/promises";
 
-const AREAS = ["CZE","DEU","FRA","POL","GBR","USA","CHE","SWE","DNK"];
+const AREAS = ["CZE","DEU","FRA","POL","GBR","USA","CHE","SWE","DNK","BRA","ESP","JPN","NLD","NOR"];
 const AREA_KEY = AREAS.join("+");
 const SHA = "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1";
 const BEDS = "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_HEALTH_REAC_HOSP@DF_BEDS_FUNC,1.1";
@@ -16,7 +16,12 @@ const profiles = {
   USA:{currency:"USD",architecture_cs:"Peníze tečou paralelně přes Medicare, Medicaid, zaměstnavatelské a individuální pojištění i přímé platby. Nemocnice jsou veřejné, neziskové i ziskové; CMS zveřejňuje standardizované cost reports po zařízeních.",architecture_en:"Money flows in parallel through Medicare, Medicaid, employer and individual insurance, and direct payments. Hospitals can be public, non-profit or for-profit; CMS publishes standardised facility cost reports.",official_title:"CMS · hospital cost reports",official_url:"https://www.cms.gov/data-research/statistics-trends-and-reports/cost-reports"},
   CHE:{currency:"CHF",architecture_cs:"Povinné pojištění poskytují konkurenční soukromé pojišťovny; kantony dotují pojistné a spolufinancují nemocniční péči. SwissDRG rozděluje platby za případy mezi pojišťovny a kantony.",architecture_en:"Compulsory insurance is supplied by competing private insurers; cantons subsidise premiums and co-finance hospital care. SwissDRG case payments split hospital funding between insurers and cantons.",official_title:"FSO · health costs and financing",official_url:"https://www.bfs.admin.ch/bfs/en/home/statistics/health/costs-financing.html"},
   SWE:{currency:"SEK",architecture_cs:"Regiony vybírají daně a nakupují většinu zdravotní péče; stát přidává obecné a cílené granty. Obce financují významnou část dlouhodobé péče, takže zdravotní a sociální rozpočty se protínají.",architecture_en:"Regions levy taxes and purchase most healthcare, supplemented by general and earmarked central-government grants. Municipalities fund much long-term care, so health and social-care budgets overlap.",official_title:"Socialstyrelsen · health statistics",official_url:"https://www.socialstyrelsen.se/en/statistics-and-data/statistics/"},
-  DNK:{currency:"DKK",architecture_cs:"Stát financuje regiony blokovými a částečně výkonovými granty; regiony provozují nemocnice a nakupují primární péči. Obce spolufinancují péči a odpovídají za prevenci a rehabilitaci.",architecture_en:"Central government funds regions through block and partly activity-based grants; regions run hospitals and purchase primary care. Municipalities co-finance care and are responsible for prevention and rehabilitation.",official_title:"Danish Health Authority · health system",official_url:"https://www.sst.dk/en/english"}
+  DNK:{currency:"DKK",architecture_cs:"Stát financuje regiony blokovými a částečně výkonovými granty; regiony provozují nemocnice a nakupují primární péči. Obce spolufinancují péči a odpovídají za prevenci a rehabilitaci.",architecture_en:"Central government funds regions through block and partly activity-based grants; regions run hospitals and purchase primary care. Municipalities co-finance care and are responsible for prevention and rehabilitation.",official_title:"Danish Health Authority · health system",official_url:"https://www.sst.dk/en/english"},
+  BRA:{currency:"BRL",architecture_cs:"Jednotný zdravotní systém SUS je daňově financovaný a sdílí odpovědnost mezi federací, státy a obcemi; soukromé pojištění tvoří paralelní doplňkovou vrstvu.",architecture_en:"The tax-funded Unified Health System (SUS) shares responsibility across federal, state and municipal governments; private insurance forms a parallel supplementary layer.",official_title:"Ministério da Saúde · SUS",official_url:"https://www.gov.br/saude/pt-br"},
+  ESP:{currency:"EUR",architecture_cs:"Národní zdravotní systém je převážně financovaný z daní a provozovaný autonomními oblastmi; stát stanovuje společný rámec a koordinuje meziregionální politiku.",architecture_en:"The National Health System is mainly tax-funded and operated by the autonomous communities; central government sets the common framework and coordinates interregional policy.",official_title:"Ministerio de Sanidad · Sistema Nacional de Salud",official_url:"https://www.sanidad.gob.es/organizacion/sns/home.htm"},
+  JPN:{currency:"JPY",architecture_cs:"Univerzální zákonné pojištění tvoří zaměstnanecké a obecní plány; stát a samosprávy dotují pojistné a regulovaný celostátní sazebník určuje úhrady poskytovatelům.",architecture_en:"Universal statutory insurance combines employment-based and municipal plans; central and local governments subsidise contributions and a national fee schedule sets provider payments.",official_title:"MHLW · health insurance system",official_url:"https://www.mhlw.go.jp/english/policy/health-medical/health-insurance/"},
+  NLD:{currency:"EUR",architecture_cs:"Povinné základní pojištění poskytují konkurenční soukromé pojišťovny podle veřejných pravidel; rizikové vyrovnání a státní příspěvky oddělují solidaritu od nákupu péče.",architecture_en:"Mandatory basic insurance is supplied by competing private insurers under public rules; risk equalisation and public contributions separate solidarity from purchasing.",official_title:"Government.nl · health insurance",official_url:"https://www.government.nl/topics/health-insurance"},
+  NOR:{currency:"NOK",architecture_cs:"Daňově financovaný systém dělí odpovědnost mezi státní regionální zdravotní podniky a obce; stát vlastní nemocnice a obce zajišťují primární a dlouhodobou péči.",architecture_en:"The tax-funded system divides responsibility between state-owned regional health authorities and municipalities; the state owns hospitals while municipalities provide primary and long-term care.",official_title:"Norwegian Ministry of Health · healthcare system",official_url:"https://www.regjeringen.no/en/topics/health-and-care/id917/"}
 };
 
 const queries = {
@@ -53,6 +58,7 @@ const value = (key,code) => Number(results[key].find(row=>row.REF_AREA===code)?.
 const bed = (code) => results.beds
   .filter(row=>row.REF_AREA===code && row.HEALTH_FUNCTION==="_T" && row.CARE_TYPE==="_T" && Number(row.OBS_VALUE)>0)
   .sort((a,b)=>Number(b.TIME_PERIOD)-Number(a.TIME_PERIOD))[0];
+const rounded = item => Number.isFinite(item) ? Number(item.toFixed(3)) : null;
 
 const countries = Object.fromEntries(AREAS.map(code=>{
   const financing = {public_compulsory:value("public_compulsory",code),out_of_pocket:value("out_of_pocket",code)};
@@ -65,16 +71,16 @@ const countries = Object.fromEntries(AREAS.map(code=>{
     health_gdp_pct:value("gdp",code),
     per_capita_ppp:value("per_capita_ppp",code),
     per_capita_local:value("per_capita_local",code),
-    financing:Object.fromEntries(Object.entries(financing).map(([key,item])=>[key,Number(item.toFixed(3))])),
-    providers:Object.fromEntries(Object.entries(providers).map(([key,item])=>[key,Number(item.toFixed(3))])),
-    beds_per_1000:Number(latestBed.OBS_VALUE),bed_year:Number(latestBed.TIME_PERIOD),bed_status:latestBed.OBS_STATUS||""
+    financing:Object.fromEntries(Object.entries(financing).map(([key,item])=>[key,rounded(item)])),
+    providers:Object.fromEntries(Object.entries(providers).map(([key,item])=>[key,rounded(item)])),
+    beds_per_1000:latestBed ? Number(latestBed.OBS_VALUE) : null,bed_year:latestBed ? Number(latestBed.TIME_PERIOD) : null,bed_status:latestBed?.OBS_STATUS||"not_available"
   }];
 }));
 
 const payload = {
   schema_version:"1.0.0",
   generated_at:new Date().toISOString(),
-  coverage:"Nine OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
+  coverage:"Fourteen OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
   methodology:{
     cs:"Podíly jsou běžné výdaje na zdravotnictví podle System of Health Accounts 2011. Benchmark na lůžko je odhad: výdaje na obyvatele × podíl nemocnic ÷ lůžka na obyvatele. Nejde o účetní výnos konkrétní nemocnice ani žebříček kvality.",
     en:"Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."

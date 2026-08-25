@@ -8,6 +8,8 @@ import csv
 import json
 import re
 import tempfile
+import urllib.parse
+import urllib.request
 from collections import defaultdict
 from pathlib import Path
 from zipfile import ZipFile
@@ -43,6 +45,30 @@ TRANSLATIONS = {
     },
 }
 ENGLISH_SOURCE_COUNTRIES = {"GBR", "SWE", "USA"}
+
+COFOG_LABELS = {
+    "GF01": "General public services", "GF02": "Defence", "GF03": "Public order and safety",
+    "GF04": "Economic affairs", "GF05": "Environmental protection", "GF06": "Housing and community amenities",
+    "GF07": "Health", "GF08": "Recreation, culture and religion", "GF09": "Education", "GF10": "Social protection",
+}
+for _code in ("ESP", "NLD", "NOR"):
+    TRANSLATIONS[_code] = dict(COFOG_LABELS)
+TRANSLATIONS["BRA"] = {
+    "Serviços públicos gerais": "General public services", "Defesa": "Defence",
+    "Ordem pública e segurança": "Public order and safety", "Assuntos econômicos": "Economic affairs",
+    "Proteção ambiental": "Environmental protection", "Habitação e serviços comunitários": "Housing and community amenities",
+    "Saúde": "Health", "Recreação, cultura e religião": "Recreation, culture and religion",
+    "Educação": "Education", "Proteção social": "Social protection",
+}
+TRANSLATIONS["JPN"] = {
+    "皇室費":"Imperial Household expenses", "国会":"National Diet", "裁判所":"Courts", "会計検査院":"Board of Audit",
+    "内閣":"Cabinet", "内閣府":"Cabinet Office", "デジタル庁":"Digital Agency", "防災庁":"Disaster Management Agency",
+    "総務省":"Ministry of Internal Affairs and Communications", "法務省":"Ministry of Justice", "外務省":"Ministry of Foreign Affairs",
+    "財務省":"Ministry of Finance", "文部科学省":"Ministry of Education, Culture, Sports, Science and Technology",
+    "厚生労働省":"Ministry of Health, Labour and Welfare", "農林水産省":"Ministry of Agriculture, Forestry and Fisheries",
+    "経済産業省":"Ministry of Economy, Trade and Industry", "国土交通省":"Ministry of Land, Infrastructure, Transport and Tourism",
+    "環境省":"Ministry of the Environment", "防衛省":"Ministry of Defence",
+}
 
 
 def row(code, label, a, b):
@@ -204,13 +230,77 @@ def usa():
         "Záporné částky jsou zachovány: jde o netto kompenzační příjmy a úvěrové operace v oficiální databázi OMB.","Negative values are retained: they are net offsetting receipts and credit operations in the official OMB database.")
 
 
+EUROSTAT_NATIVE = {
+    "ESP": ["Servicios públicos generales", "Defensa", "Orden público y seguridad", "Asuntos económicos", "Protección del medio ambiente", "Vivienda y servicios comunitarios", "Salud", "Actividades recreativas, cultura y religión", "Educación", "Protección social"],
+    "NLD": ["Algemeen overheidsbestuur", "Defensie", "Openbare orde en veiligheid", "Economische aangelegenheden", "Milieubescherming", "Huisvesting en gemeenschapsvoorzieningen", "Volksgezondheid", "Recreatie, cultuur en religie", "Onderwijs", "Sociale bescherming"],
+    "NOR": ["Alminnelig offentlig tjenesteyting", "Forsvar", "Offentlig orden og trygghet", "Næringsøkonomiske formål", "Miljøvern", "Boliger og nærmiljø", "Helse", "Fritid, kultur og religion", "Utdanning", "Sosial beskyttelse"],
+}
+for _country_code, _labels in EUROSTAT_NATIVE.items():
+    TRANSLATIONS[_country_code] = {_labels[i]: COFOG_LABELS[f"GF{i + 1:02d}"] for i in range(10)}
+
+
+def _jsonstat_value(payload, wanted):
+    """Read one value from Eurostat's compact JSON-stat response."""
+    flat = 0
+    stride = 1
+    for dimension_id, size in reversed(list(zip(payload["id"], payload["size"]))):
+        index = payload["dimension"][dimension_id]["category"]["index"]
+        position = index[wanted[dimension_id]] if isinstance(index, dict) else index.index(wanted[dimension_id])
+        flat += position * stride
+        stride *= size
+    values = payload["value"]
+    value = values.get(str(flat)) if isinstance(values, dict) else values[flat]
+    return float(value)
+
+
+def eurostat_cofog(code, geo):
+    params = [("freq", "A"), ("unit", "MIO_NAC"), ("sector", "S13"), ("na_item", "TE"), ("geo", geo), ("time", "2023"), ("time", "2024")]
+    url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10a_exp?" + urllib.parse.urlencode(params)
+    with urllib.request.urlopen(url, timeout=90) as response:
+        payload = json.load(response)
+    rows = []
+    for i, cofog in enumerate(COFOG_LABELS, 1):
+        values = []
+        for year in ("2023", "2024"):
+            wanted = {dimension_id: next(iter(payload["dimension"][dimension_id]["category"]["index"])) for dimension_id in payload["id"]}
+            wanted.update({"freq":"A", "unit":"MIO_NAC", "sector":"S13", "na_item":"TE", "geo":geo, "cofog":cofog, "time":year})
+            values.append(_jsonstat_value(payload, wanted) / 1000)
+        rows.append(row(cofog, EUROSTAT_NATIVE[code][i - 1], *values))
+    currency = {"ESP":"EUR", "NLD":"EUR", "NOR":"NOK"}[code]
+    return country(code, currency, "functional", "Výdaje vládních institucí podle COFOG", "General-government expenditure by COFOG",
+        {"label":"2023", "status_cs":"skutečnost", "status_en":"actual"}, {"label":"2024", "status_cs":"skutečnost", "status_en":"actual"}, rows,
+        [{"title":"Eurostat — General government expenditure by function (gov_10a_exp)", "url":"https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table"}],
+        "Částky pokrývají celý sektor vládních institucí S.13 a jsou v milionech národní měny převedených na miliardy.",
+        "Amounts cover the full S.13 general-government sector and are converted from millions to billions of national currency.")
+
+
+def brazil():
+    labels = ["Serviços públicos gerais", "Defesa", "Ordem pública e segurança", "Assuntos econômicos", "Proteção ambiental", "Habitação e serviços comunitários", "Saúde", "Recreação, cultura e religião", "Educação", "Proteção social"]
+    values = [(1242018,1301580),(55791,59397),(311371,346997),(241967,265604),(54293,65313),(126088,159650),(516411,590982),(37092,47214),(539973,599178),(1833347,1941604)]
+    rows = [row(f"70{i}", labels[i - 1], a / 1000, b / 1000) for i, (a, b) in enumerate(values, 1)]
+    return country("BRA", "BRL", "functional", "Výdaje vládních institucí podle COFOG", "General-government expenditure by COFOG",
+        {"label":"2023", "status_cs":"skutečnost", "status_en":"actual"}, {"label":"2024", "status_cs":"skutečnost", "status_en":"actual"}, rows,
+        [{"title":"Tesouro Nacional / SOF / IBGE / Banco Central — COFOG 2024 bulletin", "url":"https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog/arquivos/boletim_cofog_2024.pdf/@@display-file/file"}],
+        "Oficiální konsolidované výdaje všech vládních institucí; původní tabulka je v milionech BRL.", "Official consolidated expenditure of general government; the source table is in BRL millions.")
+
+
+def japan():
+    labels = ["皇室費","国会","裁判所","会計検査院","内閣","内閣府","デジタル庁","防災庁","総務省","法務省","外務省","財務省","文部科学省","厚生労働省","農林水産省","経済産業省","国土交通省","環境省","防衛省"]
+    values = [(13430532,13648753),(136723343,145773232),(361086867,387221498),(17350449,18106659),(165299563,175400615),(5573103413,5534898968),(233910824,294543189),(0,2414573),(20266185387,22703714567),(885963789,944653365),(886514990,889281550),(29934682990,33313616029),(6848151456,7720525067),(35054552982,36528554845),(3274647710,3372806072),(1655514359,2005220872),(9926649047,9952532626),(533758685,565810507),(9673584875,9919530135)]
+    rows = [row(f"{i:02d}", label, a / 1e6, b / 1e6) for i, (label, (a, b)) in enumerate(zip(labels, values), 1)]
+    return country("JPN", "JPY", "administrative", "Výdajový rozpočet podle ministerstva a ústavní instituce", "Expenditure budget by ministry and constitutional institution",
+        {"label":"FY 2025", "status_cs":"běžný rozpočet", "status_en":"current budget"}, {"label":"FY 2026", "status_cs":"běžný rozpočet", "status_en":"current budget"}, rows,
+        [{"title":"Ministry of Finance Japan — FY2025 revenue and expenditure budget", "url":"https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2025/0705b.html"},{"title":"Ministry of Finance Japan — FY2026 revenue and expenditure budget", "url":"https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2026/0805b.html"}],
+        "Oficiální částky jsou v tisících JPY; zde jsou převedeny na miliardy. Jde o rozpočtová oprávnění, nikoli průběžné čerpání.", "Official amounts are in JPY thousands and are converted to billions. These are budget authorities, not year-to-date spending.")
+
+
 def main():
-    countries=[czechia(),germany(),denmark(),france(),britain(),poland(),sweden(),switzerland(),ukraine(),usa()]
+    countries=[czechia(),germany(),denmark(),france(),britain(),poland(),sweden(),switzerland(),ukraine(),usa(),brazil(),eurostat_cofog("ESP","ES"),japan(),eurostat_cofog("NLD","NL"),eurostat_cofog("NOR","NO")]
     payload={
-      "schema_version":"1.0.0","generated_at":"2026-08-21",
+      "schema_version":"1.0.0","generated_at":"2026-08-26",
       "methodology_cs":"Každý profil srovnává dvě období ve stejném národním členění. Rozsahy mezi státy nejsou účetně totožné.",
       "methodology_en":"Each profile compares two periods under one national classification. Accounting perimeters are not identical across countries.",
-      "fx":{"reference_date":"2026-08-18","local_per_eur":{"EUR":1,"CZK":24.179,"DKK":7.4759,"GBP":0.85585,"PLN":4.319,"SEK":11.045,"CHF":0.9406,"USD":1.1576,"UAH":51.8082},"sources":[{"title":"ECB euro reference rates","url":"https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html"},{"title":"National Bank of Ukraine EUR/UAH official rate","url":"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=EUR&date=20260818&json"}]},
+      "fx":{"reference_date":"2026-08-18","local_per_eur":{"EUR":1,"CZK":24.179,"DKK":7.4759,"GBP":0.85585,"PLN":4.319,"SEK":11.045,"CHF":0.9406,"USD":1.1576,"UAH":51.8082,"BRL":6.0281,"JPY":184.87,"NOK":10.9025},"sources":[{"title":"ECB euro reference rates","url":"https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html"},{"title":"National Bank of Ukraine EUR/UAH official rate","url":"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=EUR&date=20260818&json"}]},
       "countries":countries,
     }
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

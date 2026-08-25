@@ -32,6 +32,16 @@ const transportByCode = code => transport.countries[code];
 
 function lineage(code,module) {
   const admin=adminByCode(code), healthProfile=health.countries[code], provider=providers.countries[code], municipal=municipalByCode(code), entity=publicEntityCoverage.countries[code], entityDirectory=publicEntityDirectory.countries.find(item=>item.country_code===code), entityAggregates=publicEntityAggregates.observations.filter(item=>item.country_code===code), demographic=demography.countries[code], transportProfile=transportByCode(code);
+  const unavailable =
+    (module==="functional_spending" && !functions.countries[code]) ||
+    (module==="transport" && !transportProfile) ||
+    (module==="health" && !healthProfile) ||
+    (module==="providers" && !provider) ||
+    (module==="public_entities" && (!entity || !entityDirectory));
+  if (unavailable) {
+    const fallback=admin?.sources?.[0];
+    return {period:"Not loaded",scope:"Explicit coverage gap",sources:fallback?[source(fallback.title,fallback.url,"coverage registry; no module-specific extraction")]:[],transform:"No transformation: the module is not published for this country.",caveat:"Not loaded; no values are inferred from another accounting perimeter."};
+  }
   if(module==="sovereign") return {
     period:parity.countries.find(c=>c.country_code===code).modules.sovereign.coverage,
     scope:"General government (WEO)",

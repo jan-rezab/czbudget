@@ -79,16 +79,13 @@ test("country links are readable and data-layer cards keep accessible contrast",
   await expect(page.locator('a[href*="country.html?code="]')).toHaveCount(0);
 });
 
-test("municipal-first additions are real country profiles with explicit coverage gaps", async ({ page }) => {
-  for (const [slug, code, profiles] of [["brazil","BRA","5,557"],["spain","ESP","6,198"],["japan","JPN","1,741"],["netherlands","NLD","342"],["norway","NOR","358"]]) {
+test("new countries expose the full national dashboard and native spending", async ({ page }) => {
+  for (const [slug, name, rows] of [["brazil","Brazil",10],["spain","Spain",10],["japan","Japan",15],["netherlands","Netherlands",10],["norway","Norway",10]]) {
     await page.goto(`/countries/${slug}/?lang=en`, {waitUntil:"networkidle"});
-    await expect(page.locator("#coverage-code")).toHaveText(code);
-    await expect(page.locator("#coverage-kpis")).toContainText(profiles);
-    await expect(page.locator("#coverage-table")).toContainText("Municipal budgets");
-    await expect(page.locator("#coverage-table")).toContainText("Harmonised national macro");
-    await expect(page.locator("#coverage-table .coverage-status.loaded")).toHaveCount(1);
-    await expect(page.locator("#coverage-table .coverage-status.missing")).toHaveCount(4);
-    await expect(page.locator("#coverage-municipal-link")).toHaveAttribute("href", new RegExp(`/municipalities/${slug}/\\?lang=en$`));
+    await expect(page.locator("#country-name")).toContainText(name);
+    await expect(page.locator("#country-spending-root .spending-row")).toHaveCount(rows);
+    await expect(page.locator("#country-spending-root")).toContainText("Where the money goes");
+    await expect(page.locator("#balance-chart")).toBeVisible();
   }
 });
 
@@ -120,8 +117,8 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator(".glorious-footer .footer-hlidac")).toHaveAttribute("href", "https://www.hlidacstatu.cz/");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#compare-table tr")).toHaveCount(10);
-  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(10);
+  await expect(page.locator("#compare-table tr")).toHaveCount(15);
+  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(15);
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
@@ -244,8 +241,8 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   await expect(page.locator(".transport-budget-legend > div")).toHaveCount(6);
   await expect(page.locator(".transport-investment-trend span")).toHaveCount(10);
   await expect(page.locator(".transport-budget-detail")).toContainText("291,427 mil.");
-  await expect(page.locator(".transport-comparison tbody tr")).toHaveCount(10);
-  await expect(page.locator(".transport-coverage-matrix tbody tr")).toHaveCount(10);
+  await expect(page.locator(".transport-comparison tbody tr")).toHaveCount(14);
+  await expect(page.locator(".transport-coverage-matrix tbody tr")).toHaveCount(14);
   await expect(page.locator(".transport-coverage-audit")).toContainText("Public data and gaps");
   await expect(page.locator(".transport-comparison tr.scope-exception")).toHaveCount(2);
   await expect(page.locator(".transport-performance-audit")).toContainText("Infrastructure performance");
@@ -293,7 +290,7 @@ test("ageing deep dive stays inside official projections and transparent arithme
   await page.goto("/deep-dives/ageing/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country option")).toHaveCount(10);
   await expect(page.locator(".aging-kpis article")).toHaveCount(4);
-  await expect(page.locator(".aging-table tbody tr")).toHaveCount(10);
+  await expect(page.locator(".aging-table tbody tr")).toHaveCount(15);
   await expect(page.locator("#aging-calculator-results")).toContainText("This is not a forecast of employment, pensions, healthcare costs, taxes or public debt");
   await expect(page.locator("#aging-calculator-results")).toContainText("5,936,188");
   await page.locator("#aging-boundary").fill("70");
@@ -366,14 +363,14 @@ test("country profiles expose sortable ten-year health, social and transport com
   for (const id of ["healthcare", "social-system"]) {
     const section=page.locator(`#${id}`);
     await expect(section.locator(".function-bar-column")).toHaveCount(10);
-    await expect(section.locator("tbody tr")).toHaveCount(10);
+    await expect(section.locator("tbody tr")).toHaveCount(14);
     await expect(section.locator(".sortable-header-button")).toHaveCount(5);
   }
   const transport=page.locator("#transportation");
   await expect(transport.locator(".function-bar-column")).toHaveCount(10);
   await expect(transport.locator(".transport-network-year")).toHaveCount(10);
   await expect(transport.locator(".transport-kpis article")).toHaveCount(5);
-  await expect(transport.locator("tbody tr")).toHaveCount(10);
+  await expect(transport.locator("tbody tr")).toHaveCount(14);
   await expect(transport.locator(".sortable-header-button")).toHaveCount(7);
   await expect(transport.locator(".transport-contract")).toContainText("Absolute kilometres alone are not a quality ranking");
   await expect(transport).toContainText("1,486 km");
@@ -403,10 +400,10 @@ test("public-entity profiles expose broad perimeters, economics and the full sea
   await expect(page.locator("#public-entities .pe-directory-meta")).toContainText("18,238 matching rows");
 });
 
-test("health deep dive keeps ten system profiles and the ten-country spending comparison", async ({ page }) => {
+test("health deep dive keeps system profiles and the expanded spending comparison", async ({ page }) => {
   await page.goto("/deep-dives/health/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country option")).toHaveCount(10);
-  await expect(page.locator("#country-function-health tbody tr")).toHaveCount(10);
+  await expect(page.locator("#country-function-health tbody tr")).toHaveCount(14);
   await expect(page.locator("#healthcare-system")).toBeVisible();
   await expect(page.locator("#hospital-benchmark")).toBeVisible();
   await expect(page.locator("#country-health-kpis article")).toHaveCount(4);

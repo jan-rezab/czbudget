@@ -95,7 +95,7 @@ test("high-risk static and generated templates switch their visible copy", async
     ["/deep-dives/transportation/?code=CZE", ".deep-hero", "Doprava", "Transportation"],
     ["/municipalities/", ".municipal-hero", "Rozpočty obcí ve 16 zemích", "Municipal budgets in 16 countries"],
     ["/municipalities/czechia/", ".municipal-hero", "Rozpočty českých obcí", "Budgets of Czech municipalities"],
-    ["/countries/japan/", ".coverage-hero", "Profil země", "Country profile"],
+    ["/countries/japan/", ".country-hero", "Detail země", "Country detail"],
     ["/cz/municipalities/praha/", "main", "Příjmy", "Revenue"],
     ["/cz/municipalities/abertamy/", "main", "Příjmy", "Revenue"],
   ];

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T19:05:11.426Z",
+  "generated_at": "2026-08-25T22:43:58.477Z",
   "country": {
     "country_code": "UKR",
     "name_cs": "Ukrajina",
@@ -32,9 +32,11 @@
     }
   },
   "coverage": {
-    "loaded_modules": 11,
+    "loaded_modules": 10,
     "total_modules": 11,
-    "missing_dimensions": []
+    "missing_dimensions": [
+      "harmonised_health_financing"
+    ]
   },
   "modules": {
     "sovereign": {
@@ -78,11 +80,10 @@
       "missing_dimensions": []
     },
     "health": {
-      "status": "loaded",
-      "coverage": "SHA financing profile; 2021",
+      "status": "unavailable",
+      "coverage": "functional expenditure only",
       "missing_dimensions": [
-        "SHA provider split (HP)",
-        "comparable bed benchmark"
+        "SHA financing and provider split"
       ]
     },
     "providers": {
@@ -2353,38 +2354,7 @@
         ]
       }
     },
-    "health": {
-      "currency": "UAH",
-      "architecture_cs": "Státní program zdravotních garancí nakupuje Národní zdravotní služba Ukrajiny (NHSU). Profil financování používá poslední úplný ukrajinský řádek v databázi WHO GHED; novější válečné roky v tomto exportu úplné hodnoty nemají.",
-      "architecture_en": "The National Health Service of Ukraine (NHSU) purchases the state Programme of Medical Guarantees. The financing profile uses Ukraine's latest complete row in WHO GHED; newer wartime years do not contain complete values in that export.",
-      "official_title": "WHO · Global Health Expenditure Database",
-      "official_url": "https://apps.who.int/nha/database/Select/Indicators/en",
-      "year": 2021,
-      "health_gdp_pct": 8.203,
-      "per_capita_ppp": null,
-      "per_capita_local": null,
-      "per_capita_usd": 369.905,
-      "financing": {
-        "public_compulsory": 52.123,
-        "out_of_pocket": 45.294,
-        "voluntary_other": 2.583
-      },
-      "providers": {
-        "hospitals": null,
-        "residential_ltc": null,
-        "ambulatory": null,
-        "retailers": null,
-        "other": null
-      },
-      "beds_per_1000": null,
-      "bed_year": null,
-      "bed_status": "",
-      "missing_dimensions": [
-        "SHA provider split (HP)",
-        "comparable bed benchmark"
-      ],
-      "source_location": "WHO GHED full workbook → Data → code=UKR, year=2021 → che_gdp, gghed_che, oops_che and vpp_che; voluntary_other is the remainder to 100%"
-    },
+    "health": null,
     "providers": {
       "coverage": "nhsu_contracting_provider_open_data",
       "facility_count": null,

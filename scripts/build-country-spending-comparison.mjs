@@ -74,6 +74,19 @@ const map = {
     housing_community:["19","219","223","150","101","119","156"], economic_affairs:["14","4","87","22","169","70","236","103"],
     general_services_debt:["11","10","27","1","17","80"], culture_recreation:["171","141","140","175","100","55","43","75"],
   },
+  BRA: {
+    general_services_debt:["701"], defence:["702"], public_order_justice:["703"], economic_affairs:["704"],
+    environment_agriculture:["705"], housing_community:["706"], health:["707"], culture_recreation:["708"],
+    education_research:["709"], social_protection:["7010"],
+  },
+  ESP: {general_services_debt:["GF01"],defence:["GF02"],public_order_justice:["GF03"],economic_affairs:["GF04"],environment_agriculture:["GF05"],housing_community:["GF06"],health:["GF07"],culture_recreation:["GF08"],education_research:["GF09"],social_protection:["GF10"]},
+  NLD: {general_services_debt:["GF01"],defence:["GF02"],public_order_justice:["GF03"],economic_affairs:["GF04"],environment_agriculture:["GF05"],housing_community:["GF06"],health:["GF07"],culture_recreation:["GF08"],education_research:["GF09"],social_protection:["GF10"]},
+  NOR: {general_services_debt:["GF01"],defence:["GF02"],public_order_justice:["GF03"],economic_affairs:["GF04"],environment_agriculture:["GF05"],housing_community:["GF06"],health:["GF07"],culture_recreation:["GF08"],education_research:["GF09"],social_protection:["GF10"]},
+  JPN: {
+    social_protection:["14"], education_research:["13"], defence:["19"], public_order_justice:["03","10"],
+    transport_infrastructure:["17"], environment_agriculture:["15","18"], economic_affairs:["07","16"],
+    general_services_debt:["01","02","04","05","06","08","09","11","12"],
+  },
 };
 
 const round = value => Math.round(value * 1e6) / 1e6;

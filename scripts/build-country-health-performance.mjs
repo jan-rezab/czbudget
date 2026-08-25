@@ -2,7 +2,7 @@
 
 import fs from "node:fs/promises";
 
-const COUNTRIES = ["CZE","DEU","DNK","FRA","GBR","POL","SWE","CHE","USA","UKR"];
+const COUNTRIES = ["CZE","DEU","DNK","FRA","GBR","POL","SWE","CHE","USA","UKR","BRA","ESP","JPN","NLD","NOR"];
 const WORLD_BANK = "https://api.worldbank.org/v2";
 const OECD = "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD";
 const START_YEAR = 2015;
@@ -73,7 +73,7 @@ const countries=Object.fromEntries(COUNTRIES.map(code=>{
 const payload={
   schema_version:"1.0.0",
   generated_at:new Date().toISOString(),
-  coverage:"Ten-country performance layer. World Bank indicators provide the common ten-country spine; OECD hospital utilisation includes partial country coverage and OECD avoidable mortality covers nine countries.",
+  coverage:"Fifteen-country performance layer. World Bank indicators provide the common spine; OECD hospital utilisation and avoidable mortality have partial country coverage.",
   methodology:{
     cs:"Každý ukazatel používá poslední dostupný rok a rok je publikován spolu s hodnotou. Řady Světové banky přebírají harmonizované údaje WHO a dalších mezinárodních správců. Nemocniční využití a odvratitelná úmrtnost pocházejí z OECD Health Statistics. Rozdílný rok není dopočítán ani nahrazen nulou.",
     en:"Every indicator uses its latest available year, shown alongside the value. World Bank series redistribute harmonised data from WHO and other international custodians. Hospital utilisation and avoidable mortality come from OECD Health Statistics. Different reference years are neither imputed nor treated as zero."

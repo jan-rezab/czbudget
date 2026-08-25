@@ -179,6 +179,10 @@
   async function loadCountry() {
     const request=++state.request; state.shard=null;state.selected=null;state.query="";state.perimeter="";state.entityClass="";state.page=1;
     root.innerHTML=`<p class="pe-loading">${t().loading}</p>`;
+    if(!state.manifest?.countries?.some(country=>country.country_code===state.code)) {
+      root.innerHTML=`<p class="pe-loading">${state.lang==="en"?"A country-level public-entity register is not loaded for this profile.":"Registr veřejných subjektů na úrovni země není pro tento profil načten."}</p>`;
+      return;
+    }
     const response=await fetch(`data/public-entity-directory/${state.code}.v1.json`);if(!response.ok)throw new Error(`${state.code}: ${response.status}`);
     const shard=await response.json();if(request!==state.request)return;state.shard=shard;render();
   }

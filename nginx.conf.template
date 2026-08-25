@@ -36,7 +36,7 @@ map "$arg_code:$arg_lang" $legacy_country_path {
 
 map $request_uri $country_canonical_path {
   default "/countries/czechia";
-  ~^(?<country_path>/countries/(?:czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states))(?:\?|$) $country_path;
+  ~^(?<country_path>/countries/(?:czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway))(?:\?|$) $country_path;
 }
 
 upstream public_spending_api {
@@ -152,11 +152,11 @@ server {
     return 301 $legacy_country_path;
   }
 
-  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states)/$ {
+  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)/$ {
     return 301 /countries/$1$is_args$args;
   }
 
-  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states)$ {
+  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)$ {
     sub_filter_once off;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
     sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260825-country-expansion';
@@ -172,14 +172,6 @@ server {
     sub_filter 'country-health-performance.js?v=20260824-performance' 'country-health-performance.js?v=20260824-readable-country-routes';
     sub_filter 'country-providers.js?v=20260822-network' 'country-providers.js?v=20260824-readable-country-routes';
     try_files /country.html =404;
-  }
-
-  location ~ ^/countries/(brazil|spain|japan|netherlands|norway)/$ {
-    return 301 /countries/$1$is_args$args;
-  }
-
-  location ~ ^/countries/(brazil|spain|japan|netherlands|norway)$ {
-    try_files /countries/$1/index.html =404;
   }
 
   location / {

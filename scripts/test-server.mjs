@@ -8,11 +8,13 @@ const port = Number(process.env.PORT || 4173);
 const countrySlugs = new Set([
   "czechia", "germany", "denmark", "france", "united-kingdom",
   "poland", "sweden", "switzerland", "ukraine", "united-states",
+  "brazil", "spain", "japan", "netherlands", "norway",
 ]);
 const countryCodes = {
   CZE: "czechia", DEU: "germany", DNK: "denmark", FRA: "france",
   GBR: "united-kingdom", POL: "poland", SWE: "sweden", CHE: "switzerland",
   UKR: "ukraine", USA: "united-states",
+  BRA: "brazil", ESP: "spain", JPN: "japan", NLD: "netherlands", NOR: "norway",
 };
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",

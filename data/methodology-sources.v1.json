@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-25T17:02:37.475Z",
-  "row_count": 116,
+  "generated_at": "2026-08-25T22:44:10.718Z",
+  "row_count": 166,
   "countries": [
     {
       "code": "CZE",
@@ -60,9 +60,9 @@
       "name_en": "Brazil"
     },
     {
-      "code": "FIN",
-      "name_cs": "Finsko",
-      "name_en": "Finland"
+      "code": "ESP",
+      "name_cs": "Španělsko",
+      "name_en": "Spain"
     },
     {
       "code": "JPN",
@@ -80,9 +80,9 @@
       "name_en": "Norway"
     },
     {
-      "code": "ESP",
-      "name_cs": "Španělsko",
-      "name_en": "Spain"
+      "code": "FIN",
+      "name_cs": "Finsko",
+      "name_en": "Finland"
     }
   ],
   "modules": [
@@ -159,6 +159,31 @@
     "aggregate": "Official aggregate layer without entity-level facts."
   },
   "rows": [
+    {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "sovereign",
+      "module_order": 1,
+      "module_label_cs": "Makro a fiskální rámec",
+      "module_label_en": "Macro-fiscal framework",
+      "status": "full",
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "coverage": "2005–2024; 15 metrics",
+      "period": "2005–2024; 15 metrics",
+      "scope": "General government (WEO)",
+      "sources": [
+        {
+          "title": "International Monetary Fund · World Economic Outlook, April 2026",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=BRA; WEO subject codes for 15 published metrics"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=BRA; WEO subject codes for 15 published metrics",
+      "transformation": "Select the country and indicator series; preserve WEO units and status; derive only displayed deltas.",
+      "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
+    },
     {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
@@ -260,6 +285,31 @@
       "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "sovereign",
+      "module_order": 1,
+      "module_label_cs": "Makro a fiskální rámec",
+      "module_label_en": "Macro-fiscal framework",
+      "status": "full",
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "coverage": "2005–2024; 15 metrics",
+      "period": "2005–2024; 15 metrics",
+      "scope": "General government (WEO)",
+      "sources": [
+        {
+          "title": "International Monetary Fund · World Economic Outlook, April 2026",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=ESP; WEO subject codes for 15 published metrics"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=ESP; WEO subject codes for 15 published metrics",
+      "transformation": "Select the country and indicator series; preserve WEO units and status; derive only displayed deltas.",
+      "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -306,6 +356,81 @@
         }
       ],
       "exact_extraction": "WEOApr2026all.xlsx → ISO=GBR; WEO subject codes for 15 published metrics",
+      "transformation": "Select the country and indicator series; preserve WEO units and status; derive only displayed deltas.",
+      "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "sovereign",
+      "module_order": 1,
+      "module_label_cs": "Makro a fiskální rámec",
+      "module_label_en": "Macro-fiscal framework",
+      "status": "full",
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "coverage": "2005–2024; 15 metrics",
+      "period": "2005–2024; 15 metrics",
+      "scope": "General government (WEO)",
+      "sources": [
+        {
+          "title": "International Monetary Fund · World Economic Outlook, April 2026",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=JPN; WEO subject codes for 15 published metrics"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=JPN; WEO subject codes for 15 published metrics",
+      "transformation": "Select the country and indicator series; preserve WEO units and status; derive only displayed deltas.",
+      "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "sovereign",
+      "module_order": 1,
+      "module_label_cs": "Makro a fiskální rámec",
+      "module_label_en": "Macro-fiscal framework",
+      "status": "full",
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "coverage": "2005–2024; 15 metrics",
+      "period": "2005–2024; 15 metrics",
+      "scope": "General government (WEO)",
+      "sources": [
+        {
+          "title": "International Monetary Fund · World Economic Outlook, April 2026",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=NLD; WEO subject codes for 15 published metrics"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=NLD; WEO subject codes for 15 published metrics",
+      "transformation": "Select the country and indicator series; preserve WEO units and status; derive only displayed deltas.",
+      "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "sovereign",
+      "module_order": 1,
+      "module_label_cs": "Makro a fiskální rámec",
+      "module_label_en": "Macro-fiscal framework",
+      "status": "full",
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "coverage": "2005–2024; 15 metrics",
+      "period": "2005–2024; 15 metrics",
+      "scope": "General government (WEO)",
+      "sources": [
+        {
+          "title": "International Monetary Fund · World Economic Outlook, April 2026",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=NOR; WEO subject codes for 15 published metrics"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=NOR; WEO subject codes for 15 published metrics",
       "transformation": "Select the country and indicator series; preserve WEO units and status; derive only displayed deltas.",
       "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
     },
@@ -410,6 +535,31 @@
       "limitations": "WEO estimates and projections remain labelled; national budgets are not substituted for general government."
     },
     {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "revenue",
+      "module_order": 2,
+      "module_label_cs": "Příjmy a saldo",
+      "module_label_en": "Revenue and balance",
+      "status": "full",
+      "artifact": "data/country-cash-in.v1.json",
+      "coverage": "general-government revenue and balance",
+      "period": "2001–2031 where WEO publishes observations/estimates",
+      "scope": "General government",
+      "sources": [
+        {
+          "title": "IMF WEO · general-government revenue, balance and debt",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=BRA → GGR, GGR_NGDP, BCA/GGXONLB and debt series"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=BRA → GGR, GGR_NGDP, BCA/GGXONLB and debt series",
+      "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
+      "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
+    },
+    {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
       "country_name_en": "Switzerland",
@@ -485,12 +635,17 @@
           "location": "Czech native institutional layer named in the source"
         },
         {
+          "title": "ČSÚ DataStat — počet obyvatel k 1. 7.",
+          "url": "https://data.csu.gov.cz/datastat/info/SADA/OBY01B01",
+          "location": "Czech native institutional layer named in the source"
+        },
+        {
           "title": "Zpráva o činnosti a výsledcích strategických společností a organizací za rok 2024",
           "url": "https://mf.gov.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf",
           "location": "Czech native institutional layer named in the source"
         }
       ],
-      "exact_extraction": "WEOApr2026all.xlsx → ISO=CZE → GGR, GGR_NGDP, BCA/GGXONLB and debt series · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source",
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=CZE → GGR, GGR_NGDP, BCA/GGXONLB and debt series · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source · Czech native institutional layer named in the source",
       "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
       "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
     },
@@ -545,6 +700,31 @@
       "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "revenue",
+      "module_order": 2,
+      "module_label_cs": "Příjmy a saldo",
+      "module_label_en": "Revenue and balance",
+      "status": "full",
+      "artifact": "data/country-cash-in.v1.json",
+      "coverage": "general-government revenue and balance",
+      "period": "2001–2031 where WEO publishes observations/estimates",
+      "scope": "General government",
+      "sources": [
+        {
+          "title": "IMF WEO · general-government revenue, balance and debt",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=ESP → GGR, GGR_NGDP, BCA/GGXONLB and debt series"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=ESP → GGR, GGR_NGDP, BCA/GGXONLB and debt series",
+      "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
+      "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -591,6 +771,81 @@
         }
       ],
       "exact_extraction": "WEOApr2026all.xlsx → ISO=GBR → GGR, GGR_NGDP, BCA/GGXONLB and debt series",
+      "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
+      "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "revenue",
+      "module_order": 2,
+      "module_label_cs": "Příjmy a saldo",
+      "module_label_en": "Revenue and balance",
+      "status": "full",
+      "artifact": "data/country-cash-in.v1.json",
+      "coverage": "general-government revenue and balance",
+      "period": "2001–2031 where WEO publishes observations/estimates",
+      "scope": "General government",
+      "sources": [
+        {
+          "title": "IMF WEO · general-government revenue, balance and debt",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=JPN → GGR, GGR_NGDP, BCA/GGXONLB and debt series"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=JPN → GGR, GGR_NGDP, BCA/GGXONLB and debt series",
+      "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
+      "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "revenue",
+      "module_order": 2,
+      "module_label_cs": "Příjmy a saldo",
+      "module_label_en": "Revenue and balance",
+      "status": "full",
+      "artifact": "data/country-cash-in.v1.json",
+      "coverage": "general-government revenue and balance",
+      "period": "2001–2031 where WEO publishes observations/estimates",
+      "scope": "General government",
+      "sources": [
+        {
+          "title": "IMF WEO · general-government revenue, balance and debt",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=NLD → GGR, GGR_NGDP, BCA/GGXONLB and debt series"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=NLD → GGR, GGR_NGDP, BCA/GGXONLB and debt series",
+      "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
+      "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "revenue",
+      "module_order": 2,
+      "module_label_cs": "Příjmy a saldo",
+      "module_label_en": "Revenue and balance",
+      "status": "full",
+      "artifact": "data/country-cash-in.v1.json",
+      "coverage": "general-government revenue and balance",
+      "period": "2001–2031 where WEO publishes observations/estimates",
+      "scope": "General government",
+      "sources": [
+        {
+          "title": "IMF WEO · general-government revenue, balance and debt",
+          "url": "https://data.imf.org/en/Datasets/WEO",
+          "location": "WEOApr2026all.xlsx → ISO=NOR → GGR, GGR_NGDP, BCA/GGXONLB and debt series"
+        }
+      ],
+      "exact_extraction": "WEOApr2026all.xlsx → ISO=NOR → GGR, GGR_NGDP, BCA/GGXONLB and debt series",
       "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
       "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
     },
@@ -693,6 +948,31 @@
       "exact_extraction": "WEOApr2026all.xlsx → ISO=USA → GGR, GGR_NGDP, BCA/GGXONLB and debt series",
       "transformation": "Keep the WEO consolidated layer separate from any national state, municipal or public-corporation layer.",
       "limitations": "Institutional layers are not additive unless internal transfers are eliminated."
+    },
+    {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "administrative_spending",
+      "module_order": 3,
+      "module_label_cs": "Národní rozpočet",
+      "module_label_en": "Native budget",
+      "status": "full",
+      "artifact": "data/country-spending-2025-2026.v1.json",
+      "coverage": "10 native classification rows; 2023 and 2024",
+      "period": "2023 / 2024",
+      "scope": "General-government expenditure by COFOG",
+      "sources": [
+        {
+          "title": "Tesouro Nacional / SOF / IBGE / Banco Central — COFOG 2024 bulletin",
+          "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog/arquivos/boletim_cofog_2024.pdf/@@display-file/file",
+          "location": "native rows → functional; published date in source"
+        }
+      ],
+      "exact_extraction": "native rows → functional; published date in source",
+      "transformation": "Parse native line codes and amounts; retain local currency, national perimeter and budget stage.",
+      "limitations": "Official consolidated expenditure of general government; the source table is in BRL millions."
     },
     {
       "country_code": "CHE",
@@ -800,6 +1080,31 @@
       "limitations": "Amounts are net expenditure by ministerial section; revenue and financing sections 37–42 are excluded."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "administrative_spending",
+      "module_order": 3,
+      "module_label_cs": "Národní rozpočet",
+      "module_label_en": "Native budget",
+      "status": "full",
+      "artifact": "data/country-spending-2025-2026.v1.json",
+      "coverage": "10 native classification rows; 2023 and 2024",
+      "period": "2023 / 2024",
+      "scope": "General-government expenditure by COFOG",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "native rows → functional; published date in source"
+        }
+      ],
+      "exact_extraction": "native rows → functional; published date in source",
+      "transformation": "Parse native line codes and amounts; retain local currency, national perimeter and budget stage.",
+      "limitations": "Amounts cover the full S.13 general-government sector and are converted from millions to billions of national currency."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -853,6 +1158,86 @@
       "exact_extraction": "native rows → administrative; published date in source",
       "transformation": "Parse native line codes and amounts; retain local currency, national perimeter and budget stage.",
       "limitations": "This is controlled departmental DEL, not total UK public spending; demand-led AME is outside the chart."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "administrative_spending",
+      "module_order": 3,
+      "module_label_cs": "Národní rozpočet",
+      "module_label_en": "Native budget",
+      "status": "full",
+      "artifact": "data/country-spending-2025-2026.v1.json",
+      "coverage": "19 native classification rows; FY 2025 and FY 2026",
+      "period": "FY 2025 / FY 2026",
+      "scope": "Expenditure budget by ministry and constitutional institution",
+      "sources": [
+        {
+          "title": "Ministry of Finance Japan — FY2025 revenue and expenditure budget",
+          "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2025/0705b.html",
+          "location": "native rows → administrative; published date in source"
+        },
+        {
+          "title": "Ministry of Finance Japan — FY2026 revenue and expenditure budget",
+          "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2026/0805b.html",
+          "location": "native rows → administrative; published date in source"
+        }
+      ],
+      "exact_extraction": "native rows → administrative; published date in source · native rows → administrative; published date in source",
+      "transformation": "Parse native line codes and amounts; retain local currency, national perimeter and budget stage.",
+      "limitations": "Official amounts are in JPY thousands and are converted to billions. These are budget authorities, not year-to-date spending."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "administrative_spending",
+      "module_order": 3,
+      "module_label_cs": "Národní rozpočet",
+      "module_label_en": "Native budget",
+      "status": "full",
+      "artifact": "data/country-spending-2025-2026.v1.json",
+      "coverage": "10 native classification rows; 2023 and 2024",
+      "period": "2023 / 2024",
+      "scope": "General-government expenditure by COFOG",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "native rows → functional; published date in source"
+        }
+      ],
+      "exact_extraction": "native rows → functional; published date in source",
+      "transformation": "Parse native line codes and amounts; retain local currency, national perimeter and budget stage.",
+      "limitations": "Amounts cover the full S.13 general-government sector and are converted from millions to billions of national currency."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "administrative_spending",
+      "module_order": 3,
+      "module_label_cs": "Národní rozpočet",
+      "module_label_en": "Native budget",
+      "status": "full",
+      "artifact": "data/country-spending-2025-2026.v1.json",
+      "coverage": "10 native classification rows; 2023 and 2024",
+      "period": "2023 / 2024",
+      "scope": "General-government expenditure by COFOG",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "native rows → functional; published date in source"
+        }
+      ],
+      "exact_extraction": "native rows → functional; published date in source",
+      "transformation": "Parse native line codes and amounts; retain local currency, national perimeter and budget stage.",
+      "limitations": "Amounts cover the full S.13 general-government sector and are converted from millions to billions of national currency."
     },
     {
       "country_code": "POL",
@@ -970,6 +1355,31 @@
       "limitations": "Negative values are retained: they are net offsetting receipts and credit operations in the official OMB database."
     },
     {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "common_spending",
+      "module_order": 4,
+      "module_label_cs": "Společné kategorie",
+      "module_label_en": "Common categories",
+      "status": "full",
+      "artifact": "data/country-spending-comparison.v1.json",
+      "coverage": "12 harmonised categories",
+      "period": "2023 / 2024",
+      "scope": "Broad PSD categories mapped from the native budget perimeter",
+      "sources": [
+        {
+          "title": "Tesouro Nacional / SOF / IBGE / Banco Central — COFOG 2024 bulletin",
+          "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog/arquivos/boletim_cofog_2024.pdf/@@display-file/file",
+          "location": "same source rows as the native-budget module"
+        }
+      ],
+      "exact_extraction": "same source rows as the native-budget module",
+      "transformation": "scripts/build-country-spending-comparison.mjs → explicit BRA line-code map → 12 common categories; unmapped rows remain Other / unallocated; totals reconcile.",
+      "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
+    },
+    {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
       "country_name_en": "Switzerland",
@@ -1075,6 +1485,31 @@
       "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "common_spending",
+      "module_order": 4,
+      "module_label_cs": "Společné kategorie",
+      "module_label_en": "Common categories",
+      "status": "full",
+      "artifact": "data/country-spending-comparison.v1.json",
+      "coverage": "12 harmonised categories",
+      "period": "2023 / 2024",
+      "scope": "Broad PSD categories mapped from the native budget perimeter",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "same source rows as the native-budget module"
+        }
+      ],
+      "exact_extraction": "same source rows as the native-budget module",
+      "transformation": "scripts/build-country-spending-comparison.mjs → explicit ESP line-code map → 12 common categories; unmapped rows remain Other / unallocated; totals reconcile.",
+      "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -1127,6 +1562,86 @@
       ],
       "exact_extraction": "same source rows as the native-budget module",
       "transformation": "scripts/build-country-spending-comparison.mjs → explicit GBR line-code map → 12 common categories; unmapped rows remain Other / unallocated; totals reconcile.",
+      "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "common_spending",
+      "module_order": 4,
+      "module_label_cs": "Společné kategorie",
+      "module_label_en": "Common categories",
+      "status": "full",
+      "artifact": "data/country-spending-comparison.v1.json",
+      "coverage": "12 harmonised categories",
+      "period": "FY 2025 / FY 2026",
+      "scope": "Broad PSD categories mapped from the native budget perimeter",
+      "sources": [
+        {
+          "title": "Ministry of Finance Japan — FY2025 revenue and expenditure budget",
+          "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2025/0705b.html",
+          "location": "same source rows as the native-budget module"
+        },
+        {
+          "title": "Ministry of Finance Japan — FY2026 revenue and expenditure budget",
+          "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2026/0805b.html",
+          "location": "same source rows as the native-budget module"
+        }
+      ],
+      "exact_extraction": "same source rows as the native-budget module · same source rows as the native-budget module",
+      "transformation": "scripts/build-country-spending-comparison.mjs → explicit JPN line-code map → 12 common categories; unmapped rows remain Other / unallocated; totals reconcile.",
+      "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "common_spending",
+      "module_order": 4,
+      "module_label_cs": "Společné kategorie",
+      "module_label_en": "Common categories",
+      "status": "full",
+      "artifact": "data/country-spending-comparison.v1.json",
+      "coverage": "12 harmonised categories",
+      "period": "2023 / 2024",
+      "scope": "Broad PSD categories mapped from the native budget perimeter",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "same source rows as the native-budget module"
+        }
+      ],
+      "exact_extraction": "same source rows as the native-budget module",
+      "transformation": "scripts/build-country-spending-comparison.mjs → explicit NLD line-code map → 12 common categories; unmapped rows remain Other / unallocated; totals reconcile.",
+      "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "common_spending",
+      "module_order": 4,
+      "module_label_cs": "Společné kategorie",
+      "module_label_en": "Common categories",
+      "status": "full",
+      "artifact": "data/country-spending-comparison.v1.json",
+      "coverage": "12 harmonised categories",
+      "period": "2023 / 2024",
+      "scope": "Broad PSD categories mapped from the native budget perimeter",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "same source rows as the native-budget module"
+        }
+      ],
+      "exact_extraction": "same source rows as the native-budget module",
+      "transformation": "scripts/build-country-spending-comparison.mjs → explicit NOR line-code map → 12 common categories; unmapped rows remain Other / unallocated; totals reconcile.",
       "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
     },
     {
@@ -1245,6 +1760,31 @@
       "limitations": "Native central or state budget lines are mapped to broad common categories. This is not harmonised COFOG statistics or the full general-government sector. Mixed and non-separable lines remain in Other / unallocated."
     },
     {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "functional_spending",
+      "module_order": 5,
+      "module_label_cs": "Funkční výdaje",
+      "module_label_en": "Functional spending",
+      "status": "full",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Tesouro Nacional / SOF / IBGE / Banco Central — COFOG 2024 bulletin",
+          "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog/arquivos/boletim_cofog_2024.pdf/@@display-file/file",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
       "country_name_en": "Switzerland",
@@ -1262,7 +1802,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1270,7 +1810,7 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1292,7 +1832,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1300,7 +1840,7 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1322,7 +1862,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1330,7 +1870,7 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1352,7 +1892,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1360,7 +1900,37 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
+      "limitations": "OECD revisions and break flags are retained."
+    },
+    {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "functional_spending",
+      "module_order": 5,
+      "module_label_cs": "Funkční výdaje",
+      "module_label_en": "Functional spending",
+      "status": "full",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "coverage": "3 functions; 2015–2024",
+      "period": "2015–2024",
+      "scope": "general_government",
+      "sources": [
+        {
+          "title": "OECD · Annual government expenditure by function (COFOG)",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+        },
+        {
+          "title": "IMF World Economic Outlook · nominal GDP",
+          "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+          "location": "dataset/table named in title"
+        }
+      ],
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1382,7 +1952,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1390,7 +1960,7 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1412,7 +1982,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1420,7 +1990,97 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
+      "limitations": "OECD revisions and break flags are retained."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "functional_spending",
+      "module_order": 5,
+      "module_label_cs": "Funkční výdaje",
+      "module_label_en": "Functional spending",
+      "status": "full",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "coverage": "3 functions; 2015–2024",
+      "period": "2015–2024",
+      "scope": "general_government",
+      "sources": [
+        {
+          "title": "OECD · Annual government expenditure by function (COFOG)",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+        },
+        {
+          "title": "IMF World Economic Outlook · nominal GDP",
+          "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+          "location": "dataset/table named in title"
+        }
+      ],
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
+      "limitations": "OECD revisions and break flags are retained."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "functional_spending",
+      "module_order": 5,
+      "module_label_cs": "Funkční výdaje",
+      "module_label_en": "Functional spending",
+      "status": "full",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "coverage": "3 functions; 2015–2024",
+      "period": "2015–2024",
+      "scope": "general_government",
+      "sources": [
+        {
+          "title": "OECD · Annual government expenditure by function (COFOG)",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+        },
+        {
+          "title": "IMF World Economic Outlook · nominal GDP",
+          "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+          "location": "dataset/table named in title"
+        }
+      ],
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
+      "limitations": "OECD revisions and break flags are retained."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "functional_spending",
+      "module_order": 5,
+      "module_label_cs": "Funkční výdaje",
+      "module_label_en": "Functional spending",
+      "status": "full",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "coverage": "3 functions; 2015–2024",
+      "period": "2015–2024",
+      "scope": "general_government",
+      "sources": [
+        {
+          "title": "OECD · Annual government expenditure by function (COFOG)",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+        },
+        {
+          "title": "IMF World Economic Outlook · nominal GDP",
+          "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+          "location": "dataset/table named in title"
+        }
+      ],
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1442,7 +2102,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1450,7 +2110,7 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1472,7 +2132,7 @@
         {
           "title": "OECD · Annual government expenditure by function (COFOG)",
           "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
-          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
+          "location": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions"
         },
         {
           "title": "IMF World Economic Outlook · nominal GDP",
@@ -1480,7 +2140,7 @@
           "location": "dataset/table named in title"
         }
       ],
-      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
+      "exact_extraction": "https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.CZE+DEU+DNK+FRA+POL+SWE+CHE+GBR+USA+ESP+JPN+NLD+NOR.S13...OTE..GF07+GF10+GF0405...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "OECD revisions and break flags are retained."
     },
@@ -1548,6 +2208,31 @@
       "exact_extraction": "https://www.govinfo.gov/content/pkg/BUDGET-2026-TAB/xls/BUDGET-2026-TAB.xlsx · dataset/table named in title",
       "transformation": "Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",
       "limitations": "The U.S. series uses OMB federal functions, not consolidated general government."
+    },
+    {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "transport",
+      "module_order": 6,
+      "module_label_cs": "Doprava",
+      "module_label_en": "Transport",
+      "status": "full",
+      "artifact": "data/transport-budget-detail.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Tesouro Nacional / SOF / IBGE / Banco Central — COFOG 2024 bulletin",
+          "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog/arquivos/boletim_cofog_2024.pdf/@@display-file/file",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "Not loaded; no values are inferred from another accounting perimeter."
     },
     {
       "country_code": "CHE",
@@ -1675,6 +2360,31 @@
       "limitations": "StatBank publishes COFOG by transaction type and supports a national cross-check of Eurostat."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "transport",
+      "module_order": 6,
+      "module_label_cs": "Doprava",
+      "module_label_en": "Transport",
+      "status": "full",
+      "artifact": "data/transport-budget-detail.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -1738,6 +2448,81 @@
       "exact_extraction": "gov_10a_exp → GF04.5 Transport → TE/MIO_EUR, sector S13 · national bridge/cross-check named in the source · national bridge/cross-check named in the source",
       "transformation": "Select COFOG transport and economic transaction rows; keep national detail and government-level bridges separate.",
       "limitations": "UK data separates current and capital spending, function, region and authority, but uses financial years and the TES framework."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "transport",
+      "module_order": 6,
+      "module_label_cs": "Doprava",
+      "module_label_en": "Transport",
+      "status": "full",
+      "artifact": "data/transport-budget-detail.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Ministry of Finance Japan — FY2025 revenue and expenditure budget",
+          "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2025/0705b.html",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "transport",
+      "module_order": 6,
+      "module_label_cs": "Doprava",
+      "module_label_en": "Transport",
+      "status": "full",
+      "artifact": "data/transport-budget-detail.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "transport",
+      "module_order": 6,
+      "module_label_cs": "Doprava",
+      "module_label_en": "Transport",
+      "status": "full",
+      "artifact": "data/transport-budget-detail.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "Not loaded; no values are inferred from another accounting perimeter."
     },
     {
       "country_code": "POL",
@@ -1870,6 +2655,36 @@
       "limitations": "OMB federal outlays and Census state/local finances are public, but they are not one consolidated COFOG dataset."
     },
     {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "health",
+      "module_order": 7,
+      "module_label_cs": "Zdravotnictví",
+      "module_label_en": "Healthcare",
+      "status": "full",
+      "artifact": "data/country-health.v1.json",
+      "coverage": "SHA financing profile; 2024",
+      "period": "2024",
+      "scope": "Current health expenditure under SHA 2011",
+      "sources": [
+        {
+          "title": "OECD · Health expenditure and financing",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_SHA%40DF_SHA&df%5Bvs%5D=1.1",
+          "location": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares"
+        },
+        {
+          "title": "Ministério da Saúde · SUS",
+          "url": "https://www.gov.br/saude/pt-br",
+          "location": "national architecture and primary-source cross-check"
+        }
+      ],
+      "exact_extraction": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares · national architecture and primary-source cross-check",
+      "transformation": "Normalize only within SHA: financing and provider shares sum to 100%; keep bed-year/status separate.",
+      "limitations": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
+    },
+    {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
       "country_name_en": "Switzerland",
@@ -1990,6 +2805,36 @@
       "limitations": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "health",
+      "module_order": 7,
+      "module_label_cs": "Zdravotnictví",
+      "module_label_en": "Healthcare",
+      "status": "full",
+      "artifact": "data/country-health.v1.json",
+      "coverage": "SHA financing profile; 2024",
+      "period": "2024",
+      "scope": "Current health expenditure under SHA 2011",
+      "sources": [
+        {
+          "title": "OECD · Health expenditure and financing",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_SHA%40DF_SHA&df%5Bvs%5D=1.1",
+          "location": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares"
+        },
+        {
+          "title": "Ministerio de Sanidad · Sistema Nacional de Salud",
+          "url": "https://www.sanidad.gob.es/organizacion/sns/home.htm",
+          "location": "national architecture and primary-source cross-check"
+        }
+      ],
+      "exact_extraction": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares · national architecture and primary-source cross-check",
+      "transformation": "Normalize only within SHA: financing and provider shares sum to 100%; keep bed-year/status separate.",
+      "limitations": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -2042,6 +2887,96 @@
         {
           "title": "NHS England · financial accounting",
           "url": "https://www.england.nhs.uk/financial-accounting-and-reporting/",
+          "location": "national architecture and primary-source cross-check"
+        }
+      ],
+      "exact_extraction": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares · national architecture and primary-source cross-check",
+      "transformation": "Normalize only within SHA: financing and provider shares sum to 100%; keep bed-year/status separate.",
+      "limitations": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "health",
+      "module_order": 7,
+      "module_label_cs": "Zdravotnictví",
+      "module_label_en": "Healthcare",
+      "status": "full",
+      "artifact": "data/country-health.v1.json",
+      "coverage": "SHA financing profile; 2024",
+      "period": "2024",
+      "scope": "Current health expenditure under SHA 2011",
+      "sources": [
+        {
+          "title": "OECD · Health expenditure and financing",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_SHA%40DF_SHA&df%5Bvs%5D=1.1",
+          "location": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares"
+        },
+        {
+          "title": "MHLW · health insurance system",
+          "url": "https://www.mhlw.go.jp/english/policy/health-medical/health-insurance/",
+          "location": "national architecture and primary-source cross-check"
+        }
+      ],
+      "exact_extraction": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares · national architecture and primary-source cross-check",
+      "transformation": "Normalize only within SHA: financing and provider shares sum to 100%; keep bed-year/status separate.",
+      "limitations": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "health",
+      "module_order": 7,
+      "module_label_cs": "Zdravotnictví",
+      "module_label_en": "Healthcare",
+      "status": "full",
+      "artifact": "data/country-health.v1.json",
+      "coverage": "SHA financing profile; 2024",
+      "period": "2024",
+      "scope": "Current health expenditure under SHA 2011",
+      "sources": [
+        {
+          "title": "OECD · Health expenditure and financing",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_SHA%40DF_SHA&df%5Bvs%5D=1.1",
+          "location": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares"
+        },
+        {
+          "title": "Government.nl · health insurance",
+          "url": "https://www.government.nl/topics/health-insurance",
+          "location": "national architecture and primary-source cross-check"
+        }
+      ],
+      "exact_extraction": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares · national architecture and primary-source cross-check",
+      "transformation": "Normalize only within SHA: financing and provider shares sum to 100%; keep bed-year/status separate.",
+      "limitations": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "health",
+      "module_order": 7,
+      "module_label_cs": "Zdravotnictví",
+      "module_label_en": "Healthcare",
+      "status": "full",
+      "artifact": "data/country-health.v1.json",
+      "coverage": "SHA financing profile; 2024",
+      "period": "2024",
+      "scope": "Current health expenditure under SHA 2011",
+      "sources": [
+        {
+          "title": "OECD · Health expenditure and financing",
+          "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_SHA%40DF_SHA&df%5Bvs%5D=1.1",
+          "location": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares"
+        },
+        {
+          "title": "Norwegian Ministry of Health · healthcare system",
+          "url": "https://www.regjeringen.no/en/topics/health-and-care/id917/",
           "location": "national architecture and primary-source cross-check"
         }
       ],
@@ -2120,19 +3055,19 @@
       "module_label_en": "Healthcare",
       "status": "partial",
       "artifact": "data/country-health.v1.json",
-      "coverage": "SHA financing profile; 2021",
-      "period": "2021",
-      "scope": "Current health expenditure under SHA 2011",
+      "coverage": "functional expenditure only",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
       "sources": [
         {
-          "title": "WHO Global Health Expenditure Database",
-          "url": "https://apps.who.int/nha/database/Select/Indicators/en",
-          "location": "WHO GHED full workbook → Data → code=UKR, year=2021 → che_gdp, gghed_che, oops_che and vpp_che; voluntary_other is the remainder to 100%"
+          "title": "Verkhovna Rada — State Budget Act 2025",
+          "url": "https://zakon.rada.gov.ua/laws/show/4059-20",
+          "location": "coverage registry; no module-specific extraction"
         }
       ],
-      "exact_extraction": "WHO GHED full workbook → Data → code=UKR, year=2021 → che_gdp, gghed_che, oops_che and vpp_che; voluntary_other is the remainder to 100%",
-      "transformation": "Use the latest complete GHED financing row; voluntary/other is the remainder to 100%; do not impute provider shares.",
-      "limitations": "SHA provider split (HP) · comparable bed benchmark · SHA provider split (HP); comparable bed benchmark"
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "SHA financing and provider split · Not loaded; no values are inferred from another accounting perimeter."
     },
     {
       "country_code": "USA",
@@ -2163,6 +3098,31 @@
       "exact_extraction": "DSD_SHA@DF_SHA → REF_AREA country → 2024; HF1/HF3 and HP1/HP2/HP3/HP5 shares · national architecture and primary-source cross-check",
       "transformation": "Normalize only within SHA: financing and provider shares sum to 100%; keep bed-year/status separate.",
       "limitations": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
+    },
+    {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "providers",
+      "module_order": 8,
+      "module_label_cs": "Síť poskytovatelů",
+      "module_label_en": "Provider network",
+      "status": "partial",
+      "artifact": "data/country-provider-networks.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Tesouro Nacional / SOF / IBGE / Banco Central — COFOG 2024 bulletin",
+          "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog/arquivos/boletim_cofog_2024.pdf/@@display-file/file",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "facility records · Not loaded; no values are inferred from another accounting perimeter."
     },
     {
       "country_code": "CHE",
@@ -2265,6 +3225,31 @@
       "limitations": "SOR is an organisation register; regional accounts remain separate."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "providers",
+      "module_order": 8,
+      "module_label_cs": "Síť poskytovatelů",
+      "module_label_en": "Provider network",
+      "status": "partial",
+      "artifact": "data/country-provider-networks.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "facility records · Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -2313,6 +3298,81 @@
       "exact_extraction": "https://www.odsdatasearchandexport.nhs.uk/api/getReport?report=ets",
       "transformation": "Use the official register identifier as the record key; deduplicate specialty/activity rows only where the adapter documents that step.",
       "limitations": "The organisation and site register is loaded; individual trust accounts are a separate accounting layer."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "providers",
+      "module_order": 8,
+      "module_label_cs": "Síť poskytovatelů",
+      "module_label_en": "Provider network",
+      "status": "partial",
+      "artifact": "data/country-provider-networks.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Ministry of Finance Japan — FY2025 revenue and expenditure budget",
+          "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2025/0705b.html",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "facility records · Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "providers",
+      "module_order": 8,
+      "module_label_cs": "Síť poskytovatelů",
+      "module_label_en": "Provider network",
+      "status": "partial",
+      "artifact": "data/country-provider-networks.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "facility records · Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "providers",
+      "module_order": 8,
+      "module_label_cs": "Síť poskytovatelů",
+      "module_label_en": "Provider network",
+      "status": "partial",
+      "artifact": "data/country-provider-networks.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "facility records · Not loaded; no values are inferred from another accounting perimeter."
     },
     {
       "country_code": "POL",
@@ -2423,7 +3483,7 @@
       "module_order": 9,
       "module_label_cs": "Obecní finance",
       "module_label_en": "Municipal finance",
-      "status": "partial",
+      "status": "full",
       "artifact": "data/international-municipalities.v1.json",
       "coverage": "All 5,570 municipalities in the SICONFI directory; 2025 regular or simplified RREO Annex 01 for 5,513, 2024 DCA I-C/I-D fallback for 44, 13 without either return",
       "period": "2024, 2025",
@@ -2525,7 +3585,7 @@
       "module_label_en": "Municipal finance",
       "status": "full",
       "artifact": "data/international-municipalities.v1.json",
-      "coverage": "All 98 municipalities; budgets and final accounts",
+      "coverage": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
       "period": "2025",
       "scope": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
       "sources": [
@@ -2815,6 +3875,31 @@
       "limitations": "Coverage is the entity population stated by the national source."
     },
     {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "public_entities",
+      "module_order": 10,
+      "module_label_cs": "Veřejné subjekty",
+      "module_label_en": "Public entities",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Tesouro Nacional / SOF / IBGE / Banco Central — COFOG 2024 bulletin",
+          "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog/arquivos/boletim_cofog_2024.pdf/@@display-file/file",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "ownership register · entity accounts · Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
       "country_name_en": "Switzerland",
@@ -2930,6 +4015,31 @@
       "limitations": "The official all-level workbook link was broken at crawl time; only the documented population perimeter is recorded."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "public_entities",
+      "module_order": 10,
+      "module_label_cs": "Veřejné subjekty",
+      "module_label_en": "Public entities",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "ownership register · entity accounts · Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -2993,6 +4103,81 @@
       "exact_extraction": "data/public-entities/GBR.v1.csv.gz → gbr_ons_public_sector_classification_2026_08 · data/public-entities/GBR.v1.csv.gz → gbr_cabinet_office_public_bodies_2023_24",
       "transformation": "Normalize official source rows into data/public-entities/GBR.v1.csv.gz; expose 2267 source-scoped records in data/public-entity-directory/GBR.v1.json; keep broader aggregate-only populations separate.",
       "limitations": "Perimeters are source-scoped and non-additive; missing financial values are unavailable, not zero."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "public_entities",
+      "module_order": 10,
+      "module_label_cs": "Veřejné subjekty",
+      "module_label_en": "Public entities",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Ministry of Finance Japan — FY2025 revenue and expenditure budget",
+          "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/fy2025/0705b.html",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "ownership register · entity accounts · Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "public_entities",
+      "module_order": 10,
+      "module_label_cs": "Veřejné subjekty",
+      "module_label_en": "Public entities",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "ownership register · entity accounts · Not loaded; no values are inferred from another accounting perimeter."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "public_entities",
+      "module_order": 10,
+      "module_label_cs": "Veřejné subjekty",
+      "module_label_en": "Public entities",
+      "status": "partial",
+      "artifact": "data/public-entity-coverage.v1.json",
+      "coverage": "not loaded",
+      "period": "Not loaded",
+      "scope": "Explicit coverage gap",
+      "sources": [
+        {
+          "title": "Eurostat — General government expenditure by function (gov_10a_exp)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+          "location": "coverage registry; no module-specific extraction"
+        }
+      ],
+      "exact_extraction": "coverage registry; no module-specific extraction",
+      "transformation": "No transformation: the module is not published for this country.",
+      "limitations": "ownership register · entity accounts · Not loaded; no values are inferred from another accounting perimeter."
     },
     {
       "country_code": "POL",
@@ -3105,6 +4290,31 @@
       "limitations": "Perimeters are source-scoped and non-additive; missing financial values are unavailable, not zero."
     },
     {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "demography",
+      "module_order": 11,
+      "module_label_cs": "Demografie",
+      "module_label_en": "Demography",
+      "status": "full",
+      "artifact": "data/country-demography.v1.json",
+      "coverage": "2024–2100; annual age/sex detail plus 21 common-year aggregates",
+      "period": "2024–2100",
+      "scope": "UN World Population Prospects 2024, medium variant",
+      "sources": [
+        {
+          "title": "United Nations, Population Division · World Population Prospects 2024",
+          "url": "https://population.un.org/wpp/Download/Standard/CSV/",
+          "location": "WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code=BRA; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal"
+        }
+      ],
+      "exact_extraction": "WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code=BRA; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
+      "transformation": "Store every source year by age group and sex in data/countries/bra/demography.v1.json; derive annual 2025–2045 totals, sex splits, 0–19, 20–64, 65–79 and 80+ bands, shares and the 65+/20–64 dependency ratio from those rows.",
+      "limitations": "The source-native 1 July reference date and oldest-age open/grouped tail are retained; central projection scenarios are not mixed across countries."
+    },
+    {
       "country_code": "CHE",
       "country_name_cs": "Švýcarsko",
       "country_name_en": "Switzerland",
@@ -3205,6 +4415,31 @@
       "limitations": "The source-native 1 January reference date and oldest-age open/grouped tail are retained; central projection scenarios are not mixed across countries."
     },
     {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "demography",
+      "module_order": 11,
+      "module_label_cs": "Demografie",
+      "module_label_en": "Demography",
+      "status": "full",
+      "artifact": "data/country-demography.v1.json",
+      "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+      "period": "2022–2100",
+      "scope": "EUROPOP2023 baseline scenario",
+      "sources": [
+        {
+          "title": "Eurostat · Population projections in the EU (proj_23np)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/proj_23np/default/table",
+          "location": "API proj_23np; geo=ES; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100"
+        }
+      ],
+      "exact_extraction": "API proj_23np; geo=ES; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100",
+      "transformation": "Store every source year by age group and sex in data/countries/esp/demography.v1.json; derive annual 2025–2045 totals, sex splits, 0–19, 20–64, 65–79 and 80+ bands, shares and the 65+/20–64 dependency ratio from those rows.",
+      "limitations": "The source-native 1 January reference date and oldest-age open/grouped tail are retained; central projection scenarios are not mixed across countries."
+    },
+    {
       "country_code": "FRA",
       "country_name_cs": "Francie",
       "country_name_en": "France",
@@ -3253,6 +4488,81 @@
       "exact_extraction": "UK1.zip → uk_ppp_machine_readable.xlsx → Population; males/females; annual columns; ages 0–104, 105–109 and 110+",
       "transformation": "Store every source year by age group and sex in data/countries/gbr/demography.v1.json; derive annual 2025–2045 totals, sex splits, 0–19, 20–64, 65–79 and 80+ bands, shares and the 65+/20–64 dependency ratio from those rows.",
       "limitations": "The source-native mid-year reference date and oldest-age open/grouped tail are retained; central projection scenarios are not mixed across countries."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "demography",
+      "module_order": 11,
+      "module_label_cs": "Demografie",
+      "module_label_en": "Demography",
+      "status": "full",
+      "artifact": "data/country-demography.v1.json",
+      "coverage": "2024–2100; annual age/sex detail plus 21 common-year aggregates",
+      "period": "2024–2100",
+      "scope": "UN World Population Prospects 2024, medium variant",
+      "sources": [
+        {
+          "title": "United Nations, Population Division · World Population Prospects 2024",
+          "url": "https://population.un.org/wpp/Download/Standard/CSV/",
+          "location": "WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code=JPN; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal"
+        }
+      ],
+      "exact_extraction": "WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code=JPN; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
+      "transformation": "Store every source year by age group and sex in data/countries/jpn/demography.v1.json; derive annual 2025–2045 totals, sex splits, 0–19, 20–64, 65–79 and 80+ bands, shares and the 65+/20–64 dependency ratio from those rows.",
+      "limitations": "The source-native 1 July reference date and oldest-age open/grouped tail are retained; central projection scenarios are not mixed across countries."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "demography",
+      "module_order": 11,
+      "module_label_cs": "Demografie",
+      "module_label_en": "Demography",
+      "status": "full",
+      "artifact": "data/country-demography.v1.json",
+      "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+      "period": "2022–2100",
+      "scope": "EUROPOP2023 baseline scenario",
+      "sources": [
+        {
+          "title": "Eurostat · Population projections in the EU (proj_23np)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/proj_23np/default/table",
+          "location": "API proj_23np; geo=NL; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100"
+        }
+      ],
+      "exact_extraction": "API proj_23np; geo=NL; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100",
+      "transformation": "Store every source year by age group and sex in data/countries/nld/demography.v1.json; derive annual 2025–2045 totals, sex splits, 0–19, 20–64, 65–79 and 80+ bands, shares and the 65+/20–64 dependency ratio from those rows.",
+      "limitations": "The source-native 1 January reference date and oldest-age open/grouped tail are retained; central projection scenarios are not mixed across countries."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "demography",
+      "module_order": 11,
+      "module_label_cs": "Demografie",
+      "module_label_en": "Demography",
+      "status": "full",
+      "artifact": "data/country-demography.v1.json",
+      "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+      "period": "2022–2100",
+      "scope": "EUROPOP2023 baseline scenario",
+      "sources": [
+        {
+          "title": "Eurostat · Population projections in the EU (proj_23np)",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/proj_23np/default/table",
+          "location": "API proj_23np; geo=NO; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100"
+        }
+      ],
+      "exact_extraction": "API proj_23np; geo=NO; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100",
+      "transformation": "Store every source year by age group and sex in data/countries/nor/demography.v1.json; derive annual 2025–2045 totals, sex splits, 0–19, 20–64, 65–79 and 80+ bands, shares and the 65+/20–64 dependency ratio from those rows.",
+      "limitations": "The source-native 1 January reference date and oldest-age open/grouped tail are retained; central projection scenarios are not mixed across countries."
     },
     {
       "country_code": "POL",

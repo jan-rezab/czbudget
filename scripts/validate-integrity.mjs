@@ -218,7 +218,7 @@ for (const city of capitals.cities) {
 }
 
 const sovereign = await json("lib/data/sovereign-benchmark.v1.json");
-assert(sovereign.series.length === 10, "Expected ten sovereign series");
+assert(sovereign.series.length === 15, "Expected fifteen sovereign series");
 for (const country of sovereign.series) {
   const metrics = country.metrics;
   for (const key of ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp"]) {

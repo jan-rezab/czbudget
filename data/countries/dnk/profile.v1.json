@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-23T19:05:11.426Z",
+  "generated_at": "2026-08-25T22:43:58.477Z",
   "country": {
     "country_code": "DNK",
     "name_cs": "Dánsko",
@@ -91,12 +91,11 @@
     },
     "municipalities": {
       "status": "loaded",
-      "coverage": "All 98 municipalities; budgets and final accounts",
+      "coverage": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
       "missing_dimensions": [],
       "entity_count": 98,
-      "fact_count": 98,
+      "fact_count": 0,
       "years": [
-        2024,
         2025
       ],
       "stages": [
@@ -106,7 +105,7 @@
       "measures": [
         "revenue",
         "expenditure",
-        "financing"
+        "balance"
       ],
       "coverage_level": "complete",
       "directory": "data/countries/dnk/municipalities.v1.json",
@@ -2811,7 +2810,7 @@
       },
       "beds_per_1000": 2.26,
       "bed_year": 2024,
-      "bed_status": ""
+      "bed_status": "not_available"
     },
     "providers": {
       "coverage": "sor_active_hospitals",
@@ -2837,13 +2836,8 @@
       "name_en": "Denmark",
       "currency": "DKK",
       "years": [
-        2024,
         2025
       ],
-      "counts": {
-        "2024": 98,
-        "2025": 98
-      },
       "stages": [
         "enacted",
         "actual"
@@ -2851,12 +2845,12 @@
       "measures": [
         "revenue",
         "expenditure",
-        "financing"
+        "balance"
       ],
-      "coverage_cs": "Všech 98 obcí; rozpočty i závěrečné účty",
-      "coverage_en": "All 98 municipalities; budgets and final accounts",
+      "coverage_cs": "Všech 98 obcí; schválený rozpočet BUDK100 a závěrečné účty REGK100 v autorizovaném funkčním a ekonomickém členění",
+      "coverage_en": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
+      "source": "https://www.statbank.dk/BUDK100",
       "status": "complete",
-      "source": "https://www.statbank.dk/BUDK32",
       "directory_count": 98
     },
     "public_entities": {

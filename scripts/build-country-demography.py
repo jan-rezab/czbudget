@@ -203,12 +203,18 @@ def united_states() -> dict:
     }
 
 
-def ukraine() -> dict:
-    compressed = io.BytesIO(download(UN_WPP))
+_un_wpp_bytes = None
+
+
+def un_wpp_country(code: str) -> dict:
+    global _un_wpp_bytes
+    if _un_wpp_bytes is None:
+        _un_wpp_bytes = download(UN_WPP)
+    compressed = io.BytesIO(_un_wpp_bytes)
     records = csv.DictReader(io.TextIOWrapper(gzip.GzipFile(fileobj=compressed), encoding="utf-8-sig"))
     values = {}
     for record in records:
-        if record["ISO3_code"] != "UKR":
+        if record["ISO3_code"] != code:
             continue
         year, start = int(record["Time"]), int(record["AgeGrpStart"])
         span = int(record["AgeGrpSpan"])
@@ -228,7 +234,7 @@ def ukraine() -> dict:
             "dataset": "World Population Prospects 2024",
             "url": "https://population.un.org/wpp/Download/Standard/CSV/",
             "download_urls": [UN_WPP],
-            "location": "WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code=UKR; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
+            "location": f"WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code={code}; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
         },
     }
 
@@ -293,11 +299,12 @@ def profile_and_store(code: str, detail: dict, generated_at: str) -> dict:
 def main() -> None:
     generated_at = datetime.now(timezone.utc).isoformat()
     details = {"CZE": czechia()}
-    for code, geo in {"POL": "PL", "DEU": "DE", "FRA": "FR", "CHE": "CH", "SWE": "SE", "DNK": "DK"}.items():
+    for code, geo in {"POL": "PL", "DEU": "DE", "FRA": "FR", "CHE": "CH", "SWE": "SE", "DNK": "DK", "ESP": "ES", "NLD": "NL", "NOR": "NO"}.items():
         details[code] = eurostat_country(geo)
     details["GBR"] = united_kingdom()
     details["USA"] = united_states()
-    details["UKR"] = ukraine()
+    for code in ("UKR", "BRA", "JPN"):
+        details[code] = un_wpp_country(code)
     countries = {code: profile_and_store(code, detail, generated_at) for code, detail in details.items()}
     payload = {
         "schema_version": "2.0.0", "generated_at": generated_at, "contract": "country-demography.v1",

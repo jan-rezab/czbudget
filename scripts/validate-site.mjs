@@ -23,6 +23,7 @@ const publicEntityCoverage = JSON.parse(await readFile("data/public-entity-cover
 const publicEntityAggregates = JSON.parse(await readFile("data/public-entity-aggregates.v1.json", "utf8"));
 const publicEntityDirectory = JSON.parse(await readFile("data/public-entity-directory/manifest.v1.json", "utf8"));
 const methodologySources = JSON.parse(await readFile("data/methodology-sources.v1.json", "utf8"));
+const coverageSourceResearch = JSON.parse(await readFile("data/coverage-source-research.v1.json", "utf8"));
 const sovereign = JSON.parse(await readFile("lib/data/sovereign-benchmark.v1.json", "utf8"));
 const homepage = await readFile("index.html", "utf8");
 const comparisonPage = await readFile("comparison.html", "utf8");
@@ -30,8 +31,6 @@ const methodologyPage = await readFile("methodology.html", "utf8");
 const aboutPage = await readFile("about.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
 const countryPage = await readFile("country.html", "utf8");
-const countryCoverageScript = await readFile("country-coverage.js", "utf8");
-const countryCoverageStyles = await readFile("country-coverage.css", "utf8");
 const countryHealthPerformanceScript = await readFile("country-health-performance.js", "utf8");
 const czechHistoryScript = await readFile("cz-history.js", "utf8");
 const czechEnterprisePage = await readFile("cesko.html", "utf8");
@@ -120,16 +119,16 @@ if (capitals.cities.length !== 28 || capitals.cities.filter((city) => city.eu_ca
 if (capitals.cities.some((city) => !Number.isFinite(city.budget?.local_amount) || !Number.isFinite(city.budget?.eur_amount) || !city.benchmarks?.population || !city.benchmarks?.tourism)) throw new Error("Incomplete European capitals facts");
 if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fiscal_details?.balance_classification || !Array.isArray(city.fiscal_details?.components))) throw new Error("Incomplete European capital fiscal details");
 if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
-if (categoryComparison.countries.length !== 10 || categoryComparison.categories.length !== 12) throw new Error("Expected ten countries and twelve common spending categories");
-if (Object.keys(functionalBudgets.countries).length !== 10) throw new Error("Expected functional budgets for all ten countries");
-if (Object.keys(countryHealth.countries).length !== 10 || !countryHealth.countries.UKR) throw new Error("Expected ten health-system profiles including Ukraine's latest available GHED row");
-if (Object.keys(countryHealthPerformance.countries).length !== 10 || !countryHealthPerformance.countries.UKR) throw new Error("Expected ten health-performance profiles including Ukraine");
+if (categoryComparison.countries.length !== 15 || categoryComparison.categories.length !== 12) throw new Error("Expected fifteen countries and twelve common spending categories");
+if (Object.keys(functionalBudgets.countries).length !== 14) throw new Error("Expected fourteen sourced functional-budget profiles");
+if (Object.keys(countryHealth.countries).length !== 14 || !countryHealth.countries.JPN) throw new Error("Expected fourteen OECD health-system profiles including Japan");
+if (Object.keys(countryHealthPerformance.countries).length !== 15 || !countryHealthPerformance.countries.UKR) throw new Error("Expected fifteen health-performance profiles including Ukraine");
 for (const [code, country] of Object.entries(countryHealthPerformance.countries)) {
   for (const metric of [country.spending?.per_capita_ppp, country.workforce?.physicians_per_1000, country.workforce?.nurses_per_1000, country.capacity?.beds_per_1000, country.outcomes?.life_expectancy_years, country.outcomes?.premature_ncd_mortality_pct]) {
     if (!Number.isFinite(metric?.value) || !Number.isInteger(metric?.year)) throw new Error(`${code}: incomplete core health-performance metric`);
   }
 }
-if (Object.values(countryHealthPerformance.countries).filter((country) => Number.isFinite(country.outcomes?.treatable_mortality_per_100k?.value)).length !== 9) throw new Error("Expected nine-country OECD treatable-mortality coverage");
+if (Object.values(countryHealthPerformance.countries).filter((country) => Number.isFinite(country.outcomes?.treatable_mortality_per_100k?.value)).length !== 14) throw new Error("Expected fourteen-country OECD treatable-mortality coverage");
 if (dataQuality.status !== "passed" || dataQuality.failures.length || dataQuality.counts.municipalities !== 6254) throw new Error("Expected a passing, machine-readable release quality report");
 if (publicEntityHistory.summary.financial_rows !== 1043 || publicEntityHistory.entities.length < 100 || publicEntityHistory.entities.some((entity) => !entity.series.length)) throw new Error("Expected Czech public-entity financial history with all available annual statements");
 if (!methodologyPage.includes('id="data-health-root"')) throw new Error("Methodology page must surface release health");
@@ -137,15 +136,23 @@ if (!countryPage.includes('id="health-performance"') || !countryPage.includes("c
 if (!czechHistoryScript.includes('view="overview"') || !czechHistoryScript.includes('view==="execution"') || !czechHistoryScript.includes('view==="structure"') || !czechHistoryScript.includes('expense_per_capita')) throw new Error("Municipal profiles must surface execution, structure and per-capita history views");
 if (!czechEnterprisePage.includes('id="public-entity-history-root"') || !czechEnterpriseScript.includes("renderPublicHistory")) throw new Error("Czech public-entity profiles must surface annual financial histories");
 if (norwayBenchmarkProfile.breakdown_kind !== "native_measures" || norwayBenchmarkProfile.breakdown.length < 70 || finlandBenchmarkProfile.breakdown_kind !== "native_measures" || finlandBenchmarkProfile.breakdown.length < 150 || netherlandsBenchmarkProfile.breakdown.length < 30) throw new Error("European benchmark profiles must expose complete latest native accounting detail");
-if (countryParity.contract !== "country-parity.v1" || countryParity.countries.length !== 10) throw new Error("Expected the ten-country parity contract");
-if (countryParity.countries.some((country) => country.modules.sovereign.status !== "loaded" || country.modules.administrative_spending.status !== "loaded" || country.modules.functional_spending.status !== "loaded" || country.modules.transport.status !== "loaded")) throw new Error("Every country must load the shared national fiscal modules");
-if (countryParity.countries.some((country) => country.coverage.loaded_modules !== 11 || country.coverage.total_modules !== 11 || country.coverage.missing_dimensions.length)) throw new Error("Expected all eleven dashboard modules for every country");
-if (countryParity.countries.filter((country) => country.modules.municipalities.status === "loaded").length !== 10) throw new Error("Expected ten loaded municipal censuses");
-if (administrativeSpending.countries.length !== 10 || administrativeSpending.countries.flatMap((country) => country.rows).length !== 369 || administrativeSpending.countries.some((country) => country.rows.some((row) => !row.label_native || !row.label_en))) throw new Error("Every national budget row must retain its native label and an English translation");
-if (Object.keys(countryDemography.countries).length !== 10 || Object.values(countryDemography.countries).reduce((sum, country) => sum + country.detail_row_count, 0) !== 82416) throw new Error("Expected complete ten-country annual age-by-sex demographic projections");
+if (countryParity.contract !== "country-parity.v1" || countryParity.countries.length !== 15) throw new Error("Expected the fifteen-country parity contract");
+if (countryParity.countries.some((country) => country.modules.sovereign.status !== "loaded" || country.modules.administrative_spending.status !== "loaded" || country.modules.common_spending.status !== "loaded" || country.modules.revenue.status !== "loaded" || country.modules.demography.status !== "loaded")) throw new Error("Every country must load the core national fiscal and demographic modules");
+if (countryParity.countries.some((country) => country.coverage.total_modules !== 11)) throw new Error("Expected all eleven dashboard module slots for every country");
+if (countryParity.countries.filter((country) => country.modules.municipalities.status === "loaded").length !== 15) throw new Error("Expected fifteen loaded municipal censuses");
+if (administrativeSpending.countries.length !== 15 || administrativeSpending.countries.flatMap((country) => country.rows).length !== 428 || administrativeSpending.countries.some((country) => country.rows.some((row) => !row.label_native || !row.label_en))) throw new Error("Every national budget row must retain its native label and an English translation");
+if (Object.keys(countryDemography.countries).length !== 15 || Object.values(countryDemography.countries).reduce((sum, country) => sum + country.detail_row_count, 0) !== 121907) throw new Error("Expected complete fifteen-country annual age-by-sex demographic projections");
 if (Object.keys(publicEntityCoverage.countries).length !== 10 || publicEntityDirectory.total_record_count !== 121199 || publicEntityDirectory.countries.length !== 10 || publicEntityAggregates.observations.length < 350) throw new Error("Expected the complete ten-country public-entity registry, coverage contract and economic observations");
 if (publicEntityDirectory.countries.some((country) => !country.file || !Number.isFinite(country.record_count)) || Object.values(publicEntityCoverage.countries).some((country) => !country.registry_file || !country.sources.length)) throw new Error("Every public-entity country must expose a registry file and source lineage");
-if (methodologySources.row_count !== 116 || methodologySources.countries.length !== 16 || methodologySources.modules.length !== 11) throw new Error("Expected the complete sovereign ledger plus all sixteen municipal source rows");
+if (methodologySources.row_count !== 166 || methodologySources.countries.length !== 16 || methodologySources.modules.length !== 11) throw new Error("Expected the complete fifteen-country sovereign ledger plus municipal source rows");
+if (coverageSourceResearch.contract !== "coverage-source-research.v1" || Object.keys(coverageSourceResearch.countries).length !== 6) throw new Error("Expected source-availability research for all six municipal-only country profiles");
+for (const [code, modules] of Object.entries(coverageSourceResearch.countries)) {
+  for (const module of ["fiscal", "health", "geo", "transport"]) {
+    const record = modules[module];
+    if (!record || !["source_available", "fragmented", "not_found"].includes(record.status) || !record.sources?.length || record.sources.some((source) => !source.url) || !record.evidence_en || !record.evidence_cs || !record.ingestion_en || !record.ingestion_cs) throw new Error(`${code}/${module}: incomplete source-availability research`);
+  }
+}
+if (!methodologyPage.includes("coverage-source-availability") && !methodologyPage.includes("source-availability")) throw new Error("Methodology page must explain source availability separately from PSD coverage");
 if (municipalTransparency.countries.length !== 23 || municipalTransparency.countries.find((country) => country.iso3 === "BRA")?.pipeline !== "loaded_partial") throw new Error("Expected the 23-country municipal transparency atlas with Brazil's exact partial-load status");
 for (const code of ["CZE", "FRA", "GBR", "USA"]) if (countryParity.countries.find((country) => country.country_code === code)?.modules.providers.status !== "loaded") throw new Error(`Expected loaded provider register for ${code}`);
 if (roadNetworks.countries.length !== 10 || !roadNetworks.construction_history_status.includes("annual net stock change")) throw new Error("Expected ten-country road histories with an explicit construction proxy caveat");
@@ -159,9 +166,9 @@ for (const [code, country] of Object.entries(transportPerformance.countries)) {
   if (!["CZE", "DEU", "DNK", "FRA", "GBR", "POL", "SWE", "CHE"].includes(code)) continue;
   if (!country.rail.network.length || !country.infrastructure_spending.road.investment_constant_eur.length) throw new Error(`${code}: expected official rail and road-investment series`);
 }
-if (Object.keys(countryCashIn.countries).length !== 10 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for ten countries and Czech territorial/company cash-in layers");
+if (Object.keys(countryCashIn.countries).length !== 15 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for fifteen countries and Czech territorial/company cash-in layers");
 if (countryCashIn.countries.CZE.layers.municipalities.entity_count !== 6254 || countryCashIn.countries.CZE.layers.companies.entity_count !== 38) throw new Error("Unexpected Czech municipality or state-company cash-in coverage");
-if (countryRevenue.contract !== "country-revenue.v1" || Object.keys(countryRevenue.countries).length !== 10 || countryRevenue.sources.length !== 3) throw new Error("Expected a ten-country revenue contract with three primary source pipelines");
+if (countryRevenue.contract !== "country-revenue.v1" || Object.keys(countryRevenue.countries).length !== 15 || countryRevenue.sources.length !== 3) throw new Error("Expected a fifteen-country revenue contract with three primary source pipelines");
 for (const [code, profile] of Object.entries(countryRevenue.countries)) {
   const taxMixTotal = Object.values(profile.tax_mix).reduce((sum, value) => sum + value, 0);
   const governmentLevelTotal = Object.values(profile.government_levels).filter(Number.isFinite).reduce((sum, value) => sum + value, 0);
@@ -219,7 +226,7 @@ if (!czechBudgetScript.includes("requiredBaseAmounts") || !czechBudgetScript.inc
 if (!homepageScript.includes("PSDCountryRoutes.href") || homepageScript.includes("country.html?code=") || homepageScript.includes('code==="CZE"?')) throw new Error("Every country card must use readable shared country routes");
 if (!countryPage.includes('<base href="/">') || !countryPage.includes("country-routes.js") || !countryScript.includes("PSDCountryRoutes.codeFromLocation") || !countryScript.includes("PSDCountryRoutes.href") || !globalNav.includes("/countries/${countrySlugs[code]}") || !countryRoutes.includes('CHE: "switzerland"') || !countryRoutes.includes('BRA: "brazil"') || !countryRoutes.includes('JPN: "japan"')) throw new Error("Country profiles must use readable slug routes throughout the site");
 if (!nginx.includes("location = /country.html") || !nginx.includes("return 301 $legacy_country_path") || !nginx.includes("/countries/switzerland") || !nginx.includes("try_files /country.html =404")) throw new Error("Nginx must redirect legacy country URLs and serve readable country routes");
-if (!nginx.includes("brazil|spain|japan|netherlands|norway") || !nginx.includes("try_files /countries/$1/index.html =404") || !countryCoverageScript.includes("municipal-itemized-coverage.v1.json") || !countryCoverageStyles.includes(".country-coverage-page")) throw new Error("Municipal-first country profiles must have dedicated routes, data contracts, and styles");
+if (!nginx.includes("united-states|brazil|spain|japan|netherlands|norway") || nginx.includes("try_files /countries/$1/index.html =404")) throw new Error("All fifteen countries must use the shared national dashboard route");
 if (!countryParityStyles.includes("background:#fff;color:#17241f") || !countryParityStyles.includes("color:#4f5a55")) throw new Error("Country data-layer cards must keep readable dark text on white backgrounds");
 if (!czechMunicipalPage.includes('municipalities-czechia.js') || !internationalMunicipalScript.includes('CZE:"czechia"')) throw new Error("Municipality hub must link to the Czechia detail route");
 if (!homepage.includes('styles-v2.css?v=20260822-brand') || !homepage.includes('homepage-v2.js?v=20260822-separate-pages') || !homepage.includes('global-nav.js?v=20260824-logo-120') || !homepage.includes('site-header.css?v=20260824-header-lockup')) throw new Error("Homepage assets must be cache-busted for the shared-header release");

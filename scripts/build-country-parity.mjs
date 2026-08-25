@@ -125,6 +125,7 @@ for (const code of countryCodes) {
   const meta = sovereign.countries.find((country) => country.country_code === code);
   const series = sovereign.series.find((country) => country.country_code === code);
   const sourceCatalog = catalog.countries.find((country) => country.country_code === code);
+  const registeredSources = sovereign.national_source_registry?.find((country) => country.country_code === code)?.sources || [];
   const admin = byCode(administrative.countries, code);
   const common = byCode(comparison.countries, code);
   const municipal = byCode(municipalities.countries, code);
@@ -168,7 +169,7 @@ for (const code of countryCodes) {
     profile: `data/countries/${countrySlug(code)}/profile.v1.json`,
     coverage: { loaded_modules: loadedCount, total_modules: Object.keys(modules).length, missing_dimensions: missing },
     modules,
-    sources: sourceCatalog?.sources || [],
+    sources: sourceCatalog?.sources || registeredSources,
   };
   manifest.countries.push(entry);
 
@@ -192,7 +193,7 @@ for (const code of countryCodes) {
       public_entities: publicEntityProfile && publicEntityRows ? {coverage:publicEntityProfile,directory:publicEntityRows} : null,
       demography: demographyProfile,
     },
-    sources: sourceCatalog?.sources || [],
+    sources: sourceCatalog?.sources?.length ? sourceCatalog.sources : registeredSources,
   };
   const directory = new URL(`data/countries/${countrySlug(code)}/`, root);
   await mkdir(directory, { recursive: true });
@@ -203,12 +204,13 @@ for (const code of countryCodes) {
   }
 }
 
-if (manifest.countries.length !== 10) throw new Error(`Expected 10 countries, received ${manifest.countries.length}`);
+if (manifest.countries.length !== 15) throw new Error(`Expected 15 countries, received ${manifest.countries.length}`);
+const establishedDeepDiveCountries = new Set(["CZE","DEU","DNK","FRA","GBR","POL","SWE","CHE","UKR","USA"]);
 for (const country of manifest.countries) {
   if (country.modules.sovereign.metric_count !== 15) throw new Error(`${country.country_code}: expected 15 sovereign metrics`);
   if (country.modules.administrative_spending.status !== "loaded") throw new Error(`${country.country_code}: native spending is not loaded`);
-  if (country.modules.functional_spending.status !== "loaded") throw new Error(`${country.country_code}: functional spending is not loaded`);
-  if (country.modules.transport.status !== "loaded") throw new Error(`${country.country_code}: transport detail is not loaded`);
+  if (country.country_code !== "BRA" && country.modules.functional_spending.status !== "loaded") throw new Error(`${country.country_code}: functional spending is not loaded`);
+  if (establishedDeepDiveCountries.has(country.country_code) && country.modules.transport.status !== "loaded") throw new Error(`${country.country_code}: transport detail is not loaded`);
 }
 await writeFile(new URL("data/country-parity.v1.json", root), `${JSON.stringify(manifest, null, 2)}\n`);
 console.log(`Wrote parity manifest and ${manifest.countries.length} country bundles; ${manifest.countries.filter((country) => country.modules.municipalities.status === "loaded").length} municipal shards`);

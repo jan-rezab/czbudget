@@ -5,9 +5,10 @@
   const names = {
     CZE:["Česko","Czechia"], DEU:["Německo","Germany"], DNK:["Dánsko","Denmark"], FRA:["Francie","France"],
     GBR:["Spojené království","United Kingdom"], POL:["Polsko","Poland"], SWE:["Švédsko","Sweden"], CHE:["Švýcarsko","Switzerland"],
-    UKR:["Ukrajina","Ukraine"], USA:["Spojené státy","United States"],
+    UKR:["Ukrajina","Ukraine"], USA:["Spojené státy","United States"], BRA:["Brazílie","Brazil"],
+    ESP:["Španělsko","Spain"], JPN:["Japonsko","Japan"], NLD:["Nizozemsko","Netherlands"], NOR:["Norsko","Norway"],
   };
-  const flags = {CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us"};
+  const flags = {CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no"};
   const flag = code => `<span class="country-flag-svg"><img src="assets/flags/${flags[code]}.svg" alt="" loading="lazy"><b>${code}</b></span>`;
   const copy = {
     cs:{kicker:"02 / Výdaje podle kategorií",title:"Stejná otázka. Deset rozpočtů.",intro:"Vyberte společnou kategorii a porovnejte její podíl v národních rozpočtech. Každý řádek zároveň zachovává částku v místní měně i orientační přepočet do EUR.",category:"Kategorie",period:"Období",current:"Aktuální",previous:"Předchozí",scale:"Měřítko",share:"Podíl rozpočtu",eur:"Částka v EUR",leader:"Nejvyšší podíl",median:"Medián zemí",coverage:"Pokrytí",countries:"10 zemí",matrix:"Celá mapa kategorií",matrixCopy:"Podíl kategorie na součtu publikovaného národního členění. Kliknutím na řádek změníte hlavní srovnání.",profile:"Detail země",sourceLine:"zdrojová položka",mapped:"zdrojových položek",notSeparate:"ve zdroji není samostatně vidět",method:"Jak srovnání vzniká",local:"místní měna",nominal:"nominální",loading:"Načítám srovnání…"},

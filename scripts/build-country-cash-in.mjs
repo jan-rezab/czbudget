@@ -43,4 +43,4 @@ const payload={schema_version:"1.0.0",generated_at:new Date().toISOString(),coun
   ...enterprises.sources.map(source=>({title:source.title,url:source.url}))
 ]};
 await fs.writeFile(new URL("data/country-cash-in.v1.json",root),`${JSON.stringify(payload,null,2)}\n`);
-console.log("Wrote consolidated revenue for 10 countries and Czech cash-in layers");
+console.log(`Wrote consolidated revenue for ${Object.keys(countries).length} countries and Czech cash-in layers`);
