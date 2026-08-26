@@ -50,7 +50,7 @@
   else { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = portalStylesHref; styles.dataset.portalUi = "true"; document.head.append(styles); }
   if (!document.querySelector("script[data-portal-ui]")) { const script = document.createElement("script"); script.src = `${assetRoot}portal-ui.js?v=20260823`; script.defer = true; script.dataset.portalUi = "true"; document.head.append(script); }
   const HEADER_TAG = "psd-site-header";
-  const countries = [
+  let countries = [
     ["CZE", "Česko", "Czechia", "cz"], ["DEU", "Německo", "Germany", "de"],
     ["DNK", "Dánsko", "Denmark", "dk"], ["FIN", "Finsko", "Finland", "fi"], ["FRA", "Francie", "France", "fr"],
     ["GBR", "Spojené království", "United Kingdom", "gb"], ["POL", "Polsko", "Poland", "pl"],
@@ -61,13 +61,20 @@
     ["NOR", "Norsko", "Norway", "no"], ["GRC", "Řecko", "Greece", "gr"],
   ];
   const municipalityCountries = [
-    ["CZE", "Česko", "Czechia", "cz", "czechia"], ["POL", "Polsko", "Poland", "pl", "poland"],
-    ["DNK", "Dánsko", "Denmark", "dk", "denmark"], ["FRA", "Francie", "France", "fr", "france"],
-    ["SWE", "Švédsko", "Sweden", "se", "sweden"], ["GBR", "Anglie", "England", "gb", "england"],
-    ["UKR", "Ukrajina", "Ukraine", "ua", "ukraine"], ["NOR", "Norsko", "Norway", "no", "norway"],
-    ["NLD", "Nizozemsko", "Netherlands", "nl", "netherlands"], ["FIN", "Finsko", "Finland", "fi", "finland"],
-    ["BRA", "Brazílie", "Brazil", "br", "brazil"], ["ESP", "Španělsko", "Spain", "es", "spain"],
-    ["JPN", "Japonsko", "Japan", "jp", "japan"],
+    ["BOL", "Bolívie", "Bolivia", "bo", "bolivia"], ["BRA", "Brazílie", "Brazil", "br", "brazil"],
+    ["CHL", "Chile", "Chile", "cl", "chile"], ["COL", "Kolumbie", "Colombia", "co", "colombia"],
+    ["CRI", "Kostarika", "Costa Rica", "cr", "costa-rica"], ["CZE", "Česko", "Czechia", "cz", "czechia"],
+    ["DNK", "Dánsko", "Denmark", "dk", "denmark"], ["SLV", "Salvador", "El Salvador", "sv", "el-salvador"],
+    ["GBR", "Anglie", "England", "gb", "england"], ["FIN", "Finsko", "Finland", "fi", "finland"],
+    ["FRA", "Francie", "France", "fr", "france"], ["GEO", "Gruzie", "Georgia", "ge", "georgia"],
+    ["DEU", "Německo", "Germany", "de", ""], ["GTM", "Guatemala", "Guatemala", "gt", "guatemala"],
+    ["ITA", "Itálie", "Italy", "it", "italy"], ["JPN", "Japonsko", "Japan", "jp", "japan"],
+    ["MEX", "Mexiko", "Mexico", "mx", "mexico"], ["NLD", "Nizozemsko", "Netherlands", "nl", "netherlands"],
+    ["NOR", "Norsko", "Norway", "no", "norway"], ["PER", "Peru", "Peru", "pe", "peru"],
+    ["POL", "Polsko", "Poland", "pl", "poland"], ["KOR", "Jižní Korea", "South Korea", "kr", "south-korea"],
+    ["ESP", "Španělsko", "Spain", "es", "spain"], ["SWE", "Švédsko", "Sweden", "se", "sweden"],
+    ["CHE", "Švýcarsko", "Switzerland", "ch", ""], ["UKR", "Ukrajina", "Ukraine", "ua", "ukraine"],
+    ["USA", "Spojené státy", "United States", "us", ""],
   ];
   const countrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FIN:"finland",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states",BRA:"brazil",ESP:"spain",JPN:"japan",NLD:"netherlands",NOR:"norway",GRC:"greece"};
   const copy = {
@@ -76,6 +83,9 @@
   };
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const href = (path, lang = language()) => `${assetRoot}${path}${path.includes("?") ? "&" : "?"}lang=${lang}`;
+  const countryHref = (code, lang = language()) => window.PSDCountryRoutes?.href
+    ? window.PSDCountryRoutes.href(code, lang)
+    : `/countries/${countrySlugs[code]}?lang=${lang}`;
 
   function activeSection(host) {
     if (host.dataset.section) return host.dataset.section;
@@ -113,8 +123,11 @@
       const t = copy[lang];
       const nav = this.querySelector(".global-nav");
       if (!nav) return;
-      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="/countries/${countrySlugs[code]}?lang=${lang}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("");
-      const municipalityLinks = municipalityCountries.map(([code, cs, en, flag, slug]) => `<a href="${assetRoot}municipalities/${slug}/?lang=${lang}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("");
+      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${countryHref(code,lang)}" data-country-code="${code}">${flag ? `<img src="${assetRoot}assets/flags/${flag}.svg" alt="">` : `<i class="country-menu-flag-placeholder" aria-hidden="true"></i>`}<b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("");
+      const municipalityLinks = municipalityCountries.map(([code, cs, en, flag, slug]) => {
+        const destination = slug ? `${assetRoot}municipalities/${slug}/?lang=${lang}` : `${assetRoot}municipalities/?lang=${lang}&country=${code}#directory`;
+        return `<a href="${destination}" data-country-code="${code}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`;
+      }).join("");
       nav.setAttribute("aria-label", t.navigation);
       nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><details class="deep-dive-menu"><summary><span class="menu-label">${t.deepDives}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${href("deep-dives/", lang)}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a href="${assetRoot}deep-dives/health/?code=CZE&lang=${lang}"><b>02</b><span><strong>${t.health}</strong><small>${t.healthCopy}</small></span></a><a href="${href("deep-dives/state-owned-enterprises/", lang)}"><b>03</b><span><strong>${t.stateCompanies}</strong><small>${t.stateCompaniesCopy}</small></span></a><a href="${assetRoot}deep-dives/capital-cities/?city=prague-cz&lang=${lang}"><b>04</b><span><strong>${t.capitalCities}</strong><small>${t.capitalCitiesCopy}</small></span></a><a href="${assetRoot}deep-dives/revenue/?code=CZE&lang=${lang}"><b>05</b><span><strong>${t.revenue}</strong><small>${t.revenueCopy}</small></span></a><a href="${assetRoot}deep-dives/ageing/?code=CZE&lang=${lang}"><b>06</b><span><strong>${t.ageing}</strong><small>${t.ageingCopy}</small></span></a><a href="${assetRoot}deep-dives/migration/?lang=${lang}"><b>07</b><span><strong>${t.migration}</strong><small>${t.migrationCopy}</small></span></a></div></details><a href="${href("methodology.html", lang)}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
       nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/economy/?code=CZE&lang=${lang}"><b>08</b><span><strong>${t.economy}</strong><small>${t.economyCopy}</small></span></a><a href="${assetRoot}deep-dives/defense/?code=USA&lang=${lang}"><b>09</b><span><strong>${t.defense}</strong><small>${t.defenseCopy}</small></span></a>`);
@@ -143,7 +156,7 @@
     }
   }
 
-  const headerStylesHref = `${assetRoot}site-header.css?v=20260824-logo-120`;
+  const headerStylesHref = `${assetRoot}site-header.css?v=20260827-coverage-menu`;
   const existingHeaderStyles = document.querySelector("link[data-psd-site-header]");
   if (existingHeaderStyles) {
     existingHeaderStyles.href = headerStylesHref;
@@ -199,6 +212,18 @@
   languageObserver.observe(document.documentElement, { attributes:true, attributeFilter:["lang"] });
   document.documentElement.dataset.navLang = document.documentElement.lang;
   sharedComponents.navigation = { refresh, observer: languageObserver };
+  fetch(`${assetRoot}data/country-parity.v1.json`, { cache:"no-cache" })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Country coverage ${response.status}`);
+      return response.json();
+    })
+    .then((coverage) => {
+      if (!Array.isArray(coverage.countries) || !coverage.countries.length) return;
+      const flags = Object.fromEntries(countries.map(([code,,,flag]) => [code, flag]));
+      countries = coverage.countries.map((country) => [country.country_code, country.name_cs, country.name_en, flags[country.country_code] || ""]);
+      refresh();
+    })
+    .catch(() => {});
 
   const railLinks = [...document.querySelectorAll(".context-rail a[href^='#']")];
   if (railLinks.length) {

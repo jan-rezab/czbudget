@@ -57,7 +57,7 @@ export const openapi = {
     "/api/v1": { get: operation("API index", "Returns API version, release, and documentation links.", ["Discovery"]) },
     "/api/v1/datasets": { get: operation("List datasets", "Lists every dataset represented in API v1 with its schema version and generation time.", ["Discovery"]) },
     "/api/v1/datasets/{dataset}": { get: operation("Get dataset metadata", "Returns provenance and methodology metadata without returning the full bulk artifact.", ["Discovery"], [{ name: "dataset", in: "path", required: true, schema: { type: "string" } }]) },
-    "/api/v1/countries": { get: operation("List countries", "Lists the ten core country profiles and module coverage.", ["Countries"]) },
+    "/api/v1/countries": { get: operation("List countries", "Lists all published country profiles and module coverage.", ["Countries"]) },
     "/api/v1/countries/{country}": { get: operation("Get country profile", "Returns profile metadata, module coverage, and official sources.", ["Countries"], [country]) },
     "/api/v1/countries/{country}/fiscal": { get: operation("Get sovereign fiscal series", "General-government IMF fiscal time series and summary statistics.", ["Countries"], [country]) },
     "/api/v1/countries/{country}/spending": { get: operation("Get administrative spending", "Native national spending classifications for the latest comparable periods.", ["Countries"], [country]) },

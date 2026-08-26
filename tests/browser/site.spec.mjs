@@ -75,8 +75,9 @@ test("country links are readable and data-layer cards keep accessible contrast",
   await expect(page.locator("#country-name")).toContainText("Germany");
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-cards a").first()).toHaveAttribute("href", "/countries/czechia?lang=en");
-  await expect(page.locator("#country-cards a")).toHaveCount(16);
+  await expect(page.locator("#country-cards a")).toHaveCount(17);
   await expect(page.locator('#country-cards a[href="/countries/japan?lang=en"]')).toContainText("Japan");
+  await expect(page.locator('#country-cards a[href="/countries/greece?lang=en"]')).toContainText("Greece");
   await expect(page.locator('a[href*="country.html?code="]')).toHaveCount(0);
 });
 
@@ -118,21 +119,21 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator(".glorious-footer .footer-hlidac")).toHaveAttribute("href", "https://www.hlidacstatu.cz/");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#compare-table tr")).toHaveCount(16);
-  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(16);
+  await expect(page.locator("#compare-table tr")).toHaveCount(17);
+  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(17);
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".status-header")).toContainText("Data status");
   await expect(page.locator(".status-volume")).toContainText("Published data entries");
-  await expect(page.locator("#status-data-total")).toContainText("372,394");
+  await expect(page.locator("#status-data-total")).toContainText("387,346");
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(4);
   await expect(page.locator("#data-health-root")).toContainText("Checks passed");
-  await expect(page.locator("#data-health-root")).toContainText("92,751");
-  await expect(page.locator("#data-health-root")).toContainText("16 countries");
-  await expect(page.locator("#data-health-root")).toContainText("54");
-  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(16);
-  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(112);
+  await expect(page.locator("#data-health-root")).toContainText("107,703");
+  await expect(page.locator("#data-health-root")).toContainText("27 countries");
+  await expect(page.locator("#data-health-root")).toContainText("66");
+  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(28);
+  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(196);
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
   await expect(page.locator('[data-coverage-country="NOR"][data-coverage-node="municipalHistory"]')).toContainText("2015–2025");
   await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="municipalHistory"]')).toContainText("2010–2025");
@@ -252,16 +253,19 @@ test("homepage defaults every independently rendered module to English", async (
 
 test("deep dives expose dedicated topic hierarchies for countries and capital cities", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".deep-card")).toHaveCount(6);
-  await expect(page.locator(".deep-card.available")).toHaveCount(6);
+  await expect(page.locator(".deep-card")).toHaveCount(9);
+  await expect(page.locator(".deep-card.available")).toHaveCount(9);
   await expect(page.locator(".deep-card.available").first()).toContainText("Transportation");
   await expect(page.locator(".deep-card.available").nth(1)).toContainText("Health");
   await expect(page.locator(".deep-card.available").nth(2)).toContainText("State-owned enterprises");
   await expect(page.locator(".deep-card.available").nth(3)).toContainText("Capital cities");
   await expect(page.locator(".deep-card.available").nth(4)).toContainText("Who actually funds the state?");
-  await expect(page.locator(".deep-card.available").last()).toContainText("The Ageing Bill");
+  await expect(page.locator(".deep-card.available").nth(5)).toContainText("The Ageing Bill");
+  await expect(page.locator(".deep-card.available").nth(6)).toContainText("European migration");
+  await expect(page.locator(".deep-card.available").nth(7)).toContainText("Economy in context");
+  await expect(page.locator(".deep-card.available").last()).toContainText("Defense spending");
   await page.locator(".deep-dive-menu summary").click();
-  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(6);
+  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(9);
   await page.goto("/deep-dives/capital-cities/?city=prague-cz&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("h1")).toContainText("Capital Cities Under Pressure");
   await expect(page.locator("#capital-pressure-city")).toHaveValue("prague-cz");
@@ -274,14 +278,14 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   await expect(page.locator(".transport-budget-legend > div")).toHaveCount(6);
   await expect(page.locator(".transport-investment-trend span")).toHaveCount(10);
   await expect(page.locator(".transport-budget-detail")).toContainText("291,427 mil.");
-  await expect(page.locator(".transport-comparison tbody tr")).toHaveCount(15);
-  await expect(page.locator(".transport-coverage-matrix tbody tr")).toHaveCount(15);
+  await expect(page.locator(".transport-comparison tbody tr")).toHaveCount(16);
+  await expect(page.locator(".transport-coverage-matrix tbody tr")).toHaveCount(16);
   await expect(page.locator(".transport-coverage-audit")).toContainText("Public data and gaps");
   await expect(page.locator(".transport-comparison tr.scope-exception")).toHaveCount(2);
   await expect(page.locator(".transport-performance-audit")).toContainText("Infrastructure performance");
   await expect(page.locator(".transport-infra-kpis")).toContainText("9,514 km");
   await expect(page.locator(".transport-infra-money")).toHaveCount(4);
-  await expect(page.locator(".transport-infra-comparison tbody tr")).toHaveCount(16);
+  await expect(page.locator(".transport-infra-comparison tbody tr")).toHaveCount(17);
   await expect(page.locator(".transport-project-list > article")).toHaveCount(3);
   await page.locator("#deep-dive-country").selectOption("POL");
   await expect(page).toHaveURL(/code=POL/);
@@ -323,7 +327,7 @@ test("ageing deep dive stays inside official projections and transparent arithme
   await page.goto("/deep-dives/ageing/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country option")).toHaveCount(10);
   await expect(page.locator(".aging-kpis article")).toHaveCount(4);
-  await expect(page.locator(".aging-table tbody tr")).toHaveCount(16);
+  await expect(page.locator(".aging-table tbody tr")).toHaveCount(17);
   await expect(page.locator("#aging-calculator-results")).toContainText("This is not a forecast of employment, pensions, healthcare costs, taxes or public debt");
   await expect(page.locator("#aging-calculator-results")).toContainText("5,936,188");
   await page.locator("#aging-boundary").fill("70");
@@ -338,7 +342,7 @@ test("ageing deep dive stays inside official projections and transparent arithme
 
 test("international municipality directory filters by country, year and search", async ({ page }) => {
   await page.goto("/municipalities/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(16);
+  await expect(page.locator("#country-grid .municipal-country-card")).toHaveCount(27);
   await expect(page.locator("#country-filter + .custom-select-button")).toBeVisible();
   await expect(page.locator("#year-filter + .custom-select-button")).toBeVisible();
   await expect(page.locator("#type-filter + .custom-select-button")).toBeVisible();
@@ -371,8 +375,8 @@ test("international municipality directory filters by country, year and search",
   await expect(page.locator("#municipality-grid .capital-card")).toHaveCount(27);
 });
 
-test("every covered country has a municipality homepage and the navigator connects them", async ({ page, request }) => {
-  const countries = ["czechia", "poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan"];
+test("every covered country homepage exists and the navigator connects them", async ({ page, request }) => {
+  const countries = ["bolivia", "brazil", "chile", "colombia", "costa-rica", "czechia", "denmark", "el-salvador", "england", "finland", "france", "georgia", "guatemala", "italy", "japan", "mexico", "netherlands", "norway", "peru", "poland", "south-korea", "spain", "sweden", "ukraine"];
   for (const slug of countries) {
     const response = await request.get(`/municipalities/${slug}/?lang=en`);
     expect(response.ok(), `${slug} municipality homepage failed`).toBeTruthy();
@@ -381,7 +385,7 @@ test("every covered country has a municipality homepage and the navigator connec
   await expect(page.locator("#country-title")).toContainText("Budgets of Danish municipalities");
   await expect(page.locator(".dynamic-country-picker")).toContainText("Choose a country");
   await expect(page.locator(".country-picker-readout")).toContainText("Denmark");
-  await expect(page.locator("#municipality-country-switch option")).toHaveCount(13);
+  await expect(page.locator("#municipality-country-switch option")).toHaveCount(24);
   await expect(page.locator("#country-insight-grid article")).toHaveCount(4);
   await expect(page.locator("#country-directory-count")).toContainText("98 entities");
   await page.locator("#country-municipality-search").fill("Copenhagen");
@@ -396,14 +400,14 @@ test("country profiles expose sortable ten-year health, social and transport com
   for (const id of ["healthcare", "social-system"]) {
     const section=page.locator(`#${id}`);
     await expect(section.locator(".function-bar-column")).toHaveCount(10);
-    await expect(section.locator("tbody tr")).toHaveCount(15);
+    await expect(section.locator("tbody tr")).toHaveCount(16);
     await expect(section.locator(".sortable-header-button")).toHaveCount(5);
   }
   const transport=page.locator("#transportation");
   await expect(transport.locator(".function-bar-column")).toHaveCount(10);
   await expect(transport.locator(".transport-network-year")).toHaveCount(10);
   await expect(transport.locator(".transport-kpis article")).toHaveCount(5);
-  await expect(transport.locator("tbody tr")).toHaveCount(15);
+  await expect(transport.locator("tbody tr")).toHaveCount(16);
   await expect(transport.locator(".sortable-header-button")).toHaveCount(7);
   await expect(transport.locator(".transport-contract")).toContainText("Absolute kilometres alone are not a quality ranking");
   await expect(transport).toContainText("1,486 km");
@@ -436,7 +440,7 @@ test("public-entity profiles expose broad perimeters, economics and the full sea
 test("health deep dive keeps system profiles and the expanded spending comparison", async ({ page }) => {
   await page.goto("/deep-dives/health/?code=CZE&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#deep-dive-country option")).toHaveCount(10);
-  await expect(page.locator("#country-function-health tbody tr")).toHaveCount(15);
+  await expect(page.locator("#country-function-health tbody tr")).toHaveCount(16);
   await expect(page.locator("#healthcare-system")).toBeVisible();
   await expect(page.locator("#hospital-benchmark")).toBeVisible();
   await expect(page.locator("#country-health-kpis article")).toHaveCount(4);
@@ -583,7 +587,7 @@ test("all representative page menus resolve and primary navigation routes correc
     for (const href of hrefs) {
       const target = new URL(href); target.hash = "";
       if (target.pathname.startsWith("/countries/")) {
-        expect(["czechia","germany","denmark","finland","france","united-kingdom","poland","sweden","switzerland","ukraine","united-states","brazil","spain","japan","netherlands","norway"]).toContain(target.pathname.split("/").filter(Boolean).at(-1));
+        expect(["czechia","germany","denmark","finland","france","united-kingdom","poland","sweden","switzerland","ukraine","united-states","brazil","spain","japan","netherlands","norway","greece"]).toContain(target.pathname.split("/").filter(Boolean).at(-1));
         continue;
       }
       const response = await request.get(target.href);
@@ -597,13 +601,30 @@ test("all representative page menus resolve and primary navigation routes correc
   await expect(navItems.nth(1)).toHaveAttribute("data-global-nav", "cities");
   const municipalityMenu = page.locator(".municipality-menu");
   await municipalityMenu.locator("summary").click();
-  await expect(municipalityMenu.locator(".country-menu-panel a")).toHaveCount(14);
+  await expect(municipalityMenu.locator(".country-menu-panel a")).toHaveCount(28);
+  const municipalCardCountries = await page.locator("#country-cards .country-flag-svg b").allTextContents();
+  const municipalMenuCountries = await municipalityMenu.locator(".country-menu-panel > a[data-country-code] b").allTextContents();
+  await page.goto("/municipalities/?lang=cs", { waitUntil:"networkidle" });
+  const municipalCoverageCountries = await page.locator("#country-grid .municipal-country-card").evaluateAll((cards) => cards.map((card) => card.dataset.country));
+  expect(municipalMenuCountries).toEqual(municipalCoverageCountries);
+  expect(municipalCardCountries).toHaveLength(17);
+  await page.goto("/?lang=cs", { waitUntil:"networkidle" });
+  await page.locator(".municipality-menu summary").click();
+  await page.locator('.municipality-menu a[data-country-code="DEU"]').click();
+  await expect(page).toHaveURL(/\/municipalities\/\?lang=cs&country=DEU#directory/);
+  await expect(page.locator("#country-filter")).toHaveValue("DEU");
+  await expect(page.locator("#directory-count")).toContainText("10 756 jednotek");
+  await page.goto("/?lang=cs", { waitUntil:"networkidle" });
+  await page.locator(".municipality-menu summary").click();
   await municipalityMenu.locator(".country-menu-head a").click();
   await expect(page).toHaveURL(/\/municipalities\/\?lang=cs/);
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(18);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(19);
+  const chartCountries = await page.locator("#country-cards .country-flag-svg b").allTextContents();
+  const menuCountries = await countryMenu.locator(".country-menu-panel > a[data-country-code] b").allTextContents();
+  expect(menuCountries).toEqual(chartCountries);
   await countryMenu.locator('.country-menu-panel a[href="/countries/czechia?lang=cs"]').click();
   await expect(page).toHaveURL(/\/countries\/czechia\?lang=cs/);
 });
@@ -665,14 +686,18 @@ test("state-owned enterprise catalogue ranks, filters and translates thirty sour
 });
 
 test("cities use the functional unified menu on desktop and mobile", async ({ page }) => {
+  await page.setViewportSize({ width:1280, height:600 });
   await page.goto("/cz/mesta/?lang=cs", { waitUntil: "networkidle" });
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
   await expect(countryMenu).toHaveAttribute("open", "");
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(18);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(19);
   const panelBox = await countryMenu.locator(".country-menu-panel").boundingBox();
   expect(panelBox?.width).toBeLessThanOrEqual(430);
-  expect(panelBox?.height).toBeLessThan(700);
+  expect((panelBox?.y || 0) + (panelBox?.height || 0)).toBeLessThanOrEqual(600);
+  const panelScroll = await countryMenu.locator(".country-menu-panel").evaluate((panel) => ({clientHeight:panel.clientHeight,scrollHeight:panel.scrollHeight,overflowY:getComputedStyle(panel).overflowY}));
+  expect(panelScroll.overflowY).toBe("auto");
+  expect(panelScroll.scrollHeight).toBeGreaterThan(panelScroll.clientHeight);
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.reload({ waitUntil: "networkidle" });

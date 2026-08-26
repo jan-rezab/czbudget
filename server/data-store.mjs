@@ -3,7 +3,6 @@ import path from "node:path";
 
 const ROOT = path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html");
 const cache = new Map();
-const COUNTRY_CODES = new Set(["CZE", "DEU", "DNK", "FRA", "GBR", "POL", "SWE", "CHE", "UKR", "USA"]);
 
 const DATASETS = {
   fiscal: "lib/data/sovereign-benchmark.v1.json",
@@ -47,9 +46,12 @@ async function readJSON(relativePath, { useCache = true } = {}) {
   return value;
 }
 
-function code(value) {
+async function code(value) {
   const normalized = String(value || "").toUpperCase();
-  if (!COUNTRY_CODES.has(normalized)) throw new DataError(404, "country_not_found", "Country code is not available.");
+  const parity = await readJSON(DATASETS["country-parity"]);
+  if (!parity.countries.some((country) => country.country_code === normalized)) {
+    throw new DataError(404, "country_not_found", "Country code is not available.");
+  }
   return normalized;
 }
 
@@ -161,7 +163,7 @@ export async function listCountries() {
 }
 
 export async function countryProfile(countryCode) {
-  const countryCodeNormalized = code(countryCode);
+  const countryCodeNormalized = await code(countryCode);
   const parity = await readJSON(DATASETS["country-parity"]);
   const country = parity.countries.find((item) => item.country_code === countryCodeNormalized);
   if (!country) throw new DataError(404, "country_not_found", "Country code is not available.");
@@ -169,7 +171,7 @@ export async function countryProfile(countryCode) {
 }
 
 export async function countryModule(countryCode, module) {
-  const countryCodeNormalized = code(countryCode);
+  const countryCodeNormalized = await code(countryCode);
   const relativePath = DATASETS[module];
   if (!relativePath) throw new DataError(404, "module_not_found", "Country module is not available.");
   const dataset = await readJSON(relativePath);
@@ -231,7 +233,7 @@ export async function czechMunicipalityHistory(municipalityID) {
 }
 
 export async function listPublicEntities(searchParams) {
-  const countryCode = code(optionalCountry(searchParams));
+  const countryCode = await code(optionalCountry(searchParams));
   const dataset = await readJSON(`data/public-entity-directory/${countryCode}.v1.json`);
   let items = decodeDirectory(dataset);
   const query = optionalQuery(searchParams, "q", 100)?.toLocaleLowerCase();
@@ -242,7 +244,7 @@ export async function listPublicEntities(searchParams) {
 }
 
 export async function publicEntity(countryCode, recordID) {
-  const countryCodeNormalized = code(countryCode);
+  const countryCodeNormalized = await code(countryCode);
   const dataset = await readJSON(`data/public-entity-directory/${countryCodeNormalized}.v1.json`);
   const recordIndex = dataset.fields.indexOf("record_id");
   const row = dataset.records.find((item) => item[recordIndex] === recordID);

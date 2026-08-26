@@ -3,6 +3,7 @@
   const params = new URLSearchParams(location.search);
   const requestedType = params.get("type");
   const requestedLanguage = params.get("lang");
+  const requestedCountry = params.get("country")?.toUpperCase();
   const initialLanguage = ["cs", "en"].includes(requestedLanguage) ? requestedLanguage : (document.documentElement.lang === "en" ? "en" : "cs");
   const state = {data:null,benchmark:null,benchmarkMetric:"mean",capitals:[],lang:initialLanguage,type:requestedType === "capital" ? "capital" : "all",country:"all",year:"all",query:"",shown:48};
   const C = {
@@ -22,7 +23,7 @@
   const name = (country) => country[`name_${state.lang}`];
   const fmt = (number) => new Intl.NumberFormat(state.lang === "en" ? "en-GB" : "cs-CZ").format(number);
   const currency = (number, code) => new Intl.NumberFormat(state.lang === "en" ? "en-GB" : "cs-CZ", {style:"currency",currency:code,notation:"compact",maximumFractionDigits:1}).format(number);
-  const slugs={CZE:"czechia",POL:"poland",DNK:"denmark",FRA:"france",SWE:"sweden",GBR:"england",UKR:"ukraine",NOR:"norway",NLD:"netherlands",FIN:"finland",BRA:"brazil",ESP:"spain",JPN:"japan"};
+  const slugs={CZE:"czechia",POL:"poland",DNK:"denmark",FRA:"france",SWE:"sweden",GBR:"england",UKR:"ukraine",NOR:"norway",NLD:"netherlands",FIN:"finland",BRA:"brazil",ESP:"spain",JPN:"japan",COL:"colombia",GEO:"georgia",ITA:"italy",BOL:"bolivia",SLV:"el-salvador",MEX:"mexico",CRI:"costa-rica",GTM:"guatemala",PER:"peru",KOR:"south-korea",CHL:"chile"};
   const czechRegions={"Hlavní město Praha":"Prague","Středočeský kraj":"Central Bohemian Region","Jihočeský kraj":"South Bohemian Region","Plzeňský kraj":"Plzeň Region","Karlovarský kraj":"Karlovy Vary Region","Ústecký kraj":"Ústí nad Labem Region","Liberecký kraj":"Liberec Region","Královéhradecký kraj":"Hradec Králové Region","Pardubický kraj":"Pardubice Region","Kraj Vysočina":"Vysočina Region","Jihomoravský kraj":"South Moravian Region","Olomoucký kraj":"Olomouc Region","Zlínský kraj":"Zlín Region","Moravskoslezský kraj":"Moravian-Silesian Region"};
   const regionName = (entity) => state.lang === "en" && entity.country === "CZE" ? (czechRegions[entity.region] || entity.region) : entity.region;
 
@@ -34,6 +35,7 @@
   function updateUrl() {
     const url = new URL(location.href); url.searchParams.set("lang", state.lang);
     if (state.type === "capital") url.searchParams.set("type", "capital"); else url.searchParams.delete("type");
+    if (state.type !== "capital" && state.country !== "all") url.searchParams.set("country", state.country); else url.searchParams.delete("country");
     history.replaceState(null, "", `${url.pathname}${url.search}${location.hash}`);
   }
   function setLanguage() {
@@ -135,14 +137,14 @@
     $("#municipality-country-switch").onchange=(event)=>{if(event.target.value)location.href=`${assetRoot}municipalities/${event.target.value}/?lang=${state.lang}`;};
     document.querySelectorAll("[data-lang]").forEach((button)=>button.onclick=()=>{state.lang=button.dataset.lang;setLanguage();countryCards();insights();controls();renderDirectory();updateUrl();});
     $("#type-filter").onchange=(event)=>{state.type=event.target.value;state.country="all";state.year="all";state.shown=48;$("#country-filter").value="all";$("#year-filter").value="all";syncControlState();renderDirectory();updateUrl();};
-    $("#country-filter").onchange=(event)=>{state.country=event.target.value;state.shown=48;renderDirectory();};
+    $("#country-filter").onchange=(event)=>{state.country=event.target.value;state.shown=48;renderDirectory();updateUrl();};
     $("#year-filter").onchange=(event)=>{state.year=event.target.value;state.shown=48;renderDirectory();};
     $("#municipality-search").oninput=(event)=>{state.query=event.target.value;state.shown=48;renderDirectory();};
     $("#reset-filters").onclick=()=>{state.type="all";state.country="all";state.year="all";state.query="";state.shown=48;$("#type-filter").value="all";$("#country-filter").value="all";$("#year-filter").value="all";$("#municipality-search").value="";syncControlState();renderDirectory();updateUrl();};
     $("#load-more").onclick=()=>{state.shown+=48;renderDirectory();};
   }
   Promise.all([fetch(`${assetRoot}data/international-municipalities.v1.json`).then((response)=>response.json()),fetch(`${assetRoot}data/eu-capital-budgets.v1.json`).then((response)=>response.json())]).then(([data,capitalData])=>{
-    state.data=data;state.capitals=capitalData.cities.filter((city)=>city.eu_capital).map((city)=>({kind:"capital",code:city.city_id,name:city.city,countryName:city.country,alpha2:city.country_code,currency:city.budget.local_currency,expenditure:city.fiscal_details?.expenditure?.local_amount||city.budget.local_amount,revenue:city.fiscal_details?.revenue?.local_amount,balance:city.fiscal_details?.balance?.local_amount,population:city.benchmarks?.population?.value,period:city.period,scope:city.scope,source:city.landing_page_url||city.download_url}));
+    state.data=data;if(requestedCountry&&data.countries.some((country)=>country.code===requestedCountry))state.country=requestedCountry;state.capitals=capitalData.cities.filter((city)=>city.eu_capital).map((city)=>({kind:"capital",code:city.city_id,name:city.city,countryName:city.country,alpha2:city.country_code,currency:city.budget.local_currency,expenditure:city.fiscal_details?.expenditure?.local_amount||city.budget.local_amount,revenue:city.fiscal_details?.revenue?.local_amount,balance:city.fiscal_details?.balance?.local_amount,population:city.benchmarks?.population?.value,period:city.period,scope:city.scope,source:city.landing_page_url||city.download_url}));
     setLanguage();$("#total-entities").textContent=fmt(data.entities.length);countryCards();insights();controls();renderDirectory();bind();updateUrl();
     fetch(`${assetRoot}data/municipal-size-benchmark.v1.json`).then((response)=>{if(!response.ok)throw new Error(`Municipal benchmark returned ${response.status}`);return response.json();}).then((benchmark)=>{state.benchmark=benchmark;renderBenchmark();}).catch((error)=>{console.error(error);$("#municipal-benchmark-content").innerHTML=`<p class="benchmark-loading">${esc(state.lang==="en"?"The OECD comparison could not be loaded.":"Srovnání OECD se nepodařilo načíst.")}</p>`;});
   }).catch((error)=>{console.error(error);$("#country-grid").innerHTML=`<p>${esc(t().loadError)}</p>`;});

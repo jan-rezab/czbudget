@@ -13,7 +13,7 @@ npm run build:country-parity
 ```
 
 The build writes one `data/countries/<iso3>/profile.v1.json` bundle for each of
-the ten catalog countries. Countries with a loaded municipal census also get a
+the 17 published country profiles. Countries with a loaded municipal census also get a
 `municipalities.v1.json` directory shard. The browser can therefore request one
 country without downloading the complete international directory.
 

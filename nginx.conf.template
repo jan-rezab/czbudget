@@ -35,6 +35,21 @@ map "$arg_code:$arg_lang" $legacy_country_path {
   "USA:" "/countries/united-states";
   "USA:cs" "/countries/united-states?lang=cs";
   "USA:en" "/countries/united-states?lang=en";
+  "BRA:" "/countries/brazil";
+  "BRA:cs" "/countries/brazil?lang=cs";
+  "BRA:en" "/countries/brazil?lang=en";
+  "ESP:" "/countries/spain";
+  "ESP:cs" "/countries/spain?lang=cs";
+  "ESP:en" "/countries/spain?lang=en";
+  "JPN:" "/countries/japan";
+  "JPN:cs" "/countries/japan?lang=cs";
+  "JPN:en" "/countries/japan?lang=en";
+  "NLD:" "/countries/netherlands";
+  "NLD:cs" "/countries/netherlands?lang=cs";
+  "NLD:en" "/countries/netherlands?lang=en";
+  "NOR:" "/countries/norway";
+  "NOR:cs" "/countries/norway?lang=cs";
+  "NOR:en" "/countries/norway?lang=en";
   "GRC:" "/countries/greece";
   "GRC:cs" "/countries/greece?lang=cs";
   "GRC:en" "/countries/greece?lang=en";
@@ -165,7 +180,7 @@ server {
   location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece)$ {
     sub_filter_once off;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
-    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260825-country-expansion';
+    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-coverage-menu';
     sub_filter 'country.js?v=20260823-country-hover' 'country.js?v=20260824-readable-country-routes';
     sub_filter 'country-parity.css?v=20260822-parity-contract' 'country-parity.css?v=20260824-readable-country-routes';
     sub_filter 'country-parity.js?v=20260822-parity-contract' 'country-parity.js?v=20260824-readable-country-routes';
@@ -188,11 +203,11 @@ server {
     sub_filter 'cz-municipal-directory.js"' 'cz-municipal-directory.js?v=20260823-english-route"';
     sub_filter 'cz-history.js"' 'cz-history.js?v=20260824-history-views"';
     sub_filter 'municipal-benchmark-profile.css"' 'municipal-benchmark-profile.css?v=20260824-box-sizing"';
-    sub_filter 'global-nav.js?v=20260822-component"' 'global-nav.js?v=20260825-country-expansion"';
-    sub_filter 'global-nav.js?v=20260824-budget-stages"' 'global-nav.js?v=20260825-country-expansion"';
-    sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260825-country-expansion"';
-    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260825-country-expansion';
-    sub_filter 'global-nav.js?v=20260825-canonical-home' 'global-nav.js?v=20260825-country-expansion';
+    sub_filter 'global-nav.js?v=20260822-component"' 'global-nav.js?v=20260827-coverage-menu"';
+    sub_filter 'global-nav.js?v=20260824-budget-stages"' 'global-nav.js?v=20260827-coverage-menu"';
+    sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260827-coverage-menu"';
+    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-coverage-menu';
+    sub_filter 'global-nav.js?v=20260825-canonical-home' 'global-nav.js?v=20260827-coverage-menu';
     sub_filter 'global-footer.js?v=20260822-hlidac' 'global-footer.js?v=20260825-footer-align';
     sub_filter 'global-footer.js?v=20260823-footer' 'global-footer.js?v=20260825-footer-align';
     sub_filter 'global-footer.js?v=20260824-compact' 'global-footer.js?v=20260825-footer-align';

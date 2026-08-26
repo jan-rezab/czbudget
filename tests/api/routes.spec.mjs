@@ -46,6 +46,24 @@ test("serves country modules from the production artifacts", async () => {
   }
 });
 
+test("serves every published country through the API", async () => {
+  const response = await get("/api/v1/countries");
+  const payload = await response.json();
+  const codes = payload.data.map((country) => country.country_code);
+  assert.equal(response.status, 200);
+  assert.deepEqual(codes, ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]);
+
+  for (const country of ["FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]) {
+    const profile = await get(`/api/v1/countries/${country}`);
+    assert.equal(profile.status, 200, `${country} profile`);
+    assert.equal((await profile.json()).data.country_code, country);
+
+    const fiscal = await get(`/api/v1/countries/${country}/fiscal`);
+    assert.equal(fiscal.status, 200, `${country} fiscal`);
+    assert.equal((await fiscal.json()).data.country.country_code, country);
+  }
+});
+
 test("paginates municipality and public-entity searches", async () => {
   const municipalities = await get("/api/v1/municipalities?country=CZE&limit=2");
   const municipalityPage = await municipalities.json();
