@@ -13,10 +13,23 @@ const pages={
   finland:{code:"FIN",title:"Finnish municipalities",description:"Official municipal accounts and a searchable directory of Finnish municipalities."},
   brazil:{code:"BRA",title:"Brazilian municipalities",description:"SICONFI budget execution and a searchable directory of Brazilian municipalities."},
   spain:{code:"ESP",title:"Spanish municipalities",description:"CONPREL adopted budgets, liquidations and a searchable directory of Spanish municipalities."},
-  japan:{code:"JPN",title:"Japanese municipalities",description:"Official e-Stat local public-finance settlements and a searchable directory of Japanese municipalities."}
+  japan:{code:"JPN",title:"Japanese municipalities",description:"Official e-Stat local public-finance settlements and a searchable directory of Japanese municipalities."},
+  colombia:{code:"COL",title:"Colombian municipalities",description:"CUIPO municipal budgets, execution and a searchable directory of Colombian municipalities."},
+  georgia:{code:"GEO",title:"Georgian municipalities",description:"Official municipal accounts and a searchable directory of Georgian municipalities."},
+  italy:{code:"ITA",title:"Italian municipalities",description:"SIOPE cash receipts, payments and a searchable directory of Italian municipalities."},
+  bolivia:{code:"BOL",title:"Bolivian local governments",description:"Official municipal budgets, execution and a searchable directory of Bolivian local governments."},
+  "el-salvador":{code:"SLV",title:"Salvadoran municipalities",description:"SAFIM municipal budgets, execution and a searchable directory of Salvadoran municipalities."},
+  mexico:{code:"MEX",title:"Mexican municipalities",description:"INEGI EFIPEM definitive annual municipal finances and a searchable directory of reporting Mexican municipalities."},
+  "costa-rica":{code:"CRI",title:"Costa Rican municipalities",description:"CGR SIPP municipal revenue, spending and a searchable directory of all Costa Rican municipalities."},
+  guatemala:{code:"GTM",title:"Guatemalan municipalities",description:"MINFIN SICOINGL municipal budgets, execution and a searchable directory of all Guatemalan municipalities."},
+  peru:{code:"PER",title:"Peruvian municipalities",description:"MEF Consulta Amigable budgets, execution and a searchable directory of all Peruvian local governments."},
+  "south-korea":{code:"KOR",title:"South Korean local governments",description:"Local Finance 365 settlements and a searchable directory of all South Korean local governments."},
+  chile:{code:"CHL",title:"Chilean municipalities",description:"SINIM municipal revenue, expenditure and a searchable directory of all Chilean municipalities."}
 };
 
-for(const [slug,page] of Object.entries(pages)){
+const requested=new Set(process.argv.slice(2));
+const selectedPages=Object.entries(pages).filter(([slug])=>requested.size===0||requested.has(slug));
+for(const [slug,page] of selectedPages){
   const canonical=`${origin}/municipalities/${slug}/`;
   const html=`<!doctype html>
 <html lang="cs">
@@ -35,8 +48,8 @@ for(const [slug,page] of Object.entries(pages)){
   <link rel="stylesheet" href="../../styles.css?v=20260822-brand">
   <link rel="stylesheet" href="../../chart-system.css?v=20260822-country-municipalities">
   <link rel="stylesheet" href="../../municipalities.css?v=20260823-layout-fix">
-  <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260823-municipal-ux">
-  <script src="../../municipalities-country.js?v=20260825-expanded-coverage" defer></script>
+  <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260826-budget-structure">
+  <script src="../../municipalities-country.js?v=20260826-budget-structure" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -49,10 +62,11 @@ for(const [slug,page] of Object.entries(pages)){
   <main id="top">
     <nav class="municipality-switch" aria-label="Municipality views"><a href="../?lang=cs" data-view-link="europe" data-copy="viewEurope">Evropa</a><label class="active"><span data-copy="countryHomepage">Stránka země</span><select id="municipality-country-switch" aria-label="Stránka obcí podle země"></select></label></nav>
     <section class="municipal-hero"><div><span class="eyebrow"><i class="live-dot"></i><span id="country-eyebrow">—</span></span><h1 id="country-title">—</h1><p id="country-intro">—</p></div><div class="municipal-hero-stat"><span data-copy="covered">Pokryté místní jednotky</span><strong id="country-total">—</strong><small id="country-coverage">—</small></div></section>
-    <nav class="municipal-rail"><a href="#insights" data-copy="navInsights">Co data říkají</a><a href="#directory" data-copy="navDirectory">Adresář</a><a href="#context" data-copy="navContext">Kontext a zdroj</a></nav>
+    <nav class="municipal-rail"><a href="#insights" data-copy="navInsights">Co data říkají</a><a id="budget-structure-nav" href="#budget-structure" data-copy="navStructure" hidden>Struktura rozpočtu</a><a href="#directory" data-copy="navDirectory">Adresář</a><a href="#context" data-copy="navContext">Kontext a zdroj</a></nav>
     <section id="insights" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="insightsKicker">01 / Datový profil</span><h2 id="insights-title">—</h2></div><p id="insights-copy">—</p></div><div id="country-insight-grid" class="insight-grid"></div></section>
-    <section id="directory" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="directoryKicker">02 / Místní úroveň</span><h2 data-copy="directoryTitle">Najděte konkrétní obec.</h2></div><p id="country-directory-count">—</p></div><div class="municipal-controls country-directory-controls"><label><span data-copy="search">Hledat</span><input id="country-municipality-search" type="search" autocomplete="off" data-placeholder="searchPlaceholder" placeholder="Název nebo národní kód…"></label><label><span data-copy="year">Rok</span><select id="country-year-filter"></select></label><button id="country-reset" type="button" data-copy="reset">Vymazat filtry</button></div><div id="country-municipality-grid" class="municipality-grid"></div><button id="country-load-more" class="load-more" type="button" data-copy="more">Načíst další</button></section>
-    <section id="context" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="contextKicker">03 / Co je uvnitř</span><h2 data-copy="contextTitle">Rozsah zůstává viditelný.</h2></div><p data-copy="contextCopy">Národní zdroj a účetní hranice jsou součástí výsledku, ne poznámka pod čarou.</p></div><div id="country-context-grid" class="country-context-grid"></div></section>
+    <section id="budget-structure" class="municipal-section municipal-budget-structure" hidden><div class="section-heading"><div><span class="kicker" data-copy="structureKicker">02 / Průměrný místní rozpočet</span><h2 data-copy="structureTitle">Kam míří každých 100.</h2></div><p data-copy="structureCopy">Každý místní rozpočet má stejnou váhu, takže největší města nepřehluší okresní a menší obecní rozpočty.</p></div><div id="budget-structure-content"></div></section>
+    <section id="directory" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="directoryKicker">03 / Místní úroveň</span><h2 data-copy="directoryTitle">Najděte konkrétní obec.</h2></div><p id="country-directory-count">—</p></div><div class="municipal-controls country-directory-controls"><label><span data-copy="search">Hledat</span><input id="country-municipality-search" type="search" autocomplete="off" data-placeholder="searchPlaceholder" placeholder="Název nebo národní kód…"></label><label><span data-copy="year">Rok</span><select id="country-year-filter"></select></label><button id="country-reset" type="button" data-copy="reset">Vymazat filtry</button></div><div id="country-municipality-grid" class="municipality-grid"></div><button id="country-load-more" class="load-more" type="button" data-copy="more">Načíst další</button></section>
+    <section id="context" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="contextKicker">04 / Co je uvnitř</span><h2 data-copy="contextTitle">Rozsah zůstává viditelný.</h2></div><p data-copy="contextCopy">Národní zdroj a účetní hranice jsou součástí výsledku, ne poznámka pod čarou.</p></div><div id="country-context-grid" class="country-context-grid"></div></section>
   </main>
   <footer data-global-footer></footer>
   <script src="../../global-footer.js?v=20260823-footer" defer></script>
@@ -62,4 +76,4 @@ for(const [slug,page] of Object.entries(pages)){
   await writeFile(new URL(`../municipalities/${slug}/index.html`,import.meta.url),html);
 }
 
-console.log(`Built ${Object.keys(pages).length} municipality country pages`);
+console.log(`Built ${selectedPages.length} municipality country pages`);

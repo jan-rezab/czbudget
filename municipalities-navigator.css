@@ -234,10 +234,39 @@
 .country-context-grid p { max-width: 680px; font-size: 15px; line-height: 1.6; }
 .country-context-grid a { margin-top: auto; color: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 .country-flag { width: 54px; height: 36px; object-fit: cover; border: 1px solid #aeb6ac; margin-bottom: 16px; }
+.municipal-budget-structure { background: #e9ece3; margin-inline: -36px; padding-inline: 36px; }
+.municipal-budget-structure>.section-heading>p { color: #56615b; }
+.municipal-structure-layout { display: grid; grid-template-columns: minmax(260px,.62fr) minmax(0,1.38fr); gap: 1px; border: 1px solid #aeb6ac; background: #aeb6ac; }
+.municipal-structure-summary,.municipal-structure-chart { background: #fffdf7; }
+.municipal-structure-summary { min-height: 530px; padding: 30px; display: flex; flex-direction: column; }
+.municipal-structure-summary>strong { margin-top: 58px; color: #c74c2f; font: 500 clamp(76px,8vw,122px)/.8 Georgia,serif; letter-spacing: -.07em; }
+.municipal-structure-summary h3 { margin: 25px 0 6px; font: 500 clamp(27px,3vw,39px)/1 Georgia,serif; }
+.municipal-structure-summary>p { margin: 0; color: #69716c; font-size: 13px; }
+.municipal-structure-summary dl { margin: auto 0 0; border-top: 1px solid #d8d8d1; }
+.municipal-structure-summary dl div { display: flex; justify-content: space-between; gap: 18px; padding: 12px 0; border-bottom: 1px solid #e1e0da; }
+.municipal-structure-summary dt { color: #69716c; font: 11px monospace; text-transform: uppercase; }
+.municipal-structure-summary dd { margin: 0; font: 700 12px monospace; text-align: right; }
+.municipal-structure-chart { min-width: 0; padding: 30px; }
+.municipal-structure-stack { height: 34px; display: flex; overflow: hidden; border: 1px solid #171918; background: #e7e5dd; }
+.municipal-structure-stack>i { display: block; min-width: 1px; height: 100%; border-right: 1px solid #fffdf780; }
+.municipal-structure-chart ol { margin: 28px 0 0; padding: 0; list-style: none; }
+.municipal-structure-chart li { display: grid; grid-template-columns: minmax(190px,1fr) 70px; gap: 8px 20px; align-items: center; padding: 10px 0; border-top: 1px solid #e1e0da; }
+.municipal-structure-chart li>span { min-width: 0; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
+.municipal-structure-chart li>span i { width: 9px; height: 9px; flex: none; }
+.municipal-structure-chart li>b { font: 700 13px monospace; text-align: right; }
+.municipal-structure-chart li>div { grid-column: 1/-1; height: 5px; background: #e7e5dd; }
+.municipal-structure-chart li>div i { display: block; height: 100%; }
+.municipal-structure-method { display: grid; grid-template-columns: minmax(260px,.62fr) minmax(0,1.38fr); gap: 1px; border: 1px solid #aeb6ac; border-top: 0; background: #aeb6ac; }
+.municipal-structure-method>* { margin: 0; padding: 20px 24px; background: #171918; color: #fff; }
+.municipal-structure-method strong { color: #d9ff69; font: 700 12px/1.5 monospace; text-transform: uppercase; letter-spacing: .05em; }
+.municipal-structure-method p { color: #bac1bc; font-size: 13px; line-height: 1.6; }
+.municipal-structure-method p b { color: #fff; }
 @media (max-width: 1000px) {
   .municipal-controls { grid-template-columns: 1fr 1fr; }
   .czechia-destination-grid { grid-template-columns: 1fr; }
   .country-context-grid { grid-template-columns: 1fr; }
+  .municipal-structure-layout,.municipal-structure-method { grid-template-columns: 1fr; }
+  .municipal-structure-summary { min-height: 390px; }
   .municipal-size-heading { grid-template-columns: 1fr; gap: 22px; }
   .municipal-size-heading p { margin-top: 0; }
   .czechia-municipalities-page #insights .section-heading { grid-template-columns: 1fr; gap: 12px; }
@@ -256,6 +285,9 @@
   .municipal-controls { grid-template-columns: 1fr; }
   .czechia-destination-grid > a { min-height: 280px; }
   .municipality-lang-switch button { min-width: 36px; padding-inline: 8px; }
+  .municipal-budget-structure { margin-inline: -18px; padding-inline: 18px; }
+  .municipal-structure-summary,.municipal-structure-chart { padding: 22px; }
+  .municipal-structure-chart li { grid-template-columns: minmax(0,1fr) 60px; gap-inline: 10px; }
   .czechia-municipalities-page .municipality-size-benchmark { padding: 64px 20px 70px; }
   .czechia-municipalities-page #insights .section-heading { margin-bottom: 34px; }
   .czechia-municipalities-page #insights .insight-grid article { min-height: 190px; }

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 from pathlib import Path
@@ -18,6 +19,17 @@ META = {
     "BRA":{"alpha2":"BR","name_cs":"Brazílie","name_en":"Brazil","currency":"BRL","slug":"brazil","years":[2025],"stages":["enacted","revised","actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všechny obce v adresáři SICONFI; RREO 2025, 6. bimestr, příloha 01","coverage_en":"All municipalities in the SICONFI directory; 2025 period-6 RREO Annex 01","source":"https://apidatalake.tesouro.gov.br/docs/siconfi"},
     "ESP":{"alpha2":"ES","name_cs":"Španělsko","name_en":"Spain","currency":"EUR","slug":"spain","years":[2025,2026],"stages":["enacted","revised","actual","cash"],"measures":["revenue","expenditure","balance"],"coverage_cs":"6 198 vykazujících obcí v CONPREL; schválené rozpočty 2026 a likvidace 2025 s ekonomickými účty","coverage_en":"6,198 reporting municipalities in CONPREL; 2026 adopted budgets and 2025 liquidations with economic accounts","source":"https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel"},
     "JPN":{"alpha2":"JP","name_cs":"Japonsko","name_en":"Japan","currency":"JPY","slug":"japan","years":[2024],"stages":["actual"],"measures":["revenue","expenditure","balance","debt"],"coverage_cs":"Všech 1 741 obcí a tokijských obvodů; 16 tabulek e-Stat pro příjmy, výdaje, dluh, fondy a finance spojené se stárnutím","coverage_en":"All 1,741 municipalities and Tokyo wards; 16 e-Stat tables covering revenue, expenditure, debt, funds and ageing-related finance","source":"https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755"}
+    ,"COL":{"alpha2":"CO","name_cs":"Kolumbie","name_en":"Colombia","currency":"COP","slug":"colombia","years":[2025],"stages":["enacted","revised","actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 1 102 obcí vykazujících v CUIPO; počáteční a konečný plán i skutečnost příjmů a výdajů za rok 2025","coverage_en":"All 1,102 municipalities reporting in CUIPO; initial and definitive plans plus 2025 revenue and expenditure execution","source":"https://www.datos.gov.co/browse?q=OVCF%20CUIPO"}
+    ,"GEO":{"alpha2":"GE","name_cs":"Gruzie","name_en":"Georgia","currency":"GEL","slug":"georgia","years":[2025,2026],"stages":["enacted","actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 69 obcí v sešitech ministerstva financí; skutečnost 2025 a schválený plán 2026, s funkčním detailem výdajů 2025","coverage_en":"All 69 municipalities in Ministry of Finance workbooks; 2025 actuals and the 2026 approved plan, with 2025 functional expenditure detail","source":"https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities"}
+    ,"ITA":{"alpha2":"IT","name_cs":"Itálie","name_en":"Italy","currency":"EUR","slug":"italy","years":[2025],"stages":["cash"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 7 896 italských obcí; hotovostní příjmy a platby SIOPE za rok 2025, seskupené podle původních titulů","coverage_en":"All 7,896 Italian municipalities; 2025 SIOPE cash receipts and payments grouped by native titles","source":"https://www.siope.it/Siope/"}
+    ,"BOL":{"alpha2":"BO","name_cs":"Bolívie","name_en":"Bolivia","currency":"BOB","slug":"bolivia","years":[2025],"stages":["enacted","revised","actual","cash"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 343 aktivních místních vlád: 335 obecních a 8 domorodých autonomií; rozpočet a plnění 2025","coverage_en":"All 343 active local governments: 335 municipal and 8 Indigenous autonomous governments; 2025 budget and execution","source":"https://abierto.economiayfinanzas.gob.bo/descargas"}
+    ,"SLV":{"alpha2":"SV","name_cs":"Salvador","name_en":"El Salvador","currency":"USD","slug":"el-salvador","years":[2023],"stages":["enacted","revised","actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"259 z 262 tehdejších obcí ve výkazech SAFIM za celý rok 2023; tři obce nevykázaly data","coverage_en":"259 of the 262 then-municipalities in full-year 2023 SAFIM returns; three municipalities did not report","source":"https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html"}
+    ,"MEX":{"alpha2":"MX","name_cs":"Mexiko","name_en":"Mexico","currency":"MXN","slug":"mexico","years":[2024],"stages":["actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"2 380 vykazujících obecních vlád v definitivních ročních datech EFIPEM 2024; nejde o úplný census všech obcí","coverage_en":"2,380 reporting municipal governments in definitive 2024 EFIPEM annual data; this is not a complete census of every municipality","source":"https://www.inegi.org.mx/programas/finanzas/"}
+    ,"CRI":{"alpha2":"CR","name_cs":"Kostarika","name_en":"Costa Rica","currency":"CRC","slug":"costa-rica","years":[2025],"stages":["actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 84 současných obcí; přijaté příjmy, výdaje a výsledek vykázané v SIPP za rok 2025","coverage_en":"All 84 current municipalities; 2025 received revenue, spending and result reported in SIPP","source":"https://cgrweb.cgr.go.cr/apex/f?p=150220:2"}
+    ,"GTM":{"alpha2":"GT","name_cs":"Guatemala","name_en":"Guatemala","currency":"GTQ","slug":"guatemala","years":[2025],"stages":["enacted","revised","actual","cash"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 340 obcí v SICOINGL a SICOINDES; rozpočet, úpravy, akruální plnění a hotovost za rok 2025","coverage_en":"All 340 municipalities in SICOINGL and SICOINDES; 2025 budget, revisions, accrual execution and cash","source":"https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025"}
+    ,"PER":{"alpha2":"PE","name_cs":"Peru","name_en":"Peru","currency":"PEN","slug":"peru","years":[2024],"stages":["enacted","revised","actual","cash"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 1 891 místních vlád: 196 provinčních včetně metropolitní Limy a 1 695 okresních; rozpočet a plnění 2024","coverage_en":"All 1,891 local governments: 196 provincial including metropolitan Lima and 1,695 district municipalities; 2024 budget and execution","source":"https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto"}
+    ,"KOR":{"alpha2":"KR","name_cs":"Jižní Korea","name_en":"South Korea","currency":"KRW","slug":"south-korea","years":[2024],"stages":["actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 243 místních vlád v Local Finance 365: 17 vyšších a 226 základních; závěrečné účty 2024 za obecný účet, zvláštní účty a fondy","coverage_en":"All 243 local governments in Local Finance 365: 17 upper-tier and 226 basic governments; 2024 settlements across the general account, special accounts and funds","source":"https://www.lofin365.go.kr/portal/LF5100000.do"}
+    ,"CHL":{"alpha2":"CL","name_cs":"Chile","name_en":"Chile","currency":"CLP","slug":"chile","years":[2025],"stages":["actual"],"measures":["revenue","expenditure","balance"],"coverage_cs":"Všech 345 obcí v SINIM; přijaté příjmy bez počátečního zůstatku hotovosti a akruální výdaje obecního sektoru za rok 2025","coverage_en":"All 345 municipalities in SINIM; 2025 perceived revenue excluding opening cash and accrued expenditure for the municipal sector","source":"https://datos.sinim.gov.cl/evolucion_presupuestaria.php"}
 }
 
 
@@ -45,21 +57,26 @@ def page(profile: dict, info: dict) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--countries", nargs="+", choices=tuple(META), help="Only merge the selected country bundles")
+    args = parser.parse_args()
     payload=json.loads(DATA.read_text(encoding="utf-8"))
     for country in payload["countries"]:
         if country["code"] == "NOR":
             country["coverage_en"] = "All 357 municipalities plus Longyearbyen; 2015–2025 headline accounts and 2025 detail across 97 KOSTRA functions"
             country["coverage_cs"] = "Všech 357 obcí plus Longyearbyen; souhrnné účty 2015–2025 a detail roku 2025 napříč 97 funkcemi KOSTRA"
-    codes=[code for code in META if (BUNDLES/f"{code}.json").exists()]
+    selected=set(args.countries or META)
+    codes=[code for code in META if code in selected and (BUNDLES/f"{code}.json").exists()]
     payload["countries"]=[row for row in payload["countries"] if row["code"] not in codes]
     payload["entities"]=[row for row in payload["entities"] if row["country"] not in codes]
     generated_profiles=[]
     brazil_registry_update=None
+    registry_updates={}
     for code in codes:
         bundle=json.loads((BUNDLES/f"{code}.json").read_text(encoding="utf-8")); info={**META[code]}
         entities=bundle["entities"]
         extra={}
-        status="complete"
+        status=bundle.get("status", "complete")
         if code == "BRA":
             fmt_cs=lambda value:f"{value:,}".replace(","," ")
             regular_count=sum(profile.get("reporting_basis")=="RREO" and any(row.get("year")==2025 for row in profile.get("detail",[])) for profile in entities)
@@ -73,6 +90,12 @@ def main() -> None:
             info["coverage_cs"]=f"Všech {fmt_cs(len(entities))} obcí v adresáři SICONFI; běžné nebo zjednodušené RREO 2025 pro {fmt_cs(rreo_count)}, náhradní DCA I-C/I-D 2024 pro {fmt_cs(dca_count)}, bez obou výkazů {fmt_cs(missing_count)}"
             extra={"rreo_2025_count":rreo_count,"regular_rreo_2025_count":regular_count,"simplified_rreo_2025_count":simplified_count,"dca_2024_fallback_count":dca_count,"missing_finance_count":missing_count}
             brazil_registry_update={"pipeline":"loaded" if missing_count==0 else "loaded_partial","note_en":f"Loaded: {rreo_count:,} municipalities with 2025 regular or simplified RREO, {dca_count:,} with paired 2024 DCA revenue/expenditure fallback, and {missing_count:,} directory entities with no rows in either filing layer.","note_cs":f"Načteno: {fmt_cs(rreo_count)} obcí s běžným nebo zjednodušeným RREO 2025, {fmt_cs(dca_count)} s náhradní dvojicí DCA 2024 pro příjmy a výdaje a {fmt_cs(missing_count)} jednotek adresáře bez řádků v obou vrstvách."}
+        registry_updates[code]=brazil_registry_update if code == "BRA" else {
+            "pipeline":"loaded" if status == "complete" else "loaded_partial",
+            "note_en":f"Loaded into the public municipal directory: {info['coverage_en']}.",
+            "note_cs":f"Načteno do veřejného obecního adresáře: {info['coverage_cs']}.",
+            "source":info["source"],
+        }
         payload["countries"].append({"code":code,**{key:value for key,value in info.items() if key!="slug"},"status":status,"directory_count":len(entities),**extra})
         data_dir=WEB/f"data/municipal-expansion/{code.lower()}"; data_dir.mkdir(parents=True,exist_ok=True)
         for profile in entities:
@@ -85,17 +108,19 @@ def main() -> None:
     payload["entities"].sort(key=lambda row:(row["country"],str(row["name"]).casefold(),row["code"]))
     payload["generated_at"]="2026-08-25"
     DATA.write_text(json.dumps(payload,ensure_ascii=False,separators=(",",":"))+"\n",encoding="utf-8")
-    if brazil_registry_update:
+    if registry_updates:
         registry_path=WEB/"data/municipal-transparency.v1.json"
         registry=json.loads(registry_path.read_text(encoding="utf-8"))
         for country in registry["countries"]:
-            if country["iso3"] == "BRA": country.update(brazil_registry_update)
+            if country["iso3"] in registry_updates: country.update(registry_updates[country["iso3"]])
         registry_path.write_text(json.dumps(registry,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     sitemap=WEB/"sitemap.xml"; source=sitemap.read_text(encoding="utf-8")
-    source=re.sub(
-        r"\s*<url><loc>https://(?:publicspendingdata\.org|czbudget-public-258433468858\.europe-west1\.run\.app)/municipalities/(?:denmark|brazil|spain|japan)/(?:[^<]*)?</loc>(?:<lastmod>[^<]*</lastmod>)?</url>",
-        "", source,
-    )
+    if codes:
+        selected_slugs="|".join(re.escape(META[code]["slug"]) for code in codes)
+        source=re.sub(
+            rf"\s*<url><loc>https://(?:publicspendingdata\.org|czbudget-public-258433468858\.europe-west1\.run\.app)/municipalities/(?:{selected_slugs})/(?:[^<]*)?</loc>(?:<lastmod>[^<]*</lastmod>)?</url>",
+            "", source,
+        )
     additions=[]
     for code in codes: additions.append(f"  <url><loc>{ORIGIN}/municipalities/{META[code]['slug']}/</loc></url>")
     additions.extend(f"  <url><loc>{ORIGIN}{path}</loc></url>" for path in generated_profiles)

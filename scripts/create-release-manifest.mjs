@@ -48,7 +48,7 @@ for (const name of historyFiles) {
 }
 artifacts.push({ path: "data/municipal-history/*.json", files: historyFiles.length, bytes: historyBytes, sha256: historyHash.digest("hex") });
 for (const directory of [
-  "data/municipal-expansion/bra", "data/municipal-expansion/dnk", "data/municipal-expansion/esp", "data/municipal-expansion/jpn",
+  "data/municipal-expansion/bol", "data/municipal-expansion/bra", "data/municipal-expansion/chl", "data/municipal-expansion/col", "data/municipal-expansion/cri", "data/municipal-expansion/dnk", "data/municipal-expansion/esp", "data/municipal-expansion/geo", "data/municipal-expansion/gtm", "data/municipal-expansion/ita", "data/municipal-expansion/jpn", "data/municipal-expansion/kor", "data/municipal-expansion/mex", "data/municipal-expansion/per", "data/municipal-expansion/slv",
   "data/municipal-benchmarks/nld", "data/municipal-benchmarks/nor", "data/municipal-benchmarks/fin",
 ]) {
   const digest = createHash("sha256");

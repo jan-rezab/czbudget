@@ -88,22 +88,26 @@ const internationalMunicipalPage = await readFile("municipalities/index.html", "
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
 const internationalMunicipalScript = await readFile("municipalities.js", "utf8");
 const municipalityCountryScript = await readFile("municipalities-country.js", "utf8");
-const municipalityCountrySlugs = ["poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan"];
+const municipalityCountrySlugs = ["poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan", "colombia", "georgia", "italy", "bolivia", "el-salvador", "mexico", "costa-rica", "guatemala", "peru", "south-korea", "chile"];
 const municipalityCountryPages = await Promise.all(municipalityCountrySlugs.map((slug) => readFile(`municipalities/${slug}/index.html`, "utf8")));
 if (snapshot.municipalities.length !== 6254) throw new Error("Expected 6,254 municipalities");
-if (internationalMunicipalities.countries.length !== 16 || internationalMunicipalities.entities.length !== 90630) throw new Error("Expected sixteen-country municipality directory with 90,630 entity rows");
+if (internationalMunicipalities.countries.length !== 27 || internationalMunicipalities.entities.length !== 105582) throw new Error("Expected 27-country municipality directory with 105,582 entity rows");
 const requiredInternationalItemized = ["POL", "DNK", "UKR", "FRA", "SWE", "GBR", "DEU", "USA", "CHE"];
 if (municipalItemizedCoverage.countries.length !== 16) throw new Error("Expected itemized municipal coverage for sixteen countries");
 for (const code of requiredInternationalItemized) {
   const country = municipalItemizedCoverage.countries.find((row) => row.code === code);
   if (!country || country.profile_count <= 0) throw new Error(`Expected deployed itemized municipal profiles for ${code}`);
 }
-if (dataQuality.counts.published_data_entries !== 372394 || Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== 372394) throw new Error("Expected 372,394 published registry, history, directory and itemized-profile entries");
+if (dataQuality.counts.published_data_entries !== 387346 || Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== 387346) throw new Error("Expected 387,346 published registry, history, directory and itemized-profile entries");
 if (municipalItemizedCoverage.countries.find((country) => country.code === "CZE")?.profile_count !== 6254 || municipalItemizedCoverage.countries.find((country) => country.code === "USA")?.profile_count !== 4 || municipalItemizedCoverage.countries.find((country) => country.code === "DEU")?.status !== "partial") throw new Error("Itemized municipal coverage must preserve full and partial profile-level detail honestly");
 if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.length, 0) !== 1010) throw new Error("Expected 1,010 Nordic and Dutch municipal benchmark profiles");
 for (const [code, expected] of [["DNK",98],["ESP",6198],["JPN",1741]]) {
   const country = internationalMunicipalities.countries.find((item) => item.code === code);
   if (!country || country.status !== "complete" || country.directory_count !== expected || internationalMunicipalities.entities.filter((item) => item.country === code && item.url).length !== expected) throw new Error(`${code}: incomplete municipality directory or profile routes`);
+}
+for (const [code, expected, status] of [["COL",1102,"complete"],["GEO",69,"complete"],["ITA",7896,"complete"],["BOL",343,"complete"],["SLV",259,"partial"],["MEX",2380,"partial"],["CRI",84,"complete"],["GTM",340,"complete"],["PER",1891,"complete"],["KOR",243,"complete"],["CHL",345,"complete"]]) {
+  const country = internationalMunicipalities.countries.find((item) => item.code === code);
+  if (!country || country.status !== status || country.directory_count !== expected || internationalMunicipalities.entities.filter((item) => item.country === code && item.url).length !== expected) throw new Error(`${code}: unexpected municipality count, coverage status or profile routes`);
 }
 const brazilMunicipalities = internationalMunicipalities.countries.find((item) => item.code === "BRA");
 if (!brazilMunicipalities || brazilMunicipalities.status !== "partial" || brazilMunicipalities.directory_count !== 5570 || brazilMunicipalities.rreo_2025_count !== 5513 || brazilMunicipalities.dca_2024_fallback_count !== 44 || brazilMunicipalities.missing_finance_count !== 13 || internationalMunicipalities.entities.filter((item) => item.country === "BRA" && item.url).length !== 5570) throw new Error("Brazil must expose all directory routes and the exact RREO/DCA/missing split");
@@ -161,7 +165,10 @@ for (const [code, modules] of Object.entries(coverageSourceResearch.countries)) 
 if (!methodologyPage.includes("coverage-source-availability") && !methodologyPage.includes("source-availability")) throw new Error("Methodology page must explain source availability separately from PSD coverage");
 if (municipalTransparency.countries.length !== 45 || municipalTransparency.countries.find((country) => country.iso3 === "BRA")?.pipeline !== "loaded_partial") throw new Error("Expected the 45-country municipal transparency atlas with Brazil's exact partial-load status");
 const georgiaTransparency = municipalTransparency.countries.find((country) => country.iso3 === "GEO");
-if (georgiaTransparency?.category !== "full_lifecycle" || georgiaTransparency.pipeline !== "crawling" || Object.values(georgiaTransparency.features).some((value) => value !== true)) throw new Error("Expected Georgia's researched full municipal lifecycle to remain crawl-queued");
+if (georgiaTransparency?.category !== "full_lifecycle" || georgiaTransparency.pipeline !== "loaded" || Object.values(georgiaTransparency.features).some((value) => value !== true)) throw new Error("Expected Georgia's complete municipal lifecycle to be loaded");
+for (const [code, pipeline] of [["COL","loaded"],["GEO","loaded"],["ITA","loaded"],["BOL","loaded"],["SLV","loaded_partial"],["MEX","loaded_partial"],["CRI","loaded"],["GTM","loaded"],["PER","loaded"],["KOR","loaded"],["CHL","loaded"]]) {
+  if (municipalTransparency.countries.find((country) => country.iso3 === code)?.pipeline !== pipeline) throw new Error(`${code}: unexpected municipal transparency pipeline status`);
+}
 if (globalBudgetTransparency.countries.length !== 195 || globalBudgetTransparency.countries.filter((country) => country.national_budget.research_status === "assessed").length !== 125 || globalBudgetTransparency.countries.filter((country) => country.municipal_item_level.research_status === "researched").length !== 45) throw new Error("Expected a 195-state atlas with 125 national assessments and 45 municipal item-level reviews");
 if (globalBudgetTransparency.countries.filter((country) => country.budget_transparency_index?.score !== null).length !== 135 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.country_profile === "loaded").length !== 17 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.ingestion_status === "discovery_crawl_started").length !== 16) throw new Error("Budget Transparency Index must distinguish indexed, PSD-loaded and crawl-started countries");
 if (globalBudgetTransparency.countries.find((country) => country.iso2 === "ge")?.budget_transparency_index?.score !== 100) throw new Error("Georgia's Budget Transparency Index must include its verified municipal lifecycle bonus");

@@ -369,10 +369,10 @@ if (!dataOnly) {
 
   const sitemap = await readFile("sitemap.xml", "utf8");
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/", "/municipalities/brazil/", "/municipalities/spain/", "/municipalities/japan/"];
-  const expansionCodes = new Set(["BRA", "DNK", "ESP", "JPN"]);
+  const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/", "/municipalities/brazil/", "/municipalities/spain/", "/municipalities/japan/", "/municipalities/colombia/", "/municipalities/georgia/", "/municipalities/italy/", "/municipalities/bolivia/", "/municipalities/el-salvador/", "/municipalities/mexico/", "/municipalities/costa-rica/", "/municipalities/guatemala/", "/municipalities/peru/", "/municipalities/south-korea/", "/municipalities/chile/"];
+  const expansionCodes = new Set(["BRA", "DNK", "ESP", "JPN", "COL", "GEO", "ITA", "BOL", "SLV", "MEX", "CRI", "GTM", "PER", "KOR", "CHL"]);
   const expansionProfiles = internationalMunicipalities.entities.filter((entity) => expansionCodes.has(entity.country) && entity.url);
-  const expectedSitemapUrls = municipalities.length + 14 + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 4;
+  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 4;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
   for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
