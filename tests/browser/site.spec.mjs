@@ -20,6 +20,7 @@ const routes = [
   ["health deep dive", "/deep-dives/health/?code=CZE&lang=cs"],
   ["state-owned enterprises deep dive", "/deep-dives/state-owned-enterprises/?lang=cs"],
   ["ageing deep dive", "/deep-dives/ageing/?code=CZE&lang=cs"],
+  ["EU migration deep dive", "/deep-dives/migration/?lang=cs"],
   ["state budget", "/cesky-rozpocet.html?lang=cs"],
   ["municipality", "/cz/municipalities/praha/?lang=cs"],
   ["region", "/cz/kraje/praha/?lang=cs"],

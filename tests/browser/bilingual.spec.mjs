@@ -18,6 +18,7 @@ const previewRoutes = [
   "/deep-dives/ageing/?code=CZE",
   "/deep-dives/capital-cities/?city=prague-cz",
   "/deep-dives/revenue/?code=CZE",
+  "/deep-dives/migration/",
   "/cesky-rozpocet.html",
   "/cesko.html",
   "/cz/municipalities/",

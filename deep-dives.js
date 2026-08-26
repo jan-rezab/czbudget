@@ -27,6 +27,8 @@
   Object.assign(copy.en,{revenue:"Who actually funds the state?",revenueCopy:"The tax mix, government levels, revenue resilience and the path to municipal transfers."});
   Object.assign(copy.cs,{ageing:"Účet stárnutí",ageingCopy:"Oficiální projekce, věková struktura a transparentní demografická kalkulačka bez fiskálních předpovědí.",ageingEyebrow:"Hloubkový profil / Stárnutí",ageingTitle:"Účet stárnutí.",ageingIntro:"Žádná cenovka. Jen oficiální populační projekce a transparentní demografická aritmetika.",projectionStats:"Projekce",calculator:"Kalkulačka"});
   Object.assign(copy.en,{ageing:"The Ageing Bill",ageingCopy:"Official projections, age structure and a transparent demographic calculator without fiscal forecasts.",ageingEyebrow:"Deep dive / Ageing",ageingTitle:"The Ageing Bill.",ageingIntro:"No price tag. Just official population projections and transparent demographic arithmetic.",projectionStats:"Projection",calculator:"Calculator"});
+  Object.assign(copy.cs,{migration:"Evropská migrace",migrationCopy:"Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024.",indexCoverage:"až 27 zemí"});
+  Object.assign(copy.en,{migration:"European migration",migrationCopy:"Immigration, emigration and migration balance across all 27 EU countries from 2000 to 2024.",indexCoverage:"up to 27 countries"});
   const t=copy[lang];
   const name=(code)=>{const row=countries.find(item=>item[0]===code);return row?.[lang==="en"?2:1]??code};
   function translate(){

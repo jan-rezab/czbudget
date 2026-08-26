@@ -113,6 +113,10 @@
       cs: ["Kdo skutečně financuje stát? — Public Spending Data", "Sledujte každých 100 jednotek daňových příjmů od práce, kapitálu, spotřeby a majetku k jednotlivým úrovním vlády."],
       en: ["Who actually funds the state? — Public Spending Data", "Follow every 100 units of tax revenue from income, payroll, consumption and property to each level of government."],
     },
+    "/deep-dives/migration/": {
+      cs: ["Evropská migrace v čase — Public Spending Data", "Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024 podle Eurostatu."],
+      en: ["European migration over time — Public Spending Data", "Immigration, emigration and migration balance across all 27 EU countries from 2000 to 2024, based on Eurostat."],
+    },
     "/cesky-rozpocet.html": {
       cs: ["Public Spending Data — český rozpočet v čase", "Státní rozpočet ČR 2001–2026, tok peněz ve zdravotnictví, benchmark nemocnic, účelové oblasti, kapitoly a demografický tlak do roku 2045."],
       en: ["Public Spending Data — Czech budget over time", "The Czech state budget for 2001–2026, health-system money flows, hospital benchmarks, spending purposes, budget chapters and demographic pressure to 2045."],

@@ -34,6 +34,8 @@ Potom otevřete <http://localhost:3000/>.
 - `cesky-rozpocet.html` a `cesko.html` — připravené české tematické vrstvy
 - `lib/data/sovereign-benchmark.v1.json` — harmonizované fiskální řady
 - `data/catalog.v1.json` — katalog národních zdrojů a rozpočtových specifik
+- `deep-dives/migration/` — přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024
+- `data/eu-migration.v1.json` — auditovatelná časová řada Eurostatu; obnovuje ji `npm run build:eu-migration`
 
 Volba jazyka se přenáší v URL parametru `lang` a ukládá do `localStorage`.
 Nové texty mají být přidávány do slovníků `I` a `T`, nikoli natvrdo do

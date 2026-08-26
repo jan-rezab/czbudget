@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <script src="/language-bootstrap.js?v=20260826-migration"></script>
+  <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Evropská migrace v čase — Public Spending Data</title>
+  <meta name="description" content="Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024 podle Eurostatu.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/migration/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/migration/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/migration/?lang=en">
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../styles.css?v=20260822-section-rail">
+  <link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives">
+  <link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter">
+  <link rel="stylesheet" href="../../migration-deep-dive.css?v=20260826-eu27">
+  <script src="../../deep-dives.js?v=20260824-sticky-filter" defer></script>
+  <script src="../../migration-deep-dive.js?v=20260826-eu27" defer></script>
+  <script src="../../global-nav.js?v=20260826-migration" defer></script>
+</head>
+<body class="deep-dives-page migration-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <section class="migration-hero" id="overview">
+      <div class="migration-hero-copy">
+        <span class="eyebrow" data-migration-copy="eyebrow">Hloubkový profil / EU-27</span>
+        <h1><span data-migration-copy="titleLead">Evropa</span> <em data-migration-copy="titleEm">v pohybu.</em></h1>
+        <p data-migration-copy="intro">Přistěhování, vystěhování a výsledné saldo všech 27 členských států v jedné srovnatelné časové řadě.</p>
+        <a href="#map" data-migration-copy="heroCta">Otevřít migrační mapu ↓</a>
+      </div>
+      <aside class="migration-ledger" aria-label="Datový přehled">
+        <span data-migration-copy="dataset">Nejnovější úplný součet EU</span>
+        <strong id="hero-year">2024</strong>
+        <dl>
+          <div><dt data-migration-copy="arrivals">Přistěhování</dt><dd id="hero-immigration">—</dd></div>
+          <div><dt data-migration-copy="departures">Vystěhování</dt><dd id="hero-emigration">—</dd></div>
+          <div><dt data-migration-copy="balance">Saldo</dt><dd id="hero-net">—</dd></div>
+          <div><dt data-migration-copy="coverage">Pokrytí</dt><dd>27 / 27</dd></div>
+        </dl>
+        <small data-migration-copy="heroNote">Počet migračních událostí; předběžné a odhadované hodnoty zůstávají označené.</small>
+      </aside>
+    </section>
+
+    <nav class="deep-topic-rail migration-rail" aria-label="Migration sections" data-sticky-filter="#migration-country" data-sticky-filter-kind="country">
+      <a href="#map" data-migration-copy="navMap">Mapa</a>
+      <a href="#trend" data-migration-copy="navTrend">Vývoj</a>
+      <a href="#ranking" data-migration-copy="navRanking">Srovnání</a>
+      <a href="#atlas" data-migration-copy="navAtlas">Atlas zemí</a>
+      <a href="#method" data-migration-copy="navMethod">Metodika</a>
+    </nav>
+
+    <section class="migration-definition-strip" aria-label="Definitions">
+      <article><b data-migration-copy="arrivalLabel">PŘISTĚHOVÁNÍ</b><p data-migration-copy="arrivalDefinition">Nové obvyklé bydliště alespoň na 12 měsíců.</p></article>
+      <article><b data-migration-copy="departureLabel">VYSTĚHOVÁNÍ</b><p data-migration-copy="departureDefinition">Ukončení obvyklého bydliště alespoň na 12 měsíců.</p></article>
+      <article><b data-migration-copy="netLabel">SALDO</b><p data-migration-copy="netDefinition">Přistěhování minus vystěhování; ne totéž co statisticky dopočtená čistá migrace.</p></article>
+    </section>
+
+    <section class="migration-section migration-map-section" id="map">
+      <div class="migration-heading"><div><span class="kicker" data-migration-copy="mapKicker">01 / Signaturní pohled</span><h2 data-migration-copy="mapTitle">Jedna Evropa. Velmi rozdílná intenzita.</h2></div><p data-migration-copy="mapIntro">Mapa přepočítává migrační toky na 1 000 obyvatel, aby malé a velké státy šlo číst na stejné stupnici.</p></div>
+      <div class="migration-controls">
+        <label><span data-migration-copy="year">Rok</span><output id="migration-year-output" for="migration-year">2024</output><input id="migration-year" type="range" min="2000" max="2024" value="2024" step="1"></label>
+        <fieldset><legend data-migration-copy="metric">Ukazatel</legend><button type="button" data-map-metric="immigration" data-migration-copy="arrivals">Přistěhování</button><button type="button" data-map-metric="emigration" data-migration-copy="departures">Vystěhování</button><button type="button" class="active" data-map-metric="net" data-migration-copy="balance">Saldo</button></fieldset>
+      </div>
+      <div class="migration-map-layout">
+        <figure class="migration-map-figure"><div id="migration-map" aria-live="polite"></div><figcaption><span id="map-scale-low">—</span><i></i><span id="map-scale-high">—</span><small data-migration-copy="perThousand">na 1 000 obyvatel</small></figcaption><p class="migration-source" data-migration-copy="mapSource">Zdroj: Eurostat migr_imm8, migr_emi2 a demo_gind.</p></figure>
+        <aside class="migration-map-readout" id="migration-map-readout" aria-live="polite"></aside>
+      </div>
+    </section>
+
+    <section class="migration-section migration-trend-section" id="trend">
+      <div class="migration-heading"><div><span class="kicker" data-migration-copy="trendKicker">02 / Vývoj v čase</span><h2 data-migration-copy="trendTitle">Příchody a odchody, ne jen výsledné číslo.</h2></div><p data-migration-copy="trendIntro">Stejné saldo může vzniknout z malých i velmi velkých protisměrných toků. Proto zobrazujeme obě strany vedle výsledku.</p></div>
+      <div class="migration-trend-controls">
+        <label><span data-migration-copy="country">Země</span><select id="migration-country"></select></label>
+        <fieldset><legend data-migration-copy="unit">Jednotka</legend><button type="button" class="active" data-unit="absolute" data-migration-copy="people">Osoby</button><button type="button" data-unit="rate" data-migration-copy="perThousand">Na 1 000 obyvatel</button></fieldset>
+      </div>
+      <figure class="migration-line-figure">
+        <div class="migration-legend"><span><i class="immigration"></i><b data-migration-copy="arrivals">Přistěhování</b></span><span><i class="emigration"></i><b data-migration-copy="departures">Vystěhování</b></span><span><i class="net"></i><b data-migration-copy="balance">Saldo</b></span></div>
+        <div id="migration-line-chart"></div>
+        <div id="migration-line-detail" class="migration-line-detail" aria-live="polite"></div>
+        <p class="migration-source" data-migration-copy="trendSource">Roční migrační události. Mezery znamenají chybějící data, nikoli nulu.</p>
+      </figure>
+    </section>
+
+    <section class="migration-section migration-ranking-section" id="ranking">
+      <div class="migration-heading"><div><span class="kicker" data-migration-copy="rankingKicker">03 / Srovnání zemí</span><h2 data-migration-copy="rankingTitle">Měřítko a intenzita vyprávějí jiný příběh.</h2></div><p data-migration-copy="rankingIntro">Přepínač odděluje absolutní počet lidí od intenzity vzhledem k velikosti populace.</p></div>
+      <div class="ranking-toolbar"><fieldset><legend data-migration-copy="rankingMeasure">Zobrazení</legend><button type="button" class="active" data-ranking-unit="rate" data-migration-copy="perThousand">Na 1 000 obyvatel</button><button type="button" data-ranking-unit="absolute" data-migration-copy="people">Osoby</button></fieldset><p id="ranking-coverage"></p></div>
+      <div id="migration-ranking" class="migration-ranking"></div>
+    </section>
+
+    <section class="migration-section migration-atlas-section" id="atlas">
+      <div class="migration-heading"><div><span class="kicker" data-migration-copy="atlasKicker">04 / Atlas EU-27</span><h2 data-migration-copy="atlasTitle">Všechny země. Stejný rok. Stejná definice.</h2></div><p data-migration-copy="atlasIntro">Tabulka používá rok zvolený na mapě a přiznává chybějící nebo označené hodnoty.</p></div>
+      <div class="migration-table-wrap" tabindex="0" role="region" aria-label="EU migration table"><table><thead><tr><th data-migration-copy="country">Země</th><th data-migration-copy="arrivals">Přistěhování</th><th data-migration-copy="departures">Vystěhování</th><th data-migration-copy="balance">Saldo</th><th data-migration-copy="netRate">Saldo / 1 000</th><th data-migration-copy="quality">Kvalita</th></tr></thead><tbody id="migration-table-body"></tbody></table></div>
+    </section>
+
+    <section class="migration-section migration-method-section" id="method">
+      <div class="migration-heading"><div><span class="kicker" data-migration-copy="methodKicker">05 / Jak data číst</span><h2 data-migration-copy="methodTitle">Tok lidí, ne počet migrantů.</h2></div><p data-migration-copy="methodIntro">Jedna osoba může během delšího období vytvořit více migračních událostí. Čísla neříkají státní občanství, důvod přesunu ani právní status.</p></div>
+      <div class="migration-method-grid">
+        <article><b>01</b><h3 data-migration-copy="methodFlowTitle">Událost</h3><p data-migration-copy="methodFlow">Roční počet přistěhování a vystěhování podle obvyklého bydliště a dvanáctiměsíčního pravidla.</p></article>
+        <article><b>02</b><h3 data-migration-copy="methodAggregateTitle">Součet EU</h3><p data-migration-copy="methodAggregate">Pohyb mezi dvěma státy EU vstupuje do přistěhování jedné země a vystěhování druhé. Součet není počet překročení vnější hranice.</p></article>
+        <article><b>03</b><h3 data-migration-copy="methodRateTitle">Intenzita</h3><p data-migration-copy="methodRate">Sazba dělí tok průměrnou roční populací z demo_gind a násobí jej 1 000.</p></article>
+        <article><b>04</b><h3 data-migration-copy="methodQualityTitle">Revize</h3><p data-migration-copy="methodQuality">Eurostat označuje zlomy, odhady, předběžná čísla a hodnoty s metodickou poznámkou. Zdroj se může revidovat.</p></article>
+      </div>
+      <div class="migration-source-links"><a id="source-immigration" target="_blank" rel="noreferrer" data-migration-copy="openImmigration">Otevřít přistěhování v Eurostatu ↗</a><a id="source-emigration" target="_blank" rel="noreferrer" data-migration-copy="openEmigration">Otevřít vystěhování v Eurostatu ↗</a><a id="source-metadata" target="_blank" rel="noreferrer" data-migration-copy="openMetadata">Metodika Eurostatu ↗</a></div>
+    </section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small data-migration-copy="footer">European migration · Eurostat</small></div><a href="#top">↑</a></footer>
+  <noscript>This page needs JavaScript to load the EU migration dataset.</noscript>
+</body>
+</html>
