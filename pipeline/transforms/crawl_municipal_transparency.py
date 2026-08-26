@@ -10,11 +10,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urljoin
 
 import requests
 
@@ -139,6 +141,38 @@ def colombia_probe(session: requests.Session, output: Path) -> dict[str, Any]:
     }
 
 
+def georgia_probe(session: requests.Session, output: Path) -> dict[str, Any]:
+    """Verify Georgia's national municipal XLSX publication, not only its landing page."""
+    base = "https://www.mof.ge"
+    budget_list_url = f"{base}/ka/FileList/List?page=1&id=79"
+    functional_list_url = f"{base}/ka/FileList/List?page=1&id=82"
+    budget_html = get(session, budget_list_url).text
+    functional_html = get(session, functional_list_url).text
+
+    href_pattern = re.compile(r'href="([^"]+\.xlsx/[^"]+)"')
+    budget_links = list(dict.fromkeys(html.unescape(link) for link in href_pattern.findall(budget_html)))
+    functional_links = list(dict.fromkeys(html.unescape(link) for link in href_pattern.findall(functional_html)))
+    if not budget_links or not functional_links:
+        raise ValueError("Georgia Ministry of Finance XLSX catalogue returned no downloadable workbooks")
+
+    tbilisi_link = next((link for link in budget_links if "%E1%83%97%E1%83%91%E1%83%98%E1%83%9A%E1%83%98%E1%83%A1%E1%83%98" in link), budget_links[0])
+    functional_2025_link = next((link for link in functional_links if "2025" in link), functional_links[0])
+    samples = []
+    for filename, link in (("tbilisi-current-budget.xlsx", tbilisi_link), ("municipal-functional-2025.xlsx", functional_2025_link)):
+        source = urljoin(base, link)
+        response = get(session, source)
+        item = save(output / "GEO" / filename, response.content)
+        item.update({"source": source, "content_type": response.headers.get("content-type")})
+        samples.append(item)
+    return {
+        "status": "sampled",
+        "source": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
+        "municipal_budget_workbooks": len(budget_links),
+        "functional_workbooks": len(functional_links),
+        "samples": samples,
+    }
+
+
 def landing_probe(session: requests.Session, output: Path, country: str, url: str) -> dict[str, Any]:
     response = get(session, url)
     item = save(output / country / "official-source.html", response.content)
@@ -159,6 +193,7 @@ def main() -> None:
         "NOR": lambda: norway_probe(session, args.output),
         "BRA": lambda: brazil_probe(session, args.output),
         "COL": lambda: colombia_probe(session, args.output),
+        "GEO": lambda: georgia_probe(session, args.output),
         "ESP": lambda: landing_probe(session, args.output, "ESP", "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel"),
         "JPN": lambda: landing_probe(session, args.output, "JPN", "https://www.e-stat.go.jp/stat-search/files?cycle=7&layout=datalist&month=0&tclass1=000001077756&tclass2=000001077757&toukei=00200251&tstat=000001077755&year=20250"),
         "KOR": lambda: landing_probe(session, args.output, "KOR", "https://www.lofin365.go.kr/portal/LF5110000.do"),

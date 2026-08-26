@@ -40,6 +40,23 @@
     "fidelity_target": "Load every verified published layer 1:1, retaining native classifications, budget stages, entity scope and explicit missingness.",
     "countries": [
       {
+        "iso3": "GEO",
+        "name_en": "Georgia",
+        "name_cs": "Gruzie",
+        "budget_transparency_index": 100,
+        "verified_features": [
+          "enacted",
+          "revised",
+          "execution",
+          "actual",
+          "function",
+          "economic",
+          "api"
+        ],
+        "source": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
+        "status": "discovery_crawl_started"
+      },
+      {
         "iso3": "NZL",
         "name_en": "New Zealand",
         "name_cs": "Nový Zéland",
@@ -3608,7 +3625,7 @@
     },
     {
       "iso2": "ge",
-      "iso3": null,
+      "iso3": "GEO",
       "name_en": "Georgia",
       "name_cs": "Gruzie",
       "national_budget": {
@@ -3618,46 +3635,46 @@
         "survey": "OBS 2023"
       },
       "budget_transparency_index": {
-        "score": 87,
+        "score": 100,
         "band": "excellent",
         "obs_component": 87,
-        "municipal_score": null,
-        "municipal_bonus": null,
-        "evidence_status": "national_only",
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "portal_readiness": {
-        "score": 87,
+        "score": 100,
         "band": "excellent",
         "obs_component": 87,
-        "municipal_score": null,
-        "municipal_bonus": null,
-        "evidence_status": "national_only",
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
         "country_profile": "not_loaded",
         "loaded_modules": 0,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
-        "target": null
+        "ingestion_status": "discovery_crawl_started",
+        "target": "Match every verified published layer and retain native classifications, stages and missingness."
       },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "full_lifecycle",
+        "pipeline": "crawling",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": true,
+          "revised": true,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": true
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
+        "note_en": "The Ministry of Finance publishes bulk XLSX files for the municipal universe with approved/current plans, historical and in-year actuals, economic categories and a separate detailed functional-classification workbook. Files link to versioned municipal budget acts on Matsne; no public query API was found, but bulk download is available.",
+        "note_cs": "Ministerstvo financí zveřejňuje hromadné soubory XLSX za soubor obcí se schválenými/aktuálními plány, historickou i meziroční skutečností, ekonomickým členěním a samostatným detailním sešitem funkční klasifikace. Soubory odkazují na verzované obecní rozpočtové akty v Matsne; veřejné dotazovací API nebylo nalezeno, ale hromadné stažení je dostupné."
       }
     },
     {
