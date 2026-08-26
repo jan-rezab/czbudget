@@ -30,8 +30,26 @@
 .footer-formalities a { text-decoration: underline; text-underline-offset: 3px; }
 .footer-hlidac {
   display: block;
+  position: relative;
   width: 152px;
   line-height: 0;
+}
+/* Hover easter egg: a kroužek over the u makes it "Hlídač států". */
+.footer-hlidac-krouzek {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+.footer-hlidac:hover .footer-hlidac-krouzek,
+.footer-hlidac:focus-visible .footer-hlidac-krouzek {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-hlidac-krouzek { transition: none; }
 }
 .footer-hlidac img {
   display: block;
