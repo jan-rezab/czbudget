@@ -3,11 +3,12 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 const read = async path => JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"));
-const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, municipalHistory, publicEntityCoverage, publicEntityDirectory, publicEntityAggregates, demography] = await Promise.all([
+const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, municipalHistory, publicEntityCoverage, publicEntityDirectory, publicEntityAggregates, demography, itemizedCoverage, internationalWarehouse, municipalSourceConfig] = await Promise.all([
   read("data/country-parity.v1.json"), read("lib/data/sovereign-benchmark.v1.json"), read("data/country-cash-in.v1.json"),
   read("data/country-spending-2025-2026.v1.json"), read("data/country-spending-comparison.v1.json"), read("data/country-functional-budgets.v1.json"),
   read("data/transport-budget-detail.v1.json"), read("data/country-health.v1.json"), read("data/country-provider-networks.v1.json"),
-  read("data/international-municipalities.v1.json"), read("data/municipal-history-directory.v1.json"), read("data/public-entity-coverage.v1.json"), read("data/public-entity-directory/manifest.v1.json"), read("data/public-entity-aggregates.v1.json"), read("data/country-demography.v1.json")
+  read("data/international-municipalities.v1.json"), read("data/municipal-history-directory.v1.json"), read("data/public-entity-coverage.v1.json"), read("data/public-entity-directory/manifest.v1.json"), read("data/public-entity-aggregates.v1.json"), read("data/country-demography.v1.json"),
+  read("data/municipal-itemized-coverage.v1.json"), read("data/international-itemized-warehouse.v1.json"), read("pipeline/config/international_municipal_sources.json")
 ]);
 
 const moduleMeta = {
@@ -20,8 +21,9 @@ const moduleMeta = {
   health:{order:7,cs:"Zdravotnictví",en:"Healthcare",artifact:"data/country-health.v1.json"},
   providers:{order:8,cs:"Síť poskytovatelů",en:"Provider network",artifact:"data/country-provider-networks.v1.json"},
   municipalities:{order:9,cs:"Obecní finance",en:"Municipal finance",artifact:"data/international-municipalities.v1.json"},
-  public_entities:{order:10,cs:"Veřejné subjekty",en:"Public entities",artifact:"data/public-entity-coverage.v1.json"},
-  demography:{order:11,cs:"Demografie",en:"Demography",artifact:"data/country-demography.v1.json"}
+  municipal_itemized:{order:10,cs:"Položkové rozpočty obcí",en:"Itemized municipal budgets",artifact:"data/municipal-itemized-coverage.v1.json"},
+  public_entities:{order:11,cs:"Veřejné subjekty",en:"Public entities",artifact:"data/public-entity-coverage.v1.json"},
+  demography:{order:12,cs:"Demografie",en:"Demography",artifact:"data/country-demography.v1.json"}
 };
 const alpha2 = {CZE:"CZ",UKR:"UA",POL:"PL",DEU:"DE",GBR:"UK",FRA:"FR",USA:"US",CHE:"CH",SWE:"SE",DNK:"DK",FIN:"FI",NLD:"NL",NOR:"NO",BRA:"BR",ESP:"ES",JPN:"JP"};
 const source = (title,url,location="") => ({title,url,location});
@@ -142,6 +144,39 @@ for(const municipal of municipalities.countries.filter(country=>!parityCodes.has
   });
 }
 
+// Itemized budgets are a distinct published layer. Keep their warehouse
+// provenance separate from the directory/headline municipality module so the
+// methodology never implies that a national directory is itself line-item
+// coverage.
+const warehouseByCode=new Map(internationalWarehouse.countries.map(country=>[country.code,country]));
+const municipalNames=new Map(municipalities.countries.map(country=>[country.code,country]));
+for(const itemized of itemizedCoverage.countries){
+  const municipal=municipalNames.get(itemized.code),warehouse=warehouseByCode.get(itemized.code),configured=municipalSourceConfig.countries[itemized.code];
+  const configuredSources=(configured?.sources||[]).map((item,index)=>source(
+    index===0&&itemized.source_title?itemized.source_title:item.id,
+    item.url,
+    [item.id,item.dataset&&`Socrata ${item.dataset}`,item.table&&`table ${item.table}`,item.filename].filter(Boolean).join(" · ")
+  ));
+  const sources=cleanSources(configuredSources.length?configuredSources:[source(itemized.source_title,itemized.source_url,"published profile adapter documented by the itemized coverage contract")]);
+  const stages=(itemized.stages||warehouse?.stages||[]).join(", ")||"source-native stages listed in the profile data";
+  const factCounts=warehouse
+    ? `${warehouse.line_fact_count.toLocaleString("en-US")} line facts${warehouse.balance_fact_count?` plus ${warehouse.balance_fact_count.toLocaleString("en-US")} balance-sheet facts`:""}`
+    : "profile-level native item rows in the published benchmark/expansion artifacts";
+  rows.push({
+    country_code:itemized.code,country_name_cs:municipal.name_cs,country_name_en:municipal.name_en,flag:alpha2[itemized.code],
+    module:"municipal_itemized",module_order:moduleMeta.municipal_itemized.order,module_label_cs:moduleMeta.municipal_itemized.cs,module_label_en:moduleMeta.municipal_itemized.en,
+    status:itemized.status,
+    artifact:warehouse?"data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts":"data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+    coverage:`${itemized.profile_count.toLocaleString("en-US")} of ${itemized.municipal_scope.toLocaleString("en-US")} municipal profiles; ${itemized.detail_kind_en}`,
+    period:itemized.period,scope:`Stages: ${stages}. ${factCounts}.`,sources,
+    exact_extraction:sources.map(item=>item.location).filter(Boolean).join(" · "),
+    transformation:warehouse
+      ? `pipeline/transforms/prepare_international_municipal_data.py → ${configured?.adapter||"official-source adapter"} → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.`
+      : "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+    limitations:itemized.note
+  });
+}
+
 rows.sort((a,b)=>a.module_order-b.module_order||a.country_code.localeCompare(b.country_code));
 const payload={
   schema_version:"1.0.0",contract:"methodology-sources.v1",generated_at:new Date().toISOString(),row_count:rows.length,
@@ -151,7 +186,8 @@ const payload={
   rows
 };
 
-if(rows.length!==parity.country_count*Object.keys(moduleMeta).length+municipalities.countries.filter(country=>!parityCodes.has(country.code)).length) throw new Error(`Unexpected lineage row count: ${rows.length}`);
+const expectedRows=parity.country_count*(Object.keys(moduleMeta).length-1)+municipalities.countries.filter(country=>!parityCodes.has(country.code)).length+itemizedCoverage.countries.length;
+if(rows.length!==expectedRows) throw new Error(`Unexpected lineage row count: ${rows.length}; expected ${expectedRows}`);
 for(const row of rows) if(!row.sources.length||row.sources.some(item=>!item.url)||!row.exact_extraction) throw new Error(`${row.country_code}/${row.module}: incomplete lineage`);
 await writeFile(new URL("../data/methodology-sources.v1.json",import.meta.url),`${JSON.stringify(payload,null,2)}\n`);
 console.log(`Wrote ${rows.length} methodology lineage rows`);

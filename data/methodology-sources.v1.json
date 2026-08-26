@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-25T22:44:10.718Z",
-  "row_count": 166,
+  "generated_at": "2026-08-26T08:04:51.913Z",
+  "row_count": 182,
   "countries": [
     {
       "code": "CZE",
@@ -141,16 +141,22 @@
       "order": 9
     },
     {
+      "id": "municipal_itemized",
+      "label_cs": "Položkové rozpočty obcí",
+      "label_en": "Itemized municipal budgets",
+      "order": 10
+    },
+    {
       "id": "public_entities",
       "label_cs": "Veřejné subjekty",
       "label_en": "Public entities",
-      "order": 10
+      "order": 11
     },
     {
       "id": "demography",
       "label_cs": "Demografie",
       "label_en": "Demography",
-      "order": 11
+      "order": 12
     }
   ],
   "status_definitions": {
@@ -3879,8 +3885,483 @@
       "country_name_cs": "Brazílie",
       "country_name_en": "Brazil",
       "flag": "BR",
-      "module": "public_entities",
+      "module": "municipal_itemized",
       "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "partial",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "5,557 of 5,570 municipal profiles; native RREO or DCA budget-execution items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Brazil municipal source",
+          "url": "https://apidatalake.tesouro.gov.br/docs/siconfi",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "13 directory entities have no rows in either the 2025 RREO or 2024 DCA fallback layer."
+    },
+    {
+      "country_code": "CHE",
+      "country_name_cs": "Švýcarsko",
+      "country_name_en": "Switzerland",
+      "flag": "CH",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "partial",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "79 of 2,121 municipal profiles; Lucerne HRM2 functional and account budget items",
+      "period": "2026",
+      "scope": "Stages: enacted. 59,978 line facts.",
+      "sources": [
+        {
+          "title": "LUSTAT · Lucerne municipality budgets",
+          "url": "https://www.data.lustat.ch/gefis-lu-bg.csv",
+          "location": "ch-lustat-lucerne-municipal-budgets · gefis-lu-bg.csv"
+        }
+      ],
+      "exact_extraction": "ch-lustat-lucerne-municipal-budgets · gefis-lu-bg.csv",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → switzerland_lucerne → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "This is complete for the 79 Lucerne municipalities in the official cantonal file, not nationwide Swiss coverage."
+    },
+    {
+      "country_code": "CZE",
+      "country_name_cs": "Česko",
+      "country_name_en": "Czechia",
+      "flag": "CZ",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "6,254 of 6,254 municipal profiles; economic and functional line items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Monitor · FIN 2-12 M",
+          "url": "https://monitor.statnipokladna.gov.cz/",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Economic and functional breakdowns for enacted, revised and actual stages are merged into every published Czech municipal profile during the production build."
+    },
+    {
+      "country_code": "DEU",
+      "country_name_cs": "Německo",
+      "country_name_en": "Germany",
+      "flag": "DE",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "partial",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "1 of 10,756 municipal profiles; Bremen product-group and kameral budget-position items",
+      "period": "2026–2027",
+      "scope": "Stages: enacted. 4,861 line facts.",
+      "sources": [
+        {
+          "title": "Bremen Transparency Portal · Stadtgemeinde budget",
+          "url": "https://www.finanzen.bremen.de/sixcms/media.php/bremen02.a.13.de/download/Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv",
+          "location": "de-bremen-city-budget-2026-2027 · Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv"
+        }
+      ],
+      "exact_extraction": "de-bremen-city-budget-2026-2027 · Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → germany_bremen → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "This is a verified one-city scatter for the Stadtgemeinde Bremen, not nationwide German municipal coverage."
+    },
+    {
+      "country_code": "DNK",
+      "country_name_cs": "Dánsko",
+      "country_name_en": "Denmark",
+      "flag": "DK",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "98 of 98 municipal profiles; native BUDK100 and REGK100 account items",
+      "period": "2024–2025",
+      "scope": "Stages: actual, enacted. 303,760 line facts.",
+      "sources": [
+        {
+          "title": "Statistics Denmark · StatBank",
+          "url": "https://api.statbank.dk/v1/data",
+          "location": "dk-statbank-budk100 · table BUDK100"
+        }
+      ],
+      "exact_extraction": "dk-statbank-budk100 · table BUDK100",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → denmark_statbank → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+    },
+    {
+      "country_code": "ESP",
+      "country_name_cs": "Španělsko",
+      "country_name_en": "Spain",
+      "flag": "ES",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "6,198 of 6,198 municipal profiles; native CONPREL budget and liquidation items",
+      "period": "2026",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Spain municipal source",
+          "url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "FIN",
+      "country_name_cs": "Finsko",
+      "country_name_en": "Finland",
+      "flag": "FI",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "310 of 310 municipal profiles; native financial-statement measures",
+      "period": "2020",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Finland municipal source",
+          "url": "https://pxdata.stat.fi/PxWeb/pxweb/en/Kuntien_talous_ja_toiminta/",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Each counted profile publishes its native itemized accounting breakdown."
+    },
+    {
+      "country_code": "FRA",
+      "country_name_cs": "Francie",
+      "country_name_en": "France",
+      "flag": "FR",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "35,041 of 35,041 municipal profiles; DGFiP itemized actual accounts and balance-sheet items",
+      "period": "2024–2025",
+      "scope": "Stages: actual. 10,438,699 line facts plus 14,147,797 balance-sheet facts.",
+      "sources": [
+        {
+          "title": "French Ministry of Economy · DGFiP commune accounts",
+          "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-communes-en-2024/attachments/balance_commune_2024_dec2025_zip",
+          "location": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip"
+        },
+        {
+          "title": "fr-dgfip-balances-fonction-2024",
+          "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2024/attachments/balancespl_fonction_2024_dec2025_zip",
+          "location": "fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip"
+        },
+        {
+          "title": "fr-dgfip-commune-balances-2025",
+          "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-communes-en-2025/attachments/balance_commune_2025_juil2026zip",
+          "location": "fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip"
+        },
+        {
+          "title": "fr-dgfip-balances-fonction-2025",
+          "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2025/attachments/balancespl_fonction_2025_juil2026zip",
+          "location": "fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip"
+        }
+      ],
+      "exact_extraction": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip · fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip · fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip · fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → france_dgfip → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+    },
+    {
+      "country_code": "GBR",
+      "country_name_cs": "Anglie",
+      "country_name_en": "England",
+      "flag": "UK",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "partial",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "318 of 318 municipal profiles; England local-authority revenue-outturn items",
+      "period": "2024–2025",
+      "scope": "Stages: actual. 494,568 line facts.",
+      "sources": [
+        {
+          "title": "UK Ministry of Housing, Communities and Local Government",
+          "url": "https://assets.publishing.service.gov.uk/media/6a7ada920a700895e2d7a07b/Revenue_Outturn_time_series_data_v3.2.csv",
+          "location": "gb-england-revenue-outturn-timeseries · Revenue_Outturn_time_series_data_v3.2.csv"
+        }
+      ],
+      "exact_extraction": "gb-england-revenue-outturn-timeseries · Revenue_Outturn_time_series_data_v3.2.csv",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → england_mhclg → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "The warehouse currently covers all 318 England authorities in this directory; Scotland, Wales and Northern Ireland are not yet included."
+    },
+    {
+      "country_code": "JPN",
+      "country_name_cs": "Japonsko",
+      "country_name_en": "Japan",
+      "flag": "JP",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "1,741 of 1,741 municipal profiles; native Local Public Finance Survey items",
+      "period": "2024",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Japan municipal source",
+          "url": "https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "NLD",
+      "country_name_cs": "Nizozemsko",
+      "country_name_en": "Netherlands",
+      "flag": "NL",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "342 of 342 municipal profiles; native Iv3 task fields",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Netherlands municipal source",
+          "url": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Each counted profile publishes its native itemized accounting breakdown."
+    },
+    {
+      "country_code": "NOR",
+      "country_name_cs": "Norsko",
+      "country_name_en": "Norway",
+      "flag": "NO",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "358 of 358 municipal profiles; native KOSTRA measures",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Norway municipal source",
+          "url": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Each counted profile publishes its native itemized accounting breakdown."
+    },
+    {
+      "country_code": "POL",
+      "country_name_cs": "Polsko",
+      "country_name_en": "Poland",
+      "flag": "PL",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "2,486 of 2,486 municipal profiles; native Rb-27S and Rb-28S budget-reporting items",
+      "period": "2024–2025",
+      "scope": "Stages: actual, revised. 6,033,974 line facts.",
+      "sources": [
+        {
+          "title": "Polish Ministry of Finance · local-government budget reports",
+          "url": "https://www.gov.pl/attachment/35c6e527-a44e-4f8e-9e24-5a8823758e27",
+          "location": "pl-mf-rb27s-2024q4 · Rb27S_2024Q4.zip"
+        },
+        {
+          "title": "pl-mf-rb28s-2024q4",
+          "url": "https://www.gov.pl/attachment/7e9fe5f6-d9f2-4eae-b8bc-bc59e80965d5",
+          "location": "pl-mf-rb28s-2024q4 · Rb28S_2024Q4.zip"
+        },
+        {
+          "title": "pl-mf-jst-dictionary-2024",
+          "url": "https://www.gov.pl/attachment/499730a3-c35f-4d6a-9fde-993b607cd466",
+          "location": "pl-mf-jst-dictionary-2024 · Slownik_JST_2024.xlsx"
+        },
+        {
+          "title": "pl-mf-rb27s-2025q4",
+          "url": "https://www.gov.pl/attachment/f98752f2-176a-4be1-910f-8aca6ffd9044",
+          "location": "pl-mf-rb27s-2025q4 · Rb27S_2025Q4.zip"
+        },
+        {
+          "title": "pl-mf-rb28s-2025q4",
+          "url": "https://www.gov.pl/attachment/1eb59fb5-ab95-4f0d-8d62-4ef07c1a9910",
+          "location": "pl-mf-rb28s-2025q4 · Rb28S_2025Q4.zip"
+        },
+        {
+          "title": "pl-mf-jst-dictionary-2025",
+          "url": "https://www.gov.pl/attachment/737c9fd5-8f45-4424-8f8d-9fd5a2e656fe",
+          "location": "pl-mf-jst-dictionary-2025 · Slownik_JST_2025.xlsx"
+        }
+      ],
+      "exact_extraction": "pl-mf-rb27s-2024q4 · Rb27S_2024Q4.zip · pl-mf-rb28s-2024q4 · Rb28S_2024Q4.zip · pl-mf-jst-dictionary-2024 · Slownik_JST_2024.xlsx · pl-mf-rb27s-2025q4 · Rb27S_2025Q4.zip · pl-mf-rb28s-2025q4 · Rb28S_2025Q4.zip · pl-mf-jst-dictionary-2025 · Slownik_JST_2025.xlsx",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → poland_dbf → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+    },
+    {
+      "country_code": "SWE",
+      "country_name_cs": "Švédsko",
+      "country_name_en": "Sweden",
+      "flag": "SE",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "290 of 290 municipal profiles; SCB municipal cost, income and balance-sheet measures",
+      "period": "2024–2025",
+      "scope": "Stages: actual. 43,892 line facts plus 31,365 balance-sheet facts.",
+      "sources": [
+        {
+          "title": "Statistics Sweden · municipal finances",
+          "url": "https://api.scb.se/OV0104/v1/doris/en/ssd/OE/OE0107/OE0107A/VerksKostn",
+          "location": "se-scb-municipal-costs · table VerksKostn"
+        },
+        {
+          "title": "se-scb-municipal-income",
+          "url": "https://api.scb.se/OV0104/v1/doris/en/ssd/OE/OE0107/OE0107A/VerksInt",
+          "location": "se-scb-municipal-income · table VerksInt"
+        },
+        {
+          "title": "se-scb-municipal-balance",
+          "url": "https://api.scb.se/OV0104/v1/doris/en/ssd/OE/OE0107/OE0107A/BalansKnN",
+          "location": "se-scb-municipal-balance · table BalansKnN"
+        }
+      ],
+      "exact_extraction": "se-scb-municipal-costs · table VerksKostn · se-scb-municipal-income · table VerksInt · se-scb-municipal-balance · table BalansKnN",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → sweden_pxweb → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+    },
+    {
+      "country_code": "UKR",
+      "country_name_cs": "Ukrajina",
+      "country_name_en": "Ukraine",
+      "flag": "UA",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "full",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "1,467 of 1,467 municipal profiles; territorial-community revenue and expenditure classification items",
+      "period": "2024–2025",
+      "scope": "Stages: actual, enacted, revised. 4,120,319 line facts.",
+      "sources": [
+        {
+          "title": "Open Budget Ukraine · localBudgetData",
+          "url": "https://api.openbudget.gov.ua/items/BUDG?dateFrom=2024-01-01",
+          "location": "ua-openbudget-budget-directory-2024 · local_budget_directory_2024.json"
+        },
+        {
+          "title": "ua-openbudget-expenses-2024",
+          "url": "https://api.openbudget.gov.ua/api/public/localBudgetData",
+          "location": "ua-openbudget-expenses-2024"
+        },
+        {
+          "title": "ua-openbudget-budget-directory-2025",
+          "url": "https://api.openbudget.gov.ua/items/BUDG?dateFrom=2025-01-01",
+          "location": "ua-openbudget-budget-directory-2025 · local_budget_directory_2025.json"
+        }
+      ],
+      "exact_extraction": "ua-openbudget-budget-directory-2024 · local_budget_directory_2024.json · ua-openbudget-expenses-2024 · ua-openbudget-budget-directory-2025 · local_budget_directory_2025.json",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → ukraine_openbudget_public_api → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+    },
+    {
+      "country_code": "USA",
+      "country_name_cs": "Spojené státy",
+      "country_name_en": "United States",
+      "flag": "US",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Položkové rozpočty obcí",
+      "module_label_en": "Itemized municipal budgets",
+      "status": "partial",
+      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "4 of 19,401 municipal profiles; official city appropriation, agency, program and account items",
+      "period": "2026–2028",
+      "scope": "Stages: actual, enacted, proposal, revised. 47,142 line facts.",
+      "sources": [
+        {
+          "title": "NYC, Chicago, Los Angeles and San Francisco open-data portals",
+          "url": "https://data.cityofnewyork.us/resource/39g5-gbp3.json",
+          "location": "us-nyc-expense-budget · Socrata 39g5-gbp3"
+        },
+        {
+          "title": "us-chicago-budget-ordinance",
+          "url": "https://data.cityofchicago.org/resource/6694-f78c.json",
+          "location": "us-chicago-budget-ordinance · Socrata 6694-f78c"
+        },
+        {
+          "title": "us-la-budget-expenditures",
+          "url": "https://controllerdata.lacity.org/resource/uyzw-yi8n.json",
+          "location": "us-la-budget-expenditures · Socrata uyzw-yi8n"
+        },
+        {
+          "title": "us-sf-budget",
+          "url": "https://data.sfgov.org/resource/xdgd-c79v.json",
+          "location": "us-sf-budget · Socrata xdgd-c79v"
+        }
+      ],
+      "exact_extraction": "us-nyc-expense-budget · Socrata 39g5-gbp3 · us-chicago-budget-ordinance · Socrata 6694-f78c · us-la-budget-expenditures · Socrata uyzw-yi8n · us-sf-budget · Socrata xdgd-c79v",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → us_socrata_cities → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "This is a verified four-city scatter, not nationwide municipal coverage."
+    },
+    {
+      "country_code": "BRA",
+      "country_name_cs": "Brazílie",
+      "country_name_en": "Brazil",
+      "flag": "BR",
+      "module": "public_entities",
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -3905,7 +4386,7 @@
       "country_name_en": "Switzerland",
       "flag": "CH",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -3935,7 +4416,7 @@
       "country_name_en": "Czechia",
       "flag": "CZ",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "full",
@@ -3960,7 +4441,7 @@
       "country_name_en": "Germany",
       "flag": "DE",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -3990,7 +4471,7 @@
       "country_name_en": "Denmark",
       "flag": "DK",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4020,7 +4501,7 @@
       "country_name_en": "Spain",
       "flag": "ES",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4045,7 +4526,7 @@
       "country_name_en": "France",
       "flag": "FR",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4080,7 +4561,7 @@
       "country_name_en": "United Kingdom",
       "flag": "UK",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "full",
@@ -4110,7 +4591,7 @@
       "country_name_en": "Japan",
       "flag": "JP",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4135,7 +4616,7 @@
       "country_name_en": "Netherlands",
       "flag": "NL",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4160,7 +4641,7 @@
       "country_name_en": "Norway",
       "flag": "NO",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4185,7 +4666,7 @@
       "country_name_en": "Poland",
       "flag": "PL",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4210,7 +4691,7 @@
       "country_name_en": "Sweden",
       "flag": "SE",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4240,7 +4721,7 @@
       "country_name_en": "Ukraine",
       "flag": "UA",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "partial",
@@ -4265,7 +4746,7 @@
       "country_name_en": "United States",
       "flag": "US",
       "module": "public_entities",
-      "module_order": 10,
+      "module_order": 11,
       "module_label_cs": "Veřejné subjekty",
       "module_label_en": "Public entities",
       "status": "full",
@@ -4295,7 +4776,7 @@
       "country_name_en": "Brazil",
       "flag": "BR",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4320,7 +4801,7 @@
       "country_name_en": "Switzerland",
       "flag": "CH",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4345,7 +4826,7 @@
       "country_name_en": "Czechia",
       "flag": "CZ",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4370,7 +4851,7 @@
       "country_name_en": "Germany",
       "flag": "DE",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4395,7 +4876,7 @@
       "country_name_en": "Denmark",
       "flag": "DK",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4420,7 +4901,7 @@
       "country_name_en": "Spain",
       "flag": "ES",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4445,7 +4926,7 @@
       "country_name_en": "France",
       "flag": "FR",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4470,7 +4951,7 @@
       "country_name_en": "United Kingdom",
       "flag": "UK",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4495,7 +4976,7 @@
       "country_name_en": "Japan",
       "flag": "JP",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4520,7 +5001,7 @@
       "country_name_en": "Netherlands",
       "flag": "NL",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4545,7 +5026,7 @@
       "country_name_en": "Norway",
       "flag": "NO",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4570,7 +5051,7 @@
       "country_name_en": "Poland",
       "flag": "PL",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4595,7 +5076,7 @@
       "country_name_en": "Sweden",
       "flag": "SE",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4620,7 +5101,7 @@
       "country_name_en": "Ukraine",
       "flag": "UA",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
@@ -4645,7 +5126,7 @@
       "country_name_en": "United States",
       "flag": "US",
       "module": "demography",
-      "module_order": 11,
+      "module_order": 12,
       "module_label_cs": "Demografie",
       "module_label_en": "Demography",
       "status": "full",
