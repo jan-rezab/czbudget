@@ -77,7 +77,7 @@ function lineage(code,module) {
     return {period:`${functions.period.start}–${functions.period.end}`,scope:functions.countries[code].scope,sources:selected.map(item=>source(item.title,item.url||item.download_url,item.api_url||item.download_url||"dataset/table named in title")),transform:"Load COFOG/GF function observations, preserve the source sector and unit, and join nominal GDP only for the displayed share.",caveat:code==="UKR"?"Ukraine uses national functional execution rather than OECD COFOG.":code==="USA"?"The U.S. series uses OMB federal functions, not consolidated general government.":"OECD revisions and break flags are retained."};
   }
   if(module==="transport") return {
-    period:String(transportProfile.latest_year),scope:transportProfile.coverage,
+    period:transportProfile.latest_year ? String(transportProfile.latest_year) : "Source registry only",scope:transportProfile.coverage,
     sources:cleanSources([source("Eurostat · General government expenditure by function",transport.sources[0].url,"gov_10a_exp → GF04.5 Transport → TE/MIO_EUR, sector S13"),...(transportProfile.public_data?.sources||[]).map(item=>source(item.title,item.url,"national bridge/cross-check named in the source"))]),
     transform:"Select COFOG transport and economic transaction rows; keep national detail and government-level bridges separate.",
     caveat:transportProfile.public_data?.note_en||"National detail may use a different accounting perimeter."

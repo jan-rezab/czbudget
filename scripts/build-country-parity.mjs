@@ -153,7 +153,7 @@ for (const code of countryCodes) {
     administrative_spending: { ...status(Boolean(admin), admin ? `${admin.rows.length} native classification rows; ${admin.periods.previous.label} and ${admin.periods.current.label}` : "not loaded"), row_count: admin?.rows.length || 0 },
     common_spending: { ...status(Boolean(common), common ? `${comparison.categories.length} harmonised categories` : "not loaded"), category_count: common ? comparison.categories.length : 0 },
     functional_spending: { ...status(Boolean(functionProfile), functionProfile ? `${Object.keys(functionProfile.categories).length} functions; ${functions.period.start}–${functions.period.end}` : "not loaded"), function_count: Object.keys(functionProfile?.categories || {}).length },
-    transport: { ...status(Boolean(transportProfile), transportProfile ? "transport function and native detailed budget" : "not loaded") },
+    transport: { ...status(Boolean(transportProfile), transportProfile ? (transportProfile.coverage === "available" ? `transport function and native detailed budget through ${transportProfile.latest_year}` : "official transport sources registered; harmonised detailed budget not loaded") : "not loaded", transportProfile?.coverage === "unavailable" ? ["harmonised transport budget", "government-level transport breakdown"] : []) },
     health: { ...status(Boolean(healthProfile), healthProfile ? `SHA financing profile; ${healthProfile.year}` : "functional expenditure only", healthProfile?.missing_dimensions || (healthProfile ? [] : ["SHA financing and provider split"])) },
     providers: { ...status(providerLoaded, providerLoaded ? `${provider.facility_count ?? "official bulk"} registered provider locations` : provider?.coverage || "not loaded", providerLoaded ? (provider.missing_dimensions || []) : ["facility records"]), facility_count: provider?.facility_count ?? null, coverage_level: provider?.coverage || null },
     municipalities: { ...status(Boolean(municipal), municipal?.coverage_en || "not loaded", municipal?.missing_dimensions || (municipal ? [] : ["entity census", "budget facts"])), entity_count: municipal?.directory_count || 0, fact_count: municipal?.counts?.[municipal?.years?.at(-1)] ?? 0, years: municipal?.years || [], stages: municipal?.stages || [], measures: municipal?.measures || [], coverage_level: municipal?.status || null, directory: municipal ? `data/countries/${countrySlug(code)}/municipalities.v1.json` : null, warehouse: warehouseVolume(code) },
@@ -204,7 +204,7 @@ for (const code of countryCodes) {
   }
 }
 
-if (manifest.countries.length !== 15) throw new Error(`Expected 15 countries, received ${manifest.countries.length}`);
+if (manifest.countries.length !== 16) throw new Error(`Expected 16 countries, received ${manifest.countries.length}`);
 const establishedDeepDiveCountries = new Set(["CZE","DEU","DNK","FRA","GBR","POL","SWE","CHE","UKR","USA"]);
 for (const country of manifest.countries) {
   if (country.modules.sovereign.metric_count !== 15) throw new Error(`${country.country_code}: expected 15 sovereign metrics`);

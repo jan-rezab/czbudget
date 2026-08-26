@@ -231,6 +231,7 @@ def usa():
 
 
 EUROSTAT_NATIVE = {
+    "FIN": ["Yleinen julkishallinto", "Puolustus", "Yleinen järjestys ja turvallisuus", "Elinkeinoelämän edistäminen", "Ympäristönsuojelu", "Asuminen ja yhdyskunnat", "Terveydenhuolto", "Vapaa-aika, kulttuuri ja uskonto", "Koulutus", "Sosiaaliturva"],
     "ESP": ["Servicios públicos generales", "Defensa", "Orden público y seguridad", "Asuntos económicos", "Protección del medio ambiente", "Vivienda y servicios comunitarios", "Salud", "Actividades recreativas, cultura y religión", "Educación", "Protección social"],
     "NLD": ["Algemeen overheidsbestuur", "Defensie", "Openbare orde en veiligheid", "Economische aangelegenheden", "Milieubescherming", "Huisvesting en gemeenschapsvoorzieningen", "Volksgezondheid", "Recreatie, cultuur en religie", "Onderwijs", "Sociale bescherming"],
     "NOR": ["Alminnelig offentlig tjenesteyting", "Forsvar", "Offentlig orden og trygghet", "Næringsøkonomiske formål", "Miljøvern", "Boliger og nærmiljø", "Helse", "Fritid, kultur og religion", "Utdanning", "Sosial beskyttelse"],
@@ -266,7 +267,7 @@ def eurostat_cofog(code, geo):
             wanted.update({"freq":"A", "unit":"MIO_NAC", "sector":"S13", "na_item":"TE", "geo":geo, "cofog":cofog, "time":year})
             values.append(_jsonstat_value(payload, wanted) / 1000)
         rows.append(row(cofog, EUROSTAT_NATIVE[code][i - 1], *values))
-    currency = {"ESP":"EUR", "NLD":"EUR", "NOR":"NOK"}[code]
+    currency = {"FIN":"EUR", "ESP":"EUR", "NLD":"EUR", "NOR":"NOK"}[code]
     return country(code, currency, "functional", "Výdaje vládních institucí podle COFOG", "General-government expenditure by COFOG",
         {"label":"2023", "status_cs":"skutečnost", "status_en":"actual"}, {"label":"2024", "status_cs":"skutečnost", "status_en":"actual"}, rows,
         [{"title":"Eurostat — General government expenditure by function (gov_10a_exp)", "url":"https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table"}],
@@ -295,7 +296,7 @@ def japan():
 
 
 def main():
-    countries=[czechia(),germany(),denmark(),france(),britain(),poland(),sweden(),switzerland(),ukraine(),usa(),brazil(),eurostat_cofog("ESP","ES"),japan(),eurostat_cofog("NLD","NL"),eurostat_cofog("NOR","NO")]
+    countries=[czechia(),germany(),denmark(),eurostat_cofog("FIN","FI"),france(),britain(),poland(),sweden(),switzerland(),ukraine(),usa(),brazil(),eurostat_cofog("ESP","ES"),japan(),eurostat_cofog("NLD","NL"),eurostat_cofog("NOR","NO")]
     payload={
       "schema_version":"1.0.0","generated_at":"2026-08-26",
       "methodology_cs":"Každý profil srovnává dvě období ve stejném národním členění. Rozsahy mezi státy nejsou účetně totožné.",

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-25T22:41:29.129Z",
-  "coverage": "Fourteen OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
+  "generated_at": "2026-08-26T08:07:55.785Z",
+  "coverage": "Fifteen OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
   "methodology": {
     "cs": "Podíly jsou běžné výdaje na zdravotnictví podle System of Health Accounts 2011. Benchmark na lůžko je odhad: výdaje na obyvatele × podíl nemocnic ÷ lůžka na obyvatele. Nejde o účetní výnos konkrétní nemocnice ani žebříček kvality.",
     "en": "Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."
@@ -241,6 +241,32 @@
       "bed_year": 2024,
       "bed_status": "not_available"
     },
+    "FIN": {
+      "currency": "EUR",
+      "architecture_cs": "Daňově financovaný systém organizují samosprávné kraje blahobytu; stát je financuje a řídí, zatímco obce odpovídají zejména za podporu zdraví a prevence.",
+      "architecture_en": "The tax-funded system is organised by self-governing wellbeing services counties; central government funds and steers them, while municipalities mainly retain health-promotion and prevention duties.",
+      "official_title": "Ministry of Social Affairs and Health · health and social services",
+      "official_url": "https://stm.fi/en/social-and-health-services",
+      "year": 2024,
+      "health_gdp_pct": 10.693,
+      "per_capita_ppp": 5466.746,
+      "per_capita_local": 5251.341,
+      "financing": {
+        "public_compulsory": 80.289,
+        "out_of_pocket": 14.634,
+        "voluntary_other": 5.077
+      },
+      "providers": {
+        "hospitals": 32.476,
+        "residential_ltc": 17.946,
+        "ambulatory": 32.049,
+        "retailers": 13.428,
+        "other": 4.101
+      },
+      "beds_per_1000": 2.48,
+      "bed_year": 2024,
+      "bed_status": "E"
+    },
     "BRA": {
       "currency": "BRL",
       "architecture_cs": "Jednotný zdravotní systém SUS je daňově financovaný a sdílí odpovědnost mezi federací, státy a obcemi; soukromé pojištění tvoří paralelní doplňkovou vrstvu.",
@@ -383,15 +409,15 @@
     }
   ],
   "api_queries": {
-    "public_compulsory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH.HF1._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "out_of_pocket": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH.HF3._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "hospitals": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP1._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "residential_ltc": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP2._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "ambulatory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP3._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "retailers": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP5._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "gdp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_B1GQ._T._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
-    "per_capita_ppp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.USD_PPP_PS._T._Z._T._T._T._Z._Z.Q?startPeriod=2024&endPeriod=2024",
-    "per_capita_local": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.XDC_PS._T._Z._T._T._T._Z._Z.V?startPeriod=2024&endPeriod=2024",
-    "beds": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_HEALTH_REAC_HOSP@DF_BEDS_FUNC,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+BRA+ESP+JPN+NLD+NOR..10P3HB...._T..?startPeriod=2022&endPeriod=2024"
+    "public_compulsory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH.HF1._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "out_of_pocket": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH.HF3._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "hospitals": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP1._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "residential_ltc": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP2._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "ambulatory": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP3._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "retailers": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_EXP_HLTH._T._Z._T._T.HP5._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "gdp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.PT_B1GQ._T._Z._T._T._T._Z._Z._Z?startPeriod=2024&endPeriod=2024",
+    "per_capita_ppp": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.USD_PPP_PS._T._Z._T._T._T._Z._Z.Q?startPeriod=2024&endPeriod=2024",
+    "per_capita_local": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR.A.EXP_HEALTH.XDC_PS._T._Z._T._T._T._Z._Z.V?startPeriod=2024&endPeriod=2024",
+    "beds": "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_HEALTH_REAC_HOSP@DF_BEDS_FUNC,1.1/CZE+DEU+FRA+POL+GBR+USA+CHE+SWE+DNK+FIN+BRA+ESP+JPN+NLD+NOR..10P3HB...._T..?startPeriod=2022&endPeriod=2024"
   }
 }

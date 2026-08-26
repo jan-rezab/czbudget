@@ -92,7 +92,7 @@ for (const code of requiredInternationalItemized) {
   const country = municipalItemizedCoverage.countries.find((row) => row.code === code);
   if (!country || country.profile_count <= 0) throw new Error(`Expected deployed itemized municipal profiles for ${code}`);
 }
-if (dataQuality.counts.published_data_entries !== 332708 || Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== 332708) throw new Error("Expected 332,708 published registry, history, directory and itemized-profile entries");
+if (dataQuality.counts.published_data_entries !== 372394 || Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== 372394) throw new Error("Expected 372,394 published registry, history, directory and itemized-profile entries");
 if (municipalItemizedCoverage.countries.find((country) => country.code === "CZE")?.profile_count !== 6254 || municipalItemizedCoverage.countries.find((country) => country.code === "USA")?.profile_count !== 4 || municipalItemizedCoverage.countries.find((country) => country.code === "DEU")?.status !== "partial") throw new Error("Itemized municipal coverage must preserve full and partial profile-level detail honestly");
 if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.length, 0) !== 1010) throw new Error("Expected 1,010 Nordic and Dutch municipal benchmark profiles");
 for (const [code, expected] of [["DNK",98],["ESP",6198],["JPN",1741]]) {
@@ -119,16 +119,16 @@ if (capitals.cities.length !== 28 || capitals.cities.filter((city) => city.eu_ca
 if (capitals.cities.some((city) => !Number.isFinite(city.budget?.local_amount) || !Number.isFinite(city.budget?.eur_amount) || !city.benchmarks?.population || !city.benchmarks?.tourism)) throw new Error("Incomplete European capitals facts");
 if (capitals.cities.some((city) => !city.fiscal_details?.expenditure || !city.fiscal_details?.balance_classification || !Array.isArray(city.fiscal_details?.components))) throw new Error("Incomplete European capital fiscal details");
 if (capitals.cities.filter((city) => city.fiscal_details.balance).length < 20) throw new Error("Expected at least twenty sourced capital-city balances");
-if (categoryComparison.countries.length !== 15 || categoryComparison.categories.length !== 12) throw new Error("Expected fifteen countries and twelve common spending categories");
-if (Object.keys(functionalBudgets.countries).length !== 14) throw new Error("Expected fourteen sourced functional-budget profiles");
-if (Object.keys(countryHealth.countries).length !== 14 || !countryHealth.countries.JPN) throw new Error("Expected fourteen OECD health-system profiles including Japan");
-if (Object.keys(countryHealthPerformance.countries).length !== 15 || !countryHealthPerformance.countries.UKR) throw new Error("Expected fifteen health-performance profiles including Ukraine");
+if (categoryComparison.countries.length !== 16 || categoryComparison.categories.length !== 12) throw new Error("Expected sixteen countries and twelve common spending categories");
+if (Object.keys(functionalBudgets.countries).length !== 15) throw new Error("Expected fifteen sourced functional-budget profiles");
+if (Object.keys(countryHealth.countries).length !== 15 || !countryHealth.countries.FIN || !countryHealth.countries.JPN) throw new Error("Expected fifteen OECD health-system profiles including Finland and Japan");
+if (Object.keys(countryHealthPerformance.countries).length !== 16 || !countryHealthPerformance.countries.UKR) throw new Error("Expected sixteen health-performance profiles including Ukraine");
 for (const [code, country] of Object.entries(countryHealthPerformance.countries)) {
   for (const metric of [country.spending?.per_capita_ppp, country.workforce?.physicians_per_1000, country.workforce?.nurses_per_1000, country.capacity?.beds_per_1000, country.outcomes?.life_expectancy_years, country.outcomes?.premature_ncd_mortality_pct]) {
     if (!Number.isFinite(metric?.value) || !Number.isInteger(metric?.year)) throw new Error(`${code}: incomplete core health-performance metric`);
   }
 }
-if (Object.values(countryHealthPerformance.countries).filter((country) => Number.isFinite(country.outcomes?.treatable_mortality_per_100k?.value)).length !== 14) throw new Error("Expected fourteen-country OECD treatable-mortality coverage");
+if (Object.values(countryHealthPerformance.countries).filter((country) => Number.isFinite(country.outcomes?.treatable_mortality_per_100k?.value)).length !== 15) throw new Error("Expected fifteen-country OECD treatable-mortality coverage");
 if (dataQuality.status !== "passed" || dataQuality.failures.length || dataQuality.counts.municipalities !== 6254) throw new Error("Expected a passing, machine-readable release quality report");
 if (publicEntityHistory.summary.financial_rows !== 1043 || publicEntityHistory.entities.length < 100 || publicEntityHistory.entities.some((entity) => !entity.series.length)) throw new Error("Expected Czech public-entity financial history with all available annual statements");
 if (!methodologyPage.includes('id="data-health-root"')) throw new Error("Methodology page must surface release health");
@@ -136,15 +136,15 @@ if (!countryPage.includes('id="health-performance"') || !countryPage.includes("c
 if (!czechHistoryScript.includes('view="overview"') || !czechHistoryScript.includes('view==="execution"') || !czechHistoryScript.includes('view==="structure"') || !czechHistoryScript.includes('expense_per_capita')) throw new Error("Municipal profiles must surface execution, structure and per-capita history views");
 if (!czechEnterprisePage.includes('id="public-entity-history-root"') || !czechEnterpriseScript.includes("renderPublicHistory")) throw new Error("Czech public-entity profiles must surface annual financial histories");
 if (norwayBenchmarkProfile.breakdown_kind !== "native_measures" || norwayBenchmarkProfile.breakdown.length < 70 || finlandBenchmarkProfile.breakdown_kind !== "native_measures" || finlandBenchmarkProfile.breakdown.length < 150 || netherlandsBenchmarkProfile.breakdown.length < 30) throw new Error("European benchmark profiles must expose complete latest native accounting detail");
-if (countryParity.contract !== "country-parity.v1" || countryParity.countries.length !== 15) throw new Error("Expected the fifteen-country parity contract");
+if (countryParity.contract !== "country-parity.v1" || countryParity.countries.length !== 16) throw new Error("Expected the sixteen-country parity contract");
 if (countryParity.countries.some((country) => country.modules.sovereign.status !== "loaded" || country.modules.administrative_spending.status !== "loaded" || country.modules.common_spending.status !== "loaded" || country.modules.revenue.status !== "loaded" || country.modules.demography.status !== "loaded")) throw new Error("Every country must load the core national fiscal and demographic modules");
 if (countryParity.countries.some((country) => country.coverage.total_modules !== 11)) throw new Error("Expected all eleven dashboard module slots for every country");
-if (countryParity.countries.filter((country) => country.modules.municipalities.status === "loaded").length !== 15) throw new Error("Expected fifteen loaded municipal censuses");
-if (administrativeSpending.countries.length !== 15 || administrativeSpending.countries.flatMap((country) => country.rows).length !== 428 || administrativeSpending.countries.some((country) => country.rows.some((row) => !row.label_native || !row.label_en))) throw new Error("Every national budget row must retain its native label and an English translation");
-if (Object.keys(countryDemography.countries).length !== 15 || Object.values(countryDemography.countries).reduce((sum, country) => sum + country.detail_row_count, 0) !== 121907) throw new Error("Expected complete fifteen-country annual age-by-sex demographic projections");
+if (countryParity.countries.filter((country) => country.modules.municipalities.status === "loaded").length !== 16) throw new Error("Expected sixteen loaded municipal censuses");
+if (administrativeSpending.countries.length !== 16 || administrativeSpending.countries.flatMap((country) => country.rows).length !== 438 || administrativeSpending.countries.some((country) => country.rows.some((row) => !row.label_native || !row.label_en))) throw new Error("Every national budget row must retain its native label and an English translation");
+if (Object.keys(countryDemography.countries).length !== 16 || Object.values(countryDemography.countries).reduce((sum, country) => sum + country.detail_row_count, 0) !== 129886) throw new Error("Expected complete sixteen-country annual age-by-sex demographic projections");
 if (Object.keys(publicEntityCoverage.countries).length !== 10 || publicEntityDirectory.total_record_count !== 121199 || publicEntityDirectory.countries.length !== 10 || publicEntityAggregates.observations.length < 350) throw new Error("Expected the complete ten-country public-entity registry, coverage contract and economic observations");
 if (publicEntityDirectory.countries.some((country) => !country.file || !Number.isFinite(country.record_count)) || Object.values(publicEntityCoverage.countries).some((country) => !country.registry_file || !country.sources.length)) throw new Error("Every public-entity country must expose a registry file and source lineage");
-if (methodologySources.row_count !== 182 || methodologySources.countries.length !== 16 || methodologySources.modules.length !== 12 || methodologySources.rows.filter((row) => row.module === "municipal_itemized").length !== 16) throw new Error("Expected the complete sovereign, municipal and itemized-budget source ledger");
+if (methodologySources.row_count !== 192 || methodologySources.countries.length !== 16 || methodologySources.modules.length !== 12 || methodologySources.rows.filter((row) => row.module === "municipal_itemized").length !== 16) throw new Error("Expected the complete sovereign, municipal and itemized-budget source ledger");
 if (coverageSourceResearch.contract !== "coverage-source-research.v1" || Object.keys(coverageSourceResearch.countries).length !== 6) throw new Error("Expected source-availability research for all six municipal-only country profiles");
 for (const [code, modules] of Object.entries(coverageSourceResearch.countries)) {
   for (const module of ["fiscal", "health", "geo", "transport"]) {
@@ -159,16 +159,16 @@ if (roadNetworks.countries.length !== 10 || !roadNetworks.construction_history_s
 for (const country of roadNetworks.countries) {
   if (!country.road_network?.series?.length || !country.motorways?.series?.length || country.motorways.series.some((point) => !Number.isFinite(point.km))) throw new Error(`${country.code}: incomplete road or motorway history`);
 }
-if (transportPerformance.schema_version !== "1.0.0" || Object.keys(transportPerformance.countries).length !== 10) throw new Error("Expected ten-country transport performance data");
+if (transportPerformance.schema_version !== "1.0.0" || Object.keys(transportPerformance.countries).length !== 16) throw new Error("Expected sixteen-country transport performance data");
 if (transportPerformance.projects.length < 2 || transportPerformance.projects.some((project) => !project.source?.url || !Number.isFinite(project.cost_per_route_km_local_million))) throw new Error("Transport project costs require sourced, calculable records");
 for (const [code, country] of Object.entries(transportPerformance.countries)) {
   if (!country.condition_and_repairs?.sources?.length) throw new Error(`${code}: transport condition/repair sources are missing`);
   if (!["CZE", "DEU", "DNK", "FRA", "GBR", "POL", "SWE", "CHE"].includes(code)) continue;
   if (!country.rail.network.length || !country.infrastructure_spending.road.investment_constant_eur.length) throw new Error(`${code}: expected official rail and road-investment series`);
 }
-if (Object.keys(countryCashIn.countries).length !== 15 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for fifteen countries and Czech territorial/company cash-in layers");
+if (Object.keys(countryCashIn.countries).length !== 16 || !countryCashIn.countries.CZE.layers?.municipalities?.revenue_local_bn || !countryCashIn.countries.CZE.layers?.companies?.turnover_local_bn) throw new Error("Expected consolidated revenue for sixteen countries and Czech territorial/company cash-in layers");
 if (countryCashIn.countries.CZE.layers.municipalities.entity_count !== 6254 || countryCashIn.countries.CZE.layers.companies.entity_count !== 38) throw new Error("Unexpected Czech municipality or state-company cash-in coverage");
-if (countryRevenue.contract !== "country-revenue.v1" || Object.keys(countryRevenue.countries).length !== 15 || countryRevenue.sources.length !== 3) throw new Error("Expected a fifteen-country revenue contract with three primary source pipelines");
+if (countryRevenue.contract !== "country-revenue.v1" || Object.keys(countryRevenue.countries).length !== 16 || countryRevenue.sources.length !== 3) throw new Error("Expected a sixteen-country revenue contract with three primary source pipelines");
 for (const [code, profile] of Object.entries(countryRevenue.countries)) {
   const taxMixTotal = Object.values(profile.tax_mix).reduce((sum, value) => sum + value, 0);
   const governmentLevelTotal = Object.values(profile.government_levels).filter(Number.isFinite).reduce((sum, value) => sum + value, 0);

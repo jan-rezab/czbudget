@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-25T22:43:58.477Z",
+  "generated_at": "2026-08-26T08:10:12.394Z",
   "country": {
     "country_code": "BRA",
     "name_cs": "Brazílie",
@@ -28,7 +28,7 @@
     }
   },
   "coverage": {
-    "loaded_modules": 7,
+    "loaded_modules": 8,
     "total_modules": 11,
     "missing_dimensions": [
       "provider_register",
@@ -72,9 +72,12 @@
       "function_count": 0
     },
     "transport": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": []
+      "status": "loaded",
+      "coverage": "official transport sources registered; harmonised detailed budget not loaded",
+      "missing_dimensions": [
+        "harmonised transport budget",
+        "government-level transport breakdown"
+      ]
     },
     "health": {
       "status": "loaded",
@@ -2107,7 +2110,32 @@
       ]
     },
     "functional_spending": null,
-    "transport": null,
+    "transport": {
+      "name_cs": "Brazílie",
+      "name_en": "Brazil",
+      "currency": "BRL",
+      "coverage": "unavailable",
+      "reason_cs": "Eurostat COFOG II tuto zemi nepokrývá.",
+      "reason_en": "Eurostat COFOG II does not cover this country.",
+      "public_data": {
+        "detail_status": "fragmented",
+        "level_status": "fragmented",
+        "note_cs": "Oficiální federální, státní a obecní zdroje existují, ale jednotná časová řada dopravy podle ekonomického druhu není v jednom strojově čitelném souboru.",
+        "note_en": "Official federal, state and municipal sources exist, but a single machine-readable transport series by economic type is not available in one file.",
+        "next_step_cs": "Spojit COFOG Tesouro Nacional s výdaji Ministerstva dopravy a regulátorů bez dvojího započtení transferů.",
+        "next_step_en": "Join Treasury COFOG with Ministry of Transport and regulator spending without double-counting transfers.",
+        "sources": [
+          {
+            "title": "Tesouro Nacional · harmonised fiscal statistics",
+            "url": "https://www.gov.br/tesouronacional/en/fiscal-policy/harmonized-fiscal-statistics"
+          },
+          {
+            "title": "ANTT · strategic data panels",
+            "url": "https://www.gov.br/antt/pt-br/assuntos/informacoes-estrategicas/paineis_interativos"
+          }
+        ]
+      }
+    },
     "health": {
       "currency": "BRL",
       "architecture_cs": "Jednotný zdravotní systém SUS je daňově financovaný a sdílí odpovědnost mezi federací, státy a obcemi; soukromé pojištění tvoří paralelní doplňkovou vrstvu.",

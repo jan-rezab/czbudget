@@ -95,6 +95,7 @@
   function transportStats(code){
     const performance=transportPerformanceData?.countries?.[code]||{},observations=[];
     [performance.rail,performance.road].forEach(mode=>Object.values(mode||{}).forEach(value=>{if(Array.isArray(value))observations.push(...value);}));
+    Object.values(performance.infrastructure_spending||{}).forEach(mode=>Object.values(mode||{}).forEach(value=>{if(Array.isArray(value))observations.push(...value);}));
     const performanceYears=yearSpan(observations.map(row=>Number(row.year)));
     const budget=transportBudgetData?.countries?.[code],budgetYears=yearSpan((budget?.records||[]).map(row=>Number(row.year)));
     const allYears=yearSpan([...performanceYears.values,...budgetYears.values]);

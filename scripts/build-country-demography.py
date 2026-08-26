@@ -299,7 +299,7 @@ def profile_and_store(code: str, detail: dict, generated_at: str) -> dict:
 def main() -> None:
     generated_at = datetime.now(timezone.utc).isoformat()
     details = {"CZE": czechia()}
-    for code, geo in {"POL": "PL", "DEU": "DE", "FRA": "FR", "CHE": "CH", "SWE": "SE", "DNK": "DK", "ESP": "ES", "NLD": "NL", "NOR": "NO"}.items():
+    for code, geo in {"POL": "PL", "DEU": "DE", "FRA": "FR", "CHE": "CH", "SWE": "SE", "DNK": "DK", "FIN": "FI", "ESP": "ES", "NLD": "NL", "NOR": "NO"}.items():
         details[code] = eurostat_country(geo)
     details["GBR"] = united_kingdom()
     details["USA"] = united_states()

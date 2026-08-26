@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-parity.v1",
-  "generated_at": "2026-08-25T22:43:58.477Z",
-  "country_count": 15,
+  "generated_at": "2026-08-26T08:10:12.394Z",
+  "country_count": 16,
   "rules": {
     "native_first": "National classifications, stages, currencies and accounting scopes are retained without coercion.",
     "harmonised_layer": "Cross-country comparisons use separately identified IMF, OECD/COFOG or SHA observations.",
@@ -148,7 +148,7 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -290,8 +290,11 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
-          "missing_dimensions": []
+          "coverage": "official transport sources registered; harmonised detailed budget not loaded",
+          "missing_dimensions": [
+            "harmonised transport budget",
+            "government-level transport breakdown"
+          ]
         },
         "health": {
           "status": "unavailable",
@@ -450,7 +453,7 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -607,7 +610,7 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -731,8 +734,11 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
-          "missing_dimensions": []
+          "coverage": "official transport sources registered; harmonised detailed budget not loaded",
+          "missing_dimensions": [
+            "harmonised transport budget",
+            "government-level transport breakdown"
+          ]
         },
         "health": {
           "status": "loaded",
@@ -884,7 +890,7 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -1058,8 +1064,11 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
-          "missing_dimensions": []
+          "coverage": "official transport sources registered; harmonised detailed budget not loaded",
+          "missing_dimensions": [
+            "harmonised transport budget",
+            "government-level transport breakdown"
+          ]
         },
         "health": {
           "status": "loaded",
@@ -1209,7 +1218,7 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -1334,7 +1343,7 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -1493,7 +1502,7 @@
         },
         "transport": {
           "status": "loaded",
-          "coverage": "transport function and native detailed budget",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -1587,13 +1596,155 @@
       ]
     },
     {
+      "country_code": "FIN",
+      "name_cs": "Finsko",
+      "name_en": "Finland",
+      "currency_code": "EUR",
+      "profile": "data/countries/fin/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 9,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "provider_register",
+          "public_entity_accounts"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "10 native classification rows; 2023 and 2024",
+          "missing_dimensions": [],
+          "row_count": 10
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget through 2024",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing profile; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": null,
+          "coverage_level": null
+        },
+        "municipalities": {
+          "status": "loaded",
+          "coverage": "All 310 municipalities in the 2020 census; 203 financial-statement measures, 2015–2020 archive",
+          "missing_dimensions": [],
+          "entity_count": 310,
+          "fact_count": 0,
+          "years": [
+            2015,
+            2016,
+            2017,
+            2018,
+            2019,
+            2020
+          ],
+          "stages": [
+            "actual"
+          ],
+          "measures": [
+            "revenue",
+            "expenditure",
+            "balance"
+          ],
+          "coverage_level": "complete",
+          "directory": "data/countries/fin/municipalities.v1.json",
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0,
+          "represented_entity_count": 0,
+          "broad_entity_count": null,
+          "financial_statement_count": 0,
+          "coverage_level": "entity_registry"
+        },
+        "demography": {
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/fin/demography.v1.json",
+          "detail_row_count": 7979
+        }
+      },
+      "sources": [
+        {
+          "name": "Ministry of Finance Finland — State budget proposals",
+          "url": "https://budjetti.vm.fi/indox/index.jsp?lang=en",
+          "coverage": "annual budget proposal, approved budget and supplementary budgets",
+          "formats": [
+            "HTML",
+            "open data",
+            "PDF"
+          ],
+          "purpose": "appropriations and revenue estimates by ministry, department and item"
+        },
+        {
+          "name": "Statistics Finland — General government expenditure by function",
+          "url": "https://stat.fi/en/statistics/jmete",
+          "coverage": "annual consolidated COFOG outturn",
+          "formats": [
+            "PxWeb",
+            "CSV",
+            "API"
+          ],
+          "purpose": "harmonised expenditure by function and subsector"
+        }
+      ]
+    },
+    {
       "country_code": "BRA",
       "name_cs": "Brazílie",
       "name_en": "Brazil",
       "currency_code": "BRL",
       "profile": "data/countries/bra/profile.v1.json",
       "coverage": {
-        "loaded_modules": 7,
+        "loaded_modules": 8,
         "total_modules": 11,
         "missing_dimensions": [
           "provider_register",
@@ -1637,9 +1788,12 @@
           "function_count": 0
         },
         "transport": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": []
+          "status": "loaded",
+          "coverage": "official transport sources registered; harmonised detailed budget not loaded",
+          "missing_dimensions": [
+            "harmonised transport budget",
+            "government-level transport breakdown"
+          ]
         },
         "health": {
           "status": "loaded",
@@ -1731,7 +1885,7 @@
       "currency_code": "EUR",
       "profile": "data/countries/esp/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 9,
         "total_modules": 11,
         "missing_dimensions": [
           "provider_register",
@@ -1775,8 +1929,8 @@
           "function_count": 3
         },
         "transport": {
-          "status": "unavailable",
-          "coverage": "not loaded",
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -1871,7 +2025,7 @@
       "currency_code": "JPY",
       "profile": "data/countries/jpn/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 9,
         "total_modules": 11,
         "missing_dimensions": [
           "provider_register",
@@ -1915,9 +2069,12 @@
           "function_count": 3
         },
         "transport": {
-          "status": "unavailable",
-          "coverage": "not loaded",
-          "missing_dimensions": []
+          "status": "loaded",
+          "coverage": "official transport sources registered; harmonised detailed budget not loaded",
+          "missing_dimensions": [
+            "harmonised transport budget",
+            "government-level transport breakdown"
+          ]
         },
         "health": {
           "status": "loaded",
@@ -2007,7 +2164,7 @@
       "currency_code": "EUR",
       "profile": "data/countries/nld/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 9,
         "total_modules": 11,
         "missing_dimensions": [
           "provider_register",
@@ -2051,8 +2208,8 @@
           "function_count": 3
         },
         "transport": {
-          "status": "unavailable",
-          "coverage": "not loaded",
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {
@@ -2143,7 +2300,7 @@
       "currency_code": "NOK",
       "profile": "data/countries/nor/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 9,
         "total_modules": 11,
         "missing_dimensions": [
           "provider_register",
@@ -2187,8 +2344,8 @@
           "function_count": 3
         },
         "transport": {
-          "status": "unavailable",
-          "coverage": "not loaded",
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget through 2024",
           "missing_dimensions": []
         },
         "health": {

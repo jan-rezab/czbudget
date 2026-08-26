@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-25T22:43:58.477Z",
+  "generated_at": "2026-08-26T08:10:12.394Z",
   "country": {
     "country_code": "JPN",
     "name_cs": "Japonsko",
@@ -28,7 +28,7 @@
     }
   },
   "coverage": {
-    "loaded_modules": 8,
+    "loaded_modules": 9,
     "total_modules": 11,
     "missing_dimensions": [
       "provider_register",
@@ -72,9 +72,12 @@
       "function_count": 3
     },
     "transport": {
-      "status": "unavailable",
-      "coverage": "not loaded",
-      "missing_dimensions": []
+      "status": "loaded",
+      "coverage": "official transport sources registered; harmonised detailed budget not loaded",
+      "missing_dimensions": [
+        "harmonised transport budget",
+        "government-level transport breakdown"
+      ]
     },
     "health": {
       "status": "loaded",
@@ -2426,7 +2429,32 @@
         ]
       }
     },
-    "transport": null,
+    "transport": {
+      "name_cs": "Japonsko",
+      "name_en": "Japan",
+      "currency": "JPY",
+      "coverage": "unavailable",
+      "reason_cs": "Eurostat COFOG II tuto zemi nepokrývá.",
+      "reason_en": "Eurostat COFOG II does not cover this country.",
+      "public_data": {
+        "detail_status": "national_bridge",
+        "level_status": "fragmented",
+        "note_cs": "Ministerstvo financí a MLIT zveřejňují rozpočty a dopravní statistiky, ale nikoli v evropském COFOG-II API.",
+        "note_en": "The Ministry of Finance and MLIT publish budgets and transport statistics, but not through the European COFOG-II API.",
+        "next_step_cs": "Napojit rozpočtové řádky MLIT a oddělit železnice, silnice, přístavy a letectví.",
+        "next_step_en": "Connect MLIT budget lines and separate rail, roads, ports and aviation.",
+        "sources": [
+          {
+            "title": "MLIT · statistics",
+            "url": "https://www.mlit.go.jp/english/statistics.html"
+          },
+          {
+            "title": "Ministry of Finance Japan · budget statistics",
+            "url": "https://www.mof.go.jp/english/policy/budget/budget/index.html"
+          }
+        ]
+      }
+    },
     "health": {
       "currency": "JPY",
       "architecture_cs": "Univerzální zákonné pojištění tvoří zaměstnanecké a obecní plány; stát a samosprávy dotují pojistné a regulovaný celostátní sazebník určuje úhrady poskytovatelům.",
