@@ -1,6 +1,29 @@
 .transparency-atlas {
   margin-top: 2rem;
 }
+.atlas-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid #d2ccc1;
+  border-bottom: 0;
+  background: #faf7ef;
+}
+.atlas-controls label {
+  font: 700 0.72rem/1.2 monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.atlas-controls select {
+  min-width: min(100%, 360px);
+  padding: 0.65rem 2.25rem 0.65rem 0.75rem;
+  border: 1px solid #8b8d83;
+  border-radius: 0;
+  background: #faf7ef;
+  color: #171918;
+  font: inherit;
+}
 .atlas-kpis {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -74,7 +97,34 @@
   fill: url(#atlas-hatch);
 }
 .atlas-unassessed {
-  fill: #242724;
+  fill: #000;
+}
+.atlas-not_researched {
+  fill: #000;
+}
+.atlas-extensive,
+.atlas-available {
+  fill: #a8b63f;
+}
+.atlas-substantial {
+  fill: #d4dd81;
+}
+.atlas-limited {
+  fill: #faf7ef;
+}
+.atlas-minimal,
+.atlas-unavailable {
+  fill: #8b8d83;
+}
+.atlas-scant {
+  fill: #c93237;
+}
+.atlas-verify {
+  fill: #e5a83b;
+}
+.atlas-outside {
+  fill: #171918;
+  stroke: #363936;
 }
 .atlas-legend {
   list-style: none;
@@ -111,7 +161,30 @@
   background: repeating-linear-gradient(45deg, #d2ccc1 0 4px, #8b8d83 4px 6px);
 }
 .atlas-legend i.atlas-unassessed {
-  background: #242724;
+  background: #000;
+}
+.atlas-legend i.atlas-not_researched {
+  background: #000;
+}
+.atlas-legend i.atlas-extensive,
+.atlas-legend i.atlas-available {
+  background: #a8b63f;
+}
+.atlas-legend i.atlas-substantial {
+  background: #d4dd81;
+}
+.atlas-legend i.atlas-limited {
+  background: #faf7ef;
+}
+.atlas-legend i.atlas-minimal,
+.atlas-legend i.atlas-unavailable {
+  background: #8b8d83;
+}
+.atlas-legend i.atlas-scant {
+  background: #c93237;
+}
+.atlas-legend i.atlas-verify {
+  background: #e5a83b;
 }
 .atlas-legend b {
   font-variant-numeric: tabular-nums;
@@ -127,6 +200,38 @@
 .atlas-subtitle {
   margin: 2rem 0 1rem;
   font-size: 1.25rem;
+}
+.atlas-rankings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.atlas-rankings h3 {
+  min-height: 2.5em;
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+.atlas-score-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 2;
+  column-gap: 1.5rem;
+  border-top: 1px solid #d2ccc1;
+}
+.atlas-score-list li {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 0.45rem;
+  align-items: center;
+  break-inside: avoid;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #d2ccc1;
+  font-size: 0.78rem;
+}
+.atlas-score-list b {
+  font-variant-numeric: tabular-nums;
 }
 .atlas-targets {
   display: grid;
@@ -272,6 +377,70 @@
 .atlas-table td.unknown {
   color: #c93237;
 }
+.atlas-table td.available {
+  background: rgba(168, 182, 63, 0.22);
+  font-weight: 800;
+}
+.atlas-table td.unavailable {
+  color: #8b8d83;
+}
+.atlas-table td.verify {
+  color: #9a6300;
+  font-weight: 800;
+}
+.atlas-table td.not-researched,
+.atlas-table td.atlas-score.not_researched {
+  background: #000;
+  color: #faf7ef;
+}
+.atlas-table td.atlas-score.extensive,
+.atlas-table td.atlas-score.substantial {
+  background: rgba(168, 182, 63, 0.24);
+  font-weight: 800;
+}
+.atlas-table td.atlas-score.scant {
+  color: #c93237;
+  font-weight: 800;
+}
+.atlas-municipal-status {
+  min-width: 170px;
+  text-align: left !important;
+}
+.atlas-municipal-status.atlas-not_researched {
+  background: #000;
+  color: #faf7ef;
+}
+.atlas-research-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 3px solid #171918;
+}
+.atlas-research-notes h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+.atlas-research-notes ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.atlas-research-notes li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #d2ccc1;
+  font-size: 0.78rem;
+}
+.atlas-research-notes li span,
+.atlas-research-notes p {
+  color: #565951;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
 .atlas-table tr.is-highlighted {
   outline: 3px solid #c93237;
   outline-offset: -3px;
@@ -292,6 +461,13 @@
   }
   .atlas-targets {
     grid-template-columns: 1fr;
+  }
+  .atlas-rankings,
+  .atlas-research-notes {
+    grid-template-columns: 1fr;
+  }
+  .atlas-score-list {
+    columns: 1;
   }
   .atlas-map-panel {
     padding: 1rem;

@@ -28,6 +28,8 @@ const sovereign = JSON.parse(await readFile("lib/data/sovereign-benchmark.v1.jso
 const homepage = await readFile("index.html", "utf8");
 const comparisonPage = await readFile("comparison.html", "utf8");
 const methodologyPage = await readFile("methodology.html", "utf8");
+const municipalTransparencyScript = await readFile("municipal-transparency.js", "utf8");
+const municipalTransparencyStyles = await readFile("municipal-transparency.css", "utf8");
 const aboutPage = await readFile("about.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
 const countryPage = await readFile("country.html", "utf8");
@@ -70,6 +72,7 @@ const languageBootstrap = await readFile("language-bootstrap.js", "utf8");
 const internationalMunicipalities = JSON.parse(await readFile("data/international-municipalities.v1.json", "utf8"));
 const municipalItemizedCoverage = JSON.parse(await readFile("data/municipal-itemized-coverage.v1.json", "utf8"));
 const municipalTransparency = JSON.parse(await readFile("data/municipal-transparency.v1.json", "utf8"));
+const globalBudgetTransparency = JSON.parse(await readFile("data/global-budget-transparency.v1.json", "utf8"));
 const benchmarkMunicipalities = await Promise.all(["nor", "nld", "fin"].map((code) => readFile(`data/municipal-benchmarks/${code}.json`, "utf8").then(JSON.parse)));
 const norwayBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nor/0301.json", "utf8"));
 const netherlandsBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nld/0363.json", "utf8"));
@@ -154,6 +157,8 @@ for (const [code, modules] of Object.entries(coverageSourceResearch.countries)) 
 }
 if (!methodologyPage.includes("coverage-source-availability") && !methodologyPage.includes("source-availability")) throw new Error("Methodology page must explain source availability separately from PSD coverage");
 if (municipalTransparency.countries.length !== 23 || municipalTransparency.countries.find((country) => country.iso3 === "BRA")?.pipeline !== "loaded_partial") throw new Error("Expected the 23-country municipal transparency atlas with Brazil's exact partial-load status");
+if (globalBudgetTransparency.countries.length !== 195 || globalBudgetTransparency.countries.filter((country) => country.national_budget.research_status === "assessed").length !== 125 || globalBudgetTransparency.countries.filter((country) => country.municipal_item_level.research_status === "researched").length !== 23) throw new Error("Expected a 195-state atlas with 125 national assessments and 23 municipal item-level reviews");
+if (!municipalTransparencyScript.includes('id="atlas-mode"') || !municipalTransparencyStyles.includes(".atlas-not_researched") || !municipalTransparencyStyles.includes("fill: #000")) throw new Error("Global transparency atlas must expose layer controls and render not-researched countries black");
 for (const code of ["CZE", "FRA", "GBR", "USA"]) if (countryParity.countries.find((country) => country.country_code === code)?.modules.providers.status !== "loaded") throw new Error(`Expected loaded provider register for ${code}`);
 if (roadNetworks.countries.length !== 10 || !roadNetworks.construction_history_status.includes("annual net stock change")) throw new Error("Expected ten-country road histories with an explicit construction proxy caveat");
 for (const country of roadNetworks.countries) {

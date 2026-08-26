@@ -150,7 +150,8 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#method-source-rows tr")).toHaveCount(1);
   await expect(page.locator("#method-source-rows tr")).toContainText("4,861 line facts");
   await expect(page.locator("#method-source-rows tr code").first()).toContainText("municipal_itemized");
-  await expect(page.locator("#municipal-transparency")).toContainText("23");
+  await expect(page.locator("#municipal-transparency")).toContainText("195");
+  await expect(page.locator("#municipal-transparency")).toContainText("125");
   await expect(page.locator("#municipal-transparency")).toContainText("South Korea");
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });

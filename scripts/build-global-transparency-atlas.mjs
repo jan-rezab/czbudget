@@ -1,0 +1,84 @@
+import { readFile, writeFile } from "node:fs/promises";
+
+const sovereignIso2 = new Set("ad ae af ag al am ao ar at au az ba bb bd be bf bg bh bi bj bn bo br bs bt bw by bz ca cd cf cg ch ci cl cm cn co cr cu cv cy cz de dj dk dm do dz ec ee eg er es et fi fj fm fr ga gb gd ge gh gm gn gq gr gt gw gy hn hr ht hu id ie il in iq ir is it jm jo jp ke kg kh ki km kn kp kr kw kz la lb lc li lk lr ls lt lu lv ly ma mc md me mg mh mk ml mm mn mr mt mu mv mw mx my mz na ne ng ni nl no np nr nz om pa pe pg ph pk pl ps pt pw py qa ro rs ru rw sa sb sc sd se sg si sk sl sm sn so sr ss st sv sy sz td tg th tj tl tm tn to tr tt tv tz ua ug us uy uz va vc ve vn vu ws ye za zm zw".split(" "));
+
+const obsScores = {"af":0,"al":57,"am":60,"ao":26,"ar":51,"au":78,"az":67,"ba":27,"bd":37,"bf":30,"bg":79,"bi":14,"bj":79,"bo":11,"br":80,"bw":39,"ca":74,"cd":41,"cf":6,"ci":54,"cl":60,"cm":50,"cn":20,"co":50,"cr":61,"cz":62,"de":76,"do":77,"dz":15,"ec":48,"eg":49,"es":54,"et":10,"fj":34,"fr":74,"gb":62,"ge":87,"gh":46,"gm":36,"gn":10,"gq":4,"gt":64,"gw":5,"hn":65,"hr":67,"hu":22,"id":70,"in":51,"iq":8,"it":76,"jm":50,"jo":60,"jp":63,"ke":55,"kg":61,"kh":43,"km":4,"kr":71,"kz":63,"lb":17,"lk":37,"lr":52,"ls":35,"ma":47,"md":81,"me":48,"mg":39,"mk":35,"ml":10,"mm":3,"mn":62,"mw":6,"mx":80,"my":48,"mz":47,"na":54,"ne":33,"ng":31,"ni":44,"no":80,"np":50,"nz":87,"pe":71,"pg":52,"ph":75,"pk":30,"pl":59,"ps":8,"pt":62,"py":48,"qa":2,"ro":62,"rs":51,"ru":66,"rw":50,"sa":26,"sd":2,"se":85,"si":64,"sk":69,"sl":55,"sn":42,"so":37,"ss":13,"st":32,"sv":24,"sz":30,"td":6,"tg":17,"th":60,"tj":33,"tl":37,"tn":16,"tr":64,"tt":38,"tz":41,"ua":38,"ug":59,"us":69,"ve":0,"vn":51,"ye":0,"za":83,"zm":34,"zw":63};
+
+const nationalBand = (score) => {
+  if (score === null) return "not_researched";
+  if (score >= 81) return "extensive";
+  if (score >= 61) return "substantial";
+  if (score >= 41) return "limited";
+  if (score >= 21) return "minimal";
+  return "scant";
+};
+
+const map = JSON.parse(await readFile("data/world-map.v1.json", "utf8"));
+const municipal = JSON.parse(await readFile("data/municipal-transparency.v1.json", "utf8"));
+const municipalByIso = new Map(municipal.countries.map((country) => [country.iso2, country]));
+const czechNames = new Intl.DisplayNames(["cs"], { type: "region" });
+
+const countries = map.locations
+  .filter((country) => sovereignIso2.has(country.id))
+  .map((country) => {
+    const score = Number.isFinite(obsScores[country.id]) ? obsScores[country.id] : null;
+    const municipalRecord = municipalByIso.get(country.id);
+    return {
+      iso2: country.id,
+      iso3: municipalRecord?.iso3 ?? null,
+      name_en: country.name,
+      name_cs: czechNames.of(country.id.toUpperCase()) ?? country.name,
+      national_budget: {
+        research_status: score === null ? "not_researched" : "assessed",
+        score,
+        band: nationalBand(score),
+        survey: score === null ? null : "OBS 2023"
+      },
+      municipal_item_level: municipalRecord ? {
+        research_status: "researched",
+        category: municipalRecord.category,
+        pipeline: municipalRecord.pipeline,
+        features: municipalRecord.features,
+        source: municipalRecord.source,
+        note_en: municipalRecord.note_en,
+        note_cs: municipalRecord.note_cs
+      } : {
+        research_status: "not_researched",
+        category: "not_researched",
+        pipeline: null,
+        features: { enacted:null, revised:null, execution:null, actual:null, function:null, economic:null, api:null },
+        source: null,
+        note_en: "Municipal item-level availability has not yet been researched country by country.",
+        note_cs: "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+      }
+    };
+  })
+  .sort((a, b) => a.name_en.localeCompare(b.name_en, "en"));
+
+if (countries.length !== 195) throw new Error(`Expected 195 sovereign states, received ${countries.length}`);
+if (countries.filter((country) => country.national_budget.research_status === "assessed").length !== 125) throw new Error("Expected 125 OBS 2023 assessments");
+if (countries.filter((country) => country.municipal_item_level.research_status === "researched").length !== municipal.countries.length) throw new Error("Municipal research join is incomplete");
+
+const output = {
+  schema_version: "1.0.0",
+  updated: "2026-08-26",
+  universe: {
+    definition: "193 United Nations member states plus the Holy See and the State of Palestine",
+    country_count: countries.length,
+    source: "https://www.un.org/en/about-us/member-states"
+  },
+  methodology: {
+    national_budget: "IBP Open Budget Survey 2023 score for online availability, timeliness and comprehensiveness of eight central-government budget documents. A score of 61 or more is sufficient for informed public debate.",
+    municipal_item_level: "PSD country-by-country review of whether one official national source exposes a comparable municipal budget lifecycle at item level. A national transparency score is not evidence of municipal data availability.",
+    not_researched: "Black always means not researched or not assessed; it never means that a government publishes nothing."
+  },
+  sources: [
+    { id:"obs-2023", title:"Open Budget Survey 2023", url:"https://internationalbudget.org/open-budget-survey/country-results", scope:"central government", country_count:125 },
+    { id:"sng-wofi", title:"World Observatory on Subnational Government Finance and Investment", url:"https://www.sng-wofi.org/country_profiles/presentation.html", scope:"comparative subnational aggregates and institutional profiles", country_count:135 },
+    { id:"boost", title:"World Bank BOOST country data", url:"https://www.worldbank.org/en/programs/boost-portal/country-data", scope:"published line-item fiscal datasets; government level varies by country" }
+  ],
+  countries
+};
+
+await writeFile("data/global-budget-transparency.v1.json", `${JSON.stringify(output, null, 2)}\n`);
+console.log(`Wrote ${countries.length} sovereign states: 125 national assessments and ${municipal.countries.length} municipal item-level reviews`);
