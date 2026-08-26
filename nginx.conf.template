@@ -158,11 +158,11 @@ server {
     return 301 $legacy_country_path;
   }
 
-  location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)/$ {
+  location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece)/$ {
     return 301 /countries/$1$is_args$args;
   }
 
-  location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)$ {
+  location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece)$ {
     sub_filter_once off;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
     sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260825-country-expansion';
