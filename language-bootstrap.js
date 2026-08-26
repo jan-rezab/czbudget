@@ -50,12 +50,12 @@
   // and vice versa. Social cards deliberately use language-neutral artwork.
   const metadata = {
     "/": {
-      cs: ["Public Spending Data — veřejné rozpočty v souvislostech", "Kondenzované srovnání veřejných rozpočtů a detailní profily zemí."],
-      en: ["Public Spending Data — public budgets in context", "Concise public-budget comparisons and detailed country profiles."],
+      cs: ["Public Spending Data — veřejné rozpočty v souvislostech", "Porovnejte finance zemí, projděte rozpočty obcí a otevřete původní zdroje."],
+      en: ["Public Spending Data — public budgets in context", "Compare national finances, inspect municipal budgets and open the original sources."],
     },
     "/index.html": {
-      cs: ["Public Spending Data — veřejné rozpočty v souvislostech", "Kondenzované srovnání veřejných rozpočtů a detailní profily zemí."],
-      en: ["Public Spending Data — public budgets in context", "Concise public-budget comparisons and detailed country profiles."],
+      cs: ["Public Spending Data — veřejné rozpočty v souvislostech", "Porovnejte finance zemí, projděte rozpočty obcí a otevřete původní zdroje."],
+      en: ["Public Spending Data — public budgets in context", "Compare national finances, inspect municipal budgets and open the original sources."],
     },
     "/comparison.html": {
       cs: ["Srovnání veřejných rozpočtů — Public Spending Data", "Porovnejte dvacet let harmonizovaných ukazatelů veřejných financí deseti zemí."],

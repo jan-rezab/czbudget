@@ -188,6 +188,17 @@ test("homepage compares all fifteen health-system topline metrics", async ({ pag
   await expect(comparison).toContainText("Suicide mortality");
 });
 
+test("homepage overview scales with the current country coverage", async ({ page }) => {
+  await page.goto("/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator(".hero-dot")).toHaveCount(17);
+  await expect(page.locator("#country-count")).toHaveText("17");
+  await expect(page.locator("#year-count")).toHaveText("20");
+  await expect(page.locator("#hero-chart-note")).toContainText("17 countries with a 2024 value");
+  await expect(page.locator(".category-summary article").nth(1).locator("strong")).toHaveText("33.1 %");
+  await expect(page.locator(".category-summary article").nth(2)).toContainText("17 / 17");
+  await expect(page.locator(".home-path-grid > a")).toHaveCount(4);
+});
+
 test("about page and footer credit Hlidac statu in both languages", async ({ page }) => {
   await page.goto("/about.html?lang=cs", { waitUntil: "networkidle" });
   await expect(page.locator(".maker-showcase")).toContainText("Hlidac statu, z.u.");
@@ -213,7 +224,7 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("html")).toHaveAttribute("data-language-pending", "en");
   await expect(page.locator("body")).toBeHidden();
-  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Public budgets.");
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money.");
   await expect(page.locator("html")).not.toHaveAttribute("data-language-pending", /.+/);
   await expect(page.locator("body")).toBeVisible();
 });
@@ -223,7 +234,7 @@ test("homepage defaults every independently rendered module to English", async (
 
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator('[data-lang="en"]')).toHaveClass(/active/);
-  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Public budgets.");
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money.");
   await expect(page.locator("#category-comparison-root")).toContainText("Spending by category");
   await expect(page.locator("#category-comparison-root")).toContainText("Country profile");
   await expect(page.locator("#category-comparison-root")).not.toContainText("Výdaje podle kategorií");
