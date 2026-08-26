@@ -21,10 +21,12 @@
       href="site-pages.css?v=20260826-source-availability"
     />
     <link rel="stylesheet" href="municipal-transparency.css?v=20260826-transparency-index" />
+    <link rel="stylesheet" href="data-freshness.css?v=20260827-cross-layer" />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
     <script src="site-pages.js?v=20260826-itemized-lineage" defer></script>
     <script src="municipal-transparency.js?v=20260826-transparency-index" defer></script>
+    <script src="data-freshness.js?v=20260827-cross-layer" defer></script>
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -52,6 +54,28 @@
           <span data-status-copy="releaseNote">Souhrn všech obecních dat</span>
         </header>
         <div id="data-health-root" aria-live="polite"><p class="data-health-loading">Načítám…</p></div>
+      </section>
+      <section id="data-freshness" class="freshness-overview" aria-labelledby="data-freshness-title">
+        <header class="freshness-head">
+          <div><span class="kicker" data-freshness-copy="eyebrow">Data · 44 zemí · 15 vrstev</span><h2 id="data-freshness-title" data-freshness-copy="title">Jak čerstvá jsou data napříč celým webem?</h2></div>
+          <p data-freshness-copy="method">Rok v buňce je nejnovější fiskální, vykazované nebo pozorované období. Datum sestavení souboru je samostatné; plán, skutečnost a projekce nejsou zaměnitelné.</p>
+        </header>
+        <div id="freshness-root">
+          <div id="freshness-kpis" class="freshness-kpis" aria-live="polite"></div>
+          <div class="freshness-controls" aria-label="Data freshness filters">
+            <label><span data-freshness-copy="country">Země</span><select id="freshness-country"></select></label>
+            <label><span data-freshness-copy="family">Rodina dat</span><select id="freshness-family"></select></label>
+            <label><span data-freshness-copy="freshness">Datový horizont</span><select id="freshness-band"></select></label>
+            <label><span data-freshness-copy="search">Hledat</span><input id="freshness-search" type="search" /></label>
+            <button id="freshness-reset" type="button" data-freshness-copy="reset">Vymazat</button>
+          </div>
+          <div class="freshness-subhead"><h3 data-freshness-copy="matrix">Srovnávací matice</h3><p>● actual · ■ plan · ▨ projection</p></div>
+          <div class="freshness-matrix-wrap" tabindex="0" aria-label="Country by data-layer freshness matrix"><table id="freshness-matrix" class="freshness-matrix"></table></div>
+          <section id="freshness-selection" class="freshness-selection" aria-live="polite"><p>Vyberte buňku pro detail vrstvy.</p></section>
+          <div class="freshness-subhead"><h3 data-freshness-copy="detailTable">Podrobný registr</h3><p id="freshness-summary"></p></div>
+          <div class="freshness-controls freshness-download-bar"><button id="freshness-download" type="button" data-freshness-copy="download">Stáhnout CSV</button></div>
+          <div class="freshness-ledger-wrap" tabindex="0"><table class="freshness-ledger"><thead><tr><th data-freshness-copy="country">Země</th><th data-freshness-copy="family">Vrstva</th><th data-freshness-copy="latest">Nejnovější období</th><th data-freshness-copy="type">Typ</th><th data-freshness-copy="coverage">Pokrytí</th><th data-freshness-copy="generated">Artefakt sestaven</th><th>Link</th></tr></thead><tbody id="freshness-table-body"></tbody></table></div>
+        </div>
       </section>
       <section class="coverage-overview" aria-labelledby="coverage-overview-title">
         <header class="section-bar">
