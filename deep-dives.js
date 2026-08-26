@@ -5,9 +5,10 @@
   document.documentElement.lang=lang;
   const countries=[
     ["CZE","Česko","Czechia"],["DEU","Německo","Germany"],["DNK","Dánsko","Denmark"],
-    ["FRA","Francie","France"],["GBR","Spojené království","United Kingdom"],["POL","Polsko","Poland"],
+    ["FIN","Finsko","Finland"],["FRA","Francie","France"],["GBR","Spojené království","United Kingdom"],["POL","Polsko","Poland"],
     ["SWE","Švédsko","Sweden"],["CHE","Švýcarsko","Switzerland"],["UKR","Ukrajina","Ukraine"],
-    ["USA","Spojené státy","United States"]
+    ["USA","Spojené státy","United States"],["BRA","Brazílie","Brazil"],["ESP","Španělsko","Spain"],
+    ["JPN","Japonsko","Japan"],["NLD","Nizozemsko","Netherlands"],["NOR","Norsko","Norway"],["GRC","Řecko","Greece"]
   ];
   const copy={
     cs:{
@@ -31,6 +32,8 @@
   Object.assign(copy.en,{economy:"Economy in context",economyCopy:"Global long-run series, the economic cycle, coverage and a reusable contract for econometric reporting."});
   Object.assign(copy.cs,{migration:"Evropská migrace",migrationCopy:"Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024.",indexCoverage:"až 27 zemí"});
   Object.assign(copy.en,{migration:"European migration",migrationCopy:"Immigration, emigration and migration balance across all 27 EU countries from 2000 to 2024.",indexCoverage:"up to 27 countries"});
+  Object.assign(copy.cs,{defense:"Výdaje na obranu",defenseCopy:"Výdaje vůči HDP, závazek NATO a nejjemnější dostupné řádky národních rozpočtů."});
+  Object.assign(copy.en,{defense:"Defense spending",defenseCopy:"Spending relative to GDP, the NATO commitment and the finest available national budget lines."});
   const t=copy[lang];
   const name=(code)=>{const row=countries.find(item=>item[0]===code);return row?.[lang==="en"?2:1]??code};
   function translate(){

@@ -121,6 +121,10 @@
       cs: ["Ekonomika v kontextu — Public Spending Data", "Dlouhé ekonomické řady, hospodářský cyklus a fiskální kontext v globální datové vrstvě."],
       en: ["Economy in context — Public Spending Data", "Long-run economic series, the business cycle and fiscal context in a global data layer."],
     },
+    "/deep-dives/defense/": {
+      cs: ["Výdaje na obranu — Public Spending Data", "Vojenské výdaje vůči HDP, závazek NATO a nejjemnější dostupné rozpočtové řádky pro 17 zemí."],
+      en: ["Defense spending — Public Spending Data", "Military expenditure relative to GDP, the NATO commitment and the finest available budget lines for 17 countries."],
+    },
     "/cesky-rozpocet.html": {
       cs: ["Public Spending Data — český rozpočet v čase", "Státní rozpočet ČR 2001–2026, tok peněz ve zdravotnictví, benchmark nemocnic, účelové oblasti, kapitoly a demografický tlak do roku 2045."],
       en: ["Public Spending Data — Czech budget over time", "The Czech state budget for 2001–2026, health-system money flows, hospital benchmarks, spending purposes, budget chapters and demographic pressure to 2045."],
