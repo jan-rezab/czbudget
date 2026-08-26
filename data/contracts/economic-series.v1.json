@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0.0",
+  "scope": {
+    "download_all_countries": true,
+    "benchmark_countries": ["BRA", "CHE", "CZE", "DEU", "DNK", "ESP", "FIN", "FRA", "GBR", "GRC", "JPN", "NLD", "NOR", "POL", "SWE", "UKR", "USA"],
+    "annual_start": 1960,
+    "high_frequency_start": 1995,
+    "actuals_only": true
+  },
+  "sources": {
+    "world_bank": {
+      "name": "World Development Indicators",
+      "homepage": "https://data.worldbank.org/indicator",
+      "api": "https://api.worldbank.org/v2",
+      "frequency": "A",
+      "license": "CC BY 4.0"
+    },
+    "oecd_kei": {
+      "name": "OECD Key Economic Indicators",
+      "homepage": "https://data-explorer.oecd.org/vis?df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_KEI%40DF_KEI",
+      "api": "https://sdmx.oecd.org/public/rest/v1/data/OECD.SDD.STES,DSD_KEI@DF_KEI,4.0",
+      "frequency": "A/Q/M"
+    },
+    "bis": {
+      "name": "Bank for International Settlements",
+      "homepage": "https://data.bis.org/bulkdownload",
+      "api": "https://data.bis.org/static/bulk",
+      "frequency": "A/Q/M"
+    },
+    "imf_weo": {
+      "name": "IMF World Economic Outlook, April 2026",
+      "homepage": "https://www.imf.org/en/Publications/WEO/weo-database/2026/April",
+      "frequency": "A",
+      "local_input": "../data/international_fiscal_benchmarks_2005_2024.csv"
+    }
+  },
+  "world_bank_indicators": [
+    {"source_code":"NY.GDP.MKTP.KD.ZG","indicator_code":"real_gdp_growth_annual","label_en":"Real GDP growth","label_cs":"Růst reálného HDP","topic":"output","unit":"percent"},
+    {"source_code":"NY.GDP.PCAP.KD","indicator_code":"real_gdp_per_capita","label_en":"Real GDP per capita","label_cs":"Reálné HDP na obyvatele","topic":"output","unit":"constant_2015_usd"},
+    {"source_code":"NY.GDP.PCAP.KD.ZG","indicator_code":"real_gdp_per_capita_growth","label_en":"Real GDP per capita growth","label_cs":"Růst reálného HDP na obyvatele","topic":"output","unit":"percent"},
+    {"source_code":"SL.TLF.CACT.ZS","indicator_code":"labour_force_participation","label_en":"Labour-force participation","label_cs":"Míra ekonomické aktivity","topic":"labour","unit":"percent_population_15_plus"},
+    {"source_code":"SL.EMP.TOTL.SP.ZS","indicator_code":"employment_to_population","label_en":"Employment-to-population ratio","label_cs":"Podíl zaměstnaných na populaci","topic":"labour","unit":"percent_population_15_plus"},
+    {"source_code":"SL.UEM.TOTL.ZS","indicator_code":"unemployment_rate_annual","label_en":"Unemployment rate","label_cs":"Míra nezaměstnanosti","topic":"labour","unit":"percent_labour_force"},
+    {"source_code":"NE.GDI.FTOT.ZS","indicator_code":"gross_fixed_capital_formation","label_en":"Gross fixed capital formation","label_cs":"Tvorba hrubého fixního kapitálu","topic":"demand","unit":"percent_gdp"},
+    {"source_code":"NE.CON.PRVT.ZS","indicator_code":"household_consumption","label_en":"Household consumption","label_cs":"Spotřeba domácností","topic":"demand","unit":"percent_gdp"},
+    {"source_code":"NE.CON.GOVT.ZS","indicator_code":"government_consumption","label_en":"Government consumption","label_cs":"Vládní spotřeba","topic":"demand","unit":"percent_gdp"},
+    {"source_code":"BN.CAB.XOKA.GD.ZS","indicator_code":"current_account_balance","label_en":"Current-account balance","label_cs":"Saldo běžného účtu","topic":"external","unit":"percent_gdp"},
+    {"source_code":"NE.EXP.GNFS.ZS","indicator_code":"exports_goods_services","label_en":"Exports of goods and services","label_cs":"Vývoz zboží a služeb","topic":"external","unit":"percent_gdp"},
+    {"source_code":"NE.IMP.GNFS.ZS","indicator_code":"imports_goods_services","label_en":"Imports of goods and services","label_cs":"Dovoz zboží a služeb","topic":"external","unit":"percent_gdp"},
+    {"source_code":"NE.TRD.GNFS.ZS","indicator_code":"trade_openness","label_en":"Trade openness","label_cs":"Otevřenost ekonomiky","topic":"external","unit":"percent_gdp"},
+    {"source_code":"PA.NUS.FCRF","indicator_code":"official_exchange_rate","label_en":"Official exchange rate","label_cs":"Oficiální směnný kurz","topic":"prices_finance","unit":"local_currency_per_usd"},
+    {"source_code":"PX.REX.REER","indicator_code":"real_effective_exchange_rate","label_en":"Real effective exchange-rate index","label_cs":"Reálný efektivní směnný kurz","topic":"prices_finance","unit":"index_2010_100"},
+    {"source_code":"FS.AST.PRVT.GD.ZS","indicator_code":"private_credit","label_en":"Domestic credit to private sector","label_cs":"Úvěry soukromému sektoru","topic":"credit","unit":"percent_gdp"},
+    {"source_code":"FM.LBL.BMNY.GD.ZS","indicator_code":"broad_money","label_en":"Broad money","label_cs":"Široké peníze","topic":"credit","unit":"percent_gdp"},
+    {"source_code":"NY.GDS.TOTL.ZS","indicator_code":"gross_domestic_saving","label_en":"Gross domestic saving","label_cs":"Hrubé domácí úspory","topic":"households","unit":"percent_gdp"},
+    {"source_code":"NY.GNS.ICTR.ZS","indicator_code":"gross_saving","label_en":"Gross saving","label_cs":"Hrubé úspory","topic":"households","unit":"percent_gdp"},
+    {"source_code":"SI.POV.GINI","indicator_code":"gini_index","label_en":"Gini index","label_cs":"Giniho index","topic":"distribution","unit":"index"},
+    {"source_code":"SI.POV.NAHC","indicator_code":"national_poverty_rate","label_en":"Poverty headcount at national line","label_cs":"Míra chudoby podle národní hranice","topic":"distribution","unit":"percent_population"},
+    {"source_code":"FP.CPI.TOTL.ZG","indicator_code":"consumer_price_inflation_annual","label_en":"Consumer-price inflation","label_cs":"Inflace spotřebitelských cen","topic":"prices_finance","unit":"percent"},
+    {"source_code":"NY.GDP.DEFL.KD.ZG","indicator_code":"gdp_deflator_inflation","label_en":"GDP-deflator inflation","label_cs":"Růst deflátoru HDP","topic":"prices_finance","unit":"percent"},
+    {"source_code":"FP.WPI.TOTL","indicator_code":"wholesale_price_index","label_en":"Wholesale-price index","label_cs":"Index velkoobchodních cen","topic":"prices_finance","unit":"index_2010_100"},
+    {"source_code":"SP.POP.TOTL","indicator_code":"population","label_en":"Population","label_cs":"Počet obyvatel","topic":"demography","unit":"persons"},
+    {"source_code":"SP.POP.1564.TO.ZS","indicator_code":"working_age_population_share","label_en":"Working-age population share","label_cs":"Podíl populace v produktivním věku","topic":"demography","unit":"percent_population"},
+    {"source_code":"NV.IND.MANF.ZS","indicator_code":"manufacturing_value_added","label_en":"Manufacturing value added","label_cs":"Přidaná hodnota zpracovatelského průmyslu","topic":"output","unit":"percent_gdp"},
+    {"source_code":"GB.XPD.RSDV.GD.ZS","indicator_code":"research_development_spending","label_en":"Research and development expenditure","label_cs":"Výdaje na výzkum a vývoj","topic":"productivity","unit":"percent_gdp"},
+    {"source_code":"EG.USE.PCAP.KG.OE","indicator_code":"energy_use_per_capita","label_en":"Energy use per capita","label_cs":"Spotřeba energie na obyvatele","topic":"supply","unit":"kg_oil_equivalent_per_capita"},
+    {"source_code":"EN.ATM.CO2E.PC","indicator_code":"co2_per_capita","label_en":"CO2 emissions per capita","label_cs":"Emise CO2 na obyvatele","topic":"supply","unit":"tonnes_per_capita"}
+  ],
+  "oecd_measure_map": {
+    "B1GQ_Q":{"label_en":"Real GDP","label_cs":"Reálné HDP","topic":"output"},
+    "P3_S1M_Q":{"label_en":"Household consumption","label_cs":"Spotřeba domácností","topic":"demand"},
+    "P3_S13_Q":{"label_en":"Government consumption","label_cs":"Vládní spotřeba","topic":"demand"},
+    "P51G_Q":{"label_en":"Gross fixed capital formation","label_cs":"Tvorba hrubého fixního kapitálu","topic":"demand"},
+    "P6_Q":{"label_en":"Exports","label_cs":"Vývoz","topic":"external"},
+    "P7_Q":{"label_en":"Imports","label_cs":"Dovoz","topic":"external"},
+    "CA_GDP":{"label_en":"Current-account balance","label_cs":"Saldo běžného účtu","topic":"external"},
+    "PRVM":{"label_en":"Production volume","label_cs":"Objem produkce","topic":"output"},
+    "MANM":{"label_en":"Manufacturing production","label_cs":"Průmyslová výroba","topic":"output"},
+    "TOVM":{"label_en":"Retail turnover","label_cs":"Maloobchodní obrat","topic":"demand"},
+    "CP":{"label_en":"Consumer prices","label_cs":"Spotřebitelské ceny","topic":"prices_finance"},
+    "UNEMP":{"label_en":"Unemployment rate","label_cs":"Míra nezaměstnanosti","topic":"labour"},
+    "EMP":{"label_en":"Employment","label_cs":"Zaměstnanost","topic":"labour"},
+    "H_EARN":{"label_en":"Hourly earnings","label_cs":"Hodinové výdělky","topic":"labour"},
+    "ULC":{"label_en":"Unit labour costs","label_cs":"Jednotkové náklady práce","topic":"productivity"},
+    "BCICP":{"label_en":"Business confidence","label_cs":"Důvěra podnikatelů","topic":"sentiment"},
+    "CCICP":{"label_en":"Consumer confidence","label_cs":"Důvěra spotřebitelů","topic":"sentiment"},
+    "LI":{"label_en":"Composite leading indicator","label_cs":"Souhrnný předstihový ukazatel","topic":"sentiment"},
+    "IRSTCI":{"label_en":"Short-term interest rate","label_cs":"Krátkodobá úroková sazba","topic":"prices_finance"},
+    "IR3TIB":{"label_en":"Three-month interbank rate","label_cs":"Tříměsíční mezibankovní sazba","topic":"prices_finance"},
+    "IRLT":{"label_en":"Long-term interest rate","label_cs":"Dlouhodobá úroková sazba","topic":"prices_finance"},
+    "EX":{"label_en":"Merchandise exports","label_cs":"Vývoz zboží","topic":"external"},
+    "IM":{"label_en":"Merchandise imports","label_cs":"Dovoz zboží","topic":"external"},
+    "RS":{"label_en":"Retail sales","label_cs":"Maloobchodní tržby","topic":"demand"},
+    "NODW":{"label_en":"Construction output","label_cs":"Stavební produkce","topic":"supply"},
+    "TOCAPA":{"label_en":"Passenger car registrations","label_cs":"Registrace osobních automobilů","topic":"demand"}
+  },
+  "bis_datasets": [
+    {"dataset":"WS_SPP","indicator_code":"residential_property_prices","label_en":"Residential property prices","label_cs":"Ceny rezidenčních nemovitostí","topic":"housing","url":"https://data.bis.org/static/bulk/WS_SPP_csv_flat.zip"},
+    {"dataset":"WS_TC","indicator_code":"total_credit","label_en":"Total credit","label_cs":"Celkové úvěry","topic":"credit","url":"https://data.bis.org/static/bulk/WS_TC_csv_flat.zip"},
+    {"dataset":"WS_DSR","indicator_code":"debt_service_ratio","label_en":"Debt-service ratio","label_cs":"Poměr dluhové služby","topic":"credit","url":"https://data.bis.org/static/bulk/WS_DSR_csv_flat.zip"},
+    {"dataset":"WS_EER","indicator_code":"effective_exchange_rate","label_en":"Effective exchange rate","label_cs":"Efektivní směnný kurz","topic":"external","url":"https://data.bis.org/static/bulk/WS_EER_csv_flat.zip"},
+    {"dataset":"WS_CBPOL","indicator_code":"central_bank_policy_rate","label_en":"Central-bank policy rate","label_cs":"Měnověpolitická sazba centrální banky","topic":"prices_finance","url":"https://data.bis.org/static/bulk/WS_CBPOL_csv_flat.zip"}
+  ]
+}

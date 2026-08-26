@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="cs">
+<head><script src="/language-bootstrap.js?v=20260826-economy"></script><link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260824-logo-120" defer></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ekonomika v kontextu — Public Spending Data</title>
+  <meta name="description" content="Dlouhé ekonomické řady, hospodářský cyklus a fiskální kontext pro globální panel zemí.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/economy/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/economy/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/economy/?lang=en">
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../economy-deep-dive.css?v=20260826-global">
+  <script src="../../economy-deep-dive.js?v=20260826-global" defer></script>
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="deep-dives-page economy-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <section class="deep-hero deep-topic-hero economy-hero" id="overview"><div><span class="eyebrow" data-econ-copy="eyebrow">Hloubkový profil / Ekonomika</span><h1><span data-econ-copy="titleLead">Rozpočet nikdy</span> <em data-econ-copy="titleEm">nežije sám.</em></h1><p data-econ-copy="intro">Dlouhé roční řady pro strukturu, čtvrtletí pro cyklus a měsíce pro body obratu. Každý údaj zůstává spojen se zdrojem, jednotkou a transformací.</p></div><div class="deep-hero-aside economy-stat-panel"><span data-econ-copy="globalPanel">Globální datová vrstva</span><strong id="global-observation-count">—</strong><small><b id="global-country-count">—</b> <span data-econ-copy="countries">zemí a ekonomik</span> · <b id="global-indicator-count">—</b> <span data-econ-copy="definitions">definic</span></small></div></section>
+
+    <nav class="deep-topic-rail" aria-label="Economic sections"><a href="#enough" data-econ-copy="enoughNav">Kolik historie stačí?</a><a href="#cycle" data-econ-copy="cycleNav">Hospodářský cyklus</a><a href="#explorer" data-econ-copy="explorerNav">Průzkumník řad</a><a href="#coverage" data-econ-copy="coverageNav">Pokrytí</a><a href="#method" data-econ-copy="methodNav">Datová struktura</a></nav>
+
+    <section class="economy-section adequacy-section" id="enough">
+      <div class="deep-section-heading"><div><span class="kicker" data-econ-copy="enoughKicker">01 / Hloubka vzorku</span><h2 data-econ-copy="enoughTitle">Dvacet let je začátek, ne cíl.</h2></div><p data-econ-copy="enoughIntro">Dvacet ročních bodů popíše jednu generaci veřejných financí, ale obvykle jen dva až tři velké šoky. Pro strukturální vztahy potřebujeme více režimů.</p></div>
+      <div class="sample-ladder"><article><span>20× A</span><strong>20</strong><h3 data-econ-copy="sample20Title">Popisný základ</h3><p data-econ-copy="sample20Copy">Vhodné pro trend a účetní srovnání. Slabé pro stabilní regresní závěry.</p></article><article class="recommended"><span>30× A</span><strong>30</strong><h3 data-econ-copy="sample30Title">Praktické minimum</h3><p data-econ-copy="sample30Copy">Tři dekády obvykle zachytí více cyklů a změn politiky.</p></article><article><span>40–60× A</span><strong>40+</strong><h3 data-econ-copy="sample60Title">Strukturální analýza</h3><p data-econ-copy="sample60Copy">Lepší pro režimy, zpoždění a kontroly robustnosti—pokud jsou definice srovnatelné.</p></article><article><span>80× Q</span><strong>20y</strong><h3 data-econ-copy="sampleQTitle">Cyklická analýza</h3><p data-econ-copy="sampleQCopy">Stejných dvacet let znamená přibližně 80 čtvrtletí nebo 240 měsíců.</p></article></div>
+      <div class="adequacy-note"><b data-econ-copy="ruleLabel">Pravidlo pro reporty</b><p data-econ-copy="ruleCopy">Používat 1995–2025 pro roční srovnání, 2000–2025 pro čtvrtletní cyklus a nejdelší konzistentní řadu pro strukturální testy. Délka sama neopraví změny metodiky ani endogenitu.</p></div>
+    </section>
+
+    <section class="economy-section cycle-section" id="cycle">
+      <div class="deep-section-heading"><div><span class="kicker" data-econ-copy="cycleKicker">02 / Pět čoček</span><h2 data-econ-copy="cycleTitle">Od výkonu ekonomiky k rozpočtu.</h2></div><p data-econ-copy="cycleIntro">Růst, inflace a nezaměstnanost popisují cyklus. Saldo a dluh ukazují fiskální stopu—nikoli automaticky kauzalitu.</p></div>
+      <div class="economy-filter"><label><span data-econ-copy="countryLabel">Země</span><select id="economy-country"></select></label><div><b id="economy-country-name">Česko</b><span id="economy-country-code">CZE</span></div></div>
+      <div class="cycle-grid" id="cycle-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="economy-section explorer-section" id="explorer">
+      <div class="deep-section-heading"><div><span class="kicker" data-econ-copy="explorerKicker">03 / Zdrojová řada</span><h2 data-econ-copy="explorerTitle">Stejný pojem může mít více správných měření.</h2></div><p data-econ-copy="explorerIntro">Filtr zachovává frekvenci, transformaci a sezónní očištění. Právě tyto rozdíly musí budoucí report uvádět.</p></div>
+      <div class="explorer-controls"><label><span data-econ-copy="indicatorLabel">Ukazatel</span><select id="economy-indicator"></select></label><label><span data-econ-copy="seriesLabel">Varianta řady</span><select id="economy-series"></select></label></div>
+      <div class="explorer-chart-card"><div class="chart-head"><div><h3 id="explorer-title">—</h3><span id="explorer-unit">—</span></div><b id="explorer-latest">—</b></div><div id="explorer-chart" class="economy-line-chart"></div><div class="series-meta" id="series-meta"></div></div>
+    </section>
+
+    <section class="economy-section coverage-section" id="coverage">
+      <div class="deep-section-heading"><div><span class="kicker" data-econ-copy="coverageKicker">04 / Co opravdu máme</span><h2 data-econ-copy="coverageTitle">Pokrytí je vlastnost dat, ne poznámka pod čarou.</h2></div><p data-econ-copy="coverageIntro">Tabulka počítá skutečné body a první/poslední období pro vybranou zemi. Nula znamená chybějící řadu, nikoli ekonomickou hodnotu nula.</p></div>
+      <div class="coverage-summary" id="coverage-summary"></div>
+      <div class="coverage-table-wrap"><table class="coverage-table"><thead><tr><th data-econ-copy="topicLabel">Oblast</th><th data-econ-copy="availableLabel">Dostupné řady</th><th data-econ-copy="historyLabel">Nejdelší historie</th><th data-econ-copy="pointsLabel">Pozorování</th></tr></thead><tbody id="coverage-body"></tbody></table></div>
+    </section>
+
+    <section class="economy-section method-section" id="method">
+      <div class="deep-section-heading"><div><span class="kicker" data-econ-copy="methodKicker">05 / Kontrakt pro další reporty</span><h2 data-econ-copy="methodTitle">Jedna faktová tabulka. Žádné skryté přepočty.</h2></div><p data-econ-copy="methodIntro">Každý bod nese zemi, ukazatel, plný klíč zdrojové řady, frekvenci, období, jednotku, sezónní očištění, transformaci, vintage a URL zdroje.</p></div>
+      <div class="data-flow"><article><b>01</b><h3 data-econ-copy="rawTitle">Raw snapshot</h3><p data-econ-copy="rawCopy">Datované soubory OECD, BIS, World Bank a IMF s kontrolním součtem.</p></article><span>→</span><article><b>02</b><h3 data-econ-copy="factTitle">Observation fact</h3><p data-econ-copy="factCopy">1,4+ milionu řádků v jednotném dlouhém formátu bez imputace.</p></article><span>→</span><article><b>03</b><h3 data-econ-copy="reportTitle">Report marts</h3><p data-econ-copy="reportCopy">Kompaktní výřezy pro grafy, coverage a nejnovější hodnoty.</p></article></div>
+      <div class="source-register" id="source-register"></div>
+      <div class="method-warning"><b data-econ-copy="causalLabel">Důležitá hranice</b><p data-econ-copy="causalCopy">Více pozorování zvyšuje přesnost popisu, ale nevytváří kauzální identifikaci. Závěry o dopadu politiky vyžadují samostatný design: přirozený experiment, instrument, difference-in-differences nebo jinou obhajitelnou strategii.</p></div>
+    </section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small data-econ-copy="footer">Economy deep dive · IMF, OECD, World Bank and BIS</small></div><a href="#top">↑</a></footer>
+</body>
+</html>

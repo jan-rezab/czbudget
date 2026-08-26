@@ -25,6 +25,100 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.source_registry` (
 CLUSTER BY country_code
 OPTIONS(description = 'Ověřené oficiální portály a datové zdroje.');
 
+-- Global econometric layer. The source series remains intact and is never
+-- overwritten by the curated indicator code used in reports.
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.economic_countries` (
+  country_code STRING NOT NULL OPTIONS(description = 'ISO 3166-1 alpha-3 or source-compatible economy code'),
+  country_code_alpha2 STRING,
+  name_cs STRING,
+  name_en STRING NOT NULL,
+  region STRING,
+  income_level STRING,
+  is_benchmark_country BOOL NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code
+OPTIONS(description = 'Country/economy dimension; aggregate regions are excluded.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.economic_indicators` (
+  indicator_code STRING NOT NULL,
+  source_id STRING NOT NULL,
+  source_code STRING NOT NULL,
+  label_cs STRING,
+  label_en STRING NOT NULL,
+  topic STRING NOT NULL,
+  canonical_unit STRING,
+  supported_frequencies ARRAY<STRING>,
+  definition_notes STRING,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY topic, indicator_code, source_id
+OPTIONS(description = 'Report-facing econometric definitions with explicit source mappings.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.economic_observations` (
+  observation_date DATE NOT NULL,
+  period STRING NOT NULL OPTIONS(description = 'Source period, such as 2024, 2024-Q3 or 2024-09'),
+  frequency STRING NOT NULL OPTIONS(description = 'A, Q or M'),
+  country_code STRING NOT NULL,
+  indicator_code STRING NOT NULL,
+  source_series STRING NOT NULL,
+  source_key STRING NOT NULL OPTIONS(description = 'Full source-dimensional series key'),
+  topic STRING NOT NULL,
+  value FLOAT64 NOT NULL,
+  unit STRING,
+  seasonal_adjustment STRING,
+  transformation STRING,
+  observation_status STRING,
+  source_id STRING NOT NULL,
+  source_url STRING NOT NULL,
+  source_vintage STRING,
+  retrieved_at TIMESTAMP NOT NULL,
+  quality_flags ARRAY<STRING>,
+  loaded_at TIMESTAMP NOT NULL
+)
+PARTITION BY observation_date
+CLUSTER BY country_code, indicator_code, source_id, frequency
+OPTIONS(
+  description = 'One untouched econometric source observation per country, series and period.',
+  require_partition_filter = TRUE
+);
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.economic_series_coverage` (
+  country_code STRING NOT NULL,
+  indicator_code STRING NOT NULL,
+  frequency STRING NOT NULL,
+  source_id STRING NOT NULL,
+  first_period STRING NOT NULL,
+  last_period STRING NOT NULL,
+  observation_count INT64 NOT NULL,
+  series_count INT64 NOT NULL,
+  assessed_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, indicator_code, frequency, source_id
+OPTIONS(description = 'Precomputed availability and history for report planning.');
+
+CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.latest_economic_observations` AS
+SELECT
+  country_code,
+  indicator_code,
+  source_id,
+  frequency,
+  source_key,
+  period,
+  observation_date,
+  value,
+  unit,
+  seasonal_adjustment,
+  transformation,
+  observation_status,
+  source_vintage
+FROM `czbudget-janrezab.budget_detail.economic_observations`
+WHERE observation_date >= DATE '1900-01-01'
+QUALIFY ROW_NUMBER() OVER (
+  PARTITION BY country_code, indicator_code, source_id, frequency, source_key
+  ORDER BY observation_date DESC, retrieved_at DESC
+) = 1;
+
 CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.ingestion_runs` (
   ingestion_run_id STRING NOT NULL,
   source_id STRING NOT NULL,
