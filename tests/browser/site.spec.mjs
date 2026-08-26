@@ -153,6 +153,11 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#municipal-transparency")).toContainText("195");
   await expect(page.locator("#municipal-transparency")).toContainText("125");
   await expect(page.locator("#municipal-transparency")).toContainText("South Korea");
+  await expect(page.locator("#atlas-mode")).toHaveValue("readiness");
+  await expect(page.locator("#atlas-row-cz td").nth(0)).toHaveText("82");
+  await expect(page.locator("#atlas-row-cz td").nth(1)).toHaveText("62");
+  await page.locator('.atlas-country[data-iso="cz"]').hover();
+  await expect(page.locator(".atlas-tooltip")).toContainText("62 OBS central government + 20 municipal bonus");
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });
 

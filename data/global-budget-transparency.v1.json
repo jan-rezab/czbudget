@@ -8,8 +8,9 @@
   },
   "methodology": {
     "national_budget": "IBP Open Budget Survey 2023 score for online availability, timeliness and comprehensiveness of eight central-government budget documents. A score of 61 or more is sufficient for informed public debate.",
+    "portal_readiness": "PSD score = OBS central-government score plus a municipal-data bonus worth up to 20 points, capped at 100. The municipal capability score weights approved budget 20, revised budget 15, in-year execution 15, final accounts 20, functional classification 10, economic classification 10, and API/bulk access 10. Missing municipal research adds no bonus and is labelled provisional, not unavailable.",
     "municipal_item_level": "PSD country-by-country review of whether one official national source exposes a comparable municipal budget lifecycle at item level. A national transparency score is not evidence of municipal data availability.",
-    "not_researched": "Black always means not researched or not assessed; it never means that a government publishes nothing."
+    "not_researched": "Dark gray always means not researched or not scored; it never means that a government publishes nothing."
   },
   "sources": [
     {
@@ -45,6 +46,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 0,
+        "band": "very_weak",
+        "obs_component": 0,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -73,6 +83,15 @@
         "score": 57,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 57,
+        "band": "partial",
+        "obs_component": 57,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -103,6 +122,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 15,
+        "band": "very_weak",
+        "obs_component": 15,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -131,6 +159,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -161,6 +198,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 26,
+        "band": "weak",
+        "obs_component": 26,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -190,34 +236,14 @@
         "band": "not_researched",
         "survey": null
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "ar",
-      "iso3": null,
-      "name_en": "Argentina",
-      "name_cs": "Argentina",
-      "national_budget": {
-        "research_status": "assessed",
-        "score": 51,
-        "band": "limited",
-        "survey": "OBS 2023"
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -238,6 +264,44 @@
       }
     },
     {
+      "iso2": "ar",
+      "iso3": "ARG",
+      "name_en": "Argentina",
+      "name_cs": "Argentina",
+      "national_budget": {
+        "research_status": "assessed",
+        "score": 51,
+        "band": "limited",
+        "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 59,
+        "band": "partial",
+        "obs_component": 51,
+        "municipal_score": 40,
+        "municipal_bonus": 8,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": true,
+          "function": true,
+          "economic": false,
+          "api": true
+        },
+        "source": "https://www.argentina.gob.ar/node/89404",
+        "note_en": "The national government publishes consolidated municipal expenditure by function, but not one entity-level adopted-to-actual municipal census.",
+        "note_cs": "Stát zveřejňuje konsolidované obecní výdaje podle funkcí, nikoli však jednotný census jednotlivých obcí od plánu po skutečnost."
+      }
+    },
+    {
       "iso2": "am",
       "iso3": null,
       "name_en": "Armenia",
@@ -247,6 +311,15 @@
         "score": 60,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 60,
+        "band": "partial",
+        "obs_component": 60,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -277,6 +350,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 86,
+        "band": "excellent",
+        "obs_component": 78,
+        "municipal_score": 40,
+        "municipal_bonus": 8,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "decentralized",
@@ -305,6 +387,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": 50,
+        "band": "partial",
+        "obs_component": null,
+        "municipal_score": 50,
+        "municipal_bonus": 10,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -335,6 +426,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 67,
+        "band": "strong",
+        "obs_component": 67,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -363,6 +463,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -393,6 +502,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -421,6 +539,15 @@
         "score": 37,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 37,
+        "band": "weak",
+        "obs_component": 37,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -451,6 +578,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -479,6 +615,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -509,6 +654,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": 40,
+        "band": "weak",
+        "obs_component": null,
+        "municipal_score": 40,
+        "municipal_bonus": 8,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "decentralized",
@@ -537,6 +691,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -567,6 +730,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 79,
+        "band": "strong",
+        "obs_component": 79,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -596,34 +768,14 @@
         "band": "not_researched",
         "survey": null
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "bo",
-      "iso3": null,
-      "name_en": "Bolivia",
-      "name_cs": "Bolívie",
-      "national_budget": {
-        "research_status": "assessed",
-        "score": 11,
-        "band": "scant",
-        "survey": "OBS 2023"
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -644,6 +796,44 @@
       }
     },
     {
+      "iso2": "bo",
+      "iso3": "BOL",
+      "name_en": "Bolivia",
+      "name_cs": "Bolívie",
+      "national_budget": {
+        "research_status": "assessed",
+        "score": 11,
+        "band": "scant",
+        "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 24,
+        "band": "weak",
+        "obs_component": 11,
+        "municipal_score": 65,
+        "municipal_bonus": 13,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "accounts_only",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": false,
+          "revised": false,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": true
+        },
+        "source": "https://abierto.economiayfinanzas.gob.bo/sobre",
+        "note_en": "Presupuesto Abierto exposes ten years of execution for public entities with official object, purpose, sector and geographic classifiers and open downloads.",
+        "note_cs": "Presupuesto Abierto zpřístupňuje deset let plnění veřejných subjektů s oficiálními klasifikacemi a otevřeným stažením."
+      }
+    },
+    {
       "iso2": "ba",
       "iso3": null,
       "name_en": "Bosnia and Herzegovina",
@@ -653,6 +843,15 @@
         "score": 27,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 27,
+        "band": "weak",
+        "obs_component": 27,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -683,6 +882,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 39,
+        "band": "weak",
+        "obs_component": 39,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -711,6 +919,15 @@
         "score": 80,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 100,
+        "band": "excellent",
+        "obs_component": 80,
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -741,6 +958,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -769,6 +995,15 @@
         "score": 79,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 79,
+        "band": "strong",
+        "obs_component": 79,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -799,6 +1034,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 30,
+        "band": "weak",
+        "obs_component": 30,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -827,6 +1071,15 @@
         "score": 14,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 14,
+        "band": "very_weak",
+        "obs_component": 14,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -857,6 +1110,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 43,
+        "band": "partial",
+        "obs_component": 43,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -885,6 +1147,15 @@
         "score": 50,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 50,
+        "band": "partial",
+        "obs_component": 50,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -915,6 +1186,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 82,
+        "band": "excellent",
+        "obs_component": 74,
+        "municipal_score": 40,
+        "municipal_bonus": 8,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "decentralized",
@@ -943,6 +1223,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -973,6 +1262,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 6,
+        "band": "very_weak",
+        "obs_component": 6,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -1002,34 +1300,14 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "cl",
-      "iso3": null,
-      "name_en": "Chile",
-      "name_cs": "Chile",
-      "national_budget": {
-        "research_status": "assessed",
-        "score": 60,
-        "band": "limited",
-        "survey": "OBS 2023"
+      "portal_readiness": {
+        "score": 6,
+        "band": "very_weak",
+        "obs_component": 6,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1050,6 +1328,44 @@
       }
     },
     {
+      "iso2": "cl",
+      "iso3": "CHL",
+      "name_en": "Chile",
+      "name_cs": "Chile",
+      "national_budget": {
+        "research_status": "assessed",
+        "score": 60,
+        "band": "limited",
+        "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 69,
+        "band": "strong",
+        "obs_component": 60,
+        "municipal_score": 45,
+        "municipal_bonus": 9,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "accounts_only",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": false,
+          "revised": false,
+          "execution": true,
+          "actual": true,
+          "function": null,
+          "economic": true,
+          "api": false
+        },
+        "source": "https://www.worldbank.org/en/programs/boost-portal/country-data",
+        "note_en": "Contraloría microdata provide complete subnational spending coverage from 2009 with detailed administrative, economic and programme classifications.",
+        "note_cs": "Mikrodata Contraloría pokrývají od roku 2009 úplné subnárodní výdaje s podrobným správním, ekonomickým a programovým členěním."
+      }
+    },
+    {
       "iso2": "cn",
       "iso3": null,
       "name_en": "China",
@@ -1059,6 +1375,15 @@
         "score": 20,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 20,
+        "band": "very_weak",
+        "obs_component": 20,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1080,7 +1405,7 @@
     },
     {
       "iso2": "co",
-      "iso3": null,
+      "iso3": "COL",
       "name_en": "Colombia",
       "name_cs": "Kolumbie",
       "national_budget": {
@@ -1089,22 +1414,31 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 70,
+        "band": "strong",
+        "obs_component": 50,
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "full_lifecycle",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": true,
+          "revised": true,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": true
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.datos.gov.co/Gastos-Gubernamentales/OVCF-CUIPO-Ejecuci-n-de-Gastos/4f7r-epif",
+        "note_en": "CUIPO publishes quarterly territorial revenue and expenditure programming and execution by entity through national Socrata downloads and OData.",
+        "note_cs": "CUIPO čtvrtletně zveřejňuje plánování a plnění územních příjmů a výdajů podle subjektu přes národní Socrata/OData rozhraní."
       }
     },
     {
@@ -1117,6 +1451,15 @@
         "score": 4,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 4,
+        "band": "very_weak",
+        "obs_component": 4,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1138,7 +1481,7 @@
     },
     {
       "iso2": "cr",
-      "iso3": null,
+      "iso3": "CRI",
       "name_en": "Costa Rica",
       "name_cs": "Kostarika",
       "national_budget": {
@@ -1147,22 +1490,31 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 79,
+        "band": "strong",
+        "obs_component": 61,
+        "municipal_score": 90,
+        "municipal_bonus": 18,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "full_lifecycle",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": true,
+          "revised": true,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://cgrweb.cgr.go.cr/apex/f?p=150220:30",
+        "note_en": "The Comptroller's SIPP covers initial, extraordinary and modified budgets plus execution for public institutions, with exportable results.",
+        "note_cs": "SIPP kontrolního úřadu pokrývá počáteční, mimořádné a upravené rozpočty i plnění veřejných institucí s exportem výsledků."
       }
     },
     {
@@ -1175,6 +1527,15 @@
         "score": 54,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 54,
+        "band": "partial",
+        "obs_component": 54,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1205,34 +1566,14 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "cu",
-      "iso3": null,
-      "name_en": "Cuba",
-      "name_cs": "Kuba",
-      "national_budget": {
-        "research_status": "not_researched",
-        "score": null,
-        "band": "not_researched",
-        "survey": null
+      "portal_readiness": {
+        "score": 67,
+        "band": "strong",
+        "obs_component": 67,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1253,6 +1594,44 @@
       }
     },
     {
+      "iso2": "cu",
+      "iso3": "CUB",
+      "name_en": "Cuba",
+      "name_cs": "Kuba",
+      "national_budget": {
+        "research_status": "not_researched",
+        "score": null,
+        "band": "not_researched",
+        "survey": null
+      },
+      "portal_readiness": {
+        "score": 0,
+        "band": "very_weak",
+        "obs_component": null,
+        "municipal_score": 0,
+        "municipal_bonus": 0,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": false,
+          "function": null,
+          "economic": null,
+          "api": false
+        },
+        "source": "https://www.sng-wofi.org/country_profiles/presentation.html",
+        "note_en": "The global and official-source screen found no nationally comparable entity-level municipal budget lifecycle.",
+        "note_cs": "Globální screening a kontrola oficiálních zdrojů nenalezly národně srovnatelný položkový životní cyklus obecních rozpočtů."
+      }
+    },
+    {
       "iso2": "cy",
       "iso3": null,
       "name_en": "Cyprus",
@@ -1262,6 +1641,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1292,6 +1680,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 82,
+        "band": "excellent",
+        "obs_component": 62,
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
@@ -1320,6 +1717,15 @@
         "score": 41,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 41,
+        "band": "partial",
+        "obs_component": 41,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1350,6 +1756,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": 70,
+        "band": "strong",
+        "obs_component": null,
+        "municipal_score": 70,
+        "municipal_bonus": 14,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "budget_and_accounts",
@@ -1378,6 +1793,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1408,6 +1832,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -1428,7 +1861,7 @@
     },
     {
       "iso2": "do",
-      "iso3": null,
+      "iso3": "DOM",
       "name_en": "Dominican Republic",
       "name_cs": "Dominikánská republika",
       "national_budget": {
@@ -1437,27 +1870,36 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 77,
+        "band": "strong",
+        "obs_component": 77,
+        "municipal_score": 0,
+        "municipal_bonus": 0,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": false,
           "function": null,
           "economic": null,
-          "api": null
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.digepres.gob.do/",
+        "note_en": "DIGEPRES publishes national and consolidated fiscal data, but the reviewed layer does not provide an entity-level municipal lifecycle.",
+        "note_cs": "DIGEPRES zveřejňuje státní a konsolidovaná fiskální data, prověřená vrstva však neposkytuje životní cyklus jednotlivých obcí."
       }
     },
     {
       "iso2": "ec",
-      "iso3": null,
+      "iso3": "ECU",
       "name_en": "Ecuador",
       "name_cs": "Ekvádor",
       "national_budget": {
@@ -1466,22 +1908,31 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 48,
+        "band": "partial",
+        "obs_component": 48,
+        "municipal_score": 0,
+        "municipal_bonus": 0,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": false,
           "function": null,
           "economic": null,
-          "api": null
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.datosabiertos.gob.ec/dataset/",
+        "note_en": "The national open-data catalogue exposes central-budget execution; a comparable entity-level GAD municipal lifecycle was not found in the reviewed national layer.",
+        "note_cs": "Národní katalog nabízí plnění státního rozpočtu; srovnatelný životní cyklus jednotlivých místních GAD nebyl v prověřené národní vrstvě nalezen."
       }
     },
     {
@@ -1494,6 +1945,15 @@
         "score": 49,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 49,
+        "band": "partial",
+        "obs_component": 49,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1515,7 +1975,7 @@
     },
     {
       "iso2": "sv",
-      "iso3": null,
+      "iso3": "SLV",
       "name_en": "El Salvador",
       "name_cs": "Salvador",
       "national_budget": {
@@ -1524,22 +1984,31 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 37,
+        "band": "weak",
+        "obs_component": 24,
+        "municipal_score": 65,
+        "municipal_bonus": 13,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "accounts_only",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": false,
+          "revised": false,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": true
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
+        "note_en": "The Fiscal Transparency Portal publishes CSV execution for all 262 former municipalities/current districts, plus municipal closings and classifiers.",
+        "note_cs": "Portál fiskální transparentnosti zveřejňuje CSV plnění všech 262 bývalých obcí/dnešních distriktů, účetní závěrky a klasifikátory."
       }
     },
     {
@@ -1552,6 +2021,15 @@
         "score": 4,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 4,
+        "band": "very_weak",
+        "obs_component": 4,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1582,6 +2060,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -1610,6 +2097,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1640,6 +2136,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 10,
+        "band": "very_weak",
+        "obs_component": 10,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -1668,6 +2173,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1698,6 +2212,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 34,
+        "band": "weak",
+        "obs_component": 34,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -1726,6 +2249,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": 65,
+        "band": "strong",
+        "obs_component": null,
+        "municipal_score": 65,
+        "municipal_bonus": 13,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -1756,6 +2288,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 84,
+        "band": "excellent",
+        "obs_component": 74,
+        "municipal_score": 50,
+        "municipal_bonus": 10,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
@@ -1784,6 +2325,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1814,6 +2364,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 36,
+        "band": "weak",
+        "obs_component": 36,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -1842,6 +2401,15 @@
         "score": 87,
         "band": "extensive",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 87,
+        "band": "excellent",
+        "obs_component": 87,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1872,6 +2440,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 84,
+        "band": "excellent",
+        "obs_component": 76,
+        "municipal_score": 40,
+        "municipal_bonus": 8,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "decentralized",
@@ -1900,6 +2477,15 @@
         "score": 46,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 46,
+        "band": "partial",
+        "obs_component": 46,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -1930,6 +2516,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -1959,34 +2554,14 @@
         "band": "not_researched",
         "survey": null
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "gt",
-      "iso3": null,
-      "name_en": "Guatemala",
-      "name_cs": "Guatemala",
-      "national_budget": {
-        "research_status": "assessed",
-        "score": 64,
-        "band": "substantial",
-        "survey": "OBS 2023"
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2007,6 +2582,44 @@
       }
     },
     {
+      "iso2": "gt",
+      "iso3": "GTM",
+      "name_en": "Guatemala",
+      "name_cs": "Guatemala",
+      "national_budget": {
+        "research_status": "assessed",
+        "score": 64,
+        "band": "substantial",
+        "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 84,
+        "band": "excellent",
+        "obs_component": 64,
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "full_lifecycle",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": true,
+          "revised": true,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": true
+        },
+        "source": "https://datos.minfin.gob.gt/organization/e4513287-764d-4117-9ee9-73df8a40cdd4",
+        "note_en": "SICOIN GL covers five budget stages for all 340 municipalities with deep classifications and recurring CSV/XLSX/JSON publication.",
+        "note_cs": "SICOIN GL pokrývá pět fází rozpočtu všech 340 obcí s hlubokým členěním a opakovanou publikací CSV/XLSX/JSON."
+      }
+    },
+    {
       "iso2": "gn",
       "iso3": null,
       "name_en": "Guinea",
@@ -2016,6 +2629,15 @@
         "score": 10,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 10,
+        "band": "very_weak",
+        "obs_component": 10,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2046,6 +2668,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 5,
+        "band": "very_weak",
+        "obs_component": 5,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2075,6 +2706,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2095,7 +2735,7 @@
     },
     {
       "iso2": "ht",
-      "iso3": null,
+      "iso3": "HTI",
       "name_en": "Haiti",
       "name_cs": "Haiti",
       "national_budget": {
@@ -2104,27 +2744,36 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": 0,
+        "band": "very_weak",
+        "obs_component": null,
+        "municipal_score": 0,
+        "municipal_bonus": 0,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": false,
           "function": null,
           "economic": null,
-          "api": null
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.worldbank.org/en/programs/boost-portal/country-data",
+        "note_en": "BOOST provides detailed central-government budget and execution data; the reviewed source does not include a municipal entity layer.",
+        "note_cs": "BOOST poskytuje detailní státní rozpočet a plnění; prověřený zdroj neobsahuje vrstvu jednotlivých obcí."
       }
     },
     {
       "iso2": "hn",
-      "iso3": null,
+      "iso3": "HND",
       "name_en": "Honduras",
       "name_cs": "Honduras",
       "national_budget": {
@@ -2133,22 +2782,31 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 79,
+        "band": "strong",
+        "obs_component": 65,
+        "municipal_score": 70,
+        "municipal_bonus": 14,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "accounts_only",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": false,
+          "revised": true,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.sefin.gob.hn/sami/",
+        "note_en": "SAMI standardises municipal budget modifications, execution, accounting and reports, but nationwide public bulk extraction remains incomplete.",
+        "note_cs": "SAMI standardizuje změny rozpočtu, plnění, účetnictví a výkazy obcí, celostátní veřejný hromadný export však zůstává neúplný."
       }
     },
     {
@@ -2161,6 +2819,15 @@
         "score": 22,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 22,
+        "band": "weak",
+        "obs_component": 22,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2191,34 +2858,14 @@
         "band": "not_researched",
         "survey": null
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "in",
-      "iso3": null,
-      "name_en": "India",
-      "name_cs": "Indie",
-      "national_budget": {
-        "research_status": "assessed",
-        "score": 51,
-        "band": "limited",
-        "survey": "OBS 2023"
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2239,6 +2886,44 @@
       }
     },
     {
+      "iso2": "in",
+      "iso3": "IND",
+      "name_en": "India",
+      "name_cs": "Indie",
+      "national_budget": {
+        "research_status": "assessed",
+        "score": 51,
+        "band": "limited",
+        "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 64,
+        "band": "strong",
+        "obs_component": 51,
+        "municipal_score": 65,
+        "municipal_bonus": 13,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "budget_and_accounts",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": true,
+          "revised": null,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": null,
+          "api": false
+        },
+        "source": "https://www.nic.gov.in/project/egramswaraj/",
+        "note_en": "eGramSwaraj integrates planning, work-based accounting, progress and audit for rural local bodies nationwide; urban local-government coverage is not equivalent.",
+        "note_cs": "eGramSwaraj celostátně propojuje plánování, účetnictví, průběh a audit venkovských samospráv; městské samosprávy nemají rovnocenné pokrytí."
+      }
+    },
+    {
       "iso2": "id",
       "iso3": null,
       "name_en": "Indonesia",
@@ -2248,6 +2933,15 @@
         "score": 70,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 70,
+        "band": "strong",
+        "obs_component": 70,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2278,6 +2972,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2306,6 +3009,15 @@
         "score": 8,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 8,
+        "band": "very_weak",
+        "obs_component": 8,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2336,6 +3048,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2364,6 +3085,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2394,6 +3124,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 89,
+        "band": "excellent",
+        "obs_component": 76,
+        "municipal_score": 65,
+        "municipal_bonus": 13,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
@@ -2422,6 +3161,15 @@
         "score": 50,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 50,
+        "band": "partial",
+        "obs_component": 50,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2452,6 +3200,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 73,
+        "band": "strong",
+        "obs_component": 63,
+        "municipal_score": 50,
+        "municipal_bonus": 10,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
@@ -2480,6 +3237,15 @@
         "score": 60,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 60,
+        "band": "partial",
+        "obs_component": 60,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2510,6 +3276,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 63,
+        "band": "strong",
+        "obs_component": 63,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2538,6 +3313,15 @@
         "score": 55,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 55,
+        "band": "partial",
+        "obs_component": 55,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2568,6 +3352,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2596,6 +3389,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2626,6 +3428,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 61,
+        "band": "strong",
+        "obs_component": 61,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2654,6 +3465,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2684,6 +3504,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2712,6 +3541,15 @@
         "score": 17,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 17,
+        "band": "very_weak",
+        "obs_component": 17,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2742,6 +3580,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 35,
+        "band": "weak",
+        "obs_component": 35,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2770,6 +3617,15 @@
         "score": 52,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 52,
+        "band": "partial",
+        "obs_component": 52,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2800,6 +3656,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2828,6 +3693,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2858,6 +3732,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2886,6 +3769,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2916,6 +3808,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 35,
+        "band": "weak",
+        "obs_component": 35,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -2944,6 +3845,15 @@
         "score": 39,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 39,
+        "band": "weak",
+        "obs_component": 39,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -2974,6 +3884,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 6,
+        "band": "very_weak",
+        "obs_component": 6,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3002,6 +3921,15 @@
         "score": 48,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 48,
+        "band": "partial",
+        "obs_component": 48,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3032,6 +3960,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3060,6 +3997,15 @@
         "score": 10,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 10,
+        "band": "very_weak",
+        "obs_component": 10,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3090,6 +4036,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3118,6 +4073,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3148,6 +4112,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3177,34 +4150,14 @@
         "band": "not_researched",
         "survey": null
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "mx",
-      "iso3": null,
-      "name_en": "Mexico",
-      "name_cs": "Mexiko",
-      "national_budget": {
-        "research_status": "assessed",
-        "score": 80,
-        "band": "substantial",
-        "survey": "OBS 2023"
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3225,6 +4178,44 @@
       }
     },
     {
+      "iso2": "mx",
+      "iso3": "MEX",
+      "name_en": "Mexico",
+      "name_cs": "Mexiko",
+      "national_budget": {
+        "research_status": "assessed",
+        "score": 80,
+        "band": "substantial",
+        "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 91,
+        "band": "excellent",
+        "obs_component": 80,
+        "municipal_score": 55,
+        "municipal_bonus": 11,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "accounts_only",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": false,
+          "revised": false,
+          "execution": true,
+          "actual": true,
+          "function": false,
+          "economic": true,
+          "api": true
+        },
+        "source": "https://www.inegi.org.mx/programas/finanzas/",
+        "note_en": "INEGI provides annual state and municipal revenue and expenditure execution with economic and geographic dimensions, but no municipal functional or adopted-budget layer.",
+        "note_cs": "INEGI poskytuje roční plnění příjmů a výdajů států a obcí s ekonomickým a geografickým členěním, nikoli obecní funkční či schválený rozpočet."
+      }
+    },
+    {
       "iso2": "md",
       "iso3": null,
       "name_en": "Moldova",
@@ -3234,6 +4225,15 @@
         "score": 81,
         "band": "extensive",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 81,
+        "band": "excellent",
+        "obs_component": 81,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3264,6 +4264,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3292,6 +4301,15 @@
         "score": 62,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 62,
+        "band": "strong",
+        "obs_component": 62,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3322,6 +4340,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 48,
+        "band": "partial",
+        "obs_component": 48,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3350,6 +4377,15 @@
         "score": 47,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 47,
+        "band": "partial",
+        "obs_component": 47,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3380,6 +4416,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 47,
+        "band": "partial",
+        "obs_component": 47,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3408,6 +4453,15 @@
         "score": 3,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 3,
+        "band": "very_weak",
+        "obs_component": 3,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3438,6 +4492,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 54,
+        "band": "partial",
+        "obs_component": 54,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3466,6 +4529,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3496,6 +4568,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 50,
+        "band": "partial",
+        "obs_component": 50,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3524,6 +4605,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": 100,
+        "band": "excellent",
+        "obs_component": null,
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -3554,6 +4644,15 @@
         "band": "extensive",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 95,
+        "band": "excellent",
+        "obs_component": 87,
+        "municipal_score": 40,
+        "municipal_bonus": 8,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "decentralized",
@@ -3574,7 +4673,7 @@
     },
     {
       "iso2": "ni",
-      "iso3": null,
+      "iso3": "NIC",
       "name_en": "Nicaragua",
       "name_cs": "Nikaragua",
       "national_budget": {
@@ -3583,22 +4682,31 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 52,
+        "band": "partial",
+        "obs_component": 44,
+        "municipal_score": 40,
+        "municipal_bonus": 8,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.hacienda.gob.ni/finanzas-publicas/",
+        "note_en": "National statistics publish local-government aggregates, not one entity-level itemised municipal budget lifecycle.",
+        "note_cs": "Národní statistiky zveřejňují souhrny místních vlád, nikoli položkový životní cyklus jednotlivých obcí."
       }
     },
     {
@@ -3611,6 +4719,15 @@
         "score": 33,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 33,
+        "band": "weak",
+        "obs_component": 33,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3641,6 +4758,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 31,
+        "band": "weak",
+        "obs_component": 31,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3669,6 +4795,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3699,6 +4834,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 90,
+        "band": "excellent",
+        "obs_component": 80,
+        "municipal_score": 50,
+        "municipal_bonus": 10,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
@@ -3727,6 +4871,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3757,6 +4910,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 30,
+        "band": "weak",
+        "obs_component": 30,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -3785,6 +4947,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3815,34 +4986,14 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
-      "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
-        "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
-        },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
-      }
-    },
-    {
-      "iso2": "pa",
-      "iso3": null,
-      "name_en": "Panama",
-      "name_cs": "Panama",
-      "national_budget": {
-        "research_status": "not_researched",
-        "score": null,
-        "band": "not_researched",
-        "survey": null
+      "portal_readiness": {
+        "score": 8,
+        "band": "very_weak",
+        "obs_component": 8,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3863,6 +5014,44 @@
       }
     },
     {
+      "iso2": "pa",
+      "iso3": "PAN",
+      "name_en": "Panama",
+      "name_cs": "Panama",
+      "national_budget": {
+        "research_status": "not_researched",
+        "score": null,
+        "band": "not_researched",
+        "survey": null
+      },
+      "portal_readiness": {
+        "score": 0,
+        "band": "very_weak",
+        "obs_component": null,
+        "municipal_score": 0,
+        "municipal_bonus": 0,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
+      "municipal_item_level": {
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
+        "features": {
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": false,
+          "function": null,
+          "economic": null,
+          "api": false
+        },
+        "source": "https://www.mef.gob.pa/transparencia/informe-preliminar-de-la-ejecucion-presupuestaria-del-estado/",
+        "note_en": "MEF publishes central-government execution in PDF, Excel and CSV; a national entity-level municipal layer was not found in the reviewed catalogue.",
+        "note_cs": "MEF zveřejňuje plnění státního rozpočtu v PDF, Excelu a CSV; národní vrstva jednotlivých obcí nebyla v prověřeném katalogu nalezena."
+      }
+    },
+    {
       "iso2": "pg",
       "iso3": null,
       "name_en": "Papua New Guinea",
@@ -3872,6 +5061,15 @@
         "score": 52,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 52,
+        "band": "partial",
+        "obs_component": 52,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3893,7 +5091,7 @@
     },
     {
       "iso2": "py",
-      "iso3": null,
+      "iso3": "PRY",
       "name_en": "Paraguay",
       "name_cs": "Paraguay",
       "national_budget": {
@@ -3902,27 +5100,36 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 59,
+        "band": "partial",
+        "obs_component": 48,
+        "municipal_score": 55,
+        "municipal_bonus": 11,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "accounts_only",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": false,
+          "revised": false,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.worldbank.org/en/programs/boost-portal/country-data",
+        "note_en": "BOOST includes municipal-government expenditure alongside detailed central and decentralised-agency budget data, but not a full municipal plan-to-actual lifecycle.",
+        "note_cs": "BOOST zahrnuje obecní výdaje vedle detailních dat státu a decentralizovaných institucí, nikoli však úplný obecní cyklus plán–skutečnost."
       }
     },
     {
       "iso2": "pe",
-      "iso3": null,
+      "iso3": "PER",
       "name_en": "Peru",
       "name_cs": "Peru",
       "national_budget": {
@@ -3931,22 +5138,31 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 91,
+        "band": "excellent",
+        "obs_component": 71,
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "full_lifecycle",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "enacted": true,
+          "revised": true,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": true
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.mef.gob.pe/es/?option=com_content&view=article&id=504&Itemid=100944",
+        "note_en": "Consulta Amigable publishes opening and modified budgets plus daily revenue and expenditure stages for national, regional and local governments.",
+        "note_cs": "Consulta Amigable zveřejňuje počáteční a upravené rozpočty i denní fáze příjmů a výdajů státu, regionů a obcí."
       }
     },
     {
@@ -3959,6 +5175,15 @@
         "score": 75,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 75,
+        "band": "strong",
+        "obs_component": 75,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -3989,6 +5214,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 73,
+        "band": "strong",
+        "obs_component": 59,
+        "municipal_score": 70,
+        "municipal_bonus": 14,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
@@ -4017,6 +5251,15 @@
         "score": 62,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 62,
+        "band": "strong",
+        "obs_component": 62,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4047,6 +5290,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 2,
+        "band": "very_weak",
+        "obs_component": 2,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4075,6 +5327,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4105,6 +5366,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 62,
+        "band": "strong",
+        "obs_component": 62,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4133,6 +5403,15 @@
         "score": 66,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 66,
+        "band": "strong",
+        "obs_component": 66,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4163,6 +5442,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 50,
+        "band": "partial",
+        "obs_component": 50,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4191,6 +5479,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4221,6 +5518,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4249,6 +5555,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4279,6 +5594,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4307,6 +5631,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4337,6 +5670,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 32,
+        "band": "weak",
+        "obs_component": 32,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4365,6 +5707,15 @@
         "score": 26,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 26,
+        "band": "weak",
+        "obs_component": 26,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4395,6 +5746,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 42,
+        "band": "partial",
+        "obs_component": 42,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4423,6 +5783,15 @@
         "score": 51,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 51,
+        "band": "partial",
+        "obs_component": 51,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4453,6 +5822,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4481,6 +5859,15 @@
         "score": 55,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 55,
+        "band": "partial",
+        "obs_component": 55,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4511,6 +5898,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4539,6 +5935,15 @@
         "score": 69,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 69,
+        "band": "strong",
+        "obs_component": 69,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4569,6 +5974,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 64,
+        "band": "strong",
+        "obs_component": 64,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4597,6 +6011,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4627,6 +6050,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 37,
+        "band": "weak",
+        "obs_component": 37,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4655,6 +6087,15 @@
         "score": 83,
         "band": "extensive",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 83,
+        "band": "excellent",
+        "obs_component": 83,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4685,6 +6126,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 88,
+        "band": "excellent",
+        "obs_component": 71,
+        "municipal_score": 85,
+        "municipal_bonus": 17,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
@@ -4713,6 +6163,15 @@
         "score": 13,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 13,
+        "band": "very_weak",
+        "obs_component": 13,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4743,6 +6202,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 69,
+        "band": "strong",
+        "obs_component": 54,
+        "municipal_score": 75,
+        "municipal_bonus": 15,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "budget_and_accounts",
@@ -4771,6 +6239,15 @@
         "score": 37,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 37,
+        "band": "weak",
+        "obs_component": 37,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4801,6 +6278,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 2,
+        "band": "very_weak",
+        "obs_component": 2,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4829,6 +6315,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4859,6 +6354,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 30,
+        "band": "weak",
+        "obs_component": 30,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -4887,6 +6391,15 @@
         "score": 85,
         "band": "extensive",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 95,
+        "band": "excellent",
+        "obs_component": 85,
+        "municipal_score": 50,
+        "municipal_bonus": 10,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -4917,6 +6430,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": 50,
+        "band": "partial",
+        "obs_component": null,
+        "municipal_score": 50,
+        "municipal_bonus": 10,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "decentralized",
@@ -4945,6 +6467,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -4975,6 +6506,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 33,
+        "band": "weak",
+        "obs_component": 33,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5003,6 +6543,15 @@
         "score": 41,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 41,
+        "band": "partial",
+        "obs_component": 41,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5033,6 +6582,15 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 60,
+        "band": "partial",
+        "obs_component": 60,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5061,6 +6619,15 @@
         "score": 37,
         "band": "minimal",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 37,
+        "band": "weak",
+        "obs_component": 37,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5091,6 +6658,15 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 17,
+        "band": "very_weak",
+        "obs_component": 17,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5119,6 +6695,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5149,6 +6734,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 38,
+        "band": "weak",
+        "obs_component": 38,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5177,6 +6771,15 @@
         "score": 16,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 16,
+        "band": "very_weak",
+        "obs_component": 16,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5207,6 +6810,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 64,
+        "band": "strong",
+        "obs_component": 64,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5235,6 +6847,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5265,6 +6886,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5293,6 +6923,15 @@
         "score": 59,
         "band": "limited",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 59,
+        "band": "partial",
+        "obs_component": 59,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5323,6 +6962,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 58,
+        "band": "partial",
+        "obs_component": 38,
+        "municipal_score": 100,
+        "municipal_bonus": 20,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
@@ -5351,6 +6999,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5381,6 +7038,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 74,
+        "band": "strong",
+        "obs_component": 62,
+        "municipal_score": 60,
+        "municipal_bonus": 12,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "budget_and_accounts",
@@ -5410,6 +7076,15 @@
         "band": "substantial",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 79,
+        "band": "strong",
+        "obs_component": 69,
+        "municipal_score": 50,
+        "municipal_bonus": 10,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "decentralized",
@@ -5430,7 +7105,7 @@
     },
     {
       "iso2": "uy",
-      "iso3": null,
+      "iso3": "URY",
       "name_en": "Uruguay",
       "name_cs": "Uruguay",
       "national_budget": {
@@ -5439,22 +7114,31 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": 0,
+        "band": "very_weak",
+        "obs_component": null,
+        "municipal_score": 0,
+        "municipal_bonus": 0,
+        "evidence_status": "municipal_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": false,
           "function": null,
           "economic": null,
-          "api": null
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://www.worldbank.org/en/programs/boost-portal/country-data",
+        "note_en": "The national BOOST/transparency layer explicitly has no subnational data; intendencias publish under separate local arrangements.",
+        "note_cs": "Národní vrstva BOOST/transparentnosti výslovně neobsahuje subnárodní data; intendencias zveřejňují odděleně."
       }
     },
     {
@@ -5467,6 +7151,15 @@
         "score": null,
         "band": "not_researched",
         "survey": null
+      },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5497,6 +7190,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5526,6 +7228,15 @@
         "band": "not_researched",
         "survey": null
       },
+      "portal_readiness": {
+        "score": null,
+        "band": "not_researched",
+        "obs_component": null,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "not_scored",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5546,7 +7257,7 @@
     },
     {
       "iso2": "ve",
-      "iso3": null,
+      "iso3": "VEN",
       "name_en": "Venezuela",
       "name_cs": "Venezuela",
       "national_budget": {
@@ -5555,27 +7266,36 @@
         "band": "scant",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 0,
+        "band": "very_weak",
+        "obs_component": 0,
+        "municipal_score": 0,
+        "municipal_bonus": 0,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
         "features": {
-          "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
+          "enacted": false,
+          "revised": false,
+          "execution": false,
+          "actual": false,
           "function": null,
           "economic": null,
-          "api": null
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://internationalbudget.org/open-budget-survey/country-results/2023/venezuela",
+        "note_en": "No nationally comparable entity-level municipal budget lifecycle was found in the reviewed official and global fiscal-data sources.",
+        "note_cs": "V prověřených oficiálních a globálních fiskálních zdrojích nebyl nalezen národně srovnatelný životní cyklus jednotlivých obcí."
       }
     },
     {
       "iso2": "vn",
-      "iso3": null,
+      "iso3": "VNM",
       "name_en": "Vietnam",
       "name_cs": "Vietnam",
       "national_budget": {
@@ -5584,22 +7304,31 @@
         "band": "limited",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 62,
+        "band": "strong",
+        "obs_component": 51,
+        "municipal_score": 55,
+        "municipal_bonus": 11,
+        "evidence_status": "complete",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
-        "research_status": "not_researched",
-        "category": "not_researched",
-        "pipeline": null,
+        "research_status": "researched",
+        "category": "decentralized",
+        "pipeline": "assessed",
         "features": {
           "enacted": null,
-          "revised": null,
-          "execution": null,
-          "actual": null,
-          "function": null,
-          "economic": null,
-          "api": null
+          "revised": false,
+          "execution": true,
+          "actual": true,
+          "function": true,
+          "economic": true,
+          "api": false
         },
-        "source": null,
-        "note_en": "Municipal item-level availability has not yet been researched country by country.",
-        "note_cs": "Dostupnost položkových obecních dat zatím nebyla pro tuto zemi samostatně prověřena."
+        "source": "https://ckns.mof.gov.vn/",
+        "note_en": "The Ministry of Finance defines and publishes subnational budget and final-account forms, while entity publications remain distributed across provincial and local portals.",
+        "note_cs": "Ministerstvo financí definuje a zveřejňuje formuláře místních rozpočtů a závěrečných účtů, ale publikace jednotlivých subjektů zůstávají rozptýlené po provinčních a místních portálech."
       }
     },
     {
@@ -5612,6 +7341,15 @@
         "score": 0,
         "band": "scant",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 0,
+        "band": "very_weak",
+        "obs_component": 0,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",
@@ -5642,6 +7380,15 @@
         "band": "minimal",
         "survey": "OBS 2023"
       },
+      "portal_readiness": {
+        "score": 34,
+        "band": "weak",
+        "obs_component": 34,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      },
       "municipal_item_level": {
         "research_status": "not_researched",
         "category": "not_researched",
@@ -5670,6 +7417,15 @@
         "score": 63,
         "band": "substantial",
         "survey": "OBS 2023"
+      },
+      "portal_readiness": {
+        "score": 63,
+        "band": "strong",
+        "obs_component": 63,
+        "municipal_score": null,
+        "municipal_bonus": null,
+        "evidence_status": "national_only",
+        "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "municipal_item_level": {
         "research_status": "not_researched",

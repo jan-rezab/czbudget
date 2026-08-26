@@ -4,57 +4,63 @@
   if (!root) return;
   let registry;
   let geometry;
-  const state = { mode:"national" };
+  const state = { mode:"readiness" };
   const featureKeys = ["enacted","revised","execution","actual","function","economic","api"];
   const copy = {
     en: {
-      mode:"Map layer", national:"National budget transparency", municipal:"Municipal item-level lifecycle",
+      mode:"Map layer", readiness:"PSD portal-readiness score", national:"OBS central-government score", municipal:"Municipal item-level lifecycle",
       features:{enacted:"Municipal approved budget",revised:"Municipal revised budget",execution:"Municipal in-year execution",actual:"Municipal final accounts",function:"Municipal functional classification",economic:"Municipal economic classification",api:"Municipal API / bulk data"},
-      universe:"sovereign states on the map", assessed:"national budgets assessed", researched:"municipal systems researched", sufficient:"publish enough for informed debate", full:"full municipal lifecycles", scant:"scant or no central-budget information", decentralized:"without one national municipal layer",
+      universe:"sovereign states on the map", scored:"countries with a verified score component", complete:"central + municipal evidence", provisional:"scores awaiting municipal review", assessed:"central budgets assessed by OBS", researched:"municipal systems researched", sufficient:"publish enough for informed debate", full:"full municipal lifecycles", scant:"scant or no central-budget information", decentralized:"without one national municipal layer",
+      excellent:"Excellent · 81–100", strong:"Strong · 61–80", partial:"Partial · 41–60", weak:"Weak · 21–40", veryWeak:"Very weak · 0–20",
       extensive:"Extensive information · 81–100", substantial:"Substantial · 61–80", limited:"Limited · 41–60", minimal:"Minimal · 21–40", scantBand:"Scant or none · 0–20",
       fullLifecycle:"Full municipal lifecycle", budgetAccounts:"Approved budget + final accounts", accountsOnly:"Final accounts / execution only", decentralizedBand:"No single national item-level layer found",
-      available:"Available in researched national layer", unavailable:"Not in researched national layer", verify:"Needs verification", notResearched:"Not researched",
-      caveat:"Black means not researched—not “publishes nothing.” National scores cover central-government budget documents. Municipal colours use a separate, stricter test: one official national, comparable, item-level local-budget source.",
-      bestTitle:"Governments publishing sufficient national budget information", worstTitle:"Scant or no central-budget information", municipalTitle:"Municipal item-level findings", tableTitle:"All 195 states · evidence matrix",
-      country:"Country", score:"National score", municipalColumn:"Municipal layer", stages:["Approved","Revised","In-year","Final","Function","Economic","API / bulk"], outside:"Outside the 195-state universe",
+      available:"Available in researched national layer", unavailable:"Not in researched national layer", verify:"Needs verification", notResearched:"Not researched / no verified score",
+      caveat:"The default PSD score combines the OBS central-government score with up to 20 points for verified municipal depth. Missing municipal research adds no bonus and remains provisional. Dark gray means not researched or not scored—never “publishes nothing.” White is the middle band, not the minimum.",
+      bestTitle:"Governments publishing sufficient central-budget information", worstTitle:"Scant or no central-budget information", municipalTitle:"Municipal item-level findings", tableTitle:"All 195 states · evidence and scoring matrix",
+      country:"Country", psdScore:"PSD score", obsScore:"OBS central-government score", municipalColumn:"Municipal layer", stages:["Approved","Revised","In-year","Final","Function","Economic","API / bulk"], outside:"Outside the 195-state universe",
       source:"Official municipal source ↗", status:{loaded:"Loaded",loaded_partial:"Partly loaded",upgrading:"Detail upgrade running",crawling:"Crawl started",candidate:"Recommended next",assessed:"Assessed"},
-      sources:"Research sources", nationalNote:"OBS 2023 is the latest complete global round: 125 countries, central government only.", municipalNote:"SNG-WOFI and BOOST are screening evidence; PSD still verifies municipality-level, item-level publication country by country."
+      sources:"Research sources", nationalNote:"OBS 2023 is the latest complete global round: 125 countries, central government only.", municipalNote:"Municipal score weights: approved 20, revised 15, in-year 15, final 20, function 10, economic 10, API/bulk 10. PSD adds 20% of that municipal score to OBS, capped at 100.",
+      scoreWhy:"Why this score", obs:"OBS central government", municipalCapability:"municipal capability", municipalBonus:"municipal bonus", noObs:"OBS did not assess this country", noMunicipal:"municipal layer not yet researched", completeEvidence:"central and municipal evidence", nationalOnly:"central evidence; municipal review pending", municipalOnly:"municipal evidence; no OBS score", noEvidence:"no verified score component"
     },
     cs: {
-      mode:"Vrstva mapy", national:"Transparentnost státního rozpočtu", municipal:"Položkový životní cyklus obcí",
+      mode:"Vrstva mapy", readiness:"Skóre připravenosti portálu PSD", national:"Skóre OBS pro centrální vládu", municipal:"Položkový životní cyklus obcí",
       features:{enacted:"Schválený obecní rozpočet",revised:"Upravený obecní rozpočet",execution:"Průběžné plnění obcí",actual:"Závěrečné účty obcí",function:"Funkční členění obcí",economic:"Ekonomické členění obcí",api:"Obecní API / hromadná data"},
-      universe:"suverénních států na mapě", assessed:"posouzených státních rozpočtů", researched:"prověřených obecních systémů", sufficient:"zveřejňuje dost pro informovanou debatu", full:"úplných obecních životních cyklů", scant:"téměř žádné informace o státním rozpočtu", decentralized:"bez jednotné národní obecní vrstvy",
+      universe:"suverénních států na mapě", scored:"zemí s ověřenou složkou skóre", complete:"státních i obecních důkazů", provisional:"skóre čekajících na obecní průzkum", assessed:"státních rozpočtů posouzených OBS", researched:"prověřených obecních systémů", sufficient:"zveřejňuje dost pro informovanou debatu", full:"úplných obecních životních cyklů", scant:"téměř žádné informace o státním rozpočtu", decentralized:"bez jednotné národní obecní vrstvy",
+      excellent:"Výborné · 81–100", strong:"Silné · 61–80", partial:"Částečné · 41–60", weak:"Slabé · 21–40", veryWeak:"Velmi slabé · 0–20",
       extensive:"Rozsáhlé informace · 81–100", substantial:"Dostatečné · 61–80", limited:"Omezené · 41–60", minimal:"Minimální · 21–40", scantBand:"Skrovné nebo žádné · 0–20",
       fullLifecycle:"Úplný obecní životní cyklus", budgetAccounts:"Schválený rozpočet + závěrečné účty", accountsOnly:"Jen skutečnost / plnění", decentralizedBand:"Nenalezena jednotná národní položková vrstva",
-      available:"Dostupné v prověřené národní vrstvě", unavailable:"Není v prověřené národní vrstvě", verify:"Nutno ověřit", notResearched:"Neprověřeno",
-      caveat:"Černá znamená neprověřeno—nikoli „vláda nic nezveřejňuje“. Státní skóre hodnotí dokumenty centrální vlády. Obecní barvy používají jiný, přísnější test: jeden oficiální národní, srovnatelný položkový zdroj místních rozpočtů.",
-      bestTitle:"Vlády zveřejňující dostatek informací o státním rozpočtu", worstTitle:"Skrovné nebo žádné informace o státním rozpočtu", municipalTitle:"Zjištění k položkovým obecním datům", tableTitle:"Všech 195 států · matice důkazů",
-      country:"Země", score:"Státní skóre", municipalColumn:"Obecní vrstva", stages:["Schválený","Upravený","Během roku","Skutečnost","Funkce","Ekonomika","API / bulk"], outside:"Mimo univerzum 195 států",
+      available:"Dostupné v prověřené národní vrstvě", unavailable:"Není v prověřené národní vrstvě", verify:"Nutno ověřit", notResearched:"Neprověřeno / bez ověřeného skóre",
+      caveat:"Výchozí skóre PSD kombinuje skóre OBS pro centrální vládu s až 20 body za ověřenou hloubku obecních dat. Chybějící obecní průzkum nepřidává bonus a skóre zůstává předběžné. Tmavě šedá znamená neprověřeno či nehodnoceno—nikoli „vláda nic nezveřejňuje“. Bílá je prostřední pásmo, ne minimum.",
+      bestTitle:"Vlády zveřejňující dostatek informací o centrálním rozpočtu", worstTitle:"Skrovné nebo žádné informace o centrálním rozpočtu", municipalTitle:"Zjištění k položkovým obecním datům", tableTitle:"Všech 195 států · matice důkazů a skóre",
+      country:"Země", psdScore:"Skóre PSD", obsScore:"Skóre OBS centrální vlády", municipalColumn:"Obecní vrstva", stages:["Schválený","Upravený","Během roku","Skutečnost","Funkce","Ekonomika","API / bulk"], outside:"Mimo univerzum 195 států",
       source:"Oficiální obecní zdroj ↗", status:{loaded:"Načteno",loaded_partial:"Částečně načteno",upgrading:"Běží detailní upgrade",crawling:"Crawl spuštěn",candidate:"Doporučený další",assessed:"Posouzeno"},
-      sources:"Výzkumné zdroje", nationalNote:"OBS 2023 je poslední úplné globální kolo: 125 zemí, pouze centrální vláda.", municipalNote:"SNG-WOFI a BOOST slouží ke screeningu; PSD dál ověřuje položkovou obecní publikaci zemi po zemi."
+      sources:"Výzkumné zdroje", nationalNote:"OBS 2023 je poslední úplné globální kolo: 125 zemí, pouze centrální vláda.", municipalNote:"Váhy obecního skóre: schválený rozpočet 20, upravený 15, průběžné plnění 15, skutečnost 20, funkce 10, ekonomika 10, API/bulk 10. PSD přičte 20 % obecního skóre k OBS, nejvýše do 100.",
+      scoreWhy:"Proč má toto skóre", obs:"OBS centrální vláda", municipalCapability:"obecní schopnosti", municipalBonus:"obecní bonus", noObs:"OBS tuto zemi neposuzoval", noMunicipal:"obecní vrstva zatím neprověřena", completeEvidence:"státní i obecní důkazy", nationalOnly:"státní důkazy; obecní průzkum čeká", municipalOnly:"obecní důkazy; bez skóre OBS", noEvidence:"bez ověřené složky skóre"
     }
   };
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
   const flag = (iso2) => [...iso2.toUpperCase()].map((character) => String.fromCodePoint(127397 + character.charCodeAt(0))).join("");
   const featureCategory = (country,key) => country?.municipal_item_level?.research_status !== "researched" ? "not_researched" : country.municipal_item_level.features[key] === true ? "available" : country.municipal_item_level.features[key] === false ? "unavailable" : "verify";
-  const categoryFor = (country) => state.mode === "national" ? country?.national_budget?.band ?? "not_researched" : state.mode === "municipal" ? country?.municipal_item_level?.category ?? "not_researched" : featureCategory(country,state.mode);
+  const categoryFor = (country) => state.mode === "readiness" ? country?.portal_readiness?.band ?? "not_researched" : state.mode === "national" ? country?.national_budget?.band ?? "not_researched" : state.mode === "municipal" ? country?.municipal_item_level?.category ?? "not_researched" : featureCategory(country,state.mode);
   const municipalLabel = (category,t) => ({full_lifecycle:t.fullLifecycle,budget_and_accounts:t.budgetAccounts,accounts_only:t.accountsOnly,decentralized:t.decentralizedBand,not_researched:t.notResearched})[category];
   const nationalLabel = (category,t) => ({extensive:t.extensive,substantial:t.substantial,limited:t.limited,minimal:t.minimal,scant:t.scantBand,not_researched:t.notResearched})[category];
-  const categoryLabel = (category,t) => state.mode === "national" ? nationalLabel(category,t) : state.mode === "municipal" ? municipalLabel(category,t) : ({available:t.available,unavailable:t.unavailable,verify:t.verify,not_researched:t.notResearched})[category];
+  const readinessLabel = (category,t) => ({excellent:t.excellent,strong:t.strong,partial:t.partial,weak:t.weak,very_weak:t.veryWeak,not_researched:t.notResearched})[category];
+  const categoryLabel = (category,t) => state.mode === "readiness" ? readinessLabel(category,t) : state.mode === "national" ? nationalLabel(category,t) : state.mode === "municipal" ? municipalLabel(category,t) : ({available:t.available,unavailable:t.unavailable,verify:t.verify,not_researched:t.notResearched})[category];
   const symbol = (country,key) => country.municipal_item_level.research_status !== "researched" ? "●" : country.municipal_item_level.features[key] === true ? "✓" : country.municipal_item_level.features[key] === false ? "—" : "?";
   const symbolClass = (country,key) => country.municipal_item_level.research_status !== "researched" ? "not-researched" : featureCategory(country,key);
 
   function modeOptions(t) {
-    return `<option value="national">${esc(t.national)}</option><option value="municipal">${esc(t.municipal)}</option>${featureKeys.map((key) => `<option value="${key}">${esc(t.features[key])}</option>`).join("")}`;
+    return `<option value="readiness">${esc(t.readiness)}</option><option value="national">${esc(t.national)}</option><option value="municipal">${esc(t.municipal)}</option>${featureKeys.map((key) => `<option value="${key}">${esc(t.features[key])}</option>`).join("")}`;
   }
   function legend(t,countries) {
-    const orders = state.mode === "national" ? ["extensive","substantial","limited","minimal","scant","not_researched"] : state.mode === "municipal" ? ["full_lifecycle","budget_and_accounts","accounts_only","decentralized","not_researched"] : ["available","unavailable","verify","not_researched"];
+    const orders = state.mode === "readiness" ? ["excellent","strong","partial","weak","very_weak","not_researched"] : state.mode === "national" ? ["extensive","substantial","limited","minimal","scant","not_researched"] : state.mode === "municipal" ? ["full_lifecycle","budget_and_accounts","accounts_only","decentralized","not_researched"] : ["available","unavailable","verify","not_researched"];
     return orders.map((category) => `<li><i class="atlas-${category}"></i><span>${esc(categoryLabel(category,t))}</span><b>${countries.filter((country) => categoryFor(country) === category).length}</b></li>`).join("");
   }
   function summary(t,countries) {
     const assessed = countries.filter((country) => country.national_budget.research_status === "assessed").length;
     const researched = countries.filter((country) => country.municipal_item_level.research_status === "researched").length;
+    if (state.mode === "readiness") return [[countries.length,t.universe],[countries.filter((country) => country.portal_readiness.score !== null).length,t.scored],[countries.filter((country) => country.portal_readiness.evidence_status === "complete").length,t.complete],[countries.filter((country) => country.portal_readiness.evidence_status === "national_only").length,t.provisional]];
     if (state.mode === "national") return [[countries.length,t.universe],[assessed,t.assessed],[countries.filter((country) => country.national_budget.score >= 61).length,t.sufficient],[countries.filter((country) => country.national_budget.band === "scant").length,t.scant]];
     if (state.mode === "municipal") return [[countries.length,t.universe],[researched,t.researched],[countries.filter((country) => country.municipal_item_level.category === "full_lifecycle").length,t.full],[countries.filter((country) => country.municipal_item_level.category === "decentralized").length,t.decentralized]];
     return [[countries.length,t.universe],[researched,t.researched],[countries.filter((country) => featureCategory(country,state.mode) === "available").length,t.available],[countries.filter((country) => featureCategory(country,state.mode) === "unavailable").length,t.unavailable]];
@@ -74,9 +80,21 @@
     const rows = [...countries].sort((a,b) => a[`name_${language()}`].localeCompare(b[`name_${language()}`],language())).map((country) => {
       const municipal = country.municipal_item_level;
       const municipalText = municipal.research_status === "researched" ? municipalLabel(municipal.category,t) : t.notResearched;
-      return `<tr id="atlas-row-${country.iso2}"><th><span class="atlas-flag" aria-hidden="true">${flag(country.iso2)}</span><span>${esc(country[`name_${language()}`])}<small>${esc(country.iso2.toUpperCase())}</small></span></th><td class="atlas-score ${country.national_budget.band}">${country.national_budget.score ?? "●"}</td><td class="atlas-municipal-status atlas-${municipal.category}">${esc(municipalText)}</td>${featureKeys.map((key) => `<td class="${symbolClass(country,key)}" aria-label="${esc(({available:t.available,unavailable:t.unavailable,verify:t.verify,not_researched:t.notResearched})[featureCategory(country,key)])}">${symbol(country,key)}</td>`).join("")}</tr>`;
+      return `<tr id="atlas-row-${country.iso2}"><th><span class="atlas-flag" aria-hidden="true">${flag(country.iso2)}</span><span>${esc(country[`name_${language()}`])}<small>${esc(country.iso2.toUpperCase())}</small></span></th><td class="atlas-score ${country.portal_readiness.band}">${country.portal_readiness.score ?? "●"}</td><td class="atlas-score ${country.national_budget.band}">${country.national_budget.score ?? "●"}</td><td class="atlas-municipal-status atlas-${municipal.category}">${esc(municipalText)}</td>${featureKeys.map((key) => `<td class="${symbolClass(country,key)}" aria-label="${esc(({available:t.available,unavailable:t.unavailable,verify:t.verify,not_researched:t.notResearched})[featureCategory(country,key)])}">${symbol(country,key)}</td>`).join("")}</tr>`;
     }).join("");
-    return `<h3 class="atlas-subtitle">${esc(t.tableTitle)}</h3><div class="atlas-table-wrap" tabindex="0"><table class="atlas-table"><thead><tr><th>${esc(t.country)}</th><th>${esc(t.score)}</th><th>${esc(t.municipalColumn)}</th>${t.stages.map((label) => `<th>${esc(label)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;
+    return `<h3 class="atlas-subtitle">${esc(t.tableTitle)}</h3><div class="atlas-table-wrap" tabindex="0"><table class="atlas-table"><thead><tr><th>${esc(t.country)}</th><th>${esc(t.psdScore)}</th><th>${esc(t.obsScore)}</th><th>${esc(t.municipalColumn)}</th>${t.stages.map((label) => `<th>${esc(label)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+  function evidenceLabel(status,t) {
+    return ({complete:t.completeEvidence,national_only:t.nationalOnly,municipal_only:t.municipalOnly,not_scored:t.noEvidence})[status];
+  }
+  function tooltipMarkup(country,t,lang) {
+    const readiness=country.portal_readiness, name=country[`name_${lang}`];
+    let calculation=t.noEvidence;
+    if (readiness.obs_component !== null && readiness.municipal_score !== null) calculation=`${readiness.obs_component} ${t.obs} + ${readiness.municipal_bonus} ${t.municipalBonus} (${readiness.municipal_score}/100 ${t.municipalCapability}) = ${readiness.score}`;
+    else if (readiness.obs_component !== null) calculation=`${readiness.obs_component} ${t.obs} + 0 ${t.municipalBonus} = ${readiness.score} · ${t.noMunicipal}`;
+    else if (readiness.municipal_score !== null) calculation=`${readiness.municipal_score}/100 ${t.municipalCapability} = ${readiness.score} · ${t.noObs}`;
+    const selected=`${categoryLabel(categoryFor(country),t)}${state.mode === "readiness" && readiness.score !== null ? ` · ${t.scoreWhy}` : ""}`;
+    return `<strong>${flag(country.iso2)} ${esc(name)}</strong><span>${esc(selected)}</span><b>${esc(calculation)}</b><small>${esc(evidenceLabel(readiness.evidence_status,t))}</small>`;
   }
   function render() {
     if (!registry || !geometry) return;
@@ -84,16 +102,31 @@
     const paths=geometry.locations.map((location) => {
       const country=byIso.get(location.id);
       if (!country) return `<path class="atlas-country atlas-outside" d="${location.path}" aria-label="${esc(`${location.name}: ${t.outside}`)}"><title>${esc(`${location.name}: ${t.outside}`)}</title></path>`;
-      const category=categoryFor(country), label=`${country[`name_${lang}`]}: ${categoryLabel(category,t)}`;
+      const category=categoryFor(country), score=state.mode === "readiness" ? country.portal_readiness.score : state.mode === "national" ? country.national_budget.score : null;
+      const label=`${country[`name_${lang}`]}: ${categoryLabel(category,t)}${score === null ? "" : `, ${score}/100`}`;
       return `<path class="atlas-country atlas-${category}" d="${location.path}" tabindex="0" data-iso="${location.id}" aria-label="${esc(label)}"><title>${esc(label)}</title></path>`;
     }).join("");
     const kpis=summary(t,countries).map(([value,label]) => `<article><strong>${value}</strong><span>${esc(label)}</span></article>`).join("");
-    const detail=state.mode === "national" ? nationalLists(t,countries) : municipalFindings(t,countries);
+    const detail=state.mode === "readiness" ? "" : state.mode === "national" ? nationalLists(t,countries) : municipalFindings(t,countries);
     const sources=registry.sources.map((source) => `<li><a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.title)} ↗</a><span>${esc(source.scope)}</span></li>`).join("");
-    root.innerHTML=`<div class="atlas-controls"><label for="atlas-mode">${esc(t.mode)}</label><select id="atlas-mode">${modeOptions(t)}</select></div><div class="atlas-kpis">${kpis}</div><div class="atlas-map-panel"><div class="atlas-map-wrap"><svg class="atlas-map" viewBox="${geometry.viewBox}" role="img" aria-label="${esc(t.mode)}"><defs><pattern id="atlas-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#d2ccc1"></rect><line x1="0" y1="0" x2="0" y2="8" stroke="#8b8d83" stroke-width="2"></line></pattern></defs>${paths}</svg></div><ol class="atlas-legend">${legend(t,countries)}</ol></div><p class="atlas-caveat">${esc(t.caveat)}</p>${detail}${evidenceTable(t,countries)}<div class="atlas-research-notes"><div><h3>${esc(t.sources)}</h3><ul>${sources}</ul></div><p>${esc(t.nationalNote)}<br>${esc(t.municipalNote)}</p></div>`;
+    root.innerHTML=`<div class="atlas-controls"><label for="atlas-mode">${esc(t.mode)}</label><select id="atlas-mode">${modeOptions(t)}</select></div><div class="atlas-kpis">${kpis}</div><div class="atlas-map-panel"><div class="atlas-map-wrap"><svg class="atlas-map" viewBox="${geometry.viewBox}" role="img" aria-label="${esc(t.mode)}"><defs><pattern id="atlas-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#d2ccc1"></rect><line x1="0" y1="0" x2="0" y2="8" stroke="#8b8d83" stroke-width="2"></line></pattern></defs>${paths}</svg></div><ol class="atlas-legend">${legend(t,countries)}</ol><div class="atlas-tooltip" role="tooltip" aria-hidden="true"></div></div><p class="atlas-caveat">${esc(t.caveat)}</p>${detail}${evidenceTable(t,countries)}<div class="atlas-research-notes"><div><h3>${esc(t.sources)}</h3><ul>${sources}</ul></div><p>${esc(t.nationalNote)}<br>${esc(t.municipalNote)}</p></div>`;
     const mode=root.querySelector("#atlas-mode"); mode.value=state.mode; mode.addEventListener("change",() => { state.mode=mode.value; render(); });
+    const panel=root.querySelector(".atlas-map-panel"), tooltip=root.querySelector(".atlas-tooltip");
+    const showTooltip=(path,event) => {
+      const country=byIso.get(path.dataset.iso); if (!country) return;
+      tooltip.innerHTML=tooltipMarkup(country,t,lang); tooltip.setAttribute("aria-hidden","false");
+      const panelRect=panel.getBoundingClientRect(), markRect=path.getBoundingClientRect();
+      const x=event?.clientX ?? markRect.left + markRect.width/2, y=event?.clientY ?? markRect.top;
+      const halfWidth=Math.min(165,(panelRect.width-24)/2), localY=Math.max(12,y-panelRect.top);
+      tooltip.style.left=`${Math.max(halfWidth+12,Math.min(panelRect.width-halfWidth-12,x-panelRect.left))}px`;
+      tooltip.style.top=`${localY}px`;
+      tooltip.style.transform=localY > tooltip.offsetHeight + 24 ? "translate(-50%, calc(-100% - 14px))" : "translate(-50%, 14px)";
+    };
+    const hideTooltip=() => { tooltip.setAttribute("aria-hidden","true"); };
     root.querySelectorAll(".atlas-country[tabindex='0']").forEach((path) => {
       const activate=() => { const row=root.querySelector(`#atlas-row-${path.dataset.iso}`); row?.scrollIntoView({behavior:"smooth",block:"center"}); row?.classList.add("is-highlighted"); setTimeout(() => row?.classList.remove("is-highlighted"),1800); };
+      path.addEventListener("pointerenter",(event) => showTooltip(path,event)); path.addEventListener("pointermove",(event) => showTooltip(path,event)); path.addEventListener("pointerleave",hideTooltip);
+      path.addEventListener("focus",() => showTooltip(path)); path.addEventListener("blur",hideTooltip);
       path.addEventListener("click",activate); path.addEventListener("keydown",(event) => { if (event.key === "Enter" || event.key === " ") activate(); });
     });
   }

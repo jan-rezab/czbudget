@@ -13,6 +13,17 @@ const nationalBand = (score) => {
   return "scant";
 };
 
+const municipalWeights = { enacted:20, revised:15, execution:15, actual:20, function:10, economic:10, api:10 };
+const municipalScore = (record) => record ? Object.entries(municipalWeights).reduce((sum, [key, weight]) => sum + (record.features[key] === true ? weight : 0), 0) : null;
+const readinessBand = (score) => {
+  if (score === null) return "not_researched";
+  if (score >= 81) return "excellent";
+  if (score >= 61) return "strong";
+  if (score >= 41) return "partial";
+  if (score >= 21) return "weak";
+  return "very_weak";
+};
+
 const map = JSON.parse(await readFile("data/world-map.v1.json", "utf8"));
 const municipal = JSON.parse(await readFile("data/municipal-transparency.v1.json", "utf8"));
 const municipalByIso = new Map(municipal.countries.map((country) => [country.iso2, country]));
@@ -23,6 +34,9 @@ const countries = map.locations
   .map((country) => {
     const score = Number.isFinite(obsScores[country.id]) ? obsScores[country.id] : null;
     const municipalRecord = municipalByIso.get(country.id);
+    const localScore = municipalScore(municipalRecord);
+    const municipalBonus = localScore === null ? 0 : Math.round(localScore * 0.2);
+    const readinessScore = score !== null ? Math.min(100, score + municipalBonus) : localScore;
     return {
       iso2: country.id,
       iso3: municipalRecord?.iso3 ?? null,
@@ -33,6 +47,15 @@ const countries = map.locations
         score,
         band: nationalBand(score),
         survey: score === null ? null : "OBS 2023"
+      },
+      portal_readiness: {
+        score: readinessScore,
+        band: readinessBand(readinessScore),
+        obs_component: score,
+        municipal_score: localScore,
+        municipal_bonus: localScore === null ? null : municipalBonus,
+        evidence_status: score !== null && localScore !== null ? "complete" : score !== null ? "national_only" : localScore !== null ? "municipal_only" : "not_scored",
+        formula: "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       municipal_item_level: municipalRecord ? {
         research_status: "researched",
@@ -69,8 +92,9 @@ const output = {
   },
   methodology: {
     national_budget: "IBP Open Budget Survey 2023 score for online availability, timeliness and comprehensiveness of eight central-government budget documents. A score of 61 or more is sufficient for informed public debate.",
+    portal_readiness: "PSD score = OBS central-government score plus a municipal-data bonus worth up to 20 points, capped at 100. The municipal capability score weights approved budget 20, revised budget 15, in-year execution 15, final accounts 20, functional classification 10, economic classification 10, and API/bulk access 10. Missing municipal research adds no bonus and is labelled provisional, not unavailable.",
     municipal_item_level: "PSD country-by-country review of whether one official national source exposes a comparable municipal budget lifecycle at item level. A national transparency score is not evidence of municipal data availability.",
-    not_researched: "Black always means not researched or not assessed; it never means that a government publishes nothing."
+    not_researched: "Dark gray always means not researched or not scored; it never means that a government publishes nothing."
   },
   sources: [
     { id:"obs-2023", title:"Open Budget Survey 2023", url:"https://internationalbudget.org/open-budget-survey/country-results", scope:"central government", country_count:125 },

@@ -110,7 +110,7 @@ test("high-risk static and generated templates switch their visible copy", async
 
 test("shared page modules do not retain Czech UI copy in English", async ({ page }) => {
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText("What countries publish — and what is missing from the national layer.");
+  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText("What governments publish — national and municipal, kept distinct.");
   await expect(page.locator(".atlas-table thead th").first()).toHaveText("Country");
 
   await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "networkidle" });
