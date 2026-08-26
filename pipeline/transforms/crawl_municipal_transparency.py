@@ -117,6 +117,28 @@ def brazil_probe(session: requests.Session, output: Path) -> dict[str, Any]:
     return {"status": "sampled", **item}
 
 
+def colombia_probe(session: requests.Session, output: Path) -> dict[str, Any]:
+    dataset = "4f7r-epif"
+    api = f"https://www.datos.gov.co/resource/{dataset}.json"
+    where = "ambito_nombre='Municipios'"
+    sample_url = f"{api}?{urlencode({'$limit': 100, '$where': where})}"
+    summary_url = f"{api}?{urlencode({'$select': 'periodo,count(*) as rows', '$where': where, '$group': 'periodo', '$order': 'periodo desc', '$limit': 50})}"
+    sample = get(session, sample_url).json()
+    sample_item = save(output / "COL" / "cuipo-municipal-execution-sample.json", sample)
+    summary = get(session, summary_url).json()
+    summary_item = save(output / "COL" / "cuipo-municipal-execution-scope.json", summary)
+    return {
+        "status": "sampled",
+        "source": api,
+        "dataset": dataset,
+        "municipal_filter": where,
+        "sample_rows": len(sample),
+        "sample": sample_item,
+        "scope": summary_item,
+        "periods": summary,
+    }
+
+
 def landing_probe(session: requests.Session, output: Path, country: str, url: str) -> dict[str, Any]:
     response = get(session, url)
     item = save(output / country / "official-source.html", response.content)
@@ -127,6 +149,7 @@ def landing_probe(session: requests.Session, output: Path, country: str, url: st
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--countries", help="Comma-separated ISO3 codes; registry-backed sources use a bounded landing-page probe")
     args = parser.parse_args()
     session = requests.Session()
     session.headers.update({"User-Agent": USER_AGENT, "Accept": "application/json,text/html,*/*"})
@@ -135,12 +158,23 @@ def main() -> None:
         "NLD": lambda: netherlands_probe(session, args.output),
         "NOR": lambda: norway_probe(session, args.output),
         "BRA": lambda: brazil_probe(session, args.output),
+        "COL": lambda: colombia_probe(session, args.output),
         "ESP": lambda: landing_probe(session, args.output, "ESP", "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel"),
         "JPN": lambda: landing_probe(session, args.output, "JPN", "https://www.e-stat.go.jp/stat-search/files?cycle=7&layout=datalist&month=0&tclass1=000001077756&tclass2=000001077757&toukei=00200251&tstat=000001077755&year=20250"),
         "KOR": lambda: landing_probe(session, args.output, "KOR", "https://www.lofin365.go.kr/portal/LF5110000.do"),
     }
+    registry = json.loads((ROOT / "website/data/municipal-transparency.v1.json").read_text())
+    registry_by_iso3 = {country["iso3"]: country for country in registry["countries"]}
+    requested = [code.strip().upper() for code in args.countries.split(",")] if args.countries else list(probes)
+    for country in requested:
+        if country not in probes:
+            record = registry_by_iso3.get(country)
+            if not record:
+                raise ValueError(f"No municipal transparency source registered for {country}")
+            probes[country] = lambda country=country, url=record["source"]: landing_probe(session, args.output, country, url)
     results: dict[str, Any] = {}
-    for country, probe in probes.items():
+    for country in requested:
+        probe = probes[country]
         try:
             results[country] = probe()
         except Exception as exc:

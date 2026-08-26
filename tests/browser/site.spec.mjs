@@ -157,6 +157,13 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#atlas-mode")).toHaveValue("readiness");
   await expect(page.locator("#atlas-row-cz td").nth(0)).toHaveText("82");
   await expect(page.locator("#atlas-row-cz td").nth(1)).toHaveText("62");
+  await expect(page.locator("#atlas-row-cz .atlas-load")).toHaveText("Loaded");
+  await expect(page.locator("#atlas-row-nz .atlas-load")).toHaveText("Crawl started");
+  await expect(page.locator(".atlas-table tbody tr").first()).toContainText("Brazil");
+  await page.locator('.atlas-sort[data-sort="country"]').click();
+  await expect(page.locator(".atlas-table tbody tr").first()).toContainText("Afghanistan");
+  await page.locator('.atlas-sort[data-sort="country"]').click();
+  await expect(page.locator(".atlas-table tbody tr").first()).toContainText("Zimbabwe");
   await expect(page.locator('.atlas-country[data-iso="ar"]')).toHaveCSS("fill", "rgb(215, 197, 142)");
   await page.locator('.atlas-country[data-iso="cz"]').hover();
   await expect(page.locator(".atlas-tooltip")).toContainText("62 OBS central government + 20 municipal bonus");

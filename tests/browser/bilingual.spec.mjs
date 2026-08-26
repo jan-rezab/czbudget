@@ -111,7 +111,7 @@ test("high-risk static and generated templates switch their visible copy", async
 test("shared page modules do not retain Czech UI copy in English", async ({ page }) => {
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText("COVERAGE");
-  await expect(page.locator(".atlas-table thead th").first()).toHaveText("Country");
+  await expect(page.locator(".atlas-table thead th").first()).toContainText("Country");
 
   await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".hero-deficit small")).toHaveText("12.8% of expenditure");

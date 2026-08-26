@@ -398,6 +398,24 @@
 .atlas-table thead th:first-child {
   text-align: left;
 }
+.atlas-sort {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.atlas-sort span {
+  margin-left: 0.25rem;
+  color: #d4dd81;
+}
+.atlas-sort:focus-visible {
+  outline: 2px solid #d4dd81;
+  outline-offset: 3px;
+}
 .atlas-table tbody th {
   display: flex;
   align-items: center;
@@ -461,6 +479,17 @@
 .atlas-municipal-status {
   min-width: 170px;
   text-align: left !important;
+}
+.atlas-load {
+  min-width: 92px;
+  font-weight: 700;
+}
+.atlas-load-loaded {
+  background: rgba(168, 182, 63, 0.24);
+}
+.atlas-load-discovery_crawl_started {
+  background: rgba(229, 168, 59, 0.24);
+  color: #765000;
 }
 .atlas-municipal-status.atlas-not_researched {
   background: #3f433f;

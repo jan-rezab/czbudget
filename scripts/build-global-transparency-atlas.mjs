@@ -26,7 +26,9 @@ const readinessBand = (score) => {
 
 const map = JSON.parse(await readFile("data/world-map.v1.json", "utf8"));
 const municipal = JSON.parse(await readFile("data/municipal-transparency.v1.json", "utf8"));
+const parity = JSON.parse(await readFile("data/country-parity.v1.json", "utf8"));
 const municipalByIso = new Map(municipal.countries.map((country) => [country.iso2, country]));
+const loadedByIso3 = new Map(parity.countries.map((country) => [country.country_code, country]));
 const czechNames = new Intl.DisplayNames(["cs"], { type: "region" });
 
 const countries = map.locations
@@ -37,6 +39,17 @@ const countries = map.locations
     const localScore = municipalScore(municipalRecord);
     const municipalBonus = localScore === null ? 0 : Math.round(localScore * 0.2);
     const readinessScore = score !== null ? Math.min(100, score + municipalBonus) : localScore;
+    const index = {
+      score: readinessScore,
+      band: readinessBand(readinessScore),
+      obs_component: score,
+      municipal_score: localScore,
+      municipal_bonus: localScore === null ? null : municipalBonus,
+      evidence_status: score !== null && localScore !== null ? "complete" : score !== null ? "national_only" : localScore !== null ? "municipal_only" : "not_scored",
+      formula: "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+    };
+    const loadedProfile = municipalRecord?.iso3 ? loadedByIso3.get(municipalRecord.iso3) : null;
+    const ingestionReady = !loadedProfile && ["excellent", "strong"].includes(index.band) && municipalRecord?.pipeline === "crawling";
     return {
       iso2: country.id,
       iso3: municipalRecord?.iso3 ?? null,
@@ -48,14 +61,14 @@ const countries = map.locations
         band: nationalBand(score),
         survey: score === null ? null : "OBS 2023"
       },
-      portal_readiness: {
-        score: readinessScore,
-        band: readinessBand(readinessScore),
-        obs_component: score,
-        municipal_score: localScore,
-        municipal_bonus: localScore === null ? null : municipalBonus,
-        evidence_status: score !== null && localScore !== null ? "complete" : score !== null ? "national_only" : localScore !== null ? "municipal_only" : "not_scored",
-        formula: "OBS central-government score + 20% of verified municipal capability score, capped at 100"
+      budget_transparency_index: index,
+      portal_readiness: index,
+      psd_coverage: {
+        country_profile: loadedProfile ? "loaded" : "not_loaded",
+        loaded_modules: loadedProfile?.coverage.loaded_modules ?? 0,
+        total_modules: loadedProfile?.coverage.total_modules ?? 11,
+        ingestion_status: loadedProfile ? "loaded" : ingestionReady ? "discovery_crawl_started" : "not_queued",
+        target: ingestionReady ? "Match every verified published layer and retain native classifications, stages and missingness." : null
       },
       municipal_item_level: municipalRecord ? {
         research_status: "researched",
@@ -92,7 +105,8 @@ const output = {
   },
   methodology: {
     national_budget: "IBP Open Budget Survey 2023 score for online availability, timeliness and comprehensiveness of eight central-government budget documents. A score of 61 or more is sufficient for informed public debate.",
-    portal_readiness: "PSD score = OBS central-government score plus a municipal-data bonus worth up to 20 points, capped at 100. The municipal capability score weights approved budget 20, revised budget 15, in-year execution 15, final accounts 20, functional classification 10, economic classification 10, and API/bulk access 10. Missing municipal research adds no bonus and is labelled provisional, not unavailable.",
+    budget_transparency_index: "BTI = OBS central-government score plus a municipal-data bonus worth up to 20 points, capped at 100. The municipal capability score weights approved budget 20, revised budget 15, in-year execution 15, final accounts 20, functional classification 10, economic classification 10, and API/bulk access 10. Missing municipal research adds no bonus and is labelled provisional, not unavailable.",
+    portal_readiness: "Backward-compatible alias of the PSD Budget Transparency Index.",
     municipal_item_level: "PSD country-by-country review of whether one official national source exposes a comparable municipal budget lifecycle at item level. A national transparency score is not evidence of municipal data availability.",
     not_researched: "Dark gray always means not researched or not scored; it never means that a government publishes nothing."
   },
@@ -101,6 +115,22 @@ const output = {
     { id:"sng-wofi", title:"World Observatory on Subnational Government Finance and Investment", url:"https://www.sng-wofi.org/country_profiles/presentation.html", scope:"comparative subnational aggregates and institutional profiles", country_count:135 },
     { id:"boost", title:"World Bank BOOST country data", url:"https://www.worldbank.org/en/programs/boost-portal/country-data", scope:"published line-item fiscal datasets; government level varies by country" }
   ],
+  ingestion_queue: {
+    rule: "Budget Transparency Index band strong or excellent, verified municipal source, and no PSD country profile.",
+    fidelity_target: "Load every verified published layer 1:1, retaining native classifications, budget stages, entity scope and explicit missingness.",
+    countries: countries
+      .filter((country) => country.psd_coverage.ingestion_status === "discovery_crawl_started")
+      .sort((a, b) => b.budget_transparency_index.score - a.budget_transparency_index.score || a.name_en.localeCompare(b.name_en))
+      .map((country) => ({
+        iso3: country.iso3,
+        name_en: country.name_en,
+        name_cs: country.name_cs,
+        budget_transparency_index: country.budget_transparency_index.score,
+        verified_features: Object.entries(country.municipal_item_level.features).filter(([, available]) => available === true).map(([feature]) => feature),
+        source: country.municipal_item_level.source,
+        status: country.psd_coverage.ingestion_status
+      }))
+  },
   countries
 };
 
