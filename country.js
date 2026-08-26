@@ -17,7 +17,7 @@ Object.assign(T.cs,{gdpTag:"HDP / OBYV.",debtTag:"DLUH / HDP",pppTag:"PPP / OBYV
 Object.assign(T.en,{gdpTag:"GDP / CAPITA",debtTag:"DEBT / GDP",pppTag:"PPP / CAPITA"});
 Object.assign(T.cs,{scopeTitle:"Co data zahrnují",trendTitle:"Vývoj veřejných financí",macroTitle:"Ekonomický kontext",specificTitle:"Rozpočtová pravidla země",sourcesTitle:"Primární zdroje"});
 Object.assign(T.en,{scopeTitle:"What the data includes",trendTitle:"Public finance over time",macroTitle:"Economic context",specificTitle:"National budget rules",sourcesTitle:"Primary sources"});
-const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no"};
+const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no"};
 const scope={state_budget:{cs:"Státní rozpočet",en:"State budget"},state_and_consolidated_budget:{cs:"Státní a konsolidovaný rozpočet",en:"State and consolidated budget"},federal_budget:{cs:"Federální rozpočet",en:"Federal budget"},public_sector_and_central_government:{cs:"Veřejný sektor a centrální vláda",en:"Public sector and central government"},confederation_and_general_government:{cs:"Konfederace a vládní instituce",en:"Confederation and general government"},central_and_general_government:{cs:"Centrální vláda a vládní instituce",en:"Central and general government"}};
 const loc=()=>state.lang==="en"?"en-GB":"cs-CZ";
 const meta=()=>state.data.countries.find(c=>c.country_code===state.code);

@@ -11,6 +11,9 @@ map "$arg_code:$arg_lang" $legacy_country_path {
   "DNK:" "/countries/denmark";
   "DNK:cs" "/countries/denmark?lang=cs";
   "DNK:en" "/countries/denmark?lang=en";
+  "FIN:" "/countries/finland";
+  "FIN:cs" "/countries/finland?lang=cs";
+  "FIN:en" "/countries/finland?lang=en";
   "FRA:" "/countries/france";
   "FRA:cs" "/countries/france?lang=cs";
   "FRA:en" "/countries/france?lang=en";
@@ -36,7 +39,7 @@ map "$arg_code:$arg_lang" $legacy_country_path {
 
 map $request_uri $country_canonical_path {
   default "/countries/czechia";
-  ~^(?<country_path>/countries/(?:czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway))(?:\?|$) $country_path;
+  ~^(?<country_path>/countries/(?:czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway))(?:\?|$) $country_path;
 }
 
 upstream public_spending_api {
@@ -152,11 +155,11 @@ server {
     return 301 $legacy_country_path;
   }
 
-  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)/$ {
+  location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)/$ {
     return 301 /countries/$1$is_args$args;
   }
 
-  location ~ ^/countries/(czechia|germany|denmark|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)$ {
+  location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway)$ {
     sub_filter_once off;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
     sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260825-country-expansion';

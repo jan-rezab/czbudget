@@ -3,6 +3,7 @@
     CZE: "czechia",
     DEU: "germany",
     DNK: "denmark",
+    FIN: "finland",
     FRA: "france",
     GBR: "united-kingdom",
     POL: "poland",
