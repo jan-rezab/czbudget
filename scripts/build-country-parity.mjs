@@ -204,7 +204,7 @@ for (const code of countryCodes) {
   }
 }
 
-if (manifest.countries.length !== 16) throw new Error(`Expected 16 countries, received ${manifest.countries.length}`);
+if (manifest.countries.length !== 17) throw new Error(`Expected 17 countries, received ${manifest.countries.length}`);
 const establishedDeepDiveCountries = new Set(["CZE","DEU","DNK","FRA","GBR","POL","SWE","CHE","UKR","USA"]);
 for (const country of manifest.countries) {
   if (country.modules.sovereign.metric_count !== 15) throw new Error(`${country.country_code}: expected 15 sovereign metrics`);

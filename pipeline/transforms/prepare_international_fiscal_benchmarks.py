@@ -30,8 +30,8 @@ SOURCE_URL = (
     "2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx"
 )
 DEFAULT_SOURCE = ROOT / "data/sources/international_fiscal/WEOApr2026all.xlsx"
-DEFAULT_REGISTRY = ROOT / "data/international_fiscal_source_registry.json"
-DEFAULT_SCOPE_REGISTRY = ROOT / "data/fiscal_scope_registry.json"
+DEFAULT_REGISTRY = ROOT / "website/pipeline/config/international_fiscal_source_registry.json"
+DEFAULT_SCOPE_REGISTRY = ROOT / "website/pipeline/config/fiscal_scope_registry.json"
 DEFAULT_JSON = ROOT / "data/international_fiscal_benchmarks_2005_2024.json"
 DEFAULT_CSV = ROOT / "data/international_fiscal_benchmarks_2005_2024.csv"
 DEFAULT_SUMMARY_CSV = ROOT / "data/international_fiscal_summary_2005_2024.csv"
@@ -40,7 +40,7 @@ DEFAULT_WEB_JSON = ROOT / "website/lib/data/sovereign-benchmark.v1.json"
 START_YEAR = 2005
 END_YEAR = 2024
 
-COUNTRY_ORDER = ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "FIN", "BRA", "ESP", "JPN", "NLD", "NOR"]
+COUNTRY_ORDER = ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]
 
 METRICS = {
     "revenue_pct_gdp": {

@@ -18,10 +18,10 @@ from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "country-revenue.v1.json"
-COUNTRIES = ["CZE", "DEU", "DNK", "FIN", "FRA", "GBR", "POL", "SWE", "CHE", "UKR", "USA", "BRA", "ESP", "JPN", "NLD", "NOR"]
+COUNTRIES = ["CZE", "DEU", "DNK", "FIN", "FRA", "GBR", "POL", "SWE", "CHE", "UKR", "USA", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]
 EUROSTAT_GEO = {
     "CZE": "CZ", "DEU": "DE", "DNK": "DK", "FRA": "FR", "GBR": "UK",
-    "POL": "PL", "SWE": "SE", "CHE": "CH", "UKR": "UA", "FIN": "FI", "ESP": "ES", "NLD": "NL", "NOR": "NO",
+    "POL": "PL", "SWE": "SE", "CHE": "CH", "UKR": "UA", "FIN": "FI", "ESP": "ES", "NLD": "NL", "NOR": "NO", "GRC": "EL",
 }
 OECD_API = "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_GLOBAL@DF_RSGLOBAL,2.1"
 OECD_TRANSFER_URL = "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/fiscal-federalism-network/table17_intergov_rev-tot_rev-gov-rev-by-sector.xlsx"

@@ -3,34 +3,39 @@
   "contract": "country-profile.v1",
   "generated_at": "2026-08-26T16:07:22.750Z",
   "country": {
-    "country_code": "NOR",
-    "name_cs": "Norsko",
-    "name_en": "Norway",
-    "currency_code": "NOK",
+    "country_code": "GRC",
+    "name_cs": "Řecko",
+    "name_en": "Greece",
+    "currency_code": "EUR",
     "fiscal_architecture": {
-      "country_code": "NOR",
-      "eu_status": "non_member",
-      "national_budget_label_cs": "Státní rozpočet Norska",
-      "national_budget_label_en": "Norwegian State Budget",
+      "country_code": "GRC",
+      "eu_status": "member",
+      "national_budget_label_cs": "Státní rozpočet Řecka",
+      "national_budget_label_en": "Greek State Budget",
       "municipal_budget_relation": "separate",
-      "other_public_accounts_relation": "central_local_social_security_and_petroleum_fund",
+      "other_public_accounts_relation": "central_local_social_security_and_extra_budgetary_units",
       "public_corporation_treatment": "gross_revenue_excluded_owner_distributions_included",
-      "architecture_cs": "Státní a obecní účty jsou oddělené; ropné příjmy a převod z fondu jsou transparentně odděleny od neropného salda.",
-      "architecture_en": "Central and municipal accounts are separate; petroleum revenue and the fund transfer are transparently separated from the non-oil balance.",
-      "corporation_note_cs": "Výnosy veřejných podniků a fondu nejsou běžným rozpočtovým příjmem kromě vykázaných dividend a převodů.",
-      "corporation_note_en": "Public-enterprise and fund earnings are not ordinary budget revenue except for reported dividends and transfers.",
+      "architecture_cs": "Státní rozpočet, rozpočty obcí, fondy sociálního zabezpečení a další veřejné jednotky jsou samostatné zdrojové vrstvy; ve statistice sektoru vládních institucí se konsolidují.",
+      "architecture_en": "The State Budget, municipal budgets, social-security funds and other public units are separate source layers; general-government statistics consolidate them.",
+      "corporation_note_cs": "Tržby veřejných korporací nejsou příjmem státního rozpočtu. Rozpočtem procházejí jen vykázané dividendy, daně, dotace a kapitálové převody.",
+      "corporation_note_en": "Public-corporation turnover is not State Budget revenue. Only reported dividends, taxes, subsidies and capital transfers flow through the budget.",
       "sources": [
         {
-          "source_name": "Regjeringen — Statsbudsjettet 2026",
-          "source_url": "https://www.regjeringen.no/no/dokumenter/prop.-1-s-20252026/id3123694/"
+          "source_name": "Ministry of Economy and Finance — Budget Execution Bulletins",
+          "source_url": "https://minfin.gov.gr/en/budget-execution-bulletins/"
+        },
+        {
+          "source_name": "Hellenic Statistical Authority — Government finance",
+          "source_url": "https://www.statistics.gr/en/statistics/-/publication/SEL03/-"
         }
       ]
     }
   },
   "coverage": {
-    "loaded_modules": 9,
+    "loaded_modules": 8,
     "total_modules": 11,
     "missing_dimensions": [
+      "municipal_entity_finance",
       "provider_register",
       "public_entity_accounts"
     ]
@@ -91,34 +96,19 @@
       "coverage_level": null
     },
     "municipalities": {
-      "status": "loaded",
-      "coverage": "All 357 municipalities plus Longyearbyen; 2015–2025 headline accounts and 2025 detail across 97 KOSTRA functions",
-      "missing_dimensions": [],
-      "entity_count": 358,
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "entity census",
+        "budget facts"
+      ],
+      "entity_count": 0,
       "fact_count": 0,
-      "years": [
-        2015,
-        2016,
-        2017,
-        2018,
-        2019,
-        2020,
-        2021,
-        2022,
-        2023,
-        2024,
-        2025
-      ],
-      "stages": [
-        "actual"
-      ],
-      "measures": [
-        "revenue",
-        "expenditure",
-        "balance"
-      ],
-      "coverage_level": "complete",
-      "directory": "data/countries/nor/municipalities.v1.json",
+      "years": [],
+      "stages": [],
+      "measures": [],
+      "coverage_level": null,
+      "directory": null,
       "warehouse": []
     },
     "public_entities": {
@@ -139,116 +129,116 @@
       "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
       "missing_dimensions": [],
       "projection": "EUROPOP2023 baseline scenario",
-      "detail": "data/countries/nor/demography.v1.json",
+      "detail": "data/countries/grc/demography.v1.json",
       "detail_row_count": 7979
     }
   },
   "data": {
     "sovereign": {
       "series": {
-        "country_code": "NOR",
+        "country_code": "GRC",
         "metrics": {
           "real_gdp_growth_pct": {
             "latest_actual_year": 2025,
             "values": [
               {
                 "year": 2005,
-                "value": 2.97,
+                "value": 1.183,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 2.847,
+                "value": 6.443,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 3.42,
+                "value": 3.507,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 0.823,
+                "value": 0.058,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": -1.613,
+                "value": -4.119,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 1.005,
+                "value": -5.694,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 1.385,
+                "value": -9.877,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 2.824,
+                "value": -8.331,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 1.273,
+                "value": -2.272,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 2.095,
+                "value": 0.792,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 2.044,
+                "value": -0.228,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 1.292,
+                "value": -0.032,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 2.67,
+                "value": 1.473,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 1.11,
+                "value": 2.065,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 1.47,
+                "value": 2.277,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": -1.361,
+                "value": -9.196,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 4.143,
+                "value": 8.654,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 4.08,
+                "value": 5.522,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 0.353,
+                "value": 2.136,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 1.424,
+                "value": 2.087,
                 "status": "actual"
               }
             ]
@@ -258,102 +248,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 2006.31,
+                "value": 194.773,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 2243.204,
+                "value": 214.299,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 2390.486,
+                "value": 229.283,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 2662.424,
+                "value": 238.735,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 2488.058,
+                "value": 234.323,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 2660.235,
+                "value": 223.591,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 2874.43,
+                "value": 203.475,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 3054.676,
+                "value": 185.899,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 3173.282,
+                "value": 178.114,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 3250.588,
+                "value": 176.072,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 3231.058,
+                "value": 175.363,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 3219.585,
+                "value": 174.448,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 3438.308,
+                "value": 177.379,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 3696.947,
+                "value": 180.616,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 3733.357,
+                "value": 185.181,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 3599.226,
+                "value": 167.54,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 4480.477,
+                "value": 184.575,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 5935.036,
+                "value": 207.009,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 5304.88,
+                "value": 224.686,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 5382.441,
+                "value": 236.736,
                 "status": "actual"
               }
             ]
@@ -363,102 +353,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 311.418,
+                "value": 242.45,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 349.772,
+                "value": 269.088,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 407.817,
+                "value": 314.264,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 472.061,
+                "value": 351.083,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 395.663,
+                "value": 326.474,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 440.133,
+                "value": 296.66,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 512.869,
+                "value": 283.178,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 525.084,
+                "value": 238.992,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 540.133,
+                "value": 236.56,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 515.83,
+                "value": 233.972,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 400.669,
+                "value": 194.587,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 383.284,
+                "value": 193.044,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 415.673,
+                "value": 200.31,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 454.589,
+                "value": 213.396,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 424.245,
+                "value": 207.329,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 382.253,
+                "value": 191.21,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 521.592,
+                "value": 218.449,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 617.322,
+                "value": 218.162,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 502.198,
+                "value": 243.016,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 500.886,
+                "value": 256.161,
                 "status": "actual"
               }
             ]
@@ -468,102 +458,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 433159.988,
+                "value": 17755.238,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 480151.1,
+                "value": 19473.369,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 506285.131,
+                "value": 20775.882,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 556175.542,
+                "value": 21583.651,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 513777.506,
+                "value": 21120.143,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 542003.938,
+                "value": 20108.345,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 578003.868,
+                "value": 18292.532,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 606310.626,
+                "value": 16768.211,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 622663.893,
+                "value": 16186.853,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 630392.493,
+                "value": 16113.747,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 620708.667,
+                "value": 16150.544,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 613001.379,
+                "value": 16176.954,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 649928.321,
+                "value": 16472.448,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 694401.489,
+                "value": 16815.28,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 696939.342,
+                "value": 17266.958,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 668432.575,
+                "value": 15630.777,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 827394.211,
+                "value": 17284.48,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 1083977.323,
+                "value": 19787.429,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 958670.171,
+                "value": 21575.436,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 963724.01,
+                "value": 22816.248,
                 "status": "actual"
               }
             ]
@@ -573,102 +563,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 67234.767,
+                "value": 22101.329,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 74867.635,
+                "value": 24452.035,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 86372.215,
+                "value": 28476.246,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 98612.685,
+                "value": 31740.794,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 81703.288,
+                "value": 29426.018,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 89673.89,
+                "value": 26679.741,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 103130.128,
+                "value": 25457.905,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 104221.852,
+                "value": 21557.251,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 105985.344,
+                "value": 21498.365,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 100035.836,
+                "value": 21412.642,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 76971.21,
+                "value": 17921.051,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 72976.355,
+                "value": 17901.38,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 78572.838,
+                "value": 18602.048,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 85385.981,
+                "value": 19867.086,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 79197.652,
+                "value": 19332.053,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 70990.273,
+                "value": 17839.122,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 96320.63,
+                "value": 20456.642,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 112747.923,
+                "value": 20853.518,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 90754.513,
+                "value": 23335.57,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 89683.506,
+                "value": 24688.425,
                 "status": "actual"
               }
             ]
@@ -678,102 +668,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 50938.817,
+                "value": 27933.371,
                 "status": "estimate"
               },
               {
                 "year": 2006,
-                "value": 53541.584,
+                "value": 30553.239,
                 "status": "estimate"
               },
               {
                 "year": 2007,
-                "value": 56273.819,
+                "value": 32389.394,
                 "status": "estimate"
               },
               {
                 "year": 2008,
-                "value": 57039.747,
+                "value": 32957.884,
                 "status": "estimate"
               },
               {
                 "year": 2009,
-                "value": 55816.723,
+                "value": 31698.251,
                 "status": "estimate"
               },
               {
                 "year": 2010,
-                "value": 56301.657,
+                "value": 30189.969,
                 "status": "estimate"
               },
               {
                 "year": 2011,
-                "value": 57499.096,
+                "value": 27759.303,
                 "status": "estimate"
               },
               {
                 "year": 2012,
-                "value": 59445.42,
+                "value": 26006.908,
                 "status": "estimate"
               },
               {
                 "year": 2013,
-                "value": 60527.966,
+                "value": 26043.07,
                 "status": "estimate"
               },
               {
                 "year": 2014,
-                "value": 62139.037,
+                "value": 26894.315,
                 "status": "estimate"
               },
               {
                 "year": 2015,
-                "value": 63395.607,
+                "value": 27253.512,
                 "status": "estimate"
               },
               {
                 "year": 2016,
-                "value": 64247.808,
+                "value": 27693.158,
                 "status": "estimate"
               },
               {
                 "year": 2017,
-                "value": 66660.476,
+                "value": 28645.684,
                 "status": "estimate"
               },
               {
                 "year": 2018,
-                "value": 72454.255,
+                "value": 29769.073,
                 "status": "estimate"
               },
               {
                 "year": 2019,
-                "value": 73507.871,
+                "value": 31918.392,
                 "status": "estimate"
               },
               {
                 "year": 2020,
-                "value": 69713.185,
+                "value": 29478.097,
                 "status": "estimate"
               },
               {
                 "year": 2021,
-                "value": 92322.055,
+                "value": 33233.409,
                 "status": "estimate"
               },
               {
                 "year": 2022,
-                "value": 101794.149,
+                "value": 38341.94,
                 "status": "estimate"
               },
               {
                 "year": 2023,
-                "value": 104815.989,
+                "value": 40795.65,
                 "status": "estimate"
               },
               {
                 "year": 2024,
-                "value": 107943.564,
+                "value": 42837.986,
                 "status": "estimate"
               }
             ]
@@ -783,102 +773,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 8.504,
+                "value": 0.636,
                 "status": "estimate"
               },
               {
                 "year": 2006,
-                "value": 8.968,
+                "value": 0.637,
                 "status": "estimate"
               },
               {
                 "year": 2007,
-                "value": 8.997,
+                "value": 0.641,
                 "status": "estimate"
               },
               {
                 "year": 2008,
-                "value": 9.751,
+                "value": 0.655,
                 "status": "estimate"
               },
               {
                 "year": 2009,
-                "value": 9.205,
+                "value": 0.666,
                 "status": "estimate"
               },
               {
                 "year": 2010,
-                "value": 9.627,
+                "value": 0.666,
                 "status": "estimate"
               },
               {
                 "year": 2011,
-                "value": 10.052,
+                "value": 0.659,
                 "status": "estimate"
               },
               {
                 "year": 2012,
-                "value": 10.199,
+                "value": 0.645,
                 "status": "estimate"
               },
               {
                 "year": 2013,
-                "value": 10.287,
+                "value": 0.622,
                 "status": "estimate"
               },
               {
                 "year": 2014,
-                "value": 10.145,
+                "value": 0.599,
                 "status": "estimate"
               },
               {
                 "year": 2015,
-                "value": 9.791,
+                "value": 0.593,
                 "status": "estimate"
               },
               {
                 "year": 2016,
-                "value": 9.541,
+                "value": 0.584,
                 "status": "estimate"
               },
               {
                 "year": 2017,
-                "value": 9.75,
+                "value": 0.575,
                 "status": "estimate"
               },
               {
                 "year": 2018,
-                "value": 9.584,
+                "value": 0.565,
                 "status": "estimate"
               },
               {
                 "year": 2019,
-                "value": 9.481,
+                "value": 0.541,
                 "status": "estimate"
               },
               {
                 "year": 2020,
-                "value": 9.588,
+                "value": 0.53,
                 "status": "estimate"
               },
               {
                 "year": 2021,
-                "value": 8.962,
+                "value": 0.52,
                 "status": "estimate"
               },
               {
                 "year": 2022,
-                "value": 10.649,
+                "value": 0.516,
                 "status": "estimate"
               },
               {
                 "year": 2023,
-                "value": 9.146,
+                "value": 0.529,
                 "status": "estimate"
               },
               {
                 "year": 2024,
-                "value": 8.928,
+                "value": 0.533,
                 "status": "estimate"
               }
             ]
@@ -888,102 +878,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 1.515,
+                "value": 3.489,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 2.302,
+                "value": 3.312,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 0.764,
+                "value": 2.989,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 3.748,
+                "value": 4.234,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 2.165,
+                "value": 1.347,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 2.413,
+                "value": 4.702,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 1.309,
+                "value": 3.118,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 0.689,
+                "value": 1.034,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 2.126,
+                "value": -0.857,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 2.058,
+                "value": -1.392,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 2.157,
+                "value": -1.097,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 3.546,
+                "value": 0.017,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 1.906,
+                "value": 1.134,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 2.741,
+                "value": 0.779,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 2.17,
+                "value": 0.518,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 1.295,
+                "value": -1.265,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 3.468,
+                "value": 0.576,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 5.774,
+                "value": 9.297,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 5.496,
+                "value": 4.156,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 3.181,
+                "value": 2.997,
                 "status": "actual"
               }
             ]
@@ -993,102 +983,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 4.616,
+                "value": 10,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 3.444,
+                "value": 9,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 2.539,
+                "value": 8.4,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 2.747,
+                "value": 7.75,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 3.266,
+                "value": 9.6,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 3.794,
+                "value": 12.725,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 3.364,
+                "value": 17.85,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 3.294,
+                "value": 24.425,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 3.773,
+                "value": 27.475,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 3.617,
+                "value": 26.5,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 4.531,
+                "value": 24.9,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 4.74,
+                "value": 23.55,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 4.216,
+                "value": 21.45,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 3.854,
+                "value": 19.3,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 3.728,
+                "value": 17.325,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 4.595,
+                "value": 16.325,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 4.41,
+                "value": 14.775,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 3.252,
+                "value": 12.425,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 3.595,
+                "value": 11.075,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 4.013,
+                "value": 10.1,
                 "status": "actual"
               }
             ]
@@ -1098,102 +1088,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 56.242,
+                "value": 40.277,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 57.884,
+                "value": 39.822,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 57.281,
+                "value": 40.963,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 57.407,
+                "value": 41.224,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 54.705,
+                "value": 39.402,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 54.203,
+                "value": 41.659,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 55.27,
+                "value": 44.576,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 54.766,
+                "value": 47.934,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 52.65,
+                "value": 48.923,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 52.328,
+                "value": 47.208,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 52.499,
+                "value": 48.823,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 52.69,
+                "value": 50.573,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 52.365,
+                "value": 49.591,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 53.701,
+                "value": 49.348,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 54.653,
+                "value": 47.513,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 52.08,
+                "value": 48.925,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 54.624,
+                "value": 48.963,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 60.918,
+                "value": 50.519,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 60.103,
+                "value": 48.174,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 59.692,
+                "value": 49.477,
                 "status": "actual"
               }
             ]
@@ -1203,102 +1193,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 41.589,
+                "value": 46.607,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 40.149,
+                "value": 45.867,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 40.46,
+                "value": 47.77,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 39.157,
+                "value": 51.539,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 44.708,
+                "value": 54.826,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 43.556,
+                "value": 53.084,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 42.295,
+                "value": 55.075,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 41.407,
+                "value": 54.871,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 42.319,
+                "value": 52.982,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 43.99,
+                "value": 51.501,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 46.698,
+                "value": 51.854,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 48.783,
+                "value": 50.292,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 47.574,
+                "value": 48.536,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 46.141,
+                "value": 48.57,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 48.369,
+                "value": 47.599,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 54.541,
+                "value": 59.292,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 44.698,
+                "value": 56.719,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 36.25,
+                "value": 53.091,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 44.245,
+                "value": 49.614,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 46.905,
+                "value": 48.249,
                 "status": "actual"
               }
             ]
@@ -1308,102 +1298,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 14.653,
+                "value": -6.33,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 17.735,
+                "value": -6.045,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 16.822,
+                "value": -6.807,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 18.25,
+                "value": -10.315,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 9.996,
+                "value": -15.424,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 10.647,
+                "value": -11.424,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 12.975,
+                "value": -10.5,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 13.359,
+                "value": -6.937,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 10.331,
+                "value": -4.059,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 8.338,
+                "value": -4.292,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 5.801,
+                "value": -3.031,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 3.906,
+                "value": 0.28,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 4.791,
+                "value": 1.055,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 7.559,
+                "value": 0.778,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 6.284,
+                "value": -0.086,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": -2.462,
+                "value": -10.367,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 9.926,
+                "value": -7.756,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 24.668,
+                "value": -2.572,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 15.858,
+                "value": -1.44,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 12.787,
+                "value": 1.229,
                 "status": "actual"
               }
             ]
@@ -1413,102 +1403,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": -2.794,
+                "value": -6.574,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": -2.564,
+                "value": -8.517,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": -2.419,
+                "value": -10.688,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": -2.757,
+                "value": -14.384,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": -4.315,
+                "value": -17.624,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": -4.552,
+                "value": -10.904,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": -4.134,
+                "value": -5.154,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": -4.774,
+                "value": 1.92,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": -5.107,
+                "value": 4.486,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": -5.759,
+                "value": 3.13,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": -6.362,
+                "value": 3.598,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": -7.232,
+                "value": 6.177,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": -7.385,
+                "value": 5.593,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": -6.732,
+                "value": 3.912,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": -7.291,
+                "value": 1.593,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": -10.822,
+                "value": -2.796,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": -9.748,
+                "value": -4.874,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": -8.509,
+                "value": -2.306,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": -8.951,
+                "value": -1.633,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": -9.784,
+                "value": 0.799,
                 "status": "actual"
               }
             ]
@@ -1518,102 +1508,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 12.785,
+                "value": -1.528,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 15.636,
+                "value": -1.554,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 14.037,
+                "value": -2.241,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 15.22,
+                "value": -5.434,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 7.699,
+                "value": -10.314,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 8.638,
+                "value": -5.316,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 10.975,
+                "value": -2.833,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 11.588,
+                "value": -1.517,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 8.482,
+                "value": 0.105,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 6.133,
+                "value": -0.277,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 3.329,
+                "value": 0.551,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 1.486,
+                "value": 3.497,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 2.482,
+                "value": 4.192,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 5.49,
+                "value": 4.144,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 4.29,
+                "value": 2.886,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": -4.396,
+                "value": -7.411,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 8.739,
+                "value": -5.302,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 23.449,
+                "value": -0.074,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 13.519,
+                "value": 1.952,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 9.54,
+                "value": 4.707,
                 "status": "actual"
               }
             ]
@@ -1623,102 +1613,102 @@
             "values": [
               {
                 "year": 2005,
-                "value": 42.131,
+                "value": 109.859,
                 "status": "actual"
               },
               {
                 "year": 2006,
-                "value": 52.157,
+                "value": 105.334,
                 "status": "actual"
               },
               {
                 "year": 2007,
-                "value": 48.887,
+                "value": 104.637,
                 "status": "actual"
               },
               {
                 "year": 2008,
-                "value": 46.825,
+                "value": 110.907,
                 "status": "actual"
               },
               {
                 "year": 2009,
-                "value": 41.717,
+                "value": 128.482,
                 "status": "actual"
               },
               {
                 "year": 2010,
-                "value": 42.065,
+                "value": 147.846,
                 "status": "actual"
               },
               {
                 "year": 2011,
-                "value": 28.946,
+                "value": 175.076,
                 "status": "actual"
               },
               {
                 "year": 2012,
-                "value": 30.166,
+                "value": 164.278,
                 "status": "actual"
               },
               {
                 "year": 2013,
-                "value": 30.574,
+                "value": 180.51,
                 "status": "actual"
               },
               {
                 "year": 2014,
-                "value": 28.8,
+                "value": 182.824,
                 "status": "actual"
               },
               {
                 "year": 2015,
-                "value": 33.2,
+                "value": 180.001,
                 "status": "actual"
               },
               {
                 "year": 2016,
-                "value": 36.656,
+                "value": 183.675,
                 "status": "actual"
               },
               {
                 "year": 2017,
-                "value": 36.912,
+                "value": 182.623,
                 "status": "actual"
               },
               {
                 "year": 2018,
-                "value": 38.068,
+                "value": 189.553,
                 "status": "actual"
               },
               {
                 "year": 2019,
-                "value": 39.006,
+                "value": 183.691,
                 "status": "actual"
               },
               {
                 "year": 2020,
-                "value": 44.266,
+                "value": 209.927,
                 "status": "actual"
               },
               {
                 "year": 2021,
-                "value": 40.121,
+                "value": 197.806,
                 "status": "actual"
               },
               {
                 "year": 2022,
-                "value": 34.829,
+                "value": 179.17,
                 "status": "actual"
               },
               {
                 "year": 2023,
-                "value": 42.438,
+                "value": 165.535,
                 "status": "actual"
               },
               {
                 "year": 2024,
-                "value": 52.818,
+                "value": 155.373,
                 "status": "actual"
               }
             ]
@@ -1726,41 +1716,41 @@
         }
       },
       "summary": {
-        "country_code": "NOR",
+        "country_code": "GRC",
         "period_start": 2005,
         "period_end": 2024,
-        "median_balance_pct_gdp": 10.489,
-        "mean_balance_pct_gdp": 11.111,
-        "balance_volatility_pp": 5.954,
-        "surplus_year_share": 0.95,
-        "worst_balance_pct_gdp": -2.462,
-        "median_primary_balance_pct_gdp": 8.689,
-        "mean_revenue_pct_gdp": 55.303,
-        "mean_expenditure_pct_gdp": 44.192,
-        "gross_debt_start_pct_gdp": 42.131,
-        "gross_debt_end_pct_gdp": 52.818,
-        "gross_debt_change_pp": 10.687,
-        "gross_debt_peak_pct_gdp": 52.818,
-        "post_2021_debt_change_pp": 12.697
+        "median_balance_pct_gdp": -5.168,
+        "mean_balance_pct_gdp": -5.202,
+        "balance_volatility_pp": 4.683,
+        "surplus_year_share": 0.2,
+        "worst_balance_pct_gdp": -15.424,
+        "median_primary_balance_pct_gdp": -0.897,
+        "mean_revenue_pct_gdp": 46.195,
+        "mean_expenditure_pct_gdp": 51.397,
+        "gross_debt_start_pct_gdp": 109.859,
+        "gross_debt_end_pct_gdp": 155.373,
+        "gross_debt_change_pp": 45.514,
+        "gross_debt_peak_pct_gdp": 209.927,
+        "post_2021_debt_change_pp": -42.433
       }
     },
     "revenue": {
-      "name_cs": "Norsko",
-      "name_en": "Norway",
-      "currency": "NOK",
+      "name_cs": "Řecko",
+      "name_en": "Greece",
+      "currency": "EUR",
       "consolidated": {
         "year": 2024,
         "scope": "general_government",
-        "revenue_pct_gdp": 59.692,
-        "revenue_local_bn": 3212.887,
-        "expense_pct_gdp": 46.905,
-        "balance_pct_gdp": 12.787
+        "revenue_pct_gdp": 49.477,
+        "revenue_local_bn": 117.13,
+        "expense_pct_gdp": 48.249,
+        "balance_pct_gdp": 1.229
       },
       "layers": null
     },
     "administrative_spending": {
-      "code": "NOR",
-      "currency": "NOK",
+      "code": "GRC",
+      "currency": "EUR",
       "unit": "billion_local_currency",
       "dimension": "functional",
       "scope_cs": "Výdaje vládních institucí podle COFOG",
@@ -1780,98 +1770,98 @@
       "rows": [
         {
           "code": "GF10",
-          "label_native": "Sosial beskyttelse",
+          "label_native": "Κοινωνική προστασία",
           "amounts": {
-            "previous": 924.076,
-            "current": 995.813
+            "previous": 41.664,
+            "current": 41.869
           },
           "label_en": "Social protection"
         },
         {
-          "code": "GF07",
-          "label_native": "Helse",
-          "amounts": {
-            "previous": 371.142,
-            "current": 388.902
-          },
-          "label_en": "Health"
-        },
-        {
-          "code": "GF04",
-          "label_native": "Næringsøkonomiske formål",
-          "amounts": {
-            "previous": 294.442,
-            "current": 305.038
-          },
-          "label_en": "Economic affairs"
-        },
-        {
           "code": "GF01",
-          "label_native": "Alminnelig offentlig tjenesteyting",
+          "label_native": "Γενικές δημόσιες υπηρεσίες",
           "amounts": {
-            "previous": 256.848,
-            "current": 288.188
+            "previous": 18.353,
+            "current": 19.565
           },
           "label_en": "General public services"
         },
         {
-          "code": "GF09",
-          "label_native": "Utdanning",
+          "code": "GF04",
+          "label_native": "Οικονομικές υποθέσεις",
           "amounts": {
-            "previous": 234.69,
-            "current": 251.263
+            "previous": 14.189,
+            "current": 14.115
+          },
+          "label_en": "Economic affairs"
+        },
+        {
+          "code": "GF07",
+          "label_native": "Υγεία",
+          "amounts": {
+            "previous": 13.247,
+            "current": 13.564
+          },
+          "label_en": "Health"
+        },
+        {
+          "code": "GF09",
+          "label_native": "Εκπαίδευση",
+          "amounts": {
+            "previous": 8.974,
+            "current": 9.33
           },
           "label_en": "Education"
         },
         {
           "code": "GF02",
-          "label_native": "Forsvar",
+          "label_native": "Άμυνα",
           "amounts": {
-            "previous": 91.636,
-            "current": 115.366
+            "previous": 5.055,
+            "current": 5.27
           },
           "label_en": "Defence"
         },
         {
-          "code": "GF08",
-          "label_native": "Fritid, kultur og religion",
-          "amounts": {
-            "previous": 77.183,
-            "current": 80.029
-          },
-          "label_en": "Recreation, culture and religion"
-        },
-        {
           "code": "GF03",
-          "label_native": "Offentlig orden og trygghet",
+          "label_native": "Δημόσια τάξη και ασφάλεια",
           "amounts": {
-            "previous": 52.294,
-            "current": 55.876
+            "previous": 4.372,
+            "current": 4.844
           },
           "label_en": "Public order and safety"
         },
         {
-          "code": "GF06",
-          "label_native": "Boliger og nærmiljø",
+          "code": "GF08",
+          "label_native": "Αναψυχή, πολιτισμός και θρησκεία",
           "amounts": {
-            "previous": 40.982,
-            "current": 45.8
+            "previous": 2.457,
+            "current": 2.315
           },
-          "label_en": "Housing and community amenities"
+          "label_en": "Recreation, culture and religion"
         },
         {
           "code": "GF05",
-          "label_native": "Miljøvern",
+          "label_native": "Προστασία του περιβάλλοντος",
           "amounts": {
-            "previous": 43.095,
-            "current": 44.314
+            "previous": 2.288,
+            "current": 2.13
           },
           "label_en": "Environmental protection"
+        },
+        {
+          "code": "GF06",
+          "label_native": "Στέγαση και κοινοτικές παροχές",
+          "amounts": {
+            "previous": 0.877,
+            "current": 1.22
+          },
+          "label_en": "Housing and community amenities"
         }
       ],
       "totals": {
-        "previous": 2386.388,
-        "current": 2570.589
+        "previous": 111.476,
+        "current": 114.222
       },
       "note_cs": "Částky pokrývají celý sektor vládních institucí S.13 a jsou v milionech národní měny převedených na miliardy.",
       "note_en": "Amounts cover the full S.13 general-government sector and are converted from millions to billions of national currency.",
@@ -1883,8 +1873,8 @@
       ]
     },
     "common_spending": {
-      "code": "NOR",
-      "currency": "NOK",
+      "code": "GRC",
+      "currency": "EUR",
       "unit": "billion_local_currency",
       "source_amount_scale_to_billions": 1,
       "dimension": "functional",
@@ -1903,24 +1893,24 @@
         }
       },
       "totals": {
-        "previous": 2386.388,
-        "current": 2570.589
+        "previous": 111.476,
+        "current": 114.222
       },
       "groups": [
         {
           "category_id": "social_protection",
           "amounts": {
-            "previous": 924.076,
-            "current": 995.813
+            "previous": 41.664,
+            "current": 41.869
           },
           "shares_pct": {
-            "previous": 38.722789,
-            "current": 38.738709
+            "previous": 37.374861,
+            "current": 36.655811
           },
           "source_rows": [
             {
               "code": "GF10",
-              "label_native": "Sosial beskyttelse",
+              "label_native": "Κοινωνική προστασία",
               "label_en": "Social protection"
             }
           ]
@@ -1928,17 +1918,17 @@
         {
           "category_id": "health",
           "amounts": {
-            "previous": 371.142,
-            "current": 388.902
+            "previous": 13.247,
+            "current": 13.564
           },
           "shares_pct": {
-            "previous": 15.552458,
-            "current": 15.128906
+            "previous": 11.883275,
+            "current": 11.87512
           },
           "source_rows": [
             {
               "code": "GF07",
-              "label_native": "Helse",
+              "label_native": "Υγεία",
               "label_en": "Health"
             }
           ]
@@ -1946,17 +1936,17 @@
         {
           "category_id": "education_research",
           "amounts": {
-            "previous": 234.69,
-            "current": 251.263
+            "previous": 8.974,
+            "current": 9.33
           },
           "shares_pct": {
-            "previous": 9.834528,
-            "current": 9.77453
+            "previous": 8.050163,
+            "current": 8.168304
           },
           "source_rows": [
             {
               "code": "GF09",
-              "label_native": "Utdanning",
+              "label_native": "Εκπαίδευση",
               "label_en": "Education"
             }
           ]
@@ -1964,17 +1954,17 @@
         {
           "category_id": "defence",
           "amounts": {
-            "previous": 91.636,
-            "current": 115.366
+            "previous": 5.055,
+            "current": 5.27
           },
           "shares_pct": {
-            "previous": 3.839946,
-            "current": 4.487921
+            "previous": 4.534608,
+            "current": 4.613822
           },
           "source_rows": [
             {
               "code": "GF02",
-              "label_native": "Forsvar",
+              "label_native": "Άμυνα",
               "label_en": "Defence"
             }
           ]
@@ -1982,17 +1972,17 @@
         {
           "category_id": "public_order_justice",
           "amounts": {
-            "previous": 52.294,
-            "current": 55.876
+            "previous": 4.372,
+            "current": 4.844
           },
           "shares_pct": {
-            "previous": 2.191345,
-            "current": 2.173665
+            "previous": 3.92192,
+            "current": 4.240864
           },
           "source_rows": [
             {
               "code": "GF03",
-              "label_native": "Offentlig orden og trygghet",
+              "label_native": "Δημόσια τάξη και ασφάλεια",
               "label_en": "Public order and safety"
             }
           ]
@@ -2012,17 +2002,17 @@
         {
           "category_id": "environment_agriculture",
           "amounts": {
-            "previous": 43.095,
-            "current": 44.314
+            "previous": 2.288,
+            "current": 2.13
           },
           "shares_pct": {
-            "previous": 1.805867,
-            "current": 1.723885
+            "previous": 2.05246,
+            "current": 1.86479
           },
           "source_rows": [
             {
               "code": "GF05",
-              "label_native": "Miljøvern",
+              "label_native": "Προστασία του περιβάλλοντος",
               "label_en": "Environmental protection"
             }
           ]
@@ -2030,17 +2020,17 @@
         {
           "category_id": "housing_community",
           "amounts": {
-            "previous": 40.982,
-            "current": 45.8
+            "previous": 0.877,
+            "current": 1.22
           },
           "shares_pct": {
-            "previous": 1.717323,
-            "current": 1.781693
+            "previous": 0.786716,
+            "current": 1.068095
           },
           "source_rows": [
             {
               "code": "GF06",
-              "label_native": "Boliger og nærmiljø",
+              "label_native": "Στέγαση και κοινοτικές παροχές",
               "label_en": "Housing and community amenities"
             }
           ]
@@ -2048,17 +2038,17 @@
         {
           "category_id": "economic_affairs",
           "amounts": {
-            "previous": 294.442,
-            "current": 305.038
+            "previous": 14.189,
+            "current": 14.115
           },
           "shares_pct": {
-            "previous": 12.338396,
-            "current": 11.866463
+            "previous": 12.7283,
+            "current": 12.357514
           },
           "source_rows": [
             {
               "code": "GF04",
-              "label_native": "Næringsøkonomiske formål",
+              "label_native": "Οικονομικές υποθέσεις",
               "label_en": "Economic affairs"
             }
           ]
@@ -2066,17 +2056,17 @@
         {
           "category_id": "general_services_debt",
           "amounts": {
-            "previous": 256.848,
-            "current": 288.188
+            "previous": 18.353,
+            "current": 19.565
           },
           "shares_pct": {
-            "previous": 10.763044,
-            "current": 11.210971
+            "previous": 16.463633,
+            "current": 17.128924
           },
           "source_rows": [
             {
               "code": "GF01",
-              "label_native": "Alminnelig offentlig tjenesteyting",
+              "label_native": "Γενικές δημόσιες υπηρεσίες",
               "label_en": "General public services"
             }
           ]
@@ -2084,17 +2074,17 @@
         {
           "category_id": "culture_recreation",
           "amounts": {
-            "previous": 77.183,
-            "current": 80.029
+            "previous": 2.457,
+            "current": 2.315
           },
           "shares_pct": {
-            "previous": 3.234302,
-            "current": 3.113255
+            "previous": 2.204062,
+            "current": 2.026755
           },
           "source_rows": [
             {
               "code": "GF08",
-              "label_native": "Fritid, kultur og religion",
+              "label_native": "Αναψυχή, πολιτισμός και θρησκεία",
               "label_en": "Recreation, culture and religion"
             }
           ]
@@ -2114,385 +2104,385 @@
       ]
     },
     "functional_spending": {
-      "name_cs": "Norsko",
-      "name_en": "Norway",
-      "currency": "NOK",
+      "name_cs": "Řecko",
+      "name_en": "Greece",
+      "currency": "EUR",
       "scope": "general_government",
       "categories": {
         "health": [
           {
             "year": 2015,
-            "amount_local_mn": 228532,
-            "pct_gdp": 7.073,
+            "amount_local_mn": 8783,
+            "pct_gdp": 5.008,
             "status": "A"
           },
           {
             "year": 2016,
-            "amount_local_mn": 237390,
-            "pct_gdp": 7.373,
+            "amount_local_mn": 9306,
+            "pct_gdp": 5.335,
             "status": "A"
           },
           {
             "year": 2017,
-            "amount_local_mn": 248179,
-            "pct_gdp": 7.218,
+            "amount_local_mn": 9685,
+            "pct_gdp": 5.46,
             "status": "A"
           },
           {
             "year": 2018,
-            "amount_local_mn": 260417,
-            "pct_gdp": 7.044,
+            "amount_local_mn": 10004,
+            "pct_gdp": 5.539,
             "status": "A"
           },
           {
             "year": 2019,
-            "amount_local_mn": 277323,
-            "pct_gdp": 7.428,
+            "amount_local_mn": 10546,
+            "pct_gdp": 5.695,
             "status": "A"
           },
           {
             "year": 2020,
-            "amount_local_mn": 295784,
-            "pct_gdp": 8.218,
+            "amount_local_mn": 11096,
+            "pct_gdp": 6.623,
             "status": "A"
           },
           {
             "year": 2021,
-            "amount_local_mn": 328072,
-            "pct_gdp": 7.322,
+            "amount_local_mn": 12150,
+            "pct_gdp": 6.583,
             "status": "A"
           },
           {
             "year": 2022,
-            "amount_local_mn": 347106,
-            "pct_gdp": 5.848,
+            "amount_local_mn": 12802,
+            "pct_gdp": 6.184,
             "status": "A"
           },
           {
             "year": 2023,
-            "amount_local_mn": 371142,
-            "pct_gdp": 6.996,
+            "amount_local_mn": 13247,
+            "pct_gdp": 5.896,
             "status": "A"
           },
           {
             "year": 2024,
-            "amount_local_mn": 388902,
-            "pct_gdp": 7.225,
+            "amount_local_mn": 13564,
+            "pct_gdp": 5.73,
             "status": "A"
           }
         ],
         "social": [
           {
             "year": 2015,
-            "amount_local_mn": 632629,
-            "pct_gdp": 19.58,
+            "amount_local_mn": 36012,
+            "pct_gdp": 20.536,
             "status": "A"
           },
           {
             "year": 2016,
-            "amount_local_mn": 662835,
-            "pct_gdp": 20.588,
+            "amount_local_mn": 36166,
+            "pct_gdp": 20.732,
             "status": "A"
           },
           {
             "year": 2017,
-            "amount_local_mn": 682755,
-            "pct_gdp": 19.857,
+            "amount_local_mn": 35493,
+            "pct_gdp": 20.01,
             "status": "A"
           },
           {
             "year": 2018,
-            "amount_local_mn": 702719,
-            "pct_gdp": 19.008,
+            "amount_local_mn": 35648,
+            "pct_gdp": 19.737,
             "status": "A"
           },
           {
             "year": 2019,
-            "amount_local_mn": 731275,
-            "pct_gdp": 19.588,
+            "amount_local_mn": 36329,
+            "pct_gdp": 19.618,
             "status": "A"
           },
           {
             "year": 2020,
-            "amount_local_mn": 789526,
-            "pct_gdp": 21.936,
+            "amount_local_mn": 37344,
+            "pct_gdp": 22.29,
             "status": "A"
           },
           {
             "year": 2021,
-            "amount_local_mn": 814020,
-            "pct_gdp": 18.168,
+            "amount_local_mn": 37512,
+            "pct_gdp": 20.323,
             "status": "A"
           },
           {
             "year": 2022,
-            "amount_local_mn": 849937,
-            "pct_gdp": 14.321,
+            "amount_local_mn": 39089,
+            "pct_gdp": 18.883,
             "status": "A"
           },
           {
             "year": 2023,
-            "amount_local_mn": 924076,
-            "pct_gdp": 17.419,
+            "amount_local_mn": 41664,
+            "pct_gdp": 18.543,
             "status": "A"
           },
           {
             "year": 2024,
-            "amount_local_mn": 995813,
-            "pct_gdp": 18.501,
+            "amount_local_mn": 41869,
+            "pct_gdp": 17.686,
             "status": "A"
           }
         ],
         "transport": [
           {
             "year": 2015,
-            "amount_local_mn": 110877,
-            "pct_gdp": 3.432,
+            "amount_local_mn": 5509,
+            "pct_gdp": 3.141,
             "status": "A"
           },
           {
             "year": 2016,
-            "amount_local_mn": 116347,
-            "pct_gdp": 3.614,
+            "amount_local_mn": 5393,
+            "pct_gdp": 3.091,
             "status": "A"
           },
           {
             "year": 2017,
-            "amount_local_mn": 121459,
-            "pct_gdp": 3.533,
+            "amount_local_mn": 4016,
+            "pct_gdp": 2.264,
             "status": "A"
           },
           {
             "year": 2018,
-            "amount_local_mn": 131001,
-            "pct_gdp": 3.543,
+            "amount_local_mn": 3459,
+            "pct_gdp": 1.915,
             "status": "A"
           },
           {
             "year": 2019,
-            "amount_local_mn": 141721,
-            "pct_gdp": 3.796,
+            "amount_local_mn": 3449,
+            "pct_gdp": 1.863,
             "status": "A"
           },
           {
             "year": 2020,
-            "amount_local_mn": 152895,
-            "pct_gdp": 4.248,
+            "amount_local_mn": 3534,
+            "pct_gdp": 2.109,
             "status": "A"
           },
           {
             "year": 2021,
-            "amount_local_mn": 156649,
-            "pct_gdp": 3.496,
+            "amount_local_mn": 4118,
+            "pct_gdp": 2.231,
             "status": "A"
           },
           {
             "year": 2022,
-            "amount_local_mn": 164744,
-            "pct_gdp": 2.776,
+            "amount_local_mn": 5050,
+            "pct_gdp": 2.44,
             "status": "A"
           },
           {
             "year": 2023,
-            "amount_local_mn": 182566,
-            "pct_gdp": 3.441,
+            "amount_local_mn": 5793,
+            "pct_gdp": 2.578,
             "status": "A"
           },
           {
             "year": 2024,
-            "amount_local_mn": 193663,
-            "pct_gdp": 3.598,
+            "amount_local_mn": 6426,
+            "pct_gdp": 2.714,
             "status": "A"
           }
         ]
       }
     },
     "transport": {
-      "geo": "NO",
-      "name_cs": "Norsko",
-      "name_en": "Norway",
-      "currency": "NOK",
+      "geo": "EL",
+      "name_cs": "Řecko",
+      "name_en": "Greece",
+      "currency": "EUR",
       "coverage": "available",
       "latest_year": 2024,
       "records": [
         {
           "year": 2015,
-          "total": 110877,
+          "total": 5509,
           "components": {
-            "operations": 39747,
-            "payroll": 12304,
-            "subsidies": 9522,
-            "investment": 46504,
-            "capital_transfers": 2242,
-            "other": 558
+            "operations": 749,
+            "payroll": 593,
+            "subsidies": 0,
+            "investment": 3953,
+            "capital_transfers": 111,
+            "other": 103
           },
           "levels": {
-            "central": 67750,
+            "central": 4135,
             "state": null,
-            "local": 48193,
-            "social_security": null
+            "local": 1374,
+            "social_security": 0
           }
         },
         {
           "year": 2016,
-          "total": 116347,
+          "total": 5393,
           "components": {
-            "operations": 42175,
-            "payroll": 12951,
-            "subsidies": 10457,
-            "investment": 48173,
-            "capital_transfers": 2060,
-            "other": 531
+            "operations": 849,
+            "payroll": 634,
+            "subsidies": 0,
+            "investment": 3732,
+            "capital_transfers": 116,
+            "other": 62
           },
           "levels": {
-            "central": 70510,
+            "central": 4141,
             "state": null,
-            "local": 48926,
-            "social_security": null
+            "local": 1252,
+            "social_security": 0
           }
         },
         {
           "year": 2017,
-          "total": 121459,
+          "total": 4016,
           "components": {
-            "operations": 45726,
-            "payroll": 13998,
-            "subsidies": 10180,
-            "investment": 49523,
-            "capital_transfers": 1779,
-            "other": 253
+            "operations": 771,
+            "payroll": 629,
+            "subsidies": 0,
+            "investment": 2420,
+            "capital_transfers": 112,
+            "other": 84
           },
           "levels": {
-            "central": 73773,
+            "central": 2852,
             "state": null,
-            "local": 51596,
-            "social_security": null
+            "local": 1164,
+            "social_security": 0
           }
         },
         {
           "year": 2018,
-          "total": 131001,
+          "total": 3459,
           "components": {
-            "operations": 47741,
-            "payroll": 14480,
-            "subsidies": 11739,
-            "investment": 54873,
-            "capital_transfers": 1666,
-            "other": 502
+            "operations": 631,
+            "payroll": 595,
+            "subsidies": 62,
+            "investment": 1971,
+            "capital_transfers": 138,
+            "other": 62
           },
           "levels": {
-            "central": 78921,
+            "central": 2168,
             "state": null,
-            "local": 57095,
-            "social_security": null
+            "local": 1291,
+            "social_security": 0
           }
         },
         {
           "year": 2019,
-          "total": 141721,
+          "total": 3449,
           "components": {
-            "operations": 51877,
-            "payroll": 14566,
-            "subsidies": 12422,
-            "investment": 59340,
-            "capital_transfers": 3040,
-            "other": 476
+            "operations": 587,
+            "payroll": 597,
+            "subsidies": 62,
+            "investment": 2008,
+            "capital_transfers": 128,
+            "other": 67
           },
           "levels": {
-            "central": 84428,
+            "central": 1901,
             "state": null,
-            "local": 64278,
-            "social_security": null
+            "local": 1548,
+            "social_security": 0
           }
         },
         {
           "year": 2020,
-          "total": 152895,
+          "total": 3534,
           "components": {
-            "operations": 53701,
-            "payroll": 14289,
-            "subsidies": 20119,
-            "investment": 57391,
-            "capital_transfers": 6920,
-            "other": 475
+            "operations": 525,
+            "payroll": 575,
+            "subsidies": 133,
+            "investment": 2147,
+            "capital_transfers": 73,
+            "other": 81
           },
           "levels": {
-            "central": 93457,
+            "central": 1828,
             "state": null,
-            "local": 65378,
-            "social_security": null
+            "local": 1706,
+            "social_security": 0
           }
         },
         {
           "year": 2021,
-          "total": 156649,
+          "total": 4118,
           "components": {
-            "operations": 58679,
-            "payroll": 14584,
-            "subsidies": 19540,
-            "investment": 60354,
-            "capital_transfers": 2925,
-            "other": 567
+            "operations": 599,
+            "payroll": 602,
+            "subsidies": 147,
+            "investment": 2491,
+            "capital_transfers": 235,
+            "other": 44
           },
           "levels": {
-            "central": 92712,
+            "central": 2029,
             "state": null,
-            "local": 70542,
-            "social_security": null
+            "local": 2089,
+            "social_security": 0
           }
         },
         {
           "year": 2022,
-          "total": 164744,
+          "total": 5050,
           "components": {
-            "operations": 63438,
-            "payroll": 15431,
-            "subsidies": 15673,
-            "investment": 67392,
-            "capital_transfers": 2453,
-            "other": 357
+            "operations": 794,
+            "payroll": 587,
+            "subsidies": 139,
+            "investment": 3079,
+            "capital_transfers": 402,
+            "other": 49
           },
           "levels": {
-            "central": 94719,
+            "central": 2556,
             "state": null,
-            "local": 77006,
-            "social_security": null
+            "local": 2494,
+            "social_security": 0
           }
         },
         {
           "year": 2023,
-          "total": 182566,
+          "total": 5793,
           "components": {
-            "operations": 71027,
-            "payroll": 18070,
-            "subsidies": 19269,
-            "investment": 69875,
-            "capital_transfers": 3420,
-            "other": 905
+            "operations": 875,
+            "payroll": 607,
+            "subsidies": 220,
+            "investment": 3695,
+            "capital_transfers": 352,
+            "other": 44
           },
           "levels": {
-            "central": 106360,
+            "central": 2853,
             "state": null,
-            "local": 84805,
-            "social_security": null
+            "local": 2940,
+            "social_security": 0
           }
         },
         {
           "year": 2024,
-          "total": 193663,
+          "total": 6426,
           "components": {
-            "operations": 73555,
-            "payroll": 19573,
-            "subsidies": 22418,
-            "investment": 73540,
-            "capital_transfers": 3943,
-            "other": 634
+            "operations": 911,
+            "payroll": 694,
+            "subsidies": 191,
+            "investment": 4008,
+            "capital_transfers": 575,
+            "other": 47
           },
           "levels": {
-            "central": 113849,
+            "central": 3295,
             "state": null,
-            "local": 89656,
-            "social_security": null
+            "local": 3131,
+            "social_security": 0
           }
         }
       ],
@@ -2500,78 +2490,46 @@
       "public_data": {
         "detail_status": "harmonised",
         "level_status": "harmonised",
-        "note_cs": "Eurostat/EEA zveřejňuje výdaje na dopravu podle ekonomického druhu a subsektoru; Statistics Norway poskytuje národní kontrolu.",
-        "note_en": "Eurostat/EEA publishes transport expenditure by economic type and subsector; Statistics Norway provides the national cross-check.",
-        "next_step_cs": "Doplnit projektovou vrstvu z Národního dopravního plánu.",
-        "next_step_en": "Add project-level detail from the National Transport Plan.",
+        "note_cs": "Eurostat zveřejňuje konsolidované řecké výdaje na dopravu podle ekonomického druhu a subsektoru; národní projektová vrstva zůstává oddělená.",
+        "note_en": "Eurostat publishes consolidated Greek transport expenditure by economic type and government subsector; the national project layer remains separate.",
+        "next_step_cs": "Napojit projekty a programy ministerstva infrastruktury bez směšování s konsolidovaným COFOG.",
+        "next_step_en": "Connect Ministry of Infrastructure projects and programmes without mixing them into consolidated COFOG.",
         "sources": [
           {
-            "title": "Statistics Norway · general government revenue and expenditure",
-            "url": "https://www.ssb.no/en/offentlig-sektor/statistikker/offinnut"
+            "title": "Ministry of Infrastructure and Transport Greece",
+            "url": "https://www.yme.gr/"
           }
         ]
       }
     },
     "health": {
-      "currency": "NOK",
-      "architecture_cs": "Daňově financovaný systém dělí odpovědnost mezi státní regionální zdravotní podniky a obce; stát vlastní nemocnice a obce zajišťují primární a dlouhodobou péči.",
-      "architecture_en": "The tax-funded system divides responsibility between state-owned regional health authorities and municipalities; the state owns hospitals while municipalities provide primary and long-term care.",
-      "official_title": "Norwegian Ministry of Health · healthcare system",
-      "official_url": "https://www.regjeringen.no/en/topics/health-and-care/id917/",
+      "currency": "EUR",
+      "architecture_cs": "Národní zdravotní systém ESY kombinuje daňové financování s povinným sociálním pojištěním EOPYY. Stát a regionální zdravotní správy provozují veřejné nemocnice, zatímco EOPYY nakupuje péči od veřejných i soukromých poskytovatelů.",
+      "architecture_en": "The ESY national health system combines tax funding with compulsory social insurance through EOPYY. Central government and regional health authorities operate public hospitals, while EOPYY purchases care from public and private providers.",
+      "official_title": "Ministry of Health Greece · National Health System",
+      "official_url": "https://www.moh.gov.gr/",
       "year": 2024,
-      "health_gdp_pct": 9.249,
-      "per_capita_ppp": 7573.924,
-      "per_capita_local": 89337.932,
+      "health_gdp_pct": 8.393,
+      "per_capita_ppp": 3049.154,
+      "per_capita_local": 1915.296,
       "financing": {
-        "public_compulsory": 86.107,
-        "out_of_pocket": null,
-        "voluntary_other": null
+        "public_compulsory": 60.621,
+        "out_of_pocket": 34.243,
+        "voluntary_other": 5.136
       },
       "providers": {
-        "hospitals": null,
-        "residential_ltc": null,
-        "ambulatory": null,
-        "retailers": null,
-        "other": null
+        "hospitals": 44.945,
+        "residential_ltc": 2.385,
+        "ambulatory": 16.208,
+        "retailers": 30.278,
+        "other": 6.184
       },
-      "beds_per_1000": 3.2,
+      "beds_per_1000": 4.23,
       "bed_year": 2024,
       "bed_status": "not_available"
     },
     "providers": null,
-    "municipalities": {
-      "code": "NOR",
-      "alpha2": "NO",
-      "name_cs": "Norsko",
-      "name_en": "Norway",
-      "currency": "NOK",
-      "status": "complete",
-      "directory_count": 358,
-      "years": [
-        2015,
-        2016,
-        2017,
-        2018,
-        2019,
-        2020,
-        2021,
-        2022,
-        2023,
-        2024,
-        2025
-      ],
-      "stages": [
-        "actual"
-      ],
-      "measures": [
-        "revenue",
-        "expenditure",
-        "balance"
-      ],
-      "coverage_cs": "Všech 357 obcí plus Longyearbyen; souhrnné účty 2015–2025 a detail roku 2025 napříč 97 funkcemi KOSTRA",
-      "coverage_en": "All 357 municipalities plus Longyearbyen; 2015–2025 headline accounts and 2025 detail across 97 KOSTRA functions",
-      "source": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap"
-    },
+    "municipalities": null,
     "public_entities": null,
     "demography": {
       "coverage": "eurostat_baseline_full_age_sex",
@@ -2581,618 +2539,618 @@
         "from": 2022,
         "to": 2100
       },
-      "detail": "data/countries/nor/demography.v1.json",
+      "detail": "data/countries/grc/demography.v1.json",
       "detail_row_count": 7979,
       "age_group_count": 101,
       "years": [
         {
           "year": 2025,
-          "total": 5508635,
-          "male": 2777265,
-          "female": 2731370,
-          "age_0_19": 1222161,
-          "age_20_64": 3228685,
-          "age_65_79": 786959,
-          "age_80_plus": 270830,
+          "total": 10320364,
+          "male": 5042861,
+          "female": 5277503,
+          "age_0_19": 1899522,
+          "age_20_64": 5976428,
+          "age_65_79": 1714970,
+          "age_80_plus": 729444,
           "male_by_age": {
-            "age_0_19": 628303,
-            "age_20_64": 1649135,
-            "age_65_79": 386217,
-            "age_80_plus": 113610
+            "age_0_19": 979632,
+            "age_20_64": 2977636,
+            "age_65_79": 789944,
+            "age_80_plus": 295649
           },
           "female_by_age": {
-            "age_0_19": 593858,
-            "age_20_64": 1579550,
-            "age_65_79": 400742,
-            "age_80_plus": 157220
+            "age_0_19": 919890,
+            "age_20_64": 2998792,
+            "age_65_79": 925026,
+            "age_80_plus": 433795
           },
           "shares_pct": {
-            "age_0_19": 22.1863,
-            "age_20_64": 58.6113,
-            "age_65_79": 14.2859,
-            "age_80_plus": 4.9165
+            "age_0_19": 18.4056,
+            "age_20_64": 57.9091,
+            "age_65_79": 16.6173,
+            "age_80_plus": 7.068
           },
-          "old_age_dependency_per_100_working_age": 32.7622
+          "old_age_dependency_per_100_working_age": 40.9009
         },
         {
           "year": 2026,
-          "total": 5532441,
-          "male": 2790496,
-          "female": 2741945,
-          "age_0_19": 1214438,
-          "age_20_64": 3237831,
-          "age_65_79": 794678,
-          "age_80_plus": 285494,
+          "total": 10266269,
+          "male": 5016012,
+          "female": 5250257,
+          "age_0_19": 1873452,
+          "age_20_64": 5916186,
+          "age_65_79": 1737091,
+          "age_80_plus": 739540,
           "male_by_age": {
-            "age_0_19": 624717,
-            "age_20_64": 1654238,
-            "age_65_79": 390491,
-            "age_80_plus": 121050
+            "age_0_19": 966243,
+            "age_20_64": 2949209,
+            "age_65_79": 798941,
+            "age_80_plus": 301619
           },
           "female_by_age": {
-            "age_0_19": 589721,
-            "age_20_64": 1583593,
-            "age_65_79": 404187,
-            "age_80_plus": 164444
+            "age_0_19": 907209,
+            "age_20_64": 2966977,
+            "age_65_79": 938150,
+            "age_80_plus": 437921
           },
           "shares_pct": {
-            "age_0_19": 21.9512,
-            "age_20_64": 58.5245,
-            "age_65_79": 14.364,
-            "age_80_plus": 5.1604
+            "age_0_19": 18.2486,
+            "age_20_64": 57.6274,
+            "age_65_79": 16.9204,
+            "age_80_plus": 7.2036
           },
-          "old_age_dependency_per_100_working_age": 33.361
+          "old_age_dependency_per_100_working_age": 41.862
         },
         {
           "year": 2027,
-          "total": 5561539,
-          "male": 2806377,
-          "female": 2755162,
-          "age_0_19": 1206281,
-          "age_20_64": 3252697,
-          "age_65_79": 798221,
-          "age_80_plus": 304340,
+          "total": 10209059,
+          "male": 4987168,
+          "female": 5221891,
+          "age_0_19": 1844883,
+          "age_20_64": 5861166,
+          "age_65_79": 1743681,
+          "age_80_plus": 759329,
           "male_by_age": {
-            "age_0_19": 620752,
-            "age_20_64": 1662517,
-            "age_65_79": 392618,
-            "age_80_plus": 130490
+            "age_0_19": 951344,
+            "age_20_64": 2923113,
+            "age_65_79": 801224,
+            "age_80_plus": 311487
           },
           "female_by_age": {
-            "age_0_19": 585529,
-            "age_20_64": 1590180,
-            "age_65_79": 405603,
-            "age_80_plus": 173850
+            "age_0_19": 893539,
+            "age_20_64": 2938053,
+            "age_65_79": 942457,
+            "age_80_plus": 447842
           },
           "shares_pct": {
-            "age_0_19": 21.6897,
-            "age_20_64": 58.4856,
-            "age_65_79": 14.3525,
-            "age_80_plus": 5.4722
+            "age_0_19": 18.071,
+            "age_20_64": 57.4114,
+            "age_65_79": 17.0797,
+            "age_80_plus": 7.4378
           },
-          "old_age_dependency_per_100_working_age": 33.8968
+          "old_age_dependency_per_100_working_age": 42.705
         },
         {
           "year": 2028,
-          "total": 5595945,
-          "male": 2824938,
-          "female": 2771007,
-          "age_0_19": 1199740,
-          "age_20_64": 3270916,
-          "age_65_79": 804566,
-          "age_80_plus": 320723,
+          "total": 10149281,
+          "male": 4956578,
+          "female": 5192703,
+          "age_0_19": 1814430,
+          "age_20_64": 5804546,
+          "age_65_79": 1753727,
+          "age_80_plus": 776578,
           "male_by_age": {
-            "age_0_19": 617590,
-            "age_20_64": 1672512,
-            "age_65_79": 396184,
-            "age_80_plus": 138652
+            "age_0_19": 935518,
+            "age_20_64": 2896216,
+            "age_65_79": 804862,
+            "age_80_plus": 319982
           },
           "female_by_age": {
-            "age_0_19": 582150,
-            "age_20_64": 1598404,
-            "age_65_79": 408382,
-            "age_80_plus": 182071
+            "age_0_19": 878912,
+            "age_20_64": 2908330,
+            "age_65_79": 948865,
+            "age_80_plus": 456596
           },
           "shares_pct": {
-            "age_0_19": 21.4395,
-            "age_20_64": 58.4515,
-            "age_65_79": 14.3777,
-            "age_80_plus": 5.7313
+            "age_0_19": 17.8774,
+            "age_20_64": 57.1917,
+            "age_65_79": 17.2793,
+            "age_80_plus": 7.6516
           },
-          "old_age_dependency_per_100_working_age": 34.4029
+          "old_age_dependency_per_100_working_age": 43.5918
         },
         {
           "year": 2029,
-          "total": 5629880,
-          "male": 2843088,
-          "female": 2786792,
-          "age_0_19": 1191407,
-          "age_20_64": 3289779,
-          "age_65_79": 813454,
-          "age_80_plus": 335240,
+          "total": 10090457,
+          "male": 4926313,
+          "female": 5164144,
+          "age_0_19": 1779976,
+          "age_20_64": 5752049,
+          "age_65_79": 1772690,
+          "age_80_plus": 785742,
           "male_by_age": {
-            "age_0_19": 613366,
-            "age_20_64": 1683170,
-            "age_65_79": 400569,
-            "age_80_plus": 145983
+            "age_0_19": 917649,
+            "age_20_64": 2871230,
+            "age_65_79": 812935,
+            "age_80_plus": 324499
           },
           "female_by_age": {
-            "age_0_19": 578041,
-            "age_20_64": 1606609,
-            "age_65_79": 412885,
-            "age_80_plus": 189257
+            "age_0_19": 862327,
+            "age_20_64": 2880819,
+            "age_65_79": 959755,
+            "age_80_plus": 461243
           },
           "shares_pct": {
-            "age_0_19": 21.1622,
-            "age_20_64": 58.4343,
-            "age_65_79": 14.4489,
-            "age_80_plus": 5.9547
+            "age_0_19": 17.6402,
+            "age_20_64": 57.0048,
+            "age_65_79": 17.568,
+            "age_80_plus": 7.787
           },
-          "old_age_dependency_per_100_working_age": 34.9171
+          "old_age_dependency_per_100_working_age": 44.4786
         },
         {
           "year": 2030,
-          "total": 5663302,
-          "male": 2860830,
-          "female": 2802472,
-          "age_0_19": 1182343,
-          "age_20_64": 3307066,
-          "age_65_79": 825676,
-          "age_80_plus": 348217,
+          "total": 10032545,
+          "male": 4896387,
+          "female": 5136158,
+          "age_0_19": 1745351,
+          "age_20_64": 5697049,
+          "age_65_79": 1797622,
+          "age_80_plus": 792523,
           "male_by_age": {
-            "age_0_19": 608839,
-            "age_20_64": 1692601,
-            "age_65_79": 407028,
-            "age_80_plus": 152362
+            "age_0_19": 899706,
+            "age_20_64": 2845066,
+            "age_65_79": 823465,
+            "age_80_plus": 328150
           },
           "female_by_age": {
-            "age_0_19": 573504,
-            "age_20_64": 1614465,
-            "age_65_79": 418648,
-            "age_80_plus": 195855
+            "age_0_19": 845645,
+            "age_20_64": 2851983,
+            "age_65_79": 974157,
+            "age_80_plus": 464373
           },
           "shares_pct": {
-            "age_0_19": 20.8773,
-            "age_20_64": 58.3947,
-            "age_65_79": 14.5794,
-            "age_80_plus": 6.1487
+            "age_0_19": 17.3969,
+            "age_20_64": 56.7857,
+            "age_65_79": 17.9179,
+            "age_80_plus": 7.8995
           },
-          "old_age_dependency_per_100_working_age": 35.4965
+          "old_age_dependency_per_100_working_age": 45.4647
         },
         {
           "year": 2031,
-          "total": 5696160,
-          "male": 2878142,
-          "female": 2818018,
-          "age_0_19": 1174346,
-          "age_20_64": 3322439,
-          "age_65_79": 839140,
-          "age_80_plus": 360235,
+          "total": 9975534,
+          "male": 4866810,
+          "female": 5108724,
+          "age_0_19": 1714226,
+          "age_20_64": 5636293,
+          "age_65_79": 1820166,
+          "age_80_plus": 804849,
           "male_by_age": {
-            "age_0_19": 604926,
-            "age_20_64": 1700891,
-            "age_65_79": 414173,
-            "age_80_plus": 158152
+            "age_0_19": 883547,
+            "age_20_64": 2816070,
+            "age_65_79": 833008,
+            "age_80_plus": 334185
           },
           "female_by_age": {
-            "age_0_19": 569420,
-            "age_20_64": 1621548,
-            "age_65_79": 424967,
-            "age_80_plus": 202083
+            "age_0_19": 830679,
+            "age_20_64": 2820223,
+            "age_65_79": 987158,
+            "age_80_plus": 470664
           },
           "shares_pct": {
-            "age_0_19": 20.6165,
-            "age_20_64": 58.3277,
-            "age_65_79": 14.7317,
-            "age_80_plus": 6.3242
+            "age_0_19": 17.1843,
+            "age_20_64": 56.5012,
+            "age_65_79": 18.2463,
+            "age_80_plus": 8.0682
           },
-          "old_age_dependency_per_100_working_age": 36.0992
+          "old_age_dependency_per_100_working_age": 46.5734
         },
         {
           "year": 2032,
-          "total": 5728440,
-          "male": 2895053,
-          "female": 2833387,
-          "age_0_19": 1168240,
-          "age_20_64": 3335223,
-          "age_65_79": 854419,
-          "age_80_plus": 370558,
+          "total": 9919670,
+          "male": 4837756,
+          "female": 5081914,
+          "age_0_19": 1689081,
+          "age_20_64": 5565762,
+          "age_65_79": 1844876,
+          "age_80_plus": 819951,
           "male_by_age": {
-            "age_0_19": 601839,
-            "age_20_64": 1707855,
-            "age_65_79": 422213,
-            "age_80_plus": 163146
+            "age_0_19": 870296,
+            "age_20_64": 2782358,
+            "age_65_79": 843775,
+            "age_80_plus": 341327
           },
           "female_by_age": {
-            "age_0_19": 566401,
-            "age_20_64": 1627368,
-            "age_65_79": 432206,
-            "age_80_plus": 207412
+            "age_0_19": 818785,
+            "age_20_64": 2783404,
+            "age_65_79": 1001101,
+            "age_80_plus": 478624
           },
           "shares_pct": {
-            "age_0_19": 20.3937,
-            "age_20_64": 58.2222,
-            "age_65_79": 14.9154,
-            "age_80_plus": 6.4687
+            "age_0_19": 17.0276,
+            "age_20_64": 56.1083,
+            "age_65_79": 18.5982,
+            "age_80_plus": 8.2659
           },
-          "old_age_dependency_per_100_working_age": 36.7285
+          "old_age_dependency_per_100_working_age": 47.8789
         },
         {
           "year": 2033,
-          "total": 5760135,
-          "male": 2911568,
-          "female": 2848567,
-          "age_0_19": 1162869,
-          "age_20_64": 3347147,
-          "age_65_79": 868198,
-          "age_80_plus": 381921,
+          "total": 9865215,
+          "male": 4809373,
+          "female": 5055842,
+          "age_0_19": 1666822,
+          "age_20_64": 5488992,
+          "age_65_79": 1875422,
+          "age_80_plus": 833979,
           "male_by_age": {
-            "age_0_19": 599204,
-            "age_20_64": 1714675,
-            "age_65_79": 429293,
-            "age_80_plus": 168396
+            "age_0_19": 858782,
+            "age_20_64": 2745443,
+            "age_65_79": 857684,
+            "age_80_plus": 347464
           },
           "female_by_age": {
-            "age_0_19": 563665,
-            "age_20_64": 1632472,
-            "age_65_79": 438905,
-            "age_80_plus": 213525
+            "age_0_19": 808040,
+            "age_20_64": 2743549,
+            "age_65_79": 1017738,
+            "age_80_plus": 486515
           },
           "shares_pct": {
-            "age_0_19": 20.1882,
-            "age_20_64": 58.1088,
-            "age_65_79": 15.0725,
-            "age_80_plus": 6.6304
+            "age_0_19": 16.896,
+            "age_20_64": 55.6399,
+            "age_65_79": 19.0105,
+            "age_80_plus": 8.4537
           },
-          "old_age_dependency_per_100_working_age": 37.3488
+          "old_age_dependency_per_100_working_age": 49.3606
         },
         {
           "year": 2034,
-          "total": 5791257,
-          "male": 2927708,
-          "female": 2863549,
-          "age_0_19": 1159534,
-          "age_20_64": 3355441,
-          "age_65_79": 883351,
-          "age_80_plus": 392931,
+          "total": 9811524,
+          "male": 4781380,
+          "female": 5030144,
+          "age_0_19": 1649797,
+          "age_20_64": 5406900,
+          "age_65_79": 1907333,
+          "age_80_plus": 847494,
           "male_by_age": {
-            "age_0_19": 597830,
-            "age_20_64": 1719354,
-            "age_65_79": 437265,
-            "age_80_plus": 173259
+            "age_0_19": 849586,
+            "age_20_64": 2706467,
+            "age_65_79": 872012,
+            "age_80_plus": 353315
           },
           "female_by_age": {
-            "age_0_19": 561704,
-            "age_20_64": 1636087,
-            "age_65_79": 446086,
-            "age_80_plus": 219672
+            "age_0_19": 800211,
+            "age_20_64": 2700433,
+            "age_65_79": 1035321,
+            "age_80_plus": 494179
           },
           "shares_pct": {
-            "age_0_19": 20.0221,
-            "age_20_64": 57.9398,
-            "age_65_79": 15.2532,
-            "age_80_plus": 6.7849
+            "age_0_19": 16.8149,
+            "age_20_64": 55.1076,
+            "age_65_79": 19.4397,
+            "age_80_plus": 8.6377
           },
-          "old_age_dependency_per_100_working_age": 38.0362
+          "old_age_dependency_per_100_working_age": 50.9502
         },
         {
           "year": 2035,
-          "total": 5823251,
-          "male": 2944055,
-          "female": 2879196,
-          "age_0_19": 1156972,
-          "age_20_64": 3363826,
-          "age_65_79": 898834,
-          "age_80_plus": 403619,
+          "total": 9758893,
+          "male": 4753881,
+          "female": 5005012,
+          "age_0_19": 1633726,
+          "age_20_64": 5330785,
+          "age_65_79": 1929602,
+          "age_80_plus": 864780,
           "male_by_age": {
-            "age_0_19": 596606,
-            "age_20_64": 1724227,
-            "age_65_79": 445266,
-            "age_80_plus": 177956
+            "age_0_19": 840995,
+            "age_20_64": 2670083,
+            "age_65_79": 882291,
+            "age_80_plus": 360512
           },
           "female_by_age": {
-            "age_0_19": 560366,
-            "age_20_64": 1639599,
-            "age_65_79": 453568,
-            "age_80_plus": 225663
+            "age_0_19": 792731,
+            "age_20_64": 2660702,
+            "age_65_79": 1047311,
+            "age_80_plus": 504268
           },
           "shares_pct": {
-            "age_0_19": 19.8681,
-            "age_20_64": 57.7654,
-            "age_65_79": 15.4353,
-            "age_80_plus": 6.9312
+            "age_0_19": 16.7409,
+            "age_20_64": 54.6249,
+            "age_65_79": 19.7728,
+            "age_80_plus": 8.8615
           },
-          "old_age_dependency_per_100_working_age": 38.7194
+          "old_age_dependency_per_100_working_age": 52.4197
         },
         {
           "year": 2036,
-          "total": 5854571,
-          "male": 2960029,
-          "female": 2894542,
-          "age_0_19": 1154936,
-          "age_20_64": 3373264,
-          "age_65_79": 912047,
-          "age_80_plus": 414324,
+          "total": 9706313,
+          "male": 4726592,
+          "female": 4979721,
+          "age_0_19": 1617968,
+          "age_20_64": 5257331,
+          "age_65_79": 1946714,
+          "age_80_plus": 884300,
           "male_by_age": {
-            "age_0_19": 595588,
-            "age_20_64": 1729650,
-            "age_65_79": 452047,
-            "age_80_plus": 182744
+            "age_0_19": 832426,
+            "age_20_64": 2634715,
+            "age_65_79": 890871,
+            "age_80_plus": 368580
           },
           "female_by_age": {
-            "age_0_19": 559348,
-            "age_20_64": 1643614,
-            "age_65_79": 460000,
-            "age_80_plus": 231580
+            "age_0_19": 785542,
+            "age_20_64": 2622616,
+            "age_65_79": 1055843,
+            "age_80_plus": 515720
           },
           "shares_pct": {
-            "age_0_19": 19.7271,
-            "age_20_64": 57.6176,
-            "age_65_79": 15.5784,
-            "age_80_plus": 7.0769
+            "age_0_19": 16.6692,
+            "age_20_64": 54.164,
+            "age_65_79": 20.0562,
+            "age_80_plus": 9.1106
           },
-          "old_age_dependency_per_100_working_age": 39.3201
+          "old_age_dependency_per_100_working_age": 53.8489
         },
         {
           "year": 2037,
-          "total": 5885214,
-          "male": 2975652,
-          "female": 2909562,
-          "age_0_19": 1153209,
-          "age_20_64": 3381756,
-          "age_65_79": 924865,
-          "age_80_plus": 425384,
+          "total": 9653946,
+          "male": 4699533,
+          "female": 4954413,
+          "age_0_19": 1602917,
+          "age_20_64": 5185249,
+          "age_65_79": 1960800,
+          "age_80_plus": 904980,
           "male_by_age": {
-            "age_0_19": 594579,
-            "age_20_64": 1734836,
-            "age_65_79": 458570,
-            "age_80_plus": 187667
+            "age_0_19": 824332,
+            "age_20_64": 2600124,
+            "age_65_79": 898147,
+            "age_80_plus": 376930
           },
           "female_by_age": {
-            "age_0_19": 558630,
-            "age_20_64": 1646920,
-            "age_65_79": 466295,
-            "age_80_plus": 237717
+            "age_0_19": 778585,
+            "age_20_64": 2585125,
+            "age_65_79": 1062653,
+            "age_80_plus": 528050
           },
           "shares_pct": {
-            "age_0_19": 19.595,
-            "age_20_64": 57.4619,
-            "age_65_79": 15.7151,
-            "age_80_plus": 7.228
+            "age_0_19": 16.6037,
+            "age_20_64": 53.7112,
+            "age_65_79": 20.3109,
+            "age_80_plus": 9.3742
           },
-          "old_age_dependency_per_100_working_age": 39.9275
+          "old_age_dependency_per_100_working_age": 55.2679
         },
         {
           "year": 2038,
-          "total": 5915184,
-          "male": 2990922,
-          "female": 2924262,
-          "age_0_19": 1154197,
-          "age_20_64": 3387672,
-          "age_65_79": 938228,
-          "age_80_plus": 435087,
+          "total": 9602624,
+          "male": 4673184,
+          "female": 4929440,
+          "age_0_19": 1591291,
+          "age_20_64": 5112011,
+          "age_65_79": 1975064,
+          "age_80_plus": 924258,
           "male_by_age": {
-            "age_0_19": 595039,
-            "age_20_64": 1738443,
-            "age_65_79": 465435,
-            "age_80_plus": 192005
+            "age_0_19": 817895,
+            "age_20_64": 2565216,
+            "age_65_79": 905656,
+            "age_80_plus": 384417
           },
           "female_by_age": {
-            "age_0_19": 559158,
-            "age_20_64": 1649229,
-            "age_65_79": 472793,
-            "age_80_plus": 243082
+            "age_0_19": 773396,
+            "age_20_64": 2546795,
+            "age_65_79": 1069408,
+            "age_80_plus": 539841
           },
           "shares_pct": {
-            "age_0_19": 19.5124,
-            "age_20_64": 57.2708,
-            "age_65_79": 15.8613,
-            "age_80_plus": 7.3554
+            "age_0_19": 16.5714,
+            "age_20_64": 53.2356,
+            "age_65_79": 20.568,
+            "age_80_plus": 9.6251
           },
-          "old_age_dependency_per_100_working_age": 40.5386
+          "old_age_dependency_per_100_working_age": 56.7159
         },
         {
           "year": 2039,
-          "total": 5944498,
-          "male": 3005860,
-          "female": 2938638,
-          "age_0_19": 1156930,
-          "age_20_64": 3394246,
-          "age_65_79": 947994,
-          "age_80_plus": 445328,
+          "total": 9551283,
+          "male": 4647029,
+          "female": 4904254,
+          "age_0_19": 1580396,
+          "age_20_64": 5038949,
+          "age_65_79": 1986964,
+          "age_80_plus": 944974,
           "male_by_age": {
-            "age_0_19": 596381,
-            "age_20_64": 1742332,
-            "age_65_79": 470564,
-            "age_80_plus": 196583
+            "age_0_19": 811929,
+            "age_20_64": 2530289,
+            "age_65_79": 912354,
+            "age_80_plus": 392457
           },
           "female_by_age": {
-            "age_0_19": 560549,
-            "age_20_64": 1651914,
-            "age_65_79": 477430,
-            "age_80_plus": 248745
+            "age_0_19": 768467,
+            "age_20_64": 2508660,
+            "age_65_79": 1074610,
+            "age_80_plus": 552517
           },
           "shares_pct": {
-            "age_0_19": 19.4622,
-            "age_20_64": 57.099,
-            "age_65_79": 15.9474,
-            "age_80_plus": 7.4914
+            "age_0_19": 16.5464,
+            "age_20_64": 52.7568,
+            "age_65_79": 20.8031,
+            "age_80_plus": 9.8937
           },
-          "old_age_dependency_per_100_working_age": 41.0495
+          "old_age_dependency_per_100_working_age": 58.1855
         },
         {
           "year": 2040,
-          "total": 5973143,
-          "male": 3020463,
-          "female": 2952680,
-          "age_0_19": 1160336,
-          "age_20_64": 3400192,
-          "age_65_79": 957435,
-          "age_80_plus": 455180,
+          "total": 9500551,
+          "male": 4621381,
+          "female": 4879170,
+          "age_0_19": 1571440,
+          "age_20_64": 4961586,
+          "age_65_79": 1998362,
+          "age_80_plus": 969163,
           "male_by_age": {
-            "age_0_19": 598156,
-            "age_20_64": 1746125,
-            "age_65_79": 475002,
-            "age_80_plus": 201180
+            "age_0_19": 807131,
+            "age_20_64": 2493244,
+            "age_65_79": 919065,
+            "age_80_plus": 401941
           },
           "female_by_age": {
-            "age_0_19": 562180,
-            "age_20_64": 1654067,
-            "age_65_79": 482433,
-            "age_80_plus": 254000
+            "age_0_19": 764309,
+            "age_20_64": 2468342,
+            "age_65_79": 1079297,
+            "age_80_plus": 567222
           },
           "shares_pct": {
-            "age_0_19": 19.4259,
-            "age_20_64": 56.9247,
-            "age_65_79": 16.029,
-            "age_80_plus": 7.6204
+            "age_0_19": 16.5405,
+            "age_20_64": 52.2242,
+            "age_65_79": 21.0342,
+            "age_80_plus": 10.2011
           },
-          "old_age_dependency_per_100_working_age": 41.5452
+          "old_age_dependency_per_100_working_age": 59.81
         },
         {
           "year": 2041,
-          "total": 6001076,
-          "male": 3034710,
-          "female": 2966366,
-          "age_0_19": 1165319,
-          "age_20_64": 3407138,
-          "age_65_79": 964235,
-          "age_80_plus": 464384,
+          "total": 9449830,
+          "male": 4595981,
+          "female": 4853849,
+          "age_0_19": 1560815,
+          "age_20_64": 4887895,
+          "age_65_79": 2008479,
+          "age_80_plus": 992641,
           "male_by_age": {
-            "age_0_19": 600958,
-            "age_20_64": 1750134,
-            "age_65_79": 478164,
-            "age_80_plus": 205454
+            "age_0_19": 801497,
+            "age_20_64": 2457971,
+            "age_65_79": 925406,
+            "age_80_plus": 411107
           },
           "female_by_age": {
-            "age_0_19": 564361,
-            "age_20_64": 1657004,
-            "age_65_79": 486071,
-            "age_80_plus": 258930
+            "age_0_19": 759318,
+            "age_20_64": 2429924,
+            "age_65_79": 1083073,
+            "age_80_plus": 581534
           },
           "shares_pct": {
-            "age_0_19": 19.4185,
-            "age_20_64": 56.7755,
-            "age_65_79": 16.0677,
-            "age_80_plus": 7.7383
+            "age_0_19": 16.5169,
+            "age_20_64": 51.7247,
+            "age_65_79": 21.2541,
+            "age_80_plus": 10.5043
           },
-          "old_age_dependency_per_100_working_age": 41.9302
+          "old_age_dependency_per_100_working_age": 61.399
         },
         {
           "year": 2042,
-          "total": 6028277,
-          "male": 3048586,
-          "female": 2979691,
-          "age_0_19": 1166906,
-          "age_20_64": 3419116,
-          "age_65_79": 968672,
-          "age_80_plus": 473583,
+          "total": 9399068,
+          "male": 4570767,
+          "female": 4828301,
+          "age_0_19": 1549250,
+          "age_20_64": 4816185,
+          "age_65_79": 2022732,
+          "age_80_plus": 1010901,
           "male_by_age": {
-            "age_0_19": 601937,
-            "age_20_64": 1756556,
-            "age_65_79": 480384,
-            "age_80_plus": 209709
+            "age_0_19": 795243,
+            "age_20_64": 2424012,
+            "age_65_79": 933293,
+            "age_80_plus": 418219
           },
           "female_by_age": {
-            "age_0_19": 564969,
-            "age_20_64": 1662560,
-            "age_65_79": 488288,
-            "age_80_plus": 263874
+            "age_0_19": 754007,
+            "age_20_64": 2392173,
+            "age_65_79": 1089439,
+            "age_80_plus": 592682
           },
           "shares_pct": {
-            "age_0_19": 19.3572,
-            "age_20_64": 56.718,
-            "age_65_79": 16.0688,
-            "age_80_plus": 7.856
+            "age_0_19": 16.483,
+            "age_20_64": 51.2411,
+            "age_65_79": 21.5206,
+            "age_80_plus": 10.7553
           },
-          "old_age_dependency_per_100_working_age": 42.1821
+          "old_age_dependency_per_100_working_age": 62.9883
         },
         {
           "year": 2043,
-          "total": 6054705,
-          "male": 3062071,
-          "female": 2992634,
-          "age_0_19": 1171875,
-          "age_20_64": 3428800,
-          "age_65_79": 970936,
-          "age_80_plus": 483094,
+          "total": 9347774,
+          "male": 4545436,
+          "female": 4802338,
+          "age_0_19": 1545223,
+          "age_20_64": 4740084,
+          "age_65_79": 2033288,
+          "age_80_plus": 1029179,
           "male_by_age": {
-            "age_0_19": 604469,
-            "age_20_64": 1762151,
-            "age_65_79": 481247,
-            "age_80_plus": 214204
+            "age_0_19": 792993,
+            "age_20_64": 2388077,
+            "age_65_79": 939142,
+            "age_80_plus": 425224
           },
           "female_by_age": {
-            "age_0_19": 567406,
-            "age_20_64": 1666649,
-            "age_65_79": 489689,
-            "age_80_plus": 268890
+            "age_0_19": 752230,
+            "age_20_64": 2352007,
+            "age_65_79": 1094146,
+            "age_80_plus": 603955
           },
           "shares_pct": {
-            "age_0_19": 19.3548,
-            "age_20_64": 56.6303,
-            "age_65_79": 16.0361,
-            "age_80_plus": 7.9788
+            "age_0_19": 16.5304,
+            "age_20_64": 50.7082,
+            "age_65_79": 21.7516,
+            "age_80_plus": 11.0099
           },
-          "old_age_dependency_per_100_working_age": 42.4064
+          "old_age_dependency_per_100_working_age": 64.6079
         },
         {
           "year": 2044,
-          "total": 6080317,
-          "male": 3075135,
-          "female": 3005182,
-          "age_0_19": 1175953,
-          "age_20_64": 3437239,
-          "age_65_79": 973753,
-          "age_80_plus": 493372,
+          "total": 9296025,
+          "male": 4520077,
+          "female": 4775948,
+          "age_0_19": 1538012,
+          "age_20_64": 4667659,
+          "age_65_79": 2043032,
+          "age_80_plus": 1047322,
           "male_by_age": {
-            "age_0_19": 606545,
-            "age_20_64": 1766921,
-            "age_65_79": 482795,
-            "age_80_plus": 218874
+            "age_0_19": 789144,
+            "age_20_64": 2353936,
+            "age_65_79": 944557,
+            "age_80_plus": 432440
           },
           "female_by_age": {
-            "age_0_19": 569408,
-            "age_20_64": 1670318,
-            "age_65_79": 490958,
-            "age_80_plus": 274498
+            "age_0_19": 748868,
+            "age_20_64": 2313723,
+            "age_65_79": 1098475,
+            "age_80_plus": 614882
           },
           "shares_pct": {
-            "age_0_19": 19.3403,
-            "age_20_64": 56.5306,
-            "age_65_79": 16.0148,
-            "age_80_plus": 8.1142
+            "age_0_19": 16.5448,
+            "age_20_64": 50.2113,
+            "age_65_79": 21.9775,
+            "age_80_plus": 11.2663
           },
-          "old_age_dependency_per_100_working_age": 42.6832
+          "old_age_dependency_per_100_working_age": 66.2078
         },
         {
           "year": 2045,
-          "total": 6105082,
-          "male": 3087764,
-          "female": 3017318,
-          "age_0_19": 1179472,
-          "age_20_64": 3445306,
-          "age_65_79": 974988,
-          "age_80_plus": 505316,
+          "total": 9243610,
+          "male": 4494559,
+          "female": 4749051,
+          "age_0_19": 1531352,
+          "age_20_64": 4595033,
+          "age_65_79": 2049752,
+          "age_80_plus": 1067473,
           "male_by_age": {
-            "age_0_19": 608331,
-            "age_20_64": 1771573,
-            "age_65_79": 483265,
-            "age_80_plus": 224595
+            "age_0_19": 785595,
+            "age_20_64": 2319690,
+            "age_65_79": 948630,
+            "age_80_plus": 440644
           },
           "female_by_age": {
-            "age_0_19": 571141,
-            "age_20_64": 1673733,
-            "age_65_79": 491723,
-            "age_80_plus": 280721
+            "age_0_19": 745757,
+            "age_20_64": 2275343,
+            "age_65_79": 1101122,
+            "age_80_plus": 626829
           },
           "shares_pct": {
-            "age_0_19": 19.3195,
-            "age_20_64": 56.4334,
-            "age_65_79": 15.9701,
-            "age_80_plus": 8.277
+            "age_0_19": 16.5666,
+            "age_20_64": 49.7104,
+            "age_65_79": 22.1748,
+            "age_80_plus": 11.5482
           },
-          "old_age_dependency_per_100_working_age": 42.9658
+          "old_age_dependency_per_100_working_age": 67.839
         }
       ],
       "source": {
@@ -3200,37 +3158,39 @@
         "dataset": "Population projections in the EU (proj_23np)",
         "url": "https://ec.europa.eu/eurostat/databrowser/view/proj_23np/default/table",
         "api_url": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/proj_23np",
-        "location": "API proj_23np; geo=NO; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100",
+        "location": "API proj_23np; geo=EL; projection=BSL; sex=M/F/T; annual time dimension; ages Y_LT1, Y1…Y99 and Y_GE100",
         "period": "2022–2100"
       }
     }
   },
   "sources": [
     {
-      "source_id": "nor-regjeringen-previous-national-budgets-17a42c02",
-      "country_code": "NOR",
-      "source_name": "Regjeringen – previous national budgets",
-      "source_url": "https://www.regjeringen.no/en/topics/the-economy/the-national-budget/previous-national-budgets/id450436/",
-      "coverage": "2005–současnost",
+      "source_id": "grc-ministry-of-economy-and-finance-budget-execution-d798a709",
+      "country_code": "GRC",
+      "source_name": "Ministry of Economy and Finance – Budget Execution Bulletins",
+      "source_url": "https://minfin.gov.gr/en/budget-execution-bulletins/",
+      "coverage": "měsíční plnění a roční souhrny",
       "formats": [
-        "HTML",
-        "PDF"
+        "PDF",
+        "XLSX",
+        "HTML"
       ],
-      "purpose": "návrh, revidovaný rozpočet, kapitoly příjmů a výdajů a neropné saldo",
+      "purpose": "plán, plnění příjmů a výdajů, ekonomická klasifikace a tempo čerpání",
       "active": true,
       "loaded_at": "2026-08-20T18:05:45.272092+00:00"
     },
     {
-      "source_id": "nor-norsk-st-tn-z-v-re-n-et-27e169fb",
-      "country_code": "NOR",
-      "source_name": "Norský státní závěrečný účet",
-      "source_url": "https://www.regjeringen.no/no/tema/okonomi-og-budsjett/statsregnskapet/id1438/",
-      "coverage": "roční závěrečné účty",
+      "source_id": "grc-hellenic-statistical-authority-government-financ-cf86f1da",
+      "country_code": "GRC",
+      "source_name": "Hellenic Statistical Authority – government finance",
+      "source_url": "https://www.statistics.gr/en/statistics/-/publication/SEL03/-",
+      "coverage": "vládní příjmy, výdaje, saldo a funkční členění",
       "formats": [
-        "HTML",
+        "XLSX",
+        "CSV",
         "PDF"
       ],
-      "purpose": "schválené prostředky a skutečnost po kapitolách a položkách",
+      "purpose": "ověření konsolidovaného sektoru a COFOG mapování",
       "active": true,
       "loaded_at": "2026-08-20T18:05:45.272092+00:00"
     }

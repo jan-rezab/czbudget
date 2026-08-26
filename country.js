@@ -17,7 +17,7 @@ Object.assign(T.cs,{gdpTag:"HDP / OBYV.",debtTag:"DLUH / HDP",pppTag:"PPP / OBYV
 Object.assign(T.en,{gdpTag:"GDP / CAPITA",debtTag:"DEBT / GDP",pppTag:"PPP / CAPITA"});
 Object.assign(T.cs,{scopeTitle:"Co data zahrnují",trendTitle:"Vývoj veřejných financí",macroTitle:"Ekonomický kontext",specificTitle:"Rozpočtová pravidla země",sourcesTitle:"Primární zdroje"});
 Object.assign(T.en,{scopeTitle:"What the data includes",trendTitle:"Public finance over time",macroTitle:"Economic context",specificTitle:"National budget rules",sourcesTitle:"Primary sources"});
-const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no"};
+const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no",GRC:"gr"};
 const scope={state_budget:{cs:"Státní rozpočet",en:"State budget"},state_and_consolidated_budget:{cs:"Státní a konsolidovaný rozpočet",en:"State and consolidated budget"},federal_budget:{cs:"Federální rozpočet",en:"Federal budget"},public_sector_and_central_government:{cs:"Veřejný sektor a centrální vláda",en:"Public sector and central government"},confederation_and_general_government:{cs:"Konfederace a vládní instituce",en:"Confederation and general government"},central_and_general_government:{cs:"Centrální vláda a vládní instituce",en:"Central and general government"}};
 const loc=()=>state.lang==="en"?"en-GB":"cs-CZ";
 const meta=()=>state.data.countries.find(c=>c.country_code===state.code);
@@ -149,6 +149,32 @@ function specifics(){
   const architecture=c.fiscal_architecture, suffix=state.lang==="en"?"en":"cs";
   $("#specific-grid").innerHTML=`<article><span>01</span><h3>${T[state.lang].governmentScope}</h3><strong>${architecture[`national_budget_label_${suffix}`]||scope[c.national_scope]?.[state.lang]||c.national_scope}</strong><p>${state.lang==="en"?"This national legal budget is shown separately from the harmonised general-government comparison.":"Tento národní právní rozpočet zobrazujeme odděleně od harmonizovaného srovnání sektoru vládních institucí."}</p></article><article><span>02</span><h3>${T[state.lang].fiscalRule}</h3><strong>${framework?(state.lang==="en"?framework.label_en:framework.label_cs):"—"}</strong><p>${frameworkText}</p>${framework?`<a href="${framework.source_url}" target="_blank" rel="noreferrer">${T[state.lang].openSource}</a>`:""}</article><article><span>03</span><h3>${T[state.lang].surplusRecord}</h3><strong>${fmt(s.surplus_year_share*100,"%",false,0)}</strong><p>${state.lang==="en"?`Share of years with a general-government surplus in 2005–2024. Median balance: ${fmt(s.median_balance_pct_gdp,"% GDP",true)}.`:`Podíl let s přebytkem vládních institucí v období 2005–2024. Medián salda: ${fmt(s.median_balance_pct_gdp,"% HDP",true)}.`}</p></article>`;
 }
+function recoveryStory(){
+  const section=$("#recovery"),nav=$("#recovery-nav");
+  const visible=state.code==="GRC";
+  section.hidden=!visible;
+  if(nav)nav.hidden=!visible;
+  if(!visible)return;
+  const metric=(key,year)=>series().metrics[key].values.find(point=>point.year===year)?.value;
+  const deficit2009=metric("balance_pct_gdp",2009),balance2024=metric("balance_pct_gdp",2024);
+  const debt2020=metric("gross_debt_pct_gdp",2020),debt2024=metric("gross_debt_pct_gdp",2024);
+  const unemployment2013=metric("unemployment_pct",2013),unemployment2024=metric("unemployment_pct",2024);
+  const income2013=metric("gdp_per_capita_local",2013),income2024=metric("gdp_per_capita_local",2024);
+  const t=state.lang==="en"?{
+    nav:"Recovery",kicker:"Greece / crisis to recovery",title:"The adjustment is visible. So is the unfinished work.",copy:"A sovereign crisis, a decade of consolidation and a pandemic shock appear in the same harmonised series. The recovery is real, but a 155% debt ratio means it is not a victory lap.",
+    balance:"Fiscal swing",balanceNote:"general-government balance · 2009 → 2024",debt:"Debt reduction",debtNote:"from the pandemic peak · 2020 → 2024",jobs:"Unemployment fall",jobsNote:"2013 peak → 2024",income:"Income recovery",incomeNote:"nominal EUR per capita · 2013 → 2024",
+    timeline:"Four turning points",y2009:"Sovereign crisis",y2013:"Labour-market trough",y2020:"Pandemic debt peak",y2024:"Primary surplus restored",caveat:"Interpretation: balance, debt and unemployment are comparable outcomes—not proof that living standards, investment or public-service capacity have fully recovered.",source:"Source: IMF World Economic Outlook, April 2026. Fiscal framework: Greek Medium-Term Fiscal-Structural Plan 2025–2028."
+  }:{
+    nav:"Obnova",kicker:"Řecko / od krize k obnově",title:"Korekce je vidět. Nedokončená práce také.",copy:"Dluhová krize, desetiletí konsolidace a pandemický šok jsou v jedné harmonizované řadě. Obnova je skutečná, ale dluh 155 % HDP znamená, že nejde o vítězné kolečko.",
+    balance:"Fiskální obrat",balanceNote:"saldo vládních institucí · 2009 → 2024",debt:"Pokles dluhu",debtNote:"od pandemického vrcholu · 2020 → 2024",jobs:"Pokles nezaměstnanosti",jobsNote:"vrchol 2013 → 2024",income:"Obnova příjmů",incomeNote:"nominální EUR na obyvatele · 2013 → 2024",
+    timeline:"Čtyři body obratu",y2009:"Dluhová krize",y2013:"Dno trhu práce",y2020:"Pandemický vrchol dluhu",y2024:"Obnovený primární přebytek",caveat:"Interpretace: saldo, dluh a nezaměstnanost jsou srovnatelné výsledky — nikoli důkaz, že se plně obnovila životní úroveň, investice nebo kapacita veřejných služeb.",source:"Zdroj: IMF World Economic Outlook, duben 2026. Fiskální rámec: řecký střednědobý fiskálně-strukturální plán 2025–2028."
+  };
+  if(nav)nav.textContent=t.nav;
+  const incomeChange=(income2024/income2013-1)*100;
+  const pointUnit=state.lang==="en"?"pp":"p. b.";
+  const ratioUnit=state.lang==="en"?"% GDP":"% HDP";
+  $("#recovery-root").innerHTML=`<div class="detail-heading"><div><span class="kicker">${t.kicker}</span><h2 id="recovery-title">${t.title}</h2></div><p>${t.copy}</p></div><div class="recovery-kpis"><article><span>${t.balance}</span><strong>${fmt(balance2024-deficit2009,pointUnit,true)}</strong><small>${t.balanceNote}</small></article><article><span>${t.debt}</span><strong>${fmt(debt2024-debt2020,pointUnit,true)}</strong><small>${t.debtNote}</small></article><article><span>${t.jobs}</span><strong>${fmt(unemployment2024-unemployment2013,pointUnit,true)}</strong><small>${t.jobsNote}</small></article><article><span>${t.income}</span><strong>${fmt(incomeChange,"%",true)}</strong><small>${t.incomeNote}</small></article></div><div class="recovery-timeline"><h3>${t.timeline}</h3><ol><li><b>2009</b><span>${t.y2009}</span><strong>${fmt(deficit2009,ratioUnit,true)}</strong></li><li><b>2013</b><span>${t.y2013}</span><strong>${fmt(unemployment2013,"%",false)}</strong></li><li><b>2020</b><span>${t.y2020}</span><strong>${fmt(debt2020,ratioUnit,false)}</strong></li><li><b>2024</b><span>${t.y2024}</span><strong>${fmt(metric("primary_balance_pct_gdp",2024),ratioUnit,true)}</strong></li></ol></div><p class="recovery-caveat">${t.caveat}</p><p class="recovery-source">${t.source}</p>`;
+}
 function sources(){
   const list=catalog()?.sources||[];
   $("#source-cards").innerHTML=list.map((s,i)=>`<article><span>${String(i+1).padStart(2,"0")} / ${(s.formats||[]).join(" · ")}</span><h3>${s.source_name}</h3><p>${state.lang==="en"?T[state.lang].sourcePurpose:s.purpose}</p><small>${s.coverage}</small><a href="${s.source_url}" target="_blank" rel="noreferrer">${T[state.lang].openSource}</a></article>`).join("");
@@ -156,7 +182,7 @@ function sources(){
   $("#ministry-source").innerHTML=raw?`<a class="ministry-source-card" href="${raw.source_url}" target="_blank" rel="noreferrer"><div><span>RAW / ${raw.code} / ${raw.year}</span><h3>${T[state.lang].ministryData}</h3><p>${raw.dimension} · ${raw.stage} · ${(raw.bytes/1024/1024).toLocaleString(loc(),{maximumFractionDigits:1})} MB</p></div><strong>${raw.available?T[state.lang].downloaded:T[state.lang].mappingReady} ↗</strong></a>`:"";
   $("#czech-local-link").innerHTML=state.code==="CZE"?`<div class="czech-view-heading"><span>${T[state.lang].czechViews}</span></div><div class="czech-view-grid"><a class="czech-local-card" href="cesky-rozpocet.html?lang=${state.lang}"><div><span>CZ / NATIONAL</span><h3>${T[state.lang].czechBudgetTitle}</h3></div><b>${T[state.lang].czechBudgetCta}</b></a><a class="czech-local-card territorial" href="cz/municipalities/?lang=${state.lang}"><div><span>CZ / LOCAL</span><h3>${T[state.lang].czechLocalTitle}</h3></div><b>${T[state.lang].czechLocalCta}</b></a></div>`:"";
 }
-function render(){translate();header();snapshot();scopeProfile();charts();specifics();sources();dispatchEvent(new CustomEvent("countryprofilechange",{detail:{code:state.code,lang:state.lang,year:state.year,currency:state.currency}}))}
+function render(){translate();header();snapshot();scopeProfile();charts();recoveryStory();specifics();sources();dispatchEvent(new CustomEvent("countryprofilechange",{detail:{code:state.code,lang:state.lang,year:state.year,currency:state.currency}}))}
 function init(){
   if(!meta())state.code="CZE";
   document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{state.lang=window.PSDLanguage?.set(b.dataset.lang,{persist:true})||b.dataset.lang;history.replaceState(null,"",window.PSDCountryRoutes.href(state.code,state.lang,location.hash));render()});

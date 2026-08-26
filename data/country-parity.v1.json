@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-parity.v1",
-  "generated_at": "2026-08-26T08:10:12.394Z",
-  "country_count": 16,
+  "generated_at": "2026-08-26T16:07:22.750Z",
+  "country_count": 17,
   "rules": {
     "native_first": "National classifications, stages, currencies and accounting scopes are retained without coercion.",
     "harmonised_layer": "Cross-country comparisons use separately identified IMF, OECD/COFOG or SHA observations.",
@@ -2441,6 +2441,147 @@
             "PDF"
           ],
           "purpose": "schválené prostředky a skutečnost po kapitolách a položkách",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        }
+      ]
+    },
+    {
+      "country_code": "GRC",
+      "name_cs": "Řecko",
+      "name_en": "Greece",
+      "currency_code": "EUR",
+      "profile": "data/countries/grc/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 8,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "loaded",
+          "coverage": "2005–2024; 15 metrics",
+          "missing_dimensions": [],
+          "period": {
+            "from": 2005,
+            "to": 2024,
+            "years": 20
+          },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "loaded",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "loaded",
+          "coverage": "10 native classification rows; 2023 and 2024",
+          "missing_dimensions": [],
+          "row_count": 10
+        },
+        "common_spending": {
+          "status": "loaded",
+          "coverage": "12 harmonised categories",
+          "missing_dimensions": [],
+          "category_count": 12
+        },
+        "functional_spending": {
+          "status": "loaded",
+          "coverage": "3 functions; 2015–2024",
+          "missing_dimensions": [],
+          "function_count": 3
+        },
+        "transport": {
+          "status": "loaded",
+          "coverage": "transport function and native detailed budget through 2024",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "loaded",
+          "coverage": "SHA financing profile; 2024",
+          "missing_dimensions": []
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": null,
+          "coverage_level": null
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "fact_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "coverage_level": null,
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0,
+          "represented_entity_count": 0,
+          "broad_entity_count": null,
+          "financial_statement_count": 0,
+          "coverage_level": "entity_registry"
+        },
+        "demography": {
+          "status": "loaded",
+          "coverage": "2022–2100; annual age/sex detail plus 21 common-year aggregates",
+          "missing_dimensions": [],
+          "projection": "EUROPOP2023 baseline scenario",
+          "detail": "data/countries/grc/demography.v1.json",
+          "detail_row_count": 7979
+        }
+      },
+      "sources": [
+        {
+          "source_id": "grc-ministry-of-economy-and-finance-budget-execution-d798a709",
+          "country_code": "GRC",
+          "source_name": "Ministry of Economy and Finance – Budget Execution Bulletins",
+          "source_url": "https://minfin.gov.gr/en/budget-execution-bulletins/",
+          "coverage": "měsíční plnění a roční souhrny",
+          "formats": [
+            "PDF",
+            "XLSX",
+            "HTML"
+          ],
+          "purpose": "plán, plnění příjmů a výdajů, ekonomická klasifikace a tempo čerpání",
+          "active": true,
+          "loaded_at": "2026-08-20T18:05:45.272092+00:00"
+        },
+        {
+          "source_id": "grc-hellenic-statistical-authority-government-financ-cf86f1da",
+          "country_code": "GRC",
+          "source_name": "Hellenic Statistical Authority – government finance",
+          "source_url": "https://www.statistics.gr/en/statistics/-/publication/SEL03/-",
+          "coverage": "vládní příjmy, výdaje, saldo a funkční členění",
+          "formats": [
+            "XLSX",
+            "CSV",
+            "PDF"
+          ],
+          "purpose": "ověření konsolidovaného sektoru a COFOG mapování",
           "active": true,
           "loaded_at": "2026-08-20T18:05:45.272092+00:00"
         }

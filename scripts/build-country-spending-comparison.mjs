@@ -83,6 +83,7 @@ const map = {
   FIN: {general_services_debt:["GF01"],defence:["GF02"],public_order_justice:["GF03"],economic_affairs:["GF04"],environment_agriculture:["GF05"],housing_community:["GF06"],health:["GF07"],culture_recreation:["GF08"],education_research:["GF09"],social_protection:["GF10"]},
   NLD: {general_services_debt:["GF01"],defence:["GF02"],public_order_justice:["GF03"],economic_affairs:["GF04"],environment_agriculture:["GF05"],housing_community:["GF06"],health:["GF07"],culture_recreation:["GF08"],education_research:["GF09"],social_protection:["GF10"]},
   NOR: {general_services_debt:["GF01"],defence:["GF02"],public_order_justice:["GF03"],economic_affairs:["GF04"],environment_agriculture:["GF05"],housing_community:["GF06"],health:["GF07"],culture_recreation:["GF08"],education_research:["GF09"],social_protection:["GF10"]},
+  GRC: {general_services_debt:["GF01"],defence:["GF02"],public_order_justice:["GF03"],economic_affairs:["GF04"],environment_agriculture:["GF05"],housing_community:["GF06"],health:["GF07"],culture_recreation:["GF08"],education_research:["GF09"],social_protection:["GF10"]},
   JPN: {
     social_protection:["14"], education_research:["13"], defence:["19"], public_order_justice:["03","10"],
     transport_infrastructure:["17"], environment_agriculture:["15","18"], economic_affairs:["07","16"],

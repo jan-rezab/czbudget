@@ -29,7 +29,7 @@ Object.assign(I.en,{hero1:"Public budgets.",hero2:"In one place.",heroCopy:"Publ
 Object.assign(I.cs,{municipalCountryProfile:"Obecní fiskální profil",municipalEntities:"Obce",itemizedProfiles:"Položkové profily",publishedPeriod:"Období",nationalModules:"Národní moduly",notLoaded:"nejsou načtené"});
 Object.assign(I.en,{municipalCountryProfile:"Municipal fiscal profile",municipalEntities:"Municipalities",itemizedProfiles:"Itemized profiles",publishedPeriod:"Period",nationalModules:"National modules",notLoaded:"not loaded"});
 const keys=["expenditure_pct_gdp","revenue_pct_gdp","balance_pct_gdp","primary_balance_pct_gdp","gross_debt_pct_gdp","real_gdp_growth_pct","unemployment_pct","inflation_pct"];
-const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no"};
+const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no",GRC:"gr"};
 const flag=(code,extra="")=>`<span class="country-flag-svg ${extra}"><img src="assets/flags/${flagCodes[code]}.svg" alt="" loading="lazy"><b>${code}</b></span>`;
 const meta=code=>state.data.countries.find(x=>x.country_code===code),series=code=>state.data.series.find(x=>x.country_code===code);
 const value=(code,key,year=state.year)=>series(code)?.metrics[key]?.values.find(v=>v.year===year)?.value??null;

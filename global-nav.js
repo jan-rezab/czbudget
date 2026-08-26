@@ -58,7 +58,7 @@
     ["UKR", "Ukrajina", "Ukraine", "ua"], ["USA", "Spojené státy", "United States", "us"],
     ["BRA", "Brazílie", "Brazil", "br"], ["ESP", "Španělsko", "Spain", "es"],
     ["JPN", "Japonsko", "Japan", "jp"], ["NLD", "Nizozemsko", "Netherlands", "nl"],
-    ["NOR", "Norsko", "Norway", "no"],
+    ["NOR", "Norsko", "Norway", "no"], ["GRC", "Řecko", "Greece", "gr"],
   ];
   const municipalityCountries = [
     ["CZE", "Česko", "Czechia", "cz", "czechia"], ["POL", "Polsko", "Poland", "pl", "poland"],
@@ -69,7 +69,7 @@
     ["BRA", "Brazílie", "Brazil", "br", "brazil"], ["ESP", "Španělsko", "Spain", "es", "spain"],
     ["JPN", "Japonsko", "Japan", "jp", "japan"],
   ];
-  const countrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FIN:"finland",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states",BRA:"brazil",ESP:"spain",JPN:"japan",NLD:"netherlands",NOR:"norway"};
+  const countrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FIN:"finland",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states",BRA:"brazil",ESP:"spain",JPN:"japan",NLD:"netherlands",NOR:"norway",GRC:"greece"};
   const copy = {
     cs: { home:"Domů", compare:"Srovnání", cities:"Obce a města", country:"Země", deepDives:"Hloubkové profily", method:"Metodika", about:"O projektu", all:"Všechny profily", allMunicipalities:"Všechny obce", allDeepDives:"Všechny profily", transport:"Doprava", transportCopy:"Rozpočty, silnice a tempo výstavby", health:"Zdraví", healthCopy:"Financování a kapacita systému", stateCompanies:"Státní podniky", stateCompaniesCopy:"30 podniků, výnosy v EUR", capitalCities:"Hlavní města", capitalCitiesCopy:"Rozpočtové plány, obyvatelé a turistický tlak", revenue:"Kdo financuje stát?", revenueCopy:"Daně, úrovně vlády a transfery", ageing:"Účet stárnutí", ageingCopy:"Projekce a demografická kalkulačka", migration:"Evropská migrace", migrationCopy:"27 zemí, příchody, odchody a saldo", czechBudget:"Český státní rozpočet", navigation:"Hlavní navigace", language:"Jazyk" },
     en: { home:"Home", compare:"Compare", cities:"Municipalities", country:"Country", deepDives:"Deep dives", method:"Methodology", about:"About", all:"All profiles", allMunicipalities:"All municipalities", allDeepDives:"All deep dives", transport:"Transportation", transportCopy:"Budgets, roads and build pace", health:"Health", healthCopy:"Funding and system capacity", stateCompanies:"State-owned enterprises", stateCompaniesCopy:"30 enterprises, revenue in EUR", capitalCities:"Capital cities", capitalCitiesCopy:"Budget plans, residents and visitor pressure", revenue:"Who funds the state?", revenueCopy:"Taxes, government levels and transfers", ageing:"The Ageing Bill", ageingCopy:"Projections and demographic calculator", migration:"European migration", migrationCopy:"27 countries, arrivals, departures and balance", czechBudget:"Czech state budget", navigation:"Primary navigation", language:"Language" },

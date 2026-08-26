@@ -27,6 +27,7 @@ EUROSTAT_API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/d
 EUROPE = {
     "CZE": "CZ", "POL": "PL", "DEU": "DE", "FRA": "FR", "CHE": "CH",
     "SWE": "SE", "DNK": "DK", "GBR": "UK", "UKR": "UA",
+    "GRC": "EL",
 }
 
 

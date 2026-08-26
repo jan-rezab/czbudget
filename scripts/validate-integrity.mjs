@@ -218,7 +218,9 @@ for (const city of capitals.cities) {
 }
 
 const sovereign = await json("lib/data/sovereign-benchmark.v1.json");
-assert(sovereign.series.length === 16, "Expected sixteen sovereign series");
+assert(sovereign.series.length === 17, "Expected seventeen sovereign series");
+const greekSeries = sovereign.series.find((country) => country.country_code === "GRC");
+assert(greekSeries?.metrics?.balance_pct_gdp?.values?.some((point) => point.year === 2024 && point.status === "actual"), "Expected actual 2024 Greek fiscal data");
 for (const country of sovereign.series) {
   const metrics = country.metrics;
   for (const key of ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp"]) {
@@ -334,7 +336,7 @@ assert(cloudbuild.includes("scripts/deploy-immutable.sh"), "Cloud Build does not
 
 let htmlCount = 0;
 let localReferenceCount = 0;
-const countryPaths = ["/countries/czechia", "/countries/germany", "/countries/denmark", "/countries/france", "/countries/united-kingdom", "/countries/poland", "/countries/sweden", "/countries/switzerland", "/countries/ukraine", "/countries/united-states", "/countries/brazil", "/countries/spain", "/countries/japan", "/countries/netherlands", "/countries/norway"];
+const countryPaths = ["/countries/czechia", "/countries/germany", "/countries/denmark", "/countries/france", "/countries/united-kingdom", "/countries/poland", "/countries/sweden", "/countries/switzerland", "/countries/ukraine", "/countries/united-states", "/countries/brazil", "/countries/spain", "/countries/japan", "/countries/netherlands", "/countries/norway", "/countries/finland", "/countries/greece"];
 if (!dataOnly) {
   const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html"));
   htmlCount = htmlFiles.length;

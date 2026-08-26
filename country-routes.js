@@ -16,6 +16,7 @@
     JPN: "japan",
     NLD: "netherlands",
     NOR: "norway",
+    GRC: "greece",
   });
   const codes = Object.freeze(Object.fromEntries(Object.entries(slugs).map(([code, slug]) => [slug, code])));
 

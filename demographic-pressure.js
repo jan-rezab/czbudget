@@ -3,7 +3,7 @@
   const countryRoot = document.querySelector("#country-demographic-pressure-root");
   if (!comparisonRoot && !countryRoot) return;
 
-  const flags = {CZE:"cz",POL:"pl",DEU:"de",FRA:"fr",CHE:"ch",SWE:"se",DNK:"dk",GBR:"gb",UKR:"ua"};
+  const flags = {CZE:"cz",POL:"pl",DEU:"de",FRA:"fr",CHE:"ch",SWE:"se",DNK:"dk",GBR:"gb",UKR:"ua",GRC:"gr"};
   const copy = {
     cs: {
       kicker:"Demografie / 9 evropských zemí", title:"Méně narozených. Více starších. Migrace část mezery mění.",

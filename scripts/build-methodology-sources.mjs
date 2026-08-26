@@ -25,7 +25,7 @@ const moduleMeta = {
   public_entities:{order:11,cs:"Veřejné subjekty",en:"Public entities",artifact:"data/public-entity-coverage.v1.json"},
   demography:{order:12,cs:"Demografie",en:"Demography",artifact:"data/country-demography.v1.json"}
 };
-const alpha2 = {CZE:"CZ",UKR:"UA",POL:"PL",DEU:"DE",GBR:"UK",FRA:"FR",USA:"US",CHE:"CH",SWE:"SE",DNK:"DK",FIN:"FI",NLD:"NL",NOR:"NO",BRA:"BR",ESP:"ES",JPN:"JP"};
+const alpha2 = {CZE:"CZ",UKR:"UA",POL:"PL",DEU:"DE",GBR:"UK",FRA:"FR",USA:"US",CHE:"CH",SWE:"SE",DNK:"DK",FIN:"FI",NLD:"NL",NOR:"NO",BRA:"BR",ESP:"ES",JPN:"JP",GRC:"GR"};
 const source = (title,url,location="") => ({title,url,location});
 const cleanSources = values => values.filter(Boolean).filter((item,index,array)=>item?.url&&array.findIndex(other=>other?.url===item.url)===index);
 const adminByCode = code => administrative.countries.find(country=>country.code===code);
@@ -39,6 +39,7 @@ function lineage(code,module) {
     (module==="transport" && !transportProfile) ||
     (module==="health" && !healthProfile) ||
     (module==="providers" && !provider) ||
+    (module==="municipalities" && !municipal) ||
     (module==="public_entities" && (!entity || !entityDirectory));
   if (unavailable) {
     const fallback=admin?.sources?.[0];

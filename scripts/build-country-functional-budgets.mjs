@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 
 const YEARS = Array.from({length:10},(_,index)=>2015+index);
-const OECD_AREAS = ["CZE","DEU","DNK","FIN","FRA","POL","SWE","CHE","GBR","USA","ESP","JPN","NLD","NOR"];
+const OECD_AREAS = ["CZE","DEU","DNK","FIN","FRA","POL","SWE","CHE","GBR","USA","ESP","JPN","NLD","NOR","GRC"];
 const ALL_AREAS = [...OECD_AREAS,"UKR"];
 const CATEGORY_CODES = {health:"GF07",social:"GF10",transport:"GF0405"};
 const OECD_URL = `https://sdmx.oecd.org/public/rest/data/OECD.SDD.NAD,DSD_NASEC10@DF_TABLE11,1.1/A.${OECD_AREAS.join("+")}.S13...OTE..${Object.values(CATEGORY_CODES).join("+")}...V..?startPeriod=2015&endPeriod=2024&dimensionAtObservation=AllDimensions`;
@@ -14,7 +14,7 @@ const names = {
   CZE:["Česko","Czechia"],DEU:["Německo","Germany"],DNK:["Dánsko","Denmark"],FRA:["Francie","France"],
   POL:["Polsko","Poland"],SWE:["Švédsko","Sweden"],CHE:["Švýcarsko","Switzerland"],GBR:["Spojené království","United Kingdom"],
   USA:["Spojené státy","United States"],UKR:["Ukrajina","Ukraine"],BRA:["Brazílie","Brazil"],
-  ESP:["Španělsko","Spain"],FIN:["Finsko","Finland"],JPN:["Japonsko","Japan"],NLD:["Nizozemsko","Netherlands"],NOR:["Norsko","Norway"]
+  ESP:["Španělsko","Spain"],FIN:["Finsko","Finland"],JPN:["Japonsko","Japan"],NLD:["Nizozemsko","Netherlands"],NOR:["Norsko","Norway"],GRC:["Řecko","Greece"]
 };
 
 const ukraineHistorical = {
@@ -109,8 +109,8 @@ const payload={
     transport:{cofog:"GF04.5",label_cs:"Doprava",label_en:"Transport"}
   },
   methodology:{
-    cs:"Čtrnáct zemí používá výdaje podle funkce COFOG a nominální HDP. Ukrajina používá konsolidovaný státní a místní rozpočet; USA používají pro dopravu federální výdaje OMB. Brazílie má samostatně načtenou oficiální COFOG tabulku za roky 2023–2024 v národní výdajové vrstvě.",
-    en:"Fourteen countries use expenditure by COFOG function and nominal GDP. Ukraine uses the consolidated national and local budget; U.S. transport uses OMB federal outlays. Brazil's official 2023–2024 COFOG table is loaded separately in the national-spending layer."
+    cs:"Patnáct zemí používá výdaje podle funkce COFOG a nominální HDP. Ukrajina používá konsolidovaný státní a místní rozpočet; USA používají pro dopravu federální výdaje OMB. Brazílie má samostatně načtenou oficiální COFOG tabulku za roky 2023–2024 v národní výdajové vrstvě.",
+    en:"Fifteen countries use expenditure by COFOG function and nominal GDP. Ukraine uses the consolidated national and local budget; U.S. transport uses OMB federal outlays. Brazil's official 2023–2024 COFOG table is loaded separately in the national-spending layer."
   },
   countries,
   sources:[

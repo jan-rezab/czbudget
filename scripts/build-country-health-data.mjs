@@ -2,7 +2,7 @@
 
 import fs from "node:fs/promises";
 
-const AREAS = ["CZE","DEU","FRA","POL","GBR","USA","CHE","SWE","DNK","FIN","BRA","ESP","JPN","NLD","NOR"];
+const AREAS = ["CZE","DEU","FRA","POL","GBR","USA","CHE","SWE","DNK","FIN","BRA","ESP","JPN","NLD","NOR","GRC"];
 const AREA_KEY = AREAS.join("+");
 const SHA = "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_SHA@DF_SHA,1.1";
 const BEDS = "https://sdmx.oecd.org/public/rest/data/OECD.ELS.HD,DSD_HEALTH_REAC_HOSP@DF_BEDS_FUNC,1.1";
@@ -22,7 +22,8 @@ const profiles = {
   ESP:{currency:"EUR",architecture_cs:"Národní zdravotní systém je převážně financovaný z daní a provozovaný autonomními oblastmi; stát stanovuje společný rámec a koordinuje meziregionální politiku.",architecture_en:"The National Health System is mainly tax-funded and operated by the autonomous communities; central government sets the common framework and coordinates interregional policy.",official_title:"Ministerio de Sanidad · Sistema Nacional de Salud",official_url:"https://www.sanidad.gob.es/organizacion/sns/home.htm"},
   JPN:{currency:"JPY",architecture_cs:"Univerzální zákonné pojištění tvoří zaměstnanecké a obecní plány; stát a samosprávy dotují pojistné a regulovaný celostátní sazebník určuje úhrady poskytovatelům.",architecture_en:"Universal statutory insurance combines employment-based and municipal plans; central and local governments subsidise contributions and a national fee schedule sets provider payments.",official_title:"MHLW · health insurance system",official_url:"https://www.mhlw.go.jp/english/policy/health-medical/health-insurance/"},
   NLD:{currency:"EUR",architecture_cs:"Povinné základní pojištění poskytují konkurenční soukromé pojišťovny podle veřejných pravidel; rizikové vyrovnání a státní příspěvky oddělují solidaritu od nákupu péče.",architecture_en:"Mandatory basic insurance is supplied by competing private insurers under public rules; risk equalisation and public contributions separate solidarity from purchasing.",official_title:"Government.nl · health insurance",official_url:"https://www.government.nl/topics/health-insurance"},
-  NOR:{currency:"NOK",architecture_cs:"Daňově financovaný systém dělí odpovědnost mezi státní regionální zdravotní podniky a obce; stát vlastní nemocnice a obce zajišťují primární a dlouhodobou péči.",architecture_en:"The tax-funded system divides responsibility between state-owned regional health authorities and municipalities; the state owns hospitals while municipalities provide primary and long-term care.",official_title:"Norwegian Ministry of Health · healthcare system",official_url:"https://www.regjeringen.no/en/topics/health-and-care/id917/"}
+  NOR:{currency:"NOK",architecture_cs:"Daňově financovaný systém dělí odpovědnost mezi státní regionální zdravotní podniky a obce; stát vlastní nemocnice a obce zajišťují primární a dlouhodobou péči.",architecture_en:"The tax-funded system divides responsibility between state-owned regional health authorities and municipalities; the state owns hospitals while municipalities provide primary and long-term care.",official_title:"Norwegian Ministry of Health · healthcare system",official_url:"https://www.regjeringen.no/en/topics/health-and-care/id917/"},
+  GRC:{currency:"EUR",architecture_cs:"Národní zdravotní systém ESY kombinuje daňové financování s povinným sociálním pojištěním EOPYY. Stát a regionální zdravotní správy provozují veřejné nemocnice, zatímco EOPYY nakupuje péči od veřejných i soukromých poskytovatelů.",architecture_en:"The ESY national health system combines tax funding with compulsory social insurance through EOPYY. Central government and regional health authorities operate public hospitals, while EOPYY purchases care from public and private providers.",official_title:"Ministry of Health Greece · National Health System",official_url:"https://www.moh.gov.gr/"}
 };
 
 const queries = {
@@ -81,7 +82,7 @@ const countries = Object.fromEntries(AREAS.map(code=>{
 const payload = {
   schema_version:"1.0.0",
   generated_at:new Date().toISOString(),
-  coverage:"Fifteen OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
+  coverage:"Sixteen OECD country profiles in the sovereign benchmark; Ukraine uses separately sourced functional expenditure data",
   methodology:{
     cs:"Podíly jsou běžné výdaje na zdravotnictví podle System of Health Accounts 2011. Benchmark na lůžko je odhad: výdaje na obyvatele × podíl nemocnic ÷ lůžka na obyvatele. Nejde o účetní výnos konkrétní nemocnice ani žebříček kvality.",
     en:"Shares are current health expenditure under the System of Health Accounts 2011. The per-bed benchmark is an estimate: spending per capita × hospital share ÷ beds per capita. It is neither a named hospital's accounting revenue nor a quality ranking."

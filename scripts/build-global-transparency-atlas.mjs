@@ -29,6 +29,7 @@ const municipal = JSON.parse(await readFile("data/municipal-transparency.v1.json
 const parity = JSON.parse(await readFile("data/country-parity.v1.json", "utf8"));
 const municipalByIso = new Map(municipal.countries.map((country) => [country.iso2, country]));
 const loadedByIso3 = new Map(parity.countries.map((country) => [country.country_code, country]));
+const loadedIso3ByIso2 = new Map([["gr", "GRC"]]);
 const czechNames = new Intl.DisplayNames(["cs"], { type: "region" });
 
 const countries = map.locations
@@ -48,11 +49,12 @@ const countries = map.locations
       evidence_status: score !== null && localScore !== null ? "complete" : score !== null ? "national_only" : localScore !== null ? "municipal_only" : "not_scored",
       formula: "OBS central-government score + 20% of verified municipal capability score, capped at 100"
     };
-    const loadedProfile = municipalRecord?.iso3 ? loadedByIso3.get(municipalRecord.iso3) : null;
+    const profileIso3 = municipalRecord?.iso3 ?? loadedIso3ByIso2.get(country.id) ?? null;
+    const loadedProfile = profileIso3 ? loadedByIso3.get(profileIso3) : null;
     const ingestionReady = !loadedProfile && ["excellent", "strong"].includes(index.band) && municipalRecord?.pipeline === "crawling";
     return {
       iso2: country.id,
-      iso3: municipalRecord?.iso3 ?? null,
+      iso3: profileIso3,
       name_en: country.name,
       name_cs: czechNames.of(country.id.toUpperCase()) ?? country.name,
       national_budget: {
