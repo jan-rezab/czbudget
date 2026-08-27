@@ -74,3 +74,29 @@ test("every generated country family renders the shared municipal hierarchy", as
     await expect(page.locator(".municipal-profile-loading"), route).toHaveCount(0);
   }
 });
+
+test("international profiles remain useful without JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
+  await expect(page.locator(".detail-hero h1")).toHaveText("São Paulo");
+  await expect(page.locator(".detail-kpis article")).toHaveCount(4);
+  await expect(page.locator("#history-explorer")).toBeVisible();
+  await expect(page.locator("#rozpocet .plan-panel")).toBeVisible();
+  await expect(page.locator("#native-detail tbody tr")).toHaveCount(24);
+  await expect(page.locator("#metodika.data-contract")).toBeVisible();
+  await context.close();
+});
+
+test("section navigation follows the data available for each country", async ({ page }) => {
+  await page.goto("/municipalities/denmark/aabenraa-580/?lang=en");
+  await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Budget", "Detail", "Method"]);
+  await expect(page.locator(".detail-kpis article").first()).toContainText("Not available");
+
+  await page.goto("/municipalities/norway/oslo-oslove-0301/?lang=en");
+  await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Trend", "Accounts", "Detail", "Method"]);
+
+  await page.goto("/municipalities/germany/profile/?code=F07235500700010&lang=en");
+  await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Trend", "Accounts", "Coverage", "Method"]);
+  await expect(page.locator("#native-detail")).toContainText("No item-level city budget is inferred");
+});

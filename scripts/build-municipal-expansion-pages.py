@@ -48,12 +48,20 @@ _legacy_page = page
 
 def page(profile: dict, info: dict) -> str:
     """Render every expansion route through the shared profile shell."""
+    coverage_note = info["coverage_cs"]
+    if profile["country"] == "DNK":
+        coverage_note += ". Překrývající se účetní skupiny se nesčítají do odhadovaného obecního souhrnu"
+    elif profile["country"] == "MEX":
+        coverage_note += ". Saldo v této zdrojové konstrukci není ukazatel fiskální výkonnosti"
     return render_municipal_profile_shell(
         name=profile["name"],
         country_name=info["name_en"],
         canonical_path=profile["url"],
         profile_data_path=f"../../../data/municipal-expansion/{profile['country'].lower()}/{profile['code']}.json",
         source_url=info["source"],
+        profile=profile,
+        coverage_note=coverage_note,
+        display_country_name=info["name_cs"],
     )
 
 

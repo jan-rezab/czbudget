@@ -24,7 +24,7 @@
       account: "Kód / položka", year: "Rok", shown: "zobrazeno", more: "Načíst další položky", sourceKicker: "Data a metodika",
       sourceTitle: "Auditovatelný profil.", sourceCopy: "Rozsah odpovídá oficiálnímu obecnímu výkazu. Chybějící hotovost, dluh nebo historie se nedopočítávají.",
       officialSource: "Oficiální zdroj", profileData: "Strojová data", open: "Otevřít ↗", json: "JSON ↗", noValue: "Není v načtené národní vrstvě",
-      sumOfResults: "Součet výsledků za {years} let", historyData: "Historická data", methodWarning: "Saldo je v celé řadě konsolidované. Stav účtů má metodický zlom v roce 2012. Chybějící rok není nula — pro dnešní IČO se v daném roce nenašla data.", latestPeriod: "Poslední období", overview: "Přehled", budget: "Rozpočet", detail: "Detail", method: "Metodika",
+      sumOfResults: "Součet výsledků za {years} let", historyData: "Historická data", methodWarning: "Saldo je v celé řadě konsolidované. Stav účtů má metodický zlom v roce 2012. Chybějící rok není nula — pro dnešní IČO se v daném roce nenašla data.", latestPeriod: "Poslední období", overview: "Přehled", budget: "Rozpočet", accounts: "Účty", detail: "Detail", coverage: "Rozsah", method: "Metodika",
     },
     en: {
       municipalities: "Municipalities", official: "official municipal finance", code: "National code", latest: "Latest period",
@@ -39,7 +39,7 @@
       account: "Code / item", year: "Year", shown: "shown", more: "Load more items", sourceKicker: "Data and methodology",
       sourceTitle: "An auditable profile.", sourceCopy: "Coverage follows the official municipal return. Missing cash, debt or history is not estimated.",
       officialSource: "Official source", profileData: "Machine-readable data", open: "Open ↗", json: "JSON ↗", noValue: "Not available in the loaded national layer",
-      sumOfResults: "Sum of results over {years} years", historyData: "Historical data", methodWarning: "The fiscal balance is consolidated throughout the series. Cash has a methodological break in 2012. A missing year is not zero—no data were found for the current registration ID in that year.", latestPeriod: "Latest period", overview: "Overview", budget: "Budget", detail: "Detail", method: "Method",
+      sumOfResults: "Sum of results over {years} years", historyData: "Historical data", methodWarning: "The fiscal balance is consolidated throughout the series. Cash has a methodological break in 2012. A missing year is not zero—no data were found for the current registration ID in that year.", latestPeriod: "Latest period", overview: "Overview", budget: "Budget", accounts: "Accounts", detail: "Detail", coverage: "Coverage", method: "Method",
     },
   };
 
@@ -192,6 +192,9 @@
     if (!candidates.length) return null;
     const canonicalTotal = candidates.find((row) => row.code === `TOTAL_${side.toLocaleUpperCase()}`);
     if (canonicalTotal) return numeric(canonicalTotal.amount);
+    // Denmark's authorized-account cube contains overlapping groups and
+    // financing flows, so a native line must never be promoted to a total.
+    if (profile.country === "DNK") return null;
     const pattern = headlinePatterns[profile.country]?.[side];
     const exact = pattern ? candidates.find((row) => pattern.test(String(row.name || ""))) : null;
     return numeric((exact || candidates.slice().sort((a, b) => Math.abs(Number(b.amount)) - Math.abs(Number(a.amount)))[0]).amount);
@@ -271,10 +274,20 @@
   function contextRail() {
     document.querySelector(".international-context-rail")?.remove();
     const t = copy[lang];
+    const history = profile.history || [];
+    const hasHistory = history.some((row) => ["revenue", "expenditure", "balance", "cash", "debt"].some((key) => numeric(row[key]) !== null));
+    const hasDetail = profile.normalizedDetail.length > 0;
+    const hasPlan = profile.normalizedDetail.some((row) => row.stage === "enacted" || row.stage === "revised");
+    const hasFinance = hasDetail || history.some((row) => numeric(row.revenue) !== null || numeric(row.expenditure) !== null);
+    const links = [["overview", t.overview]];
+    if (hasHistory) links.push(["history-explorer", t.trend]);
+    if (hasFinance) links.push(["rozpocet", hasPlan ? t.budget : t.accounts]);
+    if (hasDetail) links.push(["native-detail", profile.summaryOnly ? t.coverage : t.detail]);
+    links.push(["metodika", t.method]);
     const rail = document.createElement("nav");
     rail.className = "context-rail municipal-context-rail international-context-rail";
     rail.setAttribute("aria-label", lang === "en" ? "Page sections" : "Sekce stránky");
-    rail.innerHTML = [["overview", t.overview], ["history-explorer", t.trend], ["rozpocet", t.budget], ["native-detail", t.detail], ["metodika", t.method]].map(([id, label]) => `<a href="#${id}">${label}</a>`).join("");
+    rail.innerHTML = links.map(([id, label]) => `<a href="#${id}">${label}</a>`).join("");
     document.querySelector("psd-site-header")?.insertAdjacentElement("afterend", rail);
   }
 

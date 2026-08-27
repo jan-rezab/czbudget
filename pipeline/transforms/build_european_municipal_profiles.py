@@ -153,6 +153,8 @@ def profile_page(entity: dict) -> str:
         canonical_path=entity["url"],
         profile_data_path=f"../../../data/municipal-benchmarks/{country.lower()}/{entity['code']}.json",
         source_url=entity["source_url"],
+        profile=entity,
+        coverage_note=COUNTRIES[country]["coverage_en"],
         default_language="en",
     )
 

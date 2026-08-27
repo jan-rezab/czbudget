@@ -117,6 +117,26 @@ const czechProfileSamples = await Promise.all([
   "cz/municipalities/brno/index.html",
   "cz/municipalities/arnoltice/index.html",
 ].map((path) => readFile(path, "utf8")));
+const internationalProfileSamples = await Promise.all([
+  "municipalities/denmark/aabenraa-580/index.html",
+  "municipalities/brazil/sao-paulo-3550308/index.html",
+  "municipalities/spain/ababuj-44001aa000/index.html",
+  "municipalities/japan/municipality-242144/index.html",
+  "municipalities/colombia/abejorral-210205002/index.html",
+  "municipalities/georgia/municipality-mof-033/index.html",
+  "municipalities/italy/abano-terme-000105310/index.html",
+  "municipalities/bolivia/autonomia-del-territorio-indigena-originario-campesino-guarani-chaqueno-de-huacaya-3101/index.html",
+  "municipalities/el-salvador/acajutla-8301/index.html",
+  "municipalities/mexico/aguascalientes-01001/index.html",
+  "municipalities/costa-rica/abangares-sipp-abangares/index.html",
+  "municipalities/guatemala/cahabon-12101612/index.html",
+  "municipalities/peru/aramango-300023/index.html",
+  "municipalities/south-korea/municipality-4213000/index.html",
+  "municipalities/chile/antofagasta-02101/index.html",
+  "municipalities/norway/oslo-oslove-0301/index.html",
+  "municipalities/netherlands/laarbeek-1659/index.html",
+  "municipalities/finland/saarijarvi-729/index.html",
+].map((path) => readFile(path, "utf8")));
 if (snapshot.municipalities.length !== pinned.municipalities) throw new Error("Expected 6,254 municipalities");
 if (internationalMunicipalities.countries.length !== pinned.municipalDirectoryCountries || internationalMunicipalities.entities.length !== pinned.municipalDirectoryEntries) throw new Error("Expected 27-country municipality directory with 105,582 entity rows");
 // The heavy directory file is the authority for its own row count; the shared
@@ -197,6 +217,20 @@ if (czechProfileSamples.some((page) =>
   page.includes('municipal-profile-loading') ||
   page.includes('municipal-expanded-profile.js')
 )) throw new Error("Czech municipal profiles must use the full server-rendered Czech budget template");
+// International profiles use the Czech presentation hierarchy as a capability
+// contract. The first response must contain meaningful finance and provenance
+// content; JavaScript may enhance it, but must never be the only page renderer.
+if (internationalProfileSamples.some((page) =>
+  !page.includes("international-municipality-profile") ||
+  !page.includes('class="detail-hero"') ||
+  !page.includes('id="rozpocet"') ||
+  !page.includes('id="native-detail"') ||
+  !page.includes('class="data-contract" id="metodika"') ||
+  !cacheBusted(page, "municipal-expanded-profile.js") ||
+  page.includes("municipal-profile-loading")
+)) throw new Error("International municipal profiles must ship a server-rendered Czech-style first view");
+if (internationalProfileSamples[0].includes('<a href="#history-explorer">') || !internationalProfileSamples[0].includes("Překrývající se účetní skupiny")) throw new Error("Denmark must retain native detail without inventing headline history or totals");
+if (germanMunicipalProfilePage.includes("municipal-profile-loading") || !germanMunicipalProfilePage.includes('id="overview"') || !germanMunicipalProfilePage.includes('id="metodika"') || !germanMunicipalProfilePage.includes("Položkový městský rozpočet z těchto souhrnů nedopočítáváme")) throw new Error("Germany's headline-only route must render an honest coverage-first profile shell");
 for (const [code, expected] of [["DNK",98],["ESP",6198],["JPN",1741]]) {
   const country = internationalMunicipalities.countries.find((item) => item.code === code);
   if (!country || country.status !== "complete" || country.directory_count !== expected || internationalMunicipalities.entities.filter((item) => item.country === code && item.url).length !== expected) throw new Error(`${code}: incomplete municipality directory or profile routes`);

@@ -621,14 +621,14 @@ test("nationwide municipal explorer drives the aggregate story and directory yea
 
 test("municipal profiles expose 2010–2025 history and preserve genuine coverage gaps", async ({ page }) => {
   await page.goto("/cz/municipalities/abertamy/?lang=cs", { waitUntil: "networkidle" });
-  await expect(page.locator("#history-explorer .kicker")).toHaveText("Vývoj · 2010–2025");
+  await expect(page.locator("#history-explorer .kicker")).toHaveText("16 let / 2010–2025");
   await expect(page.locator("#history-table-body tr")).toHaveCount(16);
   await expect(page.locator("#history-kpis")).toContainText("Součet výsledků za 16 let");
   await expect(page.locator('.source-list a[href$="/data/municipal-history/00254398.json"]')).toBeVisible();
 
   await page.goto("/cz/municipalities/abertamy/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#history-explorer .kicker")).toHaveText("Trend · 2010–2025");
-  await expect(page.locator("#history-kpis")).toContainText("Sum of results over 16 years");
+  await expect(page.locator("#history-explorer .kicker")).toHaveText("16 years / 2010-2025");
+  await expect(page.locator("#history-kpis")).toContainText("16-year cumulative balance");
 
   await page.goto("/cz/municipalities/policna/?lang=cs", { waitUntil: "networkidle" });
   await expect(page.locator("#history-table-body tr")).toHaveCount(13);
@@ -638,18 +638,12 @@ test("municipal profiles expose 2010–2025 history and preserve genuine coverag
 
 test("municipal detail charts use meaningful units, hover values and currency recalculation", async ({ page }) => {
   await page.goto("/cz/municipalities/arnoltice/?lang=en", { waitUntil: "networkidle" });
-  await expect(page).toHaveTitle(/Arnoltice — Czechia municipal budget/);
+  await expect(page).toHaveTitle(/Arnoltice town and municipality budget 2025/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/cz\/municipalities\/arnoltice\/$/);
   await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute("content", "en_GB");
   expect(await page.locator('script[type="application\/ld\+json"]').textContent()).toContain('"inLanguage":"en"');
   await expect(page.locator("#history-kpis article").first()).toContainText(/CZK\s?[\d.,]+/);
   await expect(page.locator("#history-kpis")).not.toContainText("CZK 0bn");
-  // KNOWN GAP: the unified municipal shell (municipal-expanded-profile.js) replaced the
-  // interactive chart that cz-history.js used to render with a static table, so the
-  // per-year hover targets, tooltip and in-tooltip currency recalculation no longer exist
-  // on the 6,254 Czech profiles. Everything above this line is verified; the assertions
-  // below describe the feature that needs to be reinstated in the new shell.
-  test.fixme(true, "Interactive history chart not yet reimplemented in the unified municipal profile shell");
   await expect(page.locator(".history-year-hit")).toHaveCount(16);
   await page.locator(".history-year-hit").last().hover();
   await expect(page.locator(".history-tooltip")).toBeVisible();
