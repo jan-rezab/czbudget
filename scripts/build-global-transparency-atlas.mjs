@@ -111,7 +111,15 @@ const countries = map.locations
     const municipalRecord = municipalByIso.get(country.id);
     const localScore = municipalScore(municipalRecord);
     const municipalBonus = localScore === null ? 0 : Math.round(localScore * 0.2);
-    const readinessScore = score !== null ? Math.min(100, score + municipalBonus) : localScore;
+    // The index is an OBS score plus a municipal bonus worth at most 20 points.
+    // Without an OBS component there is no scale to add the bonus to, and falling
+    // back to the raw municipal capability score mixed two incompatible ranges in
+    // one column: it put the Netherlands at 100, level with Brazil which scored 80
+    // on OBS alone, and it put four unsurveyed countries at 0 — a number the atlas
+    // itself says must never be read as "this government publishes nothing".
+    // Unscored is the honest answer; the municipal evidence still shows in its own
+    // columns and in evidence_status.
+    const readinessScore = score === null ? null : Math.min(100, score + municipalBonus);
     const index = {
       score: readinessScore,
       band: readinessBand(readinessScore),

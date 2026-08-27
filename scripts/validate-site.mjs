@@ -288,8 +288,21 @@ for (const [code, pipeline] of [["COL","loaded"],["GEO","loaded"],["ITA","loaded
   if (municipalTransparency.countries.find((country) => country.iso3 === code)?.pipeline !== pipeline) throw new Error(`${code}: unexpected municipal transparency pipeline status`);
 }
 if (globalBudgetTransparency.countries.length !== 195 || globalBudgetTransparency.countries.filter((country) => country.national_budget.research_status === "assessed").length !== 125 || globalBudgetTransparency.countries.filter((country) => country.municipal_item_level.research_status === "researched").length !== 45) throw new Error("Expected a 195-state atlas with 125 national assessments and 45 municipal item-level reviews");
-if (globalBudgetTransparency.countries.filter((country) => country.budget_transparency_index?.score !== null).length !== 135 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.country_profile === "loaded").length !== 191 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.ingestion_status === "discovery_crawl_started").length !== 0) throw new Error("Budget Transparency Index must distinguish indexed, IMF-profiled and unavailable countries");
+if (globalBudgetTransparency.countries.filter((country) => country.budget_transparency_index?.score !== null).length !== 125 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.country_profile === "loaded").length !== 191 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.ingestion_status === "discovery_crawl_started").length !== 0) throw new Error("Budget Transparency Index must distinguish indexed, IMF-profiled and unavailable countries");
 if (globalBudgetTransparency.countries.find((country) => country.iso2 === "ge")?.budget_transparency_index?.score !== 100) throw new Error("Georgia's Budget Transparency Index must include its verified municipal lifecycle bonus");
+// The index is an OBS score plus a municipal bonus, so it only exists where an OBS
+// component exists. Scoring a country on its municipal capability alone mixed two
+// incompatible 0-100 scales in one column: it ranked the Netherlands first in the
+// world on municipal data with no central-government survey, and printed 0 for four
+// countries the atlas had never surveyed.
+for (const country of globalBudgetTransparency.countries) {
+  const index = country.budget_transparency_index;
+  if (index.evidence_status === "municipal_only" && index.score !== null) throw new Error(`${country.name_en} has no OBS component and must not carry a Budget Transparency Index score`);
+  if (index.score === null) continue;
+  if (!Number.isFinite(index.obs_component)) throw new Error(`${country.name_en} carries a Budget Transparency Index score without an OBS component`);
+  const expected = Math.min(100, index.obs_component + (index.municipal_bonus ?? 0));
+  if (index.score !== expected) throw new Error(`${country.name_en} scores ${index.score} where its own formula gives ${expected}`);
+}
 for (const [iso2, expected] of [["cz",82],["es",69],["in",64],["vn",62]]) if (globalBudgetTransparency.countries.find((country) => country.iso2 === iso2)?.portal_readiness.score !== expected) throw new Error(`Unexpected PSD readiness score for ${iso2}`);
 if (!municipalTransparencyScript.includes('id="atlas-mode"') || !municipalTransparencyScript.includes('class="atlas-tooltip"') || !municipalTransparencyScript.includes('class="atlas-sort"') || !municipalTransparencyStyles.includes(".atlas-not_researched") || !municipalTransparencyStyles.includes("fill: #3f433f") || !municipalTransparencyStyles.includes("fill: #d7c58e")) throw new Error("Global coverage atlas must expose layer controls, sortable evidence, score explanations, dark-gray unresearched countries and a non-white middle band");
 for (const code of ["CZE", "FRA", "GBR", "USA"]) if (countryParity.countries.find((country) => country.country_code === code)?.modules.providers.status !== "loaded") throw new Error(`Expected loaded provider register for ${code}`);

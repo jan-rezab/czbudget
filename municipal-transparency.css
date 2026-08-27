@@ -615,3 +615,9 @@ body[data-page="methodology"] .atlas-map {
     gap: 22px;
   }
 }
+
+/* A score built only from the OBS central-government survey is provisional: the
+   municipal layer has not been researched, so it contributed no bonus. Marking it
+   keeps a provisional number from reading like a measured one. */
+.atlas-table td.atlas-score.atlas-evidence-national_only::after{content:"†";margin-left:2px;font-size:9px;vertical-align:super;color:var(--muted)}
+.atlas-table td.atlas-score.atlas-evidence-municipal_only{color:var(--muted)}
