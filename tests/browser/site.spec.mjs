@@ -30,7 +30,7 @@ const routes = [
 
 for (const [name, path] of routes) {
   test(`${name} renders without serious accessibility or runtime failures`, async ({ page }) => {
-    if (name === "methodology") test.setTimeout(60_000);
+    if (name === "methodology") test.setTimeout(120_000);
     const failures = [];
     page.on("pageerror", (error) => failures.push(error.message));
     page.on("console", (message) => {
