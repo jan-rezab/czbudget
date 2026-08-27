@@ -77,7 +77,8 @@
     const selectedIndex=rows.findIndex((row)=>row.year===state.historyYear),selected=rows[selectedIndex];
     const hits=rows.map((row,index)=>`<circle class="year-hit" data-history-year="${row.year}" cx="${x(index)}" cy="${y(row.revenue_actual)}" r="17"><title>${row.year} · ${format(row.revenue_actual)}</title></circle>`).join("");
     host.setAttribute("aria-label",english()?"Nationwide municipal revenue, expenditure and cash from 2010 to 2025":"Celostátní vývoj obecních příjmů, výdajů a stavu účtů 2010 až 2025");
-    host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img"><g class="history-grid">${grid}${labels}<text x="18" y="22">${unit}</text></g><line class="selected-year" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height-bottom}"/><path class="history-line revenue-line" d="${line("revenue_actual")}"/><path class="history-line expense-line" d="${line("expense_actual")}"/><path class="history-line cash-line" d="${line("cash_current")}"/>${hits}<circle class="year-dot" cx="${x(selectedIndex)}" cy="${y(selected.revenue_actual)}" r="6"/></svg>`;
+    const chartLabel=english()?"Nationwide municipal revenue, expenditure and cash from 2010 to 2025":"Celostátní vývoj obecních příjmů, výdajů a stavu účtů 2010 až 2025";
+    host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${chartLabel}"><g class="history-grid">${grid}${labels}<text x="18" y="22">${unit}</text></g><line class="selected-year" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height-bottom}"/><path class="history-line revenue-line" d="${line("revenue_actual")}"/><path class="history-line expense-line" d="${line("expense_actual")}"/><path class="history-line cash-line" d="${line("cash_current")}"/>${hits}<circle class="year-dot" cx="${x(selectedIndex)}" cy="${y(selected.revenue_actual)}" r="6"/></svg>`;
   }
 
   function rankedRows(title,subtitle,entities,field,tone){
