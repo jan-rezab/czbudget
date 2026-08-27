@@ -18,12 +18,12 @@
       budgetKicker: "Rozpočet", budgetTitle: "Plán a skutečnost.", stage: "Fáze", enacted: "Schválený", revised: "Upravený",
       actual: "Skutečnost", cash: "Zaplaceno", committed: "Závazky", period: "V období", remaining: "Zbývá", allStages: "Všechny fáze",
       revenueMix: "Struktura příjmů", expenditureMix: "Struktura výdajů", nativeKicker: "Původní detail",
-      nativeTitle: "Položkový detail.", nativeCopy: "Původní kódy, názvy a sloupce z národního zdroje; bez skrytého přemapování.",
+      nativeTitle: "Položkový detail.", docTitle: "{name} — rozpočet obce, {country} — Public Spending Data", docDesc: "{name}, {country}: oficiální obecní příjmy, výdaje, saldo, rozpočtové fáze a původní položkový detail.", nativeCopy: "Původní kódy, názvy a sloupce z národního zdroje; bez skrytého přemapování.", nativeTableLabel: "Tabulka položkového detailu, vodorovně posuvná",
       search: "Hledat položku", searchPlaceholder: "Kód nebo název…", side: "Strana", allSides: "Obě strany", amount: "Částka",
       account: "Kód / položka", year: "Rok", shown: "zobrazeno", more: "Načíst další položky", sourceKicker: "Data a metodika",
       sourceTitle: "Auditovatelný profil.", sourceCopy: "Rozsah odpovídá oficiálnímu obecnímu výkazu. Chybějící hotovost, dluh nebo historie se nedopočítávají.",
       officialSource: "Oficiální zdroj", profileData: "Strojová data", open: "Otevřít ↗", json: "JSON ↗", noValue: "Není v načtené národní vrstvě",
-      latestPeriod: "Poslední období", overview: "Přehled", budget: "Rozpočet", detail: "Detail", method: "Metodika",
+      sumOfResults: "Součet výsledků za {years} let", historyData: "Historická data", methodWarning: "Saldo je v celé řadě konsolidované. Stav účtů má metodický zlom v roce 2012. Chybějící rok není nula — pro dnešní IČO se v daném roce nenašla data.", latestPeriod: "Poslední období", overview: "Přehled", budget: "Rozpočet", detail: "Detail", method: "Metodika",
     },
     en: {
       municipalities: "Municipalities", official: "official municipal finance", code: "National code", latest: "Latest period",
@@ -33,12 +33,12 @@
       budgetKicker: "Budget", budgetTitle: "Plan and actual.", stage: "Budget stage", enacted: "Approved", revised: "Amended",
       actual: "Actual", cash: "Paid", committed: "Committed", period: "In period", remaining: "Remaining", allStages: "All stages",
       revenueMix: "Revenue mix", expenditureMix: "Expenditure mix", nativeKicker: "Native detail",
-      nativeTitle: "Item-level detail.", nativeCopy: "Original codes, labels and columns from the national source, without hidden remapping.",
+      nativeTitle: "Item-level detail.", docTitle: "{name} — {country} municipal budget — Public Spending Data", docDesc: "{name}, {country}: official municipal revenue, expenditure, balance, budget stages and native item-level detail.", nativeCopy: "Original codes, labels and columns from the national source, without hidden remapping.", nativeTableLabel: "Item-level detail table, scrolls horizontally",
       search: "Search items", searchPlaceholder: "Code or label…", side: "Side", allSides: "Both sides", amount: "Amount",
       account: "Code / item", year: "Year", shown: "shown", more: "Load more items", sourceKicker: "Data and methodology",
       sourceTitle: "An auditable profile.", sourceCopy: "Coverage follows the official municipal return. Missing cash, debt or history is not estimated.",
       officialSource: "Official source", profileData: "Machine-readable data", open: "Open ↗", json: "JSON ↗", noValue: "Not available in the loaded national layer",
-      latestPeriod: "Latest period", overview: "Overview", budget: "Budget", detail: "Detail", method: "Method",
+      sumOfResults: "Sum of results over {years} years", historyData: "Historical data", methodWarning: "The fiscal balance is consolidated throughout the series. Cash has a methodological break in 2012. A missing year is not zero—no data were found for the current registration ID in that year.", latestPeriod: "Latest period", overview: "Overview", budget: "Budget", detail: "Detail", method: "Method",
     },
   };
 
@@ -59,6 +59,9 @@
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   })[character]);
+  // Title and description are translated like any other string: interpolating a
+  // hardcoded English fragment produced Czech pages titled "… Česko municipal budget".
+  const fillTemplate = (template, values) => String(template || "").replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "");
   const numeric = (value) => Number.isFinite(Number(value)) ? Number(value) : null;
   const percentage = (value) => Number.isFinite(value) ? new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", { style: "percent", maximumFractionDigits: 1 }).format(value) : "—";
   const money = (value, compact = true) => {
@@ -212,7 +215,7 @@
       const row = history[0] || {};
       return `<section class="history-explorer single-period-history" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.onePeriod}</span><h2>${t.historyTitle}</h2></div><p>${t.onePeriodCopy}</p></div><div class="history-kpis">${[[t.revenue, row.revenue], [t.expenditure, row.expenditure], [t.balance, row.balance], [fourthLabel, fourthValue(row)]].map(([label, value]) => `<article><span>${label}</span><strong>${money(value)}</strong><small>${row.year || "—"}</small></article>`).join("")}</div></section>`;
     }
-    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${t.historyCopy}</p></div><details class="history-table" open><summary>${t.historyTitle}</summary><div><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody>${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false)}</td><td>${money(row.expenditure, false)}</td><td>${money(row.balance, false)}</td><td>${money(fourthValue(row), false)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
+    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${t.historyCopy}</p><p class="method-warning">${t.methodWarning}</p></div><div class="history-kpis" id="history-kpis"><article class="history-total"><span>${fillTemplate(t.sumOfResults, { years: history.length })}</span><strong>${money(history.reduce((sum, entry) => sum + (numeric(entry.balance) ?? 0), 0))}</strong><small>${history.at(0)?.year}–${history.at(-1)?.year}</small></article></div><details class="history-table" open><summary>${t.historyTitle}</summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.historyTitle)}"><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody id="history-table-body">${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false)}</td><td>${money(row.expenditure, false)}</td><td>${money(row.balance, false)}</td><td>${money(fourthValue(row), false)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
   }
 
   function stageTableMarkup(rows, latestYear) {
@@ -284,8 +287,20 @@
 
     document.documentElement.lang = lang;
     document.body.classList.add("cz-budget-page", "detail-page", "international-municipality-profile");
-    document.title = `${profile.name} — ${country[lang]} municipal budget — Public Spending Data`;
-    document.querySelector('meta[name="description"]')?.setAttribute("content", `${profile.name}, ${country[lang]}: official municipal revenue, expenditure, balance, budget stages and native item-level detail.`);
+    document.title = fillTemplate(t.docTitle, { name: profile.name, country: country[lang] });
+    document.querySelector('meta[name="description"]')?.setAttribute("content", fillTemplate(t.docDesc, { name: profile.name, country: country[lang] }));
+    // The static Dataset block is emitted once at build time, so without this it kept
+    // inLanguage "cs" alongside an English name whichever language the reader chose.
+    const ldNode = document.querySelector('script[type="application/ld+json"]');
+    if (ldNode) {
+      try {
+        const ld = JSON.parse(ldNode.textContent);
+        ld.inLanguage = lang;
+        ld.name = fillTemplate(t.docTitle, { name: profile.name, country: country[lang] }).replace(" — Public Spending Data", "");
+        ld.description = fillTemplate(t.docDesc, { name: profile.name, country: country[lang] });
+        ldNode.textContent = JSON.stringify(ld);
+      } catch {}
+    }
     document.querySelectorAll("[data-lang]").forEach((button) => {
       const active = button.dataset.lang === lang;
       button.classList.toggle("active", active);
@@ -297,9 +312,9 @@
       <section class="detail-kpis">${[[t.revenue, latest.revenue, latestYear], [t.expenditure, latest.expenditure, latestYear], [t.balance, latest.balance, latestYear], fourthMetric].map(([label, value, note], index) => `<article><span>${label}</span><strong class="${index === 2 && numeric(value) !== null ? (Number(value) >= 0 ? "positive" : "negative") : ""}">${index === 3 && label === t.executionRate ? percentage(value) : money(value)}</strong><small>${numeric(value) !== null ? note : t.noValue}</small></article>`).join("")}</section>
       ${historyMarkup(history)}
       <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(profile.normalizedDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
-        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${t.nativeKicker}</span><h2>${t.nativeTitle}</h2></div><p>${t.nativeCopy}</p></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label><label><span>${t.side}</span><select id="profile-detail-side"><option value="all">${t.allSides}</option><option value="revenue"${detailSide === "revenue" ? " selected" : ""}>${t.revenue}</option><option value="expenditure"${detailSide === "expenditure" ? " selected" : ""}>${t.expenditure}</option></select></label><b id="profile-detail-count"></b></div><div class="profile-table-scroll"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></section>
+        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${t.nativeKicker}</span><h2>${t.nativeTitle}</h2></div><p>${t.nativeCopy}</p></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label><label><span>${t.side}</span><select id="profile-detail-side"><option value="all">${t.allSides}</option><option value="revenue"${detailSide === "revenue" ? " selected" : ""}>${t.revenue}</option><option value="expenditure"${detailSide === "expenditure" ? " selected" : ""}>${t.expenditure}</option></select></label><b id="profile-detail-count"></b></div><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></section>
       </section>
-      <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a><a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a></div></section>`;
+      <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a><a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();
     renderDetailTable();
     bindControls();
