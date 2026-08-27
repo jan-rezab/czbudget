@@ -129,7 +129,10 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator(".glorious-footer .footer-hlidac")).toHaveAttribute("href", "https://www.hlidacstatu.cz/");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#compare-table tr")).toHaveCount(191);
+  // The ranked table is now rendered by the contract renderer, not a <table>. The
+  // assertion that matters is unchanged: every tracked country appears on the default
+  // fully-comparable metric.
+  await expect(page.locator("#compare-result .cmp-row")).toHaveCount(191);
   await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(191);
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 

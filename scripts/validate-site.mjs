@@ -9,6 +9,8 @@ const capitals = JSON.parse(await readFile("data/eu-capital-budgets.v1.json", "u
 const categoryComparison = JSON.parse(await readFile("data/country-spending-comparison.v1.json", "utf8"));
 const administrativeSpending = JSON.parse(await readFile("data/country-spending-2025-2026.v1.json", "utf8"));
 const functionalBudgets = JSON.parse(await readFile("data/country-functional-budgets.v1.json", "utf8"));
+const compareMetrics = JSON.parse(await readFile("data/compare-metrics.v1.json", "utf8"));
+const healthAssignments = JSON.parse(await readFile("data/health-system-assignments.v1.json", "utf8"));
 const roadNetworks = JSON.parse(await readFile("data/road-network-history.v1.json", "utf8"));
 const transportPerformance = JSON.parse(await readFile("data/transport-performance.v1.json", "utf8"));
 const countryCashIn = JSON.parse(await readFile("data/country-cash-in.v1.json", "utf8"));
@@ -271,7 +273,33 @@ if (!czechMunicipalPage.includes('municipalities-czechia.js') || !internationalM
 if (!homepage.includes('styles-v2.css?v=20260826-home-density') || !homepage.includes('homepage-v2.js?v=20260822-separate-pages') || !homepage.includes('global-nav.js?v=20260824-logo-120') || !homepage.includes('site-header.css?v=20260824-header-lockup')) throw new Error("Homepage assets must be cache-busted for the shared-header release");
 if (homepage.includes('id="compare"') || homepage.includes('id="method"') || !comparisonPage.includes('id="benchmark-overview"') || !comparisonPage.includes('id="benchmark-country"') || !homepageScript.includes("function benchmark")) throw new Error("Comparison and methodology must be separated from the homepage");
 if (globalNav.includes('code === "CZE"') || !globalNav.includes('assets/flags/${flag}.svg') || !countryScript.includes("czech-view-grid")) throw new Error("Country navigation must use shared profiles, SVG flags, and both Czech detail views");
-if (!comparisonPage.includes('class="compare-scope-readout"') || !comparisonPage.includes("General government")) throw new Error("Comparison page must state its harmonised fiscal perimeter");
+// The perimeter used to be a hardcoded caption. It is now a control bound to
+// data/compare-metrics.v1.json, so the guard checks the control, the registry entry
+// behind it, and that every metric's contract actually resolves. A conditional metric
+// without a group_by, or a refusal pointing at a metric that does not exist, would
+// render as a silent fallback to the ranked table — the one failure the contract exists
+// to prevent.
+if (!comparisonPage.includes('id="compare-perimeters"') || !comparisonPage.includes('id="compare-perimeter-note"') || !comparisonPage.includes('id="compare-contract"') || !comparisonPage.includes('id="compare-result"') || !comparisonPage.includes("compare-contract.js?v=") || !comparisonPage.includes("compare-contract.css?v=")) throw new Error("Comparison page must expose the contract-driven perimeter control");
+if (!compareMetrics.perimeters.some((perimeter) => perimeter.id === "general_government" && perimeter.label_en === "General government" && perimeter.note_en && perimeter.note_cs)) throw new Error("Comparison page must state its harmonised fiscal perimeter");
+{
+  const metricCodes = new Set(compareMetrics.metrics.map((metric) => metric.metric_code));
+  const perimeterIds = new Set(compareMetrics.perimeters.map((perimeter) => perimeter.id));
+  const vehicleIds = new Set(healthAssignments.financing_vehicles.map((vehicle) => vehicle.id));
+  for (const metric of compareMetrics.metrics) {
+    if (!["full", "conditional", "national_only"].includes(metric.comparability)) throw new Error(`Metric ${metric.metric_code} must declare a known comparability`);
+    if (!perimeterIds.has(metric.perimeter)) throw new Error(`Metric ${metric.metric_code} names a perimeter that does not exist`);
+    if (!metric.label_cs || !metric.label_en || !metric.boundary_cs || !metric.boundary_en) throw new Error(`Metric ${metric.metric_code} must carry a bilingual label and boundary`);
+    if (metric.comparability === "conditional" && (!metric.group_by || !metric.warn_cs || !metric.warn_en)) throw new Error(`Conditional metric ${metric.metric_code} must declare group_by and a bilingual warning`);
+    if (metric.comparability === "national_only" && (!metric.refuse_cs || !metric.refuse_en)) throw new Error(`National-only metric ${metric.metric_code} must explain its refusal in both languages`);
+    if (metric.substitute && !metricCodes.has(metric.substitute)) throw new Error(`Metric ${metric.metric_code} offers a substitute that does not exist`);
+    if (metric.substitute && compareMetrics.metrics.find((candidate) => candidate.metric_code === metric.substitute).comparability !== "full") throw new Error(`Metric ${metric.metric_code} must substitute a fully comparable metric`);
+  }
+  for (const [code, assignment] of Object.entries(healthAssignments.countries)) {
+    if (!vehicleIds.has(assignment.financing_vehicle)) throw new Error(`${code} names a financing vehicle that does not exist`);
+    if (!["ledger", "register", "documented", "none"].includes(assignment.evidence)) throw new Error(`${code} must record how its assignment was evidenced`);
+    if (assignment.chip_en && !assignment.chip_cs) throw new Error(`${code} must carry its structural chip in both languages`);
+  }
+}
 if (!comparisonPage.includes('id="fiscal-architecture-body"') || !homepageScript.includes("function architectureTable")) throw new Error("Comparison page must compare fiscal architecture across all tracked countries");
 if (!methodologyPage.includes('class="status-header"') || !methodologyPage.includes('class="status-volume"') || !methodologyPage.includes('id="status-data-total"') || !methodologyPage.includes('id="coverage-matrix-body"') || !methodologyPage.includes('class="status-definitions"') || !methodologyPage.includes('class="method-ledger"') || !methodologyPage.includes('id="municipal-transparency"') || methodologyPage.indexOf('id="municipal-transparency"') < methodologyPage.indexOf('class="method-ledger"') || !aboutPage.includes("Hlidac statu, z.u.") || !aboutPage.includes("hlidac-statu-horizontal-inverted-bw.svg") || aboutPage.includes("Mnichovice") || !homepage.includes("data-global-footer") || !internationalMunicipalPage.includes("data-global-footer")) throw new Error("Technical data status, source ledger, bottom-of-page municipal atlas, and global project credits must be present");
 if (!aboutPage.includes('class="release-notes"') || (aboutPage.match(/class="release-badge"/g) || []).length !== 5 || !aboutPage.includes('datetime="2026-08-21"') || !aboutPage.includes('datetime="2026-08-26"')) throw new Error("About page must expose five dated alpha releases");

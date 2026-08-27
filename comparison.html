@@ -22,8 +22,10 @@
     />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <link rel="stylesheet" href="demographic-pressure.css?v=20260825-initial" />
+    <link rel="stylesheet" href="compare-contract.css?v=20260827-contract" />
     <script src="homepage-v2.js?v=20260824-compare-footer" defer></script>
     <script src="demographic-pressure.js?v=20260825-initial" defer></script>
+    <script src="compare-contract.js?v=20260827-contract" defer></script>
 
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
@@ -59,9 +61,6 @@
             ><span data-i18n="year">Rok</span
             ><select id="year-select"></select></label
           ><label
-            ><span data-i18n="metric">Ukazatel</span
-            ><select id="metric-select"></select></label
-          ><label
             ><span data-i18n="group">Skupina</span
             ><select id="group-select">
               <option value="all" data-i18n="groupAll">Všechny země</option>
@@ -76,34 +75,33 @@
             ><span data-i18n="benchmarkCountry">Benchmark země</span
             ><select id="benchmark-country"></select
           ></label>
-          <div class="compare-scope-readout">
-            <span data-i18n="scopeLabel">Rozsah</span
-            ><strong>General government</strong
-            ><small data-i18n="scopeSmall"
-              >konsolidováno · bez tržních veřejných korporací</small
-            >
-          </div>
         </div>
+        <div class="cmp-controls">
+          <span id="compare-perimeter-label" data-i18n="scopeLabel">Rozsah</span>
+          <div
+            class="cmp-pills"
+            id="compare-perimeters"
+            role="group"
+            aria-labelledby="compare-perimeter-label"
+          ></div>
+          <p class="cmp-perimeter-note" id="compare-perimeter-note"></p>
+        </div>
+        <div class="cmp-controls">
+          <span id="compare-metric-label" data-i18n="metric">Ukazatel</span>
+          <div
+            class="cmp-pills"
+            id="compare-metrics"
+            role="group"
+            aria-labelledby="compare-metric-label"
+          ></div>
+        </div>
+        <dl class="cmp-contract" id="compare-contract"></dl>
+        <div class="cmp-result" id="compare-result" aria-live="polite"></div>
         <div
           class="benchmark-overview"
           id="benchmark-overview"
           aria-live="polite"
         ></div>
-        <div class="compact-table-wrap">
-          <table class="compact-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th data-i18n="country">Země</th>
-                <th data-i18n="value">Hodnota</th>
-                <th data-i18n="balance">Saldo</th>
-                <th data-i18n="debt">Dluh</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="compare-table"></tbody>
-          </table>
-        </div>
         <div class="architecture-heading">
           <div>
             <span class="kicker" data-i18n="architectureKicker"

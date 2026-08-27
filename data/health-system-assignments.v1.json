@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "HEALTH_SYSTEM_ASSIGNMENTS_V1",
+  "generated_at": "2026-08-27",
+  "methodology_cs": "Kdo platí péči a která úroveň ji poskytuje. Pole financing_vehicle seskupuje země pro ukazatele, které nelze řadit napříč rozsahy. Štítek se zobrazuje jen tam, kde je podložený načteným výkazem nebo registrem; evidence říká čím.",
+  "methodology_en": "Who pays for care and which tier delivers it. The financing_vehicle field groups countries for metrics that cannot be ranked across perimeters. A chip is shown only where it is backed by a loaded ledger or register; evidence records by what.",
+  "evidence_levels": {
+    "ledger": "Measured from that country's own itemized budget execution",
+    "register": "Measured from a normalized national facility register",
+    "documented": "Established from the official description of the system, not yet measured here",
+    "none": "Not yet classified"
+  },
+  "financing_vehicles": [
+    {
+      "id": "tax",
+      "label_cs": "Financováno z daní",
+      "label_en": "Tax-funded budget",
+      "note_cs": "Zdravotnictví se platí z obecných daní, uvnitř sektoru vládních institucí",
+      "note_en": "Health paid from general taxation, inside government"
+    },
+    {
+      "id": "social_insurance",
+      "label_cs": "Veřejné zdravotní pojištění",
+      "label_en": "Social health insurance",
+      "note_cs": "Příspěvkové fondy zařazené uvnitř sektoru vládních institucí",
+      "note_en": "Contributory funds, classified inside general government"
+    },
+    {
+      "id": "private_compulsory",
+      "label_cs": "Povinné soukromé pojištění",
+      "label_en": "Private compulsory insurance",
+      "note_cs": "Povinné krytí spravované mimo sektor vládních institucí",
+      "note_en": "Compulsory cover administered outside the government sector"
+    },
+    {
+      "id": "mixed",
+      "label_cs": "Smíšené veřejné programy",
+      "label_en": "Mixed public programmes",
+      "note_cs": "Veřejná schémata vedle rozsáhlého soukromého sektoru",
+      "note_en": "Public schemes alongside a large private sector"
+    }
+  ],
+  "countries": {
+    "NOR": {
+      "financing_vehicle": "tax",
+      "municipal_role": "full_provider",
+      "evidence": "ledger",
+      "chip_cs": "obec je poskytovatel",
+      "chip_en": "municipality is provider",
+      "source": "SSB KOSTRA table 12367; Halden 2025 decomposes to 32.5% long-term care and 5.6% medical care"
+    },
+    "NLD": {
+      "financing_vehicle": "social_insurance",
+      "municipal_role": "public_health_only",
+      "evidence": "ledger",
+      "chip_cs": "národní fond dlouhodobé péče",
+      "chip_en": "national LTC fund",
+      "source": "CBS Iv3; institutional long-term care sits in the national Wlz fund, not the municipality"
+    },
+    "POL": {
+      "financing_vehicle": "social_insurance",
+      "municipal_role": "founder_and_capital_only",
+      "evidence": "ledger",
+      "chip_cs": "vlastní kraj · platí NFZ",
+      "chip_en": "region owns · NFZ pays",
+      "source": "Rb-28S 2025Q4; 82% of local health spending sits at województwo and powiat level"
+    },
+    "CZE": {
+      "financing_vehicle": "social_insurance",
+      "municipal_role": "founder_and_capital_only",
+      "evidence": "register",
+      "chip_cs": "platí pojišťovny · vlastní stát",
+      "chip_en": "insurers pay · state owns",
+      "source": "ÚZIS NRPZS and ČSÚIS 2024 hospital benchmark"
+    },
+    "FIN": {
+      "financing_vehicle": "tax",
+      "municipal_role": "none",
+      "evidence": "documented",
+      "breaks": [2023],
+      "chip_cs": "funkce přesunuta 2023",
+      "chip_en": "function moved 2023",
+      "source": "The 2023 sote reform moved health and social care to the wellbeing services counties"
+    },
+    "FRA": {
+      "financing_vehicle": "social_insurance",
+      "municipal_role": "none",
+      "evidence": "register",
+      "chip_cs": "veřejné nemocnice",
+      "chip_en": "autonomous public hospitals",
+      "source": "FINESS; 54.9% of establishments are établissements publics de santé"
+    },
+    "GBR": {
+      "financing_vehicle": "tax",
+      "municipal_role": "public_health_only",
+      "evidence": "register",
+      "chip_cs": "NHS trusty",
+      "chip_en": "NHS trusts",
+      "source": "NHS England ODS; the loaded extract holds NHS trust sites only"
+    },
+    "USA": {
+      "financing_vehicle": "mixed",
+      "municipal_role": "co_provider",
+      "evidence": "register",
+      "chip_cs": "54 % soukromé neziskové",
+      "chip_en": "54% private non-profit",
+      "source": "CMS Provider Data Catalog; 5,419 Medicare-registered hospitals"
+    },
+    "DNK": {
+      "financing_vehicle": "tax",
+      "municipal_role": "co_financier",
+      "evidence": "documented",
+      "breaks": [2007],
+      "source": "The 2007 structural reform replaced counties with regions and changed municipal co-financing"
+    },
+    "SWE": { "financing_vehicle": "tax", "municipal_role": "co_financier", "evidence": "documented", "source": "Regions run hospital care; municipalities run elderly care" },
+    "ESP": { "financing_vehicle": "tax", "municipal_role": "none", "evidence": "documented", "source": "Autonomous communities run the health service" },
+    "GRC": { "financing_vehicle": "tax", "municipal_role": "none", "evidence": "documented", "source": "EOPYY purchasing within a largely tax-funded system" },
+    "UKR": { "financing_vehicle": "tax", "municipal_role": "founder_and_capital_only", "evidence": "documented", "source": "NHSU contracts providers under the Programme of Medical Guarantees" },
+    "BRA": { "financing_vehicle": "tax", "municipal_role": "full_provider", "evidence": "documented", "source": "SUS is tax-funded and municipalities carry a constitutional health spending floor" },
+    "DEU": { "financing_vehicle": "social_insurance", "municipal_role": "none", "evidence": "documented", "source": "Statutory sickness funds purchase care; Länder finance hospital capital" },
+    "JPN": { "financing_vehicle": "social_insurance", "municipal_role": "co_financier", "evidence": "documented", "source": "Employment and residence-based insurance schemes" },
+    "CHE": {
+      "financing_vehicle": "private_compulsory",
+      "municipal_role": "none",
+      "evidence": "documented",
+      "chip_cs": "povinní soukromí pojistitelé",
+      "chip_en": "private compulsory insurers",
+      "source": "KVG cover is compulsory but administered by private insurers outside the government sector"
+    }
+  }
+}

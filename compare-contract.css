@@ -1,0 +1,67 @@
+/* Contract-driven comparison. Palette and type follow BRAND.md: no new colour,
+   Georgia for headings, monospace for furniture, acid for the primary series,
+   coral reserved for the warning and the refusal. */
+
+.cmp-controls{padding:20px 3vw;border-bottom:1px solid var(--line)}
+.cmp-controls+.cmp-controls{border-top:0}
+.cmp-controls>span{display:block;margin-bottom:10px;color:var(--muted);font:700 11px/1 monospace;text-transform:uppercase;letter-spacing:.09em}
+.cmp-pills{display:flex;flex-wrap:wrap;gap:7px}
+.cmp-pill{padding:8px 14px;border:1px solid var(--line);background:var(--white);color:var(--muted);font:500 13px/1.2 inherit;cursor:pointer}
+.cmp-pill:hover{border-color:var(--ink);color:var(--ink)}
+.cmp-pill[aria-pressed="true"]{background:var(--acid);border-color:var(--acid);color:var(--ink);font-weight:700}
+.cmp-pill:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.cmp-perimeter-note{max-width:78ch;margin:11px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+
+.cmp-contract{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin:0;background:var(--line);border-bottom:1px solid var(--line)}
+@media(min-width:760px){.cmp-contract{grid-template-columns:repeat(4,1fr)}}
+.cmp-field{padding:14px 18px 16px;background:var(--paper)}
+.cmp-field.is-wide{grid-column:1/-1}
+.cmp-field dt{color:var(--muted);font:700 10px/1 monospace;text-transform:uppercase;letter-spacing:.1em}
+.cmp-field dd{margin:7px 0 0;font-size:13.5px;line-height:1.45}
+.cmp-verdict{font-weight:700}
+.cmp-verdict.is-full{color:#5e6b1d}
+.cmp-verdict.is-conditional{color:var(--ink)}
+.cmp-verdict.is-refused{color:var(--coral)}
+
+.cmp-result{padding:22px 3vw 28px}
+.cmp-count{margin:0 0 14px;color:var(--muted);font:700 11px/1 monospace;text-transform:uppercase;letter-spacing:.08em}
+.cmp-note{max-width:74ch;margin:16px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+
+.cmp-rows{margin:0;padding:0;list-style:none}
+.cmp-row{display:grid;grid-template-columns:30px minmax(150px,1.2fr) minmax(80px,2fr) 92px;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.cmp-row:last-child{border-bottom:0}
+.cmp-rank{color:var(--muted);font:11px/1 monospace}
+.cmp-name{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font-size:14px}
+.cmp-name a{color:var(--ink);text-decoration:none;font-weight:500}
+.cmp-name a:hover{box-shadow:inset 0 -1px 0 var(--acid)}
+.cmp-track{height:10px;background:#1719180f}
+.cmp-fill{display:block;height:100%;background:var(--acid)}
+.cmp-fill.is-alt{background:var(--mint)}
+.cmp-absent{color:var(--muted);font:italic 12px/1 inherit}
+.cmp-value{font:12.5px/1 monospace;font-variant-numeric:tabular-nums;text-align:right}
+
+.cmp-chip{padding:3px 7px;background:#17191810;color:var(--muted);font:11px/1.35 monospace;white-space:nowrap}
+.cmp-chip.is-break{background:#c9323715;color:var(--coral)}
+
+.cmp-warning{display:flex;gap:11px;margin:0 0 20px;padding:13px 16px;background:#c932370d;border-left:3px solid var(--coral);color:var(--muted);font-size:13.5px;line-height:1.5}
+.cmp-warning b{color:var(--ink)}
+
+.cmp-group{margin-top:26px}
+.cmp-group:first-of-type{margin-top:0}
+.cmp-group header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.cmp-group h4{margin:0;color:var(--ink);font:700 11px/1 monospace;text-transform:uppercase;letter-spacing:.1em}
+.cmp-group header span{color:var(--muted);font-size:12.5px}
+
+.cmp-refusal{max-width:70ch}
+.cmp-refusal h3{margin:0;color:var(--coral);font:500 24px/1.15 Georgia,serif;letter-spacing:-.03em}
+.cmp-refusal p{margin:12px 0 0;color:var(--muted);font-size:14px;line-height:1.6}
+.cmp-swap{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:20px}
+.cmp-swap-btn{padding:11px 17px;border:0;background:var(--ink);color:#fff;font:700 13px/1 inherit;cursor:pointer}
+.cmp-swap-btn:hover{background:var(--acid);color:var(--ink)}
+.cmp-swap-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.cmp-swap-why{color:var(--muted);font-size:12.5px}
+
+@media(max-width:640px){
+  .cmp-row{grid-template-columns:24px 1fr 76px;gap:10px}
+  .cmp-row .cmp-track{grid-column:2/-1;order:3}
+}
