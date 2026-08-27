@@ -1,11 +1,40 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "dataset": "CZ Budget public release",
   "status": "passed",
+  "scope": "full",
+  "checks": {
+    "json_finiteness": true,
+    "release_manifest": true,
+    "municipal_snapshot": true,
+    "municipal_history": true,
+    "municipal_directory_history": true,
+    "entity_profiles": true,
+    "bigquery_merge_completeness": true,
+    "capital_fx": true,
+    "sovereign_series": true,
+    "spending_reconciliation": true,
+    "public_entity_registry": true,
+    "czech_reference_datasets": true,
+    "dead_source_scan": true,
+    "infrastructure_hardening": true,
+    "html_structure": true,
+    "canonical_urls": true,
+    "local_references": true,
+    "json_ld": true,
+    "sitemap": true
+  },
+  "skipped_check_groups": [],
+  "build_mode": "local",
+  "build_mode_signals": {
+    "cloud_build_workspace": false,
+    "cloud_build_environment": false,
+    "municipal_breakdown_merge_output": false
+  },
   "counts": {
-    "production_json_files": 42403,
-    "html_files": 35887,
-    "local_references": 447608,
+    "production_json_files": 42430,
+    "html_files": 35886,
+    "local_references": 447592,
     "municipalities": 6254,
     "municipal_history_files": 6254,
     "municipal_history_records": 100021,
@@ -17,7 +46,7 @@
     "public_entity_financial_statements": 137,
     "state_enterprises": 38,
     "state_budget_chapters": 47,
-    "published_data_entries": 402309,
+    "published_data_entries": 362612,
     "municipal_profiles_with_bigquery_headlines": 0,
     "municipal_profiles_with_bigquery_breakdowns": 0
   },
@@ -25,7 +54,7 @@
     "public_entity_registry": 121199,
     "municipal_history_records": 100021,
     "municipal_directory_entries": 105582,
-    "itemized_municipal_profiles": 75507
+    "itemized_municipal_profiles": 35810
   },
   "explicit_missing_data": {
     "cash_balance_sheet_rows_missing": [
@@ -149,6 +178,7 @@
   },
   "failures": [],
   "warnings": [
+    "Local build: municipal profiles carry no BigQuery budget headlines or breakdowns. A production Cloud Build merges them and this check becomes all-or-nothing at 6,254.",
     "500 of 637 public entities have no comparable 2024 financial statement; values remain null, not zero.",
     "Cross-country public-entity counts remain perimeter-sensitive and are not an efficiency ranking."
   ]

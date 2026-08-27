@@ -1,5 +1,13 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-counts.mjs";
+
+// Published totals are measured from the artifacts the site serves, never typed
+// out here. Hard-coding them is why this suite spent releases failing against a
+// stale "387,346" while the tree published a different number; asserting the
+// measured value against what the page renders is the check that actually
+// matters. See scripts/lib/expected-counts.mjs.
+const counts = await loadExpectedCounts();
 
 const routes = [
   ["homepage", "/?lang=cs"],
@@ -139,13 +147,17 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".status-header")).toContainText("Coverage");
   await expect(page.locator(".status-volume")).toContainText("Counted directory and profile records");
-  await expect(page.locator("#status-data-total")).toContainText("387,346");
+  await expect(page.locator("#status-data-total")).toContainText(formatCount(counts.publishedDataEntries));
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(5);
   await expect(page.locator("#data-health-root")).toContainText("Checks passed");
-  await expect(page.locator("#data-health-root")).toContainText("107,703");
+  await expect(page.locator("#data-health-root")).toContainText(formatCount(counts.municipalUnitsInScope));
   await expect(page.locator("#data-health-root")).toContainText("Municipalities · directory / headlines");
   await expect(page.locator("#data-health-root")).toContainText("Municipalities · itemized budgets");
-  await expect(page.locator("#data-health-root")).toContainText("60,544 profiles");
+  // The itemized tile counts only what the site publishes; warehouse-only
+  // countries are reported alongside it, never folded into the published tally.
+  await expect(page.locator("#data-health-root")).toContainText(`${formatCount(counts.itemizedPublishedProfiles)} profiles`);
+  await expect(page.locator("#data-health-root")).toContainText(`${formatCount(counts.itemizedWarehouseOnlyProfiles)} in warehouse`);
+  await expect(page.locator("#data-health-root .data-health-kpis article").nth(1)).toContainText(String(counts.publishedItemizedCountries));
   await expect(page.locator("#data-health-root")).toContainText("66");
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
   await expect(page.locator("#surface-coverage-atlas [data-surface-country]")).toHaveCount(195);
@@ -155,11 +167,21 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
   await expect(page.locator('[data-coverage-country="NOR"][data-coverage-node="municipalHistory"]')).toContainText("2015–2025");
   await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="municipalHistory"]')).toContainText("2010–2025");
-  await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="budgetDetail"]')).toContainText("6,254");
+  await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="budgetDetail"]')).toContainText(formatCount(counts.pinned.itemizedAnchors.CZE));
   await expect(page.locator('[data-coverage-country="NLD"][data-coverage-node="budgetDetail"]')).toContainText("342");
-  await expect(page.locator('[data-coverage-country="USA"][data-coverage-node="budgetDetail"]')).toContainText("4");
-  await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="budgetDetail"]')).toContainText("1");
-  await expect(page.locator('[data-coverage-country="GBR"][data-coverage-node="budgetDetail"]')).toHaveClass(/coverage-status-partial/);
+  // Countries loaded into the production warehouse but not published on the site
+  // must say exactly that. Rendering them as a bare count overstated coverage;
+  // letting them fall through to "— / not researched" understated it.
+  await expect(page.locator(".coverage-matrix .coverage-warehouse-only")).toHaveCount(counts.warehouseOnlyCountries);
+  for (const code of counts.warehouseOnlyCountryCodes) {
+    const cell = page.locator(`[data-coverage-country="${code}"][data-coverage-node="budgetDetail"]`);
+    const warehouseProfiles = Number(counts.itemizedCoverageByCode.get(code).warehouse_profile_count);
+    await expect(cell, `${code} itemized coverage`).toHaveClass(/coverage-warehouse-only/);
+    await expect(cell, `${code} itemized coverage`).toContainText("Loaded in warehouse");
+    await expect(cell, `${code} itemized coverage`).toContainText(`${formatCount(warehouseProfiles)} profiles · not published on site`);
+    await expect(cell, `${code} itemized coverage`).not.toContainText("not researched");
+  }
+  await expect(page.locator(".coverage-legend")).toContainText("Loaded in warehouse · not published");
   await page.locator('[data-coverage-country="SWE"][data-coverage-node="municipalities"]').click();
   await expect(page.locator("#coverage-selection-title")).toContainText("Sweden · Municipalities · directory / headlines");
   await expect(page.locator("#coverage-source-list article")).toHaveCount(1);
@@ -167,9 +189,9 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator("#method-country-filter")).toHaveValue("SWE");
   await page.locator('[data-coverage-country="DEU"][data-coverage-node="budgetDetail"]').click();
   await expect(page.locator("#coverage-selection-title")).toContainText("Germany · Municipalities · itemized budgets");
-  await expect(page.locator("#coverage-source-list")).toContainText("Bremen Transparency Portal");
+  await expect(page.locator("#coverage-source-list")).toContainText("Regionaldatenbank");
   await expect(page.locator("#method-source-rows tr")).toHaveCount(1);
-  await expect(page.locator("#method-source-rows tr")).toContainText("4,861 line facts");
+  await expect(page.locator("#method-source-rows tr")).toContainText("eleven German cities");
   await expect(page.locator("#method-source-rows tr code").first()).toContainText("municipal_itemized");
   await expect(page.locator("#municipal-transparency")).toContainText("195");
   await expect(page.locator("#municipal-transparency .atlas-kpis strong").first()).toHaveText("195/195");

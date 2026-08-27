@@ -2,8 +2,10 @@
   const root = document.querySelector("#surface-coverage-atlas");
   if (!root) return;
 
-  const params = new URLSearchParams(location.search);
-  const lang = params.get("lang") === "en" ? "en" : "cs";
+  // language-bootstrap.js is the single language authority; read the language it
+  // resolved instead of re-reading the URL, which is only rewritten later.
+  const resolveLang = () => (window.PSDLanguage?.current() || document.documentElement.lang) === "en" ? "en" : "cs";
+  let lang = resolveLang();
   const state = { mode: "all", selected: null, freshness: null, registry: null, geometry: null };
   const copy = {
     cs: {
@@ -17,7 +19,7 @@
       current: "Aktuální, živé nebo plánované", recent: "Statistická řada do 2024", older: "Řada do 2023 nebo starší", other: "Publikováno · projekce / bez roku", notPublished: "V této sekci nepublikováno",
       selectCountry: "Vyberte zemi na mapě", selectCopy: "Po výběru ukážeme přesně ty sekce, které jsou pro zemi na PSD publikované, jejich období a odkazy na profil.",
       publishedFor: "Publikované sekce", noPublished: "Pro tuto zemi není ve vybrané sekci publikovaný artefakt.", open: "Otevřít sekci", source: "Primární zdroj",
-      mapLabel: "Mapa publikovaného pokrytí Public Spending Data", scopeNote: "Tato mapa odpovídá na otázku „co je na PSD publikováno“. Atlas zdrojových systémů níže odpovídá na jinou otázku: kde data existují nebo byla prověřena, i když je PSD zatím nezpřístupňuje.",
+      mapLabel: "Mapa publikovaného pokrytí Public Spending Data", scopeNote: "Měřeno na obsahu tohoto webu, ne na dostupnosti u poskytovatelů.",
       loadError: "Mapu publikovaného pokrytí se nepodařilo načíst."
     },
     en: {
@@ -31,11 +33,11 @@
       current: "Current, live or planned", recent: "Statistical series through 2024", older: "Series through 2023 or older", other: "Published · projection / undated", notPublished: "Not published in this section",
       selectCountry: "Select a country on the map", selectCopy: "The detail will show exactly which sections PSD publishes for that country, their periods and links to the profile.",
       publishedFor: "Published sections", noPublished: "No artifact is published for this country in the selected section.", open: "Open section", source: "Primary source",
-      mapLabel: "Map of published Public Spending Data coverage", scopeNote: "This map answers “what is published on PSD”. The source-systems atlas below answers a different question: where data exists or has been researched, even when PSD does not surface it yet.",
+      mapLabel: "Map of published Public Spending Data coverage", scopeNote: "Measured on content published on this site, not on availability at providers.",
       loadError: "The published coverage map could not be loaded."
     }
   };
-  const t = copy[lang];
+  let t = copy[lang];
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
   const number = (value) => new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(Number(value) || 0);
   const moduleName = (item) => item?.[`label_${lang}`] || item?.id || "—";
@@ -168,8 +170,16 @@
     });
   }
 
-  document.querySelectorAll("[data-surface-copy]").forEach((node) => { node.textContent = t[node.dataset.surfaceCopy]; });
-  document.title = `${lang === "en" ? "Coverage" : "Pokrytí"} — Public Spending Data`;
+  const applyStaticCopy = () => document.querySelectorAll("[data-surface-copy]").forEach((node) => { node.textContent = t[node.dataset.surfaceCopy]; });
+  applyStaticCopy();
+  // document.title belongs to the metadata map in language-bootstrap.js; writing
+  // it here only started a fight with its MutationObserver.
+  addEventListener("psdlanguagechange", () => {
+    if (resolveLang() === lang) return;
+    lang = resolveLang(); t = copy[lang];
+    applyStaticCopy();
+    if (state.registry) render();
+  });
   const freshnessPromise = window.psdDataFreshnessPromise || (window.psdDataFreshnessPromise = fetch("data/data-freshness.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }));
   const transparencyPromise = window.psdTransparencyDataPromise || (window.psdTransparencyDataPromise = Promise.all([
     fetch("data/global-budget-transparency.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),

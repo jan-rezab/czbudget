@@ -1,6 +1,8 @@
 (() => {
-  const params = new URLSearchParams(location.search);
-  const lang = params.get("lang") === "en" ? "en" : "cs";
+  // language-bootstrap.js is the single language authority; read the language it
+  // resolved instead of re-reading the URL, which is only rewritten later.
+  const resolveLang = () => (window.PSDLanguage?.current() || document.documentElement.lang) === "en" ? "en" : "cs";
+  let lang = resolveLang();
   const state = { data: null, country: "", family: "", band: "", query: "", selected: null };
   const copy = {
     cs: {
@@ -82,7 +84,11 @@
   }
   function renderKpis() {
     const totals = state.data.totals;
-    document.querySelector("#freshness-kpis").innerHTML = [
+    const eyebrow = document.querySelector('[data-freshness-copy="eyebrow"]');
+    if (eyebrow) eyebrow.textContent = `Data · ${number(totals.countries)} ${t("countries")} · ${number(totals.modules)} ${t("layers")}`;
+    const kpis = document.querySelector("#freshness-kpis");
+    if (!kpis) return;
+    kpis.innerHTML = [
       [totals.countries, t("countries")], [totals.modules, t("layers")], [totals.records, t("records")], [totals.municipal_units, t("units")],
     ].map(([value, label]) => `<article><strong>${number(value)}</strong><span>${esc(label)}</span></article>`).join("");
   }
@@ -151,8 +157,18 @@
     });
     document.querySelector("#freshness-download").addEventListener("click", downloadCsv);
   }
-  document.querySelectorAll("[data-freshness-copy]").forEach((node) => { node.textContent = t(node.dataset.freshnessCopy); });
-  document.querySelector("#freshness-search").placeholder = t("searchPlaceholder");
+  const applyStaticCopy = () => {
+    document.querySelectorAll("[data-freshness-copy]").forEach((node) => { node.textContent = t(node.dataset.freshnessCopy); });
+    document.querySelector("#freshness-search").placeholder = t("searchPlaceholder");
+  };
+  applyStaticCopy();
+  addEventListener("psdlanguagechange", () => {
+    if (resolveLang() === lang) return;
+    lang = resolveLang();
+    applyStaticCopy();
+    if (!state.data) return;
+    renderKpis(); fillControls(); render();
+  });
   const freshnessDataPromise = window.psdDataFreshnessPromise || (window.psdDataFreshnessPromise = fetch("data/data-freshness.v1.json").then((response) => {
     if (!response.ok) throw new Error(`Freshness data returned ${response.status}`);
     return response.json();

@@ -1,16 +1,18 @@
 (() => {
-  const lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("psd-lang") || "cs";
+  // language-bootstrap.js is the single language authority: it has already
+  // resolved URL param → stored preference → route default into <html lang>.
+  const lang = window.PSDLanguage?.current() || (document.documentElement.lang === "en" ? "en" : "cs");
   const copy = {
     cs: {
       methodEyebrow:"Metodika",methodTitle:"Jak data srovnáváme.",methodLead:"U každého čísla uvádíme definici, období a původní zdroj. Tady jsou pravidla, která používáme.",methodAside:"6 pravidel pro srovnání",
       m1:"Rozsah institucí",m1c:"Mezinárodní srovnání používá sektor vládních institucí: ústřední, regionální a místní vlády plus sociální fondy.",m2:"Jednotky",m2c:"Příjmy, výdaje, saldo a dluh vyjadřujeme jako podíl HDP. Nominální částky nepoužíváme jako žebříček velikosti státu.",m3:"Rok a fáze",m3c:"U každé hodnoty uvádíme rok, rozpočtovou fázi a datum zdroje. Plán a skutečnost zůstávají oddělené.",m4:"Přepočet měn",m4c:"Přepočty používají uvedený kurz ECB. Původní částka v místní měně zůstává dohledatelná.",m5:"Účetní hranice",m5c:"Obce, regiony, státní rozpočet a veřejné korporace nesčítáme, pokud nejsou konsolidované ve společné definici.",m6:"Původ dat",m6c:"Profily odkazují na primární publikaci a uchovávají zdrojový kód. Chybějící údaj není nula.",methodSource:"Hlavní srovnávací zdroj",methodSourceValue:"IMF World Economic Outlook · duben 2026",methodCta:"Otevřít srovnání →",healthEyebrow:"Kontrola vydání",healthTitle:"Co je úplné. Co chybí. Co prověřujeme.",healthLead:"Strojově čitelná kontrola každého vydání zpřístupňuje pokrytí, výslovně chybějící data a prověřované anomálie.",ledgerEyebrow:"Datová linie · 110 záznamů",ledgerTitle:"Úplná tabulka zdrojů",ledgerLead:"Každá země a každý modul: rozsah, období, artefakt, primární zdroj, přesné místo výběru, transformace a známé mezery.",ledgerJson:"Stáhnout JSON ↓",ledgerCsv:"Stáhnout CSV ↓",ledgerCountry:"Země",ledgerModule:"Modul",ledgerStatus:"Pokrytí",ledgerSearch:"Hledat",ledgerSearchPlaceholder:"zdroj, tabulka, soubor…",ledgerHave:"Co máme",ledgerPeriodScope:"Období · rozsah",ledgerSourceExact:"Zdroj · přesné místo",ledgerTransform:"Artefakt · transformace",ledgerLimits:"Mezery a hranice",ledgerAllCountries:"Všechny země",ledgerAllModules:"Všechny moduly",ledgerAllStatuses:"Všechny stavy",ledgerFull:"Plné",ledgerPartial:"Částečné",ledgerAggregate:"Agregát",ledgerRows:"záznamů z",
-      atlasEyebrow:"Zdrojové systémy · celý svět",atlasTitle:"KDE MŮŽEME POKRYTÍ ROZŠÍŘIT?",atlasLead:"Tato druhá mapa odděluje publikované pokrytí PSD od dostupnosti u původních poskytovatelů. Atlas 195 států ukazuje rozpočtovou transparentnost, obecní datové systémy a země, jejichž zdroje jsme ještě nenačetli.",
+      atlasEyebrow:"Zdrojové systémy · celý svět",atlasTitle:"Kde můžeme pokrytí rozšířit?",atlasLead:"Atlas 195 států ukazuje rozpočtovou transparentnost, obecní datové systémy a země, jejichž zdroje jsme ještě nenačetli.",
       aboutEyebrow:"O projektu",aboutTitle:"O Public Spending Data",aboutLead:"Na jednom místě zveřejňujeme rozpočtová data, dlouhé časové řady a odkazy na původní zdroje.",aboutAside:"data · zdroje · metodika",aboutMission:"Co děláme",aboutMissionCopy:"Rozpočtová data jsou často rozdělená mezi portály, soubory a různé účetní definice. Převádíme je do čitelné podoby a zachováváme odkaz na jejich původ.",aboutPrinciples:"Naše pravidla",p1:"Oficiální zdroj u každé hodnoty",p2:"Jasně uvedený rozsah dat",p3:"Otevřená data a trvalé odkazy",p4:"Bez skrytého hodnocení a falešných žebříčků",releaseKicker:"Poznámky k vydání",releaseTitle:"Čtyři dny. Čtyři alpha vydání.",releaseLead:"Průběžný přehled toho, co přibylo během veřejného alpha vývoje.",releaseDate24:"24. srpna 2026",releaseTitle24:"Výsledky zdravotnictví a státní podniky",releaseCopy24:"Na hlavní stránce přibylo srovnání výkonu zdravotních systémů a nový hloubkový profil státních podniků.",releaseDate23:"23. srpna 2026",releaseTitle23:"Úplný registr veřejných subjektů",releaseCopy23:"Zveřejnili jsme registr 121 199 subjektů, sjednotili obsah profilů deseti zemí a rozšířili dopravní ukazatele.",releaseDate22:"22. srpna 2026",releaseTitle22:"Obce, města a nové hloubkové profily",releaseCopy22:"Přibylo mezinárodní centrum obcí, stránky jednotlivých zemí, nové rozpočtové a dopravní pohledy i sjednocená navigace.",releaseDate21:"21. srpna 2026",releaseTitle21:"Detailnější rozpočty a pevnější kontroly",releaseCopy21:"Obecní profily dostaly položkové členění, srovnání deseti zemí nové rozpočtové pohledy a produkční build přísnější kontroly integrity.",makerKicker:"Projekt připravuje",makerTitle:"Hlidac statu, z.u.",makerCopy:"Nezávislá česká nezisková organizace, která propojuje veřejná data a sleduje smlouvy, zakázky, dotace a další veřejné výdaje.",legal:"zapsaný ústav · nezisková organizace",official:"Oficiální web ↗",impact:"Výsledky a dopad ↗",support:"Podpořit Hlidac statu, z.u. ↗"
     },
     en: {
       methodEyebrow:"Methodology",methodTitle:"How we compare the data.",methodLead:"Every figure includes its definition, period and original source. These are the rules we use.",methodAside:"6 comparison rules",
       m1:"Institutional scope",m1c:"International comparisons use general government: central, regional and local government plus social-security funds.",m2:"Units",m2c:"Revenue, expenditure, balance and debt are expressed as a share of GDP. Nominal amounts are not used to rank government size.",m3:"Year and stage",m3c:"Each value states its year, budget stage and source date. Plans and actual accounts remain separate.",m4:"Currency conversion",m4c:"Conversions use the stated ECB rate. The original amount in local currency remains traceable.",m5:"Accounting boundaries",m5c:"Municipalities, regions, state budgets and public corporations are not added together unless a common definition consolidates them.",m6:"Data provenance",m6c:"Profiles link to the primary publication and retain source codes. A missing value is never treated as zero.",methodSource:"Main comparison source",methodSourceValue:"IMF World Economic Outlook · April 2026",methodCta:"Open comparison →",healthEyebrow:"Release health",healthTitle:"What is complete. What is missing. What we review.",healthLead:"A machine-readable check for every release exposes coverage, explicitly missing data and anomalies under review.",ledgerEyebrow:"Data lineage · 110 records",ledgerTitle:"Complete source table",ledgerLead:"Every country and every module: coverage, period, artifact, primary source, exact extraction point, transformation and known gaps.",ledgerJson:"Download JSON ↓",ledgerCsv:"Download CSV ↓",ledgerCountry:"Country",ledgerModule:"Module",ledgerStatus:"Coverage",ledgerSearch:"Search",ledgerSearchPlaceholder:"source, table, file…",ledgerHave:"What we have",ledgerPeriodScope:"Period · scope",ledgerSourceExact:"Source · exact location",ledgerTransform:"Artifact · transformation",ledgerLimits:"Gaps and boundaries",ledgerAllCountries:"All countries",ledgerAllModules:"All modules",ledgerAllStatuses:"All statuses",ledgerFull:"Full",ledgerPartial:"Partial",ledgerAggregate:"Aggregate",ledgerRows:"records of",
-      atlasEyebrow:"Source systems · whole world",atlasTitle:"WHERE CAN COVERAGE EXPAND?",atlasLead:"This second map separates PSD's published coverage from availability at original providers. The 195-state atlas shows budget transparency, municipal data systems and countries whose sources have not yet been loaded.",
+      atlasEyebrow:"Source systems · whole world",atlasTitle:"Where can coverage expand?",atlasLead:"The 195-state atlas shows budget transparency, municipal data systems and countries whose sources have not yet been loaded.",
       aboutEyebrow:"About",aboutTitle:"About Public Spending Data",aboutLead:"We publish budget data, long time series and links to original sources in one place.",aboutAside:"data · sources · methods",aboutMission:"What we do",aboutMissionCopy:"Budget data is often split across portals, files and accounting definitions. We make it easier to read while preserving a clear link to the original source.",aboutPrinciples:"Our rules",p1:"An official source for every value",p2:"A clear scope for every dataset",p3:"Open data and permanent links",p4:"No hidden scoring or false league tables",releaseKicker:"Release notes",releaseTitle:"Four days. Four alpha releases.",releaseLead:"A running record of what changed during the public alpha.",releaseDate24:"24 August 2026",releaseTitle24:"Health outcomes and state-owned enterprises",releaseCopy24:"The homepage gained a health-system performance comparison, alongside a new state-owned enterprise deep dive.",releaseDate23:"23 August 2026",releaseTitle23:"Complete public entity register",releaseCopy23:"We published a register of 121,199 entities, aligned all ten country profiles and expanded transport performance data.",releaseDate22:"22 August 2026",releaseTitle22:"Municipalities, cities and new deep dives",releaseCopy22:"A new international municipality hub, country landing pages, budget and transport views, and unified navigation went live.",releaseDate21:"21 August 2026",releaseTitle21:"Deeper budgets and stronger checks",releaseCopy21:"Municipal profiles gained line-item detail, ten-country comparisons gained new budget views, and the production build gained stricter integrity checks.",makerKicker:"Created by",makerTitle:"Hlidac statu, z.u.",makerCopy:"An independent Czech nonprofit organisation that connects public data and monitors contracts, procurement, subsidies and other public spending.",legal:"registered institute · nonprofit organisation",official:"Official website ↗",impact:"Results and impact ↗",support:"Support Hlidac statu, z.u. ↗"
     }
   };
@@ -38,6 +40,33 @@
   Object.assign(copy.en,{ledgerNotLoaded:"Not loaded by PSD"});
   Object.assign(statusCopy.cs,{pageTitle:"Pokrytí",pageIntro:"Co publikujeme podle země, sekce, období a primárního zdroje.",publishedData:"Počítané adresářové a profilové záznamy",legendNotResearched:"Neprověřeno",notResearched:"dostupnost zdroje neprověřena",not_loaded:"nenačteno v PSD",checksFailed:"Kontroly neprošly",municipalCountries:"Obce · adresář / souhrny",itemizedCountries:"Obce · položkové rozpočty",coverageRows:"Řádky registru pokrytí",coverageRowNote:"pokrytí, mezery a zdroje",loadedSource:"zdroj načten",sourceAvailability:"dostupnost zdroje"});
   Object.assign(statusCopy.en,{pageTitle:"Coverage",pageIntro:"What we publish by country, section, period and primary source.",publishedData:"Counted directory and profile records",legendNotResearched:"Not researched",notResearched:"source availability not researched",not_loaded:"not loaded by PSD",checksFailed:"Checks failed",municipalCountries:"Municipalities · directory / headlines",itemizedCountries:"Municipalities · itemized budgets",coverageRows:"Coverage ledger rows",coverageRowNote:"coverage, gaps and sources",loadedSource:"source loaded",sourceAvailability:"source availability"});
+  // Countries whose itemized budgets are loaded in the production warehouse but
+  // deliberately not published on the site. Without their own vocabulary these
+  // rendered as "— / not researched", which understates the work by exactly as
+  // much as counting them as published overstated it. Both dictionaries must
+  // stay in parity: the site is bilingual and every key exists in cs and en.
+  Object.assign(statusCopy.cs,{warehouse_only:"Načteno ve skladu",loaded_not_published:"nepublikováno na webu",legendWarehouseOnly:"Načteno ve skladu · nepublikováno",warehouseShort:"ve skladu",profiles:"profilů",warehouseNote:"Data jsou ověřená v produkčním datovém skladu, ale na webu zatím nezveřejňujeme profily."});
+  Object.assign(statusCopy.en,{warehouse_only:"Loaded in warehouse",loaded_not_published:"not published on site",legendWarehouseOnly:"Loaded in warehouse · not published",warehouseShort:"in warehouse",profiles:"profiles",warehouseNote:"The data is verified in the production warehouse, but no profiles are published on the site yet."});
+  Object.assign(statusCopy.cs,{
+    tocStartKicker:"Přehled",tocStart:"Stav vydání",
+    tocAct1Kicker:"Část 1",tocAct1:"Co publikujeme",
+    tocAct2Kicker:"Část 2",tocAct2:"Jak jsou data aktuální",
+    tocAct3Kicker:"Část 3",tocAct3:"Zdroje a mezery",
+    act1Title:"Co publikujeme",act1Lead:"Mapa ukazuje, které sekce jsou pro zemi na PSD publikované; tabulka pod ní rozpadá totéž pokrytí na kategorie a přidává, co jsme u zdroje našli, ale zatím nenačetli.",
+    act2Title:"Jak jsou data aktuální",act2Lead:"Stejné země a vrstvy jako v části 1, ale buňka měří období — nejnovější fiskální, vykazovaný nebo pozorovaný rok, a zda jde o skutečnost, plán, odhad nebo projekci.",
+    act3Title:"Zdroje a mezery",act3Lead:"Registr vede každý řádek zpět k primární publikaci a transformaci. Atlas na konci ukazuje opačnou stranu: kde zdroje existují nebo byly prověřeny, i když je PSD zatím nenačetlo.",
+    downloads:"Datové sady ke stažení"
+  });
+  Object.assign(statusCopy.en,{
+    tocStartKicker:"Overview",tocStart:"Release status",
+    tocAct1Kicker:"Part 1",tocAct1:"What we publish",
+    tocAct2Kicker:"Part 2",tocAct2:"How current it is",
+    tocAct3Kicker:"Part 3",tocAct3:"Sources and gaps",
+    act1Title:"What we publish",act1Lead:"The map shows which sections PSD publishes for a country; the table below breaks the same coverage into categories and adds what we found at the source but have not loaded yet.",
+    act2Title:"How current it is",act2Lead:"The same countries and layers as part 1, but the cell measures period — the latest fiscal, reporting or observation year, and whether it is an actual, a plan, an estimate or a projection.",
+    act3Title:"Sources and gaps",act3Lead:"The registry traces every row back to its primary publication and transformation. The atlas at the end shows the other side: where sources exist or have been researched, even when PSD has not loaded them yet.",
+    downloads:"Dataset downloads"
+  });
   const coverageCategories=[
     {id:"fiscal",cs:"Fiskální historie země",en:"Country fiscal history",modules:["sovereign"]},
     {id:"health",cs:"Zdravotnictví",en:"Health",modules:["health"]},
@@ -87,7 +116,7 @@
     const countries=new Map();
     methodologyData?.countries.forEach(country=>countries.set(country.code,{code:country.code,cs:country.name_cs,en:country.name_en}));
     municipalityData?.countries.forEach(country=>countries.set(country.code,{code:country.code,cs:countries.get(country.code)?.cs||country.name_cs,en:countries.get(country.code)?.en||country.name_en}));
-    return [...countries.values()];
+    return [...countries.values()].sort((a,b)=>String(a[current]||a.code).localeCompare(String(b[current]||b.code),current));
   }
   const yearSpan=years=>{
     const values=[...new Set((years||[]).filter(Number.isFinite))].sort((a,b)=>a-b);
@@ -130,9 +159,15 @@
     }
     if(category.id==="budgetDetail"){
       const detail=itemizedCountry(code),count=Number(detail?.profile_count)||0,scope=Number(detail?.municipal_scope)||Number(municipal?.directory_count)||0;
-      return count
-        ? {primary:integer(count),secondary:`${sc.of} ${integer(scope)} · ${detail.period} · ${detail[current==="cs"?"detail_kind_cs":"detail_kind_en"]}`,status:detail.status==="full"?"full":"partial"}
-        : researchedGap(code,category.id);
+      if(count)return {primary:integer(count),secondary:`${sc.of} ${integer(scope)} · ${detail.period} · ${detail[current==="cs"?"detail_kind_cs":"detail_kind_en"]}`,status:detail.status==="full"?"full":"partial"};
+      // Published counts are measured from on-site artifacts, so a country PSD
+      // ingested but has not published measures zero. That is not the same as
+      // "not researched" — say which one it is.
+      if(detail?.publication_status==="warehouse_only"){
+        const warehouse=Number(detail.warehouse_profile_count)||Number(detail.warehouse?.profile_count)||0;
+        return {primary:sc.warehouse_only,secondary:`${integer(warehouse)} ${sc.profiles} · ${sc.loaded_not_published}`,status:"available",extraClass:"coverage-warehouse-only"};
+      }
+      return researchedGap(code,category.id);
     }
     return {primary:"—",secondary:sc.missing,status:"missing"};
   }
@@ -154,14 +189,31 @@
     (researchCell(code,category.id)?.sources||[]).forEach(item=>add({...item,location:item.location||""}));
     return [...sources.values()];
   }
+  // The legend in methodology.html predates the warehouse-only state. Add the
+  // missing swatch here rather than leaving eight cells with no key: an
+  // unexplained cell colour is exactly how "loaded but unpublished" gets read as
+  // "not covered". Idempotent, and render() keeps the label in the current
+  // language through its [data-status-copy] pass.
+  function ensureWarehouseLegend(){
+    const legend=document.querySelector(".coverage-legend");if(!legend)return;
+    let entry=legend.querySelector('[data-coverage-legend="warehouse-only"]');
+    if(!entry){
+      entry=document.createElement("span");
+      entry.dataset.coverageLegend="warehouse-only";
+      entry.innerHTML='<i class="available"></i><b data-status-copy="legendWarehouseOnly"></b>';
+      legend.insertBefore(entry,legend.children[1]||null);
+    }
+    const label=entry.querySelector("b");if(label)label.textContent=statusCopy[current].legendWarehouseOnly;
+  }
   function renderCoverageMatrix(){
     if(!methodologyData||!municipalityData)return;
+    ensureWarehouseLegend();
     const body=document.querySelector("#coverage-matrix-body");
     document.querySelectorAll("[data-coverage-category]").forEach(node=>{const category=coverageCategories.find(item=>item.id===node.dataset.coverageCategory);if(category)node.textContent=category[current];});
     if(body)body.innerHTML=statusCountries().map(country=>{
       const cells=coverageCategories.map(category=>{
         const cell=coverageCell(country.code,category),selected=activeCoverageNode?.country===country.code&&activeCoverageNode?.category===category.id;
-        return `<td><button type="button" class="coverage-cell coverage-status-${esc(cell.status)}${selected?" selected":""}" data-coverage-country="${esc(country.code)}" data-coverage-node="${esc(category.id)}" aria-pressed="${selected}"><strong>${esc(cell.primary)}</strong><span>${esc(cell.secondary)}</span></button></td>`;
+        return `<td><button type="button" class="coverage-cell coverage-status-${esc(cell.status)}${cell.extraClass?` ${esc(cell.extraClass)}`:""}${selected?" selected":""}" data-coverage-country="${esc(country.code)}" data-coverage-node="${esc(category.id)}" aria-pressed="${selected}"><strong>${esc(cell.primary)}</strong><span>${esc(cell.secondary)}</span></button></td>`;
       }).join("");
       return `<tr><th scope="row"><b>${esc(country[current])}</b><small>${esc(country.code)}</small></th>${cells}</tr>`;
     }).join("");
@@ -197,15 +249,21 @@
     const sc=statusCopy[current],countries=municipalityData.countries||[],itemizedCountries=itemizedBudgetData?.countries||[],scope=countries.reduce((sum,country)=>sum+(Number(country.directory_count)||0),0),itemizedProfiles=itemizedCountries.reduce((sum,country)=>sum+(Number(country.profile_count)||0),0),entityRows=municipalityData.entities?.length||0,aggregateRows=Math.max(0,scope-entityRows),historySpans=countries.map(country=>municipalHistoryStats(country.code)),countryYears=historySpans.reduce((sum,span)=>sum+span.count,0),municipalYears=yearSpan(historySpans.flatMap(span=>span.values));
     const generatedValues=[municipalityData.generated_at,itemizedBudgetData?.generated_at,methodologyData.generated_at,transportPerformanceData?.generated_at,transportBudgetData?.generated_at,releaseData?.data_generated_at].filter(Boolean).map(value=>new Date(value)).filter(value=>!Number.isNaN(value.getTime())),generated=generatedValues.length?new Date(Math.max(...generatedValues)):null;
     const generatedLabel=generated?new Intl.DateTimeFormat(current==="cs"?"cs-CZ":"en-GB",{dateStyle:"medium",timeStyle:"short"}).format(generated):"—";
+    // Itemized coverage counts only what the site actually publishes. Countries
+    // held in the production warehouse are reported separately instead of being
+    // folded into the published tally.
+    const publishedItemizedCountries=itemizedCountries.filter(country=>(Number(country.profile_count)||0)>0);
+    const warehouseOnlyCountries=itemizedCountries.filter(country=>country.publication_status==="warehouse_only");
+    const warehouseOnlyProfiles=warehouseOnlyCountries.reduce((sum,country)=>sum+(Number(country.warehouse_profile_count)||Number(country.warehouse?.profile_count)||0),0);
     const cards=[
       [sc.municipalCountries,countries.length,`${integer(scope)} ${sc.entities}`],
-      [sc.itemizedCountries,itemizedCountries.length,`${integer(itemizedProfiles)} ${current==="cs"?"profilů":"profiles"}`],
+      [sc.itemizedCountries,publishedItemizedCountries.length,`${integer(itemizedProfiles)} ${sc.profiles}${warehouseOnlyCountries.length?` · ${integer(warehouseOnlyProfiles)} ${sc.warehouseShort}`:""}`],
       [sc.entityRows,entityRows,aggregateRows?`${integer(aggregateRows)} ${sc.aggregateRows}`:sc.entityLevel],
       [sc.municipalCountryYears,countryYears,municipalYears.label],
       [sc.coverageRows,methodologyData.row_count,sc.coverageRowNote]
     ];
     const passed=qualityData.status==="passed";
-    root.innerHTML=`<div class="data-health-status"><span class="${passed?"data-health-pass":"data-health-fail"}">● ${esc(passed?sc.checksPassed:sc.checksFailed)}</span><span>${esc(sc.snapshot)}: <b>${esc(generatedLabel)}</b></span></div><div class="data-health-kpis">${cards.map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${integer(value)}</strong><small>${esc(note)}</small></article>`).join("")}</div><div class="data-health-downloads"><a href="data/international-municipalities.v1.json" download>${current === "en" ? "Municipal" : "Obecní"} JSON ↓</a><a href="data/municipal-itemized-coverage.v1.json" download>${current === "en" ? "Itemized budgets" : "Položkové rozpočty"} JSON ↓</a><a href="data/methodology-sources.v1.json" download>${esc(sc.ledgerJson)}</a><a href="data/coverage-source-research.v1.json" download>${current === "en" ? "Availability research" : "Průzkum dostupnosti"} JSON ↓</a><a href="data/data-quality-report.v1.json" download>QA JSON ↓</a></div>`;
+    root.innerHTML=`<div class="data-health-status"><span class="${passed?"data-health-pass":"data-health-fail"}">● ${esc(passed?sc.checksPassed:sc.checksFailed)}</span><span>${esc(sc.snapshot)}: <b>${esc(generatedLabel)}</b></span></div><div class="data-health-kpis">${cards.map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${integer(value)}</strong><small>${esc(note)}</small></article>`).join("")}</div><div class="data-health-downloads"><a href="data/international-municipalities.v1.json" download>${current === "en" ? "Municipal" : "Obecní"} JSON ↓</a><a href="data/municipal-itemized-coverage.v1.json" download>${current === "en" ? "Itemized budgets" : "Položkové rozpočty"} JSON ↓</a><a href="data/methodology-sources.v1.json" download>${esc(sc.ledgerJson)}</a><a href="data/coverage-source-research.v1.json" download>${current === "en" ? "Availability research" : "Průzkum dostupnosti"} JSON ↓</a><a href="data/municipal-itemized-acquisition-audit.v1.json" download>${current === "en" ? "Acquisition audit" : "Audit importů"} JSON ↓</a><a href="data/data-quality-report.v1.json" download>QA JSON ↓</a></div>`;
     const publishedEntries=Number(qualityData?.counts?.published_data_entries)||0;
     const total=document.querySelector("#status-data-total");if(total)total.textContent=publishedEntries?integer(publishedEntries):"—";
   }
@@ -218,10 +276,11 @@
     document.querySelectorAll("[data-page-placeholder]").forEach(node=>{const value=copy[current][node.dataset.pagePlaceholder];if(value)node.placeholder=value;});
     renderMethodology();
     renderDataHealth();
-    localStorage.setItem("psd-lang",current);
     history.replaceState(null,"",`${location.pathname}?lang=${current}${location.hash}`);
   }
-  document.querySelectorAll("[data-lang]").forEach(button => button.addEventListener("click",()=>{current=button.dataset.lang;render();}));
+  // Persist only on an explicit toggle. PSDLanguage.set stores the choice and
+  // announces it so the independently rendered modules on this page re-render.
+  document.querySelectorAll("[data-lang]").forEach(button => button.addEventListener("click",()=>{current=window.PSDLanguage?.set(button.dataset.lang,{persist:true})||button.dataset.lang;render();}));
   ["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>document.querySelector(selector)?.addEventListener("input",()=>{activeCoverageNode=null;renderMethodology();}));
   document.querySelector("#coverage-matrix-body")?.addEventListener("click",event=>{
     const button=event.target.closest("[data-coverage-node]");if(!button||!methodologyData)return;

@@ -45,7 +45,10 @@ body[data-page="methodology"] .data-health-kpis strong{margin:15px 0 7px;font-si
 body[data-page="methodology"] .data-health-downloads{justify-content:flex-end;margin-top:8px;padding:0;border:0;background:transparent;font-size:10px}
 body[data-page="methodology"] .data-health-downloads a{padding:7px 9px;border:1px solid #a9aaa4;text-decoration:none}
 body[data-page="methodology"] .coverage-overview{margin-top:44px;padding-top:0;border-top:0}
-body[data-page="methodology"] .coverage-matrix-wrap{margin-top:12px;border:1px solid #171918;box-shadow:none}
+body[data-page="methodology"] .coverage-matrix-wrap{margin-top:12px;max-height:74vh;border:1px solid #171918;box-shadow:none;scrollbar-gutter:stable}
+body[data-page="methodology"] .coverage-matrix thead th{z-index:3}
+body[data-page="methodology"] .coverage-matrix thead th:first-child{z-index:5}
+body[data-page="methodology"] .coverage-matrix tbody th{z-index:2}
 body[data-page="methodology"] .coverage-matrix{min-width:1460px}
 body[data-page="methodology"] .coverage-matrix thead th{height:auto;padding:12px 13px;font:700 10px/1.35 monospace;letter-spacing:.04em;text-transform:uppercase}
 body[data-page="methodology"] .coverage-matrix thead th:first-child{width:165px}
@@ -93,14 +96,35 @@ body[data-page="methodology"] .status-definitions dl{display:grid;grid-template-
 body[data-page="methodology"] .status-definitions dl>div{padding:13px 14px;background:#f7f3ea}
 body[data-page="methodology"] .status-definitions dt{font:700 10px/1.4 monospace;text-transform:uppercase}
 body[data-page="methodology"] .status-definitions dd{margin:6px 0 0;color:#656963;font-size:11px;line-height:1.45}
+/* Coverage page: three-act structure and sticky section rail */
+body[data-page="methodology"] .method-toc{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:0;margin:22px 0 0;border:1px solid #171918;background:#faf7ef}
+body[data-page="methodology"] .method-toc a{flex:1 1 0;min-width:150px;padding:11px 14px;border-right:1px solid #c7c1b6;color:#171918;font:700 10px/1.4 monospace;text-decoration:none;text-transform:uppercase}
+body[data-page="methodology"] .method-toc a:last-child{border-right:0}
+body[data-page="methodology"] .method-toc a b{display:block;color:#656963;font:700 9px/1.4 monospace}
+body[data-page="methodology"] .method-toc a:hover{background:#f1ede3}
+body[data-page="methodology"] .method-toc a.is-current{background:#171918;color:#faf7ef}
+body[data-page="methodology"] .method-toc a.is-current b{color:#cbd76a}
+body[data-page="methodology"] .method-act{display:grid;grid-template-columns:auto 1fr;gap:4px 20px;margin:52px 0 0;padding:14px 0 12px;border-top:2px solid #171918;scroll-margin-top:56px}
+body[data-page="methodology"] .method-act>span{grid-row:span 2;color:#c93237;font:700 10px/1.5 monospace;text-transform:uppercase}
+body[data-page="methodology"] .method-act>b{font:700 11px/1.5 monospace;text-transform:uppercase}
+body[data-page="methodology"] .method-act>p{max-width:760px;margin:0;color:#656963;font-size:13px;line-height:1.55}
+/* One KPI band per page: the release band. The atlas stat row reads as a caption. */
+body[data-page="methodology"] .surface-kpis{grid-template-columns:repeat(4,1fr);gap:0;margin-top:14px;border:1px solid #c7c1b6;background:#f7f3ea}
+body[data-page="methodology"] .surface-kpis article{min-height:0;padding:10px 14px;border-right:1px solid #c7c1b6;background:transparent}
+body[data-page="methodology"] .surface-kpis article:last-child{border-right:0}
+body[data-page="methodology"] .surface-kpis strong{display:inline;margin:0;font:650 15px/1.2 system-ui,sans-serif;letter-spacing:-.02em}
+body[data-page="methodology"] .surface-kpis span{display:block;margin-top:5px;font-size:9px}
+body[data-page="methodology"] .published-coverage,body[data-page="methodology"] .freshness-overview,body[data-page="methodology"] .methodology-atlas{margin-top:20px;padding-top:0;border-top:0}
+body[data-page="methodology"] .freshness-head h2,body[data-page="methodology"] .published-coverage-head h2,body[data-page="methodology"] .methodology-atlas-head h2{font:500 clamp(30px,3.2vw,44px)/1.02 Georgia,serif;letter-spacing:-.04em;text-transform:none}
+body[data-page="methodology"] .method-downloads{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 body[data-page="methodology"] .method-ledger{margin-top:44px}
 body[data-page="methodology"] .method-ledger-head{display:flex;margin:0;align-items:center}
 body[data-page="methodology"] .method-ledger-head h2{font:500 29px/1 Georgia,serif;letter-spacing:-.035em}
 body[data-page="methodology"] .method-ledger-json{padding:8px 10px;font-size:10px}
 body[data-page="methodology"] .method-ledger-controls{margin-top:12px}
 body[data-page="methodology"] .method-table-wrap{height:70vh;min-height:560px;border:1px solid #171918;box-shadow:none}
-@media(max-width:900px){body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-matrix-wrap{box-shadow:none}}
-@media(max-width:600px){body[data-page="methodology"] main{padding-top:20px}body[data-page="methodology"] .status-hero{align-items:flex-start;flex-direction:column;padding:30px 0 20px}body[data-page="methodology"] .status-hero>p{text-align:left}body[data-page="methodology"] .section-bar{align-items:flex-start;flex-direction:column;gap:7px}body[data-page="methodology"] .data-health-kpis{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-overview{margin-top:36px;padding-top:0}body[data-page="methodology"] .coverage-matrix{min-width:1340px}body[data-page="methodology"] .coverage-matrix tbody th,body[data-page="methodology"] .coverage-matrix thead th:first-child{width:145px}body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr}body[data-page="methodology"] .method-ledger-head{align-items:center;flex-direction:row}body[data-page="methodology"] .method-ledger-head h2{font-size:29px}body[data-page="methodology"] .method-table-wrap{height:68vh;min-height:500px;box-shadow:none}}
+@media(max-width:900px){body[data-page="methodology"] .surface-kpis{grid-template-columns:1fr 1fr}body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-matrix-wrap{box-shadow:none}}
+@media(max-width:600px){body[data-page="methodology"] .method-toc{position:static}body[data-page="methodology"] .method-toc a{min-width:0;flex-basis:50%;border-bottom:1px solid #c7c1b6}body[data-page="methodology"] .coverage-matrix-wrap{max-height:70vh}body[data-page="methodology"] .method-act{margin-top:36px}body[data-page="methodology"] main{padding-top:20px}body[data-page="methodology"] .status-hero{align-items:flex-start;flex-direction:column;padding:30px 0 20px}body[data-page="methodology"] .status-hero>p{text-align:left}body[data-page="methodology"] .section-bar{align-items:flex-start;flex-direction:column;gap:7px}body[data-page="methodology"] .data-health-kpis{grid-template-columns:1fr 1fr}body[data-page="methodology"] .coverage-overview{margin-top:36px;padding-top:0}body[data-page="methodology"] .coverage-matrix{min-width:1340px}body[data-page="methodology"] .coverage-matrix tbody th,body[data-page="methodology"] .coverage-matrix thead th:first-child{width:145px}body[data-page="methodology"] .status-definitions dl{grid-template-columns:1fr}body[data-page="methodology"] .method-ledger-head{align-items:center;flex-direction:row}body[data-page="methodology"] .method-ledger-head h2{font-size:29px}body[data-page="methodology"] .method-table-wrap{height:68vh;min-height:500px;box-shadow:none}}
 
 /* About uses the official vector lockup in an active, linkable panel. */
 body[data-page="about"] .maker-logo-panel{position:relative;min-height:240px;padding:52px;display:grid;place-items:center;overflow:hidden;background:#171918;border:1px solid #171918;box-shadow:none;text-decoration:none}

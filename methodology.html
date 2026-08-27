@@ -12,13 +12,15 @@
     <link rel="canonical" href="https://publicspendingdata.org/methodology.html" />
     <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/methodology.html?lang=cs" />
     <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/methodology.html?lang=en" />
-    <link rel="icon" href="assets/favicon.svg" />
+    <link rel="alternate" hreflang="x-default" href="https://publicspendingdata.org/methodology.html" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="site-header.css?v=20260824-header-lockup" data-psd-site-header />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
     <link
       rel="stylesheet"
-      href="site-pages.css?v=20260826-source-availability"
+      href="site-pages.css?v=20260827-coverage-acts"
     />
     <link rel="stylesheet" href="municipal-transparency.css?v=20260826-transparency-index" />
     <link rel="stylesheet" href="data-freshness.css?v=20260827-cross-layer" />
@@ -37,10 +39,10 @@
       @media (max-width: 560px) { .data-health-kpis { grid-template-columns: 1fr; } }
     </style>
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
-    <script src="site-pages.js?v=20260827-coverage-page" defer></script>
+    <script src="site-pages.js?v=20260827-coverage-acts" defer></script>
     <script src="municipal-transparency.js?v=20260827-shared-coverage-data" defer></script>
-    <script src="data-freshness.js?v=20260827-methodology-levels-shared-data" defer></script>
-    <script src="coverage-map.js?v=20260827-shared-coverage-data" defer></script>
+    <script src="data-freshness.js?v=20260827-methodology-levels-acts" defer></script>
+    <script src="coverage-map.js?v=20260827-coverage-acts" defer></script>
     <script src="global-footer.js?v=20260827-coverage-menu" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -62,13 +64,25 @@
           <strong id="status-data-total">—</strong>
         </a>
       </header>
-      <section class="data-health" aria-labelledby="data-health-title">
+      <nav class="method-toc" aria-label="Sekce stránky pokrytí">
+        <a href="#release" data-toc-link="release"><b data-status-copy="tocStartKicker">Přehled</b><span data-status-copy="tocStart">Stav vydání</span></a>
+        <a href="#published" data-toc-link="published"><b data-status-copy="tocAct1Kicker">Část 1</b><span data-status-copy="tocAct1">Co publikujeme</span></a>
+        <a href="#freshness" data-toc-link="freshness"><b data-status-copy="tocAct2Kicker">Část 2</b><span data-status-copy="tocAct2">Jak jsou data aktuální</span></a>
+        <a href="#sources" data-toc-link="sources"><b data-status-copy="tocAct3Kicker">Část 3</b><span data-status-copy="tocAct3">Zdroje a mezery</span></a>
+      </nav>
+      <section class="data-health" id="release" aria-labelledby="data-health-title">
         <header class="section-bar">
           <h2 id="data-health-title" data-status-copy="releaseTitle">Stav vydání</h2>
           <span data-status-copy="releaseNote">Souhrn všech obecních dat</span>
         </header>
         <div id="data-health-root" aria-live="polite"><p class="data-health-loading">Načítám…</p></div>
       </section>
+
+      <div class="method-act" id="published">
+        <span data-status-copy="tocAct1Kicker">Část 1</span>
+        <b data-status-copy="act1Title">Co publikujeme</b>
+        <p data-status-copy="act1Lead">Mapa ukazuje, které sekce jsou pro zemi na PSD publikované; tabulka pod ní rozpadá totéž pokrytí na kategorie a přidává, co jsme u zdroje našli, ale zatím nenačetli.</p>
+      </div>
       <section id="published-coverage" class="published-coverage" aria-labelledby="published-coverage-title">
         <header class="published-coverage-head">
           <div>
@@ -78,28 +92,6 @@
           <p data-surface-copy="lead">Vyberte sekci a uvidíte země, pro které má Public Spending Data publikovaný profil nebo datovou vrstvu. Mapa měří obsah na tomto webu, nikoli vše, co může existovat u původních poskytovatelů.</p>
         </header>
         <div id="surface-coverage-atlas" class="surface-coverage-atlas" aria-live="polite"><p>Načítám mapu publikovaného pokrytí…</p></div>
-      </section>
-      <section id="data-freshness" class="freshness-overview" aria-labelledby="data-freshness-title">
-        <header class="freshness-head">
-          <div><span class="kicker" data-freshness-copy="eyebrow">Data · 191 zemí · 15 vrstev</span><h2 id="data-freshness-title" data-freshness-copy="title">Jak čerstvá jsou data napříč celým webem?</h2></div>
-          <p data-freshness-copy="method">Rok v buňce je nejnovější fiskální, vykazované nebo pozorované období. Datum sestavení souboru je samostatné; plán, skutečnost a projekce nejsou zaměnitelné.</p>
-        </header>
-        <div id="freshness-root">
-          <div id="freshness-kpis" class="freshness-kpis" aria-live="polite"></div>
-          <div class="freshness-controls" aria-label="Data freshness filters">
-            <label><span data-freshness-copy="country">Země</span><select id="freshness-country"></select></label>
-            <label><span data-freshness-copy="family">Rodina dat</span><select id="freshness-family"></select></label>
-            <label><span data-freshness-copy="freshness">Datový horizont</span><select id="freshness-band"></select></label>
-            <label><span data-freshness-copy="search">Hledat</span><input id="freshness-search" type="search" /></label>
-            <button id="freshness-reset" type="button" data-freshness-copy="reset">Vymazat</button>
-          </div>
-          <div class="freshness-subhead"><h3 data-freshness-copy="matrix">Srovnávací matice</h3><p>● actual · △ estimate · ■ plan · ▨ projection</p></div>
-          <div class="freshness-matrix-wrap" tabindex="0" aria-label="Country by data-layer freshness matrix"><table id="freshness-matrix" class="freshness-matrix"></table></div>
-          <section id="freshness-selection" class="freshness-selection" aria-live="polite"><p>Vyberte buňku pro detail vrstvy.</p></section>
-          <div class="freshness-subhead"><h3 data-freshness-copy="detailTable">Podrobný registr</h3><p id="freshness-summary"></p></div>
-          <div class="freshness-controls freshness-download-bar"><button id="freshness-download" type="button" data-freshness-copy="download">Stáhnout CSV</button></div>
-          <div class="freshness-ledger-wrap" tabindex="0"><table class="freshness-ledger"><thead><tr><th data-freshness-copy="country">Země</th><th data-freshness-copy="family">Vrstva</th><th data-freshness-copy="latest">Nejnovější období</th><th data-freshness-copy="type">Typ</th><th data-freshness-copy="coverage">Pokrytí</th><th data-freshness-copy="generated">Artefakt sestaven</th><th>Link</th></tr></thead><tbody id="freshness-table-body"></tbody></table></div>
-        </div>
       </section>
       <section class="coverage-overview" aria-labelledby="coverage-overview-title">
         <header class="section-bar">
@@ -152,13 +144,42 @@
           <div><dt data-status-copy="defAvailability">Dostupnost zdroje</dt><dd data-status-copy="defAvailabilityValue">„Zdroj existuje“ není publikované pokrytí PSD. Kliknutí otevře důkaz, cestu k načtení a hranice srovnatelnosti.</dd></div>
         </dl>
       </details>
+
+      <div class="method-act" id="freshness">
+        <span data-status-copy="tocAct2Kicker">Část 2</span>
+        <b data-status-copy="act2Title">Jak jsou data aktuální</b>
+        <p data-status-copy="act2Lead">Stejné země a vrstvy jako v části 1, ale buňka měří období — nejnovější fiskální, vykazovaný nebo pozorovaný rok, a zda jde o skutečnost, plán, odhad nebo projekci.</p>
+      </div>
+      <section id="data-freshness" class="freshness-overview" aria-labelledby="data-freshness-title">
+        <header class="freshness-head">
+          <div><span class="kicker" data-freshness-copy="eyebrow">Data · 191 zemí · 15 vrstev</span><h2 id="data-freshness-title" data-freshness-copy="title">Jak čerstvá jsou data napříč celým webem?</h2></div>
+          <p data-freshness-copy="method">Rok v buňce je nejnovější fiskální, vykazované nebo pozorované období. Datum sestavení souboru je samostatné; plán, skutečnost a projekce nejsou zaměnitelné.</p>
+        </header>
+        <div id="freshness-root">
+          <div class="freshness-controls" aria-label="Data freshness filters">
+            <label><span data-freshness-copy="country">Země</span><select id="freshness-country"></select></label>
+            <label><span data-freshness-copy="family">Rodina dat</span><select id="freshness-family"></select></label>
+            <label><span data-freshness-copy="freshness">Datový horizont</span><select id="freshness-band"></select></label>
+            <label><span data-freshness-copy="search">Hledat</span><input id="freshness-search" type="search" /></label>
+            <button id="freshness-reset" type="button" data-freshness-copy="reset">Vymazat</button>
+          </div>
+          <div class="freshness-subhead"><h3 data-freshness-copy="matrix">Srovnávací matice</h3><p>● actual · △ estimate · ■ plan · ▨ projection</p></div>
+          <div class="freshness-matrix-wrap" tabindex="0" aria-label="Country by data-layer freshness matrix"><table id="freshness-matrix" class="freshness-matrix"></table></div>
+          <section id="freshness-selection" class="freshness-selection" aria-live="polite"><p>Vyberte buňku pro detail vrstvy.</p></section>
+          <div class="freshness-subhead"><h3 data-freshness-copy="detailTable">Podrobný registr</h3><p id="freshness-summary"></p></div>
+          <div class="freshness-controls freshness-download-bar"><button id="freshness-download" type="button" data-freshness-copy="download">Stáhnout CSV</button></div>
+          <div class="freshness-ledger-wrap" tabindex="0"><table class="freshness-ledger"><thead><tr><th data-freshness-copy="country">Země</th><th data-freshness-copy="family">Vrstva</th><th data-freshness-copy="latest">Nejnovější období</th><th data-freshness-copy="type">Typ</th><th data-freshness-copy="coverage">Pokrytí</th><th data-freshness-copy="generated">Artefakt sestaven</th><th>Link</th></tr></thead><tbody id="freshness-table-body"></tbody></table></div>
+        </div>
+      </section>
+
+      <div class="method-act" id="sources">
+        <span data-status-copy="tocAct3Kicker">Část 3</span>
+        <b data-status-copy="act3Title">Zdroje a mezery</b>
+        <p data-status-copy="act3Lead">Registr vede každý řádek zpět k primární publikaci a transformaci. Atlas na konci ukazuje opačnou stranu: kde zdroje existují nebo byly prověřeny, i když je PSD zatím nenačetlo.</p>
+      </div>
       <section class="method-ledger" aria-labelledby="method-ledger-title">
         <header class="section-bar method-ledger-head">
           <h2 id="method-ledger-title" data-status-copy="ledgerTitle">Registr pokrytí a zdrojů</h2>
-          <div>
-            <a class="method-ledger-json" href="data/methodology-sources.v1.json" download data-status-copy="ledgerJson">JSON ↓</a>
-            <a class="method-ledger-json" href="data/municipal-itemized-acquisition-audit.v1.json" download>Audit importů ↓</a>
-          </div>
         </header>
         <p data-status-copy="acquisitionAuditNote">Audit importů odděluje zdroje, které už mají validovaný produkční balík, od katalogových tipů, dokumentových publikací a technicky blokovaných systémů. Připravený balík se do veřejného pokrytí započítá až po úspěšném načtení do produkčního skladu.</p>
         <div class="method-ledger-controls" aria-label="Methodology table filters">
@@ -187,12 +208,29 @@
       <section id="municipal-transparency" class="methodology-atlas" aria-labelledby="municipal-transparency-title">
         <header class="methodology-atlas-head">
           <span class="kicker" data-page-copy="atlasEyebrow">Zdrojové systémy · celý svět</span>
-          <h2 id="municipal-transparency-title" data-page-copy="atlasTitle">KDE MŮŽEME POKRYTÍ ROZŠÍŘIT?</h2>
-          <p data-page-copy="atlasLead">Tato druhá mapa odděluje publikované pokrytí PSD od dostupnosti u původních poskytovatelů. Atlas 195 států ukazuje rozpočtovou transparentnost, obecní datové systémy a země, jejichž zdroje jsme ještě nenačetli.</p>
+          <h2 id="municipal-transparency-title" data-page-copy="atlasTitle">Kde můžeme pokrytí rozšířit?</h2>
+          <p data-page-copy="atlasLead">Atlas 195 států ukazuje rozpočtovou transparentnost, obecní datové systémy a země, jejichž zdroje jsme ještě nenačetli.</p>
         </header>
         <div id="transparency-atlas" class="transparency-atlas" aria-live="polite"><p>Načítám atlas…</p></div>
       </section>
     </main>
     <footer data-global-footer></footer>
+    <script>
+      (() => {
+        const links = [...document.querySelectorAll("[data-toc-link]")];
+        const targets = links.map((link) => document.getElementById(link.dataset.tocLink)).filter(Boolean);
+        if (targets.length !== links.length || !("IntersectionObserver" in window)) return;
+        const seen = new Map();
+        const mark = () => {
+          const current = targets.filter((target) => seen.get(target.id)).pop() || targets.find((target) => target.getBoundingClientRect().top >= 0);
+          links.forEach((link) => link.classList.toggle("is-current", link.dataset.tocLink === current?.id));
+        };
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => seen.set(entry.target.id, entry.boundingClientRect.top <= 0));
+          mark();
+        }, { rootMargin: "-56px 0px 0px 0px", threshold: 0 });
+        targets.forEach((target) => observer.observe(target));
+      })();
+    </script>
   </body>
 </html>

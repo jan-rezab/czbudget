@@ -1,4 +1,17 @@
 import { readFile, readdir, stat } from "node:fs/promises";
+import { loadExpectedCounts } from "./lib/expected-counts.mjs";
+
+// Every published-volume total this validator asserts is measured or pinned in
+// exactly one place. See scripts/lib/expected-counts.mjs for which are derived
+// (and therefore only become real checks when reconciled against an independent
+// artifact) and which are deliberate regression tripwires.
+const counts = await loadExpectedCounts();
+const pinned = counts.pinned;
+
+// Cache-busting is the contract; the exact version token is not. Pinning the
+// literal token means every asset edit must also edit this file, which is how
+// these assertions go stale and start failing releases that are actually fine.
+const cacheBusted = (page, asset) => new RegExp(`${asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\?v=\\d{8}-[a-z0-9-]+`).test(page);
 
 const identity = (await readFile(".czbudget-canonical", "utf8")).trim();
 if (identity !== "czbudget-public-canonical-v1") throw new Error("Invalid canonical source identity");
@@ -99,21 +112,73 @@ const internationalMunicipalScript = await readFile("municipalities.js", "utf8")
 const municipalityCountryScript = await readFile("municipalities-country.js", "utf8");
 const municipalityCountrySlugs = ["poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan", "colombia", "georgia", "italy", "bolivia", "el-salvador", "mexico", "costa-rica", "guatemala", "peru", "south-korea", "chile"];
 const municipalityCountryPages = await Promise.all(municipalityCountrySlugs.map((slug) => readFile(`municipalities/${slug}/index.html`, "utf8")));
-if (snapshot.municipalities.length !== 6254) throw new Error("Expected 6,254 municipalities");
-if (internationalMunicipalities.countries.length !== 27 || internationalMunicipalities.entities.length !== 105582) throw new Error("Expected 27-country municipality directory with 105,582 entity rows");
+if (snapshot.municipalities.length !== pinned.municipalities) throw new Error("Expected 6,254 municipalities");
+if (internationalMunicipalities.countries.length !== pinned.municipalDirectoryCountries || internationalMunicipalities.entities.length !== pinned.municipalDirectoryEntries) throw new Error("Expected 27-country municipality directory with 105,582 entity rows");
+// The heavy directory file is the authority for its own row count; the shared
+// counts module reads that number out of data-freshness.v1.json so the browser
+// suite can use it without parsing 21 MB. Reconcile the two here, where both are
+// already in memory, so the cheap copy can never drift from the real artifact.
+if (counts.municipalDirectoryEntries !== internationalMunicipalities.entities.length || counts.municipalDirectoryCountries !== internationalMunicipalities.countries.length) throw new Error("data-freshness municipality totals do not reconcile with the published municipality directory");
+// Itemized municipal coverage: publication is now MEASURED from on-site
+// artifacts, so a country PSD ingested but never published reports zero. Zero on
+// its own is indistinguishable from "never researched", so every row must state
+// which of the two honest publication states it is in, and warehouse-only rows
+// must carry the warehouse figure they are withholding from the site.
+const itemizedByCode = counts.itemizedCoverageByCode;
 const requiredInternationalItemized = ["POL", "DNK", "UKR", "FRA", "SWE", "GBR", "DEU", "USA", "CHE"];
-if (municipalItemizedCoverage.countries.length !== 27) throw new Error("Expected itemized municipal coverage for twenty-seven countries");
-for (const code of requiredInternationalItemized) {
-  const country = municipalItemizedCoverage.countries.find((row) => row.code === code);
-  if (!country || country.profile_count <= 0) throw new Error(`Expected deployed itemized municipal profiles for ${code}`);
+if (municipalItemizedCoverage.countries.length !== pinned.itemizedCoverageCountries) throw new Error("Expected itemized municipal coverage for twenty-seven countries");
+for (const country of municipalItemizedCoverage.countries) {
+  if (!["published", "warehouse_only"].includes(country.publication_status)) throw new Error(`${country.code}: itemized municipal coverage must declare publication_status "published" or "warehouse_only", received ${JSON.stringify(country.publication_status)}`);
+  if (country.published_profile_count !== country.profile_count) throw new Error(`${country.code}: published itemized profile count must equal the measured profile count`);
 }
+for (const code of requiredInternationalItemized) {
+  const country = itemizedByCode.get(code);
+  if (!country) throw new Error(`Missing itemized municipal coverage row for ${code}`);
+  if (country.publication_status === "warehouse_only") {
+    // Loaded into the production warehouse, deliberately not published on the
+    // site. The site must be able to say exactly that instead of rendering the
+    // country as unresearched.
+    if (country.status !== "warehouse_only" || country.profile_count !== 0 || country.published_profile_count !== 0) throw new Error(`${code}: a warehouse-only country must report zero published itemized profiles`);
+    if (!(Number(country.warehouse_profile_count) > 0) || Number(country.warehouse?.profile_count) !== Number(country.warehouse_profile_count)) throw new Error(`${code}: a warehouse-only country must preserve its positive warehouse profile count`);
+    if (country.warehouse?.published_on_site !== false || !country.scope_limitations?.length) throw new Error(`${code}: a warehouse-only country must state that it is not published on site and why`);
+  } else {
+    if (!(country.profile_count > 0) || !country.measured_from || !country.period || !country.stages?.length) throw new Error(`${code}: a published country must expose measured itemized profiles with their source, period and stages`);
+  }
+}
+// Published itemized coverage may grow as warehouse-only countries are promoted;
+// it must never silently shrink back.
+if (counts.itemizedPublishedProfiles < pinned.itemizedPublishedProfilesFloor) throw new Error(`Published itemized municipal profiles fell to ${counts.itemizedPublishedProfiles}, below the ${pinned.itemizedPublishedProfilesFloor} already shipped`);
+if (counts.itemizedPublishedProfiles !== counts.itemizedPublishedProfileCountSum) throw new Error("Itemized coverage profile_count and published_profile_count do not reconcile");
+if (counts.warehouseOnlyCountries + counts.publishedItemizedCountries !== pinned.itemizedCoverageCountries) throw new Error("Every itemized-coverage country must be either published or warehouse-only");
 for (const [code, entities, lineFacts, balanceFacts = 0] of [["GBR",374,552003],["DEU",11,1152009],["CHE",80,64185],["FRA",35042,10445528,14147797],["PRY",263,281957]]) {
   const country = internationalItemizedWarehouse.countries.find((row) => row.code === code);
   if (!country || country.profile_count !== entities || country.line_fact_count !== lineFacts || country.balance_fact_count !== balanceFacts) throw new Error(`${code}: production itemized-warehouse verification snapshot mismatch`);
 }
 if (municipalItemizedAcquisitionAudit.production_load?.status !== "loaded" || municipalItemizedAcquisitionAudit.production_load?.bundles_loaded !== 6) throw new Error("Municipal itemized acquisition audit must record the completed six-bundle production load");
-if (dataQuality.counts.published_data_entries !== 402309 || Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== 402309) throw new Error("Expected 402,309 published registry, history, directory and itemized-profile entries");
-if (municipalItemizedCoverage.countries.find((country) => country.code === "CZE")?.profile_count !== 6254 || municipalItemizedCoverage.countries.find((country) => country.code === "USA")?.profile_count !== 4 || municipalItemizedCoverage.countries.find((country) => country.code === "DEU")?.status !== "partial") throw new Error("Itemized municipal coverage must preserve full and partial profile-level detail honestly");
+// The headline volume figure the coverage page prints. It is DERIVED from the
+// four component artifacts, then reconciled against the independently written
+// quality report, so a build that changes one component without regenerating the
+// report fails here instead of shipping two different totals. Today: 362,612
+// (121,199 registry + 100,021 history + 105,582 directory + 35,810 itemized).
+if (dataQuality.counts.published_data_entries !== counts.publishedDataEntries) throw new Error(`Quality report publishes ${dataQuality.counts.published_data_entries} data entries; the artifacts measure ${counts.publishedDataEntries}`);
+if (Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== counts.publishedDataEntries) throw new Error("Published entry components do not sum to the published data-entry total");
+for (const [component, expected] of Object.entries(counts.publishedEntryComponents)) {
+  if (dataQuality.published_entry_components?.[component] !== expected) throw new Error(`Quality report component ${component} is ${dataQuality.published_entry_components?.[component]}, measured ${expected}`);
+}
+if (counts.publishedDataEntries < pinned.publishedDataEntriesFloor) throw new Error(`Published data entries fell to ${counts.publishedDataEntries}, below the ${pinned.publishedDataEntriesFloor} already shipped`);
+// Anchor countries. CZE is the complete Czech universe and DNK is a genuinely
+// published collection: neither may be swept into the warehouse-only bucket.
+for (const [code, expected] of Object.entries(pinned.itemizedAnchors)) {
+  const country = itemizedByCode.get(code);
+  if (country?.profile_count !== expected || country.publication_status !== "published") throw new Error(`${code}: expected ${expected} published itemized municipal profiles`);
+}
+// USA and DEU are the two countries whose warehouse scatter used to be reported
+// as site coverage (4 profiles and a "partial" status for eleven German cities).
+// Both must now report zero published profiles with the warehouse figure intact.
+for (const [code, warehouseProfiles] of [["USA", 4], ["DEU", 11]]) {
+  const country = itemizedByCode.get(code);
+  if (country?.profile_count !== 0 || country.status !== "warehouse_only" || country.publication_status !== "warehouse_only" || Number(country.warehouse_profile_count) !== warehouseProfiles) throw new Error(`${code}: expected zero published itemized profiles with ${warehouseProfiles} preserved in the warehouse`);
+}
 if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.length, 0) !== 1010) throw new Error("Expected 1,010 Nordic and Dutch municipal benchmark profiles");
 for (const [code, expected] of [["DNK",98],["ESP",6198],["JPN",1741]]) {
   const country = internationalMunicipalities.countries.find((item) => item.code === code);
@@ -153,7 +218,15 @@ for (const [code, country] of Object.entries(countryHealthPerformance.countries)
   }
 }
 if (Object.values(countryHealthPerformance.countries).filter((country) => Number.isFinite(country.outcomes?.treatable_mortality_per_100k?.value)).length !== 16) throw new Error("Expected sixteen-country OECD treatable-mortality coverage");
-if (dataQuality.status !== "passed" || dataQuality.failures.length || dataQuality.counts.municipalities !== 6254 || dataQuality.counts.sovereign_countries !== 191) throw new Error("Expected a passing, machine-readable release quality report covering all 191 sovereign profiles");
+if (dataQuality.status !== "passed" || dataQuality.failures.length || dataQuality.counts.municipalities !== pinned.municipalities || dataQuality.counts.sovereign_countries !== pinned.sovereignCountries) throw new Error("Expected a passing, machine-readable release quality report covering all 191 sovereign profiles");
+// A `--data-only` integrity run skips every HTML, canonical, JSON-LD, sitemap
+// and local-link check, yet still writes status "passed" -- and the public
+// coverage page renders "● Checks passed" straight from that field. A partial
+// report must never stand in for a full one, so require the report to say which
+// scope it was produced under and refuse anything but a complete audit.
+if (dataQuality.scope !== "full") throw new Error(`Release quality report was produced with scope ${JSON.stringify(dataQuality.scope)}; the published report must come from a full audit (node scripts/validate-integrity.mjs --write-report)`);
+if (!dataQuality.checks || Object.values(dataQuality.checks).some((ran) => ran !== true) || (dataQuality.skipped_check_groups || []).length) throw new Error("Release quality report must record every check group as executed");
+if (!(dataQuality.counts.html_files > 0) || !(dataQuality.counts.local_references > 0)) throw new Error("A full release quality report must count the HTML pages and local references it checked");
 if (publicEntityHistory.summary.financial_rows !== 1043 || publicEntityHistory.entities.length < 100 || publicEntityHistory.entities.some((entity) => !entity.series.length)) throw new Error("Expected Czech public-entity financial history with all available annual statements");
 if (!methodologyPage.includes('id="data-health-root"')) throw new Error("Methodology page must surface release health");
 if (!countryPage.includes('id="health-performance"') || !countryPage.includes("country-health-performance.js") || !countryHealthPerformanceScript.includes("peerBars")) throw new Error("Country profiles must surface health capacity, utilisation and outcomes");
@@ -171,7 +244,26 @@ if (Object.keys(countryDemography.countries).length !== 17 || Object.values(coun
 if (Object.keys(publicEntityCoverage.countries).length !== 10 || publicEntityDirectory.total_record_count !== 121199 || publicEntityDirectory.countries.length !== 10 || publicEntityAggregates.observations.length < 350) throw new Error("Expected the complete ten-country public-entity registry, coverage contract and economic observations");
 if (publicEntityDirectory.countries.some((country) => !country.file || !Number.isFinite(country.record_count)) || Object.values(publicEntityCoverage.countries).some((country) => !country.registry_file || !country.sources.length)) throw new Error("Every public-entity country must expose a registry file and source lineage");
 if (methodologySources.row_count !== 2128 || methodologySources.countries.length !== 191 || methodologySources.modules.length !== 12 || methodologySources.rows.filter((row) => row.module === "municipal_itemized").length !== 27) throw new Error("Expected the complete global sovereign, municipal and itemized-budget source ledger");
-if (methodologySources.rows.some((row) => row.status === "unavailable" || !["loaded", "source_available", "fragmented", "not_found", "not_researched"].includes(row.source_availability)) || methodologySources.rows.filter((row) => row.status === "not_loaded").length !== 1746) throw new Error("Methodology must distinguish PSD layers that are not loaded from independently researched source availability");
+// The ledger carries two independent axes -- what PSD has loaded (`status`) and
+// what exists upstream (`source_availability`) -- and the point of the check is
+// that they stay independent without contradicting each other. Reconcile the two
+// axes instead of pinning a row count that every coverage change rewrites.
+if (methodologySources.rows.some((row) => row.status === "unavailable" || !["loaded", "source_available", "fragmented", "not_found", "not_researched"].includes(row.source_availability))) throw new Error("Methodology must distinguish PSD layers that are not loaded from independently researched source availability");
+const ledgerLoadedRows = methodologySources.rows.filter((row) => row.source_availability === "loaded");
+const ledgerNotLoadedRows = methodologySources.rows.filter((row) => row.status === "not_loaded");
+if (ledgerLoadedRows.length + ledgerNotLoadedRows.length !== methodologySources.rows.length || ledgerLoadedRows.some((row) => row.status === "not_loaded")) throw new Error("Source-ledger status and source availability must agree on exactly which layers PSD has loaded");
+if (ledgerLoadedRows.length < pinned.methodologyLoadedLedgerRowsFloor) throw new Error(`Source ledger reports ${ledgerLoadedRows.length} loaded layers, below the ${pinned.methodologyLoadedLedgerRowsFloor} already shipped`);
+// The itemized ledger and the itemized coverage contract are built separately
+// and must tell the same story: a country PSD publishes is "loaded", a country
+// held in the warehouse is "not loaded" with an available upstream source.
+const itemizedLedgerRows = methodologySources.rows.filter((row) => row.module === "municipal_itemized");
+for (const row of itemizedLedgerRows) {
+  const coverage = itemizedByCode.get(row.country_code);
+  if (!coverage) throw new Error(`${row.country_code}: source ledger lists itemized municipal coverage the coverage contract does not describe`);
+  if (coverage.publication_status === "warehouse_only") {
+    if (row.status !== "not_loaded" || row.source_availability !== "source_available") throw new Error(`${row.country_code}: a warehouse-only country must appear in the source ledger as not loaded by PSD with an available upstream source`);
+  } else if (row.status === "not_loaded" || row.source_availability !== "loaded") throw new Error(`${row.country_code}: a published itemized country must appear in the source ledger as loaded`);
+}
 if (!methodologyPage.includes("obecní adresář a souhrnné finance od položkových rozpočtů") || !methodologyPage.includes("methodology-levels")) throw new Error("Methodology must visibly distinguish municipal directory/headline coverage from itemized-budget coverage");
 if (coverageSourceResearch.contract !== "coverage-source-research.v1" || Object.keys(coverageSourceResearch.countries).length !== 6) throw new Error("Expected source-availability research for all six municipal-only country profiles");
 for (const [code, modules] of Object.entries(coverageSourceResearch.countries)) {
@@ -248,7 +340,10 @@ if (stateEnterpriseCatalogue.records.length !== 30 || new Set(stateEnterpriseCat
 if (!deepDivePage.includes('href="revenue/?code=CZE"') || !globalNav.includes('deep-dives/revenue/') || !revenueDeepDivePage.includes('id="hundred-flow"') || !revenueDeepDivePage.includes('id="base-composition"') || !revenueDeepDivePage.includes('id="stability-chart"') || !revenueDeepDivePage.includes('id="transfer-path"') || !revenueDeepDiveScript.includes('environmentNote')) throw new Error("Revenue deep dive must expose tax sources, government levels, downturn stability and municipal transfers");
 if (!deepDivePage.includes('href="migration/"') || !globalNav.includes('deep-dives/migration/') || !migrationDeepDivePage.includes('id="migration-map"') || !migrationDeepDivePage.includes('id="migration-line-chart"') || !migrationDeepDivePage.includes('id="migration-ranking"') || !migrationDeepDivePage.includes('id="migration-table-body"') || !migrationDeepDivePage.includes('demo_gind') || !migrationDeepDiveScript.includes('`${metric}_per_1000`') || euMigration.contract !== "eu-migration.v1" || euMigration.countries.length !== 27 || euMigration.countries.some((country) => !country.rows.length) || euMigration.scope.latest_complete_aggregate_year !== 2024) throw new Error("Migration deep dive must expose complete EU-27 flows, rates, history and source lineage");
 if (!deepDivePage.includes('href="defense/?code=USA"') || !globalNav.includes('deep-dives/defense/?code=USA') || !defenseDeepDivePage.includes('id="defense-comparison-chart"') || !defenseDeepDivePage.includes('id="defense-lines-body"') || !defenseDeepDiveScript.includes('defense-target-tick') || defenseDeepDive.default_country !== "USA" || defenseDeepDive.countries.length !== 17 || defenseDeepDive.countries.some((country) => !country.comparison.series.length || !country.budget.items.length) || defenseDeepDive.commitments.nato_core_pct_gdp_2035 !== 3.5) throw new Error("Defense deep dive must default to the US and expose 17 sourced country histories, NATO target markers and native budget lines");
-if (!methodologyPage.includes('id="data-freshness"') || !dataFreshnessScript.includes('data/data-freshness.v1.json') || dataFreshness.totals.countries !== 191 || dataFreshness.totals.modules !== 15 || dataFreshness.totals.records !== dataFreshness.records.length || dataFreshness.totals.municipal_country_coverage !== 27 || dataFreshness.totals.itemized_municipal_country_coverage !== 27 || dataFreshness.totals.itemized_municipal_profiles !== 75507 || dataFreshness.records.filter((record) => record.module === "sovereign" && record.vintage_type === "estimate").length !== 20 || dataFreshness.records.some((record) => !record.country_code || !record.module || !record.artifact)) throw new Error("Methodology must expose complete cross-layer freshness, distinct municipal coverage levels and source estimate vintages");
+// itemized_municipal_profiles is reconciled against the coverage file rather
+// than restated: the freshness build and the coverage build must measure the
+// same 35,810 published profiles, and the coverage file is the one authority.
+if (!methodologyPage.includes('id="data-freshness"') || !dataFreshnessScript.includes('data/data-freshness.v1.json') || dataFreshness.totals.countries !== pinned.sovereignCountries || dataFreshness.totals.modules !== 15 || dataFreshness.totals.records !== dataFreshness.records.length || dataFreshness.totals.municipal_country_coverage !== pinned.municipalDirectoryCountries || dataFreshness.totals.itemized_municipal_country_coverage !== pinned.itemizedCoverageCountries || dataFreshness.totals.itemized_municipal_profiles !== counts.itemizedPublishedProfiles || dataFreshness.totals.municipal_units !== pinned.municipalUnitsInScope || dataFreshness.records.filter((record) => record.module === "sovereign" && record.vintage_type === "estimate").length !== 20 || dataFreshness.records.some((record) => !record.country_code || !record.module || !record.artifact)) throw new Error("Methodology must expose complete cross-layer freshness, distinct municipal coverage levels and source estimate vintages");
 if (!cloudbuild.includes("scripts/assert-single-production.sh") || !cloudbuild.includes("scripts/deploy-immutable.sh") || !cloudbuild.includes("- czbudget-public") || cloudbuild.includes("${_SERVICE}") || cloudbuild.includes("czbudget-web")) throw new Error("Cloud Build must be locked to the sole canonical production service");
 if (!cloudbuild.includes("scripts/merge-municipal-breakdowns.mjs") || !municipalI18n.includes("renderBudgetBreakdown") || !municipalI18n.includes("municipal-budget-codebook.v1.json")) throw new Error("Municipal profiles must surface the detailed FIN 2-12 M breakdown");
 if (!capitalsScript.includes('data/large-city-history.v1.json') || !capitalsScript.includes('renderHistory(city)')) throw new Error("European capitals must surface the Prague ten-year history");
@@ -256,7 +351,7 @@ const fiscalFields = ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp
 if (sovereign.series.some((country) => fiscalFields.some((field) => !country.metrics[field]?.values?.length))) throw new Error("Country profiles require complete nominal and inflation fiscal series");
 if (sovereign.schema_version !== "1.1.0" || sovereign.fiscal_perimeters?.comparison_scope !== "general_government" || sovereign.fiscal_perimeters?.perimeters?.length !== 3) throw new Error("Sovereign benchmark must declare all three fiscal perimeters and the comparison scope");
 if (sovereign.countries.some((country) => !country.fiscal_architecture?.national_budget_label_cs || !country.fiscal_architecture?.architecture_cs || !country.fiscal_architecture?.corporation_note_cs || country.fiscal_architecture?.sources?.length < 1)) throw new Error("Every tracked country must describe its national fiscal architecture and public-corporation treatment");
-if (!countryPage.includes('data-chart-view="real"') || !countryPage.includes('country.js?v=20260826-greece-recovery') || !countryScript.includes("function fiscalAmount")) throw new Error("Country profiles must expose the dynamic inflation-adjusted chart view");
+if (!countryPage.includes('data-chart-view="real"') || !cacheBusted(countryPage, "country.js") || !countryScript.includes("function fiscalAmount")) throw new Error("Country profiles must expose the dynamic inflation-adjusted chart view");
 if (!countryPage.includes('id="scope-perimeter-grid"') || !countryScript.includes("function scopeProfile") || !countryScript.includes("fiscal_architecture")) throw new Error("Country profiles must visibly distinguish fiscal perimeters and country architecture");
 if (!czechBudgetPage.includes('class="fiscal-perimeter-map"') || !czechBudgetPage.includes('class="fiscal-series-scope"') || !czechBudgetPage.includes('class="enterprise-nonadditivity-note"') || !czechBudgetPage.includes('class="benchmark-scope-contract"')) throw new Error("Czech budget must disclose the scope and non-additivity of every fiscal layer");
 if (!czechBudgetPage.includes('styles.css?v=20260821-fiscal-scope') || !czechBudgetPage.includes('app.js?v=20260821-annual-system-cost-baseline') || !czechBudgetPage.includes('budget-i18n.js?v=20260825-localization-audit')) throw new Error("Czech budget assets must be cache-busted");
@@ -265,7 +360,13 @@ if (!czechBudgetScript.includes('d=>d.pension],["health","Zdravotnictví",d=>d.h
 for (const key of ["pension_expense", "pension_income", "health_expense", "care_allowance"]) if (!Number.isFinite(demography.base_2025?.[key]) || demography.base_2025[key] <= 0) throw new Error(`Demographic base amount ${key} must be positive`);
 if (!czechBudgetScript.includes("requiredBaseAmounts") || !czechBudgetScript.includes("pension_age_sensitive_share:pensionAgeShare")) throw new Error("Demographic calculations must validate base amounts and use declared model assumptions");
 if (!homepageScript.includes("PSDCountryRoutes.href") || homepageScript.includes("country.html?code=") || homepageScript.includes('code==="CZE"?')) throw new Error("Every country card must use readable shared country routes");
-if (!countryPage.includes('<base href="/">') || !countryPage.includes("country-routes.js") || !countryScript.includes("PSDCountryRoutes.codeFromLocation") || !countryScript.includes("PSDCountryRoutes.href") || !globalNav.includes("countrySlugs[code] || String(code).toLowerCase()") || !countryRoutes.includes('CHE: "switzerland"') || !countryRoutes.includes('BRA: "brazil"') || !countryRoutes.includes('JPN: "japan"') || !countryRoutes.includes('FIN: "finland"') || !countryRoutes.includes("normalizedCode.toLowerCase()")) throw new Error("Country profiles must use readable routes for the full profiles and ISO3 fallback routes globally");
+// country.html is served for every /countries/<slug> route, so a <base> tag
+// rewrites every relative URL on the page against the base instead of the
+// current path -- which silently sent every in-page section-nav link ("#trend",
+// "?code=…") back to the homepage. Assert the absence, not the presence: this is
+// the check that would have caught it.
+if (/<base\b/i.test(countryPage)) throw new Error("country.html must not declare a <base> tag: it rewrites every relative section-nav link on /countries/<slug> to the site root");
+if (!countryPage.includes("country-routes.js") || !countryScript.includes("PSDCountryRoutes.codeFromLocation") || !countryScript.includes("PSDCountryRoutes.href") || !globalNav.includes("countrySlugs[code] || String(code).toLowerCase()") || !countryRoutes.includes('CHE: "switzerland"') || !countryRoutes.includes('BRA: "brazil"') || !countryRoutes.includes('JPN: "japan"') || !countryRoutes.includes('FIN: "finland"') || !countryRoutes.includes("normalizedCode.toLowerCase()")) throw new Error("Country profiles must use readable routes for the full profiles and ISO3 fallback routes globally");
 if (!nginx.includes("location = /country.html") || !nginx.includes("return 301 $legacy_country_path") || !nginx.includes("/countries/switzerland") || !nginx.includes("try_files /country.html =404")) throw new Error("Nginx must redirect legacy country URLs and serve readable country routes");
 if (!nginx.includes("denmark|finland|france") || !nginx.includes("greece|[a-z][a-z][a-z])/$") || !nginx.includes("greece|[a-z][a-z][a-z])$") || nginx.includes("try_files /countries/$1/index.html =404")) throw new Error("All IMF-covered countries must use the shared national dashboard route");
 if (!countryParityStyles.includes("background:#fff;color:#17241f") || !countryParityStyles.includes("color:#4f5a55")) throw new Error("Country data-layer cards must keep readable dark text on white backgrounds");
@@ -303,7 +404,7 @@ if (!compareMetrics.perimeters.some((perimeter) => perimeter.id === "general_gov
 if (!comparisonPage.includes('id="fiscal-architecture-body"') || !homepageScript.includes("function architectureTable")) throw new Error("Comparison page must compare fiscal architecture across all tracked countries");
 if (!methodologyPage.includes('class="status-header"') || !methodologyPage.includes('class="status-volume"') || !methodologyPage.includes('id="status-data-total"') || !methodologyPage.includes('id="coverage-matrix-body"') || !methodologyPage.includes('class="status-definitions"') || !methodologyPage.includes('class="method-ledger"') || !methodologyPage.includes('id="municipal-transparency"') || methodologyPage.indexOf('id="municipal-transparency"') < methodologyPage.indexOf('class="method-ledger"') || !aboutPage.includes("Hlidac statu, z.u.") || !aboutPage.includes("hlidac-statu-horizontal-inverted-bw.svg") || aboutPage.includes("Mnichovice") || !homepage.includes("data-global-footer") || !internationalMunicipalPage.includes("data-global-footer")) throw new Error("Technical data status, source ledger, bottom-of-page municipal atlas, and global project credits must be present");
 if (!aboutPage.includes('class="release-notes"') || (aboutPage.match(/class="release-badge"/g) || []).length !== 5 || !aboutPage.includes('datetime="2026-08-21"') || !aboutPage.includes('datetime="2026-08-26"')) throw new Error("About page must expose five dated alpha releases");
-if (!countryPage.includes('country-spending.js?v=20260824-dashboard-sections') || !countryPage.includes('country-insights.js?v=20260824-dashboard-sections') || !countryPage.includes('country-dashboard.js?v=20260824-czech-parity') || !countryPage.includes('country-dashboard.css?v=20260826-greece-recovery') || !countryPage.includes('country-public-entities.js?v=20260823-public-registry-2') || !countryPage.includes('country-public-entities.css?v=20260823-public-registry-2') || !countryPage.includes('country-health.js?v=20260822-czech-flow') || !countryPage.includes('country-providers.js?v=20260822-network') || !countryPage.includes('country-functions.js?v=20260822-transport-deep-dive') || !countryPage.includes('country-cash-in.js?v=20260824-loaded-layers') || !countryPage.includes('country-parity.js?v=20260822-parity-contract') || !countryPage.includes('id="data-parity"') || !countryPage.includes('id="cash-in"') || !countryPage.includes('id="budget-map"') || !countryPage.includes('id="public-entities"') || !countryPage.includes('id="demography"') || !countryPage.includes('id="provider-network"') || !countryPage.includes('id="social-system"') || !countryPage.includes('id="transportation"') || !countryPage.includes('id="recovery"') || !countryScript.includes('function recoveryStory') || !countryScript.includes('countryprofilechange') || !countryInsightsScript.includes("label_en") || !countryPublicEntitiesScript.includes("public-entity-coverage.v1.json") || countryInsightsScript.includes("country-public-entities.v1.json") || !countryDashboardScript.includes('index.id = "country-dashboard-index"') || !countryDashboardScript.includes('ids:["trend", "cash-in", "macro", "recovery"]') || !countryDashboardScript.includes('ids:["data-parity", "sources"]') || !countryCashInScript.includes('public-entity-directory/manifest.v1.json')) throw new Error("Fiscal profiles must preserve all shared insight modules and Czech-style dashboard composition");
+if (!cacheBusted(countryPage, "country-spending.js") || !cacheBusted(countryPage, "country-insights.js") || !cacheBusted(countryPage, "country-dashboard.js") || !cacheBusted(countryPage, "country-dashboard.css") || !countryPage.includes('country-public-entities.js?v=20260823-public-registry-2') || !countryPage.includes('country-public-entities.css?v=20260823-public-registry-2') || !countryPage.includes('country-health.js?v=20260822-czech-flow') || !countryPage.includes('country-providers.js?v=20260822-network') || !countryPage.includes('country-functions.js?v=20260822-transport-deep-dive') || !countryPage.includes('country-cash-in.js?v=20260824-loaded-layers') || !countryPage.includes('country-parity.js?v=20260822-parity-contract') || !countryPage.includes('id="data-parity"') || !countryPage.includes('id="cash-in"') || !countryPage.includes('id="budget-map"') || !countryPage.includes('id="public-entities"') || !countryPage.includes('id="demography"') || !countryPage.includes('id="provider-network"') || !countryPage.includes('id="social-system"') || !countryPage.includes('id="transportation"') || !countryPage.includes('id="recovery"') || !countryScript.includes('function recoveryStory') || !countryScript.includes('countryprofilechange') || !countryInsightsScript.includes("label_en") || !countryPublicEntitiesScript.includes("public-entity-coverage.v1.json") || countryInsightsScript.includes("country-public-entities.v1.json") || !countryDashboardScript.includes('index.id = "country-dashboard-index"') || !countryDashboardScript.includes('ids:["trend", "cash-in", "macro", "recovery"]') || !countryDashboardScript.includes('ids:["data-parity", "sources"]') || !countryCashInScript.includes('public-entity-directory/manifest.v1.json')) throw new Error("Fiscal profiles must preserve all shared insight modules and Czech-style dashboard composition");
 if (!countryFunctionsScript.includes("function renderTransport") || !countryFunctionsScript.includes("transport-comparison") || !countryFunctionsScript.includes("stockNotBuild") || !countryFunctionsScript.includes("function transportBudgetDetail") || !countryFunctionsScript.includes("function infrastructurePerformance")) throw new Error("Transportation must expose network, budget and infrastructure-performance deep dives with the net-stock caveat");
 async function htmlFiles(directory = ".") {
   const entries = await readdir(directory, { withFileTypes: true });

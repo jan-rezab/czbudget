@@ -1,401 +1,985 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "generated_at": "2026-08-27",
-  "definition": "A profile counts only when municipality-level economic, functional or native accounting line items are published on this site; headline totals alone do not count.",
+  "definition": "A profile counts only when municipality-level economic, functional or native accounting line items are published on this site; headline totals alone do not count. profile_count and published_profile_count are measured by reading the published per-municipality artifacts, never asserted. Facts that exist only in the private production warehouse are reported under warehouse_profile_count with publication_status \"warehouse_only\" and a published count of zero.",
+  "measurement": {
+    "published_profile_count": "Counted by reading every published per-municipality artifact and keeping only those that carry a non-empty native line-item array.",
+    "period": "The span of fiscal years present in those published line items, not the newest year in the municipality directory.",
+    "stages": "The budget stages present in the published line items (or, for the benchmark bundles, the single stage the source bundle declares). Plans and actuals are reported separately as plan_period and actual_period and are never merged into one vintage.",
+    "warehouse_profile_count": "Entities loaded into the private production BigQuery warehouse. This is not site publication and is not counted as published."
+  },
+  "totals": {
+    "countries": 27,
+    "published_countries": 19,
+    "published_profiles": 35810,
+    "warehouse_only_countries": 8,
+    "warehouse_only_profiles": 39754
+  },
   "countries": [
     {
       "code": "BOL",
       "municipal_scope": 343,
       "profile_count": 343,
+      "published_profile_count": 343,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/bol",
       "period": "2025",
+      "stages": [
+        "actual",
+        "cash",
+        "enacted",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2025",
+        "cash": "2025",
+        "enacted": "2025",
+        "revised": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": "2025",
+      "vintage_type": "mixed",
+      "line_item_count": 20756,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native budget, revision and execution items",
       "detail_kind_cs": "původní položky rozpočtu, úprav a plnění",
       "source_title": "Official Bolivia municipal source",
       "source_url": "https://abierto.economiayfinanzas.gob.bo/descargas",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "BRA",
       "municipal_scope": 5570,
       "profile_count": 5557,
+      "published_profile_count": 5557,
+      "publication_status": "published",
       "status": "partial",
-      "period": "2025",
+      "measured_from": "data/municipal-expansion/bra",
+      "period": "2024–2025",
+      "stages": [
+        "actual",
+        "cash",
+        "enacted",
+        "execution",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2024–2025",
+        "cash": "2024–2025",
+        "enacted": "2025",
+        "execution": "2024–2025",
+        "revised": "2025"
+      },
+      "actual_period": "2024–2025",
+      "plan_period": "2025",
+      "vintage_type": "mixed",
+      "line_item_count": 1551136,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native RREO or DCA budget-execution items",
       "detail_kind_cs": "původní položky plnění RREO nebo DCA",
       "source_title": "Official Brazil municipal source",
       "source_url": "https://apidatalake.tesouro.gov.br/docs/siconfi",
-      "note": "13 directory entities have no rows in either the 2025 RREO or 2024 DCA fallback layer."
+      "note": "13 of 5,570 directory entities publish no line items and are not counted.",
+      "scope_limitations": [
+        "13 of 5,570 directory entities publish no line items and are not counted."
+      ]
     },
     {
       "code": "CHL",
       "municipal_scope": 345,
       "profile_count": 345,
+      "published_profile_count": 345,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/chl",
       "period": "2025",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 17940,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SINIM revenue and expenditure items",
       "detail_kind_cs": "původní položky příjmů a výdajů SINIM",
       "source_title": "Official Chile municipal source",
       "source_url": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "COL",
       "municipal_scope": 1102,
       "profile_count": 1102,
+      "published_profile_count": 1102,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/col",
       "period": "2025",
+      "stages": [
+        "actual",
+        "enacted",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2025",
+        "enacted": "2025",
+        "revised": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": "2025",
+      "vintage_type": "mixed",
+      "line_item_count": 6612,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native CUIPO plan and execution items",
       "detail_kind_cs": "původní položky plánu a plnění CUIPO",
       "source_title": "Official Colombia municipal source",
       "source_url": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "CRI",
       "municipal_scope": 84,
       "profile_count": 84,
+      "published_profile_count": 84,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/cri",
       "period": "2025",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 168,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SIPP revenue and expenditure items",
       "detail_kind_cs": "původní položky příjmů a výdajů SIPP",
       "source_title": "Official Costa Rica municipal source",
       "source_url": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "CZE",
       "municipal_scope": 6254,
       "profile_count": 6254,
+      "published_profile_count": 6254,
+      "publication_status": "published",
       "status": "full",
-      "period": "2025",
+      "measured_from": "data/municipal-history (per-stage revenue/expenditure with the economic split for 6,254 profiles)",
+      "period": "2010–2025",
+      "stages": [
+        "actual",
+        "enacted",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2010–2025",
+        "enacted": "2010–2025",
+        "revised": "2010–2025"
+      },
+      "actual_period": "2010–2025",
+      "plan_period": "2010–2025",
+      "vintage_type": "mixed",
+      "line_item_count": 600126,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "economic and functional line items",
       "detail_kind_cs": "ekonomické a funkční položky",
       "source_title": "Monitor · FIN 2-12 M",
       "source_url": "https://monitor.statnipokladna.gov.cz/",
-      "note": "Economic and functional breakdowns for enacted, revised and actual stages are merged into every published Czech municipal profile during the production build."
+      "note": "The count, period and stages are measured from the per-municipality history artifacts, which publish the enacted, revised and actual stages with the economic split for every year. The full FIN 2-12 M functional (purpose) and economic breakdown for the current year is merged into each profile by the production build and is validated all-or-nothing for all 6,254 municipalities.",
+      "scope_limitations": [
+        "The count, period and stages are measured from the per-municipality history artifacts, which publish the enacted, revised and actual stages with the economic split for every year. The full FIN 2-12 M functional (purpose) and economic breakdown for the current year is merged into each profile by the production build and is validated all-or-nothing for all 6,254 municipalities."
+      ]
     },
     {
       "code": "DNK",
       "municipal_scope": 98,
       "profile_count": 98,
-      "warehouse_profile_count": 98,
+      "published_profile_count": 98,
+      "publication_status": "published",
       "status": "full",
-      "period": "2024–2025",
+      "measured_from": "data/municipal-expansion/dnk",
+      "period": "2025",
       "stages": [
         "actual",
         "enacted"
       ],
+      "stage_periods": {
+        "actual": "2025",
+        "enacted": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": "2025",
+      "vintage_type": "mixed",
+      "line_item_count": 253567,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native BUDK100 and REGK100 account items",
       "detail_kind_cs": "původní účetní položky BUDK100 a REGK100",
-      "line_fact_count": 303760,
-      "balance_fact_count": 0,
       "source_title": "Statistics Denmark · StatBank",
       "source_url": "https://www.statbank.dk/BUDK100",
-      "note": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "note": "Revenue equals expenditure in all 98 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance.",
+      "scope_limitations": [
+        "Revenue equals expenditure in all 98 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 98,
+        "period": "2024–2025",
+        "stages": [
+          "actual",
+          "enacted"
+        ],
+        "line_fact_count": 303760,
+        "balance_fact_count": 0,
+        "detail_kind_en": "native BUDK100 and REGK100 account items",
+        "detail_kind_cs": "původní účetní položky BUDK100 a REGK100",
+        "source_title": "Statistics Denmark · StatBank",
+        "source_url": "https://www.statbank.dk/BUDK100",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 98
     },
     {
       "code": "SLV",
       "municipal_scope": 259,
       "profile_count": 259,
+      "published_profile_count": 259,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/slv",
       "period": "2023",
+      "stages": [
+        "actual",
+        "enacted",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2023",
+        "enacted": "2023",
+        "revised": "2023"
+      },
+      "actual_period": "2023",
+      "plan_period": "2023",
+      "vintage_type": "mixed",
+      "line_item_count": 9546,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SAFIM budget-execution items",
       "detail_kind_cs": "původní položky plnění SAFIM",
       "source_title": "Official El Salvador municipal source",
       "source_url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
-      "note": "The count covers 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
+      "note": "The measured population is 259 of the 262 municipalities in the 2023 SAFIM return; three did not report.",
+      "scope_limitations": [
+        "The measured population is 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
+      ]
     },
     {
       "code": "GBR",
       "municipal_scope": 318,
-      "profile_count": 318,
-      "warehouse_profile_count": 374,
-      "status": "partial",
-      "period": "2024–2028",
-      "stages": [
-        "actual",
-        "enacted"
-      ],
-      "detail_kind_en": "England outturn and enacted items plus Scottish and Welsh enacted council budget items",
-      "detail_kind_cs": "položky anglického plnění a schválených rozpočtů a položky schválených rozpočtů skotských a velšských rad",
-      "line_fact_count": 552003,
-      "balance_fact_count": 0,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "UK MHCLG, Scottish Government and Welsh Government local-finance collections",
       "source_url": "https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing",
-      "note": "The warehouse covers 374 authorities across England, Scotland and Wales. The published directory currently exposes 318 England profiles; Northern Ireland remains document-only."
+      "note": "The production warehouse covers 374 authorities across England, Scotland and Wales; Northern Ireland remains document-only. Itemized GBR facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for England is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "The production warehouse covers 374 authorities across England, Scotland and Wales; Northern Ireland remains document-only.",
+        "Itemized GBR facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for England is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 374,
+        "period": "2024–2028",
+        "stages": [
+          "actual",
+          "enacted"
+        ],
+        "line_fact_count": 552003,
+        "balance_fact_count": 0,
+        "detail_kind_en": "England outturn and enacted items plus Scottish and Welsh enacted council budget items",
+        "detail_kind_cs": "položky anglického plnění a schválených rozpočtů a položky schválených rozpočtů skotských a velšských rad",
+        "source_title": "UK MHCLG, Scottish Government and Welsh Government local-finance collections",
+        "source_url": "https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 374
     },
     {
       "code": "FIN",
       "municipal_scope": 310,
       "profile_count": 310,
+      "published_profile_count": 310,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-benchmarks/fin",
       "period": "2020",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2020"
+      },
+      "actual_period": "2020",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 62000,
+      "stage_basis": "declared_by_source_bundle",
       "detail_kind_en": "native financial-statement measures",
       "detail_kind_cs": "původní položky finančních výkazů",
-      "measure_count_min": 203,
-      "measure_count_max": 203,
       "source_title": "Official Finland municipal source",
       "source_url": "https://pxdata.stat.fi/PxWeb/pxweb/en/Kuntien_talous_ja_toiminta/",
-      "note": "Each counted profile publishes its native itemized accounting breakdown."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ],
+      "measure_count_min": 203,
+      "measure_count_max": 203
     },
     {
       "code": "FRA",
       "municipal_scope": 35041,
-      "profile_count": 35041,
-      "warehouse_profile_count": 35042,
-      "status": "full",
-      "period": "2024–2026",
-      "stages": [
-        "actual",
-        "enacted"
-      ],
-      "detail_kind_en": "DGFiP actual-account and balance-sheet items plus six verified current enacted city budgets",
-      "detail_kind_cs": "položky skutečných účtů a rozvah DGFiP a šest ověřených aktuálních schválených městských rozpočtů",
-      "line_fact_count": 10445528,
-      "balance_fact_count": 14147797,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
       "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
-      "note": "The national DGFiP actual-account layer is supplemented by six verified current enacted city budgets; the enacted layer is not a national census."
+      "note": "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census. Itemized FRA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for France is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census.",
+        "Itemized FRA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for France is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 35042,
+        "period": "2024–2026",
+        "stages": [
+          "actual",
+          "enacted"
+        ],
+        "line_fact_count": 10445528,
+        "balance_fact_count": 14147797,
+        "detail_kind_en": "DGFiP actual-account and balance-sheet items plus six verified current enacted city budgets",
+        "detail_kind_cs": "položky skutečných účtů a rozvah DGFiP a šest ověřených aktuálních schválených městských rozpočtů",
+        "source_title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
+        "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 35042
     },
     {
       "code": "GEO",
       "municipal_scope": 69,
       "profile_count": 69,
+      "published_profile_count": 69,
+      "publication_status": "published",
       "status": "full",
-      "period": "2026",
+      "measured_from": "data/municipal-expansion/geo",
+      "period": "2025–2026",
+      "stages": [
+        "actual",
+        "enacted"
+      ],
+      "stage_periods": {
+        "actual": "2025",
+        "enacted": "2026"
+      },
+      "actual_period": "2025",
+      "plan_period": "2026",
+      "vintage_type": "mixed",
+      "line_item_count": 2760,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native Ministry of Finance plan and execution items",
       "detail_kind_cs": "původní položky plánu a plnění ministerstva financí",
       "source_title": "Official Georgia municipal source",
       "source_url": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "DEU",
       "municipal_scope": 10756,
-      "profile_count": 11,
-      "warehouse_profile_count": 11,
-      "status": "partial",
-      "period": "2016–2029",
-      "stages": [
-        "enacted",
-        "proposal"
-      ],
-      "detail_kind_en": "official product, function, account and budget-position items for eleven German cities",
-      "detail_kind_cs": "oficiální položky podle produktů, funkcí, účtů a rozpočtových pozic jedenácti německých měst",
-      "line_fact_count": 1152009,
-      "balance_fact_count": 0,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "Official municipal open-data publications for eleven German cities",
       "source_url": "https://opendata.aachen.de/dataset/haushaltsdaten",
-      "note": "The warehouse covers eleven verified official structured city publications; Germany remains decentralized and this is not nationwide coverage."
+      "note": "The production warehouse covers eleven verified official structured city publications; Germany remains decentralized and this is not nationwide coverage. Itemized DEU facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Germany is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "The production warehouse covers eleven verified official structured city publications; Germany remains decentralized and this is not nationwide coverage.",
+        "Itemized DEU facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Germany is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 11,
+        "period": "2016–2029",
+        "stages": [
+          "enacted",
+          "proposal"
+        ],
+        "line_fact_count": 1152009,
+        "balance_fact_count": 0,
+        "detail_kind_en": "official product, function, account and budget-position items for eleven German cities",
+        "detail_kind_cs": "oficiální položky podle produktů, funkcí, účtů a rozpočtových pozic jedenácti německých měst",
+        "source_title": "Official municipal open-data publications for eleven German cities",
+        "source_url": "https://opendata.aachen.de/dataset/haushaltsdaten",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 11
     },
     {
       "code": "GTM",
       "municipal_scope": 340,
       "profile_count": 340,
+      "published_profile_count": 340,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/gtm",
       "period": "2025",
+      "stages": [
+        "actual",
+        "cash",
+        "enacted",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2025",
+        "cash": "2025",
+        "enacted": "2025",
+        "revised": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": "2025",
+      "vintage_type": "mixed",
+      "line_item_count": 19844,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SICOINGL and SICOINDES budget-execution items",
       "detail_kind_cs": "původní položky plnění SICOINGL a SICOINDES",
       "source_title": "Official Guatemala municipal source",
       "source_url": "https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "ITA",
       "municipal_scope": 7896,
       "profile_count": 7896,
+      "published_profile_count": 7896,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/ita",
       "period": "2025",
+      "stages": [
+        "cash"
+      ],
+      "stage_periods": {
+        "cash": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 92384,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SIOPE cash receipt and payment items",
       "detail_kind_cs": "původní položky hotovostních příjmů a plateb SIOPE",
       "source_title": "Official Italy municipal source",
       "source_url": "https://www.siope.it/Siope/",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "JPN",
       "municipal_scope": 1741,
       "profile_count": 1741,
+      "published_profile_count": 1741,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/jpn",
       "period": "2024",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2024"
+      },
+      "actual_period": "2024",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 626760,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native Local Public Finance Survey items",
       "detail_kind_cs": "původní položky Local Public Finance Survey",
       "source_title": "Official Japan municipal source",
       "source_url": "https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "MEX",
       "municipal_scope": 2380,
       "profile_count": 2380,
+      "published_profile_count": 2380,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/mex",
       "period": "2024",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2024"
+      },
+      "actual_period": "2024",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 31454,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native EFIPEM annual finance items",
       "detail_kind_cs": "původní položky ročních financí EFIPEM",
       "source_title": "Official Mexico municipal source",
       "source_url": "https://www.inegi.org.mx/programas/finanzas/",
-      "note": "The count covers reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico."
+      "note": "Revenue equals expenditure in all 2,380 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance. The measured population is the reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico.",
+      "scope_limitations": [
+        "Revenue equals expenditure in all 2,380 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance.",
+        "The measured population is the reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico."
+      ]
     },
     {
       "code": "NLD",
       "municipal_scope": 342,
       "profile_count": 342,
+      "published_profile_count": 342,
+      "publication_status": "published",
       "status": "full",
-      "period": "2025",
+      "measured_from": "data/municipal-benchmarks/nld",
+      "period": "2024–2025",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2024–2025"
+      },
+      "actual_period": "2024–2025",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 22674,
+      "stage_basis": "declared_by_source_bundle",
       "detail_kind_en": "native Iv3 task fields",
       "detail_kind_cs": "původní položky úloh Iv3",
-      "measure_count_min": 78,
-      "measure_count_max": 78,
       "source_title": "Official Netherlands municipal source",
       "source_url": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3",
-      "note": "Each counted profile publishes its native itemized accounting breakdown."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ],
+      "measure_count_min": 78,
+      "measure_count_max": 78
     },
     {
       "code": "NOR",
       "municipal_scope": 358,
       "profile_count": 358,
+      "published_profile_count": 358,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-benchmarks/nor",
       "period": "2025",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 55742,
+      "stage_basis": "declared_by_source_bundle",
       "detail_kind_en": "native KOSTRA measures",
       "detail_kind_cs": "původní ukazatele KOSTRA",
-      "measure_count_min": 114,
-      "measure_count_max": 175,
       "source_title": "Official Norway municipal source",
       "source_url": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap",
-      "note": "Each counted profile publishes its native itemized accounting breakdown."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ],
+      "measure_count_min": 114,
+      "measure_count_max": 175
     },
     {
       "code": "PER",
       "municipal_scope": 1891,
       "profile_count": 1891,
+      "published_profile_count": 1891,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/per",
       "period": "2024",
+      "stages": [
+        "actual",
+        "cash",
+        "enacted",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2024",
+        "cash": "2024",
+        "enacted": "2024",
+        "revised": "2024"
+      },
+      "actual_period": "2024",
+      "plan_period": "2024",
+      "vintage_type": "mixed",
+      "line_item_count": 122894,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native MEF budget and execution items",
       "detail_kind_cs": "původní položky rozpočtu a plnění MEF",
       "source_title": "Official Peru municipal source",
       "source_url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "POL",
       "municipal_scope": 2486,
-      "profile_count": 2486,
-      "warehouse_profile_count": 2486,
-      "status": "full",
-      "period": "2024–2025",
-      "stages": [
-        "actual",
-        "revised"
-      ],
-      "detail_kind_en": "native Rb-27S and Rb-28S budget-reporting items",
-      "detail_kind_cs": "původní položky rozpočtových výkazů Rb-27S a Rb-28S",
-      "line_fact_count": 6033974,
-      "balance_fact_count": 0,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "Polish Ministry of Finance · local-government budget reports",
       "source_url": "https://www.gov.pl/web/finanse/sprawozdania-budzetowe",
-      "note": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "note": "Itemized POL facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Poland is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "Itemized POL facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Poland is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 2486,
+        "period": "2024–2025",
+        "stages": [
+          "actual",
+          "revised"
+        ],
+        "line_fact_count": 6033974,
+        "balance_fact_count": 0,
+        "detail_kind_en": "native Rb-27S and Rb-28S budget-reporting items",
+        "detail_kind_cs": "původní položky rozpočtových výkazů Rb-27S a Rb-28S",
+        "source_title": "Polish Ministry of Finance · local-government budget reports",
+        "source_url": "https://www.gov.pl/web/finanse/sprawozdania-budzetowe",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 2486
     },
     {
       "code": "KOR",
       "municipal_scope": 243,
       "profile_count": 243,
+      "published_profile_count": 243,
+      "publication_status": "published",
       "status": "full",
+      "measured_from": "data/municipal-expansion/kor",
       "period": "2024",
+      "stages": [
+        "actual"
+      ],
+      "stage_periods": {
+        "actual": "2024"
+      },
+      "actual_period": "2024",
+      "plan_period": null,
+      "vintage_type": "actual",
+      "line_item_count": 1944,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native Local Finance 365 settlement items",
       "detail_kind_cs": "původní položky závěrečných účtů Local Finance 365",
       "source_title": "Official South Korea municipal source",
       "source_url": "https://www.lofin365.go.kr/portal/LF5100000.do",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "ESP",
       "municipal_scope": 6198,
       "profile_count": 6198,
+      "published_profile_count": 6198,
+      "publication_status": "published",
       "status": "full",
-      "period": "2026",
+      "measured_from": "data/municipal-expansion/esp",
+      "period": "2025–2026",
+      "stages": [
+        "actual",
+        "cash",
+        "enacted",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2025",
+        "cash": "2025",
+        "enacted": "2025–2026",
+        "revised": "2025"
+      },
+      "actual_period": "2025",
+      "plan_period": "2025–2026",
+      "vintage_type": "mixed",
+      "line_item_count": 1362728,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native CONPREL budget and liquidation items",
       "detail_kind_cs": "původní rozpočtové a likvidační položky CONPREL",
       "source_title": "Official Spain municipal source",
       "source_url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
-      "note": "Every counted profile publishes the native itemized classifications retained from the national source."
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
+      "scope_limitations": [
+        "Every counted profile publishes the native itemized classifications retained from the national source."
+      ]
     },
     {
       "code": "SWE",
       "municipal_scope": 290,
-      "profile_count": 290,
-      "warehouse_profile_count": 290,
-      "status": "full",
-      "period": "2024–2025",
-      "stages": [
-        "actual"
-      ],
-      "detail_kind_en": "SCB municipal cost, income and balance-sheet measures",
-      "detail_kind_cs": "ukazatele obecních nákladů, příjmů a rozvah SCB",
-      "line_fact_count": 43892,
-      "balance_fact_count": 31365,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "Statistics Sweden · municipal finances",
       "source_url": "https://www.statistikdatabasen.scb.se/",
-      "note": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "note": "Itemized SWE facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Sweden is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "Itemized SWE facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Sweden is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 290,
+        "period": "2024–2025",
+        "stages": [
+          "actual"
+        ],
+        "line_fact_count": 43892,
+        "balance_fact_count": 31365,
+        "detail_kind_en": "SCB municipal cost, income and balance-sheet measures",
+        "detail_kind_cs": "ukazatele obecních nákladů, příjmů a rozvah SCB",
+        "source_title": "Statistics Sweden · municipal finances",
+        "source_url": "https://www.statistikdatabasen.scb.se/",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 290
     },
     {
       "code": "CHE",
       "municipal_scope": 2121,
-      "profile_count": 80,
-      "warehouse_profile_count": 80,
-      "status": "partial",
-      "period": "2026",
-      "stages": [
-        "enacted"
-      ],
-      "detail_kind_en": "Lucerne HRM2 municipal items plus Zürich account-level budget items",
-      "detail_kind_cs": "položky obecních rozpočtů HRM2 kantonu Lucern a účtové položky rozpočtu Curychu",
-      "line_fact_count": 64185,
-      "balance_fact_count": 0,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "LUSTAT Lucerne municipality budgets and Zürich open-data API",
       "source_url": "https://www.data.lustat.ch/gefis-lu-bg.csv",
-      "note": "This is complete for the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage."
+      "note": "The production warehouse covers the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage. Itemized CHE facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Switzerland is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "The production warehouse covers the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage.",
+        "Itemized CHE facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Switzerland is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 80,
+        "period": "2026",
+        "stages": [
+          "enacted"
+        ],
+        "line_fact_count": 64185,
+        "balance_fact_count": 0,
+        "detail_kind_en": "Lucerne HRM2 municipal items plus Zürich account-level budget items",
+        "detail_kind_cs": "položky obecních rozpočtů HRM2 kantonu Lucern a účtové položky rozpočtu Curychu",
+        "source_title": "LUSTAT Lucerne municipality budgets and Zürich open-data API",
+        "source_url": "https://www.data.lustat.ch/gefis-lu-bg.csv",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 80
     },
     {
       "code": "UKR",
       "municipal_scope": 1467,
-      "profile_count": 1467,
-      "warehouse_profile_count": 1467,
-      "status": "full",
-      "period": "2024–2025",
-      "stages": [
-        "actual",
-        "enacted",
-        "revised"
-      ],
-      "detail_kind_en": "territorial-community revenue and expenditure classification items",
-      "detail_kind_cs": "položky příjmů a výdajů územních komunit",
-      "line_fact_count": 4120319,
-      "balance_fact_count": 0,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "Open Budget Ukraine · localBudgetData",
       "source_url": "https://openbudget.gov.ua/",
-      "note": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "note": "Itemized UKR facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Ukraine is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "Itemized UKR facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Ukraine is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 1467,
+        "period": "2024–2025",
+        "stages": [
+          "actual",
+          "enacted",
+          "revised"
+        ],
+        "line_fact_count": 4120319,
+        "balance_fact_count": 0,
+        "detail_kind_en": "territorial-community revenue and expenditure classification items",
+        "detail_kind_cs": "položky příjmů a výdajů územních komunit",
+        "source_title": "Open Budget Ukraine · localBudgetData",
+        "source_url": "https://openbudget.gov.ua/",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 1467
     },
     {
       "code": "USA",
       "municipal_scope": 19401,
-      "profile_count": 4,
-      "warehouse_profile_count": 4,
-      "status": "partial",
-      "period": "2026–2028",
-      "stages": [
-        "actual",
-        "enacted",
-        "proposal",
-        "revised"
-      ],
-      "detail_kind_en": "official city appropriation, agency, program and account items",
-      "detail_kind_cs": "oficiální městské položky podle apropriačních jednotek, odborů, programů a účtů",
-      "line_fact_count": 47142,
-      "balance_fact_count": 0,
+      "profile_count": 0,
+      "published_profile_count": 0,
+      "publication_status": "warehouse_only",
+      "status": "warehouse_only",
+      "measured_from": null,
+      "period": null,
+      "stages": [],
+      "stage_periods": {},
+      "actual_period": null,
+      "plan_period": null,
+      "vintage_type": null,
+      "line_item_count": 0,
+      "stage_basis": null,
+      "detail_kind_en": null,
+      "detail_kind_cs": null,
       "source_title": "NYC, Chicago, Los Angeles and San Francisco open-data portals",
       "source_url": "https://data.cityofnewyork.us/resource/39g5-gbp3",
-      "note": "This is a verified four-city scatter, not nationwide municipal coverage."
+      "note": "This is a verified four-city scatter in the production warehouse, not nationwide municipal coverage. Itemized USA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for United States is published on this site, so the published count is zero.",
+      "scope_limitations": [
+        "This is a verified four-city scatter in the production warehouse, not nationwide municipal coverage.",
+        "Itemized USA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for United States is published on this site, so the published count is zero."
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 4,
+        "period": "2026–2028",
+        "stages": [
+          "actual",
+          "enacted",
+          "proposal",
+          "revised"
+        ],
+        "line_fact_count": 47142,
+        "balance_fact_count": 0,
+        "detail_kind_en": "official city appropriation, agency, program and account items",
+        "detail_kind_cs": "oficiální městské položky podle apropriačních jednotek, odborů, programů a účtů",
+        "source_title": "NYC, Chicago, Los Angeles and San Francisco open-data portals",
+        "source_url": "https://data.cityofnewyork.us/resource/39g5-gbp3",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 4
     }
   ]
 }

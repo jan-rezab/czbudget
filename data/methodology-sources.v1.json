@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-27T13:24:37.751Z",
+  "generated_at": "2026-08-27T13:58:27.827Z",
   "row_count": 2128,
   "countries": [
     {
@@ -1038,11 +1038,11 @@
     "full": "Loaded by PSD with no missing dimensions recorded in the parity contract.",
     "partial": "Loaded by PSD with one or more disclosed missing dimensions.",
     "aggregate": "Loaded official aggregate without entity-level facts.",
-    "not_loaded": "PSD has not loaded this layer; this is not a claim that the country does not publish it."
+    "not_loaded": "PSD publishes no artifact for this layer; this is not a claim that the country does not publish it, and for an itemized municipal row it does not deny that facts exist in the private production warehouse. The coverage cell states the warehouse figure wherever one applies."
   },
   "source_availability_definitions": {
-    "loaded": "A source-backed PSD artifact is published.",
-    "source_available": "An official source exists but PSD has not loaded it.",
+    "loaded": "A source-backed PSD artifact is published on this site.",
+    "source_available": "An official source exists but PSD publishes no artifact for it here. Facts loaded into the private production warehouse without a published profile are reported this way, with the warehouse figure stated in the coverage cell; a warehouse load is never counted as publication.",
     "fragmented": "Official material exists but requires harmonisation or uses a non-comparable perimeter.",
     "not_found": "A documented review did not locate a suitable source; this is not proof of non-publication.",
     "not_researched": "Source availability has not been assessed."
@@ -46132,10 +46132,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "343 of 343 municipal profiles; native budget, revision and execution items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/bol",
+      "coverage": "343 of 343 municipal profiles published on this site; native budget, revision and execution items",
       "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025). 20,756 published line items.",
       "sources": [
         {
           "title": "Official Bolivia municipal source",
@@ -46144,7 +46144,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46158,10 +46158,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "partial",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "5,557 of 5,570 municipal profiles; native RREO or DCA budget-execution items",
-      "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/bra",
+      "coverage": "5,557 of 5,570 municipal profiles published on this site; native RREO or DCA budget-execution items",
+      "period": "2024–2025",
+      "scope": "Stages: actual, cash, enacted, execution, revised (actuals 2024–2025; plans 2025). 1,551,136 published line items.",
       "sources": [
         {
           "title": "Official Brazil municipal source",
@@ -46170,8 +46170,8 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
-      "limitations": "13 directory entities have no rows in either the 2025 RREO or 2024 DCA fallback layer."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "13 of 5,570 directory entities publish no line items and are not counted."
     },
     {
       "country_code": "CHE",
@@ -46182,12 +46182,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "partial",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "80 of 2,121 municipal profiles; Lucerne HRM2 municipal items plus Zürich account-level budget items",
-      "period": "2026",
-      "scope": "Stages: enacted. 64,185 line facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 2,121 municipal profiles are published on this site; 80 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2026)",
+      "scope": "Warehouse stages: enacted. 64,185 line facts for 80 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "LUSTAT Lucerne municipality budgets and Zürich open-data API",
@@ -46201,8 +46201,8 @@
         }
       ],
       "exact_extraction": "ch-lustat-lucerne-municipal-budgets · gefis-lu-bg.csv · ch-zurich-city-finance-api-2026 · zurich-city-budget-api-2026.json",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → switzerland_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "This is complete for the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → switzerland_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "The production warehouse covers the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage. Itemized CHE facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Switzerland is published on this site, so the published count is zero."
     },
     {
       "country_code": "CHL",
@@ -46214,10 +46214,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "345 of 345 municipal profiles; native SINIM revenue and expenditure items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/chl",
+      "coverage": "345 of 345 municipal profiles published on this site; native SINIM revenue and expenditure items",
       "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual (actuals 2025). 17,940 published line items.",
       "sources": [
         {
           "title": "Official Chile municipal source",
@@ -46226,7 +46226,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46239,10 +46239,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "1,102 of 1,102 municipal profiles; native CUIPO plan and execution items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/col",
+      "coverage": "1,102 of 1,102 municipal profiles published on this site; native CUIPO plan and execution items",
       "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual, enacted, revised (actuals 2025; plans 2025). 6,612 published line items.",
       "sources": [
         {
           "title": "Official Colombia municipal source",
@@ -46251,7 +46251,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46264,10 +46264,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "84 of 84 municipal profiles; native SIPP revenue and expenditure items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/cri",
+      "coverage": "84 of 84 municipal profiles published on this site; native SIPP revenue and expenditure items",
       "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual (actuals 2025). 168 published line items.",
       "sources": [
         {
           "title": "Official Costa Rica municipal source",
@@ -46276,7 +46276,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46290,10 +46290,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "6,254 of 6,254 municipal profiles; economic and functional line items",
-      "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-history (per-stage revenue/expenditure with the economic split for 6,254 profiles)",
+      "coverage": "6,254 of 6,254 municipal profiles published on this site; economic and functional line items",
+      "period": "2010–2025",
+      "scope": "Stages: actual, enacted, revised (actuals 2010–2025; plans 2010–2025). 600,126 published line items.",
       "sources": [
         {
           "title": "Monitor · FIN 2-12 M",
@@ -46302,8 +46302,8 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
-      "limitations": "Economic and functional breakdowns for enacted, revised and actual stages are merged into every published Czech municipal profile during the production build."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "The count, period and stages are measured from the per-municipality history artifacts, which publish the enacted, revised and actual stages with the economic split for every year. The full FIN 2-12 M functional (purpose) and economic breakdown for the current year is merged into each profile by the production build and is validated all-or-nothing for all 6,254 municipalities."
     },
     {
       "country_code": "DEU",
@@ -46314,12 +46314,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "partial",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "11 of 10,756 municipal profiles; official product, function, account and budget-position items for eleven German cities",
-      "period": "2016–2029",
-      "scope": "Stages: enacted, proposal. 1,152,009 line facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 10,756 municipal profiles are published on this site; 11 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2016–2029)",
+      "scope": "Warehouse stages: enacted, proposal. 1,152,009 line facts for 11 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "Official municipal open-data publications for eleven German cities",
@@ -46378,8 +46378,8 @@
         }
       ],
       "exact_extraction": "de-aachen-budget-2026 · haushaltsplan-2026-ergebnisplanung.csv · de-bonn-budget-archive-2024 · Datenthema_017_Haushaltsplaene_Gesamt_FINAL.zip · de-dortmund-budget-2020-2021 · fb20-haushaltsplan-2020-2021.csv · de-essen-budget-2025-2026 · Gesamtergebnisplan_Kostenarten_2025_2026.csv · de-koeln-budget-2016 · Koeln_HH_Finanzrechnung_1.csv · de-moers-budget-2023 · hhp-2023-endgultig.csv · de-frankfurt-budget-2024-2025 · frankfurt-haushaltsplan-2024-2025.csv · de-karlsruhe-budget-2024 · ikvs_ergrech_600_1000_2024_0000.csv · de-oldenburg-budget-2025 · 1101_Haushaltsplan_der_Stadt_Oldenburg_2025.xlsx · de-glueckstadt-budget-2022 · daten-2022-stadt-gluckstadt.csv · de-bremen-city-budget-2026-2027 · Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → germany_structured_cities → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "The warehouse covers eleven verified official structured city publications; Germany remains decentralized and this is not nationwide coverage."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → germany_structured_cities → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "The production warehouse covers eleven verified official structured city publications; Germany remains decentralized and this is not nationwide coverage. Itemized DEU facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Germany is published on this site, so the published count is zero."
     },
     {
       "country_code": "DNK",
@@ -46392,10 +46392,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "98 of 98 municipal profiles; native BUDK100 and REGK100 account items",
-      "period": "2024–2025",
-      "scope": "Stages: actual, enacted. 303,760 line facts.",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/dnk",
+      "coverage": "98 of 98 municipal profiles published on this site; native BUDK100 and REGK100 account items",
+      "period": "2025",
+      "scope": "Stages: actual, enacted (actuals 2025; plans 2025). 253,567 published line items. The same layer is also held as 303,760 line facts for 98 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
           "title": "Statistics Denmark · StatBank",
@@ -46404,8 +46404,8 @@
         }
       ],
       "exact_extraction": "dk-statbank-budk100 · table BUDK100",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → denmark_statbank → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "Revenue equals expenditure in all 98 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance."
     },
     {
       "country_code": "ESP",
@@ -46418,10 +46418,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "6,198 of 6,198 municipal profiles; native CONPREL budget and liquidation items",
-      "period": "2026",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/esp",
+      "coverage": "6,198 of 6,198 municipal profiles published on this site; native CONPREL budget and liquidation items",
+      "period": "2025–2026",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025–2026). 1,362,728 published line items.",
       "sources": [
         {
           "title": "Official Spain municipal source",
@@ -46430,7 +46430,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46444,10 +46444,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "310 of 310 municipal profiles; native financial-statement measures",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-benchmarks/fin",
+      "coverage": "310 of 310 municipal profiles published on this site; native financial-statement measures",
       "period": "2020",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual (actuals 2020). 62,000 published line items.",
       "sources": [
         {
           "title": "Official Finland municipal source",
@@ -46456,8 +46456,8 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
-      "limitations": "Each counted profile publishes its native itemized accounting breakdown."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
       "country_code": "FRA",
@@ -46468,12 +46468,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "full",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "35,041 of 35,041 municipal profiles; DGFiP actual-account and balance-sheet items plus six verified current enacted city budgets",
-      "period": "2024–2026",
-      "scope": "Stages: actual, enacted. 10,445,528 line facts plus 14,147,797 balance-sheet facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 35,041 municipal profiles are published on this site; 35,042 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2024–2026)",
+      "scope": "Warehouse stages: actual, enacted. 10,445,528 line facts plus 14,147,797 balance-sheet facts for 35,042 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
@@ -46527,8 +46527,8 @@
         }
       ],
       "exact_extraction": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip · fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip · fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip · fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip · fr-brest-budget-2026 · budget-primitif-ville-de-brest-2026.csv · fr-la-possession-budget-2025 · budget-primitif-la-possession-2025.csv · fr-sailly-budget-2025 · open-data-budget-sailly-2025.csv · fr-blagnac-budget-2025 · budget-primitif-blagnac-2025.csv · fr-toulouse-budget-2026 · budget-primitif-toulouse-2026.csv · fr-nantes-budget-2026 · budget-primitif-nantes-2026.csv",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → france_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "The national DGFiP actual-account layer is supplemented by six verified current enacted city budgets; the enacted layer is not a national census."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → france_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census. Itemized FRA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for France is published on this site, so the published count is zero."
     },
     {
       "country_code": "GBR",
@@ -46539,12 +46539,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "partial",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "318 of 318 municipal profiles; England outturn and enacted items plus Scottish and Welsh enacted council budget items",
-      "period": "2024–2028",
-      "scope": "Stages: actual, enacted. 552,003 line facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 318 municipal profiles are published on this site; 374 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2024–2028)",
+      "scope": "Warehouse stages: actual, enacted. 552,003 line facts for 374 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "UK MHCLG, Scottish Government and Welsh Government local-finance collections",
@@ -46578,8 +46578,8 @@
         }
       ],
       "exact_extraction": "gb-england-revenue-outturn-timeseries · Revenue_Outturn_time_series_data_v3.2.csv · gb-england-revenue-budget-2026-part-1 · RA_2026-27_data_Part_1.ods · gb-england-revenue-budget-2026-part-2 · RA_2026-27_data_Part_2.ods · gb-scotland-pobe-2026-revenue · POBE_2026_Revenue_Workbook_revised_2026-07-24.xlsx · gb-scotland-pobe-2026-capital · POBE_2026_Capital_Workbook_published_2026-06-30.xlsx · gb-wales-statswales-revenue-budget-2025-2026 · statswales_revenue_budget_2025_2026.csv",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → united_kingdom_devolved → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "The warehouse covers 374 authorities across England, Scotland and Wales. The published directory currently exposes 318 England profiles; Northern Ireland remains document-only."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → united_kingdom_devolved → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "The production warehouse covers 374 authorities across England, Scotland and Wales; Northern Ireland remains document-only. Itemized GBR facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for England is published on this site, so the published count is zero."
     },
     {
       "country_code": "GEO",
@@ -46591,10 +46591,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "69 of 69 municipal profiles; native Ministry of Finance plan and execution items",
-      "period": "2026",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/geo",
+      "coverage": "69 of 69 municipal profiles published on this site; native Ministry of Finance plan and execution items",
+      "period": "2025–2026",
+      "scope": "Stages: actual, enacted (actuals 2025; plans 2026). 2,760 published line items.",
       "sources": [
         {
           "title": "Official Georgia municipal source",
@@ -46603,7 +46603,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46616,10 +46616,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "340 of 340 municipal profiles; native SICOINGL and SICOINDES budget-execution items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/gtm",
+      "coverage": "340 of 340 municipal profiles published on this site; native SICOINGL and SICOINDES budget-execution items",
       "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025). 19,844 published line items.",
       "sources": [
         {
           "title": "Official Guatemala municipal source",
@@ -46628,7 +46628,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46641,10 +46641,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "7,896 of 7,896 municipal profiles; native SIOPE cash receipt and payment items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/ita",
+      "coverage": "7,896 of 7,896 municipal profiles published on this site; native SIOPE cash receipt and payment items",
       "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: cash (actuals 2025). 92,384 published line items.",
       "sources": [
         {
           "title": "Official Italy municipal source",
@@ -46653,7 +46653,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46667,10 +46667,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "1,741 of 1,741 municipal profiles; native Local Public Finance Survey items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/jpn",
+      "coverage": "1,741 of 1,741 municipal profiles published on this site; native Local Public Finance Survey items",
       "period": "2024",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual (actuals 2024). 626,760 published line items.",
       "sources": [
         {
           "title": "Official Japan municipal source",
@@ -46679,7 +46679,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46692,10 +46692,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "243 of 243 municipal profiles; native Local Finance 365 settlement items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/kor",
+      "coverage": "243 of 243 municipal profiles published on this site; native Local Finance 365 settlement items",
       "period": "2024",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual (actuals 2024). 1,944 published line items.",
       "sources": [
         {
           "title": "Official South Korea municipal source",
@@ -46704,7 +46704,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46717,10 +46717,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "2,380 of 2,380 municipal profiles; native EFIPEM annual finance items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/mex",
+      "coverage": "2,380 of 2,380 municipal profiles published on this site; native EFIPEM annual finance items",
       "period": "2024",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual (actuals 2024). 31,454 published line items.",
       "sources": [
         {
           "title": "Official Mexico municipal source",
@@ -46729,8 +46729,8 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
-      "limitations": "The count covers reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "Revenue equals expenditure in all 2,380 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance. The measured population is the reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico."
     },
     {
       "country_code": "NLD",
@@ -46743,10 +46743,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "342 of 342 municipal profiles; native Iv3 task fields",
-      "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-benchmarks/nld",
+      "coverage": "342 of 342 municipal profiles published on this site; native Iv3 task fields",
+      "period": "2024–2025",
+      "scope": "Stages: actual (actuals 2024–2025). 22,674 published line items.",
       "sources": [
         {
           "title": "Official Netherlands municipal source",
@@ -46755,8 +46755,8 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
-      "limitations": "Each counted profile publishes its native itemized accounting breakdown."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
       "country_code": "NOR",
@@ -46769,10 +46769,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "358 of 358 municipal profiles; native KOSTRA measures",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-benchmarks/nor",
+      "coverage": "358 of 358 municipal profiles published on this site; native KOSTRA measures",
       "period": "2025",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual (actuals 2025). 55,742 published line items.",
       "sources": [
         {
           "title": "Official Norway municipal source",
@@ -46781,8 +46781,8 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
-      "limitations": "Each counted profile publishes its native itemized accounting breakdown."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
       "country_code": "PER",
@@ -46794,10 +46794,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "1,891 of 1,891 municipal profiles; native MEF budget and execution items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/per",
+      "coverage": "1,891 of 1,891 municipal profiles published on this site; native MEF budget and execution items",
       "period": "2024",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2024; plans 2024). 122,894 published line items.",
       "sources": [
         {
           "title": "Official Peru municipal source",
@@ -46806,7 +46806,7 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
@@ -46818,12 +46818,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "full",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "2,486 of 2,486 municipal profiles; native Rb-27S and Rb-28S budget-reporting items",
-      "period": "2024–2025",
-      "scope": "Stages: actual, revised. 6,033,974 line facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 2,486 municipal profiles are published on this site; 2,486 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2024–2025)",
+      "scope": "Warehouse stages: actual, revised. 6,033,974 line facts for 2,486 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "Polish Ministry of Finance · local-government budget reports",
@@ -46857,8 +46857,8 @@
         }
       ],
       "exact_extraction": "pl-mf-rb27s-2024q4 · Rb27S_2024Q4.zip · pl-mf-rb28s-2024q4 · Rb28S_2024Q4.zip · pl-mf-jst-dictionary-2024 · Slownik_JST_2024.xlsx · pl-mf-rb27s-2025q4 · Rb27S_2025Q4.zip · pl-mf-rb28s-2025q4 · Rb28S_2025Q4.zip · pl-mf-jst-dictionary-2025 · Slownik_JST_2025.xlsx",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → poland_dbf → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → poland_dbf → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "Itemized POL facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Poland is published on this site, so the published count is zero."
     },
     {
       "country_code": "SLV",
@@ -46870,10 +46870,10 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "full",
       "source_availability": "loaded",
-      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-      "coverage": "259 of 259 municipal profiles; native SAFIM budget-execution items",
+      "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/slv",
+      "coverage": "259 of 259 municipal profiles published on this site; native SAFIM budget-execution items",
       "period": "2023",
-      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "scope": "Stages: actual, enacted, revised (actuals 2023; plans 2023). 9,546 published line items.",
       "sources": [
         {
           "title": "Official El Salvador municipal source",
@@ -46882,8 +46882,8 @@
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
-      "limitations": "The count covers 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
+      "transformation": "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      "limitations": "The measured population is 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
     },
     {
       "country_code": "SWE",
@@ -46894,12 +46894,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "full",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "290 of 290 municipal profiles; SCB municipal cost, income and balance-sheet measures",
-      "period": "2024–2025",
-      "scope": "Stages: actual. 43,892 line facts plus 31,365 balance-sheet facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 290 municipal profiles are published on this site; 290 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2024–2025)",
+      "scope": "Warehouse stages: actual. 43,892 line facts plus 31,365 balance-sheet facts for 290 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "Statistics Sweden · municipal finances",
@@ -46918,8 +46918,8 @@
         }
       ],
       "exact_extraction": "se-scb-municipal-costs · table VerksKostn · se-scb-municipal-income · table VerksInt · se-scb-municipal-balance · table BalansKnN",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → sweden_pxweb → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → sweden_pxweb → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "Itemized SWE facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Sweden is published on this site, so the published count is zero."
     },
     {
       "country_code": "UKR",
@@ -46930,12 +46930,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "full",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "1,467 of 1,467 municipal profiles; territorial-community revenue and expenditure classification items",
-      "period": "2024–2025",
-      "scope": "Stages: actual, enacted, revised. 4,120,319 line facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 1,467 municipal profiles are published on this site; 1,467 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2024–2025)",
+      "scope": "Warehouse stages: actual, enacted, revised. 4,120,319 line facts for 1,467 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "Open Budget Ukraine · localBudgetData",
@@ -46954,8 +46954,8 @@
         }
       ],
       "exact_extraction": "ua-openbudget-budget-directory-2024 · local_budget_directory_2024.json · ua-openbudget-expenses-2024 · ua-openbudget-budget-directory-2025 · local_budget_directory_2025.json",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → ukraine_openbudget_public_api → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → ukraine_openbudget_public_api → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "Itemized UKR facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Ukraine is published on this site, so the published count is zero."
     },
     {
       "country_code": "USA",
@@ -46966,12 +46966,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "partial",
-      "source_availability": "loaded",
-      "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "4 of 19,401 municipal profiles; official city appropriation, agency, program and account items",
-      "period": "2026–2028",
-      "scope": "Stages: actual, enacted, proposal, revised. 47,142 line facts.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 19,401 municipal profiles are published on this site; 4 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2026–2028)",
+      "scope": "Warehouse stages: actual, enacted, proposal, revised. 47,142 line facts for 4 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
           "title": "NYC, Chicago, Los Angeles and San Francisco open-data portals",
@@ -46995,8 +46995,8 @@
         }
       ],
       "exact_extraction": "us-nyc-expense-budget · Socrata 39g5-gbp3 · us-chicago-budget-ordinance · Socrata 6694-f78c · us-la-budget-expenditures · Socrata uyzw-yi8n · us-sf-budget · Socrata xdgd-c79v",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → us_socrata_cities → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "This is a verified four-city scatter, not nationwide municipal coverage."
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → us_socrata_cities → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
+      "limitations": "This is a verified four-city scatter in the production warehouse, not nationwide municipal coverage. Itemized USA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for United States is published on this site, so the published count is zero."
     },
     {
       "country_code": "AFG",
