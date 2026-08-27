@@ -370,7 +370,7 @@
   Promise.all([
     fetch("data/compare-metrics.v1.json").then((r) => r.json()),
     fetch("data/health-system-assignments.v1.json").then((r) => r.json()),
-    fetch("data/sovereign-benchmark-slim.v1.json").then((r) => r.json()),
+    fetch("lib/data/sovereign-benchmark.v1.json").then((r) => r.json()),
     fetch("data/country-health.v1.json").then((r) => r.json()),
     fetch("data/country-functional-budgets.v1.json").then((r) => r.json()),
   ]).then(([metricRegistry, systemAssignments, sovereign, health, functional]) => {
