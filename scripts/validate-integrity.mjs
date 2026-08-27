@@ -337,6 +337,8 @@ assert(/^FROM\s+\S+@sha256:[a-f0-9]{64}$/m.test(dockerfile), "Docker base image 
 const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
 for (const match of cloudbuild.matchAll(/^\s+name:\s+(\S+)/gm)) assert(match[1].includes("@sha256:"), `Cloud Build image is not pinned by digest: ${match[1]}`);
 assert(cloudbuild.includes("scripts/deploy-immutable.sh"), "Cloud Build does not deploy the pushed image by immutable digest");
+const nginxTemplate = await readFile("nginx.conf.template", "utf8");
+assert(!/^\s*(?:location\s+~\s+|~)\S*\{\d+(?:,\d*)?\}/m.test(nginxTemplate), "Unquoted Nginx regular expressions must not contain brace quantifiers");
 
 let htmlCount = 0;
 let localReferenceCount = 0;
