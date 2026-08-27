@@ -170,11 +170,12 @@
 
   document.querySelectorAll("[data-surface-copy]").forEach((node) => { node.textContent = t[node.dataset.surfaceCopy]; });
   document.title = `${lang === "en" ? "Coverage" : "Pokrytí"} — Public Spending Data`;
-  Promise.all([
-    fetch("data/data-freshness.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
+  const freshnessPromise = window.psdDataFreshnessPromise || (window.psdDataFreshnessPromise = fetch("data/data-freshness.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }));
+  const transparencyPromise = window.psdTransparencyDataPromise || (window.psdTransparencyDataPromise = Promise.all([
     fetch("data/global-budget-transparency.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
     fetch("data/world-map.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); })
-  ]).then(([freshness, registry, geometry]) => {
+  ]));
+  Promise.all([freshnessPromise, transparencyPromise]).then(([freshness, [registry, geometry]]) => {
     Object.assign(state, { freshness, registry, geometry });
     render();
   }).catch((error) => {

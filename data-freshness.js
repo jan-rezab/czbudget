@@ -153,10 +153,11 @@
   }
   document.querySelectorAll("[data-freshness-copy]").forEach((node) => { node.textContent = t(node.dataset.freshnessCopy); });
   document.querySelector("#freshness-search").placeholder = t("searchPlaceholder");
-  fetch("data/data-freshness.v1.json").then((response) => {
+  const freshnessDataPromise = window.psdDataFreshnessPromise || (window.psdDataFreshnessPromise = fetch("data/data-freshness.v1.json").then((response) => {
     if (!response.ok) throw new Error(`Freshness data returned ${response.status}`);
     return response.json();
-  }).then((data) => {
+  }));
+  freshnessDataPromise.then((data) => {
     state.data = data;
     renderKpis();
     fillControls();

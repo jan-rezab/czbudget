@@ -160,6 +160,7 @@
       path.addEventListener("click",activate); path.addEventListener("keydown",(event) => { if (event.key === "Enter" || event.key === " ") activate(); });
     });
   }
-  Promise.all([fetch(`${assetRoot}data/global-budget-transparency.v1.json`).then((response) => response.json()),fetch(`${assetRoot}data/world-map.v1.json`).then((response) => response.json())]).then(([data,map]) => { registry=data; geometry=map; render(); }).catch((error) => { console.error(error); root.textContent=language() === "en" ? "Transparency atlas could not be loaded." : "Atlas transparentnosti se nepodařilo načíst."; });
+  const transparencyDataPromise = window.psdTransparencyDataPromise || (window.psdTransparencyDataPromise = Promise.all([fetch(`${assetRoot}data/global-budget-transparency.v1.json`).then((response) => response.json()),fetch(`${assetRoot}data/world-map.v1.json`).then((response) => response.json())]));
+  transparencyDataPromise.then(([data,map]) => { registry=data; geometry=map; render(); }).catch((error) => { console.error(error); root.textContent=language() === "en" ? "Transparency atlas could not be loaded." : "Atlas transparentnosti se nepodařilo načíst."; });
   document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click",() => setTimeout(render)));
 })();
