@@ -219,10 +219,10 @@
       "iso3": "NOR",
       "name_en": "Norway",
       "name_cs": "Norsko",
-      "category": "budget_and_accounts",
-      "pipeline": "loaded_partial",
+      "category": "accounts_only",
+      "pipeline": "loaded",
       "features": {
-        "enacted": true,
+        "enacted": false,
         "revised": false,
         "execution": false,
         "actual": true,
@@ -230,8 +230,8 @@
         "economic": true,
         "api": true
       },
-      "note_en": "KOSTRA table 12367 exposes 97 functions and 35 accounting types, but it is an accounts—not adopted-budget—dataset.",
-      "note_cs": "Tabulka KOSTRA 12367 nabízí 97 funkcí a 35 účetních druhů, jde však o účetní skutečnost, nikoli schválený rozpočet.",
+      "note_en": "KOSTRA table 12367 exposes 97 functions and 35 accounting types, but it is an accounts—not adopted-budget—dataset. All 358 published Norwegian municipal profiles carry that accounts breakdown; no Norwegian adopted-budget source has been acquired or loaded.",
+      "note_cs": "Tabulka KOSTRA 12367 nabízí 97 funkcí a 35 účetních druhů, jde však o účetní skutečnost, nikoli schválený rozpočet. Všech 358 publikovaných norských obecních profilů obsahuje toto účetní členění; žádný norský zdroj schválených rozpočtů nebyl získán ani načten.",
       "source": "https://www.ssb.no/en/statbank/table/12367"
     },
     {
@@ -340,9 +340,9 @@
       "name_en": "United States",
       "name_cs": "Spojené státy",
       "category": "decentralized",
-      "pipeline": "loaded_partial",
+      "pipeline": "assessed",
       "features": {
-        "enacted": true,
+        "enacted": false,
         "revised": false,
         "execution": false,
         "actual": true,
@@ -350,8 +350,8 @@
         "economic": true,
         "api": true
       },
-      "note_en": "The Census of Governments standardizes finance statistics, but adopted item-level budgets remain decentralized across tens of thousands of governments.",
-      "note_cs": "Census of Governments standardizuje finanční statistiky, ale schválené položkové rozpočty zůstávají rozptýlené mezi desítkami tisíc samospráv.",
+      "note_en": "The Census of Governments standardizes finance statistics, but adopted item-level budgets remain decentralized across tens of thousands of governments. Four verified city adapters (New York City, Chicago, Los Angeles and San Francisco) are held in the production warehouse; that four-city scatter is not national coverage, and the wider Socrata catalog was reviewed and classified as catalog-not-coverage.",
+      "note_cs": "Census of Governments standardizuje finanční statistiky, ale schválené položkové rozpočty zůstávají rozptýlené mezi desítkami tisíc samospráv. V produkčním skladu jsou čtyři ověřené městské adaptéry (New York, Chicago, Los Angeles a San Francisco); tento rozptyl čtyř měst není celostátní pokrytí a širší katalog Socrata byl prověřen a vyhodnocen jako katalog, nikoli pokrytí.",
       "source": "https://www.census.gov/programs-surveys/gov-finances.html"
     },
     {
@@ -770,8 +770,8 @@
         "economic": true,
         "api": true
       },
-      "note_en": "Loaded into the public municipal directory: 2,380 reporting municipal governments in definitive 2024 EFIPEM annual data; this is not a complete census of every municipality.",
-      "note_cs": "Načteno do veřejného obecního adresáře: 2 380 vykazujících obecních vlád v definitivních ročních datech EFIPEM 2024; nejde o úplný census všech obcí.",
+      "note_en": "Loaded into the public municipal directory: 2,380 reporting municipal governments in definitive 2024 EFIPEM annual data; this is not a complete census of every municipality. EFIPEM reports ingresos equal to egresos, so the balance of every Mexican municipal profile is zero by accounting identity and is not an independently measured surplus or deficit; it must not be compared with countries that measure a balance.",
+      "note_cs": "Načteno do veřejného obecního adresáře: 2 380 vykazujících obecních vlád v definitivních ročních datech EFIPEM 2024; nejde o úplný census všech obcí. EFIPEM vykazuje ingresos rovné egresos, takže saldo každého mexického obecního profilu je nulové z účetní identity, nejde o samostatně měřený přebytek či schodek a nelze je srovnávat se zeměmi, které saldo skutečně měří.",
       "source": "https://www.inegi.org.mx/programas/finanzas/"
     },
     {
@@ -830,8 +830,8 @@
         "economic": true,
         "api": false
       },
-      "note_en": "The municipal BOOST worksheet is now normalized: 263 municipalities across 2006-2022, with approved, modified and paid expenditure by economic classification. The latest 2022 layer has 240 reporting municipalities and is not a current census.",
-      "note_cs": "Obecní list BOOST je nyní normalizován: 263 obcí v letech 2006-2022 se schválenými, upravenými a zaplacenými výdaji podle ekonomické klasifikace. Nejnovější vrstva 2022 obsahuje 240 vykazujících obcí a nejde o aktuální census.",
+      "note_en": "The municipal BOOST worksheet is now normalized: 263 municipalities across 2006-2022, with modified and paid expenditure by economic classification for the whole span. Approved (adopted) expenditure exists only for 2021 and 2022; the earlier years carry no approved layer. The latest 2022 layer has 240 reporting municipalities and is not a current census.",
+      "note_cs": "Obecní list BOOST je nyní normalizován: 263 obcí v letech 2006-2022, s upravenými a zaplacenými výdaji podle ekonomické klasifikace za celé období. Schválené (přijaté) výdaje existují pouze za roky 2021 a 2022; starší roky vrstvu schválených rozpočtů nemají. Nejnovější vrstva 2022 obsahuje 240 vykazujících obcí a nejde o aktuální census.",
       "source": "https://www.worldbank.org/en/programs/boost-portal/country-data"
     },
     {
