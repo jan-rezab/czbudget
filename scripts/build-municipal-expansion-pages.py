@@ -6,11 +6,16 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
 
 WEB = Path(__file__).resolve().parents[1]
 WORKSPACE = WEB.parent
+sys.path.insert(0, str(WEB / "pipeline/transforms"))
+
+from municipal_profile_template import render_municipal_profile_shell
+
 BUNDLES = WORKSPACE / "outputs/municipal-expansion"
 DATA = WEB / "data/international-municipalities.v1.json"
 ORIGIN = "https://publicspendingdata.org"
@@ -42,23 +47,20 @@ _legacy_page = page
 
 
 def page(profile: dict, info: dict) -> str:
-    """Render expansion profiles with the current shared-header contract."""
-    html = _legacy_page(profile, info)
-    html = html.replace(
-        '<link rel="stylesheet" href="../../../styles.css">',
-        '<link rel="stylesheet" href="../../../site-header.css?v=20260824-header-lockup" data-psd-site-header><link rel="stylesheet" href="../../../styles.css">',
+    """Render every expansion route through the shared profile shell."""
+    return render_municipal_profile_shell(
+        name=profile["name"],
+        country_name=info["name_en"],
+        canonical_path=profile["url"],
+        profile_data_path=f"../../../data/municipal-expansion/{profile['country'].lower()}/{profile['code']}.json",
+        source_url=info["source"],
     )
-    html = html.replace(
-        '<script src="../../../global-nav.js" defer></script>',
-        '<script src="../../../global-nav.js?v=20260824-logo-120" defer></script>',
-    )
-    legacy_header = '<header class="site-header compact-header has-global-nav"><a class="brand" href="../../../index.html" aria-label="Public Spending Data"><img class="brand-logo" src="../../../assets/logo-lockup.svg" width="190" height="48" alt="" aria-hidden="true"></a><nav class="global-nav" aria-label="Primary navigation"></nav><div class="municipality-lang-switch" role="group" aria-label="Language"><button data-lang="cs" class="active" aria-pressed="true">CZ</button><button data-lang="en" aria-pressed="false">EN</button></div></header>'
-    return html.replace(legacy_header, '<psd-site-header data-section="cities"></psd-site-header>')
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--countries", nargs="+", choices=tuple(META), help="Only merge the selected country bundles")
+    parser.add_argument("--profiles-only", action="store_true", help="Regenerate profile HTML from existing bundles without rewriting data, registries, or sitemap")
     args = parser.parse_args()
     payload=json.loads(DATA.read_text(encoding="utf-8"))
     for country in payload["countries"]:
@@ -67,6 +69,17 @@ def main() -> None:
             country["coverage_cs"] = "Všech 357 obcí plus Longyearbyen; souhrnné účty 2015–2025 a detail roku 2025 napříč 97 funkcemi KOSTRA"
     selected=set(args.countries or META)
     codes=[code for code in META if code in selected and (BUNDLES/f"{code}.json").exists()]
+    if args.profiles_only:
+        generated_profiles=[]
+        for code in codes:
+            bundle=json.loads((BUNDLES/f"{code}.json").read_text(encoding="utf-8")); info=META[code]
+            for profile in bundle["entities"]:
+                target=WEB/profile["url"].lstrip("/")/"index.html"
+                target.parent.mkdir(parents=True,exist_ok=True)
+                target.write_text(page(profile,info),encoding="utf-8")
+                generated_profiles.append(profile["url"])
+        print(json.dumps({"countries":codes,"profiles":len(generated_profiles),"mode":"profiles-only"}))
+        return
     payload["countries"]=[row for row in payload["countries"] if row["code"] not in codes]
     payload["entities"]=[row for row in payload["entities"] if row["country"] not in codes]
     generated_profiles=[]

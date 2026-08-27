@@ -1,0 +1,69 @@
+import { expect, test } from "@playwright/test";
+
+const sharedStructure = [
+  ".detail-hero",
+  ".detail-kpis",
+  "#history-explorer",
+  "#rozpocet",
+  ".plan-panel",
+  ".detail-grid",
+  "#metodika.data-contract",
+];
+
+const generatedProfileFamilies = [
+  "/municipalities/denmark/aabenraa-580/",
+  "/municipalities/brazil/estiva-3124500/",
+  "/municipalities/spain/ababuj-44001aa000/",
+  "/municipalities/japan/municipality-242144/",
+  "/municipalities/colombia/abejorral-210205002/",
+  "/municipalities/georgia/municipality-mof-033/",
+  "/municipalities/italy/abano-terme-000105310/",
+  "/municipalities/bolivia/autonomia-del-territorio-indigena-originario-campesino-guarani-chaqueno-de-huacaya-3101/",
+  "/municipalities/el-salvador/acajutla-8301/",
+  "/municipalities/mexico/aguascalientes-01001/",
+  "/municipalities/costa-rica/abangares-sipp-abangares/",
+  "/municipalities/guatemala/cahabon-12101612/",
+  "/municipalities/peru/aramango-300023/",
+  "/municipalities/south-korea/municipality-4213000/",
+  "/municipalities/chile/antofagasta-02101/",
+  "/municipalities/norway/oslo-oslove-0301/",
+  "/municipalities/netherlands/laarbeek-1659/",
+  "/municipalities/finland/saarijarvi-729/",
+];
+
+test("Brno and São Paulo use the same municipal profile hierarchy", async ({ page }) => {
+  for (const route of [
+    "/cz/municipalities/brno/?lang=en",
+    "/municipalities/brazil/sao-paulo-3550308/?lang=en",
+  ]) {
+    await page.goto(route);
+    for (const selector of sharedStructure) await expect(page.locator(selector)).toBeVisible();
+    await expect(page.locator(".detail-kpis article")).toHaveCount(4);
+  }
+});
+
+test("Brazilian profile reconciles stages and keeps tax rows on the revenue side", async ({ page }) => {
+  await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
+
+  const actual = page.locator(".budget-stage-actual");
+  await expect(actual).toContainText("R$112,335,533,909");
+  await expect(actual).toContainText("R$106,090,574,099");
+  await expect(actual).toContainText("R$6,244,959,810");
+
+  const taxRow = page.locator("#profile-detail tbody tr", { hasText: "ReceitaTributaria" }).first();
+  await expect(taxRow).toContainText("Revenue");
+  await expect(page.locator("#profile-detail-stage")).toContainText("In period");
+  await expect(page.locator("#profile-detail-stage")).toContainText("Remaining");
+});
+
+test("every generated country family renders the shared municipal hierarchy", async ({ page }) => {
+  test.setTimeout(120_000);
+  for (const route of generatedProfileFamilies) {
+    await page.goto(`${route}?lang=en`);
+    await expect(page.locator(".detail-hero"), route).toBeVisible();
+    await expect(page.locator(".detail-kpis article"), route).toHaveCount(4);
+    await expect(page.locator("#history-explorer"), route).toBeVisible();
+    await expect(page.locator("#native-detail"), route).toBeVisible();
+    await expect(page.locator(".municipal-profile-loading"), route).toHaveCount(0);
+  }
+});

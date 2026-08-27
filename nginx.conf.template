@@ -72,6 +72,18 @@ map $request_uri $index_redirect_path {
   ~^(?<index_directory>.*/)index\.html(?:\?|$) $index_directory;
 }
 
+# nginx does NOT merge sub_filter directives down location levels: a location
+# that declares any sub_filter of its own replaces the entire inherited set. Any
+# HTML-serving location must therefore inject this itself, and keeping the
+# payload in one map is what stops the blocks from silently drifting apart (the
+# /countries/... block previously shipped with no analytics for exactly this
+# reason). Every page already loads /language-bootstrap.js as the first child of
+# its own <head>, so it is deliberately not injected here - injecting it added a
+# second copy under a different ?v, i.e. a duplicate download on every page.
+map $host $psd_head_inject {
+  default '<head><script defer src="https://cloud.umami.is/script.js" data-website-id="b80e941b-3a25-40ef-bdf4-3ecb0e91e053" data-domains="publicspendingdata.org,www.publicspendingdata.org" data-do-not-track="true" data-exclude-search="true"></script>';
+}
+
 server {
   listen ${PORT};
   server_name publicspendingdata.org www.publicspendingdata.org _;
@@ -179,9 +191,9 @@ server {
 
   location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece|[a-z][a-z][a-z])$ {
     sub_filter_once off;
+    sub_filter '<head>' $psd_head_inject;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
     sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-coverage-menu';
-    sub_filter 'country.js?v=20260823-country-hover' 'country.js?v=20260824-readable-country-routes';
     sub_filter 'country-parity.css?v=20260822-parity-contract' 'country-parity.css?v=20260824-readable-country-routes';
     sub_filter 'country-parity.js?v=20260822-parity-contract' 'country-parity.js?v=20260824-readable-country-routes';
     sub_filter 'country-cash-in.js?v=20260824-loaded-layers' 'country-cash-in.js?v=20260824-readable-country-routes';
@@ -197,31 +209,25 @@ server {
 
   location / {
     sub_filter_once off;
-    sub_filter '<head>' '<head><script defer src="https://cloud.umami.is/script.js" data-website-id="b80e941b-3a25-40ef-bdf4-3ecb0e91e053" data-domains="publicspendingdata.org,www.publicspendingdata.org" data-do-not-track="true" data-exclude-search="true"></script><script src="/language-bootstrap.js?v=20260824-english-home-default"></script>';
+    sub_filter '<head>' $psd_head_inject;
     sub_filter 'cz-budget.css"' 'cz-budget.css?v=20260823-municipal-ux2"';
     sub_filter 'municipal-i18n.js"' 'municipal-i18n.js?v=20260823-english-route"';
-    sub_filter 'cz-municipal-directory.js"' 'cz-municipal-directory.js?v=20260823-english-route"';
     sub_filter 'cz-history.js"' 'cz-history.js?v=20260824-history-views"';
     sub_filter 'municipal-benchmark-profile.css"' 'municipal-benchmark-profile.css?v=20260824-box-sizing"';
+    sub_filter 'municipal-expanded-profile.css"' 'municipal-expanded-profile.css?v=20260827-unified-municipal-profile"';
+    sub_filter 'municipal-expanded-profile.js"' 'municipal-expanded-profile.js?v=20260827-unified-municipal-profile"';
     sub_filter 'global-nav.js?v=20260822-component"' 'global-nav.js?v=20260827-coverage-menu"';
     sub_filter 'global-nav.js?v=20260824-budget-stages"' 'global-nav.js?v=20260827-coverage-menu"';
     sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260827-coverage-menu"';
     sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-coverage-menu';
-    sub_filter 'global-nav.js?v=20260825-canonical-home' 'global-nav.js?v=20260827-coverage-menu';
     sub_filter 'global-footer.js?v=20260822-hlidac' 'global-footer.js?v=20260825-footer-align';
     sub_filter 'global-footer.js?v=20260823-footer' 'global-footer.js?v=20260825-footer-align';
     sub_filter 'global-footer.js?v=20260824-compact' 'global-footer.js?v=20260825-footer-align';
-    sub_filter 'global-footer.js?v=20260825-shared-lifecycle' 'global-footer.js?v=20260825-footer-align';
     sub_filter 'global-footer.css?v=20260822-hlidac' 'global-footer.css?v=20260825-footer-align';
     sub_filter 'global-footer.css?v=20260824-dark' 'global-footer.css?v=20260825-footer-align';
     sub_filter 'homepage-v2.js?v=20260822-separate-pages' 'homepage-v2.js?v=20260825-country-expansion';
     sub_filter 'homepage-category.js?v=20260821-benchmark-flags' 'homepage-category.js?v=20260824-language-contract';
     sub_filter 'homepage-health-performance.js?v=20260824-topline-compare' 'homepage-health-performance.js?v=20260824-language-contract';
-    sub_filter 'deep-dives.js?v=20260822-transport-budget-detail' 'deep-dives.js?v=20260824-readable-country-routes';
-    sub_filter 'deep-dives.js?v=20260823-health-performance' 'deep-dives.js?v=20260824-readable-country-routes';
-    sub_filter 'deep-dives.js?v=20260824-ageing' 'deep-dives.js?v=20260824-readable-country-routes';
-    sub_filter 'deep-dives.js?v=20260824-revenue' 'deep-dives.js?v=20260824-readable-country-routes';
-    sub_filter 'deep-dives.js?v=20260824-capital-cities' 'deep-dives.js?v=20260824-readable-country-routes';
     sub_filter 'ageing-bill.js?v=20260824-ageing' 'ageing-bill.js?v=20260824-readable-country-routes';
     sub_filter 'assets/favicon.svg"' 'assets/favicon.svg?v=20260824-archivo-lockup"';
     try_files $uri $uri/ $uri/index.html =404;

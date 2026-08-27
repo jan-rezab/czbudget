@@ -296,7 +296,19 @@ def import_brazil(resume: bool = True, limit: int | None = None, shard_index: in
         # account fallback below.
         summary = {"year": 2025}
         detail = []
-        for row in payload.get("items", []):
+        items = payload.get("items", [])
+        side_by_account: dict[tuple[str, str], str] = {}
+        for row in items:
+            account = clean(row.get("cod_conta"))
+            label = clean(row.get("conta"))
+            upper_label = label.upper()
+            upper_column = clean(row.get("coluna")).upper()
+            key = (account, label)
+            if "PREVISÃO" in upper_column or "REALIZADAS" in upper_column or "RECEITAS (EXCETO" in upper_label:
+                side_by_account[key] = "revenue"
+            if any(term in upper_column for term in ("DOTAÇÃO", "EMPENHADAS", "LIQUIDADAS", "PAGAS")) or "DESPESAS (EXCETO" in upper_label:
+                side_by_account[key] = "expenditure"
+        for row in items:
             account = clean(row.get("cod_conta"))
             label = clean(row.get("conta"))
             column = clean(row.get("coluna"))
@@ -307,15 +319,19 @@ def import_brazil(resume: bool = True, limit: int | None = None, shard_index: in
                 stage = "enacted"
             elif "ATUALIZADA" in upper_column:
                 stage = "revised"
+            elif "NO BIMESTRE" in upper_column:
+                stage = "period"
+            elif "SALDO" in upper_column:
+                stage = "remaining"
             elif "PAGAS" in upper_column:
                 stage = "cash"
             elif "EMPENHADAS" in upper_column:
-                stage = "execution"
+                stage = "committed"
             elif any(term in upper_column for term in ("REALIZADAS", "LIQUIDADAS")) or upper_column.startswith("ATÉ O BIMESTRE"):
                 stage = "actual"
             else:
                 stage = "execution"
-            side = "revenue" if "RECEITA" in clean(row.get("anexo")).upper() or "RECEITA" in label.upper() else "expenditure"
+            side = side_by_account.get((account, label)) or ("revenue" if "RECEITA" in clean(row.get("anexo")).upper() or "RECEITA" in label.upper() else "expenditure")
             if len(detail) < 360: detail.append({"year": 2025, "stage": stage, "side": side, "code": account, "name": label, "column": column, "amount": amount})
             upper = label.upper()
             is_revenue_total = "RECEITAS (EXCETO INTRA-ORÇAMENTÁRIAS)" in upper or "RECEITAS (EXCETO INTRAORÇAMENTÁRIAS)" in upper
