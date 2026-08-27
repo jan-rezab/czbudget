@@ -57,10 +57,19 @@ test("Brazilian profile reconciles stages and keeps tax rows on the revenue side
   await expect(actual).toContainText("R$106,090,574,099");
   await expect(actual).toContainText("R$6,244,959,810");
 
+  await expect(page.locator('[data-detail-side="expenditure"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#profile-detail-visual .native-visual-row").first()).toBeVisible();
+  await page.locator('[data-detail-side="revenue"]').click();
+  await expect(page.locator('[data-detail-side="revenue"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#profile-detail-visual")).toContainText("ReceitaTributaria");
   const taxRow = page.locator("#profile-detail tbody tr", { hasText: "ReceitaTributaria" }).first();
   await expect(taxRow).toContainText("Revenue");
   await expect(page.locator("#profile-detail-stage")).toContainText("In period");
   await expect(page.locator("#profile-detail-stage")).toContainText("Remaining");
+
+  await page.locator("#profile-detail-search").fill("Taxas");
+  await expect(page.locator("#profile-detail-visual")).toContainText("Taxas");
+  await expect(page.locator("#profile-detail-visual")).not.toContainText("Receitas de Capital");
 });
 
 test("every generated country family renders the shared municipal hierarchy", async ({ page }) => {
@@ -83,7 +92,9 @@ test("international profiles remain useful without JavaScript", async ({ browser
   await expect(page.locator(".detail-kpis article")).toHaveCount(4);
   await expect(page.locator("#history-explorer")).toBeVisible();
   await expect(page.locator("#rozpocet .plan-panel")).toBeVisible();
-  await expect(page.locator("#native-detail tbody tr")).toHaveCount(24);
+  await expect(page.locator("#profile-detail-visual .native-visual-row")).toHaveCount(10);
+  await expect(page.locator(".raw-detail-audit")).not.toHaveAttribute("open", "");
+  await expect(page.locator("#profile-detail tbody tr")).toHaveCount(11);
   await expect(page.locator("#metodika.data-contract")).toBeVisible();
   await context.close();
 });

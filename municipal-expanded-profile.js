@@ -7,7 +7,9 @@
   let profile;
   let detailQuery = "";
   let detailStage = "all";
-  let detailSide = "all";
+  let detailSide = "expenditure";
+  let detailYear = "all";
+  let visualShown = 12;
   let detailShown = 160;
 
   const copy = {
@@ -18,10 +20,11 @@
       onePeriod: "Jeden dostupný rok", onePeriodCopy: "Zdroj zatím poskytuje jeden srovnatelný roční profil. Další roky se zde objeví bez změny rozvržení stránky.",
       budgetKicker: "Rozpočet", budgetTitle: "Plán a skutečnost.", stage: "Fáze", enacted: "Schválený", revised: "Upravený",
       actual: "Skutečnost", cash: "Zaplaceno", committed: "Závazky", period: "V období", remaining: "Zbývá", allStages: "Všechny fáze",
-      revenueMix: "Struktura příjmů", expenditureMix: "Struktura výdajů", nativeKicker: "Původní detail",
-      nativeTitle: "Položkový detail.", docTitle: "{name} — rozpočet obce, {country} — Public Spending Data", docDesc: "{name}, {country}: oficiální obecní příjmy, výdaje, saldo, rozpočtové fáze a původní položkový detail.", nativeCopy: "Původní kódy, názvy a sloupce z národního zdroje; bez skrytého přemapování.", nativeTableLabel: "Tabulka položkového detailu, vodorovně posuvná",
+      revenueMix: "Struktura příjmů", expenditureMix: "Struktura výdajů", nativeKicker: "Kam peníze jdou",
+      nativeTitle: "Prozkoumejte příjmy a výdaje.", docTitle: "{name} — rozpočet obce, {country} — Public Spending Data", docDesc: "{name}, {country}: oficiální obecní příjmy, výdaje, saldo, rozpočtové fáze a původní položkový detail.", nativeCopy: "Přepněte mezi příjmy a výdaji a procházejte konkrétní účely. Délka pruhu porovnává velikost vykázaných položek; původní názvy a kódy zůstávají zachované.", nativeTableLabel: "Tabulka zdrojových položek, vodorovně posuvná",
       search: "Hledat položku", searchPlaceholder: "Kód nebo název…", side: "Strana", allSides: "Obě strany", amount: "Částka",
-      account: "Kód / položka", year: "Rok", shown: "zobrazeno", more: "Načíst další položky", sourceKicker: "Data a metodika",
+      incomeTab: "Příjmy", spendingTab: "Výdaje", specificItems: "Konkrétní položky", compareNote: "Pruhy porovnávají absolutní velikost vykázaných řádků, nikoli podíl z uměle sečteného celku.", noItems: "Pro zvolené filtry nejsou dostupné žádné položky.", rawRows: "Zdrojové řádky", rawRowsOpen: "Otevřít auditní tabulku", visualMore: "Zobrazit další položky",
+      account: "Kód / položka", year: "Rok", allYears: "Všechny roky", shown: "zobrazeno", more: "Načíst další zdrojové řádky", sourceKicker: "Data a metodika",
       sourceTitle: "Auditovatelný profil.", sourceCopy: "Rozsah odpovídá oficiálnímu obecnímu výkazu. Chybějící hotovost, dluh nebo historie se nedopočítávají.",
       officialSource: "Oficiální zdroj", profileData: "Strojová data", open: "Otevřít ↗", json: "JSON ↗", noValue: "Není v načtené národní vrstvě",
       sumOfResults: "Součet výsledků za {years} let", historyData: "Historická data", methodWarning: "Saldo je v celé řadě konsolidované. Stav účtů má metodický zlom v roce 2012. Chybějící rok není nula — pro dnešní IČO se v daném roce nenašla data.", latestPeriod: "Poslední období", overview: "Přehled", budget: "Rozpočet", accounts: "Účty", detail: "Detail", coverage: "Rozsah", method: "Metodika",
@@ -33,10 +36,11 @@
       onePeriod: "One year available", onePeriodCopy: "The source currently provides one comparable annual profile. Additional years can appear here without changing the page layout.",
       budgetKicker: "Budget", budgetTitle: "Plan and actual.", stage: "Budget stage", enacted: "Approved", revised: "Amended",
       actual: "Actual", cash: "Paid", committed: "Committed", period: "In period", remaining: "Remaining", allStages: "All stages",
-      revenueMix: "Revenue mix", expenditureMix: "Expenditure mix", nativeKicker: "Native detail",
-      nativeTitle: "Item-level detail.", docTitle: "{name} — {country} municipal budget — Public Spending Data", docDesc: "{name}, {country}: official municipal revenue, expenditure, balance, budget stages and native item-level detail.", nativeCopy: "Original codes, labels and columns from the national source, without hidden remapping.", nativeTableLabel: "Item-level detail table, scrolls horizontally",
+      revenueMix: "Revenue mix", expenditureMix: "Expenditure mix", nativeKicker: "Where the money goes",
+      nativeTitle: "Explore income and spending.", docTitle: "{name} — {country} municipal budget — Public Spending Data", docDesc: "{name}, {country}: official municipal revenue, expenditure, balance, budget stages and native item-level detail.", nativeCopy: "Switch between income and spending, then explore the specific purposes reported by the source. Bar length compares reported line magnitude; native labels and codes stay intact.", nativeTableLabel: "Source item table, scrolls horizontally",
       search: "Search items", searchPlaceholder: "Code or label…", side: "Side", allSides: "Both sides", amount: "Amount",
-      account: "Code / item", year: "Year", shown: "shown", more: "Load more items", sourceKicker: "Data and methodology",
+      incomeTab: "Income / revenue", spendingTab: "Spending / expenditure", specificItems: "Specific items", compareNote: "Bars compare the absolute magnitude of reported lines, not a share of an artificially summed total.", noItems: "No items are available for these filters.", rawRows: "Source rows", rawRowsOpen: "Open raw audit table", visualMore: "Show more items",
+      account: "Code / item", year: "Year", allYears: "All years", shown: "shown", more: "Load more source rows", sourceKicker: "Data and methodology",
       sourceTitle: "An auditable profile.", sourceCopy: "Coverage follows the official municipal return. Missing cash, debt or history is not estimated.",
       officialSource: "Official source", profileData: "Machine-readable data", open: "Open ↗", json: "JSON ↗", noValue: "Not available in the loaded national layer",
       sumOfResults: "Sum of results over {years} years", historyData: "Historical data", methodWarning: "The fiscal balance is consolidated throughout the series. Cash has a methodological break in 2012. A missing year is not zero—no data were found for the current registration ID in that year.", latestPeriod: "Latest period", overview: "Overview", budget: "Budget", accounts: "Accounts", detail: "Detail", coverage: "Coverage", method: "Method",
@@ -154,7 +158,13 @@
     return { ...data, detail };
   }
 
-  function normalizeBrazilRows(rows) {
+  function normalizeRows(rows) {
+    if (profile.country === "JPN") return rows.map((row) => {
+      if (row.side) return { ...row };
+      const label = `${row.name || ""} ${row.table_title || ""}`;
+      const side = /歳入/.test(label) ? "revenue" : /歳出|経費|人件費/.test(label) ? "expenditure" : "other";
+      return { ...row, side };
+    });
     if (profile.country !== "BRA") return rows.map((row) => ({ ...row }));
     const sideByAccount = new Map();
     rows.forEach((row) => {
@@ -255,7 +265,34 @@
 
   function detailRows() {
     const query = detailQuery.trim().toLocaleLowerCase();
-    return profile.normalizedDetail.filter((row) => (detailStage === "all" || row.stage === detailStage) && (detailSide === "all" || row.side === detailSide) && (!query || [row.code, row.name, row.column, row.table_title, row.side].some((value) => String(value || "").toLocaleLowerCase().includes(query))));
+    return profile.normalizedDetail.filter((row) => (detailYear === "all" || String(row.year) === detailYear) && (detailStage === "all" || row.stage === detailStage) && row.side === detailSide && (!query || [row.code, row.name, row.column, row.table_title, row.side].some((value) => String(value || "").toLocaleLowerCase().includes(query))));
+  }
+
+  function visualDetailRows() {
+    const totals = headlinePatterns[profile.country]?.[detailSide];
+    const unique = new Map();
+    detailRows().forEach((row) => {
+      if (numeric(row.amount) === null) return;
+      if (String(row.code || "").startsWith("TOTAL_")) return;
+      if (totals?.test(String(row.name || ""))) return;
+      const key = [row.year, row.stage, row.side, row.code, row.name, row.column, row.table_title, row.amount].join("\u0000");
+      if (!unique.has(key)) unique.set(key, row);
+    });
+    return [...unique.values()].sort((a, b) => Math.abs(Number(b.amount)) - Math.abs(Number(a.amount)));
+  }
+
+  function visualDetailMarkup() {
+    const t = copy[lang];
+    const rows = visualDetailRows();
+    const maximum = rows.reduce((max, row) => Math.max(max, Math.abs(Number(row.amount))), 0);
+    const visible = rows.slice(0, visualShown);
+    const items = visible.map((row, index) => {
+      const width = maximum ? Math.max(1.5, Math.abs(Number(row.amount)) / maximum * 100) : 0;
+      const label = row.name || row.column || row.code || t.specificItems;
+      const meta = [row.code, row.table_title, row.column && row.column !== row.name ? row.column : null].filter(Boolean).join(" · ");
+      return `<article class="native-visual-row"><div class="native-visual-rank">${String(index + 1).padStart(2, "0")}</div><div class="native-visual-body"><div class="native-visual-label"><div><strong>${escapeHtml(label)}</strong>${meta ? `<small>${escapeHtml(meta)}</small>` : ""}</div><b>${money(Math.abs(Number(row.amount)))}</b></div><div class="native-visual-track"><i style="width:${width.toFixed(2)}%"></i></div></div></article>`;
+    }).join("");
+    return `<div class="native-visual-summary"><span>${t.specificItems}</span><strong>${new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(rows.length)}</strong></div><div class="native-visual-list" id="profile-detail-visual">${items || `<p class="profile-empty-note">${t.noItems}</p>`}</div><p class="native-visual-note">${t.compareNote}</p><button id="profile-visual-more" class="load-more" type="button"${visualShown >= rows.length ? " hidden" : ""}>${t.visualMore}</button>`;
   }
 
   function renderDetailTable() {
@@ -269,6 +306,13 @@
     const more = document.querySelector("#profile-detail-more");
     more.textContent = t.more;
     more.hidden = detailShown >= rows.length;
+  }
+
+  function refreshDetailExplorer() {
+    const visual = document.querySelector("#profile-detail-visual-wrap");
+    if (visual) visual.innerHTML = visualDetailMarkup();
+    renderDetailTable();
+    document.querySelector("#profile-visual-more")?.addEventListener("click", () => { visualShown += 12; refreshDetailExplorer(); });
   }
 
   function contextRail() {
@@ -292,10 +336,21 @@
   }
 
   function bindControls() {
-    document.querySelector("#profile-detail-search")?.addEventListener("input", (event) => { detailQuery = event.target.value; detailShown = 160; renderDetailTable(); });
-    document.querySelector("#profile-detail-stage")?.addEventListener("change", (event) => { detailStage = event.target.value; detailShown = 160; renderDetailTable(); });
-    document.querySelector("#profile-detail-side")?.addEventListener("change", (event) => { detailSide = event.target.value; detailShown = 160; renderDetailTable(); });
+    const resetAndRefresh = () => { visualShown = 12; detailShown = 160; refreshDetailExplorer(); };
+    document.querySelector("#profile-detail-search")?.addEventListener("input", (event) => { detailQuery = event.target.value; resetAndRefresh(); });
+    document.querySelector("#profile-detail-stage")?.addEventListener("change", (event) => { detailStage = event.target.value; resetAndRefresh(); });
+    document.querySelector("#profile-detail-year")?.addEventListener("change", (event) => { detailYear = event.target.value; resetAndRefresh(); });
+    document.querySelectorAll("[data-detail-side]").forEach((button) => button.addEventListener("click", () => {
+      detailSide = button.dataset.detailSide;
+      document.querySelectorAll("[data-detail-side]").forEach((candidate) => {
+        const active = candidate.dataset.detailSide === detailSide;
+        candidate.classList.toggle("active", active);
+        candidate.setAttribute("aria-pressed", String(active));
+      });
+      resetAndRefresh();
+    }));
     document.querySelector("#profile-detail-more")?.addEventListener("click", () => { detailShown += 160; renderDetailTable(); });
+    document.querySelector("#profile-visual-more")?.addEventListener("click", () => { visualShown += 12; refreshDetailExplorer(); });
     document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => {
       lang = button.dataset.lang;
       const next = new URL(location.href);
@@ -319,6 +374,7 @@
     const revenueMix = mixRows(profile.normalizedDetail, "revenue", latestYear);
     const expenditureMix = mixRows(profile.normalizedDetail, "expenditure", latestYear);
     const stages = [...new Set(profile.normalizedDetail.map((row) => row.stage).filter(Boolean))].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
+    const detailYears = [...new Set(profile.normalizedDetail.map((row) => Number(row.year)).filter(Number.isFinite))].sort((a, b) => b - a);
 
     document.documentElement.lang = lang;
     document.body.classList.add("cz-budget-page", "detail-page", "international-municipality-profile");
@@ -361,7 +417,7 @@
       <section class="detail-kpis">${[[t.revenue, latest.revenue, latestYear], [t.expenditure, latest.expenditure, latestYear], [t.balance, latest.balance, latestYear], fourthMetric].map(([label, value, note], index) => `<article><span>${label}</span><strong class="${index === 2 && numeric(value) !== null ? (Number(value) >= 0 ? "positive" : "negative") : ""}">${index === 3 && label === t.executionRate ? percentage(value) : money(value)}</strong><small>${numeric(value) !== null ? note : t.noValue}</small></article>`).join("")}</section>
       ${historyMarkup(history)}
       <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(profile.normalizedDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
-        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label><label><span>${t.side}</span><select id="profile-detail-side"><option value="all">${t.allSides}</option><option value="revenue"${detailSide === "revenue" ? " selected" : ""}>${t.revenue}</option><option value="expenditure"${detailSide === "expenditure" ? " selected" : ""}>${t.expenditure}</option></select></label><b id="profile-detail-count"></b></div><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></section>
+        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div><div class="detail-side-tabs" role="group" aria-label="${escapeHtml(t.side)}"><button type="button" data-detail-side="expenditure" class="${detailSide === "expenditure" ? "active" : ""}" aria-pressed="${detailSide === "expenditure"}">${t.spendingTab}</button><button type="button" data-detail-side="revenue" class="${detailSide === "revenue" ? "active" : ""}" aria-pressed="${detailSide === "revenue"}">${t.incomeTab}</button></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.year}</span><select id="profile-detail-year"><option value="all">${t.allYears}</option>${detailYears.map((year) => `<option value="${year}"${String(year) === detailYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label></div><div id="profile-detail-visual-wrap">${visualDetailMarkup()}</div><details class="raw-detail-audit"><summary><span>${t.rawRows}</span><strong>${t.rawRowsOpen} · <b id="profile-detail-count"></b></strong></summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></details></section>
       </section>
       <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a><a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();
@@ -373,7 +429,13 @@
   Promise.all([fetchJson(profileUrl), document.body.dataset.historyUrl ? fetchJson(document.body.dataset.historyUrl) : Promise.resolve(null)])
     .then(([data, historyData]) => {
       profile = adaptProfile(data, historyData);
-      profile.normalizedDetail = normalizeBrazilRows(profile.detail || []);
+      profile.normalizedDetail = normalizeRows(profile.detail || []);
+      const availableSides = new Set(profile.normalizedDetail.map((row) => row.side));
+      detailSide = availableSides.has("expenditure") ? "expenditure" : availableSides.has("revenue") ? "revenue" : "other";
+      const years = profile.normalizedDetail.map((row) => Number(row.year)).filter(Number.isFinite);
+      detailYear = years.length ? String(Math.max(...years)) : "all";
+      const sideYearRows = profile.normalizedDetail.filter((row) => row.side === detailSide && String(row.year) === detailYear);
+      detailStage = sideYearRows.some((row) => row.stage === "actual") ? "actual" : sideYearRows[0]?.stage || "all";
       render();
     })
     .catch((error) => {

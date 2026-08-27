@@ -109,9 +109,36 @@
   margin-bottom: 30px;
 }
 
+.detail-side-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 1px;
+  gap: 1px;
+  padding: 1px;
+  background: var(--cz-line);
+}
+
+.detail-side-tabs button {
+  min-height: 64px;
+  padding: 14px 20px;
+  border: 0;
+  background: #f4f1e9;
+  color: var(--cz-muted);
+  font: 800 13px monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+
+.detail-side-tabs button.active {
+  background: var(--cz-ink);
+  color: white;
+  box-shadow: inset 0 -4px var(--cz-yellow);
+}
+
 .expanded-detail-controls {
   display: grid;
-  grid-template-columns: minmax(250px, 1fr) minmax(170px, .35fr) minmax(170px, .35fr) auto;
+  grid-template-columns: minmax(250px, 1fr) minmax(150px, .35fr) minmax(170px, .35fr);
   gap: 1px;
   align-items: stretch;
   margin-bottom: 14px;
@@ -119,8 +146,7 @@
   background: var(--cz-line);
 }
 
-.expanded-detail-controls label,
-.expanded-detail-controls > b {
+.expanded-detail-controls label {
   min-width: 0;
   padding: 13px 15px;
   background: #faf8f2;
@@ -154,12 +180,143 @@
   box-shadow: inset 0 -3px var(--cz-green);
 }
 
-.expanded-detail-controls > b {
-  display: grid;
-  place-items: center;
+.native-visual-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 20px 22px;
+  border: 1px solid var(--cz-line);
+  border-bottom: 0;
+  background: white;
+}
+
+.native-visual-summary span {
   color: var(--cz-muted);
   font: 700 11px monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.native-visual-summary strong {
+  color: var(--cz-green);
+  font: 800 30px/1 monospace;
+}
+
+.native-visual-list {
+  border: 1px solid var(--cz-line);
+  background: white;
+}
+
+.native-visual-row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  border-bottom: 1px solid var(--cz-line);
+}
+
+.native-visual-row:last-child {
+  border-bottom: 0;
+}
+
+.native-visual-rank {
+  display: grid;
+  place-items: center;
+  border-right: 1px solid var(--cz-line);
+  color: var(--cz-muted);
+  font: 700 12px monospace;
+}
+
+.native-visual-body {
+  min-width: 0;
+  padding: 18px 20px;
+}
+
+.native-visual-label {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.native-visual-label > div {
+  min-width: 0;
+}
+
+.native-visual-label strong,
+.native-visual-label small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.native-visual-label strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.native-visual-label small {
+  margin-top: 5px;
+  color: var(--cz-muted);
+  font: 11px/1.45 monospace;
+}
+
+.native-visual-label > b {
+  flex: 0 0 auto;
+  font: 800 14px monospace;
   white-space: nowrap;
+}
+
+.native-visual-track {
+  height: 8px;
+  margin-top: 13px;
+  overflow: hidden;
+  background: #ece8dd;
+}
+
+.native-visual-track i {
+  display: block;
+  height: 100%;
+  background: var(--cz-green);
+}
+
+.native-visual-note {
+  margin: 14px 0 0;
+  color: var(--cz-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+#profile-visual-more {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.raw-detail-audit {
+  margin-top: 30px;
+  border: 1px solid var(--cz-line);
+  background: white;
+}
+
+.raw-detail-audit summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px;
+  color: var(--cz-ink);
+  cursor: pointer;
+}
+
+.raw-detail-audit summary span {
+  font-weight: 800;
+}
+
+.raw-detail-audit summary strong {
+  color: var(--cz-green);
+  font: 700 11px monospace;
+  text-align: right;
+}
+
+.raw-detail-audit .profile-table-scroll {
+  border-width: 1px 0 0;
 }
 
 .international-municipality-profile .profile-table-scroll {
@@ -263,7 +420,25 @@
     grid-template-columns: 1fr;
   }
 
-  .expanded-detail-controls > b {
-    min-height: 46px;
+  .native-visual-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .native-visual-body {
+    padding: 16px 14px;
+  }
+
+  .native-visual-label {
+    display: block;
+  }
+
+  .native-visual-label > b {
+    display: block;
+    margin-top: 9px;
+  }
+
+  .raw-detail-audit summary {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

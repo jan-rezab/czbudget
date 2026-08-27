@@ -2,7 +2,7 @@
 
 Country importers own data normalization. This module owns the durable first
 view; municipal-expanded-profile.js progressively enhances it with filtering,
-language switching, and the complete native-detail table.
+language switching, and the complete visual detail explorer.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from collections.abc import Iterable
 
 
 ORIGIN = "https://publicspendingdata.org"
-ASSET_VERSION = "20260828-capability-profile"
+ASSET_VERSION = "20260828-visual-detail"
 STAGE_ORDER = ("enacted", "revised", "actual", "committed", "cash", "period", "remaining")
 STAGE_LABELS = {
     "en": {"enacted": "Approved", "revised": "Amended", "actual": "Actual", "committed": "Committed", "cash": "Paid", "period": "In period", "remaining": "Remaining"},
@@ -88,7 +88,15 @@ def _normalize_brazil_rows(rows: list[dict]) -> list[dict]:
 def _profile_detail(profile: dict) -> list[dict]:
     if isinstance(profile.get("detail"), list):
         rows = [dict(row) for row in profile["detail"]]
-        return _normalize_brazil_rows(rows) if profile.get("country") == "BRA" else rows
+        if profile.get("country") == "BRA":
+            return _normalize_brazil_rows(rows)
+        if profile.get("country") == "JPN":
+            for row in rows:
+                if row.get("side"):
+                    continue
+                label = f"{row.get('name') or ''} {row.get('table_title') or ''}"
+                row["side"] = "revenue" if "歳入" in label else "expenditure" if re.search(r"歳出|経費|人件費", label) else "other"
+        return rows
     breakdown = profile.get("breakdown")
     if not isinstance(breakdown, list):
         return []
@@ -131,10 +139,11 @@ def _headline(rows: Iterable[dict], stage: str, side: str, country: str) -> floa
     return numeric(max(candidates, key=lambda row: abs(numeric(row.get("amount")) or 0)).get("amount"))
 
 
-def _table(rows: list[list[str]], headings: list[str], label: str) -> str:
+def _table(rows: list[list[str]], headings: list[str], label: str, *, table_id: str | None = None) -> str:
     head = "".join(f"<th>{esc(item)}</th>" for item in headings)
     body = "".join("<tr>" + "".join(f"<{('th' if index == 0 else 'td')}>{cell}</{('th' if index == 0 else 'td')}>" for index, cell in enumerate(row)) + "</tr>" for row in rows)
-    return f'<div class="profile-table-scroll" role="region" tabindex="0" aria-label="{esc(label)}"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
+    identifier = f' id="{esc(table_id)}"' if table_id else ""
+    return f'<div class="profile-table-scroll" role="region" tabindex="0" aria-label="{esc(label)}"><table{identifier}><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
 def render_municipal_profile_shell(
@@ -247,12 +256,39 @@ def render_municipal_profile_shell(
 
         detail_section = ""
         if detail:
+            default_side = "expenditure" if any(row.get("side") == "expenditure" for row in detail) else "revenue" if any(row.get("side") == "revenue" for row in detail) else "other"
+            default_year = latest_year or max((int(numeric(row.get("year")) or 0) for row in detail), default=0)
+            side_year_rows = [row for row in detail if row.get("side") == default_side and int(numeric(row.get("year")) or 0) == default_year]
+            default_stage = "actual" if any(row.get("stage") == "actual" for row in side_year_rows) else str(side_year_rows[0].get("stage") or "all") if side_year_rows else "all"
+            filtered = [row for row in side_year_rows if default_stage == "all" or row.get("stage") == default_stage]
+            unique: dict[tuple, dict] = {}
+            for row in filtered:
+                if numeric(row.get("amount")) is None or str(row.get("code") or "").startswith("TOTAL_"):
+                    continue
+                label = str(row.get("name") or "")
+                if country == "BRA" and re.search(r"DESPESAS \(EXCETO INTRA-?ORÇAMENTÁRIAS\)", label, re.I):
+                    continue
+                key = tuple(str(row.get(field) or "") for field in ("year", "stage", "side", "code", "name", "column", "table_title", "amount"))
+                unique.setdefault(key, row)
+            visual_rows = sorted(unique.values(), key=lambda row: abs(numeric(row.get("amount")) or 0), reverse=True)
+            maximum = max((abs(numeric(row.get("amount")) or 0) for row in visual_rows), default=0)
+            visual_items = []
+            for index, row in enumerate(visual_rows[:12], 1):
+                label = row.get("name") or row.get("column") or row.get("code") or ("Specific item" if is_en else "Konkrétní položka")
+                meta = " · ".join(str(value) for value in (row.get("code"), row.get("table_title"), row.get("column") if row.get("column") != row.get("name") else None) if value)
+                width = max(1.5, abs(numeric(row.get("amount")) or 0) / maximum * 100) if maximum else 0
+                visual_items.append(f'<article class="native-visual-row"><div class="native-visual-rank">{index:02d}</div><div class="native-visual-body"><div class="native-visual-label"><div><strong>{esc(label)}</strong>{f"<small>{esc(meta)}</small>" if meta else ""}</div><b>{esc(fmt_money(abs(numeric(row.get("amount")) or 0), currency))}</b></div><div class="native-visual-track"><i style="width:{width:.2f}%"></i></div></div></article>')
+            visual_list = "".join(visual_items) or f'<p class="profile-empty-note">{"No items are available for these filters." if is_en else "Pro zvolené filtry nejsou dostupné žádné položky."}</p>'
+
             detail_rows = []
-            for row in detail[:24]:
+            for row in filtered[:24]:
                 item = f'<b>{esc(row.get("code") or "—")}</b><small>{esc(row.get("name") or row.get("column") or "")}</small>'
                 detail_rows.append([esc(row.get("year") or "—"), esc(STAGE_LABELS[lang].get(str(row.get("stage")), row.get("stage") or "—")), esc(row.get("side") or "—"), item, esc(fmt_money(row.get("amount"), currency, compact=False))])
-            detail_table = _table(detail_rows, ["Year" if is_en else "Rok", "Budget stage" if is_en else "Fáze", "Side" if is_en else "Strana", "Code / item" if is_en else "Kód / položka", "Amount" if is_en else "Částka"], "Item-level detail table")
-            detail_section = f'<section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">{labels["detail"]}</span><h2>{"Item-level detail." if is_en else "Položkový detail."}</h2></div><p>{"First 24 rows are rendered here; the interactive table loads every original row and preserves national codes." if is_en else "Prvních 24 řádků je přímo v HTML; interaktivní tabulka načte všechny původní řádky a zachová národní kódy."}</p></div>{detail_table}<p class="profile-render-note">{len(detail):,} {"source rows available" if is_en else "dostupných zdrojových řádků"}</p></section>'
+            detail_table = _table(detail_rows, ["Year" if is_en else "Rok", "Budget stage" if is_en else "Fáze", "Side" if is_en else "Strana", "Code / item" if is_en else "Kód / položka", "Amount" if is_en else "Částka"], "Source item table", table_id="profile-detail")
+            year_options = "".join(f'<option value="{year}"{(" selected" if year == default_year else "")}>{year}</option>' for year in sorted({int(numeric(row.get("year")) or 0) for row in detail if numeric(row.get("year")) is not None}, reverse=True))
+            stages = sorted({str(row.get("stage")) for row in detail if row.get("stage")}, key=lambda stage: STAGE_ORDER.index(stage) if stage in STAGE_ORDER else len(STAGE_ORDER))
+            stage_options = "".join(f'<option value="{esc(stage)}"{(" selected" if stage == default_stage else "")}>{esc(STAGE_LABELS[lang].get(stage, stage))}</option>' for stage in stages)
+            detail_section = f'<section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">{"Where the money goes" if is_en else "Kam peníze jdou"}</span><h2>{"Explore income and spending." if is_en else "Prozkoumejte příjmy a výdaje."}</h2></div><p>{"Switch between income and spending, then explore the specific purposes reported by the source. Bar length compares reported line magnitude; native labels and codes stay intact." if is_en else "Přepněte mezi příjmy a výdaji a procházejte konkrétní účely. Délka pruhu porovnává velikost vykázaných položek; původní názvy a kódy zůstávají zachované."}</p></div><div class="detail-side-tabs" role="group" aria-label="{("Side" if is_en else "Strana")}"><button type="button" data-detail-side="expenditure" class="{("active" if default_side == "expenditure" else "")}" aria-pressed="{str(default_side == "expenditure").lower()}">{"Spending / expenditure" if is_en else "Výdaje"}</button><button type="button" data-detail-side="revenue" class="{("active" if default_side == "revenue" else "")}" aria-pressed="{str(default_side == "revenue").lower()}">{"Income / revenue" if is_en else "Příjmy"}</button></div><div class="expanded-detail-controls"><label><span>{"Search items" if is_en else "Hledat položku"}</span><input id="profile-detail-search" type="search" placeholder="{("Code or label…" if is_en else "Kód nebo název…")}"></label><label><span>{"Year" if is_en else "Rok"}</span><select id="profile-detail-year"><option value="all">{"All years" if is_en else "Všechny roky"}</option>{year_options}</select></label><label><span>{"Budget stage" if is_en else "Fáze"}</span><select id="profile-detail-stage"><option value="all">{"All stages" if is_en else "Všechny fáze"}</option>{stage_options}</select></label></div><div id="profile-detail-visual-wrap"><div class="native-visual-summary"><span>{"Specific items" if is_en else "Konkrétní položky"}</span><strong>{len(visual_rows):,}</strong></div><div class="native-visual-list" id="profile-detail-visual">{visual_list}</div><p class="native-visual-note">{"Bars compare the absolute magnitude of reported lines, not a share of an artificially summed total." if is_en else "Pruhy porovnávají absolutní velikost vykázaných řádků, nikoli podíl z uměle sečteného celku."}</p></div><details class="raw-detail-audit"><summary><span>{"Source rows" if is_en else "Zdrojové řádky"}</span><strong>{"Open raw audit table" if is_en else "Otevřít auditní tabulku"} · <b id="profile-detail-count">{min(24, len(filtered)):,} / {len(filtered):,}</b></strong></summary>{detail_table}<button id="profile-detail-more" class="load-more" type="button">{"Load more source rows" if is_en else "Načíst další zdrojové řádky"}</button></details></section>'
         budget_section = f'<section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">{labels["budget"]} · {latest_year or "—"}</span><h2>{"Reported budget stages." if is_en else "Vykázané fáze rozpočtu."}</h2></div><p>{"Only stages present in the official source are shown." if is_en else "Zobrazují se pouze fáze přítomné v oficiálním zdroji."}</p></div><article class="detail-panel plan-panel">{stage_table}</article>{detail_section}</section>'
 
     coverage = coverage_note or ("Item-level filing available; national labels and classifications are preserved." if detail and is_en else "Položkový výkaz je dostupný; národní názvy a klasifikace zůstávají zachovány." if detail else "No item-level financial filing is available for this directory entity." if is_en else "Pro tuto jednotku adresáře není dostupný položkový finanční výkaz.")

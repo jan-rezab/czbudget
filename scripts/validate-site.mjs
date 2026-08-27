@@ -225,6 +225,9 @@ if (internationalProfileSamples.some((page) =>
   !page.includes('class="detail-hero"') ||
   !page.includes('id="rozpocet"') ||
   !page.includes('id="native-detail"') ||
+  !page.includes('class="detail-side-tabs"') ||
+  !page.includes('id="profile-detail-visual"') ||
+  !page.includes('class="raw-detail-audit"') ||
   !page.includes('class="data-contract" id="metodika"') ||
   !cacheBusted(page, "municipal-expanded-profile.js") ||
   page.includes("municipal-profile-loading")
