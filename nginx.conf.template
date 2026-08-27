@@ -193,7 +193,7 @@ server {
     sub_filter_once off;
     sub_filter '<head>' $psd_head_inject;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
-    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-germany-routes';
+    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-country-methodology';
     sub_filter 'country-parity.css?v=20260822-parity-contract' 'country-parity.css?v=20260824-readable-country-routes';
     sub_filter 'country-parity.js?v=20260822-parity-contract' 'country-parity.js?v=20260824-readable-country-routes';
     sub_filter 'country-cash-in.js?v=20260824-loaded-layers' 'country-cash-in.js?v=20260824-readable-country-routes';
@@ -216,10 +216,10 @@ server {
     sub_filter 'municipal-benchmark-profile.css"' 'municipal-benchmark-profile.css?v=20260824-box-sizing"';
     sub_filter 'municipal-expanded-profile.css"' 'municipal-expanded-profile.css?v=20260827-unified-municipal-profile"';
     sub_filter 'municipal-expanded-profile.js"' 'municipal-expanded-profile.js?v=20260827-unified-municipal-profile"';
-    sub_filter 'global-nav.js?v=20260822-component"' 'global-nav.js?v=20260827-germany-routes"';
-    sub_filter 'global-nav.js?v=20260824-budget-stages"' 'global-nav.js?v=20260827-germany-routes"';
-    sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260827-germany-routes"';
-    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-germany-routes';
+    sub_filter 'global-nav.js?v=20260822-component"' 'global-nav.js?v=20260827-country-methodology"';
+    sub_filter 'global-nav.js?v=20260824-budget-stages"' 'global-nav.js?v=20260827-country-methodology"';
+    sub_filter 'global-nav.js?v=20260824-identity-outlines"' 'global-nav.js?v=20260827-country-methodology"';
+    sub_filter 'global-nav.js?v=20260824-logo-120' 'global-nav.js?v=20260827-country-methodology';
     sub_filter 'global-footer.js?v=20260822-hlidac' 'global-footer.js?v=20260825-footer-align';
     sub_filter 'global-footer.js?v=20260823-footer' 'global-footer.js?v=20260825-footer-align';
     sub_filter 'global-footer.js?v=20260824-compact' 'global-footer.js?v=20260825-footer-align';

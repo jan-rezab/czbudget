@@ -216,6 +216,20 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });
 
+test("municipality country pages open their own methodology records", async ({ page }) => {
+  await page.goto("/municipalities/finland/?lang=en", { waitUntil: "networkidle" });
+  const methodologyLink = page.locator('[data-global-nav="method"]');
+  await expect(methodologyLink).toHaveAttribute("href", /methodology\.html\?lang=en&country=FIN#sources$/);
+
+  await methodologyLink.click();
+  await expect(page).toHaveURL(/methodology\.html\?lang=en&country=FIN#sources$/);
+  await expect(page.locator("#method-country-filter")).toHaveValue("FIN");
+  await expect(page.locator("#method-source-rows tr")).toHaveCount(12);
+  await expect(page.locator("#method-source-rows")).toContainText("Municipalities · directory and headline finance");
+  await expect(page.locator("#method-source-rows")).toContainText("Municipalities · itemized budgets");
+  await expect(page.locator("#method-source-rows")).toContainText("310 of 310 municipal profiles published on this site");
+});
+
 test("homepage compares all fifteen health-system topline metrics", async ({ page }) => {
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   const comparison = page.locator("#health-performance-compare");

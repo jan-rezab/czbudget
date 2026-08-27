@@ -79,7 +79,8 @@
     {id:"budgetDetail",cs:"Obce · položkové rozpočty",en:"Municipalities · itemized budgets",modules:["municipal_itemized"],municipal:true}
   ];
   let current = lang === "en" ? "en" : "cs";
-  let methodologyData=null,qualityData=null,releaseData=null,municipalityData=null,itemizedBudgetData=null,transportPerformanceData=null,transportBudgetData=null,coverageResearchData=null,activeCoverageNode=null,coverageCountryQuery="";
+  const initialCountryCode=(new URLSearchParams(location.search).get("country")||"").toUpperCase();
+  let methodologyData=null,qualityData=null,releaseData=null,municipalityData=null,itemizedBudgetData=null,transportPerformanceData=null,transportBudgetData=null,coverageResearchData=null,activeCoverageNode=null,coverageCountryQuery="",initialFiltersApplied=false;
   Object.assign(statusCopy.cs,{searchCountry:"Hledat zemi",searchCountryPlaceholder:"Název nebo kód země"});
   Object.assign(statusCopy.en,{searchCountry:"Search countries",searchCountryPlaceholder:"Country name or code"});
   const esc=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
@@ -241,6 +242,11 @@
     fillSelect("#method-country-filter",statusCountries().map(item=>({value:item.code,cs:item.cs,en:item.en})),copy[current].ledgerAllCountries,current);
     fillSelect("#method-module-filter",methodologyData.modules.map(item=>({value:item.id,cs:item.label_cs,en:item.label_en})),copy[current].ledgerAllModules,current);
     fillSelect("#method-status-filter",[{value:"full",cs:"Plné",en:"Full"},{value:"partial",cs:"Částečné",en:"Partial"},{value:"aggregate",cs:"Agregát",en:"Aggregate"},{value:"not_loaded",cs:"Nenačteno v PSD",en:"Not loaded by PSD"}],copy[current].ledgerAllStatuses,current);
+    if(!initialFiltersApplied){
+      const countryFilter=document.querySelector("#method-country-filter");
+      if(initialCountryCode&&[...countryFilter.options].some(option=>option.value===initialCountryCode))countryFilter.value=initialCountryCode;
+      initialFiltersApplied=true;
+    }
     const rows=filteredMethodRows(),visibleRows=rows.slice(0,100),body=document.querySelector("#method-source-rows");
     if(body)body.innerHTML=visibleRows.map(row=>`<tr><td><b>${esc(current==="cs"?row.country_name_cs:row.country_name_en)}</b><small>${esc(row.country_code)}</small></td><td><b>${esc(current==="cs"?row.module_label_cs:row.module_label_en)}</b><code>${esc(row.module)}</code></td><td><span class="method-status method-status-${esc(row.status)}">${esc(statusLabel(row.status))}</span><small class="method-source-availability">${esc(statusCopy[current].sourceAvailability)}: ${esc(availabilityLabel(row.source_availability))}</small><p>${esc(row.coverage)}</p></td><td><b>${esc(row.period)}</b><p>${esc(row.scope)}</p></td><td>${row.sources.map(item=>`<a href="${esc(item.url)}" target="_blank" rel="noreferrer">${esc(item.title)} ↗</a>`).join("")}<p>${esc(row.exact_extraction)}</p></td><td><code>${esc(row.artifact)}</code><p>${esc(row.transformation)}</p></td><td>${row.limitations?`<p>${esc(row.limitations)}</p>`:"—"}</td></tr>`).join("");
     const summary=document.querySelector("#method-ledger-summary"); if(summary)summary.textContent=current==="cs"?`${visibleRows.length} zobrazeno · ${rows.length} odpovídá z ${methodologyData.row_count}`:`${visibleRows.length} shown · ${rows.length} matching of ${methodologyData.row_count}`;
@@ -284,23 +290,28 @@
     document.querySelectorAll("[data-status-placeholder]").forEach(node=>{const value=statusCopy[current][node.dataset.statusPlaceholder];if(value)node.placeholder=value;});
     renderMethodology();
     renderDataHealth();
-    history.replaceState(null,"",`${location.pathname}?lang=${current}${location.hash}`);
+    const url=new URL(location.href);url.searchParams.set("lang",current);history.replaceState(null,"",`${url.pathname}${url.search}${url.hash}`);
+  }
+  function syncMethodCountryQuery(){
+    const country=document.querySelector("#method-country-filter")?.value||"",url=new URL(location.href);
+    if(country)url.searchParams.set("country",country);else url.searchParams.delete("country");
+    history.replaceState(null,"",`${url.pathname}${url.search}${url.hash}`);
   }
   // Persist only on an explicit toggle. PSDLanguage.set stores the choice and
   // announces it so the independently rendered modules on this page re-render.
   document.querySelectorAll("[data-lang]").forEach(button => button.addEventListener("click",()=>{current=window.PSDLanguage?.set(button.dataset.lang,{persist:true})||button.dataset.lang;render();}));
-  ["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>document.querySelector(selector)?.addEventListener("input",()=>{activeCoverageNode=null;renderMethodology();}));
+  ["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>document.querySelector(selector)?.addEventListener("input",()=>{activeCoverageNode=null;if(selector==="#method-country-filter")syncMethodCountryQuery();renderMethodology();}));
   document.querySelector("#coverage-matrix-body")?.addEventListener("click",event=>{
     const button=event.target.closest("[data-coverage-node]");if(!button||!methodologyData)return;
     const category=coverageCategories.find(item=>item.id===button.dataset.coverageNode);if(!category)return;
     activeCoverageNode={country:button.dataset.coverageCountry,category:category.id,modules:category.modules};
     const countryFilter=document.querySelector("#method-country-filter"),moduleFilter=document.querySelector("#method-module-filter"),statusFilter=document.querySelector("#method-status-filter"),search=document.querySelector("#method-source-search");
     if(countryFilter)countryFilter.value=activeCoverageNode.country;if(moduleFilter)moduleFilter.value="";if(statusFilter)statusFilter.value="";if(search)search.value="";
-    renderMethodology();document.querySelector(".coverage-selection")?.scrollIntoView({behavior:"smooth",block:"nearest"});
+    syncMethodCountryQuery();renderMethodology();document.querySelector(".coverage-selection")?.scrollIntoView({behavior:"smooth",block:"nearest"});
   });
   document.querySelector("#coverage-country-search")?.addEventListener("input",event=>{coverageCountryQuery=event.target.value;renderCoverageMatrix();});
   document.querySelector("#coverage-clear")?.addEventListener("click",()=>{
-    activeCoverageNode=null;["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>{const control=document.querySelector(selector);if(control)control.value="";});renderMethodology();
+    activeCoverageNode=null;["#method-country-filter","#method-module-filter","#method-status-filter","#method-source-search"].forEach(selector=>{const control=document.querySelector(selector);if(control)control.value="";});syncMethodCountryQuery();renderMethodology();
   });
   document.querySelector("#method-download-csv")?.addEventListener("click",downloadMethodCsv);
   render();
