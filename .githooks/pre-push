@@ -7,6 +7,29 @@ set -eu
 
 cd "$(git rev-parse --show-toplevel)"
 
+# Reject synthetic local-only identities before they can appear on GitHub or
+# trigger the production build. Existing remote history is excluded so old
+# commits do not prevent legitimate branches from being pushed.
+zero_oid=0000000000000000000000000000000000000000
+while read -r local_ref local_oid remote_ref remote_oid; do
+  [ "$local_oid" = "$zero_oid" ] && continue
+
+  if [ "$remote_oid" = "$zero_oid" ]; then
+    commits=$(git rev-list "$local_oid" --not --remotes=origin)
+  else
+    commits=$(git rev-list "$remote_oid..$local_oid")
+  fi
+
+  for commit in $commits; do
+    identities=$(git show -s --format='%ae%n%ce' "$commit")
+    if printf '%s\n' "$identities" | grep -Eq '@local$'; then
+      echo "Push blocked: commit $commit uses a synthetic @local author or committer identity." >&2
+      echo "Configure a real repository user.name and user.email, then recreate that commit." >&2
+      exit 1
+    fi
+  done
+done
+
 if [ -n "$(git status --porcelain)" ]; then
   echo "Push blocked: commit or discard local changes first." >&2
   exit 1
