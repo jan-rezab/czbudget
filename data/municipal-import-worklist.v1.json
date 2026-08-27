@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "updated": "2026-08-26",
+  "acceptance_gate": {
+    "scope": "National entity-level municipal finance data from an official publisher",
+    "required": [
+      "stable municipality identifier and name",
+      "at least one paired revenue/expenditure period",
+      "declared accounting stage and perimeter",
+      "automated total and entity-count validation",
+      "public directory and entity profile routes"
+    ],
+    "excluded": [
+      "capital-only records",
+      "national or regional aggregates without municipalities",
+      "source landing pages without an ingestible public export",
+      "urban or rural subsets presented as full national municipal coverage"
+    ]
+  },
+  "countries": [
+    {"iso3":"COL","name":"Colombia","status":"loaded","perimeter":"1,102 CUIPO municipalities","periods":[2025],"source":"https://www.datos.gov.co/browse?q=OVCF%20CUIPO"},
+    {"iso3":"GEO","name":"Georgia","status":"loaded","perimeter":"69 municipalities","periods":[2025,2026],"source":"https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities"},
+    {"iso3":"ITA","name":"Italy","status":"loaded","perimeter":"7,896 municipalities in national SIOPE cash-flow files","periods":[2025],"source":"https://www.siope.it/Siope/"},
+    {"iso3":"KOR","name":"South Korea","status":"loaded","perimeter":"All 243 local governments: 17 upper-tier and 226 basic governments","periods":[2024],"source":"https://www.lofin365.go.kr/portal/LF5100000.do"},
+    {"iso3":"BOL","name":"Bolivia","status":"loaded","perimeter":"335 municipal and 8 Indigenous autonomous governments","periods":[2025],"source":"https://abierto.economiayfinanzas.gob.bo/descargas"},
+    {"iso3":"CHL","name":"Chile","status":"loaded","perimeter":"All 345 municipalities in SINIM municipal-sector evolution data","periods":[2025],"source":"https://datos.sinim.gov.cl/evolucion_presupuestaria.php"},
+    {"iso3":"CRI","name":"Costa Rica","status":"loaded","perimeter":"All 84 current municipalities in SIPP","periods":[2025],"source":"https://cgrweb.cgr.go.cr/apex/f?p=150220:2"},
+    {"iso3":"SLV","name":"El Salvador","status":"loaded_partial","perimeter":"259 of 262 then-municipalities","periods":[2023],"blocker":"San Lorenzo, Cuscatancingo and Meanguera del Golfo did not report in the last complete full-year legacy-municipality file","source":"https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html"},
+    {"iso3":"GTM","name":"Guatemala","status":"loaded","perimeter":"All 340 municipalities in SICOINGL and SICOINDES","periods":[2025],"source":"https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025"},
+    {"iso3":"MEX","name":"Mexico","status":"loaded_partial","perimeter":"2,380 reporting municipal governments in definitive annual EFIPEM records","periods":[2024],"blocker":"The published file does not contain the full national municipal universe","source":"https://www.inegi.org.mx/programas/finanzas/"},
+    {"iso3":"PER","name":"Peru","status":"loaded","perimeter":"All 1,891 provincial and district municipalities in Consulta Amigable","periods":[2024],"source":"https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto"},
+    {"iso3":"IND","name":"India","status":"partial_not_full","perimeter":"Nationwide rural local bodies only","blocker":"Urban local bodies do not have equivalent national coverage","source":"https://www.nic.gov.in/project/egramswaraj/"},
+    {"iso3":"HND","name":"Honduras","status":"blocked_no_bulk","perimeter":"Municipal SAMI reports","blocker":"No complete nationwide public bulk export found","source":"https://www.sefin.gob.hn/sami/"}
+  ]
+}

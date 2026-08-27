@@ -49,6 +49,7 @@
   if (existingPortalStyles) existingPortalStyles.href = portalStylesHref;
   else { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = portalStylesHref; styles.dataset.portalUi = "true"; document.head.append(styles); }
   if (!document.querySelector("script[data-portal-ui]")) { const script = document.createElement("script"); script.src = `${assetRoot}portal-ui.js?v=20260823`; script.defer = true; script.dataset.portalUi = "true"; document.head.append(script); }
+  if (!document.querySelector("link[data-ux-refinements]")) { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = `${assetRoot}ux-refinements.css?v=20260827`; styles.dataset.uxRefinements = "true"; document.head.append(styles); }
   const HEADER_TAG = "psd-site-header";
   let countries = [
     ["CZE", "Česko", "Czechia", "cz"], ["DEU", "Německo", "Germany", "de"],
@@ -78,8 +79,8 @@
   ];
   const countrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FIN:"finland",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states",BRA:"brazil",ESP:"spain",JPN:"japan",NLD:"netherlands",NOR:"norway",GRC:"greece"};
   const copy = {
-    cs: { home:"Domů", compare:"Srovnání", cities:"Obce a města", country:"Země", deepDives:"Hloubkové profily", method:"Pokrytí", about:"O projektu", all:"Všechny profily", allMunicipalities:"Všechny obce", allDeepDives:"Všechny profily", transport:"Doprava", transportCopy:"Rozpočty, silnice a tempo výstavby", health:"Zdraví", healthCopy:"Financování a kapacita systému", stateCompanies:"Státní podniky", stateCompaniesCopy:"30 podniků, výnosy v EUR", capitalCities:"Hlavní města", capitalCitiesCopy:"Rozpočtové plány, obyvatelé a turistický tlak", revenue:"Kdo financuje stát?", revenueCopy:"Daně, úrovně vlády a transfery", ageing:"Účet stárnutí", ageingCopy:"Projekce a demografická kalkulačka", migration:"Evropská migrace", migrationCopy:"27 zemí, příchody, odchody a saldo", economy:"Ekonomika v kontextu", economyCopy:"Dlouhé řady, hospodářský cyklus a fiskální kontext", defense:"Výdaje na obranu", defenseCopy:"17 zemí, % HDP a rozpočtové řádky", czechBudget:"Český státní rozpočet", navigation:"Hlavní navigace", language:"Jazyk", searchCountry:"Hledat zemi", searchCountryPlaceholder:"Název nebo kód…", countryMatches:"profilů", noCountryMatches:"Žádná země neodpovídá." },
-    en: { home:"Home", compare:"Compare", cities:"Municipalities", country:"Country", deepDives:"Deep dives", method:"Coverage", about:"About", all:"All profiles", allMunicipalities:"All municipalities", allDeepDives:"All deep dives", transport:"Transportation", transportCopy:"Budgets, roads and build pace", health:"Health", healthCopy:"Funding and system capacity", stateCompanies:"State-owned enterprises", stateCompaniesCopy:"30 enterprises, revenue in EUR", capitalCities:"Capital cities", capitalCitiesCopy:"Budget plans, residents and visitor pressure", revenue:"Who funds the state?", revenueCopy:"Taxes, government levels and transfers", ageing:"The Ageing Bill", ageingCopy:"Projections and demographic calculator", migration:"European migration", migrationCopy:"27 countries, arrivals, departures and balance", economy:"Economy in context", economyCopy:"Long-run series, the economic cycle and fiscal context", defense:"Defense spending", defenseCopy:"17 countries, % of GDP and budget lines", czechBudget:"Czech state budget", navigation:"Primary navigation", language:"Language", searchCountry:"Search countries", searchCountryPlaceholder:"Name or code…", countryMatches:"profiles", noCountryMatches:"No countries match." },
+    cs: { home:"Domů", compare:"Srovnání", cities:"Obce a města", country:"Země", deepDives:"Reporty", method:"Pokrytí", about:"O projektu", all:"Všechny profily", allMunicipalities:"Všechny obce", allDeepDives:"Všechny reporty", transport:"Doprava", transportCopy:"Rozpočty, silnice a tempo výstavby", health:"Zdraví", healthCopy:"Financování a kapacita systému", stateCompanies:"Státní podniky", stateCompaniesCopy:"30 podniků, výnosy v EUR", capitalCities:"Hlavní města", capitalCitiesCopy:"Rozpočtové plány, obyvatelé a turistický tlak", revenue:"Kdo financuje stát?", revenueCopy:"Daně, úrovně vlády a transfery", ageing:"Účet stárnutí", ageingCopy:"Projekce a demografická kalkulačka", migration:"Evropská migrace", migrationCopy:"27 zemí, příchody, odchody a saldo", economy:"Ekonomika v kontextu", economyCopy:"Dlouhé řady, hospodářský cyklus a fiskální kontext", defense:"Výdaje na obranu", defenseCopy:"17 zemí, % HDP a rozpočtové řádky", czechBudget:"Český státní rozpočet", navigation:"Hlavní navigace", language:"Jazyk", searchCountry:"Hledat zemi", searchMunicipality:"Hledat obecní zemi", searchCountryPlaceholder:"Název země…", countryMatches:"profilů", municipalityMatches:"zemí", noCountryMatches:"Žádná země neodpovídá." },
+    en: { home:"Home", compare:"Compare", cities:"Municipalities", country:"Country", deepDives:"Reports", method:"Coverage", about:"About", all:"All profiles", allMunicipalities:"All municipalities", allDeepDives:"All reports", transport:"Transportation", transportCopy:"Budgets, roads and build pace", health:"Health", healthCopy:"Funding and system capacity", stateCompanies:"State-owned enterprises", stateCompaniesCopy:"30 enterprises, revenue in EUR", capitalCities:"Capital cities", capitalCitiesCopy:"Budget plans, residents and visitor pressure", revenue:"Who funds the state?", revenueCopy:"Taxes, government levels and transfers", ageing:"The Ageing Bill", ageingCopy:"Projections and demographic calculator", migration:"European migration", migrationCopy:"27 countries, arrivals, departures and balance", economy:"Economy in context", economyCopy:"Long-run series, the economic cycle and fiscal context", defense:"Defense spending", defenseCopy:"17 countries, % of GDP and budget lines", czechBudget:"Czech state budget", navigation:"Primary navigation", language:"Language", searchCountry:"Search countries", searchMunicipality:"Search municipality countries", searchCountryPlaceholder:"Country name…", countryMatches:"profiles", municipalityMatches:"countries", noCountryMatches:"No countries match." },
   };
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const href = (path, lang = language()) => `${assetRoot}${path}${path.includes("?") ? "&" : "?"}lang=${lang}`;
@@ -87,6 +88,37 @@
     ? window.PSDCountryRoutes.href(code, lang)
     : `/countries/${countrySlugs[code] || String(code).toLowerCase()}?lang=${lang}`;
   const flagEmoji = (iso2) => String(iso2 || "").toUpperCase().replace(/[A-Z]/g, (letter) => String.fromCodePoint(127397 + letter.charCodeAt(0)));
+
+  let coverageLoaded = false;
+  // The coverage contract is 765 KB and only fills the country dropdown, so it loads once
+  // the menu is first opened rather than on every page view, and stays cacheable.
+  function loadCoverage() {
+    if (coverageLoaded) return;
+    coverageLoaded = true;
+    fetch(`${assetRoot}data/country-parity.v1.json`)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Country coverage ${response.status}`);
+        return response.json();
+      })
+      .then((coverage) => {
+        if (!Array.isArray(coverage.countries) || !coverage.countries.length) return;
+        const flags = Object.fromEntries(countries.map(([code,,,flag]) => [code, flag]));
+        countries = coverage.countries.map((country) => [country.country_code, country.name_cs, country.name_en, flags[country.country_code] || `:${country.iso2 || ""}`]);
+        const menu = document.querySelector(`${HEADER_TAG} .country-menu:not(.municipality-menu)`);
+        const open = Boolean(menu?.open), query = menu?.querySelector(".country-menu-search input")?.value || "";
+        refresh();
+        if (!open) return;
+        const reopened = document.querySelector(`${HEADER_TAG} .country-menu:not(.municipality-menu)`);
+        if (!reopened) return;
+        reopened.open = true;
+        const search = reopened.querySelector(".country-menu-search input");
+        if (!search) return;
+        search.value = query;
+        search.dispatchEvent(new Event("input"));
+        search.focus();
+      })
+      .catch(() => { coverageLoaded = false; });
+  }
 
   function activeSection(host) {
     if (host.dataset.section) return host.dataset.section;
@@ -124,24 +156,26 @@
       const t = copy[lang];
       const nav = this.querySelector(".global-nav");
       if (!nav) return;
-      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${countryHref(code,lang)}" data-country-code="${code}">${flag && !flag.startsWith(":") ? `<img src="${assetRoot}assets/flags/${flag}.svg" alt="">` : `<i class="country-menu-flag-emoji" aria-hidden="true">${flagEmoji(flag.slice(1))}</i>`}<b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`).join("");
+      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${countryHref(code,lang)}" data-country-code="${code}">${flag && !flag.startsWith(":") ? `<img src="${assetRoot}assets/flags/${flag}.svg" alt="">` : `<i class="country-menu-flag-emoji" aria-hidden="true">${flagEmoji(flag.slice(1))}</i>`}<span>${lang === "en" ? en : cs}</span></a>`).join("");
       const municipalityLinks = municipalityCountries.map(([code, cs, en, flag, slug]) => {
         const destination = slug ? `${assetRoot}municipalities/${slug}/?lang=${lang}` : `${assetRoot}municipalities/?lang=${lang}&country=${code}#directory`;
-        return `<a href="${destination}" data-country-code="${code}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><b>${code}</b><span>${lang === "en" ? en : cs}</span></a>`;
+        return `<a href="${destination}" data-country-code="${code}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><span>${lang === "en" ? en : cs}</span></a>`;
       }).join("");
       nav.setAttribute("aria-label", t.navigation);
-      nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><label class="country-menu-search"><span>${t.searchCountry}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${countries.length} ${t.countryMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><details class="deep-dive-menu"><summary><span class="menu-label">${t.deepDives}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${href("deep-dives/", lang)}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a href="${assetRoot}deep-dives/health/?code=CZE&lang=${lang}"><b>02</b><span><strong>${t.health}</strong><small>${t.healthCopy}</small></span></a><a href="${href("deep-dives/state-owned-enterprises/", lang)}"><b>03</b><span><strong>${t.stateCompanies}</strong><small>${t.stateCompaniesCopy}</small></span></a><a href="${assetRoot}deep-dives/capital-cities/?city=prague-cz&lang=${lang}"><b>04</b><span><strong>${t.capitalCities}</strong><small>${t.capitalCitiesCopy}</small></span></a><a href="${assetRoot}deep-dives/revenue/?code=CZE&lang=${lang}"><b>05</b><span><strong>${t.revenue}</strong><small>${t.revenueCopy}</small></span></a><a href="${assetRoot}deep-dives/ageing/?code=CZE&lang=${lang}"><b>06</b><span><strong>${t.ageing}</strong><small>${t.ageingCopy}</small></span></a><a href="${assetRoot}deep-dives/migration/?lang=${lang}"><b>07</b><span><strong>${t.migration}</strong><small>${t.migrationCopy}</small></span></a></div></details><a href="${href("methodology.html", lang)}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
+      nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><label class="country-menu-search"><span>${t.searchCountry}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${countries.length} ${t.countryMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div><label class="country-menu-search"><span>${t.searchMunicipality}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${municipalityCountries.length} ${t.municipalityMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><details class="deep-dive-menu"><summary><span class="menu-label">${t.deepDives}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${href("deep-dives/", lang)}">${t.allDeepDives} →</a></div><a href="${assetRoot}deep-dives/transportation/?code=CZE&lang=${lang}"><b>01</b><span><strong>${t.transport}</strong><small>${t.transportCopy}</small></span></a><a href="${assetRoot}deep-dives/health/?code=CZE&lang=${lang}"><b>02</b><span><strong>${t.health}</strong><small>${t.healthCopy}</small></span></a><a href="${href("deep-dives/state-owned-enterprises/", lang)}"><b>03</b><span><strong>${t.stateCompanies}</strong><small>${t.stateCompaniesCopy}</small></span></a><a href="${assetRoot}deep-dives/capital-cities/?city=prague-cz&lang=${lang}"><b>04</b><span><strong>${t.capitalCities}</strong><small>${t.capitalCitiesCopy}</small></span></a><a href="${assetRoot}deep-dives/revenue/?code=CZE&lang=${lang}"><b>05</b><span><strong>${t.revenue}</strong><small>${t.revenueCopy}</small></span></a><a href="${assetRoot}deep-dives/ageing/?code=CZE&lang=${lang}"><b>06</b><span><strong>${t.ageing}</strong><small>${t.ageingCopy}</small></span></a><a href="${assetRoot}deep-dives/migration/?lang=${lang}"><b>07</b><span><strong>${t.migration}</strong><small>${t.migrationCopy}</small></span></a></div></details><a href="${href("methodology.html", lang)}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
       nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/economy/?code=CZE&lang=${lang}"><b>08</b><span><strong>${t.economy}</strong><small>${t.economyCopy}</small></span></a><a href="${assetRoot}deep-dives/defense/?code=USA&lang=${lang}"><b>09</b><span><strong>${t.defense}</strong><small>${t.defenseCopy}</small></span></a>`);
       const active = activeSection(this);
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
       if (active === "cities") nav.querySelector(".municipality-menu")?.classList.add("active");
       if (active === "deep-dives") nav.querySelector(".deep-dive-menu")?.classList.add("active");
-      const countryMenu=nav.querySelector(".country-menu:not(.municipality-menu)"),countrySearch=countryMenu?.querySelector(".country-menu-search input"),countryOutput=countryMenu?.querySelector(".country-menu-search output"),countryEmpty=countryMenu?.querySelector(".country-menu-empty"),countryProfileLinks=[...(countryMenu?.querySelectorAll("a[data-country-code]")||[])];
       const fold=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase(lang==="cs"?"cs":"en");
-      const filterCountries=()=>{const query=fold(countrySearch?.value),visible=countryProfileLinks.filter(link=>{const match=!query||fold(link.textContent).includes(query);link.hidden=!match;return match;});if(countryOutput)countryOutput.textContent=`${visible.length} ${t.countryMatches}`;if(countryEmpty)countryEmpty.hidden=visible.length!==0;return visible;};
-      countrySearch?.addEventListener("input",filterCountries);
-      countrySearch?.addEventListener("keydown",event=>{if(event.key==="Enter"){const visible=filterCountries();if(visible.length===1){event.preventDefault();visible[0].click();}}else if(event.key==="Escape"){event.preventDefault();if(countrySearch.value){countrySearch.value="";filterCountries();}else{countryMenu.open=false;countryMenu.querySelector("summary")?.focus();}}});
+      nav.querySelectorAll(".country-menu").forEach(menu=>{
+        const search=menu.querySelector(".country-menu-search input"),output=menu.querySelector(".country-menu-search output"),empty=menu.querySelector(".country-menu-empty"),links=[...menu.querySelectorAll("a[data-country-code]")],label=menu.classList.contains("municipality-menu")?t.municipalityMatches:t.countryMatches;
+        const filter=()=>{const query=fold(search?.value),visible=links.filter(link=>{const match=!query||fold(link.textContent).includes(query);link.hidden=!match;return match;});if(output)output.textContent=`${visible.length} ${label}`;if(empty)empty.hidden=visible.length!==0;return visible;};
+        search?.addEventListener("input",filter);
+        search?.addEventListener("keydown",event=>{if(event.key==="Enter"){const visible=filter();if(visible.length===1){event.preventDefault();visible[0].click();}}else if(event.key==="Escape"){event.preventDefault();if(search.value){search.value="";filter();}else{menu.open=false;menu.querySelector("summary")?.focus();}}});
+      });
       this.querySelector(".lang-switch")?.setAttribute("aria-label", t.language);
       const languagePending = document.documentElement.hasAttribute("data-language-pending");
       this.querySelectorAll("[data-lang]").forEach((button) => {
@@ -154,6 +188,7 @@
       this.querySelector(".brand")?.setAttribute("href", href("", lang));
       nav.querySelectorAll("details").forEach((details) => details.addEventListener("toggle", () => {
         if (!details.open) return;
+        if (details.matches(".country-menu:not(.municipality-menu)")) loadCoverage();
         nav.querySelectorAll("details[open]").forEach((other) => { if (other !== details) other.open = false; });
         const close = (event) => { if (!details.contains(event.target)) { details.open = false; document.removeEventListener("pointerdown", close); } };
         setTimeout(() => document.addEventListener("pointerdown", close), 0);
@@ -202,7 +237,7 @@
     const languageControl = event.target.closest("[data-lang],[data-budget-lang],[data-deep-lang]");
     if (!languageControl) return;
     if (location.pathname.startsWith("/cz/") && languageControl.dataset.lang) {
-      localStorage.setItem("psd-lang", languageControl.dataset.lang);
+      try { localStorage.setItem("psd-lang", languageControl.dataset.lang); } catch {}
       const next = new URL(location.href);
       next.searchParams.set("lang", languageControl.dataset.lang);
       location.href = `${next.pathname}${next.search}${next.hash}`;
@@ -217,28 +252,29 @@
   });
   languageObserver.observe(document.documentElement, { attributes:true, attributeFilter:["lang"] });
   document.documentElement.dataset.navLang = document.documentElement.lang;
-  sharedComponents.navigation = { refresh, observer: languageObserver };
-  fetch(`${assetRoot}data/country-parity.v1.json`, { cache:"no-cache" })
-    .then((response) => {
-      if (!response.ok) throw new Error(`Country coverage ${response.status}`);
-      return response.json();
-    })
-    .then((coverage) => {
-      if (!Array.isArray(coverage.countries) || !coverage.countries.length) return;
-      const flags = Object.fromEntries(countries.map(([code,,,flag]) => [code, flag]));
-      countries = coverage.countries.map((country) => [country.country_code, country.name_cs, country.name_en, flags[country.country_code] || `:${country.iso2 || ""}`]);
-      refresh();
-    })
-    .catch(() => {});
+  sharedComponents.navigation = { refresh, observer: languageObserver, loadCoverage };
 
-  const railLinks = [...document.querySelectorAll(".context-rail a[href^='#']")];
-  if (railLinks.length) {
-    const sections = railLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+  const contextRail = document.querySelector(".context-rail");
+  if (contextRail) {
+    // The country dashboard replaces the rail markup after this script runs, so the
+    // spy re-binds whenever the rail is regenerated and marks the active link with the
+    // aria-current value the stylesheet matches.
+    let targets = [];
     const updateRail = () => {
-      const current = [...sections].reverse().find((section) => section.getBoundingClientRect().top <= 150) || sections[0];
-      railLinks.forEach((link) => link.toggleAttribute("aria-current", link.getAttribute("href") === `#${current?.id}`));
+      const current = [...targets].reverse().find(({ section }) => section.getBoundingClientRect().top <= 150) || targets[0];
+      targets.forEach(({ link, section }) => {
+        if (section === current?.section) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
     };
+    const bindRail = () => {
+      targets = [...contextRail.querySelectorAll("a")]
+        .map((link) => ({ link, section: link.hash ? document.getElementById(link.hash.slice(1)) : null }))
+        .filter(({ section }) => section);
+      updateRail();
+    };
+    bindRail();
+    new MutationObserver(bindRail).observe(contextRail, { childList:true });
     addEventListener("scroll", updateRail, { passive:true });
-    updateRail();
   }
 })();

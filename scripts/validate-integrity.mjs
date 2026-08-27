@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -8,6 +9,55 @@ const writeReport = process.argv.includes("--write-report");
 const failures = [];
 const warnings = [];
 const assert = (condition, message) => { if (!condition) failures.push(message); };
+const fileExists = async (relative) => { try { return (await stat(path.join(root, relative))).isFile(); } catch { return false; } };
+
+// Which groups of checks this run actually executes. `--data-only` skips every
+// HTML, canonical, JSON-LD, sitemap and local-link check, but the report it
+// writes used to look identical to a full pass -- same `status: "passed"`, just
+// `html_files: 0` -- and the public coverage page renders "● Checks passed"
+// straight from that field. The report now states its own scope so a partial run
+// can never be mistaken for a release-grade audit.
+const checkGroups = {
+  json_finiteness: true,
+  release_manifest: true,
+  municipal_snapshot: true,
+  municipal_history: true,
+  municipal_directory_history: true,
+  entity_profiles: true,
+  bigquery_merge_completeness: true,
+  capital_fx: true,
+  sovereign_series: true,
+  spending_reconciliation: true,
+  public_entity_registry: true,
+  czech_reference_datasets: true,
+  dead_source_scan: true,
+  infrastructure_hardening: true,
+  html_structure: !dataOnly,
+  canonical_urls: !dataOnly,
+  local_references: !dataOnly,
+  json_ld: !dataOnly,
+  sitemap: !dataOnly,
+};
+const skippedCheckGroups = Object.entries(checkGroups).filter(([, executed]) => !executed).map(([name]) => name);
+if (dataOnly) warnings.push(`This report covers data checks only. ${skippedCheckGroups.length} check group(s) were skipped (${skippedCheckGroups.join(", ")}); its status is not a full release pass.`);
+
+// A full Cloud Build runs the BigQuery export and merge steps before it
+// validates, so the merged municipal profiles MUST be complete there. A local or
+// CI checkout has never run those steps and legitimately reports zero. Accepting
+// both unconditionally meant a deploy that silently skipped the merge steps
+// still validated and shipped 6,254 municipal profiles with no budget
+// breakdowns. Cloud Build always checks out at /workspace and injects its build
+// identifiers, and scripts/merge-municipal-breakdowns.mjs is the sole producer of
+// data/municipal-budget-codebook.v1.json -- so all three are real evidence,
+// none of them derived from the merge count being asserted.
+const productionBuildSignals = {
+  cloud_build_workspace: root === "/workspace",
+  cloud_build_environment: Boolean(process.env.BUILD_ID || process.env.COMMIT_SHA),
+  municipal_breakdown_merge_output: await fileExists("data/municipal-budget-codebook.v1.json"),
+};
+const buildModeOverride = process.env.PSD_BUILD_MODE || "";
+if (buildModeOverride && !["production", "local"].includes(buildModeOverride)) throw new Error(`PSD_BUILD_MODE must be "production" or "local", received ${JSON.stringify(buildModeOverride)}`);
+const productionBuild = buildModeOverride ? buildModeOverride === "production" : Object.values(productionBuildSignals).some(Boolean);
 const close = (a, b, tolerance = 0.011) => Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= tolerance;
 const json = async (file) => JSON.parse(await readFile(file, "utf8"));
 
@@ -207,8 +257,19 @@ for (const entity of municipalities) {
   if (amounts.current_expense < 0) anomalies.negative_current_expenditure.push({ national_id: entity.national_id, name: entity.name, amount_czk: amounts.current_expense });
 }
 assert(cashMissing.length === 7, `Expected seven explicitly missing municipal cash records, received ${cashMissing.length}`);
-assert([0, municipalities.length].includes(mergedHeadlineProfiles), `BigQuery headlines are only present for ${mergedHeadlineProfiles} municipal profiles`);
-assert([0, municipalities.length].includes(mergedBreakdownProfiles), `BigQuery breakdowns are only present for ${mergedBreakdownProfiles} municipal profiles`);
+if (productionBuild) {
+  // No "or zero" escape hatch here: in a production build zero means the
+  // Cloud Build BigQuery merge steps did not run, and the profiles would ship
+  // without their budget breakdowns.
+  assert(mergedHeadlineProfiles === municipalities.length, `Production build merged BigQuery budget headlines into ${mergedHeadlineProfiles} of ${municipalities.length} municipal profiles; the Cloud Build merge steps did not complete`);
+  assert(mergedBreakdownProfiles === municipalities.length, `Production build merged BigQuery budget breakdowns into ${mergedBreakdownProfiles} of ${municipalities.length} municipal profiles; the Cloud Build merge steps did not complete`);
+} else {
+  // Local and CI checkouts never run the merge, so zero is legitimate -- but a
+  // partial merge still is not.
+  assert([0, municipalities.length].includes(mergedHeadlineProfiles), `BigQuery headlines are only present for ${mergedHeadlineProfiles} municipal profiles`);
+  assert([0, municipalities.length].includes(mergedBreakdownProfiles), `BigQuery breakdowns are only present for ${mergedBreakdownProfiles} municipal profiles`);
+  if (!mergedHeadlineProfiles || !mergedBreakdownProfiles) warnings.push("Local build: municipal profiles carry no BigQuery budget headlines or breakdowns. A production Cloud Build merges them and this check becomes all-or-nothing at 6,254.");
+}
 
 const capitals = await json("data/eu-capital-budgets.v1.json");
 assert(capitals.cities.length === 28, "Expected 28 European capital records");
@@ -379,7 +440,11 @@ if (!dataOnly) {
   const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/", "/municipalities/brazil/", "/municipalities/spain/", "/municipalities/japan/", "/municipalities/colombia/", "/municipalities/georgia/", "/municipalities/italy/", "/municipalities/bolivia/", "/municipalities/el-salvador/", "/municipalities/mexico/", "/municipalities/costa-rica/", "/municipalities/guatemala/", "/municipalities/peru/", "/municipalities/south-korea/", "/municipalities/chile/"];
   const expansionCodes = new Set(["BRA", "DNK", "ESP", "JPN", "COL", "GEO", "ITA", "BOL", "SLV", "MEX", "CRI", "GTM", "PER", "KOR", "CHL"]);
   const expansionProfiles = internationalMunicipalities.entities.filter((entity) => expansionCodes.has(entity.country) && entity.url);
-  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 6;
+  // The trailing constants count hand-authored routes. `accountabilityPages` covers the
+  // regional accountability layer, which ships its own page and sitemap entry; deriving it
+  // means the gate self-heals if that route is ever removed.
+  const accountabilityPages = existsSync(path.join(root, "cz/kraje/accountability/index.html")) ? 1 : 0;
+  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 5 + accountabilityPages;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
   for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/", "/cz/kraje/accountability/"]) {
@@ -399,9 +464,17 @@ const publishedEntryComponents = {
 const publishedDataEntries = Object.values(publishedEntryComponents).reduce((sum, count) => sum + count, 0);
 
 const report = {
-  schema_version: "1.0.0",
+  schema_version: "1.1.0",
   dataset: "CZ Budget public release",
   status: failures.length ? "failed" : "passed",
+  // `status` alone is not a release pass -- read it together with `scope`.
+  // "full" ran every check group; "data-only" skipped the HTML, canonical,
+  // JSON-LD, sitemap and local-reference audits listed in skipped_check_groups.
+  scope: dataOnly ? "data-only" : "full",
+  checks: checkGroups,
+  skipped_check_groups: skippedCheckGroups,
+  build_mode: productionBuild ? "production" : "local",
+  build_mode_signals: productionBuildSignals,
   counts: {
     production_json_files: productionJson.length,
     html_files: htmlCount,
@@ -435,4 +508,5 @@ if (failures.length) {
   process.exit(1);
 }
 const fingerprint = createHash("sha256").update(JSON.stringify(report.counts)).digest("hex").slice(0, 16);
-console.log(`Integrity validation passed: ${JSON.stringify(report.counts)} fingerprint=${fingerprint}`);
+console.log(`Integrity validation passed (scope=${report.scope}, build_mode=${report.build_mode}${skippedCheckGroups.length ? `, skipped=${skippedCheckGroups.join("/")}` : ""}): ${JSON.stringify(report.counts)} fingerprint=${fingerprint}`);
+if (dataOnly) console.log("Scope is data-only: HTML, canonical, JSON-LD, sitemap and local-reference checks did not run. This is not a full release pass.");

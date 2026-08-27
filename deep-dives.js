@@ -34,6 +34,8 @@
   Object.assign(copy.en,{migration:"European migration",migrationCopy:"Immigration, emigration and migration balance across all 27 EU countries from 2000 to 2024.",indexCoverage:"up to 27 countries"});
   Object.assign(copy.cs,{defense:"Výdaje na obranu",defenseCopy:"Výdaje vůči HDP, závazek NATO a nejjemnější dostupné řádky národních rozpočtů."});
   Object.assign(copy.en,{defense:"Defense spending",defenseCopy:"Spending relative to GDP, the NATO commitment and the finest available national budget lines."});
+  Object.assign(copy.cs,{indexEyebrow:"Reporty napříč zeměmi",open:"Otevřít report",next:"Další report",contractTitle:"Každý report odpovídá na stejné otázky."});
+  Object.assign(copy.en,{indexEyebrow:"Reports across countries",open:"Open report",next:"Next report",contractTitle:"Every report answers the same questions."});
   const t=copy[lang];
   const name=(code)=>{const row=countries.find(item=>item[0]===code);return row?.[lang==="en"?2:1]??code};
   function translate(){

@@ -1,0 +1,94 @@
+:root {
+  --font-text: "Avenir Next", "Segoe UI", Arial, sans-serif;
+  --font-table: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-number: "Arial Narrow", "Avenir Next Condensed", Arial, sans-serif;
+}
+
+body { font-family: var(--font-text); }
+table { font-family: var(--font-table); }
+td, th { font-variant-numeric: tabular-nums; }
+.home-stats strong,
+.cmp-value,
+.coverage-cell strong,
+.surface-kpis strong { font-family: var(--font-number); font-variant-numeric: tabular-nums; }
+
+/* Homepage: a ranked top 15 replaces the unreadable all-country dot cloud. */
+.home-hero-chart { min-height: 650px; }
+.hero-filter-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 0 8px; }
+.hero-filter-tabs button {
+  padding: 7px 9px;
+  border: 1px solid #ffffff38;
+  background: transparent;
+  color: #c4c3bb;
+  font: 700 10px/1 var(--font-table);
+  cursor: pointer;
+}
+.hero-filter-tabs button[aria-pressed="true"] { border-color: var(--acid); background: var(--acid); color: var(--ink); }
+.hero-top-list { flex: 1; }
+.home-hero-chart .hero-bar {
+  min-height: 30px;
+  grid-template-columns: 24px 28px minmax(80px, 112px) minmax(70px, 1fr) 52px;
+  gap: 8px;
+}
+.home-hero-chart .hero-bar > .hero-position { width: auto; height: auto; border: 0; border-radius: 0; color: #858982; font: 10px/1 var(--font-table); }
+.home-hero-chart .hero-bar > .country-flag-svg { width: 24px; height: 18px; transform: none; }
+.home-hero-chart .hero-bar strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 12px/1 var(--font-text); }
+.home-hero-chart .hero-bar em { font: 700 10px/1 var(--font-number); }
+
+.home-paths-heading { grid-template-columns: .65fr 1.35fr; align-items: baseline; }
+.home-paths-heading h2 { font-size: clamp(27px, 3vw, 42px); }
+.home-paths-heading p { max-width: 620px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.home-path-grid { grid-template-columns: repeat(3, 1fr); }
+.home-path-grid > a { min-height: 220px; }
+
+.category-country { column-gap: 10px; }
+.category-country .country-flag-svg { margin-right: 2px; }
+
+/* The About page is intentionally short and descriptive. */
+body[data-page="about"] .page-hero { grid-template-columns: minmax(0, 820px); min-height: 0; }
+body[data-page="about"] .about-story { padding-block: 58px; }
+body[data-page="about"] .about-story h2 { margin: 0 0 14px; font-size: clamp(26px, 3vw, 40px); }
+body[data-page="about"] .principles { grid-template-columns: 1fr; }
+body[data-page="about"] .principles > div { min-height: 0; padding-block: 14px; }
+
+.coverage-country-search { display: grid; grid-template-columns: auto minmax(220px, 380px); gap: 12px; align-items: center; margin-top: 14px; padding: 10px 12px; border: 1px solid #c7c1b6; background: #f7f3ea; }
+.coverage-country-search span { font: 700 10px/1 var(--font-table); text-transform: uppercase; }
+.coverage-country-search input { min-width: 0; padding: 9px 10px; border: 1px solid #8b8d83; background: #faf7ef; }
+
+/* Compact searchable country directories. */
+.site-header .country-menu-panel {
+  width: min(780px, 92vw);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  scrollbar-gutter: stable;
+}
+.site-header .country-menu-panel > a {
+  min-height: 48px;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
+  padding: 9px 12px;
+}
+.site-header .country-menu-panel > a span { min-width: 0; }
+
+@media (max-width: 1165px) {
+  .site-header.has-global-nav .global-nav {
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 4vw;
+  }
+  .site-header.has-global-nav .global-nav > a,
+  .site-header.has-global-nav .global-nav > details { scroll-snap-align: start; }
+}
+
+@media (max-width: 760px) {
+  .site-header .country-menu-panel {
+    left: 3vw;
+    right: 3vw;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .site-header .country-menu-panel > a { min-height: 46px; padding-inline: 10px; }
+  .site-header .country-menu-panel > a span { font-size: 13px; }
+  .home-hero-chart { min-height: 640px; }
+  .home-hero-chart .hero-bar { grid-template-columns: 20px 24px minmax(72px, 92px) 1fr 46px; gap: 6px; }
+  .home-paths-heading { grid-template-columns: 1fr; gap: 9px; }
+  .home-path-grid { grid-template-columns: 1fr; }
+  .coverage-country-search { grid-template-columns: 1fr; }
+}

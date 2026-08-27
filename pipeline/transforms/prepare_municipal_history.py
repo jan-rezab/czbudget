@@ -7,10 +7,10 @@ import csv
 import io
 import json
 import os
-import unicodedata
 import zipfile
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 
@@ -28,15 +28,29 @@ CONSOLIDATED_REVENUE_ITEMS = {"4133", "4134", "4137", "4138", "4139", "4251"}
 CONSOLIDATED_EXPENSE_ITEMS = {"5342", "5344", "5345", "5347", "5348", "5349", "6363"}
 MUNICIPALITY_CODE_OVERRIDES = {"04498682": 500101, "00640506": 571512, "01265741": 500071}
 
+# CZK is quoted to the halere. Amounts are accumulated as Decimal so 16 years x
+# ~6,250 municipalities of row sums stay exact, then quantized once on output.
+CZK = Decimal("0.01")
 
-def number(value: str | None) -> float:
+
+def number(value: str | None) -> Decimal:
+    """Parse a MONITOR CZK amount exactly.
+
+    Decimal rather than float: these values are summed over every municipality
+    for every year from 2010, and binary floating point would accumulate a
+    drift that downstream reconciliation then has to absorb with an artificial
+    tolerance. Decimal addition of halere-precision amounts is exact.
+    """
     text = (value or "").strip().replace(" ", "").replace(",", ".")
     if not text:
-        return 0.0
+        return Decimal(0)
     negative = text.endswith("-")
     if negative:
         text = text[:-1]
-    result = float(text)
+    try:
+        result = Decimal(text)
+    except InvalidOperation as exc:
+        raise ValueError(f"Not a MONITOR amount: {value!r}") from exc
     return -result if negative else result
 
 
@@ -45,18 +59,39 @@ def normalize_ico(value: str) -> str:
     return str(int(digits or "0")).zfill(8)[-8:]
 
 
-def normalize_name(value: str) -> str:
-    return " ".join(
-        "".join(character for character in unicodedata.normalize("NFKD", value.casefold()) if not unicodedata.combining(character)).split()
-    )
-
-
 def load_population(municipalities: dict[str, dict]) -> dict[tuple[str, int], int]:
+    """Join CZSO population onto municipalities strictly by municipality code.
+
+    There is deliberately no fallback to matching on an accent-stripped,
+    case-folded name. Czech municipality names are not unique once accents and
+    case are removed -- hundreds of them collide -- so a name join is
+    last-write-wins and would attach one village's population to another,
+    invisibly and only for the affected rows. If two entities ever share a
+    municipality code, that is a defect in the snapshot's territory mapping and
+    it is raised here rather than worked around.
+    """
     if not POPULATION.exists():
         raise RuntimeError(f"Missing CZSO population extract: run {WEB / 'pipeline/transforms/fetch_municipal_population.py'}")
     code_counts = Counter(str(entity["territory"]["municipality_code"]) for entity in municipalities.values())
+    ambiguous = sorted(code for code, count in code_counts.items() if count > 1)
+    if ambiguous:
+        offenders = {
+            code: sorted(
+                f"{ico} ({entity['short_name']})"
+                for ico, entity in municipalities.items()
+                if str(entity["territory"]["municipality_code"]) == code
+            )
+            for code in ambiguous[:10]
+        }
+        raise RuntimeError(
+            f"{len(ambiguous)} municipality code(s) are shared by more than one entity in "
+            f"{SNAPSHOT.name}, so population cannot be joined unambiguously: "
+            + "; ".join(f"{code} -> {', '.join(names)}" for code, names in offenders.items())
+            + (f" (and {len(ambiguous) - 10} more)" if len(ambiguous) > 10 else "")
+            + ". Fix the territory mapping in the snapshot. Matching these by normalized name "
+            "is not an option: normalized Czech municipality names are not unique."
+        )
     by_code: dict[tuple[int, str], int] = {}
-    by_name: dict[tuple[int, str], int] = {}
     with POPULATION.open(encoding="utf-8-sig", newline="") as source:
         for row in csv.DictReader(source):
             code = row.get("UZ25.OBEC") or ""
@@ -65,13 +100,11 @@ def load_population(municipalities: dict[str, dict]) -> dict[tuple[str, int], in
             if code and value and year in YEARS:
                 population = int(float(value.replace(" ", "").replace(",", ".")))
                 by_code[year, code] = population
-                by_name[year, normalize_name(row["Kraje a obce-Obec"])] = population
     result: dict[tuple[str, int], int] = {}
     for ico, entity in municipalities.items():
         code = str(entity["territory"]["municipality_code"])
-        name = normalize_name(entity["short_name"])
         for year in YEARS:
-            value = by_name.get((year, name)) if code_counts[code] > 1 else by_code.get((year, code))
+            value = by_code.get((year, code))
             if value is not None:
                 result[ico, year] = value
     return result
@@ -89,17 +122,37 @@ def members(path: Path, prefix: str) -> list[str]:
 
 
 def rows(path: Path, member: str):
+    """Yield rows of a MONITOR CSV, failing loudly on an encoding mismatch.
+
+    Monitor has shipped both cp1250 and UTF-8 extracts over the 2010-2025 span.
+    Decoding with ``errors="replace"`` used to paper over that: a cp1250 file
+    read as UTF-8 produced U+FFFD in every accented municipality name and every
+    label, and the run completed silently with corrupted text. Now a mismatch
+    raises and names the archive member, so the extract is re-fetched or the
+    encoding is declared rather than quietly degraded.
+    """
     with zipfile.ZipFile(path) as archive, archive.open(member) as raw:
-        reader = csv.reader(
-            io.TextIOWrapper(raw, encoding="utf-8-sig", errors="replace", newline=""),
-            delimiter=";",
-        )
-        next(reader, None)
-        yield from reader
+        stream = io.TextIOWrapper(raw, encoding="utf-8-sig", errors="strict", newline="")
+        reader = csv.reader(stream, delimiter=";")
+        try:
+            next(reader, None)
+            yield from reader
+        except UnicodeDecodeError as exc:
+            raise RuntimeError(
+                f"{path.name}::{member} is not valid UTF-8 ({exc.reason} at byte {exc.start}). "
+                "Monitor has published both cp1250 and UTF-8 extracts; re-fetch this archive "
+                "or add an explicit per-vintage encoding. It is not decoded leniently, because "
+                "that silently corrupts every accented name in the output."
+            ) from exc
 
 
-def rounded(values: dict[str, float], key: str) -> float:
-    return round(values.get(key, 0.0), 2)
+def czk(value: Decimal | float | int) -> float:
+    """Quantize an exact CZK total to halere for JSON serialization."""
+    return float(Decimal(value).quantize(CZK))
+
+
+def rounded(values: dict[str, Decimal], key: str) -> float:
+    return czk(values.get(key, Decimal(0)))
 
 
 def main() -> None:
@@ -123,8 +176,8 @@ def main() -> None:
         })
     SNAPSHOT.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     targets = set(municipalities)
-    history: dict[str, dict[int, dict[str, float | bool]]] = {
-        ico: {year: defaultdict(float) for year in YEARS} for ico in targets
+    history: dict[str, dict[int, dict[str, Decimal | bool]]] = {
+        ico: {year: defaultdict(Decimal) for year in YEARS} for ico in targets
     }
 
     for year in YEARS:
@@ -200,7 +253,10 @@ def main() -> None:
     total_rows = 0
     directory_rows = []
     annual_summary = {
-        year: defaultdict(float, {"entity_count": 0, "cash_entity_count": 0, "surplus_count": 0, "deficit_count": 0})
+        year: defaultdict(Decimal, {
+            "entity_count": Decimal(0), "cash_entity_count": Decimal(0),
+            "surplus_count": Decimal(0), "deficit_count": Decimal(0),
+        })
         for year in YEARS
     }
 
@@ -210,29 +266,30 @@ def main() -> None:
             values = history[ico][year]
             if not values.get("budget_available"):
                 continue
-            revenue = rounded(values, "revenue_actual")
-            expense = rounded(values, "expense_actual")
+            revenue = values.get("revenue_actual", Decimal(0)).quantize(CZK)
+            expense = values.get("expense_actual", Decimal(0)).quantize(CZK)
+            balance = revenue - expense
             cash_available = bool(values.get("cash_available"))
             residents = population.get((ico, year))
             row = {
                 "year": year,
                 "revenue_approved": rounded(values, "revenue_approved"),
                 "revenue_adjusted": rounded(values, "revenue_adjusted"),
-                "revenue_actual": revenue,
+                "revenue_actual": czk(revenue),
                 "expense_approved": rounded(values, "expense_approved"),
                 "expense_adjusted": rounded(values, "expense_adjusted"),
-                "expense_actual": expense,
+                "expense_actual": czk(expense),
                 "tax_revenue": rounded(values, "tax_revenue"),
                 "nontax_revenue": rounded(values, "nontax_revenue"),
                 "capital_revenue": rounded(values, "capital_revenue"),
                 "transfer_revenue": rounded(values, "transfer_revenue"),
                 "current_expense": rounded(values, "current_expense"),
                 "capital_expense": rounded(values, "capital_expense"),
-                "budget_balance": round(revenue - expense, 2),
+                "budget_balance": czk(balance),
                 "cash_current": rounded(values, "cash_current") if cash_available else None,
                 "cash_previous": rounded(values, "cash_previous") if cash_available else None,
                 "population_mid_year": residents,
-                "expense_per_capita": round(expense / residents, 2) if residents else None,
+                "expense_per_capita": czk(expense / residents) if residents else None,
                 "source_kind": "Monitor CSV extract",
                 "comparability": "historical_budget_cash_break_2012" if year <= 2011 else "consistent_2012_plus",
             }
@@ -240,8 +297,8 @@ def main() -> None:
             directory_rows.append([
                 ico,
                 year,
-                revenue,
-                expense,
+                row["revenue_actual"],
+                row["expense_actual"],
                 row["budget_balance"],
                 row["cash_current"],
                 residents,
@@ -250,21 +307,21 @@ def main() -> None:
             annual["entity_count"] += 1
             annual["revenue_actual"] += revenue
             annual["expense_actual"] += expense
-            annual["budget_balance"] += row["budget_balance"]
+            annual["budget_balance"] += balance
             if cash_available:
                 annual["cash_entity_count"] += 1
-                annual["cash_current"] += row["cash_current"]
+                annual["cash_current"] += values.get("cash_current", Decimal(0)).quantize(CZK)
             if residents is not None:
                 annual["population_entity_count"] += 1
                 annual["population_total"] += residents
-            if row["budget_balance"] >= 0:
+            if balance >= 0:
                 annual["surplus_count"] += 1
                 annual["surplus_revenue"] += revenue
-                annual["surplus_balance"] += row["budget_balance"]
+                annual["surplus_balance"] += balance
             else:
                 annual["deficit_count"] += 1
                 annual["deficit_revenue"] += revenue
-                annual["deficit_balance"] += row["budget_balance"]
+                annual["deficit_balance"] += balance
             coverage_by_year[year]["budget"] += 1
             if cash_available:
                 coverage_by_year[year]["cash"] += 1
@@ -337,13 +394,15 @@ def main() -> None:
                 "surplus_count": int(annual_summary[year]["surplus_count"]),
                 "deficit_count": int(annual_summary[year]["deficit_count"]),
                 **{
-                    key: round(annual_summary[year][key], 2)
+                    key: czk(annual_summary[year][key])
                     for key in (
                         "revenue_actual", "expense_actual", "budget_balance", "cash_current",
                         "surplus_revenue", "surplus_balance", "deficit_revenue", "deficit_balance",
                     )
                 },
-                "expense_per_capita": round(annual_summary[year]["expense_actual"] / annual_summary[year]["population_total"], 2),
+                "expense_per_capita": czk(
+                    annual_summary[year]["expense_actual"] / annual_summary[year]["population_total"]
+                ),
             }
             for year in YEARS
         ],

@@ -66,7 +66,9 @@
     "Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.": "Top line means turnover for strategic companies and total revenue for CSUIS entities. A missing statement is not zero."
   });
   const enToCs = Object.fromEntries(Object.entries(csToEn).map(([cs,en]) => [en,cs]));
-  let lang = new URLSearchParams(location.search).get("lang") || localStorage.getItem("psd-lang") || "cs";
+  // language-bootstrap.js already resolved URL param → stored preference →
+  // route default; re-reading storage here would only duplicate it unguarded.
+  let lang = window.PSDLanguage?.current() || (document.documentElement.lang === "en" ? "en" : "cs");
   // The HTML shipped by this page is always Czech. language-bootstrap.js sets
   // <html lang> before this deferred script runs, so it cannot be used as a
   // proxy for the language currently rendered in the body.
@@ -83,14 +85,16 @@
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) walker.currentNode.nodeValue = replaceText(walker.currentNode.nodeValue, dictionary);
   }
-  function applyLanguage(next) {
+  // persist is true only for an explicit user toggle; the load-time call must
+  // never write a merely defaulted language into the sitewide preference.
+  function applyLanguage(next, persist = false) {
     if (translating) return; translating = true;
     const dictionary = next === "en" ? csToEn : enToCs;
     if (renderedLang !== next) {
       translateTree(document.body, dictionary);
       renderedLang = next;
     }
-    lang = next; document.documentElement.lang = lang; localStorage.setItem("psd-lang", lang);
+    lang = window.PSDLanguage?.set(next, { persist }) || next; document.documentElement.lang = lang;
     document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(node => {
       for (const attribute of ["placeholder","aria-label","title"]) {
         const value=node.getAttribute(attribute); if(value&&dictionary[value])node.setAttribute(attribute,dictionary[value]);
@@ -102,7 +106,7 @@
     translating = false;
     dispatchEvent(new CustomEvent("budgetlanguagechange", { detail: { lang } }));
   }
-  document.querySelectorAll("[data-budget-lang]").forEach(button => button.addEventListener("click", () => applyLanguage(button.dataset.budgetLang)));
+  document.querySelectorAll("[data-budget-lang]").forEach(button => button.addEventListener("click", () => applyLanguage(button.dataset.budgetLang, true)));
   const observer = new MutationObserver(records => {
     if (translating || lang !== "en") return; translating = true;
     records.forEach(record => record.addedNodes.forEach(node => translateTree(node, csToEn)));

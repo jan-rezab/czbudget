@@ -1,9 +1,10 @@
 const $ = (selector) => document.querySelector(selector);
 const DATA_URL = "data/eu-capital-budgets.v1.json";
 const requestedLanguage = new URLSearchParams(location.search).get("lang");
-const storedLanguage = localStorage.getItem("psd-lang");
 const state = {
-  lang: ["cs", "en"].includes(requestedLanguage) ? requestedLanguage : (["cs", "en"].includes(storedLanguage) ? storedLanguage : "cs"),
+  // language-bootstrap.js already resolved URL param → stored preference →
+  // route default into <html lang>; do not re-read storage here.
+  lang: ["cs", "en"].includes(requestedLanguage) ? requestedLanguage : (document.documentElement.lang === "en" ? "en" : "cs"),
   currency: "eur", sort: "city", coverage: "all", query: "", selected: null, data: null, history: null
 };
 
@@ -253,7 +254,7 @@ function bindControls() {
   $("#capital-sort").addEventListener("change", (event) => { state.sort = event.target.value; renderTable(); });
   $("#capital-coverage").addEventListener("change", (event) => { state.coverage = event.target.value; renderTable(); });
   document.querySelectorAll("[data-currency]").forEach((button) => button.addEventListener("click", () => { state.currency = button.dataset.currency; document.querySelectorAll("[data-currency]").forEach((item) => item.classList.toggle("active", item === button)); renderTable(); if (state.selected) renderDetail(state.data.cities.find((city) => city.city_id === state.selected)); }));
-  document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => { state.lang = button.dataset.lang; localStorage.setItem("psd-lang", state.lang); const url = new URL(location.href); url.searchParams.set("lang", state.lang); history.replaceState(null, "", `${url.pathname}?${url.searchParams}${url.hash}`); render(); }));
+  document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => { state.lang = window.PSDLanguage?.set(button.dataset.lang, { persist: true }) || button.dataset.lang; const url = new URL(location.href); url.searchParams.set("lang", state.lang); history.replaceState(null, "", `${url.pathname}?${url.searchParams}${url.hash}`); render(); }));
 }
 
 Promise.all([

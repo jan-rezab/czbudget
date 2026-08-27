@@ -112,7 +112,7 @@
     document.querySelector('[data-i18n="sourcesKicker"]')?.replaceChildren(document.createTextNode(lang()==="en"?`${hasHealth?"07":"05"} / Primary sources`:`${hasHealth?"07":"05"} / Primární zdroje`));
   }
 
-  fetch("data/country-spending-2025-2026.v1.json")
+  fetch("/data/country-spending-2025-2026.v1.json")
     .then(response => { if (!response.ok) throw new Error(response.status); return response.json(); })
     .then(data => { payload = data; render(); })
     .catch(error => { console.error("country spending", error); ROOT.innerHTML = `<p class="spending-error">${COPY[lang()].unavailable}</p>`; });

@@ -9,7 +9,9 @@
     if(Array.isArray(country.facilities)){render();return}
     root.textContent=t.loading;
     const requested=state.code;
-    try{const response=await fetch(country.records);if(!response.ok)throw new Error(response.status);const shard=await response.json();country.facilities=shard.facilities;if(state.code===requested)render()}
+    // The register path arrives document-relative from the network file; the profile is
+    // served from /countries/<slug>, so root it before requesting the shard.
+    try{const response=await fetch(/^(?:[a-z]+:)?\//i.test(country.records)?country.records:`/${country.records}`);if(!response.ok)throw new Error(response.status);const shard=await response.json();country.facilities=shard.facilities;if(state.code===requested)render()}
     catch(error){console.error("Country provider shard",error);if(state.code===requested)root.textContent="Provider register unavailable."}
   }
   function render(){
@@ -22,5 +24,5 @@
     $("#provider-region").addEventListener("change",event=>{state.region=event.target.value;render()});
   }
   addEventListener("countryprofilechange",event=>{state.code=event.detail.code;state.lang=event.detail.lang==="en"?"en":"cs";state.query="";state.region="";loadCountry()});
-  fetch("data/country-provider-networks.v1.json").then(response=>response.json()).then(data=>{state.data=data;loadCountry()}).catch(error=>console.error("Country provider network",error));
+  fetch("/data/country-provider-networks.v1.json").then(response=>response.json()).then(data=>{state.data=data;loadCountry()}).catch(error=>console.error("Country provider network",error));
 })();

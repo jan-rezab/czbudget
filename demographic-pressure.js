@@ -37,7 +37,7 @@
   const locale = () => lang() === "en" ? "en-GB" : "cs-CZ";
   const fmt = (value, digits=1, sign=false) => Number.isFinite(value) ? `${sign && value > 0 ? "+" : ""}${value.toLocaleString(locale(), {minimumFractionDigits:digits, maximumFractionDigits:digits})}` : "—";
   const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
-  const flag = code => `<span class="demographic-flag"><img src="assets/flags/${flags[code]}.svg" alt=""><b>${code}</b></span>`;
+  const flag = code => `<span class="demographic-flag"><img src="/assets/flags/${flags[code]}.svg" alt=""><b>${code}</b></span>`;
   const name = profile => profile[`name_${lang()}`];
   const profileLink = code => window.PSDCountryRoutes?.href(code, lang(), "demography") || `country.html?code=${code}&lang=${lang()}#demography`;
   const wpp = (profile, year) => profile.wpp.find(row => row.year === year);
@@ -71,7 +71,7 @@
       <div class="demographic-summary"><article><span>${t.medianFertility}</span><strong>${fmt(median(fertility),2)}</strong><small>${t.latestEstimate}</small></article><article><span>${t.belowReplacement}</span><strong>${below} / ${countries.length}</strong><small>${t.replacement}</small></article><article><span>${t.naturalDecline}</span><strong>${declining} / ${countries.length}</strong><small>${t.latestEstimate}</small></article><article><span>${t.dependencyRise}</span><strong>+${fmt(median(dependency))}</strong><small>${t.yearRange}</small></article></div>
       <div class="demographic-split"><article class="fertility-ranking"><header><h3>${t.fertilityTitle}</h3><p>${t.fertilityCopy}</p></header>${countries.map(([code,profile])=>{const value=wpp(profile,2023).total_fertility_rate;return `<a href="${profileLink(code)}"><span>${flag(code)}<b>${esc(name(profile))}</b></span><i><u style="width:${Math.min(value/2.4*100,100)}%"></u><em style="left:${2.1/2.4*100}%"></em></i><strong>${fmt(value,2)}</strong></a>`}).join("")}<footer><i></i>${t.replacement}</footer></article>
       <article class="migration-definitions"><h3>${t.adminTitle}</h3><dl><div><dt>${t.recorded}</dt><dd>Eurostat migr_imm1ctz · ${t.latest}</dd></div><div><dt>${t.permits}</dt><dd>Eurostat migr_resfirst · ${t.nonEu}</dd></div><div><dt>${t.irregular}</dt><dd>Eurostat migr_eipre · ${t.enforcement}</dd></div></dl><p>${esc(data.methodology[`irregular_migration_warning_${lang()}`])}</p></article></div>
-      <header class="pressure-heading"><div><h3>${t.pressureTitle}</h3><p>${t.pressureCopy}</p></div><a href="data/europe-demographic-pressure.v1.json">JSON ↗</a></header>
+      <header class="pressure-heading"><div><h3>${t.pressureTitle}</h3><p>${t.pressureCopy}</p></div><a href="/data/europe-demographic-pressure.v1.json">JSON ↗</a></header>
       <div class="demographic-table-wrap"><table class="demographic-table"><thead><tr><th>${t.country}</th><th>${t.tfr23}</th><th>${t.tfr50}</th><th>${t.natural}<small>2023 · ‰</small></th><th>${t.migration}<small>2023 · ‰</small></th><th>${t.working}<small>2025→2045</small></th><th>${t.dependency}<small>2025→2045</small></th><th>${t.exposure}<small>2024 · ${t.pctGdp}</small></th></tr></thead><tbody>${countries.map(([code,profile])=>{const f=profile.fiscal_pressure, now=wpp(profile,2023), future=wpp(profile,2050); return `<tr><th><a href="${profileLink(code)}">${flag(code)}<span>${esc(name(profile))}<small>${t.openProfile} →</small></span></a></th><td>${fmt(now.total_fertility_rate,2)}</td><td>${fmt(future.total_fertility_rate,2)}</td><td class="${now.natural_change_per_1000<0?"negative":"positive"}">${fmt(now.natural_change_per_1000,1,true)}</td><td class="${now.net_migration_per_1000<0?"negative":"positive"}">${fmt(now.net_migration_per_1000,1,true)}</td><td>${fmt(f.working_age_change_2025_2045_pct,1,true)} %</td><td>${fmt(f.old_age_dependency_2025)} → ${fmt(f.old_age_dependency_2045)}</td><td>${fmt(f.combined_social_health_pct_gdp)} %</td></tr>`}).join("")}</tbody></table></div>`;
   }
 
@@ -89,7 +89,7 @@
   }
 
   function render(){ comparison(); country(); }
-  fetch("data/europe-demographic-pressure.v1.json").then(response=>{if(!response.ok) throw new Error(response.status); return response.json()}).then(payload=>{data=payload;render()}).catch(error=>console.error("Demographic pressure",error));
+  fetch("/data/europe-demographic-pressure.v1.json").then(response=>{if(!response.ok) throw new Error(response.status); return response.json()}).then(payload=>{data=payload;render()}).catch(error=>console.error("Demographic pressure",error));
   addEventListener("countryprofilechange", render);
   addEventListener("psdlanguagechange", render);
   new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});

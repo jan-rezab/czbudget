@@ -19,7 +19,7 @@
       current: "Aktuální, živé nebo plánované", recent: "Statistická řada do 2024", older: "Řada do 2023 nebo starší", other: "Publikováno · projekce / bez roku", notPublished: "V této sekci nepublikováno",
       selectCountry: "Vyberte zemi na mapě", selectCopy: "Po výběru ukážeme přesně ty sekce, které jsou pro zemi na PSD publikované, jejich období a odkazy na profil.",
       publishedFor: "Publikované sekce", noPublished: "Pro tuto zemi není ve vybrané sekci publikovaný artefakt.", open: "Otevřít sekci", source: "Primární zdroj",
-      mapLabel: "Mapa publikovaného pokrytí Public Spending Data", scopeNote: "Měřeno na obsahu tohoto webu, ne na dostupnosti u poskytovatelů.",
+      mapLabel: "Mapa publikovaného pokrytí Public Spending Data", scopeNote: "Měřeno na obsahu tohoto webu, ne na dostupnosti u poskytovatelů.", searchCountry: "Najít zemi", searchPlaceholder: "Název nebo kód země",
       loadError: "Mapu publikovaného pokrytí se nepodařilo načíst."
     },
     en: {
@@ -33,7 +33,7 @@
       current: "Current, live or planned", recent: "Statistical series through 2024", older: "Series through 2023 or older", other: "Published · projection / undated", notPublished: "Not published in this section",
       selectCountry: "Select a country on the map", selectCopy: "The detail will show exactly which sections PSD publishes for that country, their periods and links to the profile.",
       publishedFor: "Published sections", noPublished: "No artifact is published for this country in the selected section.", open: "Open section", source: "Primary source",
-      mapLabel: "Map of published Public Spending Data coverage", scopeNote: "Measured on content published on this site, not on availability at providers.",
+      mapLabel: "Map of published Public Spending Data coverage", scopeNote: "Measured on content published on this site, not on availability at providers.", searchCountry: "Find a country", searchPlaceholder: "Country name or code",
       loadError: "The published coverage map could not be loaded."
     }
   };
@@ -127,6 +127,7 @@
 
   function render() {
     const countries = state.registry.countries;
+    const prioritisedCountries = countries.slice().sort((a, b) => allRecordsFor(b.iso3).length - allRecordsFor(a.iso3).length || countryName(a).localeCompare(countryName(b), lang));
     const byIso2 = new Map(countries.map((country) => [country.iso2, country]));
     const paths = state.geometry.locations.map((location) => {
       const country = byIso2.get(location.id);
@@ -136,10 +137,19 @@
       return `<path class="surface-country surface-${band}${state.selected === country.iso3 ? " is-selected" : ""}" d="${location.path}" tabindex="0" data-surface-country="${esc(country.iso3)}" aria-label="${esc(label)}"><title>${esc(label)}</title></path>`;
     }).join("");
     const selectedCountry = countries.find((country) => country.iso3 === state.selected);
-    root.innerHTML = `<div class="surface-controls"><label for="surface-mode">${esc(t.choose)}</label><select id="surface-mode">${modeOptions()}</select><p>${esc(t.scopeNote)}</p></div><div class="surface-kpis">${kpis(countries).map(([value, label]) => `<article><strong>${esc(typeof value === "number" ? number(value) : value)}</strong><span>${esc(label)}</span></article>`).join("")}</div><div class="surface-map-panel"><div class="surface-map-wrap"><svg class="surface-map" viewBox="${state.geometry.viewBox}" role="img" aria-label="${esc(t.mapLabel)}">${paths}</svg></div><ol class="surface-legend">${legend(countries)}</ol><div class="surface-tooltip" role="tooltip" aria-hidden="true"></div></div><section class="surface-detail" aria-live="polite">${detail(selectedCountry)}</section>`;
+    root.innerHTML = `<div class="surface-controls"><label for="surface-mode">${esc(t.choose)}</label><select id="surface-mode">${modeOptions()}</select><label for="surface-country-search">${esc(t.searchCountry)}</label><input id="surface-country-search" type="search" list="surface-country-options" placeholder="${esc(t.searchPlaceholder)}" value="${esc(selectedCountry ? countryName(selectedCountry) : "")}"><datalist id="surface-country-options">${prioritisedCountries.map(country=>`<option value="${esc(countryName(country))}" data-code="${esc(country.iso3)}">${esc(country.iso3)} · ${allRecordsFor(country.iso3).length} ${esc(t.sections)}</option>`).join("")}</datalist><p>${esc(t.scopeNote)}</p></div><div class="surface-kpis">${kpis(countries).map(([value, label]) => `<article><strong>${esc(typeof value === "number" ? number(value) : value)}</strong><span>${esc(label)}</span></article>`).join("")}</div><div class="surface-map-panel"><div class="surface-map-wrap"><svg class="surface-map" viewBox="${state.geometry.viewBox}" role="img" aria-label="${esc(t.mapLabel)}">${paths}</svg></div><ol class="surface-legend">${legend(countries)}</ol><div class="surface-tooltip" role="tooltip" aria-hidden="true"></div></div><section class="surface-detail" aria-live="polite">${detail(selectedCountry)}</section>`;
     const select = root.querySelector("#surface-mode");
     select.value = state.mode;
     select.addEventListener("change", () => { state.mode = select.value; state.selected = null; render(); });
+    const countrySearch = root.querySelector("#surface-country-search");
+    const activateSearch = () => {
+      const query = String(countrySearch.value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+      if (!query) return;
+      const country = prioritisedCountries.find(item => [countryName(item), item.iso3, item.iso2].some(value => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === query)) || prioritisedCountries.find(item => countryName(item).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(query));
+      if (country) { state.selected = country.iso3; render(); root.querySelector(".surface-detail")?.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+    };
+    countrySearch.addEventListener("change", activateSearch);
+    countrySearch.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); activateSearch(); } });
     const panel = root.querySelector(".surface-map-panel");
     const tooltipNode = root.querySelector(".surface-tooltip");
     const showTooltip = (path, event) => {

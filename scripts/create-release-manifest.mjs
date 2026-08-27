@@ -13,7 +13,8 @@ const selected = [
   "data/czech-budget.v1.json", "data/demography-social.v1.json",
   "data/eu-capital-budgets.v1.json", "data/eu-migration.v1.json", "data/municipal-snapshot.v1.json", "data/municipal-history-directory.v1.json",
   "data/international-municipalities.v1.json", "data/international-itemized-warehouse.v1.json", "data/municipal-itemized-coverage.v1.json", "data/municipal-itemized-acquisition-audit.v1.json", "data/municipal-transparency.v1.json", "data/global-budget-transparency.v1.json", "data/world-map.v1.json",
-  "lib/data/sovereign-benchmark.v1.json", "sitemap.xml",
+  "lib/data/sovereign-benchmark.v1.json", "data/sovereign-benchmark-slim.v1.json",
+  "data/municipal-directory-counts.v1.json", "data/international-municipalities/index.v1.json", "sitemap.xml",
 ];
 try {
   await access(path.join(root, "data", "municipal-budget-codebook.v1.json"));
@@ -50,6 +51,7 @@ artifacts.push({ path: "data/municipal-history/*.json", files: historyFiles.leng
 for (const directory of [
   "data/municipal-expansion/bol", "data/municipal-expansion/bra", "data/municipal-expansion/chl", "data/municipal-expansion/col", "data/municipal-expansion/cri", "data/municipal-expansion/dnk", "data/municipal-expansion/esp", "data/municipal-expansion/geo", "data/municipal-expansion/gtm", "data/municipal-expansion/ita", "data/municipal-expansion/jpn", "data/municipal-expansion/kor", "data/municipal-expansion/mex", "data/municipal-expansion/per", "data/municipal-expansion/slv",
   "data/municipal-benchmarks/nld", "data/municipal-benchmarks/nor", "data/municipal-benchmarks/fin",
+  "data/international-municipalities",
 ]) {
   const digest = createHash("sha256");
   let bytes = 0;

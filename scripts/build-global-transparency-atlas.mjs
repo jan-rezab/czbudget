@@ -28,6 +28,77 @@ const map = JSON.parse(await readFile("data/world-map.v1.json", "utf8"));
 const municipal = JSON.parse(await readFile("data/municipal-transparency.v1.json", "utf8"));
 const parity = JSON.parse(await readFile("data/country-parity.v1.json", "utf8"));
 const universe = JSON.parse(await readFile("pipeline/config/sovereign_country_universe.json", "utf8"));
+const itemizedCoverage = JSON.parse(await readFile("data/municipal-itemized-coverage.v1.json", "utf8"));
+const itemizedWarehouse = JSON.parse(await readFile("data/international-itemized-warehouse.v1.json", "utf8"));
+const acquisitionAudit = JSON.parse(await readFile("data/municipal-itemized-acquisition-audit.v1.json", "utf8"));
+
+// ---------------------------------------------------------------------------
+// Rule: public_coverage_unchanged_until_load
+//
+// Loading facts into the private production warehouse is not publication, and a
+// research assessment is not a load. Public municipal capability may therefore
+// only move when the acquisition audit and the published coverage contract say
+// it moved. This is enforced here, in code, because the failure mode it guards
+// against is silent: a country's pipeline and its adopted-budget flag get
+// upgraded as a side effect of an import run that never touched that country.
+// ---------------------------------------------------------------------------
+const LOADED_PIPELINES = new Set(["loaded", "loaded_partial"]);
+const ENACTED_STAGES = new Set(["enacted", "approved", "revised", "modified", "proposal", "plan", "budget"]);
+// Audit verdicts that mean "we looked and there is no acquirable item-level
+// adopted-budget dataset". Access and authentication blocks are deliberately
+// excluded: those say the data exists but PSD cannot reach it, which is a
+// truthful source-availability finding rather than an absence of adopted budgets.
+const NO_ADOPTED_BUDGET_SOURCE = new Set([
+  "catalog_not_coverage",
+  "document_only",
+  "decentralized_no_bulk",
+  "accounts_not_budget",
+  "heterogeneous_catalog",
+  "no_stable_bulk_contract",
+  "regional_fragmentation",
+  "distributed_portals"
+]);
+// Countries where the official national source demonstrably publishes adopted
+// item-level municipal budgets even though PSD has so far loaded only the
+// accounts/execution layer. These are source-availability findings, not load
+// claims, and every entry must be named here rather than appearing silently.
+const SOURCE_ADOPTED_BUDGET_WITHOUT_PSD_LOAD = new Map([
+  ["NLD", "CBS Iv3 publishes the municipal begroting alongside the realisatie; PSD has loaded the accounts layer only."],
+  ["KOR", "Local Finance 365 publishes 예산 (adopted budgets) alongside the settlements; PSD has loaded the settlement layer only."],
+  ["CRI", "The CGR SIPP portal publishes the presupuesto inicial alongside execution; PSD has loaded the execution layer only."]
+]);
+
+const acquiredCodes = new Set((acquisitionAudit.acquired || []).map((entry) => entry.country_code));
+const noAdoptedBudgetCodes = new Set((acquisitionAudit.not_acquired || [])
+  .filter((entry) => NO_ADOPTED_BUDGET_SOURCE.has(entry.status))
+  .map((entry) => entry.country_code)
+  .filter((code) => !acquiredCodes.has(code)));
+const itemizedByCode = new Map(itemizedCoverage.countries.map((country) => [country.code, country]));
+const warehouseByCode = new Map(itemizedWarehouse.countries.map((country) => [country.code, country]));
+
+for (const record of municipal.countries) {
+  const code = record.iso3;
+  const coverage = itemizedByCode.get(code);
+  const warehouse = warehouseByCode.get(code);
+  const publishedProfiles = Number(coverage?.published_profile_count ?? coverage?.profile_count) || 0;
+  const publishesAdoptedBudgets = publishedProfiles > 0 && (coverage?.stages || []).some((stage) => ENACTED_STAGES.has(stage));
+
+  if (LOADED_PIPELINES.has(record.pipeline) && !publishedProfiles && !warehouse && !acquiredCodes.has(code)) {
+    throw new Error(`${code}: municipal_item_level.pipeline claims "${record.pipeline}" with no published itemized profiles, no production warehouse entry and no acquired bundle in data/municipal-itemized-acquisition-audit.v1.json`);
+  }
+
+  if (record.features?.enacted === true && noAdoptedBudgetCodes.has(code) && !publishesAdoptedBudgets) {
+    throw new Error(`${code}: municipal_item_level.features.enacted is true, but the acquisition audit records no acquirable item-level adopted-budget source for it and no adopted-budget stage is published on this site`);
+  }
+
+  if (record.features?.enacted === true && LOADED_PIPELINES.has(record.pipeline) && !acquiredCodes.has(code)) {
+    const warehouseEnacted = (warehouse?.stages || []).some((stage) => ENACTED_STAGES.has(stage));
+    if (!publishesAdoptedBudgets && !warehouseEnacted && !SOURCE_ADOPTED_BUDGET_WITHOUT_PSD_LOAD.has(code)) {
+      throw new Error(`${code}: municipal_item_level claims a PSD load with features.enacted true, but no adopted-budget stage exists in the published profiles or the production warehouse and the country is not in the acquisition audit's acquired list`);
+    }
+  }
+}
+
 const municipalByIso = new Map(municipal.countries.map((country) => [country.iso2, country]));
 const loadedByIso3 = new Map(parity.countries.map((country) => [country.country_code, country]));
 const iso3ByIso2 = new Map(universe.countries.map((country) => [country.iso2, country.iso3]));

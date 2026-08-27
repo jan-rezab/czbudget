@@ -61,9 +61,12 @@
       cs: ["Srovnání veřejných rozpočtů — Public Spending Data", "Porovnejte dvacet let harmonizovaných ukazatelů veřejných financí deseti zemí."],
       en: ["Compare public budgets — Public Spending Data", "Compare twenty years of harmonised public-finance indicators across ten countries."],
     },
+    // Keep this in step with the statusCopy pageTitle/pageIntro in site-pages.js.
+    // coverage-map.js deliberately no longer writes document.title itself: the
+    // observer below would revert it and the two writers would fight.
     "/methodology.html": {
-      cs: ["Stav dat — Public Spending Data", "Pokrytí podle země, období a primárního zdroje."],
-      en: ["Data status — Public Spending Data", "Coverage by country, period and primary source."],
+      cs: ["Pokrytí — Public Spending Data", "Co publikujeme podle země, sekce, období a primárního zdroje."],
+      en: ["Coverage — Public Spending Data", "What we publish by country, section, period and primary source."],
     },
     "/about.html": {
       cs: ["O projektu — Public Spending Data", "O projektu Public Spending Data a neziskové organizaci Hlidac statu, z.u."],
@@ -86,8 +89,8 @@
       en: ["Czech municipalities — Public Spending Data", "Insights, long-run city budgets and a complete directory of all 6,254 Czech municipalities."],
     },
     "/deep-dives/": {
-      cs: ["Hloubkové profily — Public Spending Data", "Tematické profily propojují veřejné rozpočty s infrastrukturou a kapacitou veřejných služeb."],
-      en: ["Deep dives — Public Spending Data", "Cross-country deep dives connect public budgets with infrastructure and public-service capacity."],
+      cs: ["Reporty | Public Spending Data", "Tematické reporty propojují veřejné rozpočty s infrastrukturou a kapacitou veřejných služeb."],
+      en: ["Reports | Public Spending Data", "Cross-country reports connect public budgets with infrastructure and public-service capacity."],
     },
     "/deep-dives/transportation/": {
       cs: ["Hloubkový profil dopravy — Public Spending Data", "Srovnání výdajů na dopravu, silnic, dálnic a růstu sítě v deseti zemích."],

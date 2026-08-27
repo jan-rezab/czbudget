@@ -19,6 +19,7 @@ RUN rm -rf \
     /usr/share/nginx/html/.gitignore \
     /usr/share/nginx/html/AGENTS.md \
     /usr/share/nginx/html/CANONICAL_SOURCE.md \
+    /usr/share/nginx/html/PUBLIC_DOMAIN_DEPLOYMENT.md \
     /usr/share/nginx/html/Dockerfile \
     /usr/share/nginx/html/cloudbuild.yaml \
     /usr/share/nginx/html/nginx.conf.template \

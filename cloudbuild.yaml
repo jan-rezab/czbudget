@@ -71,7 +71,15 @@ steps:
     entrypoint: node
     args: [scripts/merge-municipal-breakdowns.mjs]
 
-  - id: release-manifest
+  # Manifest/validation ordering is load-bearing — do not collapse these four steps.
+  # validate-integrity.mjs both (a) verifies every artifact hash in
+  # data/release-manifest.v1.json against disk and (b) rewrites
+  # data/data-quality-report.v1.json, which the manifest itself hashes. So the
+  # manifest has to exist before validation runs, yet the published manifest has
+  # to be built after the report is final. The draft manifest satisfies (a), the
+  # final manifest is built from the post-validation tree, and the verify step
+  # proves the shipped manifest matches the tree the image is built from.
+  - id: release-manifest-draft
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/create-release-manifest.mjs]
@@ -83,6 +91,22 @@ steps:
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: sh
     args: [-ceu, 'node scripts/validate-site.mjs && node scripts/validate-integrity.mjs --write-report']
+
+  - id: release-manifest
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/create-release-manifest.mjs]
+    env:
+      - COMMIT_SHA=$COMMIT_SHA
+      - BUILD_ID=$BUILD_ID
+
+  # Gate: re-verify without --write-report so nothing mutates the tree after the
+  # published manifest was hashed. Any step added below this point that writes a
+  # manifest-tracked file will (correctly) break the build here.
+  - id: verify-release-manifest
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/validate-integrity.mjs]
 
   - id: build
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3

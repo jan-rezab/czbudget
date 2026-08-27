@@ -3,12 +3,24 @@
   const value = (cell) => {
     const raw = text(cell);
     if (!raw || raw === "—") return { type: "empty", value: null };
-    const normalized = raw
+    // data-sort-value is written by the page itself and is already a plain number.
+    const authored = Number(cell?.dataset.sortValue);
+    if (cell?.dataset.sortValue && Number.isFinite(authored)) return { type: "number", value: authored };
+    // Displayed text arrives in Czech (1 234 567,89) or English (1,234,567.89). The later
+    // of the two marks is the decimal separator; a mark that only ever precedes a full
+    // three-digit group is a thousands separator, so "1,234,567" stays one number.
+    const digits = raw
       .replace(/[−–]/g, "-")
       .replace(/\u00a0/g, " ")
-      .replace(/[^0-9,\.\-+]/g, "")
-      .replace(/(?<=\d)[ .](?=\d{3}(?:\D|$))/g, "")
-      .replace(",", ".");
+      .replace(/[^0-9,\.\-+]/g, "");
+    const comma = digits.lastIndexOf(","), dot = digits.lastIndexOf(".");
+    const mixed = comma >= 0 && dot >= 0;
+    const decimal = mixed ? (comma > dot ? "," : ".") : (comma >= 0 ? "," : (dot >= 0 ? "." : ""));
+    const repeated = decimal !== "" && digits.indexOf(decimal) !== digits.lastIndexOf(decimal);
+    const grouped = decimal === "" || (!mixed && (repeated || /^\d{3}$/.test(digits.slice(digits.lastIndexOf(decimal) + 1))));
+    const normalized = grouped
+      ? digits.replace(/[,\.]/g, "")
+      : digits.split(decimal === "," ? "." : ",").join("").replace(decimal, ".");
     const numeric = Number(normalized);
     return Number.isFinite(numeric) && /\d/.test(raw)
       ? { type: "number", value: numeric }

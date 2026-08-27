@@ -8,3 +8,13 @@ playwright-report/
 node_modules/
 __pycache__/
 *.pyc
+.venv/
+
+# macOS "duplicate on copy" artefacts - "country-functions 2.js", "entities 3.json",
+# "website 2/". These have been created in bulk (~25k files) more than once; the
+# patterns below cover both files and directories so they can never be committed.
+# Patterns without a slash are matched against the basename at every depth.
+* [0-9]
+* [0-9].*
+* [0-9][0-9]
+* [0-9][0-9].*

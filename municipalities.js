@@ -17,6 +17,8 @@
   Object.assign(C.cs,{sourceYears:"2015–2025 · národní zdroje",navBenchmark:"Srovnání OECD",benchmarkKicker:"03 / Srovnatelná struktura",benchmarkTitle:"Velikost obcí lze porovnat.",benchmarkCopy:"Tři ukazatele z jediné definice OECD popisují velikost a roztříštěnost obecní samosprávy. Nejsou žebříčkem kvality ani efektivity.",benchmarkLoading:"Načítám srovnání OECD…",directoryKicker:"04 / Adresář obcí",methodKicker:"05 / Metodika"});
   Object.assign(C.en,{sourceYears:"2015–2025 · national sources",navBenchmark:"OECD comparison",benchmarkKicker:"03 / Comparable structure",benchmarkTitle:"Municipal size can be compared.",benchmarkCopy:"Three indicators from one OECD definition describe the scale and fragmentation of municipal government. They are not a ranking of quality or efficiency.",benchmarkLoading:"Loading OECD comparison…",directoryKicker:"04 / Municipality directory",methodKicker:"05 / Methodology"});
   C.cs.countryHomepage="Stránka země"; C.en.countryHomepage="Country homepage";
+  Object.assign(C.cs,{loadingDirectory:"Načítám adresář obcí…",pickCountry:"Vyberte zemi a prohledejte její obce"});
+  Object.assign(C.en,{loadingDirectory:"Loading the municipality directory…",pickCountry:"Choose a country to search its municipalities"});
   const $ = (selector) => document.querySelector(selector);
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[character]);
   const t = () => C[state.lang];
@@ -26,6 +28,20 @@
   const slugs={CZE:"czechia",POL:"poland",DNK:"denmark",FRA:"france",SWE:"sweden",GBR:"england",UKR:"ukraine",NOR:"norway",NLD:"netherlands",FIN:"finland",BRA:"brazil",ESP:"spain",JPN:"japan",COL:"colombia",GEO:"georgia",ITA:"italy",BOL:"bolivia",SLV:"el-salvador",MEX:"mexico",CRI:"costa-rica",GTM:"guatemala",PER:"peru",KOR:"south-korea",CHL:"chile"};
   const czechRegions={"Hlavní město Praha":"Prague","Středočeský kraj":"Central Bohemian Region","Jihočeský kraj":"South Bohemian Region","Plzeňský kraj":"Plzeň Region","Karlovarský kraj":"Karlovy Vary Region","Ústecký kraj":"Ústí nad Labem Region","Liberecký kraj":"Liberec Region","Královéhradecký kraj":"Hradec Králové Region","Pardubický kraj":"Pardubice Region","Kraj Vysočina":"Vysočina Region","Jihomoravský kraj":"South Moravian Region","Olomoucký kraj":"Olomouc Region","Zlínský kraj":"Zlín Region","Moravskoslezský kraj":"Moravian-Silesian Region"};
   const regionName = (entity) => state.lang === "en" && entity.country === "CZE" ? (czechRegions[entity.region] || entity.region) : entity.region;
+
+  // The hub paints from the 24 kB country index; municipal entities arrive one country
+  // shard at a time and only when a filter actually needs them. A shard omits everything
+  // its country already states, so rehydrate to the shape the cards render from.
+  const shards=new Map(), loaded=new Map();
+  const hydrate = (shard) => {const d=shard.defaults,code=shard.country.code;return shard.entities.map((entity)=>({id:entity.id||`${d.id_prefix}:${entity.code}`,country:code,code:entity.code,name:entity.name,region:entity.region??null,currency:entity.currency||d.currency,years:entity.years||d.years,revenue:entity.revenue??null,expenditure:entity.expenditure??null,balance:entity.balance??null,population:entity.population??null,url:entity.url||(entity.slug?`${d.url_prefix}${entity.slug}/`:null)}));};
+  const loadShard = (code) => {
+    if(!shards.has(code))shards.set(code,fetch(`${assetRoot}data/international-municipalities/${code}.v1.json`).then((response)=>{if(!response.ok)throw new Error(`${code}: ${response.status}`);return response.json();}).then((shard)=>{loaded.set(code,hydrate(shard));return loaded.get(code);}).catch((error)=>{console.error("Municipal shard",error);loaded.set(code,[]);return [];}));
+    return shards.get(code);
+  };
+  // Capitals alone answer the default view; a country choice needs one shard, and a free
+  // search or a year filter across every country needs them all.
+  const required = () => state.type === "capital" ? [] : state.country !== "all" ? [state.country] : (state.query.trim() || state.year !== "all") ? state.data.countries.map((country) => country.code) : [];
+  const municipalRows = () => required().flatMap((code) => loaded.get(code) || []);
 
   function renderCountrySwitch(){
     const select=$("#municipality-country-switch"); if(!select||!state.data)return;
@@ -114,7 +130,7 @@
   }
   function filtered() {
     const query=state.query.trim().toLocaleLowerCase();
-    const municipalities=state.data.entities.filter((entity)=>(state.country==="all"||entity.country===state.country)&&(state.year==="all"||entity.years.includes(Number(state.year))));
+    const municipalities=municipalRows().filter((entity)=>state.year==="all"||entity.years.includes(Number(state.year)));
     const source=state.type==="capital"?state.capitals:state.country==="all"&&state.year==="all"?[...state.capitals,...municipalities]:municipalities;
     return source.filter((entity)=>!query||`${entity.name} ${entity.code} ${entity.countryName||""}`.toLocaleLowerCase().includes(query));
   }
@@ -127,10 +143,19 @@
     const amount=`<dl><div><dt>${t().revenue}</dt><dd>${Number.isFinite(entity.revenue)?currency(entity.revenue,entity.currency):"—"}</dd></div><div><dt>${t().expenditure}</dt><dd>${Number.isFinite(entity.expenditure)?currency(entity.expenditure,entity.currency):"—"}</dd></div><div><dt>${t().result}</dt><dd>${Number.isFinite(entity.balance)?currency(entity.balance,entity.currency):"—"}</dd></div><div><dt>${t().population}</dt><dd>${Number.isFinite(entity.population)?fmt(entity.population):"—"}</dd></div></dl>`;
     return `<article class="municipality-card"${href?` data-href="${esc(href)}"`:""}><header><img src="${assetRoot}assets/flags/${country.alpha2.toLowerCase()}.svg" alt=""><span>${esc(name(country))}</span><small>${esc(entity.code)}</small></header><h3>${esc(entity.name)}</h3><p>${esc(regionName(entity)||country[`coverage_${state.lang}`])}</p>${amount}<footer>${entity.years.map((year)=>`<b>${year}</b>`).join("")}<a class="card-source" href="${esc(country.source)}" target="_blank" rel="noopener">${esc(t().dataSource)}</a>${href?`<a href="${esc(href)}">${t().openProfile||t().detail} →</a>`:`<span>${esc(t().openData)}</span>`}</footer></article>`;
   }
+  // Paints what has already arrived, then repaints as each outstanding shard lands, so a
+  // search never blocks on the slowest country.
+  let directoryRequest=0;
   function renderDirectory() {
+    const request=++directoryRequest,missing=required().filter((code)=>!loaded.has(code));
+    paintDirectory(missing.length>0);
+    missing.forEach((code)=>loadShard(code).then(()=>{if(request===directoryRequest)paintDirectory(required().some((item)=>!loaded.has(item)));}));
+  }
+  function paintDirectory(loading) {
     const result=filtered(),countries=Object.fromEntries(state.data.countries.map((country)=>[country.code,country]));
-    $("#directory-count").textContent=`${fmt(Math.min(result.length,state.shown))} ${t().shown} · ${fmt(result.length)} ${t().entities}`;
-    $("#municipality-grid").innerHTML=result.slice(0,state.shown).map((entity)=>entity.kind==="capital"?renderCapital(entity):renderMunicipality(entity,countries)).join("")||`<p class="directory-empty">${t().noResults}</p>`;
+    const hint=!loading&&state.type!=="capital"&&!required().length?` · ${t().pickCountry}`:"";
+    $("#directory-count").textContent=loading?t().loadingDirectory:`${fmt(Math.min(result.length,state.shown))} ${t().shown} · ${fmt(result.length)} ${t().entities}${hint}`;
+    $("#municipality-grid").innerHTML=result.slice(0,state.shown).map((entity)=>entity.kind==="capital"?renderCapital(entity):renderMunicipality(entity,countries)).join("")||`<p class="directory-empty">${loading?t().loadingDirectory:t().noResults}</p>`;
     $("#load-more").hidden=state.shown>=result.length;
   }
   function bind() {
@@ -143,9 +168,10 @@
     $("#reset-filters").onclick=()=>{state.type="all";state.country="all";state.year="all";state.query="";state.shown=48;$("#type-filter").value="all";$("#country-filter").value="all";$("#year-filter").value="all";$("#municipality-search").value="";syncControlState();renderDirectory();updateUrl();};
     $("#load-more").onclick=()=>{state.shown+=48;renderDirectory();};
   }
-  Promise.all([fetch(`${assetRoot}data/international-municipalities.v1.json`).then((response)=>response.json()),fetch(`${assetRoot}data/eu-capital-budgets.v1.json`).then((response)=>response.json())]).then(([data,capitalData])=>{
+  Promise.all([fetch(`${assetRoot}data/international-municipalities/index.v1.json`).then((response)=>response.json()),fetch(`${assetRoot}data/eu-capital-budgets.v1.json`).then((response)=>response.json())]).then(([index,capitalData])=>{
+    const data={countries:index.countries,totals:index.totals};
     state.data=data;if(requestedCountry&&data.countries.some((country)=>country.code===requestedCountry))state.country=requestedCountry;state.capitals=capitalData.cities.filter((city)=>city.eu_capital).map((city)=>({kind:"capital",code:city.city_id,name:city.city,countryName:city.country,alpha2:city.country_code,currency:city.budget.local_currency,expenditure:city.fiscal_details?.expenditure?.local_amount||city.budget.local_amount,revenue:city.fiscal_details?.revenue?.local_amount,balance:city.fiscal_details?.balance?.local_amount,population:city.benchmarks?.population?.value,period:city.period,scope:city.scope,source:city.landing_page_url||city.download_url}));
-    setLanguage();$("#total-entities").textContent=fmt(data.entities.length);countryCards();insights();controls();renderDirectory();bind();updateUrl();
+    setLanguage();$("#total-entities").textContent=fmt(index.totals.entity_count);countryCards();insights();controls();renderDirectory();bind();updateUrl();
     fetch(`${assetRoot}data/municipal-size-benchmark.v1.json`).then((response)=>{if(!response.ok)throw new Error(`Municipal benchmark returned ${response.status}`);return response.json();}).then((benchmark)=>{state.benchmark=benchmark;renderBenchmark();}).catch((error)=>{console.error(error);$("#municipal-benchmark-content").innerHTML=`<p class="benchmark-loading">${esc(state.lang==="en"?"The OECD comparison could not be loaded.":"Srovnání OECD se nepodařilo načíst.")}</p>`;});
   }).catch((error)=>{console.error(error);$("#country-grid").innerHTML=`<p>${esc(t().loadError)}</p>`;});
 })();

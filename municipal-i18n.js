@@ -2,8 +2,10 @@
   const params = new URLSearchParams(location.search);
   const requested = params.get("lang");
   const routeDefault = location.pathname.includes("/cz/municipalities/") ? "en" : "cs";
-  const lang = requested === "en" || requested === "cs" ? requested : (localStorage.getItem("psd-lang") || routeDefault);
-  localStorage.setItem("psd-lang", lang);
+  // language-bootstrap.js already resolved URL param → stored preference → route
+  // default. Never persist here: a merely defaulted value written on load would
+  // pin this route's default as the visitor's sitewide preference.
+  const lang = requested === "en" || requested === "cs" ? requested : (window.PSDLanguage?.current() || document.documentElement.lang || routeDefault);
   document.documentElement.lang = lang;
 
   const root = location.pathname.includes("/cz/municipalities/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/")
@@ -56,7 +58,8 @@
 
   const currencyRates = { CZK: 1, EUR: 1 / 24.179, USD: 1.1576 / 24.179 };
   const allowedCurrencies = Object.keys(currencyRates);
-  const storedCurrency = localStorage.getItem("psd-municipal-currency");
+  let storedCurrency = null;
+  try { storedCurrency = localStorage.getItem("psd-municipal-currency"); } catch {}
   const isDetailPage = document.body.classList.contains("detail-page");
   let selectedCurrency = isDetailPage && allowedCurrencies.includes(storedCurrency) ? storedCurrency : "CZK";
   const locale = lang === "en" ? "en-GB" : "cs-CZ";
@@ -99,11 +102,13 @@
       currencyTextNodes.push({ node, original: node.nodeValue });
     }
   };
+  // An explicit "+" is editorial, not part of the value, so keep it.
+  const formatCzkText = (value) => {
+    moneyPattern.lastIndex = 0;
+    return value.replace(moneyPattern, (_match, sign, raw, unit) => `${sign === "+" ? "+" : ""}${formatMunicipalMoney(parseCzk(sign, raw, unit), { adaptive: true })}`);
+  };
   const refreshCurrencyText = () => {
-    currencyTextNodes.forEach(({ node, original }) => {
-      moneyPattern.lastIndex = 0;
-      node.nodeValue = original.replace(moneyPattern, (_match, sign, raw, unit) => formatMunicipalMoney(parseCzk(sign, raw, unit), { adaptive: true }));
-    });
+    currencyTextNodes.forEach(({ node, original }) => { node.nodeValue = formatCzkText(original); });
   };
   const detailHero = document.querySelector(".detail-page .detail-hero");
   if (detailHero) {
@@ -113,7 +118,7 @@
     detailHero.querySelector(":scope > div")?.append(control);
     control.querySelector("select").addEventListener("change", (event) => {
       selectedCurrency = event.target.value;
-      localStorage.setItem("psd-municipal-currency", selectedCurrency);
+      try { localStorage.setItem("psd-municipal-currency", selectedCurrency); } catch {}
       refreshCurrencyText();
       dispatchEvent(new CustomEvent("municipal-currency-change", { detail: { currency: selectedCurrency } }));
     });
@@ -259,13 +264,13 @@
     "České územní rozpočty · skutečnost 2025": "Czech local government budgets · 2025 actuals",
     "Obce a kraje\nv jednom obrazu.": "Municipalities and regions\nin one view.", "v jednom obrazu.": "in one view.",
     "Všechny obecní účetní jednotky, kraje i společný součet. Praha je započtena jen jednou.": "Every municipal reporting entity, every region and a combined total. Prague is counted once.",
-    "01 / Deduplikovaný součet": "01 / Deduplicated total", "901,9 mld. Kč příjmů.": "CZK 901.9bn in revenue.",
+    "01 / Deduplikovaný součet": "01 / Deduplicated total",
     "6 254 obcí včetně Prahy + 13 krajů bez Prahy = 6 267 unikátních účetních jednotek.": "6,254 municipalities including Prague + 13 regions excluding Prague = 6,267 unique reporting entities.",
     "Obce a města": "Municipalities and cities", "Kraje bez Prahy": "Regions excluding Prague", "Celkem — Praha jen jednou": "Total · Prague counted once",
     "Praha je zde jako obec": "Prague is included as a municipality", "13 krajských účetních jednotek": "13 regional reporting entities", "6 267 unikátních jednotek": "6,267 unique entities",
     "Příjmy": "Revenue", "Výdaje": "Expenditure", "Skutečné příjmy": "Actual revenue", "Skutečné výdaje": "Actual expenditure", "Výsledek": "Balance", "Stav účtů": "Cash and deposits", "Peníze a vklady": "Cash and deposits", "Saldo": "Balance",
     "Pozor na interpretaci:": "Interpretation note:", "Praha není zdvojena, ale součet není konsolidovaný mezi obcemi a kraji — vzájemné transfery mohou zůstávat na obou stranách.": "Prague is not duplicated, but the combined total is not consolidated across municipalities and regions. Intergovernmental transfers may remain on both sides.",
-    "02 / Co tvoří výsledek": "02 / What makes the balance", "43,4 mld. Kč vytvořily přebytkové obce.": "Surplus municipalities generated CZK 43.4bn.",
+    "02 / Co tvoří výsledek": "02 / What makes the balance",
     "01 / Snapshot 2025 · deduplikovaný součet": "01 / 2025 snapshot · deduplicated total", "02 / Celá země · 2010–2025": "02 / Nationwide · 2010–2025",
     "Obecní rozpočty v čase.": "Municipal budgets over time.", "Součet všech obcí dostupných v daném roce. Vybraný rok řídí také výdajový benchmark, rozdělení přebytků a schodků i celý adresář níže.": "Totals for all municipalities available in each year. The selected year also drives the spending benchmark, surplus/deficit analysis and the directory below.",
     "Vybraný rok": "Selected year", "6 254 obcí s rozpočtovými daty": "6,254 municipalities with budget data", "Obce v přebytku": "Municipalities in surplus",
@@ -277,9 +282,8 @@
     "Celkové příjmy a souhrnný výsledek podle toho, zda obec rok 2025 uzavřela v přebytku, nebo ve schodku.": "Total revenue and aggregate balance, split by whether each municipality closed 2025 in surplus or deficit.",
     "Přebytkové obce": "Surplus municipalities", "Schodkové obce": "Deficit municipalities", "Všechny obce čistě": "All municipalities · net",
     "všech obcí": "of all municipalities", "Celkové příjmy": "Total revenue", "Souhrnný výsledek": "Aggregate balance", "Výsledek po započtení": "Net balance", "příjmy": "revenue",
-    "337,6 mld. Kč": "CZK 337.6bn", "+43,4 mld. Kč": "+CZK 43.4bn", "196,5 mld. Kč": "CZK 196.5bn", "−28,6 mld. Kč": "−CZK 28.6bn", "534,1 mld. Kč": "CZK 534.1bn", "+14,9 mld. Kč": "+CZK 14.9bn", "16,9 mld. Kč": "CZK 16.9bn",
-    "Pět největších schodků": "Five largest deficits", "Pět „špatných prasátek“ ubralo 2,0 mld. Kč.": "Five “bad piggies” took away CZK 2.0bn.",
-    "Bez této pětice by obce dohromady skončily v přebytku": "Without these five, municipalities would have finished with a surplus of", "namísto 14,9 mld. Kč.": "instead of CZK 14.9bn.",
+    "Pět největších schodků": "Five largest deficits",
+    "Bez této pětice by obce dohromady skončily v přebytku": "Without these five, municipalities would have finished with a surplus of",
     "„Špatné“ zde znamená pouze největší schodek za jediný rok. Schodek může být plánovanou investicí hrazenou z dřívějších úspor; nejde o hodnocení kvality vedení ani platební schopnosti.": "“Bad” means only the largest deficit in this single year. A deficit may be planned investment funded from prior savings; it is not a judgment on management quality or solvency.",
     "03 / Všechny obce": "03 / All municipalities", "Najděte libovolnou obec.": "Find any municipality.",
     "Jednotná data FIN 2-12 M, rozvahy a ČSÚ pro vybraný rok. Stav účtů nezahrnuje samostatné příspěvkové organizace.": "Consistent FIN 2-12 M, balance-sheet and CZSO data for the selected year. Cash excludes separately reporting public organisations.",
@@ -299,8 +303,40 @@
     "Samostatná účetní jednotka obce; příspěvkové organizace nejsou přičítány. Výsledek je po konsolidaci uvnitř rozpočtu obce.": "A separate municipal reporting entity; subsidiary public organisations are not added. The balance is consolidated within the municipal budget.",
     "Zdroj: Monitor státní pokladny MF ČR · stav k 31. 12. 2025": "Source: Czech Ministry of Finance Treasury Monitor · as of 31 December 2025",
     "Data a metodika": "Data and methodology", "Zdroje a data": "Sources and data", "Rozpočet": "Budget", "Strojová data": "Machine-readable data", "Historická data": "Historical data",
-    "České územní rozpočty": "Czech local government budgets"
+    "České územní rozpočty": "Czech local government budgets",
+    // portal-ui.js rewrites a few source headings into descriptive ones before
+    // this dictionary is consulted, and it is injected dynamically, so its
+    // ordering against this script is not guaranteed. Key the *normalized*
+    // Czech form (as "Zdroje a data" above already is) and map it to the same
+    // English string portal-ui produces from the English source heading. Both
+    // orderings then converge on one result instead of leaving the heading
+    // Czech on the English page:
+    //   portal-ui first: "Výsledek hospodaření a stav účtů." -> "Vývoj rozpočtu a účtů" -> here
+    //   i18n first:      "Výsledek hospodaření a stav účtů." -> "Fiscal balance and cash." -> portal-ui
+    "Vývoj rozpočtu a účtů": "Budget and cash over time",
+    "Plán a skutečné výsledky": "Budget and actual results"
   }));
+
+  // Sentences that carry a data value must never be dictionary keys: the next
+  // data refresh changes the amount, the literal key stops matching and the
+  // English page silently falls back to Czech. Match the sentence by shape,
+  // then re-inject the amount formatted for the active language and currency.
+  const moneyToken = String.raw`[+−-]?\d[\d\s]*(?:[,.]\d+)?\s*(?:mld\.|mil\.)?\s*Kč`;
+  const amountSentences = [
+    ["^%M% příjmů\\.$", "%A% in revenue."],
+    ["^%M% vytvořily přebytkové obce\\.$", "Surplus municipalities generated %A%."],
+    ["^Pět „špatných prasátek“ ubralo %M%\\.$", "Five “bad piggies” took away %A%."],
+    ["^namísto %M%\\.$", "instead of %A%."],
+    // A bare amount is deliberately absent: collectCurrencyText below converts
+    // those generically and keeps them switchable by the currency control.
+  ].map(([source, template]) => [new RegExp(source.replace("%M%", `(${moneyToken})`)), template]);
+  const translateAmountSentence = (value) => {
+    for (const [pattern, template] of amountSentences) {
+      const match = value.match(pattern);
+      if (match) return template.replace("%A%", () => formatCzkText(match[1]));
+    }
+    return null;
+  };
 
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   const nodes = [];
@@ -308,7 +344,7 @@
   nodes.forEach((node) => {
     const value = node.nodeValue.trim();
     if (!value) return;
-    const translated = dictionary.get(value);
+    const translated = dictionary.get(value) || translateAmountSentence(value);
     if (translated) node.nodeValue = node.nodeValue.replace(value, translated);
   });
   const translatePhrases = (selector, replacements) => document.querySelectorAll(selector).forEach((node) => {

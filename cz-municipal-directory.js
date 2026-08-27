@@ -27,7 +27,10 @@ let activeYear = 2025;
 let shown = 48;
 
 const params = new URLSearchParams(location.search);
-const english = params.get("lang") === "en" || localStorage.getItem("psd-lang") === "en";
+// An explicit ?lang= wins; otherwise take the language language-bootstrap.js
+// resolved. Never OR the two together — that lets a stored "en" beat ?lang=cs.
+const requestedLang = params.get("lang");
+const english = (requestedLang === "en" || requestedLang === "cs" ? requestedLang : document.documentElement.lang) === "en";
 const locale = english ? "en-GB" : "cs-CZ";
 const decimal = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
 const integer = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });

@@ -64,7 +64,8 @@
       structured.textContent = JSON.stringify(data);
     } catch {}
   }
-  localStorage.setItem("psd-lang", lang);
+  // This runs on every load, so it must not persist: a merely defaulted value
+  // written here would pin this route's default as the sitewide preference.
   dispatchEvent(new CustomEvent("psdlanguagechange", { detail: { lang } }));
   window.psdLanguageReady?.();
 })();

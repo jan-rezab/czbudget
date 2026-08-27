@@ -58,18 +58,56 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def decimal_value(value: Any) -> Decimal:
+# Placeholders official publishers use to mean "no value was reported".
+# Eurostat and the Nordic statistics offices use ".." and ":"; DGFiP, StatsWales
+# and the German kameral exports use a dash. None of these is a zero.
+MISSING_VALUE_TOKENS = frozenset({"..", ":", "-", "—", "–", "nan", "None", "NaN", "N/A", "n/a"})
+
+
+def decimal_value(value: Any) -> Decimal | None:
+    """Parse an official source amount.
+
+    Returns ``None`` when the source reported **no value** — an empty cell, or
+    one of the documented missing-value placeholders in
+    :data:`MISSING_VALUE_TOKENS`. It never returns ``Decimal(0)`` for those.
+
+    This is deliberate and load-bearing. The published methodology promises
+    that a missing value is never treated as zero, so "the publisher reported
+    0" and "the publisher reported nothing" have to stay distinguishable all
+    the way from the source cell to the fact tables. Callers must branch on
+    ``None`` explicitly and must not coerce it to zero; a genuine reported
+    zero comes back as ``Decimal(0)``, which is falsy but *not* ``None``.
+
+    Raises ``ValueError`` for text that is present but not a number, so an
+    unexpected source schema fails loudly instead of silently reading as zero.
+    """
     if value is None:
-        return Decimal(0)
+        return None
     text = str(value).strip().replace("\u00a0", "").replace(" ", "")
-    if not text or text in {"..", ":", "-", "—", "nan", "None"}:
-        return Decimal(0)
+    if not text or text in MISSING_VALUE_TOKENS:
+        return None
     if "," in text and "." not in text:
         text = text.replace(",", ".")
     try:
         return Decimal(text)
     except InvalidOperation as exc:
         raise ValueError(f"Not a decimal value: {value!r}") from exc
+
+
+def reported_amount(value: Any) -> Decimal | None:
+    """Return a *loadable* amount, or ``None`` if there is nothing to load.
+
+    Collapses the two distinct no-fact cases every adapter shares: a missing
+    value (:func:`decimal_value` returned ``None``) and a reported zero, which
+    carries no money and so is not emitted as a budget line. Neither is ever
+    written as a zero fact. Callers that must tell the two apart keep calling
+    :func:`decimal_value` directly; this helper only replaces the common
+    ``if not amount: continue`` guard, which could not distinguish them.
+    """
+    amount = decimal_value(value)
+    if amount is None or not amount:
+        return None
+    return amount
 
 
 def numeric_json(value: Decimal) -> str:
@@ -88,6 +126,34 @@ def bigquery_numeric_compatible(value: Any) -> bool:
     scale = max(0, -number.as_tuple().exponent)
     integer_digits = max(1, number.adjusted() + 1)
     return scale <= 9 and integer_digits <= 29
+
+
+def source_api_key(source: dict[str, Any]) -> str:
+    """Return the API key for a source, read from the environment.
+
+    Credentials are never stored in the source configuration. A source that
+    needs one declares the *name* of the environment variable that carries it
+    via ``api_key_env``; the value is read at run time. Missing configuration
+    or a missing/blank variable is a hard failure, so a refresh can never
+    silently fall through to an unauthenticated request. The key value itself
+    is never echoed, logged, or included in an error message.
+    """
+    variable = source.get("api_key_env")
+    if not variable:
+        raise SystemExit(
+            f"Source {source.get('id', '<unknown>')!r} requires an API key but declares no "
+            "'api_key_env'. Add the environment variable name to the source configuration; "
+            "never store the key itself there."
+        )
+    key = os.environ.get(variable, "").strip()
+    if not key:
+        raise SystemExit(
+            f"Environment variable {variable} is not set (or is empty), and source "
+            f"{source.get('id', '<unknown>')!r} cannot be refreshed without it. Export the "
+            "credential in the shell that runs this transform, or use --offline / a cached "
+            "snapshot."
+        )
+    return key
 
 
 def sha256(path: Path) -> str:
@@ -337,6 +403,8 @@ def iter_dbf(handle: io.BufferedReader, encoding: str = "cp1250") -> Iterator[tu
             position += length
             text = raw.decode(encoding, errors="replace").strip()
             if kind in "NF" and text:
+                # ``None`` here means the DBF numeric column held a missing-value
+                # placeholder; it is preserved as absent rather than as zero.
                 row[name] = decimal_value(text)
             else:
                 row[name] = text or None
@@ -443,8 +511,8 @@ def run_poland(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any
                     ctx.bundle.node(node_row(country, function_class, side, function, function, year, ctx.loaded_at))
                     ctx.bundle.node(node_row(country, economic_class, side, economic, economic, year, ctx.loaded_at))
                     for stage, column in (("revised", "R1"), ("actual", "R4")):
-                        amount = decimal_value(row.get(column))
-                        if not amount:
+                        amount = reported_amount(row.get(column))
+                        if amount is None:
                             continue
                         ctx.bundle.write("municipal_budget_line_facts", fact_row(
                             country, f"PL:{item['code']}", year, stage, side, function, economic, amount,
@@ -514,9 +582,10 @@ def run_denmark(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, An
                 dranst = stable_code(row.get("DRANST"))
                 owner = stable_code(row.get("EJER"))
                 grouping = stable_code(row.get("GRUPPERING"))
-                amount = decimal_value(row.get("INDHOLD")) * Decimal(1000)
-                if not amount or not function or not art:
+                amount = reported_amount(row.get("INDHOLD"))
+                if amount is None or not function or not art:
                     continue
+                amount *= Decimal(1000)
                 account = ".".join(part for part in (dranst, owner, grouping, art) if part)
                 account_name = " · ".join(part for part in (owner_names.get(owner), grouping_names.get(grouping), art_names.get(art)) if part)
                 side = "revenue" if art.startswith(("7", "8")) else ("financing" if dranst in {"5", "6", "7"} else "expenditure")
@@ -592,9 +661,10 @@ def run_sweden(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any
             for row_number, row in enumerate(jsonstat_rows(data), 1):
                 rows_read += 1
                 code = stable_code(row.get(line_variable["code"]))
-                amount = decimal_value(row["value"]) * Decimal(1000)
-                if not amount:
+                amount = reported_amount(row["value"])
+                if amount is None:
                     continue
+                amount *= Decimal(1000)
                 ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, source["table"], row, ctx.loaded_at))
                 if source["kind"] == "balance":
                     ctx.bundle.write("public_entity_balance_sheet_facts", {
@@ -682,8 +752,8 @@ def run_france(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any
             if not functional:
                 flags.append("functional_detail_not_published")
             for side, column in (("expenditure", "OBNETDEB"), ("revenue", "OBNETCRE")):
-                amount = decimal_value(row.get(column))
-                if not amount:
+                amount = reported_amount(row.get(column))
+                if amount is None:
                     continue
                 ctx.bundle.write("municipal_budget_line_facts", fact_row(
                     country, f"FR:{code}", year, "actual", side, function, account, amount,
@@ -693,7 +763,17 @@ def run_france(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any
                 run_counts[source["id"]][1] += 1
             debit, credit = decimal_value(row.get("SD")), decimal_value(row.get("SC"))
             if debit or credit:
-                signed = debit - credit
+                # A blank counterpart column in a two-column DGFiP balance is a
+                # nil side, not an unknown amount, so it nets out at zero here.
+                # Which column was absent is recorded on the fact rather than
+                # being lost, because "reported 0" and "reported nothing" are
+                # different statements about the source.
+                signed = (debit or Decimal(0)) - (credit or Decimal(0))
+                balance_flags = [
+                    "debit_minus_credit", *flags,
+                    *(["debit_column_not_reported"] if debit is None else []),
+                    *(["credit_column_not_reported"] if credit is None else []),
+                ]
                 ctx.bundle.write("public_entity_balance_sheet_facts", {
                     "public_entity_id": f"FR:{code}", "statement_date": f"{year}-12-31", "reporting_scope": scope,
                     "statement_line_code": function or account, "account_code": account, "account_name": None,
@@ -701,7 +781,7 @@ def run_france(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any
                     "currency_code": currency, "amount_eur": numeric_json(signed), "fx_date": f"{year}-12-31",
                     "source_id": source["id"], "ingestion_run_id": run_id, "source_row_number": row_number,
                     "source_sheet": member, "coverage_type": "census", "is_imputed": False,
-                    "quality_flags": ["debit_minus_credit", *flags], "loaded_at": ctx.loaded_at,
+                    "quality_flags": balance_flags, "loaded_at": ctx.loaded_at,
                 })
                 run_counts[source["id"]][1] += 1
 
@@ -762,7 +842,7 @@ def run_france_budgets(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[
                 rows_read += 1; ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, path.name, row, ctx.loaded_at))
                 for side, raw_amount in measures:
                     amount = german_decimal(raw_amount)
-                    if not amount:
+                    if amount is None or not amount:
                         continue
                     function = function or "UNSPECIFIED"; economic = economic or "UNSPECIFIED"
                     function_code = f"{side}:{function}"; economic_code = f"{side}:{economic}"
@@ -833,9 +913,10 @@ def run_england(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, An
             for variable, value in row.items():
                 if variable in identifier_columns:
                     continue
-                amount = decimal_value(value) * Decimal(1000)
-                if not amount:
+                amount = reported_amount(value)
+                if amount is None:
                     continue
+                amount *= Decimal(1000)
                 side = uk_side(variable)
                 ctx.bundle.node(node_row(country, classification_id, side, variable, variable, year_ending, ctx.loaded_at))
                 ctx.bundle.write("municipal_budget_line_facts", fact_row(
@@ -918,10 +999,10 @@ def run_england_budget(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[
                 if raw_amount in (None, ""):
                     continue
                 try:
-                    signed_amount = decimal_value(raw_amount)
+                    signed_amount = reported_amount(raw_amount)
                 except ValueError:
                     continue
-                if not signed_amount:
+                if signed_amount is None:
                     continue
                 asset_id = stable_code(asset_ids[column] if column < len(asset_ids) else None) or f"RA_{stable_code(lines[column] if column < len(lines) else column)}"
                 item_name = stable_code(headers[column]) or asset_id
@@ -985,6 +1066,12 @@ SCOTLAND_COUNCILS = {
 
 
 def _scotland_numeric(value: Any) -> Decimal | None:
+    """Return a reported POBE cell value, or ``None`` where none was reported.
+
+    ``decimal_value`` already maps the publisher's missing-value placeholders
+    to ``None``, so a dashed cell reads as "no value" instead of as a zero that
+    would make a section heading look like a populated data row.
+    """
     if value in (None, "") or isinstance(value, bool):
         return None
     try:
@@ -1116,8 +1203,8 @@ def run_wales(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]
                 year = int(year_label[:4])
             except ValueError:
                 continue
-            signed_amount = decimal_value(row.get("Data values"))
-            if not signed_amount:
+            signed_amount = reported_amount(row.get("Data values"))
+            if signed_amount is None:
                 continue
             service = stable_code(row.get("Service_reference")) or "UNSPECIFIED"
             service_name = stable_code(row.get("Service")) or service
@@ -1223,8 +1310,8 @@ def run_ukraine(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, An
             ("revised", ("revised_plan", "adjusted_plan", "plan_updated")),
             ("actual", ("executed", "actual", "fact", "cash_execution")),
         ):
-            amount = decimal_value(first_value(row, aliases))
-            if not amount:
+            amount = reported_amount(first_value(row, aliases))
+            if amount is None:
                 continue
             ctx.bundle.write("municipal_budget_line_facts", fact_row(
                 country, f"UA:{code}", year, stage, side, function, economic, amount,
@@ -1343,8 +1430,8 @@ def run_ukraine_public_api(ctx: Context, country: str, cfg: dict[str, Any]) -> d
                             ))
                             ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, f"{code}.csv", row, ctx.loaded_at))
                             for stage, column in (("enacted", "ZAT_AMT"), ("revised", "PLANS_AMT"), ("actual", "FAKT_AMT")):
-                                amount = decimal_value(row.get(column))
-                                if not amount:
+                                amount = reported_amount(row.get(column))
+                                if amount is None:
                                     continue
                                 ctx.bundle.write("municipal_budget_line_facts", fact_row(
                                     country, f"UA:{code}", year, stage, side, function, economic, amount,
@@ -1457,8 +1544,8 @@ def run_us_socrata(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str,
             ctx.bundle.node(node_row(country, economic_class, side, economic, economic_name, year, ctx.loaded_at))
             ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, source["dataset"], row, ctx.loaded_at))
             for stage, field in measures:
-                amount = decimal_value(row.get(field))
-                if not amount:
+                amount = reported_amount(row.get(field))
+                if amount is None:
                     continue
                 ctx.bundle.write("municipal_budget_line_facts", fact_row(
                     country, entity_id, year, stage, side, function, economic, amount,
@@ -1504,9 +1591,10 @@ def run_switzerland_lucerne(ctx: Context, country: str, cfg: dict[str, Any]) -> 
             side = "expenditure" if first in {"3", "5"} else "revenue" if first in {"4", "6"} else None
             if side is None:
                 continue
-            amount = abs(decimal_value(row.get("saldo")))
-            if not amount:
+            amount = reported_amount(row.get("saldo"))
+            if amount is None:
                 continue
+            amount = abs(amount)
             ctx.bundle.node(node_row(country, function_class, side, function, stable_code(row.get("fkt_name")) or function, year, ctx.loaded_at))
             ctx.bundle.node(node_row(country, economic_class, side, economic, stable_code(row.get("art_name")) or economic, year, ctx.loaded_at))
             ctx.bundle.raw(raw_row(country, year, source, run_id, row_number, "gefis-lu-bg.csv", row, ctx.loaded_at))
@@ -1531,7 +1619,7 @@ def run_switzerland_zurich(ctx: Context, country: str, cfg: dict[str, Any]) -> d
     elif ctx.args.offline:
         raise FileNotFoundError(f"Offline source missing: {path}")
     else:
-        headers = {"api-key": source["api_key"]}
+        headers = {"api-key": source_api_key(source)}
         departments = ctx.api_json("GET", f"{source['url']}/departemente", headers=headers).get("value", [])
         records = []
         for department in departments:
@@ -1551,8 +1639,8 @@ def run_switzerland_zurich(ctx: Context, country: str, cfg: dict[str, Any]) -> d
         economic = stable_code(account.get("kontoNr")).replace(" ", "")
         first = economic[:1]
         side = "expenditure" if first in {"3", "5"} else "revenue" if first in {"4", "6"} else None
-        amount = decimal_value(row.get("budgetAktuell"))
-        if not economic or side is None or not amount:
+        amount = reported_amount(row.get("budgetAktuell"))
+        if not economic or side is None or amount is None:
             continue
         function = ":".join(filter(None, (stable_code(department.get("key")), stable_code(institution.get("key"))))) or "UNSPECIFIED"
         function_name = " · ".join(filter(None, (stable_code(department.get("bezeichnung")), stable_code(institution.get("bezeichnung"))))) or function
@@ -1630,16 +1718,23 @@ def run_germany_bremen(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[
     return {"entities": 1, "rows": rows_read, "facts": rows_loaded, "fiscal_years": [2026, 2027]}
 
 
-def german_decimal(value: Any) -> Decimal:
+def german_decimal(value: Any) -> Decimal | None:
+    """Parse a German/French municipal amount written in the de-DE convention.
+
+    Returns ``None`` when the cell reports no value. ``[z]`` is the official
+    "not available" marker in these publications, and a cell that cannot be
+    parsed is an unknown amount too -- neither is a zero, so neither is
+    reported as one.
+    """
     text = stable_code(value).replace("€", "").replace("\u00a0", "").replace(" ", "")
-    if not text or text in {"-", "–", "—", "[z]"}:
-        return Decimal(0)
+    if not text or text in MISSING_VALUE_TOKENS or text in {"[z]", "[-]"}:
+        return None
     if "," in text:
         text = text.replace(".", "").replace(",", ".")
     try:
         return decimal_value(text)
     except ValueError:
-        return Decimal(0)
+        return None
 
 
 def _de_split_code(value: Any) -> tuple[str, str]:
@@ -1684,9 +1779,12 @@ def run_germany_structured(ctx: Context, country: str, cfg: dict[str, Any]) -> d
         rows_read = rows_loaded = 0
 
         def emit(row_number: int, sheet: str, payload: dict[str, Any], year: int, stage: str, side: str,
-                 function: str, function_name: str, economic: str, economic_name: str, amount: Decimal) -> None:
+                 function: str, function_name: str, economic: str, economic_name: str,
+                 amount: Decimal | None) -> None:
             nonlocal rows_loaded
-            if not amount:
+            # ``None`` is a missing source value and ``Decimal(0)`` a reported
+            # zero; neither becomes a fact, and neither is written as the other.
+            if amount is None or not amount:
                 return
             function = function or "UNSPECIFIED"; economic = economic or "UNSPECIFIED"
             ctx.bundle.node(node_row(country, function_class, side, f"{side}:{function}", function_name or function, year, ctx.loaded_at))
@@ -1831,8 +1929,8 @@ def run_paraguay_boost(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[
         node_code = f"expenditure:{economic}"
         ctx.bundle.node(node_row(country, economic_class, "expenditure", node_code, economic_name or economic, year, ctx.loaded_at))
         for stage, field in (("enacted", "approved"), ("revised", "MODIFIED"), ("actual", "PAID")):
-            amount = decimal_value(row.get(field))
-            if not amount:
+            amount = reported_amount(row.get(field))
+            if amount is None:
                 continue
             ctx.bundle.write("municipal_budget_line_facts", fact_row(
                 country, f"PY:{normalized_code}", year, stage, "expenditure", None, node_code, abs(amount),

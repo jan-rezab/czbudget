@@ -60,6 +60,7 @@
 
   function renderChrome(lang = document.documentElement.lang === "en" ? "en" : "cs") {
     const t = copy[lang];
+    if (document.body.classList.contains("country-not-found")) { index.hidden = true; rail.innerHTML = ""; rail.style.display = "none"; return; }
     index.innerHTML = `<header><span>${t.label}</span><p>${t.intro}</p></header><div>${chapters.map((chapter, i) => `<a href="#${chapter.anchor}"><b>${String(i + 1).padStart(2, "0")}</b><span><strong>${t.chapters[i][0]}</strong><small>${t.chapters[i][1]}</small></span></a>`).join("")}</div>`;
     rail.innerHTML = `<a href="#top">${t.top}</a>${chapters.map((chapter, i) => `<a href="#${chapter.anchor}">${String(i + 1).padStart(2, "0")} · ${t.chapters[i][0]}</a>`).join("")}`;
     chapters.forEach((chapter, i) => {

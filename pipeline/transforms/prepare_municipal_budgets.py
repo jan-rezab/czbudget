@@ -7,9 +7,24 @@ import argparse
 import csv
 import io
 import json
+import os
 import zipfile
 from collections import defaultdict
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
+
+
+ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[3]))
+CODEBOOK_DIR = ROOT / "data/source_cache/codebooks"
+PARAGRAPH_CODEBOOK = CODEBOOK_DIR / "CIS_PARAGRAF.CSV"
+ITEM_CODEBOOK = CODEBOOK_DIR / "CIS_POLOZKA.CSV"
+CODEBOOK_SOURCE_URL = "https://monitor.statnipokladna.gov.cz/datovy-katalog/ciselniky"
+
+# CZK is quoted to the halere. Amounts are summed as Decimal so thousands of
+# rows add up exactly, then quantized once at the boundary. A 2-decimal CZK
+# value stays exactly representable as an IEEE-754 double well past the
+# national aggregate, so the JSON contract is unchanged.
+CZK = Decimal("0.01")
 
 
 CITIES = [
@@ -52,15 +67,32 @@ CASH_ACCOUNTS = {
 }
 
 
-def parse_number(value: str | None) -> float:
+def parse_number(value: str | None) -> Decimal:
+    """Parse a MONITOR CZK amount exactly.
+
+    Returned as :class:`~decimal.Decimal`, not ``float``: these values are
+    summed across tens of thousands of rows, and binary floating point would
+    accumulate a drift that downstream reconciliation then has to absorb with
+    an artificial tolerance. Decimal addition of halere-precision amounts is
+    exact, so a reconciliation residual afterwards is a real source
+    discrepancy rather than arithmetic noise.
+    """
     text = (value or "").strip().replace(" ", "").replace(",", ".")
     if not text:
-        return 0.0
+        return Decimal(0)
     negative = text.endswith("-")
     if negative:
         text = text[:-1]
-    number = float(text)
+    try:
+        number = Decimal(text)
+    except InvalidOperation as exc:
+        raise ValueError(f"Not a MONITOR amount: {value!r}") from exc
     return -number if negative else number
+
+
+def czk(value: Decimal | float | int) -> float:
+    """Quantize an exact CZK total to halere for JSON serialization."""
+    return float(Decimal(value).quantize(CZK))
 
 
 def valid_at_2025(start: str, end: str) -> bool:
@@ -69,6 +101,14 @@ def valid_at_2025(start: str, end: str) -> bool:
 
 
 def load_code_map(path: Path, code_idx: int, start_idx: int, end_idx: int, label_idx: int) -> dict[str, str]:
+    if not path.exists():
+        raise SystemExit(
+            f"Missing MONITOR codebook: {path}\n"
+            f"Download CIS_PARAGRAF.CSV and CIS_POLOZKA.CSV from {CODEBOOK_SOURCE_URL} "
+            f"and place them in {CODEBOOK_DIR}.\n"
+            "These files are part of the source contract: without them every paragraph "
+            "and item label would silently fall back to an empty string."
+        )
     result: dict[str, str] = {}
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.reader(handle, delimiter=";", quotechar='"')
@@ -102,7 +142,7 @@ def extract_budget_detail(data_dir: Path, city_map: dict[str, dict], paragraph_l
         approved = parse_number(row[10])
         after_changes = parse_number(row[11])
         actual = parse_number(row[12])
-        if abs(approved) < 0.005 and abs(after_changes) < 0.005 and abs(actual) < 0.005:
+        if not approved and not after_changes and not actual:
             continue
         paragraph = row[8].strip().zfill(4)
         city = city_map[row[4]]
@@ -116,9 +156,9 @@ def extract_budget_detail(data_dir: Path, city_map: dict[str, dict], paragraph_l
             "paragraph_name": paragraph_labels.get(paragraph, ""),
             "item": item,
             "item_name": item_labels.get(item, ""),
-            "approved": approved,
-            "after_changes": after_changes,
-            "actual": actual,
+            "approved": czk(approved),
+            "after_changes": czk(after_changes),
+            "actual": czk(actual),
         })
     rows.sort(key=lambda r: (r["rank"], r["kind"], r["paragraph"], r["item"]))
     return rows
@@ -135,13 +175,13 @@ def extract_financing(data_dir: Path, targets: set[str]):
             "approved": parse_number(row[8]),
             "after_changes": parse_number(row[9]),
             "actual": parse_number(row[10]),
-        }
+        }  # Decimal; serialized via czk() at the output boundary
     return financing
 
 
 def extract_cash(data_dir: Path, city_map: dict[str, dict]):
     components = []
-    totals = defaultdict(lambda: {"current": 0.0, "prior": 0.0})
+    totals = defaultdict(lambda: {"current": Decimal(0), "prior": Decimal(0)})
     for member in ("ROZV1_2025012.csv", "ROZV2_2025012.csv"):
         reader = iter_zip_csv(data_dir / "rozvaha2025.zip", member)
         next(reader, None)
@@ -160,8 +200,8 @@ def extract_cash(data_dir: Path, city_map: dict[str, dict]):
                 "ico": row[4],
                 "account": account,
                 "account_name": CASH_ACCOUNTS[account],
-                "cash_2025": current,
-                "cash_2024": prior,
+                "cash_2025": czk(current),
+                "cash_2024": czk(prior),
             })
             totals[row[4]]["current"] += current
             totals[row[4]]["prior"] += prior
@@ -185,6 +225,14 @@ def main():
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--summary-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--paragraph-codebook", type=Path, default=PARAGRAPH_CODEBOOK,
+        help=f"MONITOR CIS_PARAGRAF.CSV codebook (default: {PARAGRAPH_CODEBOOK})",
+    )
+    parser.add_argument(
+        "--item-codebook", type=Path, default=ITEM_CODEBOOK,
+        help=f"MONITOR CIS_POLOZKA.CSV codebook (default: {ITEM_CODEBOOK})",
+    )
     args = parser.parse_args()
 
     city_map = {
@@ -192,8 +240,8 @@ def main():
         for rank, grade, score, ico, name in CITIES
     }
     targets = set(city_map)
-    paragraph_labels = load_code_map(Path("/tmp/CIS_PARAGRAF.CSV"), 0, 4, 5, 6)
-    item_labels = load_code_map(Path("/tmp/CIS_POLOZKA.CSV"), 0, 1, 2, 6)
+    paragraph_labels = load_code_map(args.paragraph_codebook, 0, 4, 5, 6)
+    item_labels = load_code_map(args.item_codebook, 0, 1, 2, 6)
 
     detail = extract_budget_detail(args.data_dir, city_map, paragraph_labels, item_labels)
     financing = extract_financing(args.data_dir, targets)
@@ -202,7 +250,7 @@ def main():
     cities = []
     for rank, grade, score, ico, stated_name in CITIES:
         summary_path = args.summary_dir / f"{ico}.json"
-        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        summary = json.loads(summary_path.read_text(encoding="utf-8"), parse_float=Decimal)
         categories, totals = summary_categories(summary)
         revenue = totals["revenue"]
         expense = totals["expense"]
@@ -212,23 +260,23 @@ def main():
             "score": score,
             "ico": ico,
             "name": summary.get("name") or stated_name,
-            "tax_revenue": categories.get("1", {}).get("reality", 0.0),
-            "nontax_revenue": categories.get("2", {}).get("reality", 0.0),
-            "capital_revenue": categories.get("3", {}).get("reality", 0.0),
-            "transfer_revenue": categories.get("4", {}).get("reality", 0.0),
-            "current_expense": categories.get("5", {}).get("reality", 0.0),
-            "capital_expense": categories.get("6", {}).get("reality", 0.0),
-            "revenue_approved": revenue.get("approved", 0.0),
-            "revenue_after_changes": revenue.get("afterChanges", 0.0),
-            "revenue_actual": revenue.get("reality", 0.0),
-            "expense_approved": expense.get("approved", 0.0),
-            "expense_after_changes": expense.get("afterChanges", 0.0),
-            "expense_actual": expense.get("reality", 0.0),
-            "financing_approved": financing.get(ico, {}).get("approved", 0.0),
-            "financing_after_changes": financing.get(ico, {}).get("after_changes", 0.0),
-            "financing_actual": financing.get(ico, {}).get("actual", 0.0),
-            "cash_2025": cash_totals[ico]["current"],
-            "cash_2024": cash_totals[ico]["prior"],
+            "tax_revenue": czk(categories.get("1", {}).get("reality", 0)),
+            "nontax_revenue": czk(categories.get("2", {}).get("reality", 0)),
+            "capital_revenue": czk(categories.get("3", {}).get("reality", 0)),
+            "transfer_revenue": czk(categories.get("4", {}).get("reality", 0)),
+            "current_expense": czk(categories.get("5", {}).get("reality", 0)),
+            "capital_expense": czk(categories.get("6", {}).get("reality", 0)),
+            "revenue_approved": czk(revenue.get("approved", 0)),
+            "revenue_after_changes": czk(revenue.get("afterChanges", 0)),
+            "revenue_actual": czk(revenue.get("reality", 0)),
+            "expense_approved": czk(expense.get("approved", 0)),
+            "expense_after_changes": czk(expense.get("afterChanges", 0)),
+            "expense_actual": czk(expense.get("reality", 0)),
+            "financing_approved": czk(financing.get(ico, {}).get("approved", 0)),
+            "financing_after_changes": czk(financing.get(ico, {}).get("after_changes", 0)),
+            "financing_actual": czk(financing.get(ico, {}).get("actual", 0)),
+            "cash_2025": czk(cash_totals[ico]["current"]),
+            "cash_2024": czk(cash_totals[ico]["prior"]),
             "source_summary": f"https://monitor.statnipokladna.gov.cz/ucetni-jednotka/{ico}/rozpocet/souhrnny?obdobi=2512&rad=t",
             "source_entity": f"https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/{ico}",
         }
@@ -236,14 +284,22 @@ def main():
 
     checks = []
     for city in cities:
-        balance_delta = city["revenue_actual"] - city["expense_actual"] + city["financing_actual"]
+        # Exact Decimal arithmetic: any residual here is a genuine discrepancy
+        # between the published summary and the FINM202 financing extract, not
+        # accumulated binary-float error.
+        balance_delta = (
+            Decimal(str(city["revenue_actual"]))
+            - Decimal(str(city["expense_actual"]))
+            + Decimal(str(city["financing_actual"]))
+        )
+        tolerance = Decimal("1.0")
         checks.append({
             "city": city["name"],
             "ico": city["ico"],
             "check": "Příjmy − výdaje + financování = 0",
-            "delta": balance_delta,
-            "tolerance": 1.0,
-            "status": "OK" if abs(balance_delta) <= 1.0 else "ZKONTROLOVAT",
+            "delta": czk(balance_delta),
+            "tolerance": float(tolerance),
+            "status": "OK" if abs(balance_delta) <= tolerance else "ZKONTROLOVAT",
         })
 
     payload = {

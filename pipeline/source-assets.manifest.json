@@ -1,8 +1,23 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "algorithm": "sha256",
-  "asset_count": 117,
-  "total_bytes": 1290954499,
+  "grouping": {
+    "roots": [
+      "data/source_cache",
+      "data/sources"
+    ],
+    "per_file_depth": 2,
+    "aggregate_suffix": "/**",
+    "tree_digest": "sha256 over sorted \"<path relative to the tree>\\0<file sha256>\\n\" lines",
+    "ignored": [
+      ".*",
+      "*.part",
+      "* <n>.<ext> (macOS duplicates)"
+    ]
+  },
+  "entry_count": 138,
+  "asset_count": 16061,
+  "total_bytes": 3748912976,
   "assets": [
     {
       "path": "data/source_cache/2025_12_FINM.zip",
@@ -345,64 +360,213 @@
       "sha256": "9f905848c26c97000306f0dc32d1d638778b58b7f4f51eff7461c4e9ba784365"
     },
     {
+      "path": "data/source_cache/european_municipal_benchmarks/FIN/**",
+      "files": 13,
+      "bytes": 2101290,
+      "sha256": "f87820d9542ab32de65b256cc0177b23f2f27852a1e96061da26b79f37789bbe"
+    },
+    {
+      "path": "data/source_cache/european_municipal_benchmarks/NLD/**",
+      "files": 944,
+      "bytes": 69206756,
+      "sha256": "d8559bf6596550e809361a79a077d2e9e951093b8c5fa29bb678ced4f37f475e"
+    },
+    {
+      "path": "data/source_cache/european_municipal_benchmarks/NOR/**",
+      "files": 12,
+      "bytes": 12677365,
+      "sha256": "f7a466a565b80579753ce8305333565a9bdd9db9fae821d7c5a3cd1a66a95624"
+    },
+    {
       "path": "data/source_cache/historical_2006_2009_large_cities.json",
       "bytes": 41940,
       "sha256": "6ea915d6534561b155b9d29ed5342739c3acf23cba7e542e8dd98566353724f2"
     },
     {
-      "path": "data/source_cache/international_municipal/FRA/BalanceSPL_Fonction_2024_Dec2025.zip",
-      "bytes": 68667118,
-      "sha256": "9f22d337780520e36cd910228e1c3f81aa246ef532bc4db19044d6b9be2dc5a0"
+      "path": "data/source_cache/international_municipal/CHE/**",
+      "files": 2,
+      "bytes": 57666969,
+      "sha256": "561e6b36f1f88908e2483e8b1e40b0c99297a2c2c93e9d006d365141be15f7b4"
     },
     {
-      "path": "data/source_cache/international_municipal/FRA/BalanceSPL_Fonction_2025_Juil2026.zip",
-      "bytes": 68098922,
-      "sha256": "b544bc4dd7c90b94da5615f07023e1d9d70b73af6600fc77b3e8d8d53ddf149a"
+      "path": "data/source_cache/international_municipal/DEU/**",
+      "files": 1,
+      "bytes": 1057573,
+      "sha256": "2643a1a0ca241b848a05ce27060a1d05cb26672af40695f970424b9b251f2585"
     },
     {
-      "path": "data/source_cache/international_municipal/FRA/Balance_Commune_2024_Dec2025.zip",
-      "bytes": 100473909,
-      "sha256": "8825167a288dc15fabbcf73cc19f60be422e4094cc1e253d4722f301521f7af9"
+      "path": "data/source_cache/international_municipal/FRA/**",
+      "files": 4,
+      "bytes": 336659864,
+      "sha256": "3dfdc3fa35945876b1f7a09e8d83cd9601f6771c55f2a0460743715f66647dfe"
     },
     {
-      "path": "data/source_cache/international_municipal/FRA/Balance_Commune_2025_Juil2026.zip",
-      "bytes": 99419915,
-      "sha256": "22a163c77f1b8766478e57d444c57edfbb0e801861b7ec17f1af9508c5ccdb69"
+      "path": "data/source_cache/international_municipal/GBR/**",
+      "files": 6,
+      "bytes": 29648111,
+      "sha256": "df0ca51383b829e704d8aa2294630901d992547ef8f39fc975588c84b6ddc5d9"
     },
     {
-      "path": "data/source_cache/international_municipal/GBR/Revenue_Outturn_time_series_data_v3.2.csv",
-      "bytes": 20698894,
-      "sha256": "885270cfc4d91354cce6e6e0ba3a5b798090b367e51dadbdcfb47c0428c1bc89"
+      "path": "data/source_cache/international_municipal/POL/**",
+      "files": 6,
+      "bytes": 80370294,
+      "sha256": "3a9674dd798a23a00ad2ddb53b67cfde0e201ba8c3ac97e7ec1ba3db9352ebd0"
     },
     {
-      "path": "data/source_cache/international_municipal/POL/Rb27S_2024Q4.zip",
-      "bytes": 11034990,
-      "sha256": "0629bd767e5d6cd9066a4e0b919993763980b500f2fc9e9e74b73c117a7e4076"
+      "path": "data/source_cache/international_municipal/PRY/**",
+      "files": 1,
+      "bytes": 59885020,
+      "sha256": "df61c2a1e8ae164d9100c96ee4d03e6d19bb981ca55042af30ea504dcce5cc87"
     },
     {
-      "path": "data/source_cache/international_municipal/POL/Rb27S_2025Q4.zip",
-      "bytes": 10852963,
-      "sha256": "bfe85e8dd423389d605690c02d3fbe03cfe32a0217a56e6b4e6e10c8122745d9"
+      "path": "data/source_cache/international_municipal/UKR/**",
+      "files": 5870,
+      "bytes": 180546955,
+      "sha256": "f63bd62d614a06b2ca7a47345b821793c9140b97a26fbb0d08ac3e02e8458cd5"
     },
     {
-      "path": "data/source_cache/international_municipal/POL/Rb28S_2024Q4.zip",
-      "bytes": 29694685,
-      "sha256": "f74dd2a5197e36701d90d028fd6587ee79780cc68a42cbe604e702c26a905902"
+      "path": "data/source_cache/municipal-expansion/BOL/**",
+      "files": 3,
+      "bytes": 25545901,
+      "sha256": "4fd68fcfb011f12cc09b9f945ae1de1223f73f50f77d140df0d17e27becb7568"
     },
     {
-      "path": "data/source_cache/international_municipal/POL/Rb28S_2025Q4.zip",
-      "bytes": 28418800,
-      "sha256": "0be0bab16cbc9553fffe54ddf867b4cb95ca61a3f7a6a1095a4e706536786052"
+      "path": "data/source_cache/municipal-expansion/BRA/**",
+      "files": 8536,
+      "bytes": 30639788,
+      "sha256": "317a23f42ba993c3ad101794577aad2d2ae19a738479d5bac05872034b545c91"
     },
     {
-      "path": "data/source_cache/international_municipal/POL/Slownik_JST_2024.xlsx",
-      "bytes": 190679,
-      "sha256": "dab027b9c6fff3bc41a64603cf105f776033a42e2a21e5932ba6b3d5eae2d22b"
+      "path": "data/source_cache/municipal-expansion/CHL/**",
+      "files": 346,
+      "bytes": 9709146,
+      "sha256": "b1072f7d8ed6fec01ce55ca84021a902b1ab049d3a08041fa3d11309dc566a9b"
     },
     {
-      "path": "data/source_cache/international_municipal/POL/Slownik_JST_2025.xlsx",
-      "bytes": 178177,
-      "sha256": "2376f1c5d2d180cce2289bd600771eccacf51a0bd45ac906f84bf62a7caa9123"
+      "path": "data/source_cache/municipal-expansion/COL/**",
+      "files": 4,
+      "bytes": 443638,
+      "sha256": "96e035cc216bba6ddbd2bde66c8c15841ce8b9a463e34701b97a1168d4dab7c1"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/CRI/**",
+      "files": 2,
+      "bytes": 25420,
+      "sha256": "b12b76e23c40d819829729c60678a547f5b4d14b83be4ad8bf186447b948ab26"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/ESP/**",
+      "files": 4,
+      "bytes": 637281467,
+      "sha256": "47895a788f92356a44290c2ed522f9ad41270f5c513da11e9dbb01d70b7c776d"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/GEO/**",
+      "files": 72,
+      "bytes": 1709220,
+      "sha256": "d868fb84c4095c875246d297080cae9b8d19b977461009adc7d8a8dac3005d9d"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/GTM/**",
+      "files": 9,
+      "bytes": 52068185,
+      "sha256": "7cb87791168dc458a144de855d97d715da357e3688937d7999dc38f6521461f6"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/ITA/**",
+      "files": 3,
+      "bytes": 116074655,
+      "sha256": "3ef38c6963494d122a4739291f22d49c58e03fe4de6c47b1f4331bc4803bcad3"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/JPN/**",
+      "files": 30,
+      "bytes": 165558129,
+      "sha256": "369313a41feb68eb141a1a7d8f08adab6fcbdcdeee701c7b6bba64ecd47788e5"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/KOR/**",
+      "files": 6,
+      "bytes": 112173,
+      "sha256": "7b0b8822f7c40a0006b749a5446730ac8c91f68aa9aa46cdf18e75ea73fe2f4e"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/MEX/**",
+      "files": 1,
+      "bytes": 95840224,
+      "sha256": "48f66ee2c753f044d24dcca515e1f84b7619bfb3f10cbee3bda625b661985933"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/PER/**",
+      "files": 2,
+      "bytes": 699895964,
+      "sha256": "671863e203e9950f610fad814c8bc424d341e02b0d4d54936367e6d45e1466b9"
+    },
+    {
+      "path": "data/source_cache/municipal-expansion/SLV/**",
+      "files": 2,
+      "bytes": 12847541,
+      "sha256": "99af54641dcb59dc8221413938f0d02fb91f8acf26f88bb2c34ea39e470a4311"
+    },
+    {
+      "path": "data/source_cache/public_entities/CHE/**",
+      "files": 3,
+      "bytes": 2640851,
+      "sha256": "4f9d7d86f89bfab88a01bdf8930a663f95a502416abee37efe5ca543fcaea694"
+    },
+    {
+      "path": "data/source_cache/public_entities/CZE/**",
+      "files": 1,
+      "bytes": 1345311,
+      "sha256": "ec69ac839cc3869fdc8dd48446510797de388ef1ab9251ad1ad7c589a641360f"
+    },
+    {
+      "path": "data/source_cache/public_entities/DEU/**",
+      "files": 1,
+      "bytes": 3215179,
+      "sha256": "86787abd1a37ca0675fa2f8e15533e8bfe53723eb83f801cb1800ec4d4af5747"
+    },
+    {
+      "path": "data/source_cache/public_entities/DNK/**",
+      "files": 2,
+      "bytes": 125080,
+      "sha256": "23661ef6a72f65bcec0ad2e1c1a92aa430f1152d840ec87f05ce12a69c7e2bd9"
+    },
+    {
+      "path": "data/source_cache/public_entities/FRA/**",
+      "files": 1,
+      "bytes": 18083,
+      "sha256": "2eb1070c7a99ed54f9d2682de817e55a41401b6dfddf86f14540c1df5ba350b5"
+    },
+    {
+      "path": "data/source_cache/public_entities/GBR/**",
+      "files": 2,
+      "bytes": 892386,
+      "sha256": "4675d8c180b7ebfdcc58f79432c0933a81384eaf169e54ecb8408a2ca3d4d243"
+    },
+    {
+      "path": "data/source_cache/public_entities/POL/**",
+      "files": 11,
+      "bytes": 508110,
+      "sha256": "9d49189e58090bb679900fea9369631d1d36881a7eac16cc167ec640b6f00081"
+    },
+    {
+      "path": "data/source_cache/public_entities/SWE/**",
+      "files": 2,
+      "bytes": 7338747,
+      "sha256": "f84d87f04ebc38a5644ce6ff2781bc9b240d4ab62638c8c6649d6933ff6b53ad"
+    },
+    {
+      "path": "data/source_cache/public_entities/UKR/**",
+      "files": 1,
+      "bytes": 698727,
+      "sha256": "ce3f72ddd7fe1ef08873c4f3363bc2fe8f434b17d193caa55e6cf71213431d89"
+    },
+    {
+      "path": "data/source_cache/public_entities/USA/**",
+      "files": 2,
+      "bytes": 11103620,
+      "sha256": "be997cb94c0c7edae9405b6ccee688a650c41c93193551d0cc9cb00b3cc6bb98"
     },
     {
       "path": "data/source_cache/summaries_2025/00064581.json",
@@ -475,9 +639,20 @@
       "sha256": "9e7ce3b7ea2e39f8764bd719b5edeecbd2b9bb090459a85730600a6ab5bd49a1"
     },
     {
+      "path": "data/sources/defense/world-bank-military-expenditure-pct-gdp.json",
+      "bytes": 394539,
+      "sha256": "0dc072743e00922ebcd1ca17509a4a118e4a16da3cdc32d4d28a85e92a10f244"
+    },
+    {
       "path": "data/sources/ecb/exr-usd-eur-annual-2005-2024.csv",
       "bytes": 4378,
       "sha256": "e6f07483ce90f40b2241c83ca7c06fbeff1d7fe751216692b6d7c3d3081c84da"
+    },
+    {
+      "path": "data/sources/economy/2026-08-26/**",
+      "files": 38,
+      "bytes": 141180426,
+      "sha256": "b1d5a8d3ecc7cf5eb3936372b84a0da6124c272f48c90591c1d40f6d065610f3"
     },
     {
       "path": "data/sources/international_fiscal/WEOApr2026all.xlsx",
@@ -485,109 +660,100 @@
       "sha256": "b29239cb48f8b895d1e526070c4fde01147bc8f6bd3b86f636363bb6bd87fe7a"
     },
     {
-      "path": "data/sources/ministries/CHE/budget-2026-volume-1.pdf",
-      "bytes": 1447228,
-      "sha256": "b528ec61c4da0d48bb2fcb94619df8d0c02af88d5f3790617e9781c0448251c0"
+      "path": "data/sources/ministries/BRA/**",
+      "files": 1,
+      "bytes": 1307856,
+      "sha256": "5fe7af85a4683b8b75effa7c288c612609861814c049e15e500324618b94413f"
     },
     {
-      "path": "data/sources/ministries/CHE/federal-finance-institutions-2026.csv",
-      "bytes": 1053685,
-      "sha256": "2c882f749c940bdcd04406dc00dd2e6731230e894f7277ede5c0e12ffb90b565"
+      "path": "data/sources/ministries/CHE/**",
+      "files": 2,
+      "bytes": 2500913,
+      "sha256": "8a6352ea09fb8beb0d3ed6b300f695e6ed71b9fc3c6e132bb4da241c1574d076"
     },
     {
-      "path": "data/sources/ministries/CZE/budget-chapters-2025.html",
-      "bytes": 207452,
-      "sha256": "52b1f336dab5257865d04840d414fcb74933d9d15bf87c08ecc92a747de42eb0"
+      "path": "data/sources/ministries/CZE/**",
+      "files": 3,
+      "bytes": 15370916,
+      "sha256": "a0ea0a0d2aec0c5dc541225c68a6a8d9a4a295e6f9aaa89499a7d63aa9e513a9"
     },
     {
-      "path": "data/sources/ministries/CZE/state-budget-2026-executive-summary.pdf",
-      "bytes": 194020,
-      "sha256": "37307dd132da8e164b2f6c31cf22a5f57da902c4e0bec45617beaf4f52499926"
+      "path": "data/sources/ministries/DEU/**",
+      "files": 2,
+      "bytes": 3565982,
+      "sha256": "f9fecb1e7e76af2b8604d00cc8bd124a7acc17388269b1851737c4b6b17d5193"
     },
     {
-      "path": "data/sources/ministries/DEU/federal-budget-2025.csv",
-      "bytes": 1777353,
-      "sha256": "c172198486d0a3665ae560b992bdcdeae76eb9e9482cc0e213f4668e638e9d8f"
+      "path": "data/sources/ministries/DNK/**",
+      "files": 2,
+      "bytes": 90801,
+      "sha256": "c4aa81157a1fd647954f22f2e976d56c4e3136d2ca4ed43fc3f89c76037a8001"
     },
     {
-      "path": "data/sources/ministries/DEU/federal-budget-2026.csv",
-      "bytes": 1788629,
-      "sha256": "3e0cc5a4246d8fe393de0b528fd426686b335fcbf8c8418e99b6b161d214483d"
+      "path": "data/sources/ministries/FRA/**",
+      "files": 3,
+      "bytes": 36742,
+      "sha256": "e08c5f82727419ca7ecee33be12965f5ba0ce89ea7fdc85c5156038c66c152ad"
     },
     {
-      "path": "data/sources/ministries/DNK/finance-act-database.html",
-      "bytes": 62531,
-      "sha256": "3398d40b0d829e9eeff8b18423380019b8678fcde871988180c68e7cd6a159fd"
+      "path": "data/sources/ministries/GBR/**",
+      "files": 3,
+      "bytes": 5579795,
+      "sha256": "a1a6f7c2e6b7b0cb68bddc9cc444cbaae47f637186d8fa5570a45f10ad8bc616"
     },
     {
-      "path": "data/sources/ministries/DNK/finance-act-report-2026.html",
-      "bytes": 28270,
-      "sha256": "e49d4f6178354a480a52d5f859f4a36a3bdf52ebc8a7b35be0eb72d1322cc4a6"
+      "path": "data/sources/ministries/POL/**",
+      "files": 5,
+      "bytes": 74233719,
+      "sha256": "ed15d606ffe1617c5e994703417d934172bf8d25adf26ce65d1224ab43f7cc07"
     },
     {
-      "path": "data/sources/ministries/FRA/state-budget-execution-2024.csv",
-      "bytes": 36318,
-      "sha256": "2ec0b30f934104ea11c863fc044932c5e260930d0c06e8e05aa0977aa315e90b"
-    },
-    {
-      "path": "data/sources/ministries/FRA/state-budget-voted-2025.pdf",
-      "bytes": 212,
-      "sha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d"
-    },
-    {
-      "path": "data/sources/ministries/FRA/state-budget-voted-2026.pdf",
-      "bytes": 212,
-      "sha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d"
-    },
-    {
-      "path": "data/sources/ministries/GBR/pesa-2026-chapter-1.xlsx",
-      "bytes": 119498,
-      "sha256": "0e88d4904e747460fbf254c358b0922f74898b8dd3d4364e0ca1ebe35e12e454"
-    },
-    {
-      "path": "data/sources/ministries/POL/execution-2024.zip",
-      "bytes": 32982342,
-      "sha256": "3fafbfe7a40b86274e9d8037c2d732b67fdbb342c7fa0031ea16922dcdd1a38e"
-    },
-    {
-      "path": "data/sources/ministries/POL/state-budget-execution-2025.xlsx",
-      "bytes": 3591868,
-      "sha256": "1c4d73d2fe4384fc2abea38125db65e5182ddb3a468354a7529d664c321d64fe"
-    },
-    {
-      "path": "data/sources/ministries/POL/state-budget-law-2026.zip",
-      "bytes": 10924857,
-      "sha256": "84c84e202582a27dbedba7b2519cd7c31a2e8747112ecf0f99fd3b4f0b010d4f"
-    },
-    {
-      "path": "data/sources/ministries/SWE/central-government-expenditure-1997-2024.xlsx",
+      "path": "data/sources/ministries/SWE/**",
+      "files": 1,
       "bytes": 1350259,
-      "sha256": "acb468cc1113e5a4326cbdef69c7264ce458e4286bcf9954423b2e08965e9503"
+      "sha256": "c11a2fb162c977f4821d99d6c128a1d2e48e98ed71c3270fa450b00db08aa119"
     },
     {
-      "path": "data/sources/ministries/UKR/state-budget-law-2024.zip",
-      "bytes": 543580,
-      "sha256": "8dd6f481d5fdeef7de1003efdd395315cb5e75c238a5e53cc941e26d1755f3c5"
+      "path": "data/sources/ministries/UKR/**",
+      "files": 3,
+      "bytes": 1234633,
+      "sha256": "5e3b98fd4f52c07eaf08021347f47b930174b0f81d03f07edeff06b3a3739827"
     },
     {
-      "path": "data/sources/ministries/UKR/state-budget-law-2025.zip",
-      "bytes": 339858,
-      "sha256": "cd2d01718c916ff5f7f25a2443fe55eceb1616c04a3221c92ecb298aaf8d0f73"
-    },
-    {
-      "path": "data/sources/ministries/UKR/state-budget-law-2026.zip",
-      "bytes": 351195,
-      "sha256": "1f9845c52eda9043965d09a60b48cc570e335b8527810964a8cdd5824cbe83a9"
-    },
-    {
-      "path": "data/sources/ministries/USA/public-budget-database-outlays-fy2027.xlsx",
+      "path": "data/sources/ministries/USA/**",
+      "files": 1,
       "bytes": 2144756,
-      "sha256": "d892f2247e6c1aed68414d3e4168f8b4ab97bcfc7acf82a6a449a3fcb1addb07"
+      "sha256": "c393df7c842fc7adba8b4d0f4ceb5e1d8297dbf730ab3d21a12d46214913d30b"
     },
     {
       "path": "data/sources/ministries/manifest.json",
-      "bytes": 12666,
-      "sha256": "66412519e1ece8cd6de1c393b20cb6d356241591a94dfa351a4f7e1f09b96bed"
+      "bytes": 12944,
+      "sha256": "d5b8e6b740810ee6bf41913cf0715049ea41ae30be73b63071103f6a97b0e308"
+    },
+    {
+      "path": "data/sources/transport/eurostat-road-if-motorwa.json",
+      "bytes": 39937,
+      "sha256": "a1811fbe1e1cdaf36b61930607e7be759a2a477fc992bb82a17722b6dead0aef"
+    },
+    {
+      "path": "data/sources/transport/eurostat-road-if-roadsc.json",
+      "bytes": 70608,
+      "sha256": "a0fcd3756fe067cea5565febcf569df7036fa27866461922590beb0f35edbc89"
+    },
+    {
+      "path": "data/sources/transport/manifest.json",
+      "bytes": 1488,
+      "sha256": "5e70066871624880c51f22a76a48db70dbe0fa62c1e1f5438bd74490eee2c8fd"
+    },
+    {
+      "path": "data/sources/transport/us-fhwa-hm10-2024.xlsx",
+      "bytes": 44689,
+      "sha256": "5f7e89524b57cc524aaea7b58f90e638a96bdce28d1647bdfb572c01ae171c29"
+    },
+    {
+      "path": "data/sources/transport/us-fhwa-hm220-1980-2024.xlsx",
+      "bytes": 25573,
+      "sha256": "31b75fecfb2ef8b4b7c70c118d87fe1632a3de7ef9a69d3a34df796b6474e1c1"
     }
   ]
 }

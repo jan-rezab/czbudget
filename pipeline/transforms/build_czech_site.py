@@ -9,6 +9,7 @@ import math
 import os
 import shutil
 import unicodedata
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
@@ -324,7 +325,11 @@ def build_sitemap(entities: list[dict]) -> None:
     for entity in entities:
         for level in entity["administrative_levels"]:
             paths.append(entity_path(entity, level))
-    urls = "\n".join(f"  <url><loc>{esc(PUBLIC_ORIGIN + path)}</loc><lastmod>2026-08-20</lastmod></url>" for path in paths)
+    # <lastmod> was a frozen literal, so every rebuild told crawlers the pages
+    # had not changed since that date. It now reports the actual build date;
+    # CZBUDGET_GENERATED_AT pins it for a reproducible build.
+    lastmod = (os.environ.get("CZBUDGET_GENERATED_AT") or datetime.now(timezone.utc).isoformat())[:10]
+    urls = "\n".join(f"  <url><loc>{esc(PUBLIC_ORIGIN + path)}</loc><lastmod>{lastmod}</lastmod></url>" for path in paths)
     (WEB / "sitemap.xml").write_text(f"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n{urls}\n</urlset>\n", encoding="utf-8")
     (WEB / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {PUBLIC_ORIGIN}/sitemap.xml\n", encoding="utf-8")
 

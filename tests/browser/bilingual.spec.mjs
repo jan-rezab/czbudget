@@ -1,4 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-counts.mjs";
+
+// Measured from the published artifacts rather than typed out here; see
+// scripts/lib/expected-counts.mjs.
+const counts = await loadExpectedCounts();
 
 const previewRoutes = [
   "/",
@@ -111,7 +116,12 @@ test("high-risk static and generated templates switch their visible copy", async
 
 test("shared page modules do not retain Czech UI copy in English", async ({ page }) => {
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText("WHERE CAN COVERAGE EXPAND?");
+  // Case-insensitive on purpose: the check is that the English page carries
+  // English copy, not that the heading keeps a particular typographic case. It
+  // used to assert the ALL-CAPS spelling and broke the moment the heading moved
+  // to sentence case, which is a styling decision, not a translation bug.
+  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText(/^where can coverage expand\?$/i);
+  await expect(page.locator('[data-page-copy="atlasTitle"]')).not.toContainText("pokrytí");
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
   await expect(page.locator(".atlas-table thead th").first()).toContainText("Country");
 
@@ -127,6 +137,41 @@ test("shared page modules do not retain Czech UI copy in English", async ({ page
   await expect(page.locator(".detail-hero .eyebrow")).toContainText("Municipal reporting entity · ID");
   await expect(page.locator(".method-warning")).toContainText("The fiscal balance is consolidated throughout the series.");
   await expect(page.locator(".data-contract p")).toContainText("A separate municipal reporting entity");
+});
+
+test("warehouse-only itemized coverage reads honestly in both languages", async ({ page }) => {
+  // Eight countries are loaded in the production warehouse but not published on
+  // the site. Both dictionaries must carry the vocabulary for that state, or the
+  // coverage matrix falls back to "— / not researched" and misreports work that
+  // has actually been done.
+  const wording = {
+    cs: { cell: "Načteno ve skladu", note: "nepublikováno na webu", legend: "Načteno ve skladu · nepublikováno", profiles: "profilů", other: "not published on site" },
+    en: { cell: "Loaded in warehouse", note: "not published on site", legend: "Loaded in warehouse · not published", profiles: "profiles", other: "nepublikováno na webu" },
+  };
+
+  for (const lang of ["cs", "en"]) {
+    const say = wording[lang];
+    await page.goto(withLanguage("/methodology.html", lang), { waitUntil: "networkidle" });
+    const cells = page.locator(".coverage-matrix .coverage-warehouse-only");
+    await expect(cells, `${lang} warehouse-only cell count`).toHaveCount(counts.warehouseOnlyCountries);
+    await expect(page.locator(".coverage-legend"), `${lang} legend`).toContainText(say.legend);
+
+    for (const code of counts.warehouseOnlyCountryCodes) {
+      const cell = page.locator(`[data-coverage-country="${code}"][data-coverage-node="budgetDetail"]`);
+      const warehouseProfiles = Number(counts.itemizedCoverageByCode.get(code).warehouse_profile_count);
+      const localised = new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(warehouseProfiles);
+      await expect(cell, `${code} (${lang})`).toContainText(say.cell);
+      await expect(cell, `${code} (${lang})`).toContainText(`${localised} ${say.profiles} · ${say.note}`);
+      await expect(cell, `${code} (${lang})`).not.toContainText(say.other);
+    }
+
+    // The itemized KPI tile counts published countries only.
+    const tile = page.locator("#data-health-root .data-health-kpis article").nth(1);
+    await expect(tile, `${lang} itemized tile`).toContainText(String(counts.publishedItemizedCountries));
+  }
+
+  // The English rendering is the one the shared counts module formats against.
+  await expect(page.locator("#status-data-total")).toContainText(formatCount(counts.publishedDataEntries));
 });
 
 test("representative pages contain no standalone labels from the other language", async ({ page }) => {

@@ -40,6 +40,9 @@
     },
   };
   const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  // The profile is served from /countries/<slug>, so the document-relative artifact paths
+  // the demography payload carries have to be rooted before they become hrefs.
+  const rooted = path => /^(?:[a-z]+:)?\//i.test(path) ? path : `/${path}`;
   const locale = () => state.lang === "en" ? "en-GB" : "cs-CZ";
   const number = (value, digits = 1) => Number(value).toLocaleString(locale(), {minimumFractionDigits: digits, maximumFractionDigits: digits});
   const integer = value => Number(value).toLocaleString(locale(), {maximumFractionDigits: 0});
@@ -85,7 +88,7 @@
     roots.demography.innerHTML = `<div class="detail-heading"><div><span class="kicker">${t.demoKicker}</span><h2 id="country-demography-title">${t.demoTitle}</h2></div><p>${t.demoCopy}</p></div>
       <div class="insight-kpis demography-kpis"><article><span>${t.populationChange}</span><strong>${signed(populationDelta)}</strong><small>${t.years}</small></article><article><span>${t.workingChange}</span><strong>${signed(workingDelta)}</strong><small>${integer(first.age_20_64)} → ${integer(last.age_20_64)}</small></article><article><span>${t.olderGrowth}</span><strong>${signed(olderDelta)}</strong><small>${integer(first.age_80_plus)} → ${integer(last.age_80_plus)}</small></article><article><span>${t.dependency}</span><strong>${number(last.old_age_dependency_per_100_working_age)}</strong><small>${number(first.old_age_dependency_per_100_working_age)} → ${number(last.old_age_dependency_per_100_working_age)}</small></article></div>
       <article class="demography-structure"><header><div><span>${t.ageStructure}</span><h3>${esc(profile.projection)}</h3></div><div class="age-legend">${bands.map(band => `<span class="${band.key}"><i></i>${band.label}</span>`).join("")}</div></header><div class="demography-years">${profile.years.filter(row => shownYears.has(row.year)).map(row => `<div class="demography-year"><b>${row.year}</b><div class="demography-stack">${bands.map(band => `<i class="${band.key}" style="width:${row.shares_pct[band.key]}%" title="${band.label}: ${number(row.shares_pct[band.key])}%"></i>`).join("")}</div><strong>${integer(row.total)}</strong><small>${t.men} ${number(row.male / row.total * 100)}% · ${t.women} ${number(row.female / row.total * 100)}%</small></div>`).join("")}</div></article>
-      <div class="demography-source"><div><span>${t.projection}</span><strong>${esc(profile.projection)}</strong><small>${t.referenceDate}: ${esc(profile.reference_date)} · ${profile.source.period}</small></div><div><span>${integer(profile.detail_row_count)} ${t.detailRows}</span><a href="${esc(profile.detail)}">${t.downloadDetail} ↗</a><a href="${esc(profile.source.url)}" target="_blank" rel="noreferrer">${esc(profile.source.publisher)} ↗</a></div></div>`;
+      <div class="demography-source"><div><span>${t.projection}</span><strong>${esc(profile.projection)}</strong><small>${t.referenceDate}: ${esc(profile.reference_date)} · ${profile.source.period}</small></div><div><span>${integer(profile.detail_row_count)} ${t.detailRows}</span><a href="${esc(rooted(profile.detail))}">${t.downloadDetail} ↗</a><a href="${esc(profile.source.url)}" target="_blank" rel="noreferrer">${esc(profile.source.publisher)} ↗</a></div></div>`;
   }
 
   function render() {
@@ -102,8 +105,8 @@
     render();
   });
   Promise.all([
-    fetch("data/country-spending-2025-2026.v1.json"), fetch("data/country-spending-comparison.v1.json"),
-    fetch("data/country-demography.v1.json"),
+    fetch("/data/country-spending-2025-2026.v1.json"), fetch("/data/country-spending-comparison.v1.json"),
+    fetch("/data/country-demography.v1.json"),
   ]).then(async responses => {
     for (const response of responses) if (!response.ok) throw new Error(response.status);
     [state.native, state.common, state.demography] = await Promise.all(responses.map(response => response.json()));

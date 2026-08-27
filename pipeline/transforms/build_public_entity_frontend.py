@@ -6,14 +6,23 @@ from __future__ import annotations
 import csv
 import gzip
 import json
+import os
 import statistics
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "data" / "public-entities"
 OUT = ROOT / "data" / "public-entity-directory"
-GENERATED = "2026-08-23T20:12:23+02:00"
+
+# The provenance stamp records when these shards were actually built. It was
+# previously a frozen literal, so every regeneration re-published the same
+# claim about its own freshness. CZBUDGET_GENERATED_AT allows a reproducible
+# build to pin it deliberately; otherwise it is the real build time.
+GENERATED = os.environ.get("CZBUDGET_GENERATED_AT") or (
+    datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+)
 COUNTRIES = ["CZE", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "UKR"]
 FIELDS = [
     "record_id", "national_id", "name", "perimeter", "source_id", "period",

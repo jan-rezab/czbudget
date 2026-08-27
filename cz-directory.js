@@ -5,14 +5,35 @@ const count = document.querySelector("#result-count");
 const metricLabel = document.querySelector("#active-metric");
 const empty = document.querySelector("#empty-state");
 
+// An explicit ?lang= wins; otherwise take the language language-bootstrap.js
+// resolved into <html lang>. Generated labels come from T, never hardcoded.
+const directoryLang = (() => {
+  const requested = new URLSearchParams(location.search).get("lang");
+  return (requested === "en" || requested === "cs" ? requested : document.documentElement.lang) === "en" ? "en" : "cs";
+})();
+const T = {
+  cs: {
+    revenue: "příjmů", expense: "výdajů", cash: "peněz a vkladů", cashToExpense: "krytí výdajů hotovostí",
+    capitalShare: "investičního podílu", transferShare: "podílu transferů", balanceRatio: "salda vůči příjmům",
+    byName: "Řazeno podle názvu", sortedBy: (label) => `Řazeno podle ${label}`,
+    entities: (count) => `${count} ${count === 1 ? "subjekt" : count < 5 ? "subjekty" : "subjektů"}`,
+  },
+  en: {
+    revenue: "revenue", expense: "expenditure", cash: "cash and deposits", cashToExpense: "cash cover of expenditure",
+    capitalShare: "capital share", transferShare: "transfer share", balanceRatio: "balance to revenue",
+    byName: "Sorted by name", sortedBy: (label) => `Sorted by ${label}`,
+    entities: (count) => `${count} ${count === 1 ? "entity" : "entities"}`,
+  },
+}[directoryLang];
+
 const metricConfig = {
-  revenue: { field: "revenue", label: "příjmů" },
-  expense: { field: "expense", label: "výdajů" },
-  cash: { field: "cash", label: "peněz a vkladů" },
-  "cash-to-expense": { field: "cashToExpense", label: "krytí výdajů hotovostí" },
-  "capital-share": { field: "capitalShare", label: "investičního podílu" },
-  "transfer-share": { field: "transferShare", label: "podílu transferů" },
-  "balance-ratio": { field: "balanceRatio", label: "salda vůči příjmům" },
+  revenue: { field: "revenue", label: "revenue" },
+  expense: { field: "expense", label: "expense" },
+  cash: { field: "cash", label: "cash" },
+  "cash-to-expense": { field: "cashToExpense", label: "cashToExpense" },
+  "capital-share": { field: "capitalShare", label: "capitalShare" },
+  "transfer-share": { field: "transferShare", label: "transferShare" },
+  "balance-ratio": { field: "balanceRatio", label: "balanceRatio" },
 };
 
 function values() {
@@ -30,7 +51,10 @@ function updateUrl(filters) {
   Object.entries(filters).forEach(([key, value]) => {
     if (value && !["all", "desc"].includes(value) && !(key === "metric" && value === "revenue")) params.set(key, value);
   });
-  history.replaceState(null, "", `${location.pathname}${params.size ? `?${params}` : ""}`);
+  // Keep the language in the shareable URL; dropping it would silently reset the
+  // page to its route default on the next reload.
+  if (new URLSearchParams(location.search).has("lang")) params.set("lang", directoryLang);
+  history.replaceState(null, "", `${location.pathname}${params.size ? `?${params}` : ""}${location.hash}`);
 }
 
 function applyFilters() {
@@ -49,8 +73,8 @@ function applyFilters() {
     const difference = Number(a.dataset[config.field]) - Number(b.dataset[config.field]);
     return filters.order === "asc" ? difference : -difference;
   }).forEach((card) => grid.append(card));
-  count.textContent = `${visible.length} ${visible.length === 1 ? "subjekt" : visible.length < 5 ? "subjekty" : "subjektů"}`;
-  metricLabel.textContent = filters.order === "name" ? "Řazeno podle názvu" : `Řazeno podle ${config.label}`;
+  count.textContent = T.entities(visible.length);
+  metricLabel.textContent = filters.order === "name" ? T.byName : T.sortedBy(T[config.label]);
   empty.hidden = visible.length !== 0;
   updateUrl(filters);
 }

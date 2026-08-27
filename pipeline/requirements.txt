@@ -1,0 +1,15 @@
+# Python dependencies for pipeline/transforms and pipeline/tests.
+# Install with: python3 -m pip install -r pipeline/requirements.txt
+#
+# The shared runtime pins live in ../requirements.lock so the data-pipeline
+# snapshot and this file can never drift apart; everything below is what the
+# transforms and tests import on top of that set.
+-r ../requirements.lock
+
+# prepare_international_municipal_data.py imports urllib3 directly
+# (urllib3.util.retry.Retry), so it is pinned rather than left to requests.
+urllib3==2.5.0
+
+# prepare_public_entity_registry.py
+pandas==2.3.2
+pdfplumber==0.11.7

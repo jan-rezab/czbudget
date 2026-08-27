@@ -1,9 +1,41 @@
 #!/bin/sh
 set -eu
 
+# Pushes to main trigger a production deploy, so this hook runs the gates that
+# are cheap locally plus the one gate CI cannot run at all (source-asset
+# verification, whose raw inputs live outside the repo). Roughly 30-45s total.
+
+cd "$(git rev-parse --show-toplevel)"
+
 if [ -n "$(git status --porcelain)" ]; then
   echo "Push blocked: commit or discard local changes first." >&2
   exit 1
 fi
 
-node scripts/validate-site.mjs
+echo "pre-push: site + data integrity"
+npm run validate
+
+echo "pre-push: API contract tests"
+npm run test:api
+
+# The ~16k source files behind pipeline/source-assets.manifest.json are not in
+# git and never exist on a CI runner, so this is the only place the manifest can
+# be checked against real bytes. Skip loudly when the workspace has no raw
+# inputs (fresh clone) rather than silently passing.
+WORKSPACE_ROOT="${CZBUDGET_WORKSPACE_ROOT:-$(cd .. && pwd)}"
+if [ -d "$WORKSPACE_ROOT/data/source_cache" ] && [ -d "$WORKSPACE_ROOT/data/sources" ]; then
+  echo "pre-push: source asset manifest"
+  node pipeline/create-source-manifest.mjs --verify
+else
+  echo "pre-push: SKIPPING source asset verification - no raw inputs under $WORKSPACE_ROOT" >&2
+  echo "pre-push: set CZBUDGET_WORKSPACE_ROOT if they live elsewhere; CI only checks manifest structure." >&2
+  node pipeline/create-source-manifest.mjs --self-check
+fi
+
+# Python deps are optional locally; CI gates these hard. Skip loudly if absent.
+if python3 -c "import openpyxl, requests" >/dev/null 2>&1; then
+  echo "pre-push: pipeline unit tests"
+  python3 -m unittest discover -s pipeline/tests -p 'test_*.py'
+else
+  echo "pre-push: SKIPPING pipeline unit tests - install with 'python3 -m pip install -r pipeline/requirements.txt'" >&2
+fi

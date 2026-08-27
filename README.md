@@ -104,10 +104,14 @@ node pipeline/create-source-manifest.mjs --verify
 
 `scripts/validate-integrity.mjs` kontroluje všechny publikované JSON soubory,
 vazbu snapshot ↔ 6 267 profilů, účetní identity, geografii, sitemap, canonical
-URL, JSON-LD a 75 tisíc lokálních odkazů. Výsledek auditu a explicitně
-chybějící hodnoty jsou v `data/data-quality-report.v1.json`. Hashy 105 lokálních
-zdrojových souborů jsou v `pipeline/source-assets.manifest.json`; produkční
-artifacty dostávají `data/release-manifest.v1.json`.
+URL, JSON-LD a všechny lokální odkazy (řádově stovky tisíc). Přesné počty se
+nikde neopisují: audit je zapisuje do `data/data-quality-report.v1.json`, kde
+`counts.local_references` udává skutečný počet ověřených lokálních odkazů a
+`counts.published_data_entries` počet publikovaných datových záznamů. Tamtéž
+jsou i explicitně chybějící hodnoty. Hashe lokálních zdrojových souborů jsou v
+`pipeline/source-assets.manifest.json`; jejich počet udává `asset_count` a
+`entry_count` přímo v manifestu. Produkční artifacty dostávají
+`data/release-manifest.v1.json`.
 
 Transformace, registry zdrojů, BigQuery schema a metodika jsou verzované v
 `pipeline/`. Starý duplicitní export `gcp/site` je mimo tento repozitář

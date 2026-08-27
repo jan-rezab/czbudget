@@ -32,7 +32,7 @@
   }
   function close(component, focus = false) { if (!component) return; component.shell.classList.remove("open"); component.button.setAttribute("aria-expanded", "false"); component.button.removeAttribute("aria-activedescendant"); if (focus) component.button.focus(); if (openSelect === component) openSelect = null; }
   function enhanceSelect(select) {
-    if (!(select instanceof HTMLSelectElement) || select.dataset.customSelect === "true") return;
+    if (!(select instanceof HTMLSelectElement) || select.dataset.customSelect === "true" || select.id === "municipality-country-switch") return;
     select.dataset.customSelect = "true"; select.classList.add("custom-select-native"); select.tabIndex = -1; select.setAttribute("aria-hidden", "true");
     const shell = document.createElement("span"); shell.className = "custom-select";
     const button = document.createElement("button"); button.type = "button"; button.className = "custom-select-button"; button.setAttribute("aria-haspopup", "listbox"); button.setAttribute("aria-expanded", "false");
@@ -53,7 +53,14 @@
     select.addEventListener("change", sync); new MutationObserver(sync).observe(select, { childList:true, subtree:true, attributes:true, attributeFilter:["disabled","selected","label"] }); sync();
   }
   function markSource(element) { if (!(element instanceof HTMLElement) || element.dataset.sourceStyled === "true") return; element.dataset.sourceStyled = "true"; element.classList.add("psd-source-note"); if (!/^\s*(?:source|zdroj)\s*[:·]/i.test(element.textContent || "")) { const label = document.createElement("span"); label.className = "psd-source-label"; label.textContent = copy().source; element.prepend(label); } }
-  function normaliseHeading(heading) { if (!(heading instanceof HTMLElement)) return; const replacement=simpleHeadings.get(heading.textContent.trim().replace(/\s+/g," ")); if (replacement) heading.textContent=replacement; }
+  // Rewrites a source heading into its descriptive form. This runs before or
+  // after municipal-i18n.js depending on when this dynamically injected script
+  // loads, so the normalized Czech output must also exist as a key in that
+  // file's dictionary — otherwise a heading normalized here while the page is
+  // still Czech can never be translated, and stays Czech in English. The
+  // pre-normalization text is kept on the element so the original key remains
+  // recoverable for debugging and for any later pass.
+  function normaliseHeading(heading) { if (!(heading instanceof HTMLElement)) return; const original=heading.textContent.trim().replace(/\s+/g," "); const replacement=simpleHeadings.get(original); if (replacement) { if (!heading.dataset.psdHeadingSource) heading.dataset.psdHeadingSource=original; heading.textContent=replacement; } }
   function makeCardClickable(card) { if (!(card instanceof HTMLElement) || card.dataset.clickableCard === "true") return; const link = card.matches(".municipality-card[data-href],.municipal-country-card[data-href]") ? { href:card.dataset.href, textContent:card.querySelector("h2,h3")?.textContent } : card.querySelector(".entity-detail-link, h2 a, footer a[href]:not([target='_blank'])"); if (!link?.href) return; card.dataset.clickableCard = "true"; card.dataset.cardHref = localiseHref(link.href); card.tabIndex = 0; card.setAttribute("role", "link"); card.setAttribute("aria-label", link.textContent?.trim() || card.querySelector("h2,h3")?.textContent?.trim() || "Open"); }
   function enhance(root = document) { localiseLinks(root); (root.matches?.("select") ? [root] : root.querySelectorAll?.("select") || []).forEach(enhanceSelect); (root.matches?.("h1,h2,h3") ? [root] : root.querySelectorAll?.("h1,h2,h3") || []).forEach(normaliseHeading); const sourceSelector = ".chart-source,.budget-stage-source,.breakdown-method-note,.source-note,.data-source-note,.capital-history-source,.spending-source,.transport-source-brief"; (root.matches?.(sourceSelector) ? [root] : root.querySelectorAll?.(sourceSelector) || []).forEach(markSource); const cardSelector = ".entity-card,.municipality-card,.municipal-country-card"; (root.matches?.(cardSelector) ? [root] : root.querySelectorAll?.(cardSelector) || []).forEach(makeCardClickable); }
   document.addEventListener("click", (event) => { if (openSelect && !openSelect.shell.contains(event.target)) close(openSelect); const card = event.target.closest?.("[data-clickable-card='true']"); if (card && !event.target.closest(interactive)) location.href = localiseHref(card.dataset.cardHref); });

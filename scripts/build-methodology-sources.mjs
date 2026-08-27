@@ -157,29 +157,56 @@ for(const municipal of municipalities.countries.filter(country=>!parityCodes.has
 // coverage.
 const warehouseByCode=new Map(internationalWarehouse.countries.map(country=>[country.code,country]));
 const municipalNames=new Map(municipalities.countries.map(country=>[country.code,country]));
+// A row may only say "loaded" when a published site artifact exists. Facts that
+// live only in the private production warehouse are reported as a source that
+// exists without a published PSD artifact, with the warehouse figure stated
+// explicitly so no reader can mistake a warehouse load for publication.
 for(const itemized of itemizedCoverage.countries){
   const municipal=municipalNames.get(itemized.code),warehouse=warehouseByCode.get(itemized.code),configured=municipalSourceConfig.countries[itemized.code];
+  const published=Number(itemized.published_profile_count ?? itemized.profile_count)||0;
+  const isPublished=published>0;
   const configuredSources=(configured?.sources||[]).map((item,index)=>source(
     index===0&&itemized.source_title?itemized.source_title:item.id,
     item.url,
     [item.id,item.dataset&&`Socrata ${item.dataset}`,item.table&&`table ${item.table}`,item.filename].filter(Boolean).join(" · ")
   ));
   const sources=cleanSources(configuredSources.length?configuredSources:[source(itemized.source_title,itemized.source_url,"published profile adapter documented by the itemized coverage contract")]);
-  const stages=(itemized.stages||warehouse?.stages||[]).join(", ")||"source-native stages listed in the profile data";
-  const factCounts=warehouse
-    ? `${warehouse.line_fact_count.toLocaleString("en-US")} line facts${warehouse.balance_fact_count?` plus ${warehouse.balance_fact_count.toLocaleString("en-US")} balance-sheet facts`:""}`
-    : "profile-level native item rows in the published benchmark/expansion artifacts";
+  const warehouseFacts=warehouse
+    ? `${warehouse.line_fact_count.toLocaleString("en-US")} line facts${warehouse.balance_fact_count?` plus ${warehouse.balance_fact_count.toLocaleString("en-US")} balance-sheet facts`:""} for ${warehouse.profile_count.toLocaleString("en-US")} entities in the private production warehouse (${internationalWarehouse.warehouse})`
+    : null;
+
+  if(isPublished){
+    const stages=(itemized.stages||[]).join(", ")||"source-native stages listed in the profile data";
+    const vintage=[itemized.actual_period&&`actuals ${itemized.actual_period}`,itemized.plan_period&&`plans ${itemized.plan_period}`].filter(Boolean).join("; ")||"vintage recorded per profile";
+    rows.push({
+      country_code:itemized.code,country_name_cs:municipal.name_cs,country_name_en:municipal.name_en,flag:alpha2[itemized.code],
+      module:"municipal_itemized",module_order:moduleMeta.municipal_itemized.order,module_label_cs:moduleMeta.municipal_itemized.cs,module_label_en:moduleMeta.municipal_itemized.en,
+      status:itemized.status,source_availability:"loaded",
+      artifact:`data/municipal-itemized-coverage.v1.json · ${itemized.measured_from||"published municipal profile artifacts"}`,
+      coverage:`${published.toLocaleString("en-US")} of ${itemized.municipal_scope.toLocaleString("en-US")} municipal profiles published on this site; ${itemized.detail_kind_en}`,
+      period:itemized.period,
+      scope:`Stages: ${stages} (${vintage}). ${(itemized.line_item_count||0).toLocaleString("en-US")} published line items.${warehouseFacts?` The same layer is also held as ${warehouseFacts}.`:""}`,
+      sources,
+      exact_extraction:sources.map(item=>item.location).filter(Boolean).join(" · "),
+      transformation:"Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      limitations:itemized.note
+    });
+    continue;
+  }
+
   rows.push({
     country_code:itemized.code,country_name_cs:municipal.name_cs,country_name_en:municipal.name_en,flag:alpha2[itemized.code],
     module:"municipal_itemized",module_order:moduleMeta.municipal_itemized.order,module_label_cs:moduleMeta.municipal_itemized.cs,module_label_en:moduleMeta.municipal_itemized.en,
-    status:itemized.status,source_availability:"loaded",
-    artifact:warehouse?"data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts":"data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
-    coverage:`${itemized.profile_count.toLocaleString("en-US")} of ${itemized.municipal_scope.toLocaleString("en-US")} municipal profiles; ${itemized.detail_kind_en}`,
-    period:itemized.period,scope:`Stages: ${stages}. ${factCounts}.`,sources,
+    status:"not_loaded",source_availability:"source_available",
+    artifact:warehouse?`${internationalWarehouse.warehouse}.municipal_budget_line_facts (production warehouse only; no published site artifact)`:"No published artifact",
+    coverage:`0 of ${itemized.municipal_scope.toLocaleString("en-US")} municipal profiles are published on this site${warehouse?`; ${warehouse.profile_count.toLocaleString("en-US")} entities are loaded in the private production warehouse only`:""}.`,
+    period:warehouse?`Not published on this site (warehouse ${warehouse.period})`:"Not published on this site",
+    scope:warehouse?`Warehouse stages: ${(warehouse.stages||[]).join(", ")||"source-native"}. ${warehouseFacts}. No published municipal profile artifact exists for this country.`:"No published municipal profile artifact exists for this country.",
+    sources,
     exact_extraction:sources.map(item=>item.location).filter(Boolean).join(" · "),
     transformation:warehouse
-      ? `pipeline/transforms/prepare_international_municipal_data.py → ${configured?.adapter||"official-source adapter"} → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.`
-      : "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      ? `pipeline/transforms/prepare_international_municipal_data.py → ${configured?.adapter||"official-source adapter"} → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.`
+      : "No transformation: PSD publishes no itemized municipal profile for this country.",
     limitations:itemized.note
   });
 }
@@ -189,8 +216,8 @@ const payload={
   schema_version:"1.0.0",contract:"methodology-sources.v1",generated_at:new Date().toISOString(),row_count:rows.length,
   countries:[...new Map([...parity.countries.map(country=>({code:country.country_code,name_cs:country.name_cs,name_en:country.name_en})),...municipalities.countries.map(country=>({code:country.code,name_cs:country.name_cs,name_en:country.name_en}))].map(country=>[country.code,country])).values()],
   modules:Object.entries(moduleMeta).map(([id,value])=>({id,label_cs:value.cs,label_en:value.en,order:value.order})),
-  status_definitions:{full:"Loaded by PSD with no missing dimensions recorded in the parity contract.",partial:"Loaded by PSD with one or more disclosed missing dimensions.",aggregate:"Loaded official aggregate without entity-level facts.",not_loaded:"PSD has not loaded this layer; this is not a claim that the country does not publish it."},
-  source_availability_definitions:{loaded:"A source-backed PSD artifact is published.",source_available:"An official source exists but PSD has not loaded it.",fragmented:"Official material exists but requires harmonisation or uses a non-comparable perimeter.",not_found:"A documented review did not locate a suitable source; this is not proof of non-publication.",not_researched:"Source availability has not been assessed."},
+  status_definitions:{full:"Loaded by PSD with no missing dimensions recorded in the parity contract.",partial:"Loaded by PSD with one or more disclosed missing dimensions.",aggregate:"Loaded official aggregate without entity-level facts.",not_loaded:"PSD publishes no artifact for this layer; this is not a claim that the country does not publish it, and for an itemized municipal row it does not deny that facts exist in the private production warehouse. The coverage cell states the warehouse figure wherever one applies."},
+  source_availability_definitions:{loaded:"A source-backed PSD artifact is published on this site.",source_available:"An official source exists but PSD publishes no artifact for it here. Facts loaded into the private production warehouse without a published profile are reported this way, with the warehouse figure stated in the coverage cell; a warehouse load is never counted as publication.",fragmented:"Official material exists but requires harmonisation or uses a non-comparable perimeter.",not_found:"A documented review did not locate a suitable source; this is not proof of non-publication.",not_researched:"Source availability has not been assessed."},
   rows
 };
 

@@ -123,6 +123,7 @@ const recursiveYears = (value, results = []) => {
 };
 const generatedAt = (...values) => values.filter(Boolean).sort((a, b) => new Date(b) - new Date(a))[0] || null;
 const freshnessBand = (latestYear, vintageType) => {
+  if (vintageType === "none") return "undated";
   if (vintageType === "plan") return "planned";
   if (vintageType === "projection") return "projection";
   if (vintageType === "estimate" || vintageType === "actual_estimate") return latestYear >= currentYear - 1 ? "estimate_current" : "estimate_lag";
@@ -133,6 +134,20 @@ const freshnessBand = (latestYear, vintageType) => {
   if (latestYear === currentYear - 2) return "statistical_lag";
   return "older";
 };
+// A stage either records something that happened or something that was only
+// decided. "mixed" is the honest label when a layer carries both; it is never
+// collapsed into "actual".
+const ACTUAL_STAGES = new Set(["actual", "execution", "cash", "outturn", "settlement"]);
+const PLAN_STAGES = new Set(["enacted", "approved", "revised", "modified", "proposal", "plan", "budget"]);
+const vintageFromStages = (stages) => {
+  const list = Array.isArray(stages) ? stages : [];
+  const hasActual = list.some((stage) => ACTUAL_STAGES.has(stage));
+  const hasPlan = list.some((stage) => PLAN_STAGES.has(stage));
+  if (hasActual && hasPlan) return "mixed";
+  if (hasActual) return "actual";
+  if (hasPlan) return "plan";
+  return "none";
+};
 const headlineFiscalMetrics = ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp"];
 const sovereignSeriesByCode = new Map(sovereignBenchmark.series.map((country) => [country.country_code, country]));
 const sovereignVintage = (code, year) => {
@@ -141,18 +156,26 @@ const sovereignVintage = (code, year) => {
   if (statuses.size === 1) return statuses.has("estimate") ? "estimate" : "actual";
   return statuses.size > 1 ? "actual_estimate" : "actual";
 };
+// Budget stages are not interchangeable, so a vintage is never defaulted. An
+// enacted budget or a proposal that arrives without a vintage must not be
+// silently relabelled as an observed actual: every caller states the vintage,
+// and a caller that cannot must say "none" rather than guess.
+const VINTAGE_TYPES = new Set(["actual", "estimate", "actual_estimate", "plan", "projection", "register", "mixed", "none"]);
 const records = [];
 const addRecord = (record) => {
   const latestYear = Number.isFinite(Number(record.latest_year)) ? Number(record.latest_year) : null;
   const firstYear = Number.isFinite(Number(record.first_year)) ? Number(record.first_year) : latestYear;
+  if (!VINTAGE_TYPES.has(record.vintage_type)) {
+    throw new Error(`${record.country_code}/${record.module}: vintage_type must be stated explicitly (received ${JSON.stringify(record.vintage_type)})`);
+  }
   records.push({
     country_code: record.country_code,
     module: record.module,
     latest_year: latestYear,
     first_year: firstYear,
     period_label: record.period_label || (latestYear ? String(latestYear) : null),
-    vintage_type: record.vintage_type || "actual",
-    freshness_band: freshnessBand(latestYear, record.vintage_type || "actual"),
+    vintage_type: record.vintage_type,
+    freshness_band: freshnessBand(latestYear, record.vintage_type),
     coverage_status: record.coverage_status || "full",
     coverage_cs: record.coverage_cs || "",
     coverage_en: record.coverage_en || "",
@@ -172,7 +195,9 @@ for (const country of municipalities.countries) {
     module: "municipalities",
     first_year: minOrNull(years),
     latest_year: maxOrNull(years),
-    vintage_type: "actual",
+    // Several directories carry an enacted year alongside the latest actual;
+    // read the stage list rather than assuming the newest year is an outturn.
+    vintage_type: vintageFromStages(country.stages),
     coverage_status: country.status || "full",
     coverage_cs: country.coverage_cs,
     coverage_en: country.coverage_en,
@@ -185,18 +210,33 @@ for (const country of municipalities.countries) {
   });
 }
 
+// The itemized coverage contract measures its own period, stages and vintage
+// from the published line items, so this view reports them rather than
+// re-deriving a year from a label. Countries whose facts exist only in the
+// private warehouse are shown with no published layer instead of a vintage.
 for (const country of itemized.countries) {
+  const published = Number(country.published_profile_count ?? country.profile_count) || 0;
   const years = yearValues(country.period);
+  const warehouseOnly = published === 0 && country.publication_status === "warehouse_only";
+  const vintage = published ? (country.vintage_type || vintageFromStages(country.stages)) : "none";
+  const spans = [country.actual_period && `actuals ${country.actual_period}`, country.plan_period && `plans ${country.plan_period}`].filter(Boolean).join("; ");
+  const warehouseCs = warehouseOnly
+    ? `Bez publikovaných položkových profilů; ${(country.warehouse_profile_count || 0).toLocaleString("cs-CZ")} jednotek je načteno pouze v produkčním skladu dat.`
+    : null;
+  const warehouseEn = warehouseOnly
+    ? `No published itemized profiles; ${(country.warehouse_profile_count || 0).toLocaleString("en-US")} entities are loaded in the production warehouse only.`
+    : null;
   addRecord({
     country_code: country.code,
     module: "municipal_detail",
-    first_year: minOrNull(years),
-    latest_year: maxOrNull(years),
-    period_label: country.period,
-    coverage_status: country.status,
-    coverage_cs: country.detail_kind_cs,
-    coverage_en: country.detail_kind_en,
-    entity_count: country.profile_count,
+    first_year: published ? minOrNull(years) : null,
+    latest_year: published ? maxOrNull(years) : null,
+    period_label: published ? country.period : null,
+    vintage_type: vintage,
+    coverage_status: warehouseOnly ? "not_published" : country.status,
+    coverage_cs: warehouseCs || [country.detail_kind_cs, spans].filter(Boolean).join(" · "),
+    coverage_en: warehouseEn || [country.detail_kind_en, spans].filter(Boolean).join(" · "),
+    entity_count: published,
     artifact: "data/municipal-itemized-coverage.v1.json",
     artifact_generated_at: itemized.generated_at,
     source_url: country.source_url,
@@ -209,6 +249,8 @@ for (const country of structures.countries) {
     country_code: country.code,
     module: "municipal_structure",
     latest_year: country.year,
+    // The structure contract states the stage each average was computed from.
+    vintage_type: vintageFromStages([country.stage]),
     coverage_cs: country.scope_cs,
     coverage_en: country.scope_en,
     entity_count: country.profile_count,
@@ -263,6 +305,8 @@ for (const [code, country] of Object.entries(revenue.countries)) {
     module: "revenue",
     first_year: minOrNull(years),
     latest_year: maxOrNull(years),
+    // OECD revenue statistics: observed tax-mix shares, no plan layer.
+    vintage_type: "actual",
     coverage_cs: "Daňový mix, příjemce a obecní transfery",
     coverage_en: "Tax mix, initial recipient and municipal transfers",
     artifact: "data/country-revenue.v1.json",
@@ -279,6 +323,8 @@ for (const [code, country] of Object.entries(transportBudgets.countries)) {
     module: "transport",
     first_year: minOrNull(years),
     latest_year: maxOrNull(years),
+    // Eurostat COFOG outturn plus observed network/performance statistics.
+    vintage_type: "actual",
     coverage_status: country.coverage === "available" ? "full" : country.coverage || "partial",
     coverage_cs: "Výdaje, síť a výkon dopravy",
     coverage_en: "Transport spending, network and performance",
@@ -296,6 +342,8 @@ for (const [code, country] of Object.entries(health.countries)) {
     module: "health",
     first_year: minOrNull(years),
     latest_year: maxOrNull(years),
+    // SHA 2011 current health expenditure: reported statistical years.
+    vintage_type: "actual",
     coverage_cs: "Financování, kapacita a zdravotní výsledky",
     coverage_en: "Financing, capacity and health outcomes",
     artifact: "data/country-health.v1.json + data/country-health-performance.v1.json",
@@ -346,6 +394,8 @@ for (const country of economy.countries) {
     module: "economy",
     first_year: minOrNull(actualPeriods),
     latest_year: maxOrNull(actualPeriods),
+    // The series are filtered to rows the source marks "actual" above.
+    vintage_type: "actual",
     coverage_cs: `${series.length} ekonomických řad v reportu`,
     coverage_en: `${series.length} economic series in the report`,
     row_count: series.length,
@@ -381,6 +431,8 @@ for (const country of migration.countries) {
     module: "migration",
     first_year: minOrNull(years),
     latest_year: maxOrNull(years),
+    // Eurostat observed immigration, emigration and population counts.
+    vintage_type: "actual",
     coverage_cs: "Přistěhování, vystěhování, saldo a populace",
     coverage_en: "Immigration, emigration, balance and population",
     row_count: country.rows.length,
@@ -420,6 +472,8 @@ for (const [code, rows] of enterprisesByCountry) {
     module: "state_enterprises",
     first_year: minOrNull(years),
     latest_year: maxOrNull(years),
+    // Reported enterprise results for the stated period.
+    vintage_type: "actual",
     coverage_cs: `${rows.length} největších celostátně ovládaných podniků`,
     coverage_en: `${rows.length} largest nationally controlled enterprises`,
     entity_count: rows.length,

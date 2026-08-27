@@ -99,5 +99,11 @@
     $("#country-reset").onclick=()=>{state.query="";state.year="all";state.shown=48;$("#country-municipality-search").value="";$("#country-year-filter").value="all";renderDirectory();};
     $("#country-load-more").onclick=()=>{state.shown+=48;renderDirectory();};
   }
-  Promise.all([fetch(`${assetRoot}data/international-municipalities.v1.json`).then(r=>r.json()),fetch(`${assetRoot}data/eu-capital-budgets.v1.json`).then(r=>r.json()),fetch(`${assetRoot}data/municipal-budget-structure.v1.json`).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([data,capitals,structure])=>{state.data=data;state.capitals=capitals.cities;state.structure=structure;state.country=data.countries.find(c=>c.code===code);if(!state.country||!profiles[code])throw new Error(`Unknown municipality country ${code}`);translate();bind();}).catch(error=>{console.error(error);$("#country-title").textContent="Data could not be loaded.";});
+  // One country hub loads one country shard. The index carries only country metadata,
+  // which is all the picker and the coverage panels need; the 21 MB monolith is never
+  // touched here. Shards drop what the country already states, so rehydrate to the shape
+  // the directory renders from.
+  const hydrate=shard=>{const d=shard.defaults,c=shard.country.code;return shard.entities.map(e=>({id:e.id||`${d.id_prefix}:${e.code}`,country:c,code:e.code,name:e.name,region:e.region??null,currency:e.currency||d.currency,years:e.years||d.years,revenue:e.revenue??null,expenditure:e.expenditure??null,balance:e.balance??null,population:e.population??null,url:e.url||(e.slug?`${d.url_prefix}${e.slug}/`:null)}));};
+  const load=(path,optional=false)=>fetch(`${assetRoot}${path}`).then(r=>{if(!r.ok){if(optional)return null;throw new Error(`${path}: ${r.status}`)}return r.json()}).catch(error=>{if(!optional)throw error;console.error(error);return null});
+  Promise.all([load("data/international-municipalities/index.v1.json"),load(`data/international-municipalities/${code}.v1.json`),load("data/eu-capital-budgets.v1.json"),load("data/municipal-budget-structure.v1.json",true)]).then(([index,shard,capitals,structure])=>{state.data={countries:index.countries,entities:hydrate(shard)};state.capitals=capitals.cities;state.structure=structure;state.country=index.countries.find(c=>c.code===code);if(!state.country||!profiles[code])throw new Error(`Unknown municipality country ${code}`);translate();bind();}).catch(error=>{console.error(error);$("#country-title").textContent="Data could not be loaded.";});
 })();

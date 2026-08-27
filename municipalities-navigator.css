@@ -1,6 +1,6 @@
 .municipality-switch {
   display: inline-flex;
-  margin-top: 32px;
+  margin-top: 18px;
   border: 1px solid #15201d;
   background: #fffdf7;
 }
@@ -25,8 +25,10 @@
 .site-header .municipality-lang-switch button.active { background: #171918; color: #faf7ef; box-shadow: none; }
 .municipality-lang-switch button:focus-visible { outline: 2px solid #c93237; outline-offset: 2px; }
 .municipality-switch a {
-  min-width: 130px;
-  padding: 13px 22px;
+  min-width: 112px;
+  padding: 11px 18px;
+  display: grid;
+  place-items: center;
   color: inherit;
   text-align: center;
   text-decoration: none;
@@ -35,19 +37,21 @@
   text-transform: uppercase;
   letter-spacing: .08em;
 }
-.municipality-switch label { min-width: 230px; padding: 8px 14px; border-left: 1px solid #15201d; display: grid; gap: 2px; }
+.municipality-switch label { min-width: 230px; padding: 7px 12px; border-left: 1px solid #15201d; display: grid; gap: 2px; }
+.municipality-switch label:not(.dynamic-country-picker) { padding: 5px 8px 5px 12px; display: flex; align-items: center; gap: 10px; }
+.municipality-switch label:not(.dynamic-country-picker) select { min-width: 180px; }
 .municipality-switch label span { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; }
 .municipality-switch select { border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .municipality-switch select:focus-visible { outline: 2px solid #c93237; outline-offset: 3px; }
 .municipality-switch a.active { background: #15201d; color: #fff; }
 .municipality-switch label.active { background: #15201d; color: #fff; }
-.municipality-switch label.dynamic-country-picker { position: relative; min-width: 330px; padding: 8px 14px 10px; transition: background .16s ease, color .16s ease; }
-.dynamic-country-picker > span:first-child { color: #c7ccc6; }
-.country-picker-readout { display: flex; align-items: center; gap: 10px; margin-top: 4px; pointer-events: none; }
+.municipality-switch label.dynamic-country-picker { position: relative; min-width: 270px; padding: 0; transition: background .16s ease, color .16s ease; }
+.dynamic-country-picker > span:first-child { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap; }
+.country-picker-readout { min-height: 48px; padding: 7px 12px; display: flex; align-items: center; gap: 10px; pointer-events: none; }
 .country-picker-readout img { width: 30px; height: 20px; object-fit: cover; border: 1px solid #ffffff66; }
-.country-picker-readout > span { min-width: 0; display: grid; gap: 2px; }
+.country-picker-readout > span { min-width: 0; display: block; }
 .country-picker-readout strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
-.country-picker-readout small { color: #c7ccc6; font-size: 12px; font-weight: 500; }
+.country-picker-readout small { display:none; }
 .country-picker-readout > b { margin-left: auto; color: #d9ff69; font-size: 18px; }
 .municipality-switch .dynamic-country-picker select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
 .municipality-switch .dynamic-country-picker:hover,
@@ -166,6 +170,46 @@
 .municipal-advanced-link { margin-top: 28px; padding: 20px 22px; display: flex; justify-content: space-between; gap: 22px; border: 1px solid #171918; background: #171918; color: #fff; text-decoration: none; }
 .municipal-advanced-link span { color: #bec5c0; }
 .municipal-advanced-link b { color: #a8b63f; }
+.municipal-national-history { background: #e9ece3; margin-inline: -36px; padding-inline: 36px; }
+.municipal-history-toolbar { min-height: 68px; margin-bottom: 18px; display: grid; grid-template-columns: minmax(150px,220px) auto 1fr; gap: 12px; align-items: stretch; }
+.municipal-history-toolbar label,.municipal-history-toolbar fieldset { min-width: 0; margin: 0; padding: 8px 12px; border: 1px solid #aeb6ac; background: #fffdf7; }
+.municipal-history-toolbar label { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; }
+.municipal-history-toolbar label span,.municipal-history-toolbar legend { color: #69716c; font: 700 10px/1 monospace; text-transform: uppercase; letter-spacing: .07em; }
+.municipal-history-toolbar select { width: 100%; min-height: 38px; }
+.municipal-history-toolbar fieldset { display: grid; grid-template-columns: auto 1fr 1fr; gap: 6px; align-items: center; }
+.municipal-history-toolbar legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.municipal-history-toolbar button { min-width: 72px; min-height: 38px; padding: 0 14px; border: 1px solid #15201d; background: transparent; color: #15201d; font: 800 12px/1 monospace; cursor: pointer; }
+.municipal-history-toolbar button + button { margin-left: -7px; }
+.municipal-history-toolbar button[aria-pressed="true"] { background: #15201d; color: #fffdf7; }
+.municipal-history-toolbar>p { margin: 0; padding: 12px 16px; display: flex; align-items: center; border-left: 4px solid #a8b63f; background: #fffdf7; color: #59635e; font: 12px/1.45 monospace; }
+.municipal-history-kpis { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 1px; border: 1px solid #aeb6ac; background: #aeb6ac; }
+.municipal-history-kpis article { min-width: 0; min-height: 132px; padding: 18px 20px; display: flex; flex-direction: column; background: #fffdf7; border-top: 4px solid #15201d; }
+.municipal-history-kpis article:nth-child(3) { border-top-color: #c93237; }
+.municipal-history-kpis span,.municipal-history-kpis small { color: #69716c; font: 11px/1.35 monospace; text-transform: uppercase; letter-spacing: .04em; }
+.municipal-history-kpis strong { margin: 15px 0 7px; font: 500 clamp(25px,2.8vw,40px)/1 Georgia,serif; letter-spacing: -.045em; white-space: nowrap; }
+.municipal-history-kpis small { margin-top: auto; }
+.municipal-history-kpis .positive { color: #287158; }
+.municipal-history-kpis .negative { color: #c93237; }
+.municipal-history-legend { padding: 18px 2px 10px; display: flex; flex-wrap: wrap; gap: 22px; }
+.municipal-history-legend span { display: flex; align-items: center; gap: 8px; color: #59635e; font: 700 11px/1 monospace; text-transform: uppercase; }
+.municipal-history-legend i { width: 24px; height: 4px; }
+.municipal-history-legend .revenue { background: #47735c; }
+.municipal-history-legend .expense { background: #d2674d; }
+.municipal-history-legend .cash { background: #315ba6; }
+.municipal-history-chart { overflow-x: auto; padding: 14px 14px 4px; border: 1px solid #aeb6ac; background: #fffdf7; box-shadow: 8px 8px 0 #a8b63f; }
+.municipal-history-chart:focus-visible { outline: 3px solid #c93237; outline-offset: 3px; }
+.municipal-history-chart svg { display: block; width: 100%; min-width: 780px; height: auto; }
+.municipal-history-chart .history-grid line { stroke: #dedad1; stroke-width: 1; }
+.municipal-history-chart .history-grid text { fill: #777b77; font: 12px monospace; }
+.municipal-history-chart .history-line { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.municipal-history-chart .revenue-line { stroke: #47735c; }
+.municipal-history-chart .expense-line { stroke: #d2674d; }
+.municipal-history-chart .cash-line { stroke: #315ba6; }
+.municipal-history-chart .selected-year { stroke: #c93237; stroke-width: 2; stroke-dasharray: 5 5; }
+.municipal-history-chart .selected-label { fill: #c93237; font-weight: 800; }
+.municipal-history-chart .year-hit { fill: transparent; cursor: pointer; }
+.municipal-history-chart .year-dot { fill: #fffdf7; stroke: #c93237; stroke-width: 3; pointer-events: none; }
+.municipal-history-note { margin: 22px 0 0; color: #59635e; font: 12px/1.6 monospace; }
 .czechia-municipalities-page .municipality-size-benchmark { padding: 84px 40px 92px; background: #171918; color: #fff; }
 .benchmark-loading { margin: 0; color: #b9bdb7; font: 14px monospace; text-transform: uppercase; }
 .municipal-size-heading { display: grid; grid-template-columns: minmax(0,.92fr) minmax(300px,.58fr); gap: clamp(48px,7vw,104px); align-items: start; }
@@ -262,6 +306,9 @@
 .municipal-structure-method p { color: #bac1bc; font-size: 13px; line-height: 1.6; }
 .municipal-structure-method p b { color: #fff; }
 @media (max-width: 1000px) {
+  .municipal-history-toolbar { grid-template-columns: 1fr auto; }
+  .municipal-history-toolbar>p { grid-column: 1/-1; }
+  .municipal-history-kpis { grid-template-columns: 1fr 1fr; }
   .municipal-controls { grid-template-columns: 1fr 1fr; }
   .czechia-destination-grid { grid-template-columns: 1fr; }
   .country-context-grid { grid-template-columns: 1fr; }
@@ -301,4 +348,13 @@
   .municipal-inline-search>div { grid-template-columns: 1fr; }
   .municipal-inline-search button { min-height: 48px; border-top: 1px solid #171918; border-left: 0; }
   .municipal-advanced-link { align-items: flex-start; flex-direction: column; }
+  .municipal-national-history { margin-inline: -18px; padding-inline: 18px; }
+  .municipal-history-toolbar { grid-template-columns: 1fr; }
+  .municipal-history-toolbar>p { grid-column: auto; }
+  .municipal-history-toolbar fieldset { grid-template-columns: 1fr 1fr; }
+  .municipal-history-toolbar button { width: 100%; }
+  .municipal-history-kpis { grid-template-columns: 1fr 1fr; }
+  .municipal-history-kpis article { min-height: 118px; padding: 16px; }
+  .municipal-history-kpis strong { font-size: clamp(23px,7vw,32px); }
+  .municipal-history-legend { gap: 12px 18px; }
 }

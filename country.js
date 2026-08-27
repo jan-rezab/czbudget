@@ -1,6 +1,10 @@
+// The profile is served at /countries/<slug>, so the page carries no <base> tag —
+// a root <base> resolved every in-page anchor against "/" and navigated away. Every
+// module on this page now publishes root-absolute payload and asset paths of its own.
 const P = new URLSearchParams(location.search);
 const state = { code:window.PSDCountryRoutes.codeFromLocation(), lang:window.PSDLanguage?.current()||P.get("lang")||"cs", year:2024, chartView:"ratio", currency:"local", data:null, catalog:null, fx:null, ministries:null };
 const $ = selector => document.querySelector(selector);
+const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const T = {
   cs:{back:"← Všechny země",navTrend:"Vývoj",navMacro:"Makro",navSpecifics:"Specifika",navSources:"Zdroje",profileEyebrow:"Detail země · veřejné finance",switchCountry:"Změnit zemi",switchYear:"Rok profilu",currencyView:"Měna",localCurrency:"Místní",fiscalSnapshot:"Fiskální snapshot",scopeKicker:"Fiskální perimeter / účetní hranice",scopeTitle:"Co čísla zahrnují — a co ne.",scopeCopy:"Státní rozpočet, sektor vládních institucí a veřejný sektor jsou tři různé účetní hranice. Profil je drží viditelně oddělené.",comparisonScope:"Srovnávací řada",countryArchitecture:"Uspořádání veřejných účtů",publicCorporations:"Veřejné korporace",includes:"Zahrnuje",excludes:"Nezahrnuje",trendKicker:"01 / Dvacetiletý vývoj",trendTitle:"Veřejné finance v čase.",trendCopy:"Harmonizované ukazatele IMF umožňují číst dlouhodobý fiskální příběh ve společné definici sektoru vládních institucí.",balance:"Saldo",debt:"Dluh",expense:"Výdaje",revenue:"Příjmy",display:"Zobrazení",ratioView:"% HDP",nominalView:"Nominálně",realView:"Očištěno o inflaci",prices2024:"ceny roku 2024",billions:"mld.",calculation:"výpočet PSD",gdpPcTitle:"HDP na obyvatele",macroKicker:"02 / Makro kontext",macroTitle:"Výkon, dluh a kupní síla.",macroCopy:"Měnové částky se na detailu zobrazují v místní měně; přepínač je přepočítá na EUR. PPP zůstává v mezinárodních dolarech.",debtRatioTitle:"Hrubý dluh k HDP",pppTitle:"HDP na obyvatele v paritě kupní síly",specificKicker:"04 / Národní specifika",specificTitle:"Jak země hlídá rozpočet.",specificCopy:"Vedle výsledku ukazujeme institucionální pravidla a četnost přebytku, ne jen jeden vybraný rok.",sourcesKicker:"07 / Primární zdroje",sourcesTitle:"Od srovnání k rozpočtovým kapitolám.",sourcesCopy:"Originální národní soubory tvoří reprodukovatelný základ detailu výdajů výše; zde jsou odkazy na celé zdrojové publikace.",footerSource:"Srovnávací řady: IMF WEO · kurzy: ECB · národní zdroje jsou uvedené výše",backTop:"Nahoru ↑",primary:"Primární saldo",growth:"Růst HDP",inflation:"Inflace",unemployment:"Nezaměstnanost",actual:"skutečnost",estimate:"odhad",governmentScope:"Rozsah národního rozpočtu",fiscalRule:"Fiskální pravidlo",surplusRecord:"Roky s přebytkem",openSource:"Otevřít originál ↗",ministryData:"Detail ministerstev",downloaded:"staženo a ověřeno",mappingReady:"připraveno k mapování",noRule:"Pro tuto zemi zatím zobrazujeme empirický výsledek; právní rámec doplníme z primárního zdroje.",sourcePurpose:"Primární národní zdroj rozpočtu a jeho plnění.",czechLocalTitle:"Česká územní vrstva",czechLocalCta:"Otevřít obce a kraje →"},
   en:{back:"← All countries",navTrend:"Trend",navMacro:"Macro",navSpecifics:"Specifics",navSources:"Sources",profileEyebrow:"Country detail · public finance",switchCountry:"Change country",switchYear:"Profile year",currencyView:"Currency",localCurrency:"Local",fiscalSnapshot:"Fiscal snapshot",scopeKicker:"Fiscal perimeter / accounting boundary",scopeTitle:"What the figures include — and exclude.",scopeCopy:"The state budget, general government and the public sector are three different accounting boundaries. This profile keeps them visibly separate.",comparisonScope:"Comparison series",countryArchitecture:"Public-account architecture",publicCorporations:"Public corporations",includes:"Includes",excludes:"Excludes",trendKicker:"01 / Twenty-year trend",trendTitle:"Public finances over time.",trendCopy:"Harmonised IMF indicators reveal the long-run fiscal story under a common general-government definition.",balance:"Balance",debt:"Debt",expense:"Expenditure",revenue:"Revenue",display:"Display",ratioView:"% GDP",nominalView:"Nominal",realView:"Adjusted for inflation",prices2024:"2024 prices",billions:"bn",calculation:"PSD calculation",gdpPcTitle:"GDP per capita",macroKicker:"02 / Macro context",macroTitle:"Output, debt and purchasing power.",macroCopy:"Country details show monetary amounts in local currency by default; the toggle converts them to EUR. PPP stays in international dollars.",debtRatioTitle:"Gross debt to GDP",pppTitle:"GDP per capita at purchasing-power parity",specificKicker:"04 / National specifics",specificTitle:"How the country disciplines its budget.",specificCopy:"Alongside the latest result we show institutional rules and the frequency of surpluses across the full period.",sourcesKicker:"07 / Primary sources",sourcesTitle:"From comparison to budget departments.",sourcesCopy:"Original national files provide the reproducible basis for the spending detail above; this section links the complete source publications.",footerSource:"Comparable series: IMF WEO · exchange rates: ECB · national sources above",backTop:"Back to top ↑",primary:"Primary balance",growth:"GDP growth",inflation:"Inflation",unemployment:"Unemployment",actual:"actual",estimate:"estimate",governmentScope:"National budget scope",fiscalRule:"Fiscal rule",surplusRecord:"Years in surplus",openSource:"Open original ↗",ministryData:"Ministry detail",downloaded:"downloaded and verified",mappingReady:"ready for mapping",noRule:"For this country the page currently shows the empirical record; the legal framework will be added from a primary source.",sourcePurpose:"Primary national source for the budget and its execution.",czechLocalTitle:"Czech territorial layer",czechLocalCta:"Open cities and regions →"}
@@ -17,6 +21,8 @@ Object.assign(T.cs,{gdpTag:"HDP / OBYV.",debtTag:"DLUH / HDP",pppTag:"PPP / OBYV
 Object.assign(T.en,{gdpTag:"GDP / CAPITA",debtTag:"DEBT / GDP",pppTag:"PPP / CAPITA"});
 Object.assign(T.cs,{scopeTitle:"Co data zahrnují",trendTitle:"Vývoj veřejných financí",macroTitle:"Ekonomický kontext",specificTitle:"Rozpočtová pravidla země",sourcesTitle:"Primární zdroje"});
 Object.assign(T.en,{scopeTitle:"What the data includes",trendTitle:"Public finance over time",macroTitle:"Economic context",specificTitle:"National budget rules",sourcesTitle:"Primary sources"});
+Object.assign(T.cs,{notFound:"Zemi jsme nenašli",notFoundCopy:"Tento identifikátor neodpovídá žádné zemi v datech. Zkontrolujte adresu, nebo vyberte profil ze seznamu zemí.",notFoundRequested:"Požadováno",notFoundCta:"Všechny profily zemí →"});
+Object.assign(T.en,{notFound:"Country not found",notFoundCopy:"This identifier does not match any country in the data. Check the address or pick a profile from the country list.",notFoundRequested:"Requested",notFoundCta:"All country profiles →"});
 const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no",GRC:"gr"};
 const flagEmoji=iso2=>String(iso2||"").toUpperCase().replace(/[A-Z]/g,letter=>String.fromCodePoint(127397+letter.charCodeAt(0)));
 const scope={state_budget:{cs:"Státní rozpočet",en:"State budget"},state_and_consolidated_budget:{cs:"Státní a konsolidovaný rozpočet",en:"State and consolidated budget"},federal_budget:{cs:"Federální rozpočet",en:"Federal budget"},public_sector_and_central_government:{cs:"Veřejný sektor a centrální vláda",en:"Public sector and central government"},confederation_and_general_government:{cs:"Konfederace a vládní instituce",en:"Confederation and general government"},central_and_general_government:{cs:"Centrální vláda a vládní instituce",en:"Central and general government"}};
@@ -82,13 +88,19 @@ function translate(){
   document.title=`${name()} — Public Spending Data`;
   const origin="https://publicspendingdata.org";
   const canonical=`${origin}${window.PSDCountryRoutes.href(state.code)}`;
-  $("#canonical-url").href=canonical;
-  $("#alternate-cs").href=`${origin}${window.PSDCountryRoutes.href(state.code,"cs")}`;
-  $("#alternate-en").href=`${origin}${window.PSDCountryRoutes.href(state.code,"en")}`;
+  const localised=lang=>`${origin}${window.PSDCountryRoutes.href(state.code,lang)}`;
+  // A ?lang= URL is its own canonical, so the hreflang pair does not canonicalise away;
+  // the bare path stays the x-default that language detection lands on.
+  $("#canonical-url").href=new URLSearchParams(location.search).has("lang")?localised(state.lang):canonical;
+  $("#alternate-cs").href=localised("cs");
+  $("#alternate-en").href=localised("en");
+  $("#alternate-default").href=canonical;
   $("#og-url").content=canonical;
+  const period=state.data.period;
+  $("#country-jsonld").textContent=JSON.stringify({"@context":"https://schema.org","@type":"Dataset",name:`${name()} — ${state.lang==="en"?"public finance profile":"profil veřejných financí"} ${period?.start_year??2005}–${period?.end_year??2024}`,description:state.lang==="en"?`Harmonised general-government revenue, expenditure, balance and debt for ${name()}, with macro context and links to national primary sources.`:`Harmonizované příjmy, výdaje, saldo a dluh sektoru vládních institucí pro ${name()}, makroekonomický kontext a odkazy na národní primární zdroje.`,url:canonical,inLanguage:["cs","en"],temporalCoverage:`${period?.start_year??2005}/${period?.end_year??2024}`,spatialCoverage:{"@type":"Country",name:name(),identifier:state.code},creator:{"@type":"Organization",name:"Public Spending Data"},isBasedOn:{"@type":"Dataset",name:`${state.data.source?.provider??"IMF"} · ${state.data.source?.dataset??"World Economic Outlook"}`},distribution:[{"@type":"DataDownload",encodingFormat:"application/json",contentUrl:`${origin}/lib/data/sovereign-benchmark.v1.json`},{"@type":"DataDownload",encodingFormat:"application/json",contentUrl:`${origin}/data/country-parity.v1.json`}]});
 }
 function header(){
-  const c=meta(),flag=flagCodes[c.country_code]?`<img src="assets/flags/${flagCodes[c.country_code]}.svg" alt="">`:`<span class="country-flag-emoji" aria-hidden="true">${flagEmoji(c.iso2)}</span>`; $("#country-code").innerHTML=`${flag}<b>${c.country_code}</b>`; $("#country-name").textContent=name();
+  const c=meta(),flag=flagCodes[c.country_code]?`<img src="/assets/flags/${flagCodes[c.country_code]}.svg" alt="">`:`<span class="country-flag-emoji" aria-hidden="true">${flagEmoji(c.iso2)}</span>`; $("#country-code").innerHTML=`${flag}<b>${c.country_code}</b>`; $("#country-name").textContent=name();
   const currency=c.currency_code==="LCU"?(c.currency_name||"local currency"):c.currency_code;
   $("#country-subtitle").textContent=state.lang==="en"?`${currency} · General government / harmonised scope · IMF WEO 2005–2024 · ${state.currency==="local"?"local-currency view":"EUR view"}`:`${currency} · Sektor vládních institucí / harmonizované vymezení · IMF WEO 2005–2024 · ${state.currency==="local"?"zobrazení v místní měně":"zobrazení v EUR"}`;
   $("#country-switch").innerHTML=state.data.countries.map(x=>`<option value="${x.country_code}">${state.lang==="en"?x.name_en:x.name_cs}</option>`).join(""); $("#country-switch").value=state.code;
@@ -182,21 +194,41 @@ function sources(){
   $("#source-cards").innerHTML=list.map((s,i)=>`<article><span>${String(i+1).padStart(2,"0")} / ${(s.formats||[]).join(" · ")}</span><h3>${s.source_name}</h3><p>${state.lang==="en"?T[state.lang].sourcePurpose:s.purpose}</p><small>${s.coverage}</small><a href="${s.source_url}" target="_blank" rel="noreferrer">${T[state.lang].openSource}</a></article>`).join("");
   const raw=state.ministries.countries.find(x=>x.code===state.code);
   $("#ministry-source").innerHTML=raw?`<a class="ministry-source-card" href="${raw.source_url}" target="_blank" rel="noreferrer"><div><span>RAW / ${raw.code} / ${raw.year}</span><h3>${T[state.lang].ministryData}</h3><p>${raw.dimension} · ${raw.stage} · ${(raw.bytes/1024/1024).toLocaleString(loc(),{maximumFractionDigits:1})} MB</p></div><strong>${raw.available?T[state.lang].downloaded:T[state.lang].mappingReady} ↗</strong></a>`:"";
-  $("#czech-local-link").innerHTML=state.code==="CZE"?`<div class="czech-view-heading"><span>${T[state.lang].czechViews}</span></div><div class="czech-view-grid"><a class="czech-local-card" href="cesky-rozpocet.html?lang=${state.lang}"><div><span>CZ / NATIONAL</span><h3>${T[state.lang].czechBudgetTitle}</h3></div><b>${T[state.lang].czechBudgetCta}</b></a><a class="czech-local-card territorial" href="cz/municipalities/?lang=${state.lang}"><div><span>CZ / LOCAL</span><h3>${T[state.lang].czechLocalTitle}</h3></div><b>${T[state.lang].czechLocalCta}</b></a></div>`:"";
+  $("#czech-local-link").innerHTML=state.code==="CZE"?`<div class="czech-view-heading"><span>${T[state.lang].czechViews}</span></div><div class="czech-view-grid"><a class="czech-local-card" href="/cesky-rozpocet.html?lang=${state.lang}"><div><span>CZ / NATIONAL</span><h3>${T[state.lang].czechBudgetTitle}</h3></div><b>${T[state.lang].czechBudgetCta}</b></a><a class="czech-local-card territorial" href="/cz/municipalities/?lang=${state.lang}"><div><span>CZ / LOCAL</span><h3>${T[state.lang].czechLocalTitle}</h3></div><b>${T[state.lang].czechLocalCta}</b></a></div>`:"";
 }
-function render(){translate();header();snapshot();scopeProfile();charts();recoveryStory();specifics();sources();dispatchEvent(new CustomEvent("countryprofilechange",{detail:{code:state.code,lang:state.lang,year:state.year,currency:state.currency}}))}
+const routeSlug=location.pathname.match(/^\/countries\/([^/]+)\/?$/i)?.[1]?.toLowerCase()||"";
+const knownCountry=()=>Boolean(meta())&&(!routeSlug||Boolean(window.PSDCountryRoutes.codes[routeSlug])||/^[a-z]{3}$/.test(routeSlug));
+function notFound(){
+  const t=T[state.lang], requested=routeSlug||P.get("code")||state.code;
+  document.documentElement.lang=state.lang;
+  document.body.classList.add("country-not-found");
+  document.title=`${t.notFound} — Public Spending Data`;
+  document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("active",b.dataset.lang===state.lang));
+  document.querySelector('meta[name="description"]')?.setAttribute("content",t.notFoundCopy);
+  if(!$("#country-noindex"))document.head.insertAdjacentHTML("beforeend",'<meta id="country-noindex" name="robots" content="noindex,follow">');
+  const rail=document.querySelector(".country-context-rail"); if(rail){rail.innerHTML="";rail.style.display="none"}
+  document.querySelectorAll("main > section").forEach(section=>{if(section.id!=="country-not-found")section.hidden=true});
+  let panel=$("#country-not-found");
+  if(!panel){panel=document.createElement("section");panel.id="country-not-found";panel.className="country-section";document.querySelector("main").prepend(panel)}
+  panel.innerHTML=`<div class="detail-heading"><div><span class="kicker">${t.notFoundRequested} · ${esc(requested)}</span><h2>${t.notFound}</h2></div><p>${t.notFoundCopy}</p></div><p class="country-not-found-actions"><a href="/?lang=${state.lang}#countries">${t.notFoundCta}</a></p>`;
+}
+function render(){if(!knownCountry()){notFound();return}translate();header();snapshot();scopeProfile();charts();recoveryStory();specifics();sources();dispatchEvent(new CustomEvent("countryprofilechange",{detail:{code:state.code,lang:state.lang,year:state.year,currency:state.currency}}))}
+// language-bootstrap.js holds the page at visibility:hidden for an English visitor until a
+// translator marks the toggle active. Both run before the dataset request, so a slow or
+// failed fetch can never blank the page and the toggle keeps working without any data.
+function language(){document.documentElement.lang=state.lang;document.querySelectorAll("[data-lang]").forEach(b=>{const active=b.dataset.lang===state.lang;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))})}
+function bindLanguage(){document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{state.lang=window.PSDLanguage?.set(b.dataset.lang,{persist:true})||b.dataset.lang;if(state.data){if(knownCountry())history.replaceState(null,"",window.PSDCountryRoutes.href(state.code,state.lang,location.hash));render()}else language()})}
 function init(){
-  if(!meta())state.code="CZE";
-  document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{state.lang=window.PSDLanguage?.set(b.dataset.lang,{persist:true})||b.dataset.lang;history.replaceState(null,"",window.PSDCountryRoutes.href(state.code,state.lang,location.hash));render()});
   document.querySelectorAll("[data-currency]").forEach(b=>b.onclick=()=>{state.currency=b.dataset.currency;render()});
   $("#country-switch").onchange=e=>{state.code=e.target.value;state.currency="local";history.replaceState(null,"",window.PSDCountryRoutes.href(state.code,state.lang,location.hash));render()};
   $("#year-switch").onchange=e=>{state.year=+e.target.value;render()};
   document.querySelectorAll("[data-chart-view]").forEach(b=>b.onclick=()=>{state.chartView=b.dataset.chartView;document.querySelectorAll("[data-chart-view]").forEach(x=>{x.classList.toggle("active",x===b);x.setAttribute("aria-pressed",x===b)});charts()});
   render();
 }
+bindLanguage();language();
 Promise.all([
-  fetch("lib/data/sovereign-benchmark.v1.json").then(r=>r.json()),
-  fetch("data/catalog.v1.json").then(r=>r.json()),
-  fetch("data/fx-eur-annual.v1.json").then(r=>r.json()),
-  fetch("data/ministry-budget-sources.v1.json").then(r=>r.json())
+  fetch("/lib/data/sovereign-benchmark.v1.json").then(r=>r.json()),
+  fetch("/data/catalog.v1.json").then(r=>r.json()),
+  fetch("/data/fx-eur-annual.v1.json").then(r=>r.json()),
+  fetch("/data/ministry-budget-sources.v1.json").then(r=>r.json())
 ]).then(([data,catalog,fx,ministries])=>{state.data=data;state.catalog=catalog;state.fx=fx;state.ministries=ministries;init()}).catch(error=>{console.error(error);document.body.classList.add("data-error")});

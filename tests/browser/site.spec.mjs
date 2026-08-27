@@ -72,7 +72,10 @@ test("header logo links to the canonical homepage URL", async ({ page }) => {
 
 test("country links are readable and data-layer cards keep accessible contrast", async ({ page }) => {
   await page.goto("/country.html?code=CHE&lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://publicspendingdata.org/countries/switzerland");
+  // A ?lang= URL canonicalises to itself. Pointing it at the bare path made the hreflang
+  // alternates canonicalise away, so search engines dropped the language pair entirely.
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://publicspendingdata.org/countries/switzerland?lang=en");
+  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute("href", "https://publicspendingdata.org/countries/switzerland");
   const colors = await page.locator(".parity-grid article").first().evaluate((card) => ({
     background: getComputedStyle(card).backgroundColor,
     foreground: getComputedStyle(card).color,
@@ -232,13 +235,14 @@ test("homepage compares all fifteen health-system topline metrics", async ({ pag
 
 test("homepage overview scales with the current country coverage", async ({ page }) => {
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".hero-dot")).toHaveCount(189);
+  await expect(page.locator(".hero-top-list .hero-bar")).toHaveCount(15);
   await expect(page.locator("#country-count")).toHaveText("191");
   await expect(page.locator("#year-count")).toHaveText("20");
-  await expect(page.locator("#hero-chart-note")).toContainText("189 countries with a 2024 value");
+  await expect(page.locator("#hero-chart-note")).toContainText("15 countries with the highest value");
   await expect(page.locator(".category-summary article").nth(1).locator("strong")).toHaveText("33.1 %");
   await expect(page.locator(".category-summary article").nth(2)).toContainText("17 / 17");
-  await expect(page.locator(".home-path-grid > a")).toHaveCount(4);
+  await expect(page.locator(".home-path-grid > a")).toHaveCount(3);
+  await expect(page.locator(".home-path-grid")).not.toContainText("Czech state budget");
 });
 
 test("about page and footer credit Hlidac statu in both languages", async ({ page }) => {
@@ -264,11 +268,12 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
 
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.locator("html")).toHaveAttribute("data-language-pending", "en");
-  await expect(page.locator("body")).toBeHidden();
-  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money.");
-  await expect(page.locator("html")).not.toHaveAttribute("data-language-pending", /.+/);
+  // The paint guard must resolve from the language state alone. It must not wait on the
+  // benchmark fetch above, which is throttled here to stand in for a slow connection:
+  // blocking on it used to leave English visitors on a blank page, then flash Czech.
   await expect(page.locator("body")).toBeVisible();
+  await expect(page.locator("html")).not.toHaveAttribute("data-language-pending", /.+/);
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money.");
 });
 
 test("homepage defaults every independently rendered module to English", async ({ page }) => {
@@ -644,8 +649,8 @@ test("all representative page menus resolve and primary navigation routes correc
   const municipalityMenu = page.locator(".municipality-menu");
   await municipalityMenu.locator("summary").click();
   await expect(municipalityMenu.locator(".country-menu-panel a")).toHaveCount(28);
-  const municipalCardCountries = await page.locator("#country-cards .country-flag-svg b").allTextContents();
-  const municipalMenuCountries = await municipalityMenu.locator(".country-menu-panel > a[data-country-code] b").allTextContents();
+  const municipalCardCountries = await page.locator("#country-cards .country-card-link").evaluateAll(cards=>cards.map(card=>new URL(card.href).pathname));
+  const municipalMenuCountries = await municipalityMenu.locator(".country-menu-panel > a[data-country-code]").evaluateAll(links=>links.map(link=>link.dataset.countryCode));
   await page.goto("/municipalities/?lang=cs", { waitUntil:"networkidle" });
   const municipalCoverageCountries = await page.locator("#country-grid .municipal-country-card").evaluateAll((cards) => cards.map((card) => card.dataset.country));
   expect(municipalMenuCountries).toEqual(municipalCoverageCountries);
@@ -663,16 +668,16 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(193);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(192);
   const countrySearch = countryMenu.locator(".country-menu-search input");
-  await expect(countrySearch).toHaveAttribute("placeholder", "Název nebo kód…");
+  await expect(countrySearch).toHaveAttribute("placeholder", "Název země…");
   await countrySearch.fill("novy zeland");
   await expect(countryMenu.locator('.country-menu-panel > a[data-country-code]:visible')).toHaveCount(1);
   await expect(countryMenu.locator('a[data-country-code="NZL"]')).toBeVisible();
   await expect(countryMenu.locator(".country-menu-search output")).toHaveText("1 profilů");
   await countrySearch.fill("");
-  const chartCountries = await page.locator("#country-cards .country-flag-svg b").allTextContents();
-  const menuCountries = await countryMenu.locator(".country-menu-panel > a[data-country-code] b").allTextContents();
+  const chartCountries = await page.locator("#country-cards .country-card-link").evaluateAll(cards=>cards.map(card=>new URL(card.href).pathname));
+  const menuCountries = await countryMenu.locator(".country-menu-panel > a[data-country-code]").evaluateAll(links=>links.map(link=>new URL(link.href).pathname));
   expect(menuCountries).toEqual(chartCountries);
   await countryMenu.locator('.country-menu-panel a[href="/countries/czechia?lang=cs"]').click();
   await expect(page).toHaveURL(/\/countries\/czechia\?lang=cs/);
@@ -692,7 +697,7 @@ test("every page family renders the same shared header component", async ({ page
     "/cz/kraje/praha/?lang=en",
     "/cz/mesta/?lang=en",
   ];
-  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Deep dives⌄", "Coverage", "About"];
+  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Reports⌄", "Coverage", "About"];
   for (const route of representatives) {
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator("psd-site-header")).toHaveCount(1);

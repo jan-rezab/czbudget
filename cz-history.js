@@ -1,7 +1,10 @@
 const historyRoot = document.querySelector("#history-explorer");
 if (historyRoot) {
   const source=historyRoot.dataset.source,fixedIco=historyRoot.dataset.fixedIco;
-  const english=new URLSearchParams(location.search).get("lang")==="en"||localStorage.getItem("psd-lang")==="en";
+  // An explicit ?lang= wins; otherwise take the language language-bootstrap.js
+  // resolved. Never OR the two together — that lets a stored "en" beat ?lang=cs.
+  const requestedLang=new URLSearchParams(location.search).get("lang");
+  const english=(requestedLang==="en"||requestedLang==="cs"?requestedLang:document.documentElement.lang)==="en";
   const select=historyRoot.querySelector("#history-city"),chart=historyRoot.querySelector("#history-chart"),tableBody=historyRoot.querySelector("#history-table-body"),tableHead=historyRoot.querySelector(".history-table thead tr"),kpis=historyRoot.querySelector("#history-kpis"),legend=historyRoot.querySelector(".history-legend");
   chart.tabIndex=0;
   const locale=english?"en-GB":"cs-CZ",fmt=new Intl.NumberFormat(locale,{maximumFractionDigits:1}),integer=new Intl.NumberFormat(locale,{maximumFractionDigits:0});

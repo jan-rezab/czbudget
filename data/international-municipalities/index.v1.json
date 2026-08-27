@@ -1,0 +1,802 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-25",
+  "scope": "municipality_comparison_tier",
+  "source_artifact": "data/international-municipalities.v1.json",
+  "notes": {
+    "comparability_cs": "Částky zůstávají v národní měně a národní klasifikaci. Rozpočtovou fázi a účetní rozsah vždy porovnávejte společně.",
+    "comparability_en": "Amounts remain in national currency and national classifications. Always compare budget stage and accounting scope together."
+  },
+  "totals": {
+    "country_count": 27,
+    "directory_count": 107703,
+    "entity_count": 105582,
+    "aggregate_row_count": 2121
+  },
+  "countries": [
+    {
+      "code": "BOL",
+      "alpha2": "BO",
+      "name_cs": "Bolívie",
+      "name_en": "Bolivia",
+      "currency": "BOB",
+      "years": [
+        2025
+      ],
+      "stages": [
+        "enacted",
+        "revised",
+        "actual",
+        "cash"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 343 aktivních místních vlád: 335 obecních a 8 domorodých autonomií; rozpočet a plnění 2025",
+      "coverage_en": "All 343 active local governments: 335 municipal and 8 Indigenous autonomous governments; 2025 budget and execution",
+      "source": "https://abierto.economiayfinanzas.gob.bo/descargas",
+      "status": "complete",
+      "directory_count": 343,
+      "entity_count": 343,
+      "shard": "data/international-municipalities/BOL.v1.json"
+    },
+    {
+      "code": "BRA",
+      "alpha2": "BR",
+      "name_cs": "Brazílie",
+      "name_en": "Brazil",
+      "currency": "BRL",
+      "years": [
+        2024,
+        2025
+      ],
+      "stages": [
+        "enacted",
+        "revised",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 5 570 obcí v adresáři SICONFI; běžné nebo zjednodušené RREO 2025 pro 5 513, náhradní DCA I-C/I-D 2024 pro 44, bez obou výkazů 13",
+      "coverage_en": "All 5,570 municipalities in the SICONFI directory; 2025 regular or simplified RREO Annex 01 for 5,513, 2024 DCA I-C/I-D fallback for 44, 13 without either return",
+      "source": "https://apidatalake.tesouro.gov.br/docs/siconfi",
+      "status": "partial",
+      "directory_count": 5570,
+      "rreo_2025_count": 5513,
+      "regular_rreo_2025_count": 3208,
+      "simplified_rreo_2025_count": 2305,
+      "dca_2024_fallback_count": 44,
+      "missing_finance_count": 13,
+      "entity_count": 5570,
+      "shard": "data/international-municipalities/BRA.v1.json"
+    },
+    {
+      "code": "CHL",
+      "alpha2": "CL",
+      "name_cs": "Chile",
+      "name_en": "Chile",
+      "currency": "CLP",
+      "years": [
+        2025
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 345 obcí v SINIM; přijaté příjmy bez počátečního zůstatku hotovosti a akruální výdaje obecního sektoru za rok 2025",
+      "coverage_en": "All 345 municipalities in SINIM; 2025 perceived revenue excluding opening cash and accrued expenditure for the municipal sector",
+      "source": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
+      "status": "complete",
+      "directory_count": 345,
+      "entity_count": 345,
+      "shard": "data/international-municipalities/CHL.v1.json"
+    },
+    {
+      "code": "COL",
+      "alpha2": "CO",
+      "name_cs": "Kolumbie",
+      "name_en": "Colombia",
+      "currency": "COP",
+      "years": [
+        2025
+      ],
+      "stages": [
+        "enacted",
+        "revised",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 1 102 obcí vykazujících v CUIPO; počáteční a konečný plán i skutečnost příjmů a výdajů za rok 2025",
+      "coverage_en": "All 1,102 municipalities reporting in CUIPO; initial and definitive plans plus 2025 revenue and expenditure execution",
+      "source": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
+      "status": "complete",
+      "directory_count": 1102,
+      "entity_count": 1102,
+      "shard": "data/international-municipalities/COL.v1.json"
+    },
+    {
+      "code": "CRI",
+      "alpha2": "CR",
+      "name_cs": "Kostarika",
+      "name_en": "Costa Rica",
+      "currency": "CRC",
+      "years": [
+        2025
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 84 současných obcí; přijaté příjmy, výdaje a výsledek vykázané v SIPP za rok 2025",
+      "coverage_en": "All 84 current municipalities; 2025 received revenue, spending and result reported in SIPP",
+      "source": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
+      "status": "complete",
+      "directory_count": 84,
+      "entity_count": 84,
+      "shard": "data/international-municipalities/CRI.v1.json"
+    },
+    {
+      "code": "CZE",
+      "alpha2": "CZ",
+      "name_cs": "Česko",
+      "name_en": "Czechia",
+      "currency": "CZK",
+      "years": [
+        2025
+      ],
+      "counts": {
+        "2025": 6254
+      },
+      "stages": [
+        "enacted",
+        "revised",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance",
+        "cash"
+      ],
+      "coverage_cs": "Všech 6 254 obcí",
+      "coverage_en": "All 6,254 municipalities",
+      "status": "complete",
+      "source": "https://monitor.statnipokladna.gov.cz/",
+      "directory_count": 6254,
+      "entity_count": 6254,
+      "shard": "data/international-municipalities/CZE.v1.json"
+    },
+    {
+      "code": "DNK",
+      "alpha2": "DK",
+      "name_cs": "Dánsko",
+      "name_en": "Denmark",
+      "currency": "DKK",
+      "years": [
+        2025
+      ],
+      "stages": [
+        "enacted",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 98 obcí; schválený rozpočet BUDK100 a závěrečné účty REGK100 v autorizovaném funkčním a ekonomickém členění",
+      "coverage_en": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
+      "source": "https://www.statbank.dk/BUDK100",
+      "status": "complete",
+      "directory_count": 98,
+      "entity_count": 98,
+      "shard": "data/international-municipalities/DNK.v1.json"
+    },
+    {
+      "code": "SLV",
+      "alpha2": "SV",
+      "name_cs": "Salvador",
+      "name_en": "El Salvador",
+      "currency": "USD",
+      "years": [
+        2023
+      ],
+      "stages": [
+        "enacted",
+        "revised",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "259 z 262 tehdejších obcí ve výkazech SAFIM za celý rok 2023; tři obce nevykázaly data",
+      "coverage_en": "259 of the 262 then-municipalities in full-year 2023 SAFIM returns; three municipalities did not report",
+      "source": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
+      "status": "partial",
+      "directory_count": 259,
+      "entity_count": 259,
+      "shard": "data/international-municipalities/SLV.v1.json"
+    },
+    {
+      "code": "GBR",
+      "alpha2": "GB",
+      "name_cs": "Anglie",
+      "name_en": "England",
+      "currency": "GBP",
+      "years": [
+        2024,
+        2025
+      ],
+      "counts": {
+        "2024": 318,
+        "2025": 317
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "financing"
+      ],
+      "coverage_cs": "Odevzdané výkazy anglických obcí a GLA; bez policie a hasičů",
+      "coverage_en": "Submitted English council and GLA returns; excludes police and fire",
+      "status": "complete",
+      "source": "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set",
+      "directory_count": 318,
+      "entity_count": 318,
+      "shard": "data/international-municipalities/GBR.v1.json"
+    },
+    {
+      "code": "FIN",
+      "alpha2": "FI",
+      "name_cs": "Finsko",
+      "name_en": "Finland",
+      "currency": "EUR",
+      "status": "complete",
+      "directory_count": 310,
+      "years": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 310 obcí v roce 2020; 203 položek účetních výkazů v archivu 2015–2020",
+      "coverage_en": "All 310 municipalities in the 2020 census; 203 financial-statement measures, 2015–2020 archive",
+      "source": "https://pxdata.stat.fi/PxWeb/pxweb/en/Kuntien_talous_ja_toiminta/",
+      "entity_count": 310,
+      "shard": "data/international-municipalities/FIN.v1.json"
+    },
+    {
+      "code": "FRA",
+      "alpha2": "FR",
+      "name_cs": "Francie",
+      "name_en": "France",
+      "currency": "EUR",
+      "years": [
+        2024,
+        2025
+      ],
+      "counts": {
+        "2024": 35031,
+        "2025": 34877
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všechny obce; funkční detail tam, kde jej obec vykazuje; hlavní i vedlejší rozpočty",
+      "coverage_en": "All communes; functional detail where reported; main and supplementary budgets",
+      "status": "complete",
+      "source": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+      "directory_count": 35041,
+      "entity_count": 35041,
+      "shard": "data/international-municipalities/FRA.v1.json"
+    },
+    {
+      "code": "GEO",
+      "alpha2": "GE",
+      "name_cs": "Gruzie",
+      "name_en": "Georgia",
+      "currency": "GEL",
+      "years": [
+        2025,
+        2026
+      ],
+      "stages": [
+        "enacted",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 69 obcí v sešitech ministerstva financí; skutečnost 2025 a schválený plán 2026, s funkčním detailem výdajů 2025",
+      "coverage_en": "All 69 municipalities in Ministry of Finance workbooks; 2025 actuals and the 2026 approved plan, with 2025 functional expenditure detail",
+      "source": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
+      "status": "complete",
+      "directory_count": 69,
+      "entity_count": 69,
+      "shard": "data/international-municipalities/GEO.v1.json"
+    },
+    {
+      "code": "DEU",
+      "alpha2": "DE",
+      "name_cs": "Německo",
+      "name_en": "Germany",
+      "currency": "EUR",
+      "years": [
+        2025
+      ],
+      "counts": {
+        "2025": 10756
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "10 756 obecních jádrových rozpočtů; očištěné příjmy a výdaje bez financování",
+      "coverage_en": "10,756 municipal core budgets; adjusted receipts and payments excluding financing",
+      "status": "complete",
+      "source": "https://www.regionalstatistik.de/genesis/online?operation=table&code=71717-Z-01",
+      "source_detail": {
+        "publisher": "Statistische Ämter des Bundes und der Länder",
+        "dataset": "Regionaldatenbank table 71717-Z-01",
+        "location": "flat CSV → FAMTGEM; AUSZ001 and EINZ001; administrative associations removed by source-label classification",
+        "period": "2025"
+      },
+      "directory_count": 10756,
+      "missing_dimensions": [],
+      "entity_count": 10756,
+      "shard": "data/international-municipalities/DEU.v1.json"
+    },
+    {
+      "code": "GTM",
+      "alpha2": "GT",
+      "name_cs": "Guatemala",
+      "name_en": "Guatemala",
+      "currency": "GTQ",
+      "years": [
+        2025
+      ],
+      "stages": [
+        "enacted",
+        "revised",
+        "actual",
+        "cash"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 340 obcí v SICOINGL a SICOINDES; rozpočet, úpravy, akruální plnění a hotovost za rok 2025",
+      "coverage_en": "All 340 municipalities in SICOINGL and SICOINDES; 2025 budget, revisions, accrual execution and cash",
+      "source": "https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025",
+      "status": "complete",
+      "directory_count": 340,
+      "entity_count": 340,
+      "shard": "data/international-municipalities/GTM.v1.json"
+    },
+    {
+      "code": "ITA",
+      "alpha2": "IT",
+      "name_cs": "Itálie",
+      "name_en": "Italy",
+      "currency": "EUR",
+      "years": [
+        2025
+      ],
+      "stages": [
+        "cash"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 7 896 italských obcí; hotovostní příjmy a platby SIOPE za rok 2025, seskupené podle původních titulů",
+      "coverage_en": "All 7,896 Italian municipalities; 2025 SIOPE cash receipts and payments grouped by native titles",
+      "source": "https://www.siope.it/Siope/",
+      "status": "complete",
+      "directory_count": 7896,
+      "entity_count": 7896,
+      "shard": "data/international-municipalities/ITA.v1.json"
+    },
+    {
+      "code": "JPN",
+      "alpha2": "JP",
+      "name_cs": "Japonsko",
+      "name_en": "Japan",
+      "currency": "JPY",
+      "years": [
+        2024
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance",
+        "debt"
+      ],
+      "coverage_cs": "Všech 1 741 obcí a tokijských obvodů; 16 tabulek e-Stat pro příjmy, výdaje, dluh, fondy a finance spojené se stárnutím",
+      "coverage_en": "All 1,741 municipalities and Tokyo wards; 16 e-Stat tables covering revenue, expenditure, debt, funds and ageing-related finance",
+      "source": "https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755",
+      "status": "complete",
+      "directory_count": 1741,
+      "entity_count": 1741,
+      "shard": "data/international-municipalities/JPN.v1.json"
+    },
+    {
+      "code": "MEX",
+      "alpha2": "MX",
+      "name_cs": "Mexiko",
+      "name_en": "Mexico",
+      "currency": "MXN",
+      "years": [
+        2024
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "2 380 vykazujících obecních vlád v definitivních ročních datech EFIPEM 2024; nejde o úplný census všech obcí",
+      "coverage_en": "2,380 reporting municipal governments in definitive 2024 EFIPEM annual data; this is not a complete census of every municipality",
+      "source": "https://www.inegi.org.mx/programas/finanzas/",
+      "status": "partial",
+      "directory_count": 2380,
+      "entity_count": 2380,
+      "shard": "data/international-municipalities/MEX.v1.json"
+    },
+    {
+      "code": "NLD",
+      "alpha2": "NL",
+      "name_cs": "Nizozemsko",
+      "name_en": "Netherlands",
+      "currency": "EUR",
+      "status": "complete",
+      "directory_count": 342,
+      "years": [
+        2024,
+        2025
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všechny obce v ročních účtech CBS Iv3; původní funkční a ekonomické členění",
+      "coverage_en": "All municipalities in CBS Iv3 annual accounts; native task fields and economic categories",
+      "source": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3",
+      "entity_count": 342,
+      "shard": "data/international-municipalities/NLD.v1.json"
+    },
+    {
+      "code": "NOR",
+      "alpha2": "NO",
+      "name_cs": "Norsko",
+      "name_en": "Norway",
+      "currency": "NOK",
+      "status": "complete",
+      "directory_count": 358,
+      "years": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 357 obcí plus Longyearbyen; souhrnné účty 2015–2025 a detail roku 2025 napříč 97 funkcemi KOSTRA",
+      "coverage_en": "All 357 municipalities plus Longyearbyen; 2015–2025 headline accounts and 2025 detail across 97 KOSTRA functions",
+      "source": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap",
+      "entity_count": 358,
+      "shard": "data/international-municipalities/NOR.v1.json"
+    },
+    {
+      "code": "PER",
+      "alpha2": "PE",
+      "name_cs": "Peru",
+      "name_en": "Peru",
+      "currency": "PEN",
+      "years": [
+        2024
+      ],
+      "stages": [
+        "enacted",
+        "revised",
+        "actual",
+        "cash"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 1 891 místních vlád: 196 provinčních včetně metropolitní Limy a 1 695 okresních; rozpočet a plnění 2024",
+      "coverage_en": "All 1,891 local governments: 196 provincial including metropolitan Lima and 1,695 district municipalities; 2024 budget and execution",
+      "source": "https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto",
+      "status": "complete",
+      "directory_count": 1891,
+      "entity_count": 1891,
+      "shard": "data/international-municipalities/PER.v1.json"
+    },
+    {
+      "code": "POL",
+      "alpha2": "PL",
+      "name_cs": "Polsko",
+      "name_en": "Poland",
+      "currency": "PLN",
+      "years": [
+        2024,
+        2025
+      ],
+      "counts": {
+        "2024": 2477,
+        "2025": 2479
+      },
+      "stages": [
+        "revised",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure"
+      ],
+      "coverage_cs": "Všechny gminy v ročních výkazech Rb-27S a Rb-28S",
+      "coverage_en": "All gminas in annual Rb-27S and Rb-28S returns",
+      "status": "complete",
+      "source": "https://www.gov.pl/web/finanse/bazy-danych8",
+      "directory_count": 2486,
+      "entity_count": 2486,
+      "shard": "data/international-municipalities/POL.v1.json"
+    },
+    {
+      "code": "KOR",
+      "alpha2": "KR",
+      "name_cs": "Jižní Korea",
+      "name_en": "South Korea",
+      "currency": "KRW",
+      "years": [
+        2024
+      ],
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 243 místních vlád v Local Finance 365: 17 vyšších a 226 základních; závěrečné účty 2024 za obecný účet, zvláštní účty a fondy",
+      "coverage_en": "All 243 local governments in Local Finance 365: 17 upper-tier and 226 basic governments; 2024 settlements across the general account, special accounts and funds",
+      "source": "https://www.lofin365.go.kr/portal/LF5100000.do",
+      "status": "complete",
+      "directory_count": 243,
+      "entity_count": 243,
+      "shard": "data/international-municipalities/KOR.v1.json"
+    },
+    {
+      "code": "ESP",
+      "alpha2": "ES",
+      "name_cs": "Španělsko",
+      "name_en": "Spain",
+      "currency": "EUR",
+      "years": [
+        2025,
+        2026
+      ],
+      "stages": [
+        "enacted",
+        "revised",
+        "actual",
+        "cash"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "6 198 vykazujících obcí v CONPREL; schválené rozpočty 2026 a likvidace 2025 s ekonomickými účty",
+      "coverage_en": "6,198 reporting municipalities in CONPREL; 2026 adopted budgets and 2025 liquidations with economic accounts",
+      "source": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
+      "status": "complete",
+      "directory_count": 6198,
+      "entity_count": 6198,
+      "shard": "data/international-municipalities/ESP.v1.json"
+    },
+    {
+      "code": "SWE",
+      "alpha2": "SE",
+      "name_cs": "Švédsko",
+      "name_en": "Sweden",
+      "currency": "SEK",
+      "years": [
+        2024,
+        2025
+      ],
+      "counts": {
+        "2024": 290,
+        "2025": 290
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všech 290 obcí; náklady, výnosy a rozvaha",
+      "coverage_en": "All 290 municipalities; costs, income and balance sheet",
+      "status": "complete",
+      "source": "https://www.scb.se/en/OE0107",
+      "directory_count": 290,
+      "entity_count": 290,
+      "shard": "data/international-municipalities/SWE.v1.json"
+    },
+    {
+      "code": "CHE",
+      "alpha2": "CH",
+      "name_cs": "Švýcarsko",
+      "name_en": "Switzerland",
+      "currency": "CHF",
+      "years": [
+        2023
+      ],
+      "counts": {
+        "2023": 0
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Celý obecní subsektor v harmonizovaném modelu EFV; veřejný federální sešit je agregát, nikoli výpis 2 121 obcí",
+      "coverage_en": "Complete municipal subsector in the harmonised EFV model; the federal public workbook is an aggregate, not a 2,121-commune extract",
+      "status": "aggregate_only",
+      "source": "https://www.efv.admin.ch/de/fs-daten",
+      "source_detail": {
+        "publisher": "Eidgenössische Finanzverwaltung",
+        "dataset": "Daten Finanzstatistik — Gemeinden",
+        "location": "gdn-d.xlsx and gdn_fir_art_funk-d.xlsx; FS/HRM2 standard evaluations for the municipal subsector; official commune count from BFS at 2025-01-01",
+        "period": "2023"
+      },
+      "directory_count": 2121,
+      "missing_dimensions": [
+        "entity-level municipality financial facts"
+      ],
+      "entity_count": 0,
+      "shard": "data/international-municipalities/CHE.v1.json"
+    },
+    {
+      "code": "UKR",
+      "alpha2": "UA",
+      "name_cs": "Ukrajina",
+      "name_en": "Ukraine",
+      "currency": "UAH",
+      "years": [
+        2024,
+        2025
+      ],
+      "counts": {
+        "2024": 1467,
+        "2025": 1467
+      },
+      "stages": [
+        "enacted",
+        "revised",
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure"
+      ],
+      "coverage_cs": "Všech 1 467 aktivních rozpočtů územních komunit včetně Kyjeva; bez oblastí a rajónů",
+      "coverage_en": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
+      "status": "complete",
+      "source": "https://api.openbudget.gov.ua/swagger-ui.html",
+      "directory_count": 1467,
+      "entity_count": 1467,
+      "shard": "data/international-municipalities/UKR.v1.json"
+    },
+    {
+      "code": "USA",
+      "alpha2": "US",
+      "name_cs": "Spojené státy",
+      "name_en": "United States",
+      "currency": "USD",
+      "years": [
+        2022
+      ],
+      "counts": {
+        "2022": 19401
+      },
+      "stages": [
+        "actual"
+      ],
+      "measures": [
+        "revenue",
+        "expenditure",
+        "balance"
+      ],
+      "coverage_cs": "Všechny jednotky typu city/municipality v souboru Census of Governments; částky v tisících USD převedeny na USD",
+      "coverage_en": "All city/municipality government units in the Census of Governments file; thousands of USD converted to USD",
+      "status": "complete",
+      "source": "https://www.census.gov/data/datasets/2022/econ/local/public-use-datasets.html",
+      "source_detail": {
+        "publisher": "U.S. Census Bureau",
+        "dataset": "2022 Census of Governments — Individual Unit Public Use File",
+        "location": "Fin_PID_2022.txt → type-of-government digit 2; 2022FinEstDAT → item amounts; revenue prefixes A/B/C/D/T/U and expenditure prefixes E/F/I/J/L/M/S",
+        "period": "2022"
+      },
+      "directory_count": 19401,
+      "missing_dimensions": [],
+      "entity_count": 19401,
+      "shard": "data/international-municipalities/USA.v1.json"
+    }
+  ]
+}
