@@ -17,8 +17,8 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
-WORKSPACE = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[3]))
-WEB = WORKSPACE / "website"
+WEB = Path(__file__).resolve().parents[2]
+WORKSPACE = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", WEB.parent))
 CONFIG_PATH = WEB / "pipeline/config/government_accountability_cze.v1.json"
 BENCHMARK_PATH = WEB / "data/benchmark.v1.json"
 OUTPUT_PATH = WEB / "data/accountability/cze-regions.v1.json"
