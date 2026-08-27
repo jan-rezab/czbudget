@@ -10,7 +10,6 @@ import shutil
 from pathlib import Path
 
 from build_czech_site import PUBLIC_ORIGIN, WEB, amount, esc, footer, head, header, mix_row, pct, slugify, stat_bar
-from municipal_profile_template import render_municipal_profile_shell
 
 
 SNAPSHOT = WEB / "data/municipal-snapshot.v1.json"
@@ -124,7 +123,7 @@ def build_large_cities(data: dict, history: dict, large_ids: set[str]) -> None:
     output.write_text(f"""<!doctype html><html lang="cs">{head('Rozpočty velkých měst 2006–2025 — trend a stav účtů', 'Dvacetiletý trend příjmů, výdajů, výsledku hospodaření a stavu účtů 27 velkých českých měst.', '/cz/mesta/', 2, schema)}<body class="cz-budget-page directory-page">{header('../../')}<main><nav class="breadcrumbs"><a href="../../index.html">Domů</a><span>›</span><a href="../municipalities/">Obce</a><span>›</span><strong>Velká města</strong></nav><section class="cz-hero compact-cz-hero"><div><span class="eyebrow"><i class="live-dot"></i>27 velkých měst · nominální CZK</span><h1>Dvacet let<br><em>v jednom trendu.</em></h1><p>Každý rok od 2006 do 2025: příjmy, výdaje, výsledek hospodaření a stav účtů.</p></div><div class="cohort-switch wide-switch"><a href="../municipalities/">Obce <b>6 254</b></a><a class="active" href="../mesta/">Velká města <b>20 let</b></a><a href="../kraje/">Kraje <b>14</b></a></div></section>{history_section(None, 2)}<section class="directory"><div class="directory-title"><div><span class="kicker">Profily</span><h2>Detail každého města.</h2></div><p>Nejnovější rok i celá časová řada na jedné trvalé adrese.</p></div><div class="entity-grid">{cards}</div></section></main>{footer('../../')}<script src="../../municipal-i18n.js" defer></script><script src="../../cz-history.js?v=20260824-history-views" defer></script></body></html>\n""", encoding="utf-8")
 
 
-def legacy_build_detail(data: dict, entity: dict, has_large_city_history: bool) -> None:
+def build_detail(data: dict, entity: dict, has_large_city_history: bool) -> None:
     a, r = entity["amounts"], entity["ratios"]
     cash_available = entity.get("quality", {}).get("cash_data_available", True)
     cash_change = (a["cash_current"] - a["cash_previous"]) if cash_available else None
@@ -144,25 +143,6 @@ def legacy_build_detail(data: dict, entity: dict, has_large_city_history: bool) 
     cash_change_text = "Data rozvahy nejsou dostupná" if cash_change is None else f"{pct(r.get('cash_yoy'))} meziročně"
     cash_story = "<p class=\"data-quality-warning\">Stav účtů nelze zobrazit: ve zdrojové rozvaze chybí odpovídající řádky.</p>" if cash_change is None else f"<div class=\"cash-story\"><article><span>31. 12. 2024</span><strong>{amount(a['cash_previous'])}</strong></article><i class=\"{'up' if cash_change >= 0 else 'down'}\">{'+' if cash_change >= 0 else '−'}{amount(abs(cash_change))}</i><article><span>31. 12. 2025</span><strong>{amount(a['cash_current'])}</strong></article></div>"
     out.write_text(f"""<!doctype html><html lang="en">{head(f"{entity['short_name']} town and municipality budget 2025 — revenue, expenditure and cash", description, canonical, 3, schema, language="en")}<body class="cz-budget-page detail-page" data-entity-id="{esc(entity['entity_id'])}">{header('../../../')}<main><nav class="breadcrumbs"><a href="../../../index.html">Domů</a><span>›</span><a href="../">Obce</a><span>›</span><strong>{esc(entity['short_name'])}</strong></nav><section class="detail-hero"><div><span class="eyebrow"><i class="live-dot"></i>Obecní účetní jednotka · IČO {esc(entity['national_id'])} · 2025</span><h1>{esc(entity['short_name'])}</h1><p>{esc(description)}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">Rozpočet 2025 <b>↓</b></a><a href="#history-explorer">Trend {2025 - history_from + 1} let</a><a href="../../../data/entities/{esc(entity['national_id'])}.json" download>Stáhnout JSON</a></div></div><aside class="detail-score"><span>{esc(entity['territory'].get('region_name') or 'Česko')}</span><strong>{pct(r.get('cash_to_expense'))}</strong><small>{'ročních výdajů kryto stavem účtů' if cash_available else 'data rozvahy nejsou dostupná'}</small></aside></section><section class="detail-kpis"><article><span>Příjmy</span><strong>{amount(a['revenue_actual'])}</strong><small>{pct(r.get('revenue_execution'))} upraveného rozpočtu</small></article><article><span>Výdaje</span><strong>{amount(a['expense_actual'])}</strong><small>{pct(r.get('expense_execution'))} upraveného rozpočtu</small></article><article><span>Výsledek</span><strong class="{'positive' if a['budget_balance'] >= 0 else 'negative'}">{amount(a['budget_balance'])}</strong><small>{pct(r.get('balance_to_revenue'))} příjmů</small></article><article><span>Stav účtů</span><strong>{amount(a['cash_current'])}</strong><small class="{cash_change_class}">{cash_change_text}</small></article></section>{history_html}<section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">Rozpočet 2025</span><h2>Plán a skutečnost.</h2></div></div><article class="detail-panel plan-panel">{stat_bar('Příjmy', a['revenue_actual'], a['revenue_adjusted'])}{stat_bar('Výdaje', a['expense_actual'], a['expense_adjusted'])}</article><div class="detail-grid"><article class="detail-panel"><div class="panel-title"><h3>Struktura příjmů</h3><strong>{amount(a['revenue_actual'])}</strong></div>{revenue_mix}</article><article class="detail-panel"><div class="panel-title"><h3>Struktura výdajů</h3><strong>{amount(a['expense_actual'])}</strong></div>{expense_mix}</article></div>{cash_story}</section><section class="data-contract" id="metodika"><div><span class="kicker">Data a metodika</span><h2>Auditovatelný profil.</h2><p>Samostatná účetní jednotka obce; příspěvkové organizace nejsou přičítány. Výsledek je po konsolidaci uvnitř rozpočtu obce.</p></div><div class="source-list"><a href="{esc(entity['sources']['budget'])}" target="_blank" rel="noopener"><span>Rozpočet</span><strong>Monitor MF ČR ↗</strong></a><a href="../../../data/entities/{esc(entity['national_id'])}.json"><span>Strojová data</span><strong>JSON ↗</strong></a><a href="{history_href}"><span>Historická data</span><strong>{history_label}</strong></a></div></section></main>{footer('../../../')}<script src="../../../municipal-i18n.js" defer></script>{history_script}</body></html>\n""", encoding="utf-8")
-
-
-def build_detail(data: dict, entity: dict, has_large_city_history: bool) -> None:
-    """Generate Czech routes through the same shell as every other country."""
-    history_from = 2006 if has_large_city_history else 2010
-    description = f"{entity['short_name']} town and municipality budget for 2025: revenue, expenditure, fiscal balance, cash and a {2025 - history_from + 1}-year interactive history."
-    history_path = "../../../data/large-city-history.v1.json" if has_large_city_history else f"../../../data/municipal-history/{entity['national_id']}.json"
-    out = WEB / f"cz/municipalities/{entity['seo']['slug']}/index.html"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(render_municipal_profile_shell(
-        name=entity["short_name"],
-        country_name="Czechia",
-        canonical_path=entity["seo"]["path"],
-        profile_data_path=f"../../../data/entities/{entity['national_id']}.json",
-        history_data_path=history_path,
-        source_url=entity["sources"]["budget"],
-        page_title=f"{entity['short_name']} town and municipality budget 2025 — revenue, expenditure and cash",
-        page_description=description,
-    ), encoding="utf-8")
 
 
 def build_machine_data(data: dict, benchmark: dict) -> None:

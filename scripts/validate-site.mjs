@@ -110,8 +110,9 @@ const internationalMunicipalPage = await readFile("municipalities/index.html", "
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
 const internationalMunicipalScript = await readFile("municipalities.js", "utf8");
 const municipalityCountryScript = await readFile("municipalities-country.js", "utf8");
-const municipalityCountrySlugs = ["poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan", "colombia", "georgia", "italy", "bolivia", "el-salvador", "mexico", "costa-rica", "guatemala", "peru", "south-korea", "chile"];
+const municipalityCountrySlugs = ["germany", "poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan", "colombia", "georgia", "italy", "bolivia", "el-salvador", "mexico", "costa-rica", "guatemala", "peru", "south-korea", "chile"];
 const municipalityCountryPages = await Promise.all(municipalityCountrySlugs.map((slug) => readFile(`municipalities/${slug}/index.html`, "utf8")));
+const germanMunicipalProfilePage = await readFile("municipalities/germany/profile/index.html", "utf8");
 const czechProfileSamples = await Promise.all([
   "cz/municipalities/brno/index.html",
   "cz/municipalities/arnoltice/index.html",
@@ -184,10 +185,18 @@ for (const [code, warehouseProfiles] of [["USA", 4], ["DEU", 11]]) {
   if (country?.profile_count !== 0 || country.status !== "warehouse_only" || country.publication_status !== "warehouse_only" || Number(country.warehouse_profile_count) !== warehouseProfiles) throw new Error(`${code}: expected zero published itemized profiles with ${warehouseProfiles} preserved in the warehouse`);
 }
 if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.length, 0) !== 1010) throw new Error("Expected 1,010 Nordic and Dutch municipal benchmark profiles");
-// Czech profiles keep their own richer shell (Dataset JSON-LD, robots and og:type that the
-// shared expansion shell does not emit). Unifying the two is a live design decision, so this
-// asserts what every municipal profile must carry rather than which template produced it.
-if (czechProfileSamples.some((page) => !/"@type":\s*"Dataset"/.test(page) || !page.includes('name="robots"') || !page.includes('property="og:type"'))) throw new Error("Czech municipal profiles must keep Dataset JSON-LD, robots and og:type");
+// The full Czech budget profile is the canonical municipal template. It is deliberately
+// server-rendered so the budget, history and methodology remain present in the document
+// without waiting for a client-side shell. This guard prevents a bulk profile rewrite from
+// silently replacing the production template with a loading placeholder again.
+if (czechProfileSamples.some((page) =>
+  !page.includes('class="cz-budget-page detail-page"') ||
+  !page.includes('id="history-explorer"') ||
+  !page.includes('id="rozpocet"') ||
+  !page.includes('class="data-contract"') ||
+  page.includes('municipal-profile-loading') ||
+  page.includes('municipal-expanded-profile.js')
+)) throw new Error("Czech municipal profiles must use the full server-rendered Czech budget template");
 for (const [code, expected] of [["DNK",98],["ESP",6198],["JPN",1741]]) {
   const country = internationalMunicipalities.countries.find((item) => item.code === code);
   if (!country || country.status !== "complete" || country.directory_count !== expected || internationalMunicipalities.entities.filter((item) => item.country === code && item.url).length !== expected) throw new Error(`${code}: incomplete municipality directory or profile routes`);
@@ -391,7 +400,7 @@ if (!countryPage.includes("country-routes.js") || !countryScript.includes("PSDCo
 if (!nginx.includes("location = /country.html") || !nginx.includes("return 301 $legacy_country_path") || !nginx.includes("/countries/switzerland") || !nginx.includes("try_files /country.html =404")) throw new Error("Nginx must redirect legacy country URLs and serve readable country routes");
 if (!nginx.includes("denmark|finland|france") || !nginx.includes("greece|[a-z][a-z][a-z])/$") || !nginx.includes("greece|[a-z][a-z][a-z])$") || nginx.includes("try_files /countries/$1/index.html =404")) throw new Error("All IMF-covered countries must use the shared national dashboard route");
 if (!countryParityStyles.includes("background:#fff;color:#17241f") || !countryParityStyles.includes("color:#4f5a55")) throw new Error("Country data-layer cards must keep readable dark text on white backgrounds");
-if (!czechMunicipalPage.includes('municipalities-czechia.js') || !internationalMunicipalScript.includes('CZE:"czechia"')) throw new Error("Municipality hub must link to the Czechia detail route");
+if (!czechMunicipalPage.includes('municipalities-czechia.js') || !internationalMunicipalScript.includes('CZE:"czechia"') || !internationalMunicipalScript.includes('DEU:"germany"') || !municipalityCountryScript.includes('profiles.DEU=') || !germanMunicipalProfilePage.includes('data/international-municipalities/DEU.v1.json')) throw new Error("Municipality hub must link to the Czechia and Germany detail routes");
 if (!homepage.includes('styles-v2.css?v=20260826-home-density') || !homepage.includes('homepage-v2.js?v=20260822-separate-pages') || !homepage.includes('global-nav.js?v=20260824-logo-120') || !homepage.includes('site-header.css?v=20260824-header-lockup')) throw new Error("Homepage assets must be cache-busted for the shared-header release");
 if (homepage.includes('id="compare"') || homepage.includes('id="method"') || !comparisonPage.includes('id="benchmark-overview"') || !comparisonPage.includes('id="benchmark-country"') || !homepageScript.includes("function benchmark")) throw new Error("Comparison and methodology must be separated from the homepage");
 if (globalNav.includes('code === "CZE"') || !globalNav.includes('assets/flags/${flag}.svg') || !countryScript.includes("czech-view-grid")) throw new Error("Country navigation must use shared profiles, SVG flags, and both Czech detail views");

@@ -31,7 +31,14 @@ const generatedProfileFamilies = [
   "/municipalities/finland/saarijarvi-729/",
 ];
 
-test("Brno and São Paulo use the same municipal profile hierarchy", async ({ page }) => {
+test("Brno keeps the full Czech budget template while sharing the municipal hierarchy", async ({ page }) => {
+  await page.goto("/cz/municipalities/brno/?lang=en");
+  await expect(page.locator("body")).toHaveClass(/cz-budget-page/);
+  await expect(page.locator(".municipal-profile-loading")).toHaveCount(0);
+  await expect(page.locator("#history-explorer")).toBeVisible();
+  await expect(page.locator("#rozpocet .plan-panel")).toBeVisible();
+  await expect(page.locator("#metodika.data-contract")).toBeVisible();
+
   for (const route of [
     "/cz/municipalities/brno/?lang=en",
     "/municipalities/brazil/sao-paulo-3550308/?lang=en",
