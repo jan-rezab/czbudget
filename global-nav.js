@@ -68,7 +68,7 @@
     ["DNK", "Dánsko", "Denmark", "dk", "denmark"], ["SLV", "Salvador", "El Salvador", "sv", "el-salvador"],
     ["GBR", "Anglie", "England", "gb", "england"], ["FIN", "Finsko", "Finland", "fi", "finland"],
     ["FRA", "Francie", "France", "fr", "france"], ["GEO", "Gruzie", "Georgia", "ge", "georgia"],
-    ["DEU", "Německo", "Germany", "de", ""], ["GTM", "Guatemala", "Guatemala", "gt", "guatemala"],
+    ["DEU", "Německo", "Germany", "de", "germany"], ["GTM", "Guatemala", "Guatemala", "gt", "guatemala"],
     ["ITA", "Itálie", "Italy", "it", "italy"], ["JPN", "Japonsko", "Japan", "jp", "japan"],
     ["MEX", "Mexiko", "Mexico", "mx", "mexico"], ["NLD", "Nizozemsko", "Netherlands", "nl", "netherlands"],
     ["NOR", "Norsko", "Norway", "no", "norway"], ["PER", "Peru", "Peru", "pe", "peru"],

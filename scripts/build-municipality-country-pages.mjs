@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 const origin="https://publicspendingdata.org";
 const pages={
+  germany:{code:"DEU",title:"German municipalities",description:"2025 adjusted receipts, payments and balances for all 10,756 German municipal core budgets."},
   poland:{code:"POL",title:"Polish municipalities",description:"Coverage, accounting stages and a searchable directory of all Polish gminas."},
   denmark:{code:"DNK",title:"Danish municipalities",description:"Budgets, final accounts and a searchable directory of all 98 Danish municipalities."},
   france:{code:"FRA",title:"French municipalities",description:"Coverage, accounting scope and a searchable directory of French communes."},
@@ -49,7 +50,7 @@ for(const [slug,page] of selectedPages){
   <link rel="stylesheet" href="../../chart-system.css?v=20260822-country-municipalities">
   <link rel="stylesheet" href="../../municipalities.css?v=20260823-layout-fix">
   <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260826-budget-structure">
-  <script src="../../municipalities-country.js?v=20260826-budget-structure" defer></script>
+  <script src="../../municipalities-country.js?v=20260827-germany-routes" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -75,5 +76,9 @@ for(const [slug,page] of selectedPages){
   await mkdir(new URL(`../municipalities/${slug}/`,import.meta.url),{recursive:true});
   await writeFile(new URL(`../municipalities/${slug}/index.html`,import.meta.url),html);
 }
+
+const germanProfile=`<!doctype html><html lang="cs"><head><script src="/language-bootstrap.js?v=20260822-no-language-flash"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>German municipal finances — Public Spending Data</title><meta name="description" content="Official 2025 municipal finance profile for a German municipality."><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://publicspendingdata.org/municipalities/germany/profile/"><link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/municipalities/germany/profile/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/municipalities/germany/profile/?lang=en"><meta property="og:type" content="website"><meta property="og:site_name" content="Public Spending Data"><meta property="og:title" content="German municipal finances — Public Spending Data"><meta property="og:description" content="Official 2025 municipal finance profile for a German municipality."><meta property="og:url" content="https://publicspendingdata.org/municipalities/germany/profile/"><meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"German municipal finances","description":"Official 2025 municipality-level adjusted receipts, payments and fiscal balance.","url":"https://publicspendingdata.org/municipalities/germany/profile/","inLanguage":"cs","spatialCoverage":{"@type":"Country","name":"Germany"},"distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"../../../data/international-municipalities/DEU.v1.json"}}</script><link rel="icon" href="../../../assets/favicon.svg"><link rel="stylesheet" href="../../../site-header.css?v=20260824-header-lockup" data-psd-site-header><link rel="stylesheet" href="../../../styles.css"><link rel="stylesheet" href="../../../chart-system.css"><link rel="stylesheet" href="../../../municipalities.css"><link rel="stylesheet" href="../../../municipal-benchmark-profile.css"><link rel="stylesheet" href="../../../municipal-expanded-profile.css?v=20260827-germany-summary"><link rel="stylesheet" href="../../../global-footer.css"><script src="../../../global-nav.js?v=20260824-logo-120" defer></script><script src="../../../municipal-expanded-profile.js?v=20260827-germany-summary" defer></script><script src="../../../global-footer.js" defer></script></head><body class="municipalities-page benchmark-profile expanded-profile" data-profile-url="../../../data/international-municipalities/DEU.v1.json" data-source="https://www.regionalstatistik.de/genesis/online?operation=table&amp;code=71717-Z-01"><psd-site-header data-section="cities"></psd-site-header><main><section class="municipal-profile-loading" aria-live="polite">Loading municipal profile…</section></main><footer data-global-footer></footer></body></html>`;
+await mkdir(new URL("../municipalities/germany/profile/",import.meta.url),{recursive:true});
+await writeFile(new URL("../municipalities/germany/profile/index.html",import.meta.url),germanProfile);
 
 console.log(`Built ${selectedPages.length} municipality country pages`);

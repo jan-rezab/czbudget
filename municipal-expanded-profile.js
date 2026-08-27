@@ -2,6 +2,7 @@
   const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "/";
   const profileUrl = document.body.dataset.profileUrl;
   const requested = new URLSearchParams(location.search).get("lang");
+  const requestedProfileCode = new URLSearchParams(location.search).get("code");
   let lang = requested === "cs" || requested === "en" ? requested : (document.documentElement.lang === "en" ? "en" : "cs");
   let profile;
   let detailQuery = "";
@@ -53,6 +54,7 @@
     CHL: { cs: "Chile", en: "Chile", slug: "chile" },
     NOR: { cs: "Norsko", en: "Norway", slug: "norway" }, NLD: { cs: "Nizozemsko", en: "Netherlands", slug: "netherlands" },
     FIN: { cs: "Finsko", en: "Finland", slug: "finland" },
+    DEU: { cs: "Německo", en: "Germany", slug: "germany" },
     CZE: { cs: "Česko", en: "Czechia", slug: "czechia", profileRoot: "cz/municipalities" },
   };
 
@@ -73,6 +75,24 @@
   };
 
   function adaptProfile(data, historyData = null) {
+    if (data.country?.code === "DEU" && data.defaults && Array.isArray(data.entities)) {
+      const entity = data.entities.find((row) => row.code === requestedProfileCode);
+      if (!entity) throw new Error(`Unknown German municipality ${requestedProfileCode || "(missing code)"}`);
+      const year = Number((entity.years || data.defaults.years || []).at(-1));
+      const revenue = numeric(entity.revenue);
+      const expenditure = numeric(entity.expenditure);
+      const balance = numeric(entity.balance) ?? (revenue !== null && expenditure !== null ? revenue - expenditure : null);
+      const latest = { year, revenue, expenditure, balance };
+      return {
+        country: "DEU", code: entity.code, name: entity.name, region: entity.region || null,
+        currency: entity.currency || data.defaults.currency || data.country.currency || "EUR",
+        years: [year], history: [latest], latest, summaryOnly: true,
+        detail: [
+          { year, stage: "actual", side: "revenue", code: "ADJUSTED_RECEIPTS", name: "Adjusted receipts excluding financing", amount: revenue },
+          { year, stage: "actual", side: "expenditure", code: "ADJUSTED_PAYMENTS", name: "Adjusted payments excluding financing", amount: expenditure },
+        ].filter((row) => row.amount !== null),
+      };
+    }
     if (data.entity) {
       const entity = data.entity;
       const amounts = entity.amounts || {};
@@ -265,7 +285,9 @@
     document.querySelector("#profile-detail-more")?.addEventListener("click", () => { detailShown += 160; renderDetailTable(); });
     document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => {
       lang = button.dataset.lang;
-      history.replaceState(null, "", `?lang=${lang}`);
+      const next = new URL(location.href);
+      next.searchParams.set("lang", lang);
+      history.replaceState(null, "", `${next.pathname}${next.search}${next.hash}`);
       render();
     }, { once: true }));
   }
@@ -289,6 +311,13 @@
     document.body.classList.add("cz-budget-page", "detail-page", "international-municipality-profile");
     document.title = fillTemplate(t.docTitle, { name: profile.name, country: country[lang] });
     document.querySelector('meta[name="description"]')?.setAttribute("content", fillTemplate(t.docDesc, { name: profile.name, country: country[lang] }));
+    const summaryCanonical = profile.summaryOnly ? `https://publicspendingdata.org/municipalities/germany/profile/?code=${encodeURIComponent(profile.code)}` : null;
+    if (summaryCanonical) {
+      document.querySelector('link[rel="canonical"]')?.setAttribute("href", summaryCanonical);
+      document.querySelector('link[rel="alternate"][hreflang="cs"]')?.setAttribute("href", `${summaryCanonical}&lang=cs`);
+      document.querySelector('link[rel="alternate"][hreflang="en"]')?.setAttribute("href", `${summaryCanonical}&lang=en`);
+      document.querySelector('meta[property="og:url"]')?.setAttribute("content", summaryCanonical);
+    }
     // The static Dataset block is emitted once at build time, so without this it kept
     // inLanguage "cs" alongside an English name whichever language the reader chose.
     const ldNode = document.querySelector('script[type="application/ld+json"]');
@@ -298,6 +327,10 @@
         ld.inLanguage = lang;
         ld.name = fillTemplate(t.docTitle, { name: profile.name, country: country[lang] }).replace(" — Public Spending Data", "");
         ld.description = fillTemplate(t.docDesc, { name: profile.name, country: country[lang] });
+        if (summaryCanonical) {
+          ld.url = summaryCanonical;
+          ld.spatialCoverage = { "@type": "AdministrativeArea", name: profile.name, addressCountry: country.en };
+        }
         ldNode.textContent = JSON.stringify(ld);
       } catch {}
     }
@@ -307,12 +340,15 @@
       button.setAttribute("aria-pressed", String(active));
     });
 
+    const nativeKicker = profile.summaryOnly ? (lang === "en" ? "Published detail" : "Publikovaný detail") : t.nativeKicker;
+    const nativeTitle = profile.summaryOnly ? (lang === "en" ? "National headline totals." : "Celostátní souhrnné hodnoty.") : t.nativeTitle;
+    const nativeCopy = profile.summaryOnly ? (lang === "en" ? "The national 2025 layer publishes adjusted receipts and payments excluding financing. No item-level city budget is inferred from these totals." : "Celostátní vrstva za rok 2025 publikuje očištěné příjmy a výdaje bez financování. Z těchto součtů nedopočítáváme položkový rozpočet města.") : t.nativeCopy;
     document.querySelector("main").innerHTML = `<nav class="breadcrumbs"><a href="${assetRoot}municipalities/?lang=${lang}">${t.municipalities}</a><span>›</span><a href="${assetRoot}${country.profileRoot || `municipalities/${country.slug}`}/?lang=${lang}">${escapeHtml(country[lang])}</a><span>›</span><strong>${escapeHtml(profile.name)}</strong></nav>
       <section class="detail-hero" id="overview"><div><span class="eyebrow"><i class="live-dot"></i>${escapeHtml(country[lang])} · ${t.official}</span><h1>${escapeHtml(profile.name)}</h1><p>${t.code} ${escapeHtml(profile.code)}${profile.region ? ` · ${escapeHtml(profile.region)}` : ""}. ${t.sourceCopy}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">${t.budget} ${latestYear} <b>↓</b></a><a href="#native-detail">${t.nativeKicker}</a><a href="${escapeHtml(profileUrl)}" download>${t.profileData}</a></div></div><aside class="detail-score"><span>${executionRate !== null ? t.executionRate : t.latest}</span><strong>${executionRate !== null ? percentage(executionRate) : latestYear || "—"}</strong><small>${executionRate !== null ? `${t.actual} / ${t.revised}` : escapeHtml(profile.currency)}</small></aside></section>
       <section class="detail-kpis">${[[t.revenue, latest.revenue, latestYear], [t.expenditure, latest.expenditure, latestYear], [t.balance, latest.balance, latestYear], fourthMetric].map(([label, value, note], index) => `<article><span>${label}</span><strong class="${index === 2 && numeric(value) !== null ? (Number(value) >= 0 ? "positive" : "negative") : ""}">${index === 3 && label === t.executionRate ? percentage(value) : money(value)}</strong><small>${numeric(value) !== null ? note : t.noValue}</small></article>`).join("")}</section>
       ${historyMarkup(history)}
       <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(profile.normalizedDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
-        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${t.nativeKicker}</span><h2>${t.nativeTitle}</h2></div><p>${t.nativeCopy}</p></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label><label><span>${t.side}</span><select id="profile-detail-side"><option value="all">${t.allSides}</option><option value="revenue"${detailSide === "revenue" ? " selected" : ""}>${t.revenue}</option><option value="expenditure"${detailSide === "expenditure" ? " selected" : ""}>${t.expenditure}</option></select></label><b id="profile-detail-count"></b></div><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></section>
+        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label><label><span>${t.side}</span><select id="profile-detail-side"><option value="all">${t.allSides}</option><option value="revenue"${detailSide === "revenue" ? " selected" : ""}>${t.revenue}</option><option value="expenditure"${detailSide === "expenditure" ? " selected" : ""}>${t.expenditure}</option></select></label><b id="profile-detail-count"></b></div><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></section>
       </section>
       <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a><a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();

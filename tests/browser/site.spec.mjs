@@ -395,6 +395,7 @@ test("international municipality directory filters by country, year and search",
   await expect(page.locator(".municipality-lang-switch button.active")).toHaveCSS("color", "rgb(250, 247, 239)");
   await expect(page.locator(".municipal-country-card footer").first()).toHaveCSS("margin-left", "0px");
   await expect(page.locator('.municipal-country-card[data-country="NOR"] footer a').first()).toHaveAttribute("href", /\/municipalities\/norway\/\?lang=en$/);
+  await expect(page.locator('.municipal-country-card[data-country="DEU"] footer a').first()).toHaveAttribute("href", /\/municipalities\/germany\/\?lang=en$/);
   await expect(page.locator("#total-entities")).not.toHaveText("—");
   await expect(page.locator("#municipal-benchmark-content .benchmark-kpis article")).toHaveCount(4);
   await expect(page.locator("#municipal-benchmark-content .benchmark-row")).toHaveCount(27);
@@ -422,7 +423,7 @@ test("international municipality directory filters by country, year and search",
 });
 
 test("every covered country homepage exists and the navigator connects them", async ({ page, request }) => {
-  const countries = ["bolivia", "brazil", "chile", "colombia", "costa-rica", "czechia", "denmark", "el-salvador", "england", "finland", "france", "georgia", "guatemala", "italy", "japan", "mexico", "netherlands", "norway", "peru", "poland", "south-korea", "spain", "sweden", "ukraine"];
+  const countries = ["bolivia", "brazil", "chile", "colombia", "costa-rica", "czechia", "denmark", "el-salvador", "england", "finland", "france", "georgia", "germany", "guatemala", "italy", "japan", "mexico", "netherlands", "norway", "peru", "poland", "south-korea", "spain", "sweden", "ukraine"];
   for (const slug of countries) {
     const response = await request.get(`/municipalities/${slug}/?lang=en`);
     expect(response.ok(), `${slug} municipality homepage failed`).toBeTruthy();
@@ -431,7 +432,7 @@ test("every covered country homepage exists and the navigator connects them", as
   await expect(page.locator("#country-title")).toContainText("Budgets of Danish municipalities");
   await expect(page.locator(".dynamic-country-picker")).toContainText("Choose a country");
   await expect(page.locator(".country-picker-readout")).toContainText("Denmark");
-  await expect(page.locator("#municipality-country-switch option")).toHaveCount(24);
+  await expect(page.locator("#municipality-country-switch option")).toHaveCount(25);
   await expect(page.locator("#country-insight-grid article")).toHaveCount(4);
   await expect(page.locator("#country-directory-count")).toContainText("98 entities");
   await page.locator("#country-municipality-search").fill("Copenhagen");
@@ -439,6 +440,24 @@ test("every covered country homepage exists and the navigator connects them", as
   await page.locator("#municipality-country-switch").selectOption("france");
   await expect(page).toHaveURL(/\/municipalities\/france\/\?lang=en/);
   await expect(page.locator("#country-title")).toContainText("Budgets of French municipalities");
+});
+
+test("German municipality directory opens the Bayreuth detail profile", async ({ page }) => {
+  await page.goto("/municipalities/germany/?lang=en", { waitUntil: "networkidle" });
+  await expect(page.locator("#country-title")).toContainText("Budgets of German municipalities");
+  await page.locator("#country-municipality-search").fill("Bayreuth");
+  const card = page.locator("#country-municipality-grid .municipality-card");
+  await expect(card).toHaveCount(1);
+  await expect(card).toContainText("Bayreuth");
+  await expect(card.locator("footer a").last()).toHaveAttribute("href", /\/municipalities\/germany\/profile\/\?code=F09462000000000&lang=en$/);
+  await card.locator("footer a").last().click();
+  await expect(page).toHaveURL(/\/municipalities\/germany\/profile\/\?code=F09462000000000&lang=en$/);
+  await expect(page.locator("h1")).toHaveText("Bayreuth");
+  await expect(page.locator(".detail-kpis article")).toHaveCount(4);
+  await expect(page.locator("#native-detail")).toContainText("National headline totals");
+  await page.locator('button[data-lang="cs"]').first().click();
+  await expect(page).toHaveURL(/code=F09462000000000.*lang=cs/);
+  await expect(page.locator("#native-detail")).toContainText("Celostátní souhrnné hodnoty");
 });
 
 test("country profiles expose sortable ten-year health, social and transport comparisons", async ({ page }) => {
@@ -664,9 +683,9 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/?lang=cs", { waitUntil:"networkidle" });
   await page.locator(".municipality-menu summary").click();
   await page.locator('.municipality-menu a[data-country-code="DEU"]').click();
-  await expect(page).toHaveURL(/\/municipalities\/\?lang=cs&country=DEU#directory/);
-  await expect(page.locator("#country-filter")).toHaveValue("DEU");
-  await expect(page.locator("#directory-count")).toContainText("10 756 jednotek");
+  await expect(page).toHaveURL(/\/municipalities\/germany\/\?lang=cs/);
+  await expect(page.locator("#country-title")).toContainText("Rozpočty německých obcí");
+  await expect(page.locator("#country-directory-count")).toContainText("10 756 jednotek");
   await page.goto("/?lang=cs", { waitUntil:"networkidle" });
   await page.locator(".municipality-menu summary").click();
   await municipalityMenu.locator(".country-menu-head a").click();
