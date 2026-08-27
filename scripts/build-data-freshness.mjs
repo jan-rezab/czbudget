@@ -22,6 +22,7 @@ const [
   migration,
   capitals,
   enterprises,
+  sovereignBenchmark,
 ] = await Promise.all([
   read("data/international-municipalities.v1.json"),
   read("data/country-parity.v1.json"),
@@ -40,11 +41,12 @@ const [
   read("data/eu-migration.v1.json"),
   read("data/eu-capital-budgets.v1.json"),
   read("data/state-owned-enterprises.v1.json"),
+  read("lib/data/sovereign-benchmark.v1.json"),
 ]);
 
 const modules = [
-  { id: "municipalities", family: "municipal", label_cs: "Obce", label_en: "Municipalities", order: 1 },
-  { id: "municipal_detail", family: "municipal", label_cs: "Položky obcí", label_en: "Municipal detail", order: 2 },
+  { id: "municipalities", family: "municipal", label_cs: "Obce · adresář a souhrny", label_en: "Municipalities · directory and headlines", order: 1 },
+  { id: "municipal_detail", family: "municipal", label_cs: "Obce · položkové rozpočty", label_en: "Municipalities · itemized budgets", order: 2 },
   { id: "municipal_structure", family: "municipal", label_cs: "Struktura obcí", label_en: "Municipal structure", order: 3 },
   { id: "national_budget", family: "country", label_cs: "Národní rozpočet", label_en: "National budget", order: 4 },
   { id: "sovereign", family: "country", label_cs: "Vládní finance", label_en: "Sovereign fiscal", order: 5 },
@@ -123,12 +125,21 @@ const generatedAt = (...values) => values.filter(Boolean).sort((a, b) => new Dat
 const freshnessBand = (latestYear, vintageType) => {
   if (vintageType === "plan") return "planned";
   if (vintageType === "projection") return "projection";
+  if (vintageType === "estimate" || vintageType === "actual_estimate") return latestYear >= currentYear - 1 ? "estimate_current" : "estimate_lag";
   if (vintageType === "register") return "live_register";
   if (vintageType === "mixed") return latestYear >= currentYear - 1 ? "mixed_current" : "mixed_lag";
   if (!latestYear) return "undated";
   if (latestYear >= currentYear - 1) return "current";
   if (latestYear === currentYear - 2) return "statistical_lag";
   return "older";
+};
+const headlineFiscalMetrics = ["revenue_pct_gdp", "expenditure_pct_gdp", "balance_pct_gdp"];
+const sovereignSeriesByCode = new Map(sovereignBenchmark.series.map((country) => [country.country_code, country]));
+const sovereignVintage = (code, year) => {
+  const series = sovereignSeriesByCode.get(code);
+  const statuses = new Set(headlineFiscalMetrics.map((metric) => series?.metrics?.[metric]?.values?.find((point) => point.year === year)?.status).filter(Boolean));
+  if (statuses.size === 1) return statuses.has("estimate") ? "estimate" : "actual";
+  return statuses.size > 1 ? "actual_estimate" : "actual";
 };
 const records = [];
 const addRecord = (record) => {
@@ -228,16 +239,19 @@ for (const country of nationalBudgets.countries) {
 
 for (const country of parity.countries) {
   const sovereign = country.modules.sovereign;
+  const vintageType = sovereignVintage(country.country_code, sovereign.period?.to);
   addRecord({
     country_code: country.country_code,
     module: "sovereign",
     first_year: sovereign.period?.from,
     latest_year: sovereign.period?.to,
-    coverage_cs: sovereign.coverage,
-    coverage_en: sovereign.coverage,
+    vintage_type: vintageType,
+    coverage_cs: `${sovereign.coverage}; stav zdroje pro příjmy, výdaje a saldo v posledním roce: ${vintageType === "estimate" ? "odhad" : vintageType === "actual_estimate" ? "skutečnost + odhad" : "skutečnost"}`,
+    coverage_en: `${sovereign.coverage}; source status for revenue, expenditure and balance in the latest year: ${vintageType === "estimate" ? "estimate" : vintageType === "actual_estimate" ? "actual + estimate" : "actual"}`,
     row_count: sovereign.metric_count,
     artifact: "lib/data/sovereign-benchmark.v1.json",
     artifact_generated_at: parity.generated_at,
+    source_url: sovereignBenchmark.source.download_page,
     view_url: `/country.html?code=${country.country_code}`,
   });
 }
@@ -425,7 +439,8 @@ const output = {
   definitions: {
     latest_year: "Latest fiscal, reporting or observation year represented by the published artifact; it is not the file-generation date.",
     generated_at: "When the derived web artifact was built.",
-    vintage_type: "actual, plan, projection, register or mixed; these vintages must not be ranked as if they were equivalent.",
+    vintage_type: "actual, estimate, actual_estimate, plan, projection, register or mixed; these vintages must not be ranked as if they were equivalent.",
+    estimate: "Estimate is the status carried by the source for the latest-year headline fiscal metrics; it is not relabelled as an actual observation.",
     statistical_lag: `An actual/statistical series ending in ${currentYear - 2}; a normal release lag for many international sources, not automatically stale.`,
   },
   totals: {
@@ -434,6 +449,9 @@ const output = {
     records: records.length,
     municipal_units: municipalities.countries.reduce((sum, country) => sum + (Number(country.directory_count) || 0), 0),
     municipality_rows: municipalities.entities.length,
+    municipal_country_coverage: municipalities.countries.length,
+    itemized_municipal_country_coverage: itemized.countries.length,
+    itemized_municipal_profiles: itemized.countries.reduce((sum, country) => sum + (Number(country.profile_count) || 0), 0),
   },
   modules,
   countries: [...countries.values()].filter((country) => publishedCountries.includes(country.code)).sort((a, b) => a.name_en.localeCompare(b.name_en)),

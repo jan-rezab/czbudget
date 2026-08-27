@@ -23,10 +23,22 @@
     <link rel="stylesheet" href="municipal-transparency.css?v=20260826-transparency-index" />
     <link rel="stylesheet" href="data-freshness.css?v=20260827-cross-layer" />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
+    <style>
+      .data-health-kpis { grid-template-columns: repeat(5, 1fr); }
+      .data-health-fail { color: #9c2f24; }
+      .method-status-not_loaded { background: #ececeb; color: #4f5350; }
+      .method-source-availability { display: block; margin-top: .45rem; color: #5b5e5a; }
+      .coverage-legend i.not-researched { background: #fff; border: 1px dashed #92958f; }
+      .coverage-status-not-researched, .coverage-status-not_loaded { background: #f7f7f5; color: #595c58; }
+      .freshness-estimate_current, .freshness-estimate_lag { border-left-color: #d89226; background: #f8ead3; }
+      .freshness-pill.freshness-estimate_current, .freshness-pill.freshness-estimate_lag { border-color: #d89226; background: #f8ead3; }
+      @media (max-width: 900px) { .data-health-kpis { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 560px) { .data-health-kpis { grid-template-columns: 1fr; } }
+    </style>
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
-    <script src="site-pages.js?v=20260826-itemized-lineage" defer></script>
+    <script src="site-pages.js?v=20260827-methodology-levels" defer></script>
     <script src="municipal-transparency.js?v=20260826-transparency-index" defer></script>
-    <script src="data-freshness.js?v=20260827-cross-layer" defer></script>
+    <script src="data-freshness.js?v=20260827-methodology-levels" defer></script>
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -44,7 +56,7 @@
           <p data-status-copy="pageIntro">Pokrytí podle země, období a primárního zdroje.</p>
         </div>
         <a class="status-volume" href="data/data-quality-report.v1.json" target="_blank" rel="noreferrer">
-          <span data-status-copy="publishedData">Publikovaných datových záznamů</span>
+          <span data-status-copy="publishedData">Počítané adresářové a profilové záznamy</span>
           <strong id="status-data-total">—</strong>
         </a>
       </header>
@@ -57,7 +69,7 @@
       </section>
       <section id="data-freshness" class="freshness-overview" aria-labelledby="data-freshness-title">
         <header class="freshness-head">
-          <div><span class="kicker" data-freshness-copy="eyebrow">Data · 44 zemí · 15 vrstev</span><h2 id="data-freshness-title" data-freshness-copy="title">Jak čerstvá jsou data napříč celým webem?</h2></div>
+          <div><span class="kicker" data-freshness-copy="eyebrow">Data · 191 zemí · 15 vrstev</span><h2 id="data-freshness-title" data-freshness-copy="title">Jak čerstvá jsou data napříč celým webem?</h2></div>
           <p data-freshness-copy="method">Rok v buňce je nejnovější fiskální, vykazované nebo pozorované období. Datum sestavení souboru je samostatné; plán, skutečnost a projekce nejsou zaměnitelné.</p>
         </header>
         <div id="freshness-root">
@@ -69,7 +81,7 @@
             <label><span data-freshness-copy="search">Hledat</span><input id="freshness-search" type="search" /></label>
             <button id="freshness-reset" type="button" data-freshness-copy="reset">Vymazat</button>
           </div>
-          <div class="freshness-subhead"><h3 data-freshness-copy="matrix">Srovnávací matice</h3><p>● actual · ■ plan · ▨ projection</p></div>
+          <div class="freshness-subhead"><h3 data-freshness-copy="matrix">Srovnávací matice</h3><p>● actual · △ estimate · ■ plan · ▨ projection</p></div>
           <div class="freshness-matrix-wrap" tabindex="0" aria-label="Country by data-layer freshness matrix"><table id="freshness-matrix" class="freshness-matrix"></table></div>
           <section id="freshness-selection" class="freshness-selection" aria-live="polite"><p>Vyberte buňku pro detail vrstvy.</p></section>
           <div class="freshness-subhead"><h3 data-freshness-copy="detailTable">Podrobný registr</h3><p id="freshness-summary"></p></div>
@@ -82,12 +94,13 @@
           <h2 id="coverage-overview-title" data-status-copy="coverageTitle">Pokrytí podle země</h2>
           <span data-status-copy="coverageHint">Kliknutím na buňku zobrazíte zdroje</span>
         </header>
-        <p class="coverage-contract" data-status-copy="coverageContract">Tabulka odděluje publikovaná data PSD od dat, která existují u oficiálního zdroje, ale ještě nejsou načtená. Stav „nenalezeno“ znamená pouze výsledek zdokumentovaného průzkumu, nikoli důkaz neexistence.</p>
+        <p class="coverage-contract" data-status-copy="coverageContract">Tabulka odděluje obecní adresář a souhrnné finance od položkových rozpočtů. Pokrytí země na obecní úrovni samo o sobě neznamená, že PSD publikuje její položkové rozpočty. Stav „nenalezeno“ znamená pouze výsledek zdokumentovaného průzkumu, nikoli důkaz neexistence.</p>
         <div class="coverage-legend" aria-label="Coverage status legend">
           <span><i class="loaded"></i><b data-status-copy="legendLoaded">Načteno v PSD</b></span>
           <span><i class="available"></i><b data-status-copy="legendAvailable">Zdroj existuje · nenačteno</b></span>
           <span><i class="fragmented"></i><b data-status-copy="legendFragmented">Existuje · roztříštěné / nesrovnatelné</b></span>
           <span><i class="not-found"></i><b data-status-copy="legendNotFound">V průzkumu nenalezeno</b></span>
+          <span><i class="not-researched"></i><b data-status-copy="legendNotResearched">Neprověřeno</b></span>
         </div>
         <div class="coverage-matrix-wrap" tabindex="0" aria-label="Country data coverage table">
           <table class="coverage-matrix">
@@ -120,7 +133,7 @@
         <summary data-status-copy="definitions">Definice</summary>
         <dl>
           <div><dt data-status-copy="defFiscal">Fiskální historie země</dt><dd data-status-copy="defFiscalValue">Harmonizované řady sektoru vládních institucí.</dd></div>
-          <div><dt data-status-copy="defMunicipal">Obce</dt><dd data-status-copy="defMunicipalValue">Počet jednotek v rozsahu obecního zdroje; agregát není vydáván za jednotlivé obce.</dd></div>
+          <div><dt data-status-copy="defMunicipal">Obce · adresář a souhrnné finance</dt><dd data-status-copy="defMunicipalValue">Počet jednotek v rozsahu obecního zdroje a dostupnost základních souhrnů. Tato úroveň neznamená položkové rozpočtové pokrytí.</dd></div>
           <div><dt data-status-copy="defItemized">Položkové rozpočty obcí</dt><dd data-status-copy="defItemizedValue">Počet obecních profilů s ekonomickými, funkčními nebo původními účetními položkami; souhrnné částky se nepočítají.</dd></div>
           <div><dt data-status-copy="defTransport">Doprava</dt><dd data-status-copy="defTransportValue">Roky výkonových řad / roky funkčních výdajů COFOG 04.5.</dd></div>
           <div><dt data-status-copy="defMissing">Chybějící data</dt><dd data-status-copy="defMissingValue">Pomlčka bez barevného stavu znamená, že vrstva není v PSD a dostupnost zdroje zatím nebyla ověřena; nejde o nulu.</dd></div>
@@ -129,7 +142,7 @@
       </details>
       <section class="method-ledger" aria-labelledby="method-ledger-title">
         <header class="section-bar method-ledger-head">
-          <h2 id="method-ledger-title" data-status-copy="ledgerTitle">Registr zdrojů</h2>
+          <h2 id="method-ledger-title" data-status-copy="ledgerTitle">Registr pokrytí a zdrojů</h2>
           <a class="method-ledger-json" href="data/methodology-sources.v1.json" download data-status-copy="ledgerJson">JSON ↓</a>
         </header>
         <div class="method-ledger-controls" aria-label="Methodology table filters">

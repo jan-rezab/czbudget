@@ -3,12 +3,12 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 const read = async path => JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"));
-const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, municipalHistory, publicEntityCoverage, publicEntityDirectory, publicEntityAggregates, demography, itemizedCoverage, internationalWarehouse, municipalSourceConfig] = await Promise.all([
+const [parity, sovereign, cashIn, administrative, comparison, functions, transport, health, providers, municipalities, municipalHistory, publicEntityCoverage, publicEntityDirectory, publicEntityAggregates, demography, itemizedCoverage, internationalWarehouse, municipalSourceConfig, coverageResearch] = await Promise.all([
   read("data/country-parity.v1.json"), read("lib/data/sovereign-benchmark.v1.json"), read("data/country-cash-in.v1.json"),
   read("data/country-spending-2025-2026.v1.json"), read("data/country-spending-comparison.v1.json"), read("data/country-functional-budgets.v1.json"),
   read("data/transport-budget-detail.v1.json"), read("data/country-health.v1.json"), read("data/country-provider-networks.v1.json"),
   read("data/international-municipalities.v1.json"), read("data/municipal-history-directory.v1.json"), read("data/public-entity-coverage.v1.json"), read("data/public-entity-directory/manifest.v1.json"), read("data/public-entity-aggregates.v1.json"), read("data/country-demography.v1.json"),
-  read("data/municipal-itemized-coverage.v1.json"), read("data/international-itemized-warehouse.v1.json"), read("pipeline/config/international_municipal_sources.json")
+  read("data/municipal-itemized-coverage.v1.json"), read("data/international-itemized-warehouse.v1.json"), read("pipeline/config/international_municipal_sources.json"), read("data/coverage-source-research.v1.json")
 ]);
 
 const moduleMeta = {
@@ -20,8 +20,8 @@ const moduleMeta = {
   transport:{order:6,cs:"Doprava",en:"Transport",artifact:"data/transport-budget-detail.v1.json"},
   health:{order:7,cs:"Zdravotnictví",en:"Healthcare",artifact:"data/country-health.v1.json"},
   providers:{order:8,cs:"Síť poskytovatelů",en:"Provider network",artifact:"data/country-provider-networks.v1.json"},
-  municipalities:{order:9,cs:"Obecní finance",en:"Municipal finance",artifact:"data/international-municipalities.v1.json"},
-  municipal_itemized:{order:10,cs:"Položkové rozpočty obcí",en:"Itemized municipal budgets",artifact:"data/municipal-itemized-coverage.v1.json"},
+  municipalities:{order:9,cs:"Obce · adresář a souhrnné finance",en:"Municipalities · directory and headline finance",artifact:"data/international-municipalities.v1.json"},
+  municipal_itemized:{order:10,cs:"Obce · položkové rozpočty",en:"Municipalities · itemized budgets",artifact:"data/municipal-itemized-coverage.v1.json"},
   public_entities:{order:11,cs:"Veřejné subjekty",en:"Public entities",artifact:"data/public-entity-coverage.v1.json"},
   demography:{order:12,cs:"Demografie",en:"Demography",artifact:"data/country-demography.v1.json"}
 };
@@ -31,6 +31,11 @@ const cleanSources = values => values.filter(Boolean).filter((item,index,array)=
 const adminByCode = code => administrative.countries.find(country=>country.code===code);
 const municipalByCode = code => municipalities.countries.find(country=>country.code===code);
 const transportByCode = code => transport.countries[code];
+const availabilityCategory = {sovereign:"fiscal",health:"health",demography:"geo",municipalities:"municipalities",transport:"transport",municipal_itemized:"budgetDetail"};
+const sourceAvailability = (code,module,loaded) => {
+  if(loaded)return "loaded";
+  return coverageResearch.countries?.[code]?.[availabilityCategory[module]]?.status||"not_researched";
+};
 
 function lineage(code,module,moduleCoverage) {
   const admin=adminByCode(code), healthProfile=health.countries[code], provider=providers.countries[code], municipal=municipalByCode(code), entity=publicEntityCoverage.countries[code], entityDirectory=publicEntityDirectory.countries.find(item=>item.country_code===code), entityAggregates=publicEntityAggregates.observations.filter(item=>item.country_code===code), demographic=demography.countries[code], transportProfile=transportByCode(code);
@@ -43,7 +48,7 @@ function lineage(code,module,moduleCoverage) {
     (module==="public_entities" && (!entity || !entityDirectory));
   if (unavailable) {
     const fallback=admin?.sources?.[0];
-    return {period:"Not loaded",scope:"Explicit coverage gap",sources:fallback?[source(fallback.title,fallback.url,"coverage registry; no module-specific extraction")]:[source("PSD country parity contract",`https://publicspendingdata.org/data/countries/${code.toLowerCase()}/profile.v1.json`,"module status and explicit missing dimensions")],transform:"No transformation: the module is not published for this country.",caveat:"Not loaded; no values are inferred from another accounting perimeter."};
+    return {period:"Not loaded by PSD",scope:"PSD publication gap; source availability is tracked separately",sources:fallback?[source(fallback.title,fallback.url,"coverage registry; no module-specific extraction")]:[source("PSD country parity contract",`https://publicspendingdata.org/data/countries/${code.toLowerCase()}/profile.v1.json`,"module status and explicit missing dimensions")],transform:"No transformation: PSD has not loaded this module for the country.",caveat:"Not loaded by PSD; this row does not claim that an official source is unavailable, and no values are inferred from another accounting perimeter."};
   }
   if(module==="sovereign") return {
     period:parity.countries.find(c=>c.country_code===code).modules.sovereign.coverage,
@@ -120,10 +125,11 @@ function lineage(code,module,moduleCoverage) {
 const rows=[];
 for(const country of parity.countries) for(const [module,moduleCoverage] of Object.entries(country.modules)) {
   const detail=lineage(country.country_code,module,moduleCoverage), missing=moduleCoverage.missing_dimensions||[];
-  const status=moduleCoverage.status==="unavailable"?"unavailable":moduleCoverage.coverage_level==="aggregate_only"?"aggregate":missing.length?"partial":"full";
+  const status=moduleCoverage.status==="unavailable"?"not_loaded":moduleCoverage.coverage_level==="aggregate_only"?"aggregate":missing.length?"partial":"full";
+  const loaded=status!=="not_loaded";
   rows.push({
     country_code:country.country_code,country_name_cs:country.name_cs,country_name_en:country.name_en,flag:country.iso2?.toUpperCase()||alpha2[country.country_code],
-    module,module_order:moduleMeta[module].order,module_label_cs:moduleMeta[module].cs,module_label_en:moduleMeta[module].en,status,
+    module,module_order:moduleMeta[module].order,module_label_cs:moduleMeta[module].cs,module_label_en:moduleMeta[module].en,status,source_availability:sourceAvailability(country.country_code,module,loaded),
     artifact:detail.artifact||moduleMeta[module].artifact,coverage:moduleCoverage.coverage,period:detail.period,scope:detail.scope,sources:detail.sources,
     exact_extraction:detail.sources.map(item=>item.location).filter(Boolean).join(" · "),transformation:detail.transform,
     limitations:[...new Set([...missing,detail.caveat].filter(Boolean))].join(" · ")
@@ -139,7 +145,7 @@ for(const municipal of municipalities.countries.filter(country=>!parityCodes.has
   rows.push({
     country_code:municipal.code,country_name_cs:municipal.name_cs,country_name_en:municipal.name_en,flag:alpha2[municipal.code],
     module:"municipalities",module_order:moduleMeta.municipalities.order,module_label_cs:moduleMeta.municipalities.cs,module_label_en:moduleMeta.municipalities.en,
-    status:municipal.status==="aggregate_only"?"aggregate":municipal.status==="complete"?"full":"partial",
+    status:municipal.status==="aggregate_only"?"aggregate":municipal.status==="complete"?"full":"partial",source_availability:"loaded",
     artifact:detail.artifact||moduleMeta.municipalities.artifact,coverage:municipal.coverage_en,period:detail.period,scope:detail.scope,sources:detail.sources,
     exact_extraction:detail.sources.map(item=>item.location).filter(Boolean).join(" · "),transformation:detail.transform,limitations:detail.caveat
   });
@@ -166,7 +172,7 @@ for(const itemized of itemizedCoverage.countries){
   rows.push({
     country_code:itemized.code,country_name_cs:municipal.name_cs,country_name_en:municipal.name_en,flag:alpha2[itemized.code],
     module:"municipal_itemized",module_order:moduleMeta.municipal_itemized.order,module_label_cs:moduleMeta.municipal_itemized.cs,module_label_en:moduleMeta.municipal_itemized.en,
-    status:itemized.status,
+    status:itemized.status,source_availability:"loaded",
     artifact:warehouse?"data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts":"data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
     coverage:`${itemized.profile_count.toLocaleString("en-US")} of ${itemized.municipal_scope.toLocaleString("en-US")} municipal profiles; ${itemized.detail_kind_en}`,
     period:itemized.period,scope:`Stages: ${stages}. ${factCounts}.`,sources,
@@ -183,7 +189,8 @@ const payload={
   schema_version:"1.0.0",contract:"methodology-sources.v1",generated_at:new Date().toISOString(),row_count:rows.length,
   countries:[...new Map([...parity.countries.map(country=>({code:country.country_code,name_cs:country.name_cs,name_en:country.name_en})),...municipalities.countries.map(country=>({code:country.code,name_cs:country.name_cs,name_en:country.name_en}))].map(country=>[country.code,country])).values()],
   modules:Object.entries(moduleMeta).map(([id,value])=>({id,label_cs:value.cs,label_en:value.en,order:value.order})),
-  status_definitions:{full:"Source-backed layer with no missing dimensions recorded in the parity contract.",partial:"Source-backed layer with one or more disclosed missing dimensions.",aggregate:"Official aggregate layer without entity-level facts.",unavailable:"The layer is not published for this country; no value is inferred."},
+  status_definitions:{full:"Loaded by PSD with no missing dimensions recorded in the parity contract.",partial:"Loaded by PSD with one or more disclosed missing dimensions.",aggregate:"Loaded official aggregate without entity-level facts.",not_loaded:"PSD has not loaded this layer; this is not a claim that the country does not publish it."},
+  source_availability_definitions:{loaded:"A source-backed PSD artifact is published.",source_available:"An official source exists but PSD has not loaded it.",fragmented:"Official material exists but requires harmonisation or uses a non-comparable perimeter.",not_found:"A documented review did not locate a suitable source; this is not proof of non-publication.",not_researched:"Source availability has not been assessed."},
   rows
 };
 

@@ -135,12 +135,14 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".status-header")).toContainText("Data status");
-  await expect(page.locator(".status-volume")).toContainText("Published data entries");
+  await expect(page.locator(".status-volume")).toContainText("Counted directory and profile records");
   await expect(page.locator("#status-data-total")).toContainText("387,346");
-  await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(4);
+  await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(5);
   await expect(page.locator("#data-health-root")).toContainText("Checks passed");
   await expect(page.locator("#data-health-root")).toContainText("107,703");
-  await expect(page.locator("#data-health-root")).toContainText("27 countries");
+  await expect(page.locator("#data-health-root")).toContainText("Municipalities · directory / headlines");
+  await expect(page.locator("#data-health-root")).toContainText("Municipalities · itemized budgets");
+  await expect(page.locator("#data-health-root")).toContainText("60,544 profiles");
   await expect(page.locator("#data-health-root")).toContainText("66");
   await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(191);
   await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(1337);
@@ -151,13 +153,14 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator('[data-coverage-country="NLD"][data-coverage-node="budgetDetail"]')).toContainText("342");
   await expect(page.locator('[data-coverage-country="USA"][data-coverage-node="budgetDetail"]')).toContainText("4");
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="budgetDetail"]')).toContainText("1");
+  await expect(page.locator('[data-coverage-country="GBR"][data-coverage-node="budgetDetail"]')).toHaveClass(/coverage-status-partial/);
   await page.locator('[data-coverage-country="SWE"][data-coverage-node="municipalities"]').click();
-  await expect(page.locator("#coverage-selection-title")).toContainText("Sweden · Municipal entities");
+  await expect(page.locator("#coverage-selection-title")).toContainText("Sweden · Municipalities · directory / headlines");
   await expect(page.locator("#coverage-source-list article")).toHaveCount(1);
   await expect(page.locator("#method-source-rows tr")).toHaveCount(1);
   await expect(page.locator("#method-country-filter")).toHaveValue("SWE");
   await page.locator('[data-coverage-country="DEU"][data-coverage-node="budgetDetail"]').click();
-  await expect(page.locator("#coverage-selection-title")).toContainText("Germany · Itemized municipal budgets");
+  await expect(page.locator("#coverage-selection-title")).toContainText("Germany · Municipalities · itemized budgets");
   await expect(page.locator("#coverage-source-list")).toContainText("Bremen Transparency Portal");
   await expect(page.locator("#method-source-rows tr")).toHaveCount(1);
   await expect(page.locator("#method-source-rows tr")).toContainText("4,861 line facts");
