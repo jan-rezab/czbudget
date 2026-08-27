@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <script src="../../../language-bootstrap.js?v=20260822-no-language-flash"></script>
+  <link rel="stylesheet" href="../../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="../../../global-nav.js?v=20260824-logo-120" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kdo řídí a financuje kraje — Public Spending Data</title>
+  <meta name="description" content="Auditovatelná mapa českých krajů: kdo rozhoduje, financuje, vlastní, poskytuje a kontroluje veřejné služby.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://publicspendingdata.org/cz/kraje/accountability/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/cz/kraje/accountability/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/cz/kraje/accountability/?lang=en">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Public Spending Data">
+  <meta property="og:title" content="Kdo řídí a financuje kraje — Public Spending Data">
+  <meta property="og:description" content="Kdo rozhoduje, kdo platí, kdo službu poskytuje a komu se zodpovídá.">
+  <meta property="og:url" content="https://publicspendingdata.org/cz/kraje/accountability/">
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
+  <link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../../styles.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../../cz-budget.css">
+  <link rel="stylesheet" href="../../../accountability.css?v=20260827-accountability-v1">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Czech regional government accountability","description":"Government tiers, responsibility assignments, revenue authority, accountability mechanisms and 2025 regional budget summaries.","url":"https://publicspendingdata.org/cz/kraje/accountability/","inLanguage":["cs","en"],"temporalCoverage":"2025","spatialCoverage":{"@type":"Country","name":"Czechia"},"creator":{"@type":"Organization","name":"Public Spending Data"},"distribution":{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://publicspendingdata.org/data/accountability/cze-regions.v1.json"}}</script>
+</head>
+<body class="cz-budget-page accountability-page">
+<psd-site-header data-section="cities"></psd-site-header>
+<main id="top">
+  <nav class="breadcrumbs" aria-label="Drobečková navigace"><a href="../../../index.html" data-cs="Domů" data-en="Home">Domů</a><span>›</span><a href="../" data-cs="Kraje" data-en="Regions">Kraje</a><span>›</span><strong data-cs="Odpovědnost" data-en="Accountability">Odpovědnost</strong></nav>
+
+  <section class="accountability-hero" id="overview">
+    <div class="accountability-hero-copy">
+      <span class="eyebrow" data-cs="ČESKO · KRAJSKÁ SAMOSPRÁVA · 2025" data-en="CZECHIA · REGIONAL GOVERNMENT · 2025">ČESKO · KRAJSKÁ SAMOSPRÁVA · 2025</span>
+      <h1><span data-cs="Kdo rozhoduje." data-en="Who decides.">Kdo rozhoduje.</span><br><span data-cs="Kdo platí." data-en="Who pays.">Kdo platí.</span><br><em data-cs="Kdo odpovídá." data-en="Who answers.">Kdo odpovídá.</em></h1>
+      <p data-cs="Rozpočet ukazuje částky. Tato vrstva ukazuje instituci za nimi: kdo stanoví pravidla, vybírá a rozděluje peníze, vlastní službu, objednává ji, poskytuje a kontroluje." data-en="A budget shows amounts. This layer shows the institution behind them: who sets rules, collects and allocates money, owns a service, commissions it, delivers it and audits it.">Rozpočet ukazuje částky. Tato vrstva ukazuje instituci za nimi: kdo stanoví pravidla, vybírá a rozděluje peníze, vlastní službu, objednává ji, poskytuje a kontroluje.</p>
+      <div class="accountability-actions"><a class="primary-button" href="#roles" data-cs="Prozkoumat odpovědnost ↓" data-en="Explore accountability ↓">Prozkoumat odpovědnost ↓</a><a href="../../../data/accountability/cze-regions.v1.json" download data-cs="Stáhnout datový kontrakt JSON" data-en="Download the JSON contract">Stáhnout datový kontrakt JSON</a></div>
+    </div>
+    <aside class="accountability-verdict">
+      <span data-cs="Základní pravidlo" data-en="Core rule">Základní pravidlo</span>
+      <strong data-cs="Kraj ≠ součet obcí" data-en="Region ≠ sum of municipalities">Kraj ≠ součet obcí</strong>
+      <p data-cs="Kraj a obec jsou samostatné právní a účetní jednotky. Geografický vztah není rozpočtové podřízení." data-en="A region and a municipality are separate legal and accounting entities. Geographic containment is not budget subordination.">Kraj a obec jsou samostatné právní a účetní jednotky. Geografický vztah není rozpočtové podřízení.</p>
+    </aside>
+  </section>
+
+  <section class="accountability-kpis" aria-label="Coverage">
+    <article><span data-cs="Krajské role" data-en="Regional roles">Krajské role</span><strong id="coverage-entities">14 / 14</strong><small data-cs="souhrnné rozpočty načteny" data-en="summary budgets loaded">souhrnné rozpočty načteny</small></article>
+    <article><span data-cs="Veřejné funkce" data-en="Public functions">Veřejné funkce</span><strong id="coverage-functions">10</strong><small data-cs="institucionálně zmapováno" data-en="institutionally mapped">institucionálně zmapováno</small></article>
+    <article><span data-cs="Atomické role" data-en="Atomic roles">Atomické role</span><strong id="coverage-assignments">93</strong><small data-cs="rozhoduje · platí · poskytuje · kontroluje" data-en="decides · pays · delivers · audits">rozhoduje · platí · poskytuje · kontroluje</small></article>
+    <article><span data-cs="Integrita" data-en="Integrity">Integrita</span><strong id="coverage-integrity">—</strong><small data-cs="kontroly kontraktu" data-en="contract checks">kontroly kontraktu</small></article>
+  </section>
+
+  <section class="institution-map" id="structure">
+    <div class="section-intro"><div><span class="kicker" data-cs="01 / Institucionální mapa" data-en="01 / Institutional map">01 / Institucionální mapa</span><h2 data-cs="Uvnitř území.<br>Ne uvnitř rozpočtu." data-en="Inside the territory.<br>Not inside the budget.">Uvnitř území.<br>Ne uvnitř rozpočtu.</h2></div><p data-cs="Stát vytváří zákonný rámec a posílá sdílené daně a transfery. Kraj i obec mají vlastní volené orgány a vlastní rozpočet. Jen u přenesené státní správy existuje správní dohled." data-en="The state creates the legal framework and sends shared taxes and transfers. Regions and municipalities each have elected bodies and their own budgets. Administrative hierarchy applies only to delegated state administration.">Stát vytváří zákonný rámec a posílá sdílené daně a transfery. Kraj i obec mají vlastní volené orgány a vlastní rozpočet. Jen u přenesené státní správy existuje správní dohled.</p></div>
+    <div class="government-map" aria-label="Government relationships">
+      <article class="government-node central-node"><span>00</span><h3 data-cs="Ústřední stát" data-en="Central government">Ústřední stát</h3><p data-cs="Zákony · sazby sdílených daní · celostátní pravidla · účelové transfery" data-en="Laws · shared-tax rates · national rules · earmarked transfers">Zákony · sazby sdílených daní · celostátní pravidla · účelové transfery</p></article>
+      <div class="government-flow"><b>↓</b><span data-cs="právo · sdílené daně · transfery" data-en="law · shared taxes · transfers">právo · sdílené daně · transfery</span></div>
+      <div class="parallel-governments">
+        <article class="government-node region-node"><span>01A</span><h3 data-cs="Kraj" data-en="Region">Kraj</h3><p data-cs="Vlastní zastupitelstvo · rozpočet · majetek · veřejné služby" data-en="Own assembly · budget · assets · public services">Vlastní zastupitelstvo · rozpočet · majetek · veřejné služby</p></article>
+        <div class="not-parent"><strong>≠</strong><span data-cs="rozpočtový rodič" data-en="budget parent">rozpočtový rodič</span></div>
+        <article class="government-node municipal-node"><span>01B</span><h3 data-cs="Obec" data-en="Municipality">Obec</h3><p data-cs="Vlastní zastupitelstvo · rozpočet · majetek · místní služby" data-en="Own council · budget · assets · local services">Vlastní zastupitelstvo · rozpočet · majetek · místní služby</p></article>
+      </div>
+      <p class="map-note" data-cs="Praha je zvláštní: jedna účetní jednotka plní obecní i krajskou roli. V konsolidovaném součtu smí být jen jednou." data-en="Prague is special: one accounting entity performs both municipal and regional roles. It may appear only once in a consolidated total.">Praha je zvláštní: jedna účetní jednotka plní obecní i krajskou roli. V konsolidovaném součtu smí být jen jednou.</p>
+    </div>
+  </section>
+
+  <section class="funding-explorer" id="funding">
+    <div class="section-intro"><div><span class="kicker" data-cs="02 / Kdo financuje kraj" data-en="02 / Who funds a region">02 / Kdo financuje kraj</span><h2 data-cs="Účetní příjem<br>není daňová autonomie." data-en="Accounting revenue<br>is not tax autonomy.">Účetní příjem<br>není daňová autonomie.</h2></div><p data-cs="Daňové příjmy krajů jsou převážně podílem na celostátně stanovených a vybraných daních. Kraj je může použít, ale neurčuje jejich obecnou sazbu." data-en="Regional tax revenue is predominantly a share of taxes set and collected nationally. A region can spend the allocation, but it does not set the general tax rates.">Daňové příjmy krajů jsou převážně podílem na celostátně stanovených a vybraných daních. Kraj je může použít, ale neurčuje jejich obecnou sazbu.</p></div>
+    <div class="funding-controls"><label><span data-cs="Zobrazit kraj" data-en="Show region">Zobrazit kraj</span><select id="region-select"></select></label><div><span data-cs="Rozsah" data-en="Scope">Rozsah</span><strong data-cs="Samostatná účetní jednotka · skutečnost 2025" data-en="Separate accounting entity · 2025 actual">Samostatná účetní jednotka · skutečnost 2025</strong></div></div>
+    <div class="funding-grid">
+      <article class="funding-composition"><header><div><span id="funding-entity-type">Kraj</span><h3 id="funding-entity-name">—</h3></div><strong id="funding-total">—</strong></header><div id="funding-bars"></div></article>
+      <aside class="autonomy-card"><span data-cs="Co kraj skutečně ovládá" data-en="What the region actually controls">Co kraj skutečně ovládá</span><strong data-cs="Sazby hlavních sdílených daní: ne" data-en="Main shared-tax rates: no">Sazby hlavních sdílených daní: ne</strong><dl><div><dt data-cs="Schvaluje vlastní rozpočet" data-en="Approves own budget">Schvaluje vlastní rozpočet</dt><dd data-cs="Ano" data-en="Yes">Ano</dd></div><div><dt data-cs="Rozhoduje o použití sdílených daní" data-en="Decides use of shared taxes">Rozhoduje o použití sdílených daní</dt><dd data-cs="Převážně ano" data-en="Largely yes">Převážně ano</dd></div><div><dt data-cs="Účelové transfery" data-en="Earmarked transfers">Účelové transfery</dt><dd data-cs="Omezené pravidly programu" data-en="Restricted by programme rules">Omezené pravidly programu</dd></div><div><dt data-cs="Půjčuje si" data-en="Can borrow">Půjčuje si</dt><dd data-cs="Ano, podle obecných zákonů" data-en="Yes, under general law">Ano, podle obecných zákonů</dd></div></dl><p id="autonomy-proxy">—</p></aside>
+    </div>
+    <div class="funding-instruments" id="funding-instruments"></div>
+  </section>
+
+  <section class="role-explorer" id="roles">
+    <div class="section-intro"><div><span class="kicker" data-cs="03 / Matice odpovědnosti" data-en="03 / Responsibility matrix">03 / Matice odpovědnosti</span><h2 data-cs="Jedna služba.<br>Více odpovědných aktérů." data-en="One service.<br>Several accountable actors.">Jedna služba.<br>Více odpovědných aktérů.</h2></div><p data-cs="Vyberte službu. Role jsou oddělené, aby vlastnictví nemocnice nebylo zaměněno za financování péče a financování školy za její zřizování." data-en="Choose a service. Roles are separated so hospital ownership is not confused with financing care, and school funding is not confused with founding or operating a school.">Vyberte službu. Role jsou oddělené, aby vlastnictví nemocnice nebylo zaměněno za financování péče a financování školy za její zřizování.</p></div>
+    <div class="role-controls"><label><span data-cs="Veřejná funkce" data-en="Public function">Veřejná funkce</span><select id="function-select"></select></label><div><span data-cs="Číst zleva doprava" data-en="Read left to right">Číst zleva doprava</span><strong data-cs="pravidla → peníze → vlastnictví → objednání → služba → kontrola" data-en="rules → money → ownership → commissioning → delivery → oversight">pravidla → peníze → vlastnictví → objednání → služba → kontrola</strong></div></div>
+    <div class="role-grid" id="role-grid"></div>
+    <p class="role-warning" data-cs="Sdílená odpovědnost sama o sobě není plýtvání. Riziko vzniká, když pravomoc, financování a odpovědnost nejsou sladěné nebo občan nepozná, kdo má výsledek vysvětlit." data-en="Shared responsibility is not waste by itself. Risk appears when authority, funding and accountability are misaligned, or when citizens cannot identify who must explain the result.">Sdílená odpovědnost sama o sobě není plýtvání. Riziko vzniká, když pravomoc, financování a odpovědnost nejsou sladěné nebo občan nepozná, kdo má výsledek vysvětlit.</p>
+  </section>
+
+  <section class="accountability-chain" id="answerability">
+    <div class="section-intro"><div><span class="kicker" data-cs="04 / Komu se zodpovídá" data-en="04 / Who answers to whom">04 / Komu se zodpovídá</span><h2 data-cs="Rozhodnutí musí mít fórum." data-en="Every decision needs a forum.">Rozhodnutí musí mít fórum.</h2></div><p data-cs="Volby, zastupitelstvo, přezkum hospodaření, správní dohled, veřejné výkaznictví a soud nejsou totéž. Každý mechanismus kontroluje jiný druh odpovědnosti." data-en="Elections, the assembly, financial review, administrative supervision, public reporting and courts are not interchangeable. Each mechanism tests a different kind of accountability.">Volby, zastupitelstvo, přezkum hospodaření, správní dohled, veřejné výkaznictví a soud nejsou totéž. Každý mechanismus kontroluje jiný druh odpovědnosti.</p></div>
+    <div class="mechanism-grid" id="mechanism-grid"></div>
+  </section>
+
+  <section class="risk-lab" id="risks">
+    <div class="section-intro"><div><span class="kicker" data-cs="05 / Hypotézy neefektivity" data-en="05 / Inefficiency hypotheses">05 / Hypotézy neefektivity</span><h2 data-cs="Signál není důkaz." data-en="A signal is not proof.">Signál není důkaz.</h2></div><p data-cs="Každé riziko má měřitelný test a výslovné omezení. Vysoký podíl transferů není automaticky plýtvání; ukazuje však, že odpovědnost za výdaje a kontrola příjmů jsou oddělené." data-en="Every risk has a measurable test and an explicit caveat. A high transfer share is not automatically waste; it does show that spending responsibility and revenue control are separated.">Každé riziko má měřitelný test a výslovné omezení. Vysoký podíl transferů není automaticky plýtvání; ukazuje však, že odpovědnost za výdaje a kontrola příjmů jsou oddělené.</p></div>
+    <div class="risk-grid" id="risk-grid"></div>
+  </section>
+
+  <section class="world-models" id="comparison">
+    <div class="section-intro"><div><span class="kicker" data-cs="06 / Světové modely" data-en="06 / International models">06 / Světové modely</span><h2 data-cs="Kraj není Land<br>ani kanton." data-en="A kraj is not a Land<br>or a canton.">Kraj není Land<br>ani kanton.</h2></div><p data-cs="Srovnáváme právní a fiskální model, ne pouze název územní úrovně. Rozpočty zahraničních regionů zatím nejsou načtené; zde je poctivě označena jen institucionální typologie." data-en="We compare the legal and fiscal model, not merely the name of a territorial level. Foreign regional budgets are not loaded yet; this section explicitly contains institutional typology only.">Srovnáváme právní a fiskální model, ne pouze název územní úrovně. Rozpočty zahraničních regionů zatím nejsou načtené; zde je poctivě označena jen institucionální typologie.</p></div>
+    <div class="archetype-grid" id="archetype-grid"></div>
+  </section>
+
+  <section class="coverage-contract" id="method">
+    <div><span class="kicker" data-cs="07 / Pokrytí a integrita" data-en="07 / Coverage and integrity">07 / Pokrytí a integrita</span><h2 data-cs="Co víme.<br>A co ještě ne." data-en="What we know.<br>And what we do not yet know.">Co víme.<br>A co ještě ne.</h2><p data-cs="Technická integrita nesmí předstírat úplnost. Kontrakt proto zveřejňuje načtené vrstvy i chybějící protistrany transferů, poskytovatele, výsledky a zahraniční regionální rozpočty." data-en="Technical integrity must not impersonate completeness. The contract therefore publishes both loaded layers and missing transfer counterparties, providers, outcomes and foreign regional budgets.">Technická integrita nesmí předstírat úplnost. Kontrakt proto zveřejňuje načtené vrstvy i chybějící protistrany transferů, poskytovatele, výsledky a zahraniční regionální rozpočty.</p><a href="../../../data/accountability/cze-regions.v1.json" data-cs="Otevřít úplný datový kontrakt ↗" data-en="Open the complete data contract ↗">Otevřít úplný datový kontrakt ↗</a></div>
+    <div><div class="coverage-checks" id="coverage-checks"></div><div class="coverage-limitations" id="coverage-limitations"></div></div>
+  </section>
+
+  <section class="source-ledger" id="sources"><div class="section-intro"><div><span class="kicker" data-cs="08 / Prameny" data-en="08 / Sources">08 / Prameny</span><h2 data-cs="Každé tvrzení má původ." data-en="Every assignment has lineage.">Každé tvrzení má původ.</h2></div><p data-cs="Právní pravomoci, metodiky transferů a účetní částky zůstávají oddělenými druhy zdrojů." data-en="Legal powers, transfer methodologies and accounting amounts remain separate source types.">Právní pravomoci, metodiky transferů a účetní částky zůstávají oddělenými druhy zdrojů.</p></div><div class="accountability-sources" id="accountability-sources"></div></section>
+</main>
+<footer data-global-footer></footer><script src="../../../global-footer.js?v=20260825-shared-lifecycle" defer></script>
+<script src="../../../accountability.js?v=20260827-accountability-v1" defer></script>
+</body>
+</html>

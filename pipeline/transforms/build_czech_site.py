@@ -177,6 +177,7 @@ def build_listing(data: dict, entities: list[dict], level: str) -> None:
     cards = "\n".join(listing_card(entity, level) for entity in cohort)
     active_obce = " active" if not is_region else ""
     active_kraje = " active" if is_region else ""
+    accountability_entry = "" if not is_region else """<section class="accountability-entry"><div><span class="kicker">Nová institucionální vrstva</span><h2>Rozpočet říká kolik. Odpovědnost říká kdo.</h2><p>Kdo stanoví pravidla, kdo platí, kdo vlastní, kdo službu poskytuje a kdo kontroluje výsledek. Kraj není rozpočtovým rodičem obcí.</p></div><a class="primary-button" href="accountability/">Otevřít mapu odpovědnosti →</a></section>"""
     output = WEB / ("cz/kraje/index.html" if is_region else "cz/municipalities/index.html")
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(f"""<!doctype html>
@@ -190,6 +191,7 @@ def build_listing(data: dict, entities: list[dict], level: str) -> None:
     <div><span class="eyebrow"><i class="live-dot"></i>České územní rozpočty · skutečnost 2025</span><h1>{'Kraje' if is_region else 'Obce a města'}<br><em>pod lupou.</em></h1><p>{description}</p></div>
     <div class="cohort-switch" aria-label="Úroveň samosprávy"><a class="{active_obce.strip()}" href="../municipalities/">Města <b>27</b></a><a class="{active_kraje.strip()}" href="../kraje/">Kraje <b>14</b></a></div>
   </section>
+  {accountability_entry}
   <section class="cz-totals" aria-label="Souhrn kohorty"><article><span>Příjmy</span><strong>{amount(totals['revenue_actual'])}</strong><small>{len(cohort)} účetních jednotek</small></article><article><span>Výdaje</span><strong>{amount(totals['expense_actual'])}</strong><small>{pct(totals['expense_actual']/totals['revenue_actual'])} příjmů</small></article><article><span>Peníze a vklady</span><strong>{amount(totals['cash_current'])}</strong><small>{pct(totals['cash_current']/totals['expense_actual'])} ročních výdajů</small></article></section>
   <section class="directory" id="subjekty">
     <div class="directory-title"><div><span class="kicker">01 / Datový průzkumník</span><h2>Najděte a porovnejte.</h2></div><p>Filtry mění zobrazení, nikoli účetní data. Částky jsou ve skutečných korunách za rok 2025.</p></div>
@@ -318,7 +320,7 @@ def build_machine_data(data: dict, entities: list[dict]) -> None:
 
 
 def build_sitemap(entities: list[dict]) -> None:
-    paths = ["/", "/eu-capitals.html", "/cz/municipalities/", "/cz/kraje/"]
+    paths = ["/", "/eu-capitals.html", "/cz/municipalities/", "/cz/kraje/", "/cz/kraje/accountability/"]
     for entity in entities:
         for level in entity["administrative_levels"]:
             paths.append(entity_path(entity, level))

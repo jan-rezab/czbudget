@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://publicspendingdata.org/data/contracts/government-accountability.schema.json",
+  "title": "Government accountability contract",
+  "type": "object",
+  "required": ["contract", "schema_version", "country", "valid_for_fiscal_year", "scope", "tiers", "tier_relations", "actors", "accountability_mechanisms", "functions", "responsibility_assignments", "revenue_instruments", "regional_entities", "aggregates", "risk_hypotheses", "international_archetypes", "sources", "integrity"],
+  "properties": {
+    "contract": {"const": "government-accountability.v1"},
+    "schema_version": {"const": "1.0.0"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "reviewed_at": {"type": "string", "format": "date"},
+    "country": {
+      "type": "object",
+      "required": ["code", "name_cs", "name_en"],
+      "properties": {"code": {"pattern": "^[A-Z]{3}$"}, "name_cs": {"type": "string"}, "name_en": {"type": "string"}}
+    },
+    "valid_for_fiscal_year": {"type": "integer", "minimum": 2000, "maximum": 2100},
+    "scope": {
+      "type": "object",
+      "required": ["institutional_scope", "financial_scope", "entity_coverage", "responsibility_coverage", "transfer_coverage", "international_coverage"]
+    },
+    "tiers": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/tier"}},
+    "tier_relations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/tierRelation"}},
+    "actors": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/actor"}},
+    "accountability_mechanisms": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/mechanism"}},
+    "functions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/function"}},
+    "responsibility_assignments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/assignment"}},
+    "revenue_instruments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/revenueInstrument"}},
+    "regional_entities": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/regionalEntity"}},
+    "aggregates": {"type": "object", "required": ["regions_excluding_prague", "all_regional_roles_including_prague"]},
+    "risk_hypotheses": {"type": "array", "items": {"type": "object", "required": ["risk_code", "name_cs", "name_en", "testable_now", "signals", "caution_cs", "caution_en"]}},
+    "international_archetypes": {"type": "array", "items": {"type": "object", "required": ["archetype_id", "examples", "tax_autonomy", "budget_data_status"]}},
+    "sources": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["source_id", "source_type", "publisher", "title", "url", "supports"]}},
+    "integrity": {
+      "type": "object",
+      "required": ["status", "checks", "limitations", "limitations_cs", "limitations_en"],
+      "properties": {"status": {"enum": ["passed", "failed"]}, "checks": {"type": "object", "additionalProperties": {"type": "boolean"}}, "limitations": {"type": "array", "items": {"type": "string"}}, "limitations_cs": {"type": "array", "items": {"type": "string"}}, "limitations_en": {"type": "array", "items": {"type": "string"}}}
+    }
+  },
+  "$defs": {
+    "tier": {
+      "type": "object",
+      "required": ["tier_id", "tier_code", "constitutional_type", "is_geographic_government", "is_self_governing", "is_elected", "primary_legislative_power", "general_tax_rate_power", "budget_approval_power", "borrowing_power", "source_ids"]
+    },
+    "tierRelation": {
+      "type": "object",
+      "required": ["relation_id", "from_tier_id", "to_tier_id", "relation_type", "is_budget_parent", "is_geographic_parent", "source_ids"]
+    },
+    "actor": {"type": "object", "required": ["actor_id", "actor_scope", "name_cs", "name_en"]},
+    "mechanism": {"type": "object", "required": ["mechanism_id", "answerable_actor_id", "forum_actor_id", "mechanism_type", "frequency", "scope", "source_ids"]},
+    "function": {
+      "type": "object",
+      "required": ["function_code", "name_cs", "name_en", "assignments", "source_ids"],
+      "properties": {"assignments": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["actor_id", "roles", "capacity"]}}}
+    },
+    "assignment": {"type": "object", "required": ["assignment_id", "country_code", "fiscal_year", "function_code", "actor_id", "responsibility_role", "legal_capacity", "source_ids"]},
+    "revenueInstrument": {"type": "object", "required": ["instrument_id", "instrument_type", "budget_category", "rate_setter_actor_id", "collector_actor_id", "allocator_actor_id", "recipient_tier_id", "earmarking", "regional_rate_discretion", "regional_use_discretion", "is_own_source_revenue", "source_ids"]},
+    "regionalEntity": {
+      "type": "object",
+      "required": ["public_entity_id", "national_entity_code", "entity_name", "tier_id", "accounting_roles", "is_prague_dual_role", "fiscal_year", "budget_stage", "currency_code", "revenue_actual", "expense_actual", "budget_balance", "financing_actual", "revenue_composition", "revenue_composition_shares", "fiscal_autonomy_proxies", "transfer_observation", "source"],
+      "properties": {
+        "public_entity_id": {"pattern": "^CZ:[0-9]{8}$"},
+        "fiscal_year": {"const": 2025},
+        "budget_stage": {"const": "actual"},
+        "currency_code": {"const": "CZK"},
+        "revenue_actual": {"type": "number"},
+        "expense_actual": {"type": "number"},
+        "transfer_observation": {
+          "type": "object",
+          "required": ["amount_local", "sender_entity_id", "recipient_entity_id", "counterparty_coverage", "quality_flags"],
+          "properties": {"sender_entity_id": {"type": ["string", "null"]}, "quality_flags": {"type": "array", "minItems": 1, "items": {"type": "string"}}}
+        }
+      }
+    }
+  }
+}

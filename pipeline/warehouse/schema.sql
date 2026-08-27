@@ -673,3 +673,195 @@ FROM `czbudget-janrezab.budget_detail.public_entities` AS entity
 LEFT JOIN latest_budget AS budget USING (public_entity_id)
 LEFT JOIN metric_pivot AS metric ON entity.public_entity_id = metric.city_id
 WHERE entity.entity_type IN ('municipality', 'capital_city_authority', 'city_state', 'metropolitan_authority');
+
+-- Government accountability layer. Geography, constitutional authority,
+-- responsibility assignments and money flows are deliberately separate. A
+-- geographic parent is not automatically a budget parent, and a received
+-- transfer is not consolidation-matchable until both counterparties exist.
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_accountability_sources` (
+  source_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  source_type STRING NOT NULL,
+  publisher STRING NOT NULL,
+  title STRING NOT NULL,
+  url STRING NOT NULL,
+  supports ARRAY<STRING> NOT NULL,
+  reviewed_at DATE NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, source_type, source_id
+OPTIONS(description = 'Reviewed legal, methodological and financial sources for government accountability assignments.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_tiers` (
+  tier_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  tier_code STRING NOT NULL,
+  level INT64,
+  name_cs STRING NOT NULL,
+  name_en STRING NOT NULL,
+  constitutional_type STRING NOT NULL,
+  is_geographic_government BOOL NOT NULL,
+  is_self_governing BOOL NOT NULL,
+  is_elected BOOL NOT NULL,
+  primary_legislative_power BOOL NOT NULL,
+  subordinate_rulemaking_power BOOL NOT NULL,
+  general_tax_rate_power BOOL NOT NULL,
+  budget_approval_power BOOL NOT NULL,
+  borrowing_power BOOL NOT NULL,
+  asset_ownership_power BOOL NOT NULL,
+  source_ids ARRAY<STRING> NOT NULL,
+  valid_from DATE,
+  valid_to DATE,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, tier_code, tier_id
+OPTIONS(description = 'Versioned government tiers and their legal/fiscal powers; statistical areas are excluded unless they are actual governments.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_tier_relations` (
+  relation_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  from_tier_id STRING NOT NULL,
+  to_tier_id STRING NOT NULL,
+  relation_type STRING NOT NULL,
+  is_budget_parent BOOL NOT NULL,
+  is_geographic_parent BOOL NOT NULL,
+  note_cs STRING NOT NULL,
+  note_en STRING NOT NULL,
+  source_ids ARRAY<STRING> NOT NULL,
+  valid_from DATE,
+  valid_to DATE,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, from_tier_id, to_tier_id
+OPTIONS(description = 'Relations between tiers with budget and geographic parenthood represented independently.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_entity_tier_assignments` (
+  public_entity_id STRING NOT NULL,
+  tier_id STRING NOT NULL,
+  valid_from DATE NOT NULL,
+  valid_to DATE,
+  is_dual_role BOOL NOT NULL,
+  source_id STRING NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY tier_id, public_entity_id
+OPTIONS(description = 'Valid-time link from an accounting entity to a constitutional government tier; supports dual-role entities such as Prague.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_responsibility_assignments` (
+  assignment_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  fiscal_year INT64 NOT NULL,
+  function_code STRING NOT NULL,
+  function_name_cs STRING NOT NULL,
+  function_name_en STRING NOT NULL,
+  actor_id STRING NOT NULL,
+  responsibility_role STRING NOT NULL OPTIONS(description = 'Atomic role such as sets_rules, funds, owns, commissions, delivers, supervises or audits'),
+  legal_capacity STRING NOT NULL OPTIONS(description = 'Self-government, delegated state administration, national competence, social insurance or provider capacity'),
+  source_ids ARRAY<STRING> NOT NULL,
+  valid_from DATE NOT NULL,
+  valid_to DATE,
+  loaded_at TIMESTAMP NOT NULL
+)
+PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
+CLUSTER BY country_code, function_code, actor_id
+OPTIONS(description = 'Atomic who-does-what assignments; financing, regulation, ownership, commissioning, delivery and oversight are never collapsed into one owner.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_revenue_instruments` (
+  instrument_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  instrument_type STRING NOT NULL,
+  name_cs STRING NOT NULL,
+  name_en STRING NOT NULL,
+  budget_category STRING NOT NULL,
+  rate_setter_actor_id STRING NOT NULL,
+  collector_actor_id STRING NOT NULL,
+  allocator_actor_id STRING NOT NULL,
+  recipient_tier_id STRING NOT NULL,
+  allocation_basis STRING NOT NULL,
+  earmarking STRING NOT NULL,
+  regional_rate_discretion STRING NOT NULL,
+  regional_use_discretion STRING NOT NULL,
+  is_own_source_revenue BOOL NOT NULL,
+  source_ids ARRAY<STRING> NOT NULL,
+  valid_from DATE NOT NULL,
+  valid_to DATE,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, recipient_tier_id, instrument_type
+OPTIONS(description = 'Legal and operational authority over taxes, shared taxes, transfers, fees, property income and financing.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_accountability_mechanisms` (
+  mechanism_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  answerable_actor_id STRING NOT NULL,
+  forum_actor_id STRING NOT NULL,
+  mechanism_type STRING NOT NULL,
+  frequency STRING NOT NULL,
+  scope STRING NOT NULL,
+  source_ids ARRAY<STRING> NOT NULL,
+  valid_from DATE NOT NULL,
+  valid_to DATE,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, mechanism_type, answerable_actor_id
+OPTIONS(description = 'Who must explain or justify action to whom, through elections, assemblies, audit, supervision, transparency or courts.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.intergovernmental_transfer_facts` (
+  transfer_fact_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  fiscal_year INT64 NOT NULL,
+  budget_stage STRING NOT NULL,
+  sender_public_entity_id STRING OPTIONS(description = 'Nullable only when the source publishes a mixed received total without counterparties'),
+  recipient_public_entity_id STRING NOT NULL,
+  transfer_program_id STRING,
+  transfer_type STRING NOT NULL,
+  earmarking STRING NOT NULL,
+  amount_local NUMERIC NOT NULL,
+  currency_code STRING NOT NULL,
+  is_consolidation_matchable BOOL NOT NULL OPTIONS(description = 'TRUE only when payer, recipient, programme, period, stage and amount can be matched'),
+  source_id STRING NOT NULL,
+  quality_flags ARRAY<STRING>,
+  loaded_at TIMESTAMP NOT NULL
+)
+PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
+CLUSTER BY country_code, recipient_public_entity_id, sender_public_entity_id
+OPTIONS(description = 'Intergovernmental money flows. Unknown counterparties remain explicit and may not be eliminated during consolidation.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_accountability_coverage` (
+  coverage_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  fiscal_year INT64 NOT NULL,
+  tier_id STRING NOT NULL,
+  entity_expected_count INT64 NOT NULL,
+  entity_loaded_count INT64 NOT NULL,
+  budget_coverage STRING NOT NULL,
+  responsibility_coverage STRING NOT NULL,
+  transfer_counterparty_coverage STRING NOT NULL,
+  validation_status STRING NOT NULL,
+  limitations ARRAY<STRING> NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
+CLUSTER BY country_code, tier_id
+OPTIONS(description = 'Machine-readable completeness declaration so integrity cannot be confused with tier or counterparty coverage.');
+
+CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.government_responsibility_matrix` AS
+SELECT
+  assignment.country_code,
+  assignment.fiscal_year,
+  assignment.function_code,
+  assignment.function_name_cs,
+  assignment.function_name_en,
+  assignment.actor_id,
+  ARRAY_AGG(assignment.responsibility_role ORDER BY assignment.responsibility_role) AS responsibility_roles,
+  ARRAY_AGG(DISTINCT assignment.legal_capacity ORDER BY assignment.legal_capacity) AS legal_capacities,
+  ARRAY_CONCAT_AGG(assignment.source_ids) AS source_ids
+FROM `czbudget-janrezab.budget_detail.government_responsibility_assignments` AS assignment
+GROUP BY
+  assignment.country_code,
+  assignment.fiscal_year,
+  assignment.function_code,
+  assignment.function_name_cs,
+  assignment.function_name_en,
+  assignment.actor_id;

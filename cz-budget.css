@@ -13,6 +13,10 @@
 .cz-budget-page .cz-header { background: rgba(243,240,232,.95); }
 .cz-budget-page .dataset-pill { border-color: var(--cz-ink); }
 .cz-budget-page main { overflow: hidden; }
+.accountability-entry { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6vw; align-items:center; padding:30px 5vw; background:#e3e9d1; border-bottom:1px solid var(--cz-line); }
+.accountability-entry h2 { margin:7px 0; font:500 clamp(25px,3vw,40px)/1 Georgia,serif; letter-spacing:-.03em; }
+.accountability-entry p { max-width:760px; margin:0; color:var(--cz-muted); line-height:1.55; }
+.accountability-entry .primary-button { margin:0; white-space:nowrap; }
 .breadcrumbs { display: flex; gap: 10px; align-items: center; padding: 22px 5vw; border-bottom: 1px solid var(--cz-line); font-size: 12px; color: var(--cz-muted); }
 .breadcrumbs a { text-underline-offset: 3px; }
 .breadcrumbs strong { color: var(--cz-ink); }
@@ -192,6 +196,7 @@
 }
 
 @media (max-width: 760px) {
+  .accountability-entry { grid-template-columns:1fr; padding:28px 20px; }
   .breadcrumbs { padding: 18px 20px; overflow-x: auto; white-space: nowrap; }
   .cz-hero,.detail-hero { grid-template-columns: 1fr; padding: 55px 20px; }
   .cz-hero h1,.detail-hero h1 { font-size: 17vw; }

@@ -1,0 +1,3416 @@
+{
+  "contract": "government-accountability.v1",
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-20T17:57:44.497906+00:00",
+  "reviewed_at": "2026-08-27",
+  "country": {
+    "code": "CZE",
+    "name_cs": "Česko",
+    "name_en": "Czechia"
+  },
+  "valid_for_fiscal_year": 2025,
+  "scope": {
+    "institutional_scope": "Czech regional self-government and its relationships to central government, municipalities, social insurance and service providers",
+    "financial_scope": "Fourteen regional accounting entities, 2025 actual FIN 2-12 M summary",
+    "entity_coverage": {
+      "expected": 14,
+      "loaded": 14,
+      "status": "complete_for_summary_headlines"
+    },
+    "responsibility_coverage": {
+      "function_count": 10,
+      "assignment_count": 93,
+      "status": "reviewed_institutional_baseline"
+    },
+    "transfer_coverage": {
+      "received_total_by_region": "loaded",
+      "programme_and_counterparty_detail": "not_loaded"
+    },
+    "international_coverage": "archetype_metadata_only"
+  },
+  "model_notes": {
+    "cs": "Kraj a obec jsou samostatné veřejnoprávní korporace. Kraj není konsolidační obálkou obcí na svém území. Praha se vede v obecní i krajské roli, ale její účetní rozpočet se při součtech nesmí přičíst dvakrát.",
+    "en": "A region and a municipality are separate public-law corporations. A region is not a consolidation wrapper for municipalities in its territory. Prague has both municipal and regional roles, but its single accounting budget must never be added twice."
+  },
+  "tiers": [
+    {
+      "tier_id": "CZE:CENTRAL",
+      "tier_code": "central_government",
+      "level": 0,
+      "name_cs": "Ústřední stát",
+      "name_en": "Central government",
+      "constitutional_type": "unitary_state_centre",
+      "is_geographic_government": true,
+      "is_self_governing": true,
+      "is_elected": true,
+      "primary_legislative_power": true,
+      "subordinate_rulemaking_power": true,
+      "general_tax_rate_power": true,
+      "budget_approval_power": true,
+      "borrowing_power": true,
+      "asset_ownership_power": true,
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-tax-allocation-act-243-2000"
+      ]
+    },
+    {
+      "tier_id": "CZE:REGION",
+      "tier_code": "regional_self_government",
+      "level": 1,
+      "name_cs": "Krajská samospráva",
+      "name_en": "Regional self-government",
+      "constitutional_type": "elected_region_in_unitary_state",
+      "is_geographic_government": true,
+      "is_self_governing": true,
+      "is_elected": true,
+      "primary_legislative_power": false,
+      "subordinate_rulemaking_power": true,
+      "general_tax_rate_power": false,
+      "budget_approval_power": true,
+      "borrowing_power": true,
+      "asset_ownership_power": true,
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000"
+      ]
+    },
+    {
+      "tier_id": "CZE:MUNICIPALITY",
+      "tier_code": "municipal_self_government",
+      "level": 2,
+      "name_cs": "Obecní samospráva",
+      "name_en": "Municipal self-government",
+      "constitutional_type": "elected_municipality_in_unitary_state",
+      "is_geographic_government": true,
+      "is_self_governing": true,
+      "is_elected": true,
+      "primary_legislative_power": false,
+      "subordinate_rulemaking_power": true,
+      "general_tax_rate_power": false,
+      "budget_approval_power": true,
+      "borrowing_power": true,
+      "asset_ownership_power": true,
+      "source_ids": [
+        "cze-municipalities-act-128-2000",
+        "cze-territorial-budget-rules-250-2000"
+      ]
+    },
+    {
+      "tier_id": "CZE:SOCIAL_INSURANCE",
+      "tier_code": "social_insurance_funds",
+      "level": null,
+      "name_cs": "Fondy sociálního zabezpečení a zdravotní pojišťovny",
+      "name_en": "Social-security funds and health insurers",
+      "constitutional_type": "functional_public_finance_layer",
+      "is_geographic_government": false,
+      "is_self_governing": false,
+      "is_elected": false,
+      "primary_legislative_power": false,
+      "subordinate_rulemaking_power": false,
+      "general_tax_rate_power": false,
+      "budget_approval_power": false,
+      "borrowing_power": false,
+      "asset_ownership_power": true,
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    }
+  ],
+  "tier_relations": [
+    {
+      "relation_id": "CZE:CENTRAL-REGION-CONSTITUTIONAL",
+      "from_tier_id": "CZE:CENTRAL",
+      "to_tier_id": "CZE:REGION",
+      "relation_type": "constitutional_framework_and_legality_supervision",
+      "is_budget_parent": false,
+      "is_geographic_parent": true,
+      "note_cs": "Stát stanoví zákonný rámec a kontroluje zákonnost; v samostatné působnosti není kraj podřízenou rozpočtovou kapitolou státu.",
+      "note_en": "The state sets the legal framework and supervises legality; in self-government the region is not a subordinate state budget chapter.",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "relation_id": "CZE:REGION-MUNICIPALITY-PARALLEL",
+      "from_tier_id": "CZE:REGION",
+      "to_tier_id": "CZE:MUNICIPALITY",
+      "relation_type": "parallel_self_governments_with_delegated_administration_supervision",
+      "is_budget_parent": false,
+      "is_geographic_parent": true,
+      "note_cs": "Obce leží na území kraje, ale jejich samostatné rozpočty do rozpočtu kraje nepatří. Krajský úřad kontroluje vybrané obecní úkoly pouze v přenesené působnosti.",
+      "note_en": "Municipalities are geographically inside a region, but their independent budgets do not belong to the regional budget. The regional office supervises selected delegated state-administration tasks only.",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-municipalities-act-128-2000"
+      ]
+    }
+  ],
+  "actors": [
+    {
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "actor_scope": "central_government",
+      "name_cs": "Vláda a ústřední orgány",
+      "name_en": "Government and central authorities"
+    },
+    {
+      "actor_id": "CZE:PARLIAMENT",
+      "actor_scope": "central_legislature",
+      "name_cs": "Parlament",
+      "name_en": "Parliament"
+    },
+    {
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "actor_scope": "regional_self_government",
+      "name_cs": "Zastupitelstvo kraje",
+      "name_en": "Regional assembly"
+    },
+    {
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "actor_scope": "regional_self_government",
+      "name_cs": "Rada kraje",
+      "name_en": "Regional executive"
+    },
+    {
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "actor_scope": "delegated_state_administration",
+      "name_cs": "Krajský úřad v přenesené působnosti",
+      "name_en": "Regional office exercising delegated state administration"
+    },
+    {
+      "actor_id": "CZE:MUNICIPALITIES",
+      "actor_scope": "municipal_self_government",
+      "name_cs": "Obce",
+      "name_en": "Municipalities"
+    },
+    {
+      "actor_id": "CZE:HEALTH_INSURERS",
+      "actor_scope": "social_insurance_funds",
+      "name_cs": "Veřejné zdravotní pojišťovny",
+      "name_en": "Public health insurers"
+    },
+    {
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "actor_scope": "public_service_provider",
+      "name_cs": "Krajské příspěvkové organizace a společnosti",
+      "name_en": "Regional public organisations and companies"
+    },
+    {
+      "actor_id": "CZE:PRIVATE_NONPROFIT_PROVIDERS",
+      "actor_scope": "contracted_service_provider",
+      "name_cs": "Smluvní, soukromí a neziskoví poskytovatelé",
+      "name_en": "Contracted, private and non-profit providers"
+    },
+    {
+      "actor_id": "CZE:REGIONAL_VOTERS",
+      "actor_scope": "electorate",
+      "name_cs": "Voliči kraje",
+      "name_en": "Regional electorate"
+    },
+    {
+      "actor_id": "CZE:MINISTRY_FINANCE",
+      "actor_scope": "central_auditor",
+      "name_cs": "Ministerstvo financí",
+      "name_en": "Ministry of Finance"
+    },
+    {
+      "actor_id": "CZE:COURTS",
+      "actor_scope": "judiciary",
+      "name_cs": "Soudy",
+      "name_en": "Courts"
+    }
+  ],
+  "accountability_mechanisms": [
+    {
+      "mechanism_id": "CZE:REGIONAL_ELECTION",
+      "answerable_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "forum_actor_id": "CZE:REGIONAL_VOTERS",
+      "mechanism_type": "electoral",
+      "frequency": "four_year_cycle",
+      "scope": "regional_self_government_policy_and_results",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "mechanism_id": "CZE:REGIONAL_BUDGET_APPROVAL",
+      "answerable_actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "forum_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "mechanism_type": "political_and_budgetary",
+      "frequency": "annual_and_in_year_amendments",
+      "scope": "regional_budget_budget_amendments_final_account_and_financial_statements",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000"
+      ]
+    },
+    {
+      "mechanism_id": "CZE:EXTERNAL_FINANCIAL_REVIEW",
+      "answerable_actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "forum_actor_id": "CZE:MINISTRY_FINANCE",
+      "mechanism_type": "external_financial_review",
+      "frequency": "annual",
+      "scope": "regional_financial_management_and_compliance",
+      "source_ids": [
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "mechanism_id": "CZE:DELEGATED_ADMINISTRATION_SUPERVISION",
+      "answerable_actor_id": "CZE:REGIONAL_OFFICE",
+      "forum_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "mechanism_type": "administrative_hierarchy",
+      "frequency": "continuous",
+      "scope": "legality_and_execution_of_delegated_state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "mechanism_id": "CZE:PUBLIC_BUDGET_REPORTING",
+      "answerable_actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "forum_actor_id": "CZE:REGIONAL_VOTERS",
+      "mechanism_type": "public_transparency",
+      "frequency": "budget_cycle_and_monthly_reporting",
+      "scope": "budget_proposal_approved_budget_amendments_execution_and_final_account",
+      "source_ids": [
+        "cze-monitor-fin-2-12m-2025",
+        "cze-monitor-methodology"
+      ]
+    },
+    {
+      "mechanism_id": "CZE:JUDICIAL_REVIEW",
+      "answerable_actor_id": "CZE:REGIONAL_OFFICE",
+      "forum_actor_id": "CZE:COURTS",
+      "mechanism_type": "judicial",
+      "frequency": "case_based",
+      "scope": "legality_of_public_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "function_code": "general_regional_governance",
+      "name_cs": "Krajská samospráva a rozpočet",
+      "name_en": "Regional self-government and budget",
+      "assignments": [
+        {
+          "actor_id": "CZE:PARLIAMENT",
+          "roles": [
+            "sets_legal_framework"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ASSEMBLY",
+          "roles": [
+            "sets_regional_policy",
+            "approves_budget",
+            "approves_final_account",
+            "owns_assets"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_EXECUTIVE",
+          "roles": [
+            "proposes_budget",
+            "implements_budget",
+            "manages_assets"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:MINISTRY_FINANCE",
+          "roles": [
+            "reviews_financial_management",
+            "publishes_execution_data"
+          ],
+          "capacity": "state_oversight"
+        }
+      ],
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "function_code": "delegated_state_administration",
+      "name_cs": "Přenesený výkon státní správy",
+      "name_en": "Delegated state administration",
+      "assignments": [
+        {
+          "actor_id": "CZE:PARLIAMENT",
+          "roles": [
+            "assigns_mandate"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_rules",
+            "funds_contribution",
+            "supervises"
+          ],
+          "capacity": "state_administration"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_OFFICE",
+          "roles": [
+            "administers",
+            "decides_cases",
+            "supervises_delegated_municipal_tasks"
+          ],
+          "capacity": "delegated_state_administration"
+        }
+      ],
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "function_code": "secondary_and_vocational_education",
+      "name_cs": "Střední a vyšší odborné školství",
+      "name_en": "Secondary and vocational education",
+      "assignments": [
+        {
+          "actor_id": "CZE:PARLIAMENT",
+          "roles": [
+            "sets_legal_framework"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_curriculum_and_standards",
+            "determines_direct_education_funding",
+            "funds_direct_costs"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ASSEMBLY",
+          "roles": [
+            "plans_school_network",
+            "founds_and_closes_regional_schools",
+            "funds_operations_and_investment",
+            "owns_assets"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+          "roles": [
+            "employs_staff",
+            "delivers_service",
+            "reports_results"
+          ],
+          "capacity": "public_service_provider"
+        }
+      ],
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "function_code": "regional_public_transport",
+      "name_cs": "Regionální veřejná doprava",
+      "name_en": "Regional public transport",
+      "assignments": [
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_legal_and_technical_framework",
+            "cofunds_selected_programmes"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_EXECUTIVE",
+          "roles": [
+            "plans_network",
+            "commissions_service",
+            "sets_integrated_tariff_policy",
+            "funds_public_service_obligation"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:MUNICIPALITIES",
+          "roles": [
+            "coordinates_local_transport",
+            "cofunds_selected_services"
+          ],
+          "capacity": "municipal_self_government"
+        },
+        {
+          "actor_id": "CZE:PRIVATE_NONPROFIT_PROVIDERS",
+          "roles": [
+            "operates_service"
+          ],
+          "capacity": "contracted_service_provider"
+        }
+      ],
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "function_code": "regional_roads",
+      "name_cs": "Silnice II. a III. třídy",
+      "name_en": "Class II and III regional roads",
+      "assignments": [
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_road_rules_and_standards",
+            "cofunds_selected_investment"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ASSEMBLY",
+          "roles": [
+            "owns_assets",
+            "approves_investment_strategy"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_EXECUTIVE",
+          "roles": [
+            "funds_maintenance_and_investment",
+            "commissions_works"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+          "roles": [
+            "manages_assets",
+            "delivers_maintenance"
+          ],
+          "capacity": "public_service_provider"
+        }
+      ],
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "function_code": "hospitals_and_emergency_medical_service",
+      "name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "name_en": "Hospitals and emergency medical service",
+      "assignments": [
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_health_rules_and_standards",
+            "licenses_and_supervises_system",
+            "cofunds_selected_investment"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:HEALTH_INSURERS",
+          "roles": [
+            "purchases_covered_care",
+            "funds_provider_activity"
+          ],
+          "capacity": "social_insurance"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ASSEMBLY",
+          "roles": [
+            "founds_or_owns_regional_providers",
+            "sets_owner_strategy"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_EXECUTIVE",
+          "roles": [
+            "funds_emergency_service",
+            "funds_selected_investment",
+            "exercises_owner_control"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+          "roles": [
+            "delivers_care",
+            "operates_emergency_service",
+            "reports_quality_and_finance"
+          ],
+          "capacity": "public_service_provider"
+        }
+      ],
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "function_code": "social_services",
+      "name_cs": "Sociální služby",
+      "name_en": "Social services",
+      "assignments": [
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_entitlement_and_quality_rules",
+            "funds_state_grants"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_EXECUTIVE",
+          "roles": [
+            "plans_regional_network",
+            "allocates_grants",
+            "commissions_and_cofunds_services"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:MUNICIPALITIES",
+          "roles": [
+            "plans_local_access",
+            "cofunds_services",
+            "delivers_selected_services"
+          ],
+          "capacity": "municipal_self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+          "roles": [
+            "delivers_service"
+          ],
+          "capacity": "public_service_provider"
+        },
+        {
+          "actor_id": "CZE:PRIVATE_NONPROFIT_PROVIDERS",
+          "roles": [
+            "delivers_service"
+          ],
+          "capacity": "contracted_service_provider"
+        }
+      ],
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "function_code": "regional_development_and_spatial_planning",
+      "name_cs": "Regionální rozvoj a územní plánování",
+      "name_en": "Regional development and spatial planning",
+      "assignments": [
+        {
+          "actor_id": "CZE:PARLIAMENT",
+          "roles": [
+            "sets_legal_framework"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_national_policy",
+            "funds_national_and_eu_programmes"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ASSEMBLY",
+          "roles": [
+            "approves_regional_development_programme",
+            "approves_regional_spatial_planning_documents"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_OFFICE",
+          "roles": [
+            "administers_planning_procedure",
+            "coordinates_municipal_planning"
+          ],
+          "capacity": "mixed_self_and_delegated_administration"
+        },
+        {
+          "actor_id": "CZE:MUNICIPALITIES",
+          "roles": [
+            "approves_local_spatial_plan",
+            "implements_local_development"
+          ],
+          "capacity": "municipal_self_government"
+        }
+      ],
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "function_code": "culture_and_regional_heritage",
+      "name_cs": "Kultura a regionální paměťové instituce",
+      "name_en": "Culture and regional heritage institutions",
+      "assignments": [
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_heritage_rules",
+            "cofunds_programmes"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ASSEMBLY",
+          "roles": [
+            "founds_and_owns_regional_institutions",
+            "sets_regional_policy"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_EXECUTIVE",
+          "roles": [
+            "funds_operations_and_investment",
+            "exercises_owner_control"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+          "roles": [
+            "delivers_service",
+            "manages_collections_and_assets"
+          ],
+          "capacity": "public_service_provider"
+        }
+      ],
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "function_code": "environment_and_regional_permitting",
+      "name_cs": "Životní prostředí a regionální správní agenda",
+      "name_en": "Environment and regional permitting",
+      "assignments": [
+        {
+          "actor_id": "CZE:PARLIAMENT",
+          "roles": [
+            "sets_legal_framework"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:CENTRAL_EXECUTIVE",
+          "roles": [
+            "sets_national_policy",
+            "supervises_delegated_administration",
+            "funds_programmes"
+          ],
+          "capacity": "national_competence"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_ASSEMBLY",
+          "roles": [
+            "sets_regional_environment_policy",
+            "approves_selected_plans"
+          ],
+          "capacity": "self_government"
+        },
+        {
+          "actor_id": "CZE:REGIONAL_OFFICE",
+          "roles": [
+            "administers_permits_and_appeals",
+            "supervises_selected_municipal_administration"
+          ],
+          "capacity": "delegated_state_administration"
+        }
+      ],
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    }
+  ],
+  "responsibility_assignments": [
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:PARLIAMENT:sets_legal_framework",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:PARLIAMENT",
+      "responsibility_role": "sets_legal_framework",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:REGIONAL_ASSEMBLY:sets_regional_policy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "sets_regional_policy",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:REGIONAL_ASSEMBLY:approves_budget",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "approves_budget",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:REGIONAL_ASSEMBLY:approves_final_account",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "approves_final_account",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:REGIONAL_ASSEMBLY:owns_assets",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "owns_assets",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:REGIONAL_EXECUTIVE:proposes_budget",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "proposes_budget",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:REGIONAL_EXECUTIVE:implements_budget",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "implements_budget",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:REGIONAL_EXECUTIVE:manages_assets",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "manages_assets",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:MINISTRY_FINANCE:reviews_financial_management",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:MINISTRY_FINANCE",
+      "responsibility_role": "reviews_financial_management",
+      "legal_capacity": "state_oversight",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:general_regional_governance:MINISTRY_FINANCE:publishes_execution_data",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "general_regional_governance",
+      "function_name_cs": "Krajská samospráva a rozpočet",
+      "function_name_en": "Regional self-government and budget",
+      "actor_id": "CZE:MINISTRY_FINANCE",
+      "responsibility_role": "publishes_execution_data",
+      "legal_capacity": "state_oversight",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-territorial-budget-rules-250-2000",
+        "cze-financial-review-act-420-2004"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:delegated_state_administration:PARLIAMENT:assigns_mandate",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "delegated_state_administration",
+      "function_name_cs": "Přenesený výkon státní správy",
+      "function_name_en": "Delegated state administration",
+      "actor_id": "CZE:PARLIAMENT",
+      "responsibility_role": "assigns_mandate",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:delegated_state_administration:CENTRAL_EXECUTIVE:sets_rules",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "delegated_state_administration",
+      "function_name_cs": "Přenesený výkon státní správy",
+      "function_name_en": "Delegated state administration",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_rules",
+      "legal_capacity": "state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:delegated_state_administration:CENTRAL_EXECUTIVE:funds_contribution",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "delegated_state_administration",
+      "function_name_cs": "Přenesený výkon státní správy",
+      "function_name_en": "Delegated state administration",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "funds_contribution",
+      "legal_capacity": "state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:delegated_state_administration:CENTRAL_EXECUTIVE:supervises",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "delegated_state_administration",
+      "function_name_cs": "Přenesený výkon státní správy",
+      "function_name_en": "Delegated state administration",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "supervises",
+      "legal_capacity": "state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:delegated_state_administration:REGIONAL_OFFICE:administers",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "delegated_state_administration",
+      "function_name_cs": "Přenesený výkon státní správy",
+      "function_name_en": "Delegated state administration",
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "responsibility_role": "administers",
+      "legal_capacity": "delegated_state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:delegated_state_administration:REGIONAL_OFFICE:decides_cases",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "delegated_state_administration",
+      "function_name_cs": "Přenesený výkon státní správy",
+      "function_name_en": "Delegated state administration",
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "responsibility_role": "decides_cases",
+      "legal_capacity": "delegated_state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:delegated_state_administration:REGIONAL_OFFICE:supervises_delegated_municipal_tasks",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "delegated_state_administration",
+      "function_name_cs": "Přenesený výkon státní správy",
+      "function_name_en": "Delegated state administration",
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "responsibility_role": "supervises_delegated_municipal_tasks",
+      "legal_capacity": "delegated_state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:PARLIAMENT:sets_legal_framework",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:PARLIAMENT",
+      "responsibility_role": "sets_legal_framework",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:CENTRAL_EXECUTIVE:sets_curriculum_and_standards",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_curriculum_and_standards",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:CENTRAL_EXECUTIVE:determines_direct_education_funding",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "determines_direct_education_funding",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:CENTRAL_EXECUTIVE:funds_direct_costs",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "funds_direct_costs",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:REGIONAL_ASSEMBLY:plans_school_network",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "plans_school_network",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:REGIONAL_ASSEMBLY:founds_and_closes_regional_schools",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "founds_and_closes_regional_schools",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:REGIONAL_ASSEMBLY:funds_operations_and_investment",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "funds_operations_and_investment",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:REGIONAL_ASSEMBLY:owns_assets",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "owns_assets",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:REGIONAL_ORGANISATIONS:employs_staff",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "employs_staff",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:REGIONAL_ORGANISATIONS:delivers_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "delivers_service",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:secondary_and_vocational_education:REGIONAL_ORGANISATIONS:reports_results",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "secondary_and_vocational_education",
+      "function_name_cs": "Střední a vyšší odborné školství",
+      "function_name_en": "Secondary and vocational education",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "reports_results",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "cze-regional-education-financing-2025",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:CENTRAL_EXECUTIVE:sets_legal_and_technical_framework",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_legal_and_technical_framework",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:CENTRAL_EXECUTIVE:cofunds_selected_programmes",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "cofunds_selected_programmes",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:REGIONAL_EXECUTIVE:plans_network",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "plans_network",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:REGIONAL_EXECUTIVE:commissions_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "commissions_service",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:REGIONAL_EXECUTIVE:sets_integrated_tariff_policy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "sets_integrated_tariff_policy",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:REGIONAL_EXECUTIVE:funds_public_service_obligation",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "funds_public_service_obligation",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:MUNICIPALITIES:coordinates_local_transport",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:MUNICIPALITIES",
+      "responsibility_role": "coordinates_local_transport",
+      "legal_capacity": "municipal_self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:MUNICIPALITIES:cofunds_selected_services",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:MUNICIPALITIES",
+      "responsibility_role": "cofunds_selected_services",
+      "legal_capacity": "municipal_self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_public_transport:PRIVATE_NONPROFIT_PROVIDERS:operates_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_public_transport",
+      "function_name_cs": "Regionální veřejná doprava",
+      "function_name_en": "Regional public transport",
+      "actor_id": "CZE:PRIVATE_NONPROFIT_PROVIDERS",
+      "responsibility_role": "operates_service",
+      "legal_capacity": "contracted_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:CENTRAL_EXECUTIVE:sets_road_rules_and_standards",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_road_rules_and_standards",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:CENTRAL_EXECUTIVE:cofunds_selected_investment",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "cofunds_selected_investment",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:REGIONAL_ASSEMBLY:owns_assets",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "owns_assets",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:REGIONAL_ASSEMBLY:approves_investment_strategy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "approves_investment_strategy",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:REGIONAL_EXECUTIVE:funds_maintenance_and_investment",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "funds_maintenance_and_investment",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:REGIONAL_EXECUTIVE:commissions_works",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "commissions_works",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:REGIONAL_ORGANISATIONS:manages_assets",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "manages_assets",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_roads:REGIONAL_ORGANISATIONS:delivers_maintenance",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_roads",
+      "function_name_cs": "Silnice II. a III. třídy",
+      "function_name_en": "Class II and III regional roads",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "delivers_maintenance",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:CENTRAL_EXECUTIVE:sets_health_rules_and_standards",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_health_rules_and_standards",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:CENTRAL_EXECUTIVE:licenses_and_supervises_system",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "licenses_and_supervises_system",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:CENTRAL_EXECUTIVE:cofunds_selected_investment",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "cofunds_selected_investment",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:HEALTH_INSURERS:purchases_covered_care",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:HEALTH_INSURERS",
+      "responsibility_role": "purchases_covered_care",
+      "legal_capacity": "social_insurance",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:HEALTH_INSURERS:funds_provider_activity",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:HEALTH_INSURERS",
+      "responsibility_role": "funds_provider_activity",
+      "legal_capacity": "social_insurance",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_ASSEMBLY:founds_or_owns_regional_providers",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "founds_or_owns_regional_providers",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_ASSEMBLY:sets_owner_strategy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "sets_owner_strategy",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_EXECUTIVE:funds_emergency_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "funds_emergency_service",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_EXECUTIVE:funds_selected_investment",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "funds_selected_investment",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_EXECUTIVE:exercises_owner_control",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "exercises_owner_control",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_ORGANISATIONS:delivers_care",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "delivers_care",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_ORGANISATIONS:operates_emergency_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "operates_emergency_service",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:hospitals_and_emergency_medical_service:REGIONAL_ORGANISATIONS:reports_quality_and_finance",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "hospitals_and_emergency_medical_service",
+      "function_name_cs": "Nemocnice a zdravotnická záchranná služba",
+      "function_name_en": "Hospitals and emergency medical service",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "reports_quality_and_finance",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:CENTRAL_EXECUTIVE:sets_entitlement_and_quality_rules",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_entitlement_and_quality_rules",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:CENTRAL_EXECUTIVE:funds_state_grants",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "funds_state_grants",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:REGIONAL_EXECUTIVE:plans_regional_network",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "plans_regional_network",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:REGIONAL_EXECUTIVE:allocates_grants",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "allocates_grants",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:REGIONAL_EXECUTIVE:commissions_and_cofunds_services",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "commissions_and_cofunds_services",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:MUNICIPALITIES:plans_local_access",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:MUNICIPALITIES",
+      "responsibility_role": "plans_local_access",
+      "legal_capacity": "municipal_self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:MUNICIPALITIES:cofunds_services",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:MUNICIPALITIES",
+      "responsibility_role": "cofunds_services",
+      "legal_capacity": "municipal_self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:MUNICIPALITIES:delivers_selected_services",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:MUNICIPALITIES",
+      "responsibility_role": "delivers_selected_services",
+      "legal_capacity": "municipal_self_government",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:REGIONAL_ORGANISATIONS:delivers_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "delivers_service",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:social_services:PRIVATE_NONPROFIT_PROVIDERS:delivers_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "social_services",
+      "function_name_cs": "Sociální služby",
+      "function_name_en": "Social services",
+      "actor_id": "CZE:PRIVATE_NONPROFIT_PROVIDERS",
+      "responsibility_role": "delivers_service",
+      "legal_capacity": "contracted_service_provider",
+      "source_ids": [
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:PARLIAMENT:sets_legal_framework",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:PARLIAMENT",
+      "responsibility_role": "sets_legal_framework",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:CENTRAL_EXECUTIVE:sets_national_policy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_national_policy",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:CENTRAL_EXECUTIVE:funds_national_and_eu_programmes",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "funds_national_and_eu_programmes",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:REGIONAL_ASSEMBLY:approves_regional_development_programme",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "approves_regional_development_programme",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:REGIONAL_ASSEMBLY:approves_regional_spatial_planning_documents",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "approves_regional_spatial_planning_documents",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:REGIONAL_OFFICE:administers_planning_procedure",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "responsibility_role": "administers_planning_procedure",
+      "legal_capacity": "mixed_self_and_delegated_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:REGIONAL_OFFICE:coordinates_municipal_planning",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "responsibility_role": "coordinates_municipal_planning",
+      "legal_capacity": "mixed_self_and_delegated_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:MUNICIPALITIES:approves_local_spatial_plan",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:MUNICIPALITIES",
+      "responsibility_role": "approves_local_spatial_plan",
+      "legal_capacity": "municipal_self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:regional_development_and_spatial_planning:MUNICIPALITIES:implements_local_development",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "regional_development_and_spatial_planning",
+      "function_name_cs": "Regionální rozvoj a územní plánování",
+      "function_name_en": "Regional development and spatial planning",
+      "actor_id": "CZE:MUNICIPALITIES",
+      "responsibility_role": "implements_local_development",
+      "legal_capacity": "municipal_self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:CENTRAL_EXECUTIVE:sets_heritage_rules",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_heritage_rules",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:CENTRAL_EXECUTIVE:cofunds_programmes",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "cofunds_programmes",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:REGIONAL_ASSEMBLY:founds_and_owns_regional_institutions",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "founds_and_owns_regional_institutions",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:REGIONAL_ASSEMBLY:sets_regional_policy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "sets_regional_policy",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:REGIONAL_EXECUTIVE:funds_operations_and_investment",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "funds_operations_and_investment",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:REGIONAL_EXECUTIVE:exercises_owner_control",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "responsibility_role": "exercises_owner_control",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:REGIONAL_ORGANISATIONS:delivers_service",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "delivers_service",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:culture_and_regional_heritage:REGIONAL_ORGANISATIONS:manages_collections_and_assets",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "culture_and_regional_heritage",
+      "function_name_cs": "Kultura a regionální paměťové instituce",
+      "function_name_en": "Culture and regional heritage institutions",
+      "actor_id": "CZE:REGIONAL_ORGANISATIONS",
+      "responsibility_role": "manages_collections_and_assets",
+      "legal_capacity": "public_service_provider",
+      "source_ids": [
+        "cze-regions-act-129-2000"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:PARLIAMENT:sets_legal_framework",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:PARLIAMENT",
+      "responsibility_role": "sets_legal_framework",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:CENTRAL_EXECUTIVE:sets_national_policy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "sets_national_policy",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:CENTRAL_EXECUTIVE:supervises_delegated_administration",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "supervises_delegated_administration",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:CENTRAL_EXECUTIVE:funds_programmes",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "responsibility_role": "funds_programmes",
+      "legal_capacity": "national_competence",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:REGIONAL_ASSEMBLY:sets_regional_environment_policy",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "sets_regional_environment_policy",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:REGIONAL_ASSEMBLY:approves_selected_plans",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "responsibility_role": "approves_selected_plans",
+      "legal_capacity": "self_government",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:REGIONAL_OFFICE:administers_permits_and_appeals",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "responsibility_role": "administers_permits_and_appeals",
+      "legal_capacity": "delegated_state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    },
+    {
+      "assignment_id": "CZE:2025:environment_and_regional_permitting:REGIONAL_OFFICE:supervises_selected_municipal_administration",
+      "country_code": "CZE",
+      "fiscal_year": 2025,
+      "function_code": "environment_and_regional_permitting",
+      "function_name_cs": "Životní prostředí a regionální správní agenda",
+      "function_name_en": "Environment and regional permitting",
+      "actor_id": "CZE:REGIONAL_OFFICE",
+      "responsibility_role": "supervises_selected_municipal_administration",
+      "legal_capacity": "delegated_state_administration",
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "oecd-cze-decentralisation-2021"
+      ]
+    }
+  ],
+  "revenue_instruments": [
+    {
+      "instrument_id": "CZE:REGION_SHARED_TAXES",
+      "instrument_type": "shared_tax",
+      "name_cs": "Podíl krajů na sdílených daních",
+      "name_en": "Regional share of nationally shared taxes",
+      "budget_category": "tax_revenue",
+      "rate_setter_actor_id": "CZE:PARLIAMENT",
+      "collector_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "allocator_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "recipient_tier_id": "CZE:REGION",
+      "allocation_basis": "statutory_regional_shares_under_tax_allocation_act",
+      "earmarking": "unearmarked",
+      "regional_rate_discretion": "none",
+      "regional_use_discretion": "general_revenue_subject_to_law",
+      "is_own_source_revenue": false,
+      "source_ids": [
+        "cze-tax-allocation-act-243-2000"
+      ]
+    },
+    {
+      "instrument_id": "CZE:REGION_EDUCATION_DIRECT_COST_GRANT",
+      "instrument_type": "earmarked_transfer",
+      "name_cs": "Přímé výdaje regionálního školství",
+      "name_en": "Direct regional-education expenditure transfer",
+      "budget_category": "transfer_revenue",
+      "rate_setter_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "collector_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "allocator_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "recipient_tier_id": "CZE:REGION",
+      "allocation_basis": "school_and_facility_normative_rules_for_2025",
+      "earmarking": "earmarked",
+      "regional_rate_discretion": "not_applicable",
+      "regional_use_discretion": "restricted_to_eligible_direct_education_costs",
+      "is_own_source_revenue": false,
+      "source_ids": [
+        "cze-regional-education-financing-2025"
+      ]
+    },
+    {
+      "instrument_id": "CZE:REGION_DELEGATED_ADMINISTRATION_GRANT",
+      "instrument_type": "mandate_contribution",
+      "name_cs": "Příspěvek na přenesený výkon státní správy",
+      "name_en": "Contribution for delegated state administration",
+      "budget_category": "transfer_revenue",
+      "rate_setter_actor_id": "CZE:PARLIAMENT",
+      "collector_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "allocator_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "recipient_tier_id": "CZE:REGION",
+      "allocation_basis": "annual_state_budget_and_staffing_cost_methodology",
+      "earmarking": "mandate_linked_contribution",
+      "regional_rate_discretion": "not_applicable",
+      "regional_use_discretion": "linked_to_delegated_state_administration",
+      "is_own_source_revenue": false,
+      "source_ids": [
+        "cze-regions-act-129-2000",
+        "cze-delegated-administration-grant-2025"
+      ]
+    },
+    {
+      "instrument_id": "CZE:REGION_PROGRAMME_TRANSFERS",
+      "instrument_type": "programme_transfer",
+      "name_cs": "Programové, provozní a investiční transfery",
+      "name_en": "Programme, operating and capital transfers",
+      "budget_category": "transfer_revenue",
+      "rate_setter_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "collector_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "allocator_actor_id": "CZE:CENTRAL_EXECUTIVE",
+      "recipient_tier_id": "CZE:REGION",
+      "allocation_basis": "multiple_programme_rules_and_award_decisions",
+      "earmarking": "mixed_mostly_earmarked",
+      "regional_rate_discretion": "not_applicable",
+      "regional_use_discretion": "programme_specific",
+      "is_own_source_revenue": false,
+      "source_ids": [
+        "cze-territorial-budget-rules-250-2000"
+      ]
+    },
+    {
+      "instrument_id": "CZE:REGION_NONTAX_OWN_REVENUE",
+      "instrument_type": "fees_property_and_service_income",
+      "name_cs": "Nedaňové vlastní příjmy",
+      "name_en": "Own non-tax revenue",
+      "budget_category": "nontax_revenue",
+      "rate_setter_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "collector_actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "allocator_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "recipient_tier_id": "CZE:REGION",
+      "allocation_basis": "fees_contracts_property_income_and_other_nontax_receipts",
+      "earmarking": "mixed",
+      "regional_rate_discretion": "partial_within_national_law_and_contracts",
+      "regional_use_discretion": "generally_regional",
+      "is_own_source_revenue": true,
+      "source_ids": [
+        "cze-territorial-budget-rules-250-2000"
+      ]
+    },
+    {
+      "instrument_id": "CZE:REGION_CAPITAL_REVENUE",
+      "instrument_type": "asset_disposal_and_capital_receipts",
+      "name_cs": "Kapitálové vlastní příjmy",
+      "name_en": "Own capital revenue",
+      "budget_category": "capital_revenue",
+      "rate_setter_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "collector_actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "allocator_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "recipient_tier_id": "CZE:REGION",
+      "allocation_basis": "asset_and_capital_transactions",
+      "earmarking": "transaction_specific_or_unearmarked",
+      "regional_rate_discretion": "transaction_discretion_subject_to_law",
+      "regional_use_discretion": "regional_subject_to_budget_rules",
+      "is_own_source_revenue": true,
+      "source_ids": [
+        "cze-territorial-budget-rules-250-2000"
+      ]
+    },
+    {
+      "instrument_id": "CZE:REGION_BORROWING",
+      "instrument_type": "financing",
+      "name_cs": "Úvěry, dluhopisy a změna peněžních prostředků",
+      "name_en": "Loans, bonds and change in cash",
+      "budget_category": "financing",
+      "rate_setter_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "collector_actor_id": "CZE:REGIONAL_EXECUTIVE",
+      "allocator_actor_id": "CZE:REGIONAL_ASSEMBLY",
+      "recipient_tier_id": "CZE:REGION",
+      "allocation_basis": "regional_financing_decision_subject_to_general_law",
+      "earmarking": "financing_not_revenue",
+      "regional_rate_discretion": "market_and_contractual",
+      "regional_use_discretion": "approved_regional_budget",
+      "is_own_source_revenue": false,
+      "source_ids": [
+        "cze-territorial-budget-rules-250-2000"
+      ]
+    }
+  ],
+  "regional_entities": [
+    {
+      "public_entity_id": "CZ:00064581",
+      "national_entity_code": "00064581",
+      "entity_name": "Hlavní město Praha",
+      "display_name": "Praha",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "municipality",
+        "region"
+      ],
+      "is_prague_dual_role": true,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 148140567664.53,
+      "expense_actual": 123970124035.39005,
+      "budget_balance": 24170443629.139954,
+      "financing_actual": -24170443629.14,
+      "revenue_composition": {
+        "tax_revenue": 102553263595.08,
+        "transfer_revenue": 35990609247.27999,
+        "nontax_revenue": 8978728044.760002,
+        "capital_revenue": 617966777.41
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.6922699515187211,
+        "transfer_revenue_share": 0.2429490437000492,
+        "nontax_revenue_share": 0.06060951558585003,
+        "capital_revenue_share": 0.004171489195379684
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 9596694822.170002,
+        "own_source_upper_bound_share": 0.06478100478122971,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 35990609247.27999,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:00064581",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/00064581/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70891095",
+      "national_entity_code": "70891095",
+      "entity_name": "Středočeský kraj",
+      "display_name": "Středočeský kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 52865160862.780014,
+      "expense_actual": 53584738272.45,
+      "budget_balance": -719577409.6699829,
+      "financing_actual": 719577409.67,
+      "revenue_composition": {
+        "tax_revenue": 16315037363.920002,
+        "transfer_revenue": 35310280517.350006,
+        "nontax_revenue": 1216277240.51,
+        "capital_revenue": 23565741.0
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3086160544610522,
+        "transfer_revenue_share": 0.6679310143215773,
+        "nontax_revenue_share": 0.023007160493979054,
+        "capital_revenue_share": 0.00044577072339132103
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 1239842981.51,
+        "own_source_upper_bound_share": 0.023452931217370375,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 35310280517.350006,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70891095",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891095/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70888337",
+      "national_entity_code": "70888337",
+      "entity_name": "Jihomoravský kraj",
+      "display_name": "Jihomoravský kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 42242821545.69,
+      "expense_actual": 42697360737.67,
+      "budget_balance": -454539191.9799957,
+      "financing_actual": 454539191.98,
+      "revenue_composition": {
+        "tax_revenue": 11413246591.79,
+        "transfer_revenue": 29220166641.2,
+        "nontax_revenue": 1604562022.7,
+        "capital_revenue": 4846290.0
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.2701819190615709,
+        "transfer_revenue_share": 0.6917191033178348,
+        "nontax_revenue_share": 0.03798425303964366,
+        "capital_revenue_share": 0.00011472458095059379
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 1609408312.7,
+        "own_source_upper_bound_share": 0.03809897762059425,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 29220166641.2,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70888337",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70888337/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70890692",
+      "national_entity_code": "70890692",
+      "entity_name": "Moravskoslezský kraj",
+      "display_name": "Moravskoslezský kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 41856431553.88,
+      "expense_actual": 41877819328.639946,
+      "budget_balance": -21387774.75994873,
+      "financing_actual": 21387774.76,
+      "revenue_composition": {
+        "tax_revenue": 11445015007.51,
+        "transfer_revenue": 28872853512.529995,
+        "nontax_revenue": 1462587239.62,
+        "capital_revenue": 75975794.22
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.2734350393147424,
+        "transfer_revenue_share": 0.6898068574088358,
+        "nontax_revenue_share": 0.03494295106684558,
+        "capital_revenue_share": 0.0018151522095761939
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 1538563033.84,
+        "own_source_upper_bound_share": 0.03675810327642177,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 28872853512.529995,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70890692",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890692/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70892156",
+      "national_entity_code": "70892156",
+      "entity_name": "Ústecký kraj",
+      "display_name": "Ústecký kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 31477848377.670002,
+      "expense_actual": 31774102039.53999,
+      "budget_balance": -296253661.8699875,
+      "financing_actual": 296253661.87,
+      "revenue_composition": {
+        "tax_revenue": 9882813566.5,
+        "transfer_revenue": 20692031536.030003,
+        "nontax_revenue": 866544457.14,
+        "capital_revenue": 36458818.0
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3139608987223773,
+        "transfer_revenue_share": 0.6573521572303104,
+        "nontax_revenue_share": 0.02752870675095811,
+        "capital_revenue_share": 0.0011582372963542017
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 903003275.14,
+        "own_source_upper_bound_share": 0.028686944047312313,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 20692031536.030003,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70892156",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70892156/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70890650",
+      "national_entity_code": "70890650",
+      "entity_name": "Jihočeský kraj",
+      "display_name": "Jihočeský kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 28224242856.370007,
+      "expense_actual": 27715553108.99,
+      "budget_balance": 508689747.3800049,
+      "financing_actual": -508689747.38,
+      "revenue_composition": {
+        "tax_revenue": 10189432216.150002,
+        "transfer_revenue": 16955965089.890001,
+        "nontax_revenue": 1078026080.23,
+        "capital_revenue": 819470.1
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.36101702596604185,
+        "transfer_revenue_share": 0.6007588999349601,
+        "nontax_revenue_share": 0.03819503983564602,
+        "capital_revenue_share": 2.9034263351906055e-05
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 1078845550.33,
+        "own_source_upper_bound_share": 0.038224074098997925,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 16955965089.890001,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70890650",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890650/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:60609460",
+      "national_entity_code": "60609460",
+      "entity_name": "Olomoucký kraj",
+      "display_name": "Olomoucký kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 26627523570.969997,
+      "expense_actual": 26148973682.659977,
+      "budget_balance": 478549888.31002045,
+      "financing_actual": -478549888.31,
+      "revenue_composition": {
+        "tax_revenue": 7993223440.1,
+        "transfer_revenue": 17714630567.339996,
+        "nontax_revenue": 914785787.53,
+        "capital_revenue": 4883776.0
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3001865126058668,
+        "transfer_revenue_share": 0.6652751811532687,
+        "nontax_revenue_share": 0.03435489541833784,
+        "capital_revenue_share": 0.00018341082252667373
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 919669563.53,
+        "own_source_upper_bound_share": 0.034538306240864514,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 17714630567.339996,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:60609460",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/60609460/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70890366",
+      "national_entity_code": "70890366",
+      "entity_name": "Plzeňský kraj",
+      "display_name": "Plzeňský kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 23890097295.680004,
+      "expense_actual": 24242578081.749996,
+      "budget_balance": -352480786.06999207,
+      "financing_actual": 352480786.07,
+      "revenue_composition": {
+        "tax_revenue": 8576426667.110001,
+        "transfer_revenue": 14337581821.800001,
+        "nontax_revenue": 970059687.5200001,
+        "capital_revenue": 6029119.25
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.35899504974644275,
+        "transfer_revenue_share": 0.6001474855605814,
+        "nontax_revenue_share": 0.04060509572287987,
+        "capital_revenue_share": 0.00025236897009583265
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 976088806.7700001,
+        "own_source_upper_bound_share": 0.0408574646929757,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 14337581821.800001,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70890366",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890366/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70890749",
+      "national_entity_code": "70890749",
+      "entity_name": "Kraj Vysočina",
+      "display_name": "Kraj Vysočina",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 23410035599.24,
+      "expense_actual": 23141913539.070004,
+      "budget_balance": 268122060.16999817,
+      "financing_actual": -268122060.17,
+      "revenue_composition": {
+        "tax_revenue": 8735881612.03,
+        "transfer_revenue": 13857827972.269999,
+        "nontax_revenue": 814637788.94,
+        "capital_revenue": 1688226.0
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.37316823270074856,
+        "transfer_revenue_share": 0.5919609952545262,
+        "nontax_revenue_share": 0.03479865656276264,
+        "capital_revenue_share": 7.211548196256514e-05
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 816326014.94,
+        "own_source_upper_bound_share": 0.034870772044725204,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 13857827972.269999,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70890749",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70890749/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70889546",
+      "national_entity_code": "70889546",
+      "entity_name": "Královéhradecký kraj",
+      "display_name": "Královéhradecký kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 23279830054.720005,
+      "expense_actual": 23965189320.969986,
+      "budget_balance": -685359266.2499809,
+      "financing_actual": 685359266.25,
+      "revenue_composition": {
+        "tax_revenue": 7679545658.8,
+        "transfer_revenue": 14932873330.869999,
+        "nontax_revenue": 662016697.05,
+        "capital_revenue": 5394368.0
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3298797989825946,
+        "transfer_revenue_share": 0.6414511315490615,
+        "nontax_revenue_share": 0.02843735093829757,
+        "capital_revenue_share": 0.00023171853004598235
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 667411065.05,
+        "own_source_upper_bound_share": 0.028669069468343553,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 14932873330.869999,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70889546",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70889546/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70891320",
+      "national_entity_code": "70891320",
+      "entity_name": "Zlínský kraj",
+      "display_name": "Zlínský kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 22616815638.1,
+      "expense_actual": 23687455297.839973,
+      "budget_balance": -1070639659.739975,
+      "financing_actual": 1070639659.74,
+      "revenue_composition": {
+        "tax_revenue": 6289297477.460001,
+        "transfer_revenue": 15272709312.819998,
+        "nontax_revenue": 1046923852.68,
+        "capital_revenue": 7884995.14
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.2780805918082089,
+        "transfer_revenue_share": 0.6752811517414409,
+        "nontax_revenue_share": 0.04628962226301944,
+        "capital_revenue_share": 0.0003486341873308211
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 1054808847.8199999,
+        "own_source_upper_bound_share": 0.04663825645035026,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 15272709312.819998,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70891320",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891320/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70892822",
+      "national_entity_code": "70892822",
+      "entity_name": "Pardubický kraj",
+      "display_name": "Pardubický kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 21349047271.229996,
+      "expense_actual": 21033565966.18999,
+      "budget_balance": 315481305.04000473,
+      "financing_actual": -315481305.04,
+      "revenue_composition": {
+        "tax_revenue": 6620893246.49,
+        "transfer_revenue": 14348123171.51,
+        "nontax_revenue": 358815554.7,
+        "capital_revenue": 21215298.53
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3101259350065857,
+        "transfer_revenue_share": 0.6720732306797386,
+        "nontax_revenue_share": 0.016807099171284347,
+        "capital_revenue_share": 0.0009937351423915655
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 380030853.23,
+        "own_source_upper_bound_share": 0.017800834313675913,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 14348123171.51,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70892822",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70892822/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70891508",
+      "national_entity_code": "70891508",
+      "entity_name": "Liberecký kraj",
+      "display_name": "Liberecký kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 17274611531.84,
+      "expense_actual": 17562481666.220005,
+      "budget_balance": -287870134.3800049,
+      "financing_actual": 287870134.38,
+      "revenue_composition": {
+        "tax_revenue": 5575817708.73,
+        "transfer_revenue": 11226215524.89,
+        "nontax_revenue": 472208083.62,
+        "capital_revenue": 370214.6
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3227752877946248,
+        "transfer_revenue_share": 0.6498679003112866,
+        "nontax_revenue_share": 0.027335380755141237,
+        "capital_revenue_share": 2.1431138947329295e-05
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 472578298.22,
+        "own_source_upper_bound_share": 0.027356811894088565,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 11226215524.89,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70891508",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891508/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    },
+    {
+      "public_entity_id": "CZ:70891168",
+      "national_entity_code": "70891168",
+      "entity_name": "Karlovarský kraj",
+      "display_name": "Karlovarský kraj",
+      "tier_id": "CZE:REGION",
+      "accounting_roles": [
+        "region"
+      ],
+      "is_prague_dual_role": false,
+      "fiscal_year": 2025,
+      "budget_stage": "actual",
+      "currency_code": "CZK",
+      "reporting_scope": "regional_accounting_entity_only",
+      "revenue_actual": 12666351383.74,
+      "expense_actual": 11998122530.75001,
+      "budget_balance": 668228852.9899902,
+      "financing_actual": -668228852.99,
+      "revenue_composition": {
+        "tax_revenue": 4538557752.309999,
+        "transfer_revenue": 7467590020.2,
+        "nontax_revenue": 660177361.2299998,
+        "capital_revenue": 26250.0
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3583161097311906,
+        "transfer_revenue_share": 0.5895612551682615,
+        "nontax_revenue_share": 0.05212056268054273,
+        "capital_revenue_share": 2.0724200051561453e-06
+      },
+      "fiscal_autonomy_proxies": {
+        "own_source_upper_bound_amount": 660203611.2299998,
+        "own_source_upper_bound_share": 0.05212263510054788,
+        "interpretation": "Upper-bound proxy: non-tax plus capital revenue. It is not a measure of fully discretionary revenue. Tax revenue is predominantly nationally shared tax, not a regionally set tax.",
+        "direct_own_tax_amount": null,
+        "direct_own_tax_share": null,
+        "missing_reason": "FIN 2-12 M summary does not identify regional tax-rate authority because Czech regions generally do not set the rates of the shared taxes recorded here."
+      },
+      "transfer_observation": {
+        "amount_local": 7467590020.2,
+        "sender_entity_id": null,
+        "recipient_entity_id": "CZ:70891168",
+        "counterparty_coverage": "not_disaggregated_in_summary",
+        "earmarking_coverage": "not_disaggregated_in_summary",
+        "quality_flags": [
+          "mixed_transfer_programmes",
+          "sender_not_loaded",
+          "not_matchable_for_consolidation"
+        ]
+      },
+      "source": {
+        "source_id": "cze-monitor-fin-2-12m-2025",
+        "url": "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/70891168/rozpocet/souhrnny?obdobi=2512&rad=t"
+      }
+    }
+  ],
+  "aggregates": {
+    "regions_excluding_prague": {
+      "scope": "thirteen_regions_excluding_prague",
+      "entity_count": 13,
+      "currency_code": "CZK",
+      "fiscal_year": 2025,
+      "revenue_actual": 367780817541.91,
+      "expense_actual": 369429853572.73987,
+      "budget_balance": -1649036030.8298492,
+      "revenue_composition": {
+        "tax_revenue": 115255188308.90001,
+        "transfer_revenue": 240208849018.7,
+        "nontax_revenue": 12127621853.470001,
+        "capital_revenue": 189158360.83999997
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.3133800970893928,
+        "transfer_revenue_share": 0.6531304449866457,
+        "nontax_revenue_share": 0.03297513430560585,
+        "capital_revenue_share": 0.0005143236183557744
+      },
+      "non_additivity_warning": "The Prague accounting budget has both municipal and regional roles. Do not add the all-region aggregate to an all-municipality aggregate without eliminating Prague and matched intergovernmental transfers."
+    },
+    "all_regional_roles_including_prague": {
+      "scope": "all_regions_including_prague",
+      "entity_count": 14,
+      "currency_code": "CZK",
+      "fiscal_year": 2025,
+      "revenue_actual": 515921385206.43994,
+      "expense_actual": 493399977608.1299,
+      "budget_balance": 22521407598.310104,
+      "revenue_composition": {
+        "tax_revenue": 217808451903.98,
+        "transfer_revenue": 276199458265.98004,
+        "nontax_revenue": 21106349898.230003,
+        "capital_revenue": 807125138.25
+      },
+      "revenue_composition_shares": {
+        "tax_revenue_share": 0.42217372287606664,
+        "transfer_revenue_share": 0.5353518310846177,
+        "nontax_revenue_share": 0.040910011686731196,
+        "capital_revenue_share": 0.0015644343525846253
+      },
+      "non_additivity_warning": "The Prague accounting budget has both municipal and regional roles. Do not add the all-region aggregate to an all-municipality aggregate without eliminating Prague and matched intergovernmental transfers."
+    }
+  },
+  "risk_hypotheses": [
+    {
+      "risk_code": "vertical_fiscal_gap",
+      "name_cs": "Odpovědnost bez odpovídajícího vlastního příjmu",
+      "name_en": "Responsibility without matching own revenue",
+      "testable_now": true,
+      "signals": [
+        "transfer_revenue_share",
+        "shared_tax_share",
+        "own_source_share"
+      ],
+      "caution_cs": "Vysoký podíl transferů je strukturální signál, nikoli důkaz plýtvání.",
+      "caution_en": "A high transfer share is a structural signal, not proof of waste."
+    },
+    {
+      "risk_code": "split_accountability",
+      "name_cs": "Rozdělené rozhodování, financování a poskytování",
+      "name_en": "Split decision, financing and delivery",
+      "testable_now": true,
+      "signals": [
+        "actors_per_function",
+        "funders_per_function",
+        "role_overlap_count"
+      ],
+      "caution_cs": "Sdílená odpovědnost může být vhodná; riziko vzniká, když občan nepozná, kdo se má zodpovídat.",
+      "caution_en": "Shared responsibility can be appropriate; the risk arises when citizens cannot identify the answerable actor."
+    },
+    {
+      "risk_code": "earmarked_transfer_rigidity",
+      "name_cs": "Nízká možnost přesouvat účelové prostředky",
+      "name_en": "Low ability to redirect earmarked funding",
+      "testable_now": false,
+      "signals": [
+        "earmarked_transfer_share",
+        "unused_transfer_balance",
+        "budget_amendment_frequency"
+      ],
+      "caution_cs": "Současný souhrn FIN nerozlišuje jednotlivé transferové programy dostatečně.",
+      "caution_en": "The current FIN summary does not split transfer programmes sufficiently."
+    },
+    {
+      "risk_code": "pass_through_opacity",
+      "name_cs": "Kraj jako průtokový účet",
+      "name_en": "Region acting as a pass-through account",
+      "testable_now": false,
+      "signals": [
+        "incoming_outgoing_transfer_match",
+        "retained_transfer_share"
+      ],
+      "caution_cs": "Párování plátce a příjemce vyžaduje detail protistran, který zatím není načten.",
+      "caution_en": "Payer-recipient transfer matching requires detailed counterparty data not yet loaded."
+    },
+    {
+      "risk_code": "stale_allocation_formula",
+      "name_cs": "Rozdělení příjmů neodpovídá dnešní poptávce",
+      "name_en": "Revenue allocation no longer matches current demand",
+      "testable_now": false,
+      "signals": [
+        "allocation_share_change",
+        "population_change",
+        "student_change",
+        "ageing_change",
+        "service_load_change"
+      ],
+      "caution_cs": "Kauzální test potřebuje historii zákonného vzorce a časové řady poptávky po službách.",
+      "caution_en": "A causal test needs the statutory formula history and service-demand series."
+    },
+    {
+      "risk_code": "horizontal_fragmentation",
+      "name_cs": "Ztráta úspor z rozsahu mezi poskytovateli a územími",
+      "name_en": "Lost economies of scale across providers and territories",
+      "testable_now": false,
+      "signals": [
+        "cost_per_output",
+        "provider_scale",
+        "capacity_utilisation",
+        "cross_border_use"
+      ],
+      "caution_cs": "Samotné rozpočtové součty nerozliší volbu dostupnosti od neefektivity.",
+      "caution_en": "Budget totals alone cannot distinguish access choices from inefficiency."
+    },
+    {
+      "risk_code": "internal_transfer_double_counting",
+      "name_cs": "Dvojí započtení stejného toku",
+      "name_en": "Double counting the same internal flow",
+      "testable_now": true,
+      "signals": [
+        "payer_recipient_transfer_match",
+        "prague_dual_role",
+        "consolidation_scope"
+      ],
+      "caution_cs": "Rozpočty subjektů jsou samostatně platné; pouze konsolidovaný pohled eliminuje spárované vnitřní transfery.",
+      "caution_en": "Entity budgets are valid separately; only consolidated views eliminate matched internal transfers."
+    }
+  ],
+  "international_archetypes": [
+    {
+      "archetype_id": "unitary_low_tax_autonomy",
+      "examples": [
+        "CZE"
+      ],
+      "name_cs": "Volený region s nízkou daňovou autonomií",
+      "name_en": "Elected region with low tax autonomy",
+      "legislative_power": "limited_subordinate_rules",
+      "tax_autonomy": "very_low",
+      "main_funding": "shared_taxes_and_transfers",
+      "budget_data_status": "czech_region_summaries_loaded"
+    },
+    {
+      "archetype_id": "federal_shared_tax_state",
+      "examples": [
+        "DEU"
+      ],
+      "name_cs": "Spolková země ve sdíleném daňovém systému",
+      "name_en": "Federal state in a shared-tax system",
+      "legislative_power": "high",
+      "tax_autonomy": "medium",
+      "main_funding": "own_and_shared_taxes_equalisation",
+      "budget_data_status": "tier_model_only_budget_not_loaded"
+    },
+    {
+      "archetype_id": "federal_high_tax_canton",
+      "examples": [
+        "CHE"
+      ],
+      "name_cs": "Kanton se silnou vlastní daňovou pravomocí",
+      "name_en": "Canton with strong own-tax authority",
+      "legislative_power": "high",
+      "tax_autonomy": "high",
+      "main_funding": "own_taxes_and_equalisation",
+      "budget_data_status": "tier_model_only_budget_not_loaded"
+    },
+    {
+      "archetype_id": "asymmetric_autonomous_region_common",
+      "examples": [
+        "ESP-common"
+      ],
+      "name_cs": "Autonomní region ve společném režimu",
+      "name_en": "Autonomous region under the common regime",
+      "legislative_power": "high_within_statute",
+      "tax_autonomy": "medium",
+      "main_funding": "assigned_tax_shares_and_equalisation_funds",
+      "budget_data_status": "tier_model_only_budget_not_loaded"
+    },
+    {
+      "archetype_id": "asymmetric_autonomous_region_foral",
+      "examples": [
+        "ESP-foral"
+      ],
+      "name_cs": "Forální region vybírající většinu daní",
+      "name_en": "Foral region collecting most taxes",
+      "legislative_power": "high_within_statute",
+      "tax_autonomy": "high",
+      "main_funding": "regionally_administered_taxes_less_contribution_to_state",
+      "budget_data_status": "tier_model_only_budget_not_loaded"
+    },
+    {
+      "archetype_id": "unitary_tax_funded_region",
+      "examples": [
+        "SWE"
+      ],
+      "name_cs": "Region v unitárním státě s vlastní daní",
+      "name_en": "Region in a unitary state with its own tax",
+      "legislative_power": "limited",
+      "tax_autonomy": "high_for_assigned_services",
+      "main_funding": "regional_income_tax_and_grants",
+      "budget_data_status": "tier_model_only_budget_not_loaded"
+    },
+    {
+      "archetype_id": "unitary_transfer_funded_functional_region",
+      "examples": [
+        "DNK"
+      ],
+      "name_cs": "Funkční region financovaný transfery",
+      "name_en": "Transfer-funded functional region",
+      "legislative_power": "limited",
+      "tax_autonomy": "none",
+      "main_funding": "state_and_municipal_contributions",
+      "budget_data_status": "tier_model_only_budget_not_loaded"
+    },
+    {
+      "archetype_id": "federal_broad_tax_state",
+      "examples": [
+        "USA"
+      ],
+      "name_cs": "Stát federace se širokými příjmovými pravomocemi",
+      "name_en": "Federal state with broad revenue authority",
+      "legislative_power": "high",
+      "tax_autonomy": "high",
+      "main_funding": "state_taxes_federal_grants_and_borrowing",
+      "budget_data_status": "tier_model_only_budget_not_loaded"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "cze-regions-act-129-2000",
+      "source_type": "legal_basis",
+      "publisher": "Parlament České republiky",
+      "title": "Zákon č. 129/2000 Sb., o krajích",
+      "url": "https://www.zakonyprolidi.cz/cs/2000-129",
+      "supports": [
+        "tier_design",
+        "self_government",
+        "delegated_administration",
+        "budget_approval",
+        "state_supervision"
+      ]
+    },
+    {
+      "source_id": "cze-municipalities-act-128-2000",
+      "source_type": "legal_basis",
+      "publisher": "Parlament České republiky",
+      "title": "Zákon č. 128/2000 Sb., o obcích",
+      "url": "https://www.zakonyprolidi.cz/cs/2000-128",
+      "supports": [
+        "municipal_independence",
+        "delegated_administration_supervision"
+      ]
+    },
+    {
+      "source_id": "cze-tax-allocation-act-243-2000",
+      "source_type": "legal_basis",
+      "publisher": "Parlament České republiky",
+      "title": "Zákon č. 243/2000 Sb., o rozpočtovém určení daní",
+      "url": "https://www.zakonyprolidi.cz/cs/2000-243",
+      "supports": [
+        "shared_tax_pool",
+        "regional_allocation_formula"
+      ]
+    },
+    {
+      "source_id": "cze-territorial-budget-rules-250-2000",
+      "source_type": "legal_basis",
+      "publisher": "Parlament České republiky",
+      "title": "Zákon č. 250/2000 Sb., o rozpočtových pravidlech územních rozpočtů",
+      "url": "https://www.zakonyprolidi.cz/cs/2000-250",
+      "supports": [
+        "budget_process",
+        "funds",
+        "organisations",
+        "transfers"
+      ]
+    },
+    {
+      "source_id": "cze-financial-review-act-420-2004",
+      "source_type": "legal_basis",
+      "publisher": "Parlament České republiky",
+      "title": "Zákon č. 420/2004 Sb., o přezkoumávání hospodaření územních samosprávných celků",
+      "url": "https://www.zakonyprolidi.cz/cs/2004-420",
+      "supports": [
+        "external_financial_review"
+      ]
+    },
+    {
+      "source_id": "cze-monitor-fin-2-12m-2025",
+      "source_type": "budget_execution",
+      "publisher": "Ministerstvo financí České republiky",
+      "title": "Monitor státní pokladny · FIN 2-12 M · skutečnost 2025",
+      "url": "https://monitor.statnipokladna.gov.cz/",
+      "supports": [
+        "entity_identity",
+        "regional_budget_execution",
+        "revenue_composition"
+      ]
+    },
+    {
+      "source_id": "cze-monitor-methodology",
+      "source_type": "methodology",
+      "publisher": "Ministerstvo financí České republiky",
+      "title": "Monitor státní pokladny · metodika",
+      "url": "https://monitor.statnipokladna.gov.cz/metodika",
+      "supports": [
+        "reporting_scope",
+        "publication_method"
+      ]
+    },
+    {
+      "source_id": "cze-delegated-administration-grant-2025",
+      "source_type": "transfer_methodology",
+      "publisher": "Ministerstvo vnitra České republiky",
+      "title": "Příspěvek na výkon státní správy pro rok 2025",
+      "url": "https://mv.gov.cz/npo/clanek/prispevek-na-vykon-statni-spravy-prispevek-na-vykon-statni-spravy.aspx",
+      "supports": [
+        "delegated_administration_grant"
+      ]
+    },
+    {
+      "source_id": "cze-regional-education-financing-2025",
+      "source_type": "transfer_methodology",
+      "publisher": "Ministerstvo školství, mládeže a tělovýchovy",
+      "title": "Principy rozpisu rozpočtu přímých výdajů regionálního školství na rok 2025",
+      "url": "https://msmt.gov.cz/aktuality/normativy-pro-regionalni-skolstvi-uzemnich-samospravnych-celku-na-rok-2025",
+      "supports": [
+        "education_direct_cost_grant",
+        "secondary_education_roles"
+      ]
+    },
+    {
+      "source_id": "oecd-cze-decentralisation-2021",
+      "source_type": "comparative_methodology",
+      "publisher": "OECD",
+      "title": "Enhancing administrative and fiscal decentralisation in the Czech Republic",
+      "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/01/enhancing-administrative-and-fiscal-decentralisation-in-the-czech-republic_307826f4/c1d0c9bb-en.pdf",
+      "supports": [
+        "international_comparison",
+        "assignment_review",
+        "fiscal_autonomy_interpretation",
+        "risk_hypotheses"
+      ]
+    },
+    {
+      "source_id": "oecd-regional-governance-2022",
+      "source_type": "comparative_methodology",
+      "publisher": "OECD",
+      "title": "Regional Governance in OECD Countries",
+      "url": "https://www.oecd.org/en/publications/regional-governance-in-oecd-countries_4d7c6483-en/full-report/component-10.html",
+      "supports": [
+        "international_archetypes",
+        "tier_classification"
+      ]
+    }
+  ],
+  "integrity": {
+    "status": "passed",
+    "checks": {
+      "fourteen_regional_entities_present": true,
+      "prague_dual_role_explicit": true,
+      "municipalities_not_region_budget_children": true,
+      "regional_revenue_components_reconcile": true,
+      "every_function_has_assignments": true,
+      "responsibility_assignments_have_lineage": true,
+      "transfer_counterparty_gaps_explicit": true,
+      "archetype_budget_coverage_explicit": true
+    },
+    "limitations": [
+      "Regional FIN 2-12 M summary totals are loaded, but programme-level transfer counterparties are not yet loaded.",
+      "Tax revenue is an accounting category. It must not be interpreted as tax-rate autonomy.",
+      "Responsibility assignments describe the 2025 institutional design; they are not service-performance scores.",
+      "International archetypes are comparison metadata only. Their regional entity budgets are not loaded in this release.",
+      "Provider assets, employment, outputs, quality outcomes, procurement and debt instruments remain separate future fact layers."
+    ],
+    "limitations_cs": [
+      "Souhrnné částky FIN 2-12 M jsou načtené, ale protistrany a programy jednotlivých transferů zatím ne.",
+      "Daňové příjmy jsou účetní kategorie. Nesmějí být vykládány jako pravomoc kraje určovat sazbu daně.",
+      "Přiřazení odpovědností popisuje institucionální uspořádání roku 2025; nejde o hodnocení výkonu služeb.",
+      "Mezinárodní archetypy jsou pouze srovnávací metadata. Rozpočty zahraničních regionálních vlád v této verzi načtené nejsou.",
+      "Majetek poskytovatelů, zaměstnanost, výstupy, kvalita, zakázky a dluhové nástroje zůstávají samostatnými budoucími vrstvami."
+    ],
+    "limitations_en": [
+      "Regional FIN 2-12 M summary totals are loaded, but programme-level transfer counterparties are not yet loaded.",
+      "Tax revenue is an accounting category. It must not be interpreted as tax-rate autonomy.",
+      "Responsibility assignments describe the 2025 institutional design; they are not service-performance scores.",
+      "International archetypes are comparison metadata only. Their regional entity budgets are not loaded in this release.",
+      "Provider assets, employment, outputs, quality outcomes, procurement and debt instruments remain separate future fact layers."
+    ]
+  }
+}
