@@ -2,7 +2,7 @@
 
 ## Non-negotiable hosting rule
 
-CZ Budget must never use ChatGPT Sites. Do not create, save, preview, publish, deploy, inspect, or reconnect a Sites project, and never restore `.openai/hosting.json`. The only permitted deployment path is this Git repository through Google Cloud Build to Cloud Run.
+The only permitted deployment path is this Git repository through Google Cloud Build to Cloud Run. Do not create or connect any alternate hosting project, source repository, preview, deployment integration, or provider-specific project metadata.
 
 This Git repository is the only source allowed to deploy the public CZ Budget service.
 
