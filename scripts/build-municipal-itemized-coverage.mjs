@@ -14,10 +14,21 @@ const benchmarkLabels = {
   NOR: { en: "native KOSTRA measures", cs: "původní ukazatele KOSTRA" }
 };
 const expansionLabels = {
+  BOL: { en: "native budget, revision and execution items", cs: "původní položky rozpočtu, úprav a plnění" },
   BRA: { en: "native RREO or DCA budget-execution items", cs: "původní položky plnění RREO nebo DCA" },
+  CHL: { en: "native SINIM revenue and expenditure items", cs: "původní položky příjmů a výdajů SINIM" },
+  COL: { en: "native CUIPO plan and execution items", cs: "původní položky plánu a plnění CUIPO" },
+  CRI: { en: "native SIPP revenue and expenditure items", cs: "původní položky příjmů a výdajů SIPP" },
   DNK: { en: "native BUDK100 and REGK100 account items", cs: "původní účetní položky BUDK100 a REGK100" },
   ESP: { en: "native CONPREL budget and liquidation items", cs: "původní rozpočtové a likvidační položky CONPREL" },
+  GEO: { en: "native Ministry of Finance plan and execution items", cs: "původní položky plánu a plnění ministerstva financí" },
+  GTM: { en: "native SICOINGL and SICOINDES budget-execution items", cs: "původní položky plnění SICOINGL a SICOINDES" },
+  ITA: { en: "native SIOPE cash receipt and payment items", cs: "původní položky hotovostních příjmů a plateb SIOPE" },
   JPN: { en: "native Local Public Finance Survey items", cs: "původní položky Local Public Finance Survey" },
+  KOR: { en: "native Local Finance 365 settlement items", cs: "původní položky závěrečných účtů Local Finance 365" },
+  MEX: { en: "native EFIPEM annual finance items", cs: "původní položky ročních financí EFIPEM" },
+  PER: { en: "native MEF budget and execution items", cs: "původní položky rozpočtu a plnění MEF" },
+  SLV: { en: "native SAFIM budget-execution items", cs: "původní položky plnění SAFIM" },
 };
 const benchmarkData = Object.fromEntries(await Promise.all(
   Object.entries(benchmarkCodes).map(async ([code, slug]) => [code, await read(`data/municipal-benchmarks/${slug}.json`)])
@@ -41,11 +52,13 @@ const countries = municipalities.countries.map((country) => {
 
   const warehouse = warehouseByCountry[country.code];
   if (warehouse) {
+    const publishedProfileCount = warehouse.published_profile_count ?? Math.min(warehouse.profile_count, country.directory_count);
     return {
       code: country.code,
       municipal_scope: country.directory_count,
-      profile_count: warehouse.profile_count,
-      status: warehouse.force_status || (warehouse.profile_count === country.directory_count ? "full" : "partial"),
+      profile_count: publishedProfileCount,
+      warehouse_profile_count: warehouse.profile_count,
+      status: warehouse.force_status || (publishedProfileCount === country.directory_count ? "full" : "partial"),
       period: warehouse.period,
       stages: warehouse.stages,
       detail_kind_en: warehouse.detail_kind_en,
@@ -55,13 +68,15 @@ const countries = municipalities.countries.map((country) => {
       source_title: warehouse.source_title,
       source_url: warehouse.source_url,
       note: country.code === "DEU"
-        ? "This is a verified one-city scatter for the Stadtgemeinde Bremen, not nationwide German municipal coverage."
+        ? "The warehouse covers eleven verified official structured city publications; Germany remains decentralized and this is not nationwide coverage."
         : country.code === "GBR"
-          ? "The warehouse currently covers all 318 England authorities in this directory; Scotland, Wales and Northern Ireland are not yet included."
+          ? "The warehouse covers 374 authorities across England, Scotland and Wales. The published directory currently exposes 318 England profiles; Northern Ireland remains document-only."
           : country.code === "USA"
           ? "This is a verified four-city scatter, not nationwide municipal coverage."
           : country.code === "CHE"
-            ? "This is complete for the 79 Lucerne municipalities in the official cantonal file, not nationwide Swiss coverage."
+            ? "This is complete for the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage."
+            : country.code === "FRA"
+              ? "The national DGFiP actual-account layer is supplemented by six verified current enacted city budgets; the enacted layer is not a national census."
             : "Every counted profile has native itemized facts loaded in the production warehouse."
     };
   }
@@ -91,7 +106,9 @@ const countries = municipalities.countries.map((country) => {
 
   const expansion = expansionLabels[country.code];
   if (expansion) {
-    const profileCount = country.code === "BRA" ? country.directory_count - country.missing_finance_count : country.directory_count;
+    const profileCount = country.code === "BRA"
+      ? country.directory_count - country.missing_finance_count
+      : country.directory_count;
     return {
       code: country.code,
       municipal_scope: country.directory_count,
@@ -104,7 +121,11 @@ const countries = municipalities.countries.map((country) => {
       source_url: country.source,
       note: country.code === "BRA"
         ? `${country.missing_finance_count} directory entities have no rows in either the 2025 RREO or 2024 DCA fallback layer.`
-        : "Every counted profile publishes the native itemized classifications retained from the national source."
+        : country.code === "MEX"
+          ? "The count covers reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico."
+          : country.code === "SLV"
+            ? "The count covers 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
+            : "Every counted profile publishes the native itemized classifications retained from the national source."
     };
   }
 

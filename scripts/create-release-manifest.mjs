@@ -6,13 +6,13 @@ import path from "node:path";
 const root = process.cwd();
 const selected = [
   "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-parity.v1.json", "data/contracts/country-parity.schema.json", "data/country-health.v1.json", "data/country-health-performance.v1.json", "data/country-provider-networks.v1.json", "data/country-functional-budgets.v1.json", "data/transport-budget-detail.v1.json", "data/transport-performance.v1.json", "data/country-cash-in.v1.json", "data/country-revenue.v1.json",
-  "data/country-spending-2025-2026.v1.json", "data/country-spending-comparison.v1.json",
+  "data/country-spending-2025-2026.v1.json", "data/country-spending-comparison.v1.json", "data/defense-deep-dive.v1.json", "data/data-freshness.v1.json",
   "data/country-demography.v1.json", "data/public-entity-coverage.v1.json", "data/public-entity-aggregates.v1.json", "data/public-entity-directory/manifest.v1.json", "data/methodology-sources.v1.json", "data/coverage-source-research.v1.json", "data/data-quality-report.v1.json",
   "data/cz-public-entities-2024.json", "data/cz-public-entity-history.v1.json",
   "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json", "data/state-owned-enterprises.v1.json",
   "data/czech-budget.v1.json", "data/demography-social.v1.json",
   "data/eu-capital-budgets.v1.json", "data/eu-migration.v1.json", "data/municipal-snapshot.v1.json", "data/municipal-history-directory.v1.json",
-  "data/international-municipalities.v1.json", "data/international-itemized-warehouse.v1.json", "data/municipal-itemized-coverage.v1.json", "data/municipal-transparency.v1.json", "data/global-budget-transparency.v1.json", "data/world-map.v1.json",
+  "data/international-municipalities.v1.json", "data/international-itemized-warehouse.v1.json", "data/municipal-itemized-coverage.v1.json", "data/municipal-itemized-acquisition-audit.v1.json", "data/municipal-transparency.v1.json", "data/global-budget-transparency.v1.json", "data/world-map.v1.json",
   "lib/data/sovereign-benchmark.v1.json", "sitemap.xml",
 ];
 try {

@@ -190,8 +190,8 @@
         "economic": true,
         "api": false
       },
-      "note_en": "England has standardized revenue budget and outturn collections; the current loader covers England only.",
-      "note_cs": "Anglie má standardizované výkazy rozpočtu a skutečnosti; současný import pokrývá pouze Anglii.",
+      "note_en": "Production-ready adapters now cover enacted budgets for 317 English general-purpose councils, all 32 Scottish councils and all 22 Welsh unitary authorities; Northern Ireland's 11 district councils remain document-only.",
+      "note_cs": "Produkčně připravené adaptéry nyní pokrývají schválené rozpočty 317 anglických všeobecných rad, všech 32 skotských rad a všech 22 velšských unitárních samospráv; 11 okresních rad Severního Irska zůstává pouze v dokumentech.",
       "source": "https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing"
     },
     {
@@ -219,10 +219,10 @@
       "iso3": "NOR",
       "name_en": "Norway",
       "name_cs": "Norsko",
-      "category": "accounts_only",
-      "pipeline": "loaded",
+      "category": "budget_and_accounts",
+      "pipeline": "loaded_partial",
       "features": {
-        "enacted": false,
+        "enacted": true,
         "revised": false,
         "execution": false,
         "actual": true,
@@ -239,10 +239,10 @@
       "iso3": "FRA",
       "name_en": "France",
       "name_cs": "Francie",
-      "category": "accounts_only",
-      "pipeline": "loaded",
+      "category": "budget_and_accounts",
+      "pipeline": "loaded_partial",
       "features": {
-        "enacted": false,
+        "enacted": true,
         "revised": false,
         "execution": false,
         "actual": true,
@@ -250,8 +250,8 @@
         "economic": true,
         "api": true
       },
-      "note_en": "DGFiP publishes detailed commune accounting balances nationally; adopted budgets are not in the same national open-data layer.",
-      "note_cs": "DGFiP celostátně zveřejňuje detailní účetní obraty obcí; schválené rozpočty nejsou ve stejné národní otevřené vrstvě.",
+      "note_en": "DGFiP publishes detailed commune accounting balances nationally. A separate production adapter now loads current machine-readable enacted budgets for Brest, La Possession, Sailly-lez-Lannoy, Blagnac, Toulouse and Nantes; this enacted layer remains incomplete.",
+      "note_cs": "DGFiP celostátně zveřejňuje detailní účetní obraty obcí. Samostatný produkční adaptér nyní načítá aktuální strojově čitelné schválené rozpočty Brestu, La Possession, Sailly-lez-Lannoy, Blagnacu, Toulouse a Nantes; tato vrstva schválených rozpočtů zůstává neúplná.",
       "source": "https://data.economie.gouv.fr/pages/accueil/"
     },
     {
@@ -320,18 +320,18 @@
       "name_en": "Germany",
       "name_cs": "Německo",
       "category": "decentralized",
-      "pipeline": "assessed",
+      "pipeline": "loaded_partial",
       "features": {
-        "enacted": false,
+        "enacted": true,
         "revised": false,
         "execution": false,
         "actual": true,
-        "function": null,
+        "function": true,
         "economic": true,
         "api": true
       },
-      "note_en": "Municipal budgets are published by Länder and municipalities; national statistics do not reproduce one comparable item-level budget lifecycle.",
-      "note_cs": "Obecní rozpočty zveřejňují spolkové země a obce; národní statistika nereprodukuje jednotný položkový životní cyklus rozpočtu.",
+      "note_en": "The production adapter now covers 11 verified official structured city publications and 1.15 million normalized plan facts. Germany remains decentralized and this is not national coverage.",
+      "note_cs": "Produkční adaptér nyní pokrývá 11 ověřených oficiálních strukturovaných městských publikací a 1,15 milionu normalizovaných plánových záznamů. Německo zůstává decentralizované a nejde o celostátní pokrytí.",
       "source": "https://www.destatis.de/EN/Themes/Government/Public-Finance/_node.html"
     },
     {
@@ -340,9 +340,9 @@
       "name_en": "United States",
       "name_cs": "Spojené státy",
       "category": "decentralized",
-      "pipeline": "assessed",
+      "pipeline": "loaded_partial",
       "features": {
-        "enacted": false,
+        "enacted": true,
         "revised": false,
         "execution": false,
         "actual": true,
@@ -420,9 +420,9 @@
       "name_en": "Switzerland",
       "name_cs": "Švýcarsko",
       "category": "decentralized",
-      "pipeline": "assessed",
+      "pipeline": "loaded_partial",
       "features": {
-        "enacted": false,
+        "enacted": true,
         "revised": false,
         "execution": false,
         "actual": true,
@@ -430,8 +430,8 @@
         "economic": true,
         "api": true
       },
-      "note_en": "Harmonized financial statistics exist, while adopted municipal budget documents remain cantonal/local.",
-      "note_cs": "Existují harmonizované finanční statistiky, schválené obecní rozpočty však zůstávají kantonální či místní.",
+      "note_en": "The adapter covers enacted HRM2 budgets for all 79 Lucerne municipalities plus Zürich's 2026 account-level budget API. This is cantonal/local coverage, not a national census.",
+      "note_cs": "Adaptér pokrývá schválené rozpočty HRM2 všech 79 lucernských obcí a navíc položkový rozpočet Curychu 2026 z API. Jde o kantonální a místní pokrytí, nikoli celostátní census.",
       "source": "https://www.efv.admin.ch/efv/en/home/themen/finanzstatistik.html"
     },
     {
@@ -819,19 +819,19 @@
       "iso3": "PRY",
       "name_en": "Paraguay",
       "name_cs": "Paraguay",
-      "category": "accounts_only",
-      "pipeline": "assessed",
+      "category": "budget_and_accounts",
+      "pipeline": "loaded_partial",
       "features": {
-        "enacted": false,
-        "revised": false,
+        "enacted": true,
+        "revised": true,
         "execution": true,
         "actual": true,
-        "function": true,
+        "function": false,
         "economic": true,
         "api": false
       },
-      "note_en": "BOOST includes municipal-government expenditure alongside detailed central and decentralised-agency budget data, but not a full municipal plan-to-actual lifecycle.",
-      "note_cs": "BOOST zahrnuje obecní výdaje vedle detailních dat státu a decentralizovaných institucí, nikoli však úplný obecní cyklus plán–skutečnost.",
+      "note_en": "The municipal BOOST worksheet is now normalized: 263 municipalities across 2006-2022, with approved, modified and paid expenditure by economic classification. The latest 2022 layer has 240 reporting municipalities and is not a current census.",
+      "note_cs": "Obecní list BOOST je nyní normalizován: 263 obcí v letech 2006-2022 se schválenými, upravenými a zaplacenými výdaji podle ekonomické klasifikace. Nejnovější vrstva 2022 obsahuje 240 vykazujících obcí a nejde o aktuální census.",
       "source": "https://www.worldbank.org/en/programs/boost-portal/country-data"
     },
     {

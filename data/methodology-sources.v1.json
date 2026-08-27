@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-27T07:47:27.458Z",
-  "row_count": 2117,
+  "generated_at": "2026-08-27T13:24:37.751Z",
+  "row_count": 2128,
   "countries": [
     {
       "code": "CZE",
@@ -46123,6 +46123,31 @@
       "limitations": "entity census · budget facts · Not loaded by PSD; this row does not claim that an official source is unavailable, and no values are inferred from another accounting perimeter."
     },
     {
+      "country_code": "BOL",
+      "country_name_cs": "Bolívie",
+      "country_name_en": "Bolivia",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "343 of 343 municipal profiles; native budget, revision and execution items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Bolivia municipal source",
+          "url": "https://abierto.economiayfinanzas.gob.bo/descargas",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
       "country_code": "BRA",
       "country_name_cs": "Brazílie",
       "country_name_en": "Brazil",
@@ -46160,19 +46185,99 @@
       "status": "partial",
       "source_availability": "loaded",
       "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "79 of 2,121 municipal profiles; Lucerne HRM2 functional and account budget items",
+      "coverage": "80 of 2,121 municipal profiles; Lucerne HRM2 municipal items plus Zürich account-level budget items",
       "period": "2026",
-      "scope": "Stages: enacted. 59,978 line facts.",
+      "scope": "Stages: enacted. 64,185 line facts.",
       "sources": [
         {
-          "title": "LUSTAT · Lucerne municipality budgets",
+          "title": "LUSTAT Lucerne municipality budgets and Zürich open-data API",
           "url": "https://www.data.lustat.ch/gefis-lu-bg.csv",
           "location": "ch-lustat-lucerne-municipal-budgets · gefis-lu-bg.csv"
+        },
+        {
+          "title": "ch-zurich-city-finance-api-2026",
+          "url": "https://api.stadt-zuerich.ch/rpkk-rs/v1",
+          "location": "ch-zurich-city-finance-api-2026 · zurich-city-budget-api-2026.json"
         }
       ],
-      "exact_extraction": "ch-lustat-lucerne-municipal-budgets · gefis-lu-bg.csv",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → switzerland_lucerne → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "This is complete for the 79 Lucerne municipalities in the official cantonal file, not nationwide Swiss coverage."
+      "exact_extraction": "ch-lustat-lucerne-municipal-budgets · gefis-lu-bg.csv · ch-zurich-city-finance-api-2026 · zurich-city-budget-api-2026.json",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → switzerland_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "This is complete for the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage."
+    },
+    {
+      "country_code": "CHL",
+      "country_name_cs": "Chile",
+      "country_name_en": "Chile",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "345 of 345 municipal profiles; native SINIM revenue and expenditure items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Chile municipal source",
+          "url": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "COL",
+      "country_name_cs": "Kolumbie",
+      "country_name_en": "Colombia",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "1,102 of 1,102 municipal profiles; native CUIPO plan and execution items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Colombia municipal source",
+          "url": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "CRI",
+      "country_name_cs": "Kostarika",
+      "country_name_en": "Costa Rica",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "84 of 84 municipal profiles; native SIPP revenue and expenditure items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Costa Rica municipal source",
+          "url": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
       "country_code": "CZE",
@@ -46212,19 +46317,69 @@
       "status": "partial",
       "source_availability": "loaded",
       "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "1 of 10,756 municipal profiles; Bremen product-group and kameral budget-position items",
-      "period": "2026–2027",
-      "scope": "Stages: enacted. 4,861 line facts.",
+      "coverage": "11 of 10,756 municipal profiles; official product, function, account and budget-position items for eleven German cities",
+      "period": "2016–2029",
+      "scope": "Stages: enacted, proposal. 1,152,009 line facts.",
       "sources": [
         {
-          "title": "Bremen Transparency Portal · Stadtgemeinde budget",
+          "title": "Official municipal open-data publications for eleven German cities",
+          "url": "https://offenedaten.aachen.de/dataset/82bf0cb9-4092-48bf-965d-c1dfa681a2f0/resource/44473b15-aefb-4484-8271-57279cdb93d5/download/haushaltsplan-2026-ergebnisplanung.csv",
+          "location": "de-aachen-budget-2026 · haushaltsplan-2026-ergebnisplanung.csv"
+        },
+        {
+          "title": "de-bonn-budget-archive-2024",
+          "url": "https://opendata.bonn.de/sites/default/files/Datenthema%20017%20Haushaltspl%C3%A4ne_Gesamt_FINAL.zip",
+          "location": "de-bonn-budget-archive-2024 · Datenthema_017_Haushaltsplaene_Gesamt_FINAL.zip"
+        },
+        {
+          "title": "de-dortmund-budget-2020-2021",
+          "url": "https://open-data.dortmund.de/api/v2/catalog/datasets/fb20-haushaltsplan-2020-2021/exports/csv?use_labels=true",
+          "location": "de-dortmund-budget-2020-2021 · fb20-haushaltsplan-2020-2021.csv"
+        },
+        {
+          "title": "de-essen-budget-2025-2026",
+          "url": "https://opendata.essen.de/sites/default/files/Gesamtergebnisplan_Kostenarten_2025_2026%28inkl_interne_Leistungsbeziehungen%29.csv",
+          "location": "de-essen-budget-2025-2026 · Gesamtergebnisplan_Kostenarten_2025_2026.csv"
+        },
+        {
+          "title": "de-koeln-budget-2016",
+          "url": "https://www.offenedaten-koeln.de/sites/default/files/distribution/Koeln_HH_Finanzrechnung_1.csv",
+          "location": "de-koeln-budget-2016 · Koeln_HH_Finanzrechnung_1.csv"
+        },
+        {
+          "title": "de-moers-budget-2023",
+          "url": "https://www.offenesdatenportal.de/dataset/2fc502ea-58eb-4560-9d57-78512447d630/resource/6258e737-31b3-4a1a-b4a4-93ccfe1f9433/download/hhp-2023-endgultig.csv",
+          "location": "de-moers-budget-2023 · hhp-2023-endgultig.csv"
+        },
+        {
+          "title": "de-frankfurt-budget-2024-2025",
+          "url": "https://offenedaten.frankfurt.de/dcat/dataset/de-he-frankfurtam-haushaltsplan_20242025_ergebnishaushalt/content.csv",
+          "location": "de-frankfurt-budget-2024-2025 · frankfurt-haushaltsplan-2024-2025.csv"
+        },
+        {
+          "title": "de-karlsruhe-budget-2024",
+          "url": "https://transparenz.karlsruhe.de/dataset/69abad11-27b0-479c-9599-26efc164b4e8/resource/875e9d43-24d4-4ee8-b384-be45256dfb15/download/ikvs_ergrech_600_1000_2024_0000.csv",
+          "location": "de-karlsruhe-budget-2024 · ikvs_ergrech_600_1000_2024_0000.csv"
+        },
+        {
+          "title": "de-oldenburg-budget-2025",
+          "url": "https://opendata.oldenburg.de/sites/default/files/1101_Haushaltsplan_der_Stadt_Oldenburg_2025.xlsx",
+          "location": "de-oldenburg-budget-2025 · 1101_Haushaltsplan_der_Stadt_Oldenburg_2025.xlsx"
+        },
+        {
+          "title": "de-glueckstadt-budget-2022",
+          "url": "https://opendata.schleswig-holstein.de/dataset/7f34579f-9eec-4726-b569-6232686a4bbf/resource/a5e797de-33c7-4da5-bcea-7ed52ceafe1d/download/daten-2022-stadt-gluckstadt-stand-beschlussfassung-stadtvertretung.csv",
+          "location": "de-glueckstadt-budget-2022 · daten-2022-stadt-gluckstadt.csv"
+        },
+        {
+          "title": "de-bremen-city-budget-2026-2027",
           "url": "https://www.finanzen.bremen.de/sixcms/media.php/bremen02.a.13.de/download/Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv",
           "location": "de-bremen-city-budget-2026-2027 · Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv"
         }
       ],
-      "exact_extraction": "de-bremen-city-budget-2026-2027 · Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → germany_bremen → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "This is a verified one-city scatter for the Stadtgemeinde Bremen, not nationwide German municipal coverage."
+      "exact_extraction": "de-aachen-budget-2026 · haushaltsplan-2026-ergebnisplanung.csv · de-bonn-budget-archive-2024 · Datenthema_017_Haushaltsplaene_Gesamt_FINAL.zip · de-dortmund-budget-2020-2021 · fb20-haushaltsplan-2020-2021.csv · de-essen-budget-2025-2026 · Gesamtergebnisplan_Kostenarten_2025_2026.csv · de-koeln-budget-2016 · Koeln_HH_Finanzrechnung_1.csv · de-moers-budget-2023 · hhp-2023-endgultig.csv · de-frankfurt-budget-2024-2025 · frankfurt-haushaltsplan-2024-2025.csv · de-karlsruhe-budget-2024 · ikvs_ergrech_600_1000_2024_0000.csv · de-oldenburg-budget-2025 · 1101_Haushaltsplan_der_Stadt_Oldenburg_2025.xlsx · de-glueckstadt-budget-2022 · daten-2022-stadt-gluckstadt.csv · de-bremen-city-budget-2026-2027 · Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → germany_structured_cities → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "The warehouse covers eleven verified official structured city publications; Germany remains decentralized and this is not nationwide coverage."
     },
     {
       "country_code": "DNK",
@@ -46316,12 +46471,12 @@
       "status": "full",
       "source_availability": "loaded",
       "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "35,041 of 35,041 municipal profiles; DGFiP itemized actual accounts and balance-sheet items",
-      "period": "2024–2025",
-      "scope": "Stages: actual. 10,438,699 line facts plus 14,147,797 balance-sheet facts.",
+      "coverage": "35,041 of 35,041 municipal profiles; DGFiP actual-account and balance-sheet items plus six verified current enacted city budgets",
+      "period": "2024–2026",
+      "scope": "Stages: actual, enacted. 10,445,528 line facts plus 14,147,797 balance-sheet facts.",
       "sources": [
         {
-          "title": "French Ministry of Economy · DGFiP commune accounts",
+          "title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
           "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-communes-en-2024/attachments/balance_commune_2024_dec2025_zip",
           "location": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip"
         },
@@ -46339,11 +46494,41 @@
           "title": "fr-dgfip-balances-fonction-2025",
           "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2025/attachments/balancespl_fonction_2025_juil2026zip",
           "location": "fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip"
+        },
+        {
+          "title": "fr-brest-budget-2026",
+          "url": "https://static.data.gouv.fr/resources/donnees-du-budget-primitif-de-la-ville-de-brest/20260205-160749/budget-primitif-ville-de-brest-2026.csv",
+          "location": "fr-brest-budget-2026 · budget-primitif-ville-de-brest-2026.csv"
+        },
+        {
+          "title": "fr-la-possession-budget-2025",
+          "url": "https://static.data.gouv.fr/resources/budget-primitif-2023-de-la-possession-1/20250917-110952/budget-primitif-2025.csv",
+          "location": "fr-la-possession-budget-2025 · budget-primitif-la-possession-2025.csv"
+        },
+        {
+          "title": "fr-sailly-budget-2025",
+          "url": "https://static.data.gouv.fr/resources/budget-primitif-2025/20250422-123353/open-data-budget-2025.csv",
+          "location": "fr-sailly-budget-2025 · open-data-budget-sailly-2025.csv"
+        },
+        {
+          "title": "fr-blagnac-budget-2025",
+          "url": "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/budget-primitif-2024-budget-principal-blagnac0/exports/csv?use_labels=true",
+          "location": "fr-blagnac-budget-2025 · budget-primitif-blagnac-2025.csv"
+        },
+        {
+          "title": "fr-toulouse-budget-2026",
+          "url": "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/budget-primitif-2026-ville-de-toulouse/exports/csv?use_labels=true",
+          "location": "fr-toulouse-budget-2026 · budget-primitif-toulouse-2026.csv"
+        },
+        {
+          "title": "fr-nantes-budget-2026",
+          "url": "https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_budget-primitif-bp-2026-nantes/exports/csv?use_labels=true",
+          "location": "fr-nantes-budget-2026 · budget-primitif-nantes-2026.csv"
         }
       ],
-      "exact_extraction": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip · fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip · fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip · fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → france_dgfip → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+      "exact_extraction": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip · fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip · fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip · fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip · fr-brest-budget-2026 · budget-primitif-ville-de-brest-2026.csv · fr-la-possession-budget-2025 · budget-primitif-la-possession-2025.csv · fr-sailly-budget-2025 · open-data-budget-sailly-2025.csv · fr-blagnac-budget-2025 · budget-primitif-blagnac-2025.csv · fr-toulouse-budget-2026 · budget-primitif-toulouse-2026.csv · fr-nantes-budget-2026 · budget-primitif-nantes-2026.csv",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → france_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "The national DGFiP actual-account layer is supplemented by six verified current enacted city budgets; the enacted layer is not a national census."
     },
     {
       "country_code": "GBR",
@@ -46357,19 +46542,119 @@
       "status": "partial",
       "source_availability": "loaded",
       "artifact": "data/international-itemized-warehouse.v1.json · czbudget-janrezab.budget_detail.municipal_budget_line_facts",
-      "coverage": "318 of 318 municipal profiles; England local-authority revenue-outturn items",
-      "period": "2024–2025",
-      "scope": "Stages: actual. 494,568 line facts.",
+      "coverage": "318 of 318 municipal profiles; England outturn and enacted items plus Scottish and Welsh enacted council budget items",
+      "period": "2024–2028",
+      "scope": "Stages: actual, enacted. 552,003 line facts.",
       "sources": [
         {
-          "title": "UK Ministry of Housing, Communities and Local Government",
+          "title": "UK MHCLG, Scottish Government and Welsh Government local-finance collections",
           "url": "https://assets.publishing.service.gov.uk/media/6a7ada920a700895e2d7a07b/Revenue_Outturn_time_series_data_v3.2.csv",
           "location": "gb-england-revenue-outturn-timeseries · Revenue_Outturn_time_series_data_v3.2.csv"
+        },
+        {
+          "title": "gb-england-revenue-budget-2026-part-1",
+          "url": "https://assets.publishing.service.gov.uk/media/6a2962166d178a6fb7e32089/RA_2026-27_data_Part_1.ods",
+          "location": "gb-england-revenue-budget-2026-part-1 · RA_2026-27_data_Part_1.ods"
+        },
+        {
+          "title": "gb-england-revenue-budget-2026-part-2",
+          "url": "https://assets.publishing.service.gov.uk/media/6a281185e371d9d2c0052b0a/RA_2026-27_data_Part_2.ods",
+          "location": "gb-england-revenue-budget-2026-part-2 · RA_2026-27_data_Part_2.ods"
+        },
+        {
+          "title": "gb-scotland-pobe-2026-revenue",
+          "url": "https://www.gov.scot/binaries/content/documents/govscot/publications/statistics/2026/06/local-government-2025-26-provisional-outturn-and-2026-27-budget-estimates/documents/provisional-outturn-budget-estimates---revenue-workbook/provisional-outturn-budget-estimates---revenue-workbook/govscot%3Adocument/POBE%2B2026%2B-%2BRevenue%2BWorkboook%2B-%2Brevised%2Bon%2B24%2BJuly%2B2026.xlsx",
+          "location": "gb-scotland-pobe-2026-revenue · POBE_2026_Revenue_Workbook_revised_2026-07-24.xlsx"
+        },
+        {
+          "title": "gb-scotland-pobe-2026-capital",
+          "url": "https://www.gov.scot/binaries/content/documents/govscot/publications/statistics/2026/06/local-government-2025-26-provisional-outturn-and-2026-27-budget-estimates/documents/provisional-outturn-budget-estimates---capital-workbook/provisional-outturn-budget-estimates---capital-workbook/govscot%3Adocument/POBE%2B2026%2B-%2BCapital%2BWorkbook%2B-%2Bpublished%2Bon%2B30%2BJune%2B2026.xlsx",
+          "location": "gb-scotland-pobe-2026-capital · POBE_2026_Capital_Workbook_published_2026-06-30.xlsx"
+        },
+        {
+          "title": "gb-wales-statswales-revenue-budget-2025-2026",
+          "url": "https://stats.gov.wales/en-GB/88384d5e-1a50-4496-849c-7195ddd4185f/download",
+          "location": "gb-wales-statswales-revenue-budget-2025-2026 · statswales_revenue_budget_2025_2026.csv"
         }
       ],
-      "exact_extraction": "gb-england-revenue-outturn-timeseries · Revenue_Outturn_time_series_data_v3.2.csv",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → england_mhclg → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
-      "limitations": "The warehouse currently covers all 318 England authorities in this directory; Scotland, Wales and Northern Ireland are not yet included."
+      "exact_extraction": "gb-england-revenue-outturn-timeseries · Revenue_Outturn_time_series_data_v3.2.csv · gb-england-revenue-budget-2026-part-1 · RA_2026-27_data_Part_1.ods · gb-england-revenue-budget-2026-part-2 · RA_2026-27_data_Part_2.ods · gb-scotland-pobe-2026-revenue · POBE_2026_Revenue_Workbook_revised_2026-07-24.xlsx · gb-scotland-pobe-2026-capital · POBE_2026_Capital_Workbook_published_2026-06-30.xlsx · gb-wales-statswales-revenue-budget-2025-2026 · statswales_revenue_budget_2025_2026.csv",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → united_kingdom_devolved → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
+      "limitations": "The warehouse covers 374 authorities across England, Scotland and Wales. The published directory currently exposes 318 England profiles; Northern Ireland remains document-only."
+    },
+    {
+      "country_code": "GEO",
+      "country_name_cs": "Gruzie",
+      "country_name_en": "Georgia",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "69 of 69 municipal profiles; native Ministry of Finance plan and execution items",
+      "period": "2026",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Georgia municipal source",
+          "url": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "GTM",
+      "country_name_cs": "Guatemala",
+      "country_name_en": "Guatemala",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "340 of 340 municipal profiles; native SICOINGL and SICOINDES budget-execution items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Guatemala municipal source",
+          "url": "https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "ITA",
+      "country_name_cs": "Itálie",
+      "country_name_en": "Italy",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "7,896 of 7,896 municipal profiles; native SIOPE cash receipt and payment items",
+      "period": "2025",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Italy municipal source",
+          "url": "https://www.siope.it/Siope/",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
     },
     {
       "country_code": "JPN",
@@ -46396,6 +46681,56 @@
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
       "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
       "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "KOR",
+      "country_name_cs": "Jižní Korea",
+      "country_name_en": "South Korea",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "243 of 243 municipal profiles; native Local Finance 365 settlement items",
+      "period": "2024",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official South Korea municipal source",
+          "url": "https://www.lofin365.go.kr/portal/LF5100000.do",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
+      "country_code": "MEX",
+      "country_name_cs": "Mexiko",
+      "country_name_en": "Mexico",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "2,380 of 2,380 municipal profiles; native EFIPEM annual finance items",
+      "period": "2024",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Mexico municipal source",
+          "url": "https://www.inegi.org.mx/programas/finanzas/",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "The count covers reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico."
     },
     {
       "country_code": "NLD",
@@ -46450,6 +46785,31 @@
       "limitations": "Each counted profile publishes its native itemized accounting breakdown."
     },
     {
+      "country_code": "PER",
+      "country_name_cs": "Peru",
+      "country_name_en": "Peru",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "1,891 of 1,891 municipal profiles; native MEF budget and execution items",
+      "period": "2024",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official Peru municipal source",
+          "url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "Every counted profile publishes the native itemized classifications retained from the national source."
+    },
+    {
       "country_code": "POL",
       "country_name_cs": "Polsko",
       "country_name_en": "Poland",
@@ -46499,6 +46859,31 @@
       "exact_extraction": "pl-mf-rb27s-2024q4 · Rb27S_2024Q4.zip · pl-mf-rb28s-2024q4 · Rb28S_2024Q4.zip · pl-mf-jst-dictionary-2024 · Slownik_JST_2024.xlsx · pl-mf-rb27s-2025q4 · Rb27S_2025Q4.zip · pl-mf-rb28s-2025q4 · Rb28S_2025Q4.zip · pl-mf-jst-dictionary-2025 · Slownik_JST_2025.xlsx",
       "transformation": "pipeline/transforms/prepare_international_municipal_data.py → poland_dbf → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → verified coverage snapshot.",
       "limitations": "Every counted profile has native itemized facts loaded in the production warehouse."
+    },
+    {
+      "country_code": "SLV",
+      "country_name_cs": "Salvador",
+      "country_name_en": "El Salvador",
+      "module": "municipal_itemized",
+      "module_order": 10,
+      "module_label_cs": "Obce · položkové rozpočty",
+      "module_label_en": "Municipalities · itemized budgets",
+      "status": "full",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · published municipal profile artifacts",
+      "coverage": "259 of 259 municipal profiles; native SAFIM budget-execution items",
+      "period": "2023",
+      "scope": "Stages: source-native stages listed in the profile data. profile-level native item rows in the published benchmark/expansion artifacts.",
+      "sources": [
+        {
+          "title": "Official El Salvador municipal source",
+          "url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
+          "location": "published profile adapter documented by the itemized coverage contract"
+        }
+      ],
+      "exact_extraction": "published profile adapter documented by the itemized coverage contract",
+      "transformation": "Load the official profile artifact, retain native item classifications and stages, and count only profiles with actual line-item arrays.",
+      "limitations": "The count covers 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
     },
     {
       "country_code": "SWE",

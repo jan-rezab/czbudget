@@ -1,8 +1,9 @@
 # International municipal finance pipeline
 
-`prepare_international_municipal_data.py` downloads and normalizes the six
-municipal sources selected for the first international expansion: Poland,
-Denmark, Ukraine, France, Sweden, and the United Kingdom's England collection.
+`prepare_international_municipal_data.py` downloads and normalizes official
+municipal sources for Poland, Denmark, Ukraine, France, Sweden, Paraguay, and
+devolved United Kingdom collections, plus explicitly partial city/canton
+collections for Germany, the United States and Switzerland.
 
 The output uses the same public-entity and municipal fact tables as the Czech
 FIN 2-12 M pipeline. National classifications remain intact. Missing stages are
@@ -48,9 +49,12 @@ Use `--gzip` for national-scale runs. The warehouse loader accepts both
 | Poland | revised and actual revenue/expenditure | Rb-27S/Rb-28S Q4 does not expose the original enacted plan |
 | Denmark | enacted and actual revenue/expenditure/financing | source values in DKK thousands are converted to DKK |
 | Ukraine | enacted, revised, and actual revenue/expenditure | 1,473 territorial-community budgets including Kyiv; official API is downloaded per budget |
-| France | actual debit/credit execution and signed closing balances for all communes; function detail where published | main and supplementary budgets remain separate scopes |
+| France | actual debit/credit execution and signed closing balances for all communes; function detail where published; current enacted-budget CSVs for six verified cities | enacted-budget coverage is a decentralized published subset; main and supplementary actuals remain separate scopes |
 | Sweden | actual costs/income and closing balance sheet | latest annual SCB values are marked preliminary |
-| United Kingdom | England council revenue outturn actuals | police, fire, parks, waste and combined-authority returns are excluded; Scotland, Wales, and Northern Ireland need separate adapters before claiming full UK coverage |
+| United Kingdom | England council revenue-outturn actuals and 2026 enacted Revenue Account budgets; Scottish council provisional outturn and enacted revenue/capital budgets; Welsh unitary-authority enacted revenue budgets | police, fire, parks, waste and combined-authority returns are excluded; Northern Ireland's 11 district councils remain outside the loaded collection |
+| Germany | enacted or forward-plan lines from 11 official structured city publications | decentralized subset, not a national census; source schemas remain city-native |
+| Switzerland | enacted HRM2 budgets for all Lucerne municipalities and Zürich's account-level city budget API | decentralized subset, not national coverage |
+| Paraguay | approved, modified and paid municipal expenditure lines for 2006-2022 | BOOST is historical, economic-only at municipal level and not a current census |
 
 Ukraine uses the documented public API at `api.openbudget.gov.ua` and the
 official `BUDG` directory. Year-end cumulative fourth-quarter rows are retained;
@@ -61,6 +65,16 @@ France combines the DGFiP commune census balances with the separate
 nature-function publication. The functional file is used wherever a commune
 appears in it; the census file fills the remaining communes. This preserves
 functional detail without loading the same account execution twice.
+
+England's enacted-budget adapter reads ODS directly with the Python standard
+library. It includes the general-purpose `E06`, `E07`, `E08`, `E09` and `E10`
+GSS authority classes and excludes special-purpose reporting bodies. German
+city sources are enumerated explicitly in the configuration; adding a city is
+a reviewed source-contract change, not an inference from a catalog search.
+
+The Paraguay adapter reads only the `Municipalidades` worksheet from the
+officially endorsed BOOST distribution. It never mixes the separate central
+government worksheet into municipal facts.
 
 ## Warehouse load
 

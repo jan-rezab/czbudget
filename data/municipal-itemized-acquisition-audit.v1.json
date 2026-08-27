@@ -1,0 +1,146 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-27T15:23:48+02:00",
+  "definition": "Every municipality-level source identified by the 2026-08-25 research is classified as acquired, already published, or blocked by a specific reproducibility constraint. Catalog search hits alone are not counted as coverage.",
+  "production_load": {
+    "status": "loaded",
+    "loaded_at": "2026-08-27T15:23:48+02:00",
+    "project": "czbudget-janrezab",
+    "dataset": "budget_detail",
+    "bundles_loaded": 6,
+    "verification": {
+      "GBR": {"entities": 374, "line_facts": 552003, "period": "2024–2028"},
+      "DEU": {"entities": 11, "line_facts": 1152009, "period": "2016–2029"},
+      "CHE": {"entities": 80, "line_facts": 64185, "period": "2026"},
+      "FRA": {"entities": 35042, "line_facts": 10445528, "balance_facts": 14147797, "period": "2024–2026"},
+      "PRY": {"entities": 263, "line_facts": 281957, "period": "2006–2022"}
+    }
+  },
+  "acquired": [
+    {
+      "country_code": "GBR",
+      "scope": "England, Scotland and Wales",
+      "entities": 371,
+      "facts": 57435,
+      "bundle": "outputs/20260827-international-municipal-uk-full",
+      "validation": "passed",
+      "sources": 5
+    },
+    {
+      "country_code": "DEU",
+      "scope": "11 official structured city publications",
+      "entities": 11,
+      "facts": 1152009,
+      "bundle": "outputs/20260827-international-municipal-germany-structured",
+      "validation": "passed",
+      "sources": 11
+    },
+    {
+      "country_code": "CHE",
+      "scope": "All Lucerne municipalities plus Zürich city",
+      "entities": 80,
+      "facts": 64185,
+      "bundle": "outputs/20260827-international-municipal-switzerland-structured",
+      "validation": "passed",
+      "sources": 2
+    },
+    {
+      "country_code": "FRA",
+      "scope": "2025 national actuals plus six verified current enacted municipal budget CSVs",
+      "entities": 34878,
+      "facts": 12213086,
+      "bundle": "outputs/20260827-international-municipal-france-2025-full and outputs/20260827-international-municipal-france-enacted-2026",
+      "validation": "passed",
+      "sources": 8
+    },
+    {
+      "country_code": "PRY",
+      "scope": "Municipal BOOST worksheet, 2006-2022",
+      "entities": 263,
+      "facts": 281957,
+      "bundle": "outputs/20260827-international-municipal-paraguay-boost",
+      "validation": "passed",
+      "sources": 1
+    }
+  ],
+  "not_acquired": [
+    {
+      "country_code": "GBR",
+      "scope": "Northern Ireland's 11 district councils",
+      "status": "document_only",
+      "reason": "No standardized national adopted-budget dataset was found; council PDFs require eleven document-specific extraction contracts."
+    },
+    {
+      "country_code": "IND",
+      "scope": "eGramSwaraj rural local bodies",
+      "status": "access_blocked",
+      "reason": "The official portal resets automated connections and exposes no documented public bulk/API contract; urban local governments are outside the system."
+    },
+    {
+      "country_code": "HND",
+      "scope": "SAMI municipal execution and accounting",
+      "status": "authentication_required",
+      "reason": "The reviewed SAMI endpoint is a credentialed login and no public nationwide bulk export was located."
+    },
+    {
+      "country_code": "SWE",
+      "scope": "Stockholm, Göteborg and Malmö enacted budgets",
+      "status": "document_only",
+      "reason": "The official current publications are council PDFs with presentation tables, not stable row-level datasets; national SCB actuals are already loaded separately."
+    },
+    {
+      "country_code": "USA",
+      "scope": "Socrata discovery beyond the four verified city adapters",
+      "status": "catalog_not_coverage",
+      "reason": "The 1,600 search hits mix states, counties, non-US portals and non-budget artifacts. Each dataset needs municipality, stage, schema and duplication review before it can be counted."
+    },
+    {
+      "country_code": "CAN",
+      "scope": "Municipal adopted budgets",
+      "status": "decentralized_no_bulk",
+      "reason": "Publications are local or provincial and no national item-level adopted-budget feed was identified."
+    },
+    {
+      "country_code": "AUS",
+      "scope": "Municipal adopted budgets",
+      "status": "decentralized_no_bulk",
+      "reason": "State collections and national statistics provide aggregates; adopted item-level plans remain council publications."
+    },
+    {
+      "country_code": "NZL",
+      "scope": "Council annual and long-term plans",
+      "status": "decentralized_no_bulk",
+      "reason": "Councils publish plans individually and the national layer is standardized summary data rather than line items."
+    },
+    {
+      "country_code": "VNM",
+      "scope": "Subnational budget disclosure forms",
+      "status": "distributed_portals",
+      "reason": "The Ministry of Finance defines forms, but entity files are distributed across provincial and local portals without a national entity-level bulk endpoint."
+    },
+    {
+      "country_code": "AUT",
+      "scope": "Municipal adopted budgets",
+      "status": "accounts_not_budget",
+      "reason": "National municipal accounts are available; a central item-level adopted-budget lifecycle was not found."
+    },
+    {
+      "country_code": "BEL",
+      "scope": "Municipal adopted budgets",
+      "status": "regional_fragmentation",
+      "reason": "The three regional systems use different models and no Belgian national item-level lifecycle exists."
+    },
+    {
+      "country_code": "DEU",
+      "scope": "IKVS tenants and official PDF-only cities",
+      "status": "no_stable_bulk_contract",
+      "reason": "IKVS has municipality-specific tenants without a documented central export; Hannover, Magdeburg, Erfurt, Cottbus, Rostock and Saarbrücken publish document-specific PDFs."
+    },
+    {
+      "country_code": "FRA",
+      "scope": "Remaining Data.gouv budget-primitif catalog",
+      "status": "heterogeneous_catalog",
+      "reason": "The catalog mixes communes, intercommunal bodies, regions, departments, annex budgets, duplicates and PDFs. Six current municipal CSV contracts were verified and acquired; the remaining records are discovery leads, not a defensible denominator."
+    }
+  ]
+}

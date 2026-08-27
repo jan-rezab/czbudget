@@ -155,8 +155,12 @@
       <section class="method-ledger" aria-labelledby="method-ledger-title">
         <header class="section-bar method-ledger-head">
           <h2 id="method-ledger-title" data-status-copy="ledgerTitle">Registr pokrytí a zdrojů</h2>
-          <a class="method-ledger-json" href="data/methodology-sources.v1.json" download data-status-copy="ledgerJson">JSON ↓</a>
+          <div>
+            <a class="method-ledger-json" href="data/methodology-sources.v1.json" download data-status-copy="ledgerJson">JSON ↓</a>
+            <a class="method-ledger-json" href="data/municipal-itemized-acquisition-audit.v1.json" download>Audit importů ↓</a>
+          </div>
         </header>
+        <p data-status-copy="acquisitionAuditNote">Audit importů odděluje zdroje, které už mají validovaný produkční balík, od katalogových tipů, dokumentových publikací a technicky blokovaných systémů. Připravený balík se do veřejného pokrytí započítá až po úspěšném načtení do produkčního skladu.</p>
         <div class="method-ledger-controls" aria-label="Methodology table filters">
           <label><span data-page-copy="ledgerCountry">Země</span><select id="method-country-filter"><option value="">Všechny země</option></select></label>
           <label><span data-page-copy="ledgerModule">Modul</span><select id="method-module-filter"><option value="">Všechny moduly</option></select></label>

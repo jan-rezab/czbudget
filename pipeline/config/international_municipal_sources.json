@@ -4,7 +4,7 @@
     "POL": {
       "name": "Poland",
       "year": 2025,
-      "years": [2024, 2025],
+      "years": [2024, 2025, 2026],
       "currency": "PLN",
       "adapter": "poland_dbf",
       "coverage": "Municipalities; fourth-quarter Rb-27S and Rb-28S returns",
@@ -50,13 +50,19 @@
       "year": 2025,
       "years": [2024, 2025],
       "currency": "EUR",
-      "adapter": "france_dgfip",
-      "coverage": "All commune main and supplementary accounting balances; nature-function detail where published",
+      "adapter": "france_structured",
+      "coverage": "All commune main and supplementary accounting balances with nature-function detail where published, plus verified current machine-readable enacted budgets for Brest, La Possession, Sailly-lez-Lannoy, Blagnac, Toulouse and Nantes; enacted-budget layer is a published subset",
       "sources": [
         {"id": "fr-dgfip-commune-balances-2024", "year": 2024, "kind": "actual_and_balance", "detail": "census", "filename": "Balance_Commune_2024_Dec2025.zip", "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-communes-en-2024/attachments/balance_commune_2024_dec2025_zip"},
         {"id": "fr-dgfip-balances-fonction-2024", "year": 2024, "kind": "actual_and_balance", "detail": "function", "filename": "BalanceSPL_Fonction_2024_Dec2025.zip", "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2024/attachments/balancespl_fonction_2024_dec2025_zip"},
         {"id": "fr-dgfip-commune-balances-2025", "year": 2025, "kind": "actual_and_balance", "detail": "census", "filename": "Balance_Commune_2025_Juil2026.zip", "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-communes-en-2025/attachments/balance_commune_2025_juil2026zip"},
-        {"id": "fr-dgfip-balances-fonction-2025", "year": 2025, "kind": "actual_and_balance", "detail": "function", "filename": "BalanceSPL_Fonction_2025_Juil2026.zip", "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2025/attachments/balancespl_fonction_2025_juil2026zip"}
+        {"id": "fr-dgfip-balances-fonction-2025", "year": 2025, "kind": "actual_and_balance", "detail": "function", "filename": "BalanceSPL_Fonction_2025_Juil2026.zip", "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2025/attachments/balancespl_fonction_2025_juil2026zip"},
+        {"id":"fr-brest-budget-2026","collection":"budget","year":2026,"kind":"enacted","parser":"brest","city_code":"29019","city_name":"Brest","filename":"budget-primitif-ville-de-brest-2026.csv","url":"https://static.data.gouv.fr/resources/donnees-du-budget-primitif-de-la-ville-de-brest/20260205-160749/budget-primitif-ville-de-brest-2026.csv"},
+        {"id":"fr-la-possession-budget-2025","collection":"budget","year":2025,"kind":"enacted","parser":"la_possession","city_code":"97408","city_name":"La Possession","encoding":"cp1252","filename":"budget-primitif-la-possession-2025.csv","url":"https://static.data.gouv.fr/resources/budget-primitif-2023-de-la-possession-1/20250917-110952/budget-primitif-2025.csv"},
+        {"id":"fr-sailly-budget-2025","collection":"budget","year":2025,"kind":"enacted","parser":"sailly","city_code":"59522","city_name":"Sailly-lez-Lannoy","encoding":"cp1252","filename":"open-data-budget-sailly-2025.csv","url":"https://static.data.gouv.fr/resources/budget-primitif-2025/20250422-123353/open-data-budget-2025.csv"},
+        {"id":"fr-blagnac-budget-2025","collection":"budget","year":2025,"kind":"enacted","parser":"blagnac","city_code":"31069","city_name":"Blagnac","filename":"budget-primitif-blagnac-2025.csv","url":"https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/budget-primitif-2024-budget-principal-blagnac0/exports/csv?use_labels=true"},
+        {"id":"fr-toulouse-budget-2026","collection":"budget","year":2026,"kind":"enacted","parser":"toulouse","city_code":"31555","city_name":"Toulouse","filename":"budget-primitif-toulouse-2026.csv","url":"https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets/budget-primitif-2026-ville-de-toulouse/exports/csv?use_labels=true"},
+        {"id":"fr-nantes-budget-2026","collection":"budget","year":2026,"kind":"enacted","parser":"nantes","city_code":"44109","city_name":"Nantes","filename":"budget-primitif-nantes-2026.csv","url":"https://data.nantesmetropole.fr/api/explore/v2.1/catalog/datasets/244400404_budget-primitif-bp-2026-nantes/exports/csv?use_labels=true"}
       ]
     },
     "SWE": {
@@ -73,14 +79,19 @@
       ]
     },
     "GBR": {
-      "name": "United Kingdom (England collection)",
-      "year": 2025,
-      "years": [2024, 2025],
+      "name": "United Kingdom (England, Scotland and Wales collections)",
+      "year": 2026,
+      "years": [2024, 2025, 2026],
       "currency": "GBP",
-      "adapter": "england_mhclg",
-      "coverage": "England local authorities; revenue outturn 2017-18 through 2024-25",
+      "adapter": "united_kingdom_devolved",
+      "coverage": "England local-authority revenue outturn plus 2026-27 enacted Revenue Account budgets for general-purpose councils, all 32 Scottish councils' provisional outturn and budget estimates, and enacted revenue budgets for all 22 Welsh unitary authorities; Northern Ireland not yet loaded",
       "sources": [
-        {"id": "gb-england-revenue-outturn-timeseries", "kind": "actual", "filename": "Revenue_Outturn_time_series_data_v3.2.csv", "url": "https://assets.publishing.service.gov.uk/media/6a7ada920a700895e2d7a07b/Revenue_Outturn_time_series_data_v3.2.csv"}
+        {"id": "gb-england-revenue-outturn-timeseries", "collection": "england", "years": [2024, 2025], "kind": "actual", "filename": "Revenue_Outturn_time_series_data_v3.2.csv", "url": "https://assets.publishing.service.gov.uk/media/6a7ada920a700895e2d7a07b/Revenue_Outturn_time_series_data_v3.2.csv"},
+        {"id": "gb-england-revenue-budget-2026-part-1", "collection": "england_budget", "year": 2026, "kind": "revenue_account_part_1", "filename": "RA_2026-27_data_Part_1.ods", "sheet": "RA_LA_Data_2026-27", "url": "https://assets.publishing.service.gov.uk/media/6a2962166d178a6fb7e32089/RA_2026-27_data_Part_1.ods"},
+        {"id": "gb-england-revenue-budget-2026-part-2", "collection": "england_budget", "year": 2026, "kind": "revenue_account_part_2", "filename": "RA_2026-27_data_Part_2.ods", "sheet": "RA_LA_Data_2026-27", "url": "https://assets.publishing.service.gov.uk/media/6a281185e371d9d2c0052b0a/RA_2026-27_data_Part_2.ods"},
+        {"id": "gb-scotland-pobe-2026-revenue", "collection": "scotland", "year": 2026, "kind": "revenue", "filename": "POBE_2026_Revenue_Workbook_revised_2026-07-24.xlsx", "url": "https://www.gov.scot/binaries/content/documents/govscot/publications/statistics/2026/06/local-government-2025-26-provisional-outturn-and-2026-27-budget-estimates/documents/provisional-outturn-budget-estimates---revenue-workbook/provisional-outturn-budget-estimates---revenue-workbook/govscot%3Adocument/POBE%2B2026%2B-%2BRevenue%2BWorkboook%2B-%2Brevised%2Bon%2B24%2BJuly%2B2026.xlsx"},
+        {"id": "gb-scotland-pobe-2026-capital", "collection": "scotland", "year": 2026, "kind": "capital", "filename": "POBE_2026_Capital_Workbook_published_2026-06-30.xlsx", "url": "https://www.gov.scot/binaries/content/documents/govscot/publications/statistics/2026/06/local-government-2025-26-provisional-outturn-and-2026-27-budget-estimates/documents/provisional-outturn-budget-estimates---capital-workbook/provisional-outturn-budget-estimates---capital-workbook/govscot%3Adocument/POBE%2B2026%2B-%2BCapital%2BWorkbook%2B-%2Bpublished%2Bon%2B30%2BJune%2B2026.xlsx"},
+        {"id": "gb-wales-statswales-revenue-budget-2025-2026", "collection": "wales", "year": 2026, "kind": "revenue", "filename": "statswales_revenue_budget_2025_2026.csv", "method": "POST", "url": "https://stats.gov.wales/en-GB/88384d5e-1a50-4496-849c-7195ddd4185f/download", "form": {"view_type": "unfiltered", "format": "csv", "view_choice": "raw", "extended": "yes", "download_language": "en-GB", "selected_filter_options": "[]", "action": "download"}}
       ]
     },
     "USA": {
@@ -98,25 +109,47 @@
       ]
     },
     "CHE": {
-      "name": "Switzerland (Canton Lucerne collection)",
+      "name": "Switzerland (Lucerne municipal census and Zürich city API)",
       "year": 2026,
       "years": [2026],
       "currency": "CHF",
-      "adapter": "switzerland_lucerne",
-      "coverage": "Published subset: every municipality in Canton Lucerne with HRM2 itemized annual budgets",
+      "adapter": "switzerland_structured",
+      "coverage": "Published decentralized subset: every municipality in Canton Lucerne with HRM2 itemized annual budgets plus Zürich's account-level enacted city budget API; not national coverage",
       "sources": [
-        {"id":"ch-lustat-lucerne-municipal-budgets","kind":"enacted","filename":"gefis-lu-bg.csv","url":"https://www.data.lustat.ch/gefis-lu-bg.csv"}
+        {"id":"ch-lustat-lucerne-municipal-budgets","collection":"lucerne","kind":"enacted","filename":"gefis-lu-bg.csv","url":"https://www.data.lustat.ch/gefis-lu-bg.csv"},
+        {"id":"ch-zurich-city-finance-api-2026","collection":"zurich","kind":"enacted","filename":"zurich-city-budget-api-2026.json","url":"https://api.stadt-zuerich.ch/rpkk-rs/v1","api_key":"vopVcmhIMkeUCf8gQjk1GgU2wK+fKihAdlCl0WKJ"}
       ]
     },
     "DEU": {
-      "name": "Germany (Bremen city collection)",
+      "name": "Germany (official structured municipal collections)",
       "year": 2026,
       "years": [2026],
       "currency": "EUR",
-      "adapter": "germany_bremen",
-      "coverage": "Published scatter: enacted 2026 and 2027 itemized budgets for the Stadtgemeinde Bremen",
+      "adapter": "germany_structured_cities",
+      "coverage": "Published decentralized structured-budget subset: Aachen, Bonn, Dortmund, Essen, Cologne, Moers, Frankfurt am Main, Karlsruhe, Oldenburg, Glückstadt and Bremen; not national coverage",
       "sources": [
-        {"id":"de-bremen-city-budget-2026-2027","kind":"enacted","filename":"Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv","url":"https://www.finanzen.bremen.de/sixcms/media.php/bremen02.a.13.de/download/Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv"}
+        {"id":"de-aachen-budget-2026","kind":"enacted","parser":"aachen","city_code":"05334002","city_name":"Aachen","region":"Nordrhein-Westfalen","filename":"haushaltsplan-2026-ergebnisplanung.csv","url":"https://offenedaten.aachen.de/dataset/82bf0cb9-4092-48bf-965d-c1dfa681a2f0/resource/44473b15-aefb-4484-8271-57279cdb93d5/download/haushaltsplan-2026-ergebnisplanung.csv"},
+        {"id":"de-bonn-budget-archive-2024","kind":"enacted","parser":"bonn","city_code":"05314000","city_name":"Bonn","region":"Nordrhein-Westfalen","filename":"Datenthema_017_Haushaltsplaene_Gesamt_FINAL.zip","member":"Plan 2024.csv","url":"https://opendata.bonn.de/sites/default/files/Datenthema%20017%20Haushaltspl%C3%A4ne_Gesamt_FINAL.zip"},
+        {"id":"de-dortmund-budget-2020-2021","kind":"enacted","parser":"dortmund","city_code":"05913000","city_name":"Dortmund","region":"Nordrhein-Westfalen","filename":"fb20-haushaltsplan-2020-2021.csv","url":"https://open-data.dortmund.de/api/v2/catalog/datasets/fb20-haushaltsplan-2020-2021/exports/csv?use_labels=true"},
+        {"id":"de-essen-budget-2025-2026","kind":"enacted","parser":"essen","city_code":"05113000","city_name":"Essen","region":"Nordrhein-Westfalen","filename":"Gesamtergebnisplan_Kostenarten_2025_2026.csv","url":"https://opendata.essen.de/sites/default/files/Gesamtergebnisplan_Kostenarten_2025_2026%28inkl_interne_Leistungsbeziehungen%29.csv"},
+        {"id":"de-koeln-budget-2016","kind":"enacted","parser":"koeln","city_code":"05315000","city_name":"Köln","region":"Nordrhein-Westfalen","filename":"Koeln_HH_Finanzrechnung_1.csv","url":"https://www.offenedaten-koeln.de/sites/default/files/distribution/Koeln_HH_Finanzrechnung_1.csv"},
+        {"id":"de-moers-budget-2023","kind":"enacted","parser":"moers","city_code":"05170024","city_name":"Moers","region":"Nordrhein-Westfalen","filename":"hhp-2023-endgultig.csv","url":"https://www.offenesdatenportal.de/dataset/2fc502ea-58eb-4560-9d57-78512447d630/resource/6258e737-31b3-4a1a-b4a4-93ccfe1f9433/download/hhp-2023-endgultig.csv"},
+        {"id":"de-frankfurt-budget-2024-2025","kind":"enacted","parser":"frankfurt","city_code":"06412000","city_name":"Frankfurt am Main","region":"Hessen","filename":"frankfurt-haushaltsplan-2024-2025.csv","url":"https://offenedaten.frankfurt.de/dcat/dataset/de-he-frankfurtam-haushaltsplan_20242025_ergebnishaushalt/content.csv"},
+        {"id":"de-karlsruhe-budget-2024","kind":"enacted","parser":"karlsruhe","city_code":"08212000","city_name":"Karlsruhe","region":"Baden-Württemberg","filename":"ikvs_ergrech_600_1000_2024_0000.csv","url":"https://transparenz.karlsruhe.de/dataset/69abad11-27b0-479c-9599-26efc164b4e8/resource/875e9d43-24d4-4ee8-b384-be45256dfb15/download/ikvs_ergrech_600_1000_2024_0000.csv"},
+        {"id":"de-oldenburg-budget-2025","kind":"enacted","parser":"oldenburg","city_code":"03403000","city_name":"Oldenburg","region":"Niedersachsen","filename":"1101_Haushaltsplan_der_Stadt_Oldenburg_2025.xlsx","url":"https://opendata.oldenburg.de/sites/default/files/1101_Haushaltsplan_der_Stadt_Oldenburg_2025.xlsx"},
+        {"id":"de-glueckstadt-budget-2022","kind":"enacted","parser":"glueckstadt","city_code":"01061029","city_name":"Glückstadt","region":"Schleswig-Holstein","filename":"daten-2022-stadt-gluckstadt.csv","url":"https://opendata.schleswig-holstein.de/dataset/7f34579f-9eec-4726-b569-6232686a4bbf/resource/a5e797de-33c7-4da5-bcea-7ed52ceafe1d/download/daten-2022-stadt-gluckstadt-stand-beschlussfassung-stadtvertretung.csv"},
+        {"id":"de-bremen-city-budget-2026-2027","kind":"enacted","parser":"bremen","city_code":"04011000","city_name":"Bremen","region":"Bremen","filename":"Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv","url":"https://www.finanzen.bremen.de/sixcms/media.php/bremen02.a.13.de/download/Haushaltsdaten_Stadt_Bremen_2026_und_2027.csv"}
+      ]
+    },
+    "PRY": {
+      "name": "Paraguay municipal BOOST expenditure collection",
+      "year": 2022,
+      "years": [2022],
+      "currency": "PYG",
+      "adapter": "paraguay_boost_municipal",
+      "coverage": "Officially endorsed municipal expenditure subset in Paraguay BOOST, 2006-2022; 2022 contains 240 reporting municipalities and approved, modified and paid economic-classification lines; not a current full municipal census",
+      "sources": [
+        {"id":"py-boost-municipal-2006-2022","kind":"budget_and_actual","filename":"Paraguay_BOOST_PS_2006-22_SP.xlsx","sheet":"Municipalidades","url":"https://datacatalogfiles.worldbank.org/ddh-published/0038079/2/DR0092933/Paraguay%20BOOST%20PS%202006-22%20%28SP%29.xlsx","catalog_url":"https://datacatalog.worldbank.org/search/dataset/0038079/paraguay-boost-public-expenditure-database"}
       ]
     }
   }
