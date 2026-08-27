@@ -1,6 +1,7 @@
 import copy
 import importlib.util
 import json
+import re
 import unittest
 from pathlib import Path
 
@@ -65,6 +66,10 @@ class GovernmentAccountabilityContractTest(unittest.TestCase):
         relation["is_budget_parent"] = True
         with self.assertRaises(MODULE.ContractError):
             MODULE.validate_config(config)
+
+    def test_bigquery_arrays_do_not_use_unsupported_not_null_modifier(self):
+        schema = (MODULE.WEB / "pipeline/warehouse/schema.sql").read_text(encoding="utf-8")
+        self.assertIsNone(re.search(r"ARRAY<[^>]+>\s+NOT NULL", schema))
 
     def test_published_payload_and_warehouse_exports_are_current(self):
         MODULE.write_or_check(self.payload, check=True)

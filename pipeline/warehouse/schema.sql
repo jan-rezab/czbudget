@@ -686,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_accountab
   publisher STRING NOT NULL,
   title STRING NOT NULL,
   url STRING NOT NULL,
-  supports ARRAY<STRING> NOT NULL,
+  supports ARRAY<STRING>,
   reviewed_at DATE NOT NULL,
   loaded_at TIMESTAMP NOT NULL
 )
@@ -710,7 +710,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_tiers` (
   budget_approval_power BOOL NOT NULL,
   borrowing_power BOOL NOT NULL,
   asset_ownership_power BOOL NOT NULL,
-  source_ids ARRAY<STRING> NOT NULL,
+  source_ids ARRAY<STRING>,
   valid_from DATE,
   valid_to DATE,
   loaded_at TIMESTAMP NOT NULL
@@ -728,7 +728,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_tier_rela
   is_geographic_parent BOOL NOT NULL,
   note_cs STRING NOT NULL,
   note_en STRING NOT NULL,
-  source_ids ARRAY<STRING> NOT NULL,
+  source_ids ARRAY<STRING>,
   valid_from DATE,
   valid_to DATE,
   loaded_at TIMESTAMP NOT NULL
@@ -758,7 +758,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_responsib
   actor_id STRING NOT NULL,
   responsibility_role STRING NOT NULL OPTIONS(description = 'Atomic role such as sets_rules, funds, owns, commissions, delivers, supervises or audits'),
   legal_capacity STRING NOT NULL OPTIONS(description = 'Self-government, delegated state administration, national competence, social insurance or provider capacity'),
-  source_ids ARRAY<STRING> NOT NULL,
+  source_ids ARRAY<STRING>,
   valid_from DATE NOT NULL,
   valid_to DATE,
   loaded_at TIMESTAMP NOT NULL
@@ -783,7 +783,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_revenue_i
   regional_rate_discretion STRING NOT NULL,
   regional_use_discretion STRING NOT NULL,
   is_own_source_revenue BOOL NOT NULL,
-  source_ids ARRAY<STRING> NOT NULL,
+  source_ids ARRAY<STRING>,
   valid_from DATE NOT NULL,
   valid_to DATE,
   loaded_at TIMESTAMP NOT NULL
@@ -799,7 +799,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_accountab
   mechanism_type STRING NOT NULL,
   frequency STRING NOT NULL,
   scope STRING NOT NULL,
-  source_ids ARRAY<STRING> NOT NULL,
+  source_ids ARRAY<STRING>,
   valid_from DATE NOT NULL,
   valid_to DATE,
   loaded_at TIMESTAMP NOT NULL
@@ -839,7 +839,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.government_accountab
   responsibility_coverage STRING NOT NULL,
   transfer_counterparty_coverage STRING NOT NULL,
   validation_status STRING NOT NULL,
-  limitations ARRAY<STRING> NOT NULL,
+  limitations ARRAY<STRING>,
   loaded_at TIMESTAMP NOT NULL
 )
 PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
