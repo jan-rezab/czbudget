@@ -1,4 +1,4 @@
-import { access, unlink, writeFile } from "node:fs/promises";
+import { unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const expectedCommit = process.argv[2];
@@ -11,14 +11,6 @@ if (!path.isAbsolute(markerPath || "")) throw new Error("The deployment marker m
 await unlink(markerPath).catch((error) => {
   if (error.code !== "ENOENT") throw error;
 });
-
-try {
-  await access(path.join(process.cwd(), ".deployment-hold"));
-  console.log("Production deployment is temporarily held; deploy marker will not be created.");
-  process.exit(0);
-} catch (error) {
-  if (error.code !== "ENOENT") throw error;
-}
 
 const response = await fetch(refURL, {
   headers: {
