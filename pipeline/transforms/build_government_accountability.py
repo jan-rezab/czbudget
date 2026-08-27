@@ -13,6 +13,7 @@ import argparse
 import json
 import os
 from collections import Counter
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -198,9 +199,11 @@ def amount_row(entity: dict[str, Any]) -> dict[str, Any]:
 
 def aggregate(rows: list[dict[str, Any]], include_prague: bool) -> dict[str, Any]:
     selected = [row for row in rows if include_prague or not row["is_prague_dual_role"]]
-    revenue = sum(row["revenue_actual"] for row in selected)
+    money = Decimal("0.01")
+    money_sum = lambda values: float(sum((Decimal(str(value)) for value in values), Decimal()).quantize(money))
+    revenue = money_sum(row["revenue_actual"] for row in selected)
     composition = {
-        key: sum(row["revenue_composition"][key] for row in selected)
+        key: money_sum(row["revenue_composition"][key] for row in selected)
         for key in ("tax_revenue", "transfer_revenue", "nontax_revenue", "capital_revenue")
     }
     return {
@@ -209,10 +212,10 @@ def aggregate(rows: list[dict[str, Any]], include_prague: bool) -> dict[str, Any
         "currency_code": "CZK",
         "fiscal_year": 2025,
         "revenue_actual": revenue,
-        "expense_actual": sum(row["expense_actual"] for row in selected),
-        "budget_balance": sum(row["budget_balance"] for row in selected),
+        "expense_actual": money_sum(row["expense_actual"] for row in selected),
+        "budget_balance": money_sum(row["budget_balance"] for row in selected),
         "revenue_composition": composition,
-        "revenue_composition_shares": {f"{key}_share": value / revenue for key, value in composition.items()},
+        "revenue_composition_shares": {f"{key}_share": round(value / revenue, 15) for key, value in composition.items()},
         "non_additivity_warning": "The Prague accounting budget has both municipal and regional roles. Do not add the all-region aggregate to an all-municipality aggregate without eliminating Prague and matched intergovernmental transfers."
     }
 
