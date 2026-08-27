@@ -9,12 +9,12 @@
     cs: {
       maker: "Projekt připravuje Hlidac statu, z.u.",
       legal: "zapsaný ústav · IČO 05965527",
-      about: "O projektu", methodology: "Metodika"
+      about: "O projektu", methodology: "Pokrytí"
     },
     en: {
       maker: "Created by Hlidac statu, z.u.",
       legal: "registered institute · ID 05965527",
-      about: "About", methodology: "Methodology"
+      about: "About", methodology: "Coverage"
     }
   };
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";

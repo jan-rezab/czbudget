@@ -4,10 +4,10 @@
     <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Stav dat — Public Spending Data</title>
+    <title>Pokrytí — Public Spending Data</title>
     <meta
       name="description"
-      content="Technický stav dat: pokrytí podle země, období a primární zdroje."
+      content="Pokrytí Public Spending Data podle země, publikované sekce, období a primární zdroje."
     />
     <link rel="canonical" href="https://publicspendingdata.org/methodology.html" />
     <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/methodology.html?lang=cs" />
@@ -22,6 +22,7 @@
     />
     <link rel="stylesheet" href="municipal-transparency.css?v=20260826-transparency-index" />
     <link rel="stylesheet" href="data-freshness.css?v=20260827-cross-layer" />
+    <link rel="stylesheet" href="coverage-map.css?v=20260827-surfaced-sections" />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <style>
       .data-health-kpis { grid-template-columns: repeat(5, 1fr); }
@@ -36,10 +37,11 @@
       @media (max-width: 560px) { .data-health-kpis { grid-template-columns: 1fr; } }
     </style>
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
-    <script src="site-pages.js?v=20260827-methodology-levels" defer></script>
+    <script src="site-pages.js?v=20260827-coverage-page" defer></script>
     <script src="municipal-transparency.js?v=20260826-transparency-index" defer></script>
     <script src="data-freshness.js?v=20260827-methodology-levels" defer></script>
-    <script src="global-footer.js?v=20260824-compact" defer></script>
+    <script src="coverage-map.js?v=20260827-surfaced-sections" defer></script>
+    <script src="global-footer.js?v=20260827-coverage-menu" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -52,8 +54,8 @@
     <main id="top">
       <header class="status-header">
         <div>
-          <h1 data-status-copy="pageTitle">Stav dat</h1>
-          <p data-status-copy="pageIntro">Pokrytí podle země, období a primárního zdroje.</p>
+          <h1 data-status-copy="pageTitle">Pokrytí</h1>
+          <p data-status-copy="pageIntro">Co publikujeme podle země, sekce, období a primárního zdroje.</p>
         </div>
         <a class="status-volume" href="data/data-quality-report.v1.json" target="_blank" rel="noreferrer">
           <span data-status-copy="publishedData">Počítané adresářové a profilové záznamy</span>
@@ -66,6 +68,16 @@
           <span data-status-copy="releaseNote">Souhrn všech obecních dat</span>
         </header>
         <div id="data-health-root" aria-live="polite"><p class="data-health-loading">Načítám…</p></div>
+      </section>
+      <section id="published-coverage" class="published-coverage" aria-labelledby="published-coverage-title">
+        <header class="published-coverage-head">
+          <div>
+            <span class="kicker" data-surface-copy="eyebrow">Publikované na PSD · 15 sekcí</span>
+            <h2 id="published-coverage-title" data-surface-copy="title">Co na webu skutečně zpřístupňujeme?</h2>
+          </div>
+          <p data-surface-copy="lead">Vyberte sekci a uvidíte země, pro které má Public Spending Data publikovaný profil nebo datovou vrstvu. Mapa měří obsah na tomto webu, nikoli vše, co může existovat u původních poskytovatelů.</p>
+        </header>
+        <div id="surface-coverage-atlas" class="surface-coverage-atlas" aria-live="polite"><p>Načítám mapu publikovaného pokrytí…</p></div>
       </section>
       <section id="data-freshness" class="freshness-overview" aria-labelledby="data-freshness-title">
         <header class="freshness-head">
@@ -170,9 +182,9 @@
       </section>
       <section id="municipal-transparency" class="methodology-atlas" aria-labelledby="municipal-transparency-title">
         <header class="methodology-atlas-head">
-          <span class="kicker" data-page-copy="atlasEyebrow">Data · celý svět</span>
-          <h2 id="municipal-transparency-title" data-page-copy="atlasTitle">POKRYTÍ</h2>
-          <p data-page-copy="atlasLead">Mapa a řaditelná tabulka zahrnují všech 195 suverénních států. Index rozpočtové transparentnosti kombinuje centrální skóre OBS s bonusem za hloubku obecních dat a ukazuje, které zelené země ještě musíme načíst.</p>
+          <span class="kicker" data-page-copy="atlasEyebrow">Zdrojové systémy · celý svět</span>
+          <h2 id="municipal-transparency-title" data-page-copy="atlasTitle">KDE MŮŽEME POKRYTÍ ROZŠÍŘIT?</h2>
+          <p data-page-copy="atlasLead">Tato druhá mapa odděluje publikované pokrytí PSD od dostupnosti u původních poskytovatelů. Atlas 195 států ukazuje rozpočtovou transparentnost, obecní datové systémy a země, jejichž zdroje jsme ještě nenačetli.</p>
         </header>
         <div id="transparency-atlas" class="transparency-atlas" aria-live="polite"><p>Načítám atlas…</p></div>
       </section>

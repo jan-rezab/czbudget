@@ -111,7 +111,8 @@ test("high-risk static and generated templates switch their visible copy", async
 
 test("shared page modules do not retain Czech UI copy in English", async ({ page }) => {
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText("COVERAGE");
+  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText("WHERE CAN COVERAGE EXPAND?");
+  await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
   await expect(page.locator(".atlas-table thead th").first()).toContainText("Country");
 
   await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "networkidle" });
@@ -131,8 +132,8 @@ test("shared page modules do not retain Czech UI copy in English", async ({ page
 test("representative pages contain no standalone labels from the other language", async ({ page }) => {
   test.setTimeout(180_000);
   const forbidden = {
-    en: ["Domů", "Srovnání", "Obce a města", "Metodika", "O projektu", "Přehled", "Výdaje", "Příjmy", "Výsledek", "Stav účtů", "Zdroje", "Vybraný rok", "Hledat", "Nahoru ↑", "Rozpočet", "Data a metodika"],
-    cs: ["Home", "Compare", "Municipalities", "Methodology", "About", "Overview", "Expenditure", "Revenue", "Result", "Cash and deposits", "Sources", "Selected year", "Search", "Back to top ↑", "Budget", "Data and methodology"],
+    en: ["Domů", "Srovnání", "Obce a města", "Metodika", "Pokrytí", "O projektu", "Přehled", "Výdaje", "Příjmy", "Výsledek", "Stav účtů", "Zdroje", "Vybraný rok", "Hledat", "Nahoru ↑", "Rozpočet", "Data a metodika"],
+    cs: ["Home", "Compare", "Municipalities", "Methodology", "Coverage", "About", "Overview", "Expenditure", "Revenue", "Result", "Cash and deposits", "Sources", "Selected year", "Search", "Back to top ↑", "Budget", "Data and methodology"],
   };
 
   for (const path of previewRoutes) {

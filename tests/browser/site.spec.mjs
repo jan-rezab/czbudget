@@ -121,7 +121,7 @@ test("state budget translates its Czech static body on an initial English visit"
   await expect(page.locator(".fiscal-perimeter-map")).not.toContainText("Tři účetní hranice");
 });
 
-test("comparison and methodology live outside the homepage", async ({ page }) => {
+test("comparison and coverage live outside the homepage", async ({ page }) => {
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#compare")).toHaveCount(0);
   await expect(page.locator("#method")).toHaveCount(0);
@@ -134,7 +134,7 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".status-header")).toContainText("Data status");
+  await expect(page.locator(".status-header")).toContainText("Coverage");
   await expect(page.locator(".status-volume")).toContainText("Counted directory and profile records");
   await expect(page.locator("#status-data-total")).toContainText("387,346");
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(5);
@@ -144,6 +144,9 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#data-health-root")).toContainText("Municipalities · itemized budgets");
   await expect(page.locator("#data-health-root")).toContainText("60,544 profiles");
   await expect(page.locator("#data-health-root")).toContainText("66");
+  await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
+  await expect(page.locator("#surface-coverage-atlas [data-surface-country]")).toHaveCount(195);
+  await expect(page.locator("#transparency-atlas .atlas-map")).toBeVisible();
   await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(191);
   await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(1337);
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
@@ -664,7 +667,7 @@ test("every page family renders the same shared header component", async ({ page
     "/cz/kraje/praha/?lang=en",
     "/cz/mesta/?lang=en",
   ];
-  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Deep dives⌄", "Methodology", "About"];
+  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Deep dives⌄", "Coverage", "About"];
   for (const route of representatives) {
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator("psd-site-header")).toHaveCount(1);
