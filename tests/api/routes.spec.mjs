@@ -51,9 +51,11 @@ test("serves every published country through the API", async () => {
   const payload = await response.json();
   const codes = payload.data.map((country) => country.country_code);
   assert.equal(response.status, 200);
-  assert.deepEqual(codes, ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]);
+  assert.equal(codes.length, 191);
+  for (const country of ["CZE", "AFG", "PSE", "ZWE"]) assert.ok(codes.includes(country), country);
+  for (const country of ["CUB", "MCO", "PRK", "VAT"]) assert.ok(!codes.includes(country), country);
 
-  for (const country of ["FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]) {
+  for (const country of ["FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC", "AFG", "PSE"]) {
     const profile = await get(`/api/v1/countries/${country}`);
     assert.equal(profile.status, 200, `${country} profile`);
     assert.equal((await profile.json()).data.country_code, country);

@@ -15,7 +15,8 @@ Potom otevřete <http://localhost:3000/>.
 
 - `index.html` — kondenzované mezinárodní srovnání a adresář zemí
 - `homepage-v2.js` — filtry srovnání a česká/anglická lokalizace homepage
-- `country.html?code=CZE&lang=cs` — sdílená šablona detailu každé země
+- `country.html?code=CZE&lang=cs` — sdílená šablona detailu země; čisté trasy
+  publikují 191 států s řadou IMF WEO, z toho 17 s plným národním dashboardem
 - `country.js` — dlouhodobé řady, národní specifika, zdroje a CS/EN překlady
 - `municipalities/` — centrální evropský obecní rozcestník s filtrem všech 27 hlavních měst EU
 - `municipalities/czechia/` — český obecní přehled, celostátní insighty a navigace na úplný adresář a velká města

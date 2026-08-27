@@ -2,13 +2,16 @@
 
 Tato vrstva je srovnávací páteř, nikoli hotová vizualizace státních rozpočtů.
 Používá jednotnou definici sektoru vládních institucí (general government) z IMF
-WEO pro Česko a devět srovnávaných zemí.
+WEO pro všech 191 suverénních států, pro které se v sešitu z dubna 2026 nachází
+ekonomická řada. Chybějící pozorování zůstávají `null`; nejsou nahrazena nulou.
 
-## Země
+## Pokrytí zemí
 
 - kotva: Česko
 - zadané země: Ukrajina, Polsko, Německo, Spojené království, Francie, USA
 - institucionální benchmarky: Švýcarsko, Švédsko, Dánsko
+- globální makrofiskální profil: dalších 174 států
+- bez řady v IMF WEO: Kuba, Monako, Severní Korea a Vatikán
 
 „Anglie“ je v datech vedena jako Spojené království. Anglie nemá samostatný
 suverénní státní rozpočet, který by byl s ostatními zeměmi srovnatelný.

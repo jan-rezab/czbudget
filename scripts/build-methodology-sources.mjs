@@ -32,9 +32,9 @@ const adminByCode = code => administrative.countries.find(country=>country.code=
 const municipalByCode = code => municipalities.countries.find(country=>country.code===code);
 const transportByCode = code => transport.countries[code];
 
-function lineage(code,module) {
+function lineage(code,module,moduleCoverage) {
   const admin=adminByCode(code), healthProfile=health.countries[code], provider=providers.countries[code], municipal=municipalByCode(code), entity=publicEntityCoverage.countries[code], entityDirectory=publicEntityDirectory.countries.find(item=>item.country_code===code), entityAggregates=publicEntityAggregates.observations.filter(item=>item.country_code===code), demographic=demography.countries[code], transportProfile=transportByCode(code);
-  const unavailable =
+  const unavailable = moduleCoverage?.status === "unavailable" ||
     (module==="functional_spending" && !functions.countries[code]) ||
     (module==="transport" && !transportProfile) ||
     (module==="health" && !healthProfile) ||
@@ -43,12 +43,12 @@ function lineage(code,module) {
     (module==="public_entities" && (!entity || !entityDirectory));
   if (unavailable) {
     const fallback=admin?.sources?.[0];
-    return {period:"Not loaded",scope:"Explicit coverage gap",sources:fallback?[source(fallback.title,fallback.url,"coverage registry; no module-specific extraction")]:[],transform:"No transformation: the module is not published for this country.",caveat:"Not loaded; no values are inferred from another accounting perimeter."};
+    return {period:"Not loaded",scope:"Explicit coverage gap",sources:fallback?[source(fallback.title,fallback.url,"coverage registry; no module-specific extraction")]:[source("PSD country parity contract",`https://publicspendingdata.org/data/countries/${code.toLowerCase()}/profile.v1.json`,"module status and explicit missing dimensions")],transform:"No transformation: the module is not published for this country.",caveat:"Not loaded; no values are inferred from another accounting perimeter."};
   }
   if(module==="sovereign") return {
     period:parity.countries.find(c=>c.country_code===code).modules.sovereign.coverage,
     scope:"General government (WEO)",
-    sources:[source(`${sovereign.source.provider} · ${sovereign.source.dataset}`,sovereign.source.download_page,`${sovereign.source.source_file} → ISO=${code}; WEO subject codes for 15 published metrics`)],
+    sources:[source(`${sovereign.source.provider} · ${sovereign.source.dataset}`,sovereign.source.download_page,`${sovereign.source.source_file} → COUNTRY.ID=${parity.countries.find(c=>c.country_code===code)?.weo_country_code||code}; WEO subject codes for 15 published metrics`)],
     transform:"Select the country and indicator series; preserve WEO units and status; derive only displayed deltas.",
     caveat:"WEO estimates and projections remain labelled; national budgets are not substituted for general government."
   };
@@ -119,10 +119,10 @@ function lineage(code,module) {
 
 const rows=[];
 for(const country of parity.countries) for(const [module,moduleCoverage] of Object.entries(country.modules)) {
-  const detail=lineage(country.country_code,module), missing=moduleCoverage.missing_dimensions||[];
-  const status=moduleCoverage.coverage_level==="aggregate_only"?"aggregate":missing.length?"partial":"full";
+  const detail=lineage(country.country_code,module,moduleCoverage), missing=moduleCoverage.missing_dimensions||[];
+  const status=moduleCoverage.status==="unavailable"?"unavailable":moduleCoverage.coverage_level==="aggregate_only"?"aggregate":missing.length?"partial":"full";
   rows.push({
-    country_code:country.country_code,country_name_cs:country.name_cs,country_name_en:country.name_en,flag:alpha2[country.country_code],
+    country_code:country.country_code,country_name_cs:country.name_cs,country_name_en:country.name_en,flag:country.iso2?.toUpperCase()||alpha2[country.country_code],
     module,module_order:moduleMeta[module].order,module_label_cs:moduleMeta[module].cs,module_label_en:moduleMeta[module].en,status,
     artifact:detail.artifact||moduleMeta[module].artifact,coverage:moduleCoverage.coverage,period:detail.period,scope:detail.scope,sources:detail.sources,
     exact_extraction:detail.sources.map(item=>item.location).filter(Boolean).join(" · "),transformation:detail.transform,
@@ -183,7 +183,7 @@ const payload={
   schema_version:"1.0.0",contract:"methodology-sources.v1",generated_at:new Date().toISOString(),row_count:rows.length,
   countries:[...new Map([...parity.countries.map(country=>({code:country.country_code,name_cs:country.name_cs,name_en:country.name_en})),...municipalities.countries.map(country=>({code:country.code,name_cs:country.name_cs,name_en:country.name_en}))].map(country=>[country.code,country])).values()],
   modules:Object.entries(moduleMeta).map(([id,value])=>({id,label_cs:value.cs,label_en:value.en,order:value.order})),
-  status_definitions:{full:"Source-backed layer with no missing dimensions recorded in the parity contract.",partial:"Source-backed layer with one or more disclosed missing dimensions.",aggregate:"Official aggregate layer without entity-level facts."},
+  status_definitions:{full:"Source-backed layer with no missing dimensions recorded in the parity contract.",partial:"Source-backed layer with one or more disclosed missing dimensions.",aggregate:"Official aggregate layer without entity-level facts.",unavailable:"The layer is not published for this country; no value is inferred."},
   rows
 };
 

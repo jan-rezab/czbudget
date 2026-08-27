@@ -61,6 +61,7 @@ for (const [label, path] of volumeBundles) {
 }
 
 const countryCodes = sovereign.countries.map((country) => country.country_code);
+const fullProfileCountries = new Set(["CZE","UKR","POL","DEU","GBR","FRA","USA","CHE","SWE","DNK","FIN","BRA","ESP","JPN","NLD","NOR","GRC"]);
 const byCode = (rows, code, key = "code") => rows.find((row) => row[key] === code);
 const metricYears = (series) => {
   const years = Object.values(series?.metrics || {}).flatMap((metric) => metric.values?.map((point) => point.year) || []);
@@ -163,13 +164,24 @@ for (const code of countryCodes) {
   const loadedCount = Object.values(modules).filter((module) => module.status === "loaded").length;
   const entry = {
     country_code: code,
+    iso2: meta.iso2 || null,
+    weo_country_code: meta.weo_country_code || code,
+    profile_tier: meta.profile_tier || "full",
     name_cs: meta.name_cs,
     name_en: meta.name_en,
     currency_code: meta.currency_code,
     profile: `data/countries/${countrySlug(code)}/profile.v1.json`,
     coverage: { loaded_modules: loadedCount, total_modules: Object.keys(modules).length, missing_dimensions: missing },
     modules,
-    sources: sourceCatalog?.sources || registeredSources,
+    sources: sourceCatalog?.sources?.length ? sourceCatalog.sources : (registeredSources.length ? registeredSources : [{
+      source_id: "imf-weo-2026-04",
+      source_name: `${sovereign.source.provider} · ${sovereign.source.dataset}`,
+      source_url: sovereign.source.download_page,
+      coverage: `${sovereign.period.start_year}–${sovereign.period.end_year}`,
+      formats: ["XLSX"],
+      purpose: "Harmonised general-government macro-fiscal series",
+      active: true,
+    }]),
   };
   manifest.countries.push(entry);
 
@@ -193,7 +205,7 @@ for (const code of countryCodes) {
       public_entities: publicEntityProfile && publicEntityRows ? {coverage:publicEntityProfile,directory:publicEntityRows} : null,
       demography: demographyProfile,
     },
-    sources: sourceCatalog?.sources?.length ? sourceCatalog.sources : registeredSources,
+    sources: entry.sources,
   };
   const directory = new URL(`data/countries/${countrySlug(code)}/`, root);
   await mkdir(directory, { recursive: true });
@@ -204,12 +216,12 @@ for (const code of countryCodes) {
   }
 }
 
-if (manifest.countries.length !== 17) throw new Error(`Expected 17 countries, received ${manifest.countries.length}`);
+if (manifest.countries.length !== sovereign.universe.weo_profile_count) throw new Error(`Expected ${sovereign.universe.weo_profile_count} countries, received ${manifest.countries.length}`);
 const establishedDeepDiveCountries = new Set(["CZE","DEU","DNK","FRA","GBR","POL","SWE","CHE","UKR","USA"]);
 for (const country of manifest.countries) {
   if (country.modules.sovereign.metric_count !== 15) throw new Error(`${country.country_code}: expected 15 sovereign metrics`);
-  if (country.modules.administrative_spending.status !== "loaded") throw new Error(`${country.country_code}: native spending is not loaded`);
-  if (country.country_code !== "BRA" && country.modules.functional_spending.status !== "loaded") throw new Error(`${country.country_code}: functional spending is not loaded`);
+  if (fullProfileCountries.has(country.country_code) && country.modules.administrative_spending.status !== "loaded") throw new Error(`${country.country_code}: native spending is not loaded`);
+  if (fullProfileCountries.has(country.country_code) && country.country_code !== "BRA" && country.modules.functional_spending.status !== "loaded") throw new Error(`${country.country_code}: functional spending is not loaded`);
   if (establishedDeepDiveCountries.has(country.country_code) && country.modules.transport.status !== "loaded") throw new Error(`${country.country_code}: transport detail is not loaded`);
 }
 await writeFile(new URL("data/country-parity.v1.json", root), `${JSON.stringify(manifest, null, 2)}\n`);

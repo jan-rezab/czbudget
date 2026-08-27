@@ -13,9 +13,14 @@ npm run build:country-parity
 ```
 
 The build writes one `data/countries/<iso3>/profile.v1.json` bundle for each of
-the 17 published country profiles. Countries with a loaded municipal census also get a
-`municipalities.v1.json` directory shard. The browser can therefore request one
-country without downloading the complete international directory.
+the 191 sovereign states covered by the April 2026 IMF WEO workbook. Seventeen
+countries have the full national dashboard; the remaining profiles publish the
+harmonised macro-fiscal spine and mark every unavailable native layer
+explicitly. Cuba, Monaco, North Korea and Vatican City remain outside the WEO
+profile set because the workbook has no economy series for them. Countries with
+a loaded municipal census also get a `municipalities.v1.json` directory shard.
+The browser can therefore request one country without downloading the complete
+international directory.
 
 Every module has a `status`, a human-readable `coverage` statement and an
 explicit `missing_dimensions` array. Missing, pending and not-applicable facts

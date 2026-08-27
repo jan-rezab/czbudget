@@ -218,7 +218,8 @@ for (const city of capitals.cities) {
 }
 
 const sovereign = await json("lib/data/sovereign-benchmark.v1.json");
-assert(sovereign.series.length === 17, "Expected seventeen sovereign series");
+assert(sovereign.series.length === 191, "Expected all 191 IMF-covered sovereign-state series");
+assert(JSON.stringify(sovereign.universe?.missing_from_weo) === JSON.stringify(["CUB", "MCO", "PRK", "VAT"]), "Expected four explicit sovereign-state WEO gaps");
 const greekSeries = sovereign.series.find((country) => country.country_code === "GRC");
 assert(greekSeries?.metrics?.balance_pct_gdp?.values?.some((point) => point.year === 2024 && point.status === "actual"), "Expected actual 2024 Greek fiscal data");
 for (const country of sovereign.series) {
@@ -229,7 +230,10 @@ for (const country of sovereign.series) {
   }
   const values = (key) => new Map(metrics[key].values.map((point) => [point.year, point.value]));
   const revenue = values("revenue_pct_gdp"), expenditure = values("expenditure_pct_gdp"), balance = values("balance_pct_gdp");
-  for (const year of revenue.keys()) assert(Math.abs((revenue.get(year) - expenditure.get(year)) - balance.get(year)) <= 0.25, `${country.country_code}/${year} fiscal identity mismatch`);
+  for (const year of revenue.keys()) {
+    const valuesForYear = [revenue.get(year), expenditure.get(year), balance.get(year)];
+    if (valuesForYear.every(Number.isFinite)) assert(Math.abs((valuesForYear[0] - valuesForYear[1]) - valuesForYear[2]) <= 0.25, `${country.country_code}/${year} fiscal identity mismatch`);
+  }
 }
 
 const comparison = await json("data/country-spending-comparison.v1.json");
@@ -336,7 +340,8 @@ assert(cloudbuild.includes("scripts/deploy-immutable.sh"), "Cloud Build does not
 
 let htmlCount = 0;
 let localReferenceCount = 0;
-const countryPaths = ["/countries/czechia", "/countries/germany", "/countries/denmark", "/countries/france", "/countries/united-kingdom", "/countries/poland", "/countries/sweden", "/countries/switzerland", "/countries/ukraine", "/countries/united-states", "/countries/brazil", "/countries/spain", "/countries/japan", "/countries/netherlands", "/countries/norway", "/countries/finland", "/countries/greece"];
+const readableCountrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FIN:"finland",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states",BRA:"brazil",ESP:"spain",JPN:"japan",NLD:"netherlands",NOR:"norway",GRC:"greece"};
+const countryPaths = sovereign.countries.map((country) => `/countries/${readableCountrySlugs[country.country_code] || country.country_code.toLowerCase()}`);
 if (!dataOnly) {
   const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html"));
   htmlCount = htmlFiles.length;
@@ -372,10 +377,10 @@ if (!dataOnly) {
   const municipalityCountryPaths = ["/municipalities/czechia/", "/municipalities/poland/", "/municipalities/denmark/", "/municipalities/france/", "/municipalities/sweden/", "/municipalities/england/", "/municipalities/ukraine/", "/municipalities/norway/", "/municipalities/netherlands/", "/municipalities/finland/", "/municipalities/brazil/", "/municipalities/spain/", "/municipalities/japan/", "/municipalities/colombia/", "/municipalities/georgia/", "/municipalities/italy/", "/municipalities/bolivia/", "/municipalities/el-salvador/", "/municipalities/mexico/", "/municipalities/costa-rica/", "/municipalities/guatemala/", "/municipalities/peru/", "/municipalities/south-korea/", "/municipalities/chile/"];
   const expansionCodes = new Set(["BRA", "DNK", "ESP", "JPN", "COL", "GEO", "ITA", "BOL", "SLV", "MEX", "CRI", "GTM", "PER", "KOR", "CHL"]);
   const expansionProfiles = internationalMunicipalities.entities.filter((entity) => expansionCodes.has(entity.country) && entity.url);
-  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 4;
+  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 9 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 5;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
-  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
+  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/"]) {
     assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);

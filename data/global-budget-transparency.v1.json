@@ -38,246 +38,12 @@
   "ingestion_queue": {
     "rule": "Budget Transparency Index band strong or excellent, verified municipal source, and no PSD country profile.",
     "fidelity_target": "Load every verified published layer 1:1, retaining native classifications, budget stages, entity scope and explicit missingness.",
-    "countries": [
-      {
-        "iso3": "GEO",
-        "name_en": "Georgia",
-        "name_cs": "Gruzie",
-        "budget_transparency_index": 100,
-        "verified_features": [
-          "enacted",
-          "revised",
-          "execution",
-          "actual",
-          "function",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "NZL",
-        "name_en": "New Zealand",
-        "name_cs": "Nový Zéland",
-        "budget_transparency_index": 95,
-        "verified_features": [
-          "actual",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.stats.govt.nz/topics/local-government",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "MEX",
-        "name_en": "Mexico",
-        "name_cs": "Mexiko",
-        "budget_transparency_index": 91,
-        "verified_features": [
-          "execution",
-          "actual",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.inegi.org.mx/programas/finanzas/",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "PER",
-        "name_en": "Peru",
-        "name_cs": "Peru",
-        "budget_transparency_index": 91,
-        "verified_features": [
-          "enacted",
-          "revised",
-          "execution",
-          "actual",
-          "function",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.mef.gob.pe/es/?option=com_content&view=article&id=504&Itemid=100944",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "ITA",
-        "name_en": "Italy",
-        "name_cs": "Itálie",
-        "budget_transparency_index": 89,
-        "verified_features": [
-          "execution",
-          "actual",
-          "function",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.siope.it/",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "KOR",
-        "name_en": "South Korea",
-        "name_cs": "Jižní Korea",
-        "budget_transparency_index": 88,
-        "verified_features": [
-          "enacted",
-          "execution",
-          "actual",
-          "function",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.lofin365.go.kr/portal/LF2100000.do",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "AUS",
-        "name_en": "Australia",
-        "name_cs": "Austrálie",
-        "budget_transparency_index": 86,
-        "verified_features": [
-          "actual",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.abs.gov.au/statistics/economy/government",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "GTM",
-        "name_en": "Guatemala",
-        "name_cs": "Guatemala",
-        "budget_transparency_index": 84,
-        "verified_features": [
-          "enacted",
-          "revised",
-          "execution",
-          "actual",
-          "function",
-          "economic",
-          "api"
-        ],
-        "source": "https://datos.minfin.gob.gt/organization/e4513287-764d-4117-9ee9-73df8a40cdd4",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "CAN",
-        "name_en": "Canada",
-        "name_cs": "Kanada",
-        "budget_transparency_index": 82,
-        "verified_features": [
-          "actual",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.statcan.gc.ca/en/subjects-start/government",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "CRI",
-        "name_en": "Costa Rica",
-        "name_cs": "Kostarika",
-        "budget_transparency_index": 79,
-        "verified_features": [
-          "enacted",
-          "revised",
-          "execution",
-          "actual",
-          "function",
-          "economic"
-        ],
-        "source": "https://cgrweb.cgr.go.cr/apex/f?p=150220:30",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "HND",
-        "name_en": "Honduras",
-        "name_cs": "Honduras",
-        "budget_transparency_index": 79,
-        "verified_features": [
-          "revised",
-          "execution",
-          "actual",
-          "function",
-          "economic"
-        ],
-        "source": "https://www.sefin.gob.hn/sami/",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "DOM",
-        "name_en": "Dominican Republic",
-        "name_cs": "Dominikánská republika",
-        "budget_transparency_index": 77,
-        "verified_features": [],
-        "source": "https://www.digepres.gob.do/",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "COL",
-        "name_en": "Colombia",
-        "name_cs": "Kolumbie",
-        "budget_transparency_index": 70,
-        "verified_features": [
-          "enacted",
-          "revised",
-          "execution",
-          "actual",
-          "function",
-          "economic",
-          "api"
-        ],
-        "source": "https://www.datos.gov.co/Gastos-Gubernamentales/OVCF-CUIPO-Ejecuci-n-de-Gastos/4f7r-epif",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "CHL",
-        "name_en": "Chile",
-        "name_cs": "Chile",
-        "budget_transparency_index": 69,
-        "verified_features": [
-          "execution",
-          "actual",
-          "economic"
-        ],
-        "source": "https://www.worldbank.org/en/programs/boost-portal/country-data",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "IND",
-        "name_en": "India",
-        "name_cs": "Indie",
-        "budget_transparency_index": 64,
-        "verified_features": [
-          "enacted",
-          "execution",
-          "actual",
-          "function"
-        ],
-        "source": "https://www.nic.gov.in/project/egramswaraj/",
-        "status": "discovery_crawl_started"
-      },
-      {
-        "iso3": "VNM",
-        "name_en": "Vietnam",
-        "name_cs": "Vietnam",
-        "budget_transparency_index": 62,
-        "verified_features": [
-          "execution",
-          "actual",
-          "function",
-          "economic"
-        ],
-        "source": "https://ckns.mof.gov.vn/",
-        "status": "discovery_crawl_started"
-      }
-    ]
+    "countries": []
   },
   "countries": [
     {
       "iso2": "af",
-      "iso3": null,
+      "iso3": "AFG",
       "name_en": "Afghanistan",
       "name_cs": "Afghánistán",
       "national_budget": {
@@ -305,10 +71,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -331,7 +97,7 @@
     },
     {
       "iso2": "al",
-      "iso3": null,
+      "iso3": "ALB",
       "name_en": "Albania",
       "name_cs": "Albánie",
       "national_budget": {
@@ -359,10 +125,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -385,7 +151,7 @@
     },
     {
       "iso2": "dz",
-      "iso3": null,
+      "iso3": "DZA",
       "name_en": "Algeria",
       "name_cs": "Alžírsko",
       "national_budget": {
@@ -413,10 +179,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -439,7 +205,7 @@
     },
     {
       "iso2": "ad",
-      "iso3": null,
+      "iso3": "AND",
       "name_en": "Andorra",
       "name_cs": "Andorra",
       "national_budget": {
@@ -467,10 +233,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -493,7 +259,7 @@
     },
     {
       "iso2": "ao",
-      "iso3": null,
+      "iso3": "AGO",
       "name_en": "Angola",
       "name_cs": "Angola",
       "national_budget": {
@@ -521,10 +287,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -547,7 +313,7 @@
     },
     {
       "iso2": "ag",
-      "iso3": null,
+      "iso3": "ATG",
       "name_en": "Antigua and Barbuda",
       "name_cs": "Antigua a Barbuda",
       "national_budget": {
@@ -575,10 +341,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -629,10 +395,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -655,7 +421,7 @@
     },
     {
       "iso2": "am",
-      "iso3": null,
+      "iso3": "ARM",
       "name_en": "Armenia",
       "name_cs": "Arménie",
       "national_budget": {
@@ -683,10 +449,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -737,11 +503,11 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -791,10 +557,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -817,7 +583,7 @@
     },
     {
       "iso2": "az",
-      "iso3": null,
+      "iso3": "AZE",
       "name_en": "Azerbaijan",
       "name_cs": "Ázerbájdžán",
       "national_budget": {
@@ -845,10 +611,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -871,7 +637,7 @@
     },
     {
       "iso2": "bs",
-      "iso3": null,
+      "iso3": "BHS",
       "name_en": "Bahamas",
       "name_cs": "Bahamy",
       "national_budget": {
@@ -899,10 +665,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -925,7 +691,7 @@
     },
     {
       "iso2": "bh",
-      "iso3": null,
+      "iso3": "BHR",
       "name_en": "Bahrain",
       "name_cs": "Bahrajn",
       "national_budget": {
@@ -953,10 +719,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -979,7 +745,7 @@
     },
     {
       "iso2": "bd",
-      "iso3": null,
+      "iso3": "BGD",
       "name_en": "Bangladesh",
       "name_cs": "Bangladéš",
       "national_budget": {
@@ -1007,10 +773,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1033,7 +799,7 @@
     },
     {
       "iso2": "bb",
-      "iso3": null,
+      "iso3": "BRB",
       "name_en": "Barbados",
       "name_cs": "Barbados",
       "national_budget": {
@@ -1061,10 +827,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1087,7 +853,7 @@
     },
     {
       "iso2": "by",
-      "iso3": null,
+      "iso3": "BLR",
       "name_en": "Belarus",
       "name_cs": "Bělorusko",
       "national_budget": {
@@ -1115,10 +881,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1169,10 +935,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1195,7 +961,7 @@
     },
     {
       "iso2": "bz",
-      "iso3": null,
+      "iso3": "BLZ",
       "name_en": "Belize",
       "name_cs": "Belize",
       "national_budget": {
@@ -1223,10 +989,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1249,7 +1015,7 @@
     },
     {
       "iso2": "bj",
-      "iso3": null,
+      "iso3": "BEN",
       "name_en": "Benin",
       "name_cs": "Benin",
       "national_budget": {
@@ -1277,10 +1043,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1303,7 +1069,7 @@
     },
     {
       "iso2": "bt",
-      "iso3": null,
+      "iso3": "BTN",
       "name_en": "Bhutan",
       "name_cs": "Bhútán",
       "national_budget": {
@@ -1331,10 +1097,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1385,16 +1151,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
-        "pipeline": "assessed",
+        "pipeline": "loaded",
         "features": {
           "enacted": false,
           "revised": false,
@@ -1404,14 +1170,14 @@
           "economic": true,
           "api": true
         },
-        "source": "https://abierto.economiayfinanzas.gob.bo/sobre",
-        "note_en": "Presupuesto Abierto exposes ten years of execution for public entities with official object, purpose, sector and geographic classifiers and open downloads.",
-        "note_cs": "Presupuesto Abierto zpřístupňuje deset let plnění veřejných subjektů s oficiálními klasifikacemi a otevřeným stažením."
+        "source": "https://abierto.economiayfinanzas.gob.bo/descargas",
+        "note_en": "Loaded into the public municipal directory: All 343 active local governments: 335 municipal and 8 Indigenous autonomous governments; 2025 budget and execution.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 343 aktivních místních vlád: 335 obecních a 8 domorodých autonomií; rozpočet a plnění 2025."
       }
     },
     {
       "iso2": "ba",
-      "iso3": null,
+      "iso3": "BIH",
       "name_en": "Bosnia and Herzegovina",
       "name_cs": "Bosna a Hercegovina",
       "national_budget": {
@@ -1439,10 +1205,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1465,7 +1231,7 @@
     },
     {
       "iso2": "bw",
-      "iso3": null,
+      "iso3": "BWA",
       "name_en": "Botswana",
       "name_cs": "Botswana",
       "national_budget": {
@@ -1493,10 +1259,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1573,7 +1339,7 @@
     },
     {
       "iso2": "bn",
-      "iso3": null,
+      "iso3": "BRN",
       "name_en": "Brunei Darussalam",
       "name_cs": "Brunej",
       "national_budget": {
@@ -1601,10 +1367,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1627,7 +1393,7 @@
     },
     {
       "iso2": "bg",
-      "iso3": null,
+      "iso3": "BGR",
       "name_en": "Bulgaria",
       "name_cs": "Bulharsko",
       "national_budget": {
@@ -1655,10 +1421,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1681,7 +1447,7 @@
     },
     {
       "iso2": "bf",
-      "iso3": null,
+      "iso3": "BFA",
       "name_en": "Burkina Faso",
       "name_cs": "Burkina Faso",
       "national_budget": {
@@ -1709,10 +1475,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1735,7 +1501,7 @@
     },
     {
       "iso2": "bi",
-      "iso3": null,
+      "iso3": "BDI",
       "name_en": "Burundi",
       "name_cs": "Burundi",
       "national_budget": {
@@ -1763,10 +1529,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1789,7 +1555,7 @@
     },
     {
       "iso2": "kh",
-      "iso3": null,
+      "iso3": "KHM",
       "name_en": "Cambodia",
       "name_cs": "Kambodža",
       "national_budget": {
@@ -1817,10 +1583,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1843,7 +1609,7 @@
     },
     {
       "iso2": "cm",
-      "iso3": null,
+      "iso3": "CMR",
       "name_en": "Cameroon",
       "name_cs": "Kamerun",
       "national_budget": {
@@ -1871,10 +1637,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -1925,11 +1691,11 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -1951,7 +1717,7 @@
     },
     {
       "iso2": "cv",
-      "iso3": null,
+      "iso3": "CPV",
       "name_en": "Cape Verde",
       "name_cs": "Kapverdy",
       "national_budget": {
@@ -1979,10 +1745,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2005,7 +1771,7 @@
     },
     {
       "iso2": "cf",
-      "iso3": null,
+      "iso3": "CAF",
       "name_en": "Central African Republic",
       "name_cs": "Středoafrická republika",
       "national_budget": {
@@ -2033,10 +1799,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2059,7 +1825,7 @@
     },
     {
       "iso2": "td",
-      "iso3": null,
+      "iso3": "TCD",
       "name_en": "Chad",
       "name_cs": "Čad",
       "national_budget": {
@@ -2087,10 +1853,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2141,16 +1907,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": false,
           "revised": false,
@@ -2160,14 +1926,14 @@
           "economic": true,
           "api": false
         },
-        "source": "https://www.worldbank.org/en/programs/boost-portal/country-data",
-        "note_en": "Contraloría microdata provide complete subnational spending coverage from 2009 with detailed administrative, economic and programme classifications.",
-        "note_cs": "Mikrodata Contraloría pokrývají od roku 2009 úplné subnárodní výdaje s podrobným správním, ekonomickým a programovým členěním."
+        "source": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
+        "note_en": "Loaded into the public municipal directory: All 345 municipalities in SINIM; 2025 perceived revenue excluding opening cash and accrued expenditure for the municipal sector.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 345 obcí v SINIM; přijaté příjmy bez počátečního zůstatku hotovosti a akruální výdaje obecního sektoru za rok 2025."
       }
     },
     {
       "iso2": "cn",
-      "iso3": null,
+      "iso3": "CHN",
       "name_en": "China",
       "name_cs": "Čína",
       "national_budget": {
@@ -2195,10 +1961,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2249,16 +2015,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": true,
           "revised": true,
@@ -2268,14 +2034,14 @@
           "economic": true,
           "api": true
         },
-        "source": "https://www.datos.gov.co/Gastos-Gubernamentales/OVCF-CUIPO-Ejecuci-n-de-Gastos/4f7r-epif",
-        "note_en": "CUIPO publishes quarterly territorial revenue and expenditure programming and execution by entity through national Socrata downloads and OData.",
-        "note_cs": "CUIPO čtvrtletně zveřejňuje plánování a plnění územních příjmů a výdajů podle subjektu přes národní Socrata/OData rozhraní."
+        "source": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
+        "note_en": "Loaded into the public municipal directory: All 1,102 municipalities reporting in CUIPO; initial and definitive plans plus 2025 revenue and expenditure execution.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 1 102 obcí vykazujících v CUIPO; počáteční a konečný plán i skutečnost příjmů a výdajů za rok 2025."
       }
     },
     {
       "iso2": "km",
-      "iso3": null,
+      "iso3": "COM",
       "name_en": "Comoros",
       "name_cs": "Komory",
       "national_budget": {
@@ -2303,10 +2069,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2357,16 +2123,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": true,
           "revised": true,
@@ -2376,14 +2142,14 @@
           "economic": true,
           "api": false
         },
-        "source": "https://cgrweb.cgr.go.cr/apex/f?p=150220:30",
-        "note_en": "The Comptroller's SIPP covers initial, extraordinary and modified budgets plus execution for public institutions, with exportable results.",
-        "note_cs": "SIPP kontrolního úřadu pokrývá počáteční, mimořádné a upravené rozpočty i plnění veřejných institucí s exportem výsledků."
+        "source": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
+        "note_en": "Loaded into the public municipal directory: All 84 current municipalities; 2025 received revenue, spending and result reported in SIPP.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 84 současných obcí; přijaté příjmy, výdaje a výsledek vykázané v SIPP za rok 2025."
       }
     },
     {
       "iso2": "ci",
-      "iso3": null,
+      "iso3": "CIV",
       "name_en": "Côte d'Ivoire",
       "name_cs": "Pobřeží slonoviny",
       "national_budget": {
@@ -2411,10 +2177,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2437,7 +2203,7 @@
     },
     {
       "iso2": "hr",
-      "iso3": null,
+      "iso3": "HRV",
       "name_en": "Croatia",
       "name_cs": "Chorvatsko",
       "national_budget": {
@@ -2465,10 +2231,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2545,7 +2311,7 @@
     },
     {
       "iso2": "cy",
-      "iso3": null,
+      "iso3": "CYP",
       "name_en": "Cyprus",
       "name_cs": "Kypr",
       "national_budget": {
@@ -2573,10 +2339,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2653,7 +2419,7 @@
     },
     {
       "iso2": "cd",
-      "iso3": null,
+      "iso3": "COD",
       "name_en": "Democratic Republic of Congo",
       "name_cs": "Kongo – Kinshasa",
       "national_budget": {
@@ -2681,10 +2447,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2761,7 +2527,7 @@
     },
     {
       "iso2": "dj",
-      "iso3": null,
+      "iso3": "DJI",
       "name_en": "Djibouti",
       "name_cs": "Džibutsko",
       "national_budget": {
@@ -2789,10 +2555,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2815,7 +2581,7 @@
     },
     {
       "iso2": "dm",
-      "iso3": null,
+      "iso3": "DMA",
       "name_en": "Dominica",
       "name_cs": "Dominika",
       "national_budget": {
@@ -2843,10 +2609,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2897,11 +2663,11 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -2951,10 +2717,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -2977,7 +2743,7 @@
     },
     {
       "iso2": "eg",
-      "iso3": null,
+      "iso3": "EGY",
       "name_en": "Egypt",
       "name_cs": "Egypt",
       "national_budget": {
@@ -3005,10 +2771,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3059,16 +2825,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
-        "pipeline": "assessed",
+        "pipeline": "loaded_partial",
         "features": {
           "enacted": false,
           "revised": false,
@@ -3079,13 +2845,13 @@
           "api": true
         },
         "source": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
-        "note_en": "The Fiscal Transparency Portal publishes CSV execution for all 262 former municipalities/current districts, plus municipal closings and classifiers.",
-        "note_cs": "Portál fiskální transparentnosti zveřejňuje CSV plnění všech 262 bývalých obcí/dnešních distriktů, účetní závěrky a klasifikátory."
+        "note_en": "Loaded into the public municipal directory: 259 of the 262 then-municipalities in full-year 2023 SAFIM returns; three municipalities did not report.",
+        "note_cs": "Načteno do veřejného obecního adresáře: 259 z 262 tehdejších obcí ve výkazech SAFIM za celý rok 2023; tři obce nevykázaly data."
       }
     },
     {
       "iso2": "gq",
-      "iso3": null,
+      "iso3": "GNQ",
       "name_en": "Equatorial Guinea",
       "name_cs": "Rovníková Guinea",
       "national_budget": {
@@ -3113,10 +2879,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3139,7 +2905,7 @@
     },
     {
       "iso2": "er",
-      "iso3": null,
+      "iso3": "ERI",
       "name_en": "Eritrea",
       "name_cs": "Eritrea",
       "national_budget": {
@@ -3167,10 +2933,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3193,7 +2959,7 @@
     },
     {
       "iso2": "ee",
-      "iso3": null,
+      "iso3": "EST",
       "name_en": "Estonia",
       "name_cs": "Estonsko",
       "national_budget": {
@@ -3221,10 +2987,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3247,7 +3013,7 @@
     },
     {
       "iso2": "et",
-      "iso3": null,
+      "iso3": "ETH",
       "name_en": "Ethiopia",
       "name_cs": "Etiopie",
       "national_budget": {
@@ -3275,10 +3041,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3301,7 +3067,7 @@
     },
     {
       "iso2": "fm",
-      "iso3": null,
+      "iso3": "FSM",
       "name_en": "Federated States of Micronesia",
       "name_cs": "Mikronésie",
       "national_budget": {
@@ -3329,10 +3095,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3355,7 +3121,7 @@
     },
     {
       "iso2": "fj",
-      "iso3": null,
+      "iso3": "FJI",
       "name_en": "Fiji",
       "name_cs": "Fidži",
       "national_budget": {
@@ -3383,10 +3149,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3517,7 +3283,7 @@
     },
     {
       "iso2": "ga",
-      "iso3": null,
+      "iso3": "GAB",
       "name_en": "Gabon",
       "name_cs": "Gabon",
       "national_budget": {
@@ -3545,10 +3311,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3571,7 +3337,7 @@
     },
     {
       "iso2": "gm",
-      "iso3": null,
+      "iso3": "GMB",
       "name_en": "Gambia",
       "name_cs": "Gambie",
       "national_budget": {
@@ -3599,10 +3365,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3653,16 +3419,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": true,
           "revised": true,
@@ -3673,8 +3439,8 @@
           "api": true
         },
         "source": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
-        "note_en": "The Ministry of Finance publishes bulk XLSX files for the municipal universe with approved/current plans, historical and in-year actuals, economic categories and a separate detailed functional-classification workbook. Files link to versioned municipal budget acts on Matsne; no public query API was found, but bulk download is available.",
-        "note_cs": "Ministerstvo financí zveřejňuje hromadné soubory XLSX za soubor obcí se schválenými/aktuálními plány, historickou i meziroční skutečností, ekonomickým členěním a samostatným detailním sešitem funkční klasifikace. Soubory odkazují na verzované obecní rozpočtové akty v Matsne; veřejné dotazovací API nebylo nalezeno, ale hromadné stažení je dostupné."
+        "note_en": "Loaded into the public municipal directory: All 69 municipalities in Ministry of Finance workbooks; 2025 actuals and the 2026 approved plan, with 2025 functional expenditure detail.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 69 obcí v sešitech ministerstva financí; skutečnost 2025 a schválený plán 2026, s funkčním detailem výdajů 2025."
       }
     },
     {
@@ -3733,7 +3499,7 @@
     },
     {
       "iso2": "gh",
-      "iso3": null,
+      "iso3": "GHA",
       "name_en": "Ghana",
       "name_cs": "Ghana",
       "national_budget": {
@@ -3761,10 +3527,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3841,7 +3607,7 @@
     },
     {
       "iso2": "gd",
-      "iso3": null,
+      "iso3": "GRD",
       "name_en": "Grenada",
       "name_cs": "Grenada",
       "national_budget": {
@@ -3869,10 +3635,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -3923,16 +3689,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": true,
           "revised": true,
@@ -3942,14 +3708,14 @@
           "economic": true,
           "api": true
         },
-        "source": "https://datos.minfin.gob.gt/organization/e4513287-764d-4117-9ee9-73df8a40cdd4",
-        "note_en": "SICOIN GL covers five budget stages for all 340 municipalities with deep classifications and recurring CSV/XLSX/JSON publication.",
-        "note_cs": "SICOIN GL pokrývá pět fází rozpočtu všech 340 obcí s hlubokým členěním a opakovanou publikací CSV/XLSX/JSON."
+        "source": "https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025",
+        "note_en": "Loaded into the public municipal directory: All 340 municipalities in SICOINGL and SICOINDES; 2025 budget, revisions, accrual execution and cash.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 340 obcí v SICOINGL a SICOINDES; rozpočet, úpravy, akruální plnění a hotovost za rok 2025."
       }
     },
     {
       "iso2": "gn",
-      "iso3": null,
+      "iso3": "GIN",
       "name_en": "Guinea",
       "name_cs": "Guinea",
       "national_budget": {
@@ -3977,10 +3743,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4003,7 +3769,7 @@
     },
     {
       "iso2": "gw",
-      "iso3": null,
+      "iso3": "GNB",
       "name_en": "Guinea-Bissau",
       "name_cs": "Guinea-Bissau",
       "national_budget": {
@@ -4031,10 +3797,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4057,7 +3823,7 @@
     },
     {
       "iso2": "gy",
-      "iso3": null,
+      "iso3": "GUY",
       "name_en": "Guyana",
       "name_cs": "Guyana",
       "national_budget": {
@@ -4085,10 +3851,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4139,10 +3905,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4193,11 +3959,11 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -4219,7 +3985,7 @@
     },
     {
       "iso2": "hu",
-      "iso3": null,
+      "iso3": "HUN",
       "name_en": "Hungary",
       "name_cs": "Maďarsko",
       "national_budget": {
@@ -4247,10 +4013,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4273,7 +4039,7 @@
     },
     {
       "iso2": "is",
-      "iso3": null,
+      "iso3": "ISL",
       "name_en": "Iceland",
       "name_cs": "Island",
       "national_budget": {
@@ -4301,10 +4067,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4355,11 +4121,11 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -4381,7 +4147,7 @@
     },
     {
       "iso2": "id",
-      "iso3": null,
+      "iso3": "IDN",
       "name_en": "Indonesia",
       "name_cs": "Indonésie",
       "national_budget": {
@@ -4409,10 +4175,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4435,7 +4201,7 @@
     },
     {
       "iso2": "ir",
-      "iso3": null,
+      "iso3": "IRN",
       "name_en": "Iran",
       "name_cs": "Írán",
       "national_budget": {
@@ -4463,10 +4229,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4489,7 +4255,7 @@
     },
     {
       "iso2": "iq",
-      "iso3": null,
+      "iso3": "IRQ",
       "name_en": "Iraq",
       "name_cs": "Irák",
       "national_budget": {
@@ -4517,10 +4283,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4543,7 +4309,7 @@
     },
     {
       "iso2": "ie",
-      "iso3": null,
+      "iso3": "IRL",
       "name_en": "Ireland",
       "name_cs": "Irsko",
       "national_budget": {
@@ -4571,10 +4337,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4597,7 +4363,7 @@
     },
     {
       "iso2": "il",
-      "iso3": null,
+      "iso3": "ISR",
       "name_en": "Israel",
       "name_cs": "Izrael",
       "national_budget": {
@@ -4625,10 +4391,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4679,16 +4445,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": null,
           "revised": null,
@@ -4698,14 +4464,14 @@
           "economic": true,
           "api": true
         },
-        "source": "https://www.siope.it/",
-        "note_en": "SIOPE is a strong national cash-flow source; full adopted-budget comparability requires a separate BDAP assessment.",
-        "note_cs": "SIOPE je silný národní zdroj peněžních toků; úplná srovnatelnost schválených rozpočtů vyžaduje samostatné posouzení BDAP."
+        "source": "https://www.siope.it/Siope/",
+        "note_en": "Loaded into the public municipal directory: All 7,896 Italian municipalities; 2025 SIOPE cash receipts and payments grouped by native titles.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 7 896 italských obcí; hotovostní příjmy a platby SIOPE za rok 2025, seskupené podle původních titulů."
       }
     },
     {
       "iso2": "jm",
-      "iso3": null,
+      "iso3": "JAM",
       "name_en": "Jamaica",
       "name_cs": "Jamajka",
       "national_budget": {
@@ -4733,10 +4499,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4813,7 +4579,7 @@
     },
     {
       "iso2": "jo",
-      "iso3": null,
+      "iso3": "JOR",
       "name_en": "Jordan",
       "name_cs": "Jordánsko",
       "national_budget": {
@@ -4841,10 +4607,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4867,7 +4633,7 @@
     },
     {
       "iso2": "kz",
-      "iso3": null,
+      "iso3": "KAZ",
       "name_en": "Kazakhstan",
       "name_cs": "Kazachstán",
       "national_budget": {
@@ -4895,10 +4661,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4921,7 +4687,7 @@
     },
     {
       "iso2": "ke",
-      "iso3": null,
+      "iso3": "KEN",
       "name_en": "Kenya",
       "name_cs": "Keňa",
       "national_budget": {
@@ -4949,10 +4715,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -4975,7 +4741,7 @@
     },
     {
       "iso2": "ki",
-      "iso3": null,
+      "iso3": "KIR",
       "name_en": "Kiribati",
       "name_cs": "Kiribati",
       "national_budget": {
@@ -5003,10 +4769,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5029,7 +4795,7 @@
     },
     {
       "iso2": "kw",
-      "iso3": null,
+      "iso3": "KWT",
       "name_en": "Kuwait",
       "name_cs": "Kuvajt",
       "national_budget": {
@@ -5057,10 +4823,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5083,7 +4849,7 @@
     },
     {
       "iso2": "kg",
-      "iso3": null,
+      "iso3": "KGZ",
       "name_en": "Kyrgyzstan",
       "name_cs": "Kyrgyzstán",
       "national_budget": {
@@ -5111,10 +4877,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5137,7 +4903,7 @@
     },
     {
       "iso2": "la",
-      "iso3": null,
+      "iso3": "LAO",
       "name_en": "Lao People's Democratic Republic",
       "name_cs": "Laos",
       "national_budget": {
@@ -5165,10 +4931,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5191,7 +4957,7 @@
     },
     {
       "iso2": "lv",
-      "iso3": null,
+      "iso3": "LVA",
       "name_en": "Latvia",
       "name_cs": "Lotyšsko",
       "national_budget": {
@@ -5219,10 +4985,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5245,7 +5011,7 @@
     },
     {
       "iso2": "lb",
-      "iso3": null,
+      "iso3": "LBN",
       "name_en": "Lebanon",
       "name_cs": "Libanon",
       "national_budget": {
@@ -5273,10 +5039,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5299,7 +5065,7 @@
     },
     {
       "iso2": "ls",
-      "iso3": null,
+      "iso3": "LSO",
       "name_en": "Lesotho",
       "name_cs": "Lesotho",
       "national_budget": {
@@ -5327,10 +5093,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5353,7 +5119,7 @@
     },
     {
       "iso2": "lr",
-      "iso3": null,
+      "iso3": "LBR",
       "name_en": "Liberia",
       "name_cs": "Libérie",
       "national_budget": {
@@ -5381,10 +5147,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5407,7 +5173,7 @@
     },
     {
       "iso2": "ly",
-      "iso3": null,
+      "iso3": "LBY",
       "name_en": "Libya",
       "name_cs": "Libye",
       "national_budget": {
@@ -5435,10 +5201,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5461,7 +5227,7 @@
     },
     {
       "iso2": "li",
-      "iso3": null,
+      "iso3": "LIE",
       "name_en": "Liechtenstein",
       "name_cs": "Lichtenštejnsko",
       "national_budget": {
@@ -5489,10 +5255,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5515,7 +5281,7 @@
     },
     {
       "iso2": "lt",
-      "iso3": null,
+      "iso3": "LTU",
       "name_en": "Lithuania",
       "name_cs": "Litva",
       "national_budget": {
@@ -5543,10 +5309,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5569,7 +5335,7 @@
     },
     {
       "iso2": "lu",
-      "iso3": null,
+      "iso3": "LUX",
       "name_en": "Luxembourg",
       "name_cs": "Lucembursko",
       "national_budget": {
@@ -5597,10 +5363,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5623,7 +5389,7 @@
     },
     {
       "iso2": "mk",
-      "iso3": null,
+      "iso3": "MKD",
       "name_en": "Macedonia",
       "name_cs": "Severní Makedonie",
       "national_budget": {
@@ -5651,10 +5417,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5677,7 +5443,7 @@
     },
     {
       "iso2": "mg",
-      "iso3": null,
+      "iso3": "MDG",
       "name_en": "Madagascar",
       "name_cs": "Madagaskar",
       "national_budget": {
@@ -5705,10 +5471,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5731,7 +5497,7 @@
     },
     {
       "iso2": "mw",
-      "iso3": null,
+      "iso3": "MWI",
       "name_en": "Malawi",
       "name_cs": "Malawi",
       "national_budget": {
@@ -5759,10 +5525,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5785,7 +5551,7 @@
     },
     {
       "iso2": "my",
-      "iso3": null,
+      "iso3": "MYS",
       "name_en": "Malaysia",
       "name_cs": "Malajsie",
       "national_budget": {
@@ -5813,10 +5579,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5839,7 +5605,7 @@
     },
     {
       "iso2": "mv",
-      "iso3": null,
+      "iso3": "MDV",
       "name_en": "Maldives",
       "name_cs": "Maledivy",
       "national_budget": {
@@ -5867,10 +5633,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5893,7 +5659,7 @@
     },
     {
       "iso2": "ml",
-      "iso3": null,
+      "iso3": "MLI",
       "name_en": "Mali",
       "name_cs": "Mali",
       "national_budget": {
@@ -5921,10 +5687,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -5947,7 +5713,7 @@
     },
     {
       "iso2": "mt",
-      "iso3": null,
+      "iso3": "MLT",
       "name_en": "Malta",
       "name_cs": "Malta",
       "national_budget": {
@@ -5975,10 +5741,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6001,7 +5767,7 @@
     },
     {
       "iso2": "mh",
-      "iso3": null,
+      "iso3": "MHL",
       "name_en": "Marshall Islands",
       "name_cs": "Marshallovy ostrovy",
       "national_budget": {
@@ -6029,10 +5795,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6055,7 +5821,7 @@
     },
     {
       "iso2": "mr",
-      "iso3": null,
+      "iso3": "MRT",
       "name_en": "Mauritania",
       "name_cs": "Mauritánie",
       "national_budget": {
@@ -6083,10 +5849,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6109,7 +5875,7 @@
     },
     {
       "iso2": "mu",
-      "iso3": null,
+      "iso3": "MUS",
       "name_en": "Mauritius",
       "name_cs": "Mauricius",
       "national_budget": {
@@ -6137,10 +5903,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6191,16 +5957,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "accounts_only",
-        "pipeline": "crawling",
+        "pipeline": "loaded_partial",
         "features": {
           "enacted": false,
           "revised": false,
@@ -6211,13 +5977,13 @@
           "api": true
         },
         "source": "https://www.inegi.org.mx/programas/finanzas/",
-        "note_en": "INEGI provides annual state and municipal revenue and expenditure execution with economic and geographic dimensions, but no municipal functional or adopted-budget layer.",
-        "note_cs": "INEGI poskytuje roční plnění příjmů a výdajů států a obcí s ekonomickým a geografickým členěním, nikoli obecní funkční či schválený rozpočet."
+        "note_en": "Loaded into the public municipal directory: 2,380 reporting municipal governments in definitive 2024 EFIPEM annual data; this is not a complete census of every municipality.",
+        "note_cs": "Načteno do veřejného obecního adresáře: 2 380 vykazujících obecních vlád v definitivních ročních datech EFIPEM 2024; nejde o úplný census všech obcí."
       }
     },
     {
       "iso2": "md",
-      "iso3": null,
+      "iso3": "MDA",
       "name_en": "Moldova",
       "name_cs": "Moldavsko",
       "national_budget": {
@@ -6245,10 +6011,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6271,7 +6037,7 @@
     },
     {
       "iso2": "mc",
-      "iso3": null,
+      "iso3": "MCO",
       "name_en": "Monaco",
       "name_cs": "Monako",
       "national_budget": {
@@ -6325,7 +6091,7 @@
     },
     {
       "iso2": "mn",
-      "iso3": null,
+      "iso3": "MNG",
       "name_en": "Mongolia",
       "name_cs": "Mongolsko",
       "national_budget": {
@@ -6353,10 +6119,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6379,7 +6145,7 @@
     },
     {
       "iso2": "me",
-      "iso3": null,
+      "iso3": "MNE",
       "name_en": "Montenegro",
       "name_cs": "Černá Hora",
       "national_budget": {
@@ -6407,10 +6173,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6433,7 +6199,7 @@
     },
     {
       "iso2": "ma",
-      "iso3": null,
+      "iso3": "MAR",
       "name_en": "Morocco",
       "name_cs": "Maroko",
       "national_budget": {
@@ -6461,10 +6227,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6487,7 +6253,7 @@
     },
     {
       "iso2": "mz",
-      "iso3": null,
+      "iso3": "MOZ",
       "name_en": "Mozambique",
       "name_cs": "Mosambik",
       "national_budget": {
@@ -6515,10 +6281,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6541,7 +6307,7 @@
     },
     {
       "iso2": "mm",
-      "iso3": null,
+      "iso3": "MMR",
       "name_en": "Myanmar",
       "name_cs": "Myanmar (Barma)",
       "national_budget": {
@@ -6569,10 +6335,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6595,7 +6361,7 @@
     },
     {
       "iso2": "na",
-      "iso3": null,
+      "iso3": "NAM",
       "name_en": "Namibia",
       "name_cs": "Namibie",
       "national_budget": {
@@ -6623,10 +6389,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6649,7 +6415,7 @@
     },
     {
       "iso2": "nr",
-      "iso3": null,
+      "iso3": "NRU",
       "name_en": "Nauru",
       "name_cs": "Nauru",
       "national_budget": {
@@ -6677,10 +6443,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6703,7 +6469,7 @@
     },
     {
       "iso2": "np",
-      "iso3": null,
+      "iso3": "NPL",
       "name_en": "Nepal",
       "name_cs": "Nepál",
       "national_budget": {
@@ -6731,10 +6497,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6839,11 +6605,11 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -6893,10 +6659,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6919,7 +6685,7 @@
     },
     {
       "iso2": "ne",
-      "iso3": null,
+      "iso3": "NER",
       "name_en": "Niger",
       "name_cs": "Niger",
       "national_budget": {
@@ -6947,10 +6713,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -6973,7 +6739,7 @@
     },
     {
       "iso2": "ng",
-      "iso3": null,
+      "iso3": "NGA",
       "name_en": "Nigeria",
       "name_cs": "Nigérie",
       "national_budget": {
@@ -7001,10 +6767,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7027,7 +6793,7 @@
     },
     {
       "iso2": "kp",
-      "iso3": null,
+      "iso3": "PRK",
       "name_en": "North Korea",
       "name_cs": "Severní Korea",
       "national_budget": {
@@ -7135,7 +6901,7 @@
     },
     {
       "iso2": "om",
-      "iso3": null,
+      "iso3": "OMN",
       "name_en": "Oman",
       "name_cs": "Omán",
       "national_budget": {
@@ -7163,10 +6929,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7189,7 +6955,7 @@
     },
     {
       "iso2": "pk",
-      "iso3": null,
+      "iso3": "PAK",
       "name_en": "Pakistan",
       "name_cs": "Pákistán",
       "national_budget": {
@@ -7217,10 +6983,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7243,7 +7009,7 @@
     },
     {
       "iso2": "pw",
-      "iso3": null,
+      "iso3": "PLW",
       "name_en": "Palau",
       "name_cs": "Palau",
       "national_budget": {
@@ -7271,10 +7037,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7297,7 +7063,7 @@
     },
     {
       "iso2": "ps",
-      "iso3": null,
+      "iso3": "PSE",
       "name_en": "Palestinian Territories",
       "name_cs": "Palestinská území",
       "national_budget": {
@@ -7325,10 +7091,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7379,10 +7145,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7405,7 +7171,7 @@
     },
     {
       "iso2": "pg",
-      "iso3": null,
+      "iso3": "PNG",
       "name_en": "Papua New Guinea",
       "name_cs": "Papua-Nová Guinea",
       "national_budget": {
@@ -7433,10 +7199,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7487,10 +7253,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7541,16 +7307,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": true,
           "revised": true,
@@ -7560,14 +7326,14 @@
           "economic": true,
           "api": true
         },
-        "source": "https://www.mef.gob.pe/es/?option=com_content&view=article&id=504&Itemid=100944",
-        "note_en": "Consulta Amigable publishes opening and modified budgets plus daily revenue and expenditure stages for national, regional and local governments.",
-        "note_cs": "Consulta Amigable zveřejňuje počáteční a upravené rozpočty i denní fáze příjmů a výdajů státu, regionů a obcí."
+        "source": "https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto",
+        "note_en": "Loaded into the public municipal directory: All 1,891 local governments: 196 provincial including metropolitan Lima and 1,695 district municipalities; 2024 budget and execution.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 1 891 místních vlád: 196 provinčních včetně metropolitní Limy a 1 695 okresních; rozpočet a plnění 2024."
       }
     },
     {
       "iso2": "ph",
-      "iso3": null,
+      "iso3": "PHL",
       "name_en": "Philippines",
       "name_cs": "Filipíny",
       "national_budget": {
@@ -7595,10 +7361,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7675,7 +7441,7 @@
     },
     {
       "iso2": "pt",
-      "iso3": null,
+      "iso3": "PRT",
       "name_en": "Portugal",
       "name_cs": "Portugalsko",
       "national_budget": {
@@ -7703,10 +7469,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7729,7 +7495,7 @@
     },
     {
       "iso2": "qa",
-      "iso3": null,
+      "iso3": "QAT",
       "name_en": "Qatar",
       "name_cs": "Katar",
       "national_budget": {
@@ -7757,10 +7523,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7783,7 +7549,7 @@
     },
     {
       "iso2": "cg",
-      "iso3": null,
+      "iso3": "COG",
       "name_en": "Republic of Congo",
       "name_cs": "Kongo – Brazzaville",
       "national_budget": {
@@ -7811,10 +7577,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7837,7 +7603,7 @@
     },
     {
       "iso2": "ro",
-      "iso3": null,
+      "iso3": "ROU",
       "name_en": "Romania",
       "name_cs": "Rumunsko",
       "national_budget": {
@@ -7865,10 +7631,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7891,7 +7657,7 @@
     },
     {
       "iso2": "ru",
-      "iso3": null,
+      "iso3": "RUS",
       "name_en": "Russia",
       "name_cs": "Rusko",
       "national_budget": {
@@ -7919,10 +7685,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7945,7 +7711,7 @@
     },
     {
       "iso2": "rw",
-      "iso3": null,
+      "iso3": "RWA",
       "name_en": "Rwanda",
       "name_cs": "Rwanda",
       "national_budget": {
@@ -7973,10 +7739,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -7999,7 +7765,7 @@
     },
     {
       "iso2": "kn",
-      "iso3": null,
+      "iso3": "KNA",
       "name_en": "Saint Kitts and Nevis",
       "name_cs": "Svatý Kryštof a Nevis",
       "national_budget": {
@@ -8027,10 +7793,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8053,7 +7819,7 @@
     },
     {
       "iso2": "lc",
-      "iso3": null,
+      "iso3": "LCA",
       "name_en": "Saint Lucia",
       "name_cs": "Svatá Lucie",
       "national_budget": {
@@ -8081,10 +7847,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8107,7 +7873,7 @@
     },
     {
       "iso2": "vc",
-      "iso3": null,
+      "iso3": "VCT",
       "name_en": "Saint Vincent and the Grenadines",
       "name_cs": "Svatý Vincenc a Grenadiny",
       "national_budget": {
@@ -8135,10 +7901,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8161,7 +7927,7 @@
     },
     {
       "iso2": "ws",
-      "iso3": null,
+      "iso3": "WSM",
       "name_en": "Samoa",
       "name_cs": "Samoa",
       "national_budget": {
@@ -8189,10 +7955,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8215,7 +7981,7 @@
     },
     {
       "iso2": "sm",
-      "iso3": null,
+      "iso3": "SMR",
       "name_en": "San Marino",
       "name_cs": "San Marino",
       "national_budget": {
@@ -8243,10 +8009,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8269,7 +8035,7 @@
     },
     {
       "iso2": "st",
-      "iso3": null,
+      "iso3": "STP",
       "name_en": "Sao Tome and Principe",
       "name_cs": "Svatý Tomáš a Princův ostrov",
       "national_budget": {
@@ -8297,10 +8063,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8323,7 +8089,7 @@
     },
     {
       "iso2": "sa",
-      "iso3": null,
+      "iso3": "SAU",
       "name_en": "Saudi Arabia",
       "name_cs": "Saúdská Arábie",
       "national_budget": {
@@ -8351,10 +8117,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8377,7 +8143,7 @@
     },
     {
       "iso2": "sn",
-      "iso3": null,
+      "iso3": "SEN",
       "name_en": "Senegal",
       "name_cs": "Senegal",
       "national_budget": {
@@ -8405,10 +8171,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8431,7 +8197,7 @@
     },
     {
       "iso2": "rs",
-      "iso3": null,
+      "iso3": "SRB",
       "name_en": "Serbia",
       "name_cs": "Srbsko",
       "national_budget": {
@@ -8459,10 +8225,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8485,7 +8251,7 @@
     },
     {
       "iso2": "sc",
-      "iso3": null,
+      "iso3": "SYC",
       "name_en": "Seychelles",
       "name_cs": "Seychely",
       "national_budget": {
@@ -8513,10 +8279,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8539,7 +8305,7 @@
     },
     {
       "iso2": "sl",
-      "iso3": null,
+      "iso3": "SLE",
       "name_en": "Sierra Leone",
       "name_cs": "Sierra Leone",
       "national_budget": {
@@ -8567,10 +8333,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8593,7 +8359,7 @@
     },
     {
       "iso2": "sg",
-      "iso3": null,
+      "iso3": "SGP",
       "name_en": "Singapore",
       "name_cs": "Singapur",
       "national_budget": {
@@ -8621,10 +8387,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8647,7 +8413,7 @@
     },
     {
       "iso2": "sk",
-      "iso3": null,
+      "iso3": "SVK",
       "name_en": "Slovakia",
       "name_cs": "Slovensko",
       "national_budget": {
@@ -8675,10 +8441,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8701,7 +8467,7 @@
     },
     {
       "iso2": "si",
-      "iso3": null,
+      "iso3": "SVN",
       "name_en": "Slovenia",
       "name_cs": "Slovinsko",
       "national_budget": {
@@ -8729,10 +8495,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8755,7 +8521,7 @@
     },
     {
       "iso2": "sb",
-      "iso3": null,
+      "iso3": "SLB",
       "name_en": "Solomon Islands",
       "name_cs": "Šalamounovy ostrovy",
       "national_budget": {
@@ -8783,10 +8549,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8809,7 +8575,7 @@
     },
     {
       "iso2": "so",
-      "iso3": null,
+      "iso3": "SOM",
       "name_en": "Somalia",
       "name_cs": "Somálsko",
       "national_budget": {
@@ -8837,10 +8603,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8863,7 +8629,7 @@
     },
     {
       "iso2": "za",
-      "iso3": null,
+      "iso3": "ZAF",
       "name_en": "South Africa",
       "name_cs": "Jihoafrická republika",
       "national_budget": {
@@ -8891,10 +8657,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -8945,16 +8711,16 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 2,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
         "category": "full_lifecycle",
-        "pipeline": "crawling",
+        "pipeline": "loaded",
         "features": {
           "enacted": true,
           "revised": null,
@@ -8964,14 +8730,14 @@
           "economic": true,
           "api": true
         },
-        "source": "https://www.lofin365.go.kr/portal/LF2100000.do",
-        "note_en": "Local Finance 365 centrally publishes budgets, settlements, disclosures and Open APIs. It is more machine-accessible than Japan for budget-stage analysis.",
-        "note_cs": "Local Finance 365 centrálně zveřejňuje rozpočty, závěrečné účty, povinná zveřejnění a Open API. Pro analýzu fází rozpočtu je strojově dostupnější než Japonsko."
+        "source": "https://www.lofin365.go.kr/portal/LF5100000.do",
+        "note_en": "Loaded into the public municipal directory: All 243 local governments in Local Finance 365: 17 upper-tier and 226 basic governments; 2024 settlements across the general account, special accounts and funds.",
+        "note_cs": "Načteno do veřejného obecního adresáře: Všech 243 místních vlád v Local Finance 365: 17 vyšších a 226 základních; závěrečné účty 2024 za obecný účet, zvláštní účty a fondy."
       }
     },
     {
       "iso2": "ss",
-      "iso3": null,
+      "iso3": "SSD",
       "name_en": "South Sudan",
       "name_cs": "Jižní Súdán",
       "national_budget": {
@@ -8999,10 +8765,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9079,7 +8845,7 @@
     },
     {
       "iso2": "lk",
-      "iso3": null,
+      "iso3": "LKA",
       "name_en": "Sri Lanka",
       "name_cs": "Srí Lanka",
       "national_budget": {
@@ -9107,10 +8873,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9133,7 +8899,7 @@
     },
     {
       "iso2": "sd",
-      "iso3": null,
+      "iso3": "SDN",
       "name_en": "Sudan",
       "name_cs": "Súdán",
       "national_budget": {
@@ -9161,10 +8927,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9187,7 +8953,7 @@
     },
     {
       "iso2": "sr",
-      "iso3": null,
+      "iso3": "SUR",
       "name_en": "Suriname",
       "name_cs": "Surinam",
       "national_budget": {
@@ -9215,10 +8981,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9241,7 +9007,7 @@
     },
     {
       "iso2": "sz",
-      "iso3": null,
+      "iso3": "SWZ",
       "name_en": "Swaziland",
       "name_cs": "Eswatini",
       "national_budget": {
@@ -9269,10 +9035,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9403,7 +9169,7 @@
     },
     {
       "iso2": "sy",
-      "iso3": null,
+      "iso3": "SYR",
       "name_en": "Syria",
       "name_cs": "Sýrie",
       "national_budget": {
@@ -9431,10 +9197,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9457,7 +9223,7 @@
     },
     {
       "iso2": "tj",
-      "iso3": null,
+      "iso3": "TJK",
       "name_en": "Tajikistan",
       "name_cs": "Tádžikistán",
       "national_budget": {
@@ -9485,10 +9251,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9511,7 +9277,7 @@
     },
     {
       "iso2": "tz",
-      "iso3": null,
+      "iso3": "TZA",
       "name_en": "Tanzania",
       "name_cs": "Tanzanie",
       "national_budget": {
@@ -9539,10 +9305,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9565,7 +9331,7 @@
     },
     {
       "iso2": "th",
-      "iso3": null,
+      "iso3": "THA",
       "name_en": "Thailand",
       "name_cs": "Thajsko",
       "national_budget": {
@@ -9593,10 +9359,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9619,7 +9385,7 @@
     },
     {
       "iso2": "tl",
-      "iso3": null,
+      "iso3": "TLS",
       "name_en": "Timor-Leste",
       "name_cs": "Východní Timor",
       "national_budget": {
@@ -9647,10 +9413,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9673,7 +9439,7 @@
     },
     {
       "iso2": "tg",
-      "iso3": null,
+      "iso3": "TGO",
       "name_en": "Togo",
       "name_cs": "Togo",
       "national_budget": {
@@ -9701,10 +9467,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9727,7 +9493,7 @@
     },
     {
       "iso2": "to",
-      "iso3": null,
+      "iso3": "TON",
       "name_en": "Tonga",
       "name_cs": "Tonga",
       "national_budget": {
@@ -9755,10 +9521,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9781,7 +9547,7 @@
     },
     {
       "iso2": "tt",
-      "iso3": null,
+      "iso3": "TTO",
       "name_en": "Trinidad and Tobago",
       "name_cs": "Trinidad a Tobago",
       "national_budget": {
@@ -9809,10 +9575,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9835,7 +9601,7 @@
     },
     {
       "iso2": "tn",
-      "iso3": null,
+      "iso3": "TUN",
       "name_en": "Tunisia",
       "name_cs": "Tunisko",
       "national_budget": {
@@ -9863,10 +9629,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9889,7 +9655,7 @@
     },
     {
       "iso2": "tr",
-      "iso3": null,
+      "iso3": "TUR",
       "name_en": "Turkey",
       "name_cs": "Turecko",
       "national_budget": {
@@ -9917,10 +9683,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9943,7 +9709,7 @@
     },
     {
       "iso2": "tm",
-      "iso3": null,
+      "iso3": "TKM",
       "name_en": "Turkmenistan",
       "name_cs": "Turkmenistán",
       "national_budget": {
@@ -9971,10 +9737,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -9997,7 +9763,7 @@
     },
     {
       "iso2": "tv",
-      "iso3": null,
+      "iso3": "TUV",
       "name_en": "Tuvalu",
       "name_cs": "Tuvalu",
       "national_budget": {
@@ -10025,10 +9791,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10051,7 +9817,7 @@
     },
     {
       "iso2": "ug",
-      "iso3": null,
+      "iso3": "UGA",
       "name_en": "Uganda",
       "name_cs": "Uganda",
       "national_budget": {
@@ -10079,10 +9845,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10159,7 +9925,7 @@
     },
     {
       "iso2": "ae",
-      "iso3": null,
+      "iso3": "ARE",
       "name_en": "United Arab Emirates",
       "name_cs": "Spojené arabské emiráty",
       "national_budget": {
@@ -10187,10 +9953,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10349,10 +10115,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10375,7 +10141,7 @@
     },
     {
       "iso2": "uz",
-      "iso3": null,
+      "iso3": "UZB",
       "name_en": "Uzbekistan",
       "name_cs": "Uzbekistán",
       "national_budget": {
@@ -10403,10 +10169,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10429,7 +10195,7 @@
     },
     {
       "iso2": "vu",
-      "iso3": null,
+      "iso3": "VUT",
       "name_en": "Vanuatu",
       "name_cs": "Vanuatu",
       "national_budget": {
@@ -10457,10 +10223,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10483,7 +10249,7 @@
     },
     {
       "iso2": "va",
-      "iso3": null,
+      "iso3": "VAT",
       "name_en": "Vatican City",
       "name_cs": "Vatikán",
       "national_budget": {
@@ -10565,10 +10331,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10619,11 +10385,11 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "discovery_crawl_started",
-        "target": "Match every verified published layer and retain native classifications, stages and missingness."
+        "ingestion_status": "loaded",
+        "target": null
       },
       "municipal_item_level": {
         "research_status": "researched",
@@ -10645,7 +10411,7 @@
     },
     {
       "iso2": "ye",
-      "iso3": null,
+      "iso3": "YEM",
       "name_en": "Yemen",
       "name_cs": "Jemen",
       "national_budget": {
@@ -10673,10 +10439,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10699,7 +10465,7 @@
     },
     {
       "iso2": "zm",
-      "iso3": null,
+      "iso3": "ZMB",
       "name_en": "Zambia",
       "name_cs": "Zambie",
       "national_budget": {
@@ -10727,10 +10493,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {
@@ -10753,7 +10519,7 @@
     },
     {
       "iso2": "zw",
-      "iso3": null,
+      "iso3": "ZWE",
       "name_en": "Zimbabwe",
       "name_cs": "Zimbabwe",
       "national_budget": {
@@ -10781,10 +10547,10 @@
         "formula": "OBS central-government score + 20% of verified municipal capability score, capped at 100"
       },
       "psd_coverage": {
-        "country_profile": "not_loaded",
-        "loaded_modules": 0,
+        "country_profile": "loaded",
+        "loaded_modules": 1,
         "total_modules": 11,
-        "ingestion_status": "not_queued",
+        "ingestion_status": "loaded",
         "target": null
       },
       "municipal_item_level": {

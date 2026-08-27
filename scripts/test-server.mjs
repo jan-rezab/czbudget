@@ -41,14 +41,15 @@ createServer(async (request, response) => {
     let pathname = decodeURIComponent(url.pathname);
     const countryMatch = pathname.match(/^\/countries\/([^/]+)(\/?)$/);
 
-    if (countryMatch && countrySlugs.has(countryMatch[1])) {
+    if (countryMatch && (countrySlugs.has(countryMatch[1]) || /^[a-z]{3}$/.test(countryMatch[1]))) {
       if (countryMatch[2]) {
         redirect(response, `/countries/${countryMatch[1]}${url.search}`);
         return;
       }
       pathname = "/country.html";
     } else if (pathname === "/country.html") {
-      const slug = countryCodes[(url.searchParams.get("code") || "CZE").toUpperCase()] || countryCodes.CZE;
+      const requestedCode = (url.searchParams.get("code") || "CZE").toUpperCase();
+      const slug = countryCodes[requestedCode] || (/^[A-Z]{3}$/.test(requestedCode) ? requestedCode.toLowerCase() : countryCodes.CZE);
       const lang = url.searchParams.get("lang");
       redirect(response, `/countries/${slug}${lang === "cs" || lang === "en" ? `?lang=${lang}` : ""}`);
       return;

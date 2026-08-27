@@ -18,6 +18,7 @@ Object.assign(T.en,{gdpTag:"GDP / CAPITA",debtTag:"DEBT / GDP",pppTag:"PPP / CAP
 Object.assign(T.cs,{scopeTitle:"Co data zahrnují",trendTitle:"Vývoj veřejných financí",macroTitle:"Ekonomický kontext",specificTitle:"Rozpočtová pravidla země",sourcesTitle:"Primární zdroje"});
 Object.assign(T.en,{scopeTitle:"What the data includes",trendTitle:"Public finance over time",macroTitle:"Economic context",specificTitle:"National budget rules",sourcesTitle:"Primary sources"});
 const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no",GRC:"gr"};
+const flagEmoji=iso2=>String(iso2||"").toUpperCase().replace(/[A-Z]/g,letter=>String.fromCodePoint(127397+letter.charCodeAt(0)));
 const scope={state_budget:{cs:"Státní rozpočet",en:"State budget"},state_and_consolidated_budget:{cs:"Státní a konsolidovaný rozpočet",en:"State and consolidated budget"},federal_budget:{cs:"Federální rozpočet",en:"Federal budget"},public_sector_and_central_government:{cs:"Veřejný sektor a centrální vláda",en:"Public sector and central government"},confederation_and_general_government:{cs:"Konfederace a vládní instituce",en:"Confederation and general government"},central_and_general_government:{cs:"Centrální vláda a vládní instituce",en:"Central and general government"}};
 const loc=()=>state.lang==="en"?"en-GB":"cs-CZ";
 const meta=()=>state.data.countries.find(c=>c.country_code===state.code);
@@ -30,7 +31,7 @@ const name=()=>state.lang==="en"?meta().name_en:meta().name_cs;
 const fmt=(v,unit="",signed=false,digits=1)=>Number.isFinite(v)?`${signed&&v>0?"+":""}${v.toLocaleString(loc(),{minimumFractionDigits:digits,maximumFractionDigits:digits})}${unit?` ${unit}`:""}`:"—";
 const fxRate=year=>state.fx.values.find(v=>v.year===year)?.usd_per_eur;
 const moneyCode=()=>state.currency==="eur"?"EUR":meta().currency_code;
-const money=(v,code=moneyCode())=>Number.isFinite(v)?new Intl.NumberFormat(loc(),{style:"currency",currency:code,maximumFractionDigits:0,notation:Math.abs(v)>999999?"compact":"standard"}).format(v):"—";
+const money=(v,code=moneyCode())=>Number.isFinite(v)?(code==="LCU"?`${new Intl.NumberFormat(loc(),{maximumFractionDigits:0,notation:Math.abs(v)>999999?"compact":"standard"}).format(v)} ${meta().currency_name||"LCU"}`:new Intl.NumberFormat(loc(),{style:"currency",currency:code,maximumFractionDigits:0,notation:Math.abs(v)>999999?"compact":"standard"}).format(v)):"—";
 const monetaryValue=(localKey,usdKey,year=state.year)=>state.currency==="local"?value(localKey,year):(value(usdKey,year)/fxRate(year));
 const FISCAL_BASE_YEAR=2024;
 
@@ -87,8 +88,9 @@ function translate(){
   $("#og-url").content=canonical;
 }
 function header(){
-  const c=meta(); $("#country-code").innerHTML=`<img src="assets/flags/${flagCodes[c.country_code]}.svg" alt=""><b>${c.country_code}</b>`; $("#country-name").textContent=name();
-  $("#country-subtitle").textContent=state.lang==="en"?`${c.currency_code} · General government / harmonised scope · IMF WEO 2005–2024 · ${state.currency==="local"?"local-currency view":"EUR view"}`:`${c.currency_code} · Sektor vládních institucí / harmonizované vymezení · IMF WEO 2005–2024 · ${state.currency==="local"?"zobrazení v místní měně":"zobrazení v EUR"}`;
+  const c=meta(),flag=flagCodes[c.country_code]?`<img src="assets/flags/${flagCodes[c.country_code]}.svg" alt="">`:`<span class="country-flag-emoji" aria-hidden="true">${flagEmoji(c.iso2)}</span>`; $("#country-code").innerHTML=`${flag}<b>${c.country_code}</b>`; $("#country-name").textContent=name();
+  const currency=c.currency_code==="LCU"?(c.currency_name||"local currency"):c.currency_code;
+  $("#country-subtitle").textContent=state.lang==="en"?`${currency} · General government / harmonised scope · IMF WEO 2005–2024 · ${state.currency==="local"?"local-currency view":"EUR view"}`:`${currency} · Sektor vládních institucí / harmonizované vymezení · IMF WEO 2005–2024 · ${state.currency==="local"?"zobrazení v místní měně":"zobrazení v EUR"}`;
   $("#country-switch").innerHTML=state.data.countries.map(x=>`<option value="${x.country_code}">${state.lang==="en"?x.name_en:x.name_cs}</option>`).join(""); $("#country-switch").value=state.code;
   $("#year-switch").innerHTML=Array.from({length:20},(_,i)=>`<option>${2024-i}</option>`).join(""); $("#year-switch").value=state.year;
 }
@@ -176,7 +178,7 @@ function recoveryStory(){
   $("#recovery-root").innerHTML=`<div class="detail-heading"><div><span class="kicker">${t.kicker}</span><h2 id="recovery-title">${t.title}</h2></div><p>${t.copy}</p></div><div class="recovery-kpis"><article><span>${t.balance}</span><strong>${fmt(balance2024-deficit2009,pointUnit,true)}</strong><small>${t.balanceNote}</small></article><article><span>${t.debt}</span><strong>${fmt(debt2024-debt2020,pointUnit,true)}</strong><small>${t.debtNote}</small></article><article><span>${t.jobs}</span><strong>${fmt(unemployment2024-unemployment2013,pointUnit,true)}</strong><small>${t.jobsNote}</small></article><article><span>${t.income}</span><strong>${fmt(incomeChange,"%",true)}</strong><small>${t.incomeNote}</small></article></div><div class="recovery-timeline"><h3>${t.timeline}</h3><ol><li><b>2009</b><span>${t.y2009}</span><strong>${fmt(deficit2009,ratioUnit,true)}</strong></li><li><b>2013</b><span>${t.y2013}</span><strong>${fmt(unemployment2013,"%",false)}</strong></li><li><b>2020</b><span>${t.y2020}</span><strong>${fmt(debt2020,ratioUnit,false)}</strong></li><li><b>2024</b><span>${t.y2024}</span><strong>${fmt(metric("primary_balance_pct_gdp",2024),ratioUnit,true)}</strong></li></ol></div><p class="recovery-caveat">${t.caveat}</p><p class="recovery-source">${t.source}</p>`;
 }
 function sources(){
-  const list=catalog()?.sources||[];
+  const list=catalog()?.sources?.length?catalog().sources:[{source_name:`${state.data.source.provider} · ${state.data.source.dataset}`,source_url:state.data.source.download_page,formats:["XLSX"],coverage:`${state.data.period.start_year}–${state.data.period.end_year}`,purpose:"Harmonizovaná makrofiskální řada sektoru vládních institucí."}];
   $("#source-cards").innerHTML=list.map((s,i)=>`<article><span>${String(i+1).padStart(2,"0")} / ${(s.formats||[]).join(" · ")}</span><h3>${s.source_name}</h3><p>${state.lang==="en"?T[state.lang].sourcePurpose:s.purpose}</p><small>${s.coverage}</small><a href="${s.source_url}" target="_blank" rel="noreferrer">${T[state.lang].openSource}</a></article>`).join("");
   const raw=state.ministries.countries.find(x=>x.code===state.code);
   $("#ministry-source").innerHTML=raw?`<a class="ministry-source-card" href="${raw.source_url}" target="_blank" rel="noreferrer"><div><span>RAW / ${raw.code} / ${raw.year}</span><h3>${T[state.lang].ministryData}</h3><p>${raw.dimension} · ${raw.stage} · ${(raw.bytes/1024/1024).toLocaleString(loc(),{maximumFractionDigits:1})} MB</p></div><strong>${raw.available?T[state.lang].downloaded:T[state.lang].mappingReady} ↗</strong></a>`:"";

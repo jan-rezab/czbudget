@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a small, comparable sovereign-fiscal benchmark from IMF WEO data.
+"""Build a comparable sovereign-fiscal benchmark from IMF WEO data.
 
 The output is intentionally a general-government macro spine, not a substitute
 for national budget data. National plan/outturn/program trees are registered in
@@ -14,6 +14,7 @@ import argparse
 import csv
 import json
 import math
+import re
 import shutil
 import statistics
 import urllib.request
@@ -32,6 +33,7 @@ SOURCE_URL = (
 DEFAULT_SOURCE = ROOT / "data/sources/international_fiscal/WEOApr2026all.xlsx"
 DEFAULT_REGISTRY = ROOT / "website/pipeline/config/international_fiscal_source_registry.json"
 DEFAULT_SCOPE_REGISTRY = ROOT / "website/pipeline/config/fiscal_scope_registry.json"
+DEFAULT_UNIVERSE = ROOT / "website/pipeline/config/sovereign_country_universe.json"
 DEFAULT_JSON = ROOT / "data/international_fiscal_benchmarks_2005_2024.json"
 DEFAULT_CSV = ROOT / "data/international_fiscal_benchmarks_2005_2024.csv"
 DEFAULT_SUMMARY_CSV = ROOT / "data/international_fiscal_summary_2005_2024.csv"
@@ -40,7 +42,21 @@ DEFAULT_WEB_JSON = ROOT / "website/lib/data/sovereign-benchmark.v1.json"
 START_YEAR = 2005
 END_YEAR = 2024
 
-COUNTRY_ORDER = ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]
+FULL_PROFILE_ORDER = ["CZE", "UKR", "POL", "DEU", "GBR", "FRA", "USA", "CHE", "SWE", "DNK", "FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC"]
+
+CURRENCY_CODES = {
+    "Bangladesh taka": "BDT", "Lao kip": "LAK", "Mongolian tögrög": "MNT",
+    "Papua New Guinea kina": "PGK", "Bosnian convertible marka": "BAM",
+    "Eastern Caribbean dollar": "XCD", "Barbados dollar": "BBD", "Guyanese dollar": "GYD",
+    "Trinidad and Tobago dollar": "TTD", "Azerbaijan manat": "AZN", "Bahrain dinar": "BHD",
+    "Djibouti franc": "DJF", "Pakistan rupee": "PKR", "Tajik somoni": "TJS",
+    "New Turkmen manat": "TMT", "U.A.E. dirham": "AED", "Uzbek som": "UZS",
+    "Botswana pula": "BWP", "Burundi franc": "BIF", "Cabo Verdean escudo": "CVE",
+    "São Tomé and Príncipe dobra": "STN", "Seychelles rupee": "SCR",
+    "Zimbabwe gold": "ZWG", "United States dollar": "USD", "U.S. dollar": "USD",
+    "Pound sterling": "GBP", "UK pound sterling": "GBP", "CFA franc (WAEMU)": "XOF",
+    "CFA franc (CEMAC)": "XAF", "Chinese yuan": "CNY", "New Taiwan dollar": "TWD",
+}
 
 METRICS = {
     "revenue_pct_gdp": {
@@ -147,6 +163,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source", type=Path, default=DEFAULT_SOURCE)
     parser.add_argument("--registry", type=Path, default=DEFAULT_REGISTRY)
     parser.add_argument("--scope-registry", type=Path, default=DEFAULT_SCOPE_REGISTRY)
+    parser.add_argument("--universe", type=Path, default=DEFAULT_UNIVERSE)
     parser.add_argument("--output", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--csv-output", type=Path, default=DEFAULT_CSV)
     parser.add_argument("--summary-output", type=Path, default=DEFAULT_SUMMARY_CSV)
@@ -226,7 +243,7 @@ def build_summary(country_series: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def validate_extracted(extracted: dict[str, dict[str, Any]]) -> None:
+def validate_extracted(extracted: dict[str, dict[str, Any]], full_profile_codes: set[str]) -> None:
     fiscal_metrics = (
         "revenue_pct_gdp",
         "expenditure_pct_gdp",
@@ -243,16 +260,19 @@ def validate_extracted(extracted: dict[str, dict[str, Any]]) -> None:
             points = country_series[metric_code]["values"]
             if len(points) != END_YEAR - START_YEAR + 1:
                 raise ValueError(f"{country_code}/{metric_code} has an incomplete period")
-            for point in points:
-                if point["value"] is None:
-                    raise ValueError(f"{country_code}/{metric_code}/{point['year']} is missing")
-                if point["status"] != "actual":
-                    raise ValueError(f"{country_code}/{metric_code}/{point['year']} is not actual")
+            if country_code in full_profile_codes:
+                for point in points:
+                    if point["value"] is None:
+                        raise ValueError(f"{country_code}/{metric_code}/{point['year']} is missing")
+                    if point["status"] != "actual":
+                        raise ValueError(f"{country_code}/{metric_code}/{point['year']} is not actual")
 
         revenue = value_map(country_series, "revenue_pct_gdp")
         expenditure = value_map(country_series, "expenditure_pct_gdp")
         balance = value_map(country_series, "balance_pct_gdp")
         for year in range(START_YEAR, END_YEAR + 1):
+            if any(values.get(year) is None for values in (revenue, expenditure, balance)):
+                continue
             identity_error = abs((revenue[year] - expenditure[year]) - balance[year])
             if identity_error > 0.02:
                 raise ValueError(
@@ -268,13 +288,13 @@ def main() -> None:
 
     registry = json.loads(args.registry.read_text(encoding="utf-8"))
     registry_by_country = {country["country_code"]: country for country in registry["countries"]}
-    missing_registry = set(COUNTRY_ORDER) - set(registry_by_country)
+    missing_registry = set(FULL_PROFILE_ORDER) - set(registry_by_country)
     if missing_registry:
         raise ValueError(f"Missing countries in registry: {sorted(missing_registry)}")
 
     scope_registry = json.loads(args.scope_registry.read_text(encoding="utf-8"))
     scope_by_country = {country["country_code"]: country for country in scope_registry["countries"]}
-    missing_scope = set(COUNTRY_ORDER) - set(scope_by_country)
+    missing_scope = set(FULL_PROFILE_ORDER) - set(scope_by_country)
     if missing_scope:
         raise ValueError(f"Missing fiscal-scope definitions: {sorted(missing_scope)}")
     perimeter_codes = {
@@ -283,6 +303,14 @@ def main() -> None:
     if perimeter_codes != {"national_budget", "general_government", "public_sector"}:
         raise ValueError(f"Unexpected fiscal perimeters: {sorted(perimeter_codes)}")
 
+    universe = json.loads(args.universe.read_text(encoding="utf-8"))
+    universe_by_code = {country["iso3"]: country for country in universe["countries"] if country.get("weo_code")}
+    weo_to_public = {country["weo_code"]: country["iso3"] for country in universe_by_code.values()}
+    country_order = FULL_PROFILE_ORDER + sorted(
+        (code for code in universe_by_code if code not in FULL_PROFILE_ORDER),
+        key=lambda code: universe_by_code[code]["name_en"],
+    )
+
     workbook = load_workbook(args.source, read_only=True, data_only=True)
     sheet = workbook["Countries"]
     rows = sheet.iter_rows(values_only=True)
@@ -290,18 +318,22 @@ def main() -> None:
     column = {name: index for index, name in enumerate(headers)}
     indicator_to_metric = {definition["imf_indicator"]: code for code, definition in METRICS.items()}
 
-    extracted: dict[str, dict[str, Any]] = {country: {} for country in COUNTRY_ORDER}
-    fiscal_metadata: dict[str, dict[str, Any]] = {country: {} for country in COUNTRY_ORDER}
+    extracted: dict[str, dict[str, Any]] = {country: {} for country in country_order}
+    fiscal_metadata: dict[str, dict[str, Any]] = {country: {} for country in country_order}
+    currency_names: dict[str, str | None] = {country: None for country in country_order}
 
     for row in rows:
-        country_code = row[column["COUNTRY.ID"]]
+        source_country_code = row[column["COUNTRY.ID"]]
+        country_code = weo_to_public.get(source_country_code)
         indicator_code = row[column["INDICATOR.ID"]]
         if country_code not in extracted or indicator_code not in indicator_to_metric:
             continue
 
         metric_code = indicator_to_metric[indicator_code]
+        currency_names[country_code] = row[column["PRIMARY_DOMESTIC_CURRENCY"]]
         latest_actual_raw = row[column["LATEST_ACTUAL_ANNUAL_DATA"]]
-        latest_actual = int(latest_actual_raw) if latest_actual_raw not in (None, "") else None
+        latest_actual_match = re.search(r"(?:19|20)\d{2}", str(latest_actual_raw or ""))
+        latest_actual = int(latest_actual_match.group()) if latest_actual_match else None
         values = []
         for year in range(START_YEAR, END_YEAR + 1):
             value = clean_number(row[column[year]])
@@ -322,30 +354,64 @@ def main() -> None:
                 ],
             }
 
-    validate_extracted(extracted)
+    validate_extracted(extracted, set(FULL_PROFILE_ORDER))
 
     countries = []
     summaries = []
-    for country_code in COUNTRY_ORDER:
-        country = registry_by_country[country_code]
-        countries.append(
-            ({
+    for country_code in country_order:
+        country = registry_by_country.get(country_code)
+        universe_country = universe_by_code[country_code]
+        if country:
+            country_metadata = {
                 key: country[key]
                 for key in (
-                    "country_code",
-                    "role",
-                    "name_cs",
-                    "name_en",
-                    "currency_code",
-                    "national_scope",
-                    "benchmark_reason",
-                    "benchmark_evidence_url",
+                    "country_code", "role", "name_cs", "name_en", "currency_code",
+                    "national_scope", "benchmark_reason", "benchmark_evidence_url",
                 )
                 if key in country
             }
-            | {
+            architecture = scope_by_country[country_code]
+        else:
+            currency_name = currency_names[country_code]
+            # LCU is an explicit local-currency-unit marker when the WEO
+            # workbook names the currency but does not publish an ISO code.
+            currency_code = CURRENCY_CODES.get(currency_name or "", "LCU")
+            country_metadata = {
+                "country_code": country_code,
+                "iso2": universe_country["iso2"],
+                "weo_country_code": universe_country["weo_code"],
+                "role": "global_macro_profile",
+                "profile_tier": "macro_fiscal",
+                "name_cs": universe_country["name_cs"],
+                "name_en": universe_country["name_en"],
+                "currency_code": currency_code,
+                "currency_name": currency_name,
+                "national_scope": "not_source_mapped",
+            }
+            architecture = {
+                "country_code": country_code,
+                "eu_status": "not_assessed",
+                "national_budget_label_cs": f"Národní rozpočet — {universe_country['name_cs']}",
+                "national_budget_label_en": f"National budget — {universe_country['name_en']}",
+                "municipal_budget_relation": "not_assessed",
+                "other_public_accounts_relation": "not_assessed",
+                "public_corporation_treatment": "not_assessed",
+                "architecture_cs": "Národní právní a institucionální uspořádání zatím není zmapováno. Publikovaná makrofiskální řada používá výhradně harmonizovaný sektor vládních institucí IMF.",
+                "architecture_en": "The national legal and institutional architecture has not yet been source-mapped. The published macro-fiscal series uses only the IMF harmonised general-government sector.",
+                "corporation_note_cs": "Údaje IMF za sektor vládních institucí nezahrnují tržní veřejné korporace; jejich obrat se k příjmům vlády nepřičítá.",
+                "corporation_note_en": "IMF general-government data excludes market public corporations; their turnover is not added to government revenue.",
+                "sources": [{
+                    "source_name": "IMF World Economic Outlook",
+                    "source_url": "https://data.imf.org/en/Datasets/WEO",
+                    "purpose": "Harmonised general-government perimeter; national legal architecture remains explicitly not assessed.",
+                }],
+            }
+        countries.append(
+            (country_metadata | {
+                "iso2": universe_country["iso2"],
+                "weo_country_code": universe_country["weo_code"],
                 "imf_fiscal_metadata": fiscal_metadata[country_code],
-                "fiscal_architecture": scope_by_country[country_code],
+                "fiscal_architecture": architecture,
             })
         )
         summaries.append({"country_code": country_code} | build_summary(extracted[country_code]))
@@ -391,10 +457,16 @@ def main() -> None:
                 "country_code": country_code,
                 "metrics": extracted[country_code],
             }
-            for country_code in COUNTRY_ORDER
+            for country_code in country_order
         ],
         "summaries": summaries,
         "national_source_registry": registry["countries"],
+        "universe": {
+            "definition": universe["universe"],
+            "sovereign_state_count": len(universe["countries"]),
+            "weo_profile_count": len(country_order),
+            "missing_from_weo": [country["iso3"] for country in universe["countries"] if not country.get("weo_code") or country["weo_code"] not in weo_to_public],
+        },
     }
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -409,7 +481,7 @@ def main() -> None:
             fieldnames=["country_code", "year", "metric_code", "value", "status", "unit", "source_indicator"],
         )
         writer.writeheader()
-        for country_code in COUNTRY_ORDER:
+        for country_code in country_order:
             for metric_code, metric_series in extracted[country_code].items():
                 definition = METRICS[metric_code]
                 for point in metric_series["values"]:
@@ -431,7 +503,7 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(summaries)
 
-    print(f"Wrote {len(COUNTRY_ORDER)} countries × {len(METRICS)} metrics × {END_YEAR - START_YEAR + 1} years")
+    print(f"Wrote {len(country_order)} countries × {len(METRICS)} metrics × {END_YEAR - START_YEAR + 1} years")
     print(args.output)
     print(args.csv_output)
     print(args.summary_output)

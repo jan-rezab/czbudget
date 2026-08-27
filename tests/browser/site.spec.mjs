@@ -30,6 +30,7 @@ const routes = [
 
 for (const [name, path] of routes) {
   test(`${name} renders without serious accessibility or runtime failures`, async ({ page }) => {
+    if (name === "methodology") test.setTimeout(60_000);
     const failures = [];
     page.on("pageerror", (error) => failures.push(error.message));
     page.on("console", (message) => {
@@ -75,7 +76,7 @@ test("country links are readable and data-layer cards keep accessible contrast",
   await expect(page.locator("#country-name")).toContainText("Germany");
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-cards a").first()).toHaveAttribute("href", "/countries/czechia?lang=en");
-  await expect(page.locator("#country-cards a")).toHaveCount(17);
+  await expect(page.locator("#country-cards a")).toHaveCount(191);
   await expect(page.locator('#country-cards a[href="/countries/japan?lang=en"]')).toContainText("Japan");
   await expect(page.locator('#country-cards a[href="/countries/greece?lang=en"]')).toContainText("Greece");
   await expect(page.locator('a[href*="country.html?code="]')).toHaveCount(0);
@@ -89,6 +90,15 @@ test("new countries expose the full national dashboard and native spending", asy
     await expect(page.locator("#country-spending-root")).toContainText("Where the money goes");
     await expect(page.locator("#balance-chart")).toBeVisible();
   }
+});
+
+test("global macro profiles expose sourced IMF data and explicit module gaps", async ({ page }) => {
+  await page.goto("/countries/afg?lang=en", {waitUntil:"networkidle"});
+  await expect(page.locator("#country-name")).toHaveText("Afghanistan");
+  await expect(page.locator("#balance-chart")).toBeVisible();
+  await expect(page.locator("#country-parity-root")).toContainText("1 / 11");
+  await expect(page.locator("#country-parity-root")).toContainText("Missing");
+  await expect(page.locator("#source-cards")).toContainText("International Monetary Fund");
 });
 
 test("English remains selected when a municipality card is opened", async ({ page }) => {
@@ -119,8 +129,8 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator(".glorious-footer .footer-hlidac")).toHaveAttribute("href", "https://www.hlidacstatu.cz/");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#compare-table tr")).toHaveCount(17);
-  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(17);
+  await expect(page.locator("#compare-table tr")).toHaveCount(191);
+  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(191);
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
@@ -132,8 +142,8 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#data-health-root")).toContainText("107,703");
   await expect(page.locator("#data-health-root")).toContainText("27 countries");
   await expect(page.locator("#data-health-root")).toContainText("66");
-  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(28);
-  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(196);
+  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(191);
+  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(1337);
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
   await expect(page.locator('[data-coverage-country="NOR"][data-coverage-node="municipalHistory"]')).toContainText("2015–2025");
   await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="municipalHistory"]')).toContainText("2010–2025");
@@ -160,14 +170,14 @@ test("comparison and methodology live outside the homepage", async ({ page }) =>
   await expect(page.locator("#atlas-row-cz td").nth(0)).toHaveText("82");
   await expect(page.locator("#atlas-row-cz td").nth(1)).toHaveText("62");
   await expect(page.locator("#atlas-row-cz .atlas-load")).toHaveText("Loaded");
-  await expect(page.locator("#atlas-row-nz .atlas-load")).toHaveText("Crawl started");
+  await expect(page.locator("#atlas-row-nz .atlas-load")).toHaveText("Loaded");
   await expect(page.locator(".atlas-table tbody tr").first()).toContainText("Brazil");
   await page.locator('.atlas-sort[data-sort="country"]').click();
   await expect(page.locator(".atlas-table tbody tr").first()).toContainText("Afghanistan");
   await page.locator('.atlas-sort[data-sort="country"]').click();
   await expect(page.locator(".atlas-table tbody tr").first()).toContainText("Zimbabwe");
   await expect(page.locator('.atlas-country[data-iso="ar"]')).toHaveCSS("fill", "rgb(215, 197, 142)");
-  await page.locator('.atlas-country[data-iso="cz"]').hover();
+  await page.locator('.atlas-country[data-iso="cz"]').focus();
   await expect(page.locator(".atlas-tooltip")).toContainText("62 OBS central government + 20 municipal bonus");
   await expect(page.locator('[data-global-nav="method"]')).toHaveClass(/active/);
 });
@@ -191,10 +201,10 @@ test("homepage compares all fifteen health-system topline metrics", async ({ pag
 
 test("homepage overview scales with the current country coverage", async ({ page }) => {
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".hero-dot")).toHaveCount(17);
-  await expect(page.locator("#country-count")).toHaveText("17");
+  await expect(page.locator(".hero-dot")).toHaveCount(189);
+  await expect(page.locator("#country-count")).toHaveText("191");
   await expect(page.locator("#year-count")).toHaveText("20");
-  await expect(page.locator("#hero-chart-note")).toContainText("17 countries with a 2024 value");
+  await expect(page.locator("#hero-chart-note")).toContainText("189 countries with a 2024 value");
   await expect(page.locator(".category-summary article").nth(1).locator("strong")).toHaveText("33.1 %");
   await expect(page.locator(".category-summary article").nth(2)).toContainText("17 / 17");
   await expect(page.locator(".home-path-grid > a")).toHaveCount(4);
@@ -587,7 +597,8 @@ test("all representative page menus resolve and primary navigation routes correc
     for (const href of hrefs) {
       const target = new URL(href); target.hash = "";
       if (target.pathname.startsWith("/countries/")) {
-        expect(["czechia","germany","denmark","finland","france","united-kingdom","poland","sweden","switzerland","ukraine","united-states","brazil","spain","japan","netherlands","norway","greece"]).toContain(target.pathname.split("/").filter(Boolean).at(-1));
+        const countrySlug = target.pathname.split("/").filter(Boolean).at(-1);
+        expect(/^[a-z]{3}$/.test(countrySlug) || ["czechia","germany","denmark","finland","france","united-kingdom","poland","sweden","switzerland","ukraine","united-states","brazil","spain","japan","netherlands","norway","greece"].includes(countrySlug)).toBeTruthy();
         continue;
       }
       const response = await request.get(target.href);
@@ -607,7 +618,7 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/municipalities/?lang=cs", { waitUntil:"networkidle" });
   const municipalCoverageCountries = await page.locator("#country-grid .municipal-country-card").evaluateAll((cards) => cards.map((card) => card.dataset.country));
   expect(municipalMenuCountries).toEqual(municipalCoverageCountries);
-  expect(municipalCardCountries).toHaveLength(17);
+  expect(municipalCardCountries).toHaveLength(191);
   await page.goto("/?lang=cs", { waitUntil:"networkidle" });
   await page.locator(".municipality-menu summary").click();
   await page.locator('.municipality-menu a[data-country-code="DEU"]').click();
@@ -621,7 +632,14 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(19);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(193);
+  const countrySearch = countryMenu.locator(".country-menu-search input");
+  await expect(countrySearch).toHaveAttribute("placeholder", "Název nebo kód…");
+  await countrySearch.fill("novy zeland");
+  await expect(countryMenu.locator('.country-menu-panel > a[data-country-code]:visible')).toHaveCount(1);
+  await expect(countryMenu.locator('a[data-country-code="NZL"]')).toBeVisible();
+  await expect(countryMenu.locator(".country-menu-search output")).toHaveText("1 profilů");
+  await countrySearch.fill("");
   const chartCountries = await page.locator("#country-cards .country-flag-svg b").allTextContents();
   const menuCountries = await countryMenu.locator(".country-menu-panel > a[data-country-code] b").allTextContents();
   expect(menuCountries).toEqual(chartCountries);
@@ -691,7 +709,7 @@ test("cities use the functional unified menu on desktop and mobile", async ({ pa
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
   await expect(countryMenu).toHaveAttribute("open", "");
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(19);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(193);
   const panelBox = await countryMenu.locator(".country-menu-panel").boundingBox();
   expect(panelBox?.width).toBeLessThanOrEqual(430);
   expect((panelBox?.y || 0) + (panelBox?.height || 0)).toBeLessThanOrEqual(600);

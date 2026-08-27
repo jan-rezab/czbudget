@@ -1,0 +1,1766 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "country-profile.v1",
+  "generated_at": "2026-08-26T23:52:12.099Z",
+  "country": {
+    "country_code": "BHS",
+    "name_cs": "Bahamy",
+    "name_en": "Bahamas",
+    "currency_code": "LCU",
+    "fiscal_architecture": {
+      "country_code": "BHS",
+      "eu_status": "not_assessed",
+      "national_budget_label_cs": "Národní rozpočet — Bahamy",
+      "national_budget_label_en": "National budget — Bahamas",
+      "municipal_budget_relation": "not_assessed",
+      "other_public_accounts_relation": "not_assessed",
+      "public_corporation_treatment": "not_assessed",
+      "architecture_cs": "Národní právní a institucionální uspořádání zatím není zmapováno. Publikovaná makrofiskální řada používá výhradně harmonizovaný sektor vládních institucí IMF.",
+      "architecture_en": "The national legal and institutional architecture has not yet been source-mapped. The published macro-fiscal series uses only the IMF harmonised general-government sector.",
+      "corporation_note_cs": "Údaje IMF za sektor vládních institucí nezahrnují tržní veřejné korporace; jejich obrat se k příjmům vlády nepřičítá.",
+      "corporation_note_en": "IMF general-government data excludes market public corporations; their turnover is not added to government revenue.",
+      "sources": [
+        {
+          "source_name": "IMF World Economic Outlook",
+          "source_url": "https://data.imf.org/en/Datasets/WEO",
+          "purpose": "Harmonised general-government perimeter; national legal architecture remains explicitly not assessed."
+        }
+      ]
+    }
+  },
+  "coverage": {
+    "loaded_modules": 1,
+    "total_modules": 11,
+    "missing_dimensions": [
+      "municipal_entity_finance",
+      "provider_register",
+      "public_entity_accounts",
+      "national_demographic_projection",
+      "harmonised_health_financing"
+    ]
+  },
+  "modules": {
+    "sovereign": {
+      "status": "loaded",
+      "coverage": "2005–2024; 15 metrics",
+      "missing_dimensions": [],
+      "period": {
+        "from": 2005,
+        "to": 2024,
+        "years": 20
+      },
+      "metric_count": 15
+    },
+    "revenue": {
+      "status": "unavailable",
+      "coverage": "general-government revenue and balance",
+      "missing_dimensions": [],
+      "native_layers": []
+    },
+    "administrative_spending": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [],
+      "row_count": 0
+    },
+    "common_spending": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [],
+      "category_count": 0
+    },
+    "functional_spending": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [],
+      "function_count": 0
+    },
+    "transport": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": []
+    },
+    "health": {
+      "status": "unavailable",
+      "coverage": "functional expenditure only",
+      "missing_dimensions": [
+        "SHA financing and provider split"
+      ]
+    },
+    "providers": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "facility records"
+      ],
+      "facility_count": null,
+      "coverage_level": null
+    },
+    "municipalities": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "entity census",
+        "budget facts"
+      ],
+      "entity_count": 0,
+      "fact_count": 0,
+      "years": [],
+      "stages": [],
+      "measures": [],
+      "coverage_level": null,
+      "directory": null,
+      "warehouse": []
+    },
+    "public_entities": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "ownership register",
+        "entity accounts"
+      ],
+      "entity_count": 0,
+      "represented_entity_count": 0,
+      "broad_entity_count": null,
+      "financial_statement_count": 0,
+      "coverage_level": "entity_registry"
+    },
+    "demography": {
+      "status": "unavailable",
+      "coverage": "not loaded",
+      "missing_dimensions": [
+        "population projection",
+        "annual age structure",
+        "sex breakdown"
+      ],
+      "projection": null,
+      "detail": null,
+      "detail_row_count": 0
+    }
+  },
+  "data": {
+    "sovereign": {
+      "series": {
+        "country_code": "BHS",
+        "metrics": {
+          "real_gdp_growth_pct": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 3.395,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 2.517,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 1.447,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": -2.324,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -4.175,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 1.539,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 0.613,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 4.61,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": -2.863,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 1.847,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 0.997,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": -1.156,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 3.371,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 2.398,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": -0.839,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": -20.09,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 17.587,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 10.877,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 3.049,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 3.379,
+                "status": "actual"
+              }
+            ]
+          },
+          "nominal_gdp_local_bn": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 9.836,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 10.167,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 10.618,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 10.526,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 9.982,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 10.096,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 10.07,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 10.72,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 10.475,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 11.139,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 11.838,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 11.881,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 12.447,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 12.819,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 13.277,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 10.363,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 12.037,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 13.897,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 15.271,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 15.833,
+                "status": "actual"
+              }
+            ]
+          },
+          "nominal_gdp_usd_bn": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 9.836,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 10.167,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 10.618,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 10.526,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 9.982,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 10.096,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 10.07,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 10.72,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 10.475,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 11.139,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 11.838,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 11.881,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 12.447,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 12.819,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 13.277,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 10.363,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 12.037,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 13.897,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 15.271,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 15.833,
+                "status": "actual"
+              }
+            ]
+          },
+          "gdp_per_capita_local": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 30030.89,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 30594.671,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 31498.523,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 30787.585,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 28793.341,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 28725.135,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 28365.859,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 29895.418,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 28918.977,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 30441.264,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 32022.083,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 31811.467,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 32984.165,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 33618.059,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 34455.207,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 26612.553,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 30522.745,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 34801.709,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 37827.627,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 38791.831,
+                "status": "actual"
+              }
+            ]
+          },
+          "gdp_per_capita_usd": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 30030.89,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 30594.671,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 31498.523,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 30787.585,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 28793.341,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 28725.135,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 28365.859,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 29895.418,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 28918.977,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 30441.264,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 32022.083,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 31811.467,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 32984.165,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 33618.059,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 34455.207,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 26612.553,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 30522.745,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 34801.709,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 37827.627,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 38791.831,
+                "status": "actual"
+              }
+            ]
+          },
+          "gdp_per_capita_ppp": {
+            "latest_actual_year": null,
+            "values": [
+              {
+                "year": 2005,
+                "value": 31385.105,
+                "status": "estimate"
+              },
+              {
+                "year": 2006,
+                "value": 32689.699,
+                "status": "estimate"
+              },
+              {
+                "year": 2007,
+                "value": 33577.553,
+                "status": "estimate"
+              },
+              {
+                "year": 2008,
+                "value": 32961.183,
+                "status": "estimate"
+              },
+              {
+                "year": 2009,
+                "value": 31341.12,
+                "status": "estimate"
+              },
+              {
+                "year": 2010,
+                "value": 31771.625,
+                "status": "estimate"
+              },
+              {
+                "year": 2011,
+                "value": 32298.84,
+                "status": "estimate"
+              },
+              {
+                "year": 2012,
+                "value": 34073.414,
+                "status": "estimate"
+              },
+              {
+                "year": 2013,
+                "value": 33323.877,
+                "status": "estimate"
+              },
+              {
+                "year": 2014,
+                "value": 34182.371,
+                "status": "estimate"
+              },
+              {
+                "year": 2015,
+                "value": 34490.026,
+                "status": "estimate"
+              },
+              {
+                "year": 2016,
+                "value": 34064.089,
+                "status": "estimate"
+              },
+              {
+                "year": 2017,
+                "value": 35474.556,
+                "status": "estimate"
+              },
+              {
+                "year": 2018,
+                "value": 36280.768,
+                "status": "estimate"
+              },
+              {
+                "year": 2019,
+                "value": 36990.839,
+                "status": "estimate"
+              },
+              {
+                "year": 2020,
+                "value": 27655.424,
+                "status": "estimate"
+              },
+              {
+                "year": 2021,
+                "value": 31223.121,
+                "status": "estimate"
+              },
+              {
+                "year": 2022,
+                "value": 36621.802,
+                "status": "estimate"
+              },
+              {
+                "year": 2023,
+                "value": 38708.853,
+                "status": "estimate"
+              },
+              {
+                "year": 2024,
+                "value": 40563.879,
+                "status": "estimate"
+              }
+            ]
+          },
+          "ppp_conversion_factor": {
+            "latest_actual_year": null,
+            "values": [
+              {
+                "year": 2005,
+                "value": 0.957,
+                "status": "estimate"
+              },
+              {
+                "year": 2006,
+                "value": 0.936,
+                "status": "estimate"
+              },
+              {
+                "year": 2007,
+                "value": 0.938,
+                "status": "estimate"
+              },
+              {
+                "year": 2008,
+                "value": 0.934,
+                "status": "estimate"
+              },
+              {
+                "year": 2009,
+                "value": 0.919,
+                "status": "estimate"
+              },
+              {
+                "year": 2010,
+                "value": 0.904,
+                "status": "estimate"
+              },
+              {
+                "year": 2011,
+                "value": 0.878,
+                "status": "estimate"
+              },
+              {
+                "year": 2012,
+                "value": 0.877,
+                "status": "estimate"
+              },
+              {
+                "year": 2013,
+                "value": 0.868,
+                "status": "estimate"
+              },
+              {
+                "year": 2014,
+                "value": 0.891,
+                "status": "estimate"
+              },
+              {
+                "year": 2015,
+                "value": 0.928,
+                "status": "estimate"
+              },
+              {
+                "year": 2016,
+                "value": 0.934,
+                "status": "estimate"
+              },
+              {
+                "year": 2017,
+                "value": 0.93,
+                "status": "estimate"
+              },
+              {
+                "year": 2018,
+                "value": 0.927,
+                "status": "estimate"
+              },
+              {
+                "year": 2019,
+                "value": 0.931,
+                "status": "estimate"
+              },
+              {
+                "year": 2020,
+                "value": 0.962,
+                "status": "estimate"
+              },
+              {
+                "year": 2021,
+                "value": 0.978,
+                "status": "estimate"
+              },
+              {
+                "year": 2022,
+                "value": 0.95,
+                "status": "estimate"
+              },
+              {
+                "year": 2023,
+                "value": 0.977,
+                "status": "estimate"
+              },
+              {
+                "year": 2024,
+                "value": 0.956,
+                "status": "estimate"
+              }
+            ]
+          },
+          "inflation_pct": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 1.819,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 1.958,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 2.407,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 4.434,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 1.666,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 1.621,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 3.064,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 1.912,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 0.445,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 1.183,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 1.878,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": -0.33,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 1.5,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 2.268,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 2.491,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 0.039,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 2.905,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 5.605,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 3.059,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 0.403,
+                "status": "actual"
+              }
+            ]
+          },
+          "unemployment_pct": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 10.17,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 7.628,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 7.853,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 8.703,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 14.246,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 15.082,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 15.889,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 14.367,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 15.782,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 14.636,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 13.379,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 12.15,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 10.1,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 10.35,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 10.1,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 25.883,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 17.398,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 10.68,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 10.174,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 8.404,
+                "status": "actual"
+              }
+            ]
+          },
+          "revenue_pct_gdp": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 11.696,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 12.803,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 12.856,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 13.514,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 12.839,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 12.862,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 14.204,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 13.719,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 13.051,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 13.606,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 15.075,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 16.747,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 17.013,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 16.163,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 18.59,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 17.652,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 17.021,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 20.098,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 19.566,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 19.77,
+                "status": "actual"
+              }
+            ]
+          },
+          "expenditure_pct_gdp": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 12.851,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 13.241,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 13.629,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 14.338,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 15.227,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 15.432,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 17.072,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 16.971,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 18.149,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 18.117,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 18.412,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 19.358,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 23.063,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 19.446,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 20.27,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 24.761,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 28.923,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 25.624,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 23.22,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 20.97,
+                "status": "actual"
+              }
+            ]
+          },
+          "balance_pct_gdp": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": -1.155,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": -0.439,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": -0.773,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": -0.824,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -2.388,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": -2.57,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": -2.868,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": -3.253,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": -5.098,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": -4.512,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": -3.337,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": -2.61,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": -6.05,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": -3.283,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": -1.68,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": -7.109,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": -11.902,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": -5.526,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": -3.655,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": -1.2,
+                "status": "actual"
+              }
+            ]
+          },
+          "structural_balance_pct_potential_gdp": {
+            "latest_actual_year": null,
+            "values": [
+              {
+                "year": 2005,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2006,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2007,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2008,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2009,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2010,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2011,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2012,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2013,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2014,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2015,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2016,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2017,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2018,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2019,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2020,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2021,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2022,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2023,
+                "value": null,
+                "status": "estimate"
+              },
+              {
+                "year": 2024,
+                "value": null,
+                "status": "estimate"
+              }
+            ]
+          },
+          "primary_balance_pct_gdp": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 0.129,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 0.727,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 0.451,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 0.529,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": -0.884,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": -0.792,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": -0.778,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": -1.463,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": -3.164,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": -2.533,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": -1.235,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": -0.295,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": -3.85,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": -0.8,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 0.837,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": -4.181,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": -8.135,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": -1.276,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 0.272,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 2.741,
+                "status": "actual"
+              }
+            ]
+          },
+          "gross_debt_pct_gdp": {
+            "latest_actual_year": 2024,
+            "values": [
+              {
+                "year": 2005,
+                "value": 22.954,
+                "status": "actual"
+              },
+              {
+                "year": 2006,
+                "value": 23.154,
+                "status": "actual"
+              },
+              {
+                "year": 2007,
+                "value": 23.49,
+                "status": "actual"
+              },
+              {
+                "year": 2008,
+                "value": 25.344,
+                "status": "actual"
+              },
+              {
+                "year": 2009,
+                "value": 30.089,
+                "status": "actual"
+              },
+              {
+                "year": 2010,
+                "value": 33.883,
+                "status": "actual"
+              },
+              {
+                "year": 2011,
+                "value": 35.262,
+                "status": "actual"
+              },
+              {
+                "year": 2012,
+                "value": 37.589,
+                "status": "actual"
+              },
+              {
+                "year": 2013,
+                "value": 44.248,
+                "status": "actual"
+              },
+              {
+                "year": 2014,
+                "value": 47.748,
+                "status": "actual"
+              },
+              {
+                "year": 2015,
+                "value": 49.941,
+                "status": "actual"
+              },
+              {
+                "year": 2016,
+                "value": 51.057,
+                "status": "actual"
+              },
+              {
+                "year": 2017,
+                "value": 54.649,
+                "status": "actual"
+              },
+              {
+                "year": 2018,
+                "value": 61.513,
+                "status": "actual"
+              },
+              {
+                "year": 2019,
+                "value": 60.314,
+                "status": "actual"
+              },
+              {
+                "year": 2020,
+                "value": 71.925,
+                "status": "actual"
+              },
+              {
+                "year": 2021,
+                "value": 90.662,
+                "status": "actual"
+              },
+              {
+                "year": 2022,
+                "value": 84.656,
+                "status": "actual"
+              },
+              {
+                "year": 2023,
+                "value": 78.291,
+                "status": "actual"
+              },
+              {
+                "year": 2024,
+                "value": 73.813,
+                "status": "actual"
+              }
+            ]
+          }
+        }
+      },
+      "summary": {
+        "country_code": "BHS",
+        "period_start": 2005,
+        "period_end": 2024,
+        "median_balance_pct_gdp": -3.061,
+        "mean_balance_pct_gdp": -3.512,
+        "balance_volatility_pp": 2.639,
+        "surplus_year_share": 0,
+        "worst_balance_pct_gdp": -11.902,
+        "median_primary_balance_pct_gdp": -0.796,
+        "mean_revenue_pct_gdp": 15.442,
+        "mean_expenditure_pct_gdp": 18.954,
+        "gross_debt_start_pct_gdp": 22.954,
+        "gross_debt_end_pct_gdp": 73.813,
+        "gross_debt_change_pp": 50.859,
+        "gross_debt_peak_pct_gdp": 90.662,
+        "post_2021_debt_change_pp": -16.849
+      }
+    },
+    "revenue": null,
+    "administrative_spending": null,
+    "common_spending": null,
+    "functional_spending": null,
+    "transport": null,
+    "health": null,
+    "providers": null,
+    "municipalities": null,
+    "public_entities": null,
+    "demography": null
+  },
+  "sources": [
+    {
+      "source_id": "imf-weo-2026-04",
+      "source_name": "International Monetary Fund · World Economic Outlook, April 2026",
+      "source_url": "https://data.imf.org/en/Datasets/WEO",
+      "coverage": "2005–2024",
+      "formats": [
+        "XLSX"
+      ],
+      "purpose": "Harmonised general-government macro-fiscal series",
+      "active": true
+    }
+  ]
+}

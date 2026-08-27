@@ -118,7 +118,7 @@ function paginate(items, searchParams) {
 }
 
 function datasetMetadata(dataset) {
-  const { countries, cities, entities, municipalities, records, rows, observations, ...metadata } = dataset;
+  const { countries, cities, entities, municipalities, records, rows, observations, series, summaries, national_source_registry, ...metadata } = dataset;
   return metadata;
 }
 
