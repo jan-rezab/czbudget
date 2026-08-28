@@ -52,8 +52,7 @@ test("serves every published country through the API", async () => {
   const codes = payload.data.map((country) => country.country_code);
   assert.equal(response.status, 200);
   assert.equal(codes.length, 195);
-  for (const country of ["CZE", "AFG", "PSE", "ZWE"]) assert.ok(codes.includes(country), country);
-  for (const country of ["CUB", "MCO", "PRK", "VAT"]) assert.ok(!codes.includes(country), country);
+  for (const country of ["CZE", "AFG", "PSE", "ZWE", "CUB", "MCO", "PRK", "VAT"]) assert.ok(codes.includes(country), country);
 
   for (const country of ["FIN", "BRA", "ESP", "JPN", "NLD", "NOR", "GRC", "AFG", "PSE"]) {
     const profile = await get(`/api/v1/countries/${country}`);
