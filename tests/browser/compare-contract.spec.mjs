@@ -26,7 +26,7 @@ test("a full metric ranks, and missing values sort last without a rank", async (
   await expect(page.locator("#compare-contract .cmp-verdict.is-full")).toBeVisible();
 
   const rows = page.locator("#compare-result .cmp-row");
-  expect(await rows.count()).toBeGreaterThan(10);
+  expect(await rows.count()).toBe(4);
   await expect(rows.first().locator(".cmp-rank")).toHaveText("01");
 
   // Values must descend among the rows that carry one.
@@ -38,8 +38,9 @@ test("a full metric ranks, and missing values sort last without a rank", async (
   expect(numeric).toEqual(sorted);
 });
 
-test("the sovereign ranking stays at Top 20 and can pin any country", async ({ page }) => {
+test("the explorer can switch to Top 20 and build a custom country set", async ({ page }) => {
   await openCompare(page);
+  await page.locator("#comparison-view").selectOption("large");
   await expect(page.locator("#compare-result .cmp-row")).toHaveCount(20);
   await expect(page.locator("#comparison-country-options option")).toHaveCount(191);
   await expect(page.locator("#comparison-coverage-count")).toHaveText("191 × 20");
@@ -50,12 +51,13 @@ test("the sovereign ranking stays at Top 20 and can pin any country", async ({ p
   await picker.fill("IND");
   await picker.press("Enter");
 
+  await expect(page.locator("#comparison-view")).toHaveValue("selected");
+  await expect(page.locator("#comparison-selection .cmp-country-chip")).toHaveCount(5);
   const india = page.locator("#compare-result .cmp-row", {
     has: page.locator('a[href*="ind"]'),
   });
   await expect(india).toHaveCount(1);
-  await expect(india).toHaveClass(/is-extra/);
-  await expect(india.locator(".cmp-rank")).toHaveText("+");
+  await expect(india.locator(".cmp-rank")).not.toBeEmpty();
 });
 
 test("a conditional metric groups and withholds the global rank", async ({ page }) => {
@@ -73,6 +75,8 @@ test("a conditional metric groups and withholds the global rank", async ({ page 
 
 test("Switzerland is grouped away from the tax-funded systems", async ({ page }) => {
   await openCompare(page);
+  await page.locator("#comparison-country").fill("CHE");
+  await page.locator("#comparison-country").press("Enter");
   await page.locator('[data-metric="health_gf07_pct_gdp"]').click();
 
   const swissGroup = page.locator("#compare-result .cmp-group", { has: page.locator('a[href*="switzerland"]') });
@@ -102,6 +106,8 @@ test("a national-only metric refuses and its substitute button works", async ({ 
 
 test("a country with no reported value shows absence, not a zero", async ({ page }) => {
   await openCompare(page);
+  await page.locator("#comparison-country").fill("NOR");
+  await page.locator("#comparison-country").press("Enter");
   await page.locator('[data-perimeter="health_accounts"]').click();
   await page.locator('[data-metric="health_oop_share"]').click();
 
@@ -130,6 +136,7 @@ test("the section is bilingual", async ({ page }) => {
 
 test("the ownership perimeter groups countries by what their register reveals", async ({ page }) => {
   await openCompare(page);
+  await page.locator("#comparison-view").selectOption("all");
   await page.locator('[data-perimeter="facility_registers"]').click();
 
   await expect(page.locator("#compare-contract .cmp-verdict.is-conditional")).toBeVisible();
@@ -151,6 +158,7 @@ test("the ownership perimeter groups countries by what their register reveals", 
 
 test("a register that reveals nothing is shown as absent, not as private", async ({ page }) => {
   await openCompare(page);
+  await page.locator("#comparison-view").selectOption("all");
   await page.locator('[data-perimeter="facility_registers"]').click();
 
   // Great Britain's extract is NHS-only, so it reads 100% public by construction.

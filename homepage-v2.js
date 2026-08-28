@@ -40,6 +40,8 @@ Object.assign(I.cs,{countriesCopy:"Dvacet nejlidnatějších profilů, seřazen�
 Object.assign(I.en,{countriesCopy:"The twenty most populous profiles, ordered by population. The complete directory remains available in country comparison."});
 Object.assign(I.cs,{addCountry:"Přidat zemi",noExtraCountry:"Bez další země",top20:"Top 20",outsideTop20:"Přidaná země mimo Top 20",allCountriesCta:"Otevřít všechna srovnání",sources:"Zdroje ↗"});
 Object.assign(I.en,{addCountry:"Add a country",noExtraCountry:"No extra country",top20:"Top 20",outsideTop20:"Added outside the Top 20",allCountriesCta:"Open all comparisons",sources:"Sources ↗"});
+Object.assign(I.cs,{explorerView:"Pohled",selectedCountries:"Moje země",compareCopy:"Vyberte ukazatel, rok a vlastní sadu zemí. U každého pohledu ukazujeme definici, hranici srovnání a cestu k původnímu zdroji."});
+Object.assign(I.en,{explorerView:"View",selectedCountries:"My countries",compareCopy:"Choose a metric, year and your own set of countries. Every view shows its definition, comparison boundary and path back to the original source."});
 const keys=["expenditure_pct_gdp","revenue_pct_gdp","balance_pct_gdp","primary_balance_pct_gdp","gross_debt_pct_gdp","real_gdp_growth_pct","unemployment_pct","inflation_pct"];
 const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us",BRA:"br",ESP:"es",JPN:"jp",NLD:"nl",NOR:"no",GRC:"gr"};
 const meta=code=>state.data.countries.find(x=>x.country_code===code),series=code=>state.data.series.find(x=>x.country_code===code);

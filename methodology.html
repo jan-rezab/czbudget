@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="styles-v2.css?v=20260822-brand" />
     <link
       rel="stylesheet"
-      href="site-pages.css?v=20260827-coverage-acts"
+      href="site-pages.css?v=20260828-accounting-depth"
     />
     <link rel="stylesheet" href="municipal-transparency.css?v=20260827-evidence-status" />
     <link rel="stylesheet" href="data-freshness.css?v=20260827-cross-layer" />
@@ -39,10 +39,12 @@
       @media (max-width: 560px) { .data-health-kpis { grid-template-columns: 1fr; } }
     </style>
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
+    <script src="country-routes.js?v=20260824-readable-country-routes" defer></script>
     <script src="site-pages.js?v=20260827-country-methodology" defer></script>
     <script src="municipal-transparency.js?v=20260827-evidence-status" defer></script>
     <script src="data-freshness.js?v=20260827-methodology-levels-acts" defer></script>
     <script src="coverage-map.js?v=20260827-coverage-acts" defer></script>
+    <script src="coverage-accounting-boundaries.js?v=20260828-move-from-compare" defer></script>
     <script src="global-footer.js?v=20260827-coverage-menu" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -145,6 +147,30 @@
           <div><dt data-status-copy="defAvailability">Dostupnost zdroje</dt><dd data-status-copy="defAvailabilityValue">„Zdroj existuje“ není publikované pokrytí PSD. Kliknutí otevře důkaz, cestu k načtení a hranice srovnatelnosti.</dd></div>
         </dl>
       </details>
+      <section class="coverage-accounting-boundaries" id="accounting-boundaries" aria-labelledby="accounting-boundaries-title">
+        <div class="architecture-heading">
+          <div>
+            <span class="kicker" data-boundary-copy="kicker">Hloubka pokrytí / účetní hranice</span>
+            <h2 id="accounting-boundaries-title" data-boundary-copy="title">Jak hluboko vidíme do veřejných účtů?</h2>
+          </div>
+          <p data-boundary-copy="intro">U každé pokryté země oddělujeme národní rozpočet, samosprávy, další veřejné účty a korporace. Tabulka ukazuje rozsah, který umíme doložit — není to další součet příjmů.</p>
+        </div>
+        <div class="fiscal-architecture-table-wrap" tabindex="0" aria-label="Accounting boundaries by country">
+          <table class="fiscal-architecture-table">
+            <thead>
+              <tr>
+                <th data-boundary-copy="country">Země</th>
+                <th data-boundary-copy="nationalBudget">Národní rozpočet</th>
+                <th data-boundary-copy="municipalBudgets">Obce a regiony</th>
+                <th data-boundary-copy="otherAccounts">Další veřejné účty</th>
+                <th data-boundary-copy="stateCompanies">Veřejné korporace</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="fiscal-architecture-body"><tr><td colspan="6">Načítám rozsah pokrytí…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
 
       <div class="method-act" id="freshness">
         <span data-status-copy="tocAct2Kicker">Část 2</span>

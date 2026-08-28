@@ -43,7 +43,18 @@
       coverageNoneNote: "Zdroj je znám, jmenovité záznamy nejsou načteny",
       countries: (n) => `${n} zemí s údajem`,
       topCountries: (shown, total) => `Top ${shown} z ${total} zemí s údajem`,
-      addedCountry: "Přidaná země mimo Top 20",
+      selectedCount: (n) => `${n} ${n === 1 ? "vybraná země" : n < 5 ? "vybrané země" : "vybraných zemí"}`,
+      selectedEmpty: "Přidejte země, které chcete porovnat.",
+      showTop20: "Ukázat Top 20",
+      showSelected: "Ukázat moje země",
+      removeCountry: (name) => `Odebrat ${name}`,
+      sourcePath: "Jak vzniká tento pohled",
+      originalSource: "Původní publikace",
+      transform: "Harmonizace",
+      publishedData: "Publikovaná data",
+      openSource: "Otevřít zdroj ↗",
+      openData: "Otevřít JSON ↗",
+      transformCopy: "Zdrojové řady mapujeme na jednotnou definici ukazatele, rozsah a jednotku. Chybějící hodnoty nedopočítáváme.",
       fixedYear: (y) => `pevný rok ${y}`,
       profile: "Detail",
       breakYear: (y) => `zlom ${y}`,
@@ -79,7 +90,18 @@
       coverageNoneNote: "The source is known; named records are not loaded",
       countries: (n) => `${n} countries with a value`,
       topCountries: (shown, total) => `Top ${shown} of ${total} countries with a value`,
-      addedCountry: "Added country outside the Top 20",
+      selectedCount: (n) => `${n} selected ${n === 1 ? "country" : "countries"}`,
+      selectedEmpty: "Add the countries you want to compare.",
+      showTop20: "Show Top 20",
+      showSelected: "Show my countries",
+      removeCountry: (name) => `Remove ${name}`,
+      sourcePath: "How this view is sourced",
+      originalSource: "Original publication",
+      transform: "Harmonisation",
+      publishedData: "Published data",
+      openSource: "Open source ↗",
+      openData: "Open JSON ↗",
+      transformCopy: "We map source series to one metric definition, perimeter and unit. Missing values are never imputed.",
       fixedYear: (y) => `fixed year ${y}`,
       profile: "Profile",
       breakYear: (y) => `break ${y}`,
@@ -101,8 +123,8 @@
     perimeter: "general_government",
     metric: "expenditure_pct_gdp",
     year: 2024,
-    population: "large",
-    selectedCountry: "",
+    view: "selected",
+    selectedCountries: ["CZE", "DEU", "POL", "UKR"],
     ready: false,
   };
 
@@ -114,6 +136,9 @@
   let cofog = {};
   let ownership = {};
   let networks = {};
+  let sovereignMeta = {};
+  let healthMeta = {};
+  let functionalMeta = {};
 
   const t = () => copy[state.lang];
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
@@ -212,10 +237,10 @@
   };
 
   function inPopulation(code) {
-    if (state.population === "all") return true;
+    if (state.view === "all") return true;
     const population = populationMillions(code);
     if (!Number.isFinite(population)) return false;
-    return state.population === "large" ? population >= 5 : population < 5;
+    return state.view === "large" ? population >= 5 : population < 5;
   }
 
   // The metric's dataset sets the country universe. A health metric covering sixteen
@@ -229,7 +254,13 @@
     return codes.filter((code) => countriesByCode.has(code));
   }
 
-  const universe = (metric) => datasetUniverse(metric).filter(inPopulation);
+  const universe = (metric) => {
+    const available = datasetUniverse(metric);
+    if (state.view === "selected") {
+      return state.selectedCountries.filter((code) => available.includes(code));
+    }
+    return available.filter(inPopulation);
+  };
 
   function chipFor(code, metric) {
     const a = assignments.countries[code];
@@ -241,16 +272,16 @@
     return label ? `<span class="cmp-chip">${esc(label)}</span>` : "";
   }
 
-  function rowHTML(code, metric, max, rank, isExtra = false) {
+  function rowHTML(code, metric, max, rank) {
     const value = valueFor(code, metric);
     const width = Number.isFinite(value) && max > 0
       ? Math.max(Math.abs(value) / max * 100, 0.6) : 0;
     const bar = Number.isFinite(value)
       ? `<span class="cmp-track"><span class="cmp-fill${metric.alt_colour ? " is-alt" : ""}" style="width:${width.toFixed(1)}%"></span></span>`
       : `<span class="cmp-absent">${esc(t().missing)}</span>`;
-    return `<li class="cmp-row${isExtra ? " is-extra" : ""}">
-      <span class="cmp-rank">${isExtra ? "+" : (rank ? String(rank).padStart(2, "0") : "")}</span>
-      <span class="cmp-name">${flag(code)}<a href="${profileHref(code)}">${esc(countryName(code))}</a>${chipFor(code, metric)}${isExtra ? `<span class="cmp-chip is-extra">${esc(t().addedCountry)}</span>` : ""}</span>
+    return `<li class="cmp-row">
+      <span class="cmp-rank">${rank ? String(rank).padStart(2, "0") : ""}</span>
+      <span class="cmp-name">${flag(code)}<a href="${profileHref(code)}">${esc(countryName(code))}</a>${chipFor(code, metric)}</span>
       ${bar}
       <span class="cmp-value">${esc(format(value, metric))}</span>
     </li>`;
@@ -284,15 +315,55 @@
   function renderCountryPicker() {
     const input = document.querySelector("#comparison-country");
     const options = document.querySelector("#comparison-country-options");
-    const population = document.querySelector("#comparison-population");
-    if (population) population.value = state.population;
+    const view = document.querySelector("#comparison-view");
+    if (view) view.value = state.view;
     if (!input || !options) return;
     const codes = datasetUniverse(currentMetric()).slice().sort((a, b) =>
       countryName(a).localeCompare(countryName(b), locale()));
     options.innerHTML = codes.map((code) =>
       `<option value="${esc(countryName(code))}">${esc(code)}</option>`).join("");
-    input.value = state.selectedCountry ? countryName(state.selectedCountry) : "";
+    input.value = "";
     input.placeholder = state.lang === "en" ? "Add a country…" : "Přidat zemi…";
+  }
+
+  function renderSelection() {
+    const root = document.querySelector("#comparison-selection");
+    if (!root) return;
+    const selected = state.selectedCountries.filter((code) => countriesByCode.has(code));
+    root.innerHTML = `<div><span>${esc(t().selectedCount(selected.length))}</span>${selected.map((code) =>
+      `<button type="button" class="cmp-country-chip" data-remove-country="${esc(code)}" aria-label="${esc(t().removeCountry(countryName(code)))}">${flag(code)}<b>${esc(countryName(code))}</b><i aria-hidden="true">×</i></button>`
+    ).join("")}</div>${state.view === "selected" && !selected.length ? `<p>${esc(t().selectedEmpty)}</p>` : ""}<button type="button" class="cmp-top20-btn" ${state.view === "selected" ? "data-show-top20" : "data-show-selected"}>${esc(state.view === "selected" ? t().showTop20 : t().showSelected)}</button>`;
+  }
+
+  function sourceFor(metric) {
+    if (metric.dataset === "sovereign") {
+      const source = sovereignMeta.source || {};
+      return { title: `${source.provider || "IMF"} · ${source.dataset || metric.source_label}`, url: source.download_page || source.url, data: "lib/data/sovereign-benchmark.v1.json" };
+    }
+    if (metric.dataset === "cofog") {
+      const source = (functionalMeta.sources || [])[0] || {};
+      return { title: source.title || metric.source_label, url: source.url, data: "data/country-functional-budgets.v1.json" };
+    }
+    if (metric.dataset === "sha") {
+      const source = (healthMeta.sources || [])[0] || {};
+      return { title: source.title || metric.source_label, url: source.url, data: "data/country-health.v1.json" };
+    }
+    if (metric.dataset === "ownership") {
+      return { title: metric.source_label, url: `methodology.html?lang=${state.lang}#sources`, data: "data/hospital-ownership.v1.json" };
+    }
+    return { title: metric.source_label, url: `methodology.html?lang=${state.lang}#sources`, data: "data/compare-metrics.v1.json" };
+  }
+
+  function renderProvenance() {
+    const root = document.querySelector("#compare-provenance");
+    if (!root) return;
+    const metric = currentMetric();
+    const source = sourceFor(metric);
+    root.innerHTML = `<header><span>${esc(t().sourcePath)}</span><strong>${esc(pick(metric, "label"))}</strong></header><ol>
+      <li><span>01</span><div><b>${esc(t().originalSource)}</b><strong>${esc(source.title)}</strong>${source.url ? `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(t().openSource)}</a>` : ""}</div></li>
+      <li><span>02</span><div><b>${esc(t().transform)}</b><strong>${esc(pick(metric, "boundary"))}</strong><small>${esc(t().transformCopy)}</small></div></li>
+      <li><span>03</span><div><b>${esc(t().publishedData)}</b><strong>${esc(metric.metric_code)}</strong><a href="${esc(source.data)}" target="_blank" rel="noreferrer">${esc(t().openData)}</a></div></li>
+    </ol>`;
   }
 
   function renderContract() {
@@ -332,20 +403,15 @@
     const sorted = sortCodes(codes, metric);
     const values = codes.map((c) => valueFor(c, metric)).filter(Number.isFinite);
     const max = values.length ? Math.max.apply(null, values.map(Math.abs)) : 0;
-    const visible = sorted.length > 20
+    const visible = state.view !== "selected" && sorted.length > 20
       ? sorted.filter((code) => Number.isFinite(valueFor(code, metric))).slice(0, 20)
       : sorted;
-    const eligibleSelected = state.selectedCountry &&
-      datasetUniverse(metric).includes(state.selectedCountry) &&
-      !visible.includes(state.selectedCountry) ? state.selectedCountry : "";
-    const rows = eligibleSelected ? visible.concat(eligibleSelected) : visible;
     let rank = 0;
     resultRoot.innerHTML =
-      `<p class="cmp-count">${esc(sorted.length > 20 ? t().topCountries(visible.length, values.length) : t().countries(values.length))}</p>` +
-      `<ol class="cmp-rows">${rows.map((code) => {
-        const isExtra = code === eligibleSelected;
+      `<p class="cmp-count">${esc(state.view !== "selected" && sorted.length > 20 ? t().topCountries(visible.length, values.length) : t().countries(values.length))}</p>` +
+      `<ol class="cmp-rows">${visible.map((code) => {
         if (Number.isFinite(valueFor(code, metric))) rank += 1;
-        return rowHTML(code, metric, max, Number.isFinite(valueFor(code, metric)) ? rank : 0, isExtra);
+        return rowHTML(code, metric, max, Number.isFinite(valueFor(code, metric)) ? rank : 0);
       }).join("")}</ol>` +
       (pick(metric, "note") ? `<p class="cmp-note">${esc(pick(metric, "note"))}</p>` : "");
   }
@@ -412,12 +478,12 @@
     renderPerimeters();
     renderMetrics();
     renderCountryPicker();
+    renderSelection();
     renderContract();
+    renderProvenance();
     const metric = currentMetric();
     if (metric.comparability === "national_only") { renderRefusal(metric); return; }
     const codes = universe(metric);
-    if (state.selectedCountry && datasetUniverse(metric).includes(state.selectedCountry) &&
-        !codes.includes(state.selectedCountry)) codes.push(state.selectedCountry);
     if (metric.comparability === "conditional") renderGrouped(metric, codes);
     else renderRanked(metric, codes);
   }
@@ -438,14 +504,31 @@
       if (swap) {
         const target = registry.metrics.find((m) => m.metric_code === swap.dataset.swap);
         if (target) { state.perimeter = target.perimeter; state.metric = target.metric_code; render(); }
+        return;
+      }
+      const remove = event.target.closest("[data-remove-country]");
+      if (remove) {
+        state.selectedCountries = state.selectedCountries.filter((code) => code !== remove.dataset.removeCountry);
+        state.view = "selected";
+        render();
+        return;
+      }
+      if (event.target.closest("[data-show-top20]")) {
+        state.view = "large";
+        render();
+        return;
+      }
+      if (event.target.closest("[data-show-selected]")) {
+        state.view = "selected";
+        render();
       }
     });
 
     const year = document.querySelector("#year-select");
     if (year) year.addEventListener("change", (e) => { state.year = Number(e.target.value); render(); });
-    const population = document.querySelector("#comparison-population");
-    if (population) population.addEventListener("change", (event) => {
-      state.population = event.target.value;
+    const view = document.querySelector("#comparison-view");
+    if (view) view.addEventListener("change", (event) => {
+      state.view = event.target.value;
       render();
     });
     const countryInput = document.querySelector("#comparison-country");
@@ -454,8 +537,9 @@
         const query = countryInput.value.trim().toLocaleLowerCase(locale());
         const match = datasetUniverse(currentMetric()).find((code) =>
           countryName(code).toLocaleLowerCase(locale()) === query || code.toLowerCase() === query);
-        if (!query || match) {
-          state.selectedCountry = match || "";
+        if (match) {
+          if (!state.selectedCountries.includes(match)) state.selectedCountries.push(match);
+          state.view = "selected";
           render();
         }
       };
@@ -484,13 +568,15 @@
   ]).then(([metricRegistry, systemAssignments, sovereign, health, functional, ownershipData, networkData]) => {
     registry = metricRegistry;
     assignments = systemAssignments;
+    sovereignMeta = sovereign;
+    healthMeta = health;
+    functionalMeta = functional;
     sovereign.countries.forEach((c) => countriesByCode.set(c.country_code, c));
     sovereign.series.forEach((s) => seriesByCode.set(s.country_code, s));
     sha = health.countries || {};
     cofog = functional.countries || {};
     ownership = ownershipData.countries || {};
     networks = networkData.countries || {};
-
     const yearSelect = document.querySelector("#year-select");
     if (yearSelect && yearSelect.value) state.year = Number(yearSelect.value);
     const coverage = document.querySelector("#comparison-coverage-count");

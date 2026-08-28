@@ -22,10 +22,10 @@
     />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <link rel="stylesheet" href="demographic-pressure.css?v=20260825-initial" />
-    <link rel="stylesheet" href="compare-contract.css?v=20260828-top20-picker" />
-    <script src="homepage-v2.js?v=20260828-comparison-top20" defer></script>
+    <link rel="stylesheet" href="compare-contract.css?v=20260828-country-explorer" />
+    <script src="homepage-v2.js?v=20260828-country-explorer" defer></script>
     <script src="demographic-pressure.js?v=20260825-initial" defer></script>
-    <script src="compare-contract.js?v=20260828-top20-picker" defer></script>
+    <script src="compare-contract.js?v=20260828-oecd-key-metrics" defer></script>
 
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
@@ -43,9 +43,8 @@
           <span class="kicker" data-i18n="compareKicker">Srovnání zemí</span>
           <h1 data-i18n="compareTitle">Veřejné finance vedle sebe.</h1>
           <p data-i18n="compareCopy">
-            Jedna harmonizovaná tabulka sektoru vládních institucí. Národní
-            státní rozpočty a veřejné korporace jsou popsané odděleně v profilu
-            každé země.
+            Vyberte ukazatel, rok a vlastní sadu zemí. U každého pohledu
+            ukazujeme definici, hranici srovnání a cestu k původnímu zdroji.
           </p>
         </div>
         <aside>
@@ -61,16 +60,19 @@
             ><span data-i18n="year">Rok</span
             ><select id="year-select"></select></label
           ><label
-            ><span data-i18n="populationGroup">Populace</span
-            ><select id="comparison-population">
+            ><span data-i18n="explorerView">Pohled</span
+            ><select id="comparison-view">
+              <option value="selected" data-i18n="selectedCountries">
+                Moje země
+              </option>
               <option value="large" data-i18n="heroLargeCountries">
-                5 mil. obyvatel a více
+                Top 20 · 5 mil. a více
               </option>
               <option value="small" data-i18n="heroSmallCountries">
-                Méně než 5 mil.
+                Top 20 · méně než 5 mil.
               </option>
               <option value="all" data-i18n="heroAllCountries">
-                Všechny země
+                Top 20 · všechny země
               </option>
             </select></label
           ><label class="comparison-country-control"
@@ -88,6 +90,7 @@
             ><select id="benchmark-country"></select
           ></label>
         </div>
+        <div class="cmp-selection" id="comparison-selection" aria-live="polite"></div>
         <div class="cmp-controls">
           <span id="compare-perimeter-label" data-i18n="scopeLabel">Rozsah</span>
           <div
@@ -108,41 +111,13 @@
           ></div>
         </div>
         <dl class="cmp-contract" id="compare-contract"></dl>
+        <aside class="cmp-provenance" id="compare-provenance" aria-live="polite"></aside>
         <div class="cmp-result" id="compare-result" aria-live="polite"></div>
         <div
           class="benchmark-overview"
           id="benchmark-overview"
           aria-live="polite"
         ></div>
-        <div class="architecture-heading">
-          <div>
-            <span class="kicker" data-i18n="architectureKicker"
-              >Účetní hranice / všech 10 zemí</span
-            >
-            <h3 data-i18n="architectureTitle">
-              Jak jsou veřejné účty oddělené.
-            </h3>
-          </div>
-          <p data-i18n="architectureCopy">
-            Tabulka popisuje institucionální uspořádání; není to další součet
-            příjmů. Podrobnosti a primární zdroje jsou v profilu země.
-          </p>
-        </div>
-        <div class="fiscal-architecture-table-wrap">
-          <table class="fiscal-architecture-table">
-            <thead>
-              <tr>
-                <th data-i18n="country">Země</th>
-                <th data-i18n="nationalBudget">Národní rozpočet</th>
-                <th data-i18n="municipalBudgets">Obce a regiony</th>
-                <th data-i18n="otherAccounts">Další veřejné účty</th>
-                <th data-i18n="stateCompanies">Veřejné korporace</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="fiscal-architecture-body"></tbody>
-          </table>
-        </div>
       </section>
       <section class="demographic-pressure-section" id="demographic-pressure" aria-label="Demographic pressure">
         <div id="demographic-pressure-root" aria-live="polite"></div>

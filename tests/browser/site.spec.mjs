@@ -140,11 +140,13 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator(".glorious-footer .footer-hlidac")).toHaveAttribute("href", "https://www.hlidacstatu.cz/");
 
   await page.goto("/comparison.html?lang=en", { waitUntil: "networkidle" });
-  // The comparison mirrors the homepage's compact ranking: Top 20 by default,
-  // while the searchable country picker keeps every tracked profile reachable.
-  await expect(page.locator("#compare-result .cmp-row")).toHaveCount(20);
+  // Comparison starts as a small editable country set; Top 20 remains an
+  // alternate explorer view rather than the page's information architecture.
+  await expect(page.locator("#compare-result .cmp-row")).toHaveCount(4);
+  await expect(page.locator("#comparison-selection .cmp-country-chip")).toHaveCount(4);
   await expect(page.locator("#comparison-country-options option")).toHaveCount(191);
-  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(191);
+  await expect(page.locator("#compare-provenance")).toContainText("How this view is sourced");
+  await expect(page.locator("#fiscal-architecture-body")).toHaveCount(0);
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
@@ -163,6 +165,8 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator("#data-health-root .data-health-kpis article").nth(1)).toContainText(String(counts.publishedItemizedCountries));
   await expect(page.locator("#data-health-root")).toContainText("66");
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
+  await expect(page.locator("#accounting-boundaries")).toContainText("How deeply can we see into public accounts?");
+  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(191);
   await expect(page.locator("#surface-coverage-atlas [data-surface-country]")).toHaveCount(195);
   await expect(page.locator("#transparency-atlas .atlas-map")).toBeVisible();
   await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(191);
