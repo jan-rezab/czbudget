@@ -215,7 +215,13 @@ server {
     try_files /country.html =404;
   }
 
-  location ~ ^/(?:municipalities/[^/]+/[^/]+|cz/municipalities/[^/]+)$ {
+  # The slug group must not match "index.html". When nginx resolves a hub
+  # directory (/municipalities/france/ or /cz/municipalities/) through `index`,
+  # the internal URI becomes .../index.html -- which this location matched, so it
+  # 301'd to .../index.html/ and dead-ended in a 404. That took every country hub
+  # and the Czech directory offline while the profile routes, which match their
+  # own location, kept working.
+  location ~ ^/(?:municipalities/[^/]+/(?!index\.html$)[^/]+|cz/municipalities/(?!index\.html$)[^/]+)$ {
     return 301 $uri/$is_args$args;
   }
 
