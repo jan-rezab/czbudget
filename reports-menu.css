@@ -1,0 +1,39 @@
+/* Keep the growing reports catalogue within the viewport while preserving its header. */
+.site-header .deep-dive-menu-panel {
+  max-height: calc(100vh - 88px);
+  max-height: calc(100dvh - 88px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #a8b63f var(--ink, #171918);
+  -webkit-overflow-scrolling: touch;
+}
+
+.site-header .deep-dive-menu-panel > .country-menu-head {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  box-shadow: 0 7px 10px #17191855;
+}
+
+.site-header .deep-dive-menu-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.site-header .deep-dive-menu-panel::-webkit-scrollbar-track {
+  background: var(--ink, #171918);
+}
+
+.site-header .deep-dive-menu-panel::-webkit-scrollbar-thumb {
+  border: 2px solid var(--ink, #171918);
+  border-radius: 8px;
+  background: #a8b63f;
+}
+
+@media (max-width: 1165px) {
+  .site-header .deep-dive-menu-panel {
+    max-height: calc(100vh - 124px);
+    max-height: calc(100dvh - 124px);
+  }
+}

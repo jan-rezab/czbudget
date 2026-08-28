@@ -213,6 +213,16 @@
     styles.dataset.psdSiteHeader = "true";
     document.head.append(styles);
   }
+  const reportsMenuStylesHref = `${assetRoot}reports-menu.css?v=20260829-scrollable`;
+  const existingReportsMenuStyles = document.querySelector("link[data-reports-menu]");
+  if (existingReportsMenuStyles) existingReportsMenuStyles.href = reportsMenuStylesHref;
+  else {
+    const styles = document.createElement("link");
+    styles.rel = "stylesheet";
+    styles.href = reportsMenuStylesHref;
+    styles.dataset.reportsMenu = "true";
+    document.head.append(styles);
+  }
   if (!customElements.get(HEADER_TAG)) customElements.define(HEADER_TAG, PsdSiteHeader);
 
   function ensureSharedHeader() {
