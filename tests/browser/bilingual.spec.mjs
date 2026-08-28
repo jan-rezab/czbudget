@@ -8,6 +8,7 @@ const counts = await loadExpectedCounts();
 const previewRoutes = [
   "/",
   "/comparison.html",
+  "/map.html",
   "/methodology.html",
   "/about.html",
   "/country.html?code=CZE",

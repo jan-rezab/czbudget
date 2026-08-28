@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <script src="/language-bootstrap.js?v=20260828-map-view"></script>
+    <script src="country-routes.js?v=20260824-readable-country-routes" defer></script>
+    <link rel="stylesheet" href="site-header.css?v=20260824-header-lockup" data-psd-site-header />
+    <script src="global-nav.js?v=20260824-logo-120" defer></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mapa veřejných výdajů — Public Spending Data</title>
+    <meta name="description" content="Porovnejte obranu, školství, zdravotnictví a další veřejné výdaje přímo na mapě světa." />
+    <link rel="canonical" href="https://publicspendingdata.org/map.html" />
+    <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/map.html?lang=cs" />
+    <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/map.html?lang=en" />
+    <link rel="icon" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles-v2.css?v=20260828-map-view" />
+    <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
+    <link rel="stylesheet" href="map-view.css?v=20260828-map-view" />
+    <script src="map-view.js?v=20260828-map-view" defer></script>
+    <script src="global-footer.js?v=20260824-compact" defer></script>
+    <meta property="og:image" content="https://publicspendingdata.org/assets/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Public Spending Data" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body class="map-page" data-page="map">
+    <psd-site-header data-section="map"></psd-site-header>
+    <main id="top">
+      <section class="map-hero">
+        <div>
+          <span class="kicker" data-map-copy="heroKicker">Nový pohled · mapová laboratoř</span>
+          <h1 data-map-copy="heroTitle">Co státy financují — a kde?</h1>
+          <p data-map-copy="heroLead">Postavte proti sobě školství a obranu, zdravotnictví a sociální ochranu nebo dvě fiskální veličiny. Mapa ukáže nejen hodnotu, ale i směr rozdílu.</p>
+        </div>
+        <aside aria-label="Map view summary">
+          <span data-map-copy="heroAsideLabel">Tři čočky, jedna mapa</span>
+          <div><strong>195</strong><small data-map-copy="heroCountries">států na mapě</small></div>
+          <div><strong>12 + 3</strong><small data-map-copy="heroCategories">rozpočtových a funkčních kategorií</small></div>
+          <div><strong>20</strong><small data-map-copy="heroYears">let globálního fiskálního kontextu</small></div>
+        </aside>
+      </section>
+      <section class="map-workbench" aria-labelledby="map-workbench-title">
+        <header class="map-workbench-head">
+          <div>
+            <span class="kicker" data-map-copy="workbenchKicker">Interaktivní srovnání</span>
+            <h2 id="map-workbench-title" data-map-copy="workbenchTitle">Vyberte dvě priority. Mapa ukáže převahu.</h2>
+          </div>
+          <p data-map-copy="workbenchLead">V režimu Souboj barva vyjadřuje rozdíl mezi dvěma ukazateli v téže účetní vrstvě. Režim Jedna vrstva ukazuje rozložení jediné hodnoty.</p>
+        </header>
+        <div id="spending-map-root" class="spending-map-root" aria-live="polite">
+          <p class="map-loading" data-map-copy="loading">Načítám mapu a datové vrstvy…</p>
+        </div>
+      </section>
+    </main>
+    <footer data-global-footer></footer>
+  </body>
+</html>

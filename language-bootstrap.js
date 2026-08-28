@@ -61,6 +61,10 @@
       cs: ["Srovnání veřejných rozpočtů — Public Spending Data", "Porovnejte dvacet let harmonizovaných ukazatelů veřejných financí deseti zemí."],
       en: ["Compare public budgets — Public Spending Data", "Compare twenty years of harmonised public-finance indicators across ten countries."],
     },
+    "/map.html": {
+      cs: ["Mapa veřejných výdajů — Public Spending Data", "Porovnejte obranu, školství, zdravotnictví a další veřejné výdaje přímo na mapě světa."],
+      en: ["Public spending map — Public Spending Data", "Compare defence, education, health and other public spending directly on a world map."],
+    },
     // Keep this in step with the statusCopy pageTitle/pageIntro in site-pages.js.
     // coverage-map.js deliberately no longer writes document.title itself: the
     // observer below would revert it and the two writers would fight.
