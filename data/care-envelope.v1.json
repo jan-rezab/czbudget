@@ -1,0 +1,234 @@
+{
+ "schema_version": "1.0.0",
+ "generated_at": "2026-08-27",
+ "dataset_id": "CARE_ENVELOPE_V1",
+ "methodology": {
+  "en": "Municipal ledgers are split into medical care, long-term care, other care in kind, and cash benefits. Only the first three are care; income support and labour-market programmes are not. Comparing whole social domains without removing cash transfers overstates care spending in countries that pay benefits through the municipality.",
+  "cs": "Obecní výkazy jsou rozděleny na zdravotní péči, dlouhodobou péči, ostatní věcnou péči a peněžité dávky. Péčí jsou jen první tři; dávky a programy trhu práce nikoli. Srovnání celých sociálních domén bez odečtení dávek nadhodnocuje výdaje na péči tam, kde dávky vyplácí obec."
+ },
+ "entities": {
+  "NOR:3101": {
+   "name": "Halden",
+   "currency": "NOK",
+   "year": 2025,
+   "total_expenditure": 3384900000.0,
+   "groups": {
+    "medical_care": {
+     "sha_class": "HC.1–HC.2, HC.6",
+     "codes": [
+      "241",
+      "232",
+      "233",
+      "256"
+     ],
+     "amount": 189905000.0,
+     "pct_of_budget": 5.61
+    },
+    "long_term_care": {
+     "sha_class": "HC.3 / HCR.1",
+     "codes": [
+      "253",
+      "257",
+      "258",
+      "234",
+      "261"
+     ],
+     "amount": 1098664000.0,
+     "pct_of_budget": 32.46
+    },
+    "other_care": {
+     "sha_class": "HCR.1 / social",
+     "codes": [
+      "242",
+      "243",
+      "244",
+      "251",
+      "252",
+      "283"
+     ],
+     "amount": 176519000.0,
+     "pct_of_budget": 5.21
+    },
+    "cash_and_labour": {
+     "sha_class": "not health",
+     "codes": [
+      "281",
+      "273",
+      "275",
+      "276"
+     ],
+     "amount": 147491000.0,
+     "pct_of_budget": 4.36
+    }
+   },
+   "care_in_kind": {
+    "amount": 1465088000.0,
+    "pct_of_budget": 43.28
+   },
+   "reconciliation": {
+    "published_aggregate": "FGK9 Health care, nursing and care services",
+    "published_amount": 1288569000.0,
+    "derived_amount": 1288569000.0,
+    "difference": 0.0
+   }
+  },
+  "NLD:0014": {
+   "name": "Groningen (gemeente)",
+   "currency": "EUR",
+   "year": 2025,
+   "total_expenditure": 1472748000.0,
+   "groups": {
+    "medical_care": {
+     "sha_class": "HC.6 prevention",
+     "codes": [
+      "7.1"
+     ],
+     "amount": 19492000.0,
+     "pct_of_budget": 1.32
+    },
+    "long_term_care": {
+     "sha_class": "HCR.1 / HC.3",
+     "codes": [
+      "6.811",
+      "6.711",
+      "6.712",
+      "6.60",
+      "6.21",
+      "6.91",
+      "6.791",
+      "6.714"
+     ],
+     "amount": 153499000.0,
+     "pct_of_budget": 10.42
+    },
+    "other_care": {
+     "sha_class": "HCR.1 / social",
+     "codes": [
+      "6.1",
+      "6.23",
+      "6.812",
+      "6.751",
+      "6.752",
+      "6.761",
+      "6.762",
+      "6.92",
+      "6.22",
+      "6.792",
+      "6.821",
+      "6.822"
+     ],
+     "amount": 259225000.0,
+     "pct_of_budget": 17.6
+    },
+    "cash_and_labour": {
+     "sha_class": "not health",
+     "codes": [
+      "6.3",
+      "6.4",
+      "6.5"
+     ],
+     "amount": 342467000.0,
+     "pct_of_budget": 23.25
+    }
+   },
+   "care_in_kind": {
+    "amount": 432216000.0,
+    "pct_of_budget": 29.35
+   }
+  }
+ },
+ "czech_flow_2023": {
+  "currency": "CZK",
+  "unit": "billion",
+  "total": 641.996,
+  "sources": [
+   {
+    "id": "insurers",
+    "cs": "Zdravotní pojišťovny",
+    "en": "Health insurers",
+    "value_bn": 466.596,
+    "pct": 72.68
+   },
+   {
+    "id": "households",
+    "cs": "Domácnosti",
+    "en": "Households",
+    "value_bn": 93.711,
+    "pct": 14.6
+   },
+   {
+    "id": "state",
+    "cs": "Státní rozpočet",
+    "en": "State budget",
+    "value_bn": 66.638,
+    "pct": 10.38
+   },
+   {
+    "id": "local",
+    "cs": "Kraje a obce",
+    "en": "Regions and municipalities",
+    "value_bn": 9.431,
+    "pct": 1.47
+   },
+   {
+    "id": "private",
+    "cs": "Ostatní soukromé zdroje",
+    "en": "Other private sources",
+    "value_bn": 5.62,
+    "pct": 0.88
+   }
+  ],
+  "destinations": [
+   {
+    "id": "hospitals",
+    "cs": "Nemocnice",
+    "en": "Hospitals",
+    "value_bn": 288.19,
+    "pct": 44.89
+   },
+   {
+    "id": "outpatient",
+    "cs": "Ambulantní péče",
+    "en": "Outpatient care",
+    "value_bn": 152.721,
+    "pct": 23.79
+   },
+   {
+    "id": "pharmacy",
+    "cs": "Lékárny a zdravotnické prostředky",
+    "en": "Pharmacies and medical devices",
+    "value_bn": 87.456,
+    "pct": 13.62
+   },
+   {
+    "id": "long_term",
+    "cs": "Dlouhodobá lůžková péče",
+    "en": "Long-term inpatient care",
+    "value_bn": 51.71,
+    "pct": 8.05
+   },
+   {
+    "id": "other",
+    "cs": "Správa a ostatní",
+    "en": "Administration and other",
+    "value_bn": 32.028,
+    "pct": 4.99
+   },
+   {
+    "id": "ancillary",
+    "cs": "Doprava, záchranka a laboratoře",
+    "en": "Transport, emergency and laboratories",
+    "value_bn": 26.113,
+    "pct": 4.07
+   },
+   {
+    "id": "prevention",
+    "cs": "Prevence",
+    "en": "Prevention",
+    "value_bn": 3.778,
+    "pct": 0.59
+   }
+  ],
+  "note_en": "Marginals only. The source-by-destination crosstab is not published, so any ribbon diagram connecting the two sides would be invented."
+ }
+}

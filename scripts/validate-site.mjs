@@ -98,6 +98,8 @@ const internationalItemizedWarehouse = JSON.parse(await readFile("data/internati
 const municipalItemizedAcquisitionAudit = JSON.parse(await readFile("data/municipal-itemized-acquisition-audit.v1.json", "utf8"));
 const municipalTransparency = JSON.parse(await readFile("data/municipal-transparency.v1.json", "utf8"));
 const globalBudgetTransparency = JSON.parse(await readFile("data/global-budget-transparency.v1.json", "utf8"));
+const hospitalOwnership = JSON.parse(await readFile("data/hospital-ownership.v1.json", "utf8"));
+const careEnvelope = JSON.parse(await readFile("data/care-envelope.v1.json", "utf8"));
 const benchmarkMunicipalities = await Promise.all(["nor", "nld", "fin"].map((code) => readFile(`data/municipal-benchmarks/${code}.json`, "utf8").then(JSON.parse)));
 const norwayBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nor/0301.json", "utf8"));
 const netherlandsBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nld/0363.json", "utf8"));
@@ -340,6 +342,30 @@ for (const [code, pipeline] of [["COL","loaded"],["GEO","loaded"],["ITA","loaded
 }
 if (globalBudgetTransparency.countries.length !== 195 || globalBudgetTransparency.countries.filter((country) => country.national_budget.research_status === "assessed").length !== 125 || globalBudgetTransparency.countries.filter((country) => country.municipal_item_level.research_status === "researched").length !== 45) throw new Error("Expected a 195-state atlas with 125 national assessments and 45 municipal item-level reviews");
 if (globalBudgetTransparency.countries.filter((country) => country.budget_transparency_index?.score !== null).length !== 125 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.country_profile === "loaded").length !== 191 || globalBudgetTransparency.countries.filter((country) => country.psd_coverage?.ingestion_status === "discovery_crawl_started").length !== 0) throw new Error("Budget Transparency Index must distinguish indexed, IMF-profiled and unavailable countries");
+// Both health-structure datasets state a number that can be checked against their own
+// inputs, so check it. Ownership counts must account for every registered facility, and
+// "unresolved" must mean exactly the facilities whose legal form does not name an owner —
+// the whole value of that dataset is that it never guesses. The Norwegian care split must
+// still add back up to the KOSTRA aggregate it was derived from; if it stops reconciling,
+// the SHA grouping behind it has drifted from the source ledger.
+for (const [code, entry] of Object.entries(hospitalOwnership.countries)) {
+  if (!Number.isFinite(entry.facility_count)) continue;
+  const counted = Object.values(entry.owner_class).reduce((total, n) => total + n, 0);
+  if (counted !== entry.facility_count) throw new Error(`${code} hospital ownership counts ${counted} facilities against a register of ${entry.facility_count}`);
+  const unresolved = entry.owner_class.unknown ?? 0;
+  if (entry.resolved_count !== entry.facility_count - unresolved) throw new Error(`${code} hospital ownership resolved_count disagrees with its unresolved facilities`);
+}
+for (const [id, entity] of Object.entries(careEnvelope.entities)) {
+  if (!entity.reconciliation) continue;
+  if (entity.reconciliation.difference !== 0) throw new Error(`${id} care split no longer reconciles to ${entity.reconciliation.published_aggregate}`);
+}
+{
+  const flow = careEnvelope.czech_flow_2023;
+  for (const side of ["sources", "destinations"]) {
+    const summed = Math.round(flow[side].reduce((total, row) => total + row.value_bn, 0) * 10) / 10;
+    if (Math.abs(summed - Math.round(flow.total * 10) / 10) > 0.1) throw new Error(`Czech health flow ${side} sum to ${summed}bn against a published total of ${flow.total}bn`);
+  }
+}
 if (globalBudgetTransparency.countries.find((country) => country.iso2 === "ge")?.budget_transparency_index?.score !== 100) throw new Error("Georgia's Budget Transparency Index must include its verified municipal lifecycle bonus");
 // The index is an OBS score plus a municipal bonus, so it only exists where an OBS
 // component exists. Scoring a country on its municipal capability alone mixed two

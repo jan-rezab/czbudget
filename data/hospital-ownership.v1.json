@@ -1,0 +1,184 @@
+{
+ "schema_version": "1.0.0",
+ "generated_at": "2026-08-26",
+ "dataset_id": "HOSPITAL_OWNERSHIP_V1",
+ "vocabulary": [
+  "state",
+  "regional",
+  "municipal",
+  "subnational_unspecified",
+  "public_autonomous",
+  "private_nonprofit",
+  "private_forprofit",
+  "unknown"
+ ],
+ "methodology": {
+  "en": "Each facility's native legal-form string is mapped onto one owner class. Forms that do not reveal the beneficial owner resolve to unknown rather than to a guess. Facility counts are not bed counts and not spending; they answer who operates, not who pays.",
+  "cs": "Původní právní forma každého zařízení je namapována na jednu třídu vlastníka. Formy, které skutečného vlastníka neprozrazují, končí jako neznámé, nikoli jako odhad. Počty zařízení nejsou počty lůžek ani výdaje; odpovídají na otázku kdo provozuje, ne kdo platí."
+ },
+ "countries": {
+  "CZE": {
+   "coverage": "facility_register",
+   "facility_count": 642,
+   "resolved_count": 213,
+   "resolved_share_pct": 33.2,
+   "owner_class": {
+    "state": 89,
+    "subnational_unspecified": 95,
+    "private_nonprofit": 29,
+    "unknown": 429
+   },
+   "owner_class_pct": {
+    "state": 13.9,
+    "subnational_unspecified": 14.8,
+    "private_nonprofit": 4.5,
+    "unknown": 66.8
+   },
+   "unresolved_forms": [
+    {
+     "legal_form": "Akciová společnost",
+     "count": 232
+    },
+    {
+     "legal_form": "Společnost s ručením omezeným",
+     "count": 183
+    },
+    {
+     "legal_form": "—",
+     "count": 13
+    },
+    {
+     "legal_form": "Evropská společnost",
+     "count": 1
+    }
+   ],
+   "accounting_view_2024": {
+    "scope": "Publicly controlled entities with a positive 2024 VZZ revenue and cost statement in ČSÚIS; all comparable entities are contributory organisations.",
+    "entity_count": 97,
+    "registered_count": 171,
+    "revenue_total_mczk": 201774.2,
+    "by_owner_class": {
+     "state": {
+      "count": 43,
+      "revenue_mczk": 162486.8,
+      "revenue_pct": 80.5
+     },
+     "regional": {
+      "count": 33,
+      "revenue_mczk": 29170.0,
+      "revenue_pct": 14.5
+     },
+     "municipal": {
+      "count": 21,
+      "revenue_mczk": 10117.5,
+      "revenue_pct": 5.0
+     }
+    },
+    "caveat_en": "Contributory organisations only. Regional hospitals incorporated as joint-stock companies are excluded, which overstates the state share.",
+    "caveat_cs": "Pouze příspěvkové organizace. Krajské nemocnice ve formě akciové společnosti chybí, což nadhodnocuje podíl státu."
+   }
+  },
+  "FRA": {
+   "coverage": "finess_hospital_activity_establishments",
+   "facility_count": 5979,
+   "resolved_count": 4421,
+   "resolved_share_pct": 73.9,
+   "owner_class": {
+    "regional": 10,
+    "public_autonomous": 3282,
+    "private_nonprofit": 1129,
+    "unknown": 1558
+   },
+   "owner_class_pct": {
+    "regional": 0.2,
+    "public_autonomous": 54.9,
+    "private_nonprofit": 18.9,
+    "unknown": 26.1
+   },
+   "unresolved_forms": [
+    {
+     "legal_form": "Non concerné",
+     "count": 1095
+    },
+    {
+     "legal_form": "indéterminé",
+     "count": 168
+    },
+    {
+     "legal_form": "Etablissement Tarif Libre",
+     "count": 70
+    },
+    {
+     "legal_form": "ARS/PCD, Tarif global, habilité aide sociale, recours PUI",
+     "count": 35
+    },
+    {
+     "legal_form": "Indéterminé",
+     "count": 32
+    },
+    {
+     "legal_form": "ARS / DG dotation globale",
+     "count": 31
+    },
+    {
+     "legal_form": "Tarifs conventionnels assurance maladie",
+     "count": 28
+    },
+    {
+     "legal_form": "DGS ARS & hébergement PCD - sous CPOM",
+     "count": 18
+    },
+    {
+     "legal_form": "ARS établissements médico-soc. non financés dotation globale",
+     "count": 14
+    },
+    {
+     "legal_form": "ARS PCD mixte (2 arrêtés), habilité aide sociale",
+     "count": 13
+    },
+    {
+     "legal_form": "ARS/PCD, Tarif global, habilité aide sociale sans PUI",
+     "count": 10
+    },
+    {
+     "legal_form": "Tarif AM - Services de Soins Infirmiers A Domicile",
+     "count": 9
+    }
+   ]
+  },
+  "GBR": {
+   "coverage": "nhs_trust_sites",
+   "facility_count": 46118,
+   "resolved_count": 46118,
+   "resolved_share_pct": 100.0,
+   "owner_class": {
+    "public_autonomous": 46118
+   },
+   "owner_class_pct": {
+    "public_autonomous": 100.0
+   },
+   "unresolved_forms": []
+  },
+  "USA": {
+   "coverage": "medicare_registered_hospitals",
+   "facility_count": 5419,
+   "resolved_count": 5419,
+   "resolved_share_pct": 100.0,
+   "owner_class": {
+    "state": 223,
+    "regional": 209,
+    "municipal": 905,
+    "private_nonprofit": 2939,
+    "private_forprofit": 1143
+   },
+   "owner_class_pct": {
+    "state": 4.1,
+    "regional": 3.9,
+    "municipal": 16.7,
+    "private_nonprofit": 54.2,
+    "private_forprofit": 21.1
+   },
+   "unresolved_forms": []
+  }
+ }
+}
