@@ -49,27 +49,31 @@
 .home-v2 .chart-source-hover>div{position:absolute;right:0;top:100%;width:max-content;max-width:min(360px,80vw);padding:10px;display:none;border:1px solid #ffffff40;background:var(--ink);box-shadow:5px 5px 0 #17191824}
 .home-v2 .chart-source-hover:hover>div,.home-v2 .chart-source-hover:focus-within>div{display:grid;gap:8px}
 .home-v2 .chart-source-hover a{color:#fff;font:700 10px/1.35 monospace;text-decoration-color:var(--acid);text-underline-offset:3px;white-space:normal}
-.home-v2 .home-hero-chart>.chart-source-hover{top:22px;right:3.5vw}.home-v2 .home-hero-chart .visual-head{padding-right:86px}
-.home-v2 .hero-chart-toolbar{display:grid;grid-template-columns:minmax(180px,.9fr) minmax(0,1.1fr);gap:12px;align-items:end;padding:12px 0 9px}
-.home-v2 .hero-chart-toolbar label,.home-v2 .macro-country-picker{display:flex;flex-direction:column;gap:5px;color:#aaa9a1;font:700 9px/1 monospace;text-transform:uppercase;letter-spacing:.06em}
-.home-v2 .hero-chart-toolbar select,.home-v2 .macro-country-picker select{width:100%;min-height:30px;padding:5px 8px;border:1px solid #ffffff38;background:#111413;color:#fff;font:700 11px/1 Arial}
+.home-v2 .home-hero-chart>.chart-source-hover{top:22px;right:3.5vw}.home-v2 .home-hero-chart .visual-head{padding-right:330px}
+.home-v2 .chart-country-search{position:absolute;z-index:11;top:10px;right:92px;width:min(220px,calc(100% - 190px));display:block;color:var(--muted);font:700 9px/1 monospace;text-transform:uppercase;letter-spacing:.06em}
+.home-v2 .chart-country-search>span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.home-v2 .chart-country-search input{width:100%;height:32px;padding:6px 31px 6px 11px;border:1px solid var(--line);border-radius:16px;outline:0;background:var(--paper);color:var(--ink);font:700 11px/1 Arial;box-shadow:0 2px 0 #17191812}
+.home-v2 .chart-country-search:after{content:"⌕";position:absolute;right:11px;top:8px;color:var(--muted);font:700 14px/1 Arial;pointer-events:none}
+.home-v2 .chart-country-search input:focus{border-color:var(--coral);box-shadow:0 0 0 2px #c9323722}
+.home-v2 .hero-country-search{top:20px;right:calc(3.5vw + 82px);width:220px}.home-v2 .hero-country-search input{border-color:#ffffff42;background:#242724;color:#fff;box-shadow:none}.home-v2 .hero-country-search input::placeholder{color:#aaa9a1}
 .home-v2 .hero-top-list{display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(11,minmax(30px,1fr));column-gap:16px;min-height:0}
-.home-v2 .home-hero-chart .hero-bar{grid-template-columns:22px 25px minmax(64px,104px) minmax(45px,1fr) 48px;min-width:0}
+.home-v2 .home-hero-chart .hero-bar{grid-template-columns:22px 36px minmax(64px,104px) minmax(45px,1fr) 48px;min-width:0}
 .home-v2 .home-hero-chart .hero-bar:nth-child(-n+11){border-right:1px solid #ffffff1d;padding-right:12px}
 .home-v2 .hero-bar.extra-country,.home-v2 .macro-row.extra-country{background:#c9323724;box-shadow:inset 3px 0 0 var(--coral)}
 .home-v2 .hero-bar strong small{display:none}
-.home-v2 .home-macro-panel{padding-top:18px}.home-v2 .home-macro-panel>header{padding-right:76px}
+.home-v2 .home-macro-panel{padding-top:18px}.home-v2 .home-macro-panel>header{padding-right:305px}
 .home-v2 .home-macro-panel>.chart-source-hover{right:18px}
-.home-v2 .macro-country-picker{margin:12px 0 8px;color:var(--muted)}
-.home-v2 .macro-country-picker select{border-color:var(--line);background:var(--paper);color:var(--ink)}
+.home-v2 .macro-country-picker{right:100px;top:9px;width:190px}
 .home-v2 .macro-top-list{display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(11,minmax(31px,1fr));column-gap:14px}
-.home-v2 .home-macro-chart .macro-row{grid-template-columns:20px 28px minmax(40px,1fr) 62px;gap:6px;min-width:0}
+.home-v2 .home-macro-chart .macro-row{grid-template-columns:20px 36px minmax(40px,1fr) 62px;gap:6px;min-width:0}
 .home-v2 .home-macro-chart .macro-row>span{color:var(--muted);font:9px/1 monospace}
-.home-v2 .home-macro-chart .macro-row>.country-flag-svg{transform:scale(.72)}
+.home-v2 .home-macro-chart .macro-row>.country-flag-svg{transform:none}
+.home-v2 .home-hero-chart .hero-bar>.country-flag-svg,.home-v2 .home-macro-chart .macro-row>.country-flag-svg{width:34px;height:26px;transform:none}.home-v2 .home-hero-chart .country-flag-svg img,.home-v2 .home-macro-chart .country-flag-svg img{width:32px;height:22px}
 .home-v2 .country-card-more{justify-content:center;border-color:var(--ink);background:var(--ink);color:#fff}.home-v2 .country-card-more>span{color:var(--acid);font:700 10px/1 monospace;text-transform:uppercase}.home-v2 .country-card-more h3{color:#fff}.home-v2 .country-card-more>b{color:var(--acid)}
 @media(hover:none){.home-v2 .chart-source-hover{opacity:1}}
 @media(max-width:900px){.home-v2 .hero-top-list{grid-template-columns:1fr;grid-auto-flow:row;grid-template-rows:none}.home-v2 .home-hero-chart .hero-bar:nth-child(-n+11){border-right:0;padding-right:0}.home-v2 .macro-top-list{grid-template-columns:1fr;grid-auto-flow:row;grid-template-rows:none}}
-@media(max-width:620px){.home-v2 .hero-chart-toolbar{grid-template-columns:1fr}.home-v2 .home-hero-chart>.chart-source-hover{top:18px;right:5vw}.home-v2 .home-hero-chart .visual-head{padding-right:76px}.home-v2 .chart-source-hover{opacity:1}}
+@media(max-width:760px){.home-v2 .home-macro-panel>header{padding-right:0;padding-top:42px}.home-v2 .macro-country-picker{left:18px;right:100px;width:auto}}
+@media(max-width:620px){.home-v2 .home-hero-chart>.chart-source-hover{top:18px;right:5vw}.home-v2 .home-hero-chart .visual-head{padding-top:48px;padding-right:76px}.home-v2 .hero-country-search{top:54px;left:5vw;right:calc(5vw + 82px);width:auto}.home-v2 .chart-source-hover{opacity:1}}
 .compare-compact .compact-controls{grid-template-columns:130px minmax(210px,1fr) 215px minmax(245px,.8fr)}.compare-scope-readout{min-height:64px;padding:11px 15px;display:flex;flex-direction:column;gap:6px}.compare-scope-readout strong{font:700 14px/1 Arial}.compare-scope-readout small{color:#aaa9a1;font:11px/1.25 monospace}
 @media(max-width:980px){.compare-compact .compact-controls{grid-template-columns:1fr 1fr}.compare-scope-readout{border-top:1px solid #ffffff28}}
 @media(max-width:760px){.compare-compact .compact-controls{grid-template-columns:1fr}}

@@ -13,6 +13,7 @@
 .health-comparison{padding-top:64px;padding-bottom:72px}
 .health-compare-cards button{min-height:104px}.health-compare-cards strong{margin:16px 0 6px;font-size:28px}
 .health-chart{padding-top:38px;border-inline:1px solid #aaa69d;background:#faf7ef}
+.health-chart>.chart-country-search{right:100px;top:9px;width:220px}
 .health-chart .health-compare-ranking{display:grid;grid-template-columns:1fr 1fr;border-inline:0}
 .health-chart .health-compare-rank-row{min-height:58px;grid-template-columns:28px 170px minmax(90px,1fr) 132px;padding:6px 10px;gap:8px}
 .health-chart .health-compare-rank-row:nth-child(odd){border-right:1px solid #ded9cf}
@@ -22,3 +23,6 @@
 .health-compare-method small{color:var(--muted);font:700 10px/1 monospace;text-transform:uppercase;white-space:nowrap}
 @media(max-width:1050px){.health-chart .health-compare-ranking{grid-template-columns:1fr}.health-chart .health-compare-rank-row:nth-child(odd){border-right:0}.health-chart .health-compare-rank-row{grid-template-columns:32px 220px minmax(120px,1fr) 160px}}
 @media(max-width:680px){.health-chart{padding-top:42px}.health-chart .health-compare-rank-row{grid-template-columns:30px 1fr 102px}.health-compare-method{grid-template-columns:1fr}.health-compare-method small{white-space:normal}}
+.health-compare-controls{grid-template-columns:1.35fr 1fr}
+.health-compare-flag{width:40px;height:30px}.health-compare-flag img{width:36px;height:24px}.health-compare-country{grid-template-columns:46px 1fr}
+@media(max-width:680px){.health-compare-controls{grid-template-columns:1fr}.health-chart>.chart-country-search{left:10px;right:92px;width:auto}}

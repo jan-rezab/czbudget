@@ -7,11 +7,13 @@
 
 /* Compact homepage view: one Top 20 chart, no duplicate matrix table. */
 .category-comparison{padding-top:58px;padding-bottom:64px}
-.category-controls{grid-template-columns:1fr 1.25fr .85fr .85fr}
+.category-controls{grid-template-columns:1.45fr .85fr .85fr}
 .category-chart{padding-top:38px;border-inline:1px solid #ffffff2b;background:#111413}
+.category-chart>.chart-country-search{right:100px;top:9px;width:220px}
 .category-chart .category-ranking{border-inline:0}
 .category-rank-row.selected{background:#c9323724;box-shadow:inset 4px 0 0 var(--coral)}
 .category-rank-row.extra-country{border-top:1px solid var(--coral)}
 .category-method{margin-top:18px;padding-top:16px;border-top:1px solid #ffffff2b}
 @media(max-width:980px){.category-controls{grid-template-columns:1fr 1fr}.category-controls>label,.category-controls>div{border-bottom:1px solid #ffffff2b}}
-@media(max-width:620px){.category-controls{grid-template-columns:1fr}.category-chart{padding-top:42px}}
+@media(max-width:620px){.category-controls{grid-template-columns:1fr}.category-chart{padding-top:42px}.category-chart>.chart-country-search{left:10px;right:92px;width:auto}}
+.category-country .country-flag-svg{width:40px;height:30px}.category-country .country-flag-svg img{width:36px;height:24px}.category-country{grid-template-columns:44px 1fr}
