@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="coverage-map.css?v=20260827-surfaced-sections" />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <style>
-      .data-health-kpis { grid-template-columns: repeat(5, 1fr); }
+      .data-health-kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
       .data-health-fail { color: #9c2f24; }
       .method-status-not_loaded { background: #ececeb; color: #4f5350; }
       .method-source-availability { display: block; margin-top: .45rem; color: #5b5e5a; }
@@ -60,7 +60,7 @@
           <p data-status-copy="pageIntro">Co publikujeme podle země, sekce, období a primárního zdroje.</p>
         </div>
         <a class="status-volume" href="data/data-quality-report.v1.json" target="_blank" rel="noreferrer">
-          <span data-status-copy="publishedData">Počítané adresářové a profilové záznamy</span>
+          <span data-status-copy="publishedData">Zpracovaných strukturovaných řádků</span>
           <strong id="status-data-total">—</strong>
         </a>
       </header>

@@ -1,0 +1,50 @@
+steps:
+  - id: prepare-public-serving-release
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args:
+      - scripts/prepare-public-serving-snapshots.mjs
+      - --output
+      - /workspace/.public-serving-release
+      - --release-id
+      - data-$BUILD_ID
+      - --processed-structured-rows
+      - ${_PROCESSED_STRUCTURED_ROWS}
+
+  - id: validate-public-serving-release
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/validate-public-serving-snapshot.mjs, /workspace/.public-serving-release]
+
+  - id: ensure-private-snapshot-bucket
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - scripts/ensure-public-snapshot-bucket.sh
+      - $PROJECT_ID
+      - gs://$PROJECT_ID-public-snapshots
+      - EU
+      - czbudget-public
+      - europe-west1
+
+  - id: publish-bigquery-and-storage
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - pipeline/warehouse/publish_public_serving.sh
+      - --output
+      - /workspace/.public-serving-release
+      - --release-id
+      - data-$BUILD_ID
+      - --bucket
+      - gs://$PROJECT_ID-public-snapshots/municipal
+      - --use-prepared
+      - --skip-validation
+
+timeout: 3600s
+
+substitutions:
+  _PROCESSED_STRUCTURED_ROWS: "101447918"
+
+options:
+  logging: CLOUD_LOGGING_ONLY

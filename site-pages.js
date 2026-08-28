@@ -40,8 +40,8 @@
   };
   Object.assign(copy.cs,{ledgerNotLoaded:"Nenačteno v PSD"});
   Object.assign(copy.en,{ledgerNotLoaded:"Not loaded by PSD"});
-  Object.assign(statusCopy.cs,{pageTitle:"Pokrytí",pageIntro:"Co publikujeme podle země, sekce, období a primárního zdroje.",publishedData:"Počítané adresářové a profilové záznamy",legendNotResearched:"Neprověřeno",notResearched:"dostupnost zdroje neprověřena",not_loaded:"nenačteno v PSD",checksFailed:"Kontroly neprošly",municipalCountries:"Obce · adresář / souhrny",itemizedCountries:"Obce · položkové rozpočty",coverageRows:"Řádky registru pokrytí",coverageRowNote:"pokrytí, mezery a zdroje",loadedSource:"zdroj načten",sourceAvailability:"dostupnost zdroje"});
-  Object.assign(statusCopy.en,{pageTitle:"Coverage",pageIntro:"What we publish by country, section, period and primary source.",publishedData:"Counted directory and profile records",legendNotResearched:"Not researched",notResearched:"source availability not researched",not_loaded:"not loaded by PSD",checksFailed:"Checks failed",municipalCountries:"Municipalities · directory / headlines",itemizedCountries:"Municipalities · itemized budgets",coverageRows:"Coverage ledger rows",coverageRowNote:"coverage, gaps and sources",loadedSource:"source loaded",sourceAvailability:"source availability"});
+  Object.assign(statusCopy.cs,{pageTitle:"Pokrytí",pageIntro:"Co publikujeme podle země, sekce, období a primárního zdroje.",publishedData:"Zpracovaných strukturovaných řádků",legendNotResearched:"Neprověřeno",notResearched:"dostupnost zdroje neprověřena",not_loaded:"nenačteno v PSD",checksFailed:"Kontroly neprošly",municipalCountries:"Obce · adresář / souhrny",itemizedCountries:"Obce · položkové rozpočty",coverageRows:"Řádky registru pokrytí",coverageRowNote:"pokrytí, mezery a zdroje",loadedSource:"zdroj načten",sourceAvailability:"dostupnost zdroje",validatedFacts:"Validované finanční údaje",validatedFactsNote:"aktuální · bez historických verzí",servingProfiles:"Veřejné obecní profily",servingProfilesNote:"unikátní kanonické adresy"});
+  Object.assign(statusCopy.en,{pageTitle:"Coverage",pageIntro:"What we publish by country, section, period and primary source.",publishedData:"Structured rows processed",legendNotResearched:"Not researched",notResearched:"source availability not researched",not_loaded:"not loaded by PSD",checksFailed:"Checks failed",municipalCountries:"Municipalities · directory / headlines",itemizedCountries:"Municipalities · itemized budgets",coverageRows:"Coverage ledger rows",coverageRowNote:"coverage, gaps and sources",loadedSource:"source loaded",sourceAvailability:"source availability",validatedFacts:"Validated financial facts",validatedFactsNote:"current · no historical versions",servingProfiles:"Public municipal profiles",servingProfilesNote:"unique canonical routes"});
   // Countries whose itemized budgets are loaded in the production warehouse but
   // deliberately not published on the site. Without their own vocabulary these
   // rendered as "— / not researched", which understates the work by exactly as
@@ -80,7 +80,7 @@
   ];
   let current = lang === "en" ? "en" : "cs";
   const initialCountryCode=(new URLSearchParams(location.search).get("country")||"").toUpperCase();
-  let methodologyData=null,qualityData=null,releaseData=null,municipalityData=null,itemizedBudgetData=null,transportPerformanceData=null,transportBudgetData=null,coverageResearchData=null,activeCoverageNode=null,coverageCountryQuery="",initialFiltersApplied=false;
+  let methodologyData=null,qualityData=null,releaseData=null,municipalityData=null,itemizedBudgetData=null,transportPerformanceData=null,transportBudgetData=null,coverageResearchData=null,coverageMetricsData=null,activeCoverageNode=null,coverageCountryQuery="",initialFiltersApplied=false;
   Object.assign(statusCopy.cs,{searchCountry:"Hledat zemi",searchCountryPlaceholder:"Název nebo kód země"});
   Object.assign(statusCopy.en,{searchCountry:"Search countries",searchCountryPlaceholder:"Country name or code"});
   const esc=value=>String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
@@ -269,6 +269,8 @@
     const warehouseOnlyCountries=itemizedCountries.filter(country=>country.publication_status==="warehouse_only");
     const warehouseOnlyProfiles=warehouseOnlyCountries.reduce((sum,country)=>sum+(Number(country.warehouse_profile_count)||Number(country.warehouse?.profile_count)||0),0);
     const cards=[
+      [sc.validatedFacts,coverageMetricsData?.metrics?.current_validated_financial_facts||0,sc.validatedFactsNote],
+      [sc.servingProfiles,coverageMetricsData?.metrics?.current_public_profiles||0,sc.servingProfilesNote],
       [sc.municipalCountries,countries.length,`${integer(scope)} ${sc.entities}`],
       [sc.itemizedCountries,publishedItemizedCountries.length,`${integer(itemizedProfiles)} ${sc.profiles}${warehouseOnlyCountries.length?` · ${integer(warehouseOnlyProfiles)} ${sc.warehouseShort}`:""}`],
       [sc.entityRows,entityRows,aggregateRows?`${integer(aggregateRows)} ${sc.aggregateRows}`:sc.entityLevel],
@@ -277,8 +279,8 @@
     ];
     const passed=qualityData.status==="passed";
     root.innerHTML=`<div class="data-health-status"><span class="${passed?"data-health-pass":"data-health-fail"}">● ${esc(passed?sc.checksPassed:sc.checksFailed)}</span><span>${esc(sc.snapshot)}: <b>${esc(generatedLabel)}</b></span></div><div class="data-health-kpis">${cards.map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${integer(value)}</strong><small>${esc(note)}</small></article>`).join("")}</div><div class="data-health-downloads"><a href="data/international-municipalities.v1.json" download>${current === "en" ? "Municipal" : "Obecní"} JSON ↓</a><a href="data/municipal-itemized-coverage.v1.json" download>${current === "en" ? "Itemized budgets" : "Položkové rozpočty"} JSON ↓</a><a href="data/methodology-sources.v1.json" download>${esc(sc.ledgerJson)}</a><a href="data/coverage-source-research.v1.json" download>${current === "en" ? "Availability research" : "Průzkum dostupnosti"} JSON ↓</a><a href="data/municipal-itemized-acquisition-audit.v1.json" download>${current === "en" ? "Acquisition audit" : "Audit importů"} JSON ↓</a><a href="data/data-quality-report.v1.json" download>QA JSON ↓</a></div>`;
-    const publishedEntries=Number(qualityData?.counts?.published_data_entries)||0;
-    const total=document.querySelector("#status-data-total");if(total)total.textContent=publishedEntries?integer(publishedEntries):"—";
+    const processedRows=Number(coverageMetricsData?.metrics?.cumulative_structured_rows_processed)||0;
+    const total=document.querySelector("#status-data-total");if(total){total.textContent=processedRows>=100000000?"100M+":processedRows?integer(processedRows):"—";if(processedRows)total.title=integer(processedRows);}
   }
   function render() {
     document.documentElement.lang = current;
@@ -323,6 +325,7 @@
     fetch("data/municipal-itemized-coverage.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/transport-performance.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/transport-budget-detail.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/coverage-source-research.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();})
-  ]).then(([methodology,quality,release,municipalities,itemizedBudgets,transportPerformance,transportBudget,coverageResearch])=>{methodologyData=methodology;qualityData=quality;releaseData=release;municipalityData=municipalities;itemizedBudgetData=itemizedBudgets;transportPerformanceData=transportPerformance;transportBudgetData=transportBudget;coverageResearchData=coverageResearch;renderMethodology();renderDataHealth();}).catch(error=>{const summary=document.querySelector("#method-ledger-summary");if(summary)summary.textContent=`Methodology data: ${error}`;const health=document.querySelector("#data-health-root");if(health)health.textContent=`Data health: ${error}`;});
+    fetch("data/coverage-source-research.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/coverage-metrics.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();})
+  ]).then(([methodology,quality,release,municipalities,itemizedBudgets,transportPerformance,transportBudget,coverageResearch,coverageMetrics])=>{methodologyData=methodology;qualityData=quality;releaseData=release;municipalityData=municipalities;itemizedBudgetData=itemizedBudgets;transportPerformanceData=transportPerformance;transportBudgetData=transportBudget;coverageResearchData=coverageResearch;coverageMetricsData=coverageMetrics;renderMethodology();renderDataHealth();}).catch(error=>{const summary=document.querySelector("#method-ledger-summary");if(summary)summary.textContent=`Methodology data: ${error}`;const health=document.querySelector("#data-health-root");if(health)health.textContent=`Data health: ${error}`;});
 })();

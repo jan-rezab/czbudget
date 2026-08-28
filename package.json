@@ -28,6 +28,8 @@
     "build:sovereign-universe": "node scripts/build-sovereign-country-universe.mjs",
     "build:public-entities-web": "python3 pipeline/transforms/build_public_entity_frontend.py",
     "build:public-entity-history": "python3 pipeline/transforms/build_public_entity_web_dataset.py",
+    "build:public-serving-snapshots": "node scripts/prepare-public-serving-snapshots.mjs",
+    "validate:public-serving-snapshots": "node scripts/validate-public-serving-snapshot.mjs",
     "fix:benchmark-canonicals": "node scripts/backfill-benchmark-canonicals.mjs",
     "build:methodology": "node scripts/build-methodology-sources.mjs",
     "build:accountability": "python3 pipeline/transforms/build_government_accountability.py",

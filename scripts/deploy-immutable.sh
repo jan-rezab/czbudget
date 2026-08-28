@@ -6,6 +6,7 @@ region="${2:?region is required}"
 service="${3:?service is required}"
 tag="${4:?image tag is required}"
 deploy_marker="${5:?current-main deployment marker is required}"
+snapshot_base="${6:-}"
 
 if [ ! -f "$deploy_marker" ]; then
   echo "Skipping deployment because this build is no longer the current main commit"
@@ -19,7 +20,7 @@ if [ -z "$digest" ]; then
 fi
 
 repository="${tag%:*}"
-gcloud run deploy "$service" \
+set -- gcloud run deploy "$service" \
   --project="$project" \
   --image="${repository}@${digest}" \
   --region="$region" \
@@ -31,5 +32,9 @@ gcloud run deploy "$service" \
   --timeout=30s \
   --labels=app=czbudget-public,source=github \
   --quiet
+if [ -n "$snapshot_base" ]; then
+  set -- "$@" --update-env-vars="PUBLIC_SNAPSHOT_BASE_URL=${snapshot_base}"
+fi
+"$@"
 
 echo "Deployed immutable image ${repository}@${digest}"

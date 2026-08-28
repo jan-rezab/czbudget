@@ -112,6 +112,8 @@ steps:
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
     args:
       - build
+      - --file
+      - ${_DOCKERFILE}
       - --tag
       - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
       - .
@@ -140,6 +142,7 @@ steps:
       - czbudget-public
       - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
       - /workspace/.deploy-current-main
+      - ${_PUBLIC_SNAPSHOT_BASE_URL}
 
 timeout: 1800s
 
@@ -148,3 +151,7 @@ images:
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _DOCKERFILE: Dockerfile.slim
+  _PUBLIC_SNAPSHOT_BASE_URL: "gs://czbudget-janrezab-public-snapshots/municipal"

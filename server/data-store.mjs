@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 
 const ROOT = path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html");
 const cache = new Map();
@@ -225,11 +226,35 @@ function safeCzechID(value) {
 }
 
 export async function czechMunicipalityBudget(municipalityID) {
-  return readJSON(`data/entities/${safeCzechID(municipalityID)}.json`);
+  const id = safeCzechID(municipalityID);
+  try {
+    return await readJSON(`data/entities/${id}.json`);
+  } catch (error) {
+    if (!(error instanceof DataError) || error.status !== 404 || !publicSnapshotStore.enabled) throw error;
+    try { return (await publicSnapshotStore.profileForId(`CZE:${id}`)).profile; }
+    catch (snapshotError) {
+      if (snapshotError instanceof SnapshotError) throw new DataError(snapshotError.status, snapshotError.code, snapshotError.message);
+      throw snapshotError;
+    }
+  }
 }
 
 export async function czechMunicipalityHistory(municipalityID) {
-  return readJSON(`data/municipal-history/${safeCzechID(municipalityID)}.json`);
+  const id = safeCzechID(municipalityID);
+  try {
+    return await readJSON(`data/municipal-history/${id}.json`);
+  } catch (error) {
+    if (!(error instanceof DataError) || error.status !== 404 || !publicSnapshotStore.enabled) throw error;
+    try {
+      const history = (await publicSnapshotStore.profileForId(`CZE:${id}`)).history;
+      if (history === null) throw new DataError(404, "municipality_history_not_found", "Municipality history does not exist.");
+      return history;
+    } catch (snapshotError) {
+      if (snapshotError instanceof DataError) throw snapshotError;
+      if (snapshotError instanceof SnapshotError) throw new DataError(snapshotError.status, snapshotError.code, snapshotError.message);
+      throw snapshotError;
+    }
+  }
 }
 
 export async function listPublicEntities(searchParams) {

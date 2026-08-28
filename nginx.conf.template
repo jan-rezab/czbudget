@@ -133,6 +133,14 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
+  location ^~ /public-data/ {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
   location ^~ /auth/ {
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
@@ -205,6 +213,24 @@ server {
     sub_filter 'country-health-performance.js?v=20260824-performance' 'country-health-performance.js?v=20260824-readable-country-routes';
     sub_filter 'country-providers.js?v=20260822-network' 'country-providers.js?v=20260824-readable-country-routes';
     try_files /country.html =404;
+  }
+
+  location ~ ^/(?:municipalities/[^/]+/[^/]+|cz/municipalities/[^/]+)$ {
+    return 301 $uri/$is_args$args;
+  }
+
+  location ~ ^/(?:municipalities/[^/]+/[^/]+|cz/municipalities/[^/]+)/$ {
+    sub_filter_once off;
+    sub_filter '<head>' $psd_head_inject;
+    try_files $uri/index.html @municipality_profile;
+  }
+
+  location @municipality_profile {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
   }
 
   location / {

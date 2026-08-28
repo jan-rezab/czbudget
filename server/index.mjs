@@ -7,6 +7,8 @@ import { AuthError, handleAuth, requestToken, verifyIdToken } from "./auth.mjs";
 import { DataError, apiIndex, capitalCity, countryModule, countryProfile, czechMunicipalityBudget, czechMunicipalityHistory, datasetInfo, listCapitalCities, listCountries, listDatasets, listMunicipalities, listPublicEntities, municipality, publicEntity, publicEntityAggregates } from "./data-store.mjs";
 import { openapi } from "./openapi.mjs";
 import { FixedWindowRateLimiter } from "./rate-limit.mjs";
+import { municipalityPage } from "./municipality-page.mjs";
+import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
@@ -57,6 +59,30 @@ export function sendJSON(response, status, payload, extraHeaders = {}) {
     ...extraHeaders,
   });
   response.end(body);
+  return true;
+}
+
+function sendPublicJSON(request, response, status, payload, extraHeaders = {}) {
+  const body = JSON.stringify(payload);
+  response.writeHead(status, {
+    "content-type": "application/json; charset=utf-8",
+    "content-length": Buffer.byteLength(body),
+    "cache-control": "public, max-age=300, stale-while-revalidate=3600",
+    "x-content-type-options": "nosniff",
+    ...extraHeaders,
+  });
+  response.end(request.method === "HEAD" ? undefined : body);
+  return true;
+}
+
+function sendHTML(request, response, body) {
+  response.writeHead(200, {
+    "content-type": "text/html; charset=utf-8",
+    "content-length": Buffer.byteLength(body),
+    "cache-control": "public, max-age=300, stale-while-revalidate=3600",
+    "x-content-type-options": "nosniff",
+  });
+  response.end(request.method === "HEAD" ? undefined : body);
   return true;
 }
 
@@ -205,7 +231,23 @@ export async function handler(request, response) {
       return sendPage(response, "login.html", "text/html; charset=utf-8");
     }
 
-    if (url.pathname === "/healthz") return sendJSON(response, 200, { status: "ok" });
+    if (url.pathname === "/healthz") return sendJSON(response, 200, { status: "ok", public_snapshots: await publicSnapshotStore.status() });
+
+    if (url.pathname === "/public-data/municipality-profile" || url.pathname === "/public-data/municipality-history") {
+      if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
+      const snapshot = await publicSnapshotStore.profileForPath(url.searchParams.get("path"));
+      if (url.pathname.endsWith("-history")) {
+        if (snapshot.history === null) throw new DataError(404, "municipality_history_not_found", "A separate history payload is not available for this profile.");
+        return sendPublicJSON(request, response, 200, snapshot.history, { ETag: `"${snapshot.route.payload_sha256}-history"` });
+      }
+      return sendPublicJSON(request, response, 200, snapshot.profile, { ETag: `"${snapshot.route.payload_sha256}"` });
+    }
+
+    if (/^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(url.pathname)) {
+      if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
+      const snapshot = await publicSnapshotStore.profileForPath(url.pathname);
+      return sendHTML(request, response, municipalityPage(snapshot));
+    }
 
     if (url.pathname === "/docs" || url.pathname === "/docs/") {
       await requireUser(request);
@@ -247,7 +289,7 @@ export async function handler(request, response) {
       response.end();
       return;
     }
-    if (error instanceof AuthError || error instanceof DataError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

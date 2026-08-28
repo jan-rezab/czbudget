@@ -1,0 +1,46 @@
+.git
+.github
+.githooks
+.openai
+.venv
+.public-serving
+dist
+node_modules
+pipeline
+tests
+test-results
+playwright-report
+package.json
+package-lock.json
+playwright.config.mjs
+requirements.lock
+README.md
+CHART_SYSTEM.md
+BRAND.md
+PUBLIC_DOMAIN_DEPLOYMENT.md
+brand-preview.html
+serve.sh
+*.log
+
+# Per-profile payloads move to the immutable snapshot release. Keep compact
+# indexes such as data/municipal-benchmarks/fin.json and history/index.json.
+data/municipal-expansion/*/*.json
+data/municipal-benchmarks/*/*.json
+data/entities/????????.json
+data/municipal-history/????????.json
+
+# Nginx serves these canonical routes through the snapshot fallback. The France
+# and Germany query-driven profiles are not represented as one-object-per-route.
+municipalities/*/*/index.html
+!municipalities/france/profile/index.html
+!municipalities/germany/profile/index.html
+cz/municipalities/*/index.html
+
+* [0-9]
+* [0-9].*
+* [0-9][0-9]
+* [0-9][0-9].*
+**/* [0-9]
+**/* [0-9].*
+**/* [0-9][0-9]
+**/* [0-9][0-9].*
