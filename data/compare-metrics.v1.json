@@ -37,6 +37,13 @@
       "label_en": "Municipal ledgers",
       "note_cs": "Výdaje tak, jak jsou plněny ve vlastním účetnictví každé obce, v národním třídění dané země. 105 416 jednotek ve 27 zemích — a žádná dvě třídění nejsou stejná.",
       "note_en": "Spending as executed in each municipality's own accounts, in that country's native classification. 105,416 entities across 27 countries — and no two classifications alike."
+    },
+    {
+      "id": "facility_registers",
+      "label_cs": "Registry zařízení",
+      "label_en": "Facility registers",
+      "note_cs": "Kdo nemocnice provozuje, podle národních registrů zařízení. Počty zařízení, nikoli lůžka a nikoli peníze. Registr je znám v deseti zemích; se jmenovitými záznamy jsou načteny čtyři.",
+      "note_en": "Who operates the hospitals, from national facility registers. Facility counts — not beds and not money. A register is known in ten countries; four are loaded with named records."
     }
   ],
   "metrics": [
@@ -232,6 +239,45 @@
       "boundary_en": "Whatever each country files under its own health heading.",
       "refuse_cs": "Obecní řádek zdravotnictví měří, které úrovni byla funkce přidělena, nikoli kolik země na zdravotnictví vydá. Norsko řadí domovy s pečovatelskou službou do zdravotnictví a dostane se na 38 %; Nizozemsko řadí tytéž činnosti pod sociální zákony a dostane se na 1,3 %; Finsko funkci v roce 2023 převedlo na kraje blahobytu a dostane se na nulu. To jsou tři způsoby evidence, nikoli tři úrovně výdajů.",
       "refuse_en": "A municipal health line measures which tier was assigned the function, not what a country spends on health. Norway files nursing homes inside health and reaches 38%; the Netherlands files the same activities under social law and reaches 1.3%; Finland transferred the function to wellbeing services counties in 2023 and reaches zero. These are three filing conventions, not three spending levels."
+    },
+    {
+      "metric_code": "hospital_public_share",
+      "perimeter": "facility_registers",
+      "dataset": "ownership",
+      "unit": "pct_share",
+      "polarity": "neutral",
+      "signed": false,
+      "comparability": "conditional",
+      "group_by": "register_coverage",
+      "substitute": "health_public_share",
+      "source_id": "national_registers",
+      "source_label": "national facility registers",
+      "label_cs": "Podíl veřejně provozovaných zařízení",
+      "label_en": "Publicly operated share",
+      "boundary_cs": "Podíl registrovaných zařízení provozovaných státem, regionem, obcí nebo autonomním veřejnoprávním subjektem. Počty zařízení, nikoli lůžka ani výdaje.",
+      "boundary_en": "Share of registered facilities operated by the state, a region, a municipality or an autonomous public body. Facility counts, not beds and not spending.",
+      "warn_cs": "Registry se liší rozsahem i tím, co vůbec prozradí. Britský výtah obsahuje pouze pracoviště NHS, a proto vychází ze sta procent veřejný; český registr uvádí právní formu, která skutečného vlastníka neprozradí u dvou třetin zařízení.",
+      "warn_en": "Registers differ in scope and in what they reveal at all. The UK extract holds NHS sites only, so it reads 100% public by construction; the Czech register records a legal form that does not name the owner for two thirds of its facilities."
+    },
+    {
+      "metric_code": "hospital_unresolved_share",
+      "perimeter": "facility_registers",
+      "dataset": "ownership",
+      "unit": "pct_share",
+      "polarity": "negative",
+      "signed": false,
+      "alt_colour": true,
+      "comparability": "conditional",
+      "group_by": "register_coverage",
+      "substitute": "health_public_share",
+      "source_id": "national_registers",
+      "source_label": "national facility registers",
+      "label_cs": "Podíl zařízení bez určeného vlastníka",
+      "label_en": "Unresolved ownership share",
+      "boundary_cs": "Podíl zařízení, jejichž právní forma neurčuje skutečného vlastníka. Není to odhad, je to mezera ve zdroji.",
+      "boundary_en": "Share of facilities whose legal form does not name the beneficial owner. This is not an estimate; it is a gap in the source.",
+      "warn_cs": "Vysoká hodnota neznamená soukromé vlastnictví, ale nezjištěné. Většina českých krajských nemocnic je akciová společnost, kterou kraj zcela vlastní.",
+      "warn_en": "A high value does not mean private ownership; it means undetermined. Most Czech regional hospitals are joint-stock companies wholly owned by their region."
     }
   ]
 }

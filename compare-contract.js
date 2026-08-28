@@ -35,6 +35,12 @@
       missing: "zdroj neuvádí",
       unclassified: "Nezařazeno",
       unclassifiedNote: "Způsob financování zatím není v registru",
+      coverageResolved: "Registr plně určen",
+      coverageResolvedNote: "Právní forma určuje vlastníka u každého zařízení",
+      coveragePartial: "Registr určen částečně",
+      coveragePartialNote: "U části zařízení právní forma vlastníka neprozradí",
+      coverageNone: "Registr zatím nenačten",
+      coverageNoneNote: "Zdroj je znám, jmenovité záznamy nejsou načteny",
       countries: (n) => `${n} zemí s údajem`,
       fixedYear: (y) => `pevný rok ${y}`,
       profile: "Detail",
@@ -63,6 +69,12 @@
       missing: "not reported in source",
       unclassified: "Unclassified",
       unclassifiedNote: "Financing vehicle not yet in the registry",
+      coverageResolved: "Register fully resolved",
+      coverageResolvedNote: "Legal form names the owner of every facility",
+      coveragePartial: "Register partly resolved",
+      coveragePartialNote: "Legal form does not name the owner for some facilities",
+      coverageNone: "No register loaded",
+      coverageNoneNote: "The source is known; named records are not loaded",
       countries: (n) => `${n} countries with a value`,
       fixedYear: (y) => `fixed year ${y}`,
       profile: "Profile",
@@ -101,6 +113,8 @@
   let seriesByCode = new Map();
   let sha = {};
   let cofog = {};
+  let ownership = {};
+  let networks = {};
 
   const t = () => copy[state.lang];
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
@@ -150,6 +164,11 @@
   // health metric instead of showing it as absent.
   const shaValue = (raw) => (Number.isFinite(raw) && raw > 0 ? raw : null);
 
+  // "Public" is every owner class that resolves to a public body, at any tier. Unknown is
+  // never folded in: the whole point of the register normalisation is that a legal form
+  // which does not name an owner stays unresolved rather than being guessed either way.
+  const PUBLIC_CLASSES = ["state", "regional", "municipal", "subnational_unspecified", "public_autonomous"];
+
   function valueFor(code, metric) {
     if (metric.dataset === "sovereign") {
       const s = seriesByCode.get(code);
@@ -165,6 +184,12 @@
       const eligible = rows.filter((r) => r.year <= state.year);
       const row = eligible.length ? eligible[eligible.length - 1] : null;
       return row && Number.isFinite(row.pct_gdp) ? row.pct_gdp : null;
+    }
+    if (metric.dataset === "ownership") {
+      const entry = ownership[code];
+      if (!entry || !entry.owner_class_pct) return null;
+      if (metric.metric_code === "hospital_unresolved_share") return entry.owner_class_pct.unknown ?? 0;
+      return PUBLIC_CLASSES.reduce((total, key) => total + (entry.owner_class_pct[key] ?? 0), 0);
     }
     if (metric.dataset === "sha") {
       const h = sha[code];
@@ -187,7 +212,8 @@
   // countries must not render a hundred and seventy-five empty rows.
   function universe(metric) {
     let codes;
-    if (metric.dataset === "sha") codes = Object.keys(sha);
+    if (metric.dataset === "ownership") codes = Object.keys(networks);
+    else if (metric.dataset === "sha") codes = Object.keys(sha);
     else if (metric.dataset === "cofog") codes = Object.keys(cofog);
     else codes = Array.from(countriesByCode.keys());
     return codes.filter((code) => {
@@ -293,27 +319,54 @@
       (pick(metric, "note") ? `<p class="cmp-note">${esc(pick(metric, "note"))}</p>` : "");
   }
 
-  function renderGrouped(metric, codes) {
+  // Two groupings so far. Financing vehicle answers "is this the same kind of number";
+  // register coverage answers "does the source even reveal what the metric claims". Both
+  // exist to stop a ranked table forming across groups that are not comparable.
+  function groupsFor(metric, codes) {
+    const t_ = t();
+    if (metric.group_by === "register_coverage") {
+      const bucket = (code) => {
+        const entry = ownership[code];
+        if (!entry || !Number.isFinite(entry.resolved_share_pct)) return "none";
+        return entry.resolved_share_pct >= 100 ? "resolved" : "partial";
+      };
+      return {
+        order: ["resolved", "partial", "none"],
+        titles: {
+          resolved: { name: t_.coverageResolved, note: t_.coverageResolvedNote },
+          partial: { name: t_.coveragePartial, note: t_.coveragePartialNote },
+          none: { name: t_.coverageNone, note: t_.coverageNoneNote },
+        },
+        bucket,
+      };
+    }
     const vehicles = assignments.financing_vehicles;
+    const titles = {};
+    vehicles.forEach((vehicle) => { titles[vehicle.id] = { name: pick(vehicle, "label"), note: pick(vehicle, "note") }; });
+    titles.unclassified = { name: t_.unclassified, note: t_.unclassifiedNote };
+    return {
+      order: vehicles.map((vehicle) => vehicle.id).concat(["unclassified"]),
+      titles,
+      bucket: (code) => (assignments.countries[code] || {}).financing_vehicle || "unclassified",
+    };
+  }
+
+  function renderGrouped(metric, codes) {
+    const { order, titles, bucket } = groupsFor(metric, codes);
     const buckets = new Map();
     codes.forEach((code) => {
-      const a = assignments.countries[code];
-      const key = (a && a.financing_vehicle) || "unclassified";
+      const key = bucket(code);
       if (!buckets.has(key)) buckets.set(key, []);
       buckets.get(key).push(code);
     });
     const values = codes.map((c) => valueFor(c, metric)).filter(Number.isFinite);
     const max = values.length ? Math.max.apply(null, values) : 0;
-    const order = vehicles.map((v) => v.id).concat(["unclassified"]);
 
     const blocks = order.filter((k) => buckets.has(k)).map((key) => {
-      const vehicle = vehicles.find((v) => v.id === key);
-      const name = vehicle ? pick(vehicle, "label") : t().unclassified;
-      const note = vehicle ? pick(vehicle, "note") : t().unclassifiedNote;
       const rows = sortCodes(buckets.get(key), metric)
         .map((code) => rowHTML(code, metric, max, 0)).join("");
       return `<section class="cmp-group">
-        <header><h4>${esc(name)}</h4><span>${esc(note)}</span></header>
+        <header><h4>${esc(titles[key].name)}</h4><span>${esc(titles[key].note)}</span></header>
         <ol class="cmp-rows">${rows}</ol>
       </section>`;
     }).join("");
@@ -373,13 +426,17 @@
     fetch("lib/data/sovereign-benchmark.v1.json").then((r) => r.json()),
     fetch("data/country-health.v1.json").then((r) => r.json()),
     fetch("data/country-functional-budgets.v1.json").then((r) => r.json()),
-  ]).then(([metricRegistry, systemAssignments, sovereign, health, functional]) => {
+    fetch("data/hospital-ownership.v1.json").then((r) => r.json()),
+    fetch("data/country-provider-networks.v1.json").then((r) => r.json()),
+  ]).then(([metricRegistry, systemAssignments, sovereign, health, functional, ownershipData, networkData]) => {
     registry = metricRegistry;
     assignments = systemAssignments;
     sovereign.countries.forEach((c) => countriesByCode.set(c.country_code, c));
     sovereign.series.forEach((s) => seriesByCode.set(s.country_code, s));
     sha = health.countries || {};
     cofog = functional.countries || {};
+    ownership = ownershipData.countries || {};
+    networks = networkData.countries || {};
 
     const yearSelect = document.querySelector("#year-select");
     if (yearSelect && yearSelect.value) state.year = Number(yearSelect.value);

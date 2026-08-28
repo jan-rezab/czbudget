@@ -103,3 +103,52 @@ test("the section is bilingual", async ({ page }) => {
   expect(csLabel.trim()).not.toEqual(enLabel.trim());
   await expect(page.locator("#compare-contract .cmp-field dd").first()).toContainText("full");
 });
+
+// The ownership perimeter answers "who runs the hospitals" from national facility
+// registers. Only four of the ten known registers carry named records, so the point of
+// the grouping is to show that gap rather than to hide it behind an average.
+
+test("the ownership perimeter groups countries by what their register reveals", async ({ page }) => {
+  await openCompare(page);
+  await page.locator('[data-perimeter="facility_registers"]').click();
+
+  await expect(page.locator("#compare-contract .cmp-verdict.is-conditional")).toBeVisible();
+  await expect(page.locator("#compare-result .cmp-warning")).toBeVisible();
+
+  const groups = await page.locator("#compare-result .cmp-group h4").allTextContents();
+  expect(groups.length).toBeGreaterThanOrEqual(2);
+
+  // Every country with a known register appears, loaded or not.
+  const networks = await page.evaluate(() =>
+    fetch("data/country-provider-networks.v1.json").then((r) => r.json()));
+  await expect(page.locator("#compare-result .cmp-row"))
+    .toHaveCount(Object.keys(networks.countries).length);
+
+  // Ranking across coverage groups is the invalid move, so no row carries a rank.
+  const ranks = await page.locator("#compare-result .cmp-row .cmp-rank").allTextContents();
+  expect(ranks.every((r) => r.trim() === "")).toBe(true);
+});
+
+test("a register that reveals nothing is shown as absent, not as private", async ({ page }) => {
+  await openCompare(page);
+  await page.locator('[data-perimeter="facility_registers"]').click();
+
+  // Great Britain's extract is NHS-only, so it reads 100% public by construction.
+  const gb = page.locator("#compare-result .cmp-row", { has: page.locator('a[href*="united-kingdom"]') });
+  await expect(gb.locator(".cmp-value")).toContainText("100");
+
+  // Germany has a known register with no named records loaded: no value, never a zero.
+  const de = page.locator("#compare-result .cmp-row", { has: page.locator('a[href*="germany"]') });
+  await expect(de.locator(".cmp-absent")).toBeVisible();
+  await expect(de.locator(".cmp-value")).toHaveText("—");
+});
+
+test("unresolved ownership is reported as its own metric", async ({ page }) => {
+  await openCompare(page);
+  await page.locator('[data-perimeter="facility_registers"]').click();
+  await page.locator('[data-metric="hospital_unresolved_share"]').click();
+
+  // Two thirds of the Czech register records a legal form that does not name the owner.
+  const cz = page.locator("#compare-result .cmp-row", { has: page.locator('a[href*="czechia"]') });
+  await expect(cz.locator(".cmp-value")).toContainText("66");
+});
