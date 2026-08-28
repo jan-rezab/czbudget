@@ -8,3 +8,17 @@
 .health-compare-method{margin-top:18px;display:grid;grid-template-columns:150px minmax(0,1fr) minmax(240px,.8fr);gap:22px;align-items:start;padding:18px 20px;border-left:5px solid #496f5a;background:#e7e3d9}.health-compare-method p{margin:0;color:#555b56;font-size:12px;line-height:1.6}.health-compare-method div{display:flex;flex-wrap:wrap;gap:7px 13px}.health-compare-method div b{flex-basis:100%;font:700 10px/1 monospace;text-transform:uppercase}.health-compare-method a{color:var(--ink);font:700 10px/1.3 monospace;text-transform:uppercase}.health-compare-loading{padding:48px;color:var(--muted);font:12px/1 monospace}
 @media(max-width:900px){.health-compare-heading,.health-compare-method{grid-template-columns:1fr}.health-compare-heading{gap:20px}.health-compare-rank-row{grid-template-columns:32px 1fr 130px}.health-compare-rank-row>i{grid-column:2/-1;grid-row:2}.health-compare-value{grid-column:3;grid-row:1}.health-compare-open{display:none}}
 @media(max-width:680px){.health-comparison{padding:70px 5vw 78px}.health-compare-tabs{display:grid;grid-template-columns:1fr 1fr}.health-compare-tabs button:last-child{grid-column:1/-1}.health-compare-controls,.health-compare-summary{grid-template-columns:1fr}.health-compare-controls>label,.health-compare-controls>div,.health-compare-summary article{border-right:0;border-bottom:1px solid #ffffff2b}.health-compare-summary article:last-child{border-bottom:0}.health-compare-rank-row{grid-template-columns:30px 1fr 102px;gap:9px}.health-compare-country{grid-template-columns:36px 1fr}.health-compare-value small{display:none}.health-compare-matrix-head{align-items:flex-start;flex-direction:column;gap:12px}}
+
+/* One compact Top 20 replaces the full-width duplicate matrix. */
+.health-comparison{padding-top:64px;padding-bottom:72px}
+.health-compare-cards button{min-height:104px}.health-compare-cards strong{margin:16px 0 6px;font-size:28px}
+.health-chart{padding-top:38px;border-inline:1px solid #aaa69d;background:#faf7ef}
+.health-chart .health-compare-ranking{display:grid;grid-template-columns:1fr 1fr;border-inline:0}
+.health-chart .health-compare-rank-row{min-height:58px;grid-template-columns:28px 170px minmax(90px,1fr) 132px;padding:6px 10px;gap:8px}
+.health-chart .health-compare-rank-row:nth-child(odd){border-right:1px solid #ded9cf}
+.health-chart .health-compare-open{display:none}
+.health-compare-rank-row.extra-country{border-top:1px solid var(--coral)}
+.health-compare-method{grid-template-columns:150px 1fr auto;margin-top:18px}
+.health-compare-method small{color:var(--muted);font:700 10px/1 monospace;text-transform:uppercase;white-space:nowrap}
+@media(max-width:1050px){.health-chart .health-compare-ranking{grid-template-columns:1fr}.health-chart .health-compare-rank-row:nth-child(odd){border-right:0}.health-chart .health-compare-rank-row{grid-template-columns:32px 220px minmax(120px,1fr) 160px}}
+@media(max-width:680px){.health-chart{padding-top:42px}.health-chart .health-compare-rank-row{grid-template-columns:30px 1fr 102px}.health-compare-method{grid-template-columns:1fr}.health-compare-method small{white-space:normal}}

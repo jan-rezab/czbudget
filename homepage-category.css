@@ -4,3 +4,14 @@
 .category-country .country-flag-svg{grid-row:1/-1;align-self:center}.category-matrix thead th:not(:first-child){padding-top:6px}.category-matrix thead img{width:22px;height:15px;margin:0 auto 3px;display:block;object-fit:cover;border:1px solid #ffffff38}
 .category-summary article>a{margin-top:auto;color:var(--acid);font:700 11px/1 monospace;text-decoration:none;text-transform:uppercase}.category-matrix thead a{display:block;color:inherit;text-decoration:none}.category-matrix thead a:hover{color:var(--acid)}
 @media(min-width:1101px){.category-ranking{display:grid;grid-template-columns:1fr 1fr}.category-rank-row{grid-template-columns:26px 155px minmax(80px,1fr) 155px}.category-rank-row:nth-child(odd){border-right:1px solid #ffffff1f}.category-open{display:none}}
+
+/* Compact homepage view: one Top 20 chart, no duplicate matrix table. */
+.category-comparison{padding-top:58px;padding-bottom:64px}
+.category-controls{grid-template-columns:1fr 1.25fr .85fr .85fr}
+.category-chart{padding-top:38px;border-inline:1px solid #ffffff2b;background:#111413}
+.category-chart .category-ranking{border-inline:0}
+.category-rank-row.selected{background:#c9323724;box-shadow:inset 4px 0 0 var(--coral)}
+.category-rank-row.extra-country{border-top:1px solid var(--coral)}
+.category-method{margin-top:18px;padding-top:16px;border-top:1px solid #ffffff2b}
+@media(max-width:980px){.category-controls{grid-template-columns:1fr 1fr}.category-controls>label,.category-controls>div{border-bottom:1px solid #ffffff2b}}
+@media(max-width:620px){.category-controls{grid-template-columns:1fr}.category-chart{padding-top:42px}}
