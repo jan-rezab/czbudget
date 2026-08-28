@@ -22,10 +22,10 @@
     />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <link rel="stylesheet" href="demographic-pressure.css?v=20260825-initial" />
-    <link rel="stylesheet" href="compare-contract.css?v=20260828-ownership" />
-    <script src="homepage-v2.js?v=20260824-compare-footer" defer></script>
+    <link rel="stylesheet" href="compare-contract.css?v=20260828-top20-picker" />
+    <script src="homepage-v2.js?v=20260828-comparison-top20" defer></script>
     <script src="demographic-pressure.js?v=20260825-initial" defer></script>
-    <script src="compare-contract.js?v=20260828-ownership" defer></script>
+    <script src="compare-contract.js?v=20260828-top20-picker" defer></script>
 
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
@@ -49,7 +49,7 @@
           </p>
         </div>
         <aside>
-          <strong>10 × 20</strong
+          <strong id="comparison-coverage-count">— × 20</strong
           ><span data-i18n="compareCoverage"
             >zemí × let harmonizovaných dat</span
           >
@@ -61,16 +61,28 @@
             ><span data-i18n="year">Rok</span
             ><select id="year-select"></select></label
           ><label
-            ><span data-i18n="group">Skupina</span
-            ><select id="group-select">
-              <option value="all" data-i18n="groupAll">Všechny země</option>
-              <option value="requested" data-i18n="groupCore">
-                Základní srovnání
+            ><span data-i18n="populationGroup">Populace</span
+            ><select id="comparison-population">
+              <option value="large" data-i18n="heroLargeCountries">
+                5 mil. obyvatel a více
               </option>
-              <option value="responsible_benchmark" data-i18n="groupBenchmark">
-                Fiskální benchmark
+              <option value="small" data-i18n="heroSmallCountries">
+                Méně než 5 mil.
+              </option>
+              <option value="all" data-i18n="heroAllCountries">
+                Všechny země
               </option>
             </select></label
+          ><label class="comparison-country-control"
+            ><span data-i18n="addCountry">Přidat zemi</span
+            ><input
+              id="comparison-country"
+              type="search"
+              list="comparison-country-options"
+              placeholder="Přidat zemi…"
+              autocomplete="off"
+            />
+            <datalist id="comparison-country-options"></datalist></label
           ><label
             ><span data-i18n="benchmarkCountry">Benchmark země</span
             ><select id="benchmark-country"></select

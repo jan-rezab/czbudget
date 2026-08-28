@@ -42,6 +42,7 @@ const coverageSourceResearch = JSON.parse(await readFile("data/coverage-source-r
 const sovereign = JSON.parse(await readFile("lib/data/sovereign-benchmark.v1.json", "utf8"));
 const homepage = await readFile("index.html", "utf8");
 const comparisonPage = await readFile("comparison.html", "utf8");
+const comparisonScript = await readFile("compare-contract.js", "utf8");
 const methodologyPage = await readFile("methodology.html", "utf8");
 const municipalTransparencyScript = await readFile("municipal-transparency.js", "utf8");
 const municipalTransparencyStyles = await readFile("municipal-transparency.css", "utf8");
@@ -489,6 +490,7 @@ if (globalNav.includes('code === "CZE"') || !globalNav.includes('assets/flags/${
 // render as a silent fallback to the ranked table — the one failure the contract exists
 // to prevent.
 if (!comparisonPage.includes('id="compare-perimeters"') || !comparisonPage.includes('id="compare-perimeter-note"') || !comparisonPage.includes('id="compare-contract"') || !comparisonPage.includes('id="compare-result"') || !comparisonPage.includes("compare-contract.js?v=") || !comparisonPage.includes("compare-contract.css?v=")) throw new Error("Comparison page must expose the contract-driven perimeter control");
+if (!comparisonPage.includes('id="comparison-population"') || !comparisonPage.includes('id="comparison-country"') || !comparisonPage.includes('id="comparison-coverage-count"') || !comparisonScript.includes("slice(0, 20)") || !comparisonScript.includes("selectedCountry") || !comparisonScript.includes("c.iso2.toLowerCase()")) throw new Error("Comparison page must mirror the homepage's Top 20, searchable-country, population and SVG-flag controls");
 if (!compareMetrics.perimeters.some((perimeter) => perimeter.id === "general_government" && perimeter.label_en === "General government" && perimeter.note_en && perimeter.note_cs)) throw new Error("Comparison page must state its harmonised fiscal perimeter");
 {
   const metricCodes = new Set(compareMetrics.metrics.map((metric) => metric.metric_code));

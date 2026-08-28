@@ -42,6 +42,8 @@
       coverageNone: "Registr zatím nenačten",
       coverageNoneNote: "Zdroj je znám, jmenovité záznamy nejsou načteny",
       countries: (n) => `${n} zemí s údajem`,
+      topCountries: (shown, total) => `Top ${shown} z ${total} zemí s údajem`,
+      addedCountry: "Přidaná země mimo Top 20",
       fixedYear: (y) => `pevný rok ${y}`,
       profile: "Detail",
       breakYear: (y) => `zlom ${y}`,
@@ -76,6 +78,8 @@
       coverageNone: "No register loaded",
       coverageNoneNote: "The source is known; named records are not loaded",
       countries: (n) => `${n} countries with a value`,
+      topCountries: (shown, total) => `Top ${shown} of ${total} countries with a value`,
+      addedCountry: "Added country outside the Top 20",
       fixedYear: (y) => `fixed year ${y}`,
       profile: "Profile",
       breakYear: (y) => `break ${y}`,
@@ -91,19 +95,14 @@
     intl_dollar: { cs: "mez. dolary", en: "int'l dollars" },
   };
 
-  const flagCodes = {
-    CZE: "cz", DEU: "de", DNK: "dk", FIN: "fi", FRA: "fr", GBR: "gb", POL: "pl",
-    SWE: "se", CHE: "ch", UKR: "ua", USA: "us", BRA: "br", ESP: "es", JPN: "jp",
-    NLD: "nl", NOR: "no", GRC: "gr",
-  };
-
   const state = {
     lang: (window.PSDLanguage && window.PSDLanguage.current()) ||
       (document.documentElement.lang === "en" ? "en" : "cs"),
     perimeter: "general_government",
     metric: "expenditure_pct_gdp",
     year: 2024,
-    group: "all",
+    population: "large",
+    selectedCountry: "",
     ready: false,
   };
 
@@ -123,14 +122,9 @@
   const locale = () => (state.lang === "en" ? "en-GB" : "cs-CZ");
 
   const flag = (code) => {
-    const iso = flagCodes[code];
     const c = countriesByCode.get(code);
-    const emoji = String((c && c.iso2) || "").toUpperCase()
-      .replace(/[A-Z]/g, (l) => String.fromCodePoint(127397 + l.charCodeAt(0)));
-    const inner = iso
-      ? `<img src="assets/flags/${iso}.svg" alt="" loading="lazy">`
-      : `<i class="country-flag-emoji" aria-hidden="true">${emoji}</i>`;
-    return `<span class="country-flag-svg">${inner}<b>${esc(code)}</b></span>`;
+    const iso = c && c.iso2 ? c.iso2.toLowerCase() : "";
+    return `<span class="country-flag-svg"><img src="assets/flags/${esc(iso)}.svg" alt="" loading="lazy"><b>${esc(code)}</b></span>`;
   };
 
   const countryName = (code) => {
@@ -202,25 +196,40 @@
     return null;
   }
 
-  function inGroup(country) {
-    if (state.group === "all") return true;
-    if (state.group === "requested") return country.role !== "responsible_benchmark";
-    return country.role === "anchor" || country.role === "responsible_benchmark";
+  const sovereignValue = (code, metricCode, year = 2024) => {
+    const s = seriesByCode.get(code);
+    const metric = s && s.metrics && s.metrics[metricCode];
+    const hit = metric && Array.isArray(metric.values)
+      ? metric.values.find((entry) => entry.year === year) : null;
+    return hit && Number.isFinite(hit.value) ? hit.value : null;
+  };
+
+  const populationMillions = (code) => {
+    const gdp = sovereignValue(code, "nominal_gdp_usd_bn");
+    const perCapita = sovereignValue(code, "gdp_per_capita_usd");
+    return Number.isFinite(gdp) && Number.isFinite(perCapita) && perCapita > 0
+      ? gdp * 1000 / perCapita : null;
+  };
+
+  function inPopulation(code) {
+    if (state.population === "all") return true;
+    const population = populationMillions(code);
+    if (!Number.isFinite(population)) return false;
+    return state.population === "large" ? population >= 5 : population < 5;
   }
 
   // The metric's dataset sets the country universe. A health metric covering sixteen
   // countries must not render a hundred and seventy-five empty rows.
-  function universe(metric) {
+  function datasetUniverse(metric) {
     let codes;
     if (metric.dataset === "ownership") codes = Object.keys(networks);
     else if (metric.dataset === "sha") codes = Object.keys(sha);
     else if (metric.dataset === "cofog") codes = Object.keys(cofog);
     else codes = Array.from(countriesByCode.keys());
-    return codes.filter((code) => {
-      const c = countriesByCode.get(code);
-      return c && inGroup(c);
-    });
+    return codes.filter((code) => countriesByCode.has(code));
   }
+
+  const universe = (metric) => datasetUniverse(metric).filter(inPopulation);
 
   function chipFor(code, metric) {
     const a = assignments.countries[code];
@@ -232,16 +241,16 @@
     return label ? `<span class="cmp-chip">${esc(label)}</span>` : "";
   }
 
-  function rowHTML(code, metric, max, rank) {
+  function rowHTML(code, metric, max, rank, isExtra = false) {
     const value = valueFor(code, metric);
     const width = Number.isFinite(value) && max > 0
       ? Math.max(Math.abs(value) / max * 100, 0.6) : 0;
     const bar = Number.isFinite(value)
       ? `<span class="cmp-track"><span class="cmp-fill${metric.alt_colour ? " is-alt" : ""}" style="width:${width.toFixed(1)}%"></span></span>`
       : `<span class="cmp-absent">${esc(t().missing)}</span>`;
-    return `<li class="cmp-row">
-      <span class="cmp-rank">${rank ? String(rank).padStart(2, "0") : ""}</span>
-      <span class="cmp-name">${flag(code)}<a href="${profileHref(code)}">${esc(countryName(code))}</a>${chipFor(code, metric)}</span>
+    return `<li class="cmp-row${isExtra ? " is-extra" : ""}">
+      <span class="cmp-rank">${isExtra ? "+" : (rank ? String(rank).padStart(2, "0") : "")}</span>
+      <span class="cmp-name">${flag(code)}<a href="${profileHref(code)}">${esc(countryName(code))}</a>${chipFor(code, metric)}${isExtra ? `<span class="cmp-chip is-extra">${esc(t().addedCountry)}</span>` : ""}</span>
       ${bar}
       <span class="cmp-value">${esc(format(value, metric))}</span>
     </li>`;
@@ -270,6 +279,20 @@
     metricRoot.innerHTML = metricsFor(state.perimeter).map((m) =>
       `<button type="button" class="cmp-pill" data-metric="${esc(m.metric_code)}" aria-pressed="${m.metric_code === state.metric}">${esc(pick(m, "label"))}</button>`
     ).join("");
+  }
+
+  function renderCountryPicker() {
+    const input = document.querySelector("#comparison-country");
+    const options = document.querySelector("#comparison-country-options");
+    const population = document.querySelector("#comparison-population");
+    if (population) population.value = state.population;
+    if (!input || !options) return;
+    const codes = datasetUniverse(currentMetric()).slice().sort((a, b) =>
+      countryName(a).localeCompare(countryName(b), locale()));
+    options.innerHTML = codes.map((code) =>
+      `<option value="${esc(countryName(code))}">${esc(code)}</option>`).join("");
+    input.value = state.selectedCountry ? countryName(state.selectedCountry) : "";
+    input.placeholder = state.lang === "en" ? "Add a country…" : "Přidat zemi…";
   }
 
   function renderContract() {
@@ -309,12 +332,20 @@
     const sorted = sortCodes(codes, metric);
     const values = codes.map((c) => valueFor(c, metric)).filter(Number.isFinite);
     const max = values.length ? Math.max.apply(null, values.map(Math.abs)) : 0;
+    const visible = sorted.length > 20
+      ? sorted.filter((code) => Number.isFinite(valueFor(code, metric))).slice(0, 20)
+      : sorted;
+    const eligibleSelected = state.selectedCountry &&
+      datasetUniverse(metric).includes(state.selectedCountry) &&
+      !visible.includes(state.selectedCountry) ? state.selectedCountry : "";
+    const rows = eligibleSelected ? visible.concat(eligibleSelected) : visible;
     let rank = 0;
     resultRoot.innerHTML =
-      `<p class="cmp-count">${esc(t().countries(values.length))}</p>` +
-      `<ol class="cmp-rows">${sorted.map((code) => {
+      `<p class="cmp-count">${esc(sorted.length > 20 ? t().topCountries(visible.length, values.length) : t().countries(values.length))}</p>` +
+      `<ol class="cmp-rows">${rows.map((code) => {
+        const isExtra = code === eligibleSelected;
         if (Number.isFinite(valueFor(code, metric))) rank += 1;
-        return rowHTML(code, metric, max, Number.isFinite(valueFor(code, metric)) ? rank : 0);
+        return rowHTML(code, metric, max, Number.isFinite(valueFor(code, metric)) ? rank : 0, isExtra);
       }).join("")}</ol>` +
       (pick(metric, "note") ? `<p class="cmp-note">${esc(pick(metric, "note"))}</p>` : "");
   }
@@ -380,10 +411,13 @@
     if (!state.ready) return;
     renderPerimeters();
     renderMetrics();
+    renderCountryPicker();
     renderContract();
     const metric = currentMetric();
     if (metric.comparability === "national_only") { renderRefusal(metric); return; }
     const codes = universe(metric);
+    if (state.selectedCountry && datasetUniverse(metric).includes(state.selectedCountry) &&
+        !codes.includes(state.selectedCountry)) codes.push(state.selectedCountry);
     if (metric.comparability === "conditional") renderGrouped(metric, codes);
     else renderRanked(metric, codes);
   }
@@ -409,8 +443,27 @@
 
     const year = document.querySelector("#year-select");
     if (year) year.addEventListener("change", (e) => { state.year = Number(e.target.value); render(); });
-    const group = document.querySelector("#group-select");
-    if (group) group.addEventListener("change", (e) => { state.group = e.target.value; render(); });
+    const population = document.querySelector("#comparison-population");
+    if (population) population.addEventListener("change", (event) => {
+      state.population = event.target.value;
+      render();
+    });
+    const countryInput = document.querySelector("#comparison-country");
+    if (countryInput) {
+      const applyCountry = () => {
+        const query = countryInput.value.trim().toLocaleLowerCase(locale());
+        const match = datasetUniverse(currentMetric()).find((code) =>
+          countryName(code).toLocaleLowerCase(locale()) === query || code.toLowerCase() === query);
+        if (!query || match) {
+          state.selectedCountry = match || "";
+          render();
+        }
+      };
+      countryInput.addEventListener("change", applyCountry);
+      countryInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") { event.preventDefault(); applyCountry(); }
+      });
+    }
 
     window.addEventListener("psdlanguagechange", (event) => {
       state.lang = (event.detail && event.detail.lang) || state.lang;
@@ -440,8 +493,11 @@
 
     const yearSelect = document.querySelector("#year-select");
     if (yearSelect && yearSelect.value) state.year = Number(yearSelect.value);
-    const groupSelect = document.querySelector("#group-select");
-    if (groupSelect && groupSelect.value) state.group = groupSelect.value;
+    const coverage = document.querySelector("#comparison-coverage-count");
+    if (coverage) {
+      const years = sovereign.period && sovereign.period.year_count ? sovereign.period.year_count : 20;
+      coverage.textContent = `${sovereign.countries.length} × ${years}`;
+    }
 
     state.ready = true;
     bind();

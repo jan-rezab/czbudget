@@ -38,6 +38,26 @@ test("a full metric ranks, and missing values sort last without a rank", async (
   expect(numeric).toEqual(sorted);
 });
 
+test("the sovereign ranking stays at Top 20 and can pin any country", async ({ page }) => {
+  await openCompare(page);
+  await expect(page.locator("#compare-result .cmp-row")).toHaveCount(20);
+  await expect(page.locator("#comparison-country-options option")).toHaveCount(191);
+  await expect(page.locator("#comparison-coverage-count")).toHaveText("191 × 20");
+  await expect(page.locator("#compare-result .country-flag-svg img").first())
+    .toHaveAttribute("src", /assets\/flags\/[a-z]{2}\.svg/);
+
+  const picker = page.locator("#comparison-country");
+  await picker.fill("IND");
+  await picker.press("Enter");
+
+  const india = page.locator("#compare-result .cmp-row", {
+    has: page.locator('a[href*="ind"]'),
+  });
+  await expect(india).toHaveCount(1);
+  await expect(india).toHaveClass(/is-extra/);
+  await expect(india.locator(".cmp-rank")).toHaveText("+");
+});
+
 test("a conditional metric groups and withholds the global rank", async ({ page }) => {
   await openCompare(page);
   await page.locator('[data-metric="health_gf07_pct_gdp"]').click();
