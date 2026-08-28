@@ -299,7 +299,13 @@ if (process.env.NODE_ENV !== "test") {
   const server = http.createServer(handler);
   server.requestTimeout = 15_000;
   server.headersTimeout = 10_000;
-  server.listen(PORT, "0.0.0.0", () => {
-    console.log(JSON.stringify({ severity: "INFO", message: "API server ready", port: PORT }));
+  server.listen(PORT, "0.0.0.0", async () => {
+    try {
+      if (process.env.API_READY_FILE) await fs.writeFile(process.env.API_READY_FILE, `${process.pid}\n`, { mode: 0o600 });
+      console.log(JSON.stringify({ severity: "INFO", message: "API server ready", port: PORT }));
+    } catch (error) {
+      console.error(JSON.stringify({ severity: "ERROR", message: "API readiness marker failed", error: error?.message }));
+      server.close(() => process.exit(1));
+    }
   });
 }
