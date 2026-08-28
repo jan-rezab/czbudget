@@ -51,6 +51,7 @@ test("Brno keeps the full Czech budget template while sharing the municipal hier
 
 test("Brazilian profile reconciles stages and keeps tax rows on the revenue side", async ({ page }) => {
   await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
+  await page.locator('[data-profile-currency="native"]').click();
 
   const actual = page.locator(".budget-stage-actual");
   await expect(actual).toContainText("R$112,335,533,909");
@@ -70,6 +71,36 @@ test("Brazilian profile reconciles stages and keeps tax rows on the revenue side
   await page.locator("#profile-detail-search").fill("Taxas");
   await expect(page.locator("#profile-detail-visual")).toContainText("Taxas");
   await expect(page.locator("#profile-detail-visual")).not.toContainText("Receitas de Capital");
+});
+
+test("municipal profiles always offer auditable EUR, USD and native currency views", async ({ page }) => {
+  await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
+
+  const revenue = page.locator(".detail-kpis article").first().locator("strong");
+  await expect(page.locator('[data-profile-currency="EUR"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(revenue).toContainText("€");
+  await expect(page.locator(".profile-currency-converter")).toContainText("IMF WEO annual rate 2024");
+  await expect(page.locator(".profile-currency-converter")).toContainText("nearest available year");
+
+  await page.locator('[data-profile-currency="USD"]').click();
+  await expect(revenue).toContainText("$");
+  await page.reload();
+  await expect(page.locator('[data-profile-currency="USD"]')).toHaveAttribute("aria-pressed", "true");
+
+  await page.locator('[data-profile-currency="native"]').click();
+  await expect(revenue).toContainText("R$");
+
+  for (const route of [
+    "/municipalities/japan/municipality-242144/",
+    "/municipalities/denmark/aabenraa-580/",
+    "/municipalities/spain/ababuj-44001aa000/",
+    "/municipalities/el-salvador/acajutla-8301/",
+  ]) {
+    await page.goto(`${route}?lang=en`);
+    await page.locator('[data-profile-currency="EUR"]').click();
+    await expect(page.locator(".profile-currency-converter"), route).toBeVisible();
+    await expect(page.locator('[data-profile-currency="EUR"]'), route).toHaveAttribute("aria-pressed", "true");
+  }
 });
 
 test("every generated country family renders the shared municipal hierarchy", async ({ page }) => {
@@ -92,6 +123,7 @@ test("international profiles remain useful without JavaScript", async ({ browser
   await expect(page.locator(".detail-kpis article")).toHaveCount(4);
   await expect(page.locator("#history-explorer")).toBeVisible();
   await expect(page.locator("#rozpocet .plan-panel")).toBeVisible();
+  await expect(page.locator(".detail-kpis")).toContainText("BRL");
   await expect(page.locator("#profile-detail-visual .native-visual-row")).toHaveCount(10);
   await expect(page.locator(".raw-detail-audit")).not.toHaveAttribute("open", "");
   await expect(page.locator("#profile-detail tbody tr")).toHaveCount(11);

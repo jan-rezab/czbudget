@@ -35,6 +35,74 @@
   background: transparent;
 }
 
+.profile-currency-converter {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto auto;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 5vw;
+  border-bottom: 1px solid #343936;
+  background: var(--cz-ink);
+  color: white;
+}
+
+.profile-currency-converter > div:first-child {
+  min-width: 0;
+}
+
+.profile-currency-converter span,
+.profile-currency-converter small {
+  display: block;
+}
+
+.profile-currency-converter span {
+  color: #b9bdb8;
+  font: 700 11px monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.profile-currency-converter strong {
+  display: block;
+  margin: 5px 0;
+  font: 800 14px monospace;
+}
+
+.profile-currency-converter small {
+  color: #b9bdb8;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.profile-currency-options {
+  display: flex;
+  gap: 1px;
+  padding: 1px;
+  background: #4a504c;
+}
+
+.profile-currency-options button {
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 0;
+  background: #2b302d;
+  color: #d8dbd7;
+  font: 800 11px monospace;
+  cursor: pointer;
+}
+
+.profile-currency-options button.active {
+  background: var(--cz-yellow);
+  color: var(--cz-ink);
+}
+
+.profile-currency-converter > a {
+  color: white;
+  font: 700 11px monospace;
+  white-space: nowrap;
+  text-underline-offset: 3px;
+}
+
 .international-municipality-profile .single-period-history {
   background: #f4f1e9;
 }
@@ -410,6 +478,20 @@
 
   .international-municipality-profile .detail-grid {
     margin-bottom: 58px;
+  }
+
+  .profile-currency-converter {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .profile-currency-options {
+    width: 100%;
+  }
+
+  .profile-currency-options button {
+    flex: 1;
   }
 
   .native-detail-explorer {

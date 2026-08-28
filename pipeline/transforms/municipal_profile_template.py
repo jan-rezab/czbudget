@@ -15,7 +15,7 @@ from collections.abc import Iterable
 
 
 ORIGIN = "https://publicspendingdata.org"
-ASSET_VERSION = "20260828-visual-detail"
+ASSET_VERSION = "20260828-fx-currency"
 STAGE_ORDER = ("enacted", "revised", "actual", "committed", "cash", "period", "remaining")
 STAGE_LABELS = {
     "en": {"enacted": "Approved", "revised": "Amended", "actual": "Actual", "committed": "Committed", "cash": "Paid", "period": "In period", "remaining": "Remaining"},

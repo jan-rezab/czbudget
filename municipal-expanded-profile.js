@@ -14,6 +14,12 @@
   let detailYear = "all";
   let visualShown = 12;
   let detailShown = 160;
+  let fxData = null;
+  let displayCurrency = "EUR";
+  try {
+    const storedCurrency = localStorage.getItem("psd-international-municipal-currency");
+    if (["native", "EUR", "USD"].includes(storedCurrency)) displayCurrency = storedCurrency;
+  } catch {}
 
   const copy = {
     cs: {
@@ -30,6 +36,7 @@
       account: "Kód / položka", year: "Rok", allYears: "Všechny roky", shown: "zobrazeno", more: "Načíst další zdrojové řádky", sourceKicker: "Data a metodika",
       sourceTitle: "Auditovatelný profil.", sourceCopy: "Rozsah odpovídá oficiálnímu obecnímu výkazu. Chybějící hotovost, dluh nebo historie se nedopočítávají.",
       officialSource: "Oficiální zdroj", approvedBudget: "Zveřejněný schválený rozpočet", regionalAccounts: "Oficiální účty regionů", profileData: "Strojová data", open: "Otevřít ↗", json: "JSON ↗", noValue: "Není v načtené národní vrstvě",
+      displayCurrency: "Měna zobrazení", nativeCurrency: "Původní", fxCopy: "Přepočet pouze pro zobrazení; zdrojová data zůstávají v původní měně.", fxRate: "Roční kurz IMF WEO", fxLatest: "nejbližší dostupný rok",
       sumOfResults: "Součet výsledků za {years} let", historyData: "Historická data", methodWarning: "Saldo je v celé řadě konsolidované. Stav účtů má metodický zlom v roce 2012. Chybějící rok není nula — pro dnešní IČO se v daném roce nenašla data.", latestPeriod: "Poslední období", overview: "Přehled", budget: "Rozpočet", accounts: "Účty", detail: "Detail", coverage: "Rozsah", method: "Metodika",
     },
     en: {
@@ -46,6 +53,7 @@
       account: "Code / item", year: "Year", allYears: "All years", shown: "shown", more: "Load more source rows", sourceKicker: "Data and methodology",
       sourceTitle: "An auditable profile.", sourceCopy: "Coverage follows the official municipal return. Missing cash, debt or history is not estimated.",
       officialSource: "Official source", approvedBudget: "Published approved budget", regionalAccounts: "Official regional accounts", profileData: "Machine-readable data", open: "Open ↗", json: "JSON ↗", noValue: "Not available in the loaded national layer",
+      displayCurrency: "Display currency", nativeCurrency: "Native", fxCopy: "Display conversion only; source data remain in the native currency.", fxRate: "IMF WEO annual rate", fxLatest: "nearest available year",
       sumOfResults: "Sum of results over {years} years", historyData: "Historical data", methodWarning: "The fiscal balance is consolidated throughout the series. Cash has a methodological break in 2012. A missing year is not zero—no data were found for the current registration ID in that year.", latestPeriod: "Latest period", overview: "Overview", budget: "Budget", accounts: "Accounts", detail: "Detail", coverage: "Coverage", method: "Method",
     },
   };
@@ -74,12 +82,37 @@
   const fillTemplate = (template, values) => String(template || "").replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "");
   const numeric = (value) => Number.isFinite(Number(value)) ? Number(value) : null;
   const percentage = (value) => Number.isFinite(value) ? new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", { style: "percent", maximumFractionDigits: 1 }).format(value) : "—";
-  const money = (value, compact = true) => {
+  const nearestAnnual = (values, requestedYear) => {
+    const years = Object.keys(values || {}).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+    if (!years.length) return null;
+    const target = Number(requestedYear);
+    const year = Number.isFinite(target) ? years.reduce((best, candidate) => Math.abs(candidate - target) < Math.abs(best - target) ? candidate : best, years[0]) : years.at(-1);
+    return { year, value: values[year] };
+  };
+  const conversion = (year) => {
+    const sourceCurrency = profile?.currency || "EUR";
+    const targetCurrency = displayCurrency === "native" ? sourceCurrency : displayCurrency;
+    if (sourceCurrency === targetCurrency) return { factor: 1, currency: targetCurrency, rateYear: Number(year) || null, status: "native" };
+    if (!fxData) return { factor: 1, currency: sourceCurrency, rateYear: null, status: "unavailable" };
+    const euro = nearestAnnual(fxData.eur_per_usd, year);
+    if (!euro) return { factor: 1, currency: sourceCurrency, rateYear: null, status: "unavailable" };
+    if (sourceCurrency === "USD") return { factor: euro.value, currency: "EUR", rateYear: euro.year, status: "actual" };
+    if (sourceCurrency === "EUR") return { factor: 1 / euro.value, currency: "USD", rateYear: euro.year, status: "actual" };
+    let countryRates = fxData.rates?.[profile.country];
+    if (countryRates?.currency !== sourceCurrency) countryRates = Object.values(fxData.rates || {}).find((entry) => entry.currency === sourceCurrency);
+    const local = nearestAnnual(countryRates?.years, year);
+    if (!local?.value?.local_per_usd) return { factor: 1, currency: sourceCurrency, rateYear: null, status: "unavailable" };
+    const factor = targetCurrency === "USD" ? 1 / local.value.local_per_usd : euro.value / local.value.local_per_usd;
+    return { factor, currency: targetCurrency, rateYear: local.year, status: local.value.status || "estimate" };
+  };
+  const formatMoney = (value, currency, compact = true) => new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", {
+    style: "currency", currency, notation: compact ? "compact" : "standard", maximumFractionDigits: compact ? 2 : 0,
+  }).format(value);
+  const money = (value, compact = true, year = null) => {
     const amount = numeric(value);
     if (amount === null) return "—";
-    return new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", {
-      style: "currency", currency: profile.currency, notation: compact ? "compact" : "standard", maximumFractionDigits: compact ? 2 : 0,
-    }).format(amount);
+    const applied = conversion(year ?? profile.latest?.year ?? profile.years?.at(-1));
+    return formatMoney(amount * applied.factor, applied.currency, compact);
   };
 
   function adaptProfile(data, historyData = null) {
@@ -264,6 +297,17 @@
     }).join("") : `<p class="profile-empty-note">${copy[lang].noValue}</p>`}</article>`;
   }
 
+  function currencyControlMarkup(latestYear) {
+    if (!fxData) return "";
+    const t = copy[lang];
+    const applied = conversion(latestYear);
+    const converted = displayCurrency !== "native" && applied.currency === displayCurrency;
+    const fallback = converted && Number(applied.rateYear) !== Number(latestYear) ? ` · ${t.fxLatest}` : "";
+    const method = converted ? `${t.fxRate} ${applied.rateYear}${fallback}` : `${t.nativeCurrency} · ${profile.currency}`;
+    const sourceUrl = fxData.source?.download_page || fxData.source?.url || "";
+    return `<section class="profile-currency-converter" aria-label="${escapeHtml(t.displayCurrency)}"><div><span>${t.displayCurrency}</span><strong>${escapeHtml(method)}</strong><small>${t.fxCopy}</small></div><div class="profile-currency-options" role="group" aria-label="${escapeHtml(t.displayCurrency)}">${[["native", `${t.nativeCurrency} · ${profile.currency}`], ["EUR", "EUR"], ["USD", "USD"]].map(([currency, label]) => `<button type="button" data-profile-currency="${currency}" class="${displayCurrency === currency ? "active" : ""}" aria-pressed="${displayCurrency === currency}">${escapeHtml(label)}</button>`).join("")}</div>${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(fxData.source?.provider || "IMF")} ↗</a>` : ""}</section>`;
+  }
+
   function historyMarkup(history) {
     const t = copy[lang];
     const methodWarning = profile.country === "FRA"
@@ -273,9 +317,15 @@
     const fourthValue = (row) => numeric(row.cash) !== null ? row.cash : row.debt;
     if (history.length <= 1) {
       const row = history[0] || {};
-      return `<section class="history-explorer single-period-history" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.onePeriod}</span><h2>${t.historyTitle}</h2></div><p>${t.onePeriodCopy}</p></div><div class="history-kpis">${[[t.revenue, row.revenue], [t.expenditure, row.expenditure], [t.balance, row.balance], [fourthLabel, fourthValue(row)]].map(([label, value]) => `<article><span>${label}</span><strong>${money(value)}</strong><small>${row.year || "—"}</small></article>`).join("")}</div></section>`;
+      return `<section class="history-explorer single-period-history" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.onePeriod}</span><h2>${t.historyTitle}</h2></div><p>${t.onePeriodCopy}</p></div><div class="history-kpis">${[[t.revenue, row.revenue], [t.expenditure, row.expenditure], [t.balance, row.balance], [fourthLabel, fourthValue(row)]].map(([label, value]) => `<article><span>${label}</span><strong>${money(value, true, row.year)}</strong><small>${row.year || "—"}</small></article>`).join("")}</div></section>`;
     }
-    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${t.historyCopy}</p><p class="method-warning">${methodWarning}</p></div><div class="history-kpis" id="history-kpis"><article class="history-total"><span>${fillTemplate(t.sumOfResults, { years: history.length })}</span><strong>${money(history.reduce((sum, entry) => sum + (numeric(entry.balance) ?? 0), 0))}</strong><small>${history.at(0)?.year}–${history.at(-1)?.year}</small></article></div><details class="history-table" open><summary>${t.historyTitle}</summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.historyTitle)}"><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody id="history-table-body">${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false)}</td><td>${money(row.expenditure, false)}</td><td>${money(row.balance, false)}</td><td>${money(fourthValue(row), false)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
+    const convertedTotal = history.reduce((sum, entry) => {
+      const amount = numeric(entry.balance);
+      if (amount === null) return sum;
+      return sum + amount * conversion(entry.year).factor;
+    }, 0);
+    const totalCurrency = conversion(history.at(-1)?.year).currency;
+    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${t.historyCopy}</p><p class="method-warning">${methodWarning}</p></div><div class="history-kpis" id="history-kpis"><article class="history-total"><span>${fillTemplate(t.sumOfResults, { years: history.length })}</span><strong>${formatMoney(convertedTotal, totalCurrency)}</strong><small>${history.at(0)?.year}–${history.at(-1)?.year}</small></article></div><details class="history-table" open><summary>${t.historyTitle}</summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.historyTitle)}"><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody id="history-table-body">${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false, row.year)}</td><td>${money(row.expenditure, false, row.year)}</td><td>${money(row.balance, false, row.year)}</td><td>${money(fourthValue(row), false, row.year)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
   }
 
   function stageTableMarkup(rows, latestYear) {
@@ -317,7 +367,7 @@
       const width = maximum ? Math.max(1.5, Math.abs(Number(row.amount)) / maximum * 100) : 0;
       const label = row.name || row.column || row.code || t.specificItems;
       const meta = [row.code, row.table_title, row.column && row.column !== row.name ? row.column : null].filter(Boolean).join(" · ");
-      return `<article class="native-visual-row"><div class="native-visual-rank">${String(index + 1).padStart(2, "0")}</div><div class="native-visual-body"><div class="native-visual-label"><div><strong>${escapeHtml(label)}</strong>${meta ? `<small>${escapeHtml(meta)}</small>` : ""}</div><b>${money(Math.abs(Number(row.amount)))}</b></div><div class="native-visual-track"><i style="width:${width.toFixed(2)}%"></i></div></div></article>`;
+      return `<article class="native-visual-row"><div class="native-visual-rank">${String(index + 1).padStart(2, "0")}</div><div class="native-visual-body"><div class="native-visual-label"><div><strong>${escapeHtml(label)}</strong>${meta ? `<small>${escapeHtml(meta)}</small>` : ""}</div><b>${money(Math.abs(Number(row.amount)), true, row.year)}</b></div><div class="native-visual-track"><i style="width:${width.toFixed(2)}%"></i></div></div></article>`;
     }).join("");
     return `<div class="native-visual-summary"><span>${t.specificItems}</span><strong>${new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(rows.length)}</strong></div><div class="native-visual-list" id="profile-detail-visual">${items || `<p class="profile-empty-note">${t.noItems}</p>`}</div><p class="native-visual-note">${t.compareNote}</p><button id="profile-visual-more" class="load-more" type="button"${visualShown >= rows.length ? " hidden" : ""}>${t.visualMore}</button>`;
   }
@@ -328,7 +378,7 @@
     const rows = detailRows();
     const table = document.querySelector("#profile-detail");
     if (!table) return;
-    table.innerHTML = `<thead><tr><th>${t.year}</th><th>${t.stage}</th><th>${t.side}</th><th>${t.account}</th><th>${t.amount}</th></tr></thead><tbody>${rows.slice(0, detailShown).map((row) => `<tr><td>${row.year}</td><td>${escapeHtml(t[row.stage] || row.stage)}</td><td>${escapeHtml(row.side === "revenue" ? t.revenue : row.side === "expenditure" ? t.expenditure : row.side || "")}</td><td><b>${escapeHtml(row.code)}</b><small>${escapeHtml(row.name || row.column || "")}${row.column && row.name ? ` · ${escapeHtml(row.column)}` : ""}</small></td><td>${money(row.amount, false)}</td></tr>`).join("")}</tbody>`;
+    table.innerHTML = `<thead><tr><th>${t.year}</th><th>${t.stage}</th><th>${t.side}</th><th>${t.account}</th><th>${t.amount}</th></tr></thead><tbody>${rows.slice(0, detailShown).map((row) => `<tr><td>${row.year}</td><td>${escapeHtml(t[row.stage] || row.stage)}</td><td>${escapeHtml(row.side === "revenue" ? t.revenue : row.side === "expenditure" ? t.expenditure : row.side || "")}</td><td><b>${escapeHtml(row.code)}</b><small>${escapeHtml(row.name || row.column || "")}${row.column && row.name ? ` · ${escapeHtml(row.column)}` : ""}</small></td><td>${money(row.amount, false, row.year)}</td></tr>`).join("")}</tbody>`;
     document.querySelector("#profile-detail-count").textContent = `${new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(Math.min(detailShown, rows.length))} / ${new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(rows.length)} ${t.shown}`;
     const more = document.querySelector("#profile-detail-more");
     more.textContent = t.more;
@@ -364,6 +414,11 @@
 
   function bindControls() {
     const resetAndRefresh = () => { visualShown = 12; detailShown = 160; refreshDetailExplorer(); };
+    document.querySelectorAll("[data-profile-currency]").forEach((button) => button.addEventListener("click", () => {
+      displayCurrency = button.dataset.profileCurrency;
+      try { localStorage.setItem("psd-international-municipal-currency", displayCurrency); } catch {}
+      render();
+    }));
     document.querySelector("#profile-detail-search")?.addEventListener("input", (event) => { detailQuery = event.target.value; resetAndRefresh(); });
     document.querySelector("#profile-detail-stage")?.addEventListener("change", (event) => { detailStage = event.target.value; resetAndRefresh(); });
     document.querySelector("#profile-detail-year")?.addEventListener("change", (event) => { detailYear = event.target.value; resetAndRefresh(); });
@@ -443,6 +498,7 @@
     document.querySelector("main").innerHTML = `<nav class="breadcrumbs"><a href="${assetRoot}municipalities/?lang=${lang}">${t.municipalities}</a><span>›</span><a href="${assetRoot}${country.profileRoot || `municipalities/${country.slug}`}/?lang=${lang}">${escapeHtml(country[lang])}</a><span>›</span><strong>${escapeHtml(profile.name)}</strong></nav>
       <section class="detail-hero" id="overview"><div><span class="eyebrow"><i class="live-dot"></i>${escapeHtml(country[lang])} · ${t.official}</span><h1>${escapeHtml(profile.name)}</h1><p>${t.code} ${escapeHtml(profile.code)}${profile.region ? ` · ${escapeHtml(profile.region)}` : ""}. ${t.sourceCopy}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">${t.budget} ${latestYear} <b>↓</b></a><a href="#native-detail">${t.nativeKicker}</a><a href="${escapeHtml(profileUrl)}" download>${t.profileData}</a></div></div><aside class="detail-score"><span>${executionRate !== null ? t.executionRate : t.latest}</span><strong>${executionRate !== null ? percentage(executionRate) : latestYear || "—"}</strong><small>${executionRate !== null ? `${t.actual} / ${t.revised}` : escapeHtml(profile.currency)}</small></aside></section>
       <section class="detail-kpis">${[[t.revenue, latest.revenue, latestYear], [t.expenditure, latest.expenditure, latestYear], [t.balance, latest.balance, latestYear], fourthMetric].map(([label, value, note], index) => `<article><span>${label}</span><strong class="${index === 2 && numeric(value) !== null ? (Number(value) >= 0 ? "positive" : "negative") : ""}">${index === 3 && label === t.executionRate ? percentage(value) : money(value)}</strong><small>${numeric(value) !== null ? note : t.noValue}</small></article>`).join("")}</section>
+      ${currencyControlMarkup(latestYear)}
       ${historyMarkup(history)}
       <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(profile.normalizedDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
         <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div><div class="detail-side-tabs" role="group" aria-label="${escapeHtml(t.side)}"><button type="button" data-detail-side="expenditure" class="${detailSide === "expenditure" ? "active" : ""}" aria-pressed="${detailSide === "expenditure"}">${t.spendingTab}</button><button type="button" data-detail-side="revenue" class="${detailSide === "revenue" ? "active" : ""}" aria-pressed="${detailSide === "revenue"}">${t.incomeTab}</button></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.year}</span><select id="profile-detail-year"><option value="all">${t.allYears}</option>${detailYears.map((year) => `<option value="${year}"${String(year) === detailYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label></div><div id="profile-detail-visual-wrap">${visualDetailMarkup()}</div><details class="raw-detail-audit"><summary><span>${t.rawRows}</span><strong>${t.rawRowsOpen} · <b id="profile-detail-count"></b></strong></summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></details></section>
@@ -454,9 +510,15 @@
   }
 
   const fetchJson = (url) => fetch(url).then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); });
-  Promise.all([fetchJson(profileUrl), document.body.dataset.historyUrl ? fetchJson(document.body.dataset.historyUrl) : Promise.resolve(null)])
-    .then(([data, historyData]) => {
+  Promise.all([
+    fetchJson(profileUrl),
+    document.body.dataset.historyUrl ? fetchJson(document.body.dataset.historyUrl) : Promise.resolve(null),
+    fetchJson(new URL("data/municipal-fx-rates.v1.json", assetRoot).href).catch(() => null),
+  ])
+    .then(([data, historyData, rates]) => {
+      fxData = rates;
       profile = adaptProfile(data, historyData);
+      if (displayCurrency !== "native" && conversion(profile.latest?.year ?? profile.years?.at(-1)).currency !== displayCurrency) displayCurrency = "native";
       profile.normalizedDetail = normalizeRows(profile.detail || []);
       const availableSides = new Set(profile.normalizedDetail.map((row) => row.side));
       detailSide = availableSides.has("expenditure") ? "expenditure" : availableSides.has("revenue") ? "revenue" : "other";
