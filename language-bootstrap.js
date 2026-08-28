@@ -132,6 +132,14 @@
       cs: ["Výdaje na obranu — Public Spending Data", "Vojenské výdaje vůči HDP, závazek NATO a nejjemnější dostupné rozpočtové řádky pro 17 zemí."],
       en: ["Defense spending — Public Spending Data", "Military expenditure relative to GDP, the NATO commitment and the finest available budget lines for 17 countries."],
     },
+    "/deep-dives/tax-burden/": {
+      cs: ["Daňové zatížení — Public Spending Data", "Daňový klín domácností, firemní sazby, cena uhlíku a místní daňová pravomoc podle OECD."],
+      en: ["Tax burden — Public Spending Data", "OECD household tax wedges, corporate rates, carbon pricing and local tax authority."],
+    },
+    "/deep-dives/redistribution/": {
+      cs: ["Přerozdělení a výsledky — Public Spending Data", "Nerovnost před a po transferech, sociální výdaje, důchody a výsledky podle OECD."],
+      en: ["Redistribution and outcomes — Public Spending Data", "OECD inequality before and after transfers, social spending, pensions and outcomes."],
+    },
     "/cesky-rozpocet.html": {
       cs: ["Public Spending Data — český rozpočet v čase", "Státní rozpočet ČR 2001–2026, tok peněz ve zdravotnictví, benchmark nemocnic, účelové oblasti, kapitoly a demografický tlak do roku 2045."],
       en: ["Public Spending Data — Czech budget over time", "The Czech state budget for 2001–2026, health-system money flows, hospital benchmarks, spending purposes, budget chapters and demographic pressure to 2045."],

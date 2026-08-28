@@ -125,6 +125,8 @@
     year: 2024,
     view: "selected",
     selectedCountries: ["CZE", "DEU", "POL", "UKR"],
+    scatterX: "social_spending",
+    scatterY: "poverty_rate",
     ready: false,
   };
 
@@ -385,6 +387,40 @@
     </ol>`;
   }
 
+  function renderOecdScatter() {
+    const root = document.querySelector("#oecd-scatter");
+    if (!root || !oecd.metrics || !oecd.countries) return;
+    const available = ["tax_to_gdp", "labour_tax_wedge_single", "labour_tax_wedge_family", "corporate_statutory_rate", "corporate_eatr", "net_carbon_rate", "disposable_gini", "market_gini", "poverty_rate", "social_spending", "pension_replacement_aw100", "government_employment", "procurement_gdp", "housing_affordability", "life_satisfaction", "pisa_math", "road_deaths"].filter((key) => oecd.metrics[key]);
+    const points = Object.keys(oecd.countries).map((code) => ({
+      code,
+      x: oecd.countries[code].comparison?.[state.scatterX],
+      y: oecd.countries[code].comparison?.[state.scatterY],
+    })).filter((point) => Number.isFinite(point.x?.value) && Number.isFinite(point.y?.value));
+    const metricLabel = (key) => oecd.metrics[key]?.[`label_${state.lang}`] || key;
+    const options = (selected) => available.map((key) => `<option value="${esc(key)}"${key === selected ? " selected" : ""}>${esc(metricLabel(key))}</option>`).join("");
+    let chart = `<p class="oecd-chart-empty">${esc(t().missing)}</p>`;
+    if (points.length >= 3) {
+      const W = 900, H = 460, L = 76, R = 56, T = 38, B = 68;
+      const xv = points.map((point) => point.x.value), yv = points.map((point) => point.y.value);
+      const extent = (values) => { const min = Math.min(...values), max = Math.max(...values), pad = (max - min || 1) * .08; return [min - pad, max + pad]; };
+      const [xmin, xmax] = extent(xv), [ymin, ymax] = extent(yv);
+      const x = (value) => L + (value - xmin) / (xmax - xmin) * (W - L - R);
+      const y = (value) => T + (ymax - value) / (ymax - ymin) * (H - T - B);
+      const digits = (key) => key.includes("gini") ? 2 : 1;
+      const grid = [0, .25, .5, .75, 1].map((q) => {
+        const xx = L + q * (W - L - R), yy = T + q * (H - T - B);
+        return `<line class="grid" x1="${xx}" x2="${xx}" y1="${T}" y2="${H - B}"/><line class="grid" x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}"/><text class="axis" x="${xx}" y="${H - B + 21}" text-anchor="middle">${(xmin + q * (xmax - xmin)).toFixed(digits(state.scatterX))}</text><text class="axis" x="${L - 11}" y="${yy + 3}" text-anchor="end">${(ymax - q * (ymax - ymin)).toFixed(digits(state.scatterY))}</text>`;
+      }).join("");
+      chart = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(metricLabel(state.scatterX))} × ${esc(metricLabel(state.scatterY))}">${grid}${points.map((point) => `<circle class="${state.selectedCountries.includes(point.code) ? "is-selected" : ""}" cx="${x(point.x.value)}" cy="${y(point.y.value)}" r="${state.selectedCountries.includes(point.code) ? 7 : 5}"><title>${esc(countryName(point.code))}: ${point.x.value.toFixed(digits(state.scatterX))} / ${point.y.value.toFixed(digits(state.scatterY))}; ${point.x.year} / ${point.y.year}</title></circle><text class="country" x="${x(point.x.value) + 8}" y="${y(point.y.value) - 8}">${esc(point.code)}</text>`).join("")}<text class="axis-title" x="${W / 2}" y="${H - 9}" text-anchor="middle">${esc(metricLabel(state.scatterX))}</text><text class="axis-title" transform="translate(17 ${H / 2}) rotate(-90)" text-anchor="middle">${esc(metricLabel(state.scatterY))}</text></svg>`;
+    }
+    root.innerHTML = `<div class="oecd-scatter-controls"><label>${state.lang === "en" ? "Horizontal axis" : "Vodorovná osa"}<select data-scatter-axis="x">${options(state.scatterX)}</select></label><label>${state.lang === "en" ? "Vertical axis" : "Svislá osa"}<select data-scatter-axis="y">${options(state.scatterY)}</select></label></div><div class="oecd-scatter-chart">${chart}</div><p class="oecd-chart-note">${state.lang === "en" ? "Each point keeps the two source years in its tooltip. Association is not causation; missing pairs are omitted, never estimated." : "Každý bod uchovává v nápovědě oba zdrojové roky. Souvislost není příčina; chybějící dvojice vynecháváme, nikdy je neodhadujeme."}</p>`;
+    root.querySelectorAll("[data-scatter-axis]").forEach((select) => select.addEventListener("change", () => {
+      if (select.dataset.scatterAxis === "x") state.scatterX = select.value;
+      else state.scatterY = select.value;
+      renderOecdScatter();
+    }));
+  }
+
   function renderContract() {
     if (!contractRoot) return;
     const m = currentMetric();
@@ -500,6 +536,7 @@
     renderSelection();
     renderContract();
     renderProvenance();
+    renderOecdScatter();
     const metric = currentMetric();
     if (metric.comparability === "national_only") { renderRefusal(metric); return; }
     const codes = universe(metric);
