@@ -382,6 +382,164 @@ PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
 CLUSTER BY public_entity_id, budget_stage, functional_paragraph_code, economic_item_code
 OPTIONS(description = 'Detailed municipal budget facts at entity × year/period × stage × paragraph × item grain.');
 
+-- Regional governments are a distinct tier and a distinct fact grain. They
+-- share public_entity_id with the generic entity dimension, but never share a
+-- fact table with municipalities. Geographic containment is represented by
+-- dimensions/relations, not by adding municipal amounts to a regional budget.
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.regional_governments` (
+  regional_government_id STRING NOT NULL OPTIONS(description = 'Stable regional jurisdiction key; currently equal to the shared public_entity_id'),
+  public_entity_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  national_region_code STRING NOT NULL,
+  national_region_code_type STRING NOT NULL,
+  government_type_code STRING NOT NULL OPTIONS(description = 'Source-country type such as region, department, voivodeship, canton, Land or state'),
+  tier_level INT64 NOT NULL OPTIONS(description = 'Administrative/government level within the country; lower number is closer to central government'),
+  name_native STRING NOT NULL,
+  name_en STRING,
+  name_cs STRING,
+  nuts_code STRING,
+  parent_regional_government_id STRING,
+  is_capital_region BOOL NOT NULL,
+  valid_from DATE,
+  valid_to DATE,
+  source_id STRING NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, government_type_code, regional_government_id
+OPTIONS(description = 'Regional-government jurisdiction dimension separate from municipalities; supports multiple elected regional tiers in one country.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.regional_budget_line_facts` (
+  public_entity_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  regional_tier_code STRING NOT NULL,
+  fiscal_year INT64 NOT NULL,
+  fiscal_period STRING DEFAULT 'FY' NOT NULL,
+  reporting_scope STRING NOT NULL,
+  budget_stage STRING NOT NULL OPTIONS(description = 'proposal, enacted, revised or actual; unavailable stages remain missing'),
+  budget_side STRING NOT NULL OPTIONS(description = 'revenue, expenditure or financing'),
+  source_budget_item_type_code STRING,
+  functional_code STRING,
+  economic_code STRING NOT NULL,
+  functional_classification_id STRING,
+  economic_classification_id STRING NOT NULL,
+  amount_local NUMERIC NOT NULL,
+  currency_code STRING NOT NULL,
+  amount_eur NUMERIC,
+  fx_date DATE,
+  is_consolidation_item BOOL NOT NULL,
+  is_financing BOOL NOT NULL,
+  is_summary_row BOOL NOT NULL,
+  source_row_number INT64,
+  source_sheet STRING,
+  source_id STRING NOT NULL,
+  ingestion_run_id STRING NOT NULL,
+  coverage_type STRING NOT NULL,
+  is_imputed BOOL NOT NULL,
+  quality_flags ARRAY<STRING>,
+  loaded_at TIMESTAMP NOT NULL
+)
+PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
+CLUSTER BY country_code, public_entity_id, budget_stage, functional_code
+OPTIONS(
+  description = 'Source-native regional budget facts at jurisdiction × year/period × stage × function × economic-item grain.',
+  require_partition_filter = TRUE
+);
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.regional_budget_coverage` (
+  coverage_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  fiscal_year INT64 NOT NULL,
+  regional_tier_code STRING NOT NULL,
+  source_ids ARRAY<STRING>,
+  entity_expected_count INT64,
+  entity_source_count INT64 NOT NULL,
+  entity_loaded_count INT64 NOT NULL,
+  fact_count INT64 NOT NULL,
+  budget_stages ARRAY<STRING>,
+  budget_sides ARRAY<STRING>,
+  coverage_type STRING NOT NULL,
+  validation_status STRING NOT NULL,
+  limitations ARRAY<STRING>,
+  assessed_at TIMESTAMP NOT NULL
+)
+PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
+CLUSTER BY country_code, regional_tier_code
+OPTIONS(
+  description = 'Measured completeness by country, regional tier and year; a successful load is not automatically complete coverage.',
+  require_partition_filter = TRUE
+);
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.regional_source_entities` (
+  source_entity_id STRING NOT NULL OPTIONS(description = 'Stable entity key inside one source, for example oecd-regofi:CZ010'),
+  source_id STRING NOT NULL,
+  source_entity_code STRING NOT NULL,
+  entity_name STRING NOT NULL,
+  country_code STRING NOT NULL,
+  regional_tier_code STRING NOT NULL,
+  institutional_sector_code STRING NOT NULL,
+  institutional_sector_name STRING,
+  first_observation_year INT64 NOT NULL,
+  last_observation_year INT64 NOT NULL,
+  canonical_regional_government_id STRING OPTIONS(description = 'Reviewed link to regional_governments; NULL means that the source identity has not been reconciled yet'),
+  crosswalk_status STRING NOT NULL OPTIONS(description = 'unmatched, reviewed_match or historical_entity'),
+  source_id_namespace STRING NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+CLUSTER BY country_code, regional_tier_code, source_entity_id
+OPTIONS(description = 'Source-specific regional identities kept separate from canonical government entities until a crosswalk is reviewed.');
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.regional_comparable_finance_observations` (
+  source_entity_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  fiscal_year INT64 NOT NULL,
+  measure_code STRING NOT NULL,
+  measure_name STRING NOT NULL,
+  institutional_sector_code STRING NOT NULL,
+  institutional_sector_name STRING,
+  function_code STRING NOT NULL,
+  function_name STRING,
+  unit_code STRING NOT NULL,
+  unit_name STRING,
+  observation_value FLOAT64,
+  observation_status STRING,
+  unit_multiplier_code STRING,
+  confidentiality_status STRING,
+  decimals_code STRING,
+  source_id STRING NOT NULL,
+  ingestion_run_id STRING NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
+CLUSTER BY country_code, source_entity_id, measure_code, function_code
+OPTIONS(
+  description = 'Harmonised regional finance indicators such as OECD/EU REGOFI; distinct from source-native budget line items.',
+  require_partition_filter = TRUE
+);
+
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.regional_comparable_finance_coverage` (
+  coverage_id STRING NOT NULL,
+  source_id STRING NOT NULL,
+  country_code STRING NOT NULL,
+  fiscal_year INT64 NOT NULL,
+  regional_tier_code STRING NOT NULL,
+  entity_source_count INT64 NOT NULL,
+  observation_count INT64 NOT NULL,
+  non_null_observation_count INT64 NOT NULL,
+  measure_count INT64 NOT NULL,
+  function_count INT64 NOT NULL,
+  coverage_type STRING NOT NULL,
+  validation_status STRING NOT NULL,
+  limitations ARRAY<STRING>,
+  assessed_at TIMESTAMP NOT NULL
+)
+PARTITION BY RANGE_BUCKET(fiscal_year, GENERATE_ARRAY(2000, 2101, 1))
+CLUSTER BY source_id, country_code, regional_tier_code
+OPTIONS(
+  description = 'Measured source coverage for harmonised regional finance observations; source presence is not treated as legal or census completeness.',
+  require_partition_filter = TRUE
+);
+
 CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.public_entity_balance_sheet_facts` (
   public_entity_id STRING NOT NULL,
   statement_date DATE NOT NULL,
@@ -584,6 +742,135 @@ LEFT JOIN `czbudget-janrezab.budget_detail.budget_nodes` AS economic_node
   ON economic_node.classification_id = fact.economic_classification_id
   AND economic_node.node_code = fact.economic_item_code
   AND fact.fiscal_year BETWEEN economic_node.effective_from_year AND COALESCE(economic_node.effective_to_year, 9999);
+
+CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.regional_budget_line_details` AS
+SELECT
+  fact.country_code,
+  fact.public_entity_id,
+  region.name_native AS regional_government_name,
+  region.government_type_code,
+  region.tier_level,
+  fact.fiscal_year,
+  fact.fiscal_period,
+  fact.reporting_scope,
+  fact.budget_stage,
+  fact.budget_side,
+  fact.functional_classification_id,
+  fact.functional_code,
+  function_node.node_name_native AS functional_name_native,
+  fact.economic_classification_id,
+  fact.economic_code,
+  economic_node.node_name_native AS economic_name_native,
+  fact.amount_local,
+  fact.currency_code,
+  fact.is_consolidation_item,
+  fact.is_summary_row,
+  fact.coverage_type,
+  fact.source_id,
+  fact.ingestion_run_id,
+  fact.quality_flags
+FROM `czbudget-janrezab.budget_detail.regional_budget_line_facts` AS fact
+JOIN `czbudget-janrezab.budget_detail.regional_governments` AS region
+  ON region.public_entity_id = fact.public_entity_id
+LEFT JOIN `czbudget-janrezab.budget_detail.budget_nodes` AS function_node
+  ON function_node.classification_id = fact.functional_classification_id
+  AND function_node.node_code = fact.functional_code
+  AND fact.fiscal_year BETWEEN function_node.effective_from_year AND COALESCE(function_node.effective_to_year, 9999)
+LEFT JOIN `czbudget-janrezab.budget_detail.budget_nodes` AS economic_node
+  ON economic_node.classification_id = fact.economic_classification_id
+  AND economic_node.node_code = fact.economic_code
+  AND fact.fiscal_year BETWEEN economic_node.effective_from_year AND COALESCE(economic_node.effective_to_year, 9999);
+
+CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.regional_budget_year_summary` AS
+SELECT
+  fact.country_code,
+  fact.public_entity_id,
+  region.name_native AS regional_government_name,
+  region.government_type_code,
+  fact.fiscal_year,
+  fact.fiscal_period,
+  fact.reporting_scope,
+  fact.budget_stage,
+  fact.currency_code,
+  SUM(IF(fact.budget_side = 'revenue', fact.amount_local, 0)) AS revenue_amount,
+  SUM(IF(fact.budget_side = 'expenditure', fact.amount_local, 0)) AS expenditure_amount,
+  SUM(IF(fact.budget_side = 'financing', fact.amount_local, 0)) AS financing_amount,
+  SUM(IF(fact.budget_side = 'revenue', fact.amount_local, 0))
+    - SUM(IF(fact.budget_side = 'expenditure', fact.amount_local, 0)) AS budget_balance
+FROM `czbudget-janrezab.budget_detail.regional_budget_line_facts` AS fact
+JOIN `czbudget-janrezab.budget_detail.regional_governments` AS region
+  ON region.public_entity_id = fact.public_entity_id
+WHERE NOT fact.is_summary_row
+  AND NOT fact.is_consolidation_item
+GROUP BY
+  fact.country_code,
+  fact.public_entity_id,
+  regional_government_name,
+  region.government_type_code,
+  fact.fiscal_year,
+  fact.fiscal_period,
+  fact.reporting_scope,
+  fact.budget_stage,
+  fact.currency_code;
+
+CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.regional_budget_canonical_facts` AS
+SELECT
+  fact.country_code,
+  fact.public_entity_id,
+  region.government_type_code,
+  fact.fiscal_year,
+  fact.fiscal_period,
+  fact.reporting_scope,
+  fact.budget_stage,
+  fact.budget_side,
+  category.taxonomy,
+  category.canonical_category_id,
+  category.category_code,
+  category.category_name_cs,
+  category.category_name_en,
+  mapping.allocation_share,
+  fact.amount_local * mapping.allocation_share AS mapped_amount_local,
+  fact.currency_code,
+  mapping.mapping_method,
+  mapping.confidence,
+  fact.source_id
+FROM `czbudget-janrezab.budget_detail.regional_budget_line_facts` AS fact
+JOIN `czbudget-janrezab.budget_detail.regional_governments` AS region
+  ON region.public_entity_id = fact.public_entity_id
+JOIN `czbudget-janrezab.budget_detail.budget_nodes` AS function_node
+  ON function_node.classification_id = fact.functional_classification_id
+  AND function_node.node_code = fact.functional_code
+JOIN `czbudget-janrezab.budget_detail.budget_mappings` AS mapping
+  ON mapping.budget_node_id = function_node.budget_node_id
+  AND fact.fiscal_year BETWEEN mapping.valid_from_year AND COALESCE(mapping.valid_to_year, 9999)
+JOIN `czbudget-janrezab.budget_detail.canonical_categories` AS category
+  USING (canonical_category_id)
+WHERE NOT fact.is_summary_row;
+
+CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.regional_comparable_finance_details` AS
+SELECT
+  observation.country_code,
+  observation.source_entity_id,
+  entity.source_entity_code,
+  entity.entity_name,
+  entity.regional_tier_code,
+  entity.canonical_regional_government_id,
+  entity.crosswalk_status,
+  observation.fiscal_year,
+  observation.measure_code,
+  observation.measure_name,
+  observation.institutional_sector_code,
+  observation.institutional_sector_name,
+  observation.function_code,
+  observation.function_name,
+  observation.unit_code,
+  observation.unit_name,
+  observation.observation_value,
+  observation.observation_status,
+  observation.source_id
+FROM `czbudget-janrezab.budget_detail.regional_comparable_finance_observations` AS observation
+JOIN `czbudget-janrezab.budget_detail.regional_source_entities` AS entity
+  USING (source_entity_id);
 
 CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.city_latest_metrics` AS
 SELECT

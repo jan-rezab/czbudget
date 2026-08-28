@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "international-regional-finance-sources.v1",
+  "reviewed_at": "2026-08-28",
+  "countries": {
+    "FRA": {
+      "name": "France",
+      "alpha2": "FR",
+      "currency": "EUR",
+      "years": [2024, 2025],
+      "adapter": "france_dgfip",
+      "expected_tiers": [
+        {"source_code": "REG", "tier_code": "region", "level": 1, "name_en": "Region", "name_cs": "Region"},
+        {"source_code": "DEPT", "tier_code": "department", "level": 2, "name_en": "Department", "name_cs": "Departement"}
+      ],
+      "sources": [
+        {
+          "id": "fr-dgfip-regional-balances-function-2024",
+          "year": 2024,
+          "kind": "actual_and_balance",
+          "filename": "BalanceSPL_Fonction_2024_Dec2025.zip",
+          "reuse_path": "data/source_cache/international_municipal/FRA/BalanceSPL_Fonction_2024_Dec2025.zip",
+          "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2024/attachments/balancespl_fonction_2024_dec2025_zip"
+        },
+        {
+          "id": "fr-dgfip-regional-balances-function-2025",
+          "year": 2025,
+          "kind": "actual_and_balance",
+          "filename": "BalanceSPL_Fonction_2025_Juil2026.zip",
+          "reuse_path": "data/source_cache/international_municipal/FRA/BalanceSPL_Fonction_2025_Juil2026.zip",
+          "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-collectivites-et-des-etablissements-publics-locaux-avec-la-presentation-croisee-nature-fonction-2025/attachments/balancespl_fonction_2025_juil2026zip"
+        }
+      ]
+    },
+    "POL": {
+      "name": "Poland",
+      "alpha2": "PL",
+      "currency": "PLN",
+      "years": [2024, 2025],
+      "adapter": "poland_jst",
+      "expected_tiers": [
+        {"source_code": "Województwo", "tier_code": "voivodeship", "level": 1, "name_en": "Voivodeship", "name_cs": "Vojvodství", "expected_count": 16}
+      ],
+      "sources": [
+        {"id": "pl-mf-regional-rb27s-2024q4", "year": 2024, "kind": "revenue", "filename": "Rb27S_2024Q4.zip", "reuse_path": "data/source_cache/international_municipal/POL/Rb27S_2024Q4.zip", "url": "https://www.gov.pl/attachment/35c6e527-a44e-4f8e-9e24-5a8823758e27"},
+        {"id": "pl-mf-regional-rb28s-2024q4", "year": 2024, "kind": "expenditure", "filename": "Rb28S_2024Q4.zip", "reuse_path": "data/source_cache/international_municipal/POL/Rb28S_2024Q4.zip", "url": "https://www.gov.pl/attachment/7e9fe5f6-d9f2-4eae-b8bc-bc59e80965d5"},
+        {"id": "pl-mf-regional-jst-dictionary-2024", "year": 2024, "kind": "entities", "filename": "Slownik_JST_2024.xlsx", "reuse_path": "data/source_cache/international_municipal/POL/Slownik_JST_2024.xlsx", "url": "https://www.gov.pl/attachment/499730a3-c35f-4d6a-9fde-993b607cd466"},
+        {"id": "pl-mf-regional-rb27s-2025q4", "year": 2025, "kind": "revenue", "filename": "Rb27S_2025Q4.zip", "reuse_path": "data/source_cache/international_municipal/POL/Rb27S_2025Q4.zip", "url": "https://www.gov.pl/attachment/f98752f2-176a-4be1-910f-8aca6ffd9044"},
+        {"id": "pl-mf-regional-rb28s-2025q4", "year": 2025, "kind": "expenditure", "filename": "Rb28S_2025Q4.zip", "reuse_path": "data/source_cache/international_municipal/POL/Rb28S_2025Q4.zip", "url": "https://www.gov.pl/attachment/1eb59fb5-ab95-4f0d-8d62-4ef07c1a9910"},
+        {"id": "pl-mf-regional-jst-dictionary-2025", "year": 2025, "kind": "entities", "filename": "Slownik_JST_2025.xlsx", "reuse_path": "data/source_cache/international_municipal/POL/Slownik_JST_2025.xlsx", "url": "https://www.gov.pl/attachment/737c9fd5-8f45-4424-8f8d-9fd5a2e656fe"}
+      ]
+    },
+    "SWE": {
+      "name": "Sweden",
+      "alpha2": "SE",
+      "currency": "SEK",
+      "years": [2024, 2025],
+      "adapter": "sweden_scb",
+      "expected_tiers": [
+        {"source_code": "region", "tier_code": "region", "level": 1, "name_en": "Region", "name_cs": "Region", "expected_count": 21}
+      ],
+      "sources": [
+        {"id": "se-scb-regional-activity", "kind": "actual_activity", "table": "KostnDRLT", "filename": "KostnDRLT-{year}.json", "url": "https://api.scb.se/OV0104/v1/doris/en/ssd/OE/OE0107/OE0107D/KostnDRLT"},
+        {"id": "se-scb-regional-income-statement", "kind": "actual_statement", "table": "ResultLTingN", "filename": "ResultLTingN-{year}.json", "url": "https://api.scb.se/OV0104/v1/doris/en/ssd/OE/OE0107/OE0107C/ResultLTingN"}
+      ]
+    },
+    "DNK": {
+      "name": "Denmark",
+      "alpha2": "DK",
+      "currency": "DKK",
+      "years": [2024, 2025],
+      "adapter": "denmark_statbank",
+      "expected_tiers": [
+        {"source_code": "region", "tier_code": "region", "level": 1, "name_en": "Region", "name_cs": "Region", "expected_count": 5}
+      ],
+      "sources": [
+        {"id": "dk-statbank-regional-accounts", "kind": "actual", "table": "REGR55", "filename": "REGR55-{year}.csv", "url": "https://api.statbank.dk/v1/data"}
+      ]
+    }
+  },
+  "queued_sources": [
+    {"country_code": "ESP", "tier": "autonomous_community", "status": "source_reviewed_adapter_pending", "url": "https://serviciostelematicosext.hacienda.gob.es/SGCIEF/PublicacionPresupuestos/aspx/inicio.aspx"},
+    {"country_code": "DEU", "tier": "land", "status": "source_reviewed_adapter_pending", "url": "https://www.destatis.de/EN/Themes/Government/Public-Finance/EU-Directive-Budgetary-Frameworks/Tables/state-government.html"},
+    {"country_code": "CHE", "tier": "canton", "status": "source_reviewed_adapter_pending", "url": "https://www.efv.admin.ch/en/overview-financial-statistics"},
+    {"country_code": "USA", "tier": "state", "status": "source_reviewed_adapter_pending", "url": "https://www.census.gov/programs-surveys/gov-finances/data/api.html"},
+    {"country_code": "SVK", "tier": "self_governing_region", "status": "source_reviewed_adapter_pending", "url": "https://www.mfsr.sk/sk/financie/verejne-financie/uzemna-samosprava/"},
+    {"country_code": "AUT", "tier": "land", "status": "discovery_pending"},
+    {"country_code": "BEL", "tier": "region_and_community", "status": "discovery_pending"},
+    {"country_code": "ITA", "tier": "region", "status": "discovery_pending"},
+    {"country_code": "NLD", "tier": "province", "status": "discovery_pending"}
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "source_id": "oecd-eu-regofi-disaggregated-v1",
+  "dataflow": "OECD.CFE.RDG:DSD_SNGF_DISAGG@DF_REGOFI(1.0)",
+  "reviewed_at": "2026-08-28",
+  "definition": "OECD REGOFI covers elected administrative regions, including state governments in federal and quasi-federal countries and regional or county governments in unitary countries.",
+  "countries": {
+    "AT": {"country_code": "AUT", "tier_code": "land", "system_type": "federal_state", "notes": ["Vienna is a dual-role Land and municipality and is not present in this REGOFI extract."]},
+    "AU": {"country_code": "AUS", "tier_code": "state_or_territory", "system_type": "federal_state"},
+    "BE": {"country_code": "BEL", "tier_code": "region_or_community", "system_type": "federal_overlapping_region_community", "notes": ["Regions and language communities overlap; their amounts must not be summed as one territorial tier."]},
+    "CA": {"country_code": "CAN", "tier_code": "province_or_territory", "system_type": "federal_state"},
+    "CH": {"country_code": "CHE", "tier_code": "canton", "system_type": "federal_state", "notes": ["The current source extract contains 25 canton codes; source coverage must not be presented as all 26 cantons."]},
+    "CO": {"country_code": "COL", "tier_code": "department", "system_type": "unitary_elected_region"},
+    "CZ": {"country_code": "CZE", "tier_code": "region", "system_type": "unitary_elected_region"},
+    "DE": {"country_code": "DEU", "tier_code": "land", "system_type": "federal_state"},
+    "DK": {"country_code": "DNK", "tier_code": "region", "system_type": "unitary_functional_elected_region"},
+    "ES": {"country_code": "ESP", "tier_code": "autonomous_community", "system_type": "quasi_federal_asymmetric_region", "notes": ["The 17 autonomous communities exclude the two autonomous cities in this extract."]},
+    "FR": {"country_code": "FRA", "tier_code": "region", "system_type": "unitary_elected_region", "notes": ["The time series contains both pre-2016 and post-2016 regional boundaries."]},
+    "HR": {"country_code": "HRV", "tier_code": "county", "system_type": "unitary_elected_region"},
+    "IT": {"country_code": "ITA", "tier_code": "region", "system_type": "unitary_asymmetric_region"},
+    "JP": {"country_code": "JPN", "tier_code": "prefecture", "system_type": "unitary_elected_region"},
+    "KR": {"country_code": "KOR", "tier_code": "province_or_metropolitan_city", "system_type": "unitary_elected_region"},
+    "ME": {"country_code": "MEX", "tier_code": "state", "system_type": "federal_state", "notes": ["ME is the OECD territorial prefix for Mexico, not the ISO code for Montenegro."]},
+    "NL": {"country_code": "NLD", "tier_code": "province", "system_type": "unitary_elected_region"},
+    "NO": {"country_code": "NOR", "tier_code": "county", "system_type": "unitary_elected_region", "notes": ["The time series contains multiple county boundary vintages and therefore more source codes than current counties."]},
+    "NZ": {"country_code": "NZL", "tier_code": "regional_council", "system_type": "unitary_regional_council", "notes": ["The extract is not a census of all unitary authorities with regional responsibilities."]},
+    "PL": {"country_code": "POL", "tier_code": "voivodeship", "system_type": "unitary_elected_region"},
+    "RO": {"country_code": "ROU", "tier_code": "county_or_bucharest", "system_type": "unitary_elected_region"},
+    "SE": {"country_code": "SWE", "tier_code": "region", "system_type": "unitary_elected_region"},
+    "US": {"country_code": "USA", "tier_code": "state", "system_type": "federal_state", "notes": ["The extract contains the 50 states and excludes the District of Columbia."]}
+  },
+  "known_regional_systems_not_in_current_regofi_extract": {
+    "BRA": {"tier_code": "state", "system_type": "federal_state", "native_adapter_status": "pending"},
+    "FIN": {"tier_code": "wellbeing_services_county", "system_type": "unitary_functional_elected_region", "native_adapter_status": "pending", "notes": ["Helsinki and Åland require separate treatment."]},
+    "GBR": {"tier_code": "devolved_nation", "system_type": "asymmetric_devolved_government", "native_adapter_status": "pending", "notes": ["England has no equivalent devolved regional government for the whole territory."]},
+    "GRC": {"tier_code": "region", "system_type": "unitary_elected_region", "native_adapter_status": "pending"},
+    "UKR": {"tier_code": "oblast", "system_type": "unitary_regional_budget_with_state_administration", "native_adapter_status": "pending", "notes": ["Wartime administrations, occupied territories and special-status cities require explicit temporal coverage."]}
+  }
+}
