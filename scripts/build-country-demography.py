@@ -232,7 +232,7 @@ def un_wpp_country(code: str) -> dict:
         "source": {
             "publisher": "United Nations, Population Division",
             "dataset": "World Population Prospects 2024",
-            "url": "https://population.un.org/wpp/Download/Standard/CSV/",
+            "url": UN_WPP,
             "download_urls": [UN_WPP],
             "location": f"WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code={code}; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
         },

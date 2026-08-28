@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T18:42:16.626Z",
   "country": {
     "country_code": "SWE",
     "name_cs": "Švédsko",
@@ -94,7 +94,11 @@
     "municipalities": {
       "status": "loaded",
       "coverage": "All 290 municipalities; costs, income and balance sheet",
-      "missing_dimensions": [],
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
       "entity_count": 290,
       "fact_count": 290,
       "years": [
@@ -109,7 +113,7 @@
         "expenditure",
         "balance"
       ],
-      "coverage_level": "complete",
+      "coverage_level": "aggregate_only",
       "directory": "data/countries/swe/municipalities.v1.json",
       "warehouse": [
         {
@@ -2829,9 +2833,16 @@
       ],
       "coverage_cs": "Všech 290 obcí; náklady, výnosy a rozvaha",
       "coverage_en": "All 290 municipalities; costs, income and balance sheet",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://www.scb.se/en/OE0107",
-      "directory_count": 290
+      "directory_count": 290,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu."
     },
     "public_entities": {
       "coverage": {

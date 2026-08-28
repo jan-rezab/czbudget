@@ -39,13 +39,13 @@ export const pinnedCounts = Object.freeze({
   // The Czech municipal universe is a fixed, externally defined set of reporting
   // entities. It does not move between releases.
   municipalities: 6254,
-  // IMF World Economic Outlook sovereign coverage: fixed by the source release.
-  sovereignCountries: 191,
-  // Countries in the municipal directory and in the itemized-coverage contract.
-  // Both files must describe the same 27 countries; a mismatch means one of the
-  // two builds ran against a different country set.
+  // All 195 sovereign states. Four WEO omissions are explicit not-loaded rows.
+  sovereignCountries: 195,
+  // The municipal directory covers 27 countries. Itemized coverage has one
+  // additional explicit warehouse-only row for Paraguay, whose verified facts
+  // must not disappear merely because its public directory is not yet loaded.
   municipalDirectoryCountries: 27,
-  itemizedCoverageCountries: 27,
+  itemizedCoverageCountries: 28,
   // Component volumes of `published_data_entries`. Each is separately meaningful
   // and separately stable, which is what makes the derived total below a real
   // reconciliation rather than a restatement.
@@ -58,19 +58,21 @@ export const pinnedCounts = Object.freeze({
   // RATCHET, not an equality pin. Published itemized coverage is expected to
   // grow as warehouse-only countries are promoted to the site; it must never
   // silently shrink. Raise this floor deliberately when coverage grows.
-  // Value at the time of writing: 35,810 profiles across 19 of 27 countries,
-  // measured from on-site artifacts (was an asserted 75,507 that counted
-  // warehouse-only rows the site never published).
-  itemizedPublishedProfilesFloor: 35810,
+  // Value after enforcing the five-code classification floor: 34,381 profiles
+  // across 16 countries. The previous 35,810 included 1,429 Costa Rican,
+  // Colombian and Korean headline/root profiles that were not itemized data.
+  itemizedPublishedProfilesFloor: 34381,
   // Same ratchet for the headline volume figure the coverage page prints.
   // France now uses the 34,875-current-commune OFGL census instead of retaining
   // historical and supplementary-budget pseudo-entities in the browser directory.
-  publishedDataEntriesFloor: 362446,
+  // Corrected from 362,446 after removing those same 1,429 pseudo-itemized
+  // profiles from the public volume KPI.
+  publishedDataEntriesFloor: 361017,
   // RATCHET. Rows in data/methodology-sources.v1.json that PSD has actually
   // loaded (as opposed to rows that only record an available upstream source).
-  // Promoting a warehouse-only country to the site raises this; nothing else may
-  // lower it. Value at the time of writing: 374 of 2,128 ledger rows.
-  methodologyLoadedLedgerRowsFloor: 374,
+  // Corrected from 374 to 370: five null municipal-headline layers were
+  // downgraded, while Ukraine health-performance became visible (+1).
+  methodologyLoadedLedgerRowsFloor: 370,
   // Anchor countries whose published itemized coverage is complete and known.
   // CZE is the full Czech universe; DNK is a genuinely published 98-municipality
   // collection that must not be swept up in the warehouse-only reclassification.
@@ -78,7 +80,7 @@ export const pinnedCounts = Object.freeze({
 });
 
 /** The two honest publication states an itemized-coverage row may declare. */
-export const PUBLICATION_STATES = Object.freeze(["published", "warehouse_only"]);
+export const PUBLICATION_STATES = Object.freeze(["published", "warehouse_only", "headline_only"]);
 
 /** Format a count the way the English rendering of the site prints it. */
 export const formatCount = (value) => Number(value).toLocaleString("en-US");
@@ -101,6 +103,7 @@ export async function loadExpectedCounts() {
 
   const publishedItemizedCountryCodes = [];
   const warehouseOnlyCountryCodes = [];
+  const headlineOnlyCountryCodes = [];
   let itemizedPublishedProfiles = 0;
   let itemizedPublishedProfileCountSum = 0;
   let itemizedWarehouseOnlyProfiles = 0;
@@ -114,6 +117,8 @@ export async function loadExpectedCounts() {
     if (country.publication_status === "warehouse_only") {
       warehouseOnlyCountryCodes.push(country.code);
       itemizedWarehouseOnlyProfiles += Number(country.warehouse_profile_count) || 0;
+    } else if (country.publication_status === "headline_only") {
+      headlineOnlyCountryCodes.push(country.code);
     } else if (profiles > 0) {
       publishedItemizedCountryCodes.push(country.code);
     }
@@ -136,8 +141,10 @@ export async function loadExpectedCounts() {
     itemizedCoverageCountries: itemizedCoverage.countries.length,
     publishedItemizedCountryCodes: publishedItemizedCountryCodes.sort(),
     warehouseOnlyCountryCodes: warehouseOnlyCountryCodes.sort(),
+    headlineOnlyCountryCodes: headlineOnlyCountryCodes.sort(),
     publishedItemizedCountries: publishedItemizedCountryCodes.length,
     warehouseOnlyCountries: warehouseOnlyCountryCodes.length,
+    headlineOnlyCountries: headlineOnlyCountryCodes.length,
     // Derived component volumes and the headline total the coverage page prints.
     publishedEntryComponents,
     publishedDataEntries,

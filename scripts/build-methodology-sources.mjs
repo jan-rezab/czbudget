@@ -162,12 +162,12 @@ const municipalNames=new Map(municipalities.countries.map(country=>[country.code
 // exists without a published PSD artifact, with the warehouse figure stated
 // explicitly so no reader can mistake a warehouse load for publication.
 for(const itemized of itemizedCoverage.countries){
-  const municipal=municipalNames.get(itemized.code),warehouse=warehouseByCode.get(itemized.code),configured=municipalSourceConfig.countries[itemized.code];
+  const configured=municipalSourceConfig.countries[itemized.code],municipal=municipalNames.get(itemized.code)||{name_cs:configured?.name||itemized.code,name_en:configured?.name||itemized.code},warehouse=warehouseByCode.get(itemized.code);
   const published=Number(itemized.published_profile_count ?? itemized.profile_count)||0;
   const isPublished=published>0;
   const configuredSources=(configured?.sources||[]).map((item,index)=>source(
     index===0&&itemized.source_title?itemized.source_title:item.id,
-    item.url,
+    item.landing_url||item.url,
     [item.id,item.dataset&&`Socrata ${item.dataset}`,item.table&&`table ${item.table}`,item.filename].filter(Boolean).join(" · ")
   ));
   const sources=cleanSources(configuredSources.length?configuredSources:[source(itemized.source_title,itemized.source_url,"published profile adapter documented by the itemized coverage contract")]);

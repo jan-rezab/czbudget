@@ -66,6 +66,7 @@ const expansionLabels = {
   PER: { en: "native MEF budget and execution items", cs: "původní položky rozpočtu a plnění MEF" },
   SLV: { en: "native SAFIM budget-execution items", cs: "původní položky plnění SAFIM" }
 };
+const MIN_DISTINCT_CLASSIFICATION_CODES = 5;
 
 // Country-specific scope caveats that are true regardless of the measurement.
 const scopeNotes = {
@@ -92,6 +93,7 @@ const measureExpansion = async (code) => {
   let lineItems = 0;
   let balanceIdentityProfiles = 0;
   let historyProfiles = 0;
+  const distinctCodes = new Set();
   const stageYears = new Map();
   for (const name of files) {
     const profile = JSON.parse(await readFile(new URL(`${dir}/${name}`, root), "utf8"));
@@ -103,6 +105,7 @@ const measureExpansion = async (code) => {
     published += 1;
     lineItems += detail.length;
     for (const row of detail) {
+      if (row.code != null && String(row.code).trim()) distinctCodes.add(String(row.code).trim());
       if (!row.stage) continue;
       if (!stageYears.has(row.stage)) stageYears.set(row.stage, new Set());
       if (Number.isFinite(row.year)) stageYears.get(row.stage).add(row.year);
@@ -123,6 +126,7 @@ const measureExpansion = async (code) => {
     stageYears,
     history_profiles: historyProfiles,
     balance_identity_profiles: balanceIdentityProfiles
+    ,distinct_code_count: distinctCodes.size
   };
 };
 
@@ -255,7 +259,8 @@ for (const country of municipalities.countries) {
   const code = country.code;
   const measured = await measurementFor(code);
   const warehouse = warehouseByCountry[code];
-  const published = measured?.published ?? 0;
+  const classificationTooThin = measured && measured.distinct_code_count < MIN_DISTINCT_CLASSIFICATION_CODES;
+  const published = classificationTooThin ? 0 : (measured?.published ?? 0);
   const scope = country.directory_count;
 
   const stages = measured ? [...measured.stageYears.keys()].sort() : [];
@@ -275,7 +280,7 @@ for (const country of municipalities.countries) {
   // never the newest year that appears anywhere in the directory.
   const period = published ? yearRange([...actualYears, ...planYears]) : null;
 
-  const publicationStatus = published ? "published" : warehouse ? "warehouse_only" : "none";
+  const publicationStatus = published ? "published" : warehouse ? "warehouse_only" : classificationTooThin ? "headline_only" : "none";
   const status = published === 0
     ? (warehouse ? "warehouse_only" : "missing")
     : published >= scope
@@ -287,6 +292,9 @@ for (const country of municipalities.countries) {
   const detailKindCs = label?.cs || (code === "CZE" ? "ekonomické a funkční položky" : null);
 
   const limitations = [];
+  if (classificationTooThin) {
+    limitations.push(`The published profiles contain only ${measured.distinct_code_count} distinct classification code${measured.distinct_code_count === 1 ? "" : "s"} across the country, below the ${MIN_DISTINCT_CLASSIFICATION_CODES}-code minimum; they are headline totals, not itemized budgets, and are not counted.`);
+  }
   if (measured?.empty) {
     limitations.push(`${measured.empty.toLocaleString("en-US")} of ${measured.artifact_count.toLocaleString("en-US")} directory entities publish no line items and are not counted.`);
   }
@@ -327,6 +335,8 @@ for (const country of municipalities.countries) {
     plan_period: yearRange(planYears),
     vintage_type: published ? vintageFor(stages) : null,
     line_item_count: measured?.line_item_count ?? 0,
+    distinct_classification_code_count: measured?.distinct_code_count ?? null,
+    minimum_distinct_classification_codes: MIN_DISTINCT_CLASSIFICATION_CODES,
     stage_basis: measured?.stage_basis || null,
     detail_kind_en: published ? detailKindEn : null,
     detail_kind_cs: published ? detailKindCs : null,
@@ -363,6 +373,51 @@ for (const country of municipalities.countries) {
   countries.push(entry);
 }
 
+// A verified production-warehouse load must not disappear merely because the
+// directory/headline artifact does not yet carry that country. Preserve it as
+// an explicit warehouse-only row so the public matrix says "loaded privately,
+// not published" instead of the materially false "not researched".
+for (const warehouse of internationalWarehouse.countries) {
+  if (countries.some((country) => country.code === warehouse.code)) continue;
+  countries.push({
+    code: warehouse.code,
+    municipal_scope: warehouse.profile_count,
+    profile_count: 0,
+    published_profile_count: 0,
+    publication_status: "warehouse_only",
+    status: "warehouse_only",
+    measured_from: null,
+    period: null,
+    stages: [],
+    stage_periods: {},
+    actual_period: null,
+    plan_period: null,
+    vintage_type: null,
+    line_item_count: 0,
+    stage_basis: null,
+    detail_kind_en: null,
+    detail_kind_cs: null,
+    source_title: warehouse.source_title,
+    source_url: warehouse.source_url,
+    note: `No municipal directory is published for ${warehouse.code}. ${warehouse.profile_count.toLocaleString("en-US")} itemized profiles exist only in the production warehouse (${internationalWarehouse.warehouse}).`,
+    scope_limitations: [`No municipal directory is published for ${warehouse.code}; the verified itemized load is therefore disclosed as warehouse-only.`],
+    warehouse: {
+      warehouse: internationalWarehouse.warehouse,
+      profile_count: warehouse.profile_count,
+      period: warehouse.period,
+      stages: warehouse.stages || [],
+      line_fact_count: warehouse.line_fact_count,
+      balance_fact_count: warehouse.balance_fact_count,
+      detail_kind_en: warehouse.detail_kind_en,
+      detail_kind_cs: warehouse.detail_kind_cs,
+      source_title: warehouse.source_title,
+      source_url: warehouse.source_url,
+      published_on_site: false
+    },
+    warehouse_profile_count: warehouse.profile_count
+  });
+}
+
 const publishedProfiles = countries.reduce((sum, country) => sum + country.published_profile_count, 0);
 const publishedCountries = countries.filter((country) => country.published_profile_count > 0);
 const warehouseOnly = countries.filter((country) => country.publication_status === "warehouse_only");
@@ -387,12 +442,13 @@ for (const country of countries) {
 const payload = {
   schema_version: "1.1.0",
   generated_at: internationalWarehouse.generated_at,
-  definition: "A profile counts only when municipality-level economic, functional or native accounting line items are published on this site; headline totals alone do not count. profile_count and published_profile_count are measured by reading the published per-municipality artifacts, never asserted. Facts that exist only in the private production warehouse are reported under warehouse_profile_count with publication_status \"warehouse_only\" and a published count of zero.",
+  definition: `A profile counts only when municipality-level economic, functional or native accounting line items are published on this site and the country exposes at least ${MIN_DISTINCT_CLASSIFICATION_CODES} distinct classification codes; headline totals alone do not count. profile_count and published_profile_count are measured by reading the published per-municipality artifacts, never asserted. Facts that exist only in the private production warehouse are reported under warehouse_profile_count with publication_status \"warehouse_only\" and a published count of zero.`,
   measurement: {
     published_profile_count: "Counted by reading every published per-municipality artifact and keeping only those that carry a non-empty native line-item array.",
     period: "The span of fiscal years present in those published line items, not the newest year in the municipality directory.",
     stages: "The budget stages present in the published line items (or, for the benchmark bundles, the single stage the source bundle declares). Plans and actuals are reported separately as plan_period and actual_period and are never merged into one vintage.",
     warehouse_profile_count: "Entities loaded into the private production BigQuery warehouse. This is not site publication and is not counted as published."
+    ,minimum_distinct_classification_codes: `A country needs at least ${MIN_DISTINCT_CLASSIFICATION_CODES} distinct native codes across its published profiles. This low floor rejects TOTAL and revenue/expenditure-root pseudo-detail while retaining the thinnest genuine comparator (Italy has 10 codes).`
   },
   totals: {
     countries: countries.length,

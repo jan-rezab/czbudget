@@ -279,7 +279,7 @@ for (const city of capitals.cities) {
 }
 
 const sovereign = await json("lib/data/sovereign-benchmark.v1.json");
-assert(sovereign.series.length === 191, "Expected all 191 IMF-covered sovereign-state series");
+assert(sovereign.series.length === 195, "Expected all 195 sovereign-state rows, including explicit not-loaded WEO omissions");
 assert(JSON.stringify(sovereign.universe?.missing_from_weo) === JSON.stringify(["CUB", "MCO", "PRK", "VAT"]), "Expected four explicit sovereign-state WEO gaps");
 const greekSeries = sovereign.series.find((country) => country.country_code === "GRC");
 assert(greekSeries?.metrics?.balance_pct_gdp?.values?.some((point) => point.year === 2024 && point.status === "actual"), "Expected actual 2024 Greek fiscal data");

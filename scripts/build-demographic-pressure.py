@@ -229,7 +229,7 @@ def main() -> None:
             "un_wpp": {
                 "publisher": "United Nations, Population Division",
                 "dataset": "World Population Prospects 2024 — Demographic Indicators, Medium variant",
-                "url": "https://population.un.org/wpp/Download/Standard/CSV/",
+                "url": WPP,
                 "download_url": WPP,
                 "coverage": "1950–2100; estimates through 2023 and medium-variant projections from 2024",
             },

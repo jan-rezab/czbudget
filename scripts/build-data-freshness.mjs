@@ -11,6 +11,7 @@ const [
   structures,
   nationalBudgets,
   revenue,
+  oecd,
   transportBudgets,
   transportPerformance,
   health,
@@ -30,6 +31,7 @@ const [
   read("data/municipal-budget-structure.v1.json"),
   read("data/country-spending-2025-2026.v1.json"),
   read("data/country-revenue.v1.json"),
+  read("data/oecd-key-metrics.v1.json"),
   read("data/transport-budget-detail.v1.json"),
   read("data/transport-performance.v1.json"),
   read("data/country-health.v1.json"),
@@ -51,15 +53,16 @@ const modules = [
   { id: "national_budget", family: "country", label_cs: "Národní rozpočet", label_en: "National budget", order: 4 },
   { id: "sovereign", family: "country", label_cs: "Vládní finance", label_en: "Sovereign fiscal", order: 5 },
   { id: "revenue", family: "country", label_cs: "Příjmy", label_en: "Revenue", order: 6 },
-  { id: "transport", family: "deep_dive", label_cs: "Doprava", label_en: "Transport", order: 7 },
-  { id: "health", family: "deep_dive", label_cs: "Zdraví", label_en: "Health", order: 8 },
-  { id: "providers", family: "deep_dive", label_cs: "Poskytovatelé", label_en: "Providers", order: 9 },
-  { id: "demography", family: "deep_dive", label_cs: "Demografie", label_en: "Demography", order: 10 },
-  { id: "economy", family: "deep_dive", label_cs: "Ekonomika", label_en: "Economy", order: 11 },
-  { id: "defense", family: "deep_dive", label_cs: "Obrana", label_en: "Defense", order: 12 },
-  { id: "migration", family: "deep_dive", label_cs: "Migrace", label_en: "Migration", order: 13 },
-  { id: "capital_cities", family: "municipal", label_cs: "Hlavní města", label_en: "Capital cities", order: 14 },
-  { id: "state_enterprises", family: "country", label_cs: "Státní podniky", label_en: "State enterprises", order: 15 },
+  { id: "oecd_overlay", family: "country", label_cs: "Klíčové ukazatele OECD", label_en: "OECD key metrics", order: 7 },
+  { id: "transport", family: "deep_dive", label_cs: "Doprava", label_en: "Transport", order: 8 },
+  { id: "health", family: "deep_dive", label_cs: "Zdraví", label_en: "Health", order: 9 },
+  { id: "providers", family: "deep_dive", label_cs: "Poskytovatelé", label_en: "Providers", order: 10 },
+  { id: "demography", family: "deep_dive", label_cs: "Demografie", label_en: "Demography", order: 11 },
+  { id: "economy", family: "deep_dive", label_cs: "Ekonomika", label_en: "Economy", order: 12 },
+  { id: "defense", family: "deep_dive", label_cs: "Obrana", label_en: "Defense", order: 13 },
+  { id: "migration", family: "deep_dive", label_cs: "Migrace", label_en: "Migration", order: 14 },
+  { id: "capital_cities", family: "municipal", label_cs: "Hlavní města", label_en: "Capital cities", order: 15 },
+  { id: "state_enterprises", family: "country", label_cs: "Státní podniky", label_en: "State enterprises", order: 16 },
 ];
 
 const countries = new Map();
@@ -115,7 +118,7 @@ const recursiveYears = (value, results = []) => {
     value.forEach((item) => recursiveYears(item, results));
   } else if (value && typeof value === "object") {
     for (const [key, item] of Object.entries(value)) {
-      if (["year", "fiscal_year", "reference_year", "latest_year", "bed_year"].includes(key) && Number.isFinite(Number(item))) results.push(Number(item));
+      if (["year", "fiscal_year", "reference_year", "latest_year", "bed_year"].includes(key) && item != null && item !== "" && Number.isFinite(Number(item))) results.push(Number(item));
       else recursiveYears(item, results);
     }
   }
@@ -163,8 +166,9 @@ const sovereignVintage = (code, year) => {
 const VINTAGE_TYPES = new Set(["actual", "estimate", "actual_estimate", "plan", "projection", "register", "mixed", "none"]);
 const records = [];
 const addRecord = (record) => {
-  const latestYear = Number.isFinite(Number(record.latest_year)) ? Number(record.latest_year) : null;
-  const firstYear = Number.isFinite(Number(record.first_year)) ? Number(record.first_year) : latestYear;
+  const yearOrNull = (value) => value != null && value !== "" && Number.isFinite(Number(value)) ? Number(value) : null;
+  const latestYear = yearOrNull(record.latest_year);
+  const firstYear = yearOrNull(record.first_year) ?? latestYear;
   if (!VINTAGE_TYPES.has(record.vintage_type)) {
     throw new Error(`${record.country_code}/${record.module}: vintage_type must be stated explicitly (received ${JSON.stringify(record.vintage_type)})`);
   }
@@ -281,15 +285,17 @@ for (const country of nationalBudgets.countries) {
 
 for (const country of parity.countries) {
   const sovereign = country.modules.sovereign;
-  const vintageType = sovereignVintage(country.country_code, sovereign.period?.to);
+  const loaded = sovereign.status === "loaded";
+  const vintageType = loaded ? sovereignVintage(country.country_code, sovereign.period?.to) : "none";
   addRecord({
     country_code: country.country_code,
     module: "sovereign",
     first_year: sovereign.period?.from,
     latest_year: sovereign.period?.to,
     vintage_type: vintageType,
-    coverage_cs: `${sovereign.coverage}; stav zdroje pro příjmy, výdaje a saldo v posledním roce: ${vintageType === "estimate" ? "odhad" : vintageType === "actual_estimate" ? "skutečnost + odhad" : "skutečnost"}`,
-    coverage_en: `${sovereign.coverage}; source status for revenue, expenditure and balance in the latest year: ${vintageType === "estimate" ? "estimate" : vintageType === "actual_estimate" ? "actual + estimate" : "actual"}`,
+    coverage_status: loaded ? "full" : "not_loaded",
+    coverage_cs: `${sovereign.coverage}; stav zdroje pro příjmy, výdaje a saldo v posledním roce: ${vintageType === "none" ? "nedostupné" : vintageType === "estimate" ? "odhad" : vintageType === "actual_estimate" ? "skutečnost + odhad" : "skutečnost"}`,
+    coverage_en: `${sovereign.coverage}; source status for revenue, expenditure and balance in the latest year: ${vintageType === "none" ? "unavailable" : vintageType === "estimate" ? "estimate" : vintageType === "actual_estimate" ? "actual + estimate" : "actual"}`,
     row_count: sovereign.metric_count,
     artifact: "lib/data/sovereign-benchmark.v1.json",
     artifact_generated_at: parity.generated_at,
@@ -315,6 +321,26 @@ for (const [code, country] of Object.entries(revenue.countries)) {
   });
 }
 
+for (const [code, country] of Object.entries(oecd.countries)) {
+  const years = recursiveYears(country).filter((year) => year <= currentYear);
+  const available = Object.keys(country.comparison || {}).length;
+  addRecord({
+    country_code: code,
+    module: "oecd_overlay",
+    first_year: minOrNull(years),
+    latest_year: maxOrNull(years),
+    vintage_type: "actual",
+    coverage_status: available >= 15 ? "full" : available ? "partial" : "not_available",
+    coverage_cs: `${available} klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky`,
+    coverage_en: `${available} key metrics · tax, redistribution, social state, capacity and outcomes`,
+    row_count: available,
+    artifact: "data/oecd-key-metrics.v1.json",
+    artifact_generated_at: oecd.generated_at,
+    source_url: "https://data-explorer.oecd.org/",
+    view_url: `/country.html?code=${code}#oecd-benchmark`,
+  });
+}
+
 for (const [code, country] of Object.entries(transportBudgets.countries)) {
   const performanceYears = recursiveYears(transportPerformance.countries?.[code] || {});
   const years = [...(country.records || []).map((record) => record.year), ...performanceYears];
@@ -324,7 +350,7 @@ for (const [code, country] of Object.entries(transportBudgets.countries)) {
     first_year: minOrNull(years),
     latest_year: maxOrNull(years),
     // Eurostat COFOG outturn plus observed network/performance statistics.
-    vintage_type: "actual",
+    vintage_type: years.length ? "actual" : "none",
     coverage_status: country.coverage === "available" ? "full" : country.coverage || "partial",
     coverage_cs: "Výdaje, síť a výkon dopravy",
     coverage_en: "Transport spending, network and performance",
@@ -335,7 +361,9 @@ for (const [code, country] of Object.entries(transportBudgets.countries)) {
   });
 }
 
-for (const [code, country] of Object.entries(health.countries)) {
+const healthCodes = new Set([...Object.keys(health.countries), ...Object.keys(healthPerformance.countries)]);
+for (const code of healthCodes) {
+  const country = health.countries[code] || {};
   const years = [...recursiveYears(country), ...recursiveYears(healthPerformance.countries?.[code] || {})];
   addRecord({
     country_code: code,
@@ -344,6 +372,7 @@ for (const [code, country] of Object.entries(health.countries)) {
     latest_year: maxOrNull(years),
     // SHA 2011 current health expenditure: reported statistical years.
     vintage_type: "actual",
+    coverage_status: country.status === "not_loaded" ? (healthPerformance.countries?.[code] ? "performance_only" : "not_loaded") : (health.countries[code] ? "full" : "performance_only"),
     coverage_cs: "Financování, kapacita a zdravotní výsledky",
     coverage_en: "Financing, capacity and health outcomes",
     artifact: "data/country-health.v1.json + data/country-health-performance.v1.json",
@@ -354,15 +383,16 @@ for (const [code, country] of Object.entries(health.countries)) {
 }
 
 for (const [code, country] of Object.entries(providers.countries)) {
+  const loaded = Number.isFinite(country.facility_count) && country.facility_count > 0 && country.records;
   addRecord({
     country_code: code,
     module: "providers",
-    vintage_type: "register",
-    coverage_status: country.coverage === "facility_register" ? "full" : "partial",
+    vintage_type: loaded ? "register" : "none",
+    coverage_status: loaded ? (country.coverage === "facility_register" ? "full" : "partial") : "not_loaded",
     coverage_cs: `${country.facility_count || 0} míst poskytovatelů`,
     coverage_en: `${country.facility_count || 0} provider locations`,
     entity_count: country.facility_count,
-    artifact: "data/country-provider-networks.v1.json",
+    artifact: loaded ? `data/country-provider-networks.v1.json + ${country.records}` : "data/country-provider-networks.v1.json (source adapter pending; no register artifact)",
     artifact_generated_at: providers.generated_at,
     source_url: country.source?.url,
     view_url: `/deep-dives/health/?code=${code}`,

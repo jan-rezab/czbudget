@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-parity.v1",
-  "generated_at": "2026-08-28T00:07:05.387Z",
-  "country_count": 191,
+  "generated_at": "2026-08-28T18:42:16.626Z",
+  "country_count": 195,
   "rules": {
     "native_first": "National classifications, stages, currencies and accounting scopes are retained without coercion.",
     "harmonised_layer": "Cross-country comparisons use separately identified IMF, OECD/COFOG or SHA observations.",
@@ -321,7 +321,11 @@
         "municipalities": {
           "status": "loaded",
           "coverage": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
-          "missing_dimensions": [],
+          "missing_dimensions": [
+            "entity-level revenue",
+            "entity-level expenditure",
+            "entity-level balance"
+          ],
           "entity_count": 1467,
           "fact_count": 1467,
           "years": [
@@ -337,7 +341,7 @@
             "revenue",
             "expenditure"
           ],
-          "coverage_level": "complete",
+          "coverage_level": "aggregate_only",
           "directory": "data/countries/ukr/municipalities.v1.json",
           "warehouse": [
             {
@@ -480,7 +484,11 @@
         "municipalities": {
           "status": "loaded",
           "coverage": "All gminas in annual Rb-27S and Rb-28S returns",
-          "missing_dimensions": [],
+          "missing_dimensions": [
+            "entity-level revenue",
+            "entity-level expenditure",
+            "entity-level balance"
+          ],
           "entity_count": 2486,
           "fact_count": 2479,
           "years": [
@@ -495,7 +503,7 @@
             "revenue",
             "expenditure"
           ],
-          "coverage_level": "complete",
+          "coverage_level": "aggregate_only",
           "directory": "data/countries/pol/municipalities.v1.json",
           "warehouse": [
             {
@@ -770,7 +778,11 @@
         "municipalities": {
           "status": "loaded",
           "coverage": "Submitted English council and GLA returns; excludes police and fire",
-          "missing_dimensions": [],
+          "missing_dimensions": [
+            "entity-level revenue",
+            "entity-level expenditure",
+            "entity-level balance"
+          ],
           "entity_count": 318,
           "fact_count": 317,
           "years": [
@@ -785,7 +797,7 @@
             "expenditure",
             "financing"
           ],
-          "coverage_level": "complete",
+          "coverage_level": "aggregate_only",
           "directory": "data/countries/gbr/municipalities.v1.json",
           "warehouse": [
             {
@@ -1391,7 +1403,11 @@
         "municipalities": {
           "status": "loaded",
           "coverage": "All 290 municipalities; costs, income and balance sheet",
-          "missing_dimensions": [],
+          "missing_dimensions": [
+            "entity-level revenue",
+            "entity-level expenditure",
+            "entity-level balance"
+          ],
           "entity_count": 290,
           "fact_count": 290,
           "years": [
@@ -1406,7 +1422,7 @@
             "expenditure",
             "balance"
           ],
-          "coverage_level": "complete",
+          "coverage_level": "aggregate_only",
           "directory": "data/countries/swe/municipalities.v1.json",
           "warehouse": [
             {
@@ -1551,7 +1567,11 @@
         "municipalities": {
           "status": "loaded",
           "coverage": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
-          "missing_dimensions": [],
+          "missing_dimensions": [
+            "entity-level revenue",
+            "entity-level expenditure",
+            "entity-level balance"
+          ],
           "entity_count": 98,
           "fact_count": 0,
           "years": [
@@ -1566,7 +1586,7 @@
             "expenditure",
             "balance"
           ],
-          "coverage_level": "complete",
+          "coverage_level": "aggregate_only",
           "directory": "data/countries/dnk/municipalities.v1.json",
           "warehouse": [
             {
@@ -1781,11 +1801,12 @@
       "currency_code": "BRL",
       "profile": "data/countries/bra/profile.v1.json",
       "coverage": {
-        "loaded_modules": 8,
+        "loaded_modules": 7,
         "total_modules": 11,
         "missing_dimensions": [
           "provider_register",
-          "public_entity_accounts"
+          "public_entity_accounts",
+          "harmonised_health_financing"
         ]
       },
       "modules": {
@@ -1833,9 +1854,14 @@
           ]
         },
         "health": {
-          "status": "loaded",
-          "coverage": "SHA financing profile; 2024",
-          "missing_dimensions": []
+          "status": "unavailable",
+          "coverage": "The OECD SHA and beds queries returned no numeric observation for Brazil; the architecture note remains, but no health-financing profile is loaded.",
+          "missing_dimensions": [
+            "SHA health expenditure",
+            "financing shares",
+            "provider shares",
+            "hospital beds"
+          ]
         },
         "providers": {
           "status": "unavailable",
@@ -7848,6 +7874,137 @@
       ]
     },
     {
+      "country_code": "CUB",
+      "iso2": "cu",
+      "weo_country_code": "CUB",
+      "profile_tier": "macro_fiscal",
+      "name_cs": "Kuba",
+      "name_en": "Cuba",
+      "currency_code": "LCU",
+      "profile": "data/countries/cub/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 0,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection",
+          "harmonised_health_financing"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "unavailable",
+          "coverage": "WEO profile not available",
+          "missing_dimensions": [
+            "all WEO macro-fiscal metrics"
+          ],
+          "period": null,
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "unavailable",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "row_count": 0
+        },
+        "common_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "category_count": 0
+        },
+        "functional_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "function_count": 0
+        },
+        "transport": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "unavailable",
+          "coverage": "functional expenditure only",
+          "missing_dimensions": [
+            "SHA financing and provider split"
+          ]
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": null,
+          "coverage_level": null
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "fact_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "coverage_level": null,
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0,
+          "represented_entity_count": 0,
+          "broad_entity_count": null,
+          "financial_statement_count": 0,
+          "coverage_level": "entity_registry"
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "annual age structure",
+            "sex breakdown"
+          ],
+          "projection": null,
+          "detail": null,
+          "detail_row_count": 0
+        }
+      },
+      "sources": [
+        {
+          "source_id": "imf-weo-2026-04",
+          "source_name": "International Monetary Fund · World Economic Outlook, April 2026",
+          "source_url": "https://data.imf.org/en/Datasets/WEO",
+          "coverage": "2005–2024",
+          "formats": [
+            "XLSX"
+          ],
+          "purpose": "Harmonised general-government macro-fiscal series",
+          "active": true
+        }
+      ]
+    },
+    {
       "country_code": "CYP",
       "iso2": "cy",
       "weo_country_code": "CYP",
@@ -9206,12 +9363,12 @@
       "modules": {
         "sovereign": {
           "status": "loaded",
-          "coverage": "2005–2024; 15 metrics",
+          "coverage": "2005–2019; 15 metrics",
           "missing_dimensions": [],
           "period": {
             "from": 2005,
-            "to": 2024,
-            "years": 20
+            "to": 2019,
+            "years": 15
           },
           "metric_count": 15
         },
@@ -16254,6 +16411,137 @@
       ]
     },
     {
+      "country_code": "MCO",
+      "iso2": "mc",
+      "weo_country_code": "MCO",
+      "profile_tier": "macro_fiscal",
+      "name_cs": "Monako",
+      "name_en": "Monaco",
+      "currency_code": "LCU",
+      "profile": "data/countries/mco/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 0,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection",
+          "harmonised_health_financing"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "unavailable",
+          "coverage": "WEO profile not available",
+          "missing_dimensions": [
+            "all WEO macro-fiscal metrics"
+          ],
+          "period": null,
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "unavailable",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "row_count": 0
+        },
+        "common_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "category_count": 0
+        },
+        "functional_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "function_count": 0
+        },
+        "transport": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "unavailable",
+          "coverage": "functional expenditure only",
+          "missing_dimensions": [
+            "SHA financing and provider split"
+          ]
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": null,
+          "coverage_level": null
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "fact_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "coverage_level": null,
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0,
+          "represented_entity_count": 0,
+          "broad_entity_count": null,
+          "financial_statement_count": 0,
+          "coverage_level": "entity_registry"
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "annual age structure",
+            "sex breakdown"
+          ],
+          "projection": null,
+          "detail": null,
+          "detail_row_count": 0
+        }
+      },
+      "sources": [
+        {
+          "source_id": "imf-weo-2026-04",
+          "source_name": "International Monetary Fund · World Economic Outlook, April 2026",
+          "source_url": "https://data.imf.org/en/Datasets/WEO",
+          "coverage": "2005–2024",
+          "formats": [
+            "XLSX"
+          ],
+          "purpose": "Harmonised general-government macro-fiscal series",
+          "active": true
+        }
+      ]
+    },
+    {
       "country_code": "MNG",
       "iso2": "mn",
       "weo_country_code": "MNG",
@@ -17746,6 +18034,137 @@
             "to": 2024,
             "years": 20
           },
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "unavailable",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "row_count": 0
+        },
+        "common_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "category_count": 0
+        },
+        "functional_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "function_count": 0
+        },
+        "transport": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "unavailable",
+          "coverage": "functional expenditure only",
+          "missing_dimensions": [
+            "SHA financing and provider split"
+          ]
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": null,
+          "coverage_level": null
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "fact_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "coverage_level": null,
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0,
+          "represented_entity_count": 0,
+          "broad_entity_count": null,
+          "financial_statement_count": 0,
+          "coverage_level": "entity_registry"
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "annual age structure",
+            "sex breakdown"
+          ],
+          "projection": null,
+          "detail": null,
+          "detail_row_count": 0
+        }
+      },
+      "sources": [
+        {
+          "source_id": "imf-weo-2026-04",
+          "source_name": "International Monetary Fund · World Economic Outlook, April 2026",
+          "source_url": "https://data.imf.org/en/Datasets/WEO",
+          "coverage": "2005–2024",
+          "formats": [
+            "XLSX"
+          ],
+          "purpose": "Harmonised general-government macro-fiscal series",
+          "active": true
+        }
+      ]
+    },
+    {
+      "country_code": "PRK",
+      "iso2": "kp",
+      "weo_country_code": "PRK",
+      "profile_tier": "macro_fiscal",
+      "name_cs": "Severní Korea",
+      "name_en": "North Korea",
+      "currency_code": "LCU",
+      "profile": "data/countries/prk/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 0,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection",
+          "harmonised_health_financing"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "unavailable",
+          "coverage": "WEO profile not available",
+          "missing_dimensions": [
+            "all WEO macro-fiscal metrics"
+          ],
+          "period": null,
           "metric_count": 15
         },
         "revenue": {
@@ -21869,12 +22288,12 @@
       "modules": {
         "sovereign": {
           "status": "loaded",
-          "coverage": "2005–2024; 15 metrics",
+          "coverage": "2011–2024; 15 metrics",
           "missing_dimensions": [],
           "period": {
-            "from": 2005,
+            "from": 2011,
             "to": 2024,
-            "years": 20
+            "years": 14
           },
           "metric_count": 15
         },
@@ -22272,12 +22691,12 @@
       "modules": {
         "sovereign": {
           "status": "loaded",
-          "coverage": "2005–2024; 15 metrics",
+          "coverage": "2011–2024; 15 metrics",
           "missing_dimensions": [],
           "period": {
-            "from": 2005,
+            "from": 2011,
             "to": 2024,
-            "years": 20
+            "years": 14
           },
           "metric_count": 15
         },
@@ -22937,12 +23356,12 @@
       "modules": {
         "sovereign": {
           "status": "loaded",
-          "coverage": "2005–2024; 15 metrics",
+          "coverage": "2005–2010; 15 metrics",
           "missing_dimensions": [],
           "period": {
             "from": 2005,
-            "to": 2024,
-            "years": 20
+            "to": 2010,
+            "years": 6
           },
           "metric_count": 15
         },
@@ -25176,6 +25595,137 @@
       ]
     },
     {
+      "country_code": "VAT",
+      "iso2": "va",
+      "weo_country_code": "VAT",
+      "profile_tier": "macro_fiscal",
+      "name_cs": "Vatikán",
+      "name_en": "Vatican City",
+      "currency_code": "LCU",
+      "profile": "data/countries/vat/profile.v1.json",
+      "coverage": {
+        "loaded_modules": 0,
+        "total_modules": 11,
+        "missing_dimensions": [
+          "municipal_entity_finance",
+          "provider_register",
+          "public_entity_accounts",
+          "national_demographic_projection",
+          "harmonised_health_financing"
+        ]
+      },
+      "modules": {
+        "sovereign": {
+          "status": "unavailable",
+          "coverage": "WEO profile not available",
+          "missing_dimensions": [
+            "all WEO macro-fiscal metrics"
+          ],
+          "period": null,
+          "metric_count": 15
+        },
+        "revenue": {
+          "status": "unavailable",
+          "coverage": "general-government revenue and balance",
+          "missing_dimensions": [],
+          "native_layers": []
+        },
+        "administrative_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "row_count": 0
+        },
+        "common_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "category_count": 0
+        },
+        "functional_spending": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [],
+          "function_count": 0
+        },
+        "transport": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": []
+        },
+        "health": {
+          "status": "unavailable",
+          "coverage": "functional expenditure only",
+          "missing_dimensions": [
+            "SHA financing and provider split"
+          ]
+        },
+        "providers": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "facility records"
+          ],
+          "facility_count": null,
+          "coverage_level": null
+        },
+        "municipalities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "entity census",
+            "budget facts"
+          ],
+          "entity_count": 0,
+          "fact_count": 0,
+          "years": [],
+          "stages": [],
+          "measures": [],
+          "coverage_level": null,
+          "directory": null,
+          "warehouse": []
+        },
+        "public_entities": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "ownership register",
+            "entity accounts"
+          ],
+          "entity_count": 0,
+          "represented_entity_count": 0,
+          "broad_entity_count": null,
+          "financial_statement_count": 0,
+          "coverage_level": "entity_registry"
+        },
+        "demography": {
+          "status": "unavailable",
+          "coverage": "not loaded",
+          "missing_dimensions": [
+            "population projection",
+            "annual age structure",
+            "sex breakdown"
+          ],
+          "projection": null,
+          "detail": null,
+          "detail_row_count": 0
+        }
+      },
+      "sources": [
+        {
+          "source_id": "imf-weo-2026-04",
+          "source_name": "International Monetary Fund · World Economic Outlook, April 2026",
+          "source_url": "https://data.imf.org/en/Datasets/WEO",
+          "coverage": "2005–2024",
+          "formats": [
+            "XLSX"
+          ],
+          "purpose": "Harmonised general-government macro-fiscal series",
+          "active": true
+        }
+      ]
+    },
+    {
       "country_code": "VEN",
       "iso2": "ve",
       "weo_country_code": "VEN",
@@ -25464,12 +26014,12 @@
       "modules": {
         "sovereign": {
           "status": "loaded",
-          "coverage": "2005–2024; 15 metrics",
+          "coverage": "2014–2024; 15 metrics",
           "missing_dimensions": [],
           "period": {
-            "from": 2005,
+            "from": 2014,
             "to": 2024,
-            "years": 20
+            "years": 11
           },
           "metric_count": 15
         },

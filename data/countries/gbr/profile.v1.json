@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T18:42:16.626Z",
   "country": {
     "country_code": "GBR",
     "name_cs": "Spojené království",
@@ -95,7 +95,11 @@
     "municipalities": {
       "status": "loaded",
       "coverage": "Submitted English council and GLA returns; excludes police and fire",
-      "missing_dimensions": [],
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
       "entity_count": 318,
       "fact_count": 317,
       "years": [
@@ -110,7 +114,7 @@
         "expenditure",
         "financing"
       ],
-      "coverage_level": "complete",
+      "coverage_level": "aggregate_only",
       "directory": "data/countries/gbr/municipalities.v1.json",
       "warehouse": [
         {
@@ -2612,9 +2616,16 @@
       ],
       "coverage_cs": "Odevzdané výkazy anglických obcí a GLA; bez policie a hasičů",
       "coverage_en": "Submitted English council and GLA returns; excludes police and fire",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set",
-      "directory_count": 318
+      "directory_count": 318,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu."
     },
     "public_entities": {
       "coverage": {

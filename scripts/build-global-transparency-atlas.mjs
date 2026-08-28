@@ -100,7 +100,9 @@ for (const record of municipal.countries) {
 }
 
 const municipalByIso = new Map(municipal.countries.map((country) => [country.iso2, country]));
-const loadedByIso3 = new Map(parity.countries.map((country) => [country.country_code, country]));
+const loadedByIso3 = new Map(parity.countries
+  .filter((country) => country.modules.sovereign.status === "loaded")
+  .map((country) => [country.country_code, country]));
 const iso3ByIso2 = new Map(universe.countries.map((country) => [country.iso2, country.iso3]));
 const czechNames = new Intl.DisplayNames(["cs"], { type: "region" });
 

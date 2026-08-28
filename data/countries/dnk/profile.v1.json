@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T18:42:16.626Z",
   "country": {
     "country_code": "DNK",
     "name_cs": "Dánsko",
@@ -92,7 +92,11 @@
     "municipalities": {
       "status": "loaded",
       "coverage": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
-      "missing_dimensions": [],
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
       "entity_count": 98,
       "fact_count": 0,
       "years": [
@@ -107,7 +111,7 @@
         "expenditure",
         "balance"
       ],
-      "coverage_level": "complete",
+      "coverage_level": "aggregate_only",
       "directory": "data/countries/dnk/municipalities.v1.json",
       "warehouse": [
         {
@@ -2850,8 +2854,15 @@
       "coverage_cs": "Všech 98 obcí; schválený rozpočet BUDK100 a závěrečné účty REGK100 v autorizovaném funkčním a ekonomickém členění",
       "coverage_en": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
       "source": "https://www.statbank.dk/BUDK100",
-      "status": "complete",
-      "directory_count": 98
+      "status": "aggregate_only",
+      "directory_count": 98,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu."
     },
     "public_entities": {
       "coverage": {

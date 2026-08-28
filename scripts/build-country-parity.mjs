@@ -64,7 +64,7 @@ const countryCodes = sovereign.countries.map((country) => country.country_code);
 const fullProfileCountries = new Set(["CZE","UKR","POL","DEU","GBR","FRA","USA","CHE","SWE","DNK","FIN","BRA","ESP","JPN","NLD","NOR","GRC"]);
 const byCode = (rows, code, key = "code") => rows.find((row) => row[key] === code);
 const metricYears = (series) => {
-  const years = Object.values(series?.metrics || {}).flatMap((metric) => metric.values?.map((point) => point.year) || []);
+  const years = Object.values(series?.metrics || {}).flatMap((metric) => metric.values?.filter((point) => point.value != null).map((point) => point.year) || []);
   return years.length ? { from: Math.min(...years), to: Math.max(...years), years: new Set(years).size } : null;
 };
 const status = (loaded, coverage, missing = []) => ({ status: loaded ? "loaded" : "unavailable", coverage, missing_dimensions: missing });
@@ -146,16 +146,16 @@ for (const code of countryCodes) {
   if (!providerLoaded) missing.push("provider_register");
   if (!publicEntityProfile) missing.push("public_entity_accounts");
   if (!demographyProfile) missing.push("national_demographic_projection");
-  if (!healthProfile) missing.push("harmonised_health_financing");
+  if (!healthProfile || healthProfile.status === "not_loaded") missing.push("harmonised_health_financing");
 
   const modules = {
-    sovereign: { ...status(Boolean(series), `${periods?.from}–${periods?.to}; ${Object.keys(series?.metrics || {}).length} metrics`), period: periods, metric_count: Object.keys(series?.metrics || {}).length },
+    sovereign: { ...status(meta.data_status !== "not_loaded", periods ? `${periods.from}–${periods.to}; ${Object.keys(series?.metrics || {}).length} metrics` : "WEO profile not available", meta.missing_dimensions || []), period: periods, metric_count: Object.keys(series?.metrics || {}).length },
     revenue: { ...status(Boolean(cashIn.countries[code]), cashIn.countries[code]?.layers ? "general government plus native institutional layers" : "general-government revenue and balance"), native_layers: Object.keys(cashIn.countries[code]?.layers || {}) },
     administrative_spending: { ...status(Boolean(admin), admin ? `${admin.rows.length} native classification rows; ${admin.periods.previous.label} and ${admin.periods.current.label}` : "not loaded"), row_count: admin?.rows.length || 0 },
     common_spending: { ...status(Boolean(common), common ? `${comparison.categories.length} harmonised categories` : "not loaded"), category_count: common ? comparison.categories.length : 0 },
     functional_spending: { ...status(Boolean(functionProfile), functionProfile ? `${Object.keys(functionProfile.categories).length} functions; ${functions.period.start}–${functions.period.end}` : "not loaded"), function_count: Object.keys(functionProfile?.categories || {}).length },
     transport: { ...status(Boolean(transportProfile), transportProfile ? (transportProfile.coverage === "available" ? `transport function and native detailed budget through ${transportProfile.latest_year}` : "official transport sources registered; harmonised detailed budget not loaded") : "not loaded", transportProfile?.coverage === "unavailable" ? ["harmonised transport budget", "government-level transport breakdown"] : []) },
-    health: { ...status(Boolean(healthProfile), healthProfile ? `SHA financing profile; ${healthProfile.year}` : "functional expenditure only", healthProfile?.missing_dimensions || (healthProfile ? [] : ["SHA financing and provider split"])) },
+    health: { ...status(Boolean(healthProfile) && healthProfile.status !== "not_loaded", healthProfile?.status === "not_loaded" ? healthProfile.unavailable_reason_en : healthProfile ? `SHA financing profile; ${healthProfile.year}` : "functional expenditure only", healthProfile?.missing_dimensions || (healthProfile ? [] : ["SHA financing and provider split"])) },
     providers: { ...status(providerLoaded, providerLoaded ? `${provider.facility_count ?? "official bulk"} registered provider locations` : provider?.coverage || "not loaded", providerLoaded ? (provider.missing_dimensions || []) : ["facility records"]), facility_count: provider?.facility_count ?? null, coverage_level: provider?.coverage || null },
     municipalities: { ...status(Boolean(municipal), municipal?.coverage_en || "not loaded", municipal?.missing_dimensions || (municipal ? [] : ["entity census", "budget facts"])), entity_count: municipal?.directory_count || 0, fact_count: municipal?.counts?.[municipal?.years?.at(-1)] ?? 0, years: municipal?.years || [], stages: municipal?.stages || [], measures: municipal?.measures || [], coverage_level: municipal?.status || null, directory: municipal ? `data/countries/${countrySlug(code)}/municipalities.v1.json` : null, warehouse: warehouseVolume(code) },
     public_entities: { ...status(Boolean(publicEntityProfile && publicEntityRows), publicEntityProfile ? `${publicEntityRows.record_count} registry rows; ${publicEntityRows.financial_record_count} with economic fields; reference perimeter ${publicEntityProfile.comparison_perimeter}` : "not loaded", publicEntityProfile?.unresolved_layers || (publicEntityProfile ? [] : ["ownership register", "entity accounts"])), entity_count: publicEntityRows?.record_count || 0, represented_entity_count: publicEntityRows?.represented_entity_count || 0, broad_entity_count: publicEntityProfile?.broad_entity_count ?? null, financial_statement_count: publicEntityRows?.financial_record_count || 0, coverage_level: Object.values(publicEntityProfile?.perimeters || {}).some((perimeter) => perimeter.coverage_status === "aggregate_only") ? "aggregate_and_entity_registry" : "entity_registry" },

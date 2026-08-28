@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-27T13:58:28.124Z",
+  "generated_at": "2026-08-28T18:42:17.596Z",
   "reference_year": 2026,
   "definitions": {
     "latest_year": "Latest fiscal, reporting or observation year represented by the published artifact; it is not the file-generation date.",
@@ -10,14 +10,14 @@
     "statistical_lag": "An actual/statistical series ending in 2024; a normal release lag for many international sources, not automatically stale."
   },
   "totals": {
-    "countries": 191,
-    "modules": 15,
-    "records": 443,
+    "countries": 195,
+    "modules": 16,
+    "records": 466,
     "municipal_units": 107537,
     "municipality_rows": 105416,
     "municipal_country_coverage": 27,
-    "itemized_municipal_country_coverage": 27,
-    "itemized_municipal_profiles": 35810
+    "itemized_municipal_country_coverage": 28,
+    "itemized_municipal_profiles": 34381
   },
   "modules": [
     {
@@ -63,67 +63,74 @@
       "order": 6
     },
     {
+      "id": "oecd_overlay",
+      "family": "country",
+      "label_cs": "Klíčové ukazatele OECD",
+      "label_en": "OECD key metrics",
+      "order": 7
+    },
+    {
       "id": "transport",
       "family": "deep_dive",
       "label_cs": "Doprava",
       "label_en": "Transport",
-      "order": 7
+      "order": 8
     },
     {
       "id": "health",
       "family": "deep_dive",
       "label_cs": "Zdraví",
       "label_en": "Health",
-      "order": 8
+      "order": 9
     },
     {
       "id": "providers",
       "family": "deep_dive",
       "label_cs": "Poskytovatelé",
       "label_en": "Providers",
-      "order": 9
+      "order": 10
     },
     {
       "id": "demography",
       "family": "deep_dive",
       "label_cs": "Demografie",
       "label_en": "Demography",
-      "order": 10
+      "order": 11
     },
     {
       "id": "economy",
       "family": "deep_dive",
       "label_cs": "Ekonomika",
       "label_en": "Economy",
-      "order": 11
+      "order": 12
     },
     {
       "id": "defense",
       "family": "deep_dive",
       "label_cs": "Obrana",
       "label_en": "Defense",
-      "order": 12
+      "order": 13
     },
     {
       "id": "migration",
       "family": "deep_dive",
       "label_cs": "Migrace",
       "label_en": "Migration",
-      "order": 13
+      "order": 14
     },
     {
       "id": "capital_cities",
       "family": "municipal",
       "label_cs": "Hlavní města",
       "label_en": "Capital cities",
-      "order": 14
+      "order": 15
     },
     {
       "id": "state_enterprises",
       "family": "country",
       "label_cs": "Státní podniky",
       "label_en": "State enterprises",
-      "order": 15
+      "order": 16
     }
   ],
   "countries": [
@@ -372,6 +379,12 @@
       "iso2": "HR",
       "name_cs": "Chorvatsko",
       "name_en": "Croatia"
+    },
+    {
+      "code": "CUB",
+      "iso2": null,
+      "name_cs": "Kuba",
+      "name_en": "Cuba"
     },
     {
       "code": "CYP",
@@ -788,6 +801,12 @@
       "name_en": "Moldova"
     },
     {
+      "code": "MCO",
+      "iso2": null,
+      "name_cs": "Monako",
+      "name_en": "Monaco"
+    },
+    {
       "code": "MNG",
       "iso2": null,
       "name_cs": "Mongolsko",
@@ -864,6 +883,12 @@
       "iso2": null,
       "name_cs": "Nigérie",
       "name_en": "Nigeria"
+    },
+    {
+      "code": "PRK",
+      "iso2": null,
+      "name_cs": "Severní Korea",
+      "name_en": "North Korea"
     },
     {
       "code": "NOR",
@@ -1244,6 +1269,12 @@
       "name_en": "Vanuatu"
     },
     {
+      "code": "VAT",
+      "iso2": null,
+      "name_cs": "Vatikán",
+      "name_en": "Vatican City"
+    },
+    {
       "code": "VEN",
       "iso2": null,
       "name_cs": "Venezuela",
@@ -1289,7 +1320,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=AFG"
     },
@@ -1307,7 +1338,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=AGO"
     },
@@ -1325,7 +1356,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ALB"
     },
@@ -1343,7 +1374,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=AND"
     },
@@ -1361,7 +1392,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ARE"
     },
@@ -1379,7 +1410,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ARG"
     },
@@ -1397,7 +1428,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ARM"
     },
@@ -1415,7 +1446,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ATG"
     },
@@ -1433,7 +1464,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=AUS"
     },
@@ -1451,7 +1482,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=AUT"
     },
@@ -1487,7 +1518,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.wien.gv.at/politik/voranschlag-budget",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -1505,7 +1536,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=AZE"
     },
@@ -1523,7 +1554,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BDI"
     },
@@ -1541,7 +1572,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BEL"
     },
@@ -1577,7 +1608,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.brussels.be/municipal-budget",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -1595,7 +1626,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BEN"
     },
@@ -1613,7 +1644,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BFA"
     },
@@ -1631,7 +1662,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BGD"
     },
@@ -1649,7 +1680,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BGR"
     },
@@ -1685,7 +1716,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.sofia.bg/w/6950141",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -1703,7 +1734,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BHR"
     },
@@ -1721,7 +1752,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BHS"
     },
@@ -1739,7 +1770,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BIH"
     },
@@ -1757,7 +1788,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BLR"
     },
@@ -1775,7 +1806,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BLZ"
     },
@@ -1793,7 +1824,7 @@
       "entity_count": 343,
       "row_count": 343,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://abierto.economiayfinanzas.gob.bo/descargas",
       "view_url": "/municipalities.html?country=BOL"
     },
@@ -1829,7 +1860,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BOL"
     },
@@ -1847,7 +1878,7 @@
       "entity_count": 5570,
       "row_count": 5570,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://apidatalake.tesouro.gov.br/docs/siconfi",
       "view_url": "/municipalities.html?country=BRA"
     },
@@ -1901,7 +1932,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BRA"
     },
@@ -1925,11 +1956,29 @@
     },
     {
       "country_code": "BRA",
-      "module": "transport",
-      "latest_year": 0,
-      "first_year": 0,
-      "period_label": null,
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
       "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "partial",
+      "coverage_cs": "11 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "11 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 11,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=BRA#oecd-benchmark"
+    },
+    {
+      "country_code": "BRA",
+      "module": "transport",
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
       "freshness_band": "undated",
       "coverage_status": "unavailable",
       "coverage_cs": "Výdaje, síť a výkon dopravy",
@@ -1937,7 +1986,7 @@
       "entity_count": null,
       "row_count": null,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=BRA"
     },
@@ -1945,11 +1994,11 @@
       "country_code": "BRA",
       "module": "health",
       "latest_year": 2024,
-      "first_year": 0,
+      "first_year": 2015,
       "period_label": "2024",
       "vintage_type": "actual",
       "freshness_band": "statistical_lag",
-      "coverage_status": "full",
+      "coverage_status": "performance_only",
       "coverage_cs": "Financování, kapacita a zdravotní výsledky",
       "coverage_en": "Financing, capacity and health outcomes",
       "entity_count": null,
@@ -1973,7 +2022,7 @@
       "entity_count": null,
       "row_count": 7777,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=BRA"
     },
@@ -2027,7 +2076,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BRB"
     },
@@ -2045,7 +2094,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BRN"
     },
@@ -2063,7 +2112,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BTN"
     },
@@ -2081,7 +2130,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=BWA"
     },
@@ -2099,7 +2148,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CAF"
     },
@@ -2117,7 +2166,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CAN"
     },
@@ -2135,15 +2184,15 @@
       "entity_count": 2121,
       "row_count": null,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.efv.admin.ch/de/fs-daten",
       "view_url": "/municipalities.html?country=CHE"
     },
     {
       "country_code": "CHE",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -2189,7 +2238,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CHE"
     },
@@ -2213,6 +2262,24 @@
     },
     {
       "country_code": "CHE",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=CHE#oecd-benchmark"
+    },
+    {
+      "country_code": "CHE",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -2225,7 +2292,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=CHE"
     },
@@ -2253,14 +2320,14 @@
       "latest_year": null,
       "first_year": null,
       "period_label": null,
-      "vintage_type": "register",
-      "freshness_band": "live_register",
-      "coverage_status": "partial",
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
       "coverage_cs": "230 míst poskytovatelů",
       "coverage_en": "230 provider locations",
       "entity_count": 230,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json (source adapter pending; no register artifact)",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://opendata.swiss/en/dataset/qualitatsindikatoren-der-schweizer-akutspitaler-2024",
       "view_url": "/deep-dives/health/?code=CHE"
@@ -2279,7 +2346,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=CHE"
     },
@@ -2351,7 +2418,7 @@
       "entity_count": 345,
       "row_count": 345,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
       "view_url": "/municipalities.html?country=CHL"
     },
@@ -2387,7 +2454,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CHL"
     },
@@ -2405,7 +2472,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CHN"
     },
@@ -2423,7 +2490,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CIV"
     },
@@ -2441,7 +2508,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CMR"
     },
@@ -2459,7 +2526,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=COD"
     },
@@ -2477,7 +2544,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=COG"
     },
@@ -2495,22 +2562,22 @@
       "entity_count": 1102,
       "row_count": 1102,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
       "view_url": "/municipalities.html?country=COL"
     },
     {
       "country_code": "COL",
       "module": "municipal_detail",
-      "latest_year": 2025,
-      "first_year": 2025,
-      "period_label": "2025",
-      "vintage_type": "mixed",
-      "freshness_band": "mixed_current",
-      "coverage_status": "full",
-      "coverage_cs": "původní položky plánu a plnění CUIPO · actuals 2025; plans 2025",
-      "coverage_en": "native CUIPO plan and execution items · actuals 2025; plans 2025",
-      "entity_count": 1102,
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "missing",
+      "coverage_cs": "actuals 2025; plans 2025",
+      "coverage_en": "actuals 2025; plans 2025",
+      "entity_count": null,
       "row_count": null,
       "artifact": "data/municipal-itemized-coverage.v1.json",
       "artifact_generated_at": "2026-08-27",
@@ -2531,7 +2598,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=COL"
     },
@@ -2549,7 +2616,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=COM"
     },
@@ -2567,7 +2634,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CPV"
     },
@@ -2585,22 +2652,22 @@
       "entity_count": 84,
       "row_count": 84,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
       "view_url": "/municipalities.html?country=CRI"
     },
     {
       "country_code": "CRI",
       "module": "municipal_detail",
-      "latest_year": 2025,
-      "first_year": 2025,
-      "period_label": "2025",
-      "vintage_type": "actual",
-      "freshness_band": "current",
-      "coverage_status": "full",
-      "coverage_cs": "původní položky příjmů a výdajů SIPP · actuals 2025",
-      "coverage_en": "native SIPP revenue and expenditure items · actuals 2025",
-      "entity_count": 84,
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "missing",
+      "coverage_cs": "actuals 2025",
+      "coverage_en": "actuals 2025",
+      "entity_count": null,
       "row_count": null,
       "artifact": "data/municipal-itemized-coverage.v1.json",
       "artifact_generated_at": "2026-08-27",
@@ -2621,9 +2688,27 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CRI"
+    },
+    {
+      "country_code": "CUB",
+      "module": "sovereign",
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
+      "coverage_cs": "WEO profile not available; stav zdroje pro příjmy, výdaje a saldo v posledním roce: nedostupné",
+      "coverage_en": "WEO profile not available; source status for revenue, expenditure and balance in the latest year: unavailable",
+      "entity_count": null,
+      "row_count": 15,
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
+      "source_url": "https://data.imf.org/en/Datasets/WEO",
+      "view_url": "/country.html?code=CUB"
     },
     {
       "country_code": "CYP",
@@ -2639,7 +2724,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CYP"
     },
@@ -2675,7 +2760,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.nicosia.org.cy/",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -2693,7 +2778,7 @@
       "entity_count": 6254,
       "row_count": 6254,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://monitor.statnipokladna.gov.cz/",
       "view_url": "/municipalities.html?country=CZE"
     },
@@ -2747,7 +2832,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=CZE"
     },
@@ -2771,6 +2856,24 @@
     },
     {
       "country_code": "CZE",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=CZE#oecd-benchmark"
+    },
+    {
+      "country_code": "CZE",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -2783,7 +2886,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=CZE"
     },
@@ -2818,7 +2921,7 @@
       "coverage_en": "642 provider locations",
       "entity_count": 642,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json + data/countries/cze/providers.v1.json",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://datanzis.uzis.gov.cz/data/NR-01-NRPZS/NR-01-06/Otevrena-data-NR-01-06-nrpzs-mista-poskytovani-zdravotnich-sluzeb.csv",
       "view_url": "/deep-dives/health/?code=CZE"
@@ -2837,7 +2940,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=CZE"
     },
@@ -2909,7 +3012,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://praha.eu/rozpocet-pro-rok-2026",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -2945,15 +3048,15 @@
       "entity_count": 10756,
       "row_count": 10756,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.regionalstatistik.de/genesis/online?operation=table&code=71717-Z-01",
       "view_url": "/municipalities.html?country=DEU"
     },
     {
       "country_code": "DEU",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -2999,7 +3102,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=DEU"
     },
@@ -3023,6 +3126,24 @@
     },
     {
       "country_code": "DEU",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=DEU#oecd-benchmark"
+    },
+    {
+      "country_code": "DEU",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -3035,7 +3156,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=DEU"
     },
@@ -3063,14 +3184,14 @@
       "latest_year": null,
       "first_year": null,
       "period_label": null,
-      "vintage_type": "register",
-      "freshness_band": "live_register",
-      "coverage_status": "partial",
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
       "coverage_cs": "1841 míst poskytovatelů",
       "coverage_en": "1841 provider locations",
       "entity_count": 1841,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json (source adapter pending; no register artifact)",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Gesundheit/Krankenhauser/Publikationen/Downloads-Krankenhaeuser/krankenhausverzeichnis-3500100247005.html",
       "view_url": "/deep-dives/health/?code=DEU"
@@ -3089,7 +3210,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=DEU"
     },
@@ -3161,7 +3282,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.berlin.de/sen/finanzen/haushalt/downloads/haushaltsplan-2026-27/artikel.1644823.php",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -3197,7 +3318,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=DJI"
     },
@@ -3215,7 +3336,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=DMA"
     },
@@ -3227,13 +3348,13 @@
       "period_label": "2025",
       "vintage_type": "mixed",
       "freshness_band": "mixed_current",
-      "coverage_status": "complete",
+      "coverage_status": "aggregate_only",
       "coverage_cs": "Všech 98 obcí; schválený rozpočet BUDK100 a závěrečné účty REGK100 v autorizovaném funkčním a ekonomickém členění",
       "coverage_en": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
       "entity_count": 98,
       "row_count": 98,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.statbank.dk/BUDK100",
       "view_url": "/municipalities.html?country=DNK"
     },
@@ -3305,7 +3426,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=DNK"
     },
@@ -3329,6 +3450,24 @@
     },
     {
       "country_code": "DNK",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=DNK#oecd-benchmark"
+    },
+    {
+      "country_code": "DNK",
       "module": "transport",
       "latest_year": 2024,
       "first_year": 2015,
@@ -3341,7 +3480,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=DNK"
     },
@@ -3369,14 +3508,14 @@
       "latest_year": null,
       "first_year": null,
       "period_label": null,
-      "vintage_type": "register",
-      "freshness_band": "live_register",
-      "coverage_status": "partial",
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
       "coverage_cs": "135 míst poskytovatelů",
       "coverage_en": "135 provider locations",
       "entity_count": 135,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json (source adapter pending; no register artifact)",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://sundhedsdatastyrelsen.dk/data-og-registre/nationale-sundhedsregistre/sundhedsvaesenets-organisationsregister/brug-sor-data",
       "view_url": "/deep-dives/health/?code=DNK"
@@ -3395,7 +3534,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=DNK"
     },
@@ -3467,7 +3606,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.kk.dk/politik/budget-og-regnskab/budget-2026/budgetaftale-2026",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -3503,7 +3642,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=DOM"
     },
@@ -3521,7 +3660,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=DZA"
     },
@@ -3539,7 +3678,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ECU"
     },
@@ -3557,25 +3696,25 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=EGY"
     },
     {
       "country_code": "ERI",
       "module": "sovereign",
-      "latest_year": 2024,
+      "latest_year": 2019,
       "first_year": 2005,
-      "period_label": "2024",
-      "vintage_type": "estimate",
-      "freshness_band": "estimate_lag",
+      "period_label": "2019",
+      "vintage_type": "actual",
+      "freshness_band": "older",
       "coverage_status": "full",
-      "coverage_cs": "2005–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: odhad",
-      "coverage_en": "2005–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: estimate",
+      "coverage_cs": "2005–2019; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: skutečnost",
+      "coverage_en": "2005–2019; 15 metrics; source status for revenue, expenditure and balance in the latest year: actual",
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ERI"
     },
@@ -3593,7 +3732,7 @@
       "entity_count": 6198,
       "row_count": 6198,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
       "view_url": "/municipalities.html?country=ESP"
     },
@@ -3647,7 +3786,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ESP"
     },
@@ -3671,6 +3810,24 @@
     },
     {
       "country_code": "ESP",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=ESP#oecd-benchmark"
+    },
+    {
+      "country_code": "ESP",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -3683,7 +3840,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=ESP"
     },
@@ -3719,7 +3876,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=ESP"
     },
@@ -3791,7 +3948,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.madrid.es/UnidadWeb/Contenidos/EspecialInformativo/PortalContribuyente/InfoFinanciera/SectPublicMun/2026/Gastos/TotalConsolidadoGastos2026.pdf",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -3809,7 +3966,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=EST"
     },
@@ -3845,7 +4002,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.riigiteataja.ee/akt/413022026015",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -3863,7 +4020,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ETH"
     },
@@ -3881,7 +4038,7 @@
       "entity_count": 310,
       "row_count": 310,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://pxdata.stat.fi/PxWeb/pxweb/en/Kuntien_talous_ja_toiminta/",
       "view_url": "/municipalities.html?country=FIN"
     },
@@ -3935,7 +4092,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=FIN"
     },
@@ -3959,6 +4116,24 @@
     },
     {
       "country_code": "FIN",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=FIN#oecd-benchmark"
+    },
+    {
+      "country_code": "FIN",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -3971,7 +4146,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=FIN"
     },
@@ -4007,7 +4182,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=FIN"
     },
@@ -4079,7 +4254,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.hel.fi/fi/paatoksenteko-ja-hallinto/strategia-ja-talous/talous/talouden-julkaisut",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -4097,7 +4272,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=FJI"
     },
@@ -4110,20 +4285,20 @@
       "vintage_type": "actual",
       "freshness_band": "current",
       "coverage_status": "complete",
-      "coverage_cs": "Všechny obce; funkční detail tam, kde jej obec vykazuje; hlavní i vedlejší rozpočty",
-      "coverage_en": "All communes; functional detail where reported; main and supplementary budgets",
-      "entity_count": 35041,
-      "row_count": 35041,
+      "coverage_cs": "Všech 34 875 současných obcí; hlavní rozpočet, oficiální souhrny OFGL; 2025 je předběžný a u 97 obcí zatím chybí",
+      "coverage_en": "All 34,875 current communes; main-budget official OFGL aggregates; 2025 is provisional and not yet available for 97 communes",
+      "entity_count": 34875,
+      "row_count": 34875,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
-      "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+      "artifact_generated_at": "2026-08-28",
+      "source_url": "https://data.ofgl.fr/explore/dataset/ofgl-base-communes/",
       "view_url": "/municipalities.html?country=FRA"
     },
     {
       "country_code": "FRA",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -4169,7 +4344,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=FRA"
     },
@@ -4193,6 +4368,24 @@
     },
     {
       "country_code": "FRA",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2022,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=FRA#oecd-benchmark"
+    },
+    {
+      "country_code": "FRA",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -4205,7 +4398,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=FRA"
     },
@@ -4240,7 +4433,7 @@
       "coverage_en": "5979 provider locations",
       "entity_count": 5979,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json + data/countries/fra/providers.v1.json",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://www.data.gouv.fr/datasets/reexposition-des-donnees-finess",
       "view_url": "/deep-dives/health/?code=FRA"
@@ -4259,7 +4452,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=FRA"
     },
@@ -4331,7 +4524,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.paris.fr/pages/budgets-de-la-ville-retrouvez-toutes-les-infos-27792",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -4367,7 +4560,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=FSM"
     },
@@ -4385,7 +4578,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GAB"
     },
@@ -4397,21 +4590,21 @@
       "period_label": "2025",
       "vintage_type": "actual",
       "freshness_band": "current",
-      "coverage_status": "complete",
+      "coverage_status": "aggregate_only",
       "coverage_cs": "Odevzdané výkazy anglických obcí a GLA; bez policie a hasičů",
       "coverage_en": "Submitted English council and GLA returns; excludes police and fire",
       "entity_count": 318,
       "row_count": 318,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set",
       "view_url": "/municipalities.html?country=GBR"
     },
     {
       "country_code": "GBR",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -4457,7 +4650,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GBR"
     },
@@ -4481,6 +4674,24 @@
     },
     {
       "country_code": "GBR",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2022,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=GBR#oecd-benchmark"
+    },
+    {
+      "country_code": "GBR",
       "module": "transport",
       "latest_year": 2024,
       "first_year": 2015,
@@ -4493,7 +4704,7 @@
       "entity_count": null,
       "row_count": null,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=GBR"
     },
@@ -4528,7 +4739,7 @@
       "coverage_en": "46118 provider locations",
       "entity_count": 46118,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json + data/countries/gbr/providers.v1.json",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://digital.nhs.uk/services/organisation-data-service/data-search-and-export/csv-downloads/other-nhs-organisations",
       "view_url": "/deep-dives/health/?code=GBR"
@@ -4547,7 +4758,7 @@
       "entity_count": null,
       "row_count": 10807,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=GBR"
     },
@@ -4601,7 +4812,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.london.gov.uk/2026-27-gla-budget-0",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -4637,7 +4848,7 @@
       "entity_count": 69,
       "row_count": 69,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
       "view_url": "/municipalities.html?country=GEO"
     },
@@ -4691,7 +4902,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GEO"
     },
@@ -4709,7 +4920,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GHA"
     },
@@ -4727,7 +4938,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GIN"
     },
@@ -4745,7 +4956,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GMB"
     },
@@ -4763,7 +4974,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GNB"
     },
@@ -4781,7 +4992,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GNQ"
     },
@@ -4817,7 +5028,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GRC"
     },
@@ -4841,6 +5052,24 @@
     },
     {
       "country_code": "GRC",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=GRC#oecd-benchmark"
+    },
+    {
+      "country_code": "GRC",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -4853,7 +5082,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=GRC"
     },
@@ -4889,7 +5118,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=GRC"
     },
@@ -4961,7 +5190,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.cityofathens.gr/",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -4979,7 +5208,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GRD"
     },
@@ -4997,7 +5226,7 @@
       "entity_count": 340,
       "row_count": 340,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025",
       "view_url": "/municipalities.html?country=GTM"
     },
@@ -5033,7 +5262,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GTM"
     },
@@ -5051,7 +5280,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=GUY"
     },
@@ -5069,7 +5298,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=HND"
     },
@@ -5087,7 +5316,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=HRV"
     },
@@ -5123,7 +5352,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://zagreb.hr/proracun/113894",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -5141,7 +5370,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=HTI"
     },
@@ -5159,7 +5388,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=HUN"
     },
@@ -5195,7 +5424,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://einfoszab.budapest.hu/",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -5213,7 +5442,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=IDN"
     },
@@ -5231,7 +5460,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=IND"
     },
@@ -5249,7 +5478,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=IRL"
     },
@@ -5285,7 +5514,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.dublincity.ie/sites/default/files/2025-11/dublin-city-council-adopted-revenue-budget-2026.pdf",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -5303,7 +5532,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=IRN"
     },
@@ -5321,7 +5550,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=IRQ"
     },
@@ -5339,7 +5568,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ISL"
     },
@@ -5357,7 +5586,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ISR"
     },
@@ -5375,7 +5604,7 @@
       "entity_count": 7896,
       "row_count": 7896,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.siope.it/Siope/",
       "view_url": "/municipalities.html?country=ITA"
     },
@@ -5411,7 +5640,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ITA"
     },
@@ -5447,7 +5676,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.comune.roma.it/web/it/amministrazione-trasparente-bilanci-di-previsione.page",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -5465,7 +5694,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=JAM"
     },
@@ -5483,7 +5712,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=JOR"
     },
@@ -5501,7 +5730,7 @@
       "entity_count": 1741,
       "row_count": 1741,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755",
       "view_url": "/municipalities.html?country=JPN"
     },
@@ -5555,7 +5784,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=JPN"
     },
@@ -5579,6 +5808,24 @@
     },
     {
       "country_code": "JPN",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=JPN#oecd-benchmark"
+    },
+    {
+      "country_code": "JPN",
       "module": "transport",
       "latest_year": 2024,
       "first_year": 2015,
@@ -5591,7 +5838,7 @@
       "entity_count": null,
       "row_count": null,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=JPN"
     },
@@ -5610,7 +5857,7 @@
       "row_count": null,
       "artifact": "data/country-health.v1.json + data/country-health-performance.v1.json",
       "artifact_generated_at": "2026-08-26T16:05:16.749Z",
-      "source_url": "https://www.mhlw.go.jp/english/policy/health-medical/health-insurance/",
+      "source_url": "https://www.mhlw.go.jp/content/12400000/001406614.pdf",
       "view_url": "/deep-dives/health/?code=JPN"
     },
     {
@@ -5627,7 +5874,7 @@
       "entity_count": null,
       "row_count": 7777,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=JPN"
     },
@@ -5681,7 +5928,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KAZ"
     },
@@ -5699,7 +5946,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KEN"
     },
@@ -5717,7 +5964,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KGZ"
     },
@@ -5735,7 +5982,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KHM"
     },
@@ -5753,7 +6000,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KIR"
     },
@@ -5771,7 +6018,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KNA"
     },
@@ -5789,22 +6036,22 @@
       "entity_count": 243,
       "row_count": 243,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.lofin365.go.kr/portal/LF5100000.do",
       "view_url": "/municipalities.html?country=KOR"
     },
     {
       "country_code": "KOR",
       "module": "municipal_detail",
-      "latest_year": 2024,
-      "first_year": 2024,
-      "period_label": "2024",
-      "vintage_type": "actual",
-      "freshness_band": "statistical_lag",
-      "coverage_status": "full",
-      "coverage_cs": "původní položky závěrečných účtů Local Finance 365 · actuals 2024",
-      "coverage_en": "native Local Finance 365 settlement items · actuals 2024",
-      "entity_count": 243,
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "missing",
+      "coverage_cs": "actuals 2024",
+      "coverage_en": "actuals 2024",
+      "entity_count": null,
       "row_count": null,
       "artifact": "data/municipal-itemized-coverage.v1.json",
       "artifact_generated_at": "2026-08-27",
@@ -5825,7 +6072,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KOR"
     },
@@ -5843,7 +6090,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=KWT"
     },
@@ -5861,7 +6108,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LAO"
     },
@@ -5879,7 +6126,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LBN"
     },
@@ -5897,7 +6144,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LBR"
     },
@@ -5915,7 +6162,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LBY"
     },
@@ -5933,7 +6180,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LCA"
     },
@@ -5951,7 +6198,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LIE"
     },
@@ -5969,7 +6216,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LKA"
     },
@@ -5987,7 +6234,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LSO"
     },
@@ -6005,7 +6252,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LTU"
     },
@@ -6041,7 +6288,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://vilnius.lt/naujienos/patvirtintas-175-mlrd-euru-vilniaus-biudzetas-didziausias-demesys-svietimui-judumui-ir-aplinkai",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -6059,7 +6306,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LUX"
     },
@@ -6095,7 +6342,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.vdl.lu/fr/la-ville/vie-politique/budget",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -6113,7 +6360,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=LVA"
     },
@@ -6149,7 +6396,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.riga.lv/lv/budzeta-plans-no-2026gada",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -6167,9 +6414,27 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MAR"
+    },
+    {
+      "country_code": "MCO",
+      "module": "sovereign",
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
+      "coverage_cs": "WEO profile not available; stav zdroje pro příjmy, výdaje a saldo v posledním roce: nedostupné",
+      "coverage_en": "WEO profile not available; source status for revenue, expenditure and balance in the latest year: unavailable",
+      "entity_count": null,
+      "row_count": 15,
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
+      "source_url": "https://data.imf.org/en/Datasets/WEO",
+      "view_url": "/country.html?code=MCO"
     },
     {
       "country_code": "MDA",
@@ -6185,7 +6450,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MDA"
     },
@@ -6203,7 +6468,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MDG"
     },
@@ -6221,7 +6486,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MDV"
     },
@@ -6239,7 +6504,7 @@
       "entity_count": 2380,
       "row_count": 2380,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.inegi.org.mx/programas/finanzas/",
       "view_url": "/municipalities.html?country=MEX"
     },
@@ -6275,7 +6540,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MEX"
     },
@@ -6293,7 +6558,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MHL"
     },
@@ -6311,7 +6576,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MKD"
     },
@@ -6329,7 +6594,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MLI"
     },
@@ -6347,7 +6612,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MLT"
     },
@@ -6383,7 +6648,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://beltvallettalc.gov.mt/en/annual-budgets/",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -6401,7 +6666,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MMR"
     },
@@ -6419,7 +6684,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MNE"
     },
@@ -6437,7 +6702,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MNG"
     },
@@ -6455,7 +6720,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MOZ"
     },
@@ -6473,7 +6738,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MRT"
     },
@@ -6491,7 +6756,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MUS"
     },
@@ -6509,7 +6774,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MWI"
     },
@@ -6527,7 +6792,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=MYS"
     },
@@ -6545,7 +6810,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NAM"
     },
@@ -6563,7 +6828,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NER"
     },
@@ -6581,7 +6846,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NGA"
     },
@@ -6599,7 +6864,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NIC"
     },
@@ -6617,7 +6882,7 @@
       "entity_count": 342,
       "row_count": 342,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.cbs.nl/nl-nl/onze-diensten/open-data/iv3",
       "view_url": "/municipalities.html?country=NLD"
     },
@@ -6689,7 +6954,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NLD"
     },
@@ -6713,6 +6978,24 @@
     },
     {
       "country_code": "NLD",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=NLD#oecd-benchmark"
+    },
+    {
+      "country_code": "NLD",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -6725,7 +7008,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=NLD"
     },
@@ -6761,7 +7044,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=NLD"
     },
@@ -6833,7 +7116,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.amsterdam.nl/bestuur-organisatie/begroting/begroting-2026/",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -6851,7 +7134,7 @@
       "entity_count": 358,
       "row_count": 358,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.ssb.no/en/offentlig-sektor/kommunale-finanser/statistikk/kommuneregnskap",
       "view_url": "/municipalities.html?country=NOR"
     },
@@ -6923,7 +7206,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NOR"
     },
@@ -6947,6 +7230,24 @@
     },
     {
       "country_code": "NOR",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=NOR#oecd-benchmark"
+    },
+    {
+      "country_code": "NOR",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -6959,7 +7260,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=NOR"
     },
@@ -6995,7 +7296,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=NOR"
     },
@@ -7049,7 +7350,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NPL"
     },
@@ -7067,7 +7368,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NRU"
     },
@@ -7085,7 +7386,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=NZL"
     },
@@ -7103,7 +7404,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=OMN"
     },
@@ -7121,7 +7422,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PAK"
     },
@@ -7139,7 +7440,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PAN"
     },
@@ -7157,7 +7458,7 @@
       "entity_count": 1891,
       "row_count": 1891,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto",
       "view_url": "/municipalities.html?country=PER"
     },
@@ -7211,7 +7512,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PER"
     },
@@ -7229,7 +7530,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PHL"
     },
@@ -7247,7 +7548,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PLW"
     },
@@ -7265,7 +7566,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PNG"
     },
@@ -7277,21 +7578,21 @@
       "period_label": "2025",
       "vintage_type": "mixed",
       "freshness_band": "mixed_current",
-      "coverage_status": "complete",
+      "coverage_status": "aggregate_only",
       "coverage_cs": "Všechny gminy v ročních výkazech Rb-27S a Rb-28S",
       "coverage_en": "All gminas in annual Rb-27S and Rb-28S returns",
       "entity_count": 2486,
       "row_count": 2486,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.gov.pl/web/finanse/bazy-danych8",
       "view_url": "/municipalities.html?country=POL"
     },
     {
       "country_code": "POL",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -7337,7 +7638,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=POL"
     },
@@ -7361,6 +7662,24 @@
     },
     {
       "country_code": "POL",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=POL#oecd-benchmark"
+    },
+    {
+      "country_code": "POL",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -7373,7 +7692,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=POL"
     },
@@ -7401,14 +7720,14 @@
       "latest_year": null,
       "first_year": null,
       "period_label": null,
-      "vintage_type": "register",
-      "freshness_band": "live_register",
-      "coverage_status": "partial",
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
       "coverage_cs": "0 míst poskytovatelů",
       "coverage_en": "0 provider locations",
       "entity_count": null,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json (source adapter pending; no register artifact)",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://rpwdl.ezdrowie.gov.pl/",
       "view_url": "/deep-dives/health/?code=POL"
@@ -7427,7 +7746,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=POL"
     },
@@ -7499,7 +7818,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://um.warszawa.pl/budzet-26",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -7522,6 +7841,24 @@
       "view_url": "/deep-dives/state-owned-enterprises/"
     },
     {
+      "country_code": "PRK",
+      "module": "sovereign",
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
+      "coverage_cs": "WEO profile not available; stav zdroje pro příjmy, výdaje a saldo v posledním roce: nedostupné",
+      "coverage_en": "WEO profile not available; source status for revenue, expenditure and balance in the latest year: unavailable",
+      "entity_count": null,
+      "row_count": 15,
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
+      "source_url": "https://data.imf.org/en/Datasets/WEO",
+      "view_url": "/country.html?code=PRK"
+    },
+    {
       "country_code": "PRT",
       "module": "sovereign",
       "latest_year": 2024,
@@ -7535,7 +7872,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PRT"
     },
@@ -7571,9 +7908,27 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.lisboa.pt/municipio/organizacao-municipal/financas/instrumentos-previsionais",
       "view_url": "/deep-dives/capital-cities/"
+    },
+    {
+      "country_code": "PRY",
+      "module": "municipal_detail",
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_published",
+      "coverage_cs": "Bez publikovaných položkových profilů; 263 jednotek je načteno pouze v produkčním skladu dat.",
+      "coverage_en": "No published itemized profiles; 263 entities are loaded in the production warehouse only.",
+      "entity_count": null,
+      "row_count": null,
+      "artifact": "data/municipal-itemized-coverage.v1.json",
+      "artifact_generated_at": "2026-08-27",
+      "source_url": "https://datacatalog.worldbank.org/search/dataset/0038079/paraguay-boost-public-expenditure-database",
+      "view_url": "/municipalities.html?country=PRY"
     },
     {
       "country_code": "PRY",
@@ -7589,7 +7944,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PRY"
     },
@@ -7607,7 +7962,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=PSE"
     },
@@ -7625,7 +7980,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=QAT"
     },
@@ -7643,7 +7998,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ROU"
     },
@@ -7679,7 +8034,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.pmb.ro/interes-public/arhiva/get-press-releases-menu/2026/1994",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -7697,7 +8052,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=RUS"
     },
@@ -7715,7 +8070,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=RWA"
     },
@@ -7733,7 +8088,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SAU"
     },
@@ -7751,7 +8106,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SDN"
     },
@@ -7769,7 +8124,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SEN"
     },
@@ -7787,7 +8142,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SGP"
     },
@@ -7805,7 +8160,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SLB"
     },
@@ -7823,7 +8178,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SLE"
     },
@@ -7841,7 +8196,7 @@
       "entity_count": 259,
       "row_count": 259,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
       "view_url": "/municipalities.html?country=SLV"
     },
@@ -7877,7 +8232,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SLV"
     },
@@ -7895,7 +8250,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SMR"
     },
@@ -7903,17 +8258,17 @@
       "country_code": "SOM",
       "module": "sovereign",
       "latest_year": 2024,
-      "first_year": 2005,
+      "first_year": 2011,
       "period_label": "2024",
       "vintage_type": "actual",
       "freshness_band": "statistical_lag",
       "coverage_status": "full",
-      "coverage_cs": "2005–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: skutečnost",
-      "coverage_en": "2005–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: actual",
+      "coverage_cs": "2011–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: skutečnost",
+      "coverage_en": "2011–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: actual",
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SOM"
     },
@@ -7931,7 +8286,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SRB"
     },
@@ -7939,17 +8294,17 @@
       "country_code": "SSD",
       "module": "sovereign",
       "latest_year": 2024,
-      "first_year": 2005,
+      "first_year": 2011,
       "period_label": "2024",
       "vintage_type": "actual",
       "freshness_band": "statistical_lag",
       "coverage_status": "full",
-      "coverage_cs": "2005–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: skutečnost",
-      "coverage_en": "2005–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: actual",
+      "coverage_cs": "2011–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: skutečnost",
+      "coverage_en": "2011–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: actual",
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SSD"
     },
@@ -7967,7 +8322,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=STP"
     },
@@ -7985,7 +8340,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SUR"
     },
@@ -8003,7 +8358,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SVK"
     },
@@ -8039,7 +8394,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://bratislava.sk/mesto-bratislava/transparentne-mesto/rozpocet-a-hospodarenie",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -8057,7 +8412,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SVN"
     },
@@ -8093,7 +8448,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://www.ljubljana.si/sl/mestna-obcina/upravljanje/proracun",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -8105,21 +8460,21 @@
       "period_label": "2025",
       "vintage_type": "actual",
       "freshness_band": "current",
-      "coverage_status": "complete",
+      "coverage_status": "aggregate_only",
       "coverage_cs": "Všech 290 obcí; náklady, výnosy a rozvaha",
       "coverage_en": "All 290 municipalities; costs, income and balance sheet",
       "entity_count": 290,
       "row_count": 290,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.scb.se/en/OE0107",
       "view_url": "/municipalities.html?country=SWE"
     },
     {
       "country_code": "SWE",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -8165,7 +8520,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SWE"
     },
@@ -8189,6 +8544,24 @@
     },
     {
       "country_code": "SWE",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2021,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "19 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "19 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 19,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=SWE#oecd-benchmark"
+    },
+    {
+      "country_code": "SWE",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -8201,7 +8574,7 @@
       "entity_count": null,
       "row_count": 10,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=SWE"
     },
@@ -8229,14 +8602,14 @@
       "latest_year": null,
       "first_year": null,
       "period_label": null,
-      "vintage_type": "register",
-      "freshness_band": "live_register",
-      "coverage_status": "partial",
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
       "coverage_cs": "21 míst poskytovatelů",
       "coverage_en": "21 provider locations",
       "entity_count": 21,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json (source adapter pending; no register artifact)",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://skr.se/kommunerochregioner/regionerlista.8289.html",
       "view_url": "/deep-dives/health/?code=SWE"
@@ -8255,7 +8628,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=SWE"
     },
@@ -8327,7 +8700,7 @@
       "entity_count": 1,
       "row_count": null,
       "artifact": "data/eu-capital-budgets.v1.json",
-      "artifact_generated_at": "2026-08-20T21:32:51+00:00",
+      "artifact_generated_at": "2026-08-28T18:15:36+00:00",
       "source_url": "https://start.stockholm/om-stockholms-stad/sa-anvands-dina-skattepengar/stadens-budget-ar-fran-ar/",
       "view_url": "/deep-dives/capital-cities/"
     },
@@ -8363,7 +8736,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SWZ"
     },
@@ -8381,25 +8754,25 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SYC"
     },
     {
       "country_code": "SYR",
       "module": "sovereign",
-      "latest_year": 2024,
+      "latest_year": 2010,
       "first_year": 2005,
-      "period_label": "2024",
+      "period_label": "2010",
       "vintage_type": "estimate",
       "freshness_band": "estimate_lag",
       "coverage_status": "full",
-      "coverage_cs": "2005–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: odhad",
-      "coverage_en": "2005–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: estimate",
+      "coverage_cs": "2005–2010; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: odhad",
+      "coverage_en": "2005–2010; 15 metrics; source status for revenue, expenditure and balance in the latest year: estimate",
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=SYR"
     },
@@ -8417,7 +8790,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TCD"
     },
@@ -8435,7 +8808,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TGO"
     },
@@ -8453,7 +8826,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=THA"
     },
@@ -8471,7 +8844,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TJK"
     },
@@ -8489,7 +8862,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TKM"
     },
@@ -8507,7 +8880,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TLS"
     },
@@ -8525,7 +8898,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TON"
     },
@@ -8543,7 +8916,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TTO"
     },
@@ -8561,7 +8934,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TUN"
     },
@@ -8579,7 +8952,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TUR"
     },
@@ -8597,7 +8970,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TUV"
     },
@@ -8615,7 +8988,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=TZA"
     },
@@ -8633,7 +9006,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=UGA"
     },
@@ -8645,21 +9018,21 @@
       "period_label": "2025",
       "vintage_type": "mixed",
       "freshness_band": "mixed_current",
-      "coverage_status": "complete",
+      "coverage_status": "aggregate_only",
       "coverage_cs": "Všech 1 467 aktivních rozpočtů územních komunit včetně Kyjeva; bez oblastí a rajónů",
       "coverage_en": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
       "entity_count": 1467,
       "row_count": 1467,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://api.openbudget.gov.ua/swagger-ui.html",
       "view_url": "/municipalities.html?country=UKR"
     },
     {
       "country_code": "UKR",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -8705,7 +9078,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=UKR"
     },
@@ -8729,6 +9102,24 @@
     },
     {
       "country_code": "UKR",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2023,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "partial",
+      "coverage_cs": "5 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "5 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 5,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=UKR#oecd-benchmark"
+    },
+    {
+      "country_code": "UKR",
       "module": "transport",
       "latest_year": 2025,
       "first_year": 2015,
@@ -8741,9 +9132,27 @@
       "entity_count": null,
       "row_count": null,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=UKR"
+    },
+    {
+      "country_code": "UKR",
+      "module": "health",
+      "latest_year": 2024,
+      "first_year": 2015,
+      "period_label": "2024",
+      "vintage_type": "actual",
+      "freshness_band": "statistical_lag",
+      "coverage_status": "performance_only",
+      "coverage_cs": "Financování, kapacita a zdravotní výsledky",
+      "coverage_en": "Financing, capacity and health outcomes",
+      "entity_count": null,
+      "row_count": null,
+      "artifact": "data/country-health.v1.json + data/country-health-performance.v1.json",
+      "artifact_generated_at": "2026-08-26T16:05:16.749Z",
+      "source_url": null,
+      "view_url": "/deep-dives/health/?code=UKR"
     },
     {
       "country_code": "UKR",
@@ -8751,14 +9160,14 @@
       "latest_year": null,
       "first_year": null,
       "period_label": null,
-      "vintage_type": "register",
-      "freshness_band": "live_register",
-      "coverage_status": "partial",
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
       "coverage_cs": "0 míst poskytovatelů",
       "coverage_en": "0 provider locations",
       "entity_count": null,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json (source adapter pending; no register artifact)",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://data.gov.ua/dataset?organization=natsionalna-sluzhba-zdorovia-ukrainy&res_format=CSV",
       "view_url": "/deep-dives/health/?code=UKR"
@@ -8777,7 +9186,7 @@
       "entity_count": null,
       "row_count": 7777,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=UKR"
     },
@@ -8849,7 +9258,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=URY"
     },
@@ -8867,15 +9276,15 @@
       "entity_count": 19401,
       "row_count": 19401,
       "artifact": "data/international-municipalities.v1.json",
-      "artifact_generated_at": "2026-08-25",
+      "artifact_generated_at": "2026-08-28",
       "source_url": "https://www.census.gov/data/datasets/2022/econ/local/public-use-datasets.html",
       "view_url": "/municipalities.html?country=USA"
     },
     {
       "country_code": "USA",
       "module": "municipal_detail",
-      "latest_year": 0,
-      "first_year": 0,
+      "latest_year": null,
+      "first_year": null,
       "period_label": null,
       "vintage_type": "none",
       "freshness_band": "undated",
@@ -8921,7 +9330,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=USA"
     },
@@ -8945,6 +9354,24 @@
     },
     {
       "country_code": "USA",
+      "module": "oecd_overlay",
+      "latest_year": 2025,
+      "first_year": 2022,
+      "period_label": "2025",
+      "vintage_type": "actual",
+      "freshness_band": "current",
+      "coverage_status": "full",
+      "coverage_cs": "17 klíčových ukazatelů · daně, přerozdělení, sociální stát, kapacita a výsledky",
+      "coverage_en": "17 key metrics · tax, redistribution, social state, capacity and outcomes",
+      "entity_count": null,
+      "row_count": 17,
+      "artifact": "data/oecd-key-metrics.v1.json",
+      "artifact_generated_at": "2026-08-28T18:15:51.291319+00:00",
+      "source_url": "https://data-explorer.oecd.org/",
+      "view_url": "/country.html?code=USA#oecd-benchmark"
+    },
+    {
+      "country_code": "USA",
       "module": "transport",
       "latest_year": 2022,
       "first_year": 2015,
@@ -8957,7 +9384,7 @@
       "entity_count": null,
       "row_count": null,
       "artifact": "data/transport-budget-detail.v1.json + data/transport-performance.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:50.845Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.439Z",
       "source_url": null,
       "view_url": "/deep-dives/transportation/?code=USA"
     },
@@ -8992,7 +9419,7 @@
       "coverage_en": "5419 provider locations",
       "entity_count": 5419,
       "row_count": null,
-      "artifact": "data/country-provider-networks.v1.json",
+      "artifact": "data/country-provider-networks.v1.json + data/countries/usa/providers.v1.json",
       "artifact_generated_at": "2026-08-23T15:08:46.703Z",
       "source_url": "https://data.cms.gov/provider-data/dataset/xubh-q36u",
       "view_url": "/deep-dives/health/?code=USA"
@@ -9011,7 +9438,7 @@
       "entity_count": null,
       "row_count": 7979,
       "artifact": "data/country-demography.v1.json",
-      "artifact_generated_at": "2026-08-26T16:04:44.251078+00:00",
+      "artifact_generated_at": "2026-08-28T18:35:48.085890+00:00",
       "source_url": null,
       "view_url": "/deep-dives/ageing/?code=USA"
     },
@@ -9083,9 +9510,27 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=UZB"
+    },
+    {
+      "country_code": "VAT",
+      "module": "sovereign",
+      "latest_year": null,
+      "first_year": null,
+      "period_label": null,
+      "vintage_type": "none",
+      "freshness_band": "undated",
+      "coverage_status": "not_loaded",
+      "coverage_cs": "WEO profile not available; stav zdroje pro příjmy, výdaje a saldo v posledním roce: nedostupné",
+      "coverage_en": "WEO profile not available; source status for revenue, expenditure and balance in the latest year: unavailable",
+      "entity_count": null,
+      "row_count": 15,
+      "artifact": "lib/data/sovereign-benchmark.v1.json",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
+      "source_url": "https://data.imf.org/en/Datasets/WEO",
+      "view_url": "/country.html?code=VAT"
     },
     {
       "country_code": "VCT",
@@ -9101,7 +9546,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=VCT"
     },
@@ -9119,7 +9564,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=VEN"
     },
@@ -9137,7 +9582,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=VNM"
     },
@@ -9155,7 +9600,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=VUT"
     },
@@ -9173,7 +9618,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=WSM"
     },
@@ -9181,17 +9626,17 @@
       "country_code": "YEM",
       "module": "sovereign",
       "latest_year": 2024,
-      "first_year": 2005,
+      "first_year": 2014,
       "period_label": "2024",
       "vintage_type": "actual",
       "freshness_band": "statistical_lag",
       "coverage_status": "full",
-      "coverage_cs": "2005–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: skutečnost",
-      "coverage_en": "2005–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: actual",
+      "coverage_cs": "2014–2024; 15 metrics; stav zdroje pro příjmy, výdaje a saldo v posledním roce: skutečnost",
+      "coverage_en": "2014–2024; 15 metrics; source status for revenue, expenditure and balance in the latest year: actual",
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=YEM"
     },
@@ -9209,7 +9654,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ZAF"
     },
@@ -9227,7 +9672,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ZMB"
     },
@@ -9245,7 +9690,7 @@
       "entity_count": null,
       "row_count": 15,
       "artifact": "lib/data/sovereign-benchmark.v1.json",
-      "artifact_generated_at": "2026-08-26T23:52:12.099Z",
+      "artifact_generated_at": "2026-08-28T18:42:16.626Z",
       "source_url": "https://data.imf.org/en/Datasets/WEO",
       "view_url": "/country.html?code=ZWE"
     }

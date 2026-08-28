@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T18:42:16.626Z",
   "country": {
     "country_code": "BRA",
     "name_cs": "Brazílie",
@@ -28,11 +28,12 @@
     }
   },
   "coverage": {
-    "loaded_modules": 8,
+    "loaded_modules": 7,
     "total_modules": 11,
     "missing_dimensions": [
       "provider_register",
-      "public_entity_accounts"
+      "public_entity_accounts",
+      "harmonised_health_financing"
     ]
   },
   "modules": {
@@ -80,9 +81,14 @@
       ]
     },
     "health": {
-      "status": "loaded",
-      "coverage": "SHA financing profile; 2024",
-      "missing_dimensions": []
+      "status": "unavailable",
+      "coverage": "The OECD SHA and beds queries returned no numeric observation for Brazil; the architecture note remains, but no health-financing profile is loaded.",
+      "missing_dimensions": [
+        "SHA health expenditure",
+        "financing shares",
+        "provider shares",
+        "hospital beds"
+      ]
     },
     "providers": {
       "status": "unavailable",
@@ -2160,7 +2166,16 @@
       },
       "beds_per_1000": null,
       "bed_year": null,
-      "bed_status": "not_available"
+      "bed_status": "not_available",
+      "status": "not_loaded",
+      "missing_dimensions": [
+        "SHA health expenditure",
+        "financing shares",
+        "provider shares",
+        "hospital beds"
+      ],
+      "unavailable_reason_en": "The OECD SHA and beds queries returned no numeric observation for Brazil; the architecture note remains, but no health-financing profile is loaded.",
+      "unavailable_reason_cs": "Dotazy OECD SHA a lůžek nevrátily pro Brazílii žádné číselné pozorování; popis systému zůstává, profil financování však není načten."
     },
     "providers": null,
     "municipalities": {
@@ -2820,7 +2835,7 @@
       "source": {
         "publisher": "United Nations, Population Division",
         "dataset": "World Population Prospects 2024",
-        "url": "https://population.un.org/wpp/Download/Standard/CSV/",
+        "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz",
         "download_urls": [
           "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz"
         ],

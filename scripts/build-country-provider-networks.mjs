@@ -7,6 +7,7 @@ const CMS_HOSPITALS = "https://data.cms.gov/provider-data/api/1/datastore/query/
 const NHS_TRUST_SITES = "https://www.odsdatasearchandexport.nhs.uk/api/getReport?report=ets";
 const NHS_TRUSTS = "https://www.odsdatasearchandexport.nhs.uk/api/getReport?report=etr";
 const FINESS_ESTABLISHMENTS = "https://data-pipeline-open.s3.sbg.io.cloud.ovh.net/finess/finess_etablissements.csv";
+const todayCompact = new Date().toISOString().slice(0,10).replaceAll("-","");
 
 function csvMatrix(text,delimiter=",") {
   const rows=[]; let row=[], field="", quoted=false;
@@ -66,9 +67,9 @@ const usRecords=cmsRows.map(row=>({
 const usRegions=Object.fromEntries(Object.entries(Object.groupBy(usRecords,item=>item.region||"—")).map(([key,items])=>[key,items.length]));
 const [nhsSitesResponse,nhsTrustsResponse]=await Promise.all([fetch(NHS_TRUST_SITES),fetch(NHS_TRUSTS)]);
 if(!nhsSitesResponse.ok||!nhsTrustsResponse.ok)throw new Error(`NHS ODS ${nhsSitesResponse.status}/${nhsTrustsResponse.status}`);
-const nhsTrusts=csvMatrix(await nhsTrustsResponse.text()).filter(row=>!row[12]||row[12]>"20260822");
+const nhsTrusts=csvMatrix(await nhsTrustsResponse.text()).filter(row=>!row[12]||row[12]>todayCompact);
 const nhsTrustByCode=new Map(nhsTrusts.map(row=>[row[0],row[1]]));
-const gbRecords=csvMatrix(await nhsSitesResponse.text()).filter(row=>!row[12]||row[12]>"20260822").map(row=>({
+const gbRecords=csvMatrix(await nhsSitesResponse.text()).filter(row=>!row[12]||row[12]>todayCompact).map(row=>({
   id:`GBR:${row[0]}`,provider_id:row[14]||null,name:row[1]||row[4]||row[0],provider_name:nhsTrustByCode.get(row[14])||row[1]||null,
   facility_type:"NHS trust site",legal_form:"NHS",region:row[8]||"England and Wales",district:row[9]||null,municipality:row[8]||row[7]||null,
   address:[row[4],row[5],row[6],row[7],row[8],row[10]].filter(Boolean).join(" "),coordinates:null,care_fields:[],care_forms:[],website:null

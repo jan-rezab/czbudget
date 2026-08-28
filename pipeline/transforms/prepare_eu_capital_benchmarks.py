@@ -17,7 +17,7 @@ from typing import Any
 
 
 ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[3]))
-CONFIG_PATH = ROOT / "data" / "eu_capital_benchmark_sources.json"
+CONFIG_PATH = ROOT / "website" / "pipeline" / "config" / "eu_capital_benchmark_sources.json"
 BUDGET_PATH = ROOT / "data" / "eu_capital_budgets_2026.json"
 METRICS_PATH = ROOT / "data" / "eu_capital_city_metrics.json"
 CACHE_DIR = ROOT / "data" / "source_cache" / "eu_capital_benchmarks"
@@ -152,6 +152,7 @@ def main() -> int:
     population_source = sources["population"]
     tourism_source = sources["tourism"]
     city_codes = config["city_codes"]
+    core_populations = config["core_municipality_populations"]
     population_labels = population_data["dimension"]["cities"]["category"]["label"]
     tourism_labels = tourism_data["dimension"]["cities"]["category"]["label"]
     population_years = ordered_codes(population_data, "time")
@@ -186,6 +187,25 @@ def main() -> int:
             "eurostat_city_statistics", "reported", population_source["source_id"], population_flags,
         )
         rows.append(population_row)
+
+        core_config = core_populations[city_id]
+        core_value = population_value if core_config.get("copy_eurostat") else core_config.get("value")
+        core_year = population_year if core_config.get("copy_eurostat") else core_config.get("reference_year")
+        core_source_id = population_source["source_id"] if core_config.get("copy_eurostat") else core_config.get("source_id")
+        core_population = {
+            "value": core_value,
+            "unit": "persons",
+            "reference_year": core_year,
+            "geography_name": core_config["geography_name"],
+            "geography_scope": "budget_perimeter_matched_core_municipality",
+            "source_id": core_source_id,
+            "source_location": core_config.get("source_location"),
+            "quality_flags": [] if core_value is not None else ["perimeter_matched_population_unavailable"],
+        }
+        if core_config.get("reference_date"):
+            core_population["reference_date"] = core_config["reference_date"]
+        if core_config.get("reason"):
+            core_population["unavailable_reason"] = core_config["reason"]
 
         tourism_year = int(tourism_source["reference_year"])
         tourism_total = None
@@ -286,6 +306,7 @@ def main() -> int:
                 "source_id": population_source["source_id"],
                 "quality_flags": sorted(set(population_flags)),
             },
+            "core_municipality_population": core_population,
             "tourism": tourism_payload,
         }
 

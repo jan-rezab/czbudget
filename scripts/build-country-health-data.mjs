@@ -20,7 +20,7 @@ const profiles = {
   FIN:{currency:"EUR",architecture_cs:"Daňově financovaný systém organizují samosprávné kraje blahobytu; stát je financuje a řídí, zatímco obce odpovídají zejména za podporu zdraví a prevence.",architecture_en:"The tax-funded system is organised by self-governing wellbeing services counties; central government funds and steers them, while municipalities mainly retain health-promotion and prevention duties.",official_title:"Ministry of Social Affairs and Health · health and social services",official_url:"https://stm.fi/en/social-and-health-services"},
   BRA:{currency:"BRL",architecture_cs:"Jednotný zdravotní systém SUS je daňově financovaný a sdílí odpovědnost mezi federací, státy a obcemi; soukromé pojištění tvoří paralelní doplňkovou vrstvu.",architecture_en:"The tax-funded Unified Health System (SUS) shares responsibility across federal, state and municipal governments; private insurance forms a parallel supplementary layer.",official_title:"Ministério da Saúde · SUS",official_url:"https://www.gov.br/saude/pt-br"},
   ESP:{currency:"EUR",architecture_cs:"Národní zdravotní systém je převážně financovaný z daní a provozovaný autonomními oblastmi; stát stanovuje společný rámec a koordinuje meziregionální politiku.",architecture_en:"The National Health System is mainly tax-funded and operated by the autonomous communities; central government sets the common framework and coordinates interregional policy.",official_title:"Ministerio de Sanidad · Sistema Nacional de Salud",official_url:"https://www.sanidad.gob.es/organizacion/sns/home.htm"},
-  JPN:{currency:"JPY",architecture_cs:"Univerzální zákonné pojištění tvoří zaměstnanecké a obecní plány; stát a samosprávy dotují pojistné a regulovaný celostátní sazebník určuje úhrady poskytovatelům.",architecture_en:"Universal statutory insurance combines employment-based and municipal plans; central and local governments subsidise contributions and a national fee schedule sets provider payments.",official_title:"MHLW · health insurance system",official_url:"https://www.mhlw.go.jp/english/policy/health-medical/health-insurance/"},
+  JPN:{currency:"JPY",architecture_cs:"Univerzální zákonné pojištění tvoří zaměstnanecké a obecní plány; stát a samosprávy dotují pojistné a regulovaný celostátní sazebník určuje úhrady poskytovatelům.",architecture_en:"Universal statutory insurance combines employment-based and municipal plans; central and local governments subsidise contributions and a national fee schedule sets provider payments.",official_title:"MHLW · overview of health insurance policy in Japan",official_url:"https://www.mhlw.go.jp/content/12400000/001406614.pdf"},
   NLD:{currency:"EUR",architecture_cs:"Povinné základní pojištění poskytují konkurenční soukromé pojišťovny podle veřejných pravidel; rizikové vyrovnání a státní příspěvky oddělují solidaritu od nákupu péče.",architecture_en:"Mandatory basic insurance is supplied by competing private insurers under public rules; risk equalisation and public contributions separate solidarity from purchasing.",official_title:"Government.nl · health insurance",official_url:"https://www.government.nl/topics/health-insurance"},
   NOR:{currency:"NOK",architecture_cs:"Daňově financovaný systém dělí odpovědnost mezi státní regionální zdravotní podniky a obce; stát vlastní nemocnice a obce zajišťují primární a dlouhodobou péči.",architecture_en:"The tax-funded system divides responsibility between state-owned regional health authorities and municipalities; the state owns hospitals while municipalities provide primary and long-term care.",official_title:"Norwegian Ministry of Health · healthcare system",official_url:"https://www.regjeringen.no/en/topics/health-and-care/id917/"},
   GRC:{currency:"EUR",architecture_cs:"Národní zdravotní systém ESY kombinuje daňové financování s povinným sociálním pojištěním EOPYY. Stát a regionální zdravotní správy provozují veřejné nemocnice, zatímco EOPYY nakupuje péči od veřejných i soukromých poskytovatelů.",architecture_en:"The ESY national health system combines tax funding with compulsory social insurance through EOPYY. Central government and regional health authorities operate public hospitals, while EOPYY purchases care from public and private providers.",official_title:"Ministry of Health Greece · National Health System",official_url:"https://www.moh.gov.gr/"}
@@ -68,7 +68,7 @@ const countries = Object.fromEntries(AREAS.map(code=>{
   const providers = {hospitals:value("hospitals",code),residential_ltc:value("residential_ltc",code),ambulatory:value("ambulatory",code),retailers:value("retailers",code)};
   providers.other = 100-Object.values(providers).reduce((sum,item)=>sum+item,0);
   const latestBed = bed(code);
-  return [code,{
+  const country = {
     ...profiles[code],year:2024,
     health_gdp_pct:value("gdp",code),
     per_capita_ppp:value("per_capita_ppp",code),
@@ -76,7 +76,17 @@ const countries = Object.fromEntries(AREAS.map(code=>{
     financing:Object.fromEntries(Object.entries(financing).map(([key,item])=>[key,rounded(item)])),
     providers:Object.fromEntries(Object.entries(providers).map(([key,item])=>[key,rounded(item)])),
     beds_per_1000:latestBed ? Number(latestBed.OBS_VALUE) : null,bed_year:latestBed ? Number(latestBed.TIME_PERIOD) : null,bed_status:latestBed?.OBS_STATUS||"not_available"
-  }];
+  };
+  const numericLeaves = [country.health_gdp_pct,country.per_capita_ppp,country.per_capita_local,...Object.values(country.financing),...Object.values(country.providers),country.beds_per_1000];
+  if (!numericLeaves.some(Number.isFinite)) {
+    country.status = "not_loaded";
+    country.missing_dimensions = ["SHA health expenditure", "financing shares", "provider shares", "hospital beds"];
+    country.unavailable_reason_en = "The OECD SHA and beds queries returned no numeric observation for this country; the architecture note remains, but no health-financing profile is loaded.";
+    country.unavailable_reason_cs = "Dotazy OECD SHA a lůžek nevrátily pro tuto zemi žádné číselné pozorování; popis systému zůstává, profil financování však není načten.";
+  } else {
+    country.status = "full";
+  }
+  return [code,country];
 }));
 
 const payload = {

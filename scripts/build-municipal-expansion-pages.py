@@ -111,10 +111,15 @@ def main() -> None:
             info["coverage_cs"]=f"Všech {fmt_cs(len(entities))} obcí v adresáři SICONFI; běžné nebo zjednodušené RREO 2025 pro {fmt_cs(rreo_count)}, náhradní DCA I-C/I-D 2024 pro {fmt_cs(dca_count)}, bez obou výkazů {fmt_cs(missing_count)}"
             extra={"rreo_2025_count":rreo_count,"regular_rreo_2025_count":regular_count,"simplified_rreo_2025_count":simplified_count,"dca_2024_fallback_count":dca_count,"missing_finance_count":missing_count}
             brazil_registry_update={"pipeline":"loaded" if missing_count==0 else "loaded_partial","note_en":f"Loaded: {rreo_count:,} municipalities with 2025 regular or simplified RREO, {dca_count:,} with paired 2024 DCA revenue/expenditure fallback, and {missing_count:,} directory entities with no rows in either filing layer.","note_cs":f"Načteno: {fmt_cs(rreo_count)} obcí s běžným nebo zjednodušeným RREO 2025, {fmt_cs(dca_count)} s náhradní dvojicí DCA 2024 pro příjmy a výdaje a {fmt_cs(missing_count)} jednotek adresáře bez řádků v obou vrstvách."}
+        distinct_codes = {
+            str(row.get("code")).strip()
+            for profile in entities for row in profile.get("detail", [])
+            if row.get("code") is not None and str(row.get("code")).strip()
+        }
         registry_updates[code]=brazil_registry_update if code == "BRA" else {
-            "pipeline":"loaded" if status == "complete" else "loaded_partial",
-            "note_en":f"Loaded into the public municipal directory: {info['coverage_en']}.",
-            "note_cs":f"Načteno do veřejného obecního adresáře: {info['coverage_cs']}.",
+            "pipeline":"headline_only" if len(distinct_codes) < 5 else ("loaded" if status == "complete" else "loaded_partial"),
+            "note_en":(f"Headline-only: the published profiles expose {len(distinct_codes)} distinct classification codes across the country, below the five-code itemization floor." if len(distinct_codes) < 5 else f"Loaded into the public municipal directory: {info['coverage_en']}."),
+            "note_cs":(f"Pouze souhrny: zveřejněné profily obsahují napříč zemí {len(distinct_codes)} klasifikačních kódů, méně než minimálních pět pro položková data." if len(distinct_codes) < 5 else f"Načteno do veřejného obecního adresáře: {info['coverage_cs']}."),
             "source":info["source"],
         }
         payload["countries"].append({"code":code,**{key:value for key,value in info.items() if key!="slug"},"status":status,"directory_count":len(entities),**extra})

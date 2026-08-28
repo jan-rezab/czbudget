@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T18:42:16.626Z",
   "country": {
     "country_code": "POL",
     "name_cs": "Polsko",
@@ -92,7 +92,11 @@
     "municipalities": {
       "status": "loaded",
       "coverage": "All gminas in annual Rb-27S and Rb-28S returns",
-      "missing_dimensions": [],
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
       "entity_count": 2486,
       "fact_count": 2479,
       "years": [
@@ -107,7 +111,7 @@
         "revenue",
         "expenditure"
       ],
-      "coverage_level": "complete",
+      "coverage_level": "aggregate_only",
       "directory": "data/countries/pol/municipalities.v1.json",
       "warehouse": [
         {
@@ -2885,9 +2889,16 @@
       ],
       "coverage_cs": "Všechny gminy v ročních výkazech Rb-27S a Rb-28S",
       "coverage_en": "All gminas in annual Rb-27S and Rb-28S returns",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://www.gov.pl/web/finanse/bazy-danych8",
-      "directory_count": 2486
+      "directory_count": 2486,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu."
     },
     "public_entities": {
       "coverage": {

@@ -136,6 +136,7 @@
   let cofog = {};
   let ownership = {};
   let networks = {};
+  let oecd = {};
   let sovereignMeta = {};
   let healthMeta = {};
   let functionalMeta = {};
@@ -169,6 +170,11 @@
 
   function format(value, metric) {
     if (!Number.isFinite(value)) return "—";
+    if (metric.dataset === "oecd") {
+      const nativeUnit = metric[`unit_${state.lang}`] || "";
+      const digits = nativeUnit === "0–1" ? 3 : (Math.abs(value) >= 100 ? 0 : 1);
+      return `${value.toLocaleString(locale(), { minimumFractionDigits: digits, maximumFractionDigits: digits })}${nativeUnit === "%" ? " %" : nativeUnit ? ` ${nativeUnit}` : ""}`;
+    }
     if (metric.unit === "intl_dollar") {
       return value.toLocaleString(locale(), { maximumFractionDigits: 0 });
     }
@@ -218,6 +224,10 @@
       if (metric.metric_code === "health_oop_share") return shaValue(fin.out_of_pocket);
       if (metric.metric_code === "health_public_share") return shaValue(fin.public_compulsory);
     }
+    if (metric.dataset === "oecd") {
+      const observation = oecd.countries && oecd.countries[code] && oecd.countries[code].comparison && oecd.countries[code].comparison[metric.metric_code];
+      return observation && Number.isFinite(observation.value) ? observation.value : null;
+    }
     return null;
   }
 
@@ -250,6 +260,7 @@
     if (metric.dataset === "ownership") codes = Object.keys(networks);
     else if (metric.dataset === "sha") codes = Object.keys(sha);
     else if (metric.dataset === "cofog") codes = Object.keys(cofog);
+    else if (metric.dataset === "oecd") codes = Object.keys(oecd.countries || {});
     else codes = Array.from(countriesByCode.keys());
     return codes.filter((code) => countriesByCode.has(code));
   }
@@ -263,6 +274,10 @@
   };
 
   function chipFor(code, metric) {
+    if (metric.dataset === "oecd") {
+      const observation = oecd.countries?.[code]?.comparison?.[metric.metric_code];
+      return observation?.year ? `<span class="cmp-chip">${esc(observation.year)}</span>` : "";
+    }
     const a = assignments.countries[code];
     if (!a) return "";
     if (Array.isArray(a.breaks) && a.breaks.includes(state.year)) {
@@ -351,6 +366,10 @@
     if (metric.dataset === "ownership") {
       return { title: metric.source_label, url: `methodology.html?lang=${state.lang}#sources`, data: "data/hospital-ownership.v1.json" };
     }
+    if (metric.dataset === "oecd") {
+      const source = oecd.sources?.[metric.source_id] || {};
+      return { title: source.title || metric.source_label, url: source.url, data: "data/oecd-key-metrics.v1.json" };
+    }
     return { title: metric.source_label, url: `methodology.html?lang=${state.lang}#sources`, data: "data/compare-metrics.v1.json" };
   }
 
@@ -371,7 +390,7 @@
     const m = currentMetric();
     const verdictClass = { full: "is-full", conditional: "is-conditional", national_only: "is-refused" }[m.comparability];
     const rendersAs = { full: t().asRanked, conditional: t().asGroups, national_only: t().asRefusal }[m.comparability];
-    const unit = units[m.unit] ? units[m.unit][state.lang] : m.unit;
+    const unit = m.dataset === "oecd" ? m[`unit_${state.lang}`] : (units[m.unit] ? units[m.unit][state.lang] : m.unit);
     const source = m.fixed_year
       ? `${m.source_label} · ${t().fixedYear(m.fixed_year)}`
       : m.source_label;
@@ -565,7 +584,8 @@
     fetch("data/country-functional-budgets.v1.json").then((r) => r.json()),
     fetch("data/hospital-ownership.v1.json").then((r) => r.json()),
     fetch("data/country-provider-networks.v1.json").then((r) => r.json()),
-  ]).then(([metricRegistry, systemAssignments, sovereign, health, functional, ownershipData, networkData]) => {
+    fetch("data/oecd-key-metrics.v1.json").then((r) => r.json()),
+  ]).then(([metricRegistry, systemAssignments, sovereign, health, functional, ownershipData, networkData, oecdData]) => {
     registry = metricRegistry;
     assignments = systemAssignments;
     sovereignMeta = sovereign;
@@ -577,6 +597,22 @@
     cofog = functional.countries || {};
     ownership = ownershipData.countries || {};
     networks = networkData.countries || {};
+    oecd = oecdData;
+    const oecdPerimeters = [
+      ["oecd_tax", "Daně a práce", "Tax and work", "Sazby a zatížení domácností, firem, místních daní a uhlíku. Každý ukazatel drží vlastní rok a přesnou definici OECD.", "Rates and burdens on households, companies, local taxes and carbon. Each indicator keeps its own year and exact OECD definition."],
+      ["oecd_distribution", "Přerozdělení", "Redistribution", "Tržní příjem, disponibilní příjem a relativní chudoba v jednotné metodice OECD.", "Market income, disposable income and relative poverty under a common OECD method."],
+      ["oecd_social", "Sociální stát", "Social state", "Veřejné sociální výdaje a modelové důchodové náhradové míry.", "Public social expenditure and modelled pension replacement rates."],
+      ["oecd_government", "Kapacita státu", "State capacity", "Zaměstnanost ve vládním sektoru a veřejné zakázky; velikost není automaticky výkon.", "Government employment and procurement; size is not automatically performance."],
+      ["oecd_wellbeing", "Výsledky OECD", "OECD outcomes", "Bydlení, životní spokojenost, dovednosti a bezpečnost jako výsledky mimo účetní hranici rozpočtu.", "Housing, life satisfaction, skills and safety as outcomes outside the budget perimeter."],
+    ];
+    oecdPerimeters.forEach(([id, label_cs, label_en, note_cs, note_en]) => registry.perimeters.push({ id, label_cs, label_en, note_cs, note_en }));
+    const topicPerimeter = { tax: "oecd_tax", distribution: "oecd_distribution", social: "oecd_social", pensions: "oecd_social", government: "oecd_government", wellbeing: "oecd_wellbeing" };
+    Object.entries(oecd.metrics || {}).forEach(([metric_code, contract]) => registry.metrics.push({
+      metric_code, perimeter: topicPerimeter[contract.topic], dataset: "oecd", unit: "oecd_native", unit_cs: contract.unit_cs, unit_en: contract.unit_en,
+      polarity: "neutral", signed: false, comparability: "full", source_id: Object.values(oecd.countries || {}).map((country) => country.comparison?.[metric_code]?.source_id).find(Boolean) || "oecd",
+      source_label: "OECD", label_cs: contract.label_cs, label_en: contract.label_en, boundary_cs: contract.boundary_cs, boundary_en: contract.boundary_en,
+    }));
+
     const yearSelect = document.querySelector("#year-select");
     if (yearSelect && yearSelect.value) state.year = Number(yearSelect.value);
     const coverage = document.querySelector("#comparison-coverage-count");

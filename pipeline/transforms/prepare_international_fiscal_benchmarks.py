@@ -218,9 +218,15 @@ def build_summary(country_series: dict[str, Any]) -> dict[str, Any]:
     debt_end = debt.get(END_YEAR)
     debt_2021 = debt.get(2021)
 
+    observed_years = sorted({
+        point["year"]
+        for metric in country_series.values()
+        for point in metric["values"]
+        if point["value"] is not None
+    })
     return {
-        "period_start": START_YEAR,
-        "period_end": END_YEAR,
+        "period_start": observed_years[0] if observed_years else None,
+        "period_end": observed_years[-1] if observed_years else None,
         "median_balance_pct_gdp": median(balance_values),
         "mean_balance_pct_gdp": mean(balance_values),
         "balance_volatility_pp": stdev(balance_values),
@@ -304,8 +310,8 @@ def main() -> None:
         raise ValueError(f"Unexpected fiscal perimeters: {sorted(perimeter_codes)}")
 
     universe = json.loads(args.universe.read_text(encoding="utf-8"))
-    universe_by_code = {country["iso3"]: country for country in universe["countries"] if country.get("weo_code")}
-    weo_to_public = {country["weo_code"]: country["iso3"] for country in universe_by_code.values()}
+    universe_by_code = {country["iso3"]: country for country in universe["countries"]}
+    weo_to_public = {country["weo_code"]: country["iso3"] for country in universe_by_code.values() if country.get("weo_code")}
     country_order = FULL_PROFILE_ORDER + sorted(
         (code for code in universe_by_code if code not in FULL_PROFILE_ORDER),
         key=lambda code: universe_by_code[code]["name_en"],
@@ -354,6 +360,19 @@ def main() -> None:
                 ],
             }
 
+    # WEO omits a small number of UN members. Keep explicit all-null series for
+    # them (and for any metric WEO omits for a covered country) so absence is a
+    # published status rather than a country silently disappearing.
+    for country_code in country_order:
+        for metric_code in METRICS:
+            extracted[country_code].setdefault(metric_code, {
+                "latest_actual_year": None,
+                "values": [
+                    {"year": year, "value": None, "status": "not_available"}
+                    for year in range(START_YEAR, END_YEAR + 1)
+                ],
+            })
+
     validate_extracted(extracted, set(FULL_PROFILE_ORDER))
 
     countries = []
@@ -379,7 +398,7 @@ def main() -> None:
             country_metadata = {
                 "country_code": country_code,
                 "iso2": universe_country["iso2"],
-                "weo_country_code": universe_country["weo_code"],
+                "weo_country_code": universe_country.get("weo_code"),
                 "role": "global_macro_profile",
                 "profile_tier": "macro_fiscal",
                 "name_cs": universe_country["name_cs"],
@@ -406,10 +425,17 @@ def main() -> None:
                     "purpose": "Harmonised general-government perimeter; national legal architecture remains explicitly not assessed.",
                 }],
             }
+        has_observation = any(
+            point["value"] is not None
+            for metric in extracted[country_code].values()
+            for point in metric["values"]
+        )
         countries.append(
             (country_metadata | {
                 "iso2": universe_country["iso2"],
-                "weo_country_code": universe_country["weo_code"],
+                "weo_country_code": universe_country.get("weo_code"),
+                "data_status": "loaded" if has_observation else "not_loaded",
+                "missing_dimensions": [] if has_observation else ["all WEO macro-fiscal metrics"],
                 "imf_fiscal_metadata": fiscal_metadata[country_code],
                 "fiscal_architecture": architecture,
             })

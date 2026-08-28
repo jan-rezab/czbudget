@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T18:42:16.626Z",
   "country": {
     "country_code": "UKR",
     "name_cs": "Ukrajina",
@@ -101,7 +101,11 @@
     "municipalities": {
       "status": "loaded",
       "coverage": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
-      "missing_dimensions": [],
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
       "entity_count": 1467,
       "fact_count": 1467,
       "years": [
@@ -117,7 +121,7 @@
         "revenue",
         "expenditure"
       ],
-      "coverage_level": "complete",
+      "coverage_level": "aggregate_only",
       "directory": "data/countries/ukr/municipalities.v1.json",
       "warehouse": [
         {
@@ -2402,9 +2406,16 @@
       ],
       "coverage_cs": "Všech 1 467 aktivních rozpočtů územních komunit včetně Kyjeva; bez oblastí a rajónů",
       "coverage_en": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://api.openbudget.gov.ua/swagger-ui.html",
-      "directory_count": 1467
+      "directory_count": 1467,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu."
     },
     "public_entities": {
       "coverage": {
@@ -3091,7 +3102,7 @@
       "source": {
         "publisher": "United Nations, Population Division",
         "dataset": "World Population Prospects 2024",
-        "url": "https://population.un.org/wpp/Download/Standard/CSV/",
+        "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz",
         "download_urls": [
           "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz"
         ],

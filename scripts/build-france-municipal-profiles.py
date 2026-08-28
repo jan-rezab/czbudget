@@ -191,6 +191,9 @@ def main() -> None:
         "directory_count": len(entities), "provisional_year": 2025,
         "latest_year_missing_count": len(entities) - counts["2025"],
     })
+    coverage.pop("missing_dimensions", None)
+    coverage.pop("coverage_note_en", None)
+    coverage.pop("coverage_note_cs", None)
     DIRECTORY.write_text(json.dumps(directory, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"Wrote {len(profiles):,} commune profiles in {len(shards)} department shards; {counts['2025']:,} include 2025")
 
