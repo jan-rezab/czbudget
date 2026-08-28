@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-parity.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T00:07:05.387Z",
   "country_count": 191,
   "rules": {
     "native_first": "National classifications, stages, currencies and accounting scopes are retained without coercion.",
@@ -925,10 +925,10 @@
         },
         "municipalities": {
           "status": "loaded",
-          "coverage": "All communes; functional detail where reported; main and supplementary budgets",
+          "coverage": "All 34,875 current communes; main-budget official OFGL aggregates; 2025 is provisional and not yet available for 97 communes",
           "missing_dimensions": [],
-          "entity_count": 35041,
-          "fact_count": 34877,
+          "entity_count": 34875,
+          "fact_count": 34778,
           "years": [
             2024,
             2025
@@ -939,7 +939,8 @@
           "measures": [
             "revenue",
             "expenditure",
-            "balance"
+            "balance",
+            "debt"
           ],
           "coverage_level": "complete",
           "directory": "data/countries/fra/municipalities.v1.json",

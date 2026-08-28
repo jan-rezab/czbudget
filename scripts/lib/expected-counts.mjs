@@ -51,10 +51,10 @@ export const pinnedCounts = Object.freeze({
   // reconciliation rather than a restatement.
   publicEntityRegistryRecords: 121199,
   municipalHistoryRecords: 100021,
-  municipalDirectoryEntries: 105582,
+  municipalDirectoryEntries: 105416,
   // Municipal entities in scope across all 27 directory countries (directory
   // rows plus aggregate-only units).
-  municipalUnitsInScope: 107703,
+  municipalUnitsInScope: 107537,
   // RATCHET, not an equality pin. Published itemized coverage is expected to
   // grow as warehouse-only countries are promoted to the site; it must never
   // silently shrink. Raise this floor deliberately when coverage grows.
@@ -63,7 +63,9 @@ export const pinnedCounts = Object.freeze({
   // warehouse-only rows the site never published).
   itemizedPublishedProfilesFloor: 35810,
   // Same ratchet for the headline volume figure the coverage page prints.
-  publishedDataEntriesFloor: 362612,
+  // France now uses the 34,875-current-commune OFGL census instead of retaining
+  // historical and supplementary-budget pseudo-entities in the browser directory.
+  publishedDataEntriesFloor: 362446,
   // RATCHET. Rows in data/methodology-sources.v1.json that PSD has actually
   // loaded (as opposed to rows that only record an available upstream source).
   // Promoting a warehouse-only country to the site raises this; nothing else may

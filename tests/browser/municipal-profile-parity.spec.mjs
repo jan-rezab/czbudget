@@ -111,3 +111,19 @@ test("section navigation follows the data available for each country", async ({ 
   await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Trend", "Accounts", "Coverage", "Method"]);
   await expect(page.locator("#native-detail")).toContainText("No item-level city budget is inferred");
 });
+
+test("French communes expose OFGL accounts, city sources and separate regional data", async ({ page }) => {
+  await page.goto("/municipalities/france/profile/?code=31555&lang=en");
+  await expect(page.locator(".detail-hero h1")).toHaveText("Toulouse");
+  await expect(page.locator(".detail-kpis article")).toHaveCount(4);
+  await expect(page.locator("#history-table-body tr")).toHaveCount(2);
+  await expect(page.locator("#native-detail")).toContainText("Official OFGL aggregates");
+  await expect(page.locator('.source-list a[href*="refine.com_code=31555"]')).toBeVisible();
+  await expect(page.locator('.source-list a[href*="budget-primitif-2026-ville-de-toulouse"]')).toContainText("Published approved budget 2026");
+  await expect(page.locator('.source-list a[href*="balances-comptables-des-regions"]')).toContainText("Official regional accounts");
+
+  await page.goto("/municipalities/france/?lang=en");
+  expect(await page.locator(".municipality-card").first().locator("dd").allTextContents()).not.toContain("—");
+  await expect(page.locator('.municipality-card a[href*="/municipalities/france/profile/?code="]').first()).toBeVisible();
+  await expect(page.locator('#country-context-grid a[href*="balances-comptables-des-regions"]')).toBeVisible();
+});

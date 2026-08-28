@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-27T13:58:27.827Z",
+  "generated_at": "2026-08-28T00:01:44.663Z",
   "row_count": 2128,
   "countries": [
     {
@@ -42650,13 +42650,13 @@
       "status": "full",
       "source_availability": "loaded",
       "artifact": "data/international-municipalities.v1.json",
-      "coverage": "All communes; functional detail where reported; main and supplementary budgets",
+      "coverage": "All 34,875 current communes; main-budget official OFGL aggregates; 2025 is provisional and not yet available for 97 communes",
       "period": "2024, 2025",
-      "scope": "All communes; functional detail where reported; main and supplementary budgets",
+      "scope": "All 34,875 current communes; main-budget official OFGL aggregates; 2025 is provisional and not yet available for 97 communes",
       "sources": [
         {
-          "title": "Official municipal-finance source",
-          "url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+          "title": "OFGL - Base communes",
+          "url": "https://data.ofgl.fr/explore/dataset/ofgl-base-communes/",
           "location": "source adapter and table/file listed in pipeline/config/international_municipal_sources.json"
         }
       ],
@@ -46477,6 +46477,11 @@
       "sources": [
         {
           "title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
+          "url": "https://data.ofgl.fr/explore/dataset/ofgl-base-communes/",
+          "location": "fr-ofgl-commune-aggregates-2024-2025 · ofgl-base-communes-2024-2025.csv"
+        },
+        {
+          "title": "fr-dgfip-commune-balances-2024",
           "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/balances-comptables-des-communes-en-2024/attachments/balance_commune_2024_dec2025_zip",
           "location": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip"
         },
@@ -46526,7 +46531,7 @@
           "location": "fr-nantes-budget-2026 · budget-primitif-nantes-2026.csv"
         }
       ],
-      "exact_extraction": "fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip · fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip · fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip · fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip · fr-brest-budget-2026 · budget-primitif-ville-de-brest-2026.csv · fr-la-possession-budget-2025 · budget-primitif-la-possession-2025.csv · fr-sailly-budget-2025 · open-data-budget-sailly-2025.csv · fr-blagnac-budget-2025 · budget-primitif-blagnac-2025.csv · fr-toulouse-budget-2026 · budget-primitif-toulouse-2026.csv · fr-nantes-budget-2026 · budget-primitif-nantes-2026.csv",
+      "exact_extraction": "fr-ofgl-commune-aggregates-2024-2025 · ofgl-base-communes-2024-2025.csv · fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip · fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip · fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip · fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip · fr-brest-budget-2026 · budget-primitif-ville-de-brest-2026.csv · fr-la-possession-budget-2025 · budget-primitif-la-possession-2025.csv · fr-sailly-budget-2025 · open-data-budget-sailly-2025.csv · fr-blagnac-budget-2025 · budget-primitif-blagnac-2025.csv · fr-toulouse-budget-2026 · budget-primitif-toulouse-2026.csv · fr-nantes-budget-2026 · budget-primitif-nantes-2026.csv",
       "transformation": "pipeline/transforms/prepare_international_municipal_data.py → france_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
       "limitations": "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census. Itemized FRA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for France is published on this site, so the published count is zero."
     },

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-26T23:52:12.099Z",
+  "generated_at": "2026-08-28T00:07:05.387Z",
   "country": {
     "country_code": "FRA",
     "name_cs": "Francie",
@@ -91,10 +91,10 @@
     },
     "municipalities": {
       "status": "loaded",
-      "coverage": "All communes; functional detail where reported; main and supplementary budgets",
+      "coverage": "All 34,875 current communes; main-budget official OFGL aggregates; 2025 is provisional and not yet available for 97 communes",
       "missing_dimensions": [],
-      "entity_count": 35041,
-      "fact_count": 34877,
+      "entity_count": 34875,
+      "fact_count": 34778,
       "years": [
         2024,
         2025
@@ -105,7 +105,8 @@
       "measures": [
         "revenue",
         "expenditure",
-        "balance"
+        "balance",
+        "debt"
       ],
       "coverage_level": "complete",
       "directory": "data/countries/fra/municipalities.v1.json",
@@ -2993,8 +2994,8 @@
         2025
       ],
       "counts": {
-        "2024": 35031,
-        "2025": 34877
+        "2024": 34869,
+        "2025": 34778
       },
       "stages": [
         "actual"
@@ -3002,13 +3003,24 @@
       "measures": [
         "revenue",
         "expenditure",
-        "balance"
+        "balance",
+        "debt"
       ],
-      "coverage_cs": "Všechny obce; funkční detail tam, kde jej obec vykazuje; hlavní i vedlejší rozpočty",
-      "coverage_en": "All communes; functional detail where reported; main and supplementary budgets",
+      "coverage_cs": "Všech 34 875 současných obcí; hlavní rozpočet, oficiální souhrny OFGL; 2025 je předběžný a u 97 obcí zatím chybí",
+      "coverage_en": "All 34,875 current communes; main-budget official OFGL aggregates; 2025 is provisional and not yet available for 97 communes",
       "status": "complete",
-      "source": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
-      "directory_count": 35041
+      "source": "https://data.ofgl.fr/explore/dataset/ofgl-base-communes/",
+      "directory_count": 34875,
+      "regional_source": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-regions-/",
+      "source_detail": {
+        "publisher": "Observatoire des Finances et de la Gestion publique Locales (OFGL)",
+        "dataset": "OFGL - Base communes",
+        "scope": "Main-budget executed-account aggregates",
+        "period": "2024–2025; 2025 provisional"
+      },
+      "provisional_year": 2025,
+      "latest_year_missing_count": 97,
+      "entity_source_url_prefix": "https://data.ofgl.fr/explore/dataset/ofgl-base-communes/?refine.com_code="
     },
     "public_entities": {
       "coverage": {

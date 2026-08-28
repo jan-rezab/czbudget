@@ -31,6 +31,12 @@ const urlPrefix = (entities) => {
   return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 };
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const sourceUrlPrefix = (entities) => {
+  const first = entities.find((entity) => entity.source_url?.endsWith(String(entity.code)));
+  if (!first) return null;
+  const prefix = first.source_url.slice(0, -String(first.code).length);
+  return entities.every((entity) => !entity.source_url || entity.source_url === `${prefix}${entity.code}`) ? prefix : null;
+};
 
 const data = await read(source);
 const grouped = new Map(data.countries.map((country) => [country.code, []]));
@@ -49,11 +55,14 @@ for (const [code, entities] of grouped) {
   const country = meta.get(code) ?? { code, directory_count: entities.length };
   const prefix = urlPrefix(entities);
   const idPrefix = entities[0]?.id?.includes(":") ? entities[0].id.split(":")[0] : code;
+  const sourcePrefix = country.entity_source_url_prefix || sourceUrlPrefix(entities);
   const defaults = { id_prefix: idPrefix, currency: country.currency ?? null, years: country.years ?? [], url_prefix: prefix };
+  if (sourcePrefix) defaults.source_url_prefix = sourcePrefix;
   const rows = entities.map((entity) => {
     const row = { code: entity.code, name: entity.name };
     if (entity.region) row.region = entity.region;
     for (const key of ["revenue", "expenditure", "balance", "population"]) if (entity[key] !== null && entity[key] !== undefined) row[key] = entity[key];
+    if (entity.source_url && entity.source_url !== `${sourcePrefix}${entity.code}`) row.source_url = entity.source_url;
     if (!same(entity.years, defaults.years)) row.years = entity.years;
     if (entity.currency && entity.currency !== defaults.currency) row.currency = entity.currency;
     if (entity.id && entity.id !== `${idPrefix}:${entity.code}`) row.id = entity.id;

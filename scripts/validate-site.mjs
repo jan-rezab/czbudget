@@ -113,6 +113,8 @@ const municipalityCountryScript = await readFile("municipalities-country.js", "u
 const municipalityCountrySlugs = ["germany", "poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan", "colombia", "georgia", "italy", "bolivia", "el-salvador", "mexico", "costa-rica", "guatemala", "peru", "south-korea", "chile"];
 const municipalityCountryPages = await Promise.all(municipalityCountrySlugs.map((slug) => readFile(`municipalities/${slug}/index.html`, "utf8")));
 const germanMunicipalProfilePage = await readFile("municipalities/germany/profile/index.html", "utf8");
+const frenchMunicipalProfilePage = await readFile("municipalities/france/profile/index.html", "utf8");
+const frenchParisProfile = JSON.parse(await readFile("data/france-municipal-profiles/75.v1.json", "utf8"));
 const czechProfileSamples = await Promise.all([
   "cz/municipalities/brno/index.html",
   "cz/municipalities/arnoltice/index.html",
@@ -138,7 +140,7 @@ const internationalProfileSamples = await Promise.all([
   "municipalities/finland/saarijarvi-729/index.html",
 ].map((path) => readFile(path, "utf8")));
 if (snapshot.municipalities.length !== pinned.municipalities) throw new Error("Expected 6,254 municipalities");
-if (internationalMunicipalities.countries.length !== pinned.municipalDirectoryCountries || internationalMunicipalities.entities.length !== pinned.municipalDirectoryEntries) throw new Error("Expected 27-country municipality directory with 105,582 entity rows");
+if (internationalMunicipalities.countries.length !== pinned.municipalDirectoryCountries || internationalMunicipalities.entities.length !== pinned.municipalDirectoryEntries) throw new Error("Expected 27-country municipality directory with 105,416 entity rows");
 // The heavy directory file is the authority for its own row count; the shared
 // counts module reads that number out of data-freshness.v1.json so the browser
 // suite can use it without parsing 21 MB. Reconcile the two here, where both are
@@ -184,7 +186,7 @@ if (municipalItemizedAcquisitionAudit.production_load?.status !== "loaded" || mu
 // four component artifacts, then reconciled against the independently written
 // quality report, so a build that changes one component without regenerating the
 // report fails here instead of shipping two different totals. Today: 362,612
-// (121,199 registry + 100,021 history + 105,582 directory + 35,810 itemized).
+// (121,199 registry + 100,021 history + 105,416 directory + 35,810 itemized).
 if (dataQuality.counts.published_data_entries !== counts.publishedDataEntries) throw new Error(`Quality report publishes ${dataQuality.counts.published_data_entries} data entries; the artifacts measure ${counts.publishedDataEntries}`);
 if (Object.values(dataQuality.published_entry_components||{}).reduce((sum, count) => sum + count, 0) !== counts.publishedDataEntries) throw new Error("Published entry components do not sum to the published data-entry total");
 for (const [component, expected] of Object.entries(counts.publishedEntryComponents)) {
@@ -249,7 +251,10 @@ if (!spainExpansionProfile.history.some((row) => row.year === 2025 && Number.isF
 if (!Number.isFinite(japanExpansionProfile.history[0]?.debt) || !japanExpansionProfile.detail.some((row) => ["63","94"].includes(row.table))) throw new Error("Japan profile must preserve JPY debt and ageing-related tables");
 if (brazilExpansionProfile.reporting_basis !== "DCA fallback" || !Number.isFinite(brazilExpansionProfile.history[0]?.revenue) || !Number.isFinite(brazilExpansionProfile.history[0]?.expenditure) || !new Set(brazilExpansionProfile.detail.map((row) => row.side)).has("revenue") || !new Set(brazilExpansionProfile.detail.map((row) => row.side)).has("expenditure") || !new Set(brazilExpansionProfile.detail.map((row) => row.stage)).has("cash")) throw new Error("Brazil DCA fallback must reconcile paired revenue/expenditure annexes and preserve stages");
 const franceMunicipalities = internationalMunicipalities.countries.find((country) => country.code === "FRA");
-if (franceMunicipalities?.status !== "complete" || franceMunicipalities.directory_count < 34000) throw new Error("Expected complete French commune coverage");
+const parisOfgl = frenchParisProfile.profiles?.["75056"];
+if (franceMunicipalities?.status !== "complete" || franceMunicipalities.directory_count !== 34875 || franceMunicipalities.latest_year_missing_count !== 97) throw new Error("Expected all 34,875 current French communes with an explicit 2025 provisional gap");
+if (!Number.isFinite(parisOfgl?.history?.at(-1)?.revenue) || !Number.isFinite(parisOfgl?.history?.at(-1)?.debt) || !parisOfgl?.source_url?.includes("75056")) throw new Error("French profile shards must expose official OFGL aggregates and commune-specific source links");
+if (!frenchMunicipalProfilePage.includes('data-profile-root="../../../data/france-municipal-profiles/"') || !frenchMunicipalProfilePage.includes("data.ofgl.fr") || !frenchMunicipalProfilePage.includes("Profil francouzské obce")) throw new Error("France must publish the generic OFGL-backed commune profile route");
 if (!internationalMunicipalPage.includes('id="type-filter"') || !internationalMunicipalPage.includes('value="capital"') || !internationalMunicipalPage.includes('id="country-filter"') || !internationalMunicipalPage.includes('id="municipality-grid"') || !internationalMunicipalScript.includes("renderDirectory") || !internationalMunicipalScript.includes("city.eu_capital")) throw new Error("Municipality hub must expose country and EU-capital filters");
 if (!czechMunicipalPage.includes('id="cz-insight-grid"') || !czechMunicipalPage.includes('data-destination="directory"') || !czechMunicipalPage.includes('data-destination="cities"')) throw new Error("Czechia municipality detail must expose insights and downstream municipal views");
 if (!internationalMunicipalPage.includes('id="municipality-country-switch"') || !czechMunicipalPage.includes('id="municipality-country-switch"')) throw new Error("Municipality hub and Czechia detail must expose the country navigator");
