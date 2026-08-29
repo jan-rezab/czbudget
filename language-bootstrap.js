@@ -221,20 +221,18 @@
 
   // The static HTML is Czech. When English is preferred, keep it out of the
   // first paint until the page-specific translator marks EN as active.
-  if (language === initial) return;
+  // A page also declares data-shell-pending when its static shell is authored for
+  // one country and the route may ask for another: the country profile ships as the
+  // Czech profile of Czechia, so /countries/ukraine carries the wrong headline and
+  // the wrong title in either language until that page rebuilds its own shell.
+  const shellPending = document.documentElement.hasAttribute("data-shell-pending");
+  if (language === initial && !shellPending) return;
   document.documentElement.dataset.languagePending = language;
 
   const style = document.createElement("style");
   style.id = "language-paint-guard";
   style.textContent = "html[data-language-pending] { visibility: hidden; }";
   document.head.append(style);
-
-  const activeSelector = [
-    `[data-lang="${language}"].active`,
-    `[data-budget-lang="${language}"].active`,
-    `[data-deep-lang="${language}"].active`,
-    `[href*="lang=${language}"][aria-current="true"]`,
-  ].join(",");
 
   let observer;
   let timeout;
@@ -245,14 +243,27 @@
     observer?.disconnect();
     clearTimeout(timeout);
   };
+
+  window.psdLanguageReady = reveal;
+  addEventListener("psdlanguageready", reveal);
+  timeout = setTimeout(reveal, 5000);
+
+  // A shell page calls psdLanguageReady() itself, the moment the URL-derived shell
+  // is on screen. The readiness heuristic below would let go far too early there:
+  // the page marks its language toggle active while the headline still reads Česko.
+  if (shellPending) return;
+
+  const activeSelector = [
+    `[data-lang="${language}"].active`,
+    `[data-budget-lang="${language}"].active`,
+    `[data-deep-lang="${language}"].active`,
+    `[href*="lang=${language}"][aria-current="true"]`,
+  ].join(",");
   const revealWhenReady = () => {
     if (document.documentElement.lang === language && document.querySelector(activeSelector)) reveal();
   };
 
-  window.psdLanguageReady = reveal;
   observer = new MutationObserver(revealWhenReady);
   observer.observe(document.documentElement, { subtree: true, childList: true, attributes: true, attributeFilter: ["class", "aria-current", "aria-pressed"] });
-  addEventListener("psdlanguageready", reveal);
-  timeout = setTimeout(reveal, 5000);
   queueMicrotask(revealWhenReady);
 })();

@@ -27,13 +27,17 @@ const flagCodes={CZE:"cz",DEU:"de",DNK:"dk",FIN:"fi",FRA:"fr",GBR:"gb",POL:"pl",
 const flagEmoji=iso2=>String(iso2||"").toUpperCase().replace(/[A-Z]/g,letter=>String.fromCodePoint(127397+letter.charCodeAt(0)));
 const scope={state_budget:{cs:"Státní rozpočet",en:"State budget"},state_and_consolidated_budget:{cs:"Státní a konsolidovaný rozpočet",en:"State and consolidated budget"},federal_budget:{cs:"Federální rozpočet",en:"Federal budget"},public_sector_and_central_government:{cs:"Veřejný sektor a centrální vláda",en:"Public sector and central government"},confederation_and_general_government:{cs:"Konfederace a vládní instituce",en:"Confederation and general government"},central_and_general_government:{cs:"Centrální vláda a vládní instituce",en:"Central and general government"}};
 const loc=()=>state.lang==="en"?"en-GB":"cs-CZ";
-const meta=()=>state.data.countries.find(c=>c.country_code===state.code);
+const SITE_ORIGIN="https://publicspendingdata.org";
+const meta=()=>state.data?.countries.find(c=>c.country_code===state.code);
 const series=()=>state.data.series.find(c=>c.country_code===state.code);
 const catalog=()=>state.catalog.countries.find(c=>c.country_code===state.code);
 const summary=()=>state.data.summaries.find(c=>c.country_code===state.code);
 const point=(key,year=state.year)=>series()?.metrics[key]?.values.find(v=>v.year===year);
 const value=(key,year=state.year)=>point(key,year)?.value??null;
-const name=()=>state.lang==="en"?meta().name_en:meta().name_cs;
+// country-names.js carries the same name_cs / name_en the payload does, so the shell
+// can name the country a second before the eight-megabyte dataset can possibly answer.
+const shellName=()=>window.PSDCountryNames?.name(state.code,state.lang)||"";
+const name=()=>{const country=meta();return country?(state.lang==="en"?country.name_en:country.name_cs):shellName()};
 const fmt=(v,unit="",signed=false,digits=1)=>Number.isFinite(v)?`${signed&&v>0?"+":""}${v.toLocaleString(loc(),{minimumFractionDigits:digits,maximumFractionDigits:digits})}${unit?` ${unit}`:""}`:"—";
 const fxRate=year=>state.fx.values.find(v=>v.year===year)?.usd_per_eur;
 const moneyCode=()=>state.currency==="eur"?"EUR":meta().currency_code;
@@ -86,9 +90,15 @@ function translate(){
   document.querySelectorAll("[data-currency]").forEach(b=>b.classList.toggle("active",b.dataset.currency===state.currency));
   const back=$("#back-link"); if(back) back.href=`/?lang=${state.lang}#countries`;
   document.title=`${name()} — Public Spending Data`;
-  const origin="https://publicspendingdata.org";
-  const canonical=`${origin}${window.PSDCountryRoutes.href(state.code)}`;
-  const localised=lang=>`${origin}${window.PSDCountryRoutes.href(state.code,lang)}`;
+  const canonical=links();
+  const period=state.data.period;
+  $("#country-jsonld").textContent=JSON.stringify({"@context":"https://schema.org","@type":"Dataset",name:`${name()} — ${state.lang==="en"?"public finance profile":"profil veřejných financí"} ${period?.start_year??2005}–${period?.end_year??2024}`,description:state.lang==="en"?`Harmonised general-government revenue, expenditure, balance and debt for ${name()}, with macro context and links to national primary sources.`:`Harmonizované příjmy, výdaje, saldo a dluh sektoru vládních institucí pro ${name()}, makroekonomický kontext a odkazy na národní primární zdroje.`,url:canonical,inLanguage:["cs","en"],temporalCoverage:`${period?.start_year??2005}/${period?.end_year??2024}`,spatialCoverage:{"@type":"Country",name:name(),identifier:state.code},creator:{"@type":"Organization",name:"Public Spending Data"},isBasedOn:{"@type":"Dataset",name:`${state.data.source?.provider??"IMF"} · ${state.data.source?.dataset??"World Economic Outlook"}`},distribution:[{"@type":"DataDownload",encodingFormat:"application/json",contentUrl:`${SITE_ORIGIN}/lib/data/sovereign-benchmark.v1.json`},{"@type":"DataDownload",encodingFormat:"application/json",contentUrl:`${SITE_ORIGIN}/data/country-parity.v1.json`}]});
+}
+// The canonical, hreflang and og:url tags name the country too, so the shell publishes
+// them from the route rather than leaving Czechia's in place until the payload lands.
+function links(){
+  const canonical=`${SITE_ORIGIN}${window.PSDCountryRoutes.href(state.code)}`;
+  const localised=lang=>`${SITE_ORIGIN}${window.PSDCountryRoutes.href(state.code,lang)}`;
   // A ?lang= URL is its own canonical, so the hreflang pair does not canonicalise away;
   // the bare path stays the x-default that language detection lands on.
   $("#canonical-url").href=new URLSearchParams(location.search).has("lang")?localised(state.lang):canonical;
@@ -96,12 +106,18 @@ function translate(){
   $("#alternate-en").href=localised("en");
   $("#alternate-default").href=canonical;
   $("#og-url").content=canonical;
-  const period=state.data.period;
-  $("#country-jsonld").textContent=JSON.stringify({"@context":"https://schema.org","@type":"Dataset",name:`${name()} — ${state.lang==="en"?"public finance profile":"profil veřejných financí"} ${period?.start_year??2005}–${period?.end_year??2024}`,description:state.lang==="en"?`Harmonised general-government revenue, expenditure, balance and debt for ${name()}, with macro context and links to national primary sources.`:`Harmonizované příjmy, výdaje, saldo a dluh sektoru vládních institucí pro ${name()}, makroekonomický kontext a odkazy na národní primární zdroje.`,url:canonical,inLanguage:["cs","en"],temporalCoverage:`${period?.start_year??2005}/${period?.end_year??2024}`,spatialCoverage:{"@type":"Country",name:name(),identifier:state.code},creator:{"@type":"Organization",name:"Public Spending Data"},isBasedOn:{"@type":"Dataset",name:`${state.data.source?.provider??"IMF"} · ${state.data.source?.dataset??"World Economic Outlook"}`},distribution:[{"@type":"DataDownload",encodingFormat:"application/json",contentUrl:`${origin}/lib/data/sovereign-benchmark.v1.json`},{"@type":"DataDownload",encodingFormat:"application/json",contentUrl:`${origin}/data/country-parity.v1.json`}]});
+  return canonical;
+}
+// The hero identity is derived from the route rather than the payload, so the page is
+// never briefly the Czech profile it is authored as.
+function identity(){
+  const iso2=meta()?.iso2||window.PSDCountryNames?.iso2(state.code)||"";
+  const flag=flagCodes[state.code]?`<img src="/assets/flags/${flagCodes[state.code]}.svg" alt="">`:(iso2?`<span class="country-flag-emoji" aria-hidden="true">${flagEmoji(iso2)}</span>`:"");
+  $("#country-code").innerHTML=`${flag}<b>${esc(state.code)}</b>`; $("#country-name").textContent=name();
 }
 function header(){
-  const c=meta(),flag=flagCodes[c.country_code]?`<img src="/assets/flags/${flagCodes[c.country_code]}.svg" alt="">`:`<span class="country-flag-emoji" aria-hidden="true">${flagEmoji(c.iso2)}</span>`; $("#country-code").innerHTML=`${flag}<b>${c.country_code}</b>`; $("#country-name").textContent=name();
-  const currency=c.currency_code==="LCU"?(c.currency_name||"local currency"):c.currency_code;
+  identity();
+  const c=meta(),currency=c.currency_code==="LCU"?(c.currency_name||"local currency"):c.currency_code;
   $("#country-subtitle").textContent=state.lang==="en"?`${currency} · General government / harmonised scope · IMF WEO 2005–2024 · ${state.currency==="local"?"local-currency view":"EUR view"}`:`${currency} · Sektor vládních institucí / harmonizované vymezení · IMF WEO 2005–2024 · ${state.currency==="local"?"zobrazení v místní měně":"zobrazení v EUR"}`;
   $("#country-switch").innerHTML=state.data.countries.map(x=>`<option value="${x.country_code}">${state.lang==="en"?x.name_en:x.name_cs}</option>`).join(""); $("#country-switch").value=state.code;
   $("#year-switch").innerHTML=Array.from({length:20},(_,i)=>`<option>${2024-i}</option>`).join(""); $("#year-switch").value=state.year;
@@ -213,11 +229,31 @@ function notFound(){
   panel.innerHTML=`<div class="detail-heading"><div><span class="kicker">${t.notFoundRequested} · ${esc(requested)}</span><h2>${t.notFound}</h2></div><p>${t.notFoundCopy}</p></div><p class="country-not-found-actions"><a href="/?lang=${state.lang}#countries">${t.notFoundCta}</a></p>`;
 }
 function render(){if(!knownCountry()){notFound();return}translate();header();snapshot();scopeProfile();charts();recoveryStory();specifics();sources();dispatchEvent(new CustomEvent("countryprofilechange",{detail:{code:state.code,lang:state.lang,year:state.year,currency:state.currency}}))}
-// language-bootstrap.js holds the page at visibility:hidden for an English visitor until a
-// translator marks the toggle active. Both run before the dataset request, so a slow or
-// failed fetch can never blank the page and the toggle keeps working without any data.
-function language(){document.documentElement.lang=state.lang;document.querySelectorAll("[data-lang]").forEach(b=>{const active=b.dataset.lang===state.lang;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))})}
-function bindLanguage(){document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{state.lang=window.PSDLanguage?.set(b.dataset.lang,{persist:true})||b.dataset.lang;if(state.data){if(knownCountry())history.replaceState(null,"",window.PSDCountryRoutes.href(state.code,state.lang,location.hash));render()}else language()})}
+// country.html is a single static file authored as the Czech profile of Czechia, and
+// the dataset that corrects it is eight megabytes. language-bootstrap.js therefore holds
+// the first paint for this page (data-shell-pending) until the pass below has rebuilt the
+// shell from the URL alone: without it /countries/ukraine?lang=en showed "Česko" under
+// Czech labels for the whole request. The boot always releases the guard afterwards, so a
+// slow or failed fetch still leaves a readable page with a working language toggle.
+const shellKnown=()=>(!routeSlug||Boolean(window.PSDCountryRoutes.codes[routeSlug])||/^[a-z]{3}$/.test(routeSlug))&&Boolean(shellName());
+function shell(){
+  const t=T[state.lang];
+  document.documentElement.lang=state.lang;
+  document.querySelectorAll("[data-i18n]").forEach(node=>{if(t[node.dataset.i18n])node.textContent=t[node.dataset.i18n]});
+  document.querySelectorAll("[data-lang]").forEach(b=>{const active=b.dataset.lang===state.lang;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});
+  document.querySelectorAll("[data-currency]").forEach(b=>b.classList.toggle("active",b.dataset.currency===state.currency));
+  const back=$("#back-link"); if(back) back.href=`/?lang=${state.lang}#countries`;
+  // The chart headings and the % GDP unit are language-only. The currency beside GDP per
+  // capita is not, so it stays blank until the country's own currency code arrives.
+  document.querySelectorAll(".fiscal-unit-label").forEach(label=>label.textContent=fiscalUnit());
+  [["balance-chart-title",t.balance],["revenue-chart-title",t.revenue],["expenditure-chart-title",t.expense]].forEach(([id,label])=>{$("#"+id).textContent=`${label} / ${fiscalUnit()}`});
+  if(!state.data)$("#gdp-unit-label").textContent="";
+  if(shellKnown()){identity();document.title=`${name()} — Public Spending Data`;links();return}
+  // An unroutable slug resolves to no country at all; notFound() fills the page in once
+  // the payload confirms it. Until then the hero stays empty rather than wrong.
+  $("#country-code").textContent=""; $("#country-name").textContent=""; document.title=`${t.notFound} — Public Spending Data`;
+}
+function bindLanguage(){document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{state.lang=window.PSDLanguage?.set(b.dataset.lang,{persist:true})||b.dataset.lang;if(state.data){if(knownCountry())history.replaceState(null,"",window.PSDCountryRoutes.href(state.code,state.lang,location.hash));render()}else shell()})}
 function init(){
   document.querySelectorAll("[data-currency]").forEach(b=>b.onclick=()=>{state.currency=b.dataset.currency;render()});
   $("#country-switch").onchange=e=>{state.code=e.target.value;state.currency="local";history.replaceState(null,"",window.PSDCountryRoutes.href(state.code,state.lang,location.hash));render()};
@@ -225,7 +261,8 @@ function init(){
   document.querySelectorAll("[data-chart-view]").forEach(b=>b.onclick=()=>{state.chartView=b.dataset.chartView;document.querySelectorAll("[data-chart-view]").forEach(x=>{x.classList.toggle("active",x===b);x.setAttribute("aria-pressed",x===b)});charts()});
   render();
 }
-bindLanguage();language();
+bindLanguage();
+try{shell()}catch(error){console.error(error)}finally{window.psdLanguageReady?.()}
 Promise.all([
   fetch("/lib/data/sovereign-benchmark.v1.json").then(r=>r.json()),
   fetch("/data/catalog.v1.json").then(r=>r.json()),
