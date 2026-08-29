@@ -7,6 +7,7 @@ import { AuthError, handleAuth, requestToken, verifyIdToken } from "./auth.mjs";
 import { DataError, apiIndex, capitalCity, countryModule, countryProfile, czechMunicipalityBudget, czechMunicipalityHistory, datasetInfo, listCapitalCities, listCountries, listDatasets, listMunicipalities, listPublicEntities, municipality, publicEntity, publicEntityAggregates } from "./data-store.mjs";
 import { openapi } from "./openapi.mjs";
 import { FixedWindowRateLimiter } from "./rate-limit.mjs";
+import { FranceLinesError, FranceMunicipalLinesStore } from "./france-municipal-lines.mjs";
 import { municipalityPage } from "./municipality-page.mjs";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 
@@ -23,6 +24,7 @@ const RATE_LIMIT_BUCKETS = integerSetting("RATE_LIMIT_BUCKETS", 50_000, 100, 1_0
 const PAGE_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "public");
 const CORS_ORIGINS = new Set((process.env.API_CORS_ORIGINS || "").split(",").map((value) => value.trim()).filter(Boolean));
 const rateLimiter = new FixedWindowRateLimiter({ maxBuckets: RATE_LIMIT_BUCKETS });
+const franceMunicipalLines = new FranceMunicipalLinesStore();
 let apiRequestsInFlight = 0;
 
 function integerSetting(name, fallback, minimum, maximum) {
@@ -233,6 +235,19 @@ export async function handler(request, response) {
 
     if (url.pathname === "/healthz") return sendJSON(response, 200, { status: "ok", public_snapshots: await publicSnapshotStore.status() });
 
+    if (url.pathname === "/public-data/france-municipality-lines") {
+      if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
+      if (!enforceRateLimit(response, id, { key: "global", limit: 60, windowMs: 60 * 1000, group: "france-lines-global" })) return;
+      if (!enforceRateLimit(response, id, { key: clientIP(request), limit: 30, windowMs: 60 * 1000, group: "france-lines-ip" })) return;
+      if (!acquireAPISlot(response, id)) return;
+      try {
+        const payload = await franceMunicipalLines.profile(url.searchParams.get("code"));
+        return sendPublicJSON(request, response, 200, payload, { ETag: `W/\"france-${payload.entity_code}-${payload.years.join("-")}\"` });
+      } finally {
+        apiRequestsInFlight -= 1;
+      }
+    }
+
     if (url.pathname === "/public-data/municipality-profile" || url.pathname === "/public-data/municipality-history") {
       if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
       const snapshot = await publicSnapshotStore.profileForPath(url.searchParams.get("path"));
@@ -289,7 +304,7 @@ export async function handler(request, response) {
       response.end();
       return;
     }
-    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof FranceLinesError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

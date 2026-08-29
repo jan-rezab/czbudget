@@ -1,9 +1,9 @@
 {
   "schema_version": "1.1.0",
   "generated_at": "2026-08-27",
-  "definition": "A profile counts only when municipality-level economic, functional or native accounting line items are published on this site and the country exposes at least 5 distinct classification codes; headline totals alone do not count. profile_count and published_profile_count are measured by reading the published per-municipality artifacts, never asserted. Facts that exist only in the private production warehouse are reported under warehouse_profile_count with publication_status \"warehouse_only\" and a published count of zero.",
+  "definition": "A profile counts only when municipality-level economic, functional or native accounting line items are published on this site and the country exposes at least 5 distinct classification codes; headline totals alone do not count. profile_count and published_profile_count are measured from served per-municipality artifacts or a bounded public warehouse endpoint. Facts that remain private are reported under warehouse_profile_count with publication_status \"warehouse_only\" and a published count of zero.",
   "measurement": {
-    "published_profile_count": "Counted by reading every published per-municipality artifact and keeping only those that carry a non-empty native line-item array.",
+    "published_profile_count": "Counted from every served per-municipality artifact; France is measured by reconciling current-commune routes against the bounded public DGFiP line endpoint.",
     "period": "The span of fiscal years present in those published line items, not the newest year in the municipality directory.",
     "stages": "The budget stages present in the published line items (or, for the benchmark bundles, the single stage the source bundle declares). Plans and actuals are reported separately as plan_period and actual_period and are never merged into one vintage.",
     "warehouse_profile_count": "Entities loaded into the private production BigQuery warehouse. This is not site publication and is not counted as published.",
@@ -11,10 +11,10 @@
   },
   "totals": {
     "countries": 28,
-    "published_countries": 16,
-    "published_profiles": 34381,
-    "warehouse_only_countries": 9,
-    "warehouse_only_profiles": 40017
+    "published_countries": 17,
+    "published_profiles": 69125,
+    "warehouse_only_countries": 8,
+    "warehouse_only_profiles": 4975
   },
   "countries": [
     {
@@ -391,29 +391,35 @@
     {
       "code": "FRA",
       "municipal_scope": 34875,
-      "profile_count": 0,
-      "published_profile_count": 0,
-      "publication_status": "warehouse_only",
-      "status": "warehouse_only",
-      "measured_from": null,
-      "period": null,
-      "stages": [],
-      "stage_periods": {},
-      "actual_period": null,
-      "plan_period": null,
-      "vintage_type": null,
-      "line_item_count": 0,
-      "distinct_classification_code_count": null,
+      "profile_count": 34744,
+      "published_profile_count": 34744,
+      "publication_status": "published",
+      "status": "partial",
+      "measured_from": "/public-data/france-municipality-lines backed by czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "period": "2024–2026",
+      "stages": [
+        "actual",
+        "enacted"
+      ],
+      "stage_periods": {
+        "actual": "2024–2025",
+        "enacted": "2025–2026"
+      },
+      "actual_period": "2024–2025",
+      "plan_period": "2025–2026",
+      "vintage_type": "mixed",
+      "line_item_count": 10445528,
+      "distinct_classification_code_count": 2680,
       "minimum_distinct_classification_codes": 5,
-      "stage_basis": null,
-      "detail_kind_en": null,
-      "detail_kind_cs": null,
+      "stage_basis": "queried_from_public_warehouse_endpoint",
+      "detail_kind_en": "DGFiP economic accounts and functional-purpose codes where reported",
+      "detail_kind_cs": "ekonomické účty DGFiP a funkční účely tam, kde jsou vykázané",
       "source_title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
       "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
-      "note": "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census. Itemized FRA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for France is published on this site, so the published count is zero.",
+      "note": "131 of 34,875 directory entities publish no line items and are not counted. DGFiP economic-account detail is exposed for 34,744 of 34,875 current commune profiles. The 131 unmatched current codes are primarily overseas-code and special-jurisdiction gaps and are not counted. Functional-purpose detail is a separate layer reported by about 3,493 communes (roughly 10%); six verified city enacted budgets supplement the national actual-account layer for 2025–2026.",
       "scope_limitations": [
-        "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census.",
-        "Itemized FRA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for France is published on this site, so the published count is zero."
+        "131 of 34,875 directory entities publish no line items and are not counted.",
+        "DGFiP economic-account detail is exposed for 34,744 of 34,875 current commune profiles. The 131 unmatched current codes are primarily overseas-code and special-jurisdiction gaps and are not counted. Functional-purpose detail is a separate layer reported by about 3,493 communes (roughly 10%); six verified city enacted budgets supplement the national actual-account layer for 2025–2026."
       ],
       "warehouse": {
         "warehouse": "czbudget-janrezab.budget_detail",
@@ -429,7 +435,7 @@
         "detail_kind_cs": "položky skutečných účtů a rozvah DGFiP a šest ověřených aktuálních schválených městských rozpočtů",
         "source_title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
         "source_url": "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
-        "published_on_site": false
+        "published_on_site": true
       },
       "warehouse_profile_count": 35042
     },

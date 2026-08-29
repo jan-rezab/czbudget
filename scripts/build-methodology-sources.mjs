@@ -188,7 +188,9 @@ for(const itemized of itemizedCoverage.countries){
       scope:`Stages: ${stages} (${vintage}). ${(itemized.line_item_count||0).toLocaleString("en-US")} published line items.${warehouseFacts?` The same layer is also held as ${warehouseFacts}.`:""}`,
       sources,
       exact_extraction:sources.map(item=>item.location).filter(Boolean).join(" · "),
-      transformation:"Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
+      transformation:itemized.stage_basis==="queried_from_public_warehouse_endpoint"
+        ? "A parameterized, partition-bounded public endpoint selects one commune from the production facts, aggregates economic accounts and functional purposes separately, and publishes only current commune codes reconciled to the DGFiP entity layer."
+        : "Read every published per-municipality artifact, retain the native item classifications and budget stages, and count only profiles that carry a non-empty line-item array; the period and stages are measured from those items, never asserted.",
       limitations:itemized.note
     });
     continue;

@@ -144,12 +144,32 @@ test("section navigation follows the data available for each country", async ({ 
   await expect(page.locator("#native-detail")).toContainText("No item-level city budget is inferred");
 });
 
-test("French communes expose OFGL accounts, city sources and separate regional data", async ({ page }) => {
+test("French communes expose DGFiP account lines separately from functional purpose", async ({ page }) => {
+  await page.route("**/public-data/france-municipality-lines?code=31555", (route) => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({
+      entity_code: "31555", currency: "EUR", years: [2025],
+      coverage: { economic_account_detail: true, economic_line_count: 2, functional_purpose_detail: true, functional_line_count: 1 },
+      economic: [
+        { year: 2025, stage: "actual", side: "expenditure", code: "60612", name_native: "Énergie et électricité", name_en: "Energy and electricity", name_cs: "Energie a elektřina", amount: 1250, currency: "EUR" },
+        { year: 2025, stage: "actual", side: "expenditure", code: "64", name_native: "Charges de personnel", name_en: "Personnel costs", name_cs: "Osobní náklady", amount: 900, currency: "EUR" },
+      ],
+      functional: [
+        { year: 2025, stage: "actual", side: "expenditure", code: "212", name_native: "Enseignement et formation", name_en: "Education and training", name_cs: "Vzdělávání a odborná příprava", amount: 1250, currency: "EUR" },
+      ],
+      source_url: "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+    }),
+  }));
   await page.goto("/municipalities/france/profile/?code=31555&lang=en");
   await expect(page.locator(".detail-hero h1")).toHaveText("Toulouse");
   await expect(page.locator(".detail-kpis article")).toHaveCount(4);
   await expect(page.locator("#history-table-body tr")).toHaveCount(2);
-  await expect(page.locator("#native-detail")).toContainText("Official OFGL aggregates");
+  await expect(page.locator("#native-detail")).toContainText("Spending by economic account");
+  await expect(page.locator("#native-detail")).toContainText("Energy and electricity");
+  await expect(page.locator(".france-detail-contract")).toContainText("2 reported lines");
+  await page.getByRole("button", { name: "Public purpose" }).click();
+  await expect(page.locator("#native-detail h2")).toHaveText("Spending by public purpose");
+  await expect(page.locator("#native-detail")).toContainText("Education and training");
   await expect(page.locator('.source-list a[href*="refine.com_code=31555"]')).toBeVisible();
   await expect(page.locator('.source-list a[href*="budget-primitif-2026-ville-de-toulouse"]')).toContainText("Published approved budget 2026");
   await expect(page.locator('.source-list a[href*="balances-comptables-des-regions"]')).toContainText("Official regional accounts");
@@ -158,4 +178,22 @@ test("French communes expose OFGL accounts, city sources and separate regional d
   expect(await page.locator(".municipality-card").first().locator("dd").allTextContents()).not.toContain("—");
   await expect(page.locator('.municipality-card a[href*="/municipalities/france/profile/?code="]').first()).toBeVisible();
   await expect(page.locator('#country-context-grid a[href*="balances-comptables-des-regions"]')).toBeVisible();
+});
+
+test("a French commune without functional codes still surfaces economic accounts honestly", async ({ page }) => {
+  await page.route("**/public-data/france-municipality-lines?code=55001", (route) => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({
+      entity_code: "55001", currency: "EUR", years: [2025],
+      coverage: { economic_account_detail: true, economic_line_count: 55, functional_purpose_detail: false, functional_line_count: 0 },
+      economic: [{ year: 2025, stage: "actual", side: "expenditure", code: "60612", name_native: "Énergie et électricité", name_en: "Energy and electricity", name_cs: "Energie a elektřina", amount: 1250, currency: "EUR" }],
+      functional: [],
+      source_url: "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+    }),
+  }));
+  await page.goto("/municipalities/france/profile/?code=55001&lang=en");
+  await expect(page.locator(".detail-hero h1")).toHaveText("Abainville");
+  await expect(page.locator("#native-detail")).toContainText("Energy and electricity");
+  await expect(page.locator(".france-detail-contract")).toContainText("Not reported for this commune");
+  await expect(page.getByRole("button", { name: "Public purpose" })).toBeDisabled();
 });

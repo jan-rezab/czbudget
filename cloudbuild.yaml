@@ -8,6 +8,16 @@ steps:
       - europe-west1
       - czbudget-public
 
+  - id: ensure-runtime-bigquery-reader
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - scripts/ensure-public-bigquery-reader.sh
+      - $PROJECT_ID
+      - budget_detail
+      - czbudget-public
+      - europe-west1
+
   - id: export-municipal-headlines
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash

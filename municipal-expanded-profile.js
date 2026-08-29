@@ -11,6 +11,7 @@
   let detailQuery = "";
   let detailStage = "all";
   let detailSide = "expenditure";
+  let detailDimension = "economic";
   let detailYear = "all";
   let visualShown = 12;
   let detailShown = 160;
@@ -115,7 +116,7 @@
     return formatMoney(amount * applied.factor, applied.currency, compact);
   };
 
-  function adaptProfile(data, historyData = null) {
+  function adaptProfile(data, historyData = null, frenchLines = null) {
     if (data.country?.code === "FRA" && data.profiles) {
       const entity = data.profiles[requestedProfileCode];
       if (!entity) throw new Error(`Unknown French commune ${requestedProfileCode || "(missing code)"}`);
@@ -134,7 +135,18 @@
           ["expenditure", "OTHER_PAYMENTS", "Other payments, including investment and financing", otherExpenditure],
         ].filter((item) => numeric(item[3]) !== null).forEach(([side, code, name, amount]) => detail.push({ year: Number(row.year), stage: "actual", side, code, name, amount }));
       });
-      return { ...entity, country: "FRA", currency: entity.currency || data.country.currency || "EUR", history, latest, detail, summaryOnly: true };
+      const lineDetail = [
+        ...(frenchLines?.economic || []).map((row) => ({ ...row, dimension: "economic", code: row.code, name: row.name_en })),
+        ...(frenchLines?.functional || []).map((row) => ({ ...row, dimension: "functional", code: row.code, name: row.name_en })),
+      ];
+      return {
+        ...entity, country: "FRA", currency: entity.currency || data.country.currency || "EUR", history, latest,
+        detail: [...detail.map((row) => ({ ...row, dimension: "summary" })), ...lineDetail], summaryOnly: true,
+        franceLineCoverage: frenchLines?.coverage || null,
+        detail_url: frenchLines ? `/public-data/france-municipality-lines?code=${encodeURIComponent(requestedProfileCode)}` : null,
+        detail_source_url: frenchLines?.source_url || null,
+        functional_source_url: frenchLines?.functional_source_url || null,
+      };
     }
     if (data.country?.code === "DEU" && data.defaults && Array.isArray(data.entities)) {
       const entity = data.entities.find((row) => row.code === requestedProfileCode);
@@ -246,6 +258,13 @@
     });
   }
 
+  function localizedRows(rows) {
+    return normalizeRows(rows).map((row) => ({
+      ...row,
+      name: row[`name_${lang}`] || row.name_native || row.name || row.code,
+    }));
+  }
+
   const stageOrder = ["enacted", "revised", "actual", "committed", "cash", "period", "remaining"];
   const headlinePatterns = {
     BRA: {
@@ -342,7 +361,10 @@
 
   function detailRows() {
     const query = detailQuery.trim().toLocaleLowerCase();
-    return profile.normalizedDetail.filter((row) => (detailYear === "all" || String(row.year) === detailYear) && (detailStage === "all" || row.stage === detailStage) && row.side === detailSide && (!query || [row.code, row.name, row.column, row.table_title, row.side].some((value) => String(value || "").toLocaleLowerCase().includes(query))));
+    return profile.normalizedDetail.filter((row) => {
+      const dimensionMatches = !profile.franceLineCoverage || row.dimension === detailDimension;
+      return dimensionMatches && (detailYear === "all" || String(row.year) === detailYear) && (detailStage === "all" || row.stage === detailStage) && row.side === detailSide && (!query || [row.code, row.name, row.column, row.table_title, row.side].some((value) => String(value || "").toLocaleLowerCase().includes(query)));
+    });
   }
 
   function visualDetailRows() {
@@ -412,6 +434,41 @@
     document.querySelector("psd-site-header")?.insertAdjacentElement("afterend", rail);
   }
 
+  function franceDetailPresentation() {
+    const t = copy[lang];
+    const frenchSummary = profile.summaryOnly && profile.country === "FRA";
+    if (!frenchSummary || !profile.franceLineCoverage) return {
+      kicker: profile.summaryOnly ? (lang === "en" ? "Published detail" : "Publikovaný detail") : t.nativeKicker,
+      title: frenchSummary ? (lang === "en" ? "Official OFGL aggregates" : "Oficiální souhrny OFGL") : profile.summaryOnly ? (lang === "en" ? "National headline totals" : "Celostátní souhrnné hodnoty") : t.nativeTitle,
+      body: frenchSummary
+        ? (lang === "en" ? "OFGL computes these main-budget aggregates from DGFiP accounts. Operating amounts and the remaining investment and financing flows are shown without inventing item-level detail." : "OFGL tyto souhrny hlavního rozpočtu počítá z účtů DGFiP. Provozní hodnoty a zbývající investiční a finanční toky ukazujeme bez domýšlení položkového detailu.")
+        : profile.summaryOnly ? (lang === "en" ? "The national 2025 layer publishes adjusted receipts and payments excluding financing. No item-level city budget is inferred from these totals." : "Celostátní vrstva za rok 2025 publikuje očištěné příjmy a výdaje bez financování. Z těchto součtů nedopočítáváme položkový rozpočet města.") : t.nativeCopy,
+      controls: "",
+    };
+    const coverage = profile.franceLineCoverage;
+    const number = new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB");
+    const title = detailDimension === "functional"
+      ? (lang === "en" ? "Spending by public purpose" : "Výdaje podle veřejného účelu")
+      : (lang === "en" ? "Spending by economic account" : "Výdaje podle ekonomického účtu");
+    const body = detailDimension === "functional"
+      ? (lang === "en" ? "Functional codes answer which public purpose the money served. This layer appears only for communes that report the nature-by-function cross-classification." : "Funkční kódy ukazují, jakému veřejnému účelu peníze sloužily. Tato vrstva je dostupná jen u obcí, které vykazují křížovou klasifikaci podle druhu a funkce.")
+      : (lang === "en" ? "Economic accounts show what kind of input, service, transfer or asset the commune paid for. They are official executed-account entries, not inferred categories." : "Ekonomické účty ukazují, za jaký druh vstupu, služby, transferu nebo majetku obec zaplatila. Jde o oficiální položky skutečných účtů, nikoli dopočítané kategorie.");
+    const functionalStatus = coverage.functional_purpose_detail
+      ? `${number.format(coverage.functional_line_count)} ${lang === "en" ? "reported lines" : "vykázaných položek"}`
+      : (lang === "en" ? "Not reported for this commune" : "Tato obec jej nevykazuje");
+    return {
+      kicker: lang === "en" ? "DGFiP executed-account lines" : "Položky skutečných účtů DGFiP",
+      title,
+      body,
+      controls: `<div class="france-detail-contract"><div><strong>${lang === "en" ? "Economic-account detail" : "Detail ekonomických účtů"}</strong><span>${number.format(coverage.economic_line_count)} ${lang === "en" ? "reported lines" : "vykázaných položek"}</span></div><div class="${coverage.functional_purpose_detail ? "available" : "unavailable"}"><strong>${lang === "en" ? "Functional-purpose detail" : "Detail veřejného účelu"}</strong><span>${functionalStatus}</span></div></div><div class="detail-dimension-tabs" role="group" aria-label="${lang === "en" ? "Detail classification" : "Klasifikace detailu"}"><button type="button" data-detail-dimension="economic" class="${detailDimension === "economic" ? "active" : ""}" aria-pressed="${detailDimension === "economic"}">${lang === "en" ? "Economic account" : "Ekonomický účet"}</button><button type="button" data-detail-dimension="functional" class="${detailDimension === "functional" ? "active" : ""}" aria-pressed="${detailDimension === "functional"}"${coverage.functional_purpose_detail ? "" : " disabled"}>${lang === "en" ? "Public purpose" : "Veřejný účel"}</button></div>`,
+    };
+  }
+
+  function franceSourceLinks(t) {
+    if (!profile.franceLineCoverage) return "";
+    return `${profile.detail_source_url ? `<a href="${escapeHtml(profile.detail_source_url)}" target="_blank" rel="noopener"><span>${lang === "en" ? "DGFiP accounting balances" : "Účetní bilance DGFiP"}</span><strong>${t.open}</strong></a>` : ""}${profile.detail_url ? `<a href="${escapeHtml(profile.detail_url)}"><span>${lang === "en" ? "Detailed account data" : "Detailní účetní data"}</span><strong>${t.json}</strong></a>` : ""}`;
+  }
+
   function bindControls() {
     const resetAndRefresh = () => { visualShown = 12; detailShown = 160; refreshDetailExplorer(); };
     document.querySelectorAll("[data-profile-currency]").forEach((button) => button.addEventListener("click", () => {
@@ -431,6 +488,12 @@
       });
       resetAndRefresh();
     }));
+    document.querySelectorAll("[data-detail-dimension]").forEach((button) => button.addEventListener("click", () => {
+      detailDimension = button.dataset.detailDimension;
+      visualShown = 12;
+      detailShown = 160;
+      render();
+    }));
     document.querySelector("#profile-detail-more")?.addEventListener("click", () => { detailShown += 160; renderDetailTable(); });
     document.querySelector("#profile-visual-more")?.addEventListener("click", () => { visualShown += 12; refreshDetailExplorer(); });
     document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => {
@@ -438,6 +501,7 @@
       const next = new URL(location.href);
       next.searchParams.set("lang", lang);
       history.replaceState(null, "", `${next.pathname}${next.search}${next.hash}`);
+      profile.normalizedDetail = localizedRows(profile.detail || []);
       render();
     }, { once: true }));
   }
@@ -448,15 +512,16 @@
     const history = [...(profile.history || [])].sort((a, b) => Number(a.year) - Number(b.year));
     const latest = [...history].reverse().find((row) => numeric(row.revenue) !== null || numeric(row.expenditure) !== null) || history.at(-1) || {};
     const latestYear = latest.year || Math.max(...(profile.years || []).map(Number));
-    const yearRows = profile.normalizedDetail.filter((row) => row.year === latestYear);
+    const financialDetail = profile.normalizedDetail.filter((row) => row.dimension !== "functional");
+    const yearRows = financialDetail.filter((row) => row.year === latestYear);
     const revisedExpenditure = headline(yearRows, "revised", "expenditure");
     const actualExpenditure = numeric(latest.expenditure) ?? headline(yearRows, "actual", "expenditure");
     const executionRate = revisedExpenditure && actualExpenditure !== null ? actualExpenditure / revisedExpenditure : null;
     const fourthMetric = numeric(latest.cash) !== null ? [t.cashBalance, latest.cash, latestYear] : numeric(latest.debt) !== null ? [t.debt, latest.debt, latestYear] : [t.executionRate, executionRate, t.latestPeriod];
-    const revenueMix = mixRows(profile.normalizedDetail, "revenue", latestYear);
-    const expenditureMix = mixRows(profile.normalizedDetail, "expenditure", latestYear);
-    const stages = [...new Set(profile.normalizedDetail.map((row) => row.stage).filter(Boolean))].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
-    const detailYears = [...new Set(profile.normalizedDetail.map((row) => Number(row.year)).filter(Number.isFinite))].sort((a, b) => b - a);
+    const revenueMix = mixRows(financialDetail, "revenue", latestYear);
+    const expenditureMix = mixRows(financialDetail, "expenditure", latestYear);
+    const stages = [...new Set(profile.normalizedDetail.filter((row) => !profile.franceLineCoverage || row.dimension === detailDimension).map((row) => row.stage).filter(Boolean))].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
+    const detailYears = [...new Set(profile.normalizedDetail.filter((row) => !profile.franceLineCoverage || row.dimension === detailDimension).map((row) => Number(row.year)).filter(Number.isFinite))].sort((a, b) => b - a);
 
     document.documentElement.lang = lang;
     document.body.classList.add("cz-budget-page", "detail-page", "international-municipality-profile");
@@ -492,18 +557,19 @@
     });
 
     const frenchSummary = profile.summaryOnly && profile.country === "FRA";
-    const nativeKicker = profile.summaryOnly ? (lang === "en" ? "Published detail" : "Publikovaný detail") : t.nativeKicker;
-    const nativeTitle = frenchSummary ? (lang === "en" ? "Official OFGL aggregates" : "Oficiální souhrny OFGL") : profile.summaryOnly ? (lang === "en" ? "National headline totals" : "Celostátní souhrnné hodnoty") : t.nativeTitle;
-    const nativeCopy = frenchSummary ? (lang === "en" ? "OFGL computes these main-budget aggregates from DGFiP accounts. Operating amounts and the remaining investment and financing flows are shown without inventing item-level detail." : "OFGL tyto souhrny hlavního rozpočtu počítá z účtů DGFiP. Provozní hodnoty a zbývající investiční a finanční toky ukazujeme bez domýšlení položkového detailu.") : profile.summaryOnly ? (lang === "en" ? "The national 2025 layer publishes adjusted receipts and payments excluding financing. No item-level city budget is inferred from these totals." : "Celostátní vrstva za rok 2025 publikuje očištěné příjmy a výdaje bez financování. Z těchto součtů nedopočítáváme položkový rozpočet města.") : t.nativeCopy;
+    const presentation = franceDetailPresentation();
+    const nativeKicker = presentation.kicker || (profile.summaryOnly ? (lang === "en" ? "Published detail" : "Publikovaný detail") : t.nativeKicker);
+    const nativeTitle = presentation.title || (profile.summaryOnly ? (lang === "en" ? "National headline totals" : "Celostátní souhrnné hodnoty") : t.nativeTitle);
+    const nativeCopy = presentation.body || (profile.summaryOnly ? (lang === "en" ? "The national 2025 layer publishes adjusted receipts and payments excluding financing. No item-level city budget is inferred from these totals." : "Celostátní vrstva za rok 2025 publikuje očištěné příjmy a výdaje bez financování. Z těchto součtů nedopočítáváme položkový rozpočet města.") : t.nativeCopy);
     document.querySelector("main").innerHTML = `<nav class="breadcrumbs"><a href="${assetRoot}municipalities/?lang=${lang}">${t.municipalities}</a><span>›</span><a href="${assetRoot}${country.profileRoot || `municipalities/${country.slug}`}/?lang=${lang}">${escapeHtml(country[lang])}</a><span>›</span><strong>${escapeHtml(profile.name)}</strong></nav>
       <section class="detail-hero" id="overview"><div><span class="eyebrow"><i class="live-dot"></i>${escapeHtml(country[lang])} · ${t.official}</span><h1>${escapeHtml(profile.name)}</h1><p>${t.code} ${escapeHtml(profile.code)}${profile.region ? ` · ${escapeHtml(profile.region)}` : ""}. ${t.sourceCopy}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">${t.budget} ${latestYear} <b>↓</b></a><a href="#native-detail">${t.nativeKicker}</a><a href="${escapeHtml(profileUrl)}" download>${t.profileData}</a></div></div><aside class="detail-score"><span>${executionRate !== null ? t.executionRate : t.latest}</span><strong>${executionRate !== null ? percentage(executionRate) : latestYear || "—"}</strong><small>${executionRate !== null ? `${t.actual} / ${t.revised}` : escapeHtml(profile.currency)}</small></aside></section>
       <section class="detail-kpis">${[[t.revenue, latest.revenue, latestYear], [t.expenditure, latest.expenditure, latestYear], [t.balance, latest.balance, latestYear], fourthMetric].map(([label, value, note], index) => `<article><span>${label}</span><strong class="${index === 2 && numeric(value) !== null ? (Number(value) >= 0 ? "positive" : "negative") : ""}">${index === 3 && label === t.executionRate ? percentage(value) : money(value)}</strong><small>${numeric(value) !== null ? note : t.noValue}</small></article>`).join("")}</section>
       ${currencyControlMarkup(latestYear)}
       ${historyMarkup(history)}
-      <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(profile.normalizedDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
-        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div><div class="detail-side-tabs" role="group" aria-label="${escapeHtml(t.side)}"><button type="button" data-detail-side="expenditure" class="${detailSide === "expenditure" ? "active" : ""}" aria-pressed="${detailSide === "expenditure"}">${t.spendingTab}</button><button type="button" data-detail-side="revenue" class="${detailSide === "revenue" ? "active" : ""}" aria-pressed="${detailSide === "revenue"}">${t.incomeTab}</button></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.year}</span><select id="profile-detail-year"><option value="all">${t.allYears}</option>${detailYears.map((year) => `<option value="${year}"${String(year) === detailYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label></div><div id="profile-detail-visual-wrap">${visualDetailMarkup()}</div><details class="raw-detail-audit"><summary><span>${t.rawRows}</span><strong>${t.rawRowsOpen} · <b id="profile-detail-count"></b></strong></summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></details></section>
+      <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(financialDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
+        <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div>${presentation.controls}<div class="detail-side-tabs" role="group" aria-label="${escapeHtml(t.side)}"><button type="button" data-detail-side="expenditure" class="${detailSide === "expenditure" ? "active" : ""}" aria-pressed="${detailSide === "expenditure"}">${t.spendingTab}</button><button type="button" data-detail-side="revenue" class="${detailSide === "revenue" ? "active" : ""}" aria-pressed="${detailSide === "revenue"}">${t.incomeTab}</button></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.year}</span><select id="profile-detail-year"><option value="all">${t.allYears}</option>${detailYears.map((year) => `<option value="${year}"${String(year) === detailYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label></div><div id="profile-detail-visual-wrap">${visualDetailMarkup()}</div><details class="raw-detail-audit"><summary><span>${t.rawRows}</span><strong>${t.rawRowsOpen} · <b id="profile-detail-count"></b></strong></summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></details></section>
       </section>
-      <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(profile.source_url || document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a>${profile.approved_budget_url ? `<a href="${escapeHtml(profile.approved_budget_url)}" target="_blank" rel="noopener"><span>${t.approvedBudget} ${escapeHtml(profile.approved_budget_year)}</span><strong>${t.open}</strong></a>` : ""}${profile.region_source_url ? `<a href="${escapeHtml(profile.region_source_url)}" target="_blank" rel="noopener"><span>${t.regionalAccounts}</span><strong>${t.open}</strong></a>` : ""}<a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
+      <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(profile.source_url || document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a>${franceSourceLinks(t)}${profile.approved_budget_url ? `<a href="${escapeHtml(profile.approved_budget_url)}" target="_blank" rel="noopener"><span>${t.approvedBudget} ${escapeHtml(profile.approved_budget_year)}</span><strong>${t.open}</strong></a>` : ""}${profile.region_source_url ? `<a href="${escapeHtml(profile.region_source_url)}" target="_blank" rel="noopener"><span>${t.regionalAccounts}</span><strong>${t.open}</strong></a>` : ""}<a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();
     renderDetailTable();
     bindControls();
@@ -514,12 +580,15 @@
     fetchJson(profileUrl),
     document.body.dataset.historyUrl ? fetchJson(document.body.dataset.historyUrl) : Promise.resolve(null),
     fetchJson(new URL("data/municipal-fx-rates.v1.json", assetRoot).href).catch(() => null),
+    document.body.dataset.profileRoot && requestedProfileCode
+      ? fetchJson(`/public-data/france-municipality-lines?code=${encodeURIComponent(requestedProfileCode)}`).catch((error) => { console.error("French municipal line detail", error); return null; })
+      : Promise.resolve(null),
   ])
-    .then(([data, historyData, rates]) => {
+    .then(([data, historyData, rates, frenchLines]) => {
       fxData = rates;
-      profile = adaptProfile(data, historyData);
+      profile = adaptProfile(data, historyData, frenchLines);
       if (displayCurrency !== "native" && conversion(profile.latest?.year ?? profile.years?.at(-1)).currency !== displayCurrency) displayCurrency = "native";
-      profile.normalizedDetail = normalizeRows(profile.detail || []);
+      profile.normalizedDetail = localizedRows(profile.detail || []);
       const availableSides = new Set(profile.normalizedDetail.map((row) => row.side));
       detailSide = availableSides.has("expenditure") ? "expenditure" : availableSides.has("revenue") ? "revenue" : "other";
       const years = profile.normalizedDetail.map((row) => Number(row.year)).filter(Number.isFinite);

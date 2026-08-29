@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-28T18:42:17.366Z",
+  "generated_at": "2026-08-29T16:04:04.867Z",
   "row_count": 2173,
   "countries": [
     {
@@ -47414,12 +47414,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "not_loaded",
-      "source_availability": "source_available",
-      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
-      "coverage": "0 of 34,875 municipal profiles are published on this site; 35,042 entities are loaded in the private production warehouse only.",
-      "period": "Not published on this site (warehouse 2024–2026)",
-      "scope": "Warehouse stages: actual, enacted. 10,445,528 line facts plus 14,147,797 balance-sheet facts for 35,042 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
+      "status": "partial",
+      "source_availability": "loaded",
+      "artifact": "data/municipal-itemized-coverage.v1.json · /public-data/france-municipality-lines backed by czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+      "coverage": "34,744 of 34,875 municipal profiles published on this site; DGFiP economic accounts and functional-purpose codes where reported",
+      "period": "2024–2026",
+      "scope": "Stages: actual, enacted (actuals 2024–2025; plans 2025–2026). 10,445,528 published line items. The same layer is also held as 10,445,528 line facts plus 14,147,797 balance-sheet facts for 35,042 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
           "title": "French Ministry of Economy · DGFiP commune accounts and municipal open-data budgets",
@@ -47478,8 +47478,8 @@
         }
       ],
       "exact_extraction": "fr-ofgl-commune-aggregates-2024-2025 · ofgl-base-communes-2024-2025.csv · fr-dgfip-commune-balances-2024 · Balance_Commune_2024_Dec2025.zip · fr-dgfip-balances-fonction-2024 · BalanceSPL_Fonction_2024_Dec2025.zip · fr-dgfip-commune-balances-2025 · Balance_Commune_2025_Juil2026.zip · fr-dgfip-balances-fonction-2025 · BalanceSPL_Fonction_2025_Juil2026.zip · fr-brest-budget-2026 · budget-primitif-ville-de-brest-2026.csv · fr-la-possession-budget-2025 · budget-primitif-la-possession-2025.csv · fr-sailly-budget-2025 · open-data-budget-sailly-2025.csv · fr-blagnac-budget-2025 · budget-primitif-blagnac-2025.csv · fr-toulouse-budget-2026 · budget-primitif-toulouse-2026.csv · fr-nantes-budget-2026 · budget-primitif-nantes-2026.csv",
-      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → france_structured → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
-      "limitations": "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census. Itemized FRA facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for France is published on this site, so the published count is zero."
+      "transformation": "A parameterized, partition-bounded public endpoint selects one commune from the production facts, aggregates economic accounts and functional purposes separately, and publishes only current commune codes reconciled to the DGFiP entity layer.",
+      "limitations": "131 of 34,875 directory entities publish no line items and are not counted. DGFiP economic-account detail is exposed for 34,744 of 34,875 current commune profiles. The 131 unmatched current codes are primarily overseas-code and special-jurisdiction gaps and are not counted. Functional-purpose detail is a separate layer reported by about 3,493 communes (roughly 10%); six verified city enacted budgets supplement the national actual-account layer for 2025–2026."
     },
     {
       "country_code": "GBR",

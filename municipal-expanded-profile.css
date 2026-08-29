@@ -204,6 +204,59 @@
   box-shadow: inset 0 -4px var(--cz-yellow);
 }
 
+.france-detail-contract {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0 0 14px;
+  padding: 1px;
+  background: var(--cz-line);
+}
+
+.france-detail-contract > div {
+  display: grid;
+  gap: 7px;
+  padding: 18px 20px;
+  background: #faf8f2;
+}
+
+.france-detail-contract > div.available { box-shadow: inset 0 4px var(--cz-green); }
+.france-detail-contract > div.unavailable { box-shadow: inset 0 4px #b8b5ad; }
+.france-detail-contract strong { font-size: 15px; }
+
+.france-detail-contract span {
+  color: var(--cz-muted);
+  font: 700 11px/1.45 monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.detail-dimension-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.detail-dimension-tabs button {
+  min-height: 48px;
+  border: 1px solid var(--cz-line);
+  background: white;
+  color: var(--cz-ink);
+  font: 800 12px monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+
+.detail-dimension-tabs button.active {
+  border-color: var(--cz-ink);
+  background: var(--cz-ink);
+  color: white;
+}
+
+.detail-dimension-tabs button:disabled { cursor: not-allowed; opacity: .42; }
+
 .expanded-detail-controls {
   display: grid;
   grid-template-columns: minmax(250px, 1fr) minmax(150px, .35fr) minmax(170px, .35fr);
@@ -468,6 +521,11 @@
 }
 
 @media (max-width: 760px) {
+  .france-detail-contract,
+  .detail-dimension-tabs {
+    grid-template-columns: 1fr;
+  }
+
   .international-municipality-profile .detail-hero {
     min-height: 0;
   }

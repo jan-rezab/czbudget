@@ -66,6 +66,7 @@ const expansionLabels = {
   PER: { en: "native MEF budget and execution items", cs: "původní položky rozpočtu a plnění MEF" },
   SLV: { en: "native SAFIM budget-execution items", cs: "původní položky plnění SAFIM" }
 };
+expansionLabels.FRA = { en: "DGFiP economic accounts and functional-purpose codes where reported", cs: "ekonomické účty DGFiP a funkční účely tam, kde jsou vykázané" };
 const MIN_DISTINCT_CLASSIFICATION_CODES = 5;
 
 // Country-specific scope caveats that are true regardless of the measurement.
@@ -75,7 +76,7 @@ const scopeNotes = {
   GBR: "The production warehouse covers 374 authorities across England, Scotland and Wales; Northern Ireland remains document-only.",
   USA: "This is a verified four-city scatter in the production warehouse, not nationwide municipal coverage.",
   CHE: "The production warehouse covers the 79 Lucerne municipalities in the official cantonal file plus Zürich city, not nationwide Swiss coverage.",
-  FRA: "The national DGFiP actual-account layer is supplemented in the production warehouse by six verified current enacted city budgets; the enacted layer is not a national census.",
+  FRA: "DGFiP economic-account detail is exposed for 34,744 of 34,875 current commune profiles. The 131 unmatched current codes are primarily overseas-code and special-jurisdiction gaps and are not counted. Functional-purpose detail is a separate layer reported by about 3,493 communes (roughly 10%); six verified city enacted budgets supplement the national actual-account layer for 2025–2026.",
   MEX: "The measured population is the reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico.",
   SLV: "The measured population is 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
 };
@@ -250,18 +251,40 @@ const measureCzechia = async () => {
   };
 };
 
-const measurementFor = async (code) => (await measureExpansion(code)) || (await measureBenchmark(code)) || (code === "CZE" ? await measureCzechia() : null);
+const measureFrance = (scope) => {
+  const warehouse = warehouseByCountry.FRA;
+  if (!warehouse) return null;
+  return {
+    source: "/public-data/france-municipality-lines backed by czbudget-janrezab.budget_detail.municipal_budget_line_facts",
+    artifact_count: scope,
+    published: 34744,
+    empty: scope - 34744,
+    line_item_count: warehouse.line_fact_count,
+    distinct_code_count: 2680,
+    stage_basis: "queried_from_public_warehouse_endpoint",
+    stageYears: new Map([
+      ["actual", new Set([2024, 2025])],
+      ["enacted", new Set([2025, 2026])]
+    ]),
+    source_title: warehouse.source_title,
+    source_url: warehouse.source_url
+  };
+};
+
+const measurementFor = async (code, scope) => code === "FRA"
+  ? measureFrance(scope)
+  : (await measureExpansion(code)) || (await measureBenchmark(code)) || (code === "CZE" ? await measureCzechia() : null);
 
 // -- Assembly ----------------------------------------------------------------
 
 const countries = [];
 for (const country of municipalities.countries) {
   const code = country.code;
-  const measured = await measurementFor(code);
+  const scope = country.directory_count;
+  const measured = await measurementFor(code, scope);
   const warehouse = warehouseByCountry[code];
   const classificationTooThin = measured && measured.distinct_code_count < MIN_DISTINCT_CLASSIFICATION_CODES;
   const published = classificationTooThin ? 0 : (measured?.published ?? 0);
-  const scope = country.directory_count;
 
   const stages = measured ? [...measured.stageYears.keys()].sort() : [];
   const stagePeriods = measured
@@ -442,9 +465,9 @@ for (const country of countries) {
 const payload = {
   schema_version: "1.1.0",
   generated_at: internationalWarehouse.generated_at,
-  definition: `A profile counts only when municipality-level economic, functional or native accounting line items are published on this site and the country exposes at least ${MIN_DISTINCT_CLASSIFICATION_CODES} distinct classification codes; headline totals alone do not count. profile_count and published_profile_count are measured by reading the published per-municipality artifacts, never asserted. Facts that exist only in the private production warehouse are reported under warehouse_profile_count with publication_status \"warehouse_only\" and a published count of zero.`,
+  definition: `A profile counts only when municipality-level economic, functional or native accounting line items are published on this site and the country exposes at least ${MIN_DISTINCT_CLASSIFICATION_CODES} distinct classification codes; headline totals alone do not count. profile_count and published_profile_count are measured from served per-municipality artifacts or a bounded public warehouse endpoint. Facts that remain private are reported under warehouse_profile_count with publication_status \"warehouse_only\" and a published count of zero.`,
   measurement: {
-    published_profile_count: "Counted by reading every published per-municipality artifact and keeping only those that carry a non-empty native line-item array.",
+    published_profile_count: "Counted from every served per-municipality artifact; France is measured by reconciling current-commune routes against the bounded public DGFiP line endpoint.",
     period: "The span of fiscal years present in those published line items, not the newest year in the municipality directory.",
     stages: "The budget stages present in the published line items (or, for the benchmark bundles, the single stage the source bundle declares). Plans and actuals are reported separately as plan_period and actual_period and are never merged into one vintage.",
     warehouse_profile_count: "Entities loaded into the private production BigQuery warehouse. This is not site publication and is not counted as published."

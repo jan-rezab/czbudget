@@ -58,16 +58,15 @@ export const pinnedCounts = Object.freeze({
   // RATCHET, not an equality pin. Published itemized coverage is expected to
   // grow as warehouse-only countries are promoted to the site; it must never
   // silently shrink. Raise this floor deliberately when coverage grows.
-  // Value after enforcing the five-code classification floor: 34,381 profiles
-  // across 16 countries. The previous 35,810 included 1,429 Costa Rican,
-  // Colombian and Korean headline/root profiles that were not itemized data.
-  itemizedPublishedProfilesFloor: 34381,
+  // France adds 34,744 current commune routes backed by the bounded public
+  // DGFiP line endpoint to the previous 34,381 genuinely itemized profiles.
+  itemizedPublishedProfilesFloor: 69125,
   // Same ratchet for the headline volume figure the coverage page prints.
   // France now uses the 34,875-current-commune OFGL census instead of retaining
   // historical and supplementary-budget pseudo-entities in the browser directory.
   // Corrected from 362,446 after removing those same 1,429 pseudo-itemized
   // profiles from the public volume KPI.
-  publishedDataEntriesFloor: 361017,
+  publishedDataEntriesFloor: 395761,
   // RATCHET. Rows in data/methodology-sources.v1.json that PSD has actually
   // loaded (as opposed to rows that only record an available upstream source).
   // Corrected from 374 to 370: five null municipal-headline layers were
@@ -76,7 +75,7 @@ export const pinnedCounts = Object.freeze({
   // Anchor countries whose published itemized coverage is complete and known.
   // CZE is the full Czech universe; DNK is a genuinely published 98-municipality
   // collection that must not be swept up in the warehouse-only reclassification.
-  itemizedAnchors: Object.freeze({ CZE: 6254, DNK: 98 }),
+  itemizedAnchors: Object.freeze({ CZE: 6254, DNK: 98, FRA: 34744 }),
 });
 
 /** The two honest publication states an itemized-coverage row may declare. */
