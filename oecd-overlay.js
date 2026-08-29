@@ -7,22 +7,22 @@
 
   const COPY = {
     cs: {
-      kicker: "OECD / společné měřítko", title: "Daně, přerozdělení a výsledky v jednom rámci.",
+      kicker: "OECD / společné měřítko", title: "Daně, přerozdělení a výsledky podle OECD",
       intro: "Každá karta používá poslední dostupný rok svého ukazatele. Medián počítáme jen ze zemí načtených na tomto webu; chybějící hodnoty nedopočítáváme.",
       tabs: { tax: "Daně a práce", distribution: "Přerozdělení", social: "Sociální stát", government: "Kapacita státu", wellbeing: "Výsledky" },
       median: "medián načtených zemí", missing: "OECD údaj není k dispozici", year: "rok",
-      rateTitle: "Od zákonné sazby ke skutečnému zatížení.",
-      rateIntro: "Sazba sama nestačí. OECD odděluje daňový klín zaměstnance, zákonnou a modelovou firemní sazbu, daňovou autonomii a cenu uhlíku.",
+      rateTitle: "Daňové sazby v definicích OECD",
+      rateIntro: "OECD odděluje daňový klín zaměstnance, zákonnou a modelovou firemní sazbu, daňovou autonomii a cenu uhlíku; každý údaj nese vlastní rok.",
       household: "Modelová domácnost", taxWedge: "Průměrný daňový klín", marginalWedge: "Mezní daňový klín", netRate: "Čistá osobní sazba",
       methodology: "Definice OECD", source: "Otevřít zdroj ↗",
     },
     en: {
-      kicker: "OECD / common benchmark", title: "Taxes, redistribution and outcomes in one frame.",
+      kicker: "OECD / common benchmark", title: "Taxes, redistribution and outcomes in OECD data",
       intro: "Each card uses that indicator's latest available year. The median covers only countries loaded on this site; missing values are never estimated.",
       tabs: { tax: "Tax and work", distribution: "Redistribution", social: "Social state", government: "State capacity", wellbeing: "Outcomes" },
       median: "loaded-country median", missing: "OECD value unavailable", year: "year",
-      rateTitle: "From headline rates to the effective burden.",
-      rateIntro: "One rate is not enough. OECD separates the employee tax wedge, statutory and modelled corporate rates, tax autonomy and carbon pricing.",
+      rateTitle: "Tax rates under OECD definitions",
+      rateIntro: "OECD separates the employee tax wedge, statutory and modelled corporate rates, tax autonomy and carbon pricing; each figure carries its own year.",
       household: "Model household", taxWedge: "Average tax wedge", marginalWedge: "Marginal tax wedge", netRate: "Net personal rate",
       methodology: "OECD definition", source: "Open source ↗",
     },
@@ -120,7 +120,7 @@
     const corp = country.tax.corporate || {};
     const autonomy = country.tax.autonomy?.local;
     const localObs = autonomy ? { value: autonomy.autonomous_share_pct, year: autonomy.year } : null;
-    revenueRoot.innerHTML = `<div class="deep-section-heading"><div><span class="kicker">02 / OECD Taxing Wages</span><h2>${esc(t().rateTitle)}</h2></div><p>${esc(t().rateIntro)}</p></div>
+    revenueRoot.innerHTML = `<div class="deep-section-heading"><div><span class="kicker">OECD Taxing Wages</span><h2>${esc(t().rateTitle)}</h2></div><p>${esc(t().rateIntro)}</p></div>
       <label class="oecd-household-select"><span>${esc(t().household)}</span><select>${scenarios.map((item) => `<option value="${esc(scenarioKey(item))}"${scenarioKey(item) === selectedKey ? " selected" : ""}>${esc(HOUSEHOLDS[lang][scenarioKey(item)] || scenarioKey(item))}</option>`).join("")}</select></label>
       <div class="oecd-tax-wedge-grid">${compactTaxCard(t().taxWedge, asObs("av_tw"), "labour_tax_wedge_single")}${compactTaxCard(t().marginalWedge, asObs("mr_tw_pe"), "labour_tax_wedge_single")}${compactTaxCard(t().netRate, asObs("npatr"), "labour_tax_wedge_single")}</div>
       <div class="oecd-rate-strip">${compactTaxCard(dataset.metrics.corporate_statutory_rate[`label_${lang}`], corp.statutory_combined, "corporate_statutory_rate")}${compactTaxCard(dataset.metrics.corporate_eatr[`label_${lang}`], corp.eatr, "corporate_eatr")}${compactTaxCard(dataset.metrics.corporate_emtr[`label_${lang}`], corp.emtr, "corporate_emtr")}${compactTaxCard(dataset.metrics.local_tax_autonomy[`label_${lang}`], localObs, "local_tax_autonomy")}${compactTaxCard(dataset.metrics.net_carbon_rate[`label_${lang}`], country.tax.carbon?.net_effective_rate, "net_carbon_rate")}</div>

@@ -5,8 +5,8 @@
   const copy = {
     cs: {
       kicker: "Hloubka pokrytí / účetní hranice",
-      title: "Jak hluboko vidíme do veřejných účtů?",
-      intro: "U každé pokryté země oddělujeme národní rozpočet, samosprávy, další veřejné účty a korporace. Tabulka ukazuje rozsah, který umíme doložit — není to další součet příjmů.",
+      title: "Účetní hranice v každé zemi",
+      intro: "U každé pokryté země oddělujeme národní rozpočet, samosprávy, další veřejné účty a korporace. Tabulka ukazuje rozsah, který umíme doložit; není to další součet příjmů.",
       country: "Země",
       nationalBudget: "Národní rozpočet",
       municipalBudgets: "Obce a regiony",
@@ -18,8 +18,8 @@
     },
     en: {
       kicker: "Coverage depth / accounting boundaries",
-      title: "How deeply can we see into public accounts?",
-      intro: "For every covered country, we distinguish the national budget, subnational governments, other public accounts and corporations. The table shows the scope we can document — it is not another revenue total.",
+      title: "Accounting boundaries in each country",
+      intro: "For every covered country, we distinguish the national budget, subnational governments, other public accounts and corporations. The table shows the scope we can document; it is not another revenue total.",
       country: "Country",
       nationalBudget: "National budget",
       municipalBudgets: "Municipalities and regions",

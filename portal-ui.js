@@ -19,7 +19,11 @@
     ["Jedno vlastnictví. Tři různé logiky.","Tři typy veřejného vlastnictví"],["Bez dvojího započítání.","Metodika a zdroje"],
     ["Plán a skutečnost.","Plán a skutečné výsledky"],["Budget and actuals.","Budget and actual results"],
     ["Výsledek hospodaření a stav účtů.","Vývoj rozpočtu a účtů"],["Fiscal balance and cash.","Budget and cash over time"],
-    ["Auditovatelný profil.","Zdroje a data"],["An auditable profile.","Sources and data"]
+    ["Auditovatelný profil.","Zdroje a data"],["An auditable profile.","Sources and data"],
+    ["Budget over time.","Budget over time"],["Rozpočet v čase.","Rozpočet v čase"],
+    ["Reported budget stages.","Reported budget stages"],["Data with its accounting context intact.","Data with its accounting context"],
+    ["Explore income and spending.","Revenue and spending in detail"],["Prozkoumejte příjmy a výdaje.","Příjmy a výdaje v detailu"],
+    ["Souhrn bez falešného detailu.","Souhrnná data bez položkového detailu"],["Najděte libovolnou obec.","Najděte obec"]
   ]);
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
   function localiseHref(href) {

@@ -97,28 +97,28 @@
       en: ["Reports | Public Spending Data", "Cross-country reports connect public budgets with infrastructure and public-service capacity."],
     },
     "/deep-dives/transportation/": {
-      cs: ["Hloubkový profil dopravy — Public Spending Data", "Srovnání výdajů na dopravu, silnic, dálnic a růstu sítě v deseti zemích."],
-      en: ["Transportation deep dive — Public Spending Data", "Compare transportation spending, roads, motorways and network growth across ten countries."],
+      cs: ["Výdaje na dopravu — Public Spending Data", "Srovnání výdajů na dopravu, silnic, dálnic a růstu sítě v deseti zemích."],
+      en: ["Transport spending — Public Spending Data", "Compare transportation spending, roads, motorways and network growth across ten countries."],
     },
     "/deep-dives/health/": {
-      cs: ["Hloubkový profil zdraví — Public Spending Data", "Srovnání výdajů na zdraví, financování, poskytovatelů, lůžek a kapacity systému v deseti zemích."],
-      en: ["Health deep dive — Public Spending Data", "Compare health spending, financing, providers, hospital beds and system capacity across ten countries."],
+      cs: ["Financování zdravotnictví — Public Spending Data", "Srovnání výdajů na zdraví, financování, poskytovatelů, lůžek a kapacity systému v deseti zemích."],
+      en: ["Health-care funding — Public Spending Data", "Compare health spending, financing, providers, hospital beds and system capacity across ten countries."],
     },
     "/deep-dives/state-owned-enterprises/": {
       cs: ["Největší státní podniky — Public Spending Data", "Zdrojovaný katalog největších státem ovládaných podniků v deseti zemích s výnosy za rok 2024 v eurech."],
       en: ["Largest state-owned enterprises — Public Spending Data", "A sourced catalogue of the largest state-controlled companies across ten countries, with 2024 revenue converted to euros."],
     },
     "/deep-dives/ageing/": {
-      cs: ["Účet stárnutí — Public Spending Data", "Oficiální populační projekce a transparentní kalkulačka demografické závislosti pro deset zemí. Bez fiskální prognózy."],
-      en: ["The Ageing Bill — Public Spending Data", "Official population projections and a transparent demographic dependency calculator for ten countries. No fiscal forecast."],
+      cs: ["Stárnutí populace — Public Spending Data", "Oficiální populační projekce a kalkulačka demografické závislosti pro deset zemí; fiskální prognózy neděláme."],
+      en: ["Population ageing — Public Spending Data", "Official population projections and a demographic dependency calculator for ten countries; we do not forecast fiscal outcomes."],
     },
     "/deep-dives/capital-cities/": {
-      cs: ["Hlavní města pod tlakem — Public Spending Data", "Rozpočty na obyvatele, turistická intenzita a rozpočtové saldo 27 hlavních měst EU a Londýna v porovnatelných skupinách."],
-      en: ["Capital Cities Under Pressure — Public Spending Data", "Budgets per resident, visitor pressure and fiscal balances across the 27 EU capitals and London in comparable groups."],
+      cs: ["Rozpočty hlavních měst — Public Spending Data", "Rozpočty na obyvatele, turistická intenzita a rozpočtové saldo 27 hlavních měst EU a Londýna v porovnatelných skupinách."],
+      en: ["Capital-city budgets — Public Spending Data", "Budgets per resident, visitor pressure and fiscal balances across the 27 EU capitals and London in comparable groups."],
     },
     "/deep-dives/revenue/": {
-      cs: ["Kdo skutečně financuje stát? — Public Spending Data", "Sledujte každých 100 jednotek daňových příjmů od práce, kapitálu, spotřeby a majetku k jednotlivým úrovním vlády."],
-      en: ["Who actually funds the state? — Public Spending Data", "Follow every 100 units of tax revenue from income, payroll, consumption and property to each level of government."],
+      cs: ["Odkud stát bere peníze — Public Spending Data", "Daňový mix, první příjemce každé daně a cesta k obecním rozpočtům v deseti zemích podle OECD."],
+      en: ["Where the state gets its money — Public Spending Data", "The tax mix, the first recipient of each tax and the path to municipal budgets across ten countries, based on OECD data."],
     },
     "/deep-dives/migration/": {
       cs: ["Evropská migrace v čase — Public Spending Data", "Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024 podle Eurostatu."],
@@ -129,8 +129,8 @@
       en: ["Economy in context — Public Spending Data", "Long-run economic series, the business cycle and fiscal context in a global data layer."],
     },
     "/deep-dives/defense/": {
-      cs: ["Výdaje na obranu — Public Spending Data", "Vojenské výdaje vůči HDP, závazek NATO a nejjemnější dostupné rozpočtové řádky pro 17 zemí."],
-      en: ["Defense spending — Public Spending Data", "Military expenditure relative to GDP, the NATO commitment and the finest available budget lines for 17 countries."],
+      cs: ["Výdaje na obranu — Public Spending Data", "Vojenské výdaje vůči HDP, závazek NATO a nejpodrobnější dostupné rozpočtové řádky pro 17 zemí."],
+      en: ["Defense spending — Public Spending Data", "Military expenditure relative to GDP, the NATO commitment and the most detailed available budget lines for 17 countries."],
     },
     "/deep-dives/tax-burden/": {
       cs: ["Daňové zatížení — Public Spending Data", "Daňový klín domácností, firemní sazby, cena uhlíku a místní daňová pravomoc podle OECD."],

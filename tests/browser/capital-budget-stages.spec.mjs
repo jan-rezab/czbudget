@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("capital-city deep dive identifies fiscal figures as plans", async ({ page }) => {
   await page.goto("/deep-dives/capital-cities/?city=prague-cz&lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".capital-stage-guide")).toContainText("Plan and actual are separate data layers");
+  await expect(page.locator(".capital-stage-guide")).toContainText("Plans and actual outcomes are kept separate");
   await expect(page.locator(".capital-stage-guide .plan")).toContainText(/budget plan/i);
   await expect(page.locator(".capital-stage-guide .actual")).toContainText("Actual outcomes");
   await expect(page.locator("#capital-city-readout")).toContainText("Adopted plan");

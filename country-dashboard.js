@@ -7,7 +7,7 @@
   const copy = {
     cs: {
       label: "Národní dashboard",
-      intro: "Stejná redakční struktura jako český dashboard. Každá kapitola používá národní data v jejich vlastním účetním rozsahu; metodika a pokrytí jsou součástí příběhu, ne náhradou za něj.",
+      intro: "Stejná redakční struktura jako český dashboard. Každá kapitola používá národní data v jejich vlastním účetním rozsahu; metodika a pokrytí jsou uvedené přímo u kapitol.",
       chapters: [
         ["Hranice", "Co se smí sčítat"], ["Rozpočet", "Příjmy, výdaje a vývoj"],
         ["Kam peníze jdou", "Účel, kapitola a překlad"], ["Stát jako vlastník", "Subjekty a dostupné účty"],
@@ -18,7 +18,7 @@
     },
     en: {
       label: "National dashboard",
-      intro: "The same editorial structure as the Czech dashboard. Every chapter uses national data inside its own accounting perimeter; methodology and coverage support the story instead of replacing it.",
+      intro: "The same editorial structure as the Czech dashboard. Every chapter uses national data inside its own accounting perimeter; methodology and coverage sit directly beside the chapters.",
       chapters: [
         ["Boundaries", "What can be added"], ["Budget", "Revenue, spending and trend"],
         ["Where money goes", "Purpose, department and translation"], ["The state as owner", "Entities and available accounts"],

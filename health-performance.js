@@ -5,7 +5,7 @@
   const NAMES={CZE:["Česko","Czechia"],DEU:["Německo","Germany"],DNK:["Dánsko","Denmark"],FRA:["Francie","France"],GBR:["Spojené království","United Kingdom"],POL:["Polsko","Poland"],SWE:["Švédsko","Sweden"],CHE:["Švýcarsko","Switzerland"],UKR:["Ukrajina","Ukraine"],USA:["Spojené státy","United States"]};
   const COPY={
     cs:{
-      kicker:"06 / Lidé, provoz a výsledky",title:"Co systém dodává za své peníze.",intro:"Deset zemí čteme přes pracovní sílu, využití nemocnic a výsledky. Každá hodnota uvádí vlastní rok; chybějící pozorování není nula.",
+      kicker:"Lidé, provoz a výsledky",title:"Kapacita, aktivita a výsledky",intro:"Deset zemí čteme přes pracovní sílu, využití nemocnic a výsledky. Každá hodnota uvádí vlastní rok; chybějící pozorování není nula.",
       tenCountries:"10 zemí",commonSpine:"společná datová páteř",latestAvailable:"poslední dostupný rok",selected:"Vybraná země",rank:"pořadí",of:"z",median:"medián skupiny",year:"rok",missing:"není dostupné",
       life:"Naděje dožití",doctorsNurses:"Lékaři / sestry",stay:"Průměrná hospitalizace",treatable:"Léčitelná úmrtnost",ncd:"Riziko předčasného úmrtí",years:"let",days:"dne",perThousand:"na 1 000",per100k:"na 100 tis.",percent:"%",
       compare:"Porovnat deset systémů",compareCopy:"Přepněte ukazatel. Pořadí vždy respektuje jeho směr: u kapacity vyšší znamená více zdrojů, u úmrtnosti a délky pobytu pouze vyšší hodnotu — ne automaticky horší kvalitu.",
@@ -16,7 +16,7 @@
       caveat:"Srovnání je popisné. Výsledky ovlivňuje věk populace, nemocnost, životní podmínky, válka, prevence i vykazování; nelze je připsat samotným výdajům.",worldBank:"Světová banka · harmonizované zdravotní ukazatele",oecdUse:"OECD · využití nemocnic",oecdMortality:"OECD · odvratitelná úmrtnost"
     },
     en:{
-      kicker:"06 / People, activity and outcomes",title:"What the system delivers for its money.",intro:"Ten countries are read through workforce, hospital use and outcomes. Every value carries its own reference year; missing observations are not zero.",
+      kicker:"People, activity and outcomes",title:"Capacity, activity and outcomes",intro:"Ten countries are read through workforce, hospital use and outcomes. Every value carries its own reference year; missing observations are not zero.",
       tenCountries:"10 countries",commonSpine:"common data spine",latestAvailable:"latest available year",selected:"Selected country",rank:"rank",of:"of",median:"cohort median",year:"year",missing:"not available",
       life:"Life expectancy",doctorsNurses:"Doctors / nurses",stay:"Average hospital stay",treatable:"Treatable mortality",ncd:"Premature mortality risk",years:"years",days:"days",perThousand:"per 1,000",per100k:"per 100k",percent:"%",
       compare:"Compare ten systems",compareCopy:"Switch the measure. Ordering respects its direction: for capacity, higher means more resources; for mortality and length of stay it only means a higher value — not automatically lower quality.",

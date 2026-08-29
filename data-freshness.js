@@ -6,7 +6,7 @@
   const state = { data: null, country: "", family: "", band: "", query: "", selected: null };
   const copy = {
     cs: {
-      eyebrow: "Data · 191 zemí · 15 vrstev", title: "Jak čerstvá jsou data napříč celým webem?",
+      eyebrow: "Data · 191 zemí · 15 vrstev", title: "Aktuálnost dat podle vrstev",
       countries: "zemí", layers: "datových vrstev", records: "kombinací země × vrstva", units: "obecních jednotek",
       country: "Země", allCountries: "Všechny země", family: "Rodina dat", allFamilies: "Všechny vrstvy",
       municipal: "Obce a města", countryData: "Data země", deepDive: "Hloubkové profily", freshness: "Datový horizont",
@@ -21,7 +21,7 @@
       none: "bez vrstvy", method: "Rok v buňce je nejnovější fiskální, vykazované nebo pozorované období. Datum sestavení souboru je samostatné; plán, skutečnost a projekce nejsou zaměnitelné.",
     },
     en: {
-      eyebrow: "Data · 191 countries · 15 layers", title: "How fresh is the data across the whole site?",
+      eyebrow: "Data · 191 countries · 15 layers", title: "Data freshness by layer",
       countries: "countries", layers: "data layers", records: "country × layer records", units: "municipal units",
       country: "Country", allCountries: "All countries", family: "Data family", allFamilies: "All layers",
       municipal: "Municipalities and cities", countryData: "Country data", deepDive: "Deep dives", freshness: "Data horizon",

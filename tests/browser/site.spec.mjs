@@ -165,7 +165,7 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator("#data-health-root .data-health-kpis article").nth(1)).toContainText(String(counts.publishedItemizedCountries));
   await expect(page.locator("#data-health-root")).toContainText("66");
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
-  await expect(page.locator("#accounting-boundaries")).toContainText("How deeply can we see into public accounts?");
+  await expect(page.locator("#accounting-boundaries")).toContainText("Accounting boundaries in each country");
   await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(191);
   await expect(page.locator("#surface-coverage-atlas [data-surface-country]")).toHaveCount(195);
   await expect(page.locator("#transparency-atlas .atlas-map")).toBeVisible();
@@ -323,15 +323,15 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   await expect(page.locator(".deep-card.available").nth(1)).toContainText("Health");
   await expect(page.locator(".deep-card.available").nth(2)).toContainText("State-owned enterprises");
   await expect(page.locator(".deep-card.available").nth(3)).toContainText("Capital cities");
-  await expect(page.locator(".deep-card.available").nth(4)).toContainText("Who actually funds the state?");
-  await expect(page.locator(".deep-card.available").nth(5)).toContainText("The Ageing Bill");
+  await expect(page.locator(".deep-card.available").nth(4)).toContainText("Where the state gets its money");
+  await expect(page.locator(".deep-card.available").nth(5)).toContainText("Population ageing");
   await expect(page.locator(".deep-card.available").nth(6)).toContainText("European migration");
   await expect(page.locator(".deep-card.available").nth(7)).toContainText("Economy in context");
   await expect(page.locator(".deep-card.available").last()).toContainText("Defense spending");
   await page.locator(".deep-dive-menu summary").click();
   await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(9);
   await page.goto("/deep-dives/capital-cities/?city=prague-cz&lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("h1")).toContainText("Capital Cities Under Pressure");
+  await expect(page.locator("h1")).toContainText("Capital-city budgets and visitor load");
   await expect(page.locator("#capital-pressure-city")).toHaveValue("prague-cz");
   await expect(page.locator(".capital-bubble-group")).toHaveCount(28);
   await expect(page.locator("#capital-city-readout")).toContainText("Prague");

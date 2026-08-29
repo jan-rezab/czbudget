@@ -33,7 +33,7 @@
 
   <main id="top">
     <section class="capital-consolidation-overview" aria-labelledby="consolidation-title">
-      <div><span class="kicker" data-i18n="consolidationKicker">00 / Rozsah měst</span><h2 id="consolidation-title" data-i18n="consolidationTitle">Konsolidace je vidět hned.</h2><p data-i18n="consolidationCopy">Barva rozlišuje konsolidovaný městský celek, město se statutem regionu a samostatnou obec bez podřízených rozpočtů.</p></div>
+      <div><span class="kicker" data-i18n="consolidationKicker">Rozsah měst</span><h2 id="consolidation-title" data-i18n="consolidationTitle">Tři typy městských rozpočtů</h2><p data-i18n="consolidationCopy">Barva rozlišuje konsolidovaný městský celek, město se statutem regionu a samostatnou obec bez podřízených rozpočtů.</p></div>
       <div class="consolidation-cards" id="consolidation-cards"></div>
     </section>
     <section class="capitals-hero">
@@ -57,10 +57,10 @@
 
     <section class="capitals-note" aria-label="Upozornění ke srovnání"><strong data-i18n="warningLabel">Plán není skutečnost.</strong><p data-i18n="warningCopy">Všechny fiskální částky v meziměstském atlasu jsou oficiální rozpočtové plány, nikoli skutečné plnění. Městské struktury a účetní definice se navíc liší.</p></section>
 
-    <section class="capital-stage-guide" aria-labelledby="capital-atlas-stage-title"><h2 id="capital-atlas-stage-title" data-i18n="stageTitle">Plán a skutečnost jsou oddělené.</h2><div><article class="plan"><span data-i18n="planBadge">ROZPOČTOVÝ PLÁN</span><strong data-i18n="stagePlanTitle">Oficiální rozpočtové plány</strong><p data-i18n="stagePlanCopy">Atlas používá plány pro srovnání zamýšlené kapacity. U každého města zobrazuje rok, stav a přesný rozsah.</p></article><article class="actual"><span data-i18n="actualBadge">SKUTEČNOST</span><strong data-i18n="stageActualTitle">Skutečné fiskální výsledky</strong><p data-i18n="stageActualCopy">Skutečné příjmy a výdaje zobrazujeme v samostatné historické vrstvě pouze tam, kde je k dispozici kompatibilní řada.</p></article></div></section>
+    <section class="capital-stage-guide" aria-labelledby="capital-atlas-stage-title"><h2 id="capital-atlas-stage-title" data-i18n="stageTitle">Plán a skutečnost vedeme odděleně</h2><div><article class="plan"><span data-i18n="planBadge">ROZPOČTOVÝ PLÁN</span><strong data-i18n="stagePlanTitle">Oficiální rozpočtové plány</strong><p data-i18n="stagePlanCopy">Atlas používá plány pro srovnání zamýšlené kapacity. U každého města zobrazuje rok, stav a přesný rozsah.</p></article><article class="actual"><span data-i18n="actualBadge">SKUTEČNOST</span><strong data-i18n="stageActualTitle">Skutečné fiskální výsledky</strong><p data-i18n="stageActualCopy">Skutečné příjmy a výdaje zobrazujeme v samostatné historické vrstvě pouze tam, kde je k dispozici kompatibilní řada.</p></article></div></section>
 
     <section class="capitals-atlas" id="atlas">
-      <div class="compact-title"><div><span class="kicker" data-i18n="atlasKicker">01 / Městský atlas</span><h2 data-i18n="atlasTitle">Plány odděleně od pozorovaného kontextu.</h2></div><p data-i18n="atlasCopy">Tabulka porovnává rozpočtové plány. Populace a turistika mají vlastní referenční roky; skutečné fiskální výsledky se zobrazují samostatně.</p></div>
+      <div class="compact-title"><div><span class="kicker" data-i18n="atlasKicker">Městský atlas</span><h2 data-i18n="atlasTitle">Rozpočtové plány vedle populace a turistiky</h2></div><p data-i18n="atlasCopy">Tabulka porovnává rozpočtové plány. Populace a turistika mají vlastní referenční roky; skutečné fiskální výsledky se zobrazují samostatně.</p></div>
       <div class="capital-controls">
         <label class="search-control"><span data-i18n="searchLabel">Hledat město nebo zemi</span><input id="capital-search" type="search" autocomplete="off" placeholder="Praha, France…" data-i18n-placeholder="searchPlaceholder"></label>
         <fieldset><legend data-i18n="currencyLabel">Zobrazená měna</legend><button type="button" class="active" data-currency="eur" data-i18n="currencyEur">EUR</button><button type="button" data-currency="local" data-i18n="currencyLocal">Místní měna</button></fieldset>
@@ -73,14 +73,14 @@
     </section>
 
     <section class="capital-spending-comparison" id="spending-comparison">
-      <div class="compact-title"><div><span class="kicker" data-i18n="spendingKicker">02 / Kam města utrácejí</span><h2 data-i18n="spendingTitle">Všechny dostupné dílčí rozpočty.</h2></div><p data-i18n="spendingCopy">Každý řádek zachovává původní kategorii, přesný rozpočtový rok a podíl na zveřejněném celku. Hlavičky tabulky řadí data; chybějící profily jsou přiznané.</p></div>
+      <div class="compact-title"><div><span class="kicker" data-i18n="spendingKicker">Kam města utrácejí</span><h2 data-i18n="spendingTitle">Dostupné dílčí rozpočty</h2></div><p data-i18n="spendingCopy">Každý řádek zachovává původní kategorii, přesný rozpočtový rok a podíl na zveřejněném celku. Hlavičky tabulky řadí data; chybějící profily jsou přiznané.</p></div>
       <div class="capital-table-wrap spending-table-wrap" tabindex="0" role="region" aria-label="Srovnání výdajových kategorií evropských hlavních měst"><table class="capital-table spending-comparison-table"><thead><tr><th data-i18n="thCity">Město</th><th data-i18n="spendingCategory">Kategorie výdajů</th><th data-i18n="spendingAmount">Částka</th><th data-i18n="spendingShare">Podíl</th><th data-i18n="spendingCoverage">Úplnost</th><th data-i18n="spendingYear">Rok</th></tr></thead><tbody id="capital-spending-body"></tbody></table></div>
     </section>
 
-    <section class="capital-detail-section" id="city-detail" aria-live="polite"><div class="detail-empty"><span class="kicker" data-i18n="detailKicker">02 / Detail města</span><h2 data-i18n="detailInitial">Vyberte město v tabulce.</h2></div></section>
+    <section class="capital-detail-section" id="city-detail" aria-live="polite"><div class="detail-empty"><span class="kicker" data-i18n="detailKicker">Detail města</span><h2 data-i18n="detailInitial">Vyberte město v tabulce.</h2></div></section>
 
     <section class="capitals-method" id="method">
-      <div class="compact-title"><div><span class="kicker" data-i18n="methodKicker">03 / Jak data číst</span><h2 data-i18n="methodTitle">Srovnání s přiznanými hranicemi.</h2></div><p data-i18n="methodCopy">Každá hodnota si nese rok, územní vymezení a primární zdroj. To umožní později stavět městské profily bez ztráty původního významu.</p></div>
+      <div class="compact-title"><div><span class="kicker" data-i18n="methodKicker">Jak data číst</span><h2 data-i18n="methodTitle">Srovnání a jeho hranice</h2></div><p data-i18n="methodCopy">Každá hodnota si nese rok, územní vymezení a primární zdroj. To umožní později stavět městské profily bez ztráty původního významu.</p></div>
       <div class="capital-method-grid">
         <article><b>01</b><h3 data-i18n="methodBudgetTitle">Rozpočtové plány</h3><p data-i18n="methodBudgetCopy">Nejširší oficiální plán výdajů dostupný k 20. srpnu 2026. Nejde o skutečné plnění; rok, stav a rozsah jsou v detailu města.</p></article>
         <article><b>02</b><h3 data-i18n="methodFxTitle">Přepočet měn</h3><p data-i18n="methodFxCopy">EUR hodnoty používají referenční kurzy ECB z 20. srpna 2026. Místní částka zůstává uložená beze změny.</p></article>

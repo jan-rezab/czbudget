@@ -4,8 +4,8 @@
 
   const COPY = {
     cs: {
-      kicker: "03 / Kam peníze jdou", title: "Rozpočet bez černé skříňky.",
-      copy: "Každá koruna má adresu. Dvě období ve stejném národním členění ukazují velikost položek i to, kde se rozpočet mění.",
+      kicker: "Kam peníze jdou", title: "Výdaje v národním členění",
+      copy: "Dvě období ve stejném národním členění ukazují velikost položek i to, kde se rozpočet mění.",
       distribution: "Výdaje podle oblasti", change: "Největší meziroční změny", scope: "Rozsah dat",
       previous: "Předchozí období", current: "Aktuální období", local: "místní měna", eur: "přepočet EUR",
       showAll: "Zobrazit všechny položky", showLess: "Zobrazit největší položky", source: "Primární zdroje",
@@ -14,8 +14,8 @@
       unavailable: "Detailní členění pro tuto zemi se nepodařilo načíst.", rows: "položek", fx: "Kurz pro orientační přepočet",
     },
     en: {
-      kicker: "03 / Where the money goes", title: "A budget without the black box.",
-      copy: "Every unit of currency has a destination. Two periods under the same national classification show both scale and where the budget is moving.",
+      kicker: "Where the money goes", title: "Spending in the national classification",
+      copy: "Two periods under the same national classification show both scale and where the budget is moving.",
       distribution: "Expenditure by area", change: "Largest period-on-period changes", scope: "Data perimeter",
       previous: "Previous period", current: "Current period", local: "local currency", eur: "EUR conversion",
       showAll: "Show every line", showLess: "Show largest lines", source: "Primary sources",
@@ -107,7 +107,7 @@
         </article>
       </div>`;
     ROOT.querySelector(".spending-expand")?.addEventListener("click", () => { expanded = !expanded; render(); });
-    document.querySelector('[data-i18n="specificKicker"]')?.replaceChildren(document.createTextNode(lang()==="en"?"04 / National specifics":"04 / Národní specifika"));
+    document.querySelector('[data-i18n="specificKicker"]')?.replaceChildren(document.createTextNode(lang()==="en"?"National specifics":"Národní specifika"));
     const hasHealth=["DEU","FRA","POL","GBR","USA","CHE","SWE","DNK"].includes(c.code);
     document.querySelector('[data-i18n="sourcesKicker"]')?.replaceChildren(document.createTextNode(lang()==="en"?`${hasHealth?"07":"05"} / Primary sources`:`${hasHealth?"07":"05"} / Primární zdroje`));
   }

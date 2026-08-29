@@ -36,8 +36,8 @@ test("map lenses, year and single-layer mode update the visual state", async ({ 
 
 test("map view switches all visible interface copy to Czech", async ({ page }) => {
   await page.goto("/map.html?lang=cs", { waitUntil: "networkidle" });
-  await expect(page.locator(".map-hero h1")).toHaveText("Co státy financují — a kde?");
+  await expect(page.locator(".map-hero h1")).toHaveText("Mapa veřejných výdajů");
   await expect(page.locator('[data-map-mode="duel"]')).toHaveText("Souboj");
   await expect(page.locator(".map-contract")).toContainText("Nejde o harmonizovanou COFOG statistiku");
-  await expect(page.locator("body")).not.toContainText("What gets funded — and where?");
+  await expect(page.locator("body")).not.toContainText("The public spending map");
 });

@@ -241,7 +241,20 @@
   const simpleHeadings = new Map([
     ["Dvacet let\nv jednom trendu.", "Rozpočty měst v letech 2006–2025"],
     ["Detail každého města.", "Profily měst"],
-    ["Auditovatelný profil.", "Zdroje a data"]
+    ["Auditovatelný profil.", "Zdroje a data"],
+    ["Auditovatelný detail.", "Zdroje a data"],
+    ["Rozpočet v čase.", "Rozpočet v čase"],
+    ["Plán a skutečnost.", "Plán a skutečnost"],
+    ["Odkud a kam.", "Struktura příjmů a výdajů"],
+    ["Peníze na účtech.", "Peníze na účtech"],
+    ["Pozice v kohortě.", "Pozice ve srovnatelné skupině"],
+    ["Prozkoumejte příjmy a výdaje.", "Příjmy a výdaje v detailu"],
+    ["Najděte libovolnou obec.", "Najděte obec"],
+    ["Obecní rozpočty v čase.", "Obecní rozpočty v čase"],
+    ["Kolik obce vydají na obyvatele.", "Výdaje obcí na obyvatele"],
+    ["Výsledek, stav účtů i počet obyvatel.", "Výsledek, stav účtů i počet obyvatel"],
+    ["Najděte a porovnejte.", "Vyhledávání a srovnání"],
+    ["Výsledek hospodaření a stav účtů.", "Výsledek hospodaření a stav účtů"]
   ]);
   document.querySelectorAll("h1,h2,h3").forEach((heading) => {
     const replacement = simpleHeadings.get(heading.textContent.trim());
@@ -302,7 +315,7 @@
     "Rozpočtový výsledek je po konsolidaci v celé řadě. Stav účtů 2006–2011 vychází z běžných účtů ve FIN 2-12M; od 2012 z širšího součtu účtů rozvahy. Rok 2012 je proto metodický zlom.": "The fiscal balance is consolidated throughout the series. Cash for 2006–2011 comes from current accounts in FIN 2-12 M and from a broader balance-sheet account total from 2012, creating a methodological break in 2012.",
     "Samostatná účetní jednotka obce; příspěvkové organizace nejsou přičítány. Výsledek je po konsolidaci uvnitř rozpočtu obce.": "A separate municipal reporting entity; subsidiary public organisations are not added. The balance is consolidated within the municipal budget.",
     "Zdroj: Monitor státní pokladny MF ČR · stav k 31. 12. 2025": "Source: Czech Ministry of Finance Treasury Monitor · as of 31 December 2025",
-    "Data a metodika": "Data and methodology", "Zdroje a data": "Sources and data", "Rozpočet": "Budget", "Strojová data": "Machine-readable data", "Historická data": "Historical data",
+    "Data a metodika": "Data and methodology", "Zdroje a data": "Sources and data", "Rozpočet v čase": "Budget over time", "Plán a skutečnost": "Budget and actuals", "Struktura příjmů a výdajů": "Revenue and expenditure structure", "Peníze na účtech": "Cash position", "Pozice ve srovnatelné skupině": "Position among peers", "Příjmy a výdaje v detailu": "Revenue and spending in detail", "Najděte obec": "Find a municipality", "Obecní rozpočty v čase": "Municipal budgets over time", "Výdaje obcí na obyvatele": "Municipal spending per resident", "Výsledek, stav účtů i počet obyvatel": "Balance, cash and population", "Vyhledávání a srovnání": "Search and compare", "Výsledek hospodaření a stav účtů": "Fiscal balance and cash", "Rozpočty měst": "City budgets", "v jednom součtu": "in one total", "a jejich rozpočty": "and their budgets", "Kdo za rozpočet odpovídá": "Who answers for the budget", "Institucionální vrstva": "Institutional layer", "Rozpočet": "Budget", "Strojová data": "Machine-readable data", "Historická data": "Historical data",
     "České územní rozpočty": "Czech local government budgets",
     // portal-ui.js rewrites a few source headings into descriptive ones before
     // this dictionary is consulted, and it is injected dynamically, so its

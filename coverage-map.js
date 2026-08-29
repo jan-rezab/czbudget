@@ -10,7 +10,7 @@
   const copy = {
     cs: {
       eyebrow: "Publikované na PSD · 15 sekcí",
-      title: "Co na webu skutečně zpřístupňujeme?",
+      title: "Co je na webu publikované",
       lead: "Vyberte sekci a uvidíte země, pro které má Public Spending Data publikovaný profil nebo datovou vrstvu. Mapa měří obsah na tomto webu, nikoli vše, co může existovat u původních poskytovatelů.",
       choose: "Zobrazená sekce", all: "Všechny publikované sekce", countryData: "Data země", municipal: "Obce a města", deepDive: "Hloubkové profily",
       countries: "zemí s publikovaným obsahem", sections: "sekcí webu", records: "kombinací země × sekce", deep: "zemí s 10+ sekcemi",
@@ -24,7 +24,7 @@
     },
     en: {
       eyebrow: "Published on PSD · 15 sections",
-      title: "What do we actually surface on the site?",
+      title: "What is published on this site",
       lead: "Choose a section to see the countries for which Public Spending Data publishes a profile or data layer. This map measures content on this site, not everything that may exist at original providers.",
       choose: "Section shown", all: "All published sections", countryData: "Country data", municipal: "Municipalities and cities", deepDive: "Deep dives",
       countries: "countries with published content", sections: "site sections", records: "country × section records", deep: "countries with 10+ sections",

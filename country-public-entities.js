@@ -11,7 +11,7 @@
   };
   const C = {
     cs: {
-      kicker:"05 / Veřejný sektor jako vlastník a provozovatel", title:"Veřejné subjekty bez slepých míst.",
+      kicker:"Veřejný sektor jako vlastník a provozovatel", title:"Registr veřejných subjektů",
       intro:"Úplný uložený registr, širší oficiální perimeter a ekonomická data jsou oddělené vrstvy. Země proto srovnáváme pouze tam, kde se definice skutečně potkávají.",
       universe:"Referenční veřejný sektor", stored:"Uložené řádky", finance:"Řádky s ekonomikou", sources:"Oficiální zdroje",
       comparison:"Srovnávací mapa pokrytí", comparisonNote:"Referenční počty a uložené seznamy mohou mít jiný perimeter. Řádky nesčítáme napříč zdroji.",
@@ -28,7 +28,7 @@
       downloadJson:"Stáhnout JSON", downloadCsv:"Stáhnout filtrované CSV", field:"Pole", rawValue:"Hodnota", loading:"Načítám úplný registr…", unavailable:"Není k dispozici", methodology:"Metodické pravidlo", crawl:"Crawl dokončen",
     },
     en: {
-      kicker:"05 / The public sector as owner and operator", title:"Public entities, without blind spots.",
+      kicker:"The public sector as owner and operator", title:"The public-entity register",
       intro:"The complete stored register, the broader official perimeter and economic data are separate layers. Countries are compared only where definitions genuinely align.",
       universe:"Reference public sector", stored:"Stored rows", finance:"Rows with economics", sources:"Official sources",
       comparison:"Coverage comparison map", comparisonNote:"Reference counts and stored lists can use different perimeters. Rows are never added across sources.",
