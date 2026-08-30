@@ -70,9 +70,14 @@ export const COUNTRIES = {
     years: [2024, 2025],
     sourceUrl: "https://apidatalake.tesouro.gov.br/docs/siconfi",
     methodology:
-      "Amounts are official SICONFI RREO filings. Enacted is the initial forecast, revised the updated " +
-      "forecast, and actual the year-to-date realisation. Brazil also publishes a bimester flow and a " +
-      "forecast-minus-realised residual; the residual is derivable rather than reported and is not stored.",
+      "Amounts are official SICONFI RREO filings. Brazil runs expenditure through three execution " +
+      "phases and reports all of them: committed (empenhada), actual (liquidada, the accrual measure " +
+      "comparable with other countries) and paid (paga, the cash measure). They describe the same money " +
+      "at different points, so do not add them together — pick the phase that answers your question. " +
+      "carried_over is restos a pagar, payables carried into the next year. Rows with period FY cover " +
+      "the whole year; period B6 is the sixth bimester alone, a slice of it, so those must not be summed " +
+      "with FY either. The published SALDO columns are forecast minus realised — derivable from the rows " +
+      "here rather than separately reported, so they are not stored.",
   },
 };
 
@@ -103,6 +108,7 @@ function sqlFor(scopes) {
   return `
     SELECT
       fiscal_year,
+      fiscal_period,
       budget_stage,
       budget_side,
       reporting_scope,
@@ -117,8 +123,10 @@ function sqlFor(scopes) {
       AND NOT is_consolidation_item
       AND NOT is_summary_row
       AND reporting_scope IN (${list})
-    GROUP BY 1, 2, 3, 4, 5, 6
-    ORDER BY fiscal_year, budget_side, code
+    -- fiscal_period must group, not collapse: a within-year slice (a bimester) and the
+    -- full year are different facts about the same code, and adding them double-counts.
+    GROUP BY 1, 2, 3, 4, 5, 6, 7
+    ORDER BY fiscal_year, fiscal_period, budget_side, code
   `;
 }
 
@@ -166,6 +174,8 @@ export class MunicipalLinesStore {
       const labels = country.label ? country.label(dimension, row.code) : null;
       const item = {
         year: Number(row.fiscal_year),
+        // "FY" is the whole year; anything else is a slice of it (Brazil files bimesters).
+        period: row.fiscal_period || "FY",
         stage: row.budget_stage,
         side: row.budget_side,
         reporting_scope: row.reporting_scope,

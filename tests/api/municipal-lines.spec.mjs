@@ -159,3 +159,38 @@ test("French commune codes keep their Corsican form", async () => {
   await assert.doesNotReject(() => store.profile("FRA", "2A004"));
   await assert.rejects(() => store.profile("FRA", "5218300"), (e) => e.code === "invalid_municipality_code");
 });
+
+test("a within-year slice never collapses into the full-year figure", async () => {
+  const capture = {};
+  const store = new MunicipalLinesStore({
+    tokenProvider: async () => "test-token",
+    fetchImpl: async (_url, options) => {
+      capture.body = JSON.parse(options.body);
+      return new Response(JSON.stringify({
+        jobComplete: true,
+        schema: {
+          fields: ["fiscal_year", "fiscal_period", "budget_stage", "budget_side", "reporting_scope",
+            "code", "column_label", "amount_local", "source_ids"].map((name) => ({ name })),
+        },
+        rows: [
+          { f: ["2025", "FY", "actual", "revenue", "standalone_municipality", "X", "Até o Bimestre (c)", "1000", "br"].map((v) => ({ v })) },
+          { f: ["2025", "B6", "actual", "revenue", "standalone_municipality", "X", "No Bimestre (b)", "200", "br"].map((v) => ({ v })) },
+        ],
+      }), { status: 200, headers: { "content-type": "application/json" } });
+    },
+  });
+
+  const result = await store.profile("BRA", "5218300");
+  // Same year, same stage, same code — but one is the year and one is a bimester inside it.
+  // They must arrive as two facts, or a caller summing them reports 1200 for a year of 1000.
+  assert.equal(result.lines.length, 2);
+  assert.deepEqual(result.lines.map((line) => line.period).sort(), ["B6", "FY"]);
+  assert.match(capture.body.query, /GROUP BY 1, 2, 3, 4, 5, 6, 7/);
+  assert.match(capture.body.query, /fiscal_period/);
+});
+
+test("Brazil's execution phases are distinct stages, not one blurred actual", async () => {
+  const brazil = COUNTRIES.BRA;
+  assert.match(brazil.methodology, /do not add them together/i,
+    "the contract must warn that committed, actual and paid describe the same money");
+});

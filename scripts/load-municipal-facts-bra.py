@@ -37,23 +37,39 @@ SOURCE_ID = "br-siconfi-rreo-2025"
 REPORTING_SCOPE = "standalone_municipality"
 COVERAGE_TYPE = "census"
 
-# Stages that map one-to-one onto the warehouse vocabulary (actual, revised, enacted,
-# proposal). Brazil also emits `execution` and `cash`, which do not — see DEFERRED below.
+# Brazil records expenditure through three official execution phases — empenhada
+# (committed), liquidada (accrued) and paga (paid) — where the warehouse vocabulary stopped
+# at proposal / enacted / revised / actual. These are lifecycle phases, not a different kind
+# of thing, so the vocabulary is extended rather than an existing value distorted:
+#
+#   proposal -> enacted -> revised -> committed -> actual (accrued) -> paid
+#
+# `actual` stays the accrual measure, because that is what is comparable with the other
+# countries already loaded. A caller wanting the cash view asks for `paid`.
 STAGE_MAP = {"enacted": "enacted", "revised": "revised", "actual": "actual"}
 
-DEFERRED = {
-    "execution": (
-        "Conflates two different things under one label: `No Bimestre (b)` is a period flow "
-        "that belongs in `actual` with the bimester carried in fiscal_period, while "
-        "`SALDO (a-c)` is a derived residual (forecast minus realised) that should not be a "
-        "stored fact at all — it is reconstructable, and storing it would break a "
-        "parts-sum-to-total invariant. Needs a period-flow decision before loading."
-    ),
-    "cash": (
-        "No matching scope in the warehouse vocabulary. Needs a reporting_scope decision "
-        "before loading."
-    ),
-}
+# Rows whose stage is decided by the source's own column heading rather than its stage label.
+# Brazil files several distinct measures under the single label `execution`.
+COLUMN_RULES = (
+    # (matcher, budget_stage, fiscal_period)
+    ("DESPESAS EMPENHADAS NO BIMESTRE", "committed", "B6"),
+    ("DESPESAS EMPENHADAS", "committed", "FY"),
+    ("Despesas Empenhadas", "committed", "FY"),
+    ("DESPESAS PAGAS", "paid", "FY"),
+    ("Despesas Pagas", "paid", "FY"),
+    ("RESTOS A PAGAR", "carried_over", "FY"),
+    ("Restos a Pagar", "carried_over", "FY"),
+    # A revenue flow realised within the bimester. It belongs to the accrual measure, but it
+    # is a slice of the year rather than the year, so the period keeps it from summing with
+    # the full-year row.
+    ("No Bimestre (b)", "actual", "B6"),
+)
+
+# Derived values, not reported facts. SALDO is forecast minus realised — reconstructable
+# from rows already stored, and storing it would break "parts sum to their published total".
+DERIVED_PREFIXES = ("SALDO",)
+
+DEFERRED = {}
 
 SUMMARY_PREFIX = re.compile(r"^(Total|Subtotal)", re.IGNORECASE)
 ROMAN_MARKER = re.compile(r"\((?:I{1,3}|IV|V|VI{0,3}|IX|X{1,3}|XI{0,3}|XIV)\)")
@@ -104,9 +120,26 @@ def main() -> None:
         for row in entity.get("detail", []):
             source_stage = row.get("stage")
             stages[source_stage] += 1
+            column = str(row.get("column") or "")
+
+            if column.strip().upper().startswith(DERIVED_PREFIXES):
+                skipped["derived_residual (SALDO)"] += 1
+                continue
+
             stage = STAGE_MAP.get(source_stage)
+            period = "FY"
             if stage is None:
-                skipped[source_stage] += 1
+                for matcher, mapped_stage, mapped_period in COLUMN_RULES:
+                    if matcher in column:
+                        stage, period = mapped_stage, mapped_period
+                        break
+            elif source_stage == "actual":
+                for matcher, mapped_stage, mapped_period in COLUMN_RULES:
+                    if matcher in column and mapped_stage == "actual":
+                        period = mapped_period
+                        break
+            if stage is None:
+                skipped[f"unmapped: {source_stage} / {column[:32]}"] += 1
                 continue
             amount = row.get("amount")
             if amount is None:
@@ -120,7 +153,7 @@ def main() -> None:
             fact = {
                 "public_entity_id": entity_id,
                 "fiscal_year": int(row["year"]),
-                "fiscal_period": "FY",
+                "fiscal_period": period,
                 "reporting_scope": REPORTING_SCOPE,
                 "budget_stage": stage,
                 "budget_side": row.get("side"),
@@ -150,16 +183,16 @@ def main() -> None:
     print(f"source:   {SOURCE.relative_to(WORKSPACE)}")
     print(f"entities: {len(entities):,}")
     print(f"rows:     {total:,}\n")
-    print("stage mapping:")
+    print("source stage labels (Brazil files several measures under `execution`):")
     for stage, count in stages.most_common():
-        target = STAGE_MAP.get(stage)
-        verdict = f"-> {target}" if target else "DEFERRED"
-        print(f"  {str(stage):<12} {count:>10,}  {verdict}")
+        print(f"  {str(stage):<12} {count:>10,}")
     print(f"\nloaded:   {loaded:,} rows across {len(entities_loaded):,} entities")
-    print(f"deferred: {sum(skipped.values()):,} rows")
-    for stage, reason in DEFERRED.items():
-        if skipped.get(stage):
-            print(f"\n  {stage} ({skipped[stage]:,} rows)\n    {reason}")
+    print("by stage:")
+    for stage, count in total_by_stage.most_common():
+        print(f"  {stage:<14} {count:>10,}")
+    print(f"\nnot loaded: {sum(skipped.values()):,} rows")
+    for reason, count in skipped.most_common(8):
+        print(f"  {reason:<52} {count:>9,}")
     if args.write:
         print(f"\nWrote {args.write}")
 
