@@ -28,6 +28,15 @@ Reproducibility contract:
 the BigQuery schema/load definitions, `config/` contains reviewed source and
 fiscal-scope registries, and `docs/` contains methodology notes.
 
+The UN Comtrade layer is a resumable freshness-aware crawl rather than a static
+one-year download. Its source contract is
+`config/un_comtrade_source.v1.json`, queue worker is
+`transforms/crawl_un_comtrade.py`, bundle exporter is
+`transforms/prepare_un_comtrade_warehouse.py`, and its partitioned BigQuery
+schema and incremental loader are in `warehouse/un_comtrade_schema.sql` and
+`warehouse/load_un_comtrade.sh`. Detailed usage and grains are documented in
+`data/trade/README.md`.
+
 The six-country municipal expansion is documented in
 `docs/README_international_municipal.md`. Its source registry is
 `config/international_municipal_sources.json`.

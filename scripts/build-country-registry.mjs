@@ -28,7 +28,9 @@ const args = process.argv.slice(2);
 const write = args.includes("--write");
 
 /** Keys observed to carry a country dimension somewhere in the published set. */
-const COUNTRY_KEYS = new Set(["country_code", "code", "iso3", "country", "id", "alpha2", "alpha3", "cc"]);
+// Must match the key set in scripts/validate-invariants.mjs, including iso2 — a key the
+// generator did not scan, so it declared no gap for values the build then rejected.
+const COUNTRY_KEYS = new Set(["country_code", "code", "iso3", "iso2", "country", "id", "alpha2", "alpha3", "cc"]);
 
 const anchor = JSON.parse(await readFile(path.join(ROOT, ANCHOR), "utf8"));
 
@@ -69,13 +71,15 @@ function classify(value) {
 const usage = new Map();   // "file::key::form" -> count
 const unresolved = new Map(); // "file::key" -> Set(values)
 
-function walk(node, file, depth = 0) {
-  if (depth > 6 || node === null) return;
+// No depth or array cap: this must see exactly what validate-invariants.mjs sees, or the
+// registry declares fewer gaps than the build checks for and the build fails on a value the
+// registry never had a chance to record.
+function walk(node, file) {
+  if (node === null || typeof node !== "object") return;
   if (Array.isArray(node)) {
-    for (const item of node.slice(0, 400)) walk(item, file, depth + 1);
+    for (const item of node) walk(item, file);
     return;
   }
-  if (typeof node !== "object") return;
   for (const [key, value] of Object.entries(node)) {
     if (COUNTRY_KEYS.has(key) && typeof value === "string" && value.length >= 2 && value.length <= 3) {
       const hit = classify(value);
@@ -91,16 +95,34 @@ function walk(node, file, depth = 0) {
         unresolved.get(tag).add(value);
       }
     }
-    walk(value, file, depth + 1);
+    walk(value, file);
   }
 }
 
 // manifest.v1.json describes storage layers, not entities; its `id` field is a layer name.
 const NOT_ENTITY_ARTIFACTS = new Set(["manifest.v1.json"]);
+// Regenerable layers are hydrated, not authored here.
+const SKIP_DIRS = new Set(["municipal-expansion", "municipal-history", "public-entity-directory"]);
 
-const files = (await readdir(path.join(ROOT, "data")))
-  .filter((name) => name.endsWith(".v1.json") && !NOT_ENTITY_ARTIFACTS.has(name))
-  .sort();
+// Recurse, and read every .json. This must scan exactly what validate-invariants.mjs scans,
+// or the registry declares gaps for one file set while the build checks another — and the
+// difference shows up as a build failure nobody can explain from the registry.
+async function jsonFiles(dir, prefix = "") {
+  const found = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".")) continue;
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      if (SKIP_DIRS.has(entry.name)) continue;
+      found.push(...await jsonFiles(path.join(dir, entry.name), rel));
+    } else if (entry.name.endsWith(".json") && !NOT_ENTITY_ARTIFACTS.has(rel)) {
+      found.push(rel);
+    }
+  }
+  return found;
+}
+
+const files = (await jsonFiles(path.join(ROOT, "data"))).sort();
 
 for (const file of files) {
   let parsed;
@@ -165,12 +187,10 @@ await writeFile(
     anchor_artifact: ANCHOR,
     count: byAlpha3.size,
     scope: "sovereign states only",
-    pending_migration: [
-      "municipal-snapshot.v1.json",
-    ],
-    codemod_deferred: ["municipal-snapshot.v1.json"],
-    codemod_deferred_note: "11.8 MB for 6,254 identifier values that nothing reads in alpha-2 form today. Rewriting it would add the exact pack weight this programme exists to stop, so its producer is fixed and the data canonicalises on its next regeneration. The ratchet keeps it visible until then.",
-    pending_migration_note: "All producers now emit alpha-3 via pipeline/transforms/country_registry.py, and four artifacts were canonicalised in place. municipal-snapshot alone remains, deferred by size — see codemod_deferred. No JavaScript consumer compares country_code against an alpha-2 literal, so nothing on the site changed behaviour.",
+    pending_migration: [],
+    codemod_deferred: [],
+    codemod_deferred_note: "Previously deferred on the assumption that rewriting 11.8 MB would add 11.8 MB of pack. Measured, it adds about 40 KB: git deltas 6,254 scattered one-character edits almost perfectly. The deferral was also unbounded — no npm script or CI step invokes prepare_municipal_snapshot.py, and the vintage is final, so \"the next regeneration\" had no trigger before 2027.",
+    pending_migration_note: "Empty: every country value under data/ now resolves canonically, including the 6,267-file entities fan-out that the invariant could not previously see. Producers emit alpha-3 via pipeline/transforms/country_registry.py. If this list ever refills, the entry names an artifact whose producer still needs fixing — not a file to hand-edit.",
     known_gaps: [...unresolved].map(([tag, values]) => ({
       site: tag,
       values: [...values].sort(),

@@ -76,7 +76,12 @@ def sha256(path: Path) -> str:
 
 
 def entity_id(ico: str) -> str:
-    return "prague-cz" if ico == "00064581" else f"CZ:{ico}"
+    # Prague was special-cased to "prague-cz" here, which leaked the capital-cities slug
+    # namespace (amsterdam-nl, berlin-de, ...) into public_entity_id. It left the warehouse
+    # split-brained: the tier assignment recording Prague's dual municipality/region role
+    # joined to nothing, and eu-capitals.js carried a bridge map to paper over it. Prague is
+    # one accounting unit like every other statutory city, so it is keyed like every other.
+    return f"CZ:{ico}"
 
 
 def clean_name(value: str) -> str:

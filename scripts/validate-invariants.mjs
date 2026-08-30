@@ -138,10 +138,14 @@ if (registry) {
   ]);
   const offenders = new Map();
 
-  const inspect = (node, file, depth = 0) => {
-    if (depth > 6 || node === null) return;
+  // No depth cap and no array cap. This began as a sampler — depth > 6 and slice(0, 400) —
+  // which made "56 of 57 artifacts canonical" a claim about the first 400 entries of shallow
+  // top-level files, not about the data. A check that silently stops looking is worse than
+  // no check, because it reports success.
+  const inspect = (node, file) => {
+    if (node === null || typeof node !== "object") return;
     if (Array.isArray(node)) {
-      for (const item of node.slice(0, 400)) inspect(item, file, depth + 1);
+      for (const item of node) inspect(item, file);
       return;
     }
     if (typeof node !== "object") return;
@@ -153,13 +157,32 @@ if (registry) {
           offenders.get(file).add(`${key}="${value}"`);
         }
       }
-      inspect(value, file, depth + 1);
+      inspect(value, file);
     }
   };
 
-  const artifacts = (await readdir(path.join(ROOT, "data")))
-    .filter((name) => name.endsWith(".v1.json") && name !== "manifest.v1.json")
-    .sort();
+  // Recursive, and every .json — not just top-level *.v1.json. The old filter meant
+  // data/entities/*.json (6,267 files, all carrying the same alpha-2 code) and the two
+  // cz-*-2024.json files were invisible to a rule that claimed to cover the data directory.
+  // The regenerable layers are skipped because they are hydrated, not authored here.
+  const SKIP_DIRS = new Set(["municipal-expansion", "municipal-history", "public-entity-directory"]);
+
+  async function jsonFiles(dir, prefix = "") {
+    const found = [];
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      if (entry.name.startsWith(".")) continue;
+      const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        if (SKIP_DIRS.has(entry.name)) continue;
+        found.push(...await jsonFiles(path.join(dir, entry.name), rel));
+      } else if (entry.name.endsWith(".json") && rel !== "manifest.v1.json") {
+        found.push(rel);
+      }
+    }
+    return found;
+  }
+
+  const artifacts = (await jsonFiles(path.join(ROOT, "data"))).sort();
 
   for (const artifact of artifacts) {
     let parsed;

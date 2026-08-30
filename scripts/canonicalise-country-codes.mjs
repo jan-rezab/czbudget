@@ -34,8 +34,23 @@ for (const country of registry.countries) {
 // Files whose producer is fixed but whose data waits for a natural regeneration, because
 // rewriting them costs more pack weight than the canonicalisation currently buys.
 const deferred = new Set(registry.codemod_deferred || []);
-const targets = (registry.pending_migration || []).filter((f) => !deferred.has(f));
+const declared = (registry.pending_migration || []).filter((f) => !deferred.has(f));
 for (const file of deferred) console.log(`  ${file.padEnd(42)} deferred to next regeneration`);
+
+// A directory named in the registry expands to every .json inside it. data/entities is a
+// verbatim per-entity fan-out of municipal-snapshot, so the two must move together or the
+// fan-out silently disagrees with its own source.
+const { readdir } = await import("node:fs/promises");
+const targets = [];
+for (const entry of declared) {
+  if (entry.endsWith("/")) {
+    const dir = entry.replace(/\/$/, "");
+    const names = await readdir(path.join(ROOT, "data", dir));
+    targets.push(...names.filter((n) => n.endsWith(".json")).map((n) => `${dir}/${n}`));
+  } else {
+    targets.push(entry);
+  }
+}
 let filesChanged = 0;
 let valuesChanged = 0;
 

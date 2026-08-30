@@ -282,7 +282,7 @@ GROUP BY
 -- line detail share public_entity_id and lineage, but remain separate fact grains.
 
 CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.public_entities` (
-  public_entity_id STRING NOT NULL OPTIONS(description = 'Stable cross-source key, for example prague-cz or CZ:00253537'),
+  public_entity_id STRING NOT NULL OPTIONS(description = 'Stable cross-source key, always <ISO alpha-2>:<national id>, for example CZ:00253537. Never a display slug: prague-cz once leaked in from the capital-cities namespace and left the warehouse split-brained.'),
   entity_name STRING NOT NULL,
   entity_type STRING NOT NULL OPTIONS(description = 'municipality, capital_city_authority, city_state or metropolitan_authority'),
   country_code_alpha2 STRING NOT NULL,

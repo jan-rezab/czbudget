@@ -30,3 +30,61 @@ python3 scripts/import_un_comtrade_annual.py --year 2024 --max-calls 100
 Set `UN_COMTRADE_API_KEY` to use an authenticated free or premium subscription.
 Without it, the importer uses the anonymous preview endpoint; HS2 × one flow ×
 one reporter stays below its 500-record response ceiling.
+
+## Detailed warehouse crawl
+
+The HS2 file is only a seed. The detailed pipeline uses live UN Comtrade data
+availability and queues only released 2025 annual datasets plus the latest six
+complete monthly periods:
+
+```bash
+npm run trade:crawl:init
+npm run trade:crawl:status
+UN_COMTRADE_API_KEY=... npm run trade:crawl -- --max-calls 25
+npm run trade:prepare-warehouse
+npm run trade:load-bigquery
+```
+
+The queue is SQLite-backed at
+`../data/sources/trade/crawler/crawl.sqlite3`. Every successful response is
+written as a gzip-compressed immutable raw slice. Work is ordered by profile,
+nominal GDP and partner batch. The crawler checkpoints after each request,
+keeps a UTC daily call counter, retries transient failures, and subdivides any
+response that reaches the API record ceiling. A capped response is never marked
+complete.
+
+Current detailed profiles are:
+
+- annual HS6 merchandise by reporter, bilateral partner and flow;
+- monthly HS6 merchandise for the latest six complete months where released;
+- annual EBOPS services by reporter, bilateral partner and flow;
+- monthly EBOPS services where Comtrade publishes a current dataset.
+
+Without an API key, `--allow-preview` enables a deliberately slow fallback. It
+splits a capped one-partner HS6 request into exact 20-product slices. An API key
+is strongly preferred; premium bulk access can later replace the request
+transport without changing the warehouse schema or natural keys.
+
+## BigQuery
+
+The deployed dataset is `czbudget-janrezab.budget_detail`. Definitions live in
+`pipeline/warehouse/un_comtrade_schema.sql`, and the idempotent loader uses
+partition-pruned, source-deduplicated MERGEs from
+`pipeline/warehouse/merge_un_comtrade.sql`.
+
+Tables:
+
+- `trade_areas`
+- `trade_products`
+- `trade_observations` — partitioned by `period_start`, clustered by reporter,
+  partner, classification and product
+- `trade_dataset_coverage` — availability and crawl completeness, separate from
+  zero-valued trade
+- `trade_ingestion_runs`
+
+Views:
+
+- `latest_trade_dataset_coverage`
+- `trade_goods_bilateral_hs6`
+- `trade_goods_country_totals`
+- `trade_services_bilateral_leaf`

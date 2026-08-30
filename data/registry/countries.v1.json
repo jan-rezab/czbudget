@@ -6,15 +6,127 @@
   "anchor_artifact": "data/sovereign-benchmark-slim.v1.json",
   "count": 195,
   "scope": "sovereign states only",
-  "pending_migration": [
-    "municipal-snapshot.v1.json"
-  ],
-  "codemod_deferred": [
-    "municipal-snapshot.v1.json"
-  ],
-  "codemod_deferred_note": "11.8 MB for 6,254 identifier values that nothing reads in alpha-2 form today. Rewriting it would add the exact pack weight this programme exists to stop, so its producer is fixed and the data canonicalises on its next regeneration. The ratchet keeps it visible until then.",
-  "pending_migration_note": "All producers now emit alpha-3 via pipeline/transforms/country_registry.py, and four artifacts were canonicalised in place. municipal-snapshot alone remains, deferred by size — see codemod_deferred. No JavaScript consumer compares country_code against an alpha-2 literal, so nothing on the site changed behaviour.",
+  "pending_migration": [],
+  "codemod_deferred": [],
+  "codemod_deferred_note": "Previously deferred on the assumption that rewriting 11.8 MB would add 11.8 MB of pack. Measured, it adds about 40 KB: git deltas 6,254 scattered one-character edits almost perfectly. The deferral was also unbounded — no npm script or CI step invokes prepare_municipal_snapshot.py, and the vintage is final, so \"the next regeneration\" had no trigger before 2027.",
+  "pending_migration_note": "Empty: every country value under data/ now resolves canonically, including the 6,267-file entities fan-out that the invariant could not previously see. Producers emit alpha-3 via pipeline/transforms/country_registry.py. If this list ever refills, the entry names an artifact whose producer still needs fixing — not a file to hand-edit.",
   "known_gaps": [
+    {
+      "site": "economy/economic-coverage.v1.json::country_code",
+      "values": [
+        "ABW",
+        "ASM",
+        "BMU",
+        "CHI",
+        "CUW",
+        "CYM",
+        "FRO",
+        "GIB",
+        "GRL",
+        "GUM",
+        "HKG",
+        "IMN",
+        "MAC",
+        "MAF",
+        "MNP",
+        "NCL",
+        "PRI",
+        "PYF",
+        "SXM",
+        "TCA",
+        "VGB",
+        "VIR",
+        "XKX"
+      ],
+      "note": "Country-shaped codes the sovereign anchor does not cover. world-map carries non-sovereign territories (and two codes that are not ISO 3166-1 at all, `go` and `ju`); geometry keeps its own identity space and references this registry where a territory has a sovereign parent. No parent is guessed here."
+    },
+    {
+      "site": "economy/economic-indicators.v1.json::code",
+      "values": [
+        "ABW",
+        "ASM",
+        "BMU",
+        "CHI",
+        "CUW",
+        "CYM",
+        "FRO",
+        "GIB",
+        "GRL",
+        "GUM",
+        "HKG",
+        "IMN",
+        "MAC",
+        "MAF",
+        "MNP",
+        "NCL",
+        "PRI",
+        "PYF",
+        "SXM",
+        "TCA",
+        "VGB",
+        "VIR",
+        "XKX"
+      ],
+      "note": "Country-shaped codes the sovereign anchor does not cover. world-map carries non-sovereign territories (and two codes that are not ISO 3166-1 at all, `go` and `ju`); geometry keeps its own identity space and references this registry where a territory has a sovereign parent. No parent is guessed here."
+    },
+    {
+      "site": "economy/economic-indicators.v1.json::iso2",
+      "values": [
+        "AS",
+        "AW",
+        "BM",
+        "CW",
+        "FO",
+        "GI",
+        "GL",
+        "GU",
+        "HK",
+        "IM",
+        "JG",
+        "KY",
+        "MF",
+        "MO",
+        "MP",
+        "NC",
+        "PF",
+        "PR",
+        "SX",
+        "TC",
+        "VG",
+        "VI",
+        "XK"
+      ],
+      "note": "Country-shaped codes the sovereign anchor does not cover. world-map carries non-sovereign territories (and two codes that are not ISO 3166-1 at all, `go` and `ju`); geometry keeps its own identity space and references this registry where a territory has a sovereign parent. No parent is guessed here."
+    },
+    {
+      "site": "economy/economy-deep-dive.v1.json::country_code",
+      "values": [
+        "ABW",
+        "ASM",
+        "BMU",
+        "CHI",
+        "CUW",
+        "CYM",
+        "FRO",
+        "GIB",
+        "GRL",
+        "GUM",
+        "HKG",
+        "IMN",
+        "MAC",
+        "MAF",
+        "MNP",
+        "NCL",
+        "PRI",
+        "PYF",
+        "SXM",
+        "TCA",
+        "VGB",
+        "VIR",
+        "XKX"
+      ],
+      "note": "Country-shaped codes the sovereign anchor does not cover. world-map carries non-sovereign territories (and two codes that are not ISO 3166-1 at all, `go` and `ju`); geometry keeps its own identity space and references this registry where a territory has a sovereign parent. No parent is guessed here."
+    },
     {
       "site": "health-system-assignments.v1.json::id",
       "values": [
@@ -100,8 +212,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 74,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -119,8 +232,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -138,8 +252,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -157,8 +272,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 70,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -176,8 +292,9 @@
       },
       "currency": "AED",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -195,8 +312,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 13,
-        "alpha2_lower": 1
+        "alpha3": 135,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -214,8 +332,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -233,8 +352,9 @@
       },
       "currency": "XCD",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 82,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -252,8 +372,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 14,
-        "alpha2_lower": 1
+        "alpha3": 232,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -271,8 +392,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 19,
-        "alpha2_lower": 1
+        "alpha3": 221,
+        "alpha2_lower": 5,
+        "alpha2": 4
       }
     },
     {
@@ -290,8 +412,9 @@
       },
       "currency": "AZN",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -309,8 +432,9 @@
       },
       "currency": "BIF",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 94,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -328,8 +452,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2_lower": 1
+        "alpha3": 229,
+        "alpha2_lower": 5,
+        "alpha2": 4
       }
     },
     {
@@ -347,8 +472,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -366,8 +492,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -385,8 +512,9 @@
       },
       "currency": "BDT",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 80,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -404,8 +532,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 15,
-        "alpha2_lower": 1
+        "alpha3": 114,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -423,8 +552,9 @@
       },
       "currency": "BHD",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -442,8 +572,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 90,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -461,8 +592,9 @@
       },
       "currency": "BAM",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 108,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -480,8 +612,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -499,8 +632,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -518,9 +652,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 361,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 807,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -538,9 +672,9 @@
       },
       "currency": "BRL",
       "observed_as": {
-        "alpha3": 86,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 11402,
+        "alpha2": 9,
+        "alpha2_lower": 5
       }
     },
     {
@@ -558,8 +692,9 @@
       },
       "currency": "BBD",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 76,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -577,8 +712,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -596,8 +732,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 82,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -615,8 +752,9 @@
       },
       "currency": "BWP",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 92,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -634,8 +772,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -653,8 +792,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 13,
-        "alpha2_lower": 1
+        "alpha3": 236,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -672,9 +812,9 @@
       },
       "currency": "CHF",
       "observed_as": {
-        "alpha3": 50,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 292,
+        "alpha2": 9,
+        "alpha2_lower": 5
       }
     },
     {
@@ -692,9 +832,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 917,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -712,8 +852,9 @@
       },
       "currency": "CNY",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 187,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -731,8 +872,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -750,8 +892,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -769,8 +912,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -788,8 +932,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -807,9 +952,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 2437,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -827,8 +972,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 98,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -846,8 +992,9 @@
       },
       "currency": "CVE",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -865,9 +1012,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 393,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -885,8 +1032,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 67,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -904,8 +1052,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 15,
-        "alpha2_lower": 1
+        "alpha3": 116,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -923,9 +1072,9 @@
       },
       "currency": "CZK",
       "observed_as": {
-        "alpha3": 122,
-        "alpha2": 401,
-        "alpha2_lower": 1
+        "alpha3": 25505,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -943,9 +1092,9 @@
       },
       "currency": "EUR",
       "observed_as": {
-        "alpha3": 49,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 21818,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -963,8 +1112,9 @@
       },
       "currency": "DJF",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -982,8 +1132,9 @@
       },
       "currency": "XCD",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 66,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1001,9 +1152,9 @@
       },
       "currency": "DKK",
       "observed_as": {
-        "alpha3": 52,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 506,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1021,8 +1172,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 109,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -1040,8 +1192,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 108,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1059,8 +1212,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 109,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -1078,8 +1232,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 82,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1097,8 +1252,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 94,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1116,9 +1272,9 @@
       },
       "currency": "EUR",
       "observed_as": {
-        "alpha3": 34,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 12684,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1136,8 +1292,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 217,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -1155,8 +1312,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 82,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1174,9 +1332,9 @@
       },
       "currency": "EUR",
       "observed_as": {
-        "alpha3": 34,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 1520,
+        "alpha2": 11,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1194,8 +1352,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 94,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1213,9 +1372,9 @@
       },
       "currency": "EUR",
       "observed_as": {
-        "alpha3": 56,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 70161,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1233,8 +1392,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 68,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1252,8 +1412,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1271,9 +1432,9 @@
       },
       "currency": "GBP",
       "observed_as": {
-        "alpha3": 48,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 950,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1291,9 +1452,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 20,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 261,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1311,8 +1472,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1330,8 +1492,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 98,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1349,8 +1512,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1368,8 +1532,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1387,8 +1552,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1406,8 +1572,9 @@
       },
       "currency": "EUR",
       "observed_as": {
-        "alpha3": 34,
-        "alpha2_lower": 1
+        "alpha3": 269,
+        "alpha2_lower": 4,
+        "alpha2": 5
       }
     },
     {
@@ -1425,8 +1592,9 @@
       },
       "currency": "XCD",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 82,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1444,9 +1612,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 797,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1464,8 +1632,9 @@
       },
       "currency": "GYD",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1483,8 +1652,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 14,
-        "alpha2_lower": 1
+        "alpha3": 107,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -1502,8 +1672,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 15,
-        "alpha2_lower": 1
+        "alpha3": 174,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -1521,8 +1692,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 79,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -1540,8 +1712,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 237,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -1559,8 +1732,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 206,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1578,8 +1752,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 14,
-        "alpha2_lower": 1
+        "alpha3": 181,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -1597,8 +1772,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 221,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -1616,8 +1792,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 82,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1635,8 +1812,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1654,8 +1832,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 211,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1673,8 +1852,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 232,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1692,9 +1872,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 23,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 16034,
+        "alpha2": 9,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1712,8 +1892,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 78,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1731,8 +1912,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 108,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1750,9 +1932,9 @@
       },
       "currency": "JPY",
       "observed_as": {
-        "alpha3": 29,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 3768,
+        "alpha2": 9,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1770,8 +1952,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 108,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1789,8 +1972,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1808,8 +1992,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1827,8 +2012,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1846,8 +2032,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 90,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1865,8 +2052,9 @@
       },
       "currency": "XCD",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 76,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1884,9 +2072,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 735,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -1904,8 +2092,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1923,8 +2112,9 @@
       },
       "currency": "LAK",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1942,8 +2132,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1961,8 +2152,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 82,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1980,8 +2172,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 94,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -1999,8 +2192,9 @@
       },
       "currency": "XCD",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 78,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2018,8 +2212,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 68,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2037,8 +2232,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2056,8 +2252,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 84,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2075,8 +2272,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 217,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -2094,8 +2292,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 223,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -2113,8 +2312,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 219,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -2132,8 +2332,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 116,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2151,8 +2352,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 42,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2170,8 +2372,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2189,8 +2392,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2208,8 +2412,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2227,9 +2432,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 4999,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -2247,8 +2452,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 66,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2266,8 +2472,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 112,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2285,8 +2492,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2304,8 +2512,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 15,
-        "alpha2_lower": 1
+        "alpha3": 114,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -2323,8 +2532,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 64,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2342,8 +2552,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2361,8 +2572,9 @@
       },
       "currency": "MNT",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2380,8 +2592,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2399,8 +2612,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2418,8 +2632,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2437,8 +2652,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2456,8 +2672,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 118,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2475,8 +2692,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2494,8 +2712,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2513,8 +2732,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 96,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2532,8 +2752,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 107,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -2551,9 +2772,9 @@
       },
       "currency": "EUR",
       "observed_as": {
-        "alpha3": 36,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 1657,
+        "alpha2": 11,
+        "alpha2_lower": 5
       }
     },
     {
@@ -2571,9 +2792,9 @@
       },
       "currency": "NOK",
       "observed_as": {
-        "alpha3": 37,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 1724,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -2591,8 +2812,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 80,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2610,8 +2832,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 52,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2629,8 +2852,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 13,
-        "alpha2_lower": 1
+        "alpha3": 216,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -2648,8 +2872,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 98,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2667,8 +2892,9 @@
       },
       "currency": "PKR",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 84,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2686,8 +2912,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 109,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -2705,9 +2932,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 20,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 3911,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -2725,8 +2952,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 116,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2744,8 +2972,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 68,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2763,8 +2992,9 @@
       },
       "currency": "PGK",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2782,9 +3012,9 @@
       },
       "currency": "PLN",
       "observed_as": {
-        "alpha3": 54,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 5283,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -2802,8 +3032,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 38,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2821,8 +3052,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 223,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -2840,8 +3072,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 116,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -2859,8 +3092,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 78,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2878,8 +3112,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 98,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2897,8 +3132,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 15,
-        "alpha2_lower": 1
+        "alpha3": 118,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -2916,8 +3152,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 210,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2935,8 +3172,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 92,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2954,8 +3192,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 132,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2973,8 +3212,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -2992,8 +3232,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3011,8 +3252,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3030,8 +3272,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3049,8 +3292,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3068,9 +3312,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 18,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 639,
+        "alpha2": 8,
+        "alpha2_lower": 5
       }
     },
     {
@@ -3088,8 +3332,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 86,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3107,8 +3352,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 88,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3126,8 +3372,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 112,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3145,8 +3392,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 96,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3164,8 +3412,9 @@
       },
       "currency": "STN",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3183,8 +3432,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3202,8 +3452,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 219,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -3221,8 +3472,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 16,
-        "alpha2_lower": 1
+        "alpha3": 219,
+        "alpha2_lower": 4,
+        "alpha2": 4
       }
     },
     {
@@ -3240,9 +3492,9 @@
       },
       "currency": "SEK",
       "observed_as": {
-        "alpha3": 368,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 1223,
+        "alpha2": 10,
+        "alpha2_lower": 5
       }
     },
     {
@@ -3260,8 +3512,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 92,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3279,8 +3532,9 @@
       },
       "currency": "SCR",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 98,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3298,8 +3552,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3317,8 +3572,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3336,8 +3592,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3355,8 +3612,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3374,8 +3632,9 @@
       },
       "currency": "TJS",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3393,8 +3652,9 @@
       },
       "currency": "TMT",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 88,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3412,8 +3672,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3431,8 +3692,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 78,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3450,8 +3712,9 @@
       },
       "currency": "TTD",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 80,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3469,8 +3732,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 110,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3488,8 +3752,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 223,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3507,8 +3772,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 72,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3526,8 +3792,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 102,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3545,8 +3812,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3564,9 +3832,9 @@
       },
       "currency": "UAH",
       "observed_as": {
-        "alpha3": 29,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 3097,
+        "alpha2": 9,
+        "alpha2_lower": 5
       }
     },
     {
@@ -3584,8 +3852,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 111,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -3603,9 +3872,9 @@
       },
       "currency": "USD",
       "observed_as": {
-        "alpha3": 32,
-        "alpha2": 1,
-        "alpha2_lower": 1
+        "alpha3": 39111,
+        "alpha2": 9,
+        "alpha2_lower": 5
       }
     },
     {
@@ -3623,8 +3892,9 @@
       },
       "currency": "UZS",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 104,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3642,8 +3912,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 25,
+        "alpha2_lower": 4,
+        "alpha2": 1
       }
     },
     {
@@ -3661,8 +3932,9 @@
       },
       "currency": "XCD",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 84,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3680,8 +3952,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 11,
-        "alpha2_lower": 1
+        "alpha3": 109,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -3699,8 +3972,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 12,
-        "alpha2_lower": 1
+        "alpha3": 108,
+        "alpha2_lower": 5,
+        "alpha2": 2
       }
     },
     {
@@ -3718,8 +3992,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3737,8 +4012,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 80,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3756,8 +4032,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 96,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3775,8 +4052,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 206,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3794,8 +4072,9 @@
       },
       "currency": "LCU",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 106,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     },
     {
@@ -3813,8 +4092,9 @@
       },
       "currency": "ZWG",
       "observed_as": {
-        "alpha3": 10,
-        "alpha2_lower": 1
+        "alpha3": 100,
+        "alpha2_lower": 4,
+        "alpha2": 2
       }
     }
   ]

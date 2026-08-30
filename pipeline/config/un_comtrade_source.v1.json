@@ -31,6 +31,61 @@
     "pipeline_call_budget_per_run": 400,
     "minimum_seconds_between_calls": 1.1
   },
+  "warehouse_crawl": {
+    "state_path": "data/sources/trade/crawler/crawl.sqlite3",
+    "raw_path": "data/sources/trade/crawler/raw",
+    "availability_path": "data/sources/trade/crawler/availability",
+    "output_path": "outputs/un-comtrade/warehouse",
+    "freshness": {
+      "annual_year_offset": 1,
+      "recent_complete_months": 6,
+      "availability_required": true,
+      "note": "Queue only reporter-period datasets returned by UN Comtrade availability; do not backfill older periods merely to manufacture coverage."
+    },
+    "profiles": [
+      {
+        "id": "goods_annual_hs6_bilateral",
+        "product_type": "C",
+        "frequency": "A",
+        "classification": "HS",
+        "product_selector": "AG6",
+        "partner_batch_size": 10,
+        "priority": 100
+      },
+      {
+        "id": "goods_monthly_hs6_bilateral",
+        "product_type": "C",
+        "frequency": "M",
+        "classification": "HS",
+        "product_selector": "AG6",
+        "partner_batch_size": 10,
+        "priority": 200
+      },
+      {
+        "id": "services_annual_ebops_bilateral",
+        "product_type": "S",
+        "frequency": "A",
+        "classification": "EB",
+        "product_selector": null,
+        "partner_batch_size": 50,
+        "priority": 300
+      },
+      {
+        "id": "services_monthly_ebops_bilateral",
+        "product_type": "S",
+        "frequency": "M",
+        "classification": "EB",
+        "product_selector": null,
+        "partner_batch_size": 50,
+        "priority": 400
+      }
+    ],
+    "authenticated_max_records": 100000,
+    "anonymous_max_records": 500,
+    "anonymous_product_chunk_size": 20,
+    "calls_per_crawl_run": 25,
+    "calls_per_utc_day": 400
+  },
   "ranking": {
     "definition": "Countries are attempted in descending nominal GDP (USD) for the requested year, using the project's IMF WEO sovereign series.",
     "fallback": "Countries without a GDP observation are ordered alphabetically after ranked countries."
