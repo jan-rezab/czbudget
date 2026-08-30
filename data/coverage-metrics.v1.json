@@ -1,21 +1,21 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-28T11:00:00.000Z",
-  "release_id": "workspace-audit-20260828",
+  "generated_at": "2026-08-30T18:50:03.053Z",
+  "release_id": "20260830T185003Z",
   "metrics": {
     "cumulative_structured_rows_processed": 101447918,
     "current_validated_financial_facts": 41831399,
-    "current_validated_warehouse_facts": 37223931,
-    "current_published_line_items": 4861035,
+    "current_validated_warehouse_facts": 38460023,
+    "current_published_line_items": 15306563,
     "current_public_profiles": 35823,
     "current_public_profile_nested_records": 4446234,
-    "current_public_profile_payload_bytes": 691943044
+    "current_public_profile_payload_bytes": 691949298
   },
   "definitions": {
-    "cumulative_structured_rows_processed": "Cumulative structured source and output lines audited across the workspace; historical versions can overlap and truncated gzip tails are excluded.",
-    "current_validated_financial_facts": "Current deduplicated financial facts represented by the checked-in production warehouse inventory and published itemized layers.",
-    "current_validated_warehouse_facts": "Current line and balance facts in the checked-in production BigQuery inventory.",
+    "cumulative_structured_rows_processed": "Cumulative structured source and output lines audited across the workspace; historical versions can overlap.",
+    "current_validated_financial_facts": "Current deduplicated financial facts represented by the warehouse inventory and published itemized layers.",
+    "current_validated_warehouse_facts": "Current line and balance facts in the checked-in production warehouse inventory.",
     "current_published_line_items": "Current itemized rows represented by published municipal profiles.",
-    "current_public_profiles": "Unique canonical municipality routes in the validated immutable serving release."
+    "current_public_profiles": "Deduplicated municipality routes in this immutable release."
   }
 }

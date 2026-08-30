@@ -22,7 +22,7 @@
     releaseTitle:"Co přibylo v alpha vydáních",
     releaseDate26:"26. srpna 2026",
     releaseTitle26:"Položkové obecní rozpočty nasazeny",
-    releaseCopy26:"Produkční datový sklad a metodika nyní zveřejňují ověřené položkové obecní rozpočty pro Polsko, Dánsko, Ukrajinu, Francii, Švédsko, Anglii a dílčí kolekce pro Německo, USA a Švýcarsko."
+    releaseCopy26:"Položkové obecní rozpočty zveřejňujeme pro Česko, Francii, Brazílii, Dánsko a další země s profily na webu. Polsko, Ukrajina, Švédsko, Anglie, Německo, USA a Švýcarsko jsou zatím načtené jen v produkčním datovém skladu, na webu pro ně profily nejsou."
   });
   Object.assign(copy.en,{
     ledgerEyebrow:"Data lineage",
@@ -30,7 +30,7 @@
     releaseTitle:"What each alpha release added",
     releaseDate26:"26 August 2026",
     releaseTitle26:"Itemized municipal budgets deployed",
-    releaseCopy26:"The production warehouse and methodology now publish verified itemized municipal budgets for Poland, Denmark, Ukraine, France, Sweden and England, plus partial collections for Germany, the United States and Switzerland."
+    releaseCopy26:"Itemized municipal budgets are published on the site for Czechia, France, Brazil, Denmark and the other countries with profiles. Poland, Ukraine, Sweden, England, Germany, the United States and Switzerland are loaded into the production warehouse only — there are no profiles on the site for them yet."
   });
   Object.assign(copy.cs,{aboutLead:"Public Spending Data pomáhá rychle pochopit, odkud veřejné peníze přicházejí a kam směřují.",aboutMission:"Co projekt dělá",aboutMissionCopy:"Spojujeme oficiální rozpočtová data zemí, obcí a veřejných institucí. Čísla převádíme do srozumitelných srovnání a u každého údaje zachováváme období, definici a odkaz na původní zdroj.",aboutPrinciples:"Jak data používáme",p1:"Srovnáváme jen údaje se stejným rozsahem.",p2:"Plány, skutečnost a odhady držíme odděleně.",p3:"Každý profil vede zpět k oficiálnímu zdroji."});
   Object.assign(copy.en,{aboutLead:"Public Spending Data helps people understand where public money comes from and where it goes.",aboutMission:"What the project does",aboutMissionCopy:"We bring together official budget data for countries, municipalities and public institutions. We turn the figures into readable comparisons while preserving the period, definition and original source behind every value.",aboutPrinciples:"How we use data",p1:"We compare only figures with the same scope.",p2:"Plans, actuals and estimates remain separate.",p3:"Every profile links back to an official source."});

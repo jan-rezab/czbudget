@@ -322,11 +322,30 @@ function addInventory(inventory, row, payloadBytes, nestedRecordCount) {
   inventory.set(row.country_code, current);
 }
 
+/**
+ * How many validated financial facts a country contributes.
+ *
+ * A country can be measured twice: once from the profiles published on the site, once from
+ * the production warehouse. Those are two views of the SAME layer under different leaf
+ * rules — the warehouse drops published totals, subtotals and derived residuals that the
+ * file measurement counts — so they must not be added together, and neither should silently
+ * replace the other.
+ *
+ * The warehouse used to override unconditionally. That was wrong in both directions: where
+ * the warehouse holds fewer leaves than the published files (Brazil: 1,236,092 against
+ * 1,551,136) recording a successful load made this public volume figure fall, and where it
+ * holds more, the published measurement vanished with no note. Taking the larger keeps the
+ * honest answer to "how many facts do we hold" without ever counting one fact twice.
+ */
 function validatedFactsByCountry(itemized, warehouse) {
   const result = new Map();
-  for (const country of itemized.countries || []) result.set(country.code, Number(country.line_item_count) || 0);
+  const consider = (code, value) => {
+    if (!Number.isFinite(value) || value <= 0) return;
+    result.set(code, Math.max(result.get(code) || 0, value));
+  };
+  for (const country of itemized.countries || []) consider(country.code, Number(country.line_item_count));
   for (const country of warehouse.countries || []) {
-    result.set(country.code, (Number(country.line_fact_count) || 0) + (Number(country.balance_fact_count) || 0));
+    consider(country.code, (Number(country.line_fact_count) || 0) + (Number(country.balance_fact_count) || 0));
   }
   return result;
 }

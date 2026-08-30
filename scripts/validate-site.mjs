@@ -190,11 +190,28 @@ for (const code of requiredInternationalItemized) {
 if (counts.itemizedPublishedProfiles < pinned.itemizedPublishedProfilesFloor) throw new Error(`Published itemized municipal profiles fell to ${counts.itemizedPublishedProfiles}, below the ${pinned.itemizedPublishedProfilesFloor} already shipped`);
 if (counts.itemizedPublishedProfiles !== counts.itemizedPublishedProfileCountSum) throw new Error("Itemized coverage profile_count and published_profile_count do not reconcile");
 if (counts.warehouseOnlyCountries + counts.headlineOnlyCountries + counts.publishedItemizedCountries !== pinned.itemizedCoverageCountries) throw new Error("Every itemized-coverage country must be published, warehouse-only or headline-only");
-for (const [code, entities, lineFacts, balanceFacts = 0] of [["GBR",374,552003],["DEU",11,1152009],["CHE",80,64185],["FRA",35042,10445528,14147797],["PRY",263,281957]]) {
-  const country = internationalItemizedWarehouse.countries.find((row) => row.code === code);
-  if (!country || country.profile_count !== entities || country.line_fact_count !== lineFacts || country.balance_fact_count !== balanceFacts) throw new Error(`${code}: production itemized-warehouse verification snapshot mismatch`);
+// Every country the warehouse artifact declares must agree with the acquisition audit's own
+// verification block, rather than with a table retyped here. A hardcoded list silently
+// leaves a newly loaded country UNPINNED — which is the failure mode, not the safe default.
+{
+  const verification = municipalItemizedAcquisitionAudit.production_load?.verification || {};
+  for (const [code, recorded] of Object.entries(verification)) {
+    const country = internationalItemizedWarehouse.countries.find((row) => row.code === code);
+    if (!country) throw new Error(`${code}: verified in the acquisition audit but absent from the itemized-warehouse artifact`);
+    // The audit names these entities / line_facts / balance_facts; the warehouse artifact
+    // names them profile_count / line_fact_count / balance_fact_count. An absent
+    // balance_facts means none were loaded, which the artifact records as zero.
+    for (const [artifactField, auditValue] of [["profile_count", recorded.entities], ["line_fact_count", recorded.line_facts], ["balance_fact_count", recorded.balance_facts ?? 0]]) {
+      if (auditValue === undefined) continue;
+      if (Number(country[artifactField] ?? 0) !== Number(auditValue)) throw new Error(`${code}: ${artifactField} is ${country[artifactField]} in the warehouse artifact but ${auditValue} in the acquisition audit`);
+    }
+  }
+  const load = municipalItemizedAcquisitionAudit.production_load;
+  if (load?.status !== "loaded") throw new Error("Municipal itemized acquisition audit must record a completed production load");
+  // A count that grows with every load must never be pinned by equality. It may only fail
+  // by describing fewer bundles than it actually verified.
+  if (Number(load.bundles_loaded) < Object.keys(verification).length) throw new Error(`Acquisition audit reports ${load.bundles_loaded} bundles loaded but verifies ${Object.keys(verification).length}`);
 }
-if (municipalItemizedAcquisitionAudit.production_load?.status !== "loaded" || municipalItemizedAcquisitionAudit.production_load?.bundles_loaded !== 6) throw new Error("Municipal itemized acquisition audit must record the completed six-bundle production load");
 // The headline volume figure the coverage page prints. It is DERIVED from the
 // four component artifacts, then reconciled against the independently written
 // quality report, so a build that changes one component without regenerating the
@@ -215,9 +232,13 @@ for (const [code, expected] of Object.entries(pinned.itemizedAnchors)) {
 // USA and DEU are the two countries whose warehouse scatter used to be reported
 // as site coverage (4 profiles and a "partial" status for eleven German cities).
 // Both must now report zero published profiles with the warehouse figure intact.
-for (const [code, warehouseProfiles] of [["USA", 4], ["DEU", 11]]) {
+// The rule is "these must never be re-counted as published", so the profile figure is read
+// from the warehouse artifact rather than retyped here — the two can no longer disagree.
+for (const code of ["USA", "DEU"]) {
   const country = itemizedByCode.get(code);
-  if (country?.profile_count !== 0 || country.status !== "warehouse_only" || country.publication_status !== "warehouse_only" || Number(country.warehouse_profile_count) !== warehouseProfiles) throw new Error(`${code}: expected zero published itemized profiles with ${warehouseProfiles} preserved in the warehouse`);
+  const warehoused = internationalItemizedWarehouse.countries.find((row) => row.code === code);
+  if (country?.profile_count !== 0 || country.status !== "warehouse_only" || country.publication_status !== "warehouse_only") throw new Error(`${code}: expected zero published itemized profiles, held warehouse-only`);
+  if (!warehoused || Number(country.warehouse_profile_count) !== Number(warehoused.profile_count)) throw new Error(`${code}: warehouse_profile_count disagrees with the itemized-warehouse artifact`);
 }
 if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.length, 0) !== 1010) throw new Error("Expected 1,010 Nordic and Dutch municipal benchmark profiles");
 // The full Czech budget profile is the canonical municipal template. It is deliberately

@@ -86,12 +86,33 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native RREO or DCA budget-execution items",
       "detail_kind_cs": "původní položky plnění RREO nebo DCA",
-      "source_title": "Official Brazil municipal source",
+      "source_title": "Brazilian National Treasury · SICONFI RREO municipal filings",
       "source_url": "https://apidatalake.tesouro.gov.br/docs/siconfi",
       "note": "13 of 5,570 directory entities publish no line items and are not counted.",
       "scope_limitations": [
         "13 of 5,570 directory entities publish no line items and are not counted."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 5557,
+        "period": "2024–2025",
+        "stages": [
+          "actual",
+          "carried_over",
+          "committed",
+          "enacted",
+          "paid",
+          "revised"
+        ],
+        "line_fact_count": 1236092,
+        "balance_fact_count": 0,
+        "detail_kind_en": "SICONFI RREO filings across Brazil's full execution lifecycle: committed (empenhada), accrued (liquidada) and paid (paga), plus carried-over payables",
+        "detail_kind_cs": "výkazy SICONFI RREO v celém brazilském cyklu plnění: přiděleno (empenhada), zúčtováno (liquidada) a zaplaceno (paga), včetně nezaplacených závazků převedených do dalšího roku",
+        "source_title": "Brazilian National Treasury · SICONFI RREO municipal filings",
+        "source_url": "https://apidatalake.tesouro.gov.br/docs/siconfi",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 5557
     },
     {
       "code": "CHL",
