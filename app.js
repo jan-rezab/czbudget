@@ -139,6 +139,34 @@ let budgetState = { price:"nominal", year:2026, structure:"amount" };
 let demoState = { variant:"mid", retAge:65, wageGrowth:0, costGrowth:0 };
 let benchmarkState = { year:2024, metric:"expenditure_pct_gdp", group:"all", country:"CZE" };
 
+// A5 — the headline figures are read from the budget series, not typed into the markup.
+// They were hardcoded in cesky-rozpocet.html, which meant every one of them was a second
+// copy of a number that also lives in data/czech-budget.v1.json, silently going stale when
+// the series moved. Layout and structure are untouched; only the values are wired.
+function renderHeadlineFigures() {
+  if (!budgetData) return;
+  const rows = budgetData.rows;
+  const proposal = rows.find((row) => row.proposal) || rows[rows.length-1];
+  const actual = rows.filter((row) => !row.proposal).pop();
+  // Bare figures carry no surrounding words, so no dictionary entry can reach them —
+  // they are formatted for the active language here. The share string keeps Czech
+  // formatting because its {n} pattern is translated and reformatted by budget-i18n.js.
+  const signed = (value) => `${value < 0 ? "−" : ""}${bNum(Math.abs(value), 1)}`;
+  const put = (id, text) => { const node = document.getElementById(id); if (node) node.textContent = text; };
+
+  if (proposal) {
+    const balance = proposal.revenue - proposal.expense;
+    put("hero-revenue", bNum(proposal.revenue, 1));
+    put("hero-expense", bNum(proposal.expense, 1));
+    put("hero-deficit", signed(balance));
+    put("hero-deficit-share", `${fmt1.format(Math.abs(balance)/proposal.expense*100)} % výdajů`);
+    put("metric-approved-deficit", signed(balance));
+    const bar = document.getElementById("hero-revenue-bar");
+    if (bar) bar.style.width = `${(proposal.revenue/proposal.expense*100).toFixed(1)}%`;
+  }
+  if (actual) put("metric-actual-deficit", signed(actual.revenue - actual.expense));
+}
+
 function prepareBudget(raw) {
   const keys = raw.columns;
   const rows = raw.rows.map((values) => Object.fromEntries(keys.map((key,index) => [key, values[index]]))).map((d) => ({
@@ -330,6 +358,9 @@ function fillBenchmarkSelects(){$("#metric-select").innerHTML=sovereignData.metr
 let benchmarkRenderedLang=null;
 function syncBenchmarkLanguage(){if(!sovereignData||benchmarkRenderedLang===bLang())return;benchmarkRenderedLang=bLang();fillBenchmarkSelects();renderBenchmark();}
 ["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,syncBenchmarkLanguage));
+// The headline figures are numerals with no words around them, so the translator cannot
+// reach them; re-render so they follow the active language's number format.
+["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,renderHeadlineFigures));
 
 function initBenchmark(){const years=Array.from({length:20},(_,i)=>2005+i);$("#year-select").innerHTML=years.reverse().map(y=>`<option ${y===2024?"selected":""}>${y}</option>`).join("");benchmarkRenderedLang=bLang();fillBenchmarkSelects();$("#year-select").addEventListener("change",e=>{benchmarkState.year=+e.target.value;renderBenchmark()});$("#metric-select").addEventListener("change",e=>{benchmarkState.metric=e.target.value;renderBenchmark()});$("#group-select").addEventListener("change",e=>{benchmarkState.group=e.target.value;renderBenchmark()});$("#country-select").addEventListener("change",e=>{benchmarkState.country=e.target.value;renderBenchmark()});renderBenchmark();}
 
@@ -347,4 +378,4 @@ Promise.all([
   // The benchmark panel reads countries, metric labels and eight indicator series — the
   // slim slice, not the full twenty-year payload the country profile needs.
   fetch("data/sovereign-benchmark-slim.v1.json").then(r=>{if(!r.ok)throw new Error("Mezinárodní data se nepodařilo načíst");return r.json()})
-]).then(([budget,demography,sovereign])=>{budgetData=prepareBudget(budget);demographicData=prepareDemography(demography);sovereignData=sovereign;bindControls();renderBudget();renderDemography();initBenchmark();let timer;new ResizeObserver(()=>{clearTimeout(timer);timer=setTimeout(()=>{renderBudget();renderDemography();renderBenchmark()},120)}).observe(document.body)}).catch(error=>{document.body.classList.add("data-error");console.error(error);$(".hero-copy").textContent="Datová vrstva se nepodařila načíst. Obnovte prosím stránku."});
+]).then(([budget,demography,sovereign])=>{budgetData=prepareBudget(budget);demographicData=prepareDemography(demography);sovereignData=sovereign;bindControls();renderBudget();renderHeadlineFigures();renderDemography();initBenchmark();let timer;new ResizeObserver(()=>{clearTimeout(timer);timer=setTimeout(()=>{renderBudget();renderDemography();renderBenchmark()},120)}).observe(document.body)}).catch(error=>{document.body.classList.add("data-error");console.error(error);$(".hero-copy").textContent="Datová vrstva se nepodařila načíst. Obnovte prosím stránku."});

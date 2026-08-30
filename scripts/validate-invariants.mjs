@@ -199,19 +199,18 @@ if (registry) {
 }
 
 /**
- * Third invariant (A5 + B5): no NEW translation key carries a digit.
+ * Third invariant (A5 + B5): no translation key carries a digit. Not a ceiling — zero.
  *
- * The dictionaries key English strings off full Czech sentences. Where that sentence
- * contains a number, it is an uncontrolled second copy of a figure that also lives in a
- * data artifact: when the data moves, the key stops matching and the string silently
- * renders untranslated — no error, no failing test.
+ * These dictionaries key English strings off whole Czech strings. A number inside such a key
+ * is an uncontrolled second copy of a figure that also lives in a data artifact: the moment
+ * the data moved, the key stopped matching and the English page silently rendered Czech —
+ * no error, no failing test, no way to notice but by reading the page.
  *
- * This is a ratchet, not a refactor. The existing keys mostly serve cesky-rozpocet.html,
- * which is deliberately preserved as the reference statement of the fiscal perimeter model,
- * so the count is frozen at today's level and only growth fails the build.
+ * Keys now carry a {n} placeholder and the figure is formatted at render for the target
+ * locale. Any value matches, so the translation cannot rot when the data changes.
  */
 const I18N_FILES = ["budget-i18n.js", "cesko-i18n.js"];
-const DIGIT_KEY_CEILING = 80;
+const DIGIT_KEY_CEILING = 0;
 
 let digitKeys = 0;
 const digitSamples = [];
@@ -232,13 +231,12 @@ for (const file of I18N_FILES) {
 
 if (digitKeys > DIGIT_KEY_CEILING) {
   fail(
-    "no new translation key carries a digit",
-    `${digitKeys} keys contain digits, above the frozen ceiling of ${DIGIT_KEY_CEILING}. ` +
-    `A number in a key is a second copy of a figure that lives in a data artifact; when the ` +
-    `data moves the string silently renders untranslated. e.g. ${digitSamples[0]}`,
+    "no translation key carries a digit",
+    `${digitKeys} key(s) contain a digit. Use a {n} placeholder so the figure is formatted ` +
+    `at render instead of frozen into the key. e.g. ${digitSamples[0]}`,
   );
 } else {
-  console.log(`Translation keys with digits: ${digitKeys} (ceiling ${DIGIT_KEY_CEILING}, not rising).`);
+  console.log(`Translation keys: none carry a digit; figures render through {n} placeholders.`);
 }
 
 if (failures.length > 0) {

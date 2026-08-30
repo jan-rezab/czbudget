@@ -27,8 +27,8 @@
   <link rel="stylesheet" href="chart-system.css?v=20260821-city-navigation">
   <link rel="stylesheet" href="cz-spending.css?v=20260820-1">
   <link rel="stylesheet" href="health-budget.css?v=20260820-1">
-  <script src="app.js?v=20260821-annual-system-cost-baseline" defer></script>
-  <script src="budget-i18n.js?v=20260825-localization-audit" defer></script>
+  <script src="app.js?v=20260830-numbers-wired-2" defer></script>
+  <script src="budget-i18n.js?v=20260830-numbers-wired" defer></script>
   <script src="cz-firmy-embed.js?v=20260822-1" defer></script>
 
   <script src="budget-shell.js?v=20260820-1" defer></script>
@@ -51,9 +51,9 @@
     <aside class="hero-budget-card" aria-label="Schválený státní rozpočet 2026">
       <div><span>Schválený 2026</span><b>mld. Kč</b></div>
       <p>Rozpočet počítá se schodkem, který odpovídá téměř celému čistému demografickému tlaku vybraných systémů v roce 2045.</p>
-      <div class="hero-flow"><span>Příjmy</span><strong>2 117,8</strong><i><b style="width:87.2%"></b></i></div>
-      <div class="hero-flow expense"><span>Výdaje</span><strong>2 427,8</strong><i><b style="width:100%"></b></i></div>
-      <div class="hero-deficit"><span>Schodek</span><strong>−310,0</strong><small>12,8 % výdajů</small></div>
+      <div class="hero-flow"><span>Příjmy</span><strong id="hero-revenue">2 117,8</strong><i><b id="hero-revenue-bar" style="width:87.2%"></b></i></div>
+      <div class="hero-flow expense"><span>Výdaje</span><strong id="hero-expense">2 427,8</strong><i><b style="width:100%"></b></i></div>
+      <div class="hero-deficit"><span>Schodek</span><strong id="hero-deficit">−310,0</strong><small id="hero-deficit-share">12,8 % výdajů</small></div>
       <small>Úplné příjmy a výdaje včetně EU/FM; saldo je totožné s variantou bez EU/FM.</small>
     </aside>
   </section>
@@ -77,8 +77,8 @@
     <div class="budget-workspace-content">
 
   <section class="metrics budget-compact-metrics" aria-label="Klíčová čísla">
-    <article><span>Skutečný schodek 2025</span><strong>−290,7</strong><small>mld. Kč</small></article>
-    <article><span>Schválený schodek 2026</span><strong>−310,0</strong><small>mld. Kč</small></article>
+    <article><span>Skutečný schodek 2025</span><strong id="metric-actual-deficit">−290,7</strong><small>mld. Kč</small></article>
+    <article><span>Schválený schodek 2026</span><strong id="metric-approved-deficit">−310,0</strong><small>mld. Kč</small></article>
     <article><span>65+ na 100 lidí 20–64</span><strong id="headline-ratio">49,6</strong><small>střední varianta · 2045</small></article>
     <article><span>Změna populace 80+</span><strong id="headline-80">+72 %</strong><small>2025–2045</small></article>
   </section>
