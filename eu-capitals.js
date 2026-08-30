@@ -63,7 +63,7 @@ Object.assign(COMPONENT_LABELS, {
 const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[character]);
 const locale = () => state.lang === "en" ? "en-GB" : "cs-CZ";
 const cityName = (city) => state.lang === "cs" ? (CZECH_CITY_NAMES[city.city_id] || city.city) : city.city;
-const countryName = (city) => new Intl.DisplayNames([locale()], {type:"region"}).of(city.country_code) || city.country;
+const countryName = (city) => new Intl.DisplayNames([locale()], {type:"region"}).of(city.alpha2) || city.country;
 const compactNumber = (value, digits = 1) => Number.isFinite(value) ? new Intl.NumberFormat(locale(), {notation:"compact", maximumFractionDigits:digits}).format(value) : "—";
 const decimal = (value, digits = 1) => Number.isFinite(value) ? new Intl.NumberFormat(locale(), {maximumFractionDigits:digits, minimumFractionDigits:digits}).format(value) : "—";
 const moneyValues = (amount, currency, signed = false) => {

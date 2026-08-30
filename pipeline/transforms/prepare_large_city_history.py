@@ -137,7 +137,7 @@ def main() -> None:
             "entity_id": entity["entity_id"],
             "national_id": ico,
             "name": entity["short_name"],
-            "country_code": "CZ",
+            "country_code": "CZE",
             "currency_code": "CZK",
             "series": annual,
         })

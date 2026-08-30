@@ -1,0 +1,3821 @@
+{
+  "schema_version": "1.0.0",
+  "registry": "countries",
+  "canonical_form": "iso_alpha3",
+  "generated_at": "2026-08-30",
+  "anchor_artifact": "data/sovereign-benchmark-slim.v1.json",
+  "count": 195,
+  "scope": "sovereign states only",
+  "pending_migration": [
+    "municipal-snapshot.v1.json"
+  ],
+  "codemod_deferred": [
+    "municipal-snapshot.v1.json"
+  ],
+  "codemod_deferred_note": "11.8 MB for 6,254 identifier values that nothing reads in alpha-2 form today. Rewriting it would add the exact pack weight this programme exists to stop, so its producer is fixed and the data canonicalises on its next regeneration. The ratchet keeps it visible until then.",
+  "pending_migration_note": "All producers now emit alpha-3 via pipeline/transforms/country_registry.py, and four artifacts were canonicalised in place. municipal-snapshot alone remains, deferred by size — see codemod_deferred. No JavaScript consumer compares country_code against an alpha-2 literal, so nothing on the site changed behaviour.",
+  "known_gaps": [
+    {
+      "site": "health-system-assignments.v1.json::id",
+      "values": [
+        "tax"
+      ],
+      "note": "Country-shaped codes the sovereign anchor does not cover. world-map carries non-sovereign territories (and two codes that are not ISO 3166-1 at all, `go` and `ju`); geometry keeps its own identity space and references this registry where a territory has a sovereign parent. No parent is guessed here."
+    },
+    {
+      "site": "world-map.v1.json::id",
+      "values": [
+        "ai",
+        "as",
+        "aw",
+        "ax",
+        "bl",
+        "bm",
+        "bq",
+        "bv",
+        "cc",
+        "ck",
+        "cw",
+        "cx",
+        "eh",
+        "fk",
+        "fo",
+        "gf",
+        "gg",
+        "gi",
+        "gl",
+        "go",
+        "gp",
+        "gs",
+        "gu",
+        "hk",
+        "hm",
+        "im",
+        "io",
+        "je",
+        "ju",
+        "ky",
+        "mf",
+        "mo",
+        "mp",
+        "mq",
+        "ms",
+        "nc",
+        "nf",
+        "nu",
+        "pf",
+        "pm",
+        "pn",
+        "pr",
+        "re",
+        "sh",
+        "sj",
+        "sx",
+        "tc",
+        "tf",
+        "tk",
+        "tw",
+        "vg",
+        "vi",
+        "wf",
+        "xk",
+        "yt"
+      ],
+      "note": "Country-shaped codes the sovereign anchor does not cover. world-map carries non-sovereign territories (and two codes that are not ISO 3166-1 at all, `go` and `ju`); geometry keeps its own identity space and references this registry where a territory has a sovereign parent. No parent is guessed here."
+    }
+  ],
+  "countries": [
+    {
+      "psd_id": "psd:country:AFG",
+      "canonical": "AFG",
+      "aliases": {
+        "alpha3": "AFG",
+        "alpha2": "AF",
+        "alpha2_lower": "af",
+        "weo": "AFG"
+      },
+      "name": {
+        "cs": "Afghánistán",
+        "en": "Afghanistan"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:AGO",
+      "canonical": "AGO",
+      "aliases": {
+        "alpha3": "AGO",
+        "alpha2": "AO",
+        "alpha2_lower": "ao",
+        "weo": "AGO"
+      },
+      "name": {
+        "cs": "Angola",
+        "en": "Angola"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ALB",
+      "canonical": "ALB",
+      "aliases": {
+        "alpha3": "ALB",
+        "alpha2": "AL",
+        "alpha2_lower": "al",
+        "weo": "ALB"
+      },
+      "name": {
+        "cs": "Albánie",
+        "en": "Albania"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:AND",
+      "canonical": "AND",
+      "aliases": {
+        "alpha3": "AND",
+        "alpha2": "AD",
+        "alpha2_lower": "ad",
+        "weo": "AND"
+      },
+      "name": {
+        "cs": "Andorra",
+        "en": "Andorra"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ARE",
+      "canonical": "ARE",
+      "aliases": {
+        "alpha3": "ARE",
+        "alpha2": "AE",
+        "alpha2_lower": "ae",
+        "weo": "ARE"
+      },
+      "name": {
+        "cs": "Spojené arabské emiráty",
+        "en": "United Arab Emirates"
+      },
+      "currency": "AED",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ARG",
+      "canonical": "ARG",
+      "aliases": {
+        "alpha3": "ARG",
+        "alpha2": "AR",
+        "alpha2_lower": "ar",
+        "weo": "ARG"
+      },
+      "name": {
+        "cs": "Argentina",
+        "en": "Argentina"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 13,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ARM",
+      "canonical": "ARM",
+      "aliases": {
+        "alpha3": "ARM",
+        "alpha2": "AM",
+        "alpha2_lower": "am",
+        "weo": "ARM"
+      },
+      "name": {
+        "cs": "Arménie",
+        "en": "Armenia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ATG",
+      "canonical": "ATG",
+      "aliases": {
+        "alpha3": "ATG",
+        "alpha2": "AG",
+        "alpha2_lower": "ag",
+        "weo": "ATG"
+      },
+      "name": {
+        "cs": "Antigua a Barbuda",
+        "en": "Antigua and Barbuda"
+      },
+      "currency": "XCD",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:AUS",
+      "canonical": "AUS",
+      "aliases": {
+        "alpha3": "AUS",
+        "alpha2": "AU",
+        "alpha2_lower": "au",
+        "weo": "AUS"
+      },
+      "name": {
+        "cs": "Austrálie",
+        "en": "Australia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 14,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:AUT",
+      "canonical": "AUT",
+      "aliases": {
+        "alpha3": "AUT",
+        "alpha2": "AT",
+        "alpha2_lower": "at",
+        "weo": "AUT"
+      },
+      "name": {
+        "cs": "Rakousko",
+        "en": "Austria"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 19,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:AZE",
+      "canonical": "AZE",
+      "aliases": {
+        "alpha3": "AZE",
+        "alpha2": "AZ",
+        "alpha2_lower": "az",
+        "weo": "AZE"
+      },
+      "name": {
+        "cs": "Ázerbájdžán",
+        "en": "Azerbaijan"
+      },
+      "currency": "AZN",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BDI",
+      "canonical": "BDI",
+      "aliases": {
+        "alpha3": "BDI",
+        "alpha2": "BI",
+        "alpha2_lower": "bi",
+        "weo": "BDI"
+      },
+      "name": {
+        "cs": "Burundi",
+        "en": "Burundi"
+      },
+      "currency": "BIF",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BEL",
+      "canonical": "BEL",
+      "aliases": {
+        "alpha3": "BEL",
+        "alpha2": "BE",
+        "alpha2_lower": "be",
+        "weo": "BEL"
+      },
+      "name": {
+        "cs": "Belgie",
+        "en": "Belgium"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BEN",
+      "canonical": "BEN",
+      "aliases": {
+        "alpha3": "BEN",
+        "alpha2": "BJ",
+        "alpha2_lower": "bj",
+        "weo": "BEN"
+      },
+      "name": {
+        "cs": "Benin",
+        "en": "Benin"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BFA",
+      "canonical": "BFA",
+      "aliases": {
+        "alpha3": "BFA",
+        "alpha2": "BF",
+        "alpha2_lower": "bf",
+        "weo": "BFA"
+      },
+      "name": {
+        "cs": "Burkina Faso",
+        "en": "Burkina Faso"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BGD",
+      "canonical": "BGD",
+      "aliases": {
+        "alpha3": "BGD",
+        "alpha2": "BD",
+        "alpha2_lower": "bd",
+        "weo": "BGD"
+      },
+      "name": {
+        "cs": "Bangladéš",
+        "en": "Bangladesh"
+      },
+      "currency": "BDT",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BGR",
+      "canonical": "BGR",
+      "aliases": {
+        "alpha3": "BGR",
+        "alpha2": "BG",
+        "alpha2_lower": "bg",
+        "weo": "BGR"
+      },
+      "name": {
+        "cs": "Bulharsko",
+        "en": "Bulgaria"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 15,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BHR",
+      "canonical": "BHR",
+      "aliases": {
+        "alpha3": "BHR",
+        "alpha2": "BH",
+        "alpha2_lower": "bh",
+        "weo": "BHR"
+      },
+      "name": {
+        "cs": "Bahrajn",
+        "en": "Bahrain"
+      },
+      "currency": "BHD",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BHS",
+      "canonical": "BHS",
+      "aliases": {
+        "alpha3": "BHS",
+        "alpha2": "BS",
+        "alpha2_lower": "bs",
+        "weo": "BHS"
+      },
+      "name": {
+        "cs": "Bahamy",
+        "en": "Bahamas"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BIH",
+      "canonical": "BIH",
+      "aliases": {
+        "alpha3": "BIH",
+        "alpha2": "BA",
+        "alpha2_lower": "ba",
+        "weo": "BIH"
+      },
+      "name": {
+        "cs": "Bosna a Hercegovina",
+        "en": "Bosnia and Herzegovina"
+      },
+      "currency": "BAM",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BLR",
+      "canonical": "BLR",
+      "aliases": {
+        "alpha3": "BLR",
+        "alpha2": "BY",
+        "alpha2_lower": "by",
+        "weo": "BLR"
+      },
+      "name": {
+        "cs": "Bělorusko",
+        "en": "Belarus"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BLZ",
+      "canonical": "BLZ",
+      "aliases": {
+        "alpha3": "BLZ",
+        "alpha2": "BZ",
+        "alpha2_lower": "bz",
+        "weo": "BLZ"
+      },
+      "name": {
+        "cs": "Belize",
+        "en": "Belize"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BOL",
+      "canonical": "BOL",
+      "aliases": {
+        "alpha3": "BOL",
+        "alpha2": "BO",
+        "alpha2_lower": "bo",
+        "weo": "BOL"
+      },
+      "name": {
+        "cs": "Bolívie",
+        "en": "Bolivia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 361,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BRA",
+      "canonical": "BRA",
+      "aliases": {
+        "alpha3": "BRA",
+        "alpha2": "BR",
+        "alpha2_lower": "br",
+        "weo": "BRA"
+      },
+      "name": {
+        "cs": "Brazílie",
+        "en": "Brazil"
+      },
+      "currency": "BRL",
+      "observed_as": {
+        "alpha3": 86,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BRB",
+      "canonical": "BRB",
+      "aliases": {
+        "alpha3": "BRB",
+        "alpha2": "BB",
+        "alpha2_lower": "bb",
+        "weo": "BRB"
+      },
+      "name": {
+        "cs": "Barbados",
+        "en": "Barbados"
+      },
+      "currency": "BBD",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BRN",
+      "canonical": "BRN",
+      "aliases": {
+        "alpha3": "BRN",
+        "alpha2": "BN",
+        "alpha2_lower": "bn",
+        "weo": "BRN"
+      },
+      "name": {
+        "cs": "Brunej",
+        "en": "Brunei Darussalam"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BTN",
+      "canonical": "BTN",
+      "aliases": {
+        "alpha3": "BTN",
+        "alpha2": "BT",
+        "alpha2_lower": "bt",
+        "weo": "BTN"
+      },
+      "name": {
+        "cs": "Bhútán",
+        "en": "Bhutan"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:BWA",
+      "canonical": "BWA",
+      "aliases": {
+        "alpha3": "BWA",
+        "alpha2": "BW",
+        "alpha2_lower": "bw",
+        "weo": "BWA"
+      },
+      "name": {
+        "cs": "Botswana",
+        "en": "Botswana"
+      },
+      "currency": "BWP",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CAF",
+      "canonical": "CAF",
+      "aliases": {
+        "alpha3": "CAF",
+        "alpha2": "CF",
+        "alpha2_lower": "cf",
+        "weo": "CAF"
+      },
+      "name": {
+        "cs": "Středoafrická republika",
+        "en": "Central African Republic"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CAN",
+      "canonical": "CAN",
+      "aliases": {
+        "alpha3": "CAN",
+        "alpha2": "CA",
+        "alpha2_lower": "ca",
+        "weo": "CAN"
+      },
+      "name": {
+        "cs": "Kanada",
+        "en": "Canada"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 13,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CHE",
+      "canonical": "CHE",
+      "aliases": {
+        "alpha3": "CHE",
+        "alpha2": "CH",
+        "alpha2_lower": "ch",
+        "weo": "CHE"
+      },
+      "name": {
+        "cs": "Švýcarsko",
+        "en": "Switzerland"
+      },
+      "currency": "CHF",
+      "observed_as": {
+        "alpha3": 50,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CHL",
+      "canonical": "CHL",
+      "aliases": {
+        "alpha3": "CHL",
+        "alpha2": "CL",
+        "alpha2_lower": "cl",
+        "weo": "CHL"
+      },
+      "name": {
+        "cs": "Chile",
+        "en": "Chile"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CHN",
+      "canonical": "CHN",
+      "aliases": {
+        "alpha3": "CHN",
+        "alpha2": "CN",
+        "alpha2_lower": "cn",
+        "weo": "CHN"
+      },
+      "name": {
+        "cs": "Čína",
+        "en": "China"
+      },
+      "currency": "CNY",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CIV",
+      "canonical": "CIV",
+      "aliases": {
+        "alpha3": "CIV",
+        "alpha2": "CI",
+        "alpha2_lower": "ci",
+        "weo": "CIV"
+      },
+      "name": {
+        "cs": "Pobřeží slonoviny",
+        "en": "Côte d'Ivoire"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CMR",
+      "canonical": "CMR",
+      "aliases": {
+        "alpha3": "CMR",
+        "alpha2": "CM",
+        "alpha2_lower": "cm",
+        "weo": "CMR"
+      },
+      "name": {
+        "cs": "Kamerun",
+        "en": "Cameroon"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:COD",
+      "canonical": "COD",
+      "aliases": {
+        "alpha3": "COD",
+        "alpha2": "CD",
+        "alpha2_lower": "cd",
+        "weo": "COD"
+      },
+      "name": {
+        "cs": "Kongo – Kinshasa",
+        "en": "Democratic Republic of Congo"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:COG",
+      "canonical": "COG",
+      "aliases": {
+        "alpha3": "COG",
+        "alpha2": "CG",
+        "alpha2_lower": "cg",
+        "weo": "COG"
+      },
+      "name": {
+        "cs": "Kongo – Brazzaville",
+        "en": "Republic of Congo"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:COL",
+      "canonical": "COL",
+      "aliases": {
+        "alpha3": "COL",
+        "alpha2": "CO",
+        "alpha2_lower": "co",
+        "weo": "COL"
+      },
+      "name": {
+        "cs": "Kolumbie",
+        "en": "Colombia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:COM",
+      "canonical": "COM",
+      "aliases": {
+        "alpha3": "COM",
+        "alpha2": "KM",
+        "alpha2_lower": "km",
+        "weo": "COM"
+      },
+      "name": {
+        "cs": "Komory",
+        "en": "Comoros"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CPV",
+      "canonical": "CPV",
+      "aliases": {
+        "alpha3": "CPV",
+        "alpha2": "CV",
+        "alpha2_lower": "cv",
+        "weo": "CPV"
+      },
+      "name": {
+        "cs": "Kapverdy",
+        "en": "Cape Verde"
+      },
+      "currency": "CVE",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CRI",
+      "canonical": "CRI",
+      "aliases": {
+        "alpha3": "CRI",
+        "alpha2": "CR",
+        "alpha2_lower": "cr",
+        "weo": "CRI"
+      },
+      "name": {
+        "cs": "Kostarika",
+        "en": "Costa Rica"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CUB",
+      "canonical": "CUB",
+      "aliases": {
+        "alpha3": "CUB",
+        "alpha2": "CU",
+        "alpha2_lower": "cu",
+        "weo": null
+      },
+      "name": {
+        "cs": "Kuba",
+        "en": "Cuba"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CYP",
+      "canonical": "CYP",
+      "aliases": {
+        "alpha3": "CYP",
+        "alpha2": "CY",
+        "alpha2_lower": "cy",
+        "weo": "CYP"
+      },
+      "name": {
+        "cs": "Kypr",
+        "en": "Cyprus"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 15,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:CZE",
+      "canonical": "CZE",
+      "aliases": {
+        "alpha3": "CZE",
+        "alpha2": "CZ",
+        "alpha2_lower": "cz",
+        "weo": "CZE"
+      },
+      "name": {
+        "cs": "Česko",
+        "en": "Czechia"
+      },
+      "currency": "CZK",
+      "observed_as": {
+        "alpha3": 122,
+        "alpha2": 401,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:DEU",
+      "canonical": "DEU",
+      "aliases": {
+        "alpha3": "DEU",
+        "alpha2": "DE",
+        "alpha2_lower": "de",
+        "weo": "DEU"
+      },
+      "name": {
+        "cs": "Německo",
+        "en": "Germany"
+      },
+      "currency": "EUR",
+      "observed_as": {
+        "alpha3": 49,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:DJI",
+      "canonical": "DJI",
+      "aliases": {
+        "alpha3": "DJI",
+        "alpha2": "DJ",
+        "alpha2_lower": "dj",
+        "weo": "DJI"
+      },
+      "name": {
+        "cs": "Džibutsko",
+        "en": "Djibouti"
+      },
+      "currency": "DJF",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:DMA",
+      "canonical": "DMA",
+      "aliases": {
+        "alpha3": "DMA",
+        "alpha2": "DM",
+        "alpha2_lower": "dm",
+        "weo": "DMA"
+      },
+      "name": {
+        "cs": "Dominika",
+        "en": "Dominica"
+      },
+      "currency": "XCD",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:DNK",
+      "canonical": "DNK",
+      "aliases": {
+        "alpha3": "DNK",
+        "alpha2": "DK",
+        "alpha2_lower": "dk",
+        "weo": "DNK"
+      },
+      "name": {
+        "cs": "Dánsko",
+        "en": "Denmark"
+      },
+      "currency": "DKK",
+      "observed_as": {
+        "alpha3": 52,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:DOM",
+      "canonical": "DOM",
+      "aliases": {
+        "alpha3": "DOM",
+        "alpha2": "DO",
+        "alpha2_lower": "do",
+        "weo": "DOM"
+      },
+      "name": {
+        "cs": "Dominikánská republika",
+        "en": "Dominican Republic"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:DZA",
+      "canonical": "DZA",
+      "aliases": {
+        "alpha3": "DZA",
+        "alpha2": "DZ",
+        "alpha2_lower": "dz",
+        "weo": "DZA"
+      },
+      "name": {
+        "cs": "Alžírsko",
+        "en": "Algeria"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ECU",
+      "canonical": "ECU",
+      "aliases": {
+        "alpha3": "ECU",
+        "alpha2": "EC",
+        "alpha2_lower": "ec",
+        "weo": "ECU"
+      },
+      "name": {
+        "cs": "Ekvádor",
+        "en": "Ecuador"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:EGY",
+      "canonical": "EGY",
+      "aliases": {
+        "alpha3": "EGY",
+        "alpha2": "EG",
+        "alpha2_lower": "eg",
+        "weo": "EGY"
+      },
+      "name": {
+        "cs": "Egypt",
+        "en": "Egypt"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ERI",
+      "canonical": "ERI",
+      "aliases": {
+        "alpha3": "ERI",
+        "alpha2": "ER",
+        "alpha2_lower": "er",
+        "weo": "ERI"
+      },
+      "name": {
+        "cs": "Eritrea",
+        "en": "Eritrea"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ESP",
+      "canonical": "ESP",
+      "aliases": {
+        "alpha3": "ESP",
+        "alpha2": "ES",
+        "alpha2_lower": "es",
+        "weo": "ESP"
+      },
+      "name": {
+        "cs": "Španělsko",
+        "en": "Spain"
+      },
+      "currency": "EUR",
+      "observed_as": {
+        "alpha3": 34,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:EST",
+      "canonical": "EST",
+      "aliases": {
+        "alpha3": "EST",
+        "alpha2": "EE",
+        "alpha2_lower": "ee",
+        "weo": "EST"
+      },
+      "name": {
+        "cs": "Estonsko",
+        "en": "Estonia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ETH",
+      "canonical": "ETH",
+      "aliases": {
+        "alpha3": "ETH",
+        "alpha2": "ET",
+        "alpha2_lower": "et",
+        "weo": "ETH"
+      },
+      "name": {
+        "cs": "Etiopie",
+        "en": "Ethiopia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:FIN",
+      "canonical": "FIN",
+      "aliases": {
+        "alpha3": "FIN",
+        "alpha2": "FI",
+        "alpha2_lower": "fi",
+        "weo": "FIN"
+      },
+      "name": {
+        "cs": "Finsko",
+        "en": "Finland"
+      },
+      "currency": "EUR",
+      "observed_as": {
+        "alpha3": 34,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:FJI",
+      "canonical": "FJI",
+      "aliases": {
+        "alpha3": "FJI",
+        "alpha2": "FJ",
+        "alpha2_lower": "fj",
+        "weo": "FJI"
+      },
+      "name": {
+        "cs": "Fidži",
+        "en": "Fiji"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:FRA",
+      "canonical": "FRA",
+      "aliases": {
+        "alpha3": "FRA",
+        "alpha2": "FR",
+        "alpha2_lower": "fr",
+        "weo": "FRA"
+      },
+      "name": {
+        "cs": "Francie",
+        "en": "France"
+      },
+      "currency": "EUR",
+      "observed_as": {
+        "alpha3": 56,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:FSM",
+      "canonical": "FSM",
+      "aliases": {
+        "alpha3": "FSM",
+        "alpha2": "FM",
+        "alpha2_lower": "fm",
+        "weo": "FSM"
+      },
+      "name": {
+        "cs": "Mikronésie",
+        "en": "Federated States of Micronesia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GAB",
+      "canonical": "GAB",
+      "aliases": {
+        "alpha3": "GAB",
+        "alpha2": "GA",
+        "alpha2_lower": "ga",
+        "weo": "GAB"
+      },
+      "name": {
+        "cs": "Gabon",
+        "en": "Gabon"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GBR",
+      "canonical": "GBR",
+      "aliases": {
+        "alpha3": "GBR",
+        "alpha2": "GB",
+        "alpha2_lower": "gb",
+        "weo": "GBR"
+      },
+      "name": {
+        "cs": "Spojené království",
+        "en": "United Kingdom"
+      },
+      "currency": "GBP",
+      "observed_as": {
+        "alpha3": 48,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GEO",
+      "canonical": "GEO",
+      "aliases": {
+        "alpha3": "GEO",
+        "alpha2": "GE",
+        "alpha2_lower": "ge",
+        "weo": "GEO"
+      },
+      "name": {
+        "cs": "Gruzie",
+        "en": "Georgia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 20,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GHA",
+      "canonical": "GHA",
+      "aliases": {
+        "alpha3": "GHA",
+        "alpha2": "GH",
+        "alpha2_lower": "gh",
+        "weo": "GHA"
+      },
+      "name": {
+        "cs": "Ghana",
+        "en": "Ghana"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GIN",
+      "canonical": "GIN",
+      "aliases": {
+        "alpha3": "GIN",
+        "alpha2": "GN",
+        "alpha2_lower": "gn",
+        "weo": "GIN"
+      },
+      "name": {
+        "cs": "Guinea",
+        "en": "Guinea"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GMB",
+      "canonical": "GMB",
+      "aliases": {
+        "alpha3": "GMB",
+        "alpha2": "GM",
+        "alpha2_lower": "gm",
+        "weo": "GMB"
+      },
+      "name": {
+        "cs": "Gambie",
+        "en": "Gambia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GNB",
+      "canonical": "GNB",
+      "aliases": {
+        "alpha3": "GNB",
+        "alpha2": "GW",
+        "alpha2_lower": "gw",
+        "weo": "GNB"
+      },
+      "name": {
+        "cs": "Guinea-Bissau",
+        "en": "Guinea-Bissau"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GNQ",
+      "canonical": "GNQ",
+      "aliases": {
+        "alpha3": "GNQ",
+        "alpha2": "GQ",
+        "alpha2_lower": "gq",
+        "weo": "GNQ"
+      },
+      "name": {
+        "cs": "Rovníková Guinea",
+        "en": "Equatorial Guinea"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GRC",
+      "canonical": "GRC",
+      "aliases": {
+        "alpha3": "GRC",
+        "alpha2": "GR",
+        "alpha2_lower": "gr",
+        "weo": "GRC"
+      },
+      "name": {
+        "cs": "Řecko",
+        "en": "Greece"
+      },
+      "currency": "EUR",
+      "observed_as": {
+        "alpha3": 34,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GRD",
+      "canonical": "GRD",
+      "aliases": {
+        "alpha3": "GRD",
+        "alpha2": "GD",
+        "alpha2_lower": "gd",
+        "weo": "GRD"
+      },
+      "name": {
+        "cs": "Grenada",
+        "en": "Grenada"
+      },
+      "currency": "XCD",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GTM",
+      "canonical": "GTM",
+      "aliases": {
+        "alpha3": "GTM",
+        "alpha2": "GT",
+        "alpha2_lower": "gt",
+        "weo": "GTM"
+      },
+      "name": {
+        "cs": "Guatemala",
+        "en": "Guatemala"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:GUY",
+      "canonical": "GUY",
+      "aliases": {
+        "alpha3": "GUY",
+        "alpha2": "GY",
+        "alpha2_lower": "gy",
+        "weo": "GUY"
+      },
+      "name": {
+        "cs": "Guyana",
+        "en": "Guyana"
+      },
+      "currency": "GYD",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:HND",
+      "canonical": "HND",
+      "aliases": {
+        "alpha3": "HND",
+        "alpha2": "HN",
+        "alpha2_lower": "hn",
+        "weo": "HND"
+      },
+      "name": {
+        "cs": "Honduras",
+        "en": "Honduras"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 14,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:HRV",
+      "canonical": "HRV",
+      "aliases": {
+        "alpha3": "HRV",
+        "alpha2": "HR",
+        "alpha2_lower": "hr",
+        "weo": "HRV"
+      },
+      "name": {
+        "cs": "Chorvatsko",
+        "en": "Croatia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 15,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:HTI",
+      "canonical": "HTI",
+      "aliases": {
+        "alpha3": "HTI",
+        "alpha2": "HT",
+        "alpha2_lower": "ht",
+        "weo": "HTI"
+      },
+      "name": {
+        "cs": "Haiti",
+        "en": "Haiti"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:HUN",
+      "canonical": "HUN",
+      "aliases": {
+        "alpha3": "HUN",
+        "alpha2": "HU",
+        "alpha2_lower": "hu",
+        "weo": "HUN"
+      },
+      "name": {
+        "cs": "Maďarsko",
+        "en": "Hungary"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:IDN",
+      "canonical": "IDN",
+      "aliases": {
+        "alpha3": "IDN",
+        "alpha2": "ID",
+        "alpha2_lower": "id",
+        "weo": "IDN"
+      },
+      "name": {
+        "cs": "Indonésie",
+        "en": "Indonesia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:IND",
+      "canonical": "IND",
+      "aliases": {
+        "alpha3": "IND",
+        "alpha2": "IN",
+        "alpha2_lower": "in",
+        "weo": "IND"
+      },
+      "name": {
+        "cs": "Indie",
+        "en": "India"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 14,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:IRL",
+      "canonical": "IRL",
+      "aliases": {
+        "alpha3": "IRL",
+        "alpha2": "IE",
+        "alpha2_lower": "ie",
+        "weo": "IRL"
+      },
+      "name": {
+        "cs": "Irsko",
+        "en": "Ireland"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:IRN",
+      "canonical": "IRN",
+      "aliases": {
+        "alpha3": "IRN",
+        "alpha2": "IR",
+        "alpha2_lower": "ir",
+        "weo": "IRN"
+      },
+      "name": {
+        "cs": "Írán",
+        "en": "Iran"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:IRQ",
+      "canonical": "IRQ",
+      "aliases": {
+        "alpha3": "IRQ",
+        "alpha2": "IQ",
+        "alpha2_lower": "iq",
+        "weo": "IRQ"
+      },
+      "name": {
+        "cs": "Irák",
+        "en": "Iraq"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ISL",
+      "canonical": "ISL",
+      "aliases": {
+        "alpha3": "ISL",
+        "alpha2": "IS",
+        "alpha2_lower": "is",
+        "weo": "ISL"
+      },
+      "name": {
+        "cs": "Island",
+        "en": "Iceland"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ISR",
+      "canonical": "ISR",
+      "aliases": {
+        "alpha3": "ISR",
+        "alpha2": "IL",
+        "alpha2_lower": "il",
+        "weo": "ISR"
+      },
+      "name": {
+        "cs": "Izrael",
+        "en": "Israel"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ITA",
+      "canonical": "ITA",
+      "aliases": {
+        "alpha3": "ITA",
+        "alpha2": "IT",
+        "alpha2_lower": "it",
+        "weo": "ITA"
+      },
+      "name": {
+        "cs": "Itálie",
+        "en": "Italy"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 23,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:JAM",
+      "canonical": "JAM",
+      "aliases": {
+        "alpha3": "JAM",
+        "alpha2": "JM",
+        "alpha2_lower": "jm",
+        "weo": "JAM"
+      },
+      "name": {
+        "cs": "Jamajka",
+        "en": "Jamaica"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:JOR",
+      "canonical": "JOR",
+      "aliases": {
+        "alpha3": "JOR",
+        "alpha2": "JO",
+        "alpha2_lower": "jo",
+        "weo": "JOR"
+      },
+      "name": {
+        "cs": "Jordánsko",
+        "en": "Jordan"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:JPN",
+      "canonical": "JPN",
+      "aliases": {
+        "alpha3": "JPN",
+        "alpha2": "JP",
+        "alpha2_lower": "jp",
+        "weo": "JPN"
+      },
+      "name": {
+        "cs": "Japonsko",
+        "en": "Japan"
+      },
+      "currency": "JPY",
+      "observed_as": {
+        "alpha3": 29,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KAZ",
+      "canonical": "KAZ",
+      "aliases": {
+        "alpha3": "KAZ",
+        "alpha2": "KZ",
+        "alpha2_lower": "kz",
+        "weo": "KAZ"
+      },
+      "name": {
+        "cs": "Kazachstán",
+        "en": "Kazakhstan"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KEN",
+      "canonical": "KEN",
+      "aliases": {
+        "alpha3": "KEN",
+        "alpha2": "KE",
+        "alpha2_lower": "ke",
+        "weo": "KEN"
+      },
+      "name": {
+        "cs": "Keňa",
+        "en": "Kenya"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KGZ",
+      "canonical": "KGZ",
+      "aliases": {
+        "alpha3": "KGZ",
+        "alpha2": "KG",
+        "alpha2_lower": "kg",
+        "weo": "KGZ"
+      },
+      "name": {
+        "cs": "Kyrgyzstán",
+        "en": "Kyrgyzstan"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KHM",
+      "canonical": "KHM",
+      "aliases": {
+        "alpha3": "KHM",
+        "alpha2": "KH",
+        "alpha2_lower": "kh",
+        "weo": "KHM"
+      },
+      "name": {
+        "cs": "Kambodža",
+        "en": "Cambodia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KIR",
+      "canonical": "KIR",
+      "aliases": {
+        "alpha3": "KIR",
+        "alpha2": "KI",
+        "alpha2_lower": "ki",
+        "weo": "KIR"
+      },
+      "name": {
+        "cs": "Kiribati",
+        "en": "Kiribati"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KNA",
+      "canonical": "KNA",
+      "aliases": {
+        "alpha3": "KNA",
+        "alpha2": "KN",
+        "alpha2_lower": "kn",
+        "weo": "KNA"
+      },
+      "name": {
+        "cs": "Svatý Kryštof a Nevis",
+        "en": "Saint Kitts and Nevis"
+      },
+      "currency": "XCD",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KOR",
+      "canonical": "KOR",
+      "aliases": {
+        "alpha3": "KOR",
+        "alpha2": "KR",
+        "alpha2_lower": "kr",
+        "weo": "KOR"
+      },
+      "name": {
+        "cs": "Jižní Korea",
+        "en": "South Korea"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:KWT",
+      "canonical": "KWT",
+      "aliases": {
+        "alpha3": "KWT",
+        "alpha2": "KW",
+        "alpha2_lower": "kw",
+        "weo": "KWT"
+      },
+      "name": {
+        "cs": "Kuvajt",
+        "en": "Kuwait"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LAO",
+      "canonical": "LAO",
+      "aliases": {
+        "alpha3": "LAO",
+        "alpha2": "LA",
+        "alpha2_lower": "la",
+        "weo": "LAO"
+      },
+      "name": {
+        "cs": "Laos",
+        "en": "Lao People's Democratic Republic"
+      },
+      "currency": "LAK",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LBN",
+      "canonical": "LBN",
+      "aliases": {
+        "alpha3": "LBN",
+        "alpha2": "LB",
+        "alpha2_lower": "lb",
+        "weo": "LBN"
+      },
+      "name": {
+        "cs": "Libanon",
+        "en": "Lebanon"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LBR",
+      "canonical": "LBR",
+      "aliases": {
+        "alpha3": "LBR",
+        "alpha2": "LR",
+        "alpha2_lower": "lr",
+        "weo": "LBR"
+      },
+      "name": {
+        "cs": "Libérie",
+        "en": "Liberia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LBY",
+      "canonical": "LBY",
+      "aliases": {
+        "alpha3": "LBY",
+        "alpha2": "LY",
+        "alpha2_lower": "ly",
+        "weo": "LBY"
+      },
+      "name": {
+        "cs": "Libye",
+        "en": "Libya"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LCA",
+      "canonical": "LCA",
+      "aliases": {
+        "alpha3": "LCA",
+        "alpha2": "LC",
+        "alpha2_lower": "lc",
+        "weo": "LCA"
+      },
+      "name": {
+        "cs": "Svatá Lucie",
+        "en": "Saint Lucia"
+      },
+      "currency": "XCD",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LIE",
+      "canonical": "LIE",
+      "aliases": {
+        "alpha3": "LIE",
+        "alpha2": "LI",
+        "alpha2_lower": "li",
+        "weo": "LIE"
+      },
+      "name": {
+        "cs": "Lichtenštejnsko",
+        "en": "Liechtenstein"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LKA",
+      "canonical": "LKA",
+      "aliases": {
+        "alpha3": "LKA",
+        "alpha2": "LK",
+        "alpha2_lower": "lk",
+        "weo": "LKA"
+      },
+      "name": {
+        "cs": "Srí Lanka",
+        "en": "Sri Lanka"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LSO",
+      "canonical": "LSO",
+      "aliases": {
+        "alpha3": "LSO",
+        "alpha2": "LS",
+        "alpha2_lower": "ls",
+        "weo": "LSO"
+      },
+      "name": {
+        "cs": "Lesotho",
+        "en": "Lesotho"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LTU",
+      "canonical": "LTU",
+      "aliases": {
+        "alpha3": "LTU",
+        "alpha2": "LT",
+        "alpha2_lower": "lt",
+        "weo": "LTU"
+      },
+      "name": {
+        "cs": "Litva",
+        "en": "Lithuania"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LUX",
+      "canonical": "LUX",
+      "aliases": {
+        "alpha3": "LUX",
+        "alpha2": "LU",
+        "alpha2_lower": "lu",
+        "weo": "LUX"
+      },
+      "name": {
+        "cs": "Lucembursko",
+        "en": "Luxembourg"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:LVA",
+      "canonical": "LVA",
+      "aliases": {
+        "alpha3": "LVA",
+        "alpha2": "LV",
+        "alpha2_lower": "lv",
+        "weo": "LVA"
+      },
+      "name": {
+        "cs": "Lotyšsko",
+        "en": "Latvia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MAR",
+      "canonical": "MAR",
+      "aliases": {
+        "alpha3": "MAR",
+        "alpha2": "MA",
+        "alpha2_lower": "ma",
+        "weo": "MAR"
+      },
+      "name": {
+        "cs": "Maroko",
+        "en": "Morocco"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MCO",
+      "canonical": "MCO",
+      "aliases": {
+        "alpha3": "MCO",
+        "alpha2": "MC",
+        "alpha2_lower": "mc",
+        "weo": null
+      },
+      "name": {
+        "cs": "Monako",
+        "en": "Monaco"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MDA",
+      "canonical": "MDA",
+      "aliases": {
+        "alpha3": "MDA",
+        "alpha2": "MD",
+        "alpha2_lower": "md",
+        "weo": "MDA"
+      },
+      "name": {
+        "cs": "Moldavsko",
+        "en": "Moldova"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MDG",
+      "canonical": "MDG",
+      "aliases": {
+        "alpha3": "MDG",
+        "alpha2": "MG",
+        "alpha2_lower": "mg",
+        "weo": "MDG"
+      },
+      "name": {
+        "cs": "Madagaskar",
+        "en": "Madagascar"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MDV",
+      "canonical": "MDV",
+      "aliases": {
+        "alpha3": "MDV",
+        "alpha2": "MV",
+        "alpha2_lower": "mv",
+        "weo": "MDV"
+      },
+      "name": {
+        "cs": "Maledivy",
+        "en": "Maldives"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MEX",
+      "canonical": "MEX",
+      "aliases": {
+        "alpha3": "MEX",
+        "alpha2": "MX",
+        "alpha2_lower": "mx",
+        "weo": "MEX"
+      },
+      "name": {
+        "cs": "Mexiko",
+        "en": "Mexico"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MHL",
+      "canonical": "MHL",
+      "aliases": {
+        "alpha3": "MHL",
+        "alpha2": "MH",
+        "alpha2_lower": "mh",
+        "weo": "MHL"
+      },
+      "name": {
+        "cs": "Marshallovy ostrovy",
+        "en": "Marshall Islands"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MKD",
+      "canonical": "MKD",
+      "aliases": {
+        "alpha3": "MKD",
+        "alpha2": "MK",
+        "alpha2_lower": "mk",
+        "weo": "MKD"
+      },
+      "name": {
+        "cs": "Severní Makedonie",
+        "en": "Macedonia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MLI",
+      "canonical": "MLI",
+      "aliases": {
+        "alpha3": "MLI",
+        "alpha2": "ML",
+        "alpha2_lower": "ml",
+        "weo": "MLI"
+      },
+      "name": {
+        "cs": "Mali",
+        "en": "Mali"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MLT",
+      "canonical": "MLT",
+      "aliases": {
+        "alpha3": "MLT",
+        "alpha2": "MT",
+        "alpha2_lower": "mt",
+        "weo": "MLT"
+      },
+      "name": {
+        "cs": "Malta",
+        "en": "Malta"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 15,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MMR",
+      "canonical": "MMR",
+      "aliases": {
+        "alpha3": "MMR",
+        "alpha2": "MM",
+        "alpha2_lower": "mm",
+        "weo": "MMR"
+      },
+      "name": {
+        "cs": "Myanmar (Barma)",
+        "en": "Myanmar"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MNE",
+      "canonical": "MNE",
+      "aliases": {
+        "alpha3": "MNE",
+        "alpha2": "ME",
+        "alpha2_lower": "me",
+        "weo": "MNE"
+      },
+      "name": {
+        "cs": "Černá Hora",
+        "en": "Montenegro"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MNG",
+      "canonical": "MNG",
+      "aliases": {
+        "alpha3": "MNG",
+        "alpha2": "MN",
+        "alpha2_lower": "mn",
+        "weo": "MNG"
+      },
+      "name": {
+        "cs": "Mongolsko",
+        "en": "Mongolia"
+      },
+      "currency": "MNT",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MOZ",
+      "canonical": "MOZ",
+      "aliases": {
+        "alpha3": "MOZ",
+        "alpha2": "MZ",
+        "alpha2_lower": "mz",
+        "weo": "MOZ"
+      },
+      "name": {
+        "cs": "Mosambik",
+        "en": "Mozambique"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MRT",
+      "canonical": "MRT",
+      "aliases": {
+        "alpha3": "MRT",
+        "alpha2": "MR",
+        "alpha2_lower": "mr",
+        "weo": "MRT"
+      },
+      "name": {
+        "cs": "Mauritánie",
+        "en": "Mauritania"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MUS",
+      "canonical": "MUS",
+      "aliases": {
+        "alpha3": "MUS",
+        "alpha2": "MU",
+        "alpha2_lower": "mu",
+        "weo": "MUS"
+      },
+      "name": {
+        "cs": "Mauricius",
+        "en": "Mauritius"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MWI",
+      "canonical": "MWI",
+      "aliases": {
+        "alpha3": "MWI",
+        "alpha2": "MW",
+        "alpha2_lower": "mw",
+        "weo": "MWI"
+      },
+      "name": {
+        "cs": "Malawi",
+        "en": "Malawi"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:MYS",
+      "canonical": "MYS",
+      "aliases": {
+        "alpha3": "MYS",
+        "alpha2": "MY",
+        "alpha2_lower": "my",
+        "weo": "MYS"
+      },
+      "name": {
+        "cs": "Malajsie",
+        "en": "Malaysia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NAM",
+      "canonical": "NAM",
+      "aliases": {
+        "alpha3": "NAM",
+        "alpha2": "NA",
+        "alpha2_lower": "na",
+        "weo": "NAM"
+      },
+      "name": {
+        "cs": "Namibie",
+        "en": "Namibia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NER",
+      "canonical": "NER",
+      "aliases": {
+        "alpha3": "NER",
+        "alpha2": "NE",
+        "alpha2_lower": "ne",
+        "weo": "NER"
+      },
+      "name": {
+        "cs": "Niger",
+        "en": "Niger"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NGA",
+      "canonical": "NGA",
+      "aliases": {
+        "alpha3": "NGA",
+        "alpha2": "NG",
+        "alpha2_lower": "ng",
+        "weo": "NGA"
+      },
+      "name": {
+        "cs": "Nigérie",
+        "en": "Nigeria"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NIC",
+      "canonical": "NIC",
+      "aliases": {
+        "alpha3": "NIC",
+        "alpha2": "NI",
+        "alpha2_lower": "ni",
+        "weo": "NIC"
+      },
+      "name": {
+        "cs": "Nikaragua",
+        "en": "Nicaragua"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NLD",
+      "canonical": "NLD",
+      "aliases": {
+        "alpha3": "NLD",
+        "alpha2": "NL",
+        "alpha2_lower": "nl",
+        "weo": "NLD"
+      },
+      "name": {
+        "cs": "Nizozemsko",
+        "en": "Netherlands"
+      },
+      "currency": "EUR",
+      "observed_as": {
+        "alpha3": 36,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NOR",
+      "canonical": "NOR",
+      "aliases": {
+        "alpha3": "NOR",
+        "alpha2": "NO",
+        "alpha2_lower": "no",
+        "weo": "NOR"
+      },
+      "name": {
+        "cs": "Norsko",
+        "en": "Norway"
+      },
+      "currency": "NOK",
+      "observed_as": {
+        "alpha3": 37,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NPL",
+      "canonical": "NPL",
+      "aliases": {
+        "alpha3": "NPL",
+        "alpha2": "NP",
+        "alpha2_lower": "np",
+        "weo": "NPL"
+      },
+      "name": {
+        "cs": "Nepál",
+        "en": "Nepal"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NRU",
+      "canonical": "NRU",
+      "aliases": {
+        "alpha3": "NRU",
+        "alpha2": "NR",
+        "alpha2_lower": "nr",
+        "weo": "NRU"
+      },
+      "name": {
+        "cs": "Nauru",
+        "en": "Nauru"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:NZL",
+      "canonical": "NZL",
+      "aliases": {
+        "alpha3": "NZL",
+        "alpha2": "NZ",
+        "alpha2_lower": "nz",
+        "weo": "NZL"
+      },
+      "name": {
+        "cs": "Nový Zéland",
+        "en": "New Zealand"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 13,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:OMN",
+      "canonical": "OMN",
+      "aliases": {
+        "alpha3": "OMN",
+        "alpha2": "OM",
+        "alpha2_lower": "om",
+        "weo": "OMN"
+      },
+      "name": {
+        "cs": "Omán",
+        "en": "Oman"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PAK",
+      "canonical": "PAK",
+      "aliases": {
+        "alpha3": "PAK",
+        "alpha2": "PK",
+        "alpha2_lower": "pk",
+        "weo": "PAK"
+      },
+      "name": {
+        "cs": "Pákistán",
+        "en": "Pakistan"
+      },
+      "currency": "PKR",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PAN",
+      "canonical": "PAN",
+      "aliases": {
+        "alpha3": "PAN",
+        "alpha2": "PA",
+        "alpha2_lower": "pa",
+        "weo": "PAN"
+      },
+      "name": {
+        "cs": "Panama",
+        "en": "Panama"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PER",
+      "canonical": "PER",
+      "aliases": {
+        "alpha3": "PER",
+        "alpha2": "PE",
+        "alpha2_lower": "pe",
+        "weo": "PER"
+      },
+      "name": {
+        "cs": "Peru",
+        "en": "Peru"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 20,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PHL",
+      "canonical": "PHL",
+      "aliases": {
+        "alpha3": "PHL",
+        "alpha2": "PH",
+        "alpha2_lower": "ph",
+        "weo": "PHL"
+      },
+      "name": {
+        "cs": "Filipíny",
+        "en": "Philippines"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PLW",
+      "canonical": "PLW",
+      "aliases": {
+        "alpha3": "PLW",
+        "alpha2": "PW",
+        "alpha2_lower": "pw",
+        "weo": "PLW"
+      },
+      "name": {
+        "cs": "Palau",
+        "en": "Palau"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PNG",
+      "canonical": "PNG",
+      "aliases": {
+        "alpha3": "PNG",
+        "alpha2": "PG",
+        "alpha2_lower": "pg",
+        "weo": "PNG"
+      },
+      "name": {
+        "cs": "Papua-Nová Guinea",
+        "en": "Papua New Guinea"
+      },
+      "currency": "PGK",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:POL",
+      "canonical": "POL",
+      "aliases": {
+        "alpha3": "POL",
+        "alpha2": "PL",
+        "alpha2_lower": "pl",
+        "weo": "POL"
+      },
+      "name": {
+        "cs": "Polsko",
+        "en": "Poland"
+      },
+      "currency": "PLN",
+      "observed_as": {
+        "alpha3": 54,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PRK",
+      "canonical": "PRK",
+      "aliases": {
+        "alpha3": "PRK",
+        "alpha2": "KP",
+        "alpha2_lower": "kp",
+        "weo": null
+      },
+      "name": {
+        "cs": "Severní Korea",
+        "en": "North Korea"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PRT",
+      "canonical": "PRT",
+      "aliases": {
+        "alpha3": "PRT",
+        "alpha2": "PT",
+        "alpha2_lower": "pt",
+        "weo": "PRT"
+      },
+      "name": {
+        "cs": "Portugalsko",
+        "en": "Portugal"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PRY",
+      "canonical": "PRY",
+      "aliases": {
+        "alpha3": "PRY",
+        "alpha2": "PY",
+        "alpha2_lower": "py",
+        "weo": "PRY"
+      },
+      "name": {
+        "cs": "Paraguay",
+        "en": "Paraguay"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:PSE",
+      "canonical": "PSE",
+      "aliases": {
+        "alpha3": "PSE",
+        "alpha2": "PS",
+        "alpha2_lower": "ps",
+        "weo": "WBG"
+      },
+      "name": {
+        "cs": "Palestinská území",
+        "en": "Palestinian Territories"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:QAT",
+      "canonical": "QAT",
+      "aliases": {
+        "alpha3": "QAT",
+        "alpha2": "QA",
+        "alpha2_lower": "qa",
+        "weo": "QAT"
+      },
+      "name": {
+        "cs": "Katar",
+        "en": "Qatar"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ROU",
+      "canonical": "ROU",
+      "aliases": {
+        "alpha3": "ROU",
+        "alpha2": "RO",
+        "alpha2_lower": "ro",
+        "weo": "ROU"
+      },
+      "name": {
+        "cs": "Rumunsko",
+        "en": "Romania"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 15,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:RUS",
+      "canonical": "RUS",
+      "aliases": {
+        "alpha3": "RUS",
+        "alpha2": "RU",
+        "alpha2_lower": "ru",
+        "weo": "RUS"
+      },
+      "name": {
+        "cs": "Rusko",
+        "en": "Russia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:RWA",
+      "canonical": "RWA",
+      "aliases": {
+        "alpha3": "RWA",
+        "alpha2": "RW",
+        "alpha2_lower": "rw",
+        "weo": "RWA"
+      },
+      "name": {
+        "cs": "Rwanda",
+        "en": "Rwanda"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SAU",
+      "canonical": "SAU",
+      "aliases": {
+        "alpha3": "SAU",
+        "alpha2": "SA",
+        "alpha2_lower": "sa",
+        "weo": "SAU"
+      },
+      "name": {
+        "cs": "Saúdská Arábie",
+        "en": "Saudi Arabia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SDN",
+      "canonical": "SDN",
+      "aliases": {
+        "alpha3": "SDN",
+        "alpha2": "SD",
+        "alpha2_lower": "sd",
+        "weo": "SDN"
+      },
+      "name": {
+        "cs": "Súdán",
+        "en": "Sudan"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SEN",
+      "canonical": "SEN",
+      "aliases": {
+        "alpha3": "SEN",
+        "alpha2": "SN",
+        "alpha2_lower": "sn",
+        "weo": "SEN"
+      },
+      "name": {
+        "cs": "Senegal",
+        "en": "Senegal"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SGP",
+      "canonical": "SGP",
+      "aliases": {
+        "alpha3": "SGP",
+        "alpha2": "SG",
+        "alpha2_lower": "sg",
+        "weo": "SGP"
+      },
+      "name": {
+        "cs": "Singapur",
+        "en": "Singapore"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SLB",
+      "canonical": "SLB",
+      "aliases": {
+        "alpha3": "SLB",
+        "alpha2": "SB",
+        "alpha2_lower": "sb",
+        "weo": "SLB"
+      },
+      "name": {
+        "cs": "Šalamounovy ostrovy",
+        "en": "Solomon Islands"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SLE",
+      "canonical": "SLE",
+      "aliases": {
+        "alpha3": "SLE",
+        "alpha2": "SL",
+        "alpha2_lower": "sl",
+        "weo": "SLE"
+      },
+      "name": {
+        "cs": "Sierra Leone",
+        "en": "Sierra Leone"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SLV",
+      "canonical": "SLV",
+      "aliases": {
+        "alpha3": "SLV",
+        "alpha2": "SV",
+        "alpha2_lower": "sv",
+        "weo": "SLV"
+      },
+      "name": {
+        "cs": "Salvador",
+        "en": "El Salvador"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 18,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SMR",
+      "canonical": "SMR",
+      "aliases": {
+        "alpha3": "SMR",
+        "alpha2": "SM",
+        "alpha2_lower": "sm",
+        "weo": "SMR"
+      },
+      "name": {
+        "cs": "San Marino",
+        "en": "San Marino"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SOM",
+      "canonical": "SOM",
+      "aliases": {
+        "alpha3": "SOM",
+        "alpha2": "SO",
+        "alpha2_lower": "so",
+        "weo": "SOM"
+      },
+      "name": {
+        "cs": "Somálsko",
+        "en": "Somalia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SRB",
+      "canonical": "SRB",
+      "aliases": {
+        "alpha3": "SRB",
+        "alpha2": "RS",
+        "alpha2_lower": "rs",
+        "weo": "SRB"
+      },
+      "name": {
+        "cs": "Srbsko",
+        "en": "Serbia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SSD",
+      "canonical": "SSD",
+      "aliases": {
+        "alpha3": "SSD",
+        "alpha2": "SS",
+        "alpha2_lower": "ss",
+        "weo": "SSD"
+      },
+      "name": {
+        "cs": "Jižní Súdán",
+        "en": "South Sudan"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:STP",
+      "canonical": "STP",
+      "aliases": {
+        "alpha3": "STP",
+        "alpha2": "ST",
+        "alpha2_lower": "st",
+        "weo": "STP"
+      },
+      "name": {
+        "cs": "Svatý Tomáš a Princův ostrov",
+        "en": "Sao Tome and Principe"
+      },
+      "currency": "STN",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SUR",
+      "canonical": "SUR",
+      "aliases": {
+        "alpha3": "SUR",
+        "alpha2": "SR",
+        "alpha2_lower": "sr",
+        "weo": "SUR"
+      },
+      "name": {
+        "cs": "Surinam",
+        "en": "Suriname"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SVK",
+      "canonical": "SVK",
+      "aliases": {
+        "alpha3": "SVK",
+        "alpha2": "SK",
+        "alpha2_lower": "sk",
+        "weo": "SVK"
+      },
+      "name": {
+        "cs": "Slovensko",
+        "en": "Slovakia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SVN",
+      "canonical": "SVN",
+      "aliases": {
+        "alpha3": "SVN",
+        "alpha2": "SI",
+        "alpha2_lower": "si",
+        "weo": "SVN"
+      },
+      "name": {
+        "cs": "Slovinsko",
+        "en": "Slovenia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 16,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SWE",
+      "canonical": "SWE",
+      "aliases": {
+        "alpha3": "SWE",
+        "alpha2": "SE",
+        "alpha2_lower": "se",
+        "weo": "SWE"
+      },
+      "name": {
+        "cs": "Švédsko",
+        "en": "Sweden"
+      },
+      "currency": "SEK",
+      "observed_as": {
+        "alpha3": 368,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SWZ",
+      "canonical": "SWZ",
+      "aliases": {
+        "alpha3": "SWZ",
+        "alpha2": "SZ",
+        "alpha2_lower": "sz",
+        "weo": "SWZ"
+      },
+      "name": {
+        "cs": "Eswatini",
+        "en": "Swaziland"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SYC",
+      "canonical": "SYC",
+      "aliases": {
+        "alpha3": "SYC",
+        "alpha2": "SC",
+        "alpha2_lower": "sc",
+        "weo": "SYC"
+      },
+      "name": {
+        "cs": "Seychely",
+        "en": "Seychelles"
+      },
+      "currency": "SCR",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:SYR",
+      "canonical": "SYR",
+      "aliases": {
+        "alpha3": "SYR",
+        "alpha2": "SY",
+        "alpha2_lower": "sy",
+        "weo": "SYR"
+      },
+      "name": {
+        "cs": "Sýrie",
+        "en": "Syria"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TCD",
+      "canonical": "TCD",
+      "aliases": {
+        "alpha3": "TCD",
+        "alpha2": "TD",
+        "alpha2_lower": "td",
+        "weo": "TCD"
+      },
+      "name": {
+        "cs": "Čad",
+        "en": "Chad"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TGO",
+      "canonical": "TGO",
+      "aliases": {
+        "alpha3": "TGO",
+        "alpha2": "TG",
+        "alpha2_lower": "tg",
+        "weo": "TGO"
+      },
+      "name": {
+        "cs": "Togo",
+        "en": "Togo"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:THA",
+      "canonical": "THA",
+      "aliases": {
+        "alpha3": "THA",
+        "alpha2": "TH",
+        "alpha2_lower": "th",
+        "weo": "THA"
+      },
+      "name": {
+        "cs": "Thajsko",
+        "en": "Thailand"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TJK",
+      "canonical": "TJK",
+      "aliases": {
+        "alpha3": "TJK",
+        "alpha2": "TJ",
+        "alpha2_lower": "tj",
+        "weo": "TJK"
+      },
+      "name": {
+        "cs": "Tádžikistán",
+        "en": "Tajikistan"
+      },
+      "currency": "TJS",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TKM",
+      "canonical": "TKM",
+      "aliases": {
+        "alpha3": "TKM",
+        "alpha2": "TM",
+        "alpha2_lower": "tm",
+        "weo": "TKM"
+      },
+      "name": {
+        "cs": "Turkmenistán",
+        "en": "Turkmenistan"
+      },
+      "currency": "TMT",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TLS",
+      "canonical": "TLS",
+      "aliases": {
+        "alpha3": "TLS",
+        "alpha2": "TL",
+        "alpha2_lower": "tl",
+        "weo": "TLS"
+      },
+      "name": {
+        "cs": "Východní Timor",
+        "en": "Timor-Leste"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TON",
+      "canonical": "TON",
+      "aliases": {
+        "alpha3": "TON",
+        "alpha2": "TO",
+        "alpha2_lower": "to",
+        "weo": "TON"
+      },
+      "name": {
+        "cs": "Tonga",
+        "en": "Tonga"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TTO",
+      "canonical": "TTO",
+      "aliases": {
+        "alpha3": "TTO",
+        "alpha2": "TT",
+        "alpha2_lower": "tt",
+        "weo": "TTO"
+      },
+      "name": {
+        "cs": "Trinidad a Tobago",
+        "en": "Trinidad and Tobago"
+      },
+      "currency": "TTD",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TUN",
+      "canonical": "TUN",
+      "aliases": {
+        "alpha3": "TUN",
+        "alpha2": "TN",
+        "alpha2_lower": "tn",
+        "weo": "TUN"
+      },
+      "name": {
+        "cs": "Tunisko",
+        "en": "Tunisia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TUR",
+      "canonical": "TUR",
+      "aliases": {
+        "alpha3": "TUR",
+        "alpha2": "TR",
+        "alpha2_lower": "tr",
+        "weo": "TUR"
+      },
+      "name": {
+        "cs": "Turecko",
+        "en": "Turkey"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TUV",
+      "canonical": "TUV",
+      "aliases": {
+        "alpha3": "TUV",
+        "alpha2": "TV",
+        "alpha2_lower": "tv",
+        "weo": "TUV"
+      },
+      "name": {
+        "cs": "Tuvalu",
+        "en": "Tuvalu"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:TZA",
+      "canonical": "TZA",
+      "aliases": {
+        "alpha3": "TZA",
+        "alpha2": "TZ",
+        "alpha2_lower": "tz",
+        "weo": "TZA"
+      },
+      "name": {
+        "cs": "Tanzanie",
+        "en": "Tanzania"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:UGA",
+      "canonical": "UGA",
+      "aliases": {
+        "alpha3": "UGA",
+        "alpha2": "UG",
+        "alpha2_lower": "ug",
+        "weo": "UGA"
+      },
+      "name": {
+        "cs": "Uganda",
+        "en": "Uganda"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:UKR",
+      "canonical": "UKR",
+      "aliases": {
+        "alpha3": "UKR",
+        "alpha2": "UA",
+        "alpha2_lower": "ua",
+        "weo": "UKR"
+      },
+      "name": {
+        "cs": "Ukrajina",
+        "en": "Ukraine"
+      },
+      "currency": "UAH",
+      "observed_as": {
+        "alpha3": 29,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:URY",
+      "canonical": "URY",
+      "aliases": {
+        "alpha3": "URY",
+        "alpha2": "UY",
+        "alpha2_lower": "uy",
+        "weo": "URY"
+      },
+      "name": {
+        "cs": "Uruguay",
+        "en": "Uruguay"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:USA",
+      "canonical": "USA",
+      "aliases": {
+        "alpha3": "USA",
+        "alpha2": "US",
+        "alpha2_lower": "us",
+        "weo": "USA"
+      },
+      "name": {
+        "cs": "USA",
+        "en": "United States"
+      },
+      "currency": "USD",
+      "observed_as": {
+        "alpha3": 32,
+        "alpha2": 1,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:UZB",
+      "canonical": "UZB",
+      "aliases": {
+        "alpha3": "UZB",
+        "alpha2": "UZ",
+        "alpha2_lower": "uz",
+        "weo": "UZB"
+      },
+      "name": {
+        "cs": "Uzbekistán",
+        "en": "Uzbekistan"
+      },
+      "currency": "UZS",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:VAT",
+      "canonical": "VAT",
+      "aliases": {
+        "alpha3": "VAT",
+        "alpha2": "VA",
+        "alpha2_lower": "va",
+        "weo": null
+      },
+      "name": {
+        "cs": "Vatikán",
+        "en": "Vatican City"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:VCT",
+      "canonical": "VCT",
+      "aliases": {
+        "alpha3": "VCT",
+        "alpha2": "VC",
+        "alpha2_lower": "vc",
+        "weo": "VCT"
+      },
+      "name": {
+        "cs": "Svatý Vincenc a Grenadiny",
+        "en": "Saint Vincent and the Grenadines"
+      },
+      "currency": "XCD",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:VEN",
+      "canonical": "VEN",
+      "aliases": {
+        "alpha3": "VEN",
+        "alpha2": "VE",
+        "alpha2_lower": "ve",
+        "weo": "VEN"
+      },
+      "name": {
+        "cs": "Venezuela",
+        "en": "Venezuela"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 11,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:VNM",
+      "canonical": "VNM",
+      "aliases": {
+        "alpha3": "VNM",
+        "alpha2": "VN",
+        "alpha2_lower": "vn",
+        "weo": "VNM"
+      },
+      "name": {
+        "cs": "Vietnam",
+        "en": "Vietnam"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 12,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:VUT",
+      "canonical": "VUT",
+      "aliases": {
+        "alpha3": "VUT",
+        "alpha2": "VU",
+        "alpha2_lower": "vu",
+        "weo": "VUT"
+      },
+      "name": {
+        "cs": "Vanuatu",
+        "en": "Vanuatu"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:WSM",
+      "canonical": "WSM",
+      "aliases": {
+        "alpha3": "WSM",
+        "alpha2": "WS",
+        "alpha2_lower": "ws",
+        "weo": "WSM"
+      },
+      "name": {
+        "cs": "Samoa",
+        "en": "Samoa"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:YEM",
+      "canonical": "YEM",
+      "aliases": {
+        "alpha3": "YEM",
+        "alpha2": "YE",
+        "alpha2_lower": "ye",
+        "weo": "YEM"
+      },
+      "name": {
+        "cs": "Jemen",
+        "en": "Yemen"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ZAF",
+      "canonical": "ZAF",
+      "aliases": {
+        "alpha3": "ZAF",
+        "alpha2": "ZA",
+        "alpha2_lower": "za",
+        "weo": "ZAF"
+      },
+      "name": {
+        "cs": "Jihoafrická republika",
+        "en": "South Africa"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ZMB",
+      "canonical": "ZMB",
+      "aliases": {
+        "alpha3": "ZMB",
+        "alpha2": "ZM",
+        "alpha2_lower": "zm",
+        "weo": "ZMB"
+      },
+      "name": {
+        "cs": "Zambie",
+        "en": "Zambia"
+      },
+      "currency": "LCU",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    },
+    {
+      "psd_id": "psd:country:ZWE",
+      "canonical": "ZWE",
+      "aliases": {
+        "alpha3": "ZWE",
+        "alpha2": "ZW",
+        "alpha2_lower": "zw",
+        "weo": "ZWE"
+      },
+      "name": {
+        "cs": "Zimbabwe",
+        "en": "Zimbabwe"
+      },
+      "currency": "ZWG",
+      "observed_as": {
+        "alpha3": 10,
+        "alpha2_lower": 1
+      }
+    }
+  ]
+}

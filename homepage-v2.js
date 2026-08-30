@@ -91,7 +91,67 @@ function cards(){if(!$("#country-cards"))return;const t=I[state.lang],top=state.
 // Everything below the translation layer needs the dataset; translate() alone does not.
 function render(){translate();if(!state.data)return;const coverage=$("#comparison-coverage-count");if(coverage){const period=state.data.period;coverage.textContent=`${state.data.countries.length} × ${period?.year_count??20}`}hero();benchmark();compare();architectureTable();macro();cards()}
 function bindLanguage(){document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>{state.lang=b.dataset.lang;if(window.PSDLanguage)window.PSDLanguage.set(state.lang,{persist:true});else{document.documentElement.lang=state.lang;localStorage.setItem("psd-lang",state.lang);dispatchEvent(new CustomEvent("psdlanguagechange",{detail:{lang:state.lang}}))}history.replaceState(null,"",`?lang=${state.lang}`);render()})}
-function init(){const year=$("#year-select"),metric=$("#metric-select"),group=$("#group-select"),benchmarkCountry=$("#benchmark-country");if(year){for(let y=2024;y>=2005;y--)year.insertAdjacentHTML("beforeend",`<option>${y}</option>`);year.onchange=e=>{state.year=+e.target.value;benchmark();compare();macro()}}if(metric)metric.onchange=e=>{state.metric=e.target.value;compare()};if(group)group.onchange=e=>{state.group=e.target.value;if(!countries().some(c=>c.country_code===state.benchmark))state.benchmark=countries()[0].country_code;benchmarkCountry.innerHTML=countries().map(c=>`<option value="${c.country_code}">${name(c)}</option>`).join("");benchmarkCountry.value=state.benchmark;benchmark();compare()};if(benchmarkCountry)benchmarkCountry.onchange=e=>{state.benchmark=e.target.value;benchmark()};render()}
+/* ---------- A1 — the homepage charts as addressable objects ----------
+   Every chart here is registered with a permanent slug and inherits the affordance rail
+   (table, CSV, cite, source drawer) from psd-chart.js. rows() is an accessor rather than a
+   reference to an artifact shape, so when the fact store lands what sits behind it changes
+   and nothing in the rail moves. Drawer content is series-level provenance read from the
+   artifact itself, which is the interim path recorded in CHART_SYSTEM.md. */
+function chartUnitLabel(unit){const en=state.lang==="en";return unit==="pct_gdp"?(en?"% of GDP":"% HDP"):unit==="eur"?"EUR":unit==="ppp"?(en?"international $":"mezinárodní $"):"%"}
+function chartSource(metricCode){
+  const src=state.data?.source||{},scope=state.data?.scope||{},en=state.lang==="en";
+  const metric=(state.data?.metrics||[]).find(m=>m.metric_code===metricCode);
+  return {
+    name:src.provider||null,
+    url:src.download_page||src.url||null,
+    table:metric?.imf_indicator||null,
+    edition:src.dataset||null,
+    extracted:(state.data?.generated_at||"").slice(0,10)||null,
+    definition:metric?(en?metric.label_en||metric.label_cs:metric.label_cs):null,
+    excludes:scope.institutional_sector==="general_government"?(en?"Central and local government plus social security funds. Market public corporations stay outside.":"Ústřední a místní vláda a fondy sociálního zabezpečení. Tržní veřejné korporace zůstávají mimo."):null,
+    caveat:scope.accounting_note||null,
+  };
+}
+function chartRows(compute){
+  return()=>{
+    if(!state.data)return[];
+    return state.data.countries
+      .map(c=>({code:c.country_code,country:name(c),value:compute(c.country_code)}))
+      .filter(row=>Number.isFinite(row.value))
+      .sort((a,b)=>b.value-a.value)
+      .map(row=>({...row,value:Math.round(row.value*100)/100}));
+  };
+}
+function registerHomeCharts(){
+  if(!window.PSDChart||registerHomeCharts.done)return;
+  const en=state.lang==="en",rate=()=>state.fx?.values.find(v=>v.year===state.year)?.usd_per_eur;
+  const cols=unit=>[
+    {key:"code",label:"ISO"},
+    {key:"country",label:en?"Country":"Země"},
+    {key:"value",label:chartUnitLabel(unit),numeric:true},
+  ];
+  const charts=[
+    ["home-government-expenditure-gdp","expenditure_pct_gdp","pct_gdp",code=>value(code,"expenditure_pct_gdp",2024)],
+    ["home-gdp-per-capita","gdp_per_capita_usd","eur",code=>{const usd=value(code,"gdp_per_capita_usd"),r=rate();return Number.isFinite(usd)&&Number.isFinite(r)?usd/r:null}],
+    ["home-gross-debt-gdp","gross_debt_pct_gdp","pct_gdp",code=>value(code,"gross_debt_pct_gdp")],
+    ["home-gdp-per-capita-ppp","gdp_per_capita_ppp","ppp",code=>value(code,"gdp_per_capita_ppp")],
+    ["home-surplus-frequency",null,"pct",code=>{const share=summary(code)?.surplus_year_share;return Number.isFinite(share)?share*100:null}],
+  ];
+  charts.forEach(([slug,metricCode,unit,compute])=>{
+    const host=document.querySelector(`[data-psd-chart="${slug}"]`);
+    if(!host)return;
+    window.PSDChart.register({
+      slug,el:host,
+      title:()=>host.querySelector("h3,.visual-head span")?.textContent?.trim()||slug,
+      unit:chartUnitLabel(unit),
+      columns:cols(unit),
+      rows:chartRows(compute),
+      source:chartSource(metricCode),
+    });
+  });
+  registerHomeCharts.done=true;
+}
+function init(){const year=$("#year-select"),metric=$("#metric-select"),group=$("#group-select"),benchmarkCountry=$("#benchmark-country");if(year){for(let y=2024;y>=2005;y--)year.insertAdjacentHTML("beforeend",`<option>${y}</option>`);year.onchange=e=>{state.year=+e.target.value;benchmark();compare();macro()}}if(metric)metric.onchange=e=>{state.metric=e.target.value;compare()};if(group)group.onchange=e=>{state.group=e.target.value;if(!countries().some(c=>c.country_code===state.benchmark))state.benchmark=countries()[0].country_code;benchmarkCountry.innerHTML=countries().map(c=>`<option value="${c.country_code}">${name(c)}</option>`).join("");benchmarkCountry.value=state.benchmark;benchmark();compare()};if(benchmarkCountry)benchmarkCountry.onchange=e=>{state.benchmark=e.target.value;benchmark()};render();registerHomeCharts()}
 // language-bootstrap.js keeps the page at visibility:hidden for an English visitor until a
 // translator marks the toggle active. Bind and translate before the request goes out, so a
 // slow or failed fetch can never blank the page and the toggle works without any data.

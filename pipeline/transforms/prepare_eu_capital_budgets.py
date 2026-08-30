@@ -17,6 +17,8 @@ import xml.etree.ElementTree as ET
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
+from country_registry import to_alpha2, to_alpha3
+
 
 ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[3]))
 DEFAULT_REGISTRY = ROOT / "data" / "eu_capital_budget_sources_2026.json"
@@ -325,6 +327,12 @@ def main() -> int:
         local = Decimal(source["local_amount"])
         eur = (local / rates[currency]).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         record = {key: value for key, value in source.items() if key not in {"local_amount", "fiscal_detail"}}
+        # B2 — the source registry records whatever form the upstream publisher uses; the
+        # published artifact carries the canonical one. Canonicalise on write, not upstream.
+        record["country_code"] = to_alpha3(record["country_code"])
+        # Display APIs (Intl.DisplayNames, flag assets) key on alpha-2 and throw on alpha-3,
+        # so the artifact carries both: the canonical code for identity, alpha-2 for display.
+        record["alpha2"] = to_alpha2(record["country_code"])
         record["budget"] = {
             "local_amount": decimal_json(local),
             "local_currency": currency,

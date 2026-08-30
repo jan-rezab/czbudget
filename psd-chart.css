@@ -1,0 +1,175 @@
+/* PSD chart object — the affordance rail (A1).
+   Uses the tokens already defined in styles-v2.css / chart-system.css. No new colour. */
+
+[data-chart-slug] {
+  position: relative;
+}
+
+/* The rail sits inside chart panels that are sometimes paper and sometimes ink (the hero).
+   Everything here is drawn from currentColor so it reads correctly on either ground without
+   a per-panel override, and without introducing a colour. */
+
+.psd-chart-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.psd-chart-action {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: inherit;
+  opacity: 0.72;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  border-radius: 3px;
+  padding: 4px 9px 5px;
+  cursor: pointer;
+  transition: opacity 0.12s ease, border-color 0.12s ease;
+}
+
+.psd-chart-action:hover:not(:disabled) {
+  opacity: 1;
+  border-color: color-mix(in srgb, currentColor 58%, transparent);
+}
+
+.psd-chart-action:focus-visible {
+  outline: 2px solid var(--acid, #a8b63f);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.psd-chart-action[aria-pressed="true"] {
+  opacity: 1;
+  border-color: currentColor;
+}
+
+.psd-chart-action:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- table view ---------- */
+
+.psd-chart-panel[hidden],
+.psd-chart-drawer[hidden] {
+  display: none;
+}
+
+.psd-chart-tablewrap {
+  overflow-x: auto;
+  max-height: 420px;
+  overflow-y: auto;
+  margin-top: 10px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 3px;
+}
+
+.psd-chart-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.psd-chart-table th,
+.psd-chart-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  white-space: nowrap;
+}
+
+.psd-chart-table td.num {
+  text-align: right;
+}
+
+.psd-chart-table th {
+  position: sticky;
+  top: 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  /* sticky: needs an opaque ground of its own so scrolled rows do not show through */
+  background: var(--chart-panel-ground, var(--chart-paper, #faf7ef));
+  border-bottom-color: color-mix(in srgb, currentColor 42%, transparent);
+}
+
+.psd-chart-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- source drawer (A4, series level until provenance lands) ---------- */
+
+.psd-chart-drawer {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-left: 3px solid var(--acid, #a8b63f);
+  border-radius: 0 3px 3px 0;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.psd-chart-drawer dl {
+  display: grid;
+  grid-template-columns: minmax(88px, auto) 1fr;
+  gap: 4px 14px;
+  margin: 0;
+}
+
+.psd-chart-drawer dt {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.66;
+  padding-top: 2px;
+}
+
+.psd-chart-drawer dd {
+  margin: 0;
+  color: inherit;
+}
+
+.psd-chart-drawer p {
+  margin: 10px 0 0;
+}
+
+.psd-chart-note {
+  font-size: 11.5px;
+  opacity: 0.66;
+}
+
+@media (max-width: 520px) {
+  .psd-chart-drawer dl {
+    grid-template-columns: 1fr;
+    gap: 1px 0;
+  }
+
+  .psd-chart-drawer dd {
+    margin-bottom: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .psd-chart-action {
+    transition: none;
+  }
+}
+
+/* The hero panel is ink with white text; its sticky table header needs that same ground.
+   Every other panel is paper and falls through to the default. */
+.home-hero-chart {
+  --chart-panel-ground: var(--ink, #171918);
+}

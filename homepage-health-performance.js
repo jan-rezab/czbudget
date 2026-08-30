@@ -31,11 +31,41 @@
       <div class="health-compare-cards">${groupMetrics.map(key=>{const item=entry(state.anchor,key);return `<button type="button" data-home-health-metric="${key}" class="${key===state.metric?"selected":""}"><span>${esc(label(key))}</span><strong>${finiteEntry(item)?number(item.value,metrics[key].digits):"—"} <small>${esc(unit(key))}</small></strong><b>${finiteEntry(item)?item.year:t.noData}</b></button>`;}).join("")}</div>
       <div class="health-compare-controls"><label><span>${t.metric}</span><select id="home-health-metric">${metricOptions}</select></label><div><span>${t.sort}</span><strong>${t.highLow}</strong><small>${t.top20} · ${esc(unit(state.metric))}</small></div></div>
       <div class="health-compare-summary"><article><span>${t.selected}</span><strong>${esc(valueLabel(anchor,state.metric))}</strong><a href="${profileUrl(state.anchor)}">${esc(countryName(state.anchor))} · ${finiteEntry(anchor)?anchor.year:t.noData} ↗</a></article><article><span>${t.median}</span><strong>${middle===null?"—":esc(`${number(middle,metrics[state.metric].digits)} ${unit(state.metric)}`)}</strong><small>${esc(label(state.metric))}</small></article><article><span>${t.coverage}</span><strong>${rows.length} / ${countryCodes().length}</strong><small>${t.top20} · ${t.latest}</small></article></div>
-      <div class="health-chart chart-with-source"><label class="chart-country-search"><span>${t.anchor}</span><input id="home-health-anchor" type="search" list="health-country-options" value="${esc(countryName(state.anchor))}" placeholder="${t.anchor}…" autocomplete="off"><datalist id="health-country-options">${countryOptions}</datalist></label><div class="chart-source-hover"><button type="button" aria-label="${t.source}">${t.source} ↗</button><div>${sourceLinks}</div></div><div class="health-compare-ranking" aria-label="${esc(label(state.metric))}">${visibleRows.map((row,index)=>`<a class="health-compare-rank-row ${row.code===state.anchor?"selected":""} ${row.isExtra?"extra-country":""}" href="${profileUrl(row.code)}"><span class="health-compare-rank">${row.isExtra?"+":String(index+1).padStart(2,"0")}</span><span class="health-compare-country">${flag(row.code)}<strong>${esc(countryName(row.code))}</strong><small>${row.item.year} · ${t.latest}</small></span><i><b style="width:${Math.max(2,Number(row.item.value)/max*100)}%"></b></i><span class="health-compare-value"><strong>${esc(valueLabel(row.item,state.metric))}</strong><small>${row.code===state.anchor?t.selected:t.profile}</small></span><span class="health-compare-open">${t.profile} ↗</span></a>`).join("")}</div></div>
+      <div class="health-chart chart-with-source" data-psd-chart="home-health-performance"><label class="chart-country-search"><span>${t.anchor}</span><input id="home-health-anchor" type="search" list="health-country-options" value="${esc(countryName(state.anchor))}" placeholder="${t.anchor}…" autocomplete="off"><datalist id="health-country-options">${countryOptions}</datalist></label><div class="chart-source-hover"><button type="button" aria-label="${t.source}">${t.source} ↗</button><div>${sourceLinks}</div></div><div class="health-compare-ranking" aria-label="${esc(label(state.metric))}">${visibleRows.map((row,index)=>`<a class="health-compare-rank-row ${row.code===state.anchor?"selected":""} ${row.isExtra?"extra-country":""}" href="${profileUrl(row.code)}"><span class="health-compare-rank">${row.isExtra?"+":String(index+1).padStart(2,"0")}</span><span class="health-compare-country">${flag(row.code)}<strong>${esc(countryName(row.code))}</strong><small>${row.item.year} · ${t.latest}</small></span><i><b style="width:${Math.max(2,Number(row.item.value)/max*100)}%"></b></i><span class="health-compare-value"><strong>${esc(valueLabel(row.item,state.metric))}</strong><small>${row.code===state.anchor?t.selected:t.profile}</small></span><span class="health-compare-open">${t.profile} ↗</span></a>`).join("")}</div></div>
       <footer class="health-compare-method"><span>${t.method}</span><p>${t.methodCopy}</p><small>${t.top20} · ${t.latest}</small></footer>`;
     root.querySelectorAll("[data-home-health-group]").forEach(button=>button.addEventListener("click",()=>{state.group=button.dataset.homeHealthGroup;state.metric=Object.keys(metrics).find(key=>metrics[key].group===state.group);render();}));
     root.querySelectorAll("[data-home-health-metric]").forEach(button=>button.addEventListener("click",()=>{state.metric=button.dataset.homeHealthMetric;render();}));
     root.querySelector("#home-health-metric").addEventListener("change",event=>{state.metric=event.target.value;render();});const countryInput=root.querySelector("#home-health-anchor"),applyCountry=()=>{const query=countryInput.value.trim().toLocaleLowerCase(locale()),match=countryCodes().find(code=>countryName(code).toLocaleLowerCase(locale())===query||code.toLowerCase()===query);if(match){state.anchor=match;render()}};countryInput.addEventListener("change",applyCountry);countryInput.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();applyCountry()}});
+    registerChart(rows);
+  }
+
+  /* A1 — re-registered per render; the host element is replaced each time. */
+  function registerChart(currentRows){
+    const host=root.querySelector('[data-psd-chart="home-health-performance"]');
+    if(!host||!window.PSDChart||!Array.isArray(currentRows))return;
+    const en=state.lang==="en";
+    window.PSDChart.register({
+      slug:"home-health-performance",el:host,
+      title:()=>copy[state.lang].title,
+      columns:[
+        {key:"code",label:"ISO"},
+        {key:"country",label:en?"Country":"Země"},
+        {key:"value",label:unit(state.metric),numeric:true},
+        {key:"year",label:en?"Year":"Rok",numeric:true},
+      ],
+      rows:()=>currentRows.map(row=>{
+        const value=Number(row.item?.value);
+        return{
+          code:row.code,
+          country:countryName(row.code),
+          value:Number.isFinite(value)?value:null,
+          year:row.item?.year??null,
+        };
+      }),
+      source:{name:state.data?.source?.provider||null,url:state.data?.source?.url||null,
+        edition:state.data?.source?.dataset||null,
+        extracted:(state.data?.generated_at||"").slice(0,10)||null},
+    });
   }
   root.innerHTML=`<p class="health-compare-loading">${copy[state.lang].loading}</p>`;fetch("data/country-health-performance.v1.json").then(response=>{if(!response.ok)throw new Error(`Health comparison HTTP ${response.status}`);return response.json();}).then(data=>{state.data=data;render();}).catch(error=>{console.error(error);root.innerHTML="<p class=\"health-compare-loading\">Data could not be loaded.</p>";});addEventListener("psdlanguagechange",event=>{state.lang=event.detail?.lang==="en"?"en":"cs";render();});
 })();

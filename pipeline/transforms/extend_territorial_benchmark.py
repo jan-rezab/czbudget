@@ -180,7 +180,7 @@ def make_entity(ico: str, name: str, short_name: str, values: dict, levels: list
     balance = revenue - expense
     return {
         "entity_id": f"CZ:{ico}",
-        "country_code": "CZ",
+        "country_code": "CZE",
         "national_id": ico,
         "name": name,
         "short_name": short_name,
@@ -274,7 +274,7 @@ def main():
     source["cohorts"] = [
         {
             "cohort_id": "CZ_STATUTORY_2025",
-            "country_code": "CZ",
+            "country_code": "CZE",
             "fiscal_year": 2025,
             "level_code": "municipality",
             "label_cs": "Statutární města ČR včetně Prahy",
@@ -283,7 +283,7 @@ def main():
         },
         {
             "cohort_id": "CZ_REGIONS_2025",
-            "country_code": "CZ",
+            "country_code": "CZE",
             "fiscal_year": 2025,
             "level_code": "region",
             "label_cs": "Kraje ČR včetně hlavního města Prahy",

@@ -37,7 +37,7 @@
     root.innerHTML=`<header class="category-compare-heading"><div><span class="kicker">${t.kicker}</span><h2>${t.title}</h2></div><p>${t.intro}</p></header>
       <div class="category-controls"><label><span>${t.category}</span><select id="category-select">${categoryOptions}</select></label><div><span>${t.period}</span><div class="category-toggle"><button type="button" data-period="previous" aria-pressed="${state.period==="previous"}">${t.previous}</button><button type="button" data-period="current" aria-pressed="${state.period==="current"}">${t.current}</button></div></div><div><span>${t.scale}</span><div class="category-toggle"><button type="button" data-measure="share" aria-pressed="${state.measure==="share"}">${t.share}</button><button type="button" data-measure="eur" aria-pressed="${state.measure==="eur"}">${t.eur}</button></div></div></div>
       <div class="category-summary"><article><span>${t.leader}</span><strong>${leader.country.code} · ${pct(leader.share)}</strong><a href="${window.PSDCountryRoutes.href(leader.country.code,state.lang,"spending")}">${countryName(leader.country.code)} ↗</a></article><article><span>${t.median}</span><strong>${pct(median(rows.map(row=>row.share)))}</strong><small>${categoryLabel(selectedCategory)}</small></article><article><span>${t.coverage}</span><strong>${rows.length} / ${state.data.countries.length}</strong><small>${t.top20}</small></article></div>
-      <div class="category-chart chart-with-source"><label class="chart-country-search"><span>${t.addCountry}</span><input id="category-country" type="search" list="category-country-options" value="${state.compare?esc(countryName(state.compare)):""}" placeholder="${t.addCountry}…" autocomplete="off"><datalist id="category-country-options">${countryOptions}</datalist></label><div class="chart-source-hover"><button type="button" aria-label="${t.sources}">${t.sources} ↗</button><div><a href="methodology.html?lang=${state.lang}">${t.nationalSources} ↗</a>${fxSources}</div></div><div class="category-ranking" aria-label="${esc(categoryLabel(selectedCategory))}">${visibleRows.map((row,index)=>{
+      <div class="category-chart chart-with-source" data-psd-chart="home-category-comparison"><label class="chart-country-search"><span>${t.addCountry}</span><input id="category-country" type="search" list="category-country-options" value="${state.compare?esc(countryName(state.compare)):""}" placeholder="${t.addCountry}…" autocomplete="off"><datalist id="category-country-options">${countryOptions}</datalist></label><div class="chart-source-hover"><button type="button" aria-label="${t.sources}">${t.sources} ↗</button><div><a href="methodology.html?lang=${state.lang}">${t.nationalSources} ↗</a>${fxSources}</div></div><div class="category-ranking" aria-label="${esc(categoryLabel(selectedCategory))}">${visibleRows.map((row,index)=>{
         const raw=state.measure==="share"?row.share:row.eur,width=Math.max(0,raw)/max*100,main=state.measure==="share"?pct(row.share):compact(row.eur),sourceCount=row.item.source_rows.length,mappedLabel=sourceCount?`${sourceCount} ${sourceCount===1?t.sourceLine:t.mapped}`:t.notSeparate;
         return `<a class="category-rank-row ${row.country.code===state.compare?"selected":""} ${row.isExtra?"extra-country":""}" href="${window.PSDCountryRoutes.href(row.country.code,state.lang,"spending")}"><span class="category-rank">${row.isExtra?"+":String(index+1).padStart(2,"0")}</span><span class="category-country">${flag(row.country.code)}<strong>${esc(countryName(row.country.code))}</strong><small>${esc(row.country.periods[state.period].label)} · ${mappedLabel}</small></span><i><b style="width:${width}%"></b></i><span class="category-value"><strong>${esc(main)}</strong><small>${esc(compact(row.eur))} · ${esc(localAmount(row.country,row.item))}</small></span><span class="category-open">${t.profile} ↗</span></a>`;
       }).join("")}</div></div>
@@ -47,6 +47,37 @@
     root.querySelector("#category-select").addEventListener("change",event=>{state.category=event.target.value;render();});
     root.querySelectorAll("[data-period]").forEach(button=>button.addEventListener("click",()=>{state.period=button.dataset.period;render();}));
     root.querySelectorAll("[data-measure]").forEach(button=>button.addEventListener("click",()=>{state.measure=button.dataset.measure;render();}));
+    registerChart(rows);
+  }
+
+  /* A1 — the comparison as an addressable object. Re-registered after each render because
+     the host element is replaced; rows() closes over the freshly computed set. */
+  function registerChart(currentRows){
+    const host=root.querySelector('[data-psd-chart="home-category-comparison"]');
+    if(!host||!window.PSDChart)return;
+    const en=state.lang==="en",method=state.data.method||{};
+    window.PSDChart.register({
+      slug:"home-category-comparison",el:host,
+      title:()=>copy[state.lang].title,
+      columns:[
+        {key:"code",label:"ISO"},
+        {key:"country",label:en?"Country":"Země"},
+        {key:"share",label:en?"% of expenditure":"% výdajů",numeric:true},
+        {key:"eur",label:"EUR",numeric:true},
+      ],
+      rows:()=>currentRows.map(row=>({
+        code:row.country.code,
+        country:countryName(row.country.code),
+        share:Number.isFinite(row.share)?Math.round(row.share*100)/100:null,
+        eur:Number.isFinite(row.eur)?Math.round(row.eur):null,
+      })),
+      source:{
+        name:method[`provider_${state.lang}`]||method.provider||null,
+        caveat:method[`note_${state.lang}`]||null,
+        edition:state.data.fx?.reference_date||null,
+        url:method.url||null,
+      },
+    });
   }
 
   root.innerHTML=`<p class="category-loading">${copy[state.lang].loading}</p>`;

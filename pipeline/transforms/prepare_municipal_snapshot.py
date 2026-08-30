@@ -139,7 +139,7 @@ def main() -> None:
         name = large_city_names.get(ico) or clean_name(record.get("obchodniJmeno") or ico)
         municipalities.append({
             "entity_id": f"CZ:{ico}",
-            "country_code": "CZ",
+            "country_code": "CZE",
             "currency_code": "CZK",
             "fiscal_year": 2025,
             "national_id": ico,

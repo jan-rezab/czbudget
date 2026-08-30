@@ -2,7 +2,9 @@
   "name": "czbudget-integrity",
   "version": "1.0.0",
   "private": true,
-  "engines": { "node": "22.x" },
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build:france-municipal-profiles": "python3 scripts/build-france-municipal-profiles.py",
     "build:municipality-countries": "node scripts/build-municipality-country-pages.mjs",
@@ -40,13 +42,18 @@
     "build:regional-finance:regofi": "python3 pipeline/transforms/prepare_oecd_regofi.py",
     "validate:accountability": "python3 pipeline/transforms/build_government_accountability.py --check && python3 -m unittest pipeline.tests.test_government_accountability",
     "validate:regional-finance": "python3 -m unittest pipeline.tests.test_international_regional_data",
-    "validate": "npm run validate:accountability && npm run validate:regional-finance && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
+    "validate": "npm run validate:accountability && npm run validate:regional-finance && npm run validate:invariants && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
     "audit:links": "node scripts/check-external-links.mjs --write-report",
     "backfill:social-previews": "node scripts/backfill-social-previews.mjs",
     "test:api": "node --test tests/api/*.spec.mjs",
     "test:browser": "playwright test",
-    "test": "npm run validate && npm run test:api && npm run test:browser"
+    "test": "npm run validate && npm run test:api && npm run test:browser",
+    "validate:invariants": "node scripts/validate-invariants.mjs",
+    "data:layers:report": "node scripts/build-layer-manifest.mjs --report",
+    "data:layers:manifest": "node scripts/build-layer-manifest.mjs",
+    "build:country-registry": "node scripts/build-country-registry.mjs --write",
+    "report:country-registry": "node scripts/build-country-registry.mjs --report"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

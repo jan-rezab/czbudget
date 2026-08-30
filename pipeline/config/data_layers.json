@@ -1,0 +1,43 @@
+{
+  "config_version": "1.0.0",
+  "rationale": "Three layers, one rule: keep what cannot be recreated, regenerate what can. The raw downloads and the uniform per-country files are irreplaceable and currently have no durability at all — they live outside any git repository, unhashed and unbacked. The per-municipality fan-out and the generated pages are build output: reproducible from the uniform layer, so they are regenerated into the serving snapshot rather than committed. The manifest this config produces stays in git, which is what keeps the whole chain auditable after the fan-out stops being committed.",
+  "layers": [
+    {
+      "id": "raw",
+      "title": "Original downloads, exactly as fetched",
+      "root": "parent",
+      "path": "data/source_cache/municipal-expansion",
+      "group_by": "subdirectory",
+      "durability": "object-storage",
+      "committed": false,
+      "recreatable": "only by refetching national sources, several of which are not stable: Costa Rica is a portal query, Spain publishes year-stamped archives that are replaced in place"
+    },
+    {
+      "id": "uniform",
+      "title": "One normalised file per country",
+      "root": "parent",
+      "path": "outputs/municipal-expansion",
+      "group_by": "country-file",
+      "durability": "object-storage",
+      "committed": false,
+      "recreatable": "from raw, by rerunning the country extractors"
+    },
+    {
+      "id": "serving",
+      "title": "Per-municipality fan-out",
+      "root": "repo",
+      "path": "data/municipal-expansion",
+      "group_by": "subdirectory",
+      "durability": "regenerate",
+      "committed": false,
+      "recreatable": "directly from uniform; verified identical — 28,559 entities and 4,120,493 detail rows, no field present here that is absent upstream",
+      "note": "Regenerated into the public serving snapshot each release. prepare-public-serving-snapshots.mjs already treats this directory as a snapshot input."
+    }
+  ],
+  "known_gaps": [
+    {
+      "layer": "raw",
+      "detail": "Denmark has no subtree under data/source_cache/municipal-expansion. Its uniform file exists and Denmark is also loaded in BigQuery, so the data is not at risk, but the raw provenance chain is incomplete for that country."
+    }
+  ]
+}

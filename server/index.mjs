@@ -19,6 +19,7 @@ const MAX_IN_FLIGHT = integerSetting("API_MAX_IN_FLIGHT", 32, 1, 1_000);
 const API_IP_MINUTE_LIMIT = integerSetting("API_IP_MINUTE_LIMIT", 300, 1, 100_000);
 const API_USER_MINUTE_LIMIT = integerSetting("API_USER_MINUTE_LIMIT", 300, 1, 100_000);
 const API_USER_DAY_LIMIT = integerSetting("API_USER_DAY_LIMIT", 10_000, 1, 10_000_000);
+const API_ANON_MINUTE_LIMIT = integerSetting("API_ANON_MINUTE_LIMIT", 120, 1, 100_000);
 const AUTH_IP_WINDOW_LIMIT = integerSetting("AUTH_IP_WINDOW_LIMIT", 20, 1, 100_000);
 const RATE_LIMIT_BUCKETS = integerSetting("RATE_LIMIT_BUCKETS", 50_000, 100, 1_000_000);
 const PAGE_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "public");
@@ -163,10 +164,6 @@ async function sendPage(response, fileName, contentType) {
   return true;
 }
 
-async function requireUser(request) {
-  return verifyIdToken(requestToken(request));
-}
-
 async function routeAPI(request, response, url) {
   if (request.method !== "GET") throw new DataError(405, "method_not_allowed", "This endpoint only supports GET.");
   const pathname = url.pathname.replace(/\/$/, "") || "/";
@@ -264,32 +261,42 @@ export async function handler(request, response) {
       return sendHTML(request, response, municipalityPage(snapshot));
     }
 
+    // A3a — the contract is public. A specification nobody can read is not a contract, so the
+    // docs page, the OpenAPI document and their assets answer without a session.
     if (url.pathname === "/docs" || url.pathname === "/docs/") {
-      await requireUser(request);
       return sendPage(response, "docs.html", "text/html; charset=utf-8");
     }
     if (url.pathname === "/docs/openapi.json") {
-      await requireUser(request);
-      return sendJSON(response, 200, openapi, { "cache-control": "private, max-age=300" });
+      return sendJSON(response, 200, openapi, { "cache-control": "public, max-age=300" });
     }
     if (url.pathname === "/docs/assets/docs.css") {
-      await requireUser(request);
       return sendPage(response, "docs.css", "text/css; charset=utf-8");
     }
     if (url.pathname === "/docs/assets/docs.js") {
-      await requireUser(request);
       return sendPage(response, "docs.js", "application/javascript; charset=utf-8");
     }
 
     if (url.pathname === "/api" || url.pathname.startsWith("/api/")) {
       if (!enforceRateLimit(response, id, { key: clientIP(request), limit: API_IP_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-ip" })) return;
-      const claims = await requireUser(request);
-      const userID = String(claims.user_id || claims.sub);
-      if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_DAY_LIMIT, windowMs: 24 * 60 * 60 * 1000, group: "api-user-day" })) return;
-      if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-user-minute" })) return;
+
+      // A3a — read-only routes answer anonymously. A token is no longer the door, only the
+      // higher quota. A token that is presented but invalid still fails loudly rather than
+      // silently downgrading to anonymous, so client auth bugs stay visible.
+      const presentedToken = requestToken(request);
+      const claims = presentedToken ? await verifyIdToken(presentedToken) : null;
+
+      if (claims) {
+        const userID = String(claims.user_id || claims.sub);
+        if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_DAY_LIMIT, windowMs: 24 * 60 * 60 * 1000, group: "api-user-day" })) return;
+        if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-user-minute" })) return;
+        response.setHeader("X-Authenticated-User", claims.user_id || claims.sub);
+        response.setHeader("Cache-Control", "private, max-age=60");
+      } else {
+        if (!enforceRateLimit(response, id, { key: clientIP(request), limit: API_ANON_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-anon" })) return;
+        // Anonymous answers are identical for every caller, so shared caches may hold them.
+        response.setHeader("Cache-Control", "public, max-age=300");
+      }
       if (!acquireAPISlot(response, id)) return;
-      response.setHeader("X-Authenticated-User", claims.user_id || claims.sub);
-      response.setHeader("Cache-Control", "private, max-age=60");
       try {
         return await routeAPI(request, response, url);
       } finally {
@@ -299,11 +306,6 @@ export async function handler(request, response) {
 
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
-    if (error instanceof AuthError && (url.pathname === "/docs" || url.pathname === "/docs/")) {
-      response.writeHead(303, { Location: "/developers/login?next=%2Fdocs" });
-      response.end();
-      return;
-    }
     if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof FranceLinesError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);

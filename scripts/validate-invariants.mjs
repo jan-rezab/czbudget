@@ -1,0 +1,208 @@
+#!/usr/bin/env node
+/**
+ * Invariants — B6 of the consolidated plan.
+ *
+ * This file holds relationships that must hold by construction. It deliberately contains
+ * NO bare count literals: a rule here says "these two sets agree", never "there are N of
+ * them". Counts belong to the artifacts they describe, not to a validator that has to be
+ * edited in the same commit as the data.
+ *
+ * First invariant (seam S6): the chart slug rule from A1. A slug is a permanent public
+ * identifier — an embed and a citation both resolve through it — so the build refuses a
+ * chart that has none, and refuses two charts that share one.
+ */
+import { readFile, readdir } from "node:fs/promises";
+import path from "node:path";
+
+const ROOT = process.env.SITE_ROOT || process.cwd();
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+const failures = [];
+const fail = (rule, detail) => failures.push({ rule, detail });
+
+async function handAuthoredFiles() {
+  const entries = await readdir(ROOT, { withFileTypes: true });
+  return entries
+    .filter((entry) => entry.isFile() && /\.(?:js|html)$/.test(entry.name))
+    .map((entry) => entry.name);
+}
+
+/**
+ * Slugs declared in markup: <div class="chart-with-source" data-psd-chart="slug">.
+ * A leading "[" means the same text is a CSS selector looking the attribute up, not a
+ * declaration minting it — those are references and must not count as a second claim.
+ */
+function declaredInMarkup(source) {
+  return [...source.matchAll(/(.?)data-psd-chart="([^"]*)"/g)]
+    .filter((match) => match[1] !== "[")
+    .map((match) => match[2]);
+}
+
+/**
+ * A file that calls PSDChart.register mints slugs. They appear either as `slug: "x"` or,
+ * where charts are registered from a table, as a bare literal in that table — so every
+ * slug-shaped literal in a registering file counts as a registration.
+ */
+function registeredInCode(source) {
+  if (!source.includes("PSDChart.register")) return [];
+  return [...source.matchAll(/["']([a-z0-9]+(?:-[a-z0-9]+)+)["']/g)].map((match) => match[1]);
+}
+
+/**
+ * Slugs a chart file explicitly claims via `slug: "x"` — the strict direction. Only files
+ * that actually register charts are read; `slug` is an ordinary property name elsewhere.
+ */
+function claimedExplicitly(source) {
+  if (!source.includes("PSDChart.register")) return [];
+  return [...source.matchAll(/\bslug:\s*["']([^"']*)["']/g)].map((match) => match[1]);
+}
+
+/** Chart wrappers that carry no slug attribute at all. */
+function unslugged(source) {
+  return [...source.matchAll(/class="[^"]*chart-with-source[^"]*"[^>]*>/g)]
+    .filter((match) => !/data-psd-chart=/.test(match[0])).length;
+}
+
+const files = await handAuthoredFiles();
+const markup = new Map();
+const code = new Map();
+const claimed = new Map();
+
+for (const file of files) {
+  const source = await readFile(path.join(ROOT, file), "utf8");
+
+  for (const slug of declaredInMarkup(source)) {
+    if (!markup.has(slug)) markup.set(slug, []);
+    markup.get(slug).push(file);
+  }
+  for (const slug of new Set(registeredInCode(source))) {
+    if (!code.has(slug)) code.set(slug, []);
+    code.get(slug).push(file);
+  }
+  for (const slug of claimedExplicitly(source)) {
+    if (!claimed.has(slug)) claimed.set(slug, []);
+    claimed.get(slug).push(file);
+  }
+
+  const missing = unslugged(source);
+  if (missing > 0) {
+    fail("every chart wrapper carries a slug", `${file}: ${missing} chart-with-source block(s) without data-psd-chart`);
+  }
+}
+
+// 1. Every slug that is minted, in markup or by an explicit claim, is well formed.
+for (const [slug, sources] of [...markup, ...claimed]) {
+  if (!SLUG_PATTERN.test(slug)) {
+    fail("slugs are lowercase words joined by hyphens", `"${slug}" in ${sources.join(", ")}`);
+  }
+}
+
+// 2. No slug is minted twice. A duplicate silently steals another chart's citations.
+for (const [slug, sources] of markup) {
+  if (sources.length > 1) fail("a slug is minted once in markup", `"${slug}" in ${sources.join(", ")}`);
+}
+
+// 3. The two sides agree. Markup without a registration renders a chart with no rail;
+//    an explicit claim with no markup points at nothing.
+for (const slug of markup.keys()) {
+  if (!code.has(slug)) fail("every slug in markup is registered in code", `"${slug}" declared in ${markup.get(slug).join(", ")}`);
+}
+for (const slug of claimed.keys()) {
+  if (!markup.has(slug)) fail("every registered slug exists in markup", `"${slug}" registered in ${claimed.get(slug).join(", ")}`);
+}
+
+/**
+ * Second invariant (B2): every country-shaped value in a published artifact resolves to the
+ * entity registry, in the canonical form. This is what makes one BigQuery table possible —
+ * the six spellings of the country dimension are why the file-based countries cannot load
+ * alongside the warehouse ones today. Declared gaps are allowed and must stay declared.
+ */
+// Fields whose name implies the canonical form — these must carry alpha-3.
+const CANONICAL_KEYS = new Set(["country_code", "iso3", "country", "alpha3", "cc"]);
+// Fields whose name declares a non-canonical form — these must merely resolve.
+const ALIAS_KEYS = new Set(["alpha2", "iso2"]);
+const COUNTRY_KEYS = new Set([...CANONICAL_KEYS, ...ALIAS_KEYS]);
+let registry = null;
+try {
+  registry = JSON.parse(await readFile(path.join(ROOT, "data/registry/countries.v1.json"), "utf8"));
+} catch {
+  fail("the entity registry exists", "data/registry/countries.v1.json is missing — run npm run build:country-registry");
+}
+
+if (registry) {
+  const canonical = new Set(registry.countries.map((c) => c.canonical));
+  const declaredGap = new Set((registry.known_gaps || []).flatMap((g) => g.values));
+  const resolvable = new Set([
+    ...canonical,
+    ...registry.countries.flatMap((c) => Object.values(c.aliases).filter(Boolean)),
+  ]);
+  const offenders = new Map();
+
+  const inspect = (node, file, depth = 0) => {
+    if (depth > 6 || node === null) return;
+    if (Array.isArray(node)) {
+      for (const item of node.slice(0, 400)) inspect(item, file, depth + 1);
+      return;
+    }
+    if (typeof node !== "object") return;
+    for (const [key, value] of Object.entries(node)) {
+      if (COUNTRY_KEYS.has(key) && typeof value === "string" && /^[A-Za-z]{2,3}$/.test(value)) {
+        const required = CANONICAL_KEYS.has(key) ? canonical : resolvable;
+        if (!required.has(value) && !declaredGap.has(value)) {
+          if (!offenders.has(file)) offenders.set(file, new Set());
+          offenders.get(file).add(`${key}="${value}"`);
+        }
+      }
+      inspect(value, file, depth + 1);
+    }
+  };
+
+  const artifacts = (await readdir(path.join(ROOT, "data")))
+    .filter((name) => name.endsWith(".v1.json") && name !== "manifest.v1.json")
+    .sort();
+
+  for (const artifact of artifacts) {
+    let parsed;
+    try {
+      parsed = JSON.parse(await readFile(path.join(ROOT, "data", artifact), "utf8"));
+    } catch {
+      continue;
+    }
+    inspect(parsed, artifact);
+  }
+
+  /**
+   * Ratchet, not a cliff. The artifacts below are known to emit alpha-2 in a field whose
+   * name implies alpha-3; each is a producer fix, not a data edit, and they are listed in
+   * the registry so the debt is visible and countable. They warn. Anything NOT on the list
+   * fails the build, so no new drift can enter while the migration is scheduled.
+   */
+  const pending = new Set(registry.pending_migration || []);
+  let warned = 0;
+
+  for (const [file, values] of [...offenders].sort()) {
+    const shown = [...values].sort().slice(0, 6).join(", ");
+    const more = values.size > 6 ? ` (+${values.size - 6} more)` : "";
+    if (pending.has(file)) {
+      console.warn(`  ! pending B2 migration — ${file}: ${shown}${more}`);
+      warned += 1;
+    } else {
+      fail("every country value resolves to the registry in canonical form", `${file}: ${shown}${more}`);
+    }
+  }
+
+  const clean = artifacts.length - offenders.size;
+  console.log(`Country dimension: ${clean} of ${artifacts.length} artifacts canonical, ${warned} pending migration (${canonical.size} countries registered).`);
+  for (const stale of [...pending].filter((f) => !offenders.has(f)).sort()) {
+    fail("the pending-migration list holds only artifacts that are still failing", `${stale} is listed but now resolves — remove it from the registry`);
+  }
+}
+
+if (failures.length > 0) {
+  console.error("Invariant violations:\n");
+  for (const { rule, detail } of failures) console.error(`  ✗ ${rule}\n      ${detail}`);
+  console.error(`\n${failures.length} violation(s).`);
+  process.exit(1);
+}
+
+console.log(`Invariants hold. ${markup.size} chart slug(s) agree between markup and code.`);

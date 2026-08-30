@@ -125,7 +125,7 @@ def main() -> None:
 
     payload = {
         "schema_version": "1.1.0",
-        "country_code": "CZ",
+        "country_code": "CZE",
         "year": 2024,
         "currency_code": "CZK",
         "units": "mil. Kč",
@@ -181,7 +181,7 @@ def main() -> None:
 
     history_payload = {
         "schema_version": "1.0.0",
-        "country_code": "CZ",
+        "country_code": "CZE",
         "period": inventory["metadata"]["period"],
         "currency_code": "CZK",
         "units": "mil. Kč",

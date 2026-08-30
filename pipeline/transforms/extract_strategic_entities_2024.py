@@ -166,7 +166,7 @@ def main() -> None:
 
     payload = {
         "schema_version": "3.0.0",
-        "country_code": "CZ",
+        "country_code": "CZE",
         "currency_code": "CZK",
         "year": 2024,
         "units": {"financial": "mil. Kč", "employees": "persons"},
