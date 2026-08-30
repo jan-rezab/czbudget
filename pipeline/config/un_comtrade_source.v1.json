@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "source_id": "un_comtrade",
+  "title": "United Nations Comtrade Database",
+  "publisher": "United Nations Statistics Division",
+  "homepage": "https://comtrade.un.org/",
+  "documentation": "https://uncomtrade.org/docs/un-comtrade-api/",
+  "data_availability": "https://uncomtrade.org/docs/data-availability/",
+  "api_base": "https://comtradeapi.un.org",
+  "default_year": 2024,
+  "request": {
+    "type_code": "C",
+    "frequency_code": "A",
+    "classification_code": "HS",
+    "commodity_code": "AG2",
+    "partner_code": 0,
+    "second_partner_code": 0,
+    "customs_code": "C00",
+    "mode_of_transport_code": 0,
+    "flows": {
+      "M": "imports",
+      "X": "exports"
+    }
+  },
+  "access": {
+    "api_key_environment_variable": "UN_COMTRADE_API_KEY",
+    "anonymous_endpoint": "/public/v1/preview",
+    "authenticated_endpoint": "/data/v1/get",
+    "anonymous_record_limit_per_call": 500,
+    "free_account_calls_per_day": 500,
+    "pipeline_call_budget_per_run": 400,
+    "minimum_seconds_between_calls": 1.1
+  },
+  "ranking": {
+    "definition": "Countries are attempted in descending nominal GDP (USD) for the requested year, using the project's IMF WEO sovereign series.",
+    "fallback": "Countries without a GDP observation are ordered alphabetically after ranked countries."
+  },
+  "grain": "reporter country x calendar year x import/export flow x HS two-digit chapter; partner is World, customs procedure is total and mode of transport is total",
+  "value": {
+    "field": "primaryValue",
+    "unit": "current USD",
+    "valuation_note": "Imports are generally valued CIF and exports FOB. The source-native primary value is retained."
+  },
+  "limitations": [
+    "This initial layer is merchandise trade only; services are not included.",
+    "Partner is World, so this layer describes product composition but not bilateral partners.",
+    "Country submissions arrive and are revised on different schedules; the importer should be rerun periodically.",
+    "The sum of monthly observations can differ from the separately compiled annual dataset.",
+    "Reporter exports need not equal partner-reported imports because of valuation, timing, routing and methodology differences."
+  ]
+}

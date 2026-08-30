@@ -18,3 +18,9 @@ __pycache__/
 * [0-9].*
 * [0-9][0-9]
 * [0-9][0-9].*
+
+# Regenerable serving output — see pipeline/config/data_layers.json.
+# 580 MB across 28,559 files, rebuilt from the uniform layer each release and hydrated at
+# build time by scripts/hydrate-data-layers.mjs. Hashes stay in data/manifest.v1.json, so a
+# commit still proves which bytes it served.
+data/municipal-expansion/
