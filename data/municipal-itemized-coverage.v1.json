@@ -47,12 +47,31 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native budget, revision and execution items",
       "detail_kind_cs": "původní položky rozpočtu, úprav a plnění",
-      "source_title": "Official Bolivia municipal source",
+      "source_title": "Bolivian Ministry of Economy and Public Finance · open budget data",
       "source_url": "https://abierto.economiayfinanzas.gob.bo/descargas",
       "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
         "Every counted profile publishes the native itemized classifications retained from the national source."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 343,
+        "period": "2025",
+        "stages": [
+          "actual",
+          "enacted",
+          "paid",
+          "revised"
+        ],
+        "line_fact_count": 20756,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2025 budget and execution for all active local governments",
+        "detail_kind_cs": "2025 budget and execution for all active local governments",
+        "source_title": "Bolivian Ministry of Economy and Public Finance · open budget data",
+        "source_url": "https://abierto.economiayfinanzas.gob.bo/descargas",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 343
     },
     {
       "code": "BRA",
@@ -138,12 +157,28 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SINIM revenue and expenditure items",
       "detail_kind_cs": "původní položky příjmů a výdajů SINIM",
-      "source_title": "Official Chile municipal source",
+      "source_title": "Chilean SINIM · municipal budget execution",
       "source_url": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
       "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
         "Every counted profile publishes the native itemized classifications retained from the national source."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 345,
+        "period": "2025",
+        "stages": [
+          "actual"
+        ],
+        "line_fact_count": 17940,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2025 execution at the source’s three-level classification; only leaf rows are counted as facts",
+        "detail_kind_cs": "2025 execution at the source’s three-level classification; only leaf rows are counted as facts",
+        "source_title": "Chilean SINIM · municipal budget execution",
+        "source_url": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 345
     },
     {
       "code": "COL",
@@ -151,7 +186,7 @@
       "profile_count": 0,
       "published_profile_count": 0,
       "publication_status": "headline_only",
-      "status": "missing",
+      "status": "headline_only",
       "measured_from": "data/municipal-expansion/col",
       "period": null,
       "stages": [
@@ -173,12 +208,30 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": null,
       "detail_kind_cs": null,
-      "source_title": "Official Colombia municipal source",
+      "source_title": "Colombian CUIPO · municipal budget reporting",
       "source_url": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
       "note": "The published profiles contain only 2 distinct classification codes across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted.",
       "scope_limitations": [
         "The published profiles contain only 2 distinct classification codes across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 1102,
+        "period": "2025",
+        "stages": [
+          "actual",
+          "enacted",
+          "revised"
+        ],
+        "line_fact_count": 6612,
+        "balance_fact_count": 0,
+        "detail_kind_en": "initial and definitive plans plus 2025 execution",
+        "detail_kind_cs": "initial and definitive plans plus 2025 execution",
+        "source_title": "Colombian CUIPO · municipal budget reporting",
+        "source_url": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 1102
     },
     {
       "code": "CRI",
@@ -186,7 +239,7 @@
       "profile_count": 0,
       "published_profile_count": 0,
       "publication_status": "headline_only",
-      "status": "missing",
+      "status": "headline_only",
       "measured_from": "data/municipal-expansion/cri",
       "period": null,
       "stages": [
@@ -204,12 +257,28 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": null,
       "detail_kind_cs": null,
-      "source_title": "Official Costa Rica municipal source",
+      "source_title": "Costa Rican Contraloría General · SIPP filings",
       "source_url": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
       "note": "The published profiles contain only 1 distinct classification code across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted.",
       "scope_limitations": [
         "The published profiles contain only 1 distinct classification code across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 84,
+        "period": "2025",
+        "stages": [
+          "actual"
+        ],
+        "line_fact_count": 168,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2025 municipal filings",
+        "detail_kind_cs": "2025 municipal filings",
+        "source_title": "Costa Rican Contraloría General · SIPP filings",
+        "source_url": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 84
     },
     {
       "code": "CZE",
@@ -324,12 +393,30 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SAFIM budget-execution items",
       "detail_kind_cs": "původní položky plnění SAFIM",
-      "source_title": "Official El Salvador municipal source",
-      "source_url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
+      "source_title": "Salvadoran fiscal transparency portal",
+      "source_url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Gastos.html",
       "note": "The measured population is 259 of the 262 municipalities in the 2023 SAFIM return; three did not report.",
       "scope_limitations": [
         "The measured population is 259 of the 262 municipalities in the 2023 SAFIM return; three did not report."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 259,
+        "period": "2023",
+        "stages": [
+          "actual",
+          "enacted",
+          "revised"
+        ],
+        "line_fact_count": 9546,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2023 municipal budgets, reported in US dollars",
+        "detail_kind_cs": "2023 municipal budgets, reported in US dollars",
+        "source_title": "Salvadoran fiscal transparency portal",
+        "source_url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Gastos.html",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 259
     },
     {
       "code": "GBR",
@@ -486,12 +573,29 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native Ministry of Finance plan and execution items",
       "detail_kind_cs": "původní položky plánu a plnění ministerstva financí",
-      "source_title": "Official Georgia municipal source",
+      "source_title": "Georgian Ministry of Finance · municipal budget workbooks",
       "source_url": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
       "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
         "Every counted profile publishes the native itemized classifications retained from the national source."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 69,
+        "period": "2025–2026",
+        "stages": [
+          "actual",
+          "enacted"
+        ],
+        "line_fact_count": 2760,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2025 actuals and the 2026 approved plan",
+        "detail_kind_cs": "2025 actuals and the 2026 approved plan",
+        "source_title": "Georgian Ministry of Finance · municipal budget workbooks",
+        "source_url": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 69
     },
     {
       "code": "DEU",
@@ -568,12 +672,31 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SICOINGL and SICOINDES budget-execution items",
       "detail_kind_cs": "původní položky plnění SICOINGL a SICOINDES",
-      "source_title": "Official Guatemala municipal source",
-      "source_url": "https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025",
+      "source_title": "Guatemalan Ministry of Finance · municipal reporting",
+      "source_url": "https://datos.minfin.gob.gt/es/dataset/informacion-municipal",
       "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
         "Every counted profile publishes the native itemized classifications retained from the national source."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 340,
+        "period": "2025",
+        "stages": [
+          "actual",
+          "enacted",
+          "paid",
+          "revised"
+        ],
+        "line_fact_count": 19844,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2025 municipal budget and execution",
+        "detail_kind_cs": "2025 municipal budget and execution",
+        "source_title": "Guatemalan Ministry of Finance · municipal reporting",
+        "source_url": "https://datos.minfin.gob.gt/es/dataset/informacion-municipal",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 340
     },
     {
       "code": "ITA",
@@ -599,12 +722,28 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SIOPE cash receipt and payment items",
       "detail_kind_cs": "původní položky hotovostních příjmů a plateb SIOPE",
-      "source_title": "Official Italy municipal source",
+      "source_title": "Italian SIOPE · municipal cash receipts and payments",
       "source_url": "https://www.siope.it/Siope/",
       "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
         "Every counted profile publishes the native itemized classifications retained from the national source."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 7896,
+        "period": "2025",
+        "stages": [
+          "paid"
+        ],
+        "line_fact_count": 92384,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2025 cash flows grouped by native titles; a cash-basis source, so all rows are the paid measure",
+        "detail_kind_cs": "2025 cash flows grouped by native titles; a cash-basis source, so all rows are the paid measure",
+        "source_title": "Italian SIOPE · municipal cash receipts and payments",
+        "source_url": "https://www.siope.it/Siope/",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 7896
     },
     {
       "code": "JPN",
@@ -661,13 +800,29 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native EFIPEM annual finance items",
       "detail_kind_cs": "původní položky ročních financí EFIPEM",
-      "source_title": "Official Mexico municipal source",
+      "source_title": "Mexican INEGI · state and municipal public finance",
       "source_url": "https://www.inegi.org.mx/programas/finanzas/",
       "note": "Revenue equals expenditure in all 2,380 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance. The measured population is the reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico.",
       "scope_limitations": [
         "Revenue equals expenditure in all 2,380 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance.",
         "The measured population is the reporting municipal governments in the definitive 2024 EFIPEM file, not every municipality in Mexico."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 2380,
+        "period": "2024",
+        "stages": [
+          "actual"
+        ],
+        "line_fact_count": 31454,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2024 municipal public finance statistics",
+        "detail_kind_cs": "2024 municipal public finance statistics",
+        "source_title": "Mexican INEGI · state and municipal public finance",
+        "source_url": "https://www.inegi.org.mx/programas/finanzas/",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 2380
     },
     {
       "code": "NLD",
@@ -765,12 +920,31 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native MEF budget and execution items",
       "detail_kind_cs": "původní položky rozpočtu a plnění MEF",
-      "source_title": "Official Peru municipal source",
-      "source_url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto",
+      "source_title": "Peruvian MEF · open budget data",
+      "source_url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto",
       "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
         "Every counted profile publishes the native itemized classifications retained from the national source."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 1891,
+        "period": "2024",
+        "stages": [
+          "actual",
+          "enacted",
+          "paid",
+          "revised"
+        ],
+        "line_fact_count": 122894,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2024 budget and execution including a cash measure",
+        "detail_kind_cs": "2024 budget and execution including a cash measure",
+        "source_title": "Peruvian MEF · open budget data",
+        "source_url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 1891
     },
     {
       "code": "POL",
@@ -822,7 +996,7 @@
       "profile_count": 0,
       "published_profile_count": 0,
       "publication_status": "headline_only",
-      "status": "missing",
+      "status": "headline_only",
       "measured_from": "data/municipal-expansion/kor",
       "period": null,
       "stages": [
@@ -840,12 +1014,28 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": null,
       "detail_kind_cs": null,
-      "source_title": "Official South Korea municipal source",
+      "source_title": "Korean LOFIN · local finance reporting",
       "source_url": "https://www.lofin365.go.kr/portal/LF5100000.do",
       "note": "The published profiles contain only 4 distinct classification codes across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted.",
       "scope_limitations": [
         "The published profiles contain only 4 distinct classification codes across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 243,
+        "period": "2024",
+        "stages": [
+          "actual"
+        ],
+        "line_fact_count": 1944,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2024 local finance statements",
+        "detail_kind_cs": "2024 local finance statements",
+        "source_title": "Korean LOFIN · local finance reporting",
+        "source_url": "https://www.lofin365.go.kr/portal/LF5100000.do",
+        "published_on_site": false
+      },
+      "warehouse_profile_count": 243
     },
     {
       "code": "ESP",
@@ -877,12 +1067,31 @@
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native CONPREL budget and liquidation items",
       "detail_kind_cs": "původní rozpočtové a likvidační položky CONPREL",
-      "source_title": "Official Spain municipal source",
+      "source_title": "Spanish Ministry of Finance · CONPREL",
       "source_url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
       "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
         "Every counted profile publishes the native itemized classifications retained from the national source."
-      ]
+      ],
+      "warehouse": {
+        "warehouse": "czbudget-janrezab.budget_detail",
+        "profile_count": 6198,
+        "period": "2025–2026",
+        "stages": [
+          "actual",
+          "enacted",
+          "paid",
+          "revised"
+        ],
+        "line_fact_count": 1362728,
+        "balance_fact_count": 0,
+        "detail_kind_en": "2026 adopted budgets and 2025 liquidations with economic accounts",
+        "detail_kind_cs": "2026 adopted budgets and 2025 liquidations with economic accounts",
+        "source_title": "Spanish Ministry of Finance · CONPREL",
+        "source_url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
+        "published_on_site": true
+      },
+      "warehouse_profile_count": 6198
     },
     {
       "code": "SWE",

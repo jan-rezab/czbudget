@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "methodology-sources.v1",
-  "generated_at": "2026-08-30T18:48:08.448Z",
+  "generated_at": "2026-08-30T19:07:30.949Z",
   "row_count": 2173,
   "countries": [
     {
@@ -47081,10 +47081,10 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/bol",
       "coverage": "343 of 343 municipal profiles published on this site; native budget, revision and execution items",
       "period": "2025",
-      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025). 20,756 published line items.",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025). 20,756 published line items. The same layer is also held as 20,756 line facts for 343 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Bolivia municipal source",
+          "title": "Bolivian Ministry of Economy and Public Finance · open budget data",
           "url": "https://abierto.economiayfinanzas.gob.bo/descargas",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
@@ -47163,10 +47163,10 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/chl",
       "coverage": "345 of 345 municipal profiles published on this site; native SINIM revenue and expenditure items",
       "period": "2025",
-      "scope": "Stages: actual (actuals 2025). 17,940 published line items.",
+      "scope": "Stages: actual (actuals 2025). 17,940 published line items. The same layer is also held as 17,940 line facts for 345 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Chile municipal source",
+          "title": "Chilean SINIM · municipal budget execution",
           "url": "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
@@ -47185,19 +47185,19 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "not_loaded",
       "source_availability": "source_available",
-      "artifact": "No published artifact",
-      "coverage": "0 of 1,102 municipal profiles are published on this site.",
-      "period": "Not published on this site",
-      "scope": "No published municipal profile artifact exists for this country.",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 1,102 municipal profiles are published on this site; 1,102 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2025)",
+      "scope": "Warehouse stages: actual, enacted, revised. 6,612 line facts for 1,102 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
-          "title": "Official Colombia municipal source",
+          "title": "Colombian CUIPO · municipal budget reporting",
           "url": "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "No transformation: PSD publishes no itemized municipal profile for this country.",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → official-source adapter → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
       "limitations": "The published profiles contain only 2 distinct classification codes across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted."
     },
     {
@@ -47210,19 +47210,19 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "not_loaded",
       "source_availability": "source_available",
-      "artifact": "No published artifact",
-      "coverage": "0 of 84 municipal profiles are published on this site.",
-      "period": "Not published on this site",
-      "scope": "No published municipal profile artifact exists for this country.",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 84 municipal profiles are published on this site; 84 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2025)",
+      "scope": "Warehouse stages: actual. 168 line facts for 84 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
-          "title": "Official Costa Rica municipal source",
+          "title": "Costa Rican Contraloría General · SIPP filings",
           "url": "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "No transformation: PSD publishes no itemized municipal profile for this country.",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → official-source adapter → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
       "limitations": "The published profiles contain only 1 distinct classification code across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted."
     },
     {
@@ -47367,10 +47367,10 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/esp",
       "coverage": "6,198 of 6,198 municipal profiles published on this site; native CONPREL budget and liquidation items",
       "period": "2025–2026",
-      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025–2026). 1,362,728 published line items.",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025–2026). 1,362,728 published line items. The same layer is also held as 1,362,728 line facts for 6,198 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Spain municipal source",
+          "title": "Spanish Ministry of Finance · CONPREL",
           "url": "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
@@ -47545,10 +47545,10 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/geo",
       "coverage": "69 of 69 municipal profiles published on this site; native Ministry of Finance plan and execution items",
       "period": "2025–2026",
-      "scope": "Stages: actual, enacted (actuals 2025; plans 2026). 2,760 published line items.",
+      "scope": "Stages: actual, enacted (actuals 2025; plans 2026). 2,760 published line items. The same layer is also held as 2,760 line facts for 69 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Georgia municipal source",
+          "title": "Georgian Ministry of Finance · municipal budget workbooks",
           "url": "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
@@ -47570,11 +47570,11 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/gtm",
       "coverage": "340 of 340 municipal profiles published on this site; native SICOINGL and SICOINDES budget-execution items",
       "period": "2025",
-      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025). 19,844 published line items.",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2025; plans 2025). 19,844 published line items. The same layer is also held as 19,844 line facts for 340 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Guatemala municipal source",
-          "url": "https://datos.minfin.gob.gt/es/dataset/informacion-presupuestaria-municipal-2025",
+          "title": "Guatemalan Ministry of Finance · municipal reporting",
+          "url": "https://datos.minfin.gob.gt/es/dataset/informacion-municipal",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
       ],
@@ -47595,10 +47595,10 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/ita",
       "coverage": "7,896 of 7,896 municipal profiles published on this site; native SIOPE cash receipt and payment items",
       "period": "2025",
-      "scope": "Stages: cash (actuals 2025). 92,384 published line items.",
+      "scope": "Stages: cash (actuals 2025). 92,384 published line items. The same layer is also held as 92,384 line facts for 7,896 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Italy municipal source",
+          "title": "Italian SIOPE · municipal cash receipts and payments",
           "url": "https://www.siope.it/Siope/",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
@@ -47643,19 +47643,19 @@
       "module_label_en": "Municipalities · itemized budgets",
       "status": "not_loaded",
       "source_availability": "source_available",
-      "artifact": "No published artifact",
-      "coverage": "0 of 243 municipal profiles are published on this site.",
-      "period": "Not published on this site",
-      "scope": "No published municipal profile artifact exists for this country.",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 243 municipal profiles are published on this site; 243 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2024)",
+      "scope": "Warehouse stages: actual. 1,944 line facts for 243 entities in the private production warehouse (czbudget-janrezab.budget_detail). No published municipal profile artifact exists for this country.",
       "sources": [
         {
-          "title": "Official South Korea municipal source",
+          "title": "Korean LOFIN · local finance reporting",
           "url": "https://www.lofin365.go.kr/portal/LF5100000.do",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
       ],
       "exact_extraction": "published profile adapter documented by the itemized coverage contract",
-      "transformation": "No transformation: PSD publishes no itemized municipal profile for this country.",
+      "transformation": "pipeline/transforms/prepare_international_municipal_data.py → official-source adapter → native functional/economic codes, local currency and budget stage retained → production BigQuery facts. No public per-municipality profile artifact is generated from those facts yet, so nothing is counted as published.",
       "limitations": "The published profiles contain only 4 distinct classification codes across the country, below the 5-code minimum; they are headline totals, not itemized budgets, and are not counted."
     },
     {
@@ -47671,10 +47671,10 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/mex",
       "coverage": "2,380 of 2,380 municipal profiles published on this site; native EFIPEM annual finance items",
       "period": "2024",
-      "scope": "Stages: actual (actuals 2024). 31,454 published line items.",
+      "scope": "Stages: actual (actuals 2024). 31,454 published line items. The same layer is also held as 31,454 line facts for 2,380 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Mexico municipal source",
+          "title": "Mexican INEGI · state and municipal public finance",
           "url": "https://www.inegi.org.mx/programas/finanzas/",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
@@ -47748,11 +47748,11 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/per",
       "coverage": "1,891 of 1,891 municipal profiles published on this site; native MEF budget and execution items",
       "period": "2024",
-      "scope": "Stages: actual, cash, enacted, revised (actuals 2024; plans 2024). 122,894 published line items.",
+      "scope": "Stages: actual, cash, enacted, revised (actuals 2024; plans 2024). 122,894 published line items. The same layer is also held as 122,894 line facts for 1,891 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official Peru municipal source",
-          "url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto-y-ejecucion-de-gasto",
+          "title": "Peruvian MEF · open budget data",
+          "url": "https://datosabiertos.mef.gob.pe/dataset/presupuesto",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
       ],
@@ -47849,11 +47849,11 @@
       "artifact": "data/municipal-itemized-coverage.v1.json · data/municipal-expansion/slv",
       "coverage": "259 of 259 municipal profiles published on this site; native SAFIM budget-execution items",
       "period": "2023",
-      "scope": "Stages: actual, enacted, revised (actuals 2023; plans 2023). 9,546 published line items.",
+      "scope": "Stages: actual, enacted, revised (actuals 2023; plans 2023). 9,546 published line items. The same layer is also held as 9,546 line facts for 259 entities in the private production warehouse (czbudget-janrezab.budget_detail).",
       "sources": [
         {
-          "title": "Official El Salvador municipal source",
-          "url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Datos_Abiertos.html",
+          "title": "Salvadoran fiscal transparency portal",
+          "url": "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Gastos.html",
           "location": "published profile adapter documented by the itemized coverage contract"
         }
       ],

@@ -303,9 +303,19 @@ for (const country of municipalities.countries) {
   // never the newest year that appears anywhere in the directory.
   const period = published ? yearRange([...actualYears, ...planYears]) : null;
 
-  const publicationStatus = published ? "published" : warehouse ? "warehouse_only" : classificationTooThin ? "headline_only" : "none";
+  // "warehouse_only" is a claim that nothing is published on the site, so a country whose
+  // profiles ARE live must not carry it just because its facts were also loaded into the
+  // warehouse. Colombia, Costa Rica and Korea publish profiles that fall below the
+  // itemization floor: "headline_only" describes that truthfully, "warehouse_only" does not.
+  const publicationStatus = published
+    ? "published"
+    : classificationTooThin
+      ? "headline_only"
+      : warehouse
+        ? "warehouse_only"
+        : "none";
   const status = published === 0
-    ? (warehouse ? "warehouse_only" : "missing")
+    ? (publicationStatus === "headline_only" ? "headline_only" : warehouse ? "warehouse_only" : "missing")
     : published >= scope
       ? "full"
       : "partial";

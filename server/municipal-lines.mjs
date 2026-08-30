@@ -61,6 +61,146 @@ export const COUNTRIES = {
       "or asset was paid for. Functional codes describe the public purpose, only where the commune reports " +
       "that classification.",
   },
+  BOL: {
+    prefix: "BO",
+    currency: "BOB",
+    codePattern: /^\d{4}$/,
+    codeHint: "Expected a four-digit Bolivian local-government code.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2025],
+    sourceUrl: "https://abierto.economiayfinanzas.gob.bo/descargas",
+    methodology:
+      "Bolivian Ministry of Economy open budget data: 2025 budget and execution for all 343 active " +
+      "local governments, municipal and Indigenous autonomous.",
+  },
+  CHL: {
+    prefix: "CL",
+    currency: "CLP",
+    codePattern: /^\d{5}$/,
+    codeHint: "Expected a five-digit Chilean SINIM municipality code.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2025],
+    sourceUrl: "https://datos.sinim.gov.cl/evolucion_presupuestaria.php",
+    methodology:
+      "Chilean SINIM budget execution. The source publishes a three-level hierarchy; only leaf rows " +
+      "(N3) are served as facts, so summing returns the total once rather than three times.",
+  },
+  COL: {
+    prefix: "CO",
+    currency: "COP",
+    codePattern: /^\d{8,9}$/,
+    codeHint: "Expected a eight or nine digit Colombian CUIPO entity code.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2025],
+    sourceUrl: "https://www.datos.gov.co/browse?q=OVCF%20CUIPO",
+    methodology:
+      "Colombian CUIPO reporting: initial and definitive plans plus execution for all reporting " +
+      "municipalities.",
+  },
+  CRI: {
+    prefix: "CR",
+    currency: "CRC",
+    codePattern: /^[A-Z]+(?:-[A-Z]+)+$/,
+    codeHint: "Expected a Costa Rican SIPP institution code, e.g. SIPP-ABANGARES.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2025],
+    sourceUrl: "https://cgrweb.cgr.go.cr/apex/f?p=150220:2",
+    methodology:
+      "Costa Rican Contraloría General SIPP filings.",
+  },
+  ESP: {
+    prefix: "ES",
+    currency: "EUR",
+    codePattern: /^\d{5}[A-Z]{2}\d{3}$/,
+    codeHint: "Expected a ten-character Spanish CONPREL entity code, e.g. 44001AA000.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2026],
+    sourceUrl: "https://serviciostelematicosext.hacienda.gob.es/sgfal/conprel",
+    methodology:
+      "Spanish CONPREL: 2026 adopted budgets and 2025 liquidations with economic accounts, plus a " +
+      "cash measure served as `paid`.",
+  },
+  GEO: {
+    prefix: "GE",
+    currency: "GEL",
+    codePattern: /^[A-Z]{3}-\d{3}$/,
+    codeHint: "Expected a Georgian Ministry of Finance workbook code, e.g. MOF-033.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2026],
+    sourceUrl: "https://www.mof.ge/ka/page/budget-of-autonomous-republics-and-municipalities",
+    methodology:
+      "Georgian Ministry of Finance workbooks: 2025 actuals and the 2026 approved plan.",
+  },
+  GTM: {
+    prefix: "GT",
+    currency: "GTQ",
+    codePattern: /^\d{8}$/,
+    codeHint: "Expected a eight-digit Guatemalan municipality code.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2025],
+    sourceUrl: "https://datos.minfin.gob.gt/es/dataset/informacion-municipal",
+    methodology:
+      "Guatemalan Ministry of Finance municipal reporting. A small number of items are published " +
+      "without a code and are keyed by their official name, flagged item_code_derived_from_name.",
+  },
+  ITA: {
+    prefix: "IT",
+    currency: "EUR",
+    codePattern: /^\d{9}$/,
+    codeHint: "Expected a nine-digit Italian SIOPE entity code.",
+    scopes: ["standalone_municipality"],
+    years: [2025, 2025],
+    sourceUrl: "https://www.siope.it/Siope/",
+    methodology:
+      "Italian SIOPE cash receipts and payments for 2025, grouped by native titles. SIOPE is a " +
+      "cash-basis source, so every row is served as `paid`.",
+  },
+  KOR: {
+    prefix: "KR",
+    currency: "KRW",
+    codePattern: /^\d{7}$/,
+    codeHint: "Expected a seven-digit Korean local-finance code.",
+    scopes: ["standalone_municipality"],
+    years: [2024, 2024],
+    sourceUrl: "https://www.lofin365.go.kr/portal/LF5100000.do",
+    methodology:
+      "Korean LOFIN local finance reporting for 2024.",
+  },
+  MEX: {
+    prefix: "MX",
+    currency: "MXN",
+    codePattern: /^\d{5}$/,
+    codeHint: "Expected a five-digit INEGI municipality code.",
+    scopes: ["standalone_municipality"],
+    years: [2024, 2024],
+    sourceUrl: "https://www.inegi.org.mx/programas/finanzas/",
+    methodology:
+      "Mexican INEGI state and municipal public finance statistics for 2024. The source balance is " +
+      "a reporting construct, not a fiscal-performance indicator.",
+  },
+  PER: {
+    prefix: "PE",
+    currency: "PEN",
+    codePattern: /^\d{6}$/,
+    codeHint: "Expected a six-digit Peruvian MEF entity code.",
+    scopes: ["standalone_municipality"],
+    years: [2024, 2024],
+    sourceUrl: "https://datosabiertos.mef.gob.pe/dataset/presupuesto",
+    methodology:
+      "Peruvian MEF open budget data for 2024, including a cash measure served as `paid`.",
+  },
+  SLV: {
+    prefix: "SV",
+    currency: "USD",
+    codePattern: /^\d{4}$/,
+    codeHint: "Expected a four-digit Salvadoran municipality code.",
+    scopes: ["standalone_municipality"],
+    years: [2023, 2023],
+    sourceUrl: "https://www.transparenciafiscal.gob.sv/ptf/es/PTF2-Gastos.html",
+    methodology:
+      "Salvadoran fiscal transparency portal, 2023 municipal budgets. Reported in US dollars, the " +
+      "country’s legal tender.",
+  },
   BRA: {
     prefix: "BR",
     currency: "BRL",

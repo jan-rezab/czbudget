@@ -194,3 +194,29 @@ test("Brazil's execution phases are distinct stages, not one blurred actual", as
   assert.match(brazil.methodology, /do not add them together/i,
     "the contract must warn that committed, actual and paid describe the same money");
 });
+
+test("every configured country's code pattern accepts its real entity codes", async () => {
+  // Each pattern was derived from the actual entity codes in the uniform layer, so a
+  // representative code per country must validate — a pattern that rejects real data would
+  // 400 every request for that country while looking correct in review.
+  const REAL_CODES = {
+    BOL: "3101", BRA: "5218300", CHL: "02101", COL: "210205002", CRI: "SIPP-ABANGARES",
+    ESP: "44001AA000", FRA: "55001", GEO: "MOF-033", GTM: "12101612", ITA: "000105310",
+    KOR: "4213000", MEX: "01001", PER: "300023", SLV: "8301",
+  };
+  const store = storeReturning([]);
+  for (const [code, entity] of Object.entries(REAL_CODES)) {
+    assert.ok(COUNTRIES[code], `${code} should be configured`);
+    await assert.doesNotReject(() => store.profile(code, entity), `${code}: ${entity} should validate`);
+  }
+  assert.equal(Object.keys(COUNTRIES).length, Object.keys(REAL_CODES).length,
+    "every configured country needs a code in this test");
+});
+
+test("a code from the wrong country is rejected, not silently queried", async () => {
+  const store = storeReturning([]);
+  // Spain's ten-character code must not pass as a four-digit Bolivian one, and vice versa.
+  await assert.rejects(() => store.profile("BOL", "44001AA000"), (e) => e.code === "invalid_municipality_code");
+  await assert.rejects(() => store.profile("ESP", "3101"), (e) => e.code === "invalid_municipality_code");
+  await assert.rejects(() => store.profile("ITA", "SIPP-ABANGARES"), (e) => e.code === "invalid_municipality_code");
+});
