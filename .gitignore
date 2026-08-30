@@ -24,3 +24,10 @@ __pycache__/
 # build time by scripts/hydrate-data-layers.mjs. Hashes stay in data/manifest.v1.json, so a
 # commit still proves which bytes it served.
 data/municipal-expansion/
+
+# Generated municipal profile pages — see pipeline/config/data_layers.json.
+# 35,869 files rebuilt from the uniform layer each release and hydrated at build time.
+# Output is verified byte-identical run to run; the hub index stays committed because it is
+# the one file not under a country subtree, and hashing it keeps verification complete.
+municipalities/*/
+cz/*/

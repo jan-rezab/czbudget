@@ -32,12 +32,37 @@
       "committed": false,
       "recreatable": "directly from uniform; verified identical — 28,559 entities and 4,120,493 detail rows, no field present here that is absent upstream",
       "note": "Regenerated into the public serving snapshot each release. prepare-public-serving-snapshots.mjs already treats this directory as a snapshot input."
+    },
+    {
+      "id": "pages",
+      "title": "Generated municipal profile pages",
+      "root": "repo",
+      "path": "municipalities",
+      "group_by": "subdirectory",
+      "durability": "regenerate",
+      "committed": false,
+      "recreatable": "from the uniform layer via scripts/build-municipal-expansion-pages.py and scripts/build-municipality-country-pages.mjs; run-to-run output verified byte-identical",
+      "note": "29,597 files. Every regeneration rewrote all of them into history. Prerendered HTML is correct for SEO and no-JS readers; committing it is what was wrong."
+    },
+    {
+      "id": "pages_cz",
+      "title": "Generated Czech municipal pages",
+      "root": "repo",
+      "path": "cz",
+      "group_by": "subdirectory",
+      "durability": "regenerate",
+      "committed": false,
+      "recreatable": "from pipeline/transforms/build_czech_site.py, the single source of every page under cz/"
     }
   ],
   "known_gaps": [
     {
       "layer": "raw",
       "detail": "Denmark has no subtree under data/source_cache/municipal-expansion. Its uniform file exists and Denmark is also loaded in BigQuery, so the data is not at risk, but the raw provenance chain is incomplete for that country."
+    },
+    {
+      "layer": "pages",
+      "detail": "The committed pages are stale relative to their template: regenerating applies the copy-voice rewrite they never received, and a sort-order and numeric-type normalisation in international-municipalities.v1.json. Refreshing that baseline is a separate reviewable change from un-committing, and is deliberately not bundled here."
     }
   ]
 }

@@ -198,6 +198,49 @@ if (registry) {
   }
 }
 
+/**
+ * Third invariant (A5 + B5): no NEW translation key carries a digit.
+ *
+ * The dictionaries key English strings off full Czech sentences. Where that sentence
+ * contains a number, it is an uncontrolled second copy of a figure that also lives in a
+ * data artifact: when the data moves, the key stops matching and the string silently
+ * renders untranslated — no error, no failing test.
+ *
+ * This is a ratchet, not a refactor. The existing keys mostly serve cesky-rozpocet.html,
+ * which is deliberately preserved as the reference statement of the fiscal perimeter model,
+ * so the count is frozen at today's level and only growth fails the build.
+ */
+const I18N_FILES = ["budget-i18n.js", "cesko-i18n.js"];
+const DIGIT_KEY_CEILING = 80;
+
+let digitKeys = 0;
+const digitSamples = [];
+for (const file of I18N_FILES) {
+  let source;
+  try {
+    source = await readFile(path.join(ROOT, file), "utf8");
+  } catch {
+    continue;
+  }
+  for (const match of source.matchAll(/"((?:[^"\\]|\\.){3,})"\s*:\s*"(?:[^"\\]|\\.)*"/g)) {
+    if (/\d/.test(match[1])) {
+      digitKeys += 1;
+      if (digitSamples.length < 3) digitSamples.push(`${file}: "${match[1].slice(0, 54)}"`);
+    }
+  }
+}
+
+if (digitKeys > DIGIT_KEY_CEILING) {
+  fail(
+    "no new translation key carries a digit",
+    `${digitKeys} keys contain digits, above the frozen ceiling of ${DIGIT_KEY_CEILING}. ` +
+    `A number in a key is a second copy of a figure that lives in a data artifact; when the ` +
+    `data moves the string silently renders untranslated. e.g. ${digitSamples[0]}`,
+  );
+} else {
+  console.log(`Translation keys with digits: ${digitKeys} (ceiling ${DIGIT_KEY_CEILING}, not rising).`);
+}
+
 if (failures.length > 0) {
   console.error("Invariant violations:\n");
   for (const { rule, detail } of failures) console.error(`  ✗ ${rule}\n      ${detail}`);
