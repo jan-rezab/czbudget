@@ -128,6 +128,14 @@
       cs: ["Ekonomika v kontextu — Public Spending Data", "Dlouhé ekonomické řady, hospodářský cyklus a fiskální kontext v globální datové vrstvě."],
       en: ["Economy in context — Public Spending Data", "Long-run economic series, the business cycle and fiscal context in a global data layer."],
     },
+    "/deep-dives/money/cze/": {
+      cs: ["Kam šly peníze? Česko — Public Spending Data", "Česká peněžní zásoba, kupní síla a zásahy České národní banky v jednom zdrojovaném reportu."],
+      en: ["Where did the money go? Czechia — Public Spending Data", "Czech money supply, purchasing power and Czech National Bank interventions in one sourced report."],
+    },
+    "/deep-dives/money/usa/": {
+      cs: ["Kam šly peníze? Spojené státy — Public Spending Data", "Americká peněžní zásoba, kupní síla a zásahy Federálního rezervního systému v jednom zdrojovaném reportu."],
+      en: ["Where did the money go? United States — Public Spending Data", "US money supply, purchasing power and Federal Reserve interventions in one sourced report."],
+    },
     "/deep-dives/defense/": {
       cs: ["Výdaje na obranu — Public Spending Data", "Vojenské výdaje vůči HDP, závazek NATO a nejpodrobnější dostupné rozpočtové řádky pro 17 zemí."],
       en: ["Defense spending — Public Spending Data", "Military expenditure relative to GDP, the NATO commitment and the most detailed available budget lines for 17 countries."],
