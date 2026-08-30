@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { COUNTRIES, MunicipalLinesStore, resolveCountry } from "../../server/municipal-lines.mjs";
+import { FRANCE_MUNICIPAL_LINES_SQL } from "../../server/france-municipal-lines.mjs";
 
 const FIELDS = [
   "fiscal_year", "budget_stage", "budget_side", "reporting_scope",
@@ -102,4 +103,59 @@ test("repeat reads are served from the bounded cache", async () => {
 test("resolveCountry is case-insensitive and returns the warehouse prefix", () => {
   assert.equal(resolveCountry("bra").prefix, "BR");
   assert.equal(resolveCountry("BRA").code, "BRA");
+});
+
+test("France answers through the generic endpoint with its own structure intact", async () => {
+  const capture = {};
+  const store = new MunicipalLinesStore({
+    tokenProvider: async () => "test-token",
+    fetchImpl: async (_url, options) => {
+      capture.body = JSON.parse(options.body);
+      return new Response(JSON.stringify({
+        jobComplete: true,
+        schema: {
+          fields: ["dimension", "fiscal_year", "budget_stage", "budget_side", "reporting_scope",
+            "code", "nomenclature", "amount_local", "source_ids"].map((name) => ({ name })),
+        },
+        rows: [
+          { f: ["economic", "2025", "actual", "expenditure", "main_budget", "60612", "M57", "1250.50", "fr-dgfip-balances-fonction-2025"].map((v) => ({ v })) },
+          { f: ["functional", "2025", "actual", "expenditure", "main_budget", "212", "M57", "980.25", "fr-dgfip-balances-fonction-2025"].map((v) => ({ v })) },
+        ],
+      }), { status: 200, headers: { "content-type": "application/json" } });
+    },
+  });
+
+  const result = await store.profile("FRA", "55001");
+  assert.equal(result.country, "FRA");
+  assert.equal(result.currency, "EUR");
+
+  // The two classifications survive generalisation rather than collapsing into one list.
+  assert.deepEqual(result.coverage.dimensions, { economic: 1, functional: 1 });
+  const economic = result.lines.find((line) => line.dimension === "economic");
+  const functional = result.lines.find((line) => line.dimension === "functional");
+  assert.equal(economic.name_en, "Energy and electricity");
+  assert.equal(functional.name_en, "Education and training");
+  assert.equal(economic.nomenclature, "M57");
+  assert.ok(economic.name_native, "the French label is carried, not dropped");
+
+  // France brings its own query and its own entity namespace.
+  assert.equal(capture.body.query, FRANCE_MUNICIPAL_LINES_SQL);
+  assert.equal(capture.body.queryParameters[0].parameterValue.value, "FR:55001");
+});
+
+test("a single-classification country carries no dimension or label fields", async () => {
+  const capture = {};
+  const store = storeReturning([
+    row(["2025", "actual", "expenditure", "standalone_municipality", "X", "col", "1", "br-siconfi-rreo-2025"]),
+  ], capture);
+  const result = await store.profile("BRA", "5218300");
+  assert.equal(result.lines[0].dimension, undefined, "no invented classification");
+  assert.equal(result.lines[0].name_en, undefined, "no invented label");
+  assert.equal(result.coverage.dimensions, undefined);
+});
+
+test("French commune codes keep their Corsican form", async () => {
+  const store = storeReturning([]);
+  await assert.doesNotReject(() => store.profile("FRA", "2A004"));
+  await assert.rejects(() => store.profile("FRA", "5218300"), (e) => e.code === "invalid_municipality_code");
 });

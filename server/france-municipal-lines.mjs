@@ -179,7 +179,7 @@ export class FranceMunicipalLinesStore {
   }
 }
 
-function normalizeCommuneCode(value) {
+export function normalizeCommuneCode(value) {
   const code = String(value || "").trim().toUpperCase();
   if (!/^(?:\d{5}|2[AB]\d{3})$/.test(code)) {
     throw new FranceLinesError(400, "invalid_france_commune_code", "Expected a five-character French INSEE commune code.");
@@ -226,7 +226,7 @@ export async function requestJSON(fetchImpl, url, options) {
   }
 }
 
-function economicLabels(code) {
+export function economicLabels(code) {
   const groups = [
     ["10", "Capital et réserves", "Capital and reserves", "Kapitál a rezervy"],
     ["13", "Subventions d’investissement", "Investment grants", "Investiční dotace"],
@@ -263,7 +263,7 @@ function economicLabels(code) {
   return { fr: match?.[0] || `Compte ${code}`, en: match?.[1] || `Account ${code}`, cs: match?.[2] || `Účet ${code}` };
 }
 
-function functionalLabels(code) {
+export function functionalLabels(code) {
   const groups = {
     "0": ["Services généraux", "General public services", "Všeobecné veřejné služby"],
     "1": ["Sécurité", "Public safety", "Veřejná bezpečnost"],

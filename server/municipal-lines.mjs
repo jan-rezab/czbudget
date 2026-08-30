@@ -1,21 +1,29 @@
 /**
- * Warehouse-backed municipal line items, for every country except France.
+ * Warehouse-backed municipal line items, for every country including France.
  *
  * France proved the pattern: 35,042 communes and 10.4 million line facts served from
  * BigQuery, costing the repository nothing, while countries of a fraction the size shipped
- * as tens of thousands of committed JSON files. This is that pattern generalised, so the
- * remaining countries converge onto one grain and one endpoint instead of each acquiring a
- * bespoke store.
+ * as tens of thousands of committed JSON files. This is that pattern generalised, so every
+ * country answers on one grain through one endpoint instead of each acquiring a bespoke
+ * store — France included, addressable as ?country=FRA alongside the rest.
  *
- * France keeps its own module. It carries a nomenclature dimension and per-code French
- * label tables that none of the others have, and it is serving production traffic; folding
- * it in here would be a rewrite of working code for the sake of symmetry.
+ * Generalising did not mean flattening. France reports two classifications where the others
+ * report one, and resolves its codes through published nomenclature tables. A country brings
+ * its own query, dimensions and labeller where it has them, and the store carries those
+ * through rather than reducing every country to the poorest common shape. A country that
+ * reports one classification simply omits the field instead of carrying an invented one.
+ *
+ * The original /public-data/france-municipality-lines route and its store are untouched, so
+ * anything already linking to them keeps working unchanged.
  *
  * Adding a country is a COUNTRIES entry, not new code.
  */
 import {
+  FRANCE_MUNICIPAL_LINES_SQL,
   FranceLinesError,
   decodeRows,
+  economicLabels,
+  functionalLabels,
   metadataToken,
   parameter,
   requestJSON,
@@ -32,6 +40,27 @@ const CACHE_SIZE = 256;
  * to map it to the canonical alpha-3 the artifacts carry.
  */
 export const COUNTRIES = {
+  // France reports two classifications where every other country reports one, and its codes
+  // resolve through published nomenclature tables. Rather than flatten that away for the
+  // sake of a uniform shape, the country brings its own query and its own labeller; the
+  // store carries them through. Its original route stays exactly as it was.
+  FRA: {
+    prefix: "FR",
+    currency: "EUR",
+    codePattern: /^(?:\d{5}|2[AB]\d{3})$/,
+    codeHint: "Expected a five-character French INSEE commune code.",
+    scopes: ["main_budget"],
+    years: [2024, 2026],
+    sql: FRANCE_MUNICIPAL_LINES_SQL,
+    dimensions: ["economic", "functional"],
+    label: (dimension, code) => (dimension === "functional" ? functionalLabels(code) : economicLabels(code)),
+    nativeLanguage: "fr",
+    sourceUrl: "https://data.economie.gouv.fr/explore/dataset/balances-comptables-des-communes-en-2025/",
+    methodology:
+      "Amounts are official DGFiP executed-account entries. Economic accounts describe what kind of input " +
+      "or asset was paid for. Functional codes describe the public purpose, only where the commune reports " +
+      "that classification.",
+  },
   BRA: {
     prefix: "BR",
     currency: "BRL",
@@ -129,15 +158,28 @@ export class MunicipalLinesStore {
     for (const row of rows) {
       const amount = Number(row.amount_local);
       if (!Number.isFinite(amount) || !row.code) continue;
+      // A country that reports more than one classification says which this row belongs to;
+      // one that reports a single classification leaves the field off rather than inventing it.
+      const dimension = country.dimensions
+        ? (country.dimensions.includes(row.dimension) ? row.dimension : country.dimensions[0])
+        : null;
+      const labels = country.label ? country.label(dimension, row.code) : null;
       const item = {
         year: Number(row.fiscal_year),
         stage: row.budget_stage,
         side: row.budget_side,
         reporting_scope: row.reporting_scope,
+        ...(dimension ? { dimension } : {}),
         code: row.code,
+        ...(row.nomenclature ? { nomenclature: row.nomenclature } : {}),
+        ...(labels ? {
+          name_native: labels[country.nativeLanguage] ?? labels.en ?? null,
+          name_en: labels.en ?? null,
+          name_cs: labels.cs ?? null,
+        } : {}),
         // The source's own column heading, kept verbatim: it is the only label the
         // upstream filing provides, and inventing a translation would misreport it.
-        source_column: row.column_label || null,
+        ...(row.column_label ? { source_column: row.column_label } : {}),
         amount,
         currency: country.currency,
         source_ids: String(row.source_ids || "").split(",").filter(Boolean),
@@ -156,6 +198,11 @@ export class MunicipalLinesStore {
       coverage: {
         line_count: lines.length,
         stages: [...new Set(lines.map((line) => line.stage))].sort(),
+        ...(country.dimensions ? {
+          dimensions: Object.fromEntries(country.dimensions.map((name) => [
+            name, lines.filter((line) => line.dimension === name).length,
+          ])),
+        } : {}),
         note: lines.length
           ? "Official line items as filed, excluding published totals and intra-budgetary transfers."
           : "No line detail is warehoused for this municipality.",
@@ -174,7 +221,7 @@ export class MunicipalLinesStore {
   async query(country, entityID) {
     const token = await this.tokenProvider();
     const body = {
-      query: sqlFor(country.scopes),
+      query: country.sql || sqlFor(country.scopes),
       useLegacySql: false,
       location: this.location,
       timeoutMs: 8_000,
