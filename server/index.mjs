@@ -8,6 +8,7 @@ import { DataError, apiIndex, capitalCity, countryModule, countryProfile, czechM
 import { openapi } from "./openapi.mjs";
 import { FixedWindowRateLimiter } from "./rate-limit.mjs";
 import { FranceLinesError, FranceMunicipalLinesStore } from "./france-municipal-lines.mjs";
+import { COUNTRIES as WAREHOUSED_COUNTRIES, MunicipalLinesStore } from "./municipal-lines.mjs";
 import { municipalityPage } from "./municipality-page.mjs";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 
@@ -26,6 +27,7 @@ const PAGE_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "publi
 const CORS_ORIGINS = new Set((process.env.API_CORS_ORIGINS || "").split(",").map((value) => value.trim()).filter(Boolean));
 const rateLimiter = new FixedWindowRateLimiter({ maxBuckets: RATE_LIMIT_BUCKETS });
 const franceMunicipalLines = new FranceMunicipalLinesStore();
+const municipalLines = new MunicipalLinesStore();
 let apiRequestsInFlight = 0;
 
 function integerSetting(name, fallback, minimum, maximum) {
@@ -243,6 +245,37 @@ export async function handler(request, response) {
       } finally {
         apiRequestsInFlight -= 1;
       }
+    }
+
+    // The same job as the France route above, for every other warehoused country. France
+    // keeps its own because it carries a nomenclature dimension and label tables no other
+    // country reports; adding a country here is a config entry, not a new endpoint.
+    if (url.pathname === "/public-data/municipality-lines") {
+      if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
+      if (!enforceRateLimit(response, id, { key: "global", limit: 60, windowMs: 60 * 1000, group: "municipal-lines-global" })) return;
+      if (!enforceRateLimit(response, id, { key: clientIP(request), limit: 30, windowMs: 60 * 1000, group: "municipal-lines-ip" })) return;
+      if (!acquireAPISlot(response, id)) return;
+      try {
+        const payload = await municipalLines.profile(url.searchParams.get("country"), url.searchParams.get("code"));
+        return sendPublicJSON(request, response, 200, payload, {
+          ETag: `W/"${payload.country}-${payload.entity_code}-${payload.years.join("-")}"`,
+        });
+      } finally {
+        apiRequestsInFlight -= 1;
+      }
+    }
+
+    if (url.pathname === "/public-data/municipality-lines/countries") {
+      if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
+      return sendPublicJSON(request, response, 200, {
+        schema_version: "1.0.0",
+        countries: Object.entries(WAREHOUSED_COUNTRIES).map(([code, country]) => ({
+          country_code: code,
+          currency: country.currency,
+          years: country.years,
+          source_url: country.sourceUrl,
+        })),
+      });
     }
 
     if (url.pathname === "/public-data/municipality-profile" || url.pathname === "/public-data/municipality-history") {

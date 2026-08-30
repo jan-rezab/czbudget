@@ -1,0 +1,212 @@
+/**
+ * Warehouse-backed municipal line items, for every country except France.
+ *
+ * France proved the pattern: 35,042 communes and 10.4 million line facts served from
+ * BigQuery, costing the repository nothing, while countries of a fraction the size shipped
+ * as tens of thousands of committed JSON files. This is that pattern generalised, so the
+ * remaining countries converge onto one grain and one endpoint instead of each acquiring a
+ * bespoke store.
+ *
+ * France keeps its own module. It carries a nomenclature dimension and per-code French
+ * label tables that none of the others have, and it is serving production traffic; folding
+ * it in here would be a rewrite of working code for the sake of symmetry.
+ *
+ * Adding a country is a COUNTRIES entry, not new code.
+ */
+import {
+  FranceLinesError,
+  decodeRows,
+  metadataToken,
+  parameter,
+  requestJSON,
+} from "./france-municipal-lines.mjs";
+
+const DEFAULT_PROJECT = "czbudget-janrezab";
+const DEFAULT_LOCATION = "EU";
+const CACHE_TTL_MS = 10 * 60 * 1000;
+const CACHE_SIZE = 256;
+
+/**
+ * One entry per warehouse-backed country. `prefix` is the entity-id namespace the warehouse
+ * uses — alpha-2 by its own established convention, which is why the entity registry exists
+ * to map it to the canonical alpha-3 the artifacts carry.
+ */
+export const COUNTRIES = {
+  BRA: {
+    prefix: "BR",
+    currency: "BRL",
+    codePattern: /^\d{7}$/,
+    codeHint: "Expected a seven-digit IBGE municipality code.",
+    scopes: ["standalone_municipality"],
+    years: [2024, 2025],
+    sourceUrl: "https://apidatalake.tesouro.gov.br/docs/siconfi",
+    methodology:
+      "Amounts are official SICONFI RREO filings. Enacted is the initial forecast, revised the updated " +
+      "forecast, and actual the year-to-date realisation. Brazil also publishes a bimester flow and a " +
+      "forecast-minus-realised residual; the residual is derivable rather than reported and is not stored.",
+  },
+};
+
+export function resolveCountry(value) {
+  const code = String(value || "").trim().toUpperCase();
+  const country = COUNTRIES[code];
+  if (!country) {
+    throw new FranceLinesError(
+      404,
+      "country_not_warehoused",
+      `No warehouse-backed municipal line detail for "${code}". Available: ${Object.keys(COUNTRIES).sort().join(", ")}.`,
+    );
+  }
+  return { code, ...country };
+}
+
+function normaliseCode(country, value) {
+  const code = String(value || "").trim().toUpperCase();
+  if (!country.codePattern.test(code)) {
+    throw new FranceLinesError(400, "invalid_municipality_code", country.codeHint);
+  }
+  return code;
+}
+
+/** Scope filter is per country: France reports main_budget, Brazil standalone_municipality. */
+function sqlFor(scopes) {
+  const list = scopes.map((scope) => `'${scope}'`).join(", ");
+  return `
+    SELECT
+      fiscal_year,
+      budget_stage,
+      budget_side,
+      reporting_scope,
+      economic_item_code AS code,
+      source_budget_item_type_code AS column_label,
+      CAST(SUM(amount_local) AS STRING) AS amount_local,
+      STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
+    FROM \`czbudget-janrezab.budget_detail.municipal_budget_line_facts\`
+    WHERE fiscal_year BETWEEN @min_year AND @max_year
+      AND public_entity_id = @entity_id
+      AND budget_side IN ('revenue', 'expenditure')
+      AND NOT is_consolidation_item
+      AND NOT is_summary_row
+      AND reporting_scope IN (${list})
+    GROUP BY 1, 2, 3, 4, 5, 6
+    ORDER BY fiscal_year, budget_side, code
+  `;
+}
+
+export class MunicipalLinesStore {
+  constructor({
+    fetchImpl = globalThis.fetch,
+    tokenProvider = null,
+    project = process.env.BQ_PROJECT_ID || process.env.GOOGLE_CLOUD_PROJECT || DEFAULT_PROJECT,
+    location = process.env.BQ_LOCATION || DEFAULT_LOCATION,
+    now = () => Date.now(),
+  } = {}) {
+    this.fetchImpl = fetchImpl;
+    this.tokenProvider = tokenProvider || (() => metadataToken(this.fetchImpl));
+    this.project = project;
+    this.location = location;
+    this.now = now;
+    this.cache = new Map();
+  }
+
+  async profile(countryCode, code) {
+    const country = resolveCountry(countryCode);
+    const normalised = normaliseCode(country, code);
+    const key = `${country.code}:${normalised}`;
+
+    const cached = this.cache.get(key);
+    if (cached && cached.expiresAt > this.now()) {
+      this.cache.delete(key);
+      this.cache.set(key, cached);
+      return cached.value;
+    }
+
+    const rows = await this.query(country, `${country.prefix}:${normalised}`);
+    const lines = [];
+    const sources = new Set();
+    const years = new Set();
+
+    for (const row of rows) {
+      const amount = Number(row.amount_local);
+      if (!Number.isFinite(amount) || !row.code) continue;
+      const item = {
+        year: Number(row.fiscal_year),
+        stage: row.budget_stage,
+        side: row.budget_side,
+        reporting_scope: row.reporting_scope,
+        code: row.code,
+        // The source's own column heading, kept verbatim: it is the only label the
+        // upstream filing provides, and inventing a translation would misreport it.
+        source_column: row.column_label || null,
+        amount,
+        currency: country.currency,
+        source_ids: String(row.source_ids || "").split(",").filter(Boolean),
+      };
+      item.source_ids.forEach((source) => sources.add(source));
+      years.add(item.year);
+      lines.push(item);
+    }
+
+    const value = {
+      schema_version: "1.0.0",
+      country: country.code,
+      entity_code: normalised,
+      currency: country.currency,
+      years: [...years].sort((a, b) => a - b),
+      coverage: {
+        line_count: lines.length,
+        stages: [...new Set(lines.map((line) => line.stage))].sort(),
+        note: lines.length
+          ? "Official line items as filed, excluding published totals and intra-budgetary transfers."
+          : "No line detail is warehoused for this municipality.",
+      },
+      lines,
+      sources: [...sources].sort(),
+      source_url: country.sourceUrl,
+      methodology: country.methodology,
+    };
+
+    this.cache.set(key, { value, expiresAt: this.now() + CACHE_TTL_MS });
+    while (this.cache.size > CACHE_SIZE) this.cache.delete(this.cache.keys().next().value);
+    return value;
+  }
+
+  async query(country, entityID) {
+    const token = await this.tokenProvider();
+    const body = {
+      query: sqlFor(country.scopes),
+      useLegacySql: false,
+      location: this.location,
+      timeoutMs: 8_000,
+      maxResults: "20000",
+      maximumBytesBilled: "2000000000",
+      parameterMode: "NAMED",
+      queryParameters: [
+        parameter("entity_id", "STRING", entityID),
+        parameter("min_year", "INT64", String(country.years[0])),
+        parameter("max_year", "INT64", String(country.years[country.years.length - 1])),
+      ],
+    };
+    const endpoint = `https://bigquery.googleapis.com/bigquery/v2/projects/${encodeURIComponent(this.project)}/queries`;
+    let payload = await requestJSON(this.fetchImpl, endpoint, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!payload.jobComplete) {
+      const job = payload.jobReference;
+      if (!job?.jobId) {
+        throw new FranceLinesError(504, "municipal_lines_timeout", "The detailed municipal query did not complete in time.");
+      }
+      payload = await requestJSON(
+        this.fetchImpl,
+        `${endpoint}/${encodeURIComponent(job.jobId)}?location=${encodeURIComponent(job.location || this.location)}&timeoutMs=5000&maxResults=20000`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+    }
+    if (!payload.jobComplete) {
+      throw new FranceLinesError(504, "municipal_lines_timeout", "The detailed municipal query did not complete in time.");
+    }
+    return decodeRows(payload);
+  }
+}

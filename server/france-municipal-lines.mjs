@@ -187,17 +187,17 @@ function normalizeCommuneCode(value) {
   return code;
 }
 
-function parameter(name, type, value) {
+export function parameter(name, type, value) {
   return { name, parameterType: { type }, parameterValue: { value } };
 }
 
-function decodeRows(payload) {
+export function decodeRows(payload) {
   if (payload.errors?.length) throw new FranceLinesError(502, "france_lines_query_failed", "The detailed municipal source returned an error.");
   const fields = payload.schema?.fields?.map((field) => field.name) || [];
   return (payload.rows || []).map((row) => Object.fromEntries(fields.map((field, index) => [field, row.f?.[index]?.v ?? null])));
 }
 
-async function metadataToken(fetchImpl) {
+export async function metadataToken(fetchImpl) {
   const now = Date.now();
   if (metadataAccessToken?.expiresAt > now + 60_000) return metadataAccessToken.value;
   const payload = await requestJSON(fetchImpl, "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token", {
@@ -208,7 +208,7 @@ async function metadataToken(fetchImpl) {
   return metadataAccessToken.value;
 }
 
-async function requestJSON(fetchImpl, url, options) {
+export async function requestJSON(fetchImpl, url, options) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12_000);
   try {
