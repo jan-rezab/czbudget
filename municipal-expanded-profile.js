@@ -3,6 +3,12 @@
   const requested = new URLSearchParams(location.search).get("lang");
   const requestedProfileCode = new URLSearchParams(location.search).get("code");
   const franceDepartment = (code) => /^(971|972|973|974|976)/.test(code || "") ? code.slice(0, 3) : (code || "").slice(0, 2);
+  // Which country and municipality this page is, read from the path it already carries, so
+  // the warehouse can serve it without regenerating 29,597 pages to add an attribute.
+  const warehouseTarget = (() => {
+    const match = /\/municipal-expansion\/([a-z]{3})\/([^/]+)\.json(?:\?|$)/.exec(document.body.dataset.profileUrl || "");
+    return match ? { country: match[1].toUpperCase(), code: decodeURIComponent(match[2]) } : null;
+  })();
   const profileUrl = document.body.dataset.profileRoot
     ? `${document.body.dataset.profileRoot}${franceDepartment(requestedProfileCode)}.v1.json`
     : document.body.dataset.profileUrl;
@@ -29,7 +35,8 @@
       trend: "Vývoj", historyTitle: "Rozpočet v čase", historyCopy: "Nominální hodnoty v místní měně. Jednotlivé fáze rozpočtu zůstávají oddělené.",
       onePeriod: "Jeden dostupný rok", onePeriodCopy: "Zdroj zatím poskytuje jeden srovnatelný roční profil. Další roky se zde objeví bez změny rozvržení stránky.",
       budgetKicker: "Rozpočet", budgetTitle: "Plán a skutečnost.", stage: "Fáze", enacted: "Schválený", revised: "Upravený",
-      actual: "Skutečnost", cash: "Zaplaceno", committed: "Závazky", period: "V období", remaining: "Zbývá", allStages: "Všechny fáze",
+      actual: "Skutečnost", cash: "Zaplaceno", paid: "Zaplaceno", committed: "Závazky",
+      carried_over: "Převedené závazky", period: "V období", remaining: "Zbývá", allStages: "Všechny fáze",
       revenueMix: "Struktura příjmů", expenditureMix: "Struktura výdajů", nativeKicker: "Kam peníze jdou",
       nativeTitle: "Příjmy a výdaje v detailu", docTitle: "{name} — rozpočet obce, {country} — Public Spending Data", docDesc: "{name}, {country}: oficiální obecní příjmy, výdaje, saldo, rozpočtové fáze a původní položkový detail.", nativeCopy: "Přepněte mezi příjmy a výdaji a procházejte konkrétní účely. Délka pruhu porovnává velikost vykázaných položek; původní názvy a kódy zůstávají zachované.", nativeTableLabel: "Tabulka zdrojových položek, vodorovně posuvná",
       search: "Hledat položku", searchPlaceholder: "Kód nebo název…", side: "Strana", allSides: "Obě strany", amount: "Částka",
@@ -46,7 +53,8 @@
       trend: "Trend", historyTitle: "Budget over time", historyCopy: "Nominal values in local currency. Budget stages remain separate.",
       onePeriod: "One year available", onePeriodCopy: "The source currently provides one comparable annual profile. Additional years can appear here without changing the page layout.",
       budgetKicker: "Budget", budgetTitle: "Plan and actual.", stage: "Budget stage", enacted: "Approved", revised: "Amended",
-      actual: "Actual", cash: "Paid", committed: "Committed", period: "In period", remaining: "Remaining", allStages: "All stages",
+      actual: "Actual", cash: "Paid", paid: "Paid", committed: "Committed",
+      carried_over: "Carried-over payables", period: "In period", remaining: "Remaining", allStages: "All stages",
       revenueMix: "Revenue mix", expenditureMix: "Expenditure mix", nativeKicker: "Where the money goes",
       nativeTitle: "Revenue and spending in detail", docTitle: "{name} — {country} municipal budget — Public Spending Data", docDesc: "{name}, {country}: official municipal revenue, expenditure, balance, budget stages and native item-level detail.", nativeCopy: "Switch between income and spending, then explore the specific purposes reported by the source. Bar length compares reported line magnitude; native labels and codes stay intact.", nativeTableLabel: "Source item table, scrolls horizontally",
       search: "Search items", searchPlaceholder: "Code or label…", side: "Side", allSides: "Both sides", amount: "Amount",
@@ -116,7 +124,7 @@
     return formatMoney(amount * applied.factor, applied.currency, compact);
   };
 
-  function adaptProfile(data, historyData = null, frenchLines = null) {
+  function adaptProfile(data, historyData = null, frenchLines = null, warehouseLines = null, itemLabels = null) {
     if (data.country?.code === "FRA" && data.profiles) {
       const entity = data.profiles[requestedProfileCode];
       if (!entity) throw new Error(`Unknown French commune ${requestedProfileCode || "(missing code)"}`);
@@ -203,7 +211,32 @@
         years: history.map((row) => row.year), history, latest, detail,
       };
     }
-    if (Array.isArray(data.detail)) return { ...data, detail: data.detail.map((row) => ({ ...row })) };
+    if (Array.isArray(data.detail) || warehouseLines) {
+      // Prefer the warehouse. It is the same layer the static file holds, on one grain
+      // shared with every other country, with published totals and intra-budgetary
+      // transfers already excluded — so a reader summing what is shown cannot double-count.
+      // Item names live in the label registry rather than being repeated on every row,
+      // which is what made the per-municipality files 580 MB.
+      if (warehouseLines?.lines?.length) {
+        const labels = itemLabels?.countries?.[warehouseLines.country] || {};
+        return {
+          ...data,
+          detail: warehouseLines.lines.map((row) => ({
+            year: row.year,
+            stage: row.stage,
+            side: row.side,
+            code: row.code,
+            name: row.name_native || row.name_en || labels[row.code] || row.code,
+            amount: row.amount,
+            ...(row.period && row.period !== "FY" ? { period: row.period } : {}),
+          })),
+          detail_source: "warehouse",
+          detail_url: `/public-data/municipality-lines?country=${encodeURIComponent(warehouseLines.country)}&code=${encodeURIComponent(warehouseLines.entity_code)}`,
+          detail_source_url: warehouseLines.source_url || null,
+        };
+      }
+      return { ...data, detail: (data.detail || []).map((row) => ({ ...row })) };
+    }
     if (!Array.isArray(data.breakdown)) return { ...data, detail: [] };
 
     const latestYear = Number(data.latest?.year || Math.max(...(data.years || []).map(Number)));
@@ -265,7 +298,9 @@
     }));
   }
 
-  const stageOrder = ["enacted", "revised", "actual", "committed", "cash", "period", "remaining"];
+  // Brazil's execution lifecycle in the order money moves through it, so the selector reads
+  // as a sequence rather than an alphabetical list.
+  const stageOrder = ["enacted", "revised", "committed", "actual", "paid", "cash", "carried_over", "period", "remaining"];
   const headlinePatterns = {
     BRA: {
       revenue: /RECEITAS \(EXCETO INTRA-?ORÇAMENTÁRIAS\)/i,
@@ -583,10 +618,19 @@
     document.body.dataset.profileRoot && requestedProfileCode
       ? fetchJson(`/public-data/france-municipality-lines?code=${encodeURIComponent(requestedProfileCode)}`).catch((error) => { console.error("French municipal line detail", error); return null; })
       : Promise.resolve(null),
+    // The warehouse view of this municipality, and the labels its codes resolve through.
+    // Both fail soft: a country not yet loaded, or an endpoint that is down, leaves the
+    // committed profile serving the page exactly as before.
+    warehouseTarget
+      ? fetchJson(`/public-data/municipality-lines?country=${encodeURIComponent(warehouseTarget.country)}&code=${encodeURIComponent(warehouseTarget.code)}`).catch(() => null)
+      : Promise.resolve(null),
+    warehouseTarget
+      ? fetchJson(new URL("data/registry/municipal-item-labels.v1.json", assetRoot).href).catch(() => null)
+      : Promise.resolve(null),
   ])
-    .then(([data, historyData, rates, frenchLines]) => {
+    .then(([data, historyData, rates, frenchLines, warehouseLines, itemLabels]) => {
       fxData = rates;
-      profile = adaptProfile(data, historyData, frenchLines);
+      profile = adaptProfile(data, historyData, frenchLines, warehouseLines, itemLabels);
       if (displayCurrency !== "native" && conversion(profile.latest?.year ?? profile.years?.at(-1)).currency !== displayCurrency) displayCurrency = "native";
       profile.normalizedDetail = localizedRows(profile.detail || []);
       const availableSides = new Set(profile.normalizedDetail.map((row) => row.side));
