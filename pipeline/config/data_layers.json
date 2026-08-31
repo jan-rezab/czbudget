@@ -104,10 +104,6 @@
     },
     {
       "layer": "serving",
-      "detail": "Denmark publishes no headline at all today — its profiles carry a history row with a year and a stage and no amounts — so there is no baseline a regeneration could regress, only one it could add. Two things to settle first: the warehouse carries the Danish source's sign convention unchanged, so revenue arrives negative (Copenhagen 2025: revenue -68.82bn DKK, expenditure 35.75bn), and that expenditure looks low for a municipality whose budget is nearer 50-60bn, which suggests the expenditure side is not yet complete rather than merely unsigned."
-    },
-    {
-      "layer": "serving",
       "detail": "Profiles now build from the warehouse (scripts/build-profiles-from-warehouse.mjs), and the headline they lead with was checked against every entity the site publishes, not a sample. Twelve countries agree exactly: Costa Rica 168/168, Georgia 276/276, El Salvador 518/518, Korea 486/486, Bolivia 686/686, Chile 690/690, Guatemala 680/680, Colombia 2,204/2,204, Mexico 4,760/4,760, Peru 3,782/3,782, Italy 15,792/15,792, Spain 20,978/20,978. Brazil is 11,070 of 11,114."
     },
     {
@@ -117,6 +113,10 @@
     {
       "layer": "uniform",
       "detail": "Brazil's 2024 DCA is fetched and parsed, and awaits a `bq load`. The defect was that the warehouse's copy came second-hand: the RREO loader reads the importer's output, whose detail array is capped at 360 rows per municipality and whose DCA rows had already lost the column heading. A gross revenue and the FUNDEB deduction taken from it both arrive as `actual` at period FY under the same account code, so any sum over that grain adds them — for BR:1302405 turning a published 103,540,289.40 into 110,805,556.30, gross plus a 7,265,266.90 deduction. scripts/load-municipal-facts-bra-dca.py reads the raw annexes and keeps the column in source_budget_item_type_code, which the schema always had room for. It rebuilds all 44 municipalities' published revenue and expenditure exactly, and emits 12,046 rows against the 11,864 currently loaded."
+    },
+    {
+      "layer": "serving",
+      "detail": "Denmark publishes no headline today, so a regeneration cannot regress one — but it should not invent one either. Its rows follow the Danish account plan: gross operating expenditure on main accounts 0-6 (Copenhagen 2025: 35,746.6m DKK) with own-revenue against those same areas (-10,271.1m), tax and grant revenue on account 7 (-58,085.0m, of which income tax alone is -37,827.1m), and financing on 8. Revenue is recorded as a credit, so it arrives negative, faithfully to the source. Summing each side and flipping the sign would show Copenhagen a surplus near 33bn DKK, which is not what the accounts say: the Danish presentation is net operating expenditure by service area, funded by taxes. Choosing between those is a modelling decision about the Danish convention rather than a rule that can be derived, because there is no published figure to check a candidate against."
     }
   ]
 }
