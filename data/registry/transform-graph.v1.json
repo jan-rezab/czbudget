@@ -1,0 +1,782 @@
+{
+  "schema_version": "1.0.0",
+  "registry": "transform-graph",
+  "generated_at": "2026-08-31",
+  "note": "Statically derived: each transform's inputs and outputs are read from the artifact paths it references, not from running it. A transform with no npm entry point has no documented way to be run; an artifact written by more than one transform has no single owner. Both are recorded rather than resolved here.",
+  "transform_count": 95,
+  "without_entry_point": [
+    "pipeline/transforms/build_czech_site.py",
+    "pipeline/transforms/build_european_municipal_profiles.py",
+    "pipeline/transforms/build_municipal_budget_workbook.mjs",
+    "pipeline/transforms/build_municipal_public_site.py",
+    "pipeline/transforms/build_public_entity_revenue_workbook.mjs",
+    "pipeline/transforms/country_registry.py",
+    "pipeline/transforms/crawl_municipal_transparency.py",
+    "pipeline/transforms/extend_territorial_benchmark.py",
+    "pipeline/transforms/extract_strategic_entities_2024.py",
+    "pipeline/transforms/fetch_municipal_population.py",
+    "pipeline/transforms/import_european_municipal_benchmarks.py",
+    "pipeline/transforms/municipal_profile_template.py",
+    "pipeline/transforms/prepare_care_envelope.py",
+    "pipeline/transforms/prepare_currency_and_ministry_manifest.py",
+    "pipeline/transforms/prepare_eu_capital_benchmarks.py",
+    "pipeline/transforms/prepare_eu_capital_budgets.py",
+    "pipeline/transforms/prepare_historical_large_city_archive.py",
+    "pipeline/transforms/prepare_hospital_ownership.py",
+    "pipeline/transforms/prepare_international_fiscal_benchmarks.py",
+    "pipeline/transforms/prepare_international_municipal_data.py",
+    "pipeline/transforms/prepare_large_city_history.py",
+    "pipeline/transforms/prepare_municipal_bigquery_pilot.py",
+    "pipeline/transforms/prepare_municipal_budgets.py",
+    "pipeline/transforms/prepare_municipal_history.py",
+    "pipeline/transforms/prepare_municipal_snapshot.py",
+    "pipeline/transforms/prepare_public_entity_registry.py",
+    "pipeline/transforms/prepare_public_entity_revenues.py",
+    "pipeline/transforms/prepare_road_network_history.py",
+    "scripts/add-source-licence-fields.mjs",
+    "scripts/assert-current-main.mjs",
+    "scripts/build-denmark-expansion-bundle.py",
+    "scripts/build-global-transparency-atlas.mjs",
+    "scripts/build-health-budget-data.mjs",
+    "scripts/build-international-municipal-directory.py",
+    "scripts/build-municipal-expansion-pages.py",
+    "scripts/build-municipal-fx-rates.mjs",
+    "scripts/build-municipal-item-labels.mjs",
+    "scripts/build-transform-graph.mjs",
+    "scripts/canonicalise-country-codes.mjs",
+    "scripts/create-release-manifest.mjs",
+    "scripts/download-education-comparative.py",
+    "scripts/hydrate-data-layers.mjs",
+    "scripts/import-municipal-expansion.py",
+    "scripts/load-municipal-facts-bra.py",
+    "scripts/load-municipal-facts-jpn.py",
+    "scripts/load-municipal-facts.py",
+    "scripts/merge-municipal-breakdowns.mjs",
+    "scripts/merge-municipal-headlines.mjs",
+    "scripts/prepare_care_envelope.py",
+    "scripts/prepare_hospital_ownership.py",
+    "scripts/render-social-cards.mjs",
+    "scripts/test-server.mjs"
+  ],
+  "contested_outputs": [
+    {
+      "artifact": "data/municipal-snapshot.v1.json",
+      "written_by": [
+        "pipeline/transforms/build_municipal_public_site.py",
+        "pipeline/transforms/prepare_municipal_history.py"
+      ]
+    },
+    {
+      "artifact": "data/international-municipalities.v1.json",
+      "written_by": [
+        "scripts/build-france-municipal-profiles.py",
+        "scripts/build-international-municipal-directory.py",
+        "scripts/build-municipal-expansion-pages.py"
+      ]
+    }
+  ],
+  "external_inputs": [
+    "data/contracts/economic-series.v1.json",
+    "data/country-demography.v1.json",
+    "data/cz-public-entities-2024.json",
+    "data/international-itemized-warehouse.v1.json",
+    "data/large-city-history.v1.json",
+    "data/municipal-itemized-acquisition-audit.v1.json",
+    "data/municipal-transparency.v1.json",
+    "data/source_cache/ares_finm_entities_2025.json",
+    "data/source_cache/international_municipal/UKR/local_budget_directory_2025.json",
+    "data/world-map.v1.json",
+    "data/x.json",
+    "lib/data/sovereign-benchmark.v1.json",
+    "lib/data/x.json",
+    "pipeline/config/government_accountability_cze.v1.json",
+    "pipeline/config/international_municipal_sources.json",
+    "pipeline/config/oecd_regofi_country_map.v1.json",
+    "pipeline/config/un_comtrade_source.v1.json"
+  ],
+  "transforms": [
+    {
+      "transform": "pipeline/transforms/build_czech_site.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": [
+        "data/benchmark.v1.json"
+      ]
+    },
+    {
+      "transform": "pipeline/transforms/build_european_municipal_profiles.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/build_government_accountability.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "data/benchmark.v1.json",
+        "pipeline/config/government_accountability_cze.v1.json"
+      ],
+      "outputs": [
+        "data/accountability/cze-regions.v1.json"
+      ]
+    },
+    {
+      "transform": "pipeline/transforms/build_municipal_budget_workbook.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/build_municipal_public_site.py",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/benchmark.v1.json",
+        "data/large-city-history.v1.json"
+      ],
+      "outputs": [
+        "data/municipal-snapshot.v1.json"
+      ]
+    },
+    {
+      "transform": "pipeline/transforms/build_public_entity_frontend.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/build_public_entity_revenue_workbook.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/build_public_entity_web_dataset.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/country_registry.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/crawl_municipal_transparency.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/crawl_un_comtrade.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "pipeline/config/sovereign_country_universe.json",
+        "pipeline/config/un_comtrade_source.v1.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/extend_territorial_benchmark.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/extract_strategic_entities_2024.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/fetch_municipal_population.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": [
+        "data/source_cache/csu_municipal_population_2010_2025.csv"
+      ]
+    },
+    {
+      "transform": "pipeline/transforms/import_european_municipal_benchmarks.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/municipal_profile_template.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_care_envelope.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_currency_and_ministry_manifest.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_eu_capital_benchmarks.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_eu_capital_budgets.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_historical_large_city_archive.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": [
+        "data/source_cache/historical_2006_2009_large_cities.json"
+      ]
+    },
+    {
+      "transform": "pipeline/transforms/prepare_hospital_ownership.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_international_fiscal_benchmarks.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_international_municipal_data.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_international_regional_data.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_large_city_history.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_municipal_bigquery_pilot.py",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/source_cache/ares_finm_entities_2025.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_municipal_budgets.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_municipal_history.py",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/source_cache/csu_municipal_population_2010_2025.csv"
+      ],
+      "outputs": [
+        "data/municipal-history-directory.v1.json",
+        "data/municipal-snapshot.v1.json"
+      ]
+    },
+    {
+      "transform": "pipeline/transforms/prepare_municipal_snapshot.py",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/source_cache/ares_finm_entities_2025.json",
+        "data/source_cache/csu_municipal_population_2010_2025.csv"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_oecd_regofi.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "pipeline/config/oecd_regofi_country_map.v1.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_public_entity_registry.py",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/cz-public-entities-2024.json"
+      ],
+      "outputs": [
+        "data/public-entity-aggregates.v1.json",
+        "data/public-entity-coverage.v1.json"
+      ]
+    },
+    {
+      "transform": "pipeline/transforms/prepare_public_entity_revenues.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_road_network_history.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "pipeline/transforms/prepare_un_comtrade_warehouse.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "pipeline/config/un_comtrade_source.v1.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/add-source-licence-fields.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/assert-current-main.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/backfill-benchmark-canonicals.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/backfill-social-previews.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-country-cash-in.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/country-cash-in.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-country-demography.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-country-economy.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "data/contracts/economic-series.v1.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-country-functional-budgets.mjs",
+      "npm_entry_point": true,
+      "inputs": [
+        "lib/data/sovereign-benchmark.v1.json"
+      ],
+      "outputs": [
+        "data/country-functional-budgets.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-country-health-data.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/country-health.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-country-health-performance.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/country-health-performance.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-country-parity.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/country-parity.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-country-provider-networks.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/country-provider-networks.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-country-registry.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-country-revenue.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-country-sitemap.mjs",
+      "npm_entry_point": true,
+      "inputs": [
+        "data/country-parity.v1.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-country-spending-comparison.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-country-spending.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-data-freshness.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/data-freshness.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-defense-deep-dive.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-demographic-pressure.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "data/country-demography.v1.json",
+        "data/country-functional-budgets.v1.json",
+        "lib/data/sovereign-benchmark.v1.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-denmark-expansion-bundle.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-education-deep-dive.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "data/municipal-snapshot.v1.json"
+      ],
+      "outputs": [
+        "data/education-deep-dive.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-eu-migration.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-france-municipal-profiles.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "pipeline/config/international_municipal_sources.json"
+      ],
+      "outputs": [
+        "data/international-municipalities.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-global-transparency-atlas.mjs",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/country-parity.v1.json",
+        "data/international-itemized-warehouse.v1.json",
+        "data/municipal-itemized-acquisition-audit.v1.json",
+        "data/municipal-itemized-coverage.v1.json",
+        "data/municipal-transparency.v1.json",
+        "data/world-map.v1.json",
+        "pipeline/config/sovereign_country_universe.json"
+      ],
+      "outputs": [
+        "data/global-budget-transparency.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-health-budget-data.mjs",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/cz-public-entities-2024.json"
+      ],
+      "outputs": [
+        "data/cz-health-budget.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-international-municipal-directory.py",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/municipal-snapshot.v1.json",
+        "data/source_cache/international_municipal/UKR/local_budget_directory_2025.json"
+      ],
+      "outputs": [
+        "data/international-municipalities.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-layer-manifest.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-methodology-sources.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/methodology-sources.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-money-reports.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-municipal-budget-structure.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/municipal-budget-structure.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-municipal-directory-split.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-municipal-expansion-pages.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": [
+        "data/international-municipalities.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-municipal-fx-rates.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-municipal-item-labels.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-municipal-itemized-coverage.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/municipal-itemized-coverage.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-municipality-country-pages.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-oecd-key-metrics.py",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-sovereign-benchmark-slim.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-sovereign-country-universe.mjs",
+      "npm_entry_point": true,
+      "inputs": [
+        "data/global-budget-transparency.v1.json"
+      ],
+      "outputs": [
+        "pipeline/config/sovereign_country_universe.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-transform-graph.mjs",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/x.json",
+        "lib/data/x.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/build-transport-budget-detail.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": [
+        "data/transport-budget-detail.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/build-transport-performance.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/canonicalise-country-codes.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/check-external-links.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/create-release-manifest.mjs",
+      "npm_entry_point": false,
+      "inputs": [
+        "data/municipal-snapshot.v1.json"
+      ],
+      "outputs": [
+        "data/public-entity-directory/manifest.v1.json"
+      ]
+    },
+    {
+      "transform": "scripts/download-education-comparative.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/hydrate-data-layers.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/import-municipal-expansion.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/import_un_comtrade_annual.py",
+      "npm_entry_point": true,
+      "inputs": [
+        "pipeline/config/sovereign_country_universe.json",
+        "pipeline/config/un_comtrade_source.v1.json"
+      ],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/load-municipal-facts-bra.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/load-municipal-facts-jpn.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/load-municipal-facts.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/merge-municipal-breakdowns.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/merge-municipal-headlines.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/prepare-public-serving-snapshots.mjs",
+      "npm_entry_point": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/prepare_care_envelope.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/prepare_hospital_ownership.py",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/render-social-cards.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "transform": "scripts/test-server.mjs",
+      "npm_entry_point": false,
+      "inputs": [],
+      "outputs": []
+    }
+  ]
+}

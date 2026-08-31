@@ -23,6 +23,11 @@
     "build:country-demography": "python3 scripts/build-country-demography.py",
     "build:country-economy": "python3 scripts/build-country-economy.py",
     "fetch:annual-trade": "python3 scripts/import_un_comtrade_annual.py",
+    "trade:crawl:init": "python3 pipeline/transforms/crawl_un_comtrade.py init",
+    "trade:crawl": "python3 pipeline/transforms/crawl_un_comtrade.py crawl",
+    "trade:crawl:status": "python3 pipeline/transforms/crawl_un_comtrade.py status",
+    "trade:prepare-warehouse": "python3 pipeline/transforms/prepare_un_comtrade_warehouse.py",
+    "trade:load-bigquery": "pipeline/warehouse/load_un_comtrade.sh",
     "build:money-reports": "python3 scripts/build-money-reports.py",
     "build:demographic-pressure": "python3 scripts/build-demographic-pressure.py",
     "build:eu-migration": "node scripts/build-eu-migration.mjs",
@@ -54,7 +59,9 @@
     "data:layers:report": "node scripts/build-layer-manifest.mjs --report",
     "data:layers:manifest": "node scripts/build-layer-manifest.mjs",
     "build:country-registry": "node scripts/build-country-registry.mjs --write",
-    "report:country-registry": "node scripts/build-country-registry.mjs --report"
+    "report:country-registry": "node scripts/build-country-registry.mjs --report",
+    "build:transform-graph": "node scripts/build-transform-graph.mjs --write",
+    "report:transform-graph": "node scripts/build-transform-graph.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
