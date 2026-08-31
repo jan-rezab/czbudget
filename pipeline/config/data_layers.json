@@ -67,6 +67,10 @@
     {
       "layer": "uniform",
       "detail": "Brazil's extractor mislabels budget_side on 454,916 rows. 101 revenue codes — ReceitaTributaria, Impostos, Taxas, TransferenciasCorrentes among them — arrive marked `expenditure` across all 5,570 municipalities, and none ever arrives marked `revenue`. The RREO column heading is authoritative (revenue uses PREVISÃO / No Bimestre / Até o Bimestre; expenditure uses DOTAÇÃO / DESPESAS), so the warehouse loader corrects from it and flags each corrected row side_corrected_from_source_column. The uniform layer and the committed per-municipality files still carry the defect, so the live site shows it until the extractor is fixed upstream or the fan-out is regenerated from a corrected view. Detectable only because Brazil publishes column labels; the other countries carry none, though their revenue-to-expenditure balances are all plausible."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Japan is analysed but not loaded. Its side rules, stock exclusions (outstanding local-bond debt, fund balances), headcount exclusions and financing classification are settled in scripts/load-municipal-facts-jpn.py, but the main budget tables carry a parent-child hierarchy the uniform layer does not express: table 4 lists a parent tax category beside its own child with no marker, and tables 7-13 pair a 総額 total with the components it totals plus an うち (of which) column that is a subset of its neighbour. Leaf sums therefore come to 2.47x a municipality's published headline revenue and 0.50x its expenditure. The script refuses to write rather than publish that. The e-Stat table definitions state each row's parent and would turn is_summary_row from a guess into a lookup."
     }
   ]
 }

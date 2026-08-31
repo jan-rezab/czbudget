@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import subprocess
 import tempfile
 import time
 import urllib.error
@@ -45,6 +46,29 @@ def parse_iso(value: str | None) -> datetime | None:
     if not value:
         return None
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def resolve_api_key(config: dict[str, Any]) -> str | None:
+    """Read the API key from the environment or the macOS login Keychain."""
+    access = config["access"]
+    value = os.environ.get(access["api_key_environment_variable"])
+    if value:
+        return value.strip()
+    service = access.get("macos_keychain_service")
+    security = Path("/usr/bin/security")
+    if not service or not security.exists():
+        return None
+    try:
+        result = subprocess.run(
+            [str(security), "find-generic-password", "-s", str(service), "-w"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return result.stdout.strip() or None
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -460,9 +484,9 @@ def validate_task_response(task: sqlite3.Row, payload: dict[str, Any]) -> None:
 
 def crawl(connection: sqlite3.Connection, config: dict[str, Any], reference_paths_map: dict[str, Path], args: argparse.Namespace) -> None:
     crawl_config = config["warehouse_crawl"]
-    api_key = os.environ.get(config["access"]["api_key_environment_variable"])
+    api_key = resolve_api_key(config)
     if not api_key and not args.allow_preview:
-        raise SystemExit("Detailed crawling requires UN_COMTRADE_API_KEY. Use --allow-preview only for slow, automatically split 500-row preview slices.")
+        raise SystemExit("Detailed crawling requires UN_COMTRADE_API_KEY or the configured macOS Keychain item. Use --allow-preview only for slow, automatically split 500-row preview slices.")
     max_records = int(crawl_config["authenticated_max_records"] if api_key else crawl_config["anonymous_max_records"])
     max_calls = args.max_calls if args.max_calls is not None else int(crawl_config["calls_per_crawl_run"])
     daily_limit = args.daily_limit if args.daily_limit is not None else int(crawl_config["calls_per_utc_day"])
