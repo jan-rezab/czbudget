@@ -71,7 +71,8 @@
     "report:warehouse-profiles": "node scripts/build-profiles-from-warehouse.mjs --country CRI --verify",
     "fetch:brazil-dca": "python3 scripts/fetch-brazil-dca-2024.py --fetch",
     "report:brazil-dca": "python3 scripts/load-municipal-facts-bra-dca.py --report",
-    "build:warehouse-profiles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --out .warehouse-profiles"
+    "build:warehouse-profiles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --out .warehouse-profiles",
+    "report:japan-hierarchy": "node scripts/derive-japan-hierarchy.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

@@ -91,10 +91,6 @@
       "detail": "Brazil's extractor mislabels budget_side on 454,916 rows. 101 revenue codes — ReceitaTributaria, Impostos, Taxas, TransferenciasCorrentes among them — arrive marked `expenditure` across all 5,570 municipalities, and none ever arrives marked `revenue`. The RREO column heading is authoritative (revenue uses PREVISÃO / No Bimestre / Até o Bimestre; expenditure uses DOTAÇÃO / DESPESAS), so the warehouse loader corrects from it and flags each corrected row side_corrected_from_source_column. The uniform layer and the committed per-municipality files still carry the defect, so the live site shows it until the extractor is fixed upstream or the fan-out is regenerated from a corrected view. Detectable only because Brazil publishes column labels; the other countries carry none, though their revenue-to-expenditure balances are all plausible."
     },
     {
-      "layer": "uniform",
-      "detail": "Japan is analysed but not loaded. Its side rules, stock exclusions (outstanding local-bond debt, fund balances), headcount exclusions and financing classification are settled in scripts/load-municipal-facts-jpn.py, but the main budget tables carry a parent-child hierarchy the uniform layer does not express: table 4 lists a parent tax category beside its own child with no marker, and tables 7-13 pair a 総額 total with the components it totals plus an うち (of which) column that is a subset of its neighbour. Leaf sums therefore come to 2.47x a municipality's published headline revenue and 0.50x its expenditure. The script refuses to write rather than publish that. The e-Stat table definitions state each row's parent and would turn is_summary_row from a guess into a lookup."
-    },
-    {
       "layer": "serving",
       "detail": "The fan-out is stale where the warehouse is corrected. For BR:1100015 only 69 of 239 fan-out detail rows survive as-is: the files predate the budget_side repair and carry a different stage vocabulary (`cash`, `execution`) than the loaded lifecycle (`enacted → revised → committed → actual → paid`). The headline reconciles exactly, so the published figures are not at risk, but the two are not interchangeable and the fan-out is the wrong one. Retiring it needs prepare-public-serving-snapshots.mjs to build profiles from the warehouse and the entity directory rather than from these files."
     },
@@ -117,6 +113,14 @@
     {
       "layer": "uniform",
       "detail": "Brazil's 2024 DCA is loaded and its profiles reproduce every published headline: 11,114 of 11,114 across all 5,570 municipalities, both years. The 11,864 second-hand rows that came through the RREO loader were replaced by 12,046 read from the raw annexes, and the column heading is now kept in source_budget_item_type_code with FUNDEB deductions marked is_consolidation_item. Headline queries exclude consolidation items, without which a gross revenue and the deduction taken from it sum back together — the defect that inflated BR:1302405 by 7,265,266.90."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Japan is still not loaded, but for a different reason than recorded before, and the earlier figures were measured on truncated input. The hierarchy is derivable without the e-Stat table definitions: scripts/derive-japan-hierarchy.mjs finds a parent by arithmetic — a column equal to the sum of the columns beneath it for every municipality — and collapses table 04's 69 revenue columns to 20 top-level ones, correctly recovering 地方譲与税 over its six transfer taxes and 地方交付税 over its three. What it then shows is that the cached extract is incomplete: those 20 columns come to a median 0.713 of the 歳入総額 that table 02 prints, so roughly 29% of revenue — local bonds, carryover, prefectural disbursements, miscellaneous — is in parts of 歳入内訳 that were never fetched. The earlier 2.47x was measured against the importer's output, which caps detail at 360 rows per municipality, so it mixed an over-count from the hierarchy with an under-count from truncation."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Japan's expenditure needs a different model again. Tables 07-13 are a matrix of expenditure nature against purpose, and both dimensions carry hierarchy: purpose columns mark theirs with a ・総額 suffix, but nature rows mark only some of theirs — うち職員給 is flagged as a subset of 人件費 while 国に対するもの is a sub-item of 補助費等 with nothing to say so. Summing purpose totals across the nature rows over-counts published expenditure roughly tenfold. The column segmentation that works for table 04 does not transfer, because it models a list rather than a matrix."
     }
   ]
 }
