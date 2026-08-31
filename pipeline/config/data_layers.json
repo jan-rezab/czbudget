@@ -24,14 +24,14 @@
     },
     {
       "id": "serving",
-      "title": "Per-municipality fan-out",
+      "title": "Per-municipality fan-out (retired)",
       "root": "repo",
       "path": "data/municipal-expansion",
       "group_by": "subdirectory",
-      "durability": "regenerate",
+      "durability": "retired",
       "committed": false,
-      "recreatable": "for twelve countries, from the warehouse plus the entity directory and headline rules, verified on every published headline — 51,020 checks, all agreeing",
-      "note": "Twelve of the fifteen countries are now built from the warehouse rather than read from here: prepare-public-serving-snapshots.mjs prefers .warehouse-profiles/<country> whenever that country's headline rules reproduce every published figure and its profiles have been built, and falls back to these files otherwise. Brazil, Denmark and Japan still come from here. Note this is not a size saving — the warehouse build is larger, 160.5 MB against 146.3 MB for the same twelve, because the fan-out was lossy and Spain alone gains 14% of rows back. What changes is that those profiles become derived rather than stored, so they no longer need hydrating and verifying as a data layer."
+      "recreatable": "entirely, from the warehouse plus the entity directory and headline rules — every published headline of all fifteen countries reproduces, 54,502 checks in total",
+      "note": "Retired as a source of truth on 2026-08-31. All fifteen countries are built by scripts/build-profiles-from-warehouse.mjs, and prepare-public-serving-snapshots.mjs now enumerates countries from data/registry/municipal-entities rather than by listing this directory — which was the last thing that required 580 MB of files the build no longer reads. The fan-out remains on disk and remains hydratable, because the derivation and verification tools still read it as the published baseline they check against; nothing in the serving path does."
     },
     {
       "id": "pages",

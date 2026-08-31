@@ -220,11 +220,24 @@ async function municipalExpansionRoots() {
       || (entry.authored === true && entry.authored_basis))
     .map((entry) => entry.country_code.toLowerCase()));
 
-  for (const entry of await fs.readdir(fanout, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const fromWarehouse = reproduces.has(entry.name)
-      && await fs.access(path.join(warehouse, entry.name)).then(() => true, () => false);
-    chosen.set(entry.name, fromWarehouse ? path.join(warehouse, entry.name) : path.join(fanout, entry.name));
+  // Countries come from the entity directory, which is committed and small, rather than from
+  // a listing of the fan-out. Enumerating the fan-out meant the build could not start without
+  // 580 MB of files it no longer reads — the directory was the last thing holding it open.
+  const registry = path.join(ROOT, "data", "registry", "municipal-entities");
+  const countries = (await fs.readdir(registry))
+    .filter((name) => name.endsWith(".v1.json"))
+    .map((name) => name.replace(/\.v1\.json$/, "").toLowerCase());
+
+  for (const country of countries) {
+    const fromWarehouse = reproduces.has(country)
+      && await fs.access(path.join(warehouse, country)).then(() => true, () => false);
+    if (fromWarehouse) {
+      chosen.set(country, path.join(warehouse, country));
+      continue;
+    }
+    // Only fall back to the fan-out if it is actually still there.
+    const legacy = path.join(fanout, country);
+    if (await fs.access(legacy).then(() => true, () => false)) chosen.set(country, legacy);
   }
   return chosen;
 }

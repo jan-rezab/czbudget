@@ -86,7 +86,11 @@ const scopeNotes = {
 // Per-municipality expansion artifacts: a profile counts only when it carries a
 // non-empty `detail` array of native line items.
 const measureExpansion = async (code) => {
-  const dir = `data/municipal-expansion/${code.toLowerCase()}`;
+  // Measure what is actually served. Fourteen countries are built from the warehouse and one
+  // is authored from it; the fan-out is only still read where a country has not been rebuilt.
+  const slug = code.toLowerCase();
+  const warehouse = `${process.env.WAREHOUSE_PROFILE_ROOT || ".warehouse-profiles"}/${slug}`;
+  const dir = (await exists(warehouse)) ? warehouse : `data/municipal-expansion/${slug}`;
   if (!(await exists(dir))) return null;
   const files = await listJson(dir);
   let published = 0;
