@@ -108,7 +108,15 @@
     },
     {
       "layer": "serving",
-      "detail": "Thirteen of the fourteen warehouse countries reproduce both published headlines exactly, on every entity sampled (pipeline/config/municipal_headline_rules.json). Four things had to be modelled. fiscal_period belongs in the grain: Brazil's RREO reports the same stage twice, bimester and cumulative, so summing both reports a year as roughly double itself. The rule varies by year, because a closed year publishes its outturn and a forthcoming one its appropriation — Spain and Georgia each split almost exactly in half between `actual` and `enacted`, which read as one half-broken rule instead of two correct ones. Where item codes nest numerically the headline is one depth, not a sum of rows: Spain's chapter/article/concept codes each restate the level above, so summing all three triples the budget. And a headline can be a difference between stages: Brazil's published expenditure is `committed` net of `carried_over`, because 'despesas liquidadas' settles this year's commitments and excludes restos a pagar. That last one is why it appeared in no single row anywhere."
+      "detail": "Profiles now build from the warehouse (scripts/build-profiles-from-warehouse.mjs), and the headline they lead with was checked against every entity the site publishes, not a sample. Twelve countries agree exactly: Costa Rica 168/168, Georgia 276/276, El Salvador 518/518, Korea 486/486, Bolivia 686/686, Chile 690/690, Guatemala 680/680, Colombia 2,204/2,204, Mexico 4,760/4,760, Peru 3,782/3,782, Italy 15,792/15,792, Spain 20,978/20,978. Brazil is 11,070 of 11,114."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Brazil's 2024 DCA revenue is the last headline the warehouse cannot reproduce, and it is a loader defect rather than a missing rule. 44 of 5,570 municipalities have no RREO Annex 01 row and fall back to the 2024 DCA annual accounts, whose revenue figure is 'receitas brutas realizadas' — the gross column, before deductions. The loader collapses DCA columns onto budget stages, which loses the gross/net distinction the published figure depends on: for BR:1302405 the published 103,540,289.40 appears in no loaded row, the nearest being 103,936,573.26. Their expenditure reproduces exactly, so only the revenue side is affected."
+    },
+    {
+      "layer": "serving",
+      "detail": "The derived headline rules are only as good as the entities sampled, and an even spread hides a year a small minority uses: 44 of Brazil's 5,570 municipalities report 2024 rather than 2025, so a 40-entity sample contained none of them and no 2024 rule was derived at all. Sampling is now stratified by year. A related accounting flaw is fixed too — a year with no workable rule used to drop out of both the display and the coverage sum, so a country missing an entire year's rule still reported 100%."
     }
   ]
 }

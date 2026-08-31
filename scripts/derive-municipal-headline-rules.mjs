@@ -59,7 +59,29 @@ async function publishedHeadlines(country, limit) {
   // An even spread rather than the first N: the files are sorted by code, and the first few of
   // any country tend to share a region, a size band and often a single reporting quirk.
   const step = Math.max(1, Math.floor(files.length / limit));
-  const chosen = files.filter((_, index) => index % step === 0).slice(0, limit);
+  const spread = files.filter((_, index) => index % step === 0).slice(0, limit);
+
+  // Then top up per year. Rules are derived per year, and a year used by a small minority is
+  // invisible to an even spread: 44 of Brazil's 5,570 municipalities report 2024 rather than
+  // 2025, so a 40-entity sample saw none of them and no 2024 rule was derived at all.
+  const seenYears = new Map();
+  const chosen = new Set(spread);
+  for (const file of spread) {
+    const profile = JSON.parse(await readFile(path.join(directory, file), "utf8"));
+    for (const entry of profile.history || []) seenYears.set(entry.year, (seenYears.get(entry.year) || 0) + 1);
+  }
+  const perYear = Math.max(8, Math.floor(limit / 4));
+  for (const file of files) {
+    if (chosen.has(file)) continue;
+    if ([...seenYears.values()].every((count) => count >= perYear) && seenYears.size > 1) break;
+    const profile = JSON.parse(await readFile(path.join(directory, file), "utf8"));
+    const years = (profile.history || [])
+      .filter((entry) => Number.isFinite(entry.revenue) || Number.isFinite(entry.expenditure))
+      .map((entry) => entry.year);
+    if (!years.some((year) => (seenYears.get(year) || 0) < perYear)) continue;
+    chosen.add(file);
+    for (const year of years) seenYears.set(year, (seenYears.get(year) || 0) + 1);
+  }
 
   const published = new Map();
   for (const file of chosen) {
@@ -72,7 +94,7 @@ async function publishedHeadlines(country, limit) {
       });
     }
   }
-  return { published, codes: chosen.map((name) => name.replace(/\.json$/, "")) };
+  return { published, codes: [...chosen].map((name) => name.replace(/\.json$/, "")) };
 }
 
 const near = (a, b) => a !== null && b !== null && Math.abs(a - b) <= Math.max(1, Math.abs(b) * 1e-6);
@@ -245,9 +267,9 @@ for (const country of requested) {
     let eligible = 0;
     for (const year of years) {
       const entry = rule.years[year][side];
-      if (!entry || entry.status) continue;
-      matched += entry.matched;
-      eligible += entry.eligible;
+      if (!entry) continue;
+      matched += entry.matched || 0;
+      eligible += entry.eligible || 0;
     }
     rule[side] = eligible ? { matched, eligible, match_rate: Number((matched / eligible).toFixed(4)) } : { status: "unreproducible", eligible: 0 };
   }
@@ -257,8 +279,8 @@ for (const country of requested) {
     const value = rule[side];
     if (!value || value.status) return `${side}: ${value?.status || "none"}`;
     const per = Object.entries(rule.years)
-      .filter(([, entry]) => entry[side] && !entry[side].status)
-      .map(([year, entry]) => `${year}:${entry[side].stage}${entry[side].net_of_stage ? `-${entry[side].net_of_stage}` : ""}`)
+      .filter(([, entry]) => entry[side])
+      .map(([year, entry]) => `${year}:${entry[side].status ? "none" : `${entry[side].stage}${entry[side].net_of_stage ? `-${entry[side].net_of_stage}` : ""}`}`)
       .join(" ");
     return `${side} ${value.matched}/${value.eligible} (${per})`;
   };
