@@ -104,7 +104,15 @@
     },
     {
       "layer": "serving",
-      "detail": "Ten of the fourteen warehouse countries reproduce their published headline exactly from warehouse rows alone (pipeline/config/municipal_headline_rules.json, derived rather than transcribed). Four do not, and each for its own reason: Brazil's published headline comes from the DCA annual accounts while the warehouse holds RREO, so the two are different reports of the same year rather than a rule mismatch; Spain publishes no total row and its headline is a filtered sum the derivation does not express; Georgia publishes two years and the warehouse holds one; Denmark's profiles carry no headline at all to check against. Those four keep the fan-out until each is settled."
+      "detail": "Twelve of the fourteen warehouse countries reproduce their published headline exactly from warehouse rows (pipeline/config/municipal_headline_rules.json). Three things had to be modelled before that held. The grain includes fiscal_period: Brazil's RREO reports the same stage twice, once for the bimester and once cumulative, and summing both reports a year as roughly double itself. The rule varies by year: a closed year publishes its outturn and a forthcoming one its appropriation, so Spain and Georgia each split almost exactly in half between `actual` and `enacted` — which read as a half-broken rule rather than two correct ones. And where item codes are nested numerically, as Spain's chapter/article/concept are, every level restates the one above, so the headline is one depth rather than a sum of rows; the warehouse does not mark those as summary rows, so depth is read off the code."
+    },
+    {
+      "layer": "serving",
+      "detail": "Brazil's published expenditure is the one headline the warehouse cannot supply: only 4 of 40 sampled municipalities have that value anywhere in their facts, at any stage or period, while revenue reproduces on 39 of 39. So it is not a rule waiting to be found — the figure was computed from something not loaded. Brazil's revenue rule is actual@FY / ReceitasExcetoIntraOrcamentarias, matching the importer's own choice of the 'Até o Bimestre' column."
+    },
+    {
+      "layer": "serving",
+      "detail": "Denmark publishes no headline at all today — its profiles carry a history row with a year and a stage and no amounts — so there is no baseline a regeneration could regress, only one it could add. Two things to settle first: the warehouse carries the Danish source's sign convention unchanged, so revenue arrives negative (Copenhagen 2025: revenue -68.82bn DKK, expenditure 35.75bn), and that expenditure looks low for a municipality whose budget is nearer 50-60bn, which suggests the expenditure side is not yet complete rather than merely unsigned."
     }
   ]
 }

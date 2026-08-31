@@ -95,10 +95,10 @@ for (const country of requested) {
 
   const ids = codes.map((code) => `"${alpha2}:${code}"`).join(",");
   const facts = await query(
-    `SELECT public_entity_id, fiscal_year, budget_stage, budget_side, economic_item_code,`
+    `SELECT public_entity_id, fiscal_year, fiscal_period, budget_stage, budget_side, economic_item_code,`
     + ` SUM(CAST(amount_local AS FLOAT64)) amount`
     + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND public_entity_id IN (${ids})`
-    + ` GROUP BY 1,2,3,4,5`,
+    + ` GROUP BY 1,2,3,4,5,6`,
   );
 
   if (!facts.length) {
@@ -109,60 +109,125 @@ for (const country of requested) {
 
   // Candidate one: a published total row, identified by (stage, code).
   // Candidate two: the sum of every row at a stage, for sources that publish no total.
+  // Candidate three: the sum of one level of a coded hierarchy. Spain's item codes are
+  // chapter/article/concept nested by length — "1", "16", "162" — and every level restates
+  // the one above it, so summing all of them triples the budget. The warehouse does not mark
+  // these as summary rows, which is why depth has to be read off the code itself.
   const stageTotals = new Map();
+  const depthTotals = new Map();
   for (const fact of facts) {
     const code = fact.public_entity_id.split(":").slice(1).join(":");
-    const stageKey = `${code}|${fact.fiscal_year}|${fact.budget_stage}|${fact.budget_side}`;
+    const stageKey = `${code}|${fact.fiscal_year}|${fact.budget_stage}|${fact.fiscal_period}|${fact.budget_side}`;
     stageTotals.set(stageKey, (stageTotals.get(stageKey) || 0) + Number(fact.amount));
+    // Only where the code is a nested numeric account — "1", "16", "162". Brazil's codes are
+    // words, and "every row whose name happens to be 32 characters" is a coincidence, not a
+    // level of a hierarchy; left unrestricted it wins on noise and gets written as a rule.
+    if (/^\d{1,6}$/.test(String(fact.economic_item_code))) {
+      const depth = String(fact.economic_item_code).length;
+      depthTotals.set(`${stageKey}|${depth}`, (depthTotals.get(`${stageKey}|${depth}`) || 0) + Number(fact.amount));
+    }
   }
 
-  const rule = { country_code: country, sample_size: published.size };
+  const years = [...new Set(facts.map((fact) => String(fact.fiscal_year)))].sort();
+  const rule = { country_code: country, sample_size: published.size, years: {} };
+  for (const year of years) rule.years[year] = {};
   for (const side of ["revenue", "expenditure"]) {
+   for (const year of years) {
     const scores = new Map();
     for (const fact of facts) {
-      if (fact.budget_side !== side) continue;
+      if (fact.budget_side !== side || String(fact.fiscal_year) !== year) continue;
       const code = fact.public_entity_id.split(":").slice(1).join(":");
       const target = published.get(`${code}|${fact.fiscal_year}`);
       if (!target || target[side] === null) continue;
       if (!near(Number(fact.amount), target[side])) continue;
-      const candidate = `${fact.budget_stage} ${fact.economic_item_code}`;
+      const candidate = `${fact.budget_stage}@${fact.fiscal_period} ${fact.economic_item_code}`;
       scores.set(candidate, (scores.get(candidate) || 0) + 1);
     }
     // The sum-of-all-rows alternative, scored the same way.
     for (const [key, total] of stageTotals) {
-      const [code, year, stage, rowSide] = key.split("|");
-      if (rowSide !== side) continue;
-      const target = published.get(`${code}|${year}`);
+      const [code, rowYear, stage, period, rowSide] = key.split("|");
+      if (rowSide !== side || rowYear !== year) continue;
+      const target = published.get(`${code}|${rowYear}`);
       if (!target || target[side] === null) continue;
       if (!near(total, target[side])) continue;
-      const candidate = `${stage} *`;
+      const candidate = `${stage}@${period} *`;
       scores.set(candidate, (scores.get(candidate) || 0) + 1);
     }
 
-    const eligible = [...published.values()].filter((entry) => entry[side] !== null).length;
-    const ranked = [...scores].sort((a, b) => b[1] - a[1]);
+    for (const [key, total] of depthTotals) {
+      const [code, rowYear, stage, period, rowSide, depth] = key.split("|");
+      if (rowSide !== side || rowYear !== year) continue;
+      const target = published.get(`${code}|${rowYear}`);
+      if (!target || target[side] === null) continue;
+      if (!near(total, target[side])) continue;
+      const candidate = `${stage}@${period} #${depth}`;
+      scores.set(candidate, (scores.get(candidate) || 0) + 1);
+    }
+
+    const eligible = [...published].filter(([key, entry]) => key.endsWith(`|${year}`) && entry[side] !== null).length;
+    if (!eligible) { continue; }
+    const depthOf = (candidate) => {
+      const match = /#(\d+)$/.exec(candidate);
+      return match ? Number(match[1]) : Infinity;
+    };
+    const ranked = [...scores].sort((a, b) => b[1] - a[1] || depthOf(a[0]) - depthOf(b[0]));
     const [best, hits] = ranked[0] || [null, 0];
     if (!best) {
-      rule[side] = { status: "unreproducible", eligible };
+      rule.years[year][side] = { status: "unreproducible", eligible };
       continue;
     }
-    const [stage, code] = best.split(" ");
-    rule[side] = {
+    const [stagePeriod, code] = best.split(" ");
+    const [stage, period] = stagePeriod.split("@");
+    const depth = /^#(\d+)$/.exec(code);
+    rule.years[year][side] = {
       stage,
-      code: code === "*" ? null : code,
-      aggregate: code === "*" ? "sum_of_rows" : "single_row",
+      fiscal_period: period,
+      code: code === "*" || depth ? null : code,
+      code_length: depth ? Number(depth[1]) : null,
+      aggregate: depth ? "sum_at_code_depth" : (code === "*" ? "sum_of_rows" : "single_row"),
       matched: hits,
       eligible,
       match_rate: Number((hits / eligible).toFixed(4)),
       runner_up: ranked[1] ? { rule: ranked[1][0], matched: ranked[1][1] } : null,
     };
+    if (args.includes("--explain") && hits / eligible < 0.95) {
+      // How many entities have an exact match *somewhere*, against how many agree on where.
+      // A figure that is reproducible per entity but at a different stage each time was not
+      // taken from one rule; it was taken from whichever row the importer saw first.
+      const matchedSomewhere = new Set();
+      for (const fact of facts) {
+        if (fact.budget_side !== side) continue;
+        const entity = fact.public_entity_id.split(":").slice(1).join(":");
+        const target = published.get(`${entity}|${fact.fiscal_year}`);
+        if (target && target[side] !== null && near(Number(fact.amount), target[side])) matchedSomewhere.add(`${entity}|${fact.fiscal_year}`);
+      }
+      console.log(`  ${country} ${year} ${side}: best rule agrees on ${hits} of ${eligible}`);
+      for (const [candidate, count] of ranked.slice(0, 6)) console.log(`      ${String(count).padStart(4)}  ${candidate}`);
+    }
+   }
+  }
+  // Coverage is what share of every published headline one rule per year reproduces.
+  for (const side of ["revenue", "expenditure"]) {
+    let matched = 0;
+    let eligible = 0;
+    for (const year of years) {
+      const entry = rule.years[year][side];
+      if (!entry || entry.status) continue;
+      matched += entry.matched;
+      eligible += entry.eligible;
+    }
+    rule[side] = eligible ? { matched, eligible, match_rate: Number((matched / eligible).toFixed(4)) } : { status: "unreproducible", eligible: 0 };
   }
   results.push(rule);
 
   const line = (side) => {
     const value = rule[side];
     if (!value || value.status) return `${side}: ${value?.status || "none"}`;
-    return `${side} ${value.stage}/${value.code || "sum"} ${value.matched}/${value.eligible}`;
+    const per = Object.entries(rule.years)
+      .filter(([, entry]) => entry[side] && !entry[side].status)
+      .map(([year, entry]) => `${year}:${entry[side].stage}`)
+      .join(" ");
+    return `${side} ${value.matched}/${value.eligible} (${per})`;
   };
   console.log(`${country.padEnd(4)} ${line("revenue").padEnd(46)} ${line("expenditure")}`);
 }

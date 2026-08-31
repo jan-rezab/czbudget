@@ -7,127 +7,245 @@
     {
       "country_code": "BOL",
       "sample_size": 40,
-      "revenue": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
-        "matched": 40,
-        "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "paid *",
-          "matched": 34
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 5,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 5,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          }
         }
       },
-      "expenditure": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
+      "revenue": {
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "paid *",
-          "matched": 13
-        }
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
       }
     },
     {
       "country_code": "BRA",
       "sample_size": 40,
+      "years": {
+        "2024": {
+          "revenue": {
+            "status": "unreproducible",
+            "eligible": 1
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": "TotalDespesas",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 1,
+            "eligible": 1,
+            "match_rate": 1,
+            "runner_up": null
+          }
+        },
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": "ReceitasExcetoIntraOrcamentarias",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 39,
+            "eligible": 39,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY SubtotalDasReceitas",
+              "matched": 26
+            }
+          },
+          "expenditure": {
+            "stage": "committed",
+            "fiscal_period": "FY",
+            "code": "DespesasExcetoIntraOrcamentarias",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 3,
+            "eligible": 39,
+            "match_rate": 0.0769,
+            "runner_up": {
+              "rule": "committed@FY TotalDespesas",
+              "matched": 2
+            }
+          }
+        }
+      },
       "revenue": {
-        "status": "unreproducible",
-        "eligible": 40
+        "matched": 39,
+        "eligible": 39,
+        "match_rate": 1
       },
       "expenditure": {
-        "stage": "actual",
-        "code": "TotalDespesas",
-        "aggregate": "single_row",
-        "matched": 1,
+        "matched": 4,
         "eligible": 40,
-        "match_rate": 0.025,
-        "runner_up": null
+        "match_rate": 0.1
       }
     },
     {
       "country_code": "CHL",
       "sample_size": 40,
-      "revenue": {
-        "stage": "actual",
-        "code": "21",
-        "aggregate": "single_row",
-        "matched": 40,
-        "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "actual 23",
-          "matched": 40
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": "21",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY 23",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": "47",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": null
+          }
         }
       },
-      "expenditure": {
-        "stage": "actual",
-        "code": "47",
-        "aggregate": "single_row",
+      "revenue": {
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
       }
     },
     {
       "country_code": "COL",
       "sample_size": 40,
-      "revenue": {
-        "stage": "actual",
-        "code": "1",
-        "aggregate": "single_row",
-        "matched": 40,
-        "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "actual *",
-          "matched": 40
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY 1",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY 2",
+              "matched": 40
+            }
+          }
         }
       },
-      "expenditure": {
-        "stage": "actual",
-        "code": "2",
-        "aggregate": "single_row",
+      "revenue": {
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "actual *",
-          "matched": 40
-        }
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
       }
     },
     {
       "country_code": "CRI",
       "sample_size": 40,
-      "revenue": {
-        "stage": "actual",
-        "code": "TOTAL",
-        "aggregate": "single_row",
-        "matched": 40,
-        "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "actual *",
-          "matched": 40
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": "TOTAL",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": "TOTAL",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          }
         }
       },
-      "expenditure": {
-        "stage": "actual",
-        "code": "TOTAL",
-        "aggregate": "single_row",
+      "revenue": {
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "actual *",
-          "matched": 40
-        }
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
       }
     },
     {
@@ -138,182 +256,423 @@
     {
       "country_code": "ESP",
       "sample_size": 69,
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 34,
+            "eligible": 34,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY #2",
+              "matched": 30
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 34,
+            "eligible": 34,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY #2",
+              "matched": 29
+            }
+          }
+        },
+        "2026": {
+          "revenue": {
+            "stage": "enacted",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 35,
+            "eligible": 35,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "enacted@FY #2",
+              "matched": 30
+            }
+          },
+          "expenditure": {
+            "stage": "enacted",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 35,
+            "eligible": 35,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "enacted@FY #2",
+              "matched": 29
+            }
+          }
+        }
+      },
       "revenue": {
-        "status": "unreproducible",
-        "eligible": 69
+        "matched": 69,
+        "eligible": 69,
+        "match_rate": 1
       },
       "expenditure": {
-        "status": "unreproducible",
-        "eligible": 69
+        "matched": 69,
+        "eligible": 69,
+        "match_rate": 1
       }
     },
     {
       "country_code": "GEO",
       "sample_size": 80,
-      "revenue": {
-        "stage": "enacted",
-        "code": "R",
-        "aggregate": "single_row",
-        "matched": 40,
-        "eligible": 80,
-        "match_rate": 0.5,
-        "runner_up": {
-          "rule": "actual R",
-          "matched": 40
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": "R",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY 7",
+              "matched": 40
+            }
+          }
+        },
+        "2026": {
+          "revenue": {
+            "stage": "enacted",
+            "fiscal_period": "FY",
+            "code": "R",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "enacted@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "enacted",
+            "fiscal_period": "FY",
+            "code": "E",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "enacted@FY *",
+              "matched": 40
+            }
+          }
         }
       },
-      "expenditure": {
-        "stage": "enacted",
-        "code": "E",
-        "aggregate": "single_row",
-        "matched": 40,
+      "revenue": {
+        "matched": 80,
         "eligible": 80,
-        "match_rate": 0.5,
-        "runner_up": {
-          "rule": "actual 7",
-          "matched": 40
-        }
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 80,
+        "eligible": 80,
+        "match_rate": 1
       }
     },
     {
       "country_code": "GTM",
       "sample_size": 40,
-      "revenue": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
-        "matched": 40,
-        "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "paid *",
-          "matched": 39
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 5,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": null,
+            "aggregate": "sum_of_rows",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "paid@FY *",
+              "matched": 37
+            }
+          }
         }
       },
-      "expenditure": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
+      "revenue": {
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "paid *",
-          "matched": 37
-        }
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
       }
     },
     {
       "country_code": "ITA",
       "sample_size": 40,
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "paid",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "paid@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "paid",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "paid@FY *",
+              "matched": 40
+            }
+          }
+        }
+      },
       "revenue": {
-        "stage": "paid",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       },
       "expenditure": {
-        "stage": "paid",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       }
     },
     {
       "country_code": "KOR",
       "sample_size": 40,
+      "years": {
+        "2024": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          }
+        }
+      },
       "revenue": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       },
       "expenditure": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       }
     },
     {
       "country_code": "MEX",
       "sample_size": 40,
+      "years": {
+        "2024": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": null,
+            "aggregate": "sum_of_rows",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": null
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": null,
+            "aggregate": "sum_of_rows",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": null
+          }
+        }
+      },
       "revenue": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       },
       "expenditure": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       }
     },
     {
       "country_code": "PER",
       "sample_size": 40,
+      "years": {
+        "2024": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 1,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 2,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          }
+        }
+      },
       "revenue": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       },
       "expenditure": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": {
-          "rule": "paid *",
-          "matched": 16
-        }
+        "match_rate": 1
       }
     },
     {
       "country_code": "SLV",
       "sample_size": 40,
+      "years": {
+        "2023": {
+          "revenue": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 2,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "fiscal_period": "FY",
+            "code": null,
+            "code_length": 2,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY *",
+              "matched": 40
+            }
+          }
+        }
+      },
       "revenue": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       },
       "expenditure": {
-        "stage": "actual",
-        "code": null,
-        "aggregate": "sum_of_rows",
         "matched": 40,
         "eligible": 40,
-        "match_rate": 1,
-        "runner_up": null
+        "match_rate": 1
       }
     }
   ]
