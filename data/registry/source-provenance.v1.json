@@ -1,0 +1,1135 @@
+{
+  "schema_version": "1.0.0",
+  "registry": "source-provenance",
+  "generated_at": "2026-08-31",
+  "note": "One row per source the published artifacts declare. `edition` is the publication vintage the source itself names — \"World Economic Outlook, April 2026\" — not the date we fetched it. A null edition means no artifact records one, which is a gap to close rather than a value to invent.",
+  "source_count": 81,
+  "coverage": {
+    "with_edition": 2,
+    "with_extraction_date": 36,
+    "with_verified_licence": 0,
+    "licence_unverified": 32
+  },
+  "sources": [
+    {
+      "key": "https://ares.gov.cz/swagger-ui/",
+      "provider": null,
+      "title": "ARES — identita účetních jednotek",
+      "url": "https://ares.gov.cz/swagger-ui/",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/municipal-snapshot.v1.json"
+      ],
+      "artifact_count": 2,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://budjetti.vm.fi/indox/index.jsp?lang=en",
+      "artifacts": [],
+      "provider": "Finland",
+      "title": "Ministry of Finance Finland — State budget proposals",
+      "url": "https://budjetti.vm.fi/indox/index.jsp?lang=en",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "FIN",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://csu.gov.cz/docs/107508/3183dddf-79c3-3d97-07bf-0660173c563e/26000525.pdf?version=1.1",
+      "provider": null,
+      "title": "ČSÚ — Zdravotnické účty ČR 2010–2023",
+      "url": "https://csu.gov.cz/docs/107508/3183dddf-79c3-3d97-07bf-0660173c563e/26000525.pdf?version=1.1",
+      "edition": null,
+      "extracted": "2026-08-20",
+      "artifact": "data/cz-health-budget.v1.json",
+      "artifacts": [
+        "data/cz-health-budget.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://csu.gov.cz/mira_inflace",
+      "provider": null,
+      "title": "ČSÚ — inflace",
+      "url": "https://csu.gov.cz/mira_inflace",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/czech-budget.v1.json"
+      ],
+      "artifact_count": 2,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://csu.gov.cz/produkty/projekce-obyvatelstva-ceske-republiky-2023-2100",
+      "provider": null,
+      "title": "ČSÚ — Projekce obyvatelstva 2023–2100",
+      "url": "https://csu.gov.cz/produkty/projekce-obyvatelstva-ceske-republiky-2023-2100",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/demography-social.v1.json",
+      "artifacts": [
+        "data/demography-social.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data-api.ecb.europa.eu/service/data/EXR/A.USD.EUR.SP00.A?startPeriod=2005&endPeriod=2024&format=csvdata",
+      "provider": null,
+      "title": null,
+      "url": "https://data-api.ecb.europa.eu/service/data/EXR/A.USD.EUR.SP00.A?startPeriod=2005&endPeriod=2024&format=csvdata",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/fx-eur-annual.v1.json",
+      "artifacts": [
+        "data/fx-eur-annual.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data-explorer.oecd.org/",
+      "provider": null,
+      "title": "OECD · Hospital aggregates",
+      "url": "https://data-explorer.oecd.org/",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-health-performance.v1.json",
+      "artifacts": [
+        "data/country-health-performance.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data-explorer.oecd.org/?bp=true&fc=Topic&fs%5B0%5D=Topic%2C0%7CEducation+and+skills%23EDU%23",
+      "provider": null,
+      "title": "OECD Education Finance",
+      "url": "https://data-explorer.oecd.org/?bp=true&fc=Topic&fs%5B0%5D=Topic%2C0%7CEducation+and+skills%23EDU%23",
+      "edition": null,
+      "extracted": "2026-08-28",
+      "artifact": "data/education-deep-dive.v1.json",
+      "artifacts": [
+        "data/education-deep-dive.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_HEALTH_REAC_HOSP%40DF_BEDS_FUNC&df%5Bvs%5D=1.1",
+      "provider": null,
+      "title": "OECD Hospital beds by function",
+      "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_HEALTH_REAC_HOSP%40DF_BEDS_FUNC&df%5Bvs%5D=1.1",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-health.v1.json",
+      "artifacts": [
+        "data/country-health.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_SHA%40DF_SHA&df%5Bvs%5D=1.1",
+      "provider": null,
+      "title": "OECD Health expenditure and financing",
+      "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ELS.HD&df%5Bid%5D=DSD_SHA%40DF_SHA&df%5Bvs%5D=1.1",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-health.v1.json",
+      "artifacts": [
+        "data/country-health.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ITF&df%5Bds%5D=dsDisseminateFinalDMZ&df%5Bid%5D=DSD_INFRINV%40DF_INFRINV&df%5Bvs%5D=1.0",
+      "provider": null,
+      "title": "OECD ITF · Transport infrastructure investment and maintenance spending",
+      "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.ITF&df%5Bds%5D=dsDisseminateFinalDMZ&df%5Bid%5D=DSD_INFRINV%40DF_INFRINV&df%5Bvs%5D=1.0",
+      "edition": null,
+      "extracted": "2026-08-28",
+      "artifact": "data/transport-performance.v1.json",
+      "artifacts": [
+        "data/transport-performance.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
+      "provider": null,
+      "title": "OECD · Annual government expenditure by function (COFOG)",
+      "url": "https://data-explorer.oecd.org/vis?df%5Bag%5D=OECD.SDD.NAD&df%5Bid%5D=DSD_NASEC10%40DF_TABLE11&df%5Bvs%5D=1.1",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "artifacts": [
+        "data/country-functional-budgets.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data.csu.gov.cz/datastat/info/SADA/OBY01B01",
+      "provider": null,
+      "title": "ČSÚ DataStat — počet obyvatel k 1. 7.",
+      "url": "https://data.csu.gov.cz/datastat/info/SADA/OBY01B01",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/municipal-history-directory.v1.json",
+        "data/municipal-snapshot.v1.json"
+      ],
+      "artifact_count": 3,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+      "provider": "International Monetary Fund",
+      "title": "IMF World Economic Outlook · general government",
+      "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+      "edition": "World Economic Outlook, April 2026",
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/country-functional-budgets.v1.json",
+        "data/municipal-fx-rates.v1.json",
+        "data/sovereign-benchmark-slim.v1.json",
+        "lib/data/sovereign-benchmark.v1.json"
+      ],
+      "artifact_count": 5,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://data.worldbank.org/topic/health",
+      "provider": null,
+      "title": "World Bank · Health indicators",
+      "url": "https://data.worldbank.org/topic/health",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-health-performance.v1.json",
+      "artifacts": [
+        "data/country-health-performance.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+      "artifacts": [],
+      "provider": "Spain",
+      "title": "Eurostat – general-government expenditure by function",
+      "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "NLD",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table?lang=en",
+      "provider": null,
+      "title": "Eurostat · General government expenditure by function (COFOG)",
+      "url": "https://ec.europa.eu/eurostat/databrowser/view/gov_10a_exp/default/table?lang=en",
+      "edition": null,
+      "extracted": "2026-08-28",
+      "artifact": "data/transport-budget-detail.v1.json",
+      "artifacts": [
+        "data/transport-budget-detail.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://ec.europa.eu/eurostat/databrowser/view/road_if_motorwa/default/table",
+      "provider": null,
+      "title": "Eurostat — length of motorways and E-roads",
+      "url": "https://ec.europa.eu/eurostat/databrowser/view/road_if_motorwa/default/table",
+      "edition": null,
+      "extracted": "2026-08-22",
+      "artifact": "data/road-network-history.v1.json",
+      "artifacts": [
+        "data/road-network-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://ec.europa.eu/eurostat/databrowser/view/road_if_roadsc/default/table",
+      "provider": null,
+      "title": "Eurostat — length of road network by category",
+      "url": "https://ec.europa.eu/eurostat/databrowser/view/road_if_roadsc/default/table",
+      "edition": null,
+      "extracted": "2026-08-22",
+      "artifact": "data/road-network-history.v1.json",
+      "artifacts": [
+        "data/road-network-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://ec.europa.eu/eurostat/en/web/products-datasets/-/ENV_AC_TAX",
+      "provider": null,
+      "title": "Eurostat environmental tax revenues (env_ac_tax)",
+      "url": "https://ec.europa.eu/eurostat/en/web/products-datasets/-/ENV_AC_TAX",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-revenue.v1.json",
+      "artifacts": [
+        "data/country-revenue.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://ec.europa.eu/eurostat/en/web/transport/database",
+      "provider": null,
+      "title": "Eurostat · railway transport database",
+      "url": "https://ec.europa.eu/eurostat/en/web/transport/database",
+      "edition": null,
+      "extracted": "2026-08-28",
+      "artifact": "data/transport-performance.v1.json",
+      "artifacts": [
+        "data/transport-performance.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://fiscaldata.treasury.gov/",
+      "artifacts": [],
+      "provider": "United States",
+      "title": "U.S. Treasury Fiscal Data",
+      "url": "https://fiscaldata.treasury.gov/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "USA",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://fm.dk/arbejdsomraader/finanslov-og-offentlige-finanser/arbejdet-med-finansloven/finanslovsdatabasen/",
+      "artifacts": [],
+      "provider": "Denmark",
+      "title": "Finansministeriet – Finanslovsdatabasen",
+      "url": "https://fm.dk/arbejdsomraader/finanslov-og-offentlige-finanser/arbejdet-med-finansloven/finanslovsdatabasen/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "DNK",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://internationalbudget.org/open-budget-survey/country-results",
+      "provider": null,
+      "title": "Open Budget Survey 2023",
+      "url": "https://internationalbudget.org/open-budget-survey/country-results",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/global-budget-transparency.v1.json",
+      "artifacts": [
+        "data/global-budget-transparency.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mf.gov.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf",
+      "provider": null,
+      "title": "Zpráva o činnosti a výsledcích strategických společností a organizací za rok 2024",
+      "url": "https://mf.gov.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mf.gov.cz/assets/attachments/2026-04-01_Statni-rozpocet-2026-exekutivni-shrnuti.pdf",
+      "provider": null,
+      "title": "MF ČR — Státní rozpočet 2026, exekutivní shrnutí",
+      "url": "https://mf.gov.cz/assets/attachments/2026-04-01_Statni-rozpocet-2026-exekutivni-shrnuti.pdf",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/cz-spending-2026.v1.json",
+      "artifacts": [
+        "data/cz-spending-2026.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mf.gov.cz/assets/attachments/2026-04-30_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf",
+      "provider": null,
+      "title": "MF — zdravotní pojišťovny 2025",
+      "url": "https://mf.gov.cz/assets/attachments/2026-04-30_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/demography-social.v1.json",
+      "artifacts": [
+        "data/demography-social.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mf.gov.cz/cs/dane-a-ucetnictvi/ucetnictvi/ucetni-reforma-verejnych-financi-ucetnic/ucetni-vykaznictvi-statu/vycet-konsolidovanych-jednotek-statu-a-d",
+      "provider": null,
+      "title": null,
+      "url": "https://mf.gov.cz/cs/dane-a-ucetnictvi/ucetnictvi/ucetni-reforma-verejnych-financi-ucetnic/ucetni-vykaznictvi-statu/vycet-konsolidovanych-jednotek-statu-a-d",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/cz-public-entity-history.v1.json",
+      "artifacts": [
+        "data/cz-public-entity-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/mf-zrevidovalo-rozpocet-na-rok-2026-62672",
+      "provider": null,
+      "title": "MF ČR — návrh rozpočtu 2026",
+      "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/mf-zrevidovalo-rozpocet-na-rok-2026-62672",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/czech-budget.v1.json"
+      ],
+      "artifact_count": 2,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/snemovna-schvalila-zakon-o-statnim-rozpoctu-2026-63269",
+      "provider": null,
+      "title": "MF ČR — schválený státní rozpočet 2026 a výdaje podle kapitol",
+      "url": "https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/snemovna-schvalila-zakon-o-statnim-rozpoctu-2026-63269",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/cz-spending-2026.v1.json",
+      "artifacts": [
+        "data/cz-spending-2026.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mf.gov.cz/cs/rozpoctova-politika/statni-rozpocet/plneni-statniho-rozpoctu",
+      "provider": null,
+      "title": "MF ČR — pokladní plnění a státní závěrečné účty",
+      "url": "https://mf.gov.cz/cs/rozpoctova-politika/statni-rozpocet/plneni-statniho-rozpoctu",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/czech-budget.v1.json"
+      ],
+      "artifact_count": 2,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://minfin.gov.gr/en/budget-execution-bulletins/",
+      "artifacts": [],
+      "provider": "Greece",
+      "title": "Ministry of Economy and Finance – Budget Execution Bulletins",
+      "url": "https://minfin.gov.gr/en/budget-execution-bulletins/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "GRC",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/",
+      "artifacts": [],
+      "provider": "Czechia",
+      "title": "Monitor státní pokladny",
+      "url": "https://monitor.statnipokladna.gov.cz/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "CZE",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/data/csv/CIS_UCJED.CSV",
+      "provider": null,
+      "title": null,
+      "url": "https://monitor.statnipokladna.gov.cz/data/csv/CIS_UCJED.CSV",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/cz-public-entity-history.v1.json",
+      "artifacts": [
+        "data/cz-public-entity-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinM/2025_12_Data_CSUIS_FINM.zip",
+      "provider": null,
+      "title": "FIN 2-12M",
+      "url": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinM/2025_12_Data_CSUIS_FINM.zip",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/municipal-snapshot.v1.json"
+      ],
+      "artifact_count": 2,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/Rozvaha/2025_12_Data_CSUIS_ROZV.zip",
+      "provider": null,
+      "title": "Rozvaha",
+      "url": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/Rozvaha/2025_12_Data_CSUIS_ROZV.zip",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-cash-in.v1.json",
+      "artifacts": [
+        "data/country-cash-in.v1.json",
+        "data/municipal-snapshot.v1.json"
+      ],
+      "artifact_count": 2,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/datovy-archiv/",
+      "provider": null,
+      "title": null,
+      "url": "https://monitor.statnipokladna.gov.cz/datovy-archiv/",
+      "edition": null,
+      "extracted": "2026-08-20",
+      "artifact": "data/large-city-history.v1.json",
+      "artifacts": [
+        "data/large-city-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/datovy-katalog/",
+      "provider": null,
+      "title": null,
+      "url": "https://monitor.statnipokladna.gov.cz/datovy-katalog/",
+      "edition": null,
+      "extracted": "2026-08-20",
+      "artifact": "data/large-city-history.v1.json",
+      "artifacts": [
+        "data/large-city-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/datovy-katalog/transakcni-data",
+      "provider": null,
+      "title": "MONITOR Státní pokladny — transakční data ČSÚIS",
+      "url": "https://monitor.statnipokladna.gov.cz/datovy-katalog/transakcni-data",
+      "edition": null,
+      "extracted": "2026-08-20",
+      "artifact": "data/cz-health-budget.v1.json",
+      "artifacts": [
+        "data/cz-health-budget.v1.json",
+        "data/cz-public-entity-history.v1.json",
+        "data/education-deep-dive.v1.json"
+      ],
+      "artifact_count": 3,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://monitor.statnipokladna.gov.cz/metodika",
+      "provider": null,
+      "title": null,
+      "url": "https://monitor.statnipokladna.gov.cz/metodika",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/cz-public-entity-history.v1.json",
+      "artifacts": [
+        "data/cz-public-entity-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://mpsv.gov.cz/cms/documents/f829f6b7-772d-4305-1252-6b486f73272a/KR%20%C3%9AP%20%C4%8CR%20k%2031.12.2025.pdf",
+      "provider": null,
+      "title": "MPSV — příspěvek na péči 2025",
+      "url": "https://mpsv.gov.cz/cms/documents/f829f6b7-772d-4305-1252-6b486f73272a/KR%20%C3%9AP%20%C4%8CR%20k%2031.12.2025.pdf",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/demography-social.v1.json",
+      "artifacts": [
+        "data/demography-social.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://obr.uk/data/",
+      "artifacts": [],
+      "provider": "United Kingdom",
+      "title": "Office for Budget Responsibility – Data",
+      "url": "https://obr.uk/data/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "GBR",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://openbudget.gov.ua/en",
+      "provider": "Ukraine",
+      "title": "Ukraine Open Budget · functional expenditure API",
+      "url": "https://openbudget.gov.ua/en",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "artifacts": [
+        "data/country-functional-budgets.v1.json"
+      ],
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "UKR",
+      "artifact_count": 1
+    },
+    {
+      "key": "https://or.justice.cz/ias/ui/rejstrik",
+      "provider": null,
+      "title": null,
+      "url": "https://or.justice.cz/ias/ui/rejstrik",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/cz-public-entity-history.v1.json",
+      "artifacts": [
+        "data/cz-public-entity-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://portaldatransparencia.gov.br/orcamento",
+      "artifacts": [],
+      "provider": "Brazil",
+      "title": "Portal da Transparência – Federal budget",
+      "url": "https://portaldatransparencia.gov.br/orcamento",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "BRA",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://spending.gov.ua/",
+      "artifacts": [],
+      "provider": "Ukraine",
+      "title": "E-data Spending",
+      "url": "https://spending.gov.ua/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "UKR",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://stat.fi/en/statistics/jmete",
+      "artifacts": [],
+      "provider": "Finland",
+      "title": "Statistics Finland — General government expenditure by function",
+      "url": "https://stat.fi/en/statistics/jmete",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "FIN",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://transport.ec.europa.eu/transport-modes/rail/market/rail-market-monitoring-rmms_en",
+      "provider": null,
+      "title": "European Commission · Rail Market Monitoring",
+      "url": "https://transport.ec.europa.eu/transport-modes/rail/market/rail-market-monitoring-rmms_en",
+      "edition": null,
+      "extracted": "2026-08-28",
+      "artifact": "data/transport-performance.v1.json",
+      "artifacts": [
+        "data/transport-performance.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.budget.gouv.fr/budget-etat/mission",
+      "artifacts": [],
+      "provider": "France",
+      "title": "budget.gouv.fr – státní rozpočet podle misí",
+      "url": "https://www.budget.gouv.fr/budget-etat/mission",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "FRA",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.bundeshaushalt.de/DE/Download-Portal/download-portal.html",
+      "artifacts": [],
+      "provider": "Germany",
+      "title": "Bundeshaushalt – Download-Portal",
+      "url": "https://www.bundeshaushalt.de/DE/Download-Portal/download-portal.html",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "DEU",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.cssz.cz/web/cz/statistiky",
+      "provider": null,
+      "title": "ČSSZ — statistiky důchodového účtu",
+      "url": "https://www.cssz.cz/web/cz/statistiky",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/demography-social.v1.json",
+      "artifacts": [
+        "data/demography-social.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.data.economie.gouv.fr/",
+      "artifacts": [],
+      "provider": "France",
+      "title": "data.economie.gouv.fr – PLF a PLRG",
+      "url": "https://www.data.economie.gouv.fr/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "FRA",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.efv.admin.ch/de/open-government-data-de",
+      "artifacts": [],
+      "provider": "Switzerland",
+      "title": "Federal Finance Administration – Open Government Data",
+      "url": "https://www.efv.admin.ch/de/open-government-data-de",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "CHE",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.fhwa.dot.gov/policyinformation/statistics/2024/hm10.cfm",
+      "provider": null,
+      "title": "FHWA Highway Statistics 2024 — HM-10",
+      "url": "https://www.fhwa.dot.gov/policyinformation/statistics/2024/hm10.cfm",
+      "edition": null,
+      "extracted": "2026-08-22",
+      "artifact": "data/road-network-history.v1.json",
+      "artifacts": [
+        "data/road-network-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.fhwa.dot.gov/policyinformation/statistics/2024/hm220.cfm",
+      "provider": null,
+      "title": "FHWA Highway Statistics 2024 — HM-220",
+      "url": "https://www.fhwa.dot.gov/policyinformation/statistics/2024/hm220.cfm",
+      "edition": null,
+      "extracted": "2026-08-22",
+      "artifact": "data/road-network-history.v1.json",
+      "artifacts": [
+        "data/road-network-history.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog",
+      "artifacts": [],
+      "provider": "Brazil",
+      "title": "Tesouro Nacional / SOF – COFOG general-government expenditure",
+      "url": "https://www.gov.br/planejamento/pt-br/assuntos/orcamento/publicaoes-sobre-orcamento/classificacao-das-funcoes-de-governo-cofog",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "BRA",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.gov.pl/web/finance/revenue-expenditure-execution",
+      "artifacts": [],
+      "provider": "Poland",
+      "title": "Ministerstwo Finansów – měsíční plnění příjmů a výdajů",
+      "url": "https://www.gov.pl/web/finance/revenue-expenditure-execution",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "POL",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.gov.pl/web/finanse/sprawozdania-roczne",
+      "artifacts": [],
+      "provider": "Poland",
+      "title": "Ministerstwo Finansów – roční zprávy o plnění",
+      "url": "https://www.gov.pl/web/finanse/sprawozdania-roczne",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "POL",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.gov.uk/government/collections/public-expenditure-statistical-analyses-pesa",
+      "artifacts": [],
+      "provider": "United Kingdom",
+      "title": "HM Treasury – Public Expenditure Statistical Analyses",
+      "url": "https://www.gov.uk/government/collections/public-expenditure-statistical-analyses-pesa",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "GBR",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.government.se/government-of-sweden/ministry-of-finance/central-government-budget/central-government-budget-in-figures/",
+      "artifacts": [],
+      "provider": "Sweden",
+      "title": "Government.se – central government budget in figures",
+      "url": "https://www.government.se/government-of-sweden/ministry-of-finance/central-government-budget/central-government-budget-in-figures/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "SWE",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.mfcr.cz/assets/attachments/2024-04-28_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf",
+      "provider": null,
+      "title": "MF ČR — Státní závěrečný účet 2024",
+      "url": "https://www.mfcr.cz/assets/attachments/2024-04-28_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf",
+      "edition": null,
+      "extracted": "2026-08-20",
+      "artifact": "data/cz-health-budget.v1.json",
+      "artifacts": [
+        "data/cz-health-budget.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.mfcr.cz/assets/attachments/2025-10-01_Statni-rozpocet-v-kontextu-vykonnosti.pdf",
+      "provider": null,
+      "title": "State budget in the context of performance",
+      "url": "https://www.mfcr.cz/assets/attachments/2025-10-01_Statni-rozpocet-v-kontextu-vykonnosti.pdf",
+      "edition": null,
+      "extracted": "2026-08-28",
+      "artifact": "data/education-deep-dive.v1.json",
+      "artifacts": [
+        "data/education-deep-dive.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.mfcr.cz/cs/rozpoctova-politika/statni-rozpocet/plneni-statniho-rozpoctu",
+      "artifacts": [],
+      "provider": "Czechia",
+      "title": "Ministerstvo financí ČR – plnění státního rozpočtu",
+      "url": "https://www.mfcr.cz/cs/rozpoctova-politika/statni-rozpocet/plneni-statniho-rozpoctu",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "CZE",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.mof.go.jp/policy/budget/reference/statistics/data.htm",
+      "artifacts": [],
+      "provider": "Japan",
+      "title": "Ministry of Finance Japan – Budget statistics",
+      "url": "https://www.mof.go.jp/policy/budget/reference/statistics/data.htm",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "JPN",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/",
+      "artifacts": [],
+      "provider": "Japan",
+      "title": "Ministry of Finance Japan – Treasury receipts and payments",
+      "url": "https://www.mof.go.jp/policy/budget/report/revenue_and_expenditure/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "JPN",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.mof.gov.ua/en/statistichnij-zbirnik",
+      "provider": null,
+      "title": "Ministry of Finance of Ukraine · Budget of Ukraine 2015–2017",
+      "url": "https://www.mof.gov.ua/en/statistichnij-zbirnik",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "artifacts": [
+        "data/country-functional-budgets.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.oecd.org/en/data/datasets/global-revenue-statistics-database.html",
+      "provider": null,
+      "title": "OECD Global Revenue Statistics — Comparative tax revenues",
+      "url": "https://www.oecd.org/en/data/datasets/global-revenue-statistics-database.html",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-revenue.v1.json",
+      "artifacts": [
+        "data/country-revenue.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.oecd.org/en/data/datasets/oecd-fiscal-decentralisation-database.html",
+      "provider": null,
+      "title": "OECD Fiscal Decentralisation Database — Table 17",
+      "url": "https://www.oecd.org/en/data/datasets/oecd-fiscal-decentralisation-database.html",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-revenue.v1.json",
+      "artifacts": [
+        "data/country-revenue.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.regjeringen.no/en/topics/the-economy/the-national-budget/previous-national-budgets/id450436/",
+      "artifacts": [],
+      "provider": "Norway",
+      "title": "Regjeringen – previous national budgets",
+      "url": "https://www.regjeringen.no/en/topics/the-economy/the-national-budget/previous-national-budgets/id450436/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "NOR",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.regjeringen.no/no/tema/okonomi-og-budsjett/statsregnskapet/id1438/",
+      "artifacts": [],
+      "provider": "Norway",
+      "title": "Norský státní závěrečný účet",
+      "url": "https://www.regjeringen.no/no/tema/okonomi-og-budsjett/statsregnskapet/id1438/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "NOR",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.rijksoverheid.nl/documenten/begrotingen/2025/09/16/miljoenennota-2026",
+      "artifacts": [],
+      "provider": "Netherlands",
+      "title": "Rijksoverheid – Miljoenennota 2026",
+      "url": "https://www.rijksoverheid.nl/documenten/begrotingen/2025/09/16/miljoenennota-2026",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "NLD",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/PGE/Paginas/PGE.aspx",
+      "artifacts": [],
+      "provider": "Spain",
+      "title": "Secretaría de Estado de Presupuestos – Presupuestos Generales del Estado",
+      "url": "https://www.sepg.pap.hacienda.gob.es/sitios/sepg/es-ES/Presupuestos/PGE/Paginas/PGE.aspx",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "ESP",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.sng-wofi.org/country_profiles/presentation.html",
+      "provider": null,
+      "title": "World Observatory on Subnational Government Finance and Investment",
+      "url": "https://www.sng-wofi.org/country_profiles/presentation.html",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/global-budget-transparency.v1.json",
+      "artifacts": [
+        "data/global-budget-transparency.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.statistics.gr/en/statistics/-/publication/SEL03/-",
+      "artifacts": [],
+      "provider": "Greece",
+      "title": "Hellenic Statistical Authority – government finance",
+      "url": "https://www.statistics.gr/en/statistics/-/publication/SEL03/-",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "GRC",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.statskontoret.se/analys-och-statistik/oppna-data/arsutfall/",
+      "artifacts": [],
+      "provider": "Sweden",
+      "title": "ESV – outcome of the central government budget",
+      "url": "https://www.statskontoret.se/analys-och-statistik/oppna-data/arsutfall/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "SWE",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.usaspending.gov/",
+      "artifacts": [],
+      "provider": "United States",
+      "title": "USAspending",
+      "url": "https://www.usaspending.gov/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "USA",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.uzis.cz/res/f/008448/eknem2022.pdf",
+      "provider": null,
+      "title": "ÚZIS ČR — Ekonomické výsledky nemocnic 2022",
+      "url": "https://www.uzis.cz/res/f/008448/eknem2022.pdf",
+      "edition": null,
+      "extracted": "2026-08-20",
+      "artifact": "data/cz-health-budget.v1.json",
+      "artifacts": [
+        "data/cz-health-budget.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.whitehouse.gov/omb/information-resources/budget/historical-tables/",
+      "provider": null,
+      "title": "U.S. OMB · Historical Tables, Table 3.1",
+      "url": "https://www.whitehouse.gov/omb/information-resources/budget/historical-tables/",
+      "edition": null,
+      "extracted": "2026-08-26",
+      "artifact": "data/country-functional-budgets.v1.json",
+      "artifacts": [
+        "data/country-functional-budgets.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "https://www.whitehouse.gov/omb/information-resources/budget/supplemental-materials/",
+      "artifacts": [],
+      "provider": "United States",
+      "title": "OMB – Public Budget Database a Historical Tables",
+      "url": "https://www.whitehouse.gov/omb/information-resources/budget/supplemental-materials/",
+      "edition": null,
+      "extracted": null,
+      "licence_status": "unverified",
+      "licence_spdx": null,
+      "country": "USA",
+      "artifact_count": 0
+    },
+    {
+      "key": "https://www.worldbank.org/en/programs/boost-portal/country-data",
+      "provider": null,
+      "title": "World Bank BOOST country data",
+      "url": "https://www.worldbank.org/en/programs/boost-portal/country-data",
+      "edition": null,
+      "extracted": null,
+      "artifact": "data/global-budget-transparency.v1.json",
+      "artifacts": [
+        "data/global-budget-transparency.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    },
+    {
+      "key": "unnamed",
+      "provider": null,
+      "title": "Municipal level government by population size",
+      "url": null,
+      "edition": "Municipal level government by population size",
+      "extracted": null,
+      "artifact": "data/municipal-size-benchmark.v1.json",
+      "artifacts": [
+        "data/municipal-size-benchmark.v1.json"
+      ],
+      "artifact_count": 1,
+      "licence_status": "unrecorded"
+    }
+  ]
+}
