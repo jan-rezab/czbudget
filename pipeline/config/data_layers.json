@@ -112,10 +112,6 @@
     },
     {
       "layer": "uniform",
-      "detail": "Japan's expenditure needs a different model again. Tables 07-13 are a matrix of expenditure nature against purpose, and both dimensions carry hierarchy: purpose columns mark theirs with a ・総額 suffix, but nature rows mark only some of theirs — うち職員給 is flagged as a subset of 人件費 while 国に対するもの is a sub-item of 補助費等 with nothing to say so. Summing purpose totals across the nature rows over-counts published expenditure roughly tenfold. The column segmentation that works for table 04 does not transfer, because it models a list rather than a matrix."
-    },
-    {
-      "layer": "uniform",
       "detail": "Denmark is re-extracted, loaded and serving. REGK100 across all seven dranst with ART=UE,I closes the accounts: Copenhagen 2025 is 68,818,554 thousand kroner out against 68,818,541 in, where the previous extract missed by 33,072,000. That extract was also wrong beyond the missing side — its dranst 1 operating expenditure was 31,850.3m against a true 55,925.2m. The 209,152 superseded regk31 rows were replaced by 70,145 from regk100; the budk32 enacted-budget rows were left alone, because REGK100 is the final accounts and replaces only the actual stage."
     },
     {
@@ -125,6 +121,14 @@
     {
       "layer": "serving",
       "detail": "Denmark's headline rule is authored rather than derived, and the serving gate now distinguishes the two. A derived rule reproduces every figure the site already publishes; an authored one has no such check, so it is allowed only where the site publishes no headline at all and switching cannot regress one. Denmark qualifies on that basis, and its justification is recorded in municipal_headline_rules.json: the Danish account plan balances by construction, so a headline keeping financing in reports every municipality as revenue exactly equal to expenditure. Excluding financing — dranst 4, 5, 6 and borrowing under function 8.55 — gives Copenhagen 67.58bn against 67.12bn, a 0.46bn surplus, and across 196 entity-years the ratio runs 0.952 to 1.075 with 148 in surplus."
+    },
+    {
+      "layer": "raw",
+      "detail": "Japan's expenditure tables are now read correctly, and the earlier tenfold over-count was a misreading of what they are. Tables 07-12 are expenditure by purpose and their purposes are disjoint — 議会費 and 総務費 in 07, 民生費 and 衛生費 in 08, through to 災害復旧費, 公債費 and 諸支出金 in 12. Table 13 is not a seventh purpose table: it is 歳出合計 beside the funding sources that meet it (国庫支出金, 都道府県支出金, 使用料手数料, 分担金負担金寄附金, 財産収入, 繰入金, 諸収入, 繰越金, 地方債, 一般財源等). Summing it as though it were a purpose adds the whole budget a second time. The nature rows nest the same way the columns do — 人件費 over うち職員給, 補助費等 over rows 07-11, 普通建設事業費 over 13-17 — so the top level is rows 01, 03, 04, 05, 06, 12, 18 and 21."
+    },
+    {
+      "layer": "raw",
+      "detail": "Two things still block Japan, and neither is inference. First, 表05 収入の状況_1 was never fetched — statInfId 000040375639, now cached — and its 21 revenue categories run 地方税 through 財産収入, coming to 81.9% of Sapporo's published 歳入総額. The remainder (寄附金, 繰入金, 繰越金, 諸収入, 地方債) is in a 収入の状況_2 whose file id is not adjacent: 000040375637 and 000040375640 through 000040375642 all return 404, and e-Stat's file listing is rendered client-side with no statInfId in the markup, so finding it means driving the portal's dataset list rather than guessing ids. Second, a scope difference: table 13's 歳出合計 agrees exactly with its own funding-source total for every municipality, which says the table is coherent, but both come to only 78-80% of the 歳出総額 that table 02 prints. Something in the survey's account scope differs between those two tables and it has to be identified before either can be published as the other's breakdown."
     }
   ]
 }
