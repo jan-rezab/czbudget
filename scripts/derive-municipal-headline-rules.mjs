@@ -1,0 +1,198 @@
+#!/usr/bin/env node
+/**
+ * Headline rules — the last thing standing between the warehouse and a regenerated profile.
+ *
+ * A municipality page leads with two numbers: total revenue and total expenditure for the
+ * year. The warehouse holds every line that goes into them, but which line *is* the headline
+ * differs by country, because each national source totals its own way. Brazil publishes a
+ * `TotalReceitas` row at the `actual` stage; Costa Rica publishes a single `TOTAL`; Spain
+ * publishes no total at all and the headline is the sum of its parts.
+ *
+ * Rather than transcribe those rules from the importer by hand — where a misreading would
+ * silently move a published figure — each is derived: for a sample of entities per country,
+ * every candidate (stage, code) pair is scored against the headline those entities already
+ * publish, and the pair that reproduces the most of them wins. A rule that cannot reproduce
+ * the existing figures is reported as such rather than written.
+ *
+ *   node scripts/derive-municipal-headline-rules.mjs --countries CRI,GEO --sample 30
+ *   node scripts/derive-municipal-headline-rules.mjs --all --write
+ */
+import { readFile, readdir, writeFile, mkdir } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import path from "node:path";
+import { promisify } from "node:util";
+
+const run = promisify(execFile);
+const ROOT = process.env.SITE_ROOT || process.cwd();
+const TABLE = "`czbudget-janrezab.budget_detail.municipal_budget_line_facts`";
+const OUT = "pipeline/config/municipal_headline_rules.json";
+
+const args = process.argv.slice(2);
+const flag = (name, fallback) => {
+  const at = args.indexOf(name);
+  return at >= 0 ? args[at + 1] : fallback;
+};
+const write = args.includes("--write");
+const sampleSize = Number(flag("--sample", 40));
+
+/** The fan-out directory is alpha-3; entity ids in the warehouse are keyed by alpha-2. */
+const ALPHA2 = {
+  BOL: "BO", BRA: "BR", CHL: "CL", COL: "CO", CRI: "CR", DNK: "DK", ESP: "ES",
+  GEO: "GE", GTM: "GT", ITA: "IT", JPN: "JP", KOR: "KR", MEX: "MX", PER: "PE", SLV: "SV",
+};
+
+const requested = args.includes("--all")
+  ? Object.keys(ALPHA2).filter((code) => code !== "JPN")
+  : String(flag("--countries", "CRI")).split(",").map((value) => value.trim().toUpperCase()).filter(Boolean);
+
+async function query(sql) {
+  const { stdout } = await run("bq", ["query", "--use_legacy_sql=false", "--format=json", "--max_rows=200000", sql], {
+    maxBuffer: 512 * 1024 * 1024,
+  });
+  return JSON.parse(stdout || "[]");
+}
+
+/** The headline each entity already publishes, read from the profile the site serves today. */
+async function publishedHeadlines(country, limit) {
+  const directory = path.join(ROOT, "data/municipal-expansion", country.toLowerCase());
+  const files = (await readdir(directory)).filter((name) => name.endsWith(".json")).sort();
+  // An even spread rather than the first N: the files are sorted by code, and the first few of
+  // any country tend to share a region, a size band and often a single reporting quirk.
+  const step = Math.max(1, Math.floor(files.length / limit));
+  const chosen = files.filter((_, index) => index % step === 0).slice(0, limit);
+
+  const published = new Map();
+  for (const file of chosen) {
+    const profile = JSON.parse(await readFile(path.join(directory, file), "utf8"));
+    for (const year of profile.history || []) {
+      if (!Number.isFinite(year.revenue) && !Number.isFinite(year.expenditure)) continue;
+      published.set(`${profile.code}|${year.year}`, {
+        revenue: Number.isFinite(year.revenue) ? year.revenue : null,
+        expenditure: Number.isFinite(year.expenditure) ? year.expenditure : null,
+      });
+    }
+  }
+  return { published, codes: chosen.map((name) => name.replace(/\.json$/, "")) };
+}
+
+const near = (a, b) => a !== null && b !== null && Math.abs(a - b) <= Math.max(1, Math.abs(b) * 1e-6);
+
+const results = [];
+
+for (const country of requested) {
+  const alpha2 = ALPHA2[country];
+  if (!alpha2) {
+    console.log(`${country}: no alpha-2 mapping, skipped`);
+    continue;
+  }
+
+  const { published, codes } = await publishedHeadlines(country, sampleSize);
+  if (!published.size) {
+    results.push({ country_code: country, status: "no_published_headline", detail: "the sampled profiles publish no revenue or expenditure" });
+    console.log(`${country}: the sampled profiles publish no headline to check a rule against`);
+    continue;
+  }
+
+  const ids = codes.map((code) => `"${alpha2}:${code}"`).join(",");
+  const facts = await query(
+    `SELECT public_entity_id, fiscal_year, budget_stage, budget_side, economic_item_code,`
+    + ` SUM(CAST(amount_local AS FLOAT64)) amount`
+    + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND public_entity_id IN (${ids})`
+    + ` GROUP BY 1,2,3,4,5`,
+  );
+
+  if (!facts.length) {
+    results.push({ country_code: country, status: "not_in_warehouse", detail: `no facts for ${codes.length} sampled entities` });
+    console.log(`${country}: not in the warehouse for the sampled entities`);
+    continue;
+  }
+
+  // Candidate one: a published total row, identified by (stage, code).
+  // Candidate two: the sum of every row at a stage, for sources that publish no total.
+  const stageTotals = new Map();
+  for (const fact of facts) {
+    const code = fact.public_entity_id.split(":").slice(1).join(":");
+    const stageKey = `${code}|${fact.fiscal_year}|${fact.budget_stage}|${fact.budget_side}`;
+    stageTotals.set(stageKey, (stageTotals.get(stageKey) || 0) + Number(fact.amount));
+  }
+
+  const rule = { country_code: country, sample_size: published.size };
+  for (const side of ["revenue", "expenditure"]) {
+    const scores = new Map();
+    for (const fact of facts) {
+      if (fact.budget_side !== side) continue;
+      const code = fact.public_entity_id.split(":").slice(1).join(":");
+      const target = published.get(`${code}|${fact.fiscal_year}`);
+      if (!target || target[side] === null) continue;
+      if (!near(Number(fact.amount), target[side])) continue;
+      const candidate = `${fact.budget_stage} ${fact.economic_item_code}`;
+      scores.set(candidate, (scores.get(candidate) || 0) + 1);
+    }
+    // The sum-of-all-rows alternative, scored the same way.
+    for (const [key, total] of stageTotals) {
+      const [code, year, stage, rowSide] = key.split("|");
+      if (rowSide !== side) continue;
+      const target = published.get(`${code}|${year}`);
+      if (!target || target[side] === null) continue;
+      if (!near(total, target[side])) continue;
+      const candidate = `${stage} *`;
+      scores.set(candidate, (scores.get(candidate) || 0) + 1);
+    }
+
+    const eligible = [...published.values()].filter((entry) => entry[side] !== null).length;
+    const ranked = [...scores].sort((a, b) => b[1] - a[1]);
+    const [best, hits] = ranked[0] || [null, 0];
+    if (!best) {
+      rule[side] = { status: "unreproducible", eligible };
+      continue;
+    }
+    const [stage, code] = best.split(" ");
+    rule[side] = {
+      stage,
+      code: code === "*" ? null : code,
+      aggregate: code === "*" ? "sum_of_rows" : "single_row",
+      matched: hits,
+      eligible,
+      match_rate: Number((hits / eligible).toFixed(4)),
+      runner_up: ranked[1] ? { rule: ranked[1][0], matched: ranked[1][1] } : null,
+    };
+  }
+  results.push(rule);
+
+  const line = (side) => {
+    const value = rule[side];
+    if (!value || value.status) return `${side}: ${value?.status || "none"}`;
+    return `${side} ${value.stage}/${value.code || "sum"} ${value.matched}/${value.eligible}`;
+  };
+  console.log(`${country.padEnd(4)} ${line("revenue").padEnd(46)} ${line("expenditure")}`);
+}
+
+const solid = results.filter((r) => r.revenue?.match_rate >= 0.95 && r.expenditure?.match_rate >= 0.95);
+console.log(`\n${solid.length} of ${results.length} countries reproduce both published headlines on 95% or more of the sample.`);
+for (const row of results.filter((r) => !solid.includes(r))) {
+  const rate = (side) => (row[side]?.match_rate === undefined ? row[side]?.status || "none" : `${(row[side].match_rate * 100).toFixed(0)}%`);
+  console.log(`  ${row.country_code}: ${row.status || `revenue ${rate("revenue")}, expenditure ${rate("expenditure")}`} — not yet regenerable from the warehouse alone`);
+}
+
+if (!write) {
+  console.log("\nReport only. Pass --write.");
+  process.exit(0);
+}
+
+await mkdir(path.join(ROOT, "pipeline/config"), { recursive: true });
+await writeFile(
+  path.join(ROOT, OUT),
+  `${JSON.stringify({
+    schema_version: "1.0.0",
+    generated_at: new Date().toISOString().slice(0, 10),
+    note: "Which warehouse rows are a municipality's headline revenue and expenditure, per country. "
+        + "Derived by scoring every candidate (stage, code) against the headline each profile already "
+        + "publishes, not transcribed by hand — a misread rule would move a published figure silently. "
+        + "`match_rate` is the share of the sample the rule reproduces exactly; anything short of 1.0 "
+        + "is a country whose profiles cannot yet be regenerated from the warehouse alone.",
+    sample_size: sampleSize,
+    countries: results,
+  }, null, 2)}\n`,
+  "utf8",
+);
+console.log(`\nWrote ${OUT}`);

@@ -101,6 +101,10 @@
     {
       "layer": "serving",
       "detail": "Japan is the only country whose facts the warehouse cannot supply, so data/municipal-expansion/jpn (110.9 MB, 1,741 entities) must stay until the e-Stat hierarchy is settled. Its identity is already extracted, so the other fourteen countries are no longer waiting on it."
+    },
+    {
+      "layer": "serving",
+      "detail": "Ten of the fourteen warehouse countries reproduce their published headline exactly from warehouse rows alone (pipeline/config/municipal_headline_rules.json, derived rather than transcribed). Four do not, and each for its own reason: Brazil's published headline comes from the DCA annual accounts while the warehouse holds RREO, so the two are different reports of the same year rather than a rule mismatch; Spain publishes no total row and its headline is a filtered sum the derivation does not express; Georgia publishes two years and the warehouse holds one; Denmark's profiles carry no headline at all to check against. Those four keep the fan-out until each is settled."
     }
   ]
 }

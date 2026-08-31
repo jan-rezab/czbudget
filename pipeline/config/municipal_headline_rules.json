@@ -1,0 +1,320 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-31",
+  "note": "Which warehouse rows are a municipality's headline revenue and expenditure, per country. Derived by scoring every candidate (stage, code) against the headline each profile already publishes, not transcribed by hand — a misread rule would move a published figure silently. `match_rate` is the share of the sample the rule reproduces exactly; anything short of 1.0 is a country whose profiles cannot yet be regenerated from the warehouse alone.",
+  "sample_size": 40,
+  "countries": [
+    {
+      "country_code": "BOL",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "paid *",
+          "matched": 34
+        }
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "paid *",
+          "matched": 13
+        }
+      }
+    },
+    {
+      "country_code": "BRA",
+      "sample_size": 40,
+      "revenue": {
+        "status": "unreproducible",
+        "eligible": 40
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": "TotalDespesas",
+        "aggregate": "single_row",
+        "matched": 1,
+        "eligible": 40,
+        "match_rate": 0.025,
+        "runner_up": null
+      }
+    },
+    {
+      "country_code": "CHL",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": "21",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "actual 23",
+          "matched": 40
+        }
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": "47",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      }
+    },
+    {
+      "country_code": "COL",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": "1",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "actual *",
+          "matched": 40
+        }
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": "2",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "actual *",
+          "matched": 40
+        }
+      }
+    },
+    {
+      "country_code": "CRI",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": "TOTAL",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "actual *",
+          "matched": 40
+        }
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": "TOTAL",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "actual *",
+          "matched": 40
+        }
+      }
+    },
+    {
+      "country_code": "DNK",
+      "status": "no_published_headline",
+      "detail": "the sampled profiles publish no revenue or expenditure"
+    },
+    {
+      "country_code": "ESP",
+      "sample_size": 69,
+      "revenue": {
+        "status": "unreproducible",
+        "eligible": 69
+      },
+      "expenditure": {
+        "status": "unreproducible",
+        "eligible": 69
+      }
+    },
+    {
+      "country_code": "GEO",
+      "sample_size": 80,
+      "revenue": {
+        "stage": "enacted",
+        "code": "R",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 80,
+        "match_rate": 0.5,
+        "runner_up": {
+          "rule": "actual R",
+          "matched": 40
+        }
+      },
+      "expenditure": {
+        "stage": "enacted",
+        "code": "E",
+        "aggregate": "single_row",
+        "matched": 40,
+        "eligible": 80,
+        "match_rate": 0.5,
+        "runner_up": {
+          "rule": "actual 7",
+          "matched": 40
+        }
+      }
+    },
+    {
+      "country_code": "GTM",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "paid *",
+          "matched": 39
+        }
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "paid *",
+          "matched": 37
+        }
+      }
+    },
+    {
+      "country_code": "ITA",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "paid",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      },
+      "expenditure": {
+        "stage": "paid",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      }
+    },
+    {
+      "country_code": "KOR",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      }
+    },
+    {
+      "country_code": "MEX",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      }
+    },
+    {
+      "country_code": "PER",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": {
+          "rule": "paid *",
+          "matched": 16
+        }
+      }
+    },
+    {
+      "country_code": "SLV",
+      "sample_size": 40,
+      "revenue": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      },
+      "expenditure": {
+        "stage": "actual",
+        "code": null,
+        "aggregate": "sum_of_rows",
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1,
+        "runner_up": null
+      }
+    }
+  ]
+}
