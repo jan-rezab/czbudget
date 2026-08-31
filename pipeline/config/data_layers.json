@@ -92,10 +92,6 @@
     },
     {
       "layer": "serving",
-      "detail": "Japan is the only country whose facts the warehouse cannot supply, so data/municipal-expansion/jpn (110.9 MB, 1,741 entities) must stay until the e-Stat hierarchy is settled. Its identity is already extracted, so the other fourteen countries are no longer waiting on it."
-    },
-    {
-      "layer": "serving",
       "detail": "Profiles now build from the warehouse (scripts/build-profiles-from-warehouse.mjs), and the headline they lead with was checked against every entity the site publishes, not a sample. Twelve countries agree exactly: Costa Rica 168/168, Georgia 276/276, El Salvador 518/518, Korea 486/486, Bolivia 686/686, Chile 690/690, Guatemala 680/680, Colombia 2,204/2,204, Mexico 4,760/4,760, Peru 3,782/3,782, Italy 15,792/15,792, Spain 20,978/20,978. Brazil is 11,070 of 11,114."
     },
     {
@@ -105,10 +101,6 @@
     {
       "layer": "uniform",
       "detail": "Brazil's 2024 DCA is loaded and its profiles reproduce every published headline: 11,114 of 11,114 across all 5,570 municipalities, both years. The 11,864 second-hand rows that came through the RREO loader were replaced by 12,046 read from the raw annexes, and the column heading is now kept in source_budget_item_type_code with FUNDEB deductions marked is_consolidation_item. Headline queries exclude consolidation items, without which a gross revenue and the deduction taken from it sum back together — the defect that inflated BR:1302405 by 7,265,266.90."
-    },
-    {
-      "layer": "uniform",
-      "detail": "Japan is still not loaded, but for a different reason than recorded before, and the earlier figures were measured on truncated input. The hierarchy is derivable without the e-Stat table definitions: scripts/derive-japan-hierarchy.mjs finds a parent by arithmetic — a column equal to the sum of the columns beneath it for every municipality — and collapses table 04's 69 revenue columns to 20 top-level ones, correctly recovering 地方譲与税 over its six transfer taxes and 地方交付税 over its three. What it then shows is that the cached extract is incomplete: those 20 columns come to a median 0.713 of the 歳入総額 that table 02 prints, so roughly 29% of revenue — local bonds, carryover, prefectural disbursements, miscellaneous — is in parts of 歳入内訳 that were never fetched. The earlier 2.47x was measured against the importer's output, which caps detail at 360 rows per municipality, so it mixed an over-count from the hierarchy with an under-count from truncation."
     },
     {
       "layer": "uniform",
@@ -123,12 +115,16 @@
       "detail": "Denmark's headline rule is authored rather than derived, and the serving gate now distinguishes the two. A derived rule reproduces every figure the site already publishes; an authored one has no such check, so it is allowed only where the site publishes no headline at all and switching cannot regress one. Denmark qualifies on that basis, and its justification is recorded in municipal_headline_rules.json: the Danish account plan balances by construction, so a headline keeping financing in reports every municipality as revenue exactly equal to expenditure. Excluding financing — dranst 4, 5, 6 and borrowing under function 8.55 — gives Copenhagen 67.58bn against 67.12bn, a 0.46bn surplus, and across 196 entity-years the ratio runs 0.952 to 1.075 with 148 in surplus."
     },
     {
-      "layer": "raw",
-      "detail": "Japan's expenditure tables are now read correctly, and the earlier tenfold over-count was a misreading of what they are. Tables 07-12 are expenditure by purpose and their purposes are disjoint — 議会費 and 総務費 in 07, 民生費 and 衛生費 in 08, through to 災害復旧費, 公債費 and 諸支出金 in 12. Table 13 is not a seventh purpose table: it is 歳出合計 beside the funding sources that meet it (国庫支出金, 都道府県支出金, 使用料手数料, 分担金負担金寄附金, 財産収入, 繰入金, 諸収入, 繰越金, 地方債, 一般財源等). Summing it as though it were a purpose adds the whole budget a second time. The nature rows nest the same way the columns do — 人件費 over うち職員給, 補助費等 over rows 07-11, 普通建設事業費 over 13-17 — so the top level is rows 01, 03, 04, 05, 06, 12, 18 and 21."
+      "layer": "uniform",
+      "detail": "Japan is loaded and every published headline reproduces: 3,482 of 3,482 across 1,741 municipalities. The survey's structure ties exactly — table 02 row 01 (令和6年度) carries 歳入総額 and 歳出総額; table 05 row 33 （歳入合計）equals the first for 3,063 of 3,063 municipalities and table 13 row 38 歳出合計 equals the second for 3,063 of 3,063. The revenue leaves (rows 01-25 and 29) sum to their total exactly. The earlier 2.47x and 0.50x were measured against the importer's output, which caps detail at 360 rows per municipality, so they mixed an over-count from the hierarchy with an under-count from truncation and pointed at the wrong cause."
     },
     {
       "layer": "raw",
-      "detail": "Two things still block Japan, and neither is inference. First, 表05 収入の状況_1 was never fetched — statInfId 000040375639, now cached — and its 21 revenue categories run 地方税 through 財産収入, coming to 81.9% of Sapporo's published 歳入総額. The remainder (寄附金, 繰入金, 繰越金, 諸収入, 地方債) is in a 収入の状況_2 whose file id is not adjacent: 000040375637 and 000040375640 through 000040375642 all return 404, and e-Stat's file listing is rendered client-side with no statInfId in the markup, so finding it means driving the portal's dataset list rather than guessing ids. Second, a scope difference: table 13's 歳出合計 agrees exactly with its own funding-source total for every municipality, which says the table is coherent, but both come to only 78-80% of the 歳出総額 that table 02 prints. Something in the survey's account scope differs between those two tables and it has to be identified before either can be published as the other's breakdown."
+      "detail": "Japan's expenditure leaf natures sum to 歳出合計 for 2,825 of 3,063 municipalities; the other 238 exceed it by about 0.01%. Two reconciling candidates were tested and neither explains it — subtracting 歳入振替項目 (row 39) or 受託事業費 (row 26) changes nothing. The published figures are unaffected because they come from row 38 directly, and the discrepancy is recorded rather than absorbed into a tolerance wide enough to hide a real defect."
+    },
+    {
+      "layer": "serving",
+      "detail": "Two e-Stat file ids were needed and one of them cost an hour to a typo. 表5 収入の状況_2 is statInfId 000040375640; it was probed early and appeared to 404, because the id was assembled as a 7-digit prefix plus the 6-digit tail — thirteen digits rather than twelve. The portal's file listing is rendered client-side, so enumerating a year's files means driving it in a browser: toukei=00200251, tstat=000001077755, tclass1=000001077756, tclass2=000001077757, year=20250 lists all 124 CSVs for FY2024 with their table numbers. Note the year in that URL is the publication year, not the fiscal year — year=20240 returns FY2023 with unpadded entity codes."
     }
   ]
 }

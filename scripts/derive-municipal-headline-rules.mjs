@@ -49,7 +49,7 @@ const ALPHA2 = {
 };
 
 const requested = args.includes("--all")
-  ? Object.keys(ALPHA2).filter((code) => code !== "JPN")
+  ? Object.keys(ALPHA2)
   : String(flag("--countries", "CRI")).split(",").map((value) => value.trim().toUpperCase()).filter(Boolean);
 
 async function query(sql) {
@@ -311,6 +311,25 @@ if (!write) {
 }
 
 await mkdir(path.join(ROOT, "pipeline/config"), { recursive: true });
+
+// An authored rule cannot be re-derived — there is no published figure to derive it against,
+// which is why it was authored. Rewriting the file wholesale silently drops it, and the
+// country then falls out of the serving gate with nothing to say it happened.
+let existing = { countries: [] };
+try {
+  existing = JSON.parse(await readFile(path.join(ROOT, OUT), "utf8"));
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
+const derivedCodes = new Set(results.filter((entry) => !entry.status).map((entry) => entry.country_code));
+const preserved = (existing.countries || []).filter((entry) => entry.authored === true && !derivedCodes.has(entry.country_code));
+if (preserved.length) {
+  const byCode = new Map(results.map((entry) => [entry.country_code, entry]));
+  for (const entry of preserved) byCode.set(entry.country_code, entry);
+  results.length = 0;
+  results.push(...[...byCode.values()].sort((a, b) => a.country_code.localeCompare(b.country_code)));
+  console.log(`preserved ${preserved.length} authored rule(s): ${preserved.map((e) => e.country_code).join(", ")}`);
+}
 await writeFile(
   path.join(ROOT, OUT),
   `${JSON.stringify({

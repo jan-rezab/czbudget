@@ -276,7 +276,7 @@
     {
       "country_code": "DNK",
       "authored": true,
-      "authored_basis": "Denmark publishes no headline for these profiles, so there is nothing to derive a rule against and this one is authored. Its basis is that the Danish account plan balances by construction: across all seven dranst the two sides of REGK100 agree to within rounding (Copenhagen 2025, 68,818,554 out against 68,818,541 in), so a headline that keeps financing in reports every municipality as revenue exactly equal to expenditure with a result of zero. Excluding financing — dranst 4 renter, 5 finansforskydninger, 6 afdrag på lån, and borrowing under function 8.55 — leaves gross revenue and gross expenditure differing by the year's actual result: 67.57bn against 67.13bn for Copenhagen, a 0.45bn surplus. Gross on both sides, so it reads the same way as the other countries.",
+      "authored_basis": "Denmark publishes no headline for these profiles, so there is nothing to derive against. The Danish account plan balances by construction — across all seven dranst the two sides of REGK100 agree to within rounding — so a headline keeping financing in reports every municipality as revenue exactly equal to expenditure. Excluding financing (dranst 4 renter, 5 finansforskydninger, 6 afdrag på lån, and borrowing under function 8.55) leaves gross revenue and gross expenditure differing by the year's actual result: 67.58bn against 67.12bn for Copenhagen in 2025, a 0.46bn surplus, with the ratio running 0.952 to 1.075 across 196 entity-years.",
       "sample_size": null,
       "years": {
         "2024": {
@@ -287,11 +287,11 @@
             "code_length": null,
             "aggregate": "sum_of_rows",
             "exclude_financing": true,
+            "sign": "credit",
             "matched": null,
             "eligible": null,
             "match_rate": null,
-            "runner_up": null,
-            "sign": "credit"
+            "runner_up": null
           },
           "expenditure": {
             "stage": "actual",
@@ -300,6 +300,7 @@
             "code_length": null,
             "aggregate": "sum_of_rows",
             "exclude_financing": true,
+            "sign": null,
             "matched": null,
             "eligible": null,
             "match_rate": null,
@@ -314,11 +315,11 @@
             "code_length": null,
             "aggregate": "sum_of_rows",
             "exclude_financing": true,
+            "sign": "credit",
             "matched": null,
             "eligible": null,
             "match_rate": null,
-            "runner_up": null,
-            "sign": "credit"
+            "runner_up": null
           },
           "expenditure": {
             "stage": "actual",
@@ -327,6 +328,7 @@
             "code_length": null,
             "aggregate": "sum_of_rows",
             "exclude_financing": true,
+            "sign": null,
             "matched": null,
             "eligible": null,
             "match_rate": null,
@@ -583,6 +585,48 @@
               "rule": "paid@FY *",
               "matched": 40
             }
+          }
+        }
+      },
+      "revenue": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
+      }
+    },
+    {
+      "country_code": "JPN",
+      "sample_size": 40,
+      "years": {
+        "2024": {
+          "revenue": {
+            "stage": "actual",
+            "net_of_stage": null,
+            "fiscal_period": "FY",
+            "code": "T05.33",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": null
+          },
+          "expenditure": {
+            "stage": "actual",
+            "net_of_stage": null,
+            "fiscal_period": "FY",
+            "code": "T13.38",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": null
           }
         }
       },

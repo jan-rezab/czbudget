@@ -74,7 +74,8 @@
     "build:warehouse-profiles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --out .warehouse-profiles",
     "report:japan-hierarchy": "node scripts/derive-japan-hierarchy.mjs",
     "fetch:denmark-regk100": "python3 scripts/fetch-denmark-regk100.py --fetch",
-    "report:denmark-regk100": "python3 scripts/load-municipal-facts-dnk.py --report"
+    "report:denmark-regk100": "python3 scripts/load-municipal-facts-dnk.py --report",
+    "report:japan-estat": "python3 scripts/load-municipal-facts-jpn-estat.py --report"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
