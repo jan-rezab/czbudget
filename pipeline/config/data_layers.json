@@ -140,7 +140,11 @@
     },
     {
       "layer": "serving",
-      "detail": "Poland is served from the warehouse on an authored rule: 2,486 municipalities, 4,956 entity-years, gross revenue over gross expenditure with a median ratio of 1.001 and a range of 0.67 to 1.53 — which is what a municipal budget that must balance looks like. It is authored rather than derived because data/international-municipalities.v1.json carries no revenue or expenditure for Poland, so there is no published figure to check against. Paraguay has expenditure but no revenue at all, and Britain's periods are year-qualified (FY-2026) with a financing side, so neither is covered by the same rule."
+      "detail": "Poland generates cleanly from the warehouse but is not published, and the difference matters. Its 2,486 profiles have a median revenue-to-expenditure ratio of 1.001 across 4,956 entity-years, which is the shape of a budget that must balance — but they are written to .warehouse-profiles, which is gitignored and not in the image. The build ships the hydrated fan-out, and Poland has never been in it; there is one Polish page, the country index. Counting those profiles as published briefly credited the coverage contract with 2,486 profiles that ship nowhere, which is the overstatement that contract exists to prevent. The coverage builder now measures what ships and only reads warehouse profiles when WAREHOUSE_PROFILES_SHIP says they are part of it."
+    },
+    {
+      "layer": "serving",
+      "detail": "Nothing in the deployed image is built by scripts/build-profiles-from-warehouse.mjs. The generator, its verification against 54,502 published headlines, and the fifteen rebuilt countries are all real, but .warehouse-profiles is a local artifact: cloudbuild hydrates data/municipal-expansion from GCS and merges warehouse headlines and breakdowns into it via export-municipal-headlines and export-municipal-breakdowns. Making the generator the serving path means adding it as a build step with BigQuery access — which the build already has for those two exports — and publishing its output to the serving layer. Until then the generator proves the fan-out is reproducible; it does not replace it in production."
     }
   ]
 }

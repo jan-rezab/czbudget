@@ -47769,12 +47769,12 @@
       "module_order": 10,
       "module_label_cs": "Obce · položkové rozpočty",
       "module_label_en": "Municipalities · itemized budgets",
-      "status": "loaded",
-      "source_availability": "loaded",
-      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts → per-municipality profiles built by scripts/build-profiles-from-warehouse.mjs",
-      "coverage": "2,486 of 2,486 municipal profiles are published, built from the warehouse rather than from a committed fan-out.",
-      "period": "2024–2025",
-      "scope": "Warehouse stages: actual, revised. 6,033,974 line facts for 2,486 entities. The published headline is the gross sum of each side at actual/FY, excluding financing — an authored rule rather than a derived one, because data/international-municipalities.v1.json carries no Polish revenue or expenditure to derive against. Across 4,956 entity-years the revenue-to-expenditure ratio has a median of 1.001 and a range of 0.67 to 1.53, which is the shape of a budget that must balance.",
+      "status": "not_loaded",
+      "source_availability": "source_available",
+      "artifact": "czbudget-janrezab.budget_detail.municipal_budget_line_facts (production warehouse only; no published site artifact)",
+      "coverage": "0 of 2,486 municipal profiles are published on this site; 2,486 entities are loaded in the private production warehouse only.",
+      "period": "Not published on this site (warehouse 2024–2025)",
+      "scope": "Warehouse stages: actual, revised. 6,033,974 line facts for 2,486 entities. Profiles can be generated from those facts — 2,486 of them, with a median revenue-to-expenditure ratio of 1.001 across 4,956 entity-years — but they are a local build artifact and are not part of the image, so nothing is counted as published.",
       "sources": [
         {
           "title": "Polish Ministry of Finance · local-government budget reports",
@@ -47809,7 +47809,7 @@
       ],
       "exact_extraction": "pl-mf-rb27s-2024q4 · Rb27S_2024Q4.zip · pl-mf-rb28s-2024q4 · Rb28S_2024Q4.zip · pl-mf-jst-dictionary-2024 · Slownik_JST_2024.xlsx · pl-mf-rb27s-2025q4 · Rb27S_2025Q4.zip · pl-mf-rb28s-2025q4 · Rb28S_2025Q4.zip · pl-mf-jst-dictionary-2025 · Slownik_JST_2025.xlsx",
       "transformation": "pipeline/transforms/prepare_international_municipal_data.py → poland_dbf → native functional/economic codes, local currency and budget stage retained → production BigQuery facts → per-municipality profiles generated from those facts, the entity directory and the headline rule.",
-      "limitations": "The headline rule is authored and therefore unverified against any published Polish figure; it is admitted because the site published none before, so serving it cannot regress one. Line items keep their native Polish classification codes and are not mapped to a cross-country scheme."
+      "limitations": "Itemized POL facts exist only in the production warehouse. Profiles generate cleanly but are not shipped: the build hydrates the committed fan-out, which has never contained Poland, and no Polish municipality pages exist beyond the country index."
     },
     {
       "country_code": "PRY",

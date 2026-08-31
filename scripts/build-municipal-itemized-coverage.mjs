@@ -91,12 +91,16 @@ const scopeNotes = {
 // Per-municipality expansion artifacts: a profile counts only when it carries a
 // non-empty `detail` array of native line items.
 const measureExpansion = async (code) => {
-  // Measure what is actually served. Fourteen countries are built from the warehouse and one
-  // is authored from it; the fan-out is only still read where a country has not been rebuilt.
+  // "Published" means what the build ships, and the build ships the hydrated fan-out — the
+  // warehouse-built profiles are a local artifact and are not in the image. Measuring them
+  // instead credited Poland with 2,486 published profiles when it has one page and no shipped
+  // profile at all, which is the same overstatement this contract exists to prevent. A country
+  // is measured from the warehouse only once its profiles are part of what ships.
   const slug = code.toLowerCase();
+  const shipped = `data/municipal-expansion/${slug}`;
   const warehouse = `${process.env.WAREHOUSE_PROFILE_ROOT || ".warehouse-profiles"}/${slug}`;
-  const dir = (await exists(warehouse)) ? warehouse : `data/municipal-expansion/${slug}`;
-  if (!(await exists(dir))) return null;
+  const dir = (await exists(shipped)) ? shipped : (process.env.WAREHOUSE_PROFILES_SHIP === "1" && await exists(warehouse) ? warehouse : null);
+  if (!dir || !(await exists(dir))) return null;
   const files = await listJson(dir);
   let published = 0;
   let empty = 0;
