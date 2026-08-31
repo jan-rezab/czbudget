@@ -64,6 +64,17 @@
       "committed": false,
       "recreatable": "from pipeline/transforms/build_municipal_public_site.py, which rebuilds the directory from scratch; verified byte-identical across 6,267 files. Inputs are data/municipal-snapshot.v1.json, data/benchmark.v1.json and data/large-city-history.v1.json, all committed.",
       "note": "6,254 municipalities are a verbatim fan-out of municipal-snapshot — every field reproduces from it exactly — plus the 13 Czech regions, which come from benchmark.v1.json."
+    },
+    {
+      "id": "municipal_entities",
+      "title": "Municipal entity directory",
+      "root": "repo",
+      "path": "data/registry/municipal-entities",
+      "group_by": "file",
+      "durability": "regenerate",
+      "committed": true,
+      "recreatable": "from the serving fan-out today; from the warehouse plus each national source's own name column once the snapshot generator is rewired",
+      "note": "Entity identity extracted from the fan-out: name, region, population, currency, reporting basis and page URL for 28,559 municipalities across 15 countries, 4.6 MB against the fan-out's 580 MB. This is the layer whose absence kept the fan-out alive. The warehouse holds every fact those files carry — verified for BR:1100015, where actual/TotalReceitas reproduces the published 147,350,577.63 to the cent — but it does not know that CR:SIPP-ABANGARES is Abangares. Small enough to commit, so it is committed."
     }
   ],
   "known_gaps": [
@@ -82,6 +93,14 @@
     {
       "layer": "uniform",
       "detail": "Japan is analysed but not loaded. Its side rules, stock exclusions (outstanding local-bond debt, fund balances), headcount exclusions and financing classification are settled in scripts/load-municipal-facts-jpn.py, but the main budget tables carry a parent-child hierarchy the uniform layer does not express: table 4 lists a parent tax category beside its own child with no marker, and tables 7-13 pair a 総額 total with the components it totals plus an うち (of which) column that is a subset of its neighbour. Leaf sums therefore come to 2.47x a municipality's published headline revenue and 0.50x its expenditure. The script refuses to write rather than publish that. The e-Stat table definitions state each row's parent and would turn is_summary_row from a guess into a lookup."
+    },
+    {
+      "layer": "serving",
+      "detail": "The fan-out is stale where the warehouse is corrected. For BR:1100015 only 69 of 239 fan-out detail rows survive as-is: the files predate the budget_side repair and carry a different stage vocabulary (`cash`, `execution`) than the loaded lifecycle (`enacted → revised → committed → actual → paid`). The headline reconciles exactly, so the published figures are not at risk, but the two are not interchangeable and the fan-out is the wrong one. Retiring it needs prepare-public-serving-snapshots.mjs to build profiles from the warehouse and the entity directory rather than from these files."
+    },
+    {
+      "layer": "serving",
+      "detail": "Japan is the only country whose facts the warehouse cannot supply, so data/municipal-expansion/jpn (110.9 MB, 1,741 entities) must stay until the e-Stat hierarchy is settled. Its identity is already extracted, so the other fourteen countries are no longer waiting on it."
     }
   ]
 }
