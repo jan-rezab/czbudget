@@ -31,3 +31,9 @@ data/municipal-expansion/
 # the one file not under a country subtree, and hashing it keeps verification complete.
 municipalities/*/
 cz/*/
+
+# Regenerable per-entity profiles — see pipeline/config/data_layers.json.
+# 6,267 files rebuilt by pipeline/transforms/build_municipal_public_site.py, which clears and
+# recreates the directory; verified byte-identical. Fetched at runtime by the Czech pages and
+# served by the API, so the build hydrates it and checks it against data/manifest.v1.json.
+data/entities/

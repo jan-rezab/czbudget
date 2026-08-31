@@ -62,9 +62,13 @@ async function walk(dir) {
 /** One row per group, so a country can be verified or re-fetched on its own. */
 async function groupsFor(layer, base) {
   const groups = new Map();
+  // A flat directory has no subdirectories to group by, so the whole layer is one group.
+  if (layer.group_by === "flat") {
+    return new Map([[path.basename(base), await walk(base)]]);
+  }
   if (layer.group_by === "country-file") {
     for (const file of await walk(base)) {
-      const key = path.basename(file).split("-shard-")[0].replace(/\.json$/, "").toUpperCase();
+      const key = path.basename(file).split("-shard-")[0].replace(/\.json$/, "");
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(file);
     }
@@ -77,7 +81,10 @@ async function groupsFor(layer, base) {
     return groups;
   }
   for (const entry of entries.filter((e) => e.isDirectory() && !e.name.startsWith("."))) {
-    groups.set(entry.name.toUpperCase(), await walk(path.join(base, entry.name)));
+    // Stored exactly as it appears on disk. Upper-casing it here and lower-casing it back
+    // in the hydrate script put a different string into the path digest than the manifest
+    // recorded, so every group hashed differently while its file count matched.
+    groups.set(entry.name, await walk(path.join(base, entry.name)));
   }
   return groups;
 }
@@ -129,6 +136,10 @@ for (const layer of config.layers) {
     id: layer.id,
     path: layer.path,
     root: layer.root,
+    // The hydrate script reads this back to know how to find each group on disk. Omitting it
+    // made every layer look flat-or-subdirectory, so country-file layers verified against a
+    // path that does not exist.
+    group_by: layer.group_by,
     durability: layer.durability,
     committed: layer.committed,
     file_count: files,

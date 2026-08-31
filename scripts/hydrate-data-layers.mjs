@@ -102,15 +102,17 @@ for (const layer of layers) {
   // Compare what is on disk against the manifest, group by group.
   let checked = 0;
   for (const entry of layer.entries) {
-    const groupPath = layer.group_by === "country-file" ? localBase : path.join(localBase, entry.group.toLowerCase());
     let files;
-    if (layer.group_by === "country-file") {
+    if (layer.group_by === "flat") {
+      // No subdirectories to group by: the whole layer is a single group.
+      files = await walk(localBase);
+    } else if (layer.group_by === "country-file") {
       files = (await walk(localBase)).filter((f) => {
-        const name = path.basename(f).split("-shard-")[0].replace(/\.json$/, "").toUpperCase();
+        const name = path.basename(f).split("-shard-")[0].replace(/\.json$/, "");
         return name === entry.group;
       });
     } else {
-      files = await walk(groupPath);
+      files = await walk(path.join(localBase, entry.group));
     }
     if (!files.length) {
       console.error(`  ✗ ${entry.group}: absent`);

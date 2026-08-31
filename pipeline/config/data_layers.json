@@ -53,6 +53,17 @@
       "durability": "regenerate",
       "committed": false,
       "recreatable": "from pipeline/transforms/build_czech_site.py, the single source of every page under cz/"
+    },
+    {
+      "id": "entities",
+      "title": "Per-entity machine-readable profiles",
+      "root": "repo",
+      "path": "data/entities",
+      "group_by": "flat",
+      "durability": "regenerate",
+      "committed": false,
+      "recreatable": "from pipeline/transforms/build_municipal_public_site.py, which rebuilds the directory from scratch; verified byte-identical across 6,267 files. Inputs are data/municipal-snapshot.v1.json, data/benchmark.v1.json and data/large-city-history.v1.json, all committed.",
+      "note": "6,254 municipalities are a verbatim fan-out of municipal-snapshot — every field reproduces from it exactly — plus the 13 Czech regions, which come from benchmark.v1.json."
     }
   ],
   "known_gaps": [

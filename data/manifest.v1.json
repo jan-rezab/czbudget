@@ -1,14 +1,15 @@
 {
   "schema_version": "1.0.0",
   "release_id": "2026-08-30",
-  "generated_at": "2026-08-30T17:53:29.413Z",
-  "total_bytes": 3815506836,
-  "total_file_count": 73470,
+  "generated_at": "2026-08-31T11:19:49.806Z",
+  "total_bytes": 3830317335,
+  "total_file_count": 79737,
   "layers": [
     {
       "id": "raw",
       "path": "data/source_cache/municipal-expansion",
       "root": "parent",
+      "group_by": "subdirectory",
       "durability": "object-storage",
       "committed": false,
       "file_count": 9020,
@@ -104,6 +105,7 @@
       "id": "uniform",
       "path": "outputs/municipal-expansion",
       "root": "parent",
+      "group_by": "country-file",
       "durability": "object-storage",
       "committed": false,
       "file_count": 23,
@@ -205,97 +207,98 @@
       "id": "serving",
       "path": "data/municipal-expansion",
       "root": "repo",
+      "group_by": "subdirectory",
       "durability": "regenerate",
       "committed": false,
       "file_count": 28559,
       "bytes": 608147655,
       "entries": [
         {
-          "group": "BOL",
+          "group": "bol",
           "file_count": 343,
           "bytes": 2631600,
           "sha256": "2bdee0e23a12f95e3f0d462a1611f36ae67ec62878138b2bf8ba98cf82e02814"
         },
         {
-          "group": "BRA",
+          "group": "bra",
           "file_count": 5570,
           "bytes": 284891512,
           "sha256": "20b9b8aacb7084e2cf7a318a0719cecc17d98b0089975d24542f892fcefe2023"
         },
         {
-          "group": "CHL",
+          "group": "chl",
           "file_count": 345,
           "bytes": 2636954,
           "sha256": "5aa3ad00abfd6c2cc17239c15cb3e8f46986f4665f372f4ef5eaaf4bad721370"
         },
         {
-          "group": "COL",
+          "group": "col",
           "file_count": 1102,
           "bytes": 973242,
           "sha256": "748a40ecce8040d8beb9132487c73c3b9bdeed979c3898ccf98496b66dcb60b0"
         },
         {
-          "group": "CRI",
+          "group": "cri",
           "file_count": 84,
           "bytes": 41818,
           "sha256": "2a0af6965903dc83dfcc21d92d1cddabf7f0d0bb8c9a32d13cd1ed9e0b869110"
         },
         {
-          "group": "DNK",
+          "group": "dnk",
           "file_count": 98,
           "bytes": 53591990,
           "sha256": "d4cd60fee18e83e5a4262938b0bf2ab5107b1205be85a1f98b9ae85a8190cb34"
         },
         {
-          "group": "ESP",
+          "group": "esp",
           "file_count": 6198,
           "bytes": 111393671,
           "sha256": "9c881b25ffe45993eafa61655ea23f3d031a8696ad64a9e7b38fd9bcd4c44373"
         },
         {
-          "group": "GEO",
+          "group": "geo",
           "file_count": 69,
           "bytes": 581880,
           "sha256": "81e44ac9a2635abbbb71ab0f245c31bc5334fa2ae7851578d648e5914d0cd159"
         },
         {
-          "group": "GTM",
+          "group": "gtm",
           "file_count": 340,
           "bytes": 2498702,
           "sha256": "4e49c824cf706ad3ce120f886bd6134dd0c9e65309341df4d0decb66ab1574bd"
         },
         {
-          "group": "ITA",
+          "group": "ita",
           "file_count": 7896,
           "bytes": 12871444,
           "sha256": "8db764ed67cb8569c0dea063df050ea39eb95258702248899495bfbd23897506"
         },
         {
-          "group": "JPN",
+          "group": "jpn",
           "file_count": 1741,
           "bytes": 116305653,
           "sha256": "1ead9d47ddf76b3418b76c45295d600d9bc17c709e46110b15ce5ba7b13986b4"
         },
         {
-          "group": "KOR",
+          "group": "kor",
           "file_count": 243,
           "bytes": 297848,
           "sha256": "87563130b0f2bb6521fcfadf8cb94bf5ba34ca55ce75c592193f60d7b9c490f5"
         },
         {
-          "group": "MEX",
+          "group": "mex",
           "file_count": 2380,
           "bytes": 4245847,
           "sha256": "d742c95c3bfe3b509aa43d9e21c7dddbdc73632ed0964f5fe893285c1cb1c946"
         },
         {
-          "group": "PER",
+          "group": "per",
           "file_count": 1891,
           "bytes": 14027146,
           "sha256": "d660d68f333ffa06ad58aab2f07a6812a996369a36463db47333e097834d4841"
         },
         {
-          "group": "SLV",
+          "group": "slv",
           "file_count": 259,
           "bytes": 1158348,
           "sha256": "3bc7904a864dd13f5971cea8f0e12cfea4680cc2a887ce1ffde5b8ee92482a68"
@@ -306,157 +309,158 @@
       "id": "pages",
       "path": "municipalities",
       "root": "repo",
+      "group_by": "subdirectory",
       "durability": "regenerate",
       "committed": false,
       "file_count": 29596,
-      "bytes": 411334353,
+      "bytes": 411511778,
       "entries": [
         {
-          "group": "BOLIVIA",
+          "group": "bolivia",
           "file_count": 344,
-          "bytes": 4421291,
-          "sha256": "48041d0b2e1e927d1c2a7312a4d65037c2efec6a8a0d3143f98fef11c68ad5ed"
+          "bytes": 4423349,
+          "sha256": "18fbb3273292f2c6aecb08faad02f960ffc17d668b73613ddb34b85dedf46c07"
         },
         {
-          "group": "BRAZIL",
+          "group": "brazil",
           "file_count": 5571,
-          "bytes": 91060452,
-          "sha256": "944e4f22ae97083318fe75e939279fc3a167730b95701b7a9c7059204944663f"
+          "bytes": 91093872,
+          "sha256": "faf0dfe5719f1b058a9adad091a9dd2ab5a688ed88d3defec3128044486f4f93"
         },
         {
-          "group": "CHILE",
+          "group": "chile",
           "file_count": 346,
-          "bytes": 5658078,
-          "sha256": "101c8c128e6d3f18afe9a5e0c13699c594b0e2a66efc8d502e897c67415eb0b0"
+          "bytes": 5660148,
+          "sha256": "f3709f363a73bd3189806987fe451116f0041e825bcdff61f646383a5c5bf5b5"
         },
         {
-          "group": "COLOMBIA",
+          "group": "colombia",
           "file_count": 1103,
-          "bytes": 10659335,
-          "sha256": "a2341a914b5afe18430ee8e39de63520404afd38789f5fa5d55066c942e11a07"
+          "bytes": 10665947,
+          "sha256": "01a57eef232950935c39828c68c4460820d33a73d0b5b54d62e57a7b5413a5c3"
         },
         {
-          "group": "COSTA-RICA",
+          "group": "costa-rica",
           "file_count": 85,
-          "bytes": 788555,
-          "sha256": "c9442e9fa91682bac0f7c3336b15d6b97b1715923b590d37baacdf8fd88cc37d"
+          "bytes": 789059,
+          "sha256": "0eb6aa3b30e0d2aa357bd78ecf7b8aae2a4480f05e5187fc54985e9f3b092cb4"
         },
         {
-          "group": "CZECHIA",
+          "group": "czechia",
           "file_count": 1,
           "bytes": 10139,
           "sha256": "84210c0399721d104d7adc6aff2e84b52802e685920f855a63da86b649d63e18"
         },
         {
-          "group": "DENMARK",
+          "group": "denmark",
           "file_count": 99,
-          "bytes": 1829788,
-          "sha256": "33022791f93fb2d69561e7719d9e657cf7024fadb806c025a851cc05f635bddf"
+          "bytes": 1830376,
+          "sha256": "65aba9a3e2f552de16b248df20c53a5baee383e1516721134165d7f811ff333f"
         },
         {
-          "group": "EL-SALVADOR",
+          "group": "el-salvador",
           "file_count": 260,
-          "bytes": 3106228,
-          "sha256": "ac2b1e40ed086e76bd6120e9182cb018d55d76a2f217b4456779f6ab8bedc515"
+          "bytes": 3107782,
+          "sha256": "b915951db464a4f88e3b5b75ac029013e32fd5ee922cfbc89e54beca045eef66"
         },
         {
-          "group": "ENGLAND",
+          "group": "england",
           "file_count": 1,
           "bytes": 5590,
           "sha256": "8d810ec2dc05e0f180be52f0b50ccfbc0db801c9b2883605bd4e6c7a7f6fea6d"
         },
         {
-          "group": "FINLAND",
+          "group": "finland",
           "file_count": 311,
-          "bytes": 5299255,
-          "sha256": "a7eacd7f6be0a29433cdf0bb29f9f79b2b3400ba043190ec5047fa448b112bf2"
+          "bytes": 5301115,
+          "sha256": "b5005fe92ff9ccc2d3f09082f91dca89c4bdf3e3ad29cf468bc1b4219c470a93"
         },
         {
-          "group": "FRANCE",
+          "group": "france",
           "file_count": 2,
-          "bytes": 10138,
-          "sha256": "f576c864f47507ddefb07263b18c43aeb2c07aebf71d192b1376db6d29cf00d5"
+          "bytes": 10143,
+          "sha256": "151748a1550d9554e79c569c31983f5dd2ba52cd421b0f0edfd0c852c5c679f0"
         },
         {
-          "group": "GEORGIA",
+          "group": "georgia",
           "file_count": 70,
-          "bytes": 711686,
-          "sha256": "5da23b619e2b8514a37c7ee5cacfa4712bd9c8f92fb833e217cbb0fb77778538"
+          "bytes": 712100,
+          "sha256": "86da29316a9f86cb9fb9271bff80253cddb213f09a1dd62a6e0d0dde5936f509"
         },
         {
-          "group": "GERMANY",
+          "group": "germany",
           "file_count": 2,
-          "bytes": 10187,
-          "sha256": "71f51dd949bf3f16bb47463bc0e1075a6824d00d6501d672ad2feaf3b4ee51d5"
+          "bytes": 10193,
+          "sha256": "124f46f56b69a922f7def66c1fc4aedc1be98a8e2a077e4b60052c01d7e7f609"
         },
         {
-          "group": "GUATEMALA",
+          "group": "guatemala",
           "file_count": 341,
-          "bytes": 4192186,
-          "sha256": "7a99467f2dc88675736631048ec29d5862c4290f088b7cb51d811d0f93d768ff"
+          "bytes": 4194226,
+          "sha256": "173c0bc8176106ba518f7c450c69893e669325da1d353e4654ee461fe249ab0b"
         },
         {
-          "group": "ITALY",
+          "group": "italy",
           "file_count": 7897,
-          "bytes": 87783905,
-          "sha256": "0d791f9894df8e707ecf9b2330e3eff8872cf41f9d3d52ddc35f653cf07f1e8b"
+          "bytes": 87831281,
+          "sha256": "d1e5ee62ca902bfcbd3dad6846bf1d559d480fcb235b985508d59d0a63993edc"
         },
         {
-          "group": "JAPAN",
+          "group": "japan",
           "file_count": 1742,
-          "bytes": 29798802,
-          "sha256": "facbac55e7a010e10a38ecacd28918afec75502823cf3fa1ef55edb11df951f0"
+          "bytes": 29809248,
+          "sha256": "211f5b3d304490b805bf8f676718114708f6b1333b63ecfc9039422bd4ef6d6e"
         },
         {
-          "group": "MEXICO",
+          "group": "mexico",
           "file_count": 2381,
-          "bytes": 28884957,
-          "sha256": "542fc41989d4c631736aa44e60cdc7b6dbd2136f34279065a4a2cb1cb9a60066"
+          "bytes": 28899237,
+          "sha256": "f6d6422770785b185d7cab364c4b19f9ce27e3e23bf3e8b7932bac4fc4af6378"
         },
         {
-          "group": "NETHERLANDS",
+          "group": "netherlands",
           "file_count": 343,
-          "bytes": 5485714,
-          "sha256": "2f7e55eff555bde8326b761316b70f0e8c2cadf4c275d4d67d1b09502520c7a4"
+          "bytes": 5487766,
+          "sha256": "962b6adcf360e5da04f883d532a0ede9f8614ed9b9178f36e58c3f054e59ef2f"
         },
         {
-          "group": "NORWAY",
+          "group": "norway",
           "file_count": 359,
-          "bytes": 6479244,
-          "sha256": "f211f5d02412a3147105262a016fb08f2d001046a87cae783a7bb2d50238e856"
+          "bytes": 6481392,
+          "sha256": "e9c55cd4b9d6de1ea19af01e9f484f48e6fd5ce07682526a50115d9c33a83a1b"
         },
         {
-          "group": "PERU",
+          "group": "peru",
           "file_count": 1892,
-          "bytes": 27214277,
-          "sha256": "253b9e84afd602cbb911b921dd7d22dfb94da339a863afef5c1190a54f9e6e54"
+          "bytes": 27225623,
+          "sha256": "6d0c7834baa293431e5141acce98e9a68f522faa383d3250debb5c1079b28a57"
         },
         {
-          "group": "POLAND",
+          "group": "poland",
           "file_count": 1,
           "bytes": 5574,
           "sha256": "d18f0690e17d40f9e24b7100497df0e1325a4a447d8489524cbcfd2944429660"
         },
         {
-          "group": "SOUTH-KOREA",
+          "group": "south-korea",
           "file_count": 244,
-          "bytes": 2640700,
-          "sha256": "88785d0f225c6efbdd6a9c3b6319f7227cb74a32d006634955fd299f8ecc2df2"
+          "bytes": 2642158,
+          "sha256": "c4d264510f3f2621298919054f43e1723518a627241bfcb077f6b524943089c4"
         },
         {
-          "group": "SPAIN",
+          "group": "spain",
           "file_count": 6199,
-          "bytes": 95267077,
-          "sha256": "d9b11110317c5f0887e99f0ca9c240da5b9577c3689383cf2cdff0210f623f88"
+          "bytes": 95304265,
+          "sha256": "c25ae430c3c7028963b16f729e65b1e363ddb8c793c4039cc589887130f95123"
         },
         {
-          "group": "SWEDEN",
+          "group": "sweden",
           "file_count": 1,
           "bytes": 5590,
           "sha256": "131395bf535dff4fa4702eaa33e88f047f54ad887ab9a7d19fe0e074177fef2c"
         },
         {
-          "group": "UKRAINE",
+          "group": "ukraine",
           "file_count": 1,
           "bytes": 5605,
           "sha256": "b1ff442700fbce824ffe19d6bd2f746fcfa69b18114ce75108234606017cd6b2"
@@ -467,28 +471,47 @@
       "id": "pages_cz",
       "path": "cz",
       "root": "repo",
+      "group_by": "subdirectory",
       "durability": "regenerate",
       "committed": false,
       "file_count": 6272,
-      "bytes": 55220359,
+      "bytes": 55150666,
       "entries": [
         {
-          "group": "KRAJE",
+          "group": "kraje",
           "file_count": 16,
           "bytes": 201252,
           "sha256": "97e099975e4518c4c1102a6c798c00caa4af7436ad157948fc43e08045893feb"
         },
         {
-          "group": "MESTA",
+          "group": "mesta",
           "file_count": 1,
-          "bytes": 19804,
-          "sha256": "378b2766d5d993b70dd48655ceaa0d0caa7cb8ae294319253827efe0762286ed"
+          "bytes": 19365,
+          "sha256": "580c21971fca6c3d261fbdc092bdb352669d09b21e191de671d75db7368623fa"
         },
         {
-          "group": "MUNICIPALITIES",
+          "group": "municipalities",
           "file_count": 6255,
-          "bytes": 54999303,
-          "sha256": "00b8551fcd60ffcac661dbd75595964d5f1e792345813018907d6f313cb42f58"
+          "bytes": 54930049,
+          "sha256": "dfae36fa9aa30c6897a1e9b6e86ee312b97f0ac1251fd9aacc1baaa48e4af965"
+        }
+      ]
+    },
+    {
+      "id": "entities",
+      "path": "data/entities",
+      "root": "repo",
+      "group_by": "flat",
+      "durability": "regenerate",
+      "committed": false,
+      "file_count": 6267,
+      "bytes": 14702767,
+      "entries": [
+        {
+          "group": "entities",
+          "file_count": 6267,
+          "bytes": 14702767,
+          "sha256": "49bc27fc436ed356fc26379a5994afbb76e5240e638bb84a37a4ed2ec9b84bfb"
         }
       ]
     }
@@ -501,6 +524,14 @@
     {
       "layer": "pages",
       "detail": "The committed pages are stale relative to their template: regenerating applies the copy-voice rewrite they never received, and a sort-order and numeric-type normalisation in international-municipalities.v1.json. Refreshing that baseline is a separate reviewable change from un-committing, and is deliberately not bundled here."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Brazil's extractor mislabels budget_side on 454,916 rows. 101 revenue codes — ReceitaTributaria, Impostos, Taxas, TransferenciasCorrentes among them — arrive marked `expenditure` across all 5,570 municipalities, and none ever arrives marked `revenue`. The RREO column heading is authoritative (revenue uses PREVISÃO / No Bimestre / Até o Bimestre; expenditure uses DOTAÇÃO / DESPESAS), so the warehouse loader corrects from it and flags each corrected row side_corrected_from_source_column. The uniform layer and the committed per-municipality files still carry the defect, so the live site shows it until the extractor is fixed upstream or the fan-out is regenerated from a corrected view. Detectable only because Brazil publishes column labels; the other countries carry none, though their revenue-to-expenditure balances are all plausible."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Japan is analysed but not loaded. Its side rules, stock exclusions (outstanding local-bond debt, fund balances), headcount exclusions and financing classification are settled in scripts/load-municipal-facts-jpn.py, but the main budget tables carry a parent-child hierarchy the uniform layer does not express: table 4 lists a parent tax category beside its own child with no marker, and tables 7-13 pair a 総額 total with the components it totals plus an うち (of which) column that is a subset of its neighbour. Leaf sums therefore come to 2.47x a municipality's published headline revenue and 0.50x its expenditure. The script refuses to write rather than publish that. The e-Stat table definitions state each row's parent and would turn is_summary_row from a guess into a lookup."
     }
   ]
 }

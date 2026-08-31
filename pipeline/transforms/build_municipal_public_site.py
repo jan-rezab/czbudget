@@ -170,14 +170,22 @@ def build_sitemap(data: dict, benchmark: dict) -> None:
             paths.append(f"/cz/kraje/{entity['seo']['slug']}/")
     sitemap_path = WEB / "sitemap.xml"
     existing = sitemap_path.read_text(encoding="utf-8") if sitemap_path.exists() else ""
+    # <lastmod> is optional in a sitemap and most of this one omits it: the international
+    # municipality entries carry <url><loc>…</loc></url> alone. A pattern that required
+    # <lastmod> matched 6,490 of 36,077 URLs and silently dropped the other 29,587, so this
+    # build step used to delete 82% of the sitemap every time it ran.
     preserved = [
-        (url, modified)
-        for url, modified in re.findall(r"<url><loc>([^<]+)</loc><lastmod>([^<]+)</lastmod></url>", existing)
+        (url, modified or None)
+        for url, modified in re.findall(r"<url><loc>([^<]+)</loc>(?:<lastmod>([^<]+)</lastmod>)?</url>", existing)
         if not url.startswith(f"{PUBLIC_ORIGIN}/cz/obce/") and not url.startswith(f"{PUBLIC_ORIGIN}/cz/municipalities/")
     ]
     lastmod = data.get("generated_at", "")[:10]
     entries = preserved + [(PUBLIC_ORIGIN + path, lastmod) for path in dict.fromkeys(paths)]
-    urls = "\n".join(f"  <url><loc>{esc(url)}</loc><lastmod>{modified}</lastmod></url>" for url, modified in dict(entries).items())
+    urls = "\n".join(
+        f"  <url><loc>{esc(url)}</loc><lastmod>{modified}</lastmod></url>" if modified
+        else f"  <url><loc>{esc(url)}</loc></url>"
+        for url, modified in dict(entries).items()
+    )
     sitemap_path.write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}\n</urlset>\n', encoding="utf-8")
 
 

@@ -22,6 +22,7 @@ steps:
         gcloud storage rsync -r "$$BASE/serving/municipal-expansion" data/municipal-expansion
         gcloud storage rsync -r "$$BASE/pages/municipalities"        municipalities
         gcloud storage rsync -r "$$BASE/pages/cz"                    cz
+        gcloud storage rsync -r "$$BASE/entities/entities"            data/entities
 
   - id: verify-data-layers
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
@@ -32,6 +33,7 @@ steps:
         node scripts/hydrate-data-layers.mjs --layer serving  --verify
         node scripts/hydrate-data-layers.mjs --layer pages    --verify
         node scripts/hydrate-data-layers.mjs --layer pages_cz --verify
+        node scripts/hydrate-data-layers.mjs --layer entities --verify
 
   - id: export-municipal-headlines
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
