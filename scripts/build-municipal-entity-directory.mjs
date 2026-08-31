@@ -125,18 +125,87 @@ for (const dir of countries) {
   summary.push({ country: ISO3(dir), entities: rows.length, sourceBytes, outBytes: Buffer.byteLength(body), body });
 }
 
+/**
+ * A second source of identity. The fan-out covers the fifteen expansion countries; the
+ * international directory covers eight more that already have facts in the warehouse but never
+ * had a directory built — France, Czechia, Poland, Ukraine, Britain, Sweden, and the United
+ * States and Germany whose facts are still thin. Same extraction, different origin: identity
+ * only, no amounts, because the amounts are in the warehouse.
+ */
+async function fromInternationalDirectory(alreadyCovered) {
+  const file = path.join(ROOT, "data/international-municipalities.v1.json");
+  let payload;
+  try {
+    payload = JSON.parse(await readFile(file, "utf8"));
+  } catch (error) {
+    if (error.code === "ENOENT") return [];
+    throw error;
+  }
+  const byCountry = new Map();
+  for (const entity of payload.entities || []) {
+    const code = String(entity.country || "").toUpperCase();
+    if (!code || alreadyCovered.has(code)) continue;
+    if (!byCountry.has(code)) byCountry.set(code, []);
+    byCountry.get(code).push(entity);
+  }
+
+  const built = [];
+  for (const [country, entities] of [...byCountry].sort()) {
+    const currency = mode(entities.map((e) => e.currency).filter(Boolean));
+    const years = [...new Set(entities.flatMap((e) => e.years || []))].sort((a, b) => a - b);
+    const rows = entities.map((entity) => {
+      const row = { code: String(entity.code), name: entity.name };
+      if (entity.url) row.url = entity.url;
+      if (entity.region) row.region = entity.region;
+      if (Number.isFinite(entity.population)) row.population = entity.population;
+      if (entity.currency && entity.currency !== currency) row.currency = entity.currency;
+      return row;
+    }).sort((a, b) => String(a.code).localeCompare(String(b.code)));
+
+    const body = `${JSON.stringify({
+      schema_version: "1.0.0",
+      registry: "municipal-entities",
+      country_code: country,
+      generated_at: new Date().toISOString().slice(0, 10),
+      note: "Entity identity only, extracted from data/international-municipalities.v1.json. "
+          + "Budget facts for these entities live in the warehouse; nothing here restates an amount.",
+      currency_code: currency,
+      reporting_basis: null,
+      years,
+      entity_count: rows.length,
+      entities: rows,
+    }, null, 2)}\n`;
+    built.push({ country, entities: rows.length, sourceBytes: 0, outBytes: Buffer.byteLength(body), body });
+  }
+  return built;
+}
+
 const mb = (bytes) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 const kb = (bytes) => `${(bytes / 1024).toFixed(0)} KB`;
+
+const extra = await fromInternationalDirectory(new Set(summary.map((row) => row.country)));
+for (const row of extra) {
+  totalEntities += row.entities;
+  totalOutBytes += row.outBytes;
+  summary.push(row);
+}
+if (extra.length) {
+  console.log(`\nfrom the international directory (${extra.length} countries with warehouse facts but no directory):`);
+  for (const row of extra) console.log(`  ${row.country}  ${row.entities.toLocaleString().padStart(7)} entities  ${kb(row.outBytes).padStart(8)}`);
+  console.log();
+}
 
 console.log(`country  entities   fan-out      identity   ratio`);
 for (const row of summary) {
   const ratio = (row.sourceBytes / row.outBytes).toFixed(0);
   console.log(`${row.country}      ${String(row.entities).padStart(6)}   ${mb(row.sourceBytes).padStart(9)}   ${kb(row.outBytes).padStart(8)}   ${ratio}×`);
 }
-console.log(`\n${totalEntities} entities across ${summary.length} countries`);
-console.log(`fan-out:  ${mb(totalSourceBytes)}`);
-console.log(`identity: ${mb(totalOutBytes)}  (${(totalSourceBytes / totalOutBytes).toFixed(0)}× smaller)`);
-console.log("\nThe difference is the fact table, which the warehouse already holds.");
+const fanoutRows = summary.filter((row) => row.sourceBytes > 0);
+const fanoutOut = fanoutRows.reduce((sum, row) => sum + row.outBytes, 0);
+console.log(`\n${totalEntities.toLocaleString()} entities across ${summary.length} countries, ${mb(totalOutBytes)} of identity`);
+console.log(`  from the fan-out:   ${fanoutRows.length} countries, ${mb(totalSourceBytes)} in, ${mb(fanoutOut)} out (${(totalSourceBytes / fanoutOut).toFixed(0)}x smaller)`);
+console.log(`  from the directory: ${summary.length - fanoutRows.length} countries, ${mb(totalOutBytes - fanoutOut)} out`);
+console.log("\nWhat the fan-out carried and this does not is the fact table, which the warehouse holds.");
 
 if (!write) {
   console.log("\nReport only. Pass --write.");

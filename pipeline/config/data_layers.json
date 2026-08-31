@@ -74,7 +74,7 @@
       "durability": "regenerate",
       "committed": true,
       "recreatable": "from the serving fan-out today; from the warehouse plus each national source's own name column once the snapshot generator is rewired",
-      "note": "Entity identity extracted from the fan-out: name, region, population, currency, reporting basis and page URL for 28,559 municipalities across 15 countries, 4.6 MB against the fan-out's 580 MB. This is the layer whose absence kept the fan-out alive. The warehouse holds every fact those files carry — verified for BR:1100015, where actual/TotalReceitas reproduces the published 147,350,577.63 to the cent — but it does not know that CR:SIPP-ABANGARES is Abangares. Small enough to commit, so it is committed."
+      "note": "Entity identity for 105,416 municipalities across 26 countries, 13 MB. Built from two sources: the fan-out for the fifteen expansion countries (580 MB in, 4.6 MB out), and data/international-municipalities.v1.json for eleven more, eight of which already had facts in the warehouse but no directory. Identity only — name, region, population, currency and page URL. No amounts, because the amounts are in the warehouse."
     }
   ],
   "known_gaps": [
@@ -125,6 +125,14 @@
     {
       "layer": "serving",
       "detail": "Two e-Stat file ids were needed and one of them cost an hour to a typo. 表5 収入の状況_2 is statInfId 000040375640; it was probed early and appeared to 404, because the id was assembled as a 7-digit prefix plus the 6-digit tail — thirteen digits rather than twelve. The portal's file listing is rendered client-side, so enumerating a year's files means driving it in a browser: toukei=00200251, tstat=000001077755, tclass1=000001077756, tclass2=000001077757, year=20250 lists all 124 CSVs for FY2024 with their table numbers. Note the year in that URL is the publication year, not the fiscal year — year=20240 returns FY2023 with unpadded entity codes."
+    },
+    {
+      "layer": "serving",
+      "detail": "Coverage was being judged by which countries had an entity directory rather than by what the warehouse holds, and that understated it badly. The warehouse carries 25 countries and 76,048 entities: France 35,042, Italy 7,896, Czechia 6,254, Spain 6,198, Brazil 5,557, Japan 2,982, Poland 2,486, Mexico 2,380, Peru 1,891, Ukraine 1,467 and the rest. France, Czechia, Poland, Ukraine, Britain and Sweden were never missing — they lacked directories, not facts, and they now have them. What is genuinely thin is the United States (4 entities loaded against 19,401 in the directory) and Germany (11 against 10,756), plus Norway, the Netherlands and Finland with none."
+    },
+    {
+      "layer": "serving",
+      "detail": "The eleven countries added from the international directory have identity but no headline rule, so they are not yet served from the warehouse. Deriving one needs a published baseline to check against, and for these countries that baseline is data/international-municipalities.v1.json rather than the fan-out the derivation currently reads. That is the next step for them: point the derivation at the second baseline, then the same gate admits them on the same evidence as the other fifteen."
     }
   ]
 }
