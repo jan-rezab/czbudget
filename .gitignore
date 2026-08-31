@@ -37,3 +37,9 @@ cz/*/
 # recreates the directory; verified byte-identical. Fetched at runtime by the Czech pages and
 # served by the API, so the build hydrates it and checks it against data/manifest.v1.json.
 data/entities/
+
+# Public serving snapshots — build output, not source. Each release writes a timestamped
+# bundle of profile objects under .public-serving/<stamp>/, and four of them already come to
+# 3.3 GB. They are produced by scripts/prepare-public-serving-snapshots.mjs from layers that
+# are themselves tracked or hydrated, so nothing here is the only copy of anything.
+.public-serving/
