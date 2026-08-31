@@ -72,7 +72,9 @@
     "fetch:brazil-dca": "python3 scripts/fetch-brazil-dca-2024.py --fetch",
     "report:brazil-dca": "python3 scripts/load-municipal-facts-bra-dca.py --report",
     "build:warehouse-profiles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --out .warehouse-profiles",
-    "report:japan-hierarchy": "node scripts/derive-japan-hierarchy.mjs"
+    "report:japan-hierarchy": "node scripts/derive-japan-hierarchy.mjs",
+    "fetch:denmark-regk100": "python3 scripts/fetch-denmark-regk100.py --fetch",
+    "report:denmark-regk100": "python3 scripts/load-municipal-facts-dnk.py --report"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
