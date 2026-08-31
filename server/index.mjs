@@ -4,7 +4,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { AuthError, handleAuth, requestToken, verifyIdToken } from "./auth.mjs";
-import { DataError, apiIndex, capitalCity, countryModule, countryProfile, czechMunicipalityBudget, czechMunicipalityHistory, datasetInfo, listCapitalCities, listCountries, listDatasets, listMunicipalities, listPublicEntities, municipality, publicEntity, publicEntityAggregates } from "./data-store.mjs";
+import { DataError, apiIndex, capitalCity, countryModule, countryProfile, czechMunicipalityBudget, czechMunicipalityHistory, datasetIds, datasetInfo, datasetPayload, listCapitalCities, listCountries, listDatasets, listMunicipalities, listPublicEntities, municipality, publicEntity, publicEntityAggregates } from "./data-store.mjs";
+import { exportDataset } from "./bulk-export.mjs";
 import { openapi } from "./openapi.mjs";
 import { FixedWindowRateLimiter } from "./rate-limit.mjs";
 import { FranceLinesError, FranceMunicipalLinesStore } from "./france-municipal-lines.mjs";
@@ -202,6 +203,58 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/public-entities/aggregates") return sendJSON(response, 200, await publicEntityAggregates(url.searchParams));
   if (pathname === "/api/v1/public-entities") return sendJSON(response, 200, await listPublicEntities(url.searchParams));
   if ((match = pathname.match(/^\/api\/v1\/public-entities\/([^/]+)\/(.+)$/))) return sendJSON(response, 200, { data: await publicEntity(match[1], decodeURIComponent(match[2])) });
+
+  // A3b — bulk. A reader wanting the whole series should not have to paginate an endpoint to
+  // rebuild a file that already exists.
+  if (pathname === "/api/v1/bulk") {
+    const datasets = [];
+    for (const id of datasetIds()) {
+      try {
+        const { path: source, payload } = await datasetPayload(id);
+        const exported = exportDataset(payload);
+        datasets.push({
+          id,
+          source_artifact: source,
+          csv: `/api/v1/bulk/${id}.csv`,
+          rows: exported.rows,
+          columns: exported.columns,
+          sha256: exported.sha256,
+          vintage: exported.vintage,
+          schema_version: exported.schema_version,
+        });
+      } catch {
+        // A dataset the registry names but the tree does not carry is reported as absent
+        // rather than silently omitted, so the manifest and the registry cannot disagree.
+        datasets.push({ id, source_artifact: null, csv: null, available: false });
+      }
+    }
+    return sendJSON(response, 200, {
+      schema_version: "1.0.0",
+      note: "One CSV per published dataset. sha256 is of the exact bytes served, so a "
+          + "downloaded file can be matched to the release that produced it. vintage is the "
+          + "source artifact's publication date, not the moment the CSV was rendered.",
+      dataset_count: datasets.length,
+      datasets,
+    }, { "cache-control": "public, max-age=300" });
+  }
+
+  if ((match = pathname.match(/^\/api\/v1\/bulk\/([A-Za-z0-9-]+)\.csv$/))) {
+    const { payload } = await datasetPayload(match[1]);
+    const exported = exportDataset(payload);
+    const body = Buffer.from(exported.body, "utf8");
+    response.writeHead(200, {
+      "content-type": "text/csv; charset=utf-8",
+      "content-length": body.length,
+      "content-disposition": `attachment; filename="${match[1]}.csv"`,
+      "cache-control": "public, max-age=300",
+      "x-content-type-options": "nosniff",
+      ETag: `"${exported.sha256.slice(0, 32)}"`,
+      "x-dataset-vintage": exported.vintage || "",
+      "x-dataset-rows": String(exported.rows),
+    });
+    response.end(request.method === "HEAD" ? undefined : body);
+    return true;
+  }
 
   throw new DataError(404, "endpoint_not_found", "API endpoint does not exist.");
 }

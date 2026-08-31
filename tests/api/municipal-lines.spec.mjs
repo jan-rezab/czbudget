@@ -202,7 +202,7 @@ test("every configured country's code pattern accepts its real entity codes", as
   const REAL_CODES = {
     BOL: "3101", BRA: "5218300", CHL: "02101", COL: "210205002", CRI: "SIPP-ABANGARES",
     ESP: "44001AA000", FRA: "55001", GEO: "MOF-033", GTM: "12101612", ITA: "000105310",
-    KOR: "4213000", MEX: "01001", PER: "300023", SLV: "8301",
+    KOR: "4213000", MEX: "01001", PER: "300023", SLV: "8301", DNK: "306",
   };
   const store = storeReturning([]);
   for (const [code, entity] of Object.entries(REAL_CODES)) {

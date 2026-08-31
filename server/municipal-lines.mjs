@@ -201,6 +201,20 @@ export const COUNTRIES = {
       "Salvadoran fiscal transparency portal, 2023 municipal budgets. Reported in US dollars, the " +
       "country’s legal tender.",
   },
+  DNK: {
+    prefix: "DK",
+    currency: "DKK",
+    codePattern: /^\d{3}$/,
+    codeHint: "Expected a three-digit Danish municipality code.",
+    scopes: ["standalone_municipality"],
+    years: [2024, 2025],
+    sourceUrl: "https://www.statbank.dk/BUDK100",
+    methodology:
+      "Statistics Denmark StatBank: BUDK100 adopted budgets and REGK100 final accounts at the " +
+      "authorised functional and economic detail, for all 98 municipalities. Denmark is the one " +
+      "country loaded from a national statistics office rather than from a ministry filing, so its " +
+      "classification is the authorised account structure rather than a budget-document layout.",
+  },
   BRA: {
     prefix: "BR",
     currency: "BRL",

@@ -152,6 +152,17 @@ export async function listDatasets() {
   return results;
 }
 
+/** The dataset registry, for the bulk export to enumerate without duplicating it. */
+export function datasetIds() {
+  return Object.keys(DATASETS);
+}
+
+export async function datasetPayload(id) {
+  const relativePath = DATASETS[id];
+  if (!relativePath) throw new DataError(404, "dataset_not_found", "Dataset is not available.");
+  return { path: relativePath, payload: await readJSON(relativePath) };
+}
+
 export async function datasetInfo(id) {
   const relativePath = DATASETS[id];
   if (!relativePath) throw new DataError(404, "dataset_not_found", "Dataset is not available.");
