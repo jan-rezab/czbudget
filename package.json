@@ -68,7 +68,9 @@
     "build:municipal-entities": "node scripts/build-municipal-entity-directory.mjs --write",
     "report:municipal-entities": "node scripts/build-municipal-entity-directory.mjs",
     "report:headline-rules": "node scripts/derive-municipal-headline-rules.mjs --all",
-    "report:warehouse-profiles": "node scripts/build-profiles-from-warehouse.mjs --country CRI --verify"
+    "report:warehouse-profiles": "node scripts/build-profiles-from-warehouse.mjs --country CRI --verify",
+    "fetch:brazil-dca": "python3 scripts/fetch-brazil-dca-2024.py --fetch",
+    "report:brazil-dca": "python3 scripts/load-municipal-facts-bra-dca.py --report"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

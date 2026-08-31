@@ -43,3 +43,7 @@ data/entities/
 # 3.3 GB. They are produced by scripts/prepare-public-serving-snapshots.mjs from layers that
 # are themselves tracked or hydrated, so nothing here is the only copy of anything.
 .public-serving/
+
+# Warehouse load staging — NDJSON built by the load-municipal-facts-* scripts and handed to
+# `bq load`. Regenerable from the source cache, and the warehouse is where it belongs.
+.warehouse-staging/
