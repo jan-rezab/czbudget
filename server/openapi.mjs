@@ -52,8 +52,27 @@ export const openapi = {
     { name: "Cities", description: "Capital-city and municipality data." },
     { name: "Public entities", description: "Public-body directories and source-scoped aggregates." },
     { name: "Authentication", description: "Account, verification, and token lifecycle." },
+    { name: "Embeds", description: "oEmbed discovery for charts published for reuse." },
   ],
   paths: {
+    // oEmbed is the one route consumers reach unauthenticated and cross-origin by design: a
+    // CMS resolving a pasted link has no credentials and never will.
+    "/api/v1/oembed": {
+      get: {
+        summary: "Resolve a chart URL to an embed",
+        description: "oEmbed 1.0 discovery. Given the URL of a published chart — the page URL with the chart's anchor, which is what the chart's own cite button produces — returns a rich embed with the iframe snippet, its dimensions, and attribution. A page URL with no anchor resolves to the chart at the top of that page, because a fragment never reaches the server.",
+        tags: ["Embeds"],
+        security: [],
+        parameters: [
+          { name: "url", in: "query", required: true, description: "URL of the chart to embed.", schema: { type: "string", format: "uri", example: "https://publicspendingdata.org/index.html#home-gross-debt-gdp" } },
+          { name: "format", in: "query", description: "Only json is served.", schema: { type: "string", enum: ["json"], default: "json" } },
+          { name: "maxwidth", in: "query", description: "Maximum frame width in pixels, from 240 to 1600.", schema: { type: "integer", minimum: 240, maximum: 1600, default: 640 } },
+          { name: "maxheight", in: "query", description: "Maximum frame height in pixels, from 200 to 1200.", schema: { type: "integer", minimum: 200, maximum: 1200 } },
+          { name: "lang", in: "query", description: "Language of the embedded chart and its title.", schema: { type: "string", enum: ["cs", "en"], default: "cs" } },
+        ],
+        responses: { "200": jsonResponse(), ...errors },
+      },
+    },
     "/api/v1": { get: operation("API index", "Returns API version, release, and documentation links.", ["Discovery"]) },
     "/api/v1/datasets": { get: operation("List datasets", "Lists every dataset represented in API v1 with its schema version and generation time.", ["Discovery"]) },
     "/api/v1/datasets/{dataset}": { get: operation("Get dataset metadata", "Returns provenance and methodology metadata without returning the full bulk artifact.", ["Discovery"], [{ name: "dataset", in: "path", required: true, schema: { type: "string" } }]) },

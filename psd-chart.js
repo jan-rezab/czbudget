@@ -22,6 +22,7 @@
     cs: {
       table: "Tabulka", chart: "Graf", download: "Stáhnout", csv: "Data (CSV)",
       png: "Obrázek (PNG)", cite: "Citovat", link: "Odkaz", copied: "Zkopírováno",
+      embed: "Vložit", embed_failed: "Nelze načíst",
       sources: "Zdroje", definition: "Definice", excludes: "Neobsahuje",
       caveat: "Srovnatelnost", table_id: "Zdrojová tabulka", extracted: "Staženo",
       next: "Další vydání", vintage: "Typ údaje", edition: "Vydání zdroje", rows: "Stáhnout řádky",
@@ -32,6 +33,7 @@
     en: {
       table: "Table", chart: "Chart", download: "Download", csv: "Data (CSV)",
       png: "Image (PNG)", cite: "Cite", link: "Link", copied: "Copied",
+      embed: "Embed", embed_failed: "Unavailable",
       sources: "Sources", definition: "Definition", excludes: "Excludes",
       caveat: "Comparability", table_id: "Source table", extracted: "Extracted",
       next: "Next release", vintage: "Vintage", edition: "Source edition", rows: "Download these rows",
@@ -202,8 +204,10 @@
   /* ---------- citation ---------- */
 
   function permalink(slug) {
-    return location.origin + location.pathname + location.search + location.hash ||
-      location.origin + location.pathname + "#" + slug;
+    // The hash carries chart state where a chart has any, and names the chart where it has
+    // none. Either way a citation must land on the figure, not merely on the page holding it.
+    var base = location.origin + location.pathname + location.search;
+    return base + (location.hash || "#" + slug);
   }
 
   function citation(spec) {
@@ -347,6 +351,37 @@
       },
     });
 
+    /**
+     * The embed snippet comes from the oEmbed endpoint rather than being assembled here.
+     * Building the same iframe in two places guarantees they diverge, and the copy a
+     * publisher pastes should be byte-identical to the one a CMS resolves for itself.
+     */
+    var embedButton = spec.embeddable === false ? null : el("button", {
+      type: "button", class: "psd-chart-action", "data-action": "embed", text: t("embed"),
+      onclick: function () {
+        var query = "url=" + encodeURIComponent(permalink(spec.slug)) + "&lang=" + lang();
+        embedButton.disabled = true;
+        fetch("/api/v1/oembed?" + query)
+          .then(function (response) { return response.ok ? response.json() : Promise.reject(response.status); })
+          .then(function (payload) {
+            var html = (payload && payload.data ? payload.data.html : payload && payload.html);
+            if (!html) return Promise.reject("no_html");
+            if (navigator.clipboard) return navigator.clipboard.writeText(html);
+            return null;
+          })
+          .then(function () {
+            embedButton.textContent = t("copied");
+          })
+          .catch(function () {
+            embedButton.textContent = t("embed_failed");
+          })
+          .then(function () {
+            embedButton.disabled = false;
+            setTimeout(function () { embedButton.textContent = t("embed"); }, 1600);
+          });
+      },
+    });
+
     var sourceButton = el("button", {
       type: "button", class: "psd-chart-action psd-chart-source-toggle", "data-action": "sources", text: t("sources"),
       "aria-expanded": "false",
@@ -356,7 +391,7 @@
       },
     });
 
-    [tableButton, csvButton, pngButton, citeButton, sourceButton].forEach(function (button) {
+    [tableButton, csvButton, pngButton, citeButton, embedButton, sourceButton].forEach(function (button) {
       if (button) rail.appendChild(button);
     });
 

@@ -13,6 +13,7 @@
  */
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const ROOT = process.env.SITE_ROOT || process.cwd();
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -110,6 +111,27 @@ for (const slug of markup.keys()) {
 for (const slug of claimed.keys()) {
   if (!markup.has(slug)) fail("every registered slug exists in markup", `"${slug}" registered in ${claimed.get(slug).join(", ")}`);
 }
+
+/**
+ * Embeddable charts (A2). The embed registry is a published promise: a slug in it is a URL
+ * other sites have pasted into their pages. Renaming or removing the chart it points at
+ * breaks every one of those embeds silently, so the registry and the markup must agree, and
+ * the page each embed names must be the page that actually declares the chart.
+ */
+const { EMBEDDABLE } = await import(`${pathToFileURL(path.join(ROOT, "server/embed.mjs")).href}`);
+for (const [slug, entry] of Object.entries(EMBEDDABLE)) {
+  const declaredIn = markup.get(slug);
+  if (!declaredIn) {
+    fail("every embeddable chart exists in markup", `"${slug}" is published for embedding but no page declares it`);
+    continue;
+  }
+  const page = entry.page.replace(/^\//, "");
+  if (!declaredIn.includes(page)) {
+    fail("an embeddable chart lives on the page its embed names",
+      `"${slug}" is registered against ${entry.page} but declared in ${declaredIn.join(", ")}`);
+  }
+}
+console.log(`Embeds: ${Object.keys(EMBEDDABLE).length} chart(s) published for reuse, each on the page its snippet names.`);
 
 /**
  * Second invariant (B2): every country-shaped value in a published artifact resolves to the

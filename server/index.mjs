@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { AuthError, handleAuth, requestToken, verifyIdToken } from "./auth.mjs";
 import { DataError, apiIndex, capitalCity, countryModule, countryProfile, czechMunicipalityBudget, czechMunicipalityHistory, datasetIds, datasetInfo, datasetPayload, listCapitalCities, listCountries, listDatasets, listMunicipalities, listPublicEntities, municipality, publicEntity, publicEntityAggregates } from "./data-store.mjs";
 import { exportDataset } from "./bulk-export.mjs";
+import { EMBEDDABLE, EmbedError, embedURL, oembed } from "./embed.mjs";
 import { openapi } from "./openapi.mjs";
 import { FixedWindowRateLimiter } from "./rate-limit.mjs";
 import { FranceLinesError, FranceMunicipalLinesStore } from "./france-municipal-lines.mjs";
@@ -167,6 +168,17 @@ async function sendPage(response, fileName, contentType) {
   return true;
 }
 
+/**
+ * The public origin to write into embed snippets. Taken from configuration, not from the
+ * request's Host header: a snippet built from an attacker-supplied Host would point every
+ * embedded chart at their domain while looking like ours. The request origin is used only
+ * where nothing is configured, which is local development and the tests.
+ */
+function originOf(request, url) {
+  if (process.env.PUBLIC_ORIGIN) return process.env.PUBLIC_ORIGIN.replace(/\/$/, "");
+  return url.origin;
+}
+
 async function routeAPI(request, response, url) {
   if (request.method !== "GET") throw new DataError(405, "method_not_allowed", "This endpoint only supports GET.");
   const pathname = url.pathname.replace(/\/$/, "") || "/";
@@ -203,6 +215,19 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/public-entities/aggregates") return sendJSON(response, 200, await publicEntityAggregates(url.searchParams));
   if (pathname === "/api/v1/public-entities") return sendJSON(response, 200, await listPublicEntities(url.searchParams));
   if ((match = pathname.match(/^\/api\/v1\/public-entities\/([^/]+)\/(.+)$/))) return sendJSON(response, 200, { data: await publicEntity(match[1], decodeURIComponent(match[2])) });
+
+  // A2 — oEmbed. A CMS pasting a chart link should get the chart, not a bare URL. This is the
+  // one API route consumers reach cross-origin by design, so it answers publicly and caches.
+  if (pathname === "/api/v1/oembed") {
+    try {
+      return sendPublicJSON(request, response, 200, oembed(url.searchParams, originOf(request, url)), {
+        "Cache-Control": "public, max-age=3600",
+      });
+    } catch (error) {
+      if (error instanceof EmbedError) throw new DataError(error.status, error.code, error.message);
+      throw error;
+    }
+  }
 
   // A3b — bulk. A reader wanting the whole series should not have to paginate an endpoint to
   // rebuild a file that already exists.
@@ -283,6 +308,19 @@ export async function handler(request, response) {
 
     if (url.pathname === "/developers" || url.pathname === "/developers/" || url.pathname === "/developers/login") {
       return sendPage(response, "login.html", "text/html; charset=utf-8");
+    }
+
+    // A2 — the tidy embed URL. The snippet itself points at the query form, which works on
+    // plain static hosting where this server is not in front of the pages; this redirect
+    // exists so a hand-typed /embed/<slug> still lands somewhere sensible.
+    if (url.pathname.startsWith("/embed/")) {
+      const slug = url.pathname.slice("/embed/".length).replace(/\/$/, "");
+      if (!Object.prototype.hasOwnProperty.call(EMBEDDABLE, slug)) {
+        return sendJSON(response, 404, { error: { code: "chart_not_embeddable", message: `No embeddable chart named '${slug}'` } });
+      }
+      const lang = url.searchParams.get("lang") === "en" ? "en" : undefined;
+      response.writeHead(302, { Location: embedURL(slug, "", lang), "Cache-Control": "public, max-age=3600" });
+      return response.end();
     }
 
     if (url.pathname === "/healthz") return sendJSON(response, 200, { status: "ok", public_snapshots: await publicSnapshotStore.status() });
