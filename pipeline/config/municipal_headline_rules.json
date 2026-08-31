@@ -58,8 +58,19 @@
       "years": {
         "2024": {
           "revenue": {
-            "status": "unreproducible",
-            "eligible": 10
+            "stage": "actual",
+            "net_of_stage": null,
+            "fiscal_period": "FY",
+            "code": "ReceitasExcetoIntraOrcamentarias",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 10,
+            "eligible": 10,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual-enacted@FY ReceitasExcetoIntraOrcamentarias",
+              "matched": 10
+            }
           },
           "expenditure": {
             "stage": "actual",
@@ -89,7 +100,7 @@
             "eligible": 39,
             "match_rate": 1,
             "runner_up": {
-              "rule": "actual-committed@FY ReceitasExcetoIntraOrcamentarias",
+              "rule": "actual-paid@FY ReceitasExcetoIntraOrcamentarias",
               "matched": 39
             }
           },
@@ -111,9 +122,9 @@
         }
       },
       "revenue": {
-        "matched": 39,
+        "matched": 49,
         "eligible": 49,
-        "match_rate": 0.7959
+        "match_rate": 1
       },
       "expenditure": {
         "matched": 49,

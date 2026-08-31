@@ -94,7 +94,7 @@ const facts = JSON.parse((await run("bq", [
   "query", "--use_legacy_sql=false", "--format=json", "--max_rows=5000000",
   `SELECT public_entity_id, fiscal_year, fiscal_period, budget_stage, budget_side,`
   + ` economic_item_code, SUM(CAST(amount_local AS FLOAT64)) amount`
-  + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030`
+  + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND NOT is_consolidation_item`
   + ` AND STARTS_WITH(public_entity_id, "${alpha2}:")`
   + ` GROUP BY 1,2,3,4,5,6`,
 ], { maxBuffer: 2 * 1024 * 1024 * 1024, env: BQ_ENV })).stdout || "[]");

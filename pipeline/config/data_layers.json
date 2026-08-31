@@ -111,12 +111,12 @@
       "detail": "The derived headline rules are only as good as the entities sampled, and an even spread hides a year a small minority uses: 44 of Brazil's 5,570 municipalities report 2024 rather than 2025, so a 40-entity sample contained none of them and no 2024 rule was derived at all. Sampling is now stratified by year. A related accounting flaw is fixed too — a year with no workable rule used to drop out of both the display and the coverage sum, so a country missing an entire year's rule still reported 100%."
     },
     {
-      "layer": "uniform",
-      "detail": "Brazil's 2024 DCA is fetched and parsed, and awaits a `bq load`. The defect was that the warehouse's copy came second-hand: the RREO loader reads the importer's output, whose detail array is capped at 360 rows per municipality and whose DCA rows had already lost the column heading. A gross revenue and the FUNDEB deduction taken from it both arrive as `actual` at period FY under the same account code, so any sum over that grain adds them — for BR:1302405 turning a published 103,540,289.40 into 110,805,556.30, gross plus a 7,265,266.90 deduction. scripts/load-municipal-facts-bra-dca.py reads the raw annexes and keeps the column in source_budget_item_type_code, which the schema always had room for. It rebuilds all 44 municipalities' published revenue and expenditure exactly, and emits 12,046 rows against the 11,864 currently loaded."
-    },
-    {
       "layer": "serving",
       "detail": "Denmark publishes no headline today, so a regeneration cannot regress one — but it should not invent one either. Its rows follow the Danish account plan: gross operating expenditure on main accounts 0-6 (Copenhagen 2025: 35,746.6m DKK) with own-revenue against those same areas (-10,271.1m), tax and grant revenue on account 7 (-58,085.0m, of which income tax alone is -37,827.1m), and financing on 8. Revenue is recorded as a credit, so it arrives negative, faithfully to the source. Summing each side and flipping the sign would show Copenhagen a surplus near 33bn DKK, which is not what the accounts say: the Danish presentation is net operating expenditure by service area, funded by taxes. Choosing between those is a modelling decision about the Danish convention rather than a rule that can be derived, because there is no published figure to check a candidate against."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Brazil's 2024 DCA is loaded and its profiles reproduce every published headline: 11,114 of 11,114 across all 5,570 municipalities, both years. The 11,864 second-hand rows that came through the RREO loader were replaced by 12,046 read from the raw annexes, and the column heading is now kept in source_budget_item_type_code with FUNDEB deductions marked is_consolidation_item. Headline queries exclude consolidation items, without which a gross revenue and the deduction taken from it sum back together — the defect that inflated BR:1302405 by 7,265,266.90."
     }
   ]
 }

@@ -126,7 +126,11 @@ for (const country of requested) {
   const facts = await query(
     `SELECT public_entity_id, fiscal_year, fiscal_period, budget_stage, budget_side, economic_item_code,`
     + ` SUM(CAST(amount_local AS FLOAT64)) amount`
-    + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND public_entity_id IN (${ids})`
+    // A deduction is a real fact but is not part of the headline it is taken from: Brazil's DCA
+    // files a FUNDEB deduction against the same account code, stage and period as the gross
+    // revenue it reduces, so anything summing that grain adds the two together.
+    + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND NOT is_consolidation_item`
+    + ` AND public_entity_id IN (${ids})`
     + ` GROUP BY 1,2,3,4,5,6`,
   );
 
