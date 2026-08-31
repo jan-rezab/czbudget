@@ -63,6 +63,10 @@
     {
       "layer": "pages",
       "detail": "The committed pages are stale relative to their template: regenerating applies the copy-voice rewrite they never received, and a sort-order and numeric-type normalisation in international-municipalities.v1.json. Refreshing that baseline is a separate reviewable change from un-committing, and is deliberately not bundled here."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Brazil's extractor mislabels budget_side on 454,916 rows. 101 revenue codes — ReceitaTributaria, Impostos, Taxas, TransferenciasCorrentes among them — arrive marked `expenditure` across all 5,570 municipalities, and none ever arrives marked `revenue`. The RREO column heading is authoritative (revenue uses PREVISÃO / No Bimestre / Até o Bimestre; expenditure uses DOTAÇÃO / DESPESAS), so the warehouse loader corrects from it and flags each corrected row side_corrected_from_source_column. The uniform layer and the committed per-municipality files still carry the defect, so the live site shows it until the extractor is fixed upstream or the fan-out is regenerated from a corrected view. Detectable only because Brazil publishes column labels; the other countries carry none, though their revenue-to-expenditure balances are all plausible."
     }
   ]
 }

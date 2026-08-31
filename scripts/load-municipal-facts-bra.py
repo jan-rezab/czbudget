@@ -69,6 +69,29 @@ COLUMN_RULES = (
 # from rows already stored, and storing it would break "parts sum to their published total".
 DERIVED_PREFIXES = ("SALDO",)
 
+# The RREO publishes revenue and expenditure in separate tables with distinct column
+# headings: revenue uses PREVISÃO / No Bimestre / Até o Bimestre, expenditure uses DOTAÇÃO /
+# DESPESAS. The upstream extractor mislabels the side on 575,008 rows — 101 revenue codes
+# including ReceitaTributaria, Impostos, Taxas and TransferenciasCorrentes arrive marked
+# `expenditure` across every one of the 5,570 municipalities, and not one of them ever
+# arrives marked `revenue`, so this is systematic rather than a mixed signal.
+#
+# The column heading is authoritative: a row filed under a revenue column IS revenue. Every
+# DOTAÇÃO/DESPESAS column is already 100% expenditure, so correcting from the column fixes
+# the revenue side without disturbing anything that was right.
+REVENUE_COLUMN_MARKERS = ("PREVISÃO", "PREVISAO", "No Bimestre", "Até o Bimestre", "Ate o Bimestre")
+EXPENDITURE_COLUMN_MARKERS = ("DOTAÇÃO", "DOTACAO", "DESPESAS", "Despesas", "RESTOS A PAGAR", "Restos a Pagar")
+
+
+def side_from_column(column: str, reported: str | None) -> tuple[str | None, bool]:
+    """The side the source's own table says, and whether that corrected the reported one."""
+    text = column or ""
+    if any(marker in text for marker in REVENUE_COLUMN_MARKERS):
+        return "revenue", reported != "revenue"
+    if any(marker in text for marker in EXPENDITURE_COLUMN_MARKERS):
+        return "expenditure", reported != "expenditure"
+    return reported, False
+
 DEFERRED = {}
 
 SUMMARY_PREFIX = re.compile(r"^(Total|Subtotal)", re.IGNORECASE)
@@ -109,6 +132,7 @@ def main() -> None:
     entities = payload["entities"]
 
     stages = Counter()
+    stats = Counter()
     loaded = 0
     skipped = Counter()
     entities_loaded = set()
@@ -150,13 +174,20 @@ def main() -> None:
                 skipped["missing_code"] += 1
                 continue
 
+            side, corrected = side_from_column(column, row.get("side"))
+            if side not in ("revenue", "expenditure"):
+                skipped[f"unmapped_side:{side}"] += 1
+                continue
+            if corrected:
+                stats["_side_corrected"] += 1
+
             fact = {
                 "public_entity_id": entity_id,
                 "fiscal_year": int(row["year"]),
                 "fiscal_period": period,
                 "reporting_scope": REPORTING_SCOPE,
                 "budget_stage": stage,
-                "budget_side": row.get("side"),
+                "budget_side": side,
                 "economic_item_code": code,
                 "source_budget_item_type_code": row.get("column"),
                 "amount_local": float(amount),
@@ -167,7 +198,8 @@ def main() -> None:
                 "source_id": SOURCE_ID,
                 "ingestion_run_id": args.run_id,
                 "coverage_type": COVERAGE_TYPE,
-                "quality_flags": ["financing_split_unavailable"],
+                "quality_flags": ["financing_split_unavailable"]
+                                 + (["side_corrected_from_source_column"] if corrected else []),
                 "loaded_at": loaded_at,
             }
             if handle:
@@ -187,6 +219,8 @@ def main() -> None:
     for stage, count in stages.most_common():
         print(f"  {str(stage):<12} {count:>10,}")
     print(f"\nloaded:   {loaded:,} rows across {len(entities_loaded):,} entities")
+    if stats["_side_corrected"]:
+        print(f"side corrected from the source column: {stats['_side_corrected']:,} row(s)")
     print("by stage:")
     for stage, count in total_by_stage.most_common():
         print(f"  {stage:<14} {count:>10,}")
