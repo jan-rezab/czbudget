@@ -26,7 +26,14 @@ const HASH_CONCURRENCY = 8;
 //   .*           dotfiles, incl. the .request-rate.{lock,timestamp} rate limiter state
 //   *.part       partial downloads from Context.download()
 //   "name 2.ext" macOS duplicate-on-copy artefacts
-const ignoredName = (name) => name.startsWith(".") || name.endsWith(".part") || / \d+(\.[^./]+)?$/.test(name);
+//   *.sqlite3-wal, -shm, -journal
+//                SQLite sidecars. A write-ahead log is rewritten whenever the database is
+//                opened, so hashing one records a value that is wrong by the next read — the
+//                opposite of what a manifest is for. The database file itself is still hashed.
+const ignoredName = (name) => name.startsWith(".")
+  || name.endsWith(".part")
+  || /\.(?:sqlite3?|db)-(?:wal|shm|journal)$/.test(name)
+  || / \d+(\.[^./]+)?$/.test(name);
 
 const relative = (target) => path.relative(workspaceRoot, target).split(path.sep).join("/");
 
@@ -107,7 +114,7 @@ function summarise(assets) {
       per_file_depth: GROUP_DEPTH,
       aggregate_suffix: "/**",
       tree_digest: "sha256 over sorted \"<path relative to the tree>\\0<file sha256>\\n\" lines",
-      ignored: [".*", "*.part", "* <n>.<ext> (macOS duplicates)"],
+      ignored: [".*", "*.part", "*.sqlite3-{wal,shm,journal}", "* <n>.<ext> (macOS duplicates)"],
     },
     entry_count: assets.length,
     asset_count: assets.reduce((sum, item) => sum + (item.files ?? 1), 0),
