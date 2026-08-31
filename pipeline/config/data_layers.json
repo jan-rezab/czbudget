@@ -121,6 +121,10 @@
     {
       "layer": "uniform",
       "detail": "Denmark's extract drops one side of three dranst levels, and that — not a choice about the Danish convention — is why it publishes no headline. Aggregating Copenhagen's 2025 final accounts by dranst gives current expenditure 31,850.3m DKK against own-revenue -7,603.6m, central reimbursement -2,564.8m, capital 3,896.3m against -102.8m, interest -775.4m, financial changes -372.2m and financing -57,399.8m. Every row in dranst 4 (interest), 5 (finansforskydninger) and 7 (finansiering) is a credit: there is not one debit entry among them, so interest paid, loan repayments and deposits are absent rather than netted. The accounts therefore miss by 33,072.0m, and no presentation of them can be right. The ownership dimension was checked and is a clean partition — Own, non-profit, private providers, other public authorities — so it is not a double count. Closing this means re-extracting statbank REGK100 across the full dranst-by-side matrix."
+    },
+    {
+      "layer": "raw",
+      "detail": "Denmark's re-extraction is scoped. statbank REGK100 (Kommunernes regnskaber på gruppering, updated 2026-04-24, unit 1.000 kr.) has eight dimensions, and two of them explain the missing side. DRANST carries seven values, not the six the current extract holds: 1 Driftskonti, 2 Statsrefusion, 3 Anlægskonti, 4 Renter, 5 Finansforskydninger, 6 Afdrag på lån, 7 Finansiering — and 6, loan repayments, is pure expenditure and absent entirely. ART is the side: TOT (I alt, netto), UE (Bruttoudgifter) and I (Indtægter), alongside 48 detailed economic codes. Extracting ART=UE,I across all seven DRANST is what should close the 33,072.0m DKK gap. The cell count needs chunking — 98 municipalities x 359 functions x 7 dranst x 2 sides exceeds what the API returns in one request."
     }
   ]
 }
