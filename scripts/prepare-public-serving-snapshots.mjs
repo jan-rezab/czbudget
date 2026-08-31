@@ -194,13 +194,52 @@ async function readJSON(file) {
   return JSON.parse(await fs.readFile(file, "utf8"));
 }
 
+/**
+ * Where each country's municipal profiles come from. A country whose headline rules reproduce
+ * every figure the site publishes is read from the warehouse build; the rest are read from the
+ * committed fan-out until they do. The split is derived from the rules rather than listed by
+ * hand, so a country cannot be switched over by editing a list without the check that earns it.
+ */
+async function municipalExpansionRoots() {
+  const fanout = path.join(ROOT, "data", "municipal-expansion");
+  const warehouse = path.join(ROOT, process.env.WAREHOUSE_PROFILE_ROOT || ".warehouse-profiles");
+  const chosen = new Map();
+
+  let rules = { countries: [] };
+  try {
+    rules = await readJSON(path.join(ROOT, "pipeline", "config", "municipal_headline_rules.json"));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  const reproduces = new Set(rules.countries
+    .filter((entry) => entry.revenue?.match_rate === 1 && entry.expenditure?.match_rate === 1)
+    .map((entry) => entry.country_code.toLowerCase()));
+
+  for (const entry of await fs.readdir(fanout, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const fromWarehouse = reproduces.has(entry.name)
+      && await fs.access(path.join(warehouse, entry.name)).then(() => true, () => false);
+    chosen.set(entry.name, fromWarehouse ? path.join(warehouse, entry.name) : path.join(fanout, entry.name));
+  }
+  return chosen;
+}
+
 async function sourceFiles() {
+  const files = [];
+  const municipal = await municipalExpansionRoots();
+  const fromWarehouse = [];
+  for (const [country, directory] of municipal) {
+    if (directory.includes(".warehouse-profiles")) fromWarehouse.push(country);
+    for (const file of await walkJSON(directory)) files.push({ file, kind: "municipal-expansion" });
+  }
+  process.stdout.write(fromWarehouse.length
+    ? `municipal profiles from the warehouse: ${fromWarehouse.sort().join(", ")}\n`
+    : "municipal profiles: all from the committed fan-out\n");
+
   const groups = [
-    { directory: path.join(ROOT, "data", "municipal-expansion"), kind: "municipal-expansion" },
     { directory: path.join(ROOT, "data", "municipal-benchmarks"), kind: "municipal-benchmark" },
     { directory: path.join(ROOT, "data", "entities"), kind: "czech-public-entity" },
   ];
-  const files = [];
   for (const group of groups) {
     for (const file of await walkJSON(group.directory)) files.push({ file, kind: group.kind });
   }

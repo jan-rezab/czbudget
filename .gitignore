@@ -47,3 +47,8 @@ data/entities/
 # Warehouse load staging — NDJSON built by the load-municipal-facts-* scripts and handed to
 # `bq load`. Regenerable from the source cache, and the warehouse is where it belongs.
 .warehouse-staging/
+
+# Warehouse-built municipal profiles, consumed by prepare-public-serving-snapshots.mjs when a
+# country's headline rules reproduce every figure the site publishes. Rebuilt from BigQuery by
+# scripts/build-profiles-from-warehouse.mjs --all-ready.
+.warehouse-profiles/

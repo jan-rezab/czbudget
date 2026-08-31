@@ -37,6 +37,7 @@ const flag = (name, fallback) => {
   return at >= 0 ? args[at + 1] : fallback;
 };
 const country = String(flag("--country", "CRI")).toUpperCase();
+const allReady = args.includes("--all-ready");
 const outDir = flag("--out", null);
 const verify = args.includes("--verify");
 
@@ -44,6 +45,30 @@ const ALPHA2 = {
   BOL: "BO", BRA: "BR", CHL: "CL", COL: "CO", CRI: "CR", DNK: "DK", ESP: "ES",
   GEO: "GE", GTM: "GT", ITA: "IT", JPN: "JP", KOR: "KR", MEX: "MX", PER: "PE", SLV: "SV",
 };
+
+// `--all-ready` re-runs this script once per country whose rules reproduce every published
+// headline. Countries that do not are left on the fan-out rather than half-built, and the
+// snapshot builder makes the same judgement from the same file.
+if (allReady) {
+  const readJSONFile = async (file) => JSON.parse(await readFile(path.join(ROOT, file), "utf8"));
+  const config = await readJSONFile("pipeline/config/municipal_headline_rules.json");
+  const ready = config.countries
+    .filter((entry) => entry.revenue?.match_rate === 1 && entry.expenditure?.match_rate === 1)
+    .map((entry) => entry.country_code);
+  console.log(`${ready.length} countries reproduce every published headline: ${ready.join(", ")}\n`);
+  for (const each of ready) {
+    console.log(`--- ${each} ---`);
+    await run(process.execPath, [
+      new URL(import.meta.url).pathname, "--country", each,
+      ...(outDir ? ["--out", outDir] : []), ...(verify ? ["--verify"] : []),
+    ], { maxBuffer: 256 * 1024 * 1024 }).then(
+      ({ stdout }) => process.stdout.write(stdout),
+      (error) => process.stdout.write(`${error.stdout || ""}${error.stderr || ""}`),
+    );
+  }
+  process.exit(0);
+}
+
 const alpha2 = ALPHA2[country];
 if (!alpha2) {
   console.error(`No alpha-2 mapping for ${country}.`);
