@@ -46,6 +46,10 @@ const sampleSize = Number(flag("--sample", 40));
 const ALPHA2 = {
   BOL: "BO", BRA: "BR", CHL: "CL", COL: "CO", CRI: "CR", DNK: "DK", ESP: "ES",
   GEO: "GE", GTM: "GT", ITA: "IT", JPN: "JP", KOR: "KR", MEX: "MX", PER: "PE", SLV: "SV",
+  // Countries whose facts were already in the warehouse under their own pipelines, and whose
+  // published baseline is the international directory rather than the fan-out.
+  CHE: "CH", CZE: "CZ", DEU: "DE", FIN: "FI", FRA: "FR", GBR: "GB", NLD: "NL",
+  NOR: "NO", POL: "PL", PRY: "PY", SWE: "SE", UKR: "UA", USA: "US",
 };
 
 const requested = args.includes("--all")
@@ -60,9 +64,39 @@ async function query(sql) {
 }
 
 /** The headline each entity already publishes, read from the profile the site serves today. */
+/**
+ * The headline each entity publishes today, for a country that never had a fan-out. Its
+ * baseline is the international directory, which carries one revenue and expenditure figure
+ * per municipality — the same thing a fan-out profile's history row carries, in one file.
+ */
+async function publishedFromInternational(country, limit) {
+  const payload = JSON.parse(await readFile(path.join(ROOT, "data/international-municipalities.v1.json"), "utf8"));
+  const entities = (payload.entities || []).filter((entity) => String(entity.country).toUpperCase() === country);
+  const step = Math.max(1, Math.floor(entities.length / limit));
+  const chosen = entities.filter((_, index) => index % step === 0).slice(0, limit);
+
+  const published = new Map();
+  for (const entity of chosen) {
+    for (const year of entity.years || []) {
+      if (!Number.isFinite(entity.revenue) && !Number.isFinite(entity.expenditure)) continue;
+      published.set(`${entity.code}|${year}`, {
+        revenue: Number.isFinite(entity.revenue) ? entity.revenue : null,
+        expenditure: Number.isFinite(entity.expenditure) ? entity.expenditure : null,
+      });
+    }
+  }
+  return { published, codes: chosen.map((entity) => String(entity.code)) };
+}
+
 async function publishedHeadlines(country, limit) {
   const directory = path.join(ROOT, "data/municipal-expansion", country.toLowerCase());
-  const files = (await readdir(directory)).filter((name) => name.endsWith(".json")).sort();
+  let files;
+  try {
+    files = (await readdir(directory)).filter((name) => name.endsWith(".json")).sort();
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+    return publishedFromInternational(country, limit);
+  }
   // An even spread rather than the first N: the files are sorted by code, and the first few of
   // any country tend to share a region, a size band and often a single reporting quirk.
   const step = Math.max(1, Math.floor(files.length / limit));

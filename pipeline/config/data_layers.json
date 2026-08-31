@@ -133,6 +133,14 @@
     {
       "layer": "serving",
       "detail": "The eleven countries added from the international directory have identity but no headline rule, so they are not yet served from the warehouse. Deriving one needs a published baseline to check against, and for these countries that baseline is data/international-municipalities.v1.json rather than the fan-out the derivation currently reads. That is the next step for them: point the derivation at the second baseline, then the same gate admits them on the same evidence as the other fifteen."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Ukraine and Sweden have full warehouse coverage but cannot yet carry a headline, and the reason is scope rather than modelling. Summing each side at actual/FY gives Sweden revenue at a fifth of expenditure (378.6bn against 1,789.8bn for 2024, excluding summary rows) because se-scb-municipal-income covers external income and not kommunalskatt; and Ukraine at a half (1,185.6bn against 2,237.4bn) because ua-openbudget-incomes appears to exclude the inter-budget transfers that fund a large share of local spending. Authored rules were written for both, produced those ratios, and were withdrawn. Publishing them would show a Swedish municipality spending five times its income. Closing this needs the missing revenue series, not a different rule."
+    },
+    {
+      "layer": "serving",
+      "detail": "Poland is served from the warehouse on an authored rule: 2,486 municipalities, 4,956 entity-years, gross revenue over gross expenditure with a median ratio of 1.001 and a range of 0.67 to 1.53 — which is what a municipal budget that must balance looks like. It is authored rather than derived because data/international-municipalities.v1.json carries no revenue or expenditure for Poland, so there is no published figure to check against. Paraguay has expenditure but no revenue at all, and Britain's periods are year-qualified (FY-2026) with a financing side, so neither is covered by the same rule."
     }
   ]
 }

@@ -27,7 +27,12 @@ const warehouseByCountry = Object.fromEntries(internationalWarehouse.countries.m
 
 // A stage is either something that has happened (an observation) or something
 // that has only been decided (a plan). The two are never merged into one label.
-const ACTUAL_STAGES = new Set(["actual", "execution", "cash", "outturn", "settlement"]);
+// The warehouse extended the execution vocabulary past what the fan-out used: Brazil files
+// committed and carried_over, Italy files paid. A stage missing from both sets leaves a
+// country with published profiles and no measured period, which the validator rejects.
+const ACTUAL_STAGES = new Set([
+  "actual", "execution", "cash", "outturn", "settlement", "paid", "committed", "carried_over",
+]);
 const PLAN_STAGES = new Set(["enacted", "approved", "revised", "modified", "proposal", "plan", "budget"]);
 
 const yearRange = (years) => {

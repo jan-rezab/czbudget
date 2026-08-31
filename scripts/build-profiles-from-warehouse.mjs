@@ -44,6 +44,9 @@ const verify = args.includes("--verify");
 const ALPHA2 = {
   BOL: "BO", BRA: "BR", CHL: "CL", COL: "CO", CRI: "CR", DNK: "DK", ESP: "ES",
   GEO: "GE", GTM: "GT", ITA: "IT", JPN: "JP", KOR: "KR", MEX: "MX", PER: "PE", SLV: "SV",
+  // Countries loaded by their own national pipelines, now given directories and rules.
+  CHE: "CH", CZE: "CZ", DEU: "DE", FIN: "FI", FRA: "FR", GBR: "GB", NLD: "NL",
+  NOR: "NO", POL: "PL", PRY: "PY", SWE: "SE", UKR: "UA", USA: "US",
 };
 
 // `--all-ready` re-runs this script once per country whose rules reproduce every published
@@ -155,7 +158,9 @@ for (const entity of directory.entities) {
 
   const history = years.map((year) => {
     const yearRows = rows.filter((fact) => Number(fact.fiscal_year) === year);
-    const spec = rule.years[String(year)] || {};
+    // An authored rule states one shape for the country rather than one per year, because
+    // there is no published series whose years it has to match. Derived rules stay per-year.
+    const spec = rule.years[String(year)] || rule.default_year_rule || {};
     let revenue = headline(yearRows, spec.revenue, "revenue");
     let expenditure = headline(yearRows, spec.expenditure, "expenditure");
     // A source that books revenue as a credit hands back a negative total. The sign is kept

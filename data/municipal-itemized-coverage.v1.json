@@ -11,10 +11,10 @@
   },
   "totals": {
     "countries": 28,
-    "published_countries": 17,
-    "published_profiles": 69125,
-    "warehouse_only_countries": 8,
-    "warehouse_only_profiles": 4975
+    "published_countries": 18,
+    "published_profiles": 71611,
+    "warehouse_only_countries": 7,
+    "warehouse_only_profiles": 2489
   },
   "countries": [
     {
@@ -24,18 +24,18 @@
       "published_profile_count": 343,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/bol",
+      "measured_from": ".warehouse-profiles/bol",
       "period": "2025",
       "stages": [
         "actual",
-        "cash",
         "enacted",
+        "paid",
         "revised"
       ],
       "stage_periods": {
         "actual": "2025",
-        "cash": "2025",
         "enacted": "2025",
+        "paid": "2025",
         "revised": "2025"
       },
       "actual_period": "2025",
@@ -80,27 +80,29 @@
       "published_profile_count": 5557,
       "publication_status": "published",
       "status": "partial",
-      "measured_from": "data/municipal-expansion/bra",
+      "measured_from": ".warehouse-profiles/bra",
       "period": "2024–2025",
       "stages": [
         "actual",
-        "cash",
+        "carried_over",
+        "committed",
         "enacted",
-        "execution",
+        "paid",
         "revised"
       ],
       "stage_periods": {
         "actual": "2024–2025",
-        "cash": "2024–2025",
+        "carried_over": "2024–2025",
+        "committed": "2024–2025",
         "enacted": "2025",
-        "execution": "2024–2025",
+        "paid": "2024–2025",
         "revised": "2025"
       },
       "actual_period": "2024–2025",
       "plan_period": "2025",
       "vintage_type": "mixed",
-      "line_item_count": 1551136,
-      "distinct_classification_code_count": 607,
+      "line_item_count": 1055270,
+      "distinct_classification_code_count": 546,
       "minimum_distinct_classification_codes": 5,
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native RREO or DCA budget-execution items",
@@ -140,7 +142,7 @@
       "published_profile_count": 345,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/chl",
+      "measured_from": ".warehouse-profiles/chl",
       "period": "2025",
       "stages": [
         "actual"
@@ -187,7 +189,7 @@
       "published_profile_count": 0,
       "publication_status": "headline_only",
       "status": "headline_only",
-      "measured_from": "data/municipal-expansion/col",
+      "measured_from": ".warehouse-profiles/col",
       "period": null,
       "stages": [
         "actual",
@@ -240,7 +242,7 @@
       "published_profile_count": 0,
       "publication_status": "headline_only",
       "status": "headline_only",
-      "measured_from": "data/municipal-expansion/cri",
+      "measured_from": ".warehouse-profiles/cri",
       "period": null,
       "stages": [
         "actual"
@@ -322,30 +324,30 @@
       "published_profile_count": 98,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/dnk",
-      "period": "2025",
+      "measured_from": ".warehouse-profiles/dnk",
+      "period": "2024–2025",
       "stages": [
         "actual",
         "enacted"
       ],
       "stage_periods": {
-        "actual": "2025",
-        "enacted": "2025"
+        "actual": "2024–2025",
+        "enacted": "2024–2025"
       },
-      "actual_period": "2025",
-      "plan_period": "2025",
+      "actual_period": "2024–2025",
+      "plan_period": "2024–2025",
       "vintage_type": "mixed",
-      "line_item_count": 253567,
-      "distinct_classification_code_count": 308,
+      "line_item_count": 64071,
+      "distinct_classification_code_count": 317,
       "minimum_distinct_classification_codes": 5,
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native BUDK100 and REGK100 account items",
       "detail_kind_cs": "původní účetní položky BUDK100 a REGK100",
       "source_title": "Statistics Denmark · StatBank",
       "source_url": "https://www.statbank.dk/BUDK100",
-      "note": "Revenue equals expenditure in all 98 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance.",
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
-        "Revenue equals expenditure in all 98 published histories, so the reported balance is an accounting identity of the source totals and zero by construction; it is not an independently measured surplus or deficit and must not be compared with countries that measure a balance."
+        "Every counted profile publishes the native itemized classifications retained from the national source."
       ],
       "warehouse": {
         "warehouse": "czbudget-janrezab.budget_detail",
@@ -372,7 +374,7 @@
       "published_profile_count": 259,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/slv",
+      "measured_from": ".warehouse-profiles/slv",
       "period": "2023",
       "stages": [
         "actual",
@@ -554,7 +556,7 @@
       "published_profile_count": 69,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/geo",
+      "measured_from": ".warehouse-profiles/geo",
       "period": "2025–2026",
       "stages": [
         "actual",
@@ -649,25 +651,25 @@
       "published_profile_count": 340,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/gtm",
+      "measured_from": ".warehouse-profiles/gtm",
       "period": "2025",
       "stages": [
         "actual",
-        "cash",
         "enacted",
+        "paid",
         "revised"
       ],
       "stage_periods": {
         "actual": "2025",
-        "cash": "2025",
         "enacted": "2025",
+        "paid": "2025",
         "revised": "2025"
       },
       "actual_period": "2025",
       "plan_period": "2025",
       "vintage_type": "mixed",
       "line_item_count": 19844,
-      "distinct_classification_code_count": 19,
+      "distinct_classification_code_count": 20,
       "minimum_distinct_classification_codes": 5,
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native SICOINGL and SICOINDES budget-execution items",
@@ -705,13 +707,13 @@
       "published_profile_count": 7896,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/ita",
+      "measured_from": ".warehouse-profiles/ita",
       "period": "2025",
       "stages": [
-        "cash"
+        "paid"
       ],
       "stage_periods": {
-        "cash": "2025"
+        "paid": "2025"
       },
       "actual_period": "2025",
       "plan_period": null,
@@ -752,7 +754,7 @@
       "published_profile_count": 1741,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/jpn",
+      "measured_from": ".warehouse-profiles/jpn",
       "period": "2024",
       "stages": [
         "actual"
@@ -763,8 +765,8 @@
       "actual_period": "2024",
       "plan_period": null,
       "vintage_type": "actual",
-      "line_item_count": 626760,
-      "distinct_classification_code_count": 257,
+      "line_item_count": 88385,
+      "distinct_classification_code_count": 72,
       "minimum_distinct_classification_codes": 5,
       "stage_basis": "measured_from_line_items",
       "detail_kind_en": "native Local Public Finance Survey items",
@@ -783,7 +785,7 @@
       "published_profile_count": 2380,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/mex",
+      "measured_from": ".warehouse-profiles/mex",
       "period": "2024",
       "stages": [
         "actual"
@@ -897,18 +899,18 @@
       "published_profile_count": 1891,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/per",
+      "measured_from": ".warehouse-profiles/per",
       "period": "2024",
       "stages": [
         "actual",
-        "cash",
         "enacted",
+        "paid",
         "revised"
       ],
       "stage_periods": {
         "actual": "2024",
-        "cash": "2024",
         "enacted": "2024",
+        "paid": "2024",
         "revised": "2024"
       },
       "actual_period": "2024",
@@ -949,28 +951,34 @@
     {
       "code": "POL",
       "municipal_scope": 2486,
-      "profile_count": 0,
-      "published_profile_count": 0,
-      "publication_status": "warehouse_only",
-      "status": "warehouse_only",
-      "measured_from": null,
-      "period": null,
-      "stages": [],
-      "stage_periods": {},
-      "actual_period": null,
-      "plan_period": null,
-      "vintage_type": null,
-      "line_item_count": 0,
-      "distinct_classification_code_count": null,
+      "profile_count": 2486,
+      "published_profile_count": 2486,
+      "publication_status": "published",
+      "status": "full",
+      "measured_from": ".warehouse-profiles/pol",
+      "period": "2024–2025",
+      "stages": [
+        "actual",
+        "revised"
+      ],
+      "stage_periods": {
+        "actual": "2024–2025",
+        "revised": "2024–2025"
+      },
+      "actual_period": "2024–2025",
+      "plan_period": "2024–2025",
+      "vintage_type": "mixed",
+      "line_item_count": 1293702,
+      "distinct_classification_code_count": 900,
       "minimum_distinct_classification_codes": 5,
-      "stage_basis": null,
+      "stage_basis": "measured_from_line_items",
       "detail_kind_en": null,
       "detail_kind_cs": null,
       "source_title": "Polish Ministry of Finance · local-government budget reports",
       "source_url": "https://www.gov.pl/web/finanse/sprawozdania-budzetowe",
-      "note": "Itemized POL facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Poland is published on this site, so the published count is zero.",
+      "note": "Every counted profile publishes the native itemized classifications retained from the national source.",
       "scope_limitations": [
-        "Itemized POL facts exist only in the production BigQuery warehouse (czbudget-janrezab.budget_detail); no itemized municipal profile for Poland is published on this site, so the published count is zero."
+        "Every counted profile publishes the native itemized classifications retained from the national source."
       ],
       "warehouse": {
         "warehouse": "czbudget-janrezab.budget_detail",
@@ -986,7 +994,7 @@
         "detail_kind_cs": "původní položky rozpočtových výkazů Rb-27S a Rb-28S",
         "source_title": "Polish Ministry of Finance · local-government budget reports",
         "source_url": "https://www.gov.pl/web/finanse/sprawozdania-budzetowe",
-        "published_on_site": false
+        "published_on_site": true
       },
       "warehouse_profile_count": 2486
     },
@@ -997,7 +1005,7 @@
       "published_profile_count": 0,
       "publication_status": "headline_only",
       "status": "headline_only",
-      "measured_from": "data/municipal-expansion/kor",
+      "measured_from": ".warehouse-profiles/kor",
       "period": null,
       "stages": [
         "actual"
@@ -1044,18 +1052,18 @@
       "published_profile_count": 6198,
       "publication_status": "published",
       "status": "full",
-      "measured_from": "data/municipal-expansion/esp",
+      "measured_from": ".warehouse-profiles/esp",
       "period": "2025–2026",
       "stages": [
         "actual",
-        "cash",
         "enacted",
+        "paid",
         "revised"
       ],
       "stage_periods": {
         "actual": "2025",
-        "cash": "2025",
         "enacted": "2025–2026",
+        "paid": "2025",
         "revised": "2025"
       },
       "actual_period": "2025",
