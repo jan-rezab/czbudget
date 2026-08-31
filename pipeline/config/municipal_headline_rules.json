@@ -11,6 +11,7 @@
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 5,
@@ -25,6 +26,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 5,
@@ -61,6 +63,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "TotalDespesas",
             "code_length": null,
@@ -68,12 +71,16 @@
             "matched": 1,
             "eligible": 1,
             "match_rate": 1,
-            "runner_up": null
+            "runner_up": {
+              "rule": "actual-revised@FY TotalDespesas",
+              "matched": 1
+            }
           }
         },
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "ReceitasExcetoIntraOrcamentarias",
             "code_length": null,
@@ -82,22 +89,23 @@
             "eligible": 39,
             "match_rate": 1,
             "runner_up": {
-              "rule": "actual@FY SubtotalDasReceitas",
-              "matched": 26
+              "rule": "actual-committed@FY ReceitasExcetoIntraOrcamentarias",
+              "matched": 39
             }
           },
           "expenditure": {
             "stage": "committed",
+            "net_of_stage": "carried_over",
             "fiscal_period": "FY",
             "code": "DespesasExcetoIntraOrcamentarias",
             "code_length": null,
             "aggregate": "single_row",
-            "matched": 3,
+            "matched": 39,
             "eligible": 39,
-            "match_rate": 0.0769,
+            "match_rate": 1,
             "runner_up": {
-              "rule": "committed@FY TotalDespesas",
-              "matched": 2
+              "rule": "committed-carried_over@FY TotalDespesas",
+              "matched": 26
             }
           }
         }
@@ -108,9 +116,9 @@
         "match_rate": 1
       },
       "expenditure": {
-        "matched": 4,
+        "matched": 40,
         "eligible": 40,
-        "match_rate": 0.1
+        "match_rate": 1
       }
     },
     {
@@ -120,6 +128,7 @@
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "21",
             "code_length": null,
@@ -134,6 +143,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "47",
             "code_length": null,
@@ -163,6 +173,7 @@
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -177,6 +188,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -209,6 +221,7 @@
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "TOTAL",
             "code_length": null,
@@ -223,6 +236,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "TOTAL",
             "code_length": null,
@@ -260,6 +274,7 @@
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -274,6 +289,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -290,6 +306,7 @@
         "2026": {
           "revenue": {
             "stage": "enacted",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -304,6 +321,7 @@
           },
           "expenditure": {
             "stage": "enacted",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -336,6 +354,7 @@
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "R",
             "code_length": null,
@@ -350,6 +369,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -366,6 +386,7 @@
         "2026": {
           "revenue": {
             "stage": "enacted",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "R",
             "code_length": null,
@@ -380,6 +401,7 @@
           },
           "expenditure": {
             "stage": "enacted",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": "E",
             "code_length": null,
@@ -412,6 +434,7 @@
         "2025": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 5,
@@ -426,6 +449,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": null,
@@ -458,6 +482,7 @@
         "2025": {
           "revenue": {
             "stage": "paid",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -472,6 +497,7 @@
           },
           "expenditure": {
             "stage": "paid",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -504,6 +530,7 @@
         "2024": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -518,6 +545,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -550,6 +578,7 @@
         "2024": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": null,
@@ -561,6 +590,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": null,
@@ -590,6 +620,7 @@
         "2024": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 1,
@@ -604,6 +635,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 2,
@@ -636,6 +668,7 @@
         "2023": {
           "revenue": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 2,
@@ -650,6 +683,7 @@
           },
           "expenditure": {
             "stage": "actual",
+            "net_of_stage": null,
             "fiscal_period": "FY",
             "code": null,
             "code_length": 2,

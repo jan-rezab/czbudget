@@ -129,6 +129,7 @@ for (const country of requested) {
   }
 
   const years = [...new Set(facts.map((fact) => String(fact.fiscal_year)))].sort();
+  const stageVocabulary = [...new Set(facts.map((fact) => fact.budget_stage))];
   const rule = { country_code: country, sample_size: published.size, years: {} };
   for (const year of years) rule.years[year] = {};
   for (const side of ["revenue", "expenditure"]) {
@@ -154,6 +155,36 @@ for (const country of requested) {
       scores.set(candidate, (scores.get(candidate) || 0) + 1);
     }
 
+    // Candidate four: one stage net of another. Brazil's published expenditure is "despesas
+    // liquidadas", which settles this year's commitments and excludes restos a pagar — prior
+    // years' commitments carried forward, which the loader classifies as its own stage. The
+    // figure is therefore a difference, and no single row anywhere holds it.
+    const perCell = new Map();
+    for (const fact of facts) {
+      if (fact.budget_side !== side || String(fact.fiscal_year) !== year) continue;
+      const entity = fact.public_entity_id.split(":").slice(1).join(":");
+      const cell = `${entity}|${fact.fiscal_year}|${fact.fiscal_period}|${fact.economic_item_code}`;
+      if (!perCell.has(cell)) perCell.set(cell, new Map());
+      const stages = perCell.get(cell);
+      stages.set(fact.budget_stage, (stages.get(fact.budget_stage) || 0) + Number(fact.amount));
+    }
+    for (const [cell, stages] of perCell) {
+      const [entity, cellYear, period, itemCode] = cell.split("|");
+      const target = published.get(`${entity}|${cellYear}`);
+      if (!target || target[side] === null) continue;
+      for (const [minuend, left] of stages) {
+        for (const subtrahend of stageVocabulary) {
+          if (minuend === subtrahend) continue;
+          // A stage absent from this entity is zero, not a reason to skip: three of the
+          // sampled municipalities carry nothing forward, and "committed net of restos a
+          // pagar" is the same rule there as everywhere else.
+          if (!near(left - (stages.get(subtrahend) || 0), target[side])) continue;
+          const candidate = `${minuend}-${subtrahend}@${period} ${itemCode}`;
+          scores.set(candidate, (scores.get(candidate) || 0) + 1);
+        }
+      }
+    }
+
     for (const [key, total] of depthTotals) {
       const [code, rowYear, stage, period, rowSide, depth] = key.split("|");
       if (rowSide !== side || rowYear !== year) continue;
@@ -177,10 +208,12 @@ for (const country of requested) {
       continue;
     }
     const [stagePeriod, code] = best.split(" ");
-    const [stage, period] = stagePeriod.split("@");
+    const [stageExpression, period] = stagePeriod.split("@");
+    const [stage, netOf] = stageExpression.split("-");
     const depth = /^#(\d+)$/.exec(code);
     rule.years[year][side] = {
       stage,
+      net_of_stage: netOf || null,
       fiscal_period: period,
       code: code === "*" || depth ? null : code,
       code_length: depth ? Number(depth[1]) : null,
@@ -225,7 +258,7 @@ for (const country of requested) {
     if (!value || value.status) return `${side}: ${value?.status || "none"}`;
     const per = Object.entries(rule.years)
       .filter(([, entry]) => entry[side] && !entry[side].status)
-      .map(([year, entry]) => `${year}:${entry[side].stage}`)
+      .map(([year, entry]) => `${year}:${entry[side].stage}${entry[side].net_of_stage ? `-${entry[side].net_of_stage}` : ""}`)
       .join(" ");
     return `${side} ${value.matched}/${value.eligible} (${per})`;
   };
