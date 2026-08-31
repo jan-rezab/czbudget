@@ -24,6 +24,13 @@ const run = promisify(execFile);
 const ROOT = process.env.SITE_ROOT || process.cwd();
 const TABLE = "`czbudget-janrezab.budget_detail.municipal_budget_line_facts`";
 
+// Another session on this machine switches the active gcloud account, and `bq` picks up
+// whichever is current at the moment it runs — so the same query succeeds or fails by timing.
+// The account is pinned per invocation rather than by changing the shared config, which would
+// break that other session in exactly the way this is guarding against.
+const BQ_ENV = { ...process.env, CLOUDSDK_CORE_ACCOUNT: process.env.BQ_ACCOUNT || "jan@ravineo.com" };
+
+
 const args = process.argv.slice(2);
 const flag = (name, fallback) => {
   const at = args.indexOf(name);
@@ -65,7 +72,7 @@ const facts = JSON.parse((await run("bq", [
   + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030`
   + ` AND STARTS_WITH(public_entity_id, "${alpha2}:")`
   + ` GROUP BY 1,2,3,4,5,6`,
-], { maxBuffer: 2 * 1024 * 1024 * 1024 })).stdout || "[]");
+], { maxBuffer: 2 * 1024 * 1024 * 1024, env: BQ_ENV })).stdout || "[]");
 
 console.log(`warehouse: ${facts.length.toLocaleString()} fact rows`);
 

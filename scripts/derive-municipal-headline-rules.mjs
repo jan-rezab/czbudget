@@ -27,6 +27,13 @@ const ROOT = process.env.SITE_ROOT || process.cwd();
 const TABLE = "`czbudget-janrezab.budget_detail.municipal_budget_line_facts`";
 const OUT = "pipeline/config/municipal_headline_rules.json";
 
+// Another session on this machine switches the active gcloud account, and `bq` picks up
+// whichever is current at the moment it runs — so the same query succeeds or fails by timing.
+// The account is pinned per invocation rather than by changing the shared config, which would
+// break that other session in exactly the way this is guarding against.
+const BQ_ENV = { ...process.env, CLOUDSDK_CORE_ACCOUNT: process.env.BQ_ACCOUNT || "jan@ravineo.com" };
+
+
 const args = process.argv.slice(2);
 const flag = (name, fallback) => {
   const at = args.indexOf(name);
@@ -47,7 +54,7 @@ const requested = args.includes("--all")
 
 async function query(sql) {
   const { stdout } = await run("bq", ["query", "--use_legacy_sql=false", "--format=json", "--max_rows=200000", sql], {
-    maxBuffer: 512 * 1024 * 1024,
+    maxBuffer: 512 * 1024 * 1024, env: BQ_ENV,
   });
   return JSON.parse(stdout || "[]");
 }
