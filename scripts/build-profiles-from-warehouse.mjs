@@ -53,7 +53,8 @@ if (allReady) {
   const readJSONFile = async (file) => JSON.parse(await readFile(path.join(ROOT, file), "utf8"));
   const config = await readJSONFile("pipeline/config/municipal_headline_rules.json");
   const ready = config.countries
-    .filter((entry) => entry.revenue?.match_rate === 1 && entry.expenditure?.match_rate === 1)
+    .filter((entry) => (entry.revenue?.match_rate === 1 && entry.expenditure?.match_rate === 1)
+      || (entry.authored === true && entry.authored_basis))
     .map((entry) => entry.country_code);
   console.log(`${ready.length} countries reproduce every published headline: ${ready.join(", ")}\n`);
   for (const each of ready) {
@@ -77,6 +78,10 @@ if (!alpha2) {
 
 const readJSON = async (file) => JSON.parse(await readFile(path.join(ROOT, file), "utf8"));
 
+// `bq --format=json` returns every column as a string, booleans included. Comparing one
+// against `true` is quietly always false, which silently disables any filter built on it.
+const isTrue = (value) => value === true || value === "true";
+
 const directory = await readJSON(`data/registry/municipal-entities/${country}.v1.json`);
 const rules = await readJSON("pipeline/config/municipal_headline_rules.json");
 const labelRegistry = await readJSON("data/registry/municipal-item-labels.v1.json");
@@ -93,10 +98,10 @@ console.log(`${country}: ${directory.entity_count} entities, ${Object.keys(label
 const facts = JSON.parse((await run("bq", [
   "query", "--use_legacy_sql=false", "--format=json", "--max_rows=5000000",
   `SELECT public_entity_id, fiscal_year, fiscal_period, budget_stage, budget_side,`
-  + ` economic_item_code, SUM(CAST(amount_local AS FLOAT64)) amount`
+  + ` economic_item_code, is_financing, SUM(CAST(amount_local AS FLOAT64)) amount`
   + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND NOT is_consolidation_item`
   + ` AND STARTS_WITH(public_entity_id, "${alpha2}:")`
-  + ` GROUP BY 1,2,3,4,5,6`,
+  + ` GROUP BY 1,2,3,4,5,6,7`,
 ], { maxBuffer: 2 * 1024 * 1024 * 1024, env: BQ_ENV })).stdout || "[]");
 
 console.log(`warehouse: ${facts.length.toLocaleString()} fact rows`);
@@ -121,6 +126,10 @@ function headline(rows, spec, side) {
   // each of them as the sum of the two.
   const matches = (fact, stage) => fact.budget_side === side
     && fact.budget_stage === stage
+    // Interest, loan repayments and borrowing fund a budget rather than being it. Denmark's
+    // account plan balances by construction, so leaving them in makes every municipality
+    // report revenue exactly equal to expenditure and a result of zero.
+    && (!spec.exclude_financing || !isTrue(fact.is_financing))
     && fact.fiscal_period === spec.fiscal_period
     && (spec.code ? fact.economic_item_code === spec.code
       : spec.code_length ? /^\d{1,6}$/.test(fact.economic_item_code) && fact.economic_item_code.length === spec.code_length
@@ -147,8 +156,13 @@ for (const entity of directory.entities) {
   const history = years.map((year) => {
     const yearRows = rows.filter((fact) => Number(fact.fiscal_year) === year);
     const spec = rule.years[String(year)] || {};
-    const revenue = headline(yearRows, spec.revenue, "revenue");
-    const expenditure = headline(yearRows, spec.expenditure, "expenditure");
+    let revenue = headline(yearRows, spec.revenue, "revenue");
+    let expenditure = headline(yearRows, spec.expenditure, "expenditure");
+    // A source that books revenue as a credit hands back a negative total. The sign is kept
+    // in the facts, because that is what the filing says, and resolved here where a reader
+    // is being shown a headline rather than a ledger entry.
+    if (spec.revenue?.sign === "credit" && revenue !== null) revenue = Math.abs(revenue);
+    if (spec.expenditure?.sign === "credit" && expenditure !== null) expenditure = Math.abs(expenditure);
     const entry = { year };
     if (revenue !== null) entry.revenue = Number(revenue.toFixed(2));
     if (expenditure !== null) entry.expenditure = Number(expenditure.toFixed(2));
@@ -166,6 +180,7 @@ for (const entity of directory.entities) {
     // label would not appear in the original filing, so it could not be checked against it.
     name: labels[fact.economic_item_code] || fact.economic_item_code,
     amount: Number(fact.amount),
+    ...(isTrue(fact.is_financing) ? { financing: true } : {}),
   })).sort((a, b) => a.year - b.year || a.side.localeCompare(b.side) || a.code.localeCompare(b.code));
 
   profiles.push({

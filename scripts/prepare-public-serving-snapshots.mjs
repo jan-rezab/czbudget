@@ -211,8 +211,13 @@ async function municipalExpansionRoots() {
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
   }
+  // Two bases, kept distinct because they are not equally strong. A derived rule reproduces
+  // every figure the site already publishes. An authored one has no such check — it is allowed
+  // only where the site publishes no headline at all, so switching cannot regress one, and the
+  // rule's own justification is recorded beside it.
   const reproduces = new Set(rules.countries
-    .filter((entry) => entry.revenue?.match_rate === 1 && entry.expenditure?.match_rate === 1)
+    .filter((entry) => (entry.revenue?.match_rate === 1 && entry.expenditure?.match_rate === 1)
+      || (entry.authored === true && entry.authored_basis))
     .map((entry) => entry.country_code.toLowerCase()));
 
   for (const entry of await fs.readdir(fanout, { withFileTypes: true })) {
