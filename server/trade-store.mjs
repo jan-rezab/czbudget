@@ -136,12 +136,61 @@ product_rows AS (
     product_names.product_name, value_usd, source_last_released, retrieved_at
   FROM product_aggregates
   LEFT JOIN product_names USING (product_code)
-  QUALIFY DENSE_RANK() OVER (PARTITION BY flow_code ORDER BY value_usd DESC) <= 20
 )
 SELECT * FROM totals
 UNION ALL SELECT * FROM partner_rows
 UNION ALL SELECT * FROM product_rows
 ORDER BY row_kind, period_start, flow_code, value_usd DESC
+`;
+
+export const TRADE_PRODUCT_PARTNERS_SQL = `
+WITH scoped AS (
+  SELECT period_start, ref_year, flow_code, partner_area_code, partner_iso3,
+    partner_name, product_code, aggregation_level, primary_value_usd,
+    source_last_released, retrieved_at
+  FROM \`czbudget-janrezab.budget_detail.trade_observations\`
+  WHERE period_start BETWEEN @min_date AND CURRENT_DATE()
+    AND reporter_iso3 = @reporter_iso3
+    AND product_type = 'C'
+    AND classification_code IN ('H6', 'HS')
+    AND frequency = 'A'
+    AND flow_code IN ('M', 'X')
+    AND STARTS_WITH(product_code, @product_code)
+    AND partner_area_code != 0
+    AND (customs_code IS NULL OR customs_code = 'C00')
+    AND (mode_of_transport_code IS NULL OR mode_of_transport_code = 0)
+    AND (partner2_area_code IS NULL OR partner2_area_code = 0)
+    AND partner_area_code IN (
+      SELECT DISTINCT area_code
+      FROM \`czbudget-janrezab.budget_detail.trade_areas\`
+      WHERE is_partner AND NOT is_group
+    )
+),
+latest AS (
+  SELECT MAX(ref_year) AS ref_year FROM scoped
+),
+finest AS (
+  SELECT scoped.*
+  FROM scoped
+  WHERE ref_year = (SELECT ref_year FROM latest)
+  QUALIFY aggregation_level = MAX(aggregation_level) OVER (
+    PARTITION BY ref_year, flow_code, partner_area_code
+  )
+),
+partners AS (
+  SELECT ref_year, flow_code, partner_area_code,
+    ANY_VALUE(partner_iso3) AS partner_iso3,
+    ANY_VALUE(partner_name) AS partner_name,
+    SUM(primary_value_usd) AS value_usd,
+    MAX(source_last_released) AS source_last_released,
+    MAX(retrieved_at) AS retrieved_at
+  FROM finest
+  GROUP BY ref_year, flow_code, partner_area_code
+)
+SELECT *
+FROM partners
+QUALIFY DENSE_RANK() OVER (PARTITION BY flow_code ORDER BY value_usd DESC) <= 20
+ORDER BY flow_code, value_usd DESC
 `;
 
 export class TradeError extends Error {
@@ -254,6 +303,37 @@ export class TradeStore {
     return value;
   }
 
+  async productPartners(countryCode, productCode) {
+    const code = normalizeCountryCode(countryCode);
+    const product = normalizeProductCode(productCode);
+    const cacheKey = `product-partners:${code}:${product}`;
+    const cached = this.cache.get(cacheKey);
+    if (cached?.expiresAt > this.now()) return cached.value;
+    const rows = await this.query(TRADE_PRODUCT_PARTNERS_SQL, [
+      parameter("reporter_iso3", "STRING", code),
+      parameter("product_code", "STRING", product),
+      parameter("min_date", "DATE", MIN_TRADE_DATE),
+    ]);
+    if (!rows.length) throw new TradeError(404, "trade_product_not_found", "No partner observations are available for this product chapter.");
+    const value = {
+      schema_version: "1.0.0",
+      country: code,
+      product_code: product,
+      year: Number(rows[0].ref_year),
+      partners: rows.map((row) => ({
+        year: Number(row.ref_year),
+        flow: row.flow_code === "X" ? "export" : "import",
+        code: row.partner_iso3 || String(row.partner_area_code),
+        name: row.partner_name || row.partner_iso3 || String(row.partner_area_code),
+        value_usd: Number(row.value_usd),
+        source_last_released: row.source_last_released || null,
+        retrieved_at: row.retrieved_at || null,
+      })),
+    };
+    this.put(cacheKey, value);
+    return value;
+  }
+
   put(key, value) {
     this.cache.set(key, { value, expiresAt: this.now() + CACHE_TTL_MS });
     while (this.cache.size > 256) this.cache.delete(this.cache.keys().next().value);
@@ -299,5 +379,11 @@ export class TradeStore {
 export function normalizeCountryCode(value) {
   const code = String(value || "").trim().toUpperCase();
   if (!/^[A-Z]{3}$/.test(code)) throw new TradeError(400, "invalid_trade_country", "Expected an ISO-3 country code.");
+  return code;
+}
+
+export function normalizeProductCode(value) {
+  const code = String(value || "").trim();
+  if (!/^\d{2}$/.test(code)) throw new TradeError(400, "invalid_trade_product", "Expected a two-digit HS chapter code.");
   return code;
 }

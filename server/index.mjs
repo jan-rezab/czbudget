@@ -192,6 +192,7 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
   if ((match = pathname.match(/^\/api\/v1\/countries\/([^/]+)$/))) return sendJSON(response, 200, { data: await countryProfile(match[1]) });
   if (pathname === "/api/v1/trade/countries") return sendJSON(response, 200, { data: await trade.countries() });
+  if (pathname === "/api/v1/trade/product-partners") return sendJSON(response, 200, { data: await trade.productPartners(url.searchParams.get("country"), url.searchParams.get("product")) });
   if (pathname === "/api/v1/trade") return sendJSON(response, 200, { data: await trade.profile(url.searchParams.get("country")) });
 
   const countryModules = [

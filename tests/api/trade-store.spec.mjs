@@ -1,11 +1,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { normalizeCountryCode, TRADE_PROFILE_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
+import { normalizeCountryCode, normalizeProductCode, TRADE_PRODUCT_PARTNERS_SQL, TRADE_PROFILE_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
 
 test("trade country codes are strict ISO-3 values", () => {
   assert.equal(normalizeCountryCode(" cze "), "CZE");
   assert.throws(() => normalizeCountryCode("Czechia"), (error) => error instanceof TradeError && error.code === "invalid_trade_country");
+});
+
+test("trade product codes are strict two-digit HS chapters", () => {
+  assert.equal(normalizeProductCode("87"), "87");
+  assert.throws(() => normalizeProductCode("8703"), (error) => error instanceof TradeError && error.code === "invalid_trade_product");
 });
 
 test("trade query is partition-pruned and selects one product grain", () => {
@@ -14,6 +19,26 @@ test("trade query is partition-pruned and selects one product grain", () => {
   assert.match(TRADE_PROFILE_SQL, /partner_area_code = 0/);
   assert.match(TRADE_PROFILE_SQL, /partner_area_code != 0/);
   assert.doesNotMatch(TRADE_PROFILE_SQL, /SELECT \* FROM `czbudget-janrezab\.budget_detail\.trade_observations`/);
+  assert.doesNotMatch(TRADE_PROFILE_SQL.slice(TRADE_PROFILE_SQL.indexOf("product_rows AS")), /DENSE_RANK\(\)/);
+});
+
+test("product-partner query is partition-pruned and constrained to a chapter", () => {
+  assert.match(TRADE_PRODUCT_PARTNERS_SQL, /period_start BETWEEN @min_date AND CURRENT_DATE\(\)/);
+  assert.match(TRADE_PRODUCT_PARTNERS_SQL, /STARTS_WITH\(product_code, @product_code\)/);
+  assert.match(TRADE_PRODUCT_PARTNERS_SQL, /WHERE is_partner AND NOT is_group/);
+  assert.doesNotMatch(TRADE_PRODUCT_PARTNERS_SQL, /SELECT \* FROM `czbudget-janrezab\.budget_detail\.trade_observations`/);
+});
+
+test("product partners expose both directions without filling missing values", async () => {
+  const store = new TradeStore({ tokenProvider: async () => "unused" });
+  store.query = async () => [
+    { ref_year: "2025", flow_code: "X", partner_area_code: "276", partner_iso3: "DEU", partner_name: "Germany", value_usd: "40" },
+    { ref_year: "2025", flow_code: "M", partner_area_code: "156", partner_iso3: "CHN", partner_name: "China", value_usd: "50" },
+  ];
+  const result = await store.productPartners("CZE", "87");
+  assert.equal(result.product_code, "87");
+  assert.deepEqual(result.partners.map((row) => row.flow), ["export", "import"]);
+  assert.deepEqual(result.partners.map((row) => row.value_usd), [40, 50]);
 });
 
 test("trade profile separates totals, partners, and products without inventing zeroes", async () => {
