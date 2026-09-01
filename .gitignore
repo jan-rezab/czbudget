@@ -52,3 +52,8 @@ data/entities/
 # country's headline rules reproduce every figure the site publishes. Rebuilt from BigQuery by
 # scripts/build-profiles-from-warehouse.mjs --all-ready.
 .warehouse-profiles/
+
+# Slim warehouse profiles — identity, history and headline, with detail served by
+# /public-data/municipality-lines rather than repeated in every file. Rebuilt by
+# scripts/build-profiles-from-warehouse.mjs --slim.
+.warehouse-slim/

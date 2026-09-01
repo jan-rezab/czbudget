@@ -44,6 +44,16 @@ const country = String(flag("--country", "CRI")).toUpperCase();
 const allReady = args.includes("--all-ready");
 const outDir = flag("--out", null);
 const verify = args.includes("--verify");
+/**
+ * `--slim` omits the detail array. It is the difference between a serving layer of 1,108 MB and
+ * one of 19 MB across the same 62,534 profiles, because detail is essentially the whole weight —
+ * France alone is 690 MB of it. The page does not need it in the file: it prefers
+ * /public-data/municipality-lines for exactly these countries and falls back to the file only
+ * when the endpoint has nothing, so a slim profile is complete for any country the endpoint
+ * serves. It is refused for one that it does not, rather than shipping a profile with no detail
+ * and no way to fetch any.
+ */
+const slim = args.includes("--slim");
 
 const ALPHA2 = {
   BOL: "BO", BRA: "BR", CHL: "CL", COL: "CO", CRI: "CR", DNK: "DK", ESP: "ES",
@@ -81,6 +91,16 @@ const alpha2 = ALPHA2[country];
 if (!alpha2) {
   console.error(`No alpha-2 mapping for ${country}.`);
   process.exit(1);
+}
+
+if (slim) {
+  // A slim profile is only complete where the endpoint can supply the detail it leaves out.
+  const { COUNTRIES: SERVED } = await import(new URL("../server/municipal-lines.mjs", import.meta.url));
+  if (!SERVED[country]) {
+    console.error(`${country} is not served by /public-data/municipality-lines, so a slim profile `
+      + "would have no detail and no way to fetch any. Add it to server/municipal-lines.mjs first.");
+    process.exit(1);
+  }
 }
 
 const readJSON = async (file) => JSON.parse(await readFile(path.join(ROOT, file), "utf8"));
@@ -219,12 +239,12 @@ for (const entity of directory.entities) {
     ...(directory.reporting_basis ? { reporting_basis: entity.reporting_basis || directory.reporting_basis } : {}),
     years,
     history,
-    detail,
+    ...(slim ? {} : { detail }),
     url: entity.url,
   });
 }
 
-console.log(`built ${profiles.length} profiles, ${withHeadline} with a headline`);
+console.log(`built ${profiles.length} profiles, ${withHeadline} with a headline${slim ? " (slim: detail served by /public-data/municipality-lines)" : ""}`);
 
 if (verify) {
   let checked = 0;

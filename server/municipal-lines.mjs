@@ -201,6 +201,34 @@ export const COUNTRIES = {
       "Salvadoran fiscal transparency portal, 2023 municipal budgets. Reported in US dollars, the " +
       "country’s legal tender.",
   },
+  JPN: {
+    prefix: "JP",
+    currency: "JPY",
+    codePattern: /^\d{6}$/,
+    codeHint: "Expected a six-digit Japanese municipality code.",
+    scopes: ["standalone_municipality"],
+    years: [2024, 2024],
+    sourceUrl: "https://www.e-stat.go.jp/stat-search/files?toukei=00200251&tstat=000001077755",
+    methodology:
+      "Japan's 地方財政状況調査 settlement survey for FY2024: revenue by category from 収入の状況 " +
+      "and expenditure by nature from 歳出内訳及び財源内訳, both reconciled against the 歳入総額 " +
+      "and 歳出総額 that 決算収支の状況 prints — exactly, for all 3,063 reporting bodies. Rows " +
+      "outside the leaf set that sums to those totals are marked as summary rows.",
+  },
+  POL: {
+    prefix: "PL",
+    currency: "PLN",
+    codePattern: /^\d{4,7}$/,
+    codeHint: "Expected a Polish TERYT local-government code.",
+    scopes: ["standalone_municipality"],
+    years: [2024, 2025],
+    sourceUrl: "https://www.gov.pl/web/finanse",
+    methodology:
+      "Polish Ministry of Finance Rb-27S and Rb-28S quarterly reports at year end, carrying the " +
+      "native functional and economic classification. Poland publishes no per-municipality " +
+      "headline on this site, so its headline rule is authored rather than derived: the gross " +
+      "sum of each side at the actual stage, excluding financing.",
+  },
   DNK: {
     prefix: "DK",
     currency: "DKK",
