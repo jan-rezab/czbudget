@@ -589,7 +589,7 @@ for (const path of await htmlFiles()) {
   if (headerlessPages.has(path)) continue;
   const page = await readFile(path, "utf8");
   if ((page.match(/<psd-site-header\b/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared site-header component`);
-  if ((page.match(/global-nav\.js\?v=(?:20260822-component|20260824-identity-outlines|20260824-logo-120|20260824-budget-stages|20260825-country-expansion|20260826-migration|20260828-education|20260829-oecd-reports)/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared header script`);
+  if ((page.match(/global-nav\.js\?v=(?:20260822-component|20260824-identity-outlines|20260824-logo-120|20260824-budget-stages|20260825-country-expansion|20260826-migration|20260828-education|20260829-oecd-reports|20260901-trade-menu)/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared header script`);
   if ((page.match(/site-header\.css\?v=(?:20260822-component|20260824-header-lockup)/g) || []).length !== 1 || !page.includes("data-psd-site-header")) throw new Error(`${path}: expected exactly one shared header stylesheet`);
   if (page.includes('<header class="site-header')) throw new Error(`${path}: contains a duplicated legacy header`);
 }
