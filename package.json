@@ -77,7 +77,9 @@
     "report:denmark-regk100": "python3 scripts/load-municipal-facts-dnk.py --report",
     "report:japan-estat": "python3 scripts/load-municipal-facts-jpn-estat.py --report",
     "validate:glossary": "node scripts/validate-glossary.mjs",
-    "report:france-ofgl": "python3 scripts/load-municipal-facts-fra-ofgl.py --report"
+    "report:france-ofgl": "python3 scripts/load-municipal-facts-fra-ofgl.py --report",
+    "build:source-vintages": "node scripts/build-source-vintages.mjs --write",
+    "report:source-vintages": "node scripts/build-source-vintages.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
