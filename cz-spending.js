@@ -1,11 +1,11 @@
 (() => {
   const $ = selector => document.querySelector(selector);
   const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-  const state = {data:null, group:"all", chapterQuery:"", chapterSort:"amount"};
+  const state = {data:null, group:"all", expenseGroup:"social", chapterQuery:"", chapterSort:"amount"};
   const lang = () => document.documentElement.lang === "en" ? "en" : "cs";
   const label = item => item[`label_${lang()}`] || item.label_cs;
   const locale = () => lang() === "en" ? "en-GB" : "cs-CZ";
-  const bn = value => `${Number(value).toLocaleString(locale(), {minimumFractionDigits:value < 1 ? 2 : 1, maximumFractionDigits:value < 1 ? 2 : 1})} ${lang() === "en" ? "bn CZK" : "mld. Kč"}`;
+  const bn = value => lang() === "en" ? `CZK ${Number(value).toLocaleString(locale(), {minimumFractionDigits:value < 1 ? 2 : 1, maximumFractionDigits:value < 1 ? 2 : 1})}bn` : `${Number(value).toLocaleString(locale(), {minimumFractionDigits:value < 1 ? 2 : 1, maximumFractionDigits:value < 1 ? 2 : 1})} mld. Kč`;
   const pct = value => `${Number(value).toLocaleString(locale(), {minimumFractionDigits:1,maximumFractionDigits:1})} %`;
   const copy = () => lang() === "en" ? {
     all:"All purposes", search:"Search a ministry or chapter", noRows:"No chapter matches this search.",
@@ -61,7 +61,35 @@
     $("#spending-total").textContent=bn(total); $("#spending-pension").textContent=bn(pensions); $("#spending-pension-share").textContent=pct(pensions/total*100); $("#spending-top5").textContent=pct(top5/total*100); $("#spending-eu").textContent=bn(gap);
   }
 
-  function render() { if(!state.data)return; renderSummary(); renderPurpose(); renderChapters(); }
+  function renderExpenditurePie() {
+    if (!window.PSDBudgetStructure?.renderFinanceDonut) return;
+    const d=state.data,total=d.total_expenditure_including_eu_fm_czk/1e9;
+    const slices=d.functional_groups.map(group=>({
+      key:group.id,label:label(group),color:group.color,
+      value:d.functional.filter(row=>row.group===group.id).reduce((sum,row)=>sum+row.amount_czk_bn,0),
+    }));
+    const english=lang()==="en";
+    window.PSDBudgetStructure.renderFinanceDonut({
+      containerId:"expenditure-pie-chart",legendId:"expenditure-pie-legend",detailId:"expenditure-pie-detail",
+      slices,total,selectedKey:state.expenseGroup,totalUnit:english?"CZK bn":"mld. Kč",
+      source:english?"Source: Czech Ministry of Finance":"Zdroj: MF ČR",
+      formatAmount:bn,
+      onSelect:key=>{state.expenseGroup=key;renderExpenditurePie()},
+      detailHTML:(slice,budgetTotal)=>{
+        const purposes=d.functional.filter(row=>row.group===slice.key).sort((a,b)=>b.amount_czk_bn-a.amount_czk_bn);
+        const rows=purposes.map(row=>`<button type="button" data-overview-purpose="${esc(row.code)}" data-overview-group="${esc(row.group)}"><span>${esc(label(row))}</span><b>${bn(row.amount_czk_bn)}</b><small>${pct(row.amount_czk_bn/budgetTotal*100)}</small></button>`).join("");
+        return `<div class="finance-detail-head"><i style="background:${slice.color}"></i><div><span>${esc(slice.label)}</span><strong>${bn(slice.value)}</strong></div><b>${pct(slice.value/budgetTotal*100)}</b></div><p>${english?`${purposes.length} of the 30 expenditure purposes. Choose a line to open it in the complete ledger.`:`${purposes.length} z 30 výdajových účelů. Vyberte řádek a otevřete jej v úplném přehledu.`}</p><div class="finance-purpose-list">${rows}</div><a href="#utraceni">${english?"Open all 30 purposes ↓":"Otevřít všech 30 účelů ↓"}</a>`;
+      },
+    });
+    document.querySelectorAll("[data-overview-purpose]").forEach(button=>button.onclick=()=>{
+      state.group=button.dataset.overviewGroup;
+      renderPurpose();
+      renderPurposeDetail(button.dataset.overviewPurpose);
+      document.getElementById("utraceni")?.scrollIntoView({behavior:"smooth"});
+    });
+  }
+
+  function render() { if(!state.data)return; renderSummary(); renderExpenditurePie(); renderPurpose(); renderChapters(); }
   fetch("data/cz-spending-2026.v1.json").then(response=>{if(!response.ok)throw new Error("Czech spending data failed to load");return response.json()}).then(data=>{
     state.data=data;
     const search=$("#spending-chapter-search"),sort=$("#spending-chapter-sort");

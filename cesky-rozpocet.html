@@ -25,14 +25,14 @@
   <link rel="stylesheet" href="styles.css?v=20260821-fiscal-scope">
   <link rel="stylesheet" href="styles-v2.css?v=20260822-brand">
   <link rel="stylesheet" href="chart-system.css?v=20260821-city-navigation">
-  <link rel="stylesheet" href="cz-spending.css?v=20260901-budget-benchmarks">
+  <link rel="stylesheet" href="cz-spending.css?v=20260901-finance-structure">
   <link rel="stylesheet" href="health-budget.css?v=20260820-1">
-  <script src="psd-glossary.js?v=20260901-glossary" defer></script><script src="app.js?v=20260901-budget-benchmarks" defer></script>
-  <script src="budget-i18n.js?v=20260901-budget-benchmarks" defer></script>
+  <script src="psd-glossary.js?v=20260901-glossary" defer></script><script src="app.js?v=20260901-finance-structure" defer></script>
+  <script src="budget-i18n.js?v=20260901-finance-structure" defer></script>
   <script src="cz-firmy-embed.js?v=20260822-1" defer></script>
 
-  <script src="budget-shell.js?v=20260901-section-order-2" defer></script>
-  <script src="cz-spending.js?v=20260820-1" defer></script>
+  <script src="budget-shell.js?v=20260901-finance-first" defer></script>
+  <script src="cz-spending.js?v=20260901-finance-structure" defer></script>
   <script src="health-budget.js?v=20260820-1" defer></script>
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -63,8 +63,8 @@
       <div class="budget-side-label"><span>CZE</span><b>Advanced</b></div>
       <nav>
         <a href="#overview" class="active"><span>00</span><b>Přehled</b><small>2026</small></a>
-        <a href="#cesko"><span>01</span><b>Rozpočet</b><small>2001–26</small></a>
-        <a href="#struktura"><span>02</span><b>Struktura</b><small>Příjmy / výdaje</small></a>
+        <a href="#struktura"><span>01</span><b>Struktura</b><small>Příjmy / výdaje</small></a>
+        <a href="#rozpocet-v-case"><span>02</span><b>Rozpočet</b><small>2001–26</small></a>
         <a href="#utraceni"><span>03</span><b>Na co</b><small>30 účelů / 47 kapitol</small></a>
         <a href="#benchmark"><span>04</span><b>Země</b><small>Benchmarky</small></a>
         <a href="#demografie"><span>05</span><b>Demografie</b><small>Model 2045</small></a>
@@ -83,21 +83,40 @@
     <article><span>Změna populace 80+</span><strong id="headline-80">+72 %</strong><small>2025–2045</small></article>
   </section>
 
-  <section class="fiscal-perimeter-map" aria-labelledby="fiscal-perimeter-title">
-    <div class="perimeter-map-heading">
-      <div><span class="kicker">Rozsah dat / fiskální perimeter</span><h2 id="fiscal-perimeter-title">Tři účetní hranice</h2></div>
-      <p>Stejný stát lze měřit třemi legitimními způsoby. Výsledek se může zásadně změnit podle toho, které instituce zahrneme a zda vnitřní transfery konsolidujeme.</p>
+  <section class="finance-structure-section" id="cesko" aria-labelledby="finance-structure-title">
+    <span class="section-anchor-alias" id="struktura" aria-hidden="true"></span>
+    <div class="finance-structure-heading">
+      <div><span class="kicker">01 / Celý rozpočet 2026</span><h2 id="finance-structure-title">Příjmy a výdaje. Bez zkratek.</h2></div>
+      <p>Každá koruna schváleného státního rozpočtu v jednom pohledu: 2 117,8 mld. Kč příjmů proti 2 427,8 mld. Kč výdajů. Klikněte na výseč a otevřete její úplný detail.</p>
     </div>
-    <div class="perimeter-cards">
-      <article class="perimeter-card active" data-perimeter="national_budget"><span>01 / Aktivní řada 2001–2026</span><h3>Státní rozpočet</h3><p>Právní a pokladní rozpočet ústřední vlády. Neobsahuje vlastní rozpočty obcí a krajů, veřejné zdravotní pojištění ani obrat veřejných podniků.</p><strong>Zde: české příjmy, výdaje a saldo</strong></article>
-      <article class="perimeter-card" data-perimeter="general_government"><span>02 / Mezinárodní srovnání</span><h3>Sektor vládních institucí</h3><p>Ústřední a místní vláda plus fondy sociálního zabezpečení. Vzájemné transfery se konsolidují; tržní veřejné korporace zůstávají mimo.</p><strong>Zde: IMF benchmark v % HDP</strong></article>
-      <article class="perimeter-card" data-perimeter="public_sector"><span>03 / Vlastnická vrstva</span><h3>Veřejné korporace</h3><p>Samostatné účetní jednotky s vlastním obratem, náklady, aktivy a dluhem. Do rozpočtu vstupují jen skutečné platby mezi firmou a státem.</p><strong>Zde: registr veřejných subjektů</strong></article>
+    <div class="finance-balance-strip" aria-label="Příjmy, výdaje a schodek státního rozpočtu 2026">
+      <article><span>Příjmy</span><strong id="finance-revenue-total">2 117,8</strong><small>mld. Kč · 100 % zdrojů</small></article>
+      <article class="finance-balance-gap"><span>Schodek</span><strong id="finance-deficit-total">−310,0</strong><small id="finance-deficit-share">12,8 % výdajů není kryto příjmy</small></article>
+      <article><span>Výdaje</span><strong id="finance-expenditure-total">2 427,8</strong><small>mld. Kč · 30 účelů</small></article>
     </div>
-    <p class="perimeter-equation"><b>Nesčítat:</b> státní rozpočet + obecní rozpočty + obrat státních firem. Správný konsolidovaný součet eliminuje vnitřní transfery; obrat firmy není daň ani rozpočtový příjem.</p>
+    <div class="finance-pie-grid">
+      <article class="finance-pie-card revenue-card">
+        <header><div><span>A / Zdroje</span><h3>Příjmová struktura</h3></div><small>7 úplných kategorií</small></header>
+        <div class="finance-pie-body">
+          <div class="finance-donut" id="revenue-pie-chart" aria-label="Složení příjmů státního rozpočtu"></div>
+          <div class="finance-pie-legend" id="revenue-pie-legend"></div>
+        </div>
+        <div class="finance-pie-detail" id="revenue-pie-detail" aria-live="polite"></div>
+      </article>
+      <article class="finance-pie-card expenditure-card">
+        <header><div><span>B / Použití</span><h3>Výdajová struktura</h3></div><small>30 účelů v 6 skupinách</small></header>
+        <div class="finance-pie-body">
+          <div class="finance-donut" id="expenditure-pie-chart" aria-label="Složení výdajů státního rozpočtu"></div>
+          <div class="finance-pie-legend" id="expenditure-pie-legend"></div>
+        </div>
+        <div class="finance-pie-detail finance-purpose-detail" id="expenditure-pie-detail" aria-live="polite"></div>
+      </article>
+    </div>
+    <p class="finance-structure-scope"><b>Co přesně sčítáme:</b> schválený státní rozpočet 2026 včetně prostředků EU a finančních mechanismů. Příjmy i výdaje používají stejný celkový rozsah; jednotlivé výdajové účely jsou zaokrouhlené na 0,1 mld. Kč.</p>
   </section>
 
-  <section class="budget-section" id="cesko">
-    <div class="section-heading"><div><span class="kicker">01 / Rozpočet v čase</span><h2>Příjmy a výdaje v čase</h2></div><p><span data-term="cash">Skutečné pokladní plnění</span> 2001–2025 a schválený rozpočet 2026. Přepněte nominální koruny na ceny roku 2025 a porovnejte období bez inflačního zkreslení.</p></div>
+  <section class="budget-section" id="rozpocet-v-case">
+    <div class="section-heading"><div><span class="kicker">02 / Rozpočet v čase</span><h2>Příjmy a výdaje v čase</h2></div><p>Skutečné pokladní plnění 2001–2025 a schválený rozpočet 2026. Přepněte nominální koruny na ceny roku 2025 a porovnejte období bez inflačního zkreslení.</p></div>
     <div class="control-bar budget-controls">
       <label><span>Zobrazení</span><select id="budget-price-mode"><option value="nominal">Nominální Kč</option><option value="real">Ceny roku 2025</option></select></label>
       <label><span>Vybraný rok</span><input id="budget-year" type="range" min="2001" max="2026" value="2026" step="1"></label>
@@ -108,14 +127,13 @@
       <div class="panel-head"><div><span class="panel-index">A</span><h3>Příjmy × výdaje</h3></div><div class="chart-legend"><span><i class="revenue-key"></i>Příjmy</span><span><i class="expense-key"></i>Výdaje</span><span><i class="proposal-key"></i>Schválený 2026</span></div></div>
       <div class="svg-chart" id="budget-pair-chart"></div><div class="selected-year-grid" id="budget-year-detail"></div>
     </article>
-  </section>
-
-  <section class="structure-section" id="struktura">
-    <div class="section-heading compact-heading"><div><span class="kicker">02 / Detailní struktura</span><h2>Příjmy a výdaje podle kategorií</h2></div><p>Každý rok má stejnou klasifikaci. „Ostatní příjmy“ jsou reziduální příjmová kategorie uvnitř státního rozpočtu — zejména nedaňové a kapitálové příjmy a přijaté transfery. Nejde o příjmy dalšího veřejného sektoru.</p></div>
-    <div class="segmented-control standalone-segments" id="structure-mode" aria-label="Jednotka strukturálních grafů"><button type="button" data-mode="amount" aria-pressed="true">mld. Kč</button><button type="button" data-mode="share" aria-pressed="false">podíl v %</button></div>
-    <div class="structure-grid">
-      <article class="panel chart-panel"><div class="panel-head"><div><span class="panel-index">B</span><h3>Příjmová část</h3></div><span>daně · pojistné · ostatní</span></div><div class="stack-legend" id="income-legend"></div><div class="svg-chart" id="income-stack-chart"></div></article>
-      <article class="panel chart-panel"><div class="panel-head"><div><span class="panel-index">C</span><h3>Výdajová část</h3></div><span>dávky · provoz · investice</span></div><div class="stack-legend" id="expense-legend"></div><div class="svg-chart" id="expense-stack-chart"></div></article>
+    <div class="structure-history">
+      <div class="section-heading compact-heading"><div><span class="kicker">Vývoj struktury</span><h2>Jak se skladba rozpočtu měnila</h2></div><p>Stejná klasifikace v celé řadě ukazuje, které zdroje a typy výdajů rostly od roku 2001.</p></div>
+      <div class="segmented-control standalone-segments" id="structure-mode" aria-label="Jednotka strukturálních grafů"><button type="button" data-mode="amount" aria-pressed="true">mld. Kč</button><button type="button" data-mode="share" aria-pressed="false">podíl v %</button></div>
+      <div class="structure-grid">
+        <article class="panel chart-panel"><div class="panel-head"><div><span class="panel-index">B</span><h3>Příjmová část</h3></div><span>daně v detailu · pojistné · ostatní</span></div><div class="stack-legend" id="income-legend"></div><div class="svg-chart" id="income-stack-chart"></div></article>
+        <article class="panel chart-panel"><div class="panel-head"><div><span class="panel-index">C</span><h3>Výdajová část</h3></div><span>dávky · provoz · investice</span></div><div class="stack-legend" id="expense-legend"></div><div class="svg-chart" id="expense-stack-chart"></div></article>
+      </div>
     </div>
   </section>
 
@@ -124,14 +142,6 @@
       <div><span class="kicker">03 / Kam peníze jdou</span><h2>Výdaje podle účelu a kapitoly</h2></div>
       <p>Účel říká, jakou potřebu stát financuje. Kapitola říká, který úřad peníze spravuje. Jsou to dvě různé klasifikace téhož rozpočtu — proto je ukazujeme vedle sebe.</p>
     </div>
-    <article class="panel chart-panel revenue-origin-panel">
-      <div class="panel-head"><div><span class="panel-index">D</span><h3>Odkud peníze přicházejí</h3></div><span>daně · pojistné · ostatní</span></div>
-      <p class="revenue-origin-note" id="revenue-origin-note"></p>
-      <div class="revenue-origin-body">
-        <div class="svg-chart" id="revenue-pie-chart" aria-label="Složení příjmů státního rozpočtu"></div>
-        <div class="stack-legend revenue-origin-legend" id="revenue-pie-legend"></div>
-      </div>
-    </article>
     <p class="spending-scope-note"><b>Pozor na rozsah:</b> účelová struktura pokrývá úplných 2 427,8 mld. Kč včetně peněz EU a finančních mechanismů. Kapitoly jsou v oficiálním srovnání MF uvedeny bez EU/FM, celkem 2 287,6 mld. Kč. Rozdíl není chybějící výdaj.</p>
     <div class="spending-kpis" aria-label="Klíčové ukazatele výdajů 2026">
       <article><span>Výdaje celkem</span><strong id="spending-total">—</strong><small>včetně EU/FM</small></article>

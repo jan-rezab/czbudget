@@ -1,6 +1,6 @@
 (() => {
   const content = document.querySelector(".budget-workspace-content");
-  const requestedOrder = ["cesko", "struktura", "utraceni", "benchmark", "demografie", "zdravotni-system", "nemocnice-benchmark", "statni-firmy", "metodika"];
+  const requestedOrder = ["cesko", "rozpocet-v-case", "utraceni", "benchmark", "demografie", "zdravotni-system", "nemocnice-benchmark", "statni-firmy", "metodika"];
   if (content) requestedOrder.forEach(id => {
     const section = document.getElementById(id);
     if (section) content.append(section);

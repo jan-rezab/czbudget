@@ -4,7 +4,7 @@ const NS = "http://www.w3.org/2000/svg";
 const fmt0 = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
 const fmt1 = new Intl.NumberFormat("cs-CZ", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const esc = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[character]);
-const colors = { revenue:"#a8b63f", expense:"#c93237", taxes:"#a8b63f", insurance:"#727b2b", otherIncome:"#8b8d83", social:"#c93237", wages:"#b59f32", otherExpense:"#646861", capital:"#d3d8a0", a019:"#b59f32", a2064:"#a8b63f", a6579:"#8b8d83", a80:"#8e5d60", pension:"#c93237", health:"#a8b63f", care:"#b18a64", work:"#6f7653", balance:"#9a5b5e" };
+const colors = { revenue:"#a8b63f", expense:"#c93237", taxes:"#a8b63f", taxPit:"#c7d45b", taxCit:"#a7bb42", taxVat:"#dce38c", taxExcise:"#b59f32", taxOther:"#7c8d45", insurance:"#4f6030", otherIncome:"#8b8d83", social:"#c93237", wages:"#b59f32", otherExpense:"#646861", capital:"#d3d8a0", a019:"#b59f32", a2064:"#a8b63f", a6579:"#8b8d83", a80:"#8e5d60", pension:"#c93237", health:"#a8b63f", care:"#b18a64", work:"#6f7653", balance:"#9a5b5e" };
 const chartMeta = {
   "budget-pair-chart": ["line", "Zdroj: MF ČR · ČSÚ"],
   "income-stack-chart": ["column", "Zdroj: MF ČR · ČSÚ"],
@@ -136,7 +136,7 @@ function legend(id, items) {
 }
 
 let budgetData, demographicData, sovereignData;
-let budgetState = { price:"nominal", year:2026, structure:"amount" };
+let budgetState = { price:"nominal", year:2026, structure:"amount", revenueSlice:"insurance" };
 let demoState = { variant:"mid", retAge:65, wageGrowth:0, costGrowth:0 };
 let benchmarkState = { year:2024, metric:"expenditure_pct_gdp", country:"CZE" };
 
@@ -160,8 +160,13 @@ function renderHeadlineFigures() {
     put("hero-revenue", bNum(proposal.revenue, 1));
     put("hero-expense", bNum(proposal.expense, 1));
     put("hero-deficit", signed(balance));
-    put("hero-deficit-share", `${fmt1.format(Math.abs(balance)/proposal.expense*100)} % výdajů`);
+    const deficitShare = Math.abs(balance)/proposal.expense*100;
+    put("hero-deficit-share", `${bPct(deficitShare)} ${bLang()==="en" ? "of expenditure" : "výdajů"}`);
     put("metric-approved-deficit", signed(balance));
+    put("finance-revenue-total", bNum(proposal.revenue, 1));
+    put("finance-expenditure-total", bNum(proposal.expense, 1));
+    put("finance-deficit-total", signed(balance));
+    put("finance-deficit-share", bLang()==="en" ? `${bPct(deficitShare)} of expenditure is not covered by revenue` : `${bPct(deficitShare)} výdajů není kryto příjmy`);
     const bar = document.getElementById("hero-revenue-bar");
     if (bar) bar.style.width = `${(proposal.revenue/proposal.expense*100).toFixed(1)}%`;
   }
@@ -170,8 +175,13 @@ function renderHeadlineFigures() {
 
 function prepareBudget(raw) {
   const keys = raw.columns;
+  const taxKeys = raw.tax_detail?.columns || [];
+  const taxRows = new Map((raw.tax_detail?.rows || []).map((values) => {
+    const row = Object.fromEntries(taxKeys.map((key,index) => [key, values[index]]));
+    return [row.year, row];
+  }));
   const rows = raw.rows.map((values) => Object.fromEntries(keys.map((key,index) => [key, values[index]]))).map((d) => ({
-    ...d, proposal:d.year===raw.proposal_year,
+    ...d, ...(taxRows.get(d.year) || {}), proposal:d.year===raw.proposal_year,
     revenue:d.taxes+d.insurance+d.other_income,
     expense:d.social_benefits+d.wages+d.other_expense+d.capital
   }));
@@ -220,76 +230,120 @@ function renderBudgetDetail(d) {
   ].map(([label,value,note])=>`<div><span>${label}</span><strong>${value}</strong><small>${note}</small></div>`).join("");
 }
 
-/**
- * Where the money comes from, above the section that shows where it goes.
- *
- * A donut rather than a pie: the hole carries the total, which is the number a reader needs to
- * make the shares mean anything, and it keeps the three slices readable at small sizes where a
- * full pie's labels collide. The stack in section 02 already shows these categories moving over
- * twenty-five years; this answers the different question of what the approved year looks like.
- */
-function renderRevenuePie(rows) {
-  const container = document.getElementById("revenue-pie-chart");
-  if (!container || !rows.length) return;
-  const latest = rows[rows.length-1];
-  const slices = [
-    ["taxes", "Daně", budgetValue(latest.taxes, latest.year)],
-    ["insurance", "Sociální pojistné", budgetValue(latest.insurance, latest.year)],
-    ["otherIncome", "Ostatní příjmy", budgetValue(latest.other_income, latest.year)],
-  ];
-  const total = slices.reduce((sum,[,,value]) => sum+value, 0);
-  if (!total) return;
+/** Render one complete budget side as an accessible, clickable donut and aligned ledger. */
+function renderFinanceDonut({ containerId, legendId, detailId, slices, total, selectedKey, totalUnit, source, onSelect, detailHTML, formatAmount }) {
+  const container = document.getElementById(containerId);
+  const legendNode = document.getElementById(legendId);
+  const detailNode = document.getElementById(detailId);
+  if (!container || !legendNode || !detailNode || !slices.length || !total) return;
 
-  const size = 236, radius = 104, inner = 62, cx = size/2, cy = size/2;
-  const container_ = container;
-  container_.classList.add("psd-chart", "psd-chart--pie");
-  container_.dataset.source = "Zdroj: MF ČR";
-  container_.innerHTML = "";
+  const geometryTotal = slices.reduce((sum, slice) => sum + slice.value, 0);
+  const amountLabel = value => formatAmount ? formatAmount(value) : `${bNum(value,1)} ${totalUnit}`;
+  const size = 286, radius = 125, inner = 72, cx = size/2, cy = size/2;
+  container.classList.add("psd-chart", "psd-chart--pie", "svg-chart");
+  container.dataset.source = source;
+  container.innerHTML = "";
   const svg = node("svg", { viewBox:`0 0 ${size} ${size}`, role:"img",
-    "aria-label":`Složení příjmů: ${slices.map(([,label,value])=>`${label} ${bNum(value,1)} mld. Kč`).join(", ")}` });
-
-  // Start at twelve o'clock and run clockwise, which is how a reader expects shares to be read.
+    "aria-label":slices.map(slice => `${slice.label} ${amountLabel(slice.value)}`).join(", ") });
   let angle = -Math.PI/2;
-  slices.forEach(([key,,value]) => {
-    const sweep = value/total*Math.PI*2;
+
+  const select = (key) => { if (key !== selectedKey) onSelect(key); };
+  slices.forEach((slice) => {
+    const sweep = slice.value/geometryTotal*Math.PI*2;
     const end = angle+sweep;
+    const middle = angle+sweep/2;
     const point = (r, a) => `${(cx+r*Math.cos(a)).toFixed(2)} ${(cy+r*Math.sin(a)).toFixed(2)}`;
+    const selected = slice.key === selectedKey;
+    const offset = selected ? 5 : 0;
     const large = sweep > Math.PI ? 1 : 0;
-    svg.append(node("path", {
+    const path = node("path", {
       d: `M ${point(radius,angle)} A ${radius} ${radius} 0 ${large} 1 ${point(radius,end)}`
        + ` L ${point(inner,end)} A ${inner} ${inner} 0 ${large} 0 ${point(inner,angle)} Z`,
-      fill: colors[key], stroke:"var(--chart-pie-gap, #faf8f3)", "stroke-width":"2",
-    }));
+      fill:slice.color, class:`finance-donut-slice${selected ? " is-selected" : ""}`,
+      transform:`translate(${(Math.cos(middle)*offset).toFixed(2)} ${(Math.sin(middle)*offset).toFixed(2)})`,
+      role:"button", tabindex:"0", "aria-pressed":String(selected),
+      "aria-label":`${slice.label}: ${amountLabel(slice.value)}, ${bPct(slice.value/total*100)}`,
+    });
+    path.addEventListener("click", () => select(slice.key));
+    path.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(slice.key); }
+    });
+    path.addEventListener("pointermove", (event) => showTip(event, slice.label, [[bLang()==="en" ? "Amount" : "Částka", amountLabel(slice.value)], [bLang()==="en" ? "Share" : "Podíl", bPct(slice.value/total*100)]]));
+    path.addEventListener("pointerleave", hideTip);
+    svg.append(path);
     angle = end;
   });
 
-  svg.append(node("text", { x:cx, y:cy-4, "text-anchor":"middle", class:"pie-total-value" }, bNum(total,1)));
-  svg.append(node("text", { x:cx, y:cy+16, "text-anchor":"middle", class:"pie-total-label" }, "mld. Kč"));
-  container_.appendChild(svg);
+  svg.append(node("text", { x:cx, y:cy-5, "text-anchor":"middle", class:"pie-total-value" }, bNum(total,1)));
+  svg.append(node("text", { x:cx, y:cy+17, "text-anchor":"middle", class:"pie-total-label" }, totalUnit));
+  container.append(svg);
 
-  const shares = document.getElementById("revenue-pie-legend");
-  if (shares) {
-    // The share answers "how much of the whole", the amount answers "how much" — a reader
-    // comparing this against the expenditure figures below needs the second one too.
-    shares.innerHTML = slices.map(([key,label,value]) =>
-      `<span><i style="background:${colors[key]}"></i><em>${esc(label)}</em>`
-      + `<b>${bNum(value,1)}</b><small>${bPct(value/total*100)}</small></span>`).join("");
-  }
-  const note = document.getElementById("revenue-origin-note");
-  if (note) note.textContent = `Výdaje níže financují tyto tři zdroje. Schválený rozpočet ${latest.year}.`;
+  legendNode.innerHTML = slices.map(slice => `<button type="button" data-finance-slice="${esc(slice.key)}" aria-pressed="${slice.key===selectedKey}" style="--slice-color:${slice.color}"><i></i><span>${esc(slice.label)}</span><b>${bNum(slice.value,1)}</b><small>${bPct(slice.value/total*100)}</small></button>`).join("");
+  legendNode.querySelectorAll("[data-finance-slice]").forEach(button => button.addEventListener("click", () => select(button.dataset.financeSlice)));
+  const selected = slices.find(slice => slice.key === selectedKey) || slices[0];
+  detailNode.innerHTML = detailHTML(selected, total);
+}
+
+window.PSDBudgetStructure = { renderFinanceDonut };
+
+function renderRevenuePie() {
+  const latest = budgetData?.rows?.at(-1);
+  if (!latest) return;
+  const en = bLang() === "en";
+  const labels = en ? {
+    pit:["Personal income tax","Tax on earnings from employment and self-employment."],
+    cit:["Corporate income tax","Tax on company profits."], vat:["VAT","Value-added tax on household and business consumption."],
+    excise:["Excise & energy taxes","Excise duties and taxes on energy products."], otherTax:["Other taxes & fees","Property taxes and all remaining tax and fee revenue."],
+    insurance:["Social contributions","Mandatory social-security and employment-policy contributions."],
+    other:["Other revenue","Non-tax and capital revenue plus transfers received, including EU funds."],
+  } : {
+    pit:["Daň z příjmů fyzických osob","Daň z příjmů zaměstnanců a osob samostatně výdělečně činných."],
+    cit:["Daň z příjmů právnických osob","Daň ze zisku firem."], vat:["DPH","Daň z přidané hodnoty ze spotřeby domácností a firem."],
+    excise:["Spotřební a energetické daně","Spotřební daně a daně z energetických produktů."], otherTax:["Ostatní daně a poplatky","Majetkové daně a zbývající daňové a poplatkové příjmy."],
+    insurance:["Sociální pojistné","Povinné pojistné na sociální zabezpečení a politiku zaměstnanosti."],
+    other:["Ostatní příjmy","Nedaňové a kapitálové příjmy a přijaté transfery včetně prostředků EU."],
+  };
+  const slices = [
+    {key:"taxPit",label:labels.pit[0],description:labels.pit[1],value:latest.personal_income_tax,color:colors.taxPit},
+    {key:"taxCit",label:labels.cit[0],description:labels.cit[1],value:latest.corporate_income_tax,color:colors.taxCit},
+    {key:"taxVat",label:labels.vat[0],description:labels.vat[1],value:latest.vat,color:colors.taxVat},
+    {key:"taxExcise",label:labels.excise[0],description:labels.excise[1],value:latest.excise_and_energy_taxes,color:colors.taxExcise},
+    {key:"taxOther",label:labels.otherTax[0],description:labels.otherTax[1],value:latest.property_taxes+latest.other_taxes_and_fees,color:colors.taxOther},
+    {key:"insurance",label:labels.insurance[0],description:labels.insurance[1],value:latest.insurance,color:colors.insurance},
+    {key:"otherIncome",label:labels.other[0],description:labels.other[1],value:latest.other_income,color:colors.otherIncome},
+  ];
+  const money = value => en ? `CZK ${bNum(value,1)}bn` : `${bNum(value,1)} mld. Kč`;
+  renderFinanceDonut({
+    containerId:"revenue-pie-chart", legendId:"revenue-pie-legend", detailId:"revenue-pie-detail",
+    slices, total:latest.revenue, selectedKey:budgetState.revenueSlice,
+    totalUnit:en ? "CZK bn" : "mld. Kč", source:en ? "Source: Czech Ministry of Finance" : "Zdroj: MF ČR",
+    formatAmount:money,
+    onSelect:(key) => { budgetState.revenueSlice=key; renderRevenuePie(); },
+    detailHTML:(slice,total) => `<div class="finance-detail-head"><i style="background:${slice.color}"></i><div><span>${esc(slice.label)}</span><strong>${money(slice.value)}</strong></div><b>${bPct(slice.value/total*100)}</b></div><p>${esc(slice.description)}</p>`,
+  });
 }
 
 function renderStructure(rows) {
   const amount = budgetState.structure === "amount";
   renderStack("income-stack-chart", rows, [
-    ["taxes","Daně",d=>d.taxes],["insurance","Sociální pojistné",d=>d.insurance],["otherIncome","Ostatní příjmy",d=>d.other_income]
+    ["taxPit","Daň z příjmů fyzických osob",d=>d.personal_income_tax],
+    ["taxCit","Daň z příjmů právnických osob",d=>d.corporate_income_tax],
+    ["taxVat","DPH",d=>d.vat],
+    ["taxExcise","Spotřební a energetické daně",d=>d.excise_and_energy_taxes],
+    ["taxOther","Ostatní daně a poplatky",d=>d.property_taxes+d.other_taxes_and_fees],
+    ["insurance","Sociální pojistné",d=>d.insurance],
+    ["otherIncome","Ostatní příjmy",d=>d.other_income]
   ], d=>d.revenue, amount);
   renderStack("expense-stack-chart", rows, [
     ["social","Sociální dávky",d=>d.social_benefits],["wages","Mzdy státu",d=>d.wages],["otherExpense","Ostatní výdaje",d=>d.other_expense],["capital","Investice",d=>d.capital]
   ], d=>d.expense, amount);
-  legend("income-legend",[["taxes","Daně"],["insurance","Sociální pojistné"],["otherIncome","Ostatní"]]);
+  legend("income-legend",[
+    ["taxPit","DPFO"],["taxCit","DPPO"],["taxVat","DPH"],
+    ["taxExcise","Spotřební a energetické daně"],["taxOther","Ostatní daně a poplatky"],
+    ["insurance","Sociální pojistné"],["otherIncome","Ostatní příjmy"]
+  ]);
   legend("expense-legend",[["social","Sociální dávky"],["wages","Mzdy"],["otherExpense","Ostatní"],["capital","Investice"]]);
-  renderRevenuePie(rows);
+  renderRevenuePie();
 }
 
 function renderStack(id, rows, definitions, total, amount) {
@@ -425,7 +479,7 @@ function syncBenchmarkLanguage(){if(!sovereignData||benchmarkRenderedLang===bLan
 // The headline figures are numerals with no words around them, so the translator cannot
 // reach them; re-render so they follow the active language's number format.
 ["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,renderHeadlineFigures));
-["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,()=>{if(budgetData)renderRevenuePie(budgetData.rows);}));
+["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,()=>{if(budgetData){renderRevenuePie();renderHeadlineFigures();}}));
 
 function initBenchmark(){const years=Array.from({length:20},(_,i)=>2005+i);$("#year-select").innerHTML=years.reverse().map(y=>`<option ${y===2024?"selected":""}>${y}</option>`).join("");benchmarkRenderedLang=bLang();fillBenchmarkSelects();$("#year-select").addEventListener("change",e=>{benchmarkState.year=+e.target.value;renderBenchmark()});$("#metric-select").addEventListener("change",e=>{benchmarkState.metric=e.target.value;renderBenchmark()});$("#country-select").addEventListener("change",e=>{benchmarkState.country=e.target.value;renderBenchmark()});renderBenchmark();}
 

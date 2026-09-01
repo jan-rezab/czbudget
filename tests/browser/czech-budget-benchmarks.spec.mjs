@@ -20,7 +20,7 @@ test("Czech budget uses only the fiscal benchmark cohort and requested section o
   const sectionOrder = await page.locator(".budget-workspace-content > section[id]").evaluateAll(sections => sections.map(section => section.id));
   expect(sectionOrder).toEqual([
     "cesko",
-    "struktura",
+    "rozpocet-v-case",
     "utraceni",
     "benchmark",
     "demografie",

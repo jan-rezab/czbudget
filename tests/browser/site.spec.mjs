@@ -128,8 +128,17 @@ test("state budget translates its Czech static body on an initial English visit"
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator(".budget-hero h1")).toHaveText("Czech state budget");
   await expect(page.locator(".budget-hero")).toContainText("Twenty-five years of revenue and expenditure");
-  await expect(page.locator(".fiscal-perimeter-map")).toContainText("Three accounting boundaries");
-  await expect(page.locator(".fiscal-perimeter-map")).not.toContainText("Tři účetní hranice");
+  await expect(page.locator(".finance-structure-section")).toContainText("Revenue and expenditure. The full picture.");
+  await expect(page.locator("#revenue-pie-legend button")).toHaveCount(7);
+  await expect(page.locator("#expenditure-pie-legend button")).toHaveCount(6);
+  await expect(page.locator("#finance-revenue-total")).toHaveText("2,117.8");
+  await expect(page.locator("#finance-expenditure-total")).toHaveText("2,427.8");
+  await page.locator('#expenditure-pie-legend button', {hasText:"Economy and infrastructure"}).click();
+  await expect(page.locator("#expenditure-pie-detail")).toContainText("Transport");
+  await expect(page.locator(".budget-side-nav")).toContainText("Money flow");
+  await expect(page.locator(".budget-side-nav")).not.toContainText("Tok peněz");
+  await expect(page.locator("#rozpocet-v-case .section-heading").first()).toContainText("Actual cash outturn for 2001–2025");
+  await expect(page.locator("#rozpocet-v-case .section-heading").first()).not.toContainText("Skutečné pokladní plnění");
 });
 
 test("comparison and coverage live outside the homepage", async ({ page }) => {
