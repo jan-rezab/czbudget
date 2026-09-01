@@ -7,8 +7,8 @@
   <meta name="description" content="Interaktivní vývoj dovozu, vývozu a obchodní bilance podle země, partnera a zboží z UN Comtrade.">
   <link rel="canonical" href="https://publicspendingdata.org/deep-dives/trade/">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/trade/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/trade/?lang=en">
-  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-market">
-  <script src="../../trade-deep-dive.js?v=20260901-market-all-chapters" defer></script>
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-country-markets">
+  <script src="../../trade-deep-dive.js?v=20260901-country-markets" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 </head>
   <body class="deep-dives-page trade-page">
@@ -16,7 +16,7 @@
   <main id="top">
     <section class="deep-hero deep-topic-hero trade-hero" id="overview"><div><span class="eyebrow" data-trade-copy="eyebrow">Report / Zahraniční obchod</span><h1><span data-trade-copy="titleLead">Obchodní trh</span> <em data-trade-copy="titleEm">na jednom plátně</em></h1><p data-trade-copy="intro">Velikost ukazuje hodnotu obchodu, barva přebytek nebo deficit. Klikněte na sektor, zboží a potom partnera.</p></div><div class="deep-hero-aside deep-filter-panel"><label><span data-trade-copy="countryLabel">Země</span><select id="trade-country" aria-label="Země"></select></label><div class="deep-country-readout"><b id="trade-country-code">DEU</b><strong id="trade-country-name">Německo</strong><small id="trade-data-vintage">UN Comtrade · —</small></div></div></section>
 
-    <nav class="deep-topic-rail" aria-label="Trade sections" data-sticky-filter="#trade-country" data-sticky-filter-kind="country"><a href="#pulse" data-trade-copy="pulseNav">Bilance</a><a href="#matrix" data-trade-copy="matrixNav">Mapa trhu</a><a href="#trend" data-trade-copy="trendNav">Vývoj</a><a href="#composition" data-trade-copy="compositionNav">Žebříčky</a><a href="#method" data-trade-copy="methodNav">Metodika</a></nav>
+    <nav class="deep-topic-rail" aria-label="Trade sections" data-sticky-filter="#trade-country" data-sticky-filter-kind="country"><a href="#pulse" data-trade-copy="pulseNav">Bilance</a><a href="#matrix" data-trade-copy="matrixNav">Mapa trhu</a><a href="#routes" data-trade-copy="routesNav">Směry obchodu</a><a href="#trend" data-trade-copy="trendNav">Vývoj</a><a href="#composition" data-trade-copy="compositionNav">Žebříčky</a><a href="#method" data-trade-copy="methodNav">Metodika</a></nav>
 
     <section class="trade-section trade-pulse" id="pulse">
       <header class="trade-heading"><div><span data-trade-copy="pulseKicker">Poslední období</span><h2 data-trade-copy="pulseTitle">Obchodní bilance na první pohled</h2></div><p id="trade-period-context" data-trade-copy="pulseIntro">Vývoz minus dovoz. Červená znamená deficit, zelená přebytek.</p></header>
@@ -36,6 +36,22 @@
         <div class="trade-market-tooltip" id="trade-market-tooltip" role="tooltip" hidden></div>
         <aside class="trade-market-drawer" id="trade-market-drawer" aria-live="polite" aria-label="Detail kapitoly zboží" hidden></aside>
       </div>
+    </section>
+
+    <section class="trade-section trade-routes-section" id="routes">
+      <header class="trade-heading trade-routes-heading"><div><span data-trade-copy="routesKicker">Obchodní geografie</span><h2 data-trade-copy="routesTitle">Kam vývoz míří. Odkud dovoz přichází.</h2></div><p data-trade-copy="routesIntro">Dva trhy zemí vedle sebe. Plocha ukazuje hodnotu toku a barva bilaterální přebytek nebo deficit. Klikněte na zemi pro přesná čísla.</p></header>
+      <div class="trade-route-grid">
+        <article class="trade-route-card export">
+          <header><span data-trade-copy="exportRouteKicker">Trh vývozu</span><h3 data-trade-copy="exportRouteTitle">Kam směřuje vývoz</h3><p id="trade-export-route-meta">—</p></header>
+          <div class="trade-route-viewport"><div id="trade-export-routes" class="trade-route-map" aria-live="polite"></div></div>
+        </article>
+        <article class="trade-route-card import">
+          <header><span data-trade-copy="importRouteKicker">Trh dovozu</span><h3 data-trade-copy="importRouteTitle">Odkud přichází dovoz</h3><p id="trade-import-route-meta">—</p></header>
+          <div class="trade-route-viewport"><div id="trade-import-routes" class="trade-route-map" aria-live="polite"></div></div>
+        </article>
+      </div>
+      <div class="trade-route-legend"><span data-trade-copy="routeArea">Plocha = hodnota toku</span><span><i class="deficit"></i><span data-trade-copy="deficit">Deficit</span></span><span><i class="balanced"></i><span data-trade-copy="balanced">Vyrovnané</span></span><span><i class="surplus"></i><span data-trade-copy="surplus">Přebytek</span></span></div>
+      <aside class="trade-route-detail" id="trade-route-detail" aria-live="polite" hidden></aside>
     </section>
 
     <section class="trade-section trade-trend-section" id="trend">

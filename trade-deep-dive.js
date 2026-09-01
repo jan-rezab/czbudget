@@ -7,9 +7,11 @@
     cs: {
       eyebrow: "Report / Zahraniční obchod", titleLead: "Obchodní trh", titleEm: "na jednom plátně",
       intro: "Velikost ukazuje hodnotu obchodu, barva přebytek nebo deficit. Klikněte na sektor a potom na zboží — zobrazí se jeho partneři.", countryLabel: "Země",
-      pulseNav: "Bilance", matrixNav: "Mapa trhu", trendNav: "Vývoj", compositionNav: "Žebříčky", methodNav: "Metodika",
+      pulseNav: "Bilance", matrixNav: "Mapa trhu", routesNav: "Směry obchodu", trendNav: "Vývoj", compositionNav: "Žebříčky", methodNav: "Metodika",
       pulseKicker: "Vybrané období", pulseTitle: "Obchodní bilance na první pohled", pulseIntro: "Vývoz minus dovoz. Červená znamená deficit, zelená přebytek.",
       matrixKicker: "Struktura posledního roku", matrixTitle: "Trh zboží jako portfolio", matrixIntro: "Každá dlaždice je kapitola HS. Plocha ukazuje hodnotu, barva obchodní bilanci. Kliknutím otevřete sektor a partnery.",
+      routesKicker: "Obchodní geografie", routesTitle: "Kam vývoz míří. Odkud dovoz přichází.", routesIntro: "Dva trhy zemí vedle sebe. Plocha ukazuje hodnotu toku a barva bilaterální přebytek nebo deficit. Klikněte na zemi pro přesná čísla.",
+      exportRouteKicker: "Trh vývozu", exportRouteTitle: "Kam směřuje vývoz", importRouteKicker: "Trh dovozu", importRouteTitle: "Odkud přichází dovoz", routeArea: "Plocha = hodnota toku", topPartners: "největších partnerů", bilateralBalance: "Bilaterální bilance", exportShare: "Podíl na vývozu", importShare: "Podíl na dovozu", countryDetail: "Detail obchodní země",
       trendKicker: "Vývoj v čase", trendTitle: "Dovoz a vývoz v čase", trendIntro: "Přejeďte po grafu nebo klikněte na bod. Vybrané období se propíše do horních metrik i detailu pod grafem.",
       annual: "Ročně", monthly: "Měsíčně", exports: "Vývoz", imports: "Dovoz", chartNote: "Hodnoty jsou v běžných USD. Mezery v řadě jsou chybějící data, nikoli nuly.",
       compositionKicker: "Žebříčky posledního roku", compositionTitle: "Největší partneři a kapitoly", compositionIntro: "Přepněte dovoz nebo vývoz. Kliknutí na kapitolu otevře stejný detail partnerů jako mapa trhu.",
@@ -23,9 +25,11 @@
     en: {
       eyebrow: "Report / Foreign trade", titleLead: "The trade market", titleEm: "on one screen",
       intro: "Size shows trade value; color shows surplus or deficit. Click a sector, then a product to reveal its partners.", countryLabel: "Country",
-      pulseNav: "Balance", matrixNav: "Market map", trendNav: "Trend", compositionNav: "Rankings", methodNav: "Method",
+      pulseNav: "Balance", matrixNav: "Market map", routesNav: "Trade routes", trendNav: "Trend", compositionNav: "Rankings", methodNav: "Method",
       pulseKicker: "Selected period", pulseTitle: "The trade balance at a glance", pulseIntro: "Exports minus imports. Red means a deficit; green a surplus.",
       matrixKicker: "Latest annual structure", matrixTitle: "The goods market as a portfolio", matrixIntro: "Every tile is an HS chapter. Area shows value and color shows trade balance. Click through to sectors and partners.",
+      routesKicker: "Trade geography", routesTitle: "Where exports go. Where imports come from.", routesIntro: "Two country markets side by side. Area shows flow value and color shows the bilateral surplus or deficit. Click a country for exact figures.",
+      exportRouteKicker: "Export market", exportRouteTitle: "Where exports go", importRouteKicker: "Import market", importRouteTitle: "Where imports come from", routeArea: "Area = flow value", topPartners: "largest partners", bilateralBalance: "Bilateral balance", exportShare: "Share of exports", importShare: "Share of imports", countryDetail: "Trade country detail",
       trendKicker: "Change over time", trendTitle: "Imports and exports over time", trendIntro: "Hover over the chart or click a point. The selected period updates the headline metrics and detail below the chart.",
       annual: "Annual", monthly: "Monthly", exports: "Exports", imports: "Imports", chartNote: "Values are current USD. Gaps are missing data, not zeroes.",
       compositionKicker: "Latest annual rankings", compositionTitle: "Largest partners and chapters", compositionIntro: "Switch imports or exports. Clicking a chapter opens the same partner detail as the market map.",
@@ -50,6 +54,25 @@
     ["manufacturing", 94, 96, "Ostatní výroba", "Misc. manufacturing"], ["special", 97, 99, "Umění a zvláštní položky", "Art & special items"],
   ].map(([id, min, max, cs, en]) => ({ id, min, max, name: lang === "cs" ? cs : en }));
 
+  const productAliases = (lang === "cs" ? {
+    "02": "Maso", "03": "Ryby a mořské plody", "04": "Mléko, vejce a med", "07": "Zelenina", "08": "Ovoce a ořechy", "09": "Káva, čaj a koření", "12": "Olejnatá semena", "15": "Tuky a oleje",
+    "25": "Sůl, kámen a cement", "26": "Rudy a koncentráty", "27": "Ropa, plyn a paliva", "28": "Anorganická chemie", "29": "Organická chemie", "30": "Léčiva", "38": "Chemické výrobky", "39": "Plasty", "40": "Kaučuk a pryž",
+    "44": "Dřevo", "48": "Papír", "61": "Pletené oděvy", "62": "Ostatní oděvy", "63": "Textilní výrobky", "64": "Obuv", "68": "Výrobky z kamene", "70": "Sklo", "71": "Drahé kovy a šperky",
+    "72": "Železo a ocel", "73": "Výrobky ze železa a oceli", "74": "Měď", "76": "Hliník", "82": "Nástroje a příbory", "83": "Kovové výrobky", "84": "Stroje", "85": "Elektrická zařízení", "86": "Železniční technika", "87": "Vozidla", "88": "Letadla a kosmická technika", "89": "Lodě a čluny", "90": "Zdravotnické a optické přístroje", "94": "Nábytek", "95": "Hračky a sportovní potřeby", "96": "Ostatní výrobky", "99": "Zvláštní obchod",
+  } : {
+    "02": "Meat", "03": "Fish & seafood", "04": "Dairy, eggs & honey", "07": "Vegetables", "08": "Fruit & nuts", "09": "Coffee, tea & spices", "12": "Oil seeds", "15": "Fats & oils",
+    "25": "Salt, stone & cement", "26": "Ores & concentrates", "27": "Oil, gas & mineral fuels", "28": "Inorganic chemicals", "29": "Organic chemicals", "30": "Pharmaceuticals", "38": "Chemical products", "39": "Plastics", "40": "Rubber",
+    "44": "Wood", "48": "Paper", "61": "Knitted clothing", "62": "Non-knitted clothing", "63": "Textile goods", "64": "Footwear", "68": "Stone products", "70": "Glass", "71": "Precious metals & jewellery",
+    "72": "Iron & steel", "73": "Iron & steel products", "74": "Copper", "76": "Aluminium", "82": "Tools & cutlery", "83": "Metal goods", "84": "Machinery", "85": "Electrical equipment", "86": "Rail equipment", "87": "Vehicles", "88": "Aircraft & spacecraft", "89": "Ships & boats", "90": "Medical & optical instruments", "94": "Furniture", "95": "Toys & sports equipment", "96": "Miscellaneous goods", "99": "Special trade",
+  });
+
+  const friendlyProductLabel = (item) => productAliases[item.code] || String(item.name || `HS ${item.code}`)
+    .split(";")[0]
+    .replace(/\s*,?\s+and parts(?: and accessories)? thereof.*$/i, "")
+    .replace(/\s+and articles thereof.*$/i, "")
+    .replace(/\s+n\.e\.c\..*$/i, "")
+    .trim();
+
   document.querySelectorAll("[data-trade-copy]").forEach((node) => {
     const value = copy[node.dataset.tradeCopy];
     if (value) node.textContent = value;
@@ -62,6 +85,7 @@
     size: ["turnover", "export", "import"].includes(params.get("size")) ? params.get("size") : "turnover",
     sector: groups.some((group) => group.id === params.get("sector")) ? params.get("sector") : null,
     selectedKind: null, selectedCode: null, selectedProduct: /^\d{2}$/.test(params.get("product") || "") ? params.get("product") : null,
+    selectedPartner: /^[A-Z0-9]{2,3}$/.test((params.get("partner") || "").toUpperCase()) ? params.get("partner").toUpperCase() : null,
     drawerFlow: params.get("flow") === "import" ? "import" : "export", drawerPartner: null,
     profile: null, partnerCache: new Map(), productRequest: 0,
   };
@@ -86,6 +110,7 @@
     state.period ? url.searchParams.set("period", state.period) : url.searchParams.delete("period");
     state.sector ? url.searchParams.set("sector", state.sector) : url.searchParams.delete("sector");
     state.selectedProduct ? url.searchParams.set("product", state.selectedProduct) : url.searchParams.delete("product");
+    state.selectedPartner ? url.searchParams.set("partner", state.selectedPartner) : url.searchParams.delete("partner");
     history.replaceState(null, "", url);
   };
 
@@ -104,6 +129,23 @@
       const balance = Number.isFinite(row.export) && Number.isFinite(row.import) ? row.export - row.import : null;
       return { ...row, turnover, balance, balanceRatio: Number.isFinite(balance) && turnover > 0 ? balance / turnover : null, group: groups.find((group) => Number(row.code) >= group.min && Number(row.code) <= group.max) };
     }).filter((row) => row.group && Number.isFinite(row.turnover) && row.turnover > 0);
+  }
+
+  function partnerRows() {
+    const map = new Map();
+    (state.profile?.partners || []).forEach((row) => {
+      const entry = map.get(row.code) || { code: row.code, name: row.name, year: row.year, import: null, export: null };
+      entry[row.flow] = row.value_usd;
+      if (row.name) entry.name = row.name;
+      entry.year = Math.max(entry.year || 0, row.year || 0);
+      map.set(row.code, entry);
+    });
+    return [...map.values()].map((row) => {
+      const known = [row.import, row.export].filter(Number.isFinite);
+      const turnover = known.length ? known.reduce((sum, value) => sum + value, 0) : null;
+      const balance = Number.isFinite(row.export) && Number.isFinite(row.import) ? row.export - row.import : null;
+      return { ...row, turnover, balance, balanceRatio: Number.isFinite(balance) && turnover > 0 ? balance / turnover : null };
+    }).filter((row) => Number.isFinite(row.turnover) && row.turnover > 0);
   }
 
   function binaryTreemap(items, rectangle) {
@@ -141,6 +183,8 @@
   async function init() {
     $("#trade-chart").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
     $("#trade-matrix").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
+    $("#trade-export-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
+    $("#trade-import-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
     try {
       const catalogResponse = await fetch("/api/v1/trade/countries");
       if (!catalogResponse.ok) throw new Error("catalog");
@@ -148,18 +192,19 @@
       if (!countries.some((country) => country.code === state.country) && countries[0]) state.country = countries[0].code;
       $("#trade-country").innerHTML = countries.map((country) => `<option value="${escapeHTML(country.code)}">${escapeHTML(country.name)} (${escapeHTML(country.code)})</option>`).join("");
       $("#trade-country").value = state.country;
-      $("#trade-country").addEventListener("change", () => { state.country = $("#trade-country").value; state.period = null; state.sector = null; closeProduct(); loadProfile(); });
+      $("#trade-country").addEventListener("change", () => { state.country = $("#trade-country").value; state.period = null; state.sector = null; state.selectedPartner = null; closeProduct(); loadProfile(); });
       document.querySelectorAll("#trade-frequency button").forEach((button) => button.addEventListener("click", () => { state.frequency = button.dataset.frequency; state.period = null; render(); }));
       document.querySelectorAll("#trade-flow-tabs button").forEach((button) => button.addEventListener("click", () => { state.flow = button.dataset.flow; state.drawerFlow = state.flow; state.selectedKind = null; state.selectedCode = null; renderComposition(); if (state.selectedProduct) renderProductDrawer(); updateURL(); }));
       document.querySelectorAll("#trade-size-metric button").forEach((button) => button.addEventListener("click", () => { state.size = button.dataset.size; renderMatrix(); updateURL(); }));
       $("#trade-matrix-back").addEventListener("click", () => { state.sector = null; renderMatrix(); updateURL(); });
-      let resizeTimer; addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => state.profile && renderMatrix(), 120); });
+      let resizeTimer; addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (!state.profile) return; renderMatrix(); renderPartnerMarkets(); }, 120); });
       await loadProfile();
     } catch (error) { showError(error); }
   }
 
   async function loadProfile() {
     $("#trade-status").hidden = true; $("#trade-chart").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`; $("#trade-matrix").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
+    $("#trade-export-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`; $("#trade-import-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
     try {
       const response = await fetch(`/api/v1/trade?country=${encodeURIComponent(state.country)}`);
       if (!response.ok) throw new Error(`profile ${response.status}`);
@@ -175,6 +220,7 @@
   function showError(error) {
     console.error(error); $("#trade-status").hidden = false; $("#trade-status").textContent = copy.loadError;
     $("#trade-chart").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loadError)}</div>`; $("#trade-matrix").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loadError)}</div>`;
+    $("#trade-export-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loadError)}</div>`; $("#trade-import-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loadError)}</div>`;
     $("#trade-kpis").innerHTML = ""; $("#trade-selected-period").innerHTML = ""; $("#trade-partners").innerHTML = ""; $("#trade-products").innerHTML = "";
   }
 
@@ -184,11 +230,11 @@
     if (!periods.length) {
       $("#trade-chart").innerHTML = `<div class="trade-loading">${escapeHTML(copy.noData)}</div>`;
       const fallback = pairRows(state.profile.totals.filter((row) => row.frequency === "A")).at(-1);
-      renderKPIs(fallback); renderSelected(fallback); renderMatrix(); renderComposition(); updateURL(); return;
+      renderKPIs(fallback); renderSelected(fallback); renderMatrix(); renderPartnerMarkets(); renderComposition(); updateURL(); return;
     }
     if (!state.period || !periods.some((row) => row.period === state.period)) state.period = periods.at(-1).period;
     const selected = periods.find((row) => row.period === state.period) || periods.at(-1);
-    renderKPIs(selected); renderMatrix(); renderChart(periods); renderSelected(selected); renderComposition(); updateURL();
+    renderKPIs(selected); renderMatrix(); renderPartnerMarkets(); renderChart(periods); renderSelected(selected); renderComposition(); updateURL();
   }
 
   function renderKPIs(row) {
@@ -225,7 +271,7 @@
       const cells = itemTiles.map((item) => {
         const rect = item.rect; const compact = rect.w < 92 || rect.h < 65; const tiny = rect.w < 57 || rect.h < 42; const ratioLabel = Number.isFinite(item.balanceRatio) ? percent.format(item.balanceRatio) : "—";
         const label = `HS ${item.code} · ${item.name} · ${copy.exports} ${fmt(item.export)} · ${copy.imports} ${fmt(item.import)} · ${copy.balance} ${signed(item.balance)}`;
-        return `<button type="button" class="trade-matrix-tile${compact ? " compact" : ""}${tiny ? " tiny" : ""}" data-product="${escapeHTML(item.code)}" style="left:${rect.x.toFixed(2)}px;top:${rect.y.toFixed(2)}px;width:${Math.max(0, rect.w).toFixed(2)}px;height:${Math.max(0, rect.h).toFixed(2)}px;background:${balanceColor(item.balanceRatio)}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}"><b>HS ${escapeHTML(item.code)}</b><span>${escapeHTML(item.name)}</span><strong>${escapeHTML(ratioLabel)}</strong></button>`;
+        return `<button type="button" class="trade-matrix-tile${compact ? " compact" : ""}${tiny ? " tiny" : ""}" data-product="${escapeHTML(item.code)}" style="left:${rect.x.toFixed(2)}px;top:${rect.y.toFixed(2)}px;width:${Math.max(0, rect.w).toFixed(2)}px;height:${Math.max(0, rect.h).toFixed(2)}px;background:${balanceColor(item.balanceRatio)}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}"><b>${escapeHTML(friendlyProductLabel(item))}</b><span>HS ${escapeHTML(item.code)}</span><strong>${escapeHTML(ratioLabel)}</strong></button>`;
       }).join("");
       return `<section class="trade-matrix-group${selectedGroup ? " zoomed" : ""}" data-sector="${escapeHTML(groupTile.id)}" style="left:${(x + 1).toFixed(2)}px;top:${(y + 1).toFixed(2)}px;width:${Math.max(0, w - 2).toFixed(2)}px;height:${Math.max(0, h - 2).toFixed(2)}px">${header}${cells}</section>`;
     }).join("");
@@ -235,6 +281,41 @@
       button.addEventListener("pointerenter", showTooltip); button.addEventListener("pointermove", showTooltip); button.addEventListener("pointerleave", () => { $("#trade-market-tooltip").hidden = true; });
       button.addEventListener("focus", showTooltip); button.addEventListener("blur", () => { $("#trade-market-tooltip").hidden = true; }); button.addEventListener("click", () => openProduct(button.dataset.product));
     });
+  }
+
+  function renderPartnerMarkets() {
+    const allRows = partnerRows();
+    ["export", "import"].forEach((flow) => {
+      const host = $(`#trade-${flow}-routes`); const viewport = host.parentElement;
+      const rows = allRows.filter((row) => Number.isFinite(row[flow]) && row[flow] > 0).sort((a, b) => b[flow] - a[flow]).slice(0, 20);
+      if (!rows.length) { host.innerHTML = `<div class="trade-loading">${escapeHTML(copy.noRanking)}</div>`; return; }
+      const width = Math.max(540, viewport.clientWidth || 640); const height = 430; const year = Math.max(...rows.map((row) => row.year || 0));
+      host.style.width = `${width}px`; host.style.height = `${height}px`;
+      $(`#trade-${flow}-route-meta`).textContent = `${year} · ${rows.length} ${copy.topPartners} · ${copy.routeArea}`;
+      const tiles = binaryTreemap(rows.map((row) => ({ ...row, weight: row[flow] })), { x: 0, y: 0, w: width, h: height });
+      host.innerHTML = tiles.map((item) => {
+        const { x, y, w, h } = item.rect; const compact = w < 118 || h < 88; const tiny = w < 72 || h < 54;
+        const balanceLabel = Number.isFinite(item.balanceRatio) ? percent.format(item.balanceRatio) : "—";
+        const label = `${item.name} (${item.code}) · ${flow === "export" ? copy.exports : copy.imports} ${fmt(item[flow])} · ${copy.bilateralBalance} ${signed(item.balance)}`;
+        return `<button type="button" class="trade-route-tile${compact ? " compact" : ""}${tiny ? " tiny" : ""}${state.selectedPartner === item.code ? " selected" : ""}" data-partner="${escapeHTML(item.code)}" data-flow="${flow}" style="left:${x.toFixed(2)}px;top:${y.toFixed(2)}px;width:${Math.max(0, w).toFixed(2)}px;height:${Math.max(0, h).toFixed(2)}px;background:${balanceColor(item.balanceRatio)}" aria-label="${escapeHTML(label)}" title="${escapeHTML(label)}"><b>${escapeHTML(item.name)}</b><span>${escapeHTML(item.code)}</span><em>${escapeHTML(fmt(item[flow]))}</em><strong>${escapeHTML(balanceLabel)}</strong></button>`;
+      }).join("");
+      host.querySelectorAll("button[data-partner]").forEach((button) => button.addEventListener("click", () => {
+        state.selectedPartner = button.dataset.partner; state.flow = button.dataset.flow; state.selectedKind = "partner"; state.selectedCode = button.dataset.partner;
+        renderPartnerMarkets(); renderComposition(); updateURL();
+      }));
+    });
+    renderRouteDetail(allRows);
+  }
+
+  function renderRouteDetail(rows = partnerRows()) {
+    const detail = $("#trade-route-detail"); const selected = rows.find((row) => row.code === state.selectedPartner);
+    if (!selected) { detail.hidden = true; detail.innerHTML = ""; return; }
+    const annualTotals = state.profile.totals.filter((row) => row.frequency === "A" && row.year === selected.year);
+    const exportTotal = annualTotals.find((row) => row.flow === "export")?.value_usd; const importTotal = annualTotals.find((row) => row.flow === "import")?.value_usd;
+    const exportShare = exportTotal > 0 && Number.isFinite(selected.export) ? selected.export / exportTotal : null; const importShare = importTotal > 0 && Number.isFinite(selected.import) ? selected.import / importTotal : null;
+    detail.hidden = false;
+    const balanceClass = Number.isFinite(selected.balance) ? (selected.balance >= 0 ? "positive" : "negative") : "neutral";
+    detail.innerHTML = `<div><span>${escapeHTML(copy.countryDetail)}</span><strong>${escapeHTML(selected.name)}</strong><small>${escapeHTML(selected.code)} · ${escapeHTML(String(selected.year))}</small></div><div><span>${escapeHTML(copy.exports)}</span><strong>${escapeHTML(fmt(selected.export))}</strong></div><div><span>${escapeHTML(copy.imports)}</span><strong>${escapeHTML(fmt(selected.import))}</strong></div><div class="${balanceClass}"><span>${escapeHTML(copy.bilateralBalance)}</span><strong>${escapeHTML(signed(selected.balance))}</strong></div><div><span>${escapeHTML(copy.exportShare)}</span><strong>${exportShare === null ? "—" : escapeHTML(percent.format(exportShare).replace("+", ""))}</strong></div><div><span>${escapeHTML(copy.importShare)}</span><strong>${importShare === null ? "—" : escapeHTML(percent.format(importShare).replace("+", ""))}</strong></div>`;
   }
 
   function renderMatrixTooltip(event, item) {

@@ -16,6 +16,11 @@ const profile = { data: {
   partners: [
     {year:2025,flow:"export",code:"DEU",name:"Germany",value_usd:50},
     {year:2025,flow:"import",code:"DEU",name:"Germany",value_usd:60},
+    {year:2025,flow:"export",code:"USA",name:"United States",value_usd:38},
+    {year:2025,flow:"import",code:"USA",name:"United States",value_usd:18},
+    {year:2025,flow:"export",code:"FRA",name:"France",value_usd:22},
+    {year:2025,flow:"import",code:"CHN",name:"China",value_usd:44},
+    {year:2025,flow:"import",code:"POL",name:"Poland",value_usd:28},
   ],
   products: [
     {year:2025,flow:"export",code:"87",name:"Vehicles",value_usd:40},
@@ -60,6 +65,8 @@ test("trade deep dive exposes balance, chart state, and linked rankings", async 
 test("trade market map sizes, zooms, and drills from product to partner", async ({ page }) => {
   await page.goto("/deep-dives/trade/?code=CZE&lang=en");
   await expect(page.locator("#trade-matrix .trade-matrix-tile")).toHaveCount(6);
+  await expect(page.locator('#trade-matrix [data-product="87"] b')).toHaveText("Vehicles");
+  await expect(page.locator('#trade-matrix [data-product="87"] span')).toHaveText("HS 87");
   await page.locator('#trade-size-metric [data-size="export"]').click();
   await expect(page).toHaveURL(/size=export/);
   await page.getByRole("button", { name:"Open sector: Transport equipment" }).click();
@@ -72,4 +79,17 @@ test("trade market map sizes, zooms, and drills from product to partner", async 
   await expect(page.locator("#trade-market-drawer")).toContainText("China");
   await page.locator("#trade-market-drawer [data-close]").click();
   await expect(page).not.toHaveURL(/product=87/);
+});
+
+test("country markets show destinations and origins with clickable bilateral detail", async ({ page }) => {
+  await page.goto("/deep-dives/trade/?code=CZE&lang=en#routes");
+  await expect(page.locator("#trade-export-routes .trade-route-tile")).toHaveCount(3);
+  await expect(page.locator("#trade-import-routes .trade-route-tile")).toHaveCount(4);
+  await expect(page.locator('#trade-export-routes [data-partner="USA"] b')).toHaveText("United States");
+  await page.locator('#trade-export-routes [data-partner="DEU"]').click();
+  await expect(page).toHaveURL(/partner=DEU/);
+  await expect(page.locator("#trade-route-detail")).toContainText("Germany");
+  await expect(page.locator("#trade-route-detail")).toContainText("Bilateral balance");
+  await expect(page.locator("#trade-route-detail")).toContainText("Share of exports");
+  await expect(page.locator("#trade-route-detail")).toContainText("Share of imports");
 });
