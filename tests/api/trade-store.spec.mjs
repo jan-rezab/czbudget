@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { normalizeCountryCode, TRADE_PROFILE_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
 
 test("trade country codes are strict ISO-3 values", () => {
@@ -30,4 +31,16 @@ test("trade profile separates totals, partners, and products without inventing z
   assert.equal(profile.products[0].name, "HS 85");
   assert.equal(profile.valuation.imports, "CIF");
   assert.ok(!profile.totals.some((row) => row.value_usd === 0));
+});
+
+test("the 2024 public seed reads its structured period as a year", async () => {
+  const seedPath = fileURLToPath(new URL("../../data/trade/annual-hs2-2024.v1.json", import.meta.url));
+  const store = new TradeStore({ tokenProvider: async () => "unused", seedPath });
+  store.query = async () => [
+    { row_kind: "total", period: "2025", period_start: "2025-01-01", ref_year: "2025", ref_month: "52", frequency: "A", flow_code: "M", value_usd: "100" },
+    { row_kind: "total", period: "2025", period_start: "2025-01-01", ref_year: "2025", ref_month: "52", frequency: "A", flow_code: "X", value_usd: "125" },
+  ];
+  const profile = await store.profile("DEU");
+  assert.deepEqual([...new Set(profile.totals.map((row) => row.period))], ["2024", "2025"]);
+  assert.ok(profile.totals.filter((row) => row.year === 2024).every((row) => row.period_start === "2024-01-01"));
 });

@@ -212,10 +212,11 @@ export class TradeStore {
     try {
       const seed = JSON.parse(await fs.readFile(this.seedPath, "utf8"));
       const country = seed.countries?.find((item) => item.country_code === code && item.status === "loaded");
+      const seedYear = Number(seed.period?.year ?? seed.period);
       for (const [key, flow] of [["imports", "import"], ["exports", "export"]]) {
         const value = Number(country?.flows?.[key]?.total_value_usd);
-        if (Number.isFinite(value) && !totals.some((row) => row.frequency === "A" && row.period === seed.period && row.flow === flow)) {
-          totals.push({ period: String(seed.period), period_start: `${seed.period}-01-01`, year: Number(seed.period), month: 52, frequency: "A", flow, value_usd: value, source_last_released: null, retrieved_at: seed.generated_at || null });
+        if (Number.isFinite(seedYear) && Number.isFinite(value) && !totals.some((row) => row.frequency === "A" && row.year === seedYear && row.flow === flow)) {
+          totals.push({ period: String(seedYear), period_start: `${seedYear}-01-01`, year: seedYear, month: 52, frequency: "A", flow, value_usd: value, source_last_released: null, retrieved_at: seed.generated_at || null });
         }
       }
       totals.sort((a, b) => String(a.period).localeCompare(String(b.period)) || a.flow.localeCompare(b.flow));
