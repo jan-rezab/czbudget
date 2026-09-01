@@ -173,6 +173,18 @@
     {
       "layer": "serving",
       "detail": "France is built from the warehouse and reproduces every published headline: 69,750 of 69,750 across all 34,875 communes and both years. Getting there needed the fact query batched by entity — 7,244,504 rows will not return through the bq CLI in one buffer — and a second fix that only showed up at full scale. Ninety-seven communes report 2024 rather than 2025 and had no headline at all, because year stratification had been implemented once, on the fan-out baseline, and the international-directory baseline never got it. An even spread over 34,875 entities never sampled one of the 97, so no 2024 rule was derived and exactly those communes came out empty. Eighteen countries now build from the warehouse: sixteen derived and verified, two authored."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Britain has 552,003 facts across 374 authorities and still cannot carry a headline, for the same reason as Sweden and Ukraine: the revenue side is not revenue. It is grants — RG_granttot_tot_grant at 67.75bn for 2024 against RSX_totsx_tot_exp at 147.16bn of expenditure — and council tax and business rates, which fund the difference, are not in the dataset. Summing each side gives a median revenue-to-expenditure ratio of -0.038, negative because budget_side is unreliable here too: RSX_totsx_tot_inc, total income, is filed on the expenditure side. What is well defined and publishable is expenditure alone, either RSX_totsx_tot_exp or the net revenue expenditure MHCLG itself leads with, RS_netrevexp_net_exp at 57.85bn. The codes also nest — RS_sub_tot_net_exp and RS_netcurrtot_net_exp are totals containing one another — so any sum needs the summary rows resolved first."
+    },
+    {
+      "layer": "uniform",
+      "detail": "Paraguay has 281,957 facts across 263 municipalities and no revenue side at all — every row is expenditure, 152 codes, 66,955bn PYG. There is nothing to derive a revenue headline from and nothing to authorise one against, so it stays unpublished until an income series is loaded."
+    },
+    {
+      "layer": "serving",
+      "detail": "Four countries now sit in the same category and it is worth naming as one rather than four: Sweden, Ukraine, Britain and Paraguay all have substantial fact coverage and an incomplete or mis-sided revenue series. In each case a headline could be produced and would be wrong — Sweden at a fifth of expenditure, Ukraine at a half, Britain negative, Paraguay absent. Each needs the missing income series, not a different rule, and publishing any of them would put a municipality on the site spending several times what it earns."
     }
   ]
 }
