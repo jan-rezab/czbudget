@@ -219,9 +219,9 @@
     }).filter((group) => group.items.length && group.weight > 0);
     const groupTiles = binaryTreemap(grouped, { x: 0, y: 0, w: width, h: height });
     host.innerHTML = groupTiles.map((groupTile) => {
-      const { x, y, w, h } = groupTile.rect; const headerHeight = selectedGroup ? 34 : Math.max(20, Math.min(28, h * 0.13));
+      const { x, y, w, h } = groupTile.rect; const showHeader = Boolean(selectedGroup) || h >= 38; const headerHeight = selectedGroup ? 34 : showHeader ? Math.max(20, Math.min(28, h * 0.13)) : 0;
       const itemTiles = binaryTreemap(groupTile.items, { x: 2, y: headerHeight + 1, w: Math.max(0, w - 4), h: Math.max(0, h - headerHeight - 3) });
-      const header = selectedGroup ? `<div class="trade-matrix-group-title"><span>${escapeHTML(groupTile.name)}</span><b>${groupTile.items.length} ${escapeHTML(copy.chapters)}</b></div>` : `<button type="button" class="trade-matrix-group-title" data-sector="${escapeHTML(groupTile.id)}" aria-label="${escapeHTML(`${copy.openSector}: ${groupTile.name}`)}"><span>${escapeHTML(groupTile.name)}</span><b>${groupTile.items.length}</b></button>`;
+      const header = !showHeader ? "" : selectedGroup ? `<div class="trade-matrix-group-title"><span>${escapeHTML(groupTile.name)}</span><b>${groupTile.items.length} ${escapeHTML(copy.chapters)}</b></div>` : `<button type="button" class="trade-matrix-group-title" data-sector="${escapeHTML(groupTile.id)}" aria-label="${escapeHTML(`${copy.openSector}: ${groupTile.name}`)}"><span>${escapeHTML(groupTile.name)}</span><b>${groupTile.items.length}</b></button>`;
       const cells = itemTiles.map((item) => {
         const rect = item.rect; const compact = rect.w < 92 || rect.h < 65; const tiny = rect.w < 57 || rect.h < 42; const ratioLabel = Number.isFinite(item.balanceRatio) ? percent.format(item.balanceRatio) : "—";
         const label = `HS ${item.code} · ${item.name} · ${copy.exports} ${fmt(item.export)} · ${copy.imports} ${fmt(item.import)} · ${copy.balance} ${signed(item.balance)}`;

@@ -28,6 +28,8 @@ const profile = { data: {
     {year:2025,flow:"import",code:"27",name:"Mineral fuels",value_usd:31},
     {year:2025,flow:"export",code:"30",name:"Pharmaceutical products",value_usd:18},
     {year:2025,flow:"import",code:"30",name:"Pharmaceutical products",value_usd:12},
+    {year:2025,flow:"export",code:"93",name:"Arms and ammunition",value_usd:0.001},
+    {year:2025,flow:"import",code:"93",name:"Arms and ammunition",value_usd:0.001},
   ],
   source: { retrieved_at:"2026-08-31T00:00:00Z" },
 } };
@@ -57,7 +59,7 @@ test("trade deep dive exposes balance, chart state, and linked rankings", async 
 
 test("trade market map sizes, zooms, and drills from product to partner", async ({ page }) => {
   await page.goto("/deep-dives/trade/?code=CZE&lang=en");
-  await expect(page.locator("#trade-matrix .trade-matrix-tile")).toHaveCount(5);
+  await expect(page.locator("#trade-matrix .trade-matrix-tile")).toHaveCount(6);
   await page.locator('#trade-size-metric [data-size="export"]').click();
   await expect(page).toHaveURL(/size=export/);
   await page.getByRole("button", { name:"Open sector: Transport equipment" }).click();
