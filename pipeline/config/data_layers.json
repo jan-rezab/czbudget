@@ -189,6 +189,14 @@
     {
       "layer": "serving",
       "detail": "Vintages are now measurable for the municipal layer, which was not true when B4 was first recorded. Of 63 loaded source editions across 25 countries, 40 name a publisher edition in their source id — br-siconfi-rreo-2025, cz-monitor-finm-2025-12, pl-mf-rb27s-2024q4 — against 2 of 81 in the declared-source registry. The two sets overlap but are not the same: this one covers what is loaded, that one covers what artifacts declare. 23 loaded sources still name no edition, mostly the -municipal-expansion ids that predate the convention, and they are recorded without one rather than given the fiscal year their rows happen to cover. Those are different claims: de-aachen-budget-2026 is a 2026 publication covering 2026 to 2029."
+    },
+    {
+      "layer": "uniform",
+      "detail": "B3's sovereign side is started. budget_detail.economic_observations was designed for exactly this — country, indicator, period, value, unit, observation status, and a source_vintage column — and had been sitting empty at zero rows. It now holds the IMF World Economic Outlook series behind sovereign-benchmark.v1.json: 52,583 observations across 191 countries and 15 metrics, 2005 to 2024, split 44,587 actual and 7,996 estimate. Round-tripping it against the artifact reproduces all 52,583 exactly, value and observation status together. The status matters as much as the value: charting an estimate as though it were an outturn is the commonest way a fiscal chart misleads, and the distinction was already in the data and not in the schema until now."
+    },
+    {
+      "layer": "serving",
+      "detail": "One artifact must not be generated from the warehouse, and it is worth saying why before someone tries. data/international-municipalities.v1.json is the published baseline the headline rules are derived and verified against — 105,416 entities with the revenue and expenditure the site shows. Regenerating it from the same warehouse those rules read would make every check circular: the generator would be proving it agrees with itself. It stays an independently maintained artifact for as long as it is the thing being checked against."
     }
   ]
 }
