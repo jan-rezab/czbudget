@@ -145,6 +145,10 @@
     {
       "layer": "serving",
       "detail": "Nothing in the deployed image is built by scripts/build-profiles-from-warehouse.mjs. The generator, its verification against 54,502 published headlines, and the fifteen rebuilt countries are all real, but .warehouse-profiles is a local artifact: cloudbuild hydrates data/municipal-expansion from GCS and merges warehouse headlines and breakdowns into it via export-municipal-headlines and export-municipal-breakdowns. Making the generator the serving path means adding it as a build step with BigQuery access — which the build already has for those two exports — and publishing its output to the serving layer. Until then the generator proves the fan-out is reproducible; it does not replace it in production."
+    },
+    {
+      "layer": "pages",
+      "detail": "The deploy failed on verify-data-layers with 20 of 25 page groups showing matching file counts and mismatched hashes, and the cause was local drift rather than anything in GCS. Every international municipality page differed from the hosted copy by exactly six bytes — the cache-buster on municipal-expanded-profile.js, 20260828-fx-currency locally regenerated to 20260831-warehouse-lines-2 after that script was rewired to the warehouse endpoint — and the committed manifest had been built from the drifted local copies. The Czech pages differed more substantially and in the wrong direction: the local copies had lost the og:image tags the hosted ones carry. Local was re-synced from GCS and the manifest rebuilt from it, so the layer, the manifest and the deployed pages all describe the same bytes. Regenerating the pages against the current template is a real change worth making, and it is a reviewable one of its own rather than something to discover during a deploy."
     }
   ]
 }
