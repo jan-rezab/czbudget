@@ -50,6 +50,19 @@ function editionOf(sourceId) {
   return match ? match[1] : null;
 }
 
+/**
+ * Entity ids are keyed on alpha-2 but the country dimension is canonically alpha-3 everywhere
+ * a published artifact carries it — the B2 invariant enforces that, and caught this registry
+ * emitting alpha-2 on its first run. The alpha-2 is kept beside it because it is the key the
+ * warehouse actually uses, and losing it would make this registry unjoinable to the facts.
+ */
+const ALPHA3 = {
+  BO: "BOL", BR: "BRA", CH: "CHE", CL: "CHL", CO: "COL", CR: "CRI", CZ: "CZE", DE: "DEU",
+  DK: "DNK", ES: "ESP", FI: "FIN", FR: "FRA", GB: "GBR", GE: "GEO", GT: "GTM", IT: "ITA",
+  JP: "JPN", KR: "KOR", MX: "MEX", NL: "NLD", NO: "NOR", PE: "PER", PL: "POL", PY: "PRY",
+  SE: "SWE", SV: "SLV", UA: "UKR", US: "USA",
+};
+
 function publisherOf(sourceId) {
   const parts = sourceId.split("-");
   return parts.length > 1 ? parts[1] : null;
@@ -66,7 +79,8 @@ const { stdout } = await run("bq", [
 
 const rows = JSON.parse(stdout || "[]").map((row) => ({
   source_id: row.source_id,
-  country: row.country,
+  country_code: ALPHA3[row.country] || null,
+  entity_prefix: row.country,
   publisher: publisherOf(row.source_id),
   edition: editionOf(row.source_id),
   covers: Number(row.first_year) === Number(row.last_year)
@@ -78,7 +92,9 @@ const rows = JSON.parse(stdout || "[]").map((row) => ({
 }));
 
 const withEdition = rows.filter((row) => row.edition).length;
-const countries = new Set(rows.map((row) => row.country)).size;
+const countries = new Set(rows.map((row) => row.country_code)).size;
+const unmapped = rows.filter((row) => !row.country_code).map((row) => row.entity_prefix);
+if (unmapped.length) console.log(`  entity prefixes with no alpha-3 mapping: ${[...new Set(unmapped)].join(", ")}`);
 
 console.log(`${rows.length} loaded source editions across ${countries} countries`);
 console.log(`  naming an edition in the source id: ${withEdition}`);
