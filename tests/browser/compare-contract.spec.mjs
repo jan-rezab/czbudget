@@ -4,6 +4,8 @@ import { test, expect } from "@playwright/test";
 // whether a metric ranks, groups, or refuses. These tests assert the three
 // renderers actually differ, because a grouped metric that silently falls back
 // to a ranked table is exactly the bug the contract exists to prevent.
+// compare-contract.js also folds data/oecd-key-metrics.v1.json into the registry
+// at runtime, one oecd_<topic> perimeter per OECD topic.
 
 const page_url = "/comparison.html?lang=cs";
 
@@ -14,10 +16,19 @@ async function openCompare(page) {
 
 test("every perimeter in the registry renders a control", async ({ page }) => {
   await openCompare(page);
-  const registry = await page.evaluate(() =>
-    fetch("data/compare-metrics.v1.json").then((r) => r.json()));
-  await expect(page.locator("#compare-perimeters .cmp-pill"))
-    .toHaveCount(registry.perimeters.length);
+  const [registry, oecd] = await page.evaluate(() => Promise.all([
+    fetch("data/compare-metrics.v1.json").then((r) => r.json()),
+    fetch("data/oecd-key-metrics.v1.json").then((r) => r.json()),
+  ]));
+  // compare-contract.js folds the OECD topics in at runtime as oecd_<topic>
+  // perimeters; pensions shares the social pill (see topicPerimeter there).
+  const oecdPerimeters = new Set(Object.values(oecd.metrics)
+    .map((m) => `oecd_${m.topic === "pensions" ? "social" : m.topic}`));
+  const expected = [...registry.perimeters.map((p) => p.id), ...oecdPerimeters];
+  for (const id of expected) {
+    await expect(page.locator(`#compare-perimeters .cmp-pill[data-perimeter="${id}"]`)).toHaveCount(1);
+  }
+  await expect(page.locator("#compare-perimeters .cmp-pill")).toHaveCount(expected.length);
   await expect(page.locator("#compare-perimeter-note")).not.toBeEmpty();
 });
 
@@ -42,8 +53,13 @@ test("the explorer can switch to Top 20 and build a custom country set", async (
   await openCompare(page);
   await page.locator("#comparison-view").selectOption("large");
   await expect(page.locator("#compare-result .cmp-row")).toHaveCount(20);
-  await expect(page.locator("#comparison-country-options option")).toHaveCount(191);
-  await expect(page.locator("#comparison-coverage-count")).toHaveText("191 × 20");
+  // The datalist and the "N × years" figure both come from the sovereign benchmark
+  // file the page fetches, so derive them from it rather than pinning a count.
+  const sovereign = await page.evaluate(() =>
+    fetch("lib/data/sovereign-benchmark.v1.json").then((r) => r.json()));
+  await expect(page.locator("#comparison-country-options option")).toHaveCount(sovereign.countries.length);
+  await expect(page.locator("#comparison-coverage-count"))
+    .toHaveText(`${sovereign.countries.length} × ${sovereign.period.year_count}`);
   await expect(page.locator("#compare-result .country-flag-svg img").first())
     .toHaveAttribute("src", /assets\/flags\/[a-z]{2}\.svg/);
 
@@ -101,7 +117,17 @@ test("a national-only metric refuses and its substitute button works", async ({ 
   // The substitute must land on a metric that actually renders a ranked table.
   await expect(page.locator("#compare-contract .cmp-verdict.is-full")).toBeVisible();
   await expect(page.locator('[data-metric="health_che_pct_gdp"]')).toHaveAttribute("aria-pressed", "true");
-  expect(await page.locator("#compare-result .cmp-row").count()).toBeGreaterThan(5);
+  // Default view is the selected set; a health metric's universe is the SHA file, so only
+  // selected countries present there render (UKR is not in it). Derive, do not hardcode.
+  const health = await page.evaluate(() =>
+    fetch("data/country-health.v1.json").then((r) => r.json()));
+  const selected = await page.locator("#comparison-selection [data-remove-country]")
+    .evaluateAll((els) => els.map((el) => el.dataset.removeCountry));
+  const expected = selected.filter((code) => code in health.countries);
+  expect(expected.length).toBeGreaterThan(0);
+  const rows = page.locator("#compare-result .cmp-row");
+  await expect(rows).toHaveCount(expected.length);
+  await expect(rows.first().locator(".cmp-rank")).toHaveText("01");
 });
 
 test("a country with no reported value shows absence, not a zero", async ({ page }) => {

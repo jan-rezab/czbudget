@@ -1,9 +1,16 @@
+import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-counts.mjs";
 
 // Measured from the published artifacts rather than typed out here; see
 // scripts/lib/expected-counts.mjs.
 const counts = await loadExpectedCounts();
+
+// The atlas heading is editorial copy, not data. Read the cs/en pair from the
+// page's own copy map (site-pages.js lists cs first, then en) so a copy rewrite
+// cannot strand this test on a stale literal again.
+const sitePagesSource = await readFile(new URL("../../site-pages.js", import.meta.url), "utf8");
+const [atlasTitleCs, atlasTitleEn] = [...sitePagesSource.matchAll(/atlasTitle:"([^"]+)"/g)].map((match) => match[1]);
 
 const previewRoutes = [
   "/",
@@ -98,7 +105,7 @@ test("high-risk static and generated templates switch their visible copy", async
   test.setTimeout(90_000);
   const pairs = [
     ["/cesky-rozpocet.html", ".budget-hero", "Český státní rozpočet", "Czech state budget"],
-    ["/deep-dives/", ".deep-hero", "Jedno téma. Více zemí.", "One topic. More countries."],
+    ["/deep-dives/", ".deep-hero", "Rozpočty podle témat", "Budgets by topic"],
     ["/deep-dives/transportation/?code=CZE", ".deep-hero", "Doprava", "Transportation"],
     ["/municipalities/", ".municipal-hero", "Rozpočty obcí ve 27 zemích", "Municipal budgets in 27 countries"],
     ["/municipalities/czechia/", ".municipal-hero", "Rozpočty českých obcí", "Budgets of Czech municipalities"],
@@ -117,12 +124,12 @@ test("high-risk static and generated templates switch their visible copy", async
 
 test("shared page modules do not retain Czech UI copy in English", async ({ page }) => {
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
-  // Case-insensitive on purpose: the check is that the English page carries
-  // English copy, not that the heading keeps a particular typographic case. It
-  // used to assert the ALL-CAPS spelling and broke the moment the heading moved
-  // to sentence case, which is a styling decision, not a translation bug.
-  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText(/^where can coverage expand\?$/i);
-  await expect(page.locator('[data-page-copy="atlasTitle"]')).not.toContainText("pokrytí");
+  // Expected copy comes from site-pages.js above, so the check is that the
+  // English page renders the English entry and not the Czech one.
+  expect(atlasTitleEn, "site-pages.js must define atlasTitle for cs and en").toBeTruthy();
+  expect(atlasTitleEn).not.toBe(atlasTitleCs);
+  await expect(page.locator('[data-page-copy="atlasTitle"]')).toHaveText(atlasTitleEn);
+  await expect(page.locator('[data-page-copy="atlasTitle"]')).not.toHaveText(atlasTitleCs);
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
   await expect(page.locator(".atlas-table thead th").first()).toContainText("Country");
 
@@ -146,8 +153,8 @@ test("warehouse-only itemized coverage reads honestly in both languages", async 
   // coverage matrix falls back to "— / not researched" and misreports work that
   // has actually been done.
   const wording = {
-    cs: { cell: "Načteno ve skladu", note: "nepublikováno na webu", legend: "Načteno ve skladu · nepublikováno", profiles: "profilů", other: "not published on site" },
-    en: { cell: "Loaded in warehouse", note: "not published on site", legend: "Loaded in warehouse · not published", profiles: "profiles", other: "nepublikováno na webu" },
+    cs: { cell: "Načteno ve skladu", note: "nepublikováno na webu", legend: "Načteno ve skladu · nepublikováno", profiles: "profilů", other: "not published on site", volume: "Zpracovaných strukturovaných řádků" },
+    en: { cell: "Loaded in warehouse", note: "not published on site", legend: "Loaded in warehouse · not published", profiles: "profiles", other: "nepublikováno na webu", volume: "Structured rows processed" },
   };
 
   for (const lang of ["cs", "en"]) {
@@ -166,13 +173,28 @@ test("warehouse-only itemized coverage reads honestly in both languages", async 
       await expect(cell, `${code} (${lang})`).not.toContainText(say.other);
     }
 
-    // The itemized KPI tile counts published countries only.
-    const tile = page.locator("#data-health-root .data-health-kpis article").nth(1);
-    await expect(tile, `${lang} itemized tile`).toContainText(String(counts.publishedItemizedCountries));
+    // The itemized KPI tile counts published countries only. It is found by its
+    // data-derived note ("69 125 profilů" / "69,125 profiles") rather than by
+    // position, so tiles added in front of it do not move the assertion.
+    const publishedProfiles = new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(counts.itemizedPublishedProfiles);
+    const tile = page.locator("#data-health-root .data-health-kpis article", { hasText: `${publishedProfiles} ${say.profiles}` });
+    await expect(tile, `${lang} itemized tile`).toHaveCount(1);
+    await expect(tile.locator("strong"), `${lang} itemized tile`).toHaveText(String(counts.publishedItemizedCountries));
+
+    // The header label and figure share one semantic (processed rows), so the
+    // label is pinned here and the figure just below.
+    await expect(page.locator('.status-volume [data-status-copy="publishedData"]'), `${lang} volume label`).toHaveText(say.volume);
   }
 
-  // The English rendering is the one the shared counts module formats against.
-  await expect(page.locator("#status-data-total")).toContainText(formatCount(counts.publishedDataEntries));
+  // The header figure is the cumulative processed-row count the page reads from
+  // data/coverage-metrics.v1.json, capped at "100M+" on screen with the exact
+  // value in the title. The English rendering is the one the shared counts
+  // module formats against (the loop above ends on lang = "en").
+  const { metrics } = JSON.parse(await readFile(new URL("../../data/coverage-metrics.v1.json", import.meta.url), "utf8"));
+  const processedRows = Number(metrics.cumulative_structured_rows_processed) || 0;
+  expect(processedRows, "coverage metrics must report processed rows").toBeGreaterThan(0);
+  await expect(page.locator("#status-data-total")).toHaveText(processedRows >= 100_000_000 ? "100M+" : formatCount(processedRows));
+  await expect(page.locator("#status-data-total")).toHaveAttribute("title", formatCount(processedRows));
 });
 
 test("representative pages contain no standalone labels from the other language", async ({ page }) => {

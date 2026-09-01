@@ -18,11 +18,12 @@
   ];
   let data;
   const number = value => new Intl.NumberFormat(lang==="en"?"en-GB":"cs-CZ",{maximumFractionDigits:1}).format(value);
+  const esc = value => String(value ?? "").replace(/[&<>"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[char]));
   const compact = value => new Intl.NumberFormat(lang==="en"?"en-GB":"cs-CZ",{notation:"compact",maximumFractionDigits:1}).format(value);
   const labelFor = definition => definition?.[lang==="en"?"label_en":"label_cs"] || definition?.indicator_code || "—";
   const frequencyLabel = value => value==="M"?copy.monthly:value==="Q"?copy.quarterly:copy.annual;
 
-  function lineChart(values,{warning=false,height=220}={}){
+  function lineChart(values,{warning=false,height=220,label=""}={}){
     const clean=values.filter(item=>Number.isFinite(item[1]));
     if(clean.length<2)return `<div class="economy-empty">${copy.noData}</div>`;
     const width=760,pad={l:48,r:18,t:18,b:28};
@@ -35,7 +36,7 @@
     const zero=min<0&&max>0?`<line class="zero" x1="${pad.l}" x2="${width-pad.r}" y1="${y(0)}" y2="${y(0)}"/>`:"";
     const path=clean.map((item,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(item[1]).toFixed(1)}`).join(" ");
     const years=[0,Math.floor((clean.length-1)/2),clean.length-1].map(i=>`<text x="${x(i)}" y="${height-6}" text-anchor="middle">${clean[i][0]}</text>`).join("");
-    return `<svg class="economy-chart-svg" viewBox="0 0 ${width} ${height}" role="img">${grid}${zero}<path class="line${warning?" warning":""}" d="${path}"/>${years}</svg>`;
+    return `<svg class="economy-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}">${grid}${zero}<path class="line${warning?" warning":""}" d="${path}"/>${years}</svg>`;
   }
 
   function seriesFor(country,indicator){return data.series.filter(row=>row.country_code===country&&row.indicator_code===indicator)}
@@ -46,7 +47,7 @@
     grid.innerHTML=cycleDefs.map(([code,cs,en,unit,warning])=>{
       const series=seriesFor(country,code).find(row=>row.frequency==="A");
       const values=series?.values||[]; const latest=values.at(-1);
-      return `<article class="cycle-card"><header><div><h3>${lang==="en"?en:cs}</h3><span>IMF WEO · ${unit}</span></div><strong>${latest?`${number(latest[1])} ${unit}`:"—"}</strong></header>${lineChart(values,{warning,height:code==="real_gdp_growth_pct"?250:210})}</article>`;
+      return `<article class="cycle-card"><header><div><h3>${lang==="en"?en:cs}</h3><span>IMF WEO · ${unit}</span></div><strong>${latest?`${number(latest[1])} ${unit}`:"—"}</strong></header>${lineChart(values,{warning,height:code==="real_gdp_growth_pct"?250:210,label:lang==="en"?en:cs})}</article>`;
     }).join("");
   }
 
@@ -67,7 +68,7 @@
         document.querySelector("#explorer-title").textContent=labelFor(d);
         document.querySelector("#explorer-unit").textContent=`${sourceNames[row.source_id]} · ${frequencyLabel(row.frequency)} · ${row.unit}`;
         document.querySelector("#explorer-latest").textContent=latest?`${number(latest[1])} · ${latest[0]}`:"—";
-        document.querySelector("#explorer-chart").innerHTML=lineChart(row.values,{height:300});
+        document.querySelector("#explorer-chart").innerHTML=lineChart(row.values,{height:300,label:labelFor(d)});
         document.querySelector("#series-meta").innerHTML=[
           `<span>${row.frequency}</span>`,`<span>${row.unit}</span>`,
           row.seasonal_adjustment?`<span>SA: ${row.seasonal_adjustment}</span>`:"",

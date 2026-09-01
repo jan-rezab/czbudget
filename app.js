@@ -243,7 +243,7 @@ function renderFinanceDonut({ containerId, legendId, detailId, slices, total, se
   container.classList.add("psd-chart", "psd-chart--pie", "svg-chart");
   container.dataset.source = source;
   container.innerHTML = "";
-  const svg = node("svg", { viewBox:`0 0 ${size} ${size}`, role:"img",
+  const svg = node("svg", { viewBox:`0 0 ${size} ${size}`, role:"group",
     "aria-label":slices.map(slice => `${slice.label} ${amountLabel(slice.value)}`).join(", ") });
   let angle = -Math.PI/2;
 

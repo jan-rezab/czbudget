@@ -29,7 +29,7 @@
     $("#comparison-note").textContent=`${copy.chartNote} ${copy.axisCapped}`;
     $("#defense-comparison-chart").querySelectorAll("[data-country]").forEach(button=>button.addEventListener("click",()=>selectCountry(button.dataset.country,true)));
   }
-  function trendChart(series){
+  function trendChart(series,label){
     const points=series.filter(([year,value])=>year>=2000&&Number.isFinite(value));if(points.length<2)return `<p class="defense-empty">—</p>`;
     const W=900,H=300,p={l:58,r:24,t:25,b:35},minY=0,maxY=Math.max(4,Math.ceil(Math.max(...points.map(row=>row[1]))));
     const x=year=>p.l+(year-points[0][0])/(points.at(-1)[0]-points[0][0])*(W-p.l-p.r),y=value=>p.t+(maxY-value)/maxY*(H-p.t-p.b);
@@ -37,7 +37,7 @@
     const area=`${line} L${x(points.at(-1)[0])},${H-p.b} L${x(points[0][0])},${H-p.b} Z`;
     const grid=[0,.25,.5,.75,1].map(r=>{const v=maxY*r;return `<line class="grid" x1="${p.l}" x2="${W-p.r}" y1="${y(v)}" y2="${y(v)}"></line><text x="${p.l-9}" y="${y(v)+4}" text-anchor="end">${number(v,0)}%</text>`}).join("");
     const years=[points[0][0],2010,2020,points.at(-1)[0]].filter((v,i,a)=>v>=points[0][0]&&v<=points.at(-1)[0]&&a.indexOf(v)===i).map(v=>`<text x="${x(v)}" y="${H-10}" text-anchor="middle">${v}</text>`).join("");
-    return `<svg class="defense-trend-svg" viewBox="0 0 ${W} ${H}" role="img"><path class="area" d="${area}"></path>${grid}<path class="line" d="${line}"></path>${years}</svg>`;
+    return `<svg class="defense-trend-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}"><path class="area" d="${area}"></path>${grid}<path class="line" d="${line}"></path>${years}</svg>`;
   }
   function renderLines(item){
     const q=state.search.trim().toLocaleLowerCase(lang==="cs"?"cs":"en");
@@ -50,7 +50,7 @@
     $("#detail-country-name").textContent=name(item);$("#detail-scope").textContent=budget[lang==="en"?"scope_en":"scope_cs"];
     $("#coverage-note").textContent=budget[lang==="en"?"coverage_note_en":"coverage_note_cs"];
     $("#defense-kpis").innerHTML=`<article><span>${copy.gdpShare}</span><strong>${latest?number(latest.value,2)+"%":"—"}</strong><small>${latest?.year||"—"} · ${item.nato_member?copy.nato:copy.notNato}</small></article><article><span>${copy.budgetTotal}</span><strong>${compact(budget.total_amount)}</strong><small>${unitLabel(budget)}</small></article><article><span>${copy.budgetLines}</span><strong>${budget.item_count}</strong><small>${esc(budget.granularity.replaceAll("_"," "))}</small></article><article><span>${copy.budgetPeriod}</span><strong>${esc(budget.period)}</strong><small>${esc(budget[lang==="en"?"status_en":"status_cs"])}</small></article>`;
-    $("#trend-latest").textContent=latest?`${number(latest.value,2)}% · ${latest.year}`:"—";$("#defense-trend").innerHTML=trendChart(item.comparison.series);
+    $("#trend-latest").textContent=latest?`${number(latest.value,2)}% · ${latest.year}`:"—";$("#defense-trend").innerHTML=trendChart(item.comparison.series,`${name(item)} · ${copy.gdpShare}`);
     $("#national-sources").innerHTML=budget.sources.map(source=>`<a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.title)} ↗</a>`).join("");
     renderLines(item);renderComparison();
   }

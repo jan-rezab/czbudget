@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { readFile, readdir } from "node:fs/promises";
 import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-counts.mjs";
 
 // Published totals are measured from the artifacts the site serves, never typed
@@ -8,6 +9,38 @@ import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-coun
 // measured value against what the page renders is the check that actually
 // matters. See scripts/lib/expected-counts.mjs.
 const counts = await loadExpectedCounts();
+const readJson = async (relative) => JSON.parse(await readFile(new URL(`../../${relative}`, import.meta.url), "utf8"));
+
+// The homepage shows the twenty most populous profiles (homepage-v2.js cards(),
+// commit d884c3fb4c); derive that list from the benchmark the page fetches so the
+// check never goes stale. Population mirrors populationMillions() in homepage-v2.js.
+const benchmark = await readJson("data/sovereign-benchmark-slim.v1.json");
+const benchmarkValue = (code, key, year) => benchmark.series.find((s) => s.country_code === code)?.metrics[key]?.values.find((v) => v.year === year)?.value ?? null;
+const populationMillions = (code) => {
+  const gdp = benchmarkValue(code, "nominal_gdp_usd_bn", 2024), perCapita = benchmarkValue(code, "gdp_per_capita_usd", 2024);
+  return Number.isFinite(gdp) && Number.isFinite(perCapita) && perCapita > 0 ? gdp * 1000 / perCapita : null;
+};
+const homepageCountryCodes = benchmark.countries
+  .map((c) => ({ code: c.country_code, population: populationMillions(c.country_code) }))
+  .filter((row) => Number.isFinite(row.population))
+  .sort((a, b) => b.population - a.population)
+  .slice(0, 20)
+  .map((row) => row.code);
+
+// The registry is the canonical sovereign universe every artifact must resolve to
+// (scripts/validate-invariants.mjs); the homepage count is reconciled against it.
+const countryRegistry = await readJson("data/registry/countries.v1.json");
+
+// global-nav.js loadCoverage() fills the header country menu from this file, so the
+// menu size is measured from it rather than typed here (191 -> 195 moved it once).
+const countryParity = await readJson("data/country-parity.v1.json");
+
+// The Coverage header prints the cumulative structured-row count from
+// data/coverage-metrics.v1.json, capped at "100M+" with the exact integer in the
+// title attribute (site-pages.js renderDataHealth).
+const coverageMetrics = (await readJson("data/coverage-metrics.v1.json")).metrics;
+const structuredRowsProcessed = Number(coverageMetrics.cumulative_structured_rows_processed);
+const structuredRowsLabel = structuredRowsProcessed >= 100_000_000 ? "100M+" : formatCount(structuredRowsProcessed);
 
 const routes = [
   ["homepage", "/?lang=cs"],
@@ -86,10 +119,20 @@ test("country links are readable and data-layer cards keep accessible contrast",
   await expect(page).toHaveURL(/\/countries\/germany\?lang=en$/);
   await expect(page.locator("#country-name")).toContainText("Germany");
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#country-cards a").first()).toHaveAttribute("href", "/countries/czechia?lang=en");
-  await expect(page.locator("#country-cards a")).toHaveCount(191);
+  // Homepage cards are the twenty most populous profiles plus one "Open all comparisons"
+  // card; the full directory lives in comparison.html and the header country menu.
+  const expectedCardHrefs = await page.evaluate((codes) => codes.map((code) => window.PSDCountryRoutes.href(code, "en")), homepageCountryCodes);
+  const countryCards = page.locator("#country-cards a.country-card-link:not(.country-card-more)");
+  await expect(countryCards).toHaveCount(homepageCountryCodes.length);
+  expect(await countryCards.evaluateAll((links) => links.map((link) => link.getAttribute("href")))).toEqual(expectedCardHrefs);
+  await expect(page.locator("#country-cards a").first()).toHaveAttribute("href", expectedCardHrefs[0]);
+  await expect(page.locator("#country-cards a")).toHaveCount(homepageCountryCodes.length + 1);
+  await expect(page.locator("#country-cards a.country-card-more")).toHaveAttribute("href", /comparison\.html\?lang=en$/);
   await expect(page.locator('#country-cards a[href="/countries/japan?lang=en"]')).toContainText("Japan");
-  await expect(page.locator('#country-cards a[href="/countries/greece?lang=en"]')).toContainText("Greece");
+  // Greece and Czechia sit outside the top twenty by population; their readable slugs
+  // are checked where they still render, in the header country menu.
+  await expect(page.locator('.country-menu:not(.municipality-menu) .country-menu-panel a[href="/countries/greece?lang=en"]')).toContainText("Greece");
+  await expect(page.locator('.country-menu:not(.municipality-menu) .country-menu-panel a[href="/countries/czechia?lang=en"]')).toContainText("Czechia");
   await expect(page.locator('a[href*="country.html?code="]')).toHaveCount(0);
 });
 
@@ -167,16 +210,18 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   // alternate explorer view rather than the page's information architecture.
   await expect(page.locator("#compare-result .cmp-row")).toHaveCount(4);
   await expect(page.locator("#comparison-selection .cmp-country-chip")).toHaveCount(4);
-  await expect(page.locator("#comparison-country-options option")).toHaveCount(191);
+  await expect(page.locator("#comparison-country-options option")).toHaveCount(counts.pinned.sovereignCountries);
   await expect(page.locator("#compare-provenance")).toContainText("How this view is sourced");
   await expect(page.locator("#fiscal-architecture-body")).toHaveCount(0);
   await expect(page.locator('[data-global-nav="compare"]')).toHaveClass(/active/);
 
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".status-header")).toContainText("Coverage");
-  await expect(page.locator(".status-volume")).toContainText("Counted directory and profile records");
-  await expect(page.locator("#status-data-total")).toContainText(formatCount(counts.publishedDataEntries));
-  await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(5);
+  await expect(page.locator(".status-volume")).toContainText("Structured rows processed");
+  await expect(page.locator("#status-data-total")).toHaveText(structuredRowsLabel);
+  await expect(page.locator("#status-data-total")).toHaveAttribute("title", formatCount(structuredRowsProcessed));
+  // Validated facts, public profiles, directory, itemized, entity rows, country-years, ledger rows.
+  await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(7);
   await expect(page.locator("#data-health-root")).toContainText("Checks passed");
   await expect(page.locator("#data-health-root")).toContainText(formatCount(counts.municipalUnitsInScope));
   await expect(page.locator("#data-health-root")).toContainText("Municipalities · directory / headlines");
@@ -185,15 +230,19 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   // countries are reported alongside it, never folded into the published tally.
   await expect(page.locator("#data-health-root")).toContainText(`${formatCount(counts.itemizedPublishedProfiles)} profiles`);
   await expect(page.locator("#data-health-root")).toContainText(`${formatCount(counts.itemizedWarehouseOnlyProfiles)} in warehouse`);
-  await expect(page.locator("#data-health-root .data-health-kpis article").nth(1)).toContainText(String(counts.publishedItemizedCountries));
+  await expect(page.locator("#data-health-root .data-health-kpis article", { hasText: "Municipalities · itemized budgets" })).toContainText(String(counts.publishedItemizedCountries));
   await expect(page.locator("#data-health-root")).toContainText("66");
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
   await expect(page.locator("#accounting-boundaries")).toContainText("Accounting boundaries in each country");
-  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(191);
-  await expect(page.locator("#surface-coverage-atlas [data-surface-country]")).toHaveCount(195);
+  await expect(page.locator("#fiscal-architecture-body tr")).toHaveCount(counts.pinned.sovereignCountries);
+  await expect(page.locator("#surface-coverage-atlas [data-surface-country]")).toHaveCount(counts.pinned.sovereignCountries);
   await expect(page.locator("#transparency-atlas .atlas-map")).toBeVisible();
-  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(191);
-  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(1337);
+  await expect(page.locator(".coverage-matrix tbody tr")).toHaveCount(counts.pinned.sovereignCountries);
+  // One node per country and coverage category (site-pages.js coverageCategories:
+  // fiscal, health, geo, municipalities, municipalHistory, transport, budgetDetail).
+  const coverageCategoryCount = await page.locator(".coverage-matrix thead [data-coverage-category]").count();
+  expect(coverageCategoryCount).toBe(7);
+  await expect(page.locator(".coverage-matrix [data-coverage-node]")).toHaveCount(counts.pinned.sovereignCountries * coverageCategoryCount);
   await expect(page.locator('[data-coverage-country="DEU"][data-coverage-node="municipalities"]')).toContainText("10,756");
   await expect(page.locator('[data-coverage-country="NOR"][data-coverage-node="municipalHistory"]')).toContainText("2015–2025");
   await expect(page.locator('[data-coverage-country="CZE"][data-coverage-node="municipalHistory"]')).toContainText("2010–2025");
@@ -258,15 +307,46 @@ test("municipality country pages open their own methodology records", async ({ p
 });
 
 test("homepage compares all fifteen health-system topline metrics", async ({ page }) => {
+  // Groups, metrics and coverage are measured from the artifact the module fetches
+  // (homepage-health-performance.js -> data/country-health-performance.v1.json), so
+  // the expectations follow the data instead of going stale with it.
+  const health = await readJson("data/country-health-performance.v1.json");
+  const healthCountries = Object.values(health.countries);
+  const metricsByGroup = new Map();
+  for (const country of healthCountries) {
+    for (const [group, metrics] of Object.entries(country)) {
+      if (!metricsByGroup.has(group)) metricsByGroup.set(group, new Set());
+      for (const key of Object.keys(metrics || {})) metricsByGroup.get(group).add(key);
+    }
+  }
+  const totalMetrics = [...metricsByGroup.values()].reduce((sum, keys) => sum + keys.size, 0);
+  expect(totalMetrics).toBe(15);
+  const rankedCountries = (group, key) => healthCountries.filter((country) => Number.isFinite(Number(country[group]?.[key]?.value))).length;
+
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   const comparison = page.locator("#health-performance-compare");
   await expect(comparison).toBeVisible();
-  await expect(comparison.locator(".health-compare-tabs button")).toHaveCount(5);
-  await expect(comparison.locator(".health-compare-matrix [data-home-health-matrix-metric]")).toHaveCount(15);
-  await expect(comparison.locator(".health-compare-rank-row")).toHaveCount(10);
+  await expect(comparison.locator(".health-compare-tabs button")).toHaveCount(metricsByGroup.size);
+  // The 15 x N matrix table was retired in 630afd708b: each tab lists its group's
+  // metrics as cards, so all fifteen are reached by walking the tabs.
+  let cardsSeen = 0;
+  for (const [group, keys] of metricsByGroup) {
+    await comparison.locator(`[data-home-health-group="${group}"]`).click();
+    await expect(comparison.locator(".health-compare-cards button")).toHaveCount(keys.size);
+    cardsSeen += keys.size;
+  }
+  expect(cardsSeen).toBe(totalMetrics);
+  // The ranking is capped at the Top 20 available values (630afd708b). Selecting the
+  // outcomes tab resets the metric to the group's first entry, life expectancy.
+  await comparison.locator('[data-home-health-group="outcomes"]').click();
+  await expect(comparison.locator(".health-compare-rank-row")).toHaveCount(Math.min(20, rankedCountries("outcomes", "life_expectancy_years")));
   await comparison.locator('[data-home-health-group="workforce"]').click();
-  await expect(comparison.locator(".health-compare-cards button")).toHaveCount(2);
-  await comparison.locator("#home-health-anchor").selectOption("DEU");
+  await expect(comparison.locator(".health-compare-cards button")).toHaveCount(metricsByGroup.get("workforce").size);
+  // The anchor picker is a search input backed by a datalist (8cfb97958d); it accepts
+  // a country name or ISO3 code and applies it on Enter.
+  const anchor = comparison.locator("#home-health-anchor");
+  await anchor.fill("DEU");
+  await anchor.press("Enter");
   await expect(comparison.locator(".health-compare-rank-row.selected")).toContainText("Germany");
   await comparison.locator('[data-home-health-group="outcomes"]').click();
   await comparison.locator('[data-home-health-metric="suicide_rate_per_100k"]').click();
@@ -276,10 +356,11 @@ test("homepage compares all fifteen health-system topline metrics", async ({ pag
 
 test("homepage overview scales with the current country coverage", async ({ page }) => {
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".hero-top-list .hero-bar")).toHaveCount(15);
-  await expect(page.locator("#country-count")).toHaveText("191");
+  // The hero list is a Top 20 design constant (homepage-v2.js ranked.slice(0,20), 630afd708b).
+  await expect(page.locator(".hero-top-list .hero-bar")).toHaveCount(20);
+  await expect(page.locator("#country-count")).toHaveText(String(countryRegistry.countries.length));
   await expect(page.locator("#year-count")).toHaveText("20");
-  await expect(page.locator("#hero-chart-note")).toContainText("15 countries with the highest value");
+  await expect(page.locator("#hero-chart-note")).toContainText("Top 20 · consolidated general government");
   await expect(page.locator(".category-summary article").nth(1).locator("strong")).toHaveText("33.1 %");
   await expect(page.locator(".category-summary article").nth(2)).toContainText("17 / 17");
   await expect(page.locator(".home-path-grid > a")).toHaveCount(3);
@@ -314,7 +395,7 @@ test("stored English never paints the Czech fallback", async ({ page }) => {
   // blocking on it used to leave English visitors on a blank page, then flash Czech.
   await expect(page.locator("body")).toBeVisible();
   await expect(page.locator("html")).not.toHaveAttribute("data-language-pending", /.+/);
-  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money.");
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money");
 });
 
 test("homepage defaults every independently rendered module to English", async ({ page }) => {
@@ -322,7 +403,7 @@ test("homepage defaults every independently rendered module to English", async (
 
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator('[data-lang="en"]')).toHaveClass(/active/);
-  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money.");
+  await expect(page.locator('[data-i18n="hero1"]')).toHaveText("Follow public money");
   await expect(page.locator("#category-comparison-root")).toContainText("Spending by category");
   await expect(page.locator("#category-comparison-root")).toContainText("Country profile");
   await expect(page.locator("#category-comparison-root")).not.toContainText("Výdaje podle kategorií");
@@ -340,19 +421,33 @@ test("homepage defaults every independently rendered module to English", async (
 
 test("deep dives expose dedicated topic hierarchies for countries and capital cities", async ({ page }) => {
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".deep-card")).toHaveCount(9);
-  await expect(page.locator(".deep-card.available")).toHaveCount(9);
-  await expect(page.locator(".deep-card.available").first()).toContainText("Transportation");
-  await expect(page.locator(".deep-card.available").nth(1)).toContainText("Health");
-  await expect(page.locator(".deep-card.available").nth(2)).toContainText("State-owned enterprises");
-  await expect(page.locator(".deep-card.available").nth(3)).toContainText("Capital cities");
-  await expect(page.locator(".deep-card.available").nth(4)).toContainText("Where the state gets its money");
-  await expect(page.locator(".deep-card.available").nth(5)).toContainText("Population ageing");
-  await expect(page.locator(".deep-card.available").nth(6)).toContainText("European migration");
-  await expect(page.locator(".deep-card.available").nth(7)).toContainText("Economy in context");
-  await expect(page.locator(".deep-card.available").last()).toContainText("Defense spending");
+  // One index card and one header-menu entry per topic directory under deep-dives/.
+  // Measured from the tree so a new report cannot strand this test on a stale
+  // literal (it did: 9 -> 15). Education leads by design (validate-site.mjs).
+  const deepDiveTopics = (await readdir(new URL("../../deep-dives/", import.meta.url), { withFileTypes: true }))
+    .filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
+  const topicOf = (links) => links.map((link) => new URL(link.href).pathname.replace(/^\/deep-dives\//, "").split("/")[0]);
+  await expect(page.locator(".deep-card")).toHaveCount(deepDiveTopics.length);
+  await expect(page.locator(".deep-card.available")).toHaveCount(deepDiveTopics.length);
+  const cardTopics = await page.locator(".deep-card").evaluateAll(topicOf);
+  expect([...cardTopics].sort()).toEqual(deepDiveTopics);
+  // Cards are numbered in reading order; the numbering must run 01..N without gaps.
+  const cardNumbers = await page.locator(".deep-card header > span").evaluateAll((spans) => spans.map((span) => Number(span.textContent.split("/")[0])));
+  expect(cardNumbers).toEqual(deepDiveTopics.map((_, index) => index + 1));
+  await expect(page.locator(".deep-card.available").first()).toContainText("Education");
+  await expect(page.locator(".deep-card.available").nth(1)).toContainText("Transportation");
+  await expect(page.locator(".deep-card.available").nth(2)).toContainText("Health");
+  await expect(page.locator(".deep-card.available").nth(3)).toContainText("State-owned enterprises");
+  await expect(page.locator(".deep-card.available").nth(4)).toContainText("Capital cities");
+  await expect(page.locator(".deep-card.available").nth(5)).toContainText("Where the state gets its money");
+  await expect(page.locator(".deep-card.available").nth(6)).toContainText("Population ageing");
+  await expect(page.locator(".deep-card.available").nth(7)).toContainText("European migration");
+  await expect(page.locator(".deep-card.available").nth(8)).toContainText("Economy in context");
+  await expect(page.locator(".deep-card.available").nth(9)).toContainText("Defense spending");
   await page.locator(".deep-dive-menu summary").click();
-  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(9);
+  await expect(page.locator(".deep-dive-menu-panel > a")).toHaveCount(deepDiveTopics.length);
+  // The header menu must list exactly the topics the index publishes.
+  expect((await page.locator(".deep-dive-menu-panel > a").evaluateAll(topicOf)).sort()).toEqual(deepDiveTopics);
   await page.goto("/deep-dives/capital-cities/?city=prague-cz&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("h1")).toContainText("Capital-city budgets and visitor load");
   await expect(page.locator("#capital-pressure-city")).toHaveValue("prague-cz");
@@ -527,7 +622,7 @@ test("country profiles expose sortable ten-year health, social and transport com
 
 test("public-entity profiles expose broad perimeters, economics and the full searchable registry", async ({ page }) => {
   await page.goto("/country.html?code=CHE&lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#country-public-entities-title")).toHaveText("Public entities, without blind spots.");
+  await expect(page.locator("#country-public-entities-title")).toHaveText("The public-entity register");
   await expect(page.locator("#public-entities .pe-kpis")).toContainText("5,152");
   await expect(page.locator("#public-entities .pe-kpis")).toContainText("22");
   await expect(page.locator("#public-entities .pe-comparison tbody tr")).toHaveCount(10);
@@ -714,7 +809,9 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/municipalities/?lang=cs", { waitUntil:"networkidle" });
   const municipalCoverageCountries = await page.locator("#country-grid .municipal-country-card").evaluateAll((cards) => cards.map((card) => card.dataset.country));
   expect(municipalMenuCountries).toEqual(municipalCoverageCountries);
-  expect(municipalCardCountries).toHaveLength(191);
+  // Homepage cards: the twenty most populous profiles, then the "open all comparisons" card.
+  expect(municipalCardCountries.filter((path) => path.startsWith("/countries/"))).toHaveLength(homepageCountryCodes.length);
+  expect(municipalCardCountries.at(-1)).toBe("/comparison.html");
   await page.goto("/?lang=cs", { waitUntil:"networkidle" });
   await page.locator(".municipality-menu summary").click();
   await page.locator('.municipality-menu a[data-country-code="DEU"]').click();
@@ -728,7 +825,9 @@ test("all representative page menus resolve and primary navigation routes correc
   await page.goto("/?lang=cs", { waitUntil: "networkidle" });
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(193);
+  await expect(countryMenu.locator(".country-menu-panel > a[data-country-code]")).toHaveCount(countryParity.countries.length);
+  // Plus the "all profiles" head link and the CZ+ state-budget feature link.
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(countryParity.countries.length + 2);
   const countrySearch = countryMenu.locator(".country-menu-search input");
   await expect(countrySearch).toHaveAttribute("placeholder", "Název země…");
   await countrySearch.fill("novy zeland");
@@ -738,7 +837,11 @@ test("all representative page menus resolve and primary navigation routes correc
   await countrySearch.fill("");
   const chartCountries = await page.locator("#country-cards .country-card-link").evaluateAll(cards=>cards.map(card=>new URL(card.href).pathname));
   const menuCountries = await countryMenu.locator(".country-menu-panel > a[data-country-code]").evaluateAll(links=>links.map(link=>new URL(link.href).pathname));
-  expect(menuCountries).toEqual(chartCountries);
+  // The menu carries the full directory; every homepage profile card must be in it.
+  expect(menuCountries).toHaveLength(countryParity.countries.length);
+  const chartProfilePaths = chartCountries.filter((path) => path.startsWith("/countries/"));
+  expect(chartProfilePaths).toHaveLength(homepageCountryCodes.length);
+  expect(menuCountries).toEqual(expect.arrayContaining(chartProfilePaths));
   await countryMenu.locator('.country-menu-panel a[href="/countries/czechia?lang=cs"]').click();
   await expect(page).toHaveURL(/\/countries\/czechia\?lang=cs/);
 });
@@ -757,7 +860,7 @@ test("every page family renders the same shared header component", async ({ page
     "/cz/kraje/praha/?lang=en",
     "/cz/mesta/?lang=en",
   ];
-  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Reports⌄", "Coverage", "About"];
+  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Map", "Reports⌄", "Coverage", "About"];
   for (const route of representatives) {
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator("psd-site-header")).toHaveCount(1);
@@ -796,7 +899,13 @@ test("state-owned enterprise catalogue ranks, filters and translates thirty sour
   await expect(page.locator("#soe-body tr")).toHaveCount(3);
   await page.locator('[data-lang="cs"]').click();
   await expect(page).toHaveURL(/lang=cs/);
-  await expect(page.locator("#catalogue h2")).toHaveText("Jedna účetní řádka. Jedna měna.");
+  // The Czech heading is authored in the page HTML and mirrored by the cs copy map in
+  // state-owned-enterprises.js; reading it from the source keeps this assertion in
+  // step with copy rewrites (the 2026-08-29 editorial pass left the old literal stale).
+  const soeHtml = await readFile(new URL("../../deep-dives/state-owned-enterprises/index.html", import.meta.url), "utf8");
+  const csCatalogueTitle = soeHtml.match(/<h2 data-copy="catalogueTitle">([^<]+)<\/h2>/)?.[1];
+  expect(csCatalogueTitle).toBeTruthy();
+  await expect(page.locator("#catalogue h2")).toHaveText(csCatalogueTitle);
 });
 
 test("cities use the functional unified menu on desktop and mobile", async ({ page }) => {
@@ -805,7 +914,9 @@ test("cities use the functional unified menu on desktop and mobile", async ({ pa
   const countryMenu = page.locator(".country-menu:not(.municipality-menu)");
   await countryMenu.locator("summary").click();
   await expect(countryMenu).toHaveAttribute("open", "");
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(193);
+  // One link per country in data/country-parity.v1.json, plus the two fixed links
+  // global-nav.js always renders: the "all profiles" head link and the CZ+ feature.
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(countryParity.countries.length + 2);
   const panelBox = await countryMenu.locator(".country-menu-panel").boundingBox();
   // ux-refinements.css widened this menu to a three-column min(780px, 92vw) panel.
   // What matters is that it still fits the viewport rather than any fixed width.
