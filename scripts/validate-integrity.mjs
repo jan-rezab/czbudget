@@ -462,10 +462,10 @@ if (!dataOnly) {
   // regional accountability layer, which ships its own page and sitemap entry; deriving it
   // means the gate self-heals if that route is ever removed.
   const accountabilityPages = existsSync(path.join(root, "cz/kraje/accountability/index.html")) ? 1 : 0;
-  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 12 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 6 + accountabilityPages;
+  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 13 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 6 + accountabilityPages;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
-  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/education/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/deep-dives/tax-burden/", "/deep-dives/redistribution/", "/deep-dives/trade/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/", "/cz/kraje/accountability/"]) {
+  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/education/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/deep-dives/tax-burden/", "/deep-dives/redistribution/", "/deep-dives/trade/", "/deep-dives/budget-planner/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/", "/cz/kraje/accountability/"]) {
     assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);
