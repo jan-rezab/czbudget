@@ -29,9 +29,13 @@ const OUT = "pipeline/config/municipal_headline_rules.json";
 
 // Another session on this machine switches the active gcloud account, and `bq` picks up
 // whichever is current at the moment it runs — so the same query succeeds or fails by timing.
-// The account is pinned per invocation rather than by changing the shared config, which would
-// break that other session in exactly the way this is guarding against.
-const BQ_ENV = { ...process.env, CLOUDSDK_CORE_ACCOUNT: process.env.BQ_ACCOUNT || "jan@ravineo.com" };
+// A named configuration isolates the whole of it, account and project together, and leaves the
+// shared active configuration alone: changing that is what caused the problem in the first
+// place. Create it once with `gcloud config configurations create czbudget --no-activate`.
+const BQ_ENV = {
+  ...process.env,
+  CLOUDSDK_ACTIVE_CONFIG_NAME: process.env.CZBUDGET_GCLOUD_CONFIG || "czbudget",
+};
 
 
 const args = process.argv.slice(2);

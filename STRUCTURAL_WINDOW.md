@@ -59,3 +59,68 @@ This page was held out of the window as the reference statement of the fiscal pe
 and the non-additivity rule. It still is, and it is still not for refactoring. A revenue donut
 was added to section 03 on 2026-08-31 at the maintainer's explicit request — an addition to the
 page, deliberately made, not a refactor of it.
+
+## Working in parallel
+
+The window that this file used to guard is closed, but two sessions still share this machine.
+Nothing here is about git. Every collision that actually cost time came from shared state that
+git does not track: the raw data directories live outside the repository, and gcloud keeps one
+active account for every process on the machine. A branch or a worktree would not have helped
+with either.
+
+### Downloading while someone else pushes
+
+The pre-push gate hashes every raw input under `data/source_cache` and `data/sources` to prove
+the manifest describes real bytes. A crawl writing into those directories moves the hash faster
+than a regeneration can land — the gate rehashes after running the test suite, so the window is
+never smaller than about a minute. Hashing a directory mid-write produces a value that is wrong
+before the command that wrote it returns.
+
+So a writer declares itself:
+
+```bash
+touch data/sources/<group>/.in-flight   # before the batch
+rm    data/sources/<group>/.in-flight   # when it is complete
+```
+
+A group holding that marker is recorded as in flight rather than hashed, and verification
+passes over it. Nothing becomes silently unverified: the manifest carries an `in_flight` list
+with the moment each marker was set, and verification prints every one with its age. A marker
+older than twelve hours is reported as probably forgotten. Everything outside those groups is
+still compared byte for byte.
+
+Leaving a marker in place indefinitely does not break a build. It quietly removes that group
+from what the manifest can claim, which is worse — so remove it when the batch lands.
+
+### Two sessions, one gcloud
+
+`gcloud` keeps a single active account per machine, and `bq` reads it at the moment it runs.
+When the other session ran `gcloud config set account`, queries here began failing with
+`bigquery.jobs.create` permission denied — which reads as an IAM problem and is not one. The
+same query failed five times and then succeeded three times when pinned.
+
+Each session uses its own named configuration instead:
+
+```bash
+gcloud config configurations create <name> --no-activate
+CLOUDSDK_ACTIVE_CONFIG_NAME=<name> gcloud config set account you@example.com
+CLOUDSDK_ACTIVE_CONFIG_NAME=<name> gcloud config set project <project>
+```
+
+`--no-activate` matters: creating a configuration otherwise switches to it and breaks the other
+session in exactly the way this avoids. This repository's warehouse scripts default to the
+`czbudget` configuration and honour `CZBUDGET_GCLOUD_CONFIG` if you need another.
+
+### Two more, learned the expensive way
+
+**Do not run `git gc --prune=now` here.** This is a partial clone with a promisor remote.
+Pruning destroyed three local branches that existed nowhere else, permanently.
+
+**`gcloud builds submit` uploads the working tree, not the pushed commit.** A deploy therefore
+ships whatever is on the machine that submits it. Local drift in a hydrated layer is invisible
+until the build hashes it — a six-byte cache-buster difference in `municipalities/` once cost a
+twenty-six minute build. Re-hydrate before deploying, or check the layers verify first:
+
+```bash
+node scripts/hydrate-data-layers.mjs --layer pages --verify
+```
