@@ -176,6 +176,19 @@ steps:
 
   - id: build
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
+    # BuildKit is what makes Dockerfile.slim.dockerignore apply at all; the classic builder
+    # reads only .dockerignore, so the slim exclusions sat inert. They drop 1.17 GB of payload
+    # trees -- data/municipal-expansion, municipalities, cz, data/entities -- from a 1.5 GB
+    # image, and build + push + deploy were 389s of a 690s build, nearly all of it moving
+    # those bytes.
+    #
+    # This is only safe as of the release that added @municipality_payload. Until then the
+    # HTML routes had a fallback and the JSON payloads did not, so a slim image answered 404
+    # for every Czech breakdown and every expansion profile. Both prefixes now resolve
+    # against the snapshot release. Note BuildKit uses the per-Dockerfile ignore file
+    # *instead of* .dockerignore, not in addition: keep the slim file a superset.
+    env:
+      - DOCKER_BUILDKIT=1
     args:
       - build
       - --file
