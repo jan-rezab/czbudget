@@ -57,3 +57,7 @@ data/entities/
 # /public-data/municipality-lines rather than repeated in every file. Rebuilt by
 # scripts/build-profiles-from-warehouse.mjs --slim.
 .warehouse-slim/
+
+# Bundled warehouse profiles — one NDJSON per country. Hydration cost is per-file, so 17 files
+# beat 65,920 of the same data. Rebuilt with --slim --bundle.
+.warehouse-bundle/

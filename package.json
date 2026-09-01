@@ -80,7 +80,8 @@
     "report:france-ofgl": "python3 scripts/load-municipal-facts-fra-ofgl.py --report",
     "build:source-vintages": "node scripts/build-source-vintages.mjs --write",
     "report:source-vintages": "node scripts/build-source-vintages.mjs",
-    "report:economic-observations": "python3 scripts/load-economic-observations.py --report"
+    "report:economic-observations": "python3 scripts/load-economic-observations.py --report",
+    "build:warehouse-bundles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --slim --bundle --out .warehouse-bundle"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

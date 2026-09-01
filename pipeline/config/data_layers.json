@@ -197,6 +197,14 @@
     {
       "layer": "serving",
       "detail": "One artifact must not be generated from the warehouse, and it is worth saying why before someone tries. data/international-municipalities.v1.json is the published baseline the headline rules are derived and verified against — 105,416 entities with the revenue and expenditure the site shows. Regenerating it from the same warehouse those rules read would make every check circular: the generator would be proving it agrees with itself. It stays an independently maintained artifact for as long as it is the thing being checked against."
+    },
+    {
+      "layer": "serving",
+      "detail": "A serving layer that could replace the fan-out now exists and measures 17 files and 18.4 MB, against 28,559 files and 635 MB. It took two corrections to get there and both are worth keeping. First, the generated profiles were 1.4 GB across 72,174 files — larger than what they replace, because they carry complete warehouse detail where the fan-out was truncated. Dropping the detail array fixes that (1,108 MB to 18.4 MB) and is safe because the profile page prefers /public-data/municipality-lines and falls back to the file only when the endpoint has nothing. Second, slimming made the file count worse — 65,920 against 28,559 — and hydration cost is per-file, not per-byte: 36,000 objects took 1,526 seconds, 0.72 MB/s, nowhere near a network limit. So a slim fan-out would have hydrated slower while being thirty-five times smaller. One NDJSON per country removes both problems, and the serving snapshot it feeds is a single JSONL stream anyway."
+    },
+    {
+      "layer": "serving",
+      "detail": "What remains before the bundles can serve: prepare-public-serving-snapshots.mjs reads directories of per-municipality JSON and would need to read an NDJSON bundle; the bundles need publishing to GCS and hashing into data/manifest.v1.json as their own layer; and cloudbuild needs to hydrate them. Czechia is deliberately excluded — it is not served by the lines endpoint, so a slim profile would have no detail and no way to fetch any, and the builder refuses it rather than shipping one."
     }
   ]
 }

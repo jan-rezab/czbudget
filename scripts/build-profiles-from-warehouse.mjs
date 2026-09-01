@@ -54,6 +54,16 @@ const verify = args.includes("--verify");
  * and no way to fetch any.
  */
 const slim = args.includes("--slim");
+/**
+ * `--bundle` writes one NDJSON file per country instead of one JSON per municipality.
+ *
+ * Hydration cost here is per-file, not per-byte: roughly 36,000 objects took 1,526 seconds, or
+ * 0.72 MB/s, which is nowhere near a network limit. Slimming the profiles fixed the size and
+ * made the file count worse — 65,920 files against the fan-out's 28,559 — so a slim fan-out
+ * would hydrate slower while being thirty-five times smaller. Seventeen files do not have that
+ * problem, and the serving snapshot they feed is a single JSONL stream anyway.
+ */
+const bundle = args.includes("--bundle");
 
 const ALPHA2 = {
   BOL: "BO", BRA: "BR", CHL: "CL", COL: "CO", CRI: "CR", DNK: "DK", ESP: "ES",
@@ -292,7 +302,13 @@ if (verify) {
   if (agreed !== checked) process.exitCode = 1;
 }
 
-if (outDir) {
+if (outDir && bundle) {
+  const target = path.join(ROOT, outDir);
+  await mkdir(target, { recursive: true });
+  const file = path.join(target, `${country.toLowerCase()}.ndjson`);
+  await writeFile(file, profiles.map((profile) => JSON.stringify(profile)).join("\n") + "\n", "utf8");
+  console.log(`\nWrote ${profiles.length} profiles to ${outDir}/${country.toLowerCase()}.ndjson`);
+} else if (outDir) {
   const target = path.join(ROOT, outDir, country.toLowerCase());
   await mkdir(target, { recursive: true });
   for (const profile of profiles) {
