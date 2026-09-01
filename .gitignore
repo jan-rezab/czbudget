@@ -61,3 +61,7 @@ data/entities/
 # Bundled warehouse profiles — one NDJSON per country. Hydration cost is per-file, so 17 files
 # beat 65,920 of the same data. Rebuilt with --slim --bundle.
 .warehouse-bundle/
+
+# Resumable download checkpoints (Hlídač státu contract pages and similar). Regenerable from
+# the source API; the published dataset lives under data/contracts/.
+.cache/

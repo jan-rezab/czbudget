@@ -5,8 +5,21 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { gunzipSync } from "node:zlib";
 
-const root = path.resolve(process.argv[2] || "");
-if (!process.argv[2]) throw new Error("Usage: node scripts/validate-public-serving-snapshot.mjs OUTPUT_DIR");
+// With no argument, validate the newest timestamped snapshot under .public-serving/ so the
+// bare npm script works; an explicit OUTPUT_DIR still wins.
+async function newestSnapshotDir() {
+  const base = path.resolve(".public-serving");
+  let names = [];
+  try { names = await fs.readdir(base); } catch { names = []; }
+  const stamped = names.filter((name) => /^\d{8}T\d{6}Z$/.test(name)).sort().reverse();
+  const others = names.filter((name) => !stamped.includes(name)).sort().reverse();
+  for (const name of [...stamped, ...others]) {
+    try { await fs.access(path.join(base, name, "current.json")); return path.join(base, name); } catch {}
+  }
+  throw new Error("Usage: node scripts/validate-public-serving-snapshot.mjs OUTPUT_DIR (no snapshot with current.json under .public-serving/)");
+}
+const root = path.resolve(process.argv[2] || await newestSnapshotDir());
+console.log(`Validating ${root}`);
 const pointer = await readJSON(path.join(root, "current.json"));
 const manifest = await readJSON(path.join(root, pointer.manifest));
 if (pointer.release_id !== manifest.release_id) throw new Error("Pointer and manifest release IDs differ");
