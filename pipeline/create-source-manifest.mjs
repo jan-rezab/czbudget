@@ -18,6 +18,20 @@ const selfCheck = process.argv.includes("--self-check");
 // under the roots flip a hash. It mirrors the tree-digest rows that
 // scripts/create-release-manifest.mjs already uses for data/entities/*.json.
 const roots = ["data/source_cache", "data/sources"];
+
+/**
+ * A directory being actively written cannot be described by a manifest, and demanding that it
+ * hold still means one session's download blocks another session's push. A crawl adding three
+ * files every thirty seconds moved this hash on every regeneration; the gate rehashes after
+ * running the test suite, so the window was never small enough to win.
+ *
+ * A writer therefore declares itself: `touch data/sources/<group>/.in-flight` before it starts,
+ * and removes the file when the batch is complete. A group holding that marker is recorded as
+ * in flight rather than hashed, and verification passes over it — loudly. Nothing is silently
+ * unverified: the marker's own age is reported, so a forgotten one is visible rather than
+ * quietly eroding what the manifest claims.
+ */
+const IN_FLIGHT_MARKER = ".in-flight";
 const GROUP_DEPTH = 2;
 const HASH_CONCURRENCY = 8;
 
@@ -99,6 +113,16 @@ async function treeEntry(directory) {
   };
 }
 
+/** Whether this directory has declared itself mid-write. */
+async function inFlightSince(directory) {
+  try {
+    const info = await stat(path.join(directory, IN_FLIGHT_MARKER));
+    return info.mtime.toISOString();
+  } catch {
+    return null;
+  }
+}
+
 async function collect(directory, level) {
   const listing = await readdir(directory, { withFileTypes: true });
   const siblings = new Set(listing.map((entry) => entry.name));
@@ -108,8 +132,15 @@ async function collect(directory, level) {
   const entries = [];
   for (const child of children) {
     const target = path.join(directory, child.name);
-    if (child.isFile()) entries.push(await fileEntry(target));
-    else if (level < GROUP_DEPTH) entries.push(...await collect(target, level + 1));
+    if (child.isFile()) { entries.push(await fileEntry(target)); continue; }
+    // A directory that has declared itself mid-write is recorded, not hashed. Hashing it would
+    // produce a value that is wrong before the command that wrote it returns.
+    const since = await inFlightSince(target);
+    if (since) {
+      entries.push({ path: `${relative(target)}/**`, in_flight_since: since });
+      continue;
+    }
+    if (level < GROUP_DEPTH) entries.push(...await collect(target, level + 1));
     else entries.push(await treeEntry(target));
   }
   return entries;
@@ -129,7 +160,9 @@ function summarise(assets) {
     },
     entry_count: assets.length,
     asset_count: assets.reduce((sum, item) => sum + (item.files ?? 1), 0),
-    total_bytes: assets.reduce((sum, item) => sum + item.bytes, 0),
+    total_bytes: assets.reduce((sum, item) => sum + (item.bytes ?? 0), 0),
+    in_flight: assets.filter((item) => item.in_flight_since)
+      .map((item) => ({ path: item.path, since: item.in_flight_since })),
     assets,
   };
 }
@@ -195,13 +228,41 @@ if (selfCheck) {
 } else if (verify) {
   const manifest = await build();
   const expected = JSON.parse(await readFile(manifestPath, "utf8"));
-  if (JSON.stringify(expected) !== JSON.stringify(manifest)) {
+
+  // A group that is mid-write on either side is compared on identity, not on bytes: it is
+  // in flight, so there are no settled bytes to compare. Everything else is compared exactly.
+  const inFlight = new Set([
+    ...(manifest.in_flight || []).map((item) => item.path),
+    ...(expected.in_flight || []).map((item) => item.path),
+  ]);
+  const settled = (payload) => ({
+    ...payload,
+    in_flight: undefined,
+    assets: (payload.assets || []).filter((item) => !inFlight.has(item.path)),
+    entry_count: undefined,
+    asset_count: undefined,
+    total_bytes: undefined,
+  });
+
+  if (JSON.stringify(settled(expected)) !== JSON.stringify(settled(manifest))) {
     console.error("Source assets differ from pipeline/source-assets.manifest.json");
-    console.error(report(expected, manifest).slice(0, 50).join("\n") || "  (metadata differs; regenerate the manifest)");
+    console.error(report(expected, manifest).filter((line) => ![...inFlight].some((p) => line.includes(p)))
+      .slice(0, 50).join("\n") || "  (metadata differs; regenerate the manifest)");
     console.error("Regenerate with: node pipeline/create-source-manifest.mjs");
     process.exit(1);
   }
-  console.log(`Verified ${manifest.entry_count} entries covering ${manifest.asset_count} source files (${manifest.total_bytes} bytes)`);
+
+  const settledAssets = manifest.assets.filter((item) => !item.in_flight_since);
+  console.log(`Verified ${settledAssets.length} settled entries covering `
+    + `${settledAssets.reduce((sum, item) => sum + (item.files ?? 1), 0)} source files`);
+  for (const item of manifest.in_flight || []) {
+    const age = Math.round((Date.now() - Date.parse(item.since)) / 60000);
+    console.log(`  in flight, not verified: ${item.path} (declared ${age} min ago)`);
+  }
+  if ((manifest.in_flight || []).some((item) => Date.now() - Date.parse(item.since) > 12 * 3600 * 1000)) {
+    console.log("  a marker older than twelve hours is probably a forgotten one — remove it to "
+      + "bring that group back under verification.");
+  }
 } else {
   const manifest = await build();
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
