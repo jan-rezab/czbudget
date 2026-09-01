@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <script src="/language-bootstrap.js?v=20260901-budget-planner"></script>
+  <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260828-education" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Plánovač státního rozpočtu 2027 — Public Spending Data</title>
+  <meta name="description" content="Prozkoumejte návrh státního rozpočtu ČR na rok 2027, upravte výdaje a příjmy a sledujte dopad na schodek.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/budget-planner/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/budget-planner/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/budget-planner/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://publicspendingdata.org/deep-dives/budget-planner/">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../styles.css?v=20260822-section-rail">
+  <link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives">
+  <link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter">
+  <link rel="stylesheet" href="../../budget-planner.css?v=20260901-c">
+  <script type="module" src="../../budget-planner.js?v=20260901-b"></script>
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og-budget.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="deep-dives-page budget-planner-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <section class="deep-hero deep-topic-hero budget-planner-hero" id="overview">
+      <div>
+        <span class="eyebrow" data-budget-copy="eyebrow">Report / Plánovač rozpočtu</span>
+        <h1><span data-budget-copy="titleLead">Rozpočet není tabulka.</span> <em data-budget-copy="titleEm">Je to rozhodnutí.</em></h1>
+        <p data-budget-copy="intro">Projděte návrh státního rozpočtu na rok 2027, změňte jednotlivé oblasti a sledujte, co vaše volby udělají s celkovými výdaji a schodkem.</p>
+      </div>
+      <aside class="budget-stage-panel">
+        <span data-budget-copy="stageLabel">Stav dokumentu</span>
+        <div><b data-budget-copy="stageValue">Návrh MF</b><strong>2027</strong></div>
+        <dl>
+          <div><dt data-budget-copy="published">Publikováno</dt><dd>31. 8. 2026</dd></div>
+          <div><dt data-budget-copy="release">Verze</dt><dd>MF · 01</dd></div>
+        </dl>
+        <small data-budget-copy="stageWarning">Není to schválený rozpočet. Vláda a Poslanecká sněmovna mohou částky změnit.</small>
+      </aside>
+    </section>
+
+    <nav class="deep-topic-rail budget-planner-rail" aria-label="Budget planner sections">
+      <a href="#snapshot" data-budget-copy="snapshotNav">Bilance</a>
+      <a href="#map" data-budget-copy="mapNav">Kam peníze jdou</a>
+      <a href="#planner" data-budget-copy="plannerNav">Plánovač</a>
+      <a href="#impact" data-budget-copy="impactNav">Dopad</a>
+      <a href="#method" data-budget-copy="methodNav">Metodika</a>
+    </nav>
+
+    <section class="budget-section budget-snapshot" id="snapshot">
+      <header class="budget-section-heading">
+        <div><span data-budget-copy="snapshotKicker">Oficiální návrh</span><h2 data-budget-copy="snapshotTitle">Výchozí bilance</h2></div>
+        <p data-budget-copy="snapshotIntro">Příjmy a výdaje jsou hotovostní státní rozpočet. Schodek je jejich rozdíl; nejde o saldo celého sektoru vládních institucí.</p>
+      </header>
+      <div class="budget-stage-guide" role="note">
+        <span class="proposal"><b data-budget-copy="proposal">Návrh 2027</b><small data-budget-copy="proposalNote">Ministerstvo financí · zveřejněno 31. 8. 2026</small></span>
+        <span aria-hidden="true">→</span>
+        <span class="future"><b data-budget-copy="futureStages">Další fáze</b><small data-budget-copy="futureNote">Vláda · Poslanecká sněmovna · schválený zákon</small></span>
+      </div>
+      <div class="budget-kpis" aria-live="polite">
+        <article><span data-budget-copy="revenue">Příjmy</span><strong id="official-revenue">—</strong><small id="official-revenue-change">—</small></article>
+        <article><span data-budget-copy="expenditure">Výdaje</span><strong id="official-expenditure">—</strong><small id="official-expenditure-change">—</small></article>
+        <article class="deficit"><span data-budget-copy="deficit">Schodek</span><strong id="official-deficit">—</strong><small id="official-deficit-change">—</small></article>
+      </div>
+    </section>
+
+    <section class="budget-section budget-map-section" id="map">
+      <header class="budget-section-heading">
+        <div><span data-budget-copy="mapKicker">Odvětvové třídění</span><h2 data-budget-copy="mapTitle">Kam rozpočet míří</h2></div>
+        <p data-budget-copy="mapIntro">Plocha dlaždice odpovídá částce. Barva ukazuje změnu proti schválenému rozpočtu 2026. Vyberte oblast a upravte ji v plánovači.</p>
+      </header>
+      <div class="budget-map-shell">
+        <div class="budget-map-toolbar">
+          <div><b data-budget-copy="mapContext">Výdaje podle funkce</b><span id="budget-map-context">—</span></div>
+          <div class="budget-map-legend" aria-label="Change from 2026">
+            <span><i class="lower"></i><b data-budget-copy="lower">Nižší</b></span>
+            <span><i class="flat"></i><b data-budget-copy="flat">Beze změny</b></span>
+            <span><i class="higher"></i><b data-budget-copy="higher">Vyšší</b></span>
+          </div>
+        </div>
+        <div class="budget-map-viewport"><div id="budget-treemap" class="budget-treemap" aria-live="polite"></div></div>
+        <div class="budget-map-tooltip" id="budget-map-tooltip" role="tooltip" hidden></div>
+      </div>
+      <aside class="budget-selection" id="budget-selection" aria-live="polite">
+        <div><span id="selection-group">—</span><strong id="selection-name">—</strong></div>
+        <dl>
+          <div><dt data-budget-copy="proposal2027">Návrh 2027</dt><dd id="selection-proposal">—</dd></div>
+          <div><dt data-budget-copy="share">Podíl výdajů</dt><dd id="selection-share">—</dd></div>
+          <div><dt data-budget-copy="yearChange">Změna 2027/26</dt><dd id="selection-change">—</dd></div>
+        </dl>
+        <button type="button" id="edit-selection" data-budget-copy="editSelection">Upravit tuto oblast ↓</button>
+      </aside>
+    </section>
+
+    <section class="budget-section budget-workbench-section" id="planner">
+      <header class="budget-section-heading">
+        <div><span data-budget-copy="plannerKicker">Váš scénář</span><h2 data-budget-copy="plannerTitle">Změňte jednu věc. Uvidíte všechno.</h2></div>
+        <p data-budget-copy="plannerIntro">Každá úprava se zapisuje pouze do jedné funkční oblasti. Souhrny se přepočítávají automaticky, takže stejná koruna nemůže být započtena dvakrát.</p>
+      </header>
+      <div class="budget-workbench">
+        <article class="budget-editor" aria-labelledby="editor-title">
+          <header><span id="editor-code">—</span><small id="editor-group">—</small></header>
+          <h3 id="editor-title">—</h3>
+          <div class="budget-editor-comparison">
+            <div><span>2026</span><strong id="editor-2026">—</strong></div>
+            <i><span id="editor-compare-bar"></span></i>
+            <div><span data-budget-copy="proposal2027">Návrh 2027</span><strong id="editor-2027">—</strong></div>
+          </div>
+          <label class="budget-adjustment-label" for="budget-adjustment">
+            <span data-budget-copy="adjustment">Úprava proti návrhu</span>
+            <output id="budget-adjustment-output" for="budget-adjustment">CZK 0.0 mld.</output>
+          </label>
+          <input id="budget-adjustment" class="budget-range" type="range" min="-100" max="100" step="0.1" value="0">
+          <div class="budget-number-field">
+            <label for="budget-adjustment-number" data-budget-copy="exactAdjustment">Přesná úprava v mld. Kč</label>
+            <div><input id="budget-adjustment-number" type="number" step="0.1" value="0"><span data-budget-copy="billions">mld. Kč</span></div>
+          </div>
+          <div class="budget-editor-actions">
+            <button type="button" id="match-2026" data-budget-copy="match2026">Nastavit na úroveň 2026</button>
+            <button type="button" id="clear-item" data-budget-copy="clearItem">Zrušit úpravu</button>
+          </div>
+          <p id="editor-result" class="budget-editor-result" aria-live="polite">—</p>
+        </article>
+
+        <aside class="budget-ledger" aria-labelledby="ledger-title">
+          <header><span data-budget-copy="liveIdentity">Živá rozpočtová identita</span><h3 id="ledger-title" data-budget-copy="scenarioResult">Výsledek scénáře</h3></header>
+          <div class="budget-ledger-metrics" aria-live="polite">
+            <div><span data-budget-copy="revenue">Příjmy</span><strong id="scenario-revenue">—</strong><small id="scenario-revenue-delta">—</small></div>
+            <div><span data-budget-copy="expenditure">Výdaje</span><strong id="scenario-expenditure">—</strong><small id="scenario-expenditure-delta">—</small></div>
+            <div class="deficit"><span data-budget-copy="deficit">Schodek</span><strong id="scenario-deficit">—</strong><small id="scenario-deficit-delta">—</small></div>
+          </div>
+          <div class="budget-revenue-control">
+            <label for="revenue-adjustment"><span data-budget-copy="revenueAssumption">Úprava příjmového předpokladu</span><output id="revenue-adjustment-output" for="revenue-adjustment">CZK 0.0 mld.</output></label>
+            <input id="revenue-adjustment" class="budget-range" type="range" min="-200" max="200" step="0.1" value="0">
+            <div class="budget-number-field compact"><label for="revenue-adjustment-number" data-budget-copy="exactRevenue">Přesná úprava příjmů</label><div><input id="revenue-adjustment-number" type="number" min="-2000" step="0.1" value="0"><span data-budget-copy="billions">mld. Kč</span></div></div>
+          </div>
+          <div id="budget-waterfall" class="budget-waterfall"></div>
+          <p class="budget-identity" id="budget-identity">—</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="budget-section budget-impact-section" id="impact">
+      <header class="budget-section-heading">
+        <div><span data-budget-copy="impactKicker">Co se změnilo</span><h2 data-budget-copy="impactTitle">Váš rozpočet vedle návrhu</h2></div>
+        <p data-budget-copy="impactIntro">Černá značka ukazuje návrh ministerstva. Barevný pruh je váš scénář. Seznam pod grafem drží přesnou stopu všech zásahů.</p>
+      </header>
+      <div class="budget-impact-grid">
+        <div class="budget-group-comparison" id="budget-group-comparison" aria-live="polite"></div>
+        <aside class="budget-change-log">
+          <header><div><span data-budget-copy="changeLog">Provedené změny</span><strong id="change-count">0</strong></div><button type="button" id="reset-scenario" data-budget-copy="resetAll">Obnovit návrh MF</button></header>
+          <div id="budget-change-list" aria-live="polite"></div>
+          <div class="budget-share-actions">
+            <button type="button" id="copy-scenario" data-budget-copy="copyScenario">Kopírovat odkaz na scénář</button>
+            <button type="button" id="download-scenario" data-budget-copy="downloadCsv">Stáhnout CSV</button>
+          </div>
+          <p id="share-status" role="status"></p>
+        </aside>
+      </div>
+      <details class="budget-table-details">
+        <summary data-budget-copy="showTable">Zobrazit úplnou tabulku scénáře</summary>
+        <div class="budget-table-wrap">
+          <table>
+            <thead><tr><th data-budget-copy="function">Funkce</th><th>2026</th><th data-budget-copy="proposal2027">Návrh 2027</th><th data-budget-copy="yourScenario">Váš scénář</th><th data-budget-copy="difference">Rozdíl</th></tr></thead>
+            <tbody id="budget-table-body"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <section class="budget-section budget-method" id="method">
+      <header class="budget-section-heading">
+        <div><span data-budget-copy="methodKicker">Jak plánovač počítá</span><h2 data-budget-copy="methodTitle">Jedna klasifikace. Žádné dvojí započtení.</h2></div>
+        <p data-budget-copy="methodIntro">Plánovač mění oddíly odvětvového třídění státního rozpočtu. Kapitoly ministerstev a ekonomické druhy výdajů jsou jiné řezy stejných peněz, proto je v této verzi neupravujeme současně.</p>
+      </header>
+      <div class="budget-method-grid">
+        <article><b>01</b><h3 data-budget-copy="methodStageTitle">Fáze rozpočtu</h3><p data-budget-copy="methodStageCopy">Výchozím bodem je návrh Ministerstva financí z 31. srpna 2026, nikoli schválený zákon.</p></article>
+        <article><b>02</b><h3 data-budget-copy="methodIdentityTitle">Rozpočtová identita</h3><p data-budget-copy="methodIdentityCopy">Příjmy minus výdaje se vždy rovnají saldu. Vyšší výdaj bez nového příjmu automaticky zvyšuje schodek.</p></article>
+        <article><b>03</b><h3 data-budget-copy="methodScopeTitle">Fiskální rozsah</h3><p data-budget-copy="methodScopeCopy">Jde o hotovostní státní rozpočet. Poměr salda sektoru vládních institucí k HDP proto neodvozujeme prostým dělením.</p></article>
+      </div>
+      <p class="budget-source-line"><span data-budget-copy="source">Zdroj</span>: <a href="https://mf.gov.cz/cs/ministerstvo/media/tiskove-zpravy/2026/rozpocet-2027-rekordni-investice-dostupnejsi-zdrav-64998" target="_blank" rel="noopener">Ministerstvo financí ČR ↗</a> · <code>F_01_Tabulková část SR 2027.xlsx / Tab.2</code> · <span data-budget-copy="retrieved">staženo 1. 9. 2026</span></p>
+    </section>
+  </main>
+  <footer data-global-footer></footer>
+</body>
+</html>

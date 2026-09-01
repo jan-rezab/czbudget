@@ -40,6 +40,8 @@
   Object.assign(copy.en,{money:"Where did the money go?",moneyCopy:"Money supply, purchasing power and CNB and Fed interventions in two separate national reports."});
   Object.assign(copy.cs,{trade:"Zahraniční obchod",tradeCopy:"Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade."});
   Object.assign(copy.en,{trade:"Foreign trade",tradeCopy:"Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer."});
+  Object.assign(copy.cs,{czechBudget:"Český státní rozpočet",budgetPlanner:"Plánovač rozpočtu 2027",budgetPlannerCopy:"Projděte návrh podle funkcí, změňte výdaje nebo příjmy a sledujte dopad na schodek."});
+  Object.assign(copy.en,{czechBudget:"Czech state budget",budgetPlanner:"2027 budget planner",budgetPlannerCopy:"Explore the proposal by function, change expenditure or revenue and see the effect on the deficit."});
   Object.assign(copy.cs,{education:"Školství",educationCopy:"Celý tok od ministerstva přes kraje a obce až k typům škol, bez dvojího započtení transferů.",indexCoverage:"až 48 zemí"});
   Object.assign(copy.en,{education:"Education",educationCopy:"The full flow from ministry through regions and municipalities to school types, without double-counting transfers.",indexCoverage:"up to 48 countries"});
   Object.assign(copy.cs,{indexEyebrow:"Reporty napříč zeměmi",open:"Otevřít report",next:"Další report",contractTitle:"Co v každém reportu najdete"});

@@ -148,6 +148,10 @@
       cs: ["Přerozdělení a výsledky — Public Spending Data", "Nerovnost před a po transferech, sociální výdaje, důchody a výsledky podle OECD."],
       en: ["Redistribution and outcomes — Public Spending Data", "OECD inequality before and after transfers, social spending, pensions and outcomes."],
     },
+    "/deep-dives/budget-planner/": {
+      cs: ["Plánovač státního rozpočtu 2027 — Public Spending Data", "Prozkoumejte návrh státního rozpočtu ČR na rok 2027, upravte výdaje a příjmy a sledujte dopad na schodek."],
+      en: ["Czech state budget planner 2027 — Public Spending Data", "Explore the proposed 2027 Czech state budget, adjust expenditure and revenue, and see the effect on the deficit."],
+    },
     "/cesky-rozpocet.html": {
       cs: ["Public Spending Data — český rozpočet v čase", "Státní rozpočet ČR 2001–2026, tok peněz ve zdravotnictví, benchmark nemocnic, účelové oblasti, kapitoly a demografický tlak do roku 2045."],
       en: ["Public Spending Data — Czech budget over time", "The Czech state budget for 2001–2026, health-system money flows, hospital benchmarks, spending purposes, budget chapters and demographic pressure to 2045."],
