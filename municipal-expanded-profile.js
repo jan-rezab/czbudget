@@ -319,6 +319,12 @@
     // Denmark's authorized-account cube contains overlapping groups and
     // financing flows, so a native line must never be promoted to a total.
     if (profile.country === "DNK") return null;
+    // Poland's headline rule is authored as the gross sum of a side at one stage, and its
+    // Rb-27S/Rb-28S paragraphs do not nest, so the sum is the total. Checked against the
+    // server's own figure: the actual rows for 0202062 add to 71,792,317 against a published
+    // 71,792,316.59. Falling through to the largest single line instead read 14.4m as the
+    // amended budget and put a 497.8% execution rate on the page.
+    if (profile.country === "POL") return candidates.reduce((sum, row) => sum + Number(row.amount), 0);
     const pattern = headlinePatterns[profile.country]?.[side];
     const exact = pattern ? candidates.find((row) => pattern.test(String(row.name || ""))) : null;
     return numeric((exact || candidates.slice().sort((a, b) => Math.abs(Number(b.amount)) - Math.abs(Number(a.amount)))[0]).amount);
