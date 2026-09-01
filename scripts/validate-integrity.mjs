@@ -6,6 +6,14 @@ import path from "node:path";
 const root = process.cwd();
 const dataOnly = process.argv.includes("--data-only");
 const writeReport = process.argv.includes("--write-report");
+// `--manifest-only` exists for the post-release gate in cloudbuild.yaml. That step
+// re-ran this whole validator -- 139s of a 875s build -- to answer one question:
+// does the published release manifest still describe the tree the image is built
+// from? Nothing between the full validation and the gate touches anything else, so
+// the gate now runs the release_manifest group alone: 7.6s locally against 39s for
+// the full pass. It is a gate, never an audit, and it must never write the report.
+const manifestOnly = process.argv.includes("--manifest-only");
+if (manifestOnly && (dataOnly || writeReport)) throw new Error("--manifest-only cannot be combined with --data-only or --write-report.");
 const failures = [];
 const warnings = [];
 const assert = (condition, message) => { if (!condition) failures.push(message); };
@@ -87,7 +95,7 @@ const canonicalProductionJson = (file) => {
   if (parent === "municipal-history") return path.basename(file) === "index.json" || /^\d{8}\.json$/.test(path.basename(file));
   return true;
 };
-const productionJson = [
+const productionJson = manifestOnly ? [] : [
   ...await filesBelow(path.join(root, "data"), canonicalProductionJson),
   ...await filesBelow(path.join(root, "lib", "data"), (file) => file.endsWith(".json")),
 ];
@@ -121,6 +129,16 @@ try {
   }
 } catch (error) {
   failures.push(`Release manifest validation failed: ${error.message}`);
+}
+
+if (manifestOnly) {
+  if (failures.length) {
+    console.error(failures.slice(0, 100).join("\n"));
+    console.error(`Release-manifest verification failed with ${failures.length} issue(s)`);
+    process.exit(1);
+  }
+  console.log("Release-manifest verification passed (scope=manifest-only). This is a tree-vs-manifest gate, not a release audit.");
+  process.exit(0);
 }
 
 const snapshot = await json("data/municipal-snapshot.v1.json");

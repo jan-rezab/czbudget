@@ -2,9 +2,10 @@
 
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
-import { createWriteStream } from "node:fs";
+import { createReadStream, createWriteStream } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { createInterface } from "node:readline";
 import { once } from "node:events";
 import { gzipSync } from "node:zlib";
 
@@ -36,17 +37,25 @@ let totalBytes = 0;
 let totalNestedRecords = 0;
 let count = 0;
 let skippedNonProfileArtifacts = 0;
-for (const source of sources) {
-  const original = await readJSON(source.file);
-  const normalized = await normalizeProfile(source, original);
+// A record with no url has no canonical path, so it cannot be served however complete it is.
+// Counted apart from the index files: sixteen of those is a normal release, and thirty-four
+// thousand of these is France, which is query-driven and has no per-municipality route.
+const skippedWithoutUrl = new Map();
+for await (const source of profileSources(sources)) {
+  const normalized = await normalizeProfile(source, source.payload);
   if (!normalized) {
-    skippedNonProfileArtifacts += 1;
+    if (source.kind === "municipal-expansion" && source.payload?.url === undefined) {
+      const country = source.payload?.country || "unknown";
+      skippedWithoutUrl.set(country, (skippedWithoutUrl.get(country) || 0) + 1);
+    } else {
+      skippedNonProfileArtifacts += 1;
+    }
     continue;
   }
-  validateProfile(normalized, source.file);
+  validateProfile(normalized, source.locator);
 
-  if (seenIds.has(normalized.profile_id)) throw new Error(`Duplicate profile_id ${normalized.profile_id} (${source.file})`);
-  if (seenPaths.has(normalized.canonical_path)) throw new Error(`Duplicate canonical_path ${normalized.canonical_path} (${source.file})`);
+  if (seenIds.has(normalized.profile_id)) throw new Error(`Duplicate profile_id ${normalized.profile_id} (${source.locator})`);
+  if (seenPaths.has(normalized.canonical_path)) throw new Error(`Duplicate canonical_path ${normalized.canonical_path} (${source.locator})`);
   seenIds.add(normalized.profile_id);
   seenPaths.add(normalized.canonical_path);
 
@@ -96,6 +105,10 @@ for (const source of sources) {
 profileStage.end();
 await once(profileStage, "finish");
 
+for (const [country, skipped] of [...skippedWithoutUrl].sort()) {
+  process.stdout.write(`${country}: ${skipped.toLocaleString("en-US")} profiles carry no url and cannot be served\n`);
+}
+
 routes.sort((a, b) => a.path.localeCompare(b.path));
 const routesDocument = {
   schema_version: "1.0.0",
@@ -131,6 +144,7 @@ const manifestCore = {
   nested_record_count: totalNestedRecords,
   payload_bytes: totalBytes,
   skipped_non_profile_artifacts: skippedNonProfileArtifacts,
+  skipped_without_url: Object.fromEntries([...skippedWithoutUrl].sort()),
   route_index: `releases/${releaseId}/routes.v1.json.gz`,
   route_index_sha256: routeIndexSha256,
   coverage_metrics: `releases/${releaseId}/coverage-metrics.v1.json`,
@@ -203,6 +217,7 @@ async function readJSON(file) {
 async function municipalExpansionRoots() {
   const fanout = path.join(ROOT, "data", "municipal-expansion");
   const warehouse = path.join(ROOT, process.env.WAREHOUSE_PROFILE_ROOT || ".warehouse-profiles");
+  const bundles = path.join(ROOT, process.env.WAREHOUSE_BUNDLE_ROOT || ".warehouse-bundle");
   const chosen = new Map();
 
   let rules = { countries: [] };
@@ -229,9 +244,26 @@ async function municipalExpansionRoots() {
     .map((name) => name.replace(/\.v1\.json$/, "").toLowerCase());
 
   for (const country of countries) {
-    const fromWarehouse = reproduces.has(country)
-      && await fs.access(path.join(warehouse, country)).then(() => true, () => false);
-    if (fromWarehouse) {
+    // Czechia is served from data/entities, which sourceFiles() reads unconditionally. It also
+    // reproduces its headlines, so .warehouse-profiles/cze would be chosen here and yield the
+    // same profile_id and canonical path for all 6,254 municipalities — tripping the duplicate
+    // guards on the first one. Czechia keeps its own path; this is the one source it has.
+    if (country === "cze") continue;
+    if (!reproduces.has(country)) {
+      // Only fall back to the fan-out if it is actually still there.
+      const legacy = path.join(fanout, country);
+      if (await fs.access(legacy).then(() => true, () => false)) chosen.set(country, legacy);
+      continue;
+    }
+    // One NDJSON line per municipality says the same thing as one file per municipality, in
+    // 18.4 MB rather than 635 MB. Preferred where it exists; the directory is still read where
+    // it does not, so a country part-way through the switch is never dropped.
+    const bundle = path.join(bundles, `${country}.ndjson`);
+    if (await fs.access(bundle).then(() => true, () => false)) {
+      chosen.set(country, bundle);
+      continue;
+    }
+    if (await fs.access(path.join(warehouse, country)).then(() => true, () => false)) {
       chosen.set(country, path.join(warehouse, country));
       continue;
     }
@@ -246,10 +278,17 @@ async function sourceFiles() {
   const files = [];
   const municipal = await municipalExpansionRoots();
   const fromWarehouse = [];
-  for (const [country, directory] of municipal) {
-    if (directory.includes(".warehouse-profiles")) fromWarehouse.push(country);
-    for (const file of await walkJSON(directory)) files.push({ file, kind: "municipal-expansion" });
+  const fromBundle = [];
+  for (const [country, root] of municipal) {
+    if (root.endsWith(".ndjson")) {
+      fromBundle.push(country);
+      files.push({ file: root, kind: "municipal-expansion", bundle: true });
+      continue;
+    }
+    if (root.includes(".warehouse-profiles")) fromWarehouse.push(country);
+    for (const file of await walkJSON(root)) files.push({ file, kind: "municipal-expansion" });
   }
+  if (fromBundle.length) process.stdout.write(`municipal profiles from bundles: ${fromBundle.sort().join(", ")}\n`);
   process.stdout.write(fromWarehouse.length
     ? `municipal profiles from the warehouse: ${fromWarehouse.sort().join(", ")}\n`
     : "municipal profiles: all from the committed fan-out\n");
@@ -272,6 +311,35 @@ async function walkJSON(directory) {
     else if (entry.isFile() && entry.name.endsWith(".json")) found.push(target);
   }
   return found;
+}
+
+/**
+ * One payload per source, except a bundle, which is one payload per line. Read line by line
+ * rather than in one string: the bundles are small on disk but France alone is 10.6 MB, and
+ * nothing downstream needs a whole country resident at once. The locator carries the line
+ * number so a duplicate or a malformed record names the record, not just the file.
+ */
+async function* profileSources(sources) {
+  for (const source of sources) {
+    if (!source.bundle) {
+      yield { ...source, payload: await readJSON(source.file), locator: source.file };
+      continue;
+    }
+    let line = 0;
+    const input = createReadStream(source.file, { encoding: "utf8" });
+    for await (const text of createInterface({ input, crlfDelay: Infinity })) {
+      line += 1;
+      if (!text.trim()) continue;
+      const locator = `${source.file}:${line}`;
+      let payload;
+      try {
+        payload = JSON.parse(text);
+      } catch (error) {
+        throw new Error(`${locator} is not valid JSON: ${error.message}`);
+      }
+      yield { ...source, payload, locator };
+    }
+  }
 }
 
 async function normalizeProfile(source, payload) {

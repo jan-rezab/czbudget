@@ -385,6 +385,24 @@ export async function handler(request, response) {
       return sendHTML(request, response, municipalityPage(snapshot));
     }
 
+    // The two payload trees the pages fetch by file path — 28,559 expansion profiles and 6,254
+    // Czech entities, 659 MB — answered from the release instead of from the image. The pages
+    // above already fall back this way; these are the same objects under the names the client
+    // asks for. municipal-expanded-profile.js reads the first, municipal-i18n.js the second.
+    //
+    // The route index is keyed by profile_id, which is exactly the country and code the path
+    // carries, so this is a lookup rather than a second index.
+    const expansionFile = /^\/(?:data\/)?municipal-expansion\/([a-z]{3})\/([^/]+)\.json$/.exec(url.pathname);
+    const entityFile = /^\/data\/entities\/(\d{8})\.json$/.exec(url.pathname);
+    const payloadFile = expansionFile
+      ? { country: expansionFile[1].toUpperCase(), code: expansionFile[2] }
+      : entityFile ? { country: "CZE", code: entityFile[1] } : null;
+    if (payloadFile) {
+      if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
+      const snapshot = await publicSnapshotStore.profileForId(`${payloadFile.country}:${decodeURIComponent(payloadFile.code)}`);
+      return sendPublicJSON(request, response, 200, snapshot.profile, { ETag: `"${snapshot.route.payload_sha256}"` });
+    }
+
     // A3a — the contract is public. A specification nobody can read is not a contract, so the
     // docs page, the OpenAPI document and their assets answer without a session.
     if (url.pathname === "/docs" || url.pathname === "/docs/") {

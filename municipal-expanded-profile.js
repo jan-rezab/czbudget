@@ -3,9 +3,12 @@
   const requested = new URLSearchParams(location.search).get("lang");
   const requestedProfileCode = new URLSearchParams(location.search).get("code");
   const franceDepartment = (code) => /^(971|972|973|974|976)/.test(code || "") ? code.slice(0, 3) : (code || "").slice(0, 2);
-  // Which country and municipality this page is, read from the path it already carries, so
-  // the warehouse can serve it without regenerating 29,597 pages to add an attribute.
+  // Which country and municipality this page is. Snapshot-served pages name it outright; the
+  // 29,597 static pages carry it in the profile URL they fetch, and are read that way rather
+  // than regenerated to add an attribute. Either way a null here means no warehouse detail.
   const warehouseTarget = (() => {
+    const { warehouseCountry, warehouseCode } = document.body.dataset;
+    if (warehouseCountry && warehouseCode) return { country: warehouseCountry, code: warehouseCode };
     const match = /\/municipal-expansion\/([a-z]{3})\/([^/]+)\.json(?:\?|$)/.exec(document.body.dataset.profileUrl || "");
     return match ? { country: match[1].toUpperCase(), code: decodeURIComponent(match[2]) } : null;
   })();

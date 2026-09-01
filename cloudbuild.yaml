@@ -1,5 +1,13 @@
 steps:
+  # Cloud Build runs steps in file order unless a step declares waitFor. Four steps
+  # here need nothing from each other: the production-service assertion, the layer
+  # hydration, and the two BigQuery exports, which only write dotfiles under data/.
+  # Run sequentially they were 5 + 41 + 8 + 64 = 118s; started together the exports
+  # (72s of BigQuery wait) hide behind hydration and its verification (74s of network
+  # and gunzip). Everything downstream of the merges stays strictly ordered, because
+  # both merge scripts rewrite data/entities/ -- the very layer hydration lays down.
   - id: assert-single-production
+    waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: sh
     args:
@@ -13,6 +21,7 @@ steps:
   # The Dockerfile copies the working tree into the image, so the build must fetch it here
   # and prove it matches the hashes in data/manifest.v1.json before anything is served.
   - id: hydrate-data-layers
+    waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
@@ -31,12 +40,18 @@ steps:
         # archive never lands on disk. Measured end to end at 26s for all 70,696 files, with
         # every layer still matching the manifest. Rebuild them with:
         #   node scripts/hydrate-data-layers.mjs --layer <id> --pack
-        for LAYER in serving pages pages_cz entities; do
+        #
+        # `bundles` is the fifth and by far the smallest: 17 files and 18.4 MB carrying the
+        # same 65,920 profiles the 635 MB fan-out does. prepare-public-serving-snapshots.mjs
+        # reads it in preference to `serving`, which is retired and kept only as the baseline
+        # the derivation tools check against.
+        for LAYER in serving pages pages_cz entities bundles; do
           gcloud storage cat "$$BASE/$$LAYER.tar.gz" | tar -C . -xzf -
           echo "hydrated $$LAYER"
         done
 
   - id: verify-data-layers
+    waitFor: ["hydrate-data-layers"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: sh
     args:
@@ -46,8 +61,10 @@ steps:
         node scripts/hydrate-data-layers.mjs --layer pages    --verify
         node scripts/hydrate-data-layers.mjs --layer pages_cz --verify
         node scripts/hydrate-data-layers.mjs --layer entities --verify
+        node scripts/hydrate-data-layers.mjs --layer bundles  --verify
 
   - id: export-municipal-headlines
+    waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
@@ -78,11 +95,13 @@ steps:
           ' > data/.municipal-headlines-query.json
 
   - id: merge-municipal-headlines
+    waitFor: ["assert-single-production", "verify-data-layers", "export-municipal-headlines"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/merge-municipal-headlines.mjs]
 
   - id: export-municipal-breakdowns
+    waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
@@ -106,6 +125,7 @@ steps:
           > data/.municipal-budget-codebook-query.json
 
   - id: merge-municipal-breakdowns
+    waitFor: ["merge-municipal-headlines", "export-municipal-breakdowns"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/merge-municipal-breakdowns.mjs]
@@ -139,13 +159,20 @@ steps:
       - COMMIT_SHA=$COMMIT_SHA
       - BUILD_ID=$BUILD_ID
 
-  # Gate: re-verify without --write-report so nothing mutates the tree after the
-  # published manifest was hashed. Any step added below this point that writes a
-  # manifest-tracked file will (correctly) break the build here.
+  # Gate: re-verify that the published manifest still describes the tree on disk, so
+  # nothing mutates it after the manifest was hashed. Any step added below this point
+  # that writes a manifest-tracked file will (correctly) break the build here.
+  #
+  # This ran the full validator and cost 139s of an 875s build. Every semantic check
+  # in it -- the municipal histories, the reconciliations, the HTML and sitemap audits
+  # -- was answered identically 170s earlier in the `validate` step, because the only
+  # thing that changed in between is data/data-quality-report.v1.json, which the
+  # manifest itself covers. --manifest-only runs the release_manifest group alone and
+  # keeps the gate exact: a one-space edit to a tracked artifact still exits 1.
   - id: verify-release-manifest
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
-    args: [scripts/validate-integrity.mjs]
+    args: [scripts/validate-integrity.mjs, --manifest-only]
 
   - id: build
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
@@ -183,8 +210,21 @@ steps:
       - /workspace/.deploy-current-main
       - ${_PUBLIC_SNAPSHOT_BASE_URL}
 
-# With hydration at roughly 30s rather than 2,057s the whole build should land near 1,000s.
-# The ceiling is set at 1800s to leave real headroom for the exports, the snapshot and the
+# Measured on build 6d00ef4f (2026-09-01), the first with archive hydration: 875s total,
+# spent as build 221 / validate 153 / verify-release-manifest 139 / deploy 88 / breakdown
+# export 64 / push 60 / hydrate 41 / verify-layers 33 / everything else 76. The two changes
+# above take roughly 180s out of that -- the gate stops re-running the full validator, and
+# the exports stop queueing behind hydration -- which should land the build near 700s.
+#
+# Still on the table and deliberately not changed here: `docker build` sends a 1.548 GB
+# context because Dockerfile.slim.dockerignore is inert. The classic builder reads only
+# .dockerignore; per-Dockerfile ignore files are a BuildKit feature, and the build log's
+# "Sending build context to Docker daemon" line is the classic builder. So the ~1.2 GB of
+# per-profile payloads that file excludes are still shipped in the image, and the
+# @municipality_profile snapshot fallback in nginx.conf.template has never actually served
+# a request. Turning it on is a serving change, not a build change, and needs its own test.
+#
+# The ceiling stays at 1800s to leave real headroom for the exports, the snapshot and the
 # image build while still being tight enough that a regression fails rather than hides.
 timeout: 1800s
 

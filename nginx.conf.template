@@ -265,6 +265,25 @@ server {
     try_files $uri $uri/ $uri/index.html =404;
   }
 
+  # The two payload trees the pages fetch by file path. They are no longer in the image — the
+  # release holds them — so they need the same fallback the profile pages have. Scoped to these
+  # prefixes on purpose: the generic .json rule below must keep answering 404 for a file that
+  # genuinely is not there, or every typo becomes a proxied request.
+  # Spelled out rather than quantified: nginx reads an unquoted {3} as a block, and the
+  # exact digit count is enforced by the API behind this anyway.
+  location ~ ^/(?:data/municipal-expansion/[a-z][a-z][a-z]/[^/]+\.json|data/entities/[0-9]+\.json)$ {
+    expires 1h;
+    try_files $uri @municipality_payload;
+  }
+
+  location @municipality_payload {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
   location ~* \.(?:css|js|svg|png|jpg|jpeg|webp|json)$ {
     expires 1h;
     try_files $uri =404;

@@ -66,6 +66,17 @@
       "note": "6,254 municipalities are a verbatim fan-out of municipal-snapshot — every field reproduces from it exactly — plus the 13 Czech regions, which come from benchmark.v1.json."
     },
     {
+      "id": "bundles",
+      "title": "Slim municipal profiles, one NDJSON per country",
+      "root": "repo",
+      "path": ".warehouse-bundle",
+      "group_by": "flat",
+      "durability": "object-storage",
+      "committed": false,
+      "recreatable": "from scripts/build-profiles-from-warehouse.mjs --all-ready --slim --bundle, which rebuilds every file from the warehouse, the entity directory and the headline rules.",
+      "note": "The same 65,920 profiles the fan-out holds in 28,559 files and 635 MB, in 17 files and 18.4 MB — the detail is left out and served by /public-data/municipality-lines instead. group_by is flat, not subdirectory: this path holds files, and the subdirectory branch would find no groups and verify a pass on nothing. Czechia is absent by design; it is not served by the lines endpoint and keeps its own path."
+    },
+    {
       "id": "municipal_entities",
       "title": "Municipal entity directory",
       "root": "repo",
@@ -204,7 +215,7 @@
     },
     {
       "layer": "serving",
-      "detail": "What remains before the bundles can serve: prepare-public-serving-snapshots.mjs reads directories of per-municipality JSON and would need to read an NDJSON bundle; the bundles need publishing to GCS and hashing into data/manifest.v1.json as their own layer; and cloudbuild needs to hydrate them. Czechia is deliberately excluded — it is not served by the lines endpoint, so a slim profile would have no detail and no way to fetch any, and the builder refuses it rather than shipping one."
+      "detail": "The bundles now serve: prepare-public-serving-snapshots.mjs reads .warehouse-bundle/<cc>.ndjson where it exists and the directory where it does not, and they are hashed as the `bundles` layer. Czechia is deliberately excluded — it is not served by the lines endpoint, so a slim profile would have no detail and no way to fetch any, and the builder refuses it rather than shipping one; it is read from data/entities instead. France is read from its bundle but publishes nothing: its entities carry no url, so it has no canonical route, and it is query-driven through municipalities/france/profile/ instead."
     }
   ]
 }

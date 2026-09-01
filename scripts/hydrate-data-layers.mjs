@@ -98,8 +98,13 @@ for (const layer of layers) {
     // The inverse of hydration, run from a machine that already holds a verified tree.
     // Dotfiles are excluded to match both what walk() hashes and what rsync uploaded, so a
     // packed layer and an rsynced one verify against the same manifest digest.
+    //
+    // The exclusions are anchored inside the tree rather than written as a bare '.*'. walk()
+    // starts within the layer directory and so never judges that directory's own name, but
+    // tar starts at it: a bare '.*' matched .warehouse-bundle itself and packed an empty
+    // archive. Anchoring leaves every existing layer's member list byte-identical.
     await run("bash", ["-ceu",
-      `set -o pipefail; COPYFILE_DISABLE=1 tar -C ${shq(rootDir)} --exclude='.*' --exclude='*/.*'`
+      `set -o pipefail; COPYFILE_DISABLE=1 tar -C ${shq(rootDir)} --exclude=${shq(`${layer.path}/.*`)} --exclude='*/.*'`
       + ` -cf - ${shq(layer.path)} | gzip -6 | gcloud storage cp - ${shq(archive)}`,
     ], { maxBuffer: 64 * 1024 * 1024 });
     console.log(`  packed -> ${archive}`);

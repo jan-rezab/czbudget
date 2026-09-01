@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-25",
+  "generated_at": "2026-08-28",
   "scope": "municipality_comparison_tier",
   "source_artifact": "data/international-municipalities.v1.json",
   "notes": {
@@ -204,8 +204,15 @@
       "coverage_cs": "Všech 98 obcí; schválený rozpočet BUDK100 a závěrečné účty REGK100 v autorizovaném funkčním a ekonomickém členění",
       "coverage_en": "All 98 municipalities; BUDK100 adopted budgets and REGK100 final accounts at authorized functional and economic detail",
       "source": "https://www.statbank.dk/BUDK100",
-      "status": "complete",
+      "status": "aggregate_only",
       "directory_count": 98,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu.",
       "entity_count": 98,
       "shard": "data/international-municipalities/DNK.v1.json"
     },
@@ -260,9 +267,16 @@
       ],
       "coverage_cs": "Odevzdané výkazy anglických obcí a GLA; bez policie a hasičů",
       "coverage_en": "Submitted English council and GLA returns; excludes police and fire",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-revenue-outturn-multi-year-data-set",
       "directory_count": 318,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu.",
       "entity_count": 318,
       "shard": "data/international-municipalities/GBR.v1.json"
     },
@@ -616,9 +630,16 @@
       ],
       "coverage_cs": "Všechny gminy v ročních výkazech Rb-27S a Rb-28S",
       "coverage_en": "All gminas in annual Rb-27S and Rb-28S returns",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://www.gov.pl/web/finanse/bazy-danych8",
       "directory_count": 2486,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu.",
       "entity_count": 2486,
       "shard": "data/international-municipalities/POL.v1.json"
     },
@@ -700,9 +721,16 @@
       ],
       "coverage_cs": "Všech 290 obcí; náklady, výnosy a rozvaha",
       "coverage_en": "All 290 municipalities; costs, income and balance sheet",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://www.scb.se/en/OE0107",
       "directory_count": 290,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu.",
       "entity_count": 290,
       "shard": "data/international-municipalities/SWE.v1.json"
     },
@@ -768,9 +796,16 @@
       ],
       "coverage_cs": "Všech 1 467 aktivních rozpočtů územních komunit včetně Kyjeva; bez oblastí a rajónů",
       "coverage_en": "All 1,467 active territorial-community budgets including Kyiv; excludes oblast and district budgets",
-      "status": "complete",
+      "status": "aggregate_only",
       "source": "https://api.openbudget.gov.ua/swagger-ui.html",
       "directory_count": 1467,
+      "missing_dimensions": [
+        "entity-level revenue",
+        "entity-level expenditure",
+        "entity-level balance"
+      ],
+      "coverage_note_en": "The official directory and detailed source collection are retained, but the public headline artifact does not publish a complete revenue/expenditure pair for every directory entity. No overlapping national account lines are summed into a synthetic headline.",
+      "coverage_note_cs": "Oficiální adresář a detailní zdrojová kolekce zůstávají zachovány, veřejný souhrnný artefakt však neobsahuje úplnou dvojici příjmů a výdajů pro každou jednotku. Překrývající se národní účetní řádky se nesčítají do umělého souhrnu.",
       "entity_count": 1467,
       "shard": "data/international-municipalities/UKR.v1.json"
     },

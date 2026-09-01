@@ -73,6 +73,32 @@ const ALPHA2 = {
   NOR: "NO", POL: "PL", PRY: "PY", SWE: "SE", UKR: "UA", USA: "US",
 };
 
+/**
+ * Most entity directories carry the canonical url of each municipality. Poland's carries a code
+ * and a name and nothing else, and a profile without a url is dropped by the snapshot builder —
+ * silently, because a directory entry that is not a profile is a normal thing to skip. Derive
+ * one instead, in the shape every other country already uses.
+ *
+ * The code suffix is not decoration: 0201011 and 0201022 are both named BOLESŁAWIEC.
+ */
+const COUNTRY_SLUG = { POL: "poland" };
+
+/**
+ * NFKD does not decompose Ł — it has no canonical decomposition — so normalising and dropping
+ * what will not encode turns ŁÓDŹ into "odz" and loses the L from 411 of Poland's 2,486 names.
+ * Map the strokes first. Only new countries are slugged here; Denmark's published brndby-153
+ * and ishj-183 carry the same bug and are left alone, because they are indexed.
+ */
+function slugify(value) {
+  return String(value)
+    .replace(/[Łł]/g, "l")
+    .normalize("NFKD")
+    .replace(/[^\x00-\x7F]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "municipality";
+}
+
 // `--all-ready` re-runs this script once per country whose rules reproduce every published
 // headline. Countries that do not are left on the fan-out rather than half-built, and the
 // snapshot builder makes the same judgement from the same file.
@@ -87,8 +113,12 @@ if (allReady) {
   for (const each of ready) {
     console.log(`--- ${each} ---`);
     await run(process.execPath, [
+      // Every flag that shapes the output has to travel with the country, or `--all-ready`
+      // quietly builds something other than what was asked for: without these two it wrote
+      // fat per-municipality directories under a path named for bundles.
       new URL(import.meta.url).pathname, "--country", each,
       ...(outDir ? ["--out", outDir] : []), ...(verify ? ["--verify"] : []),
+      ...(slim ? ["--slim"] : []), ...(bundle ? ["--bundle"] : []),
     ], { maxBuffer: 256 * 1024 * 1024 }).then(
       ({ stdout }) => process.stdout.write(stdout),
       (error) => process.stdout.write(`${error.stdout || ""}${error.stderr || ""}`),
@@ -250,7 +280,9 @@ for (const entity of directory.entities) {
     years,
     history,
     ...(slim ? {} : { detail }),
-    url: entity.url,
+    url: entity.url || (COUNTRY_SLUG[country]
+      ? `/municipalities/${COUNTRY_SLUG[country]}/${slugify(entity.name)}-${entity.code}/`
+      : undefined),
   });
 }
 
