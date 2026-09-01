@@ -1,4 +1,14 @@
 (() => {
+  const content = document.querySelector(".budget-workspace-content");
+  const requestedOrder = ["cesko", "struktura", "utraceni", "benchmark", "demografie", "zdravotni-system", "nemocnice-benchmark", "statni-firmy", "metodika"];
+  if (content) requestedOrder.forEach(id => {
+    const section = document.getElementById(id);
+    if (section) content.append(section);
+  });
+  if (location.hash) requestAnimationFrame(() => {
+    document.getElementById(location.hash.slice(1))?.scrollIntoView();
+  });
+
   const links = [...document.querySelectorAll(".budget-side-nav a[href^='#']")];
   const sections = links.map(link => document.querySelector(link.getAttribute("href"))).filter(Boolean);
   const activate = id => links.forEach(link => {

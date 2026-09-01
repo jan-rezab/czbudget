@@ -58,3 +58,22 @@
   .revenue-origin-body { gap: 4px 20px; }
   .revenue-origin-body .svg-chart { flex-basis: 190px; max-width: 190px; }
 }
+
+/* Two selectors plus the fixed fiscal-benchmark cohort label. */
+.budget-workspace-page .sovereign-controls {
+  grid-template-columns: 1fr 1.8fr 1.4fr;
+}
+
+.budget-workspace-page .currency-status > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+@media (max-width: 1040px) {
+  .budget-workspace-page .sovereign-controls { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 720px) {
+  .budget-workspace-page .sovereign-controls { grid-template-columns: 1fr; }
+}
