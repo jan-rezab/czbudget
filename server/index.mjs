@@ -13,6 +13,7 @@ import { FranceLinesError, FranceMunicipalLinesStore } from "./france-municipal-
 import { COUNTRIES as WAREHOUSED_COUNTRIES, MunicipalLinesStore } from "./municipal-lines.mjs";
 import { municipalityPage } from "./municipality-page.mjs";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
+import { TradeError, TradeStore } from "./trade-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
@@ -30,6 +31,7 @@ const CORS_ORIGINS = new Set((process.env.API_CORS_ORIGINS || "").split(",").map
 const rateLimiter = new FixedWindowRateLimiter({ maxBuckets: RATE_LIMIT_BUCKETS });
 const franceMunicipalLines = new FranceMunicipalLinesStore();
 const municipalLines = new MunicipalLinesStore();
+const trade = new TradeStore();
 let apiRequestsInFlight = 0;
 
 function integerSetting(name, fallback, minimum, maximum) {
@@ -189,6 +191,8 @@ async function routeAPI(request, response, url) {
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
   if ((match = pathname.match(/^\/api\/v1\/countries\/([^/]+)$/))) return sendJSON(response, 200, { data: await countryProfile(match[1]) });
+  if (pathname === "/api/v1/trade/countries") return sendJSON(response, 200, { data: await trade.countries() });
+  if (pathname === "/api/v1/trade") return sendJSON(response, 200, { data: await trade.profile(url.searchParams.get("country")) });
 
   const countryModules = [
     ["fiscal", "fiscal"],
@@ -448,7 +452,7 @@ export async function handler(request, response) {
 
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
-    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof FranceLinesError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof FranceLinesError || error instanceof TradeError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

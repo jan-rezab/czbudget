@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="cs">
+<head><script src="/language-bootstrap.js?v=20260901-trade"></script><link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260826-migration" defer></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Zahraniční obchod — Public Spending Data</title>
+  <meta name="description" content="Interaktivní vývoj dovozu, vývozu a obchodní bilance podle země, partnera a zboží z UN Comtrade.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/trade/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/trade/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/trade/?lang=en">
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-trade">
+  <script src="../../trade-deep-dive.js?v=20260901-trade" defer></script>
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
+</head>
+  <body class="deep-dives-page trade-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <section class="deep-hero deep-topic-hero trade-hero" id="overview"><div><span class="eyebrow" data-trade-copy="eyebrow">Report / Zahraniční obchod</span><h1><span data-trade-copy="titleLead">Co země</span> <em data-trade-copy="titleEm">prodává světu</em></h1><p data-trade-copy="intro">Dovoz, vývoz a obchodní bilance v čase. Z grafu se prokliknete k partnerům a kapitolám zboží, které změnu vytvářejí.</p></div><div class="deep-hero-aside deep-filter-panel"><label><span data-trade-copy="countryLabel">Země</span><select id="trade-country" aria-label="Země"></select></label><div class="deep-country-readout"><b id="trade-country-code">DEU</b><strong id="trade-country-name">Německo</strong><small id="trade-data-vintage">UN Comtrade · —</small></div></div></section>
+
+    <nav class="deep-topic-rail" aria-label="Trade sections" data-sticky-filter="#trade-country" data-sticky-filter-kind="country"><a href="#pulse" data-trade-copy="pulseNav">Bilance</a><a href="#trend" data-trade-copy="trendNav">Vývoj</a><a href="#composition" data-trade-copy="compositionNav">Partneři a zboží</a><a href="#method" data-trade-copy="methodNav">Metodika</a></nav>
+
+    <section class="trade-section trade-pulse" id="pulse">
+      <header class="trade-heading"><div><span data-trade-copy="pulseKicker">Poslední období</span><h2 data-trade-copy="pulseTitle">Obchodní bilance na první pohled</h2></div><p id="trade-period-context" data-trade-copy="pulseIntro">Vývoz minus dovoz. Červená znamená deficit, zelená přebytek.</p></header>
+      <div class="trade-kpis" id="trade-kpis" aria-live="polite"></div>
+      <div class="trade-status" id="trade-status" role="status" hidden></div>
+    </section>
+
+    <section class="trade-section trade-trend-section" id="trend">
+      <header class="trade-heading"><div><span data-trade-copy="trendKicker">Vývoj v čase</span><h2 data-trade-copy="trendTitle">Dovoz a vývoz jako burzovní graf</h2></div><p data-trade-copy="trendIntro">Přejeďte po grafu nebo klikněte na bod. Vybrané období se propíše do horních metrik i detailu pod grafem.</p></header>
+      <div class="trade-chart-card">
+        <div class="trade-chart-toolbar"><div class="trade-segmented" id="trade-frequency"><button type="button" data-frequency="A" aria-pressed="true" data-trade-copy="annual">Ročně</button><button type="button" data-frequency="M" aria-pressed="false" data-trade-copy="monthly">Měsíčně</button></div><div class="trade-legend"><span class="export"><i></i><b data-trade-copy="exports">Vývoz</b></span><span class="import"><i></i><b data-trade-copy="imports">Dovoz</b></span></div></div>
+        <div id="trade-chart" class="trade-stock-chart" aria-live="polite"></div>
+        <div class="trade-selected-period" id="trade-selected-period"></div>
+        <p class="trade-chart-note" data-trade-copy="chartNote">Hodnoty jsou v běžných USD. Mezery v řadě jsou chybějící data, nikoli nuly.</p>
+      </div>
+    </section>
+
+    <section class="trade-section trade-composition" id="composition">
+      <header class="trade-heading"><div><span data-trade-copy="compositionKicker">Struktura posledního ročního období</span><h2 data-trade-copy="compositionTitle">Kdo obchoduje a co se převáží</h2></div><p data-trade-copy="compositionIntro">Přepněte dovoz nebo vývoz a klikněte na řádek. Délka pruhu ukazuje hodnotu, detail pod ním podíl a protisměrný tok.</p></header>
+      <div class="trade-flow-tabs" id="trade-flow-tabs"><button type="button" data-flow="export" aria-pressed="true" data-trade-copy="exports">Vývoz</button><button type="button" data-flow="import" aria-pressed="false" data-trade-copy="imports">Dovoz</button></div>
+      <div class="trade-composition-grid"><article><header><span>01</span><h3 data-trade-copy="partnersTitle">Největší obchodní partneři</h3></header><div id="trade-partners" class="trade-ranking"></div></article><article><header><span>02</span><h3 data-trade-copy="productsTitle">Největší kapitoly zboží</h3></header><div id="trade-products" class="trade-ranking"></div></article></div>
+      <aside class="trade-detail" id="trade-detail" aria-live="polite"></aside>
+    </section>
+
+    <section class="trade-section trade-method" id="method">
+      <header class="trade-heading"><div><span data-trade-copy="methodKicker">Jak číst data</span><h2 data-trade-copy="methodTitle">Jedna bilance, dvě oceňovací báze</h2></div><p data-trade-copy="methodIntro">UN Comtrade obvykle oceňuje dovoz včetně pojištění a dopravy (CIF), zatímco vývoz na hranici vývozce (FOB). Bilance je proto orientační analytický rozdíl, ne národní účet.</p></header>
+      <div class="trade-method-grid"><article><b>01</b><h3>UN Comtrade</h3><p data-trade-copy="sourceCopy">Zdrojové hlášení země, bez zrcadlového doplňování chybějících hodnot.</p></article><article><b>02</b><h3 data-trade-copy="grainTitle">Zachované dimenze</h3><p data-trade-copy="grainCopy">Období, reportér, tok, partner a šestimístný HS kód. Grafy sčítají pouze jednu nejjemnější dostupnou úroveň.</p></article><article><b>03</b><h3 data-trade-copy="coverageTitle">Pokrytí není nula</h3><p data-trade-copy="coverageCopy">Nezveřejněný měsíc nebo partner se nezobrazuje jako nulový obchod. Dostupnost se vede odděleně od faktů.</p></article></div>
+      <p class="trade-source-line"><span data-trade-copy="sourceLabel">Zdroj</span>: <a href="https://comtrade.un.org/" target="_blank" rel="noopener">United Nations Comtrade Database ↗</a> · <code>budget_detail.trade_observations</code> + <code>annual-hs2-2024.v1.json</code></p>
+    </section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small>Trade deep dive · United Nations Comtrade Database</small></div><a href="#top">↑</a></footer>
+</body>
+</html>
