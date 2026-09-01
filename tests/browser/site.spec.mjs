@@ -141,6 +141,20 @@ test("state budget translates its Czech static body on an initial English visit"
   await expect(page.locator("#rozpocet-v-case .section-heading").first()).not.toContainText("Skutečné pokladní plnění");
 });
 
+test("state-budget revenue stays finite against the aggregate-only production contract", async ({ page }) => {
+  await page.route("**/data/czech-budget.v1.json", async (route) => {
+    const response = await route.fetch();
+    const dataset = await response.json();
+    delete dataset.tax_detail;
+    await route.fulfill({ response, json:dataset });
+  });
+  await page.goto("/cesky-rozpocet.html?lang=en#cesko", { waitUntil:"networkidle" });
+  await expect(page.locator("#revenue-pie-legend button")).toHaveCount(7);
+  await expect(page.locator('#revenue-pie-legend button', {hasText:"Personal income tax"})).toContainText("196.0");
+  expect(await page.locator(".finance-structure-section, #income-stack-chart").allTextContents()).not.toContain("NaN");
+  expect(await page.locator("#revenue-pie-chart, #income-stack-chart").evaluateAll((nodes) => nodes.map((node) => node.innerHTML).join(""))).not.toContain("NaN");
+});
+
 test("comparison and coverage live outside the homepage", async ({ page }) => {
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#compare")).toHaveCount(0);

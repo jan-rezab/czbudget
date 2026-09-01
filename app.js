@@ -286,32 +286,62 @@ function renderFinanceDonut({ containerId, legendId, detailId, slices, total, se
 
 window.PSDBudgetStructure = { renderFinanceDonut };
 
+// The production dataset historically exposed taxes as one reconciled total. The approved
+// 2026 budget also has an official five-part tax split; keep that one-year contract here as a
+// safe bridge while the full tax-detail history is rolled out independently. The reconciliation
+// guard prevents these figures from ever being applied to a different budget total.
+const approved2026TaxDetail = Object.freeze({
+  personal_income_tax:196.0,
+  corporate_income_tax:234.8,
+  vat:416.0,
+  excise_and_energy_taxes:170.2,
+  property_taxes:0.0,
+  other_taxes_and_fees:30.7,
+});
+const taxDetailFields = Object.keys(approved2026TaxDetail);
+function revenueTaxDetail(row) {
+  if (taxDetailFields.every((field) => Number.isFinite(row?.[field]))) return row;
+  if (row?.year !== 2026) return null;
+  const reconciled = Object.values(approved2026TaxDetail).reduce((sum,value) => sum+value,0);
+  return Math.abs(reconciled-row.taxes) < 0.05 ? { ...row, ...approved2026TaxDetail } : null;
+}
+
 function renderRevenuePie() {
   const latest = budgetData?.rows?.at(-1);
   if (!latest) return;
+  const taxDetail = revenueTaxDetail(latest);
   const en = bLang() === "en";
   const labels = en ? {
+    taxes:["Taxes","All tax and fee revenue in the approved state budget."],
     pit:["Personal income tax","Tax on earnings from employment and self-employment."],
     cit:["Corporate income tax","Tax on company profits."], vat:["VAT","Value-added tax on household and business consumption."],
     excise:["Excise & energy taxes","Excise duties and taxes on energy products."], otherTax:["Other taxes & fees","Property taxes and all remaining tax and fee revenue."],
     insurance:["Social contributions","Mandatory social-security and employment-policy contributions."],
     other:["Other revenue","Non-tax and capital revenue plus transfers received, including EU funds."],
   } : {
+    taxes:["Daně","Veškeré daňové příjmy a poplatky ve schváleném státním rozpočtu."],
     pit:["Daň z příjmů fyzických osob","Daň z příjmů zaměstnanců a osob samostatně výdělečně činných."],
     cit:["Daň z příjmů právnických osob","Daň ze zisku firem."], vat:["DPH","Daň z přidané hodnoty ze spotřeby domácností a firem."],
     excise:["Spotřební a energetické daně","Spotřební daně a daně z energetických produktů."], otherTax:["Ostatní daně a poplatky","Majetkové daně a zbývající daňové a poplatkové příjmy."],
     insurance:["Sociální pojistné","Povinné pojistné na sociální zabezpečení a politiku zaměstnanosti."],
     other:["Ostatní příjmy","Nedaňové a kapitálové příjmy a přijaté transfery včetně prostředků EU."],
   };
+  const taxSlices = taxDetail ? [
+    {key:"taxPit",label:labels.pit[0],description:labels.pit[1],value:taxDetail.personal_income_tax,color:colors.taxPit},
+    {key:"taxCit",label:labels.cit[0],description:labels.cit[1],value:taxDetail.corporate_income_tax,color:colors.taxCit},
+    {key:"taxVat",label:labels.vat[0],description:labels.vat[1],value:taxDetail.vat,color:colors.taxVat},
+    {key:"taxExcise",label:labels.excise[0],description:labels.excise[1],value:taxDetail.excise_and_energy_taxes,color:colors.taxExcise},
+    {key:"taxOther",label:labels.otherTax[0],description:labels.otherTax[1],value:taxDetail.property_taxes+taxDetail.other_taxes_and_fees,color:colors.taxOther},
+  ] : [
+    {key:"taxes",label:labels.taxes[0],description:labels.taxes[1],value:latest.taxes,color:colors.taxes},
+  ];
   const slices = [
-    {key:"taxPit",label:labels.pit[0],description:labels.pit[1],value:latest.personal_income_tax,color:colors.taxPit},
-    {key:"taxCit",label:labels.cit[0],description:labels.cit[1],value:latest.corporate_income_tax,color:colors.taxCit},
-    {key:"taxVat",label:labels.vat[0],description:labels.vat[1],value:latest.vat,color:colors.taxVat},
-    {key:"taxExcise",label:labels.excise[0],description:labels.excise[1],value:latest.excise_and_energy_taxes,color:colors.taxExcise},
-    {key:"taxOther",label:labels.otherTax[0],description:labels.otherTax[1],value:latest.property_taxes+latest.other_taxes_and_fees,color:colors.taxOther},
+    ...taxSlices,
     {key:"insurance",label:labels.insurance[0],description:labels.insurance[1],value:latest.insurance,color:colors.insurance},
     {key:"otherIncome",label:labels.other[0],description:labels.other[1],value:latest.other_income,color:colors.otherIncome},
   ];
+  const count = document.querySelector(".revenue-card header small");
+  if (count) count.textContent = en ? `${slices.length} complete categories` : `${slices.length} úplných kategorií`;
   const money = value => en ? `CZK ${bNum(value,1)}bn` : `${bNum(value,1)} mld. Kč`;
   renderFinanceDonut({
     containerId:"revenue-pie-chart", legendId:"revenue-pie-legend", detailId:"revenue-pie-detail",
@@ -325,7 +355,8 @@ function renderRevenuePie() {
 
 function renderStructure(rows) {
   const amount = budgetState.structure === "amount";
-  renderStack("income-stack-chart", rows, [
+  const detailedTaxes = rows.every((row) => revenueTaxDetail(row));
+  const incomeDefinitions = detailedTaxes ? [
     ["taxPit","Daň z příjmů fyzických osob",d=>d.personal_income_tax],
     ["taxCit","Daň z příjmů právnických osob",d=>d.corporate_income_tax],
     ["taxVat","DPH",d=>d.vat],
@@ -333,15 +364,20 @@ function renderStructure(rows) {
     ["taxOther","Ostatní daně a poplatky",d=>d.property_taxes+d.other_taxes_and_fees],
     ["insurance","Sociální pojistné",d=>d.insurance],
     ["otherIncome","Ostatní příjmy",d=>d.other_income]
-  ], d=>d.revenue, amount);
+  ] : [
+    ["taxes","Daně",d=>d.taxes],
+    ["insurance","Sociální pojistné",d=>d.insurance],
+    ["otherIncome","Ostatní příjmy",d=>d.other_income]
+  ];
+  renderStack("income-stack-chart", rows, incomeDefinitions, d=>d.revenue, amount);
   renderStack("expense-stack-chart", rows, [
     ["social","Sociální dávky",d=>d.social_benefits],["wages","Mzdy státu",d=>d.wages],["otherExpense","Ostatní výdaje",d=>d.other_expense],["capital","Investice",d=>d.capital]
   ], d=>d.expense, amount);
-  legend("income-legend",[
+  legend("income-legend",detailedTaxes ? [
     ["taxPit","DPFO"],["taxCit","DPPO"],["taxVat","DPH"],
     ["taxExcise","Spotřební a energetické daně"],["taxOther","Ostatní daně a poplatky"],
     ["insurance","Sociální pojistné"],["otherIncome","Ostatní příjmy"]
-  ]);
+  ] : [["taxes","Daně"],["insurance","Sociální pojistné"],["otherIncome","Ostatní příjmy"]]);
   legend("expense-legend",[["social","Sociální dávky"],["wages","Mzdy"],["otherExpense","Ostatní"],["capital","Investice"]]);
   renderRevenuePie();
 }
