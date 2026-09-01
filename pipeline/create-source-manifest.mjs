@@ -29,8 +29,14 @@ const HASH_CONCURRENCY = 8;
 //   *.sqlite3-wal, -shm, -journal
 //                SQLite sidecars. A write-ahead log is rewritten whenever the database is
 //                opened, so hashing one records a value that is wrong by the next read — the
-//                opposite of what a manifest is for. The database file itself is still hashed.
-const ignoredName = (name) => name.startsWith(".")
+//                opposite of what a manifest is for.
+//   *.sqlite3    only while a -wal sits beside it. A database with a live write-ahead log is
+//                mid-transaction, not an artifact at rest: a crawl running in another session
+//                moved this hash three times in five minutes and no regeneration could land.
+//                Once the crawl ends and its log is checkpointed away, the database is hashed
+//                again like any other file. What the crawler *produces* is never excluded.
+const ignoredName = (name, siblings) => name.startsWith(".")
+  || (/\.(?:sqlite3?|db)$/.test(name) && siblings?.has(`${name}-wal`))
   || name.endsWith(".part")
   || /\.(?:sqlite3?|db)-(?:wal|shm|journal)$/.test(name)
   || / \d+(\.[^./]+)?$/.test(name);
@@ -58,8 +64,10 @@ async function mapPool(items, worker) {
 
 async function filesBelow(directory) {
   const output = [];
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    if (ignoredName(entry.name)) continue;
+  const listing = await readdir(directory, { withFileTypes: true });
+  const siblings = new Set(listing.map((entry) => entry.name));
+  for (const entry of listing) {
+    if (ignoredName(entry.name, siblings)) continue;
     const target = path.join(directory, entry.name);
     if (entry.isDirectory()) output.push(...await filesBelow(target));
     else if (entry.isFile()) output.push(target);
@@ -92,8 +100,10 @@ async function treeEntry(directory) {
 }
 
 async function collect(directory, level) {
-  const children = (await readdir(directory, { withFileTypes: true }))
-    .filter((entry) => !ignoredName(entry.name) && (entry.isFile() || entry.isDirectory()))
+  const listing = await readdir(directory, { withFileTypes: true });
+  const siblings = new Set(listing.map((entry) => entry.name));
+  const children = listing
+    .filter((entry) => !ignoredName(entry.name, siblings) && (entry.isFile() || entry.isDirectory()))
     .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   const entries = [];
   for (const child of children) {
@@ -114,7 +124,8 @@ function summarise(assets) {
       per_file_depth: GROUP_DEPTH,
       aggregate_suffix: "/**",
       tree_digest: "sha256 over sorted \"<path relative to the tree>\\0<file sha256>\\n\" lines",
-      ignored: [".*", "*.part", "*.sqlite3-{wal,shm,journal}", "* <n>.<ext> (macOS duplicates)"],
+      ignored: [".*", "*.part", "*.sqlite3-{wal,shm,journal}",
+                "*.sqlite3 while a -wal sits beside it", "* <n>.<ext> (macOS duplicates)"],
     },
     entry_count: assets.length,
     asset_count: assets.reduce((sum, item) => sum + (item.files ?? 1), 0),
