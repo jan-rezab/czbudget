@@ -5,6 +5,7 @@
 
   const copy = {
     cs: {
+      pageTitle: "Zahraniční obchod — Public Spending Data", pageDescription: "Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade.",
       eyebrow: "Report / Zahraniční obchod", titleLead: "Obchodní trh", titleEm: "na jednom plátně",
       intro: "Velikost ukazuje hodnotu obchodu, barva přebytek nebo deficit. Klikněte na sektor a potom na zboží — zobrazí se jeho partneři.", countryLabel: "Země",
       pulseNav: "Bilance", matrixNav: "Mapa trhu", routesNav: "Směry obchodu", trendNav: "Vývoj", compositionNav: "Žebříčky", methodNav: "Metodika",
@@ -23,6 +24,7 @@
       noData: "Pro tuto frekvenci zatím nejsou načtena data.", noRanking: "Pro tento řez zatím nejsou načtena detailní data.", loading: "Načítám UN Comtrade…", loadError: "Obchodní data se teď nepodařilo načíst. Zkuste stránku obnovit.",
     },
     en: {
+      pageTitle: "Foreign trade — Public Spending Data", pageDescription: "Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer.",
       eyebrow: "Report / Foreign trade", titleLead: "The trade market", titleEm: "on one screen",
       intro: "Size shows trade value; color shows surplus or deficit. Click a sector, then a product to reveal its partners.", countryLabel: "Country",
       pulseNav: "Balance", matrixNav: "Market map", routesNav: "Trade routes", trendNav: "Trend", compositionNav: "Rankings", methodNav: "Method",
@@ -41,6 +43,10 @@
       noData: "No loaded data are available for this frequency yet.", noRanking: "No detailed data are loaded for this cut yet.", loading: "Loading UN Comtrade…", loadError: "Trade data could not be loaded. Please refresh the page.",
     },
   }[lang];
+
+  document.title = copy.pageTitle;
+  const description = document.querySelector('meta[name="description"]');
+  if (description) description.content = copy.pageDescription;
 
   const groups = [
     ["animals", 1, 5, "Živá zvířata", "Live animals"], ["vegetable", 6, 15, "Rostliny a zemědělství", "Vegetable products"],
@@ -181,6 +187,13 @@
   }
 
   async function init() {
+    document.addEventListener("click", (event) => {
+      const control = event.target.closest("[data-lang],[data-deep-lang],[data-budget-lang]");
+      const next = control?.dataset.lang || control?.dataset.deepLang || control?.dataset.budgetLang;
+      if (!control || !["cs", "en"].includes(next) || next === lang) return;
+      try { localStorage.setItem("psd-lang", next); } catch {}
+      const url = new URL(location.href); url.searchParams.set("lang", next); location.href = url.href;
+    });
     $("#trade-chart").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
     $("#trade-matrix").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
     $("#trade-export-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;

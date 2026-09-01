@@ -148,6 +148,10 @@
       cs: ["Přerozdělení a výsledky — Public Spending Data", "Nerovnost před a po transferech, sociální výdaje, důchody a výsledky podle OECD."],
       en: ["Redistribution and outcomes — Public Spending Data", "OECD inequality before and after transfers, social spending, pensions and outcomes."],
     },
+    "/deep-dives/trade/": {
+      cs: ["Zahraniční obchod — Public Spending Data", "Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade."],
+      en: ["Foreign trade — Public Spending Data", "Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer."],
+    },
     "/deep-dives/budget-planner/": {
       cs: ["Plánovač státního rozpočtu 2027 — Public Spending Data", "Prozkoumejte návrh státního rozpočtu ČR na rok 2027, upravte výdaje a příjmy a sledujte dopad na schodek."],
       en: ["Czech state budget planner 2027 — Public Spending Data", "Explore the proposed 2027 Czech state budget, adjust expenditure and revenue, and see the effect on the deficit."],
