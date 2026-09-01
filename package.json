@@ -48,7 +48,7 @@
     "build:regional-finance:regofi": "python3 pipeline/transforms/prepare_oecd_regofi.py",
     "validate:accountability": "python3 pipeline/transforms/build_government_accountability.py --check && python3 -m unittest pipeline.tests.test_government_accountability",
     "validate:regional-finance": "python3 -m unittest pipeline.tests.test_international_regional_data",
-    "validate": "npm run validate:accountability && npm run validate:regional-finance && npm run validate:invariants && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
+    "validate": "npm run validate:accountability && npm run validate:regional-finance && npm run validate:invariants && npm run validate:glossary && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
     "audit:links": "node scripts/check-external-links.mjs --write-report",
     "backfill:social-previews": "node scripts/backfill-social-previews.mjs",
@@ -75,7 +75,8 @@
     "report:japan-hierarchy": "node scripts/derive-japan-hierarchy.mjs",
     "fetch:denmark-regk100": "python3 scripts/fetch-denmark-regk100.py --fetch",
     "report:denmark-regk100": "python3 scripts/load-municipal-facts-dnk.py --report",
-    "report:japan-estat": "python3 scripts/load-municipal-facts-jpn-estat.py --report"
+    "report:japan-estat": "python3 scripts/load-municipal-facts-jpn-estat.py --report",
+    "validate:glossary": "node scripts/validate-glossary.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

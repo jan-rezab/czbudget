@@ -149,6 +149,14 @@
     {
       "layer": "pages",
       "detail": "The deploy failed on verify-data-layers with 20 of 25 page groups showing matching file counts and mismatched hashes, and the cause was local drift rather than anything in GCS. Every international municipality page differed from the hosted copy by exactly six bytes — the cache-buster on municipal-expanded-profile.js, 20260828-fx-currency locally regenerated to 20260831-warehouse-lines-2 after that script was rewired to the warehouse endpoint — and the committed manifest had been built from the drifted local copies. The Czech pages differed more substantially and in the wrong direction: the local copies had lost the og:image tags the hosted ones carry. Local was re-synced from GCS and the manifest rebuilt from it, so the layer, the manifest and the deployed pages all describe the same bytes. Regenerating the pages against the current template is a real change worth making, and it is a reviewable one of its own rather than something to discover during a deploy."
+    },
+    {
+      "layer": "pages",
+      "detail": "The glossary is built and validated but reaches one term on one page. Marking a term wraps it in a span, which splits the text node it sits in, and budget-i18n.js matches whole text nodes against literal Czech keys — so marking a term inside a sentence that is itself a dictionary key silently stops that sentence translating. That happened on the first attempt, to a sentence about the general-government perimeter, and scripts/validate-glossary.mjs now fails the build on it. Surfacing the remaining 27 terms means either choosing positions whose text node is not a key, or moving the dictionary off literal-sentence keys — the second is the real fix and is a change of its own."
+    },
+    {
+      "layer": "serving",
+      "detail": "The licence audit is untouched and stays that way deliberately. All 81 declared sources lack verified terms — 31 recorded unverified, 50 unrecorded — and settling them means reading 81 publishers' conditions and deciding what redistribution each permits. A confident wrong answer there is worse than no answer, because the embed would then carry an explicit grant the source never gave. It needs a human read, or at minimum a per-publisher terms URL recorded without asserting what the terms allow."
     }
   ]
 }
