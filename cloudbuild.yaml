@@ -19,10 +19,23 @@ steps:
       - -ceu
       - |
         BASE="gs://czbudget-janrezab-data-layers/2026-08-30"
-        gcloud storage rsync -r "$$BASE/serving/municipal-expansion" data/municipal-expansion
-        gcloud storage rsync -r "$$BASE/pages/municipalities"        municipalities
-        gcloud storage rsync -r "$$BASE/pages/cz"                    cz
-        gcloud storage rsync -r "$$BASE/entities/entities"            data/entities
+        # The four layers are independent trees, and the cost here is per-file rather than per
+        # byte: roughly 36,000 small objects took 1,526s of a 1,800s build sequentially, which
+        # left under five minutes for everything after it. Pulled concurrently instead, with
+        # every exit status checked — a layer that fails silently would be hydrated as empty and
+        # the verify step would blame the manifest.
+        gcloud storage rsync -r "$$BASE/serving/municipal-expansion" data/municipal-expansion & P1=$$!
+        gcloud storage rsync -r "$$BASE/pages/municipalities"        municipalities          & P2=$$!
+        gcloud storage rsync -r "$$BASE/pages/cz"                    cz                      & P3=$$!
+        gcloud storage rsync -r "$$BASE/entities/entities"           data/entities           & P4=$$!
+        FAILED=0
+        for PID in $$P1 $$P2 $$P3 $$P4; do
+          wait $$PID || FAILED=1
+        done
+        if [ "$$FAILED" -ne 0 ]; then
+          echo "At least one layer failed to hydrate. Refusing to continue on partial data." >&2
+          exit 1
+        fi
 
   - id: verify-data-layers
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
@@ -171,7 +184,10 @@ steps:
       - /workspace/.deploy-current-main
       - ${_PUBLIC_SNAPSHOT_BASE_URL}
 
-timeout: 1800s
+# Hydration alone took 1,526s of the previous 1,800s, so the build could not finish whatever
+# came after it. The four layers now hydrate concurrently, and the ceiling is raised to leave
+# real headroom for the exports, the 35,000-profile snapshot and the image build.
+timeout: 3600s
 
 images:
   - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID

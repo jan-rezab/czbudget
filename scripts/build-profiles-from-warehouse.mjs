@@ -102,24 +102,41 @@ if (!rule || rule.status) {
 
 console.log(`${country}: ${directory.entity_count} entities, ${Object.keys(labels).length} item labels`);
 
-const facts = JSON.parse((await run("bq", [
-  "query", "--use_legacy_sql=false", "--format=json", "--max_rows=5000000",
-  `SELECT public_entity_id, fiscal_year, fiscal_period, budget_stage, budget_side,`
-  + ` economic_item_code, is_financing, SUM(CAST(amount_local AS FLOAT64)) amount`
-  + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND NOT is_consolidation_item`
-  + ` AND STARTS_WITH(public_entity_id, "${alpha2}:")`
-  + ` GROUP BY 1,2,3,4,5,6,7`,
-], { maxBuffer: 2 * 1024 * 1024 * 1024, env: BQ_ENV })).stdout || "[]");
-
-console.log(`warehouse: ${facts.length.toLocaleString()} fact rows`);
-
-/** Facts grouped by entity, so each profile is assembled from one bucket. */
+/**
+ * Facts come back in batches of entities rather than one query per country. France groups to
+ * 7,319,895 rows, which will not return through the bq CLI as JSON in a single buffer; Czechia's
+ * 1,356,712 will. Batching by an explicit entity list keeps every request the same shape whatever
+ * the country's size, and the batch is the unit that retries.
+ */
+const BATCH = Number(flag("--batch", 1500));
+const codes = directory.entities.map((entity) => entity.code);
 const byEntity = new Map();
-for (const fact of facts) {
-  const code = fact.public_entity_id.split(":").slice(1).join(":");
-  if (!byEntity.has(code)) byEntity.set(code, []);
-  byEntity.get(code).push(fact);
+let factRows = 0;
+
+for (let start = 0; start < codes.length; start += BATCH) {
+  const slice = codes.slice(start, start + BATCH);
+  const ids = slice.map((code) => `"${alpha2}:${String(code).replace(/"/g, "")}"`).join(",");
+  const { stdout } = await run("bq", [
+    "query", "--use_legacy_sql=false", "--format=json", "--max_rows=5000000",
+    `SELECT public_entity_id, fiscal_year, fiscal_period, budget_stage, budget_side,`
+    + ` economic_item_code, is_financing, SUM(CAST(amount_local AS FLOAT64)) amount`
+    + ` FROM ${TABLE} WHERE fiscal_year BETWEEN 2000 AND 2030 AND NOT is_consolidation_item`
+    + ` AND public_entity_id IN (${ids})`
+    + ` GROUP BY 1,2,3,4,5,6,7`,
+  ], { maxBuffer: 2 * 1024 * 1024 * 1024, env: BQ_ENV });
+
+  for (const fact of JSON.parse(stdout || "[]")) {
+    const code = fact.public_entity_id.split(":").slice(1).join(":");
+    if (!byEntity.has(code)) byEntity.set(code, []);
+    byEntity.get(code).push(fact);
+    factRows += 1;
+  }
+  if (codes.length > BATCH) {
+    process.stdout.write(`\r  ${Math.min(start + BATCH, codes.length)}/${codes.length} entities, ${factRows.toLocaleString()} rows`);
+  }
 }
+if (codes.length > BATCH) process.stdout.write("\n");
+console.log(`warehouse: ${factRows.toLocaleString()} fact rows`);
 
 /**
  * Apply one year's headline rule. A rule names a stage, a period and either a single item

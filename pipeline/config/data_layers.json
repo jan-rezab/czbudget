@@ -169,6 +169,10 @@
     {
       "layer": "serving",
       "detail": "Two verification blind spots, both found by fixing them. The derivation attributed the international directory's single revenue and expenditure pair to every year an entity lists, so France scored 50% — a misread baseline reading as a half-broken rule; the pair belongs to the latest year. And the profile builder verified only against the fan-out, so a country that never had one — Czechia — reported 0 of 0 and looked like it had passed. With the directory as a second baseline it reports 12,508 of 12,508."
+    },
+    {
+      "layer": "pages",
+      "detail": "The deploy could not finish, and had not been able to for some time. hydrate-data-layers took 1,526 seconds of an 1,800-second build ceiling, leaving under five minutes for the exports, the 35,000-profile snapshot, the image build and the deploy; the next attempt was cancelled mid-hydration when the whole build hit the ceiling. The cost is per-file rather than per-byte — roughly 36,000 small objects across four layers, pulled one tree after another. They now hydrate concurrently with every exit status checked, and the ceiling is 3,600s. A layer failing silently would hydrate as empty and the verify step would blame the manifest, so a partial hydration is made to fail loudly instead."
     }
   ]
 }
