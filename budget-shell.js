@@ -5,8 +5,14 @@
     const section = document.getElementById(id);
     if (section) content.append(section);
   });
-  if (location.hash) requestAnimationFrame(() => {
-    document.getElementById(location.hash.slice(1))?.scrollIntoView();
+  const initialHashTarget = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+  let preserveInitialHash = Boolean(initialHashTarget);
+  const restoreInitialHash = () => {
+    if (preserveInitialHash) initialHashTarget?.scrollIntoView();
+  };
+  [0, 250, 750, 1500, 3000].forEach(delay => setTimeout(restoreInitialHash, delay));
+  ["wheel", "touchstart", "pointerdown", "keydown"].forEach(eventName => {
+    addEventListener(eventName, () => { preserveInitialHash = false; }, {once:true, passive:true});
   });
 
   const links = [...document.querySelectorAll(".budget-side-nav a[href^='#']")];
