@@ -9,6 +9,7 @@
  *   node scripts/hydrate-data-layers.mjs --layer serving        # what the build needs
  *   node scripts/hydrate-data-layers.mjs --layer serving --verify
  *   node scripts/hydrate-data-layers.mjs --all
+ *   node scripts/hydrate-data-layers.mjs --all --pack            # rebuild the archives
  *
  * Verification compares what landed against data/manifest.v1.json, which stays committed
  * precisely so a build can prove it hydrated the bytes the release recorded.
@@ -28,6 +29,7 @@ const BUCKET = process.env.DATA_LAYER_BUCKET || "gs://czbudget-janrezab-data-lay
 
 const args = process.argv.slice(2);
 const verify = args.includes("--verify");
+const pack = args.includes("--pack");
 const all = args.includes("--all");
 const layerAt = args.indexOf("--layer");
 const requested = layerAt >= 0 ? args[layerAt + 1] : null;
@@ -45,6 +47,8 @@ if (!layers.length) {
   console.error(`No layer matched. Known: ${manifest.layers.map((l) => l.id).join(", ")}`);
   process.exit(2);
 }
+
+const shq = (value) => `'${String(value).replace(/'/g, "'\\''")}'`;
 
 const sha256File = (file) => new Promise((resolve, reject) => {
   const hash = createHash("sha256");
@@ -83,19 +87,45 @@ let failures = 0;
 
 for (const layer of layers) {
   // Layers recorded relative to the parent workspace live outside the repo.
-  const localBase = path.join(layer.root === "parent" ? path.dirname(REPO) : REPO, layer.path);
+  const rootDir = layer.root === "parent" ? path.dirname(REPO) : REPO;
+  const localBase = path.join(rootDir, layer.path);
   const remote = `${BUCKET}/${release}/${layer.id}/${path.basename(layer.path)}`;
+  const archive = `${BUCKET}/${release}/${layer.id}.tar.gz`;
 
-  console.log(`\n${layer.id}: ${remote}\n  -> ${localBase}`);
+  console.log(`\n${layer.id}: ${pack ? archive : remote}\n  -> ${localBase}`);
+
+  if (pack) {
+    // The inverse of hydration, run from a machine that already holds a verified tree.
+    // Dotfiles are excluded to match both what walk() hashes and what rsync uploaded, so a
+    // packed layer and an rsynced one verify against the same manifest digest.
+    await run("bash", ["-ceu",
+      `set -o pipefail; COPYFILE_DISABLE=1 tar -C ${shq(rootDir)} --exclude='.*' --exclude='*/.*'`
+      + ` -cf - ${shq(layer.path)} | gzip -6 | gcloud storage cp - ${shq(archive)}`,
+    ], { maxBuffer: 64 * 1024 * 1024 });
+    console.log(`  packed -> ${archive}`);
+    continue;
+  }
 
   if (!verify) {
     try {
-      await run("gcloud", ["storage", "rsync", "-r", "--exclude=(^|.*/)\\..*", remote, localBase],
-        { maxBuffer: 64 * 1024 * 1024 });
+      // Hydration cost is per object, not per byte. These four layers are 70,695 files and
+      // 1.17 GB, and rsync moved them at 34 objects a second, which is round-trip latency
+      // rather than bandwidth — 2,057s of a 3,019s build. The same trees gzip to 80 MB in
+      // four objects, streamed straight into tar so the archive never lands on disk.
+      await run("bash", ["-ceu",
+        `set -o pipefail; gcloud storage cat ${shq(archive)} | tar -C ${shq(rootDir)} -xzf -`,
+      ], { maxBuffer: 64 * 1024 * 1024 });
     } catch (error) {
-      console.error(`  download failed: ${error.message.split("\n")[0]}`);
-      failures += 1;
-      continue;
+      // A release packed before the archives existed has none. Falling back is slow, not wrong.
+      console.error(`  no archive (${error.message.split("\n")[0].slice(0, 70)}); using rsync`);
+      try {
+        await run("gcloud", ["storage", "rsync", "-r", "--exclude=(^|.*/)\\..*", remote, localBase],
+          { maxBuffer: 64 * 1024 * 1024 });
+      } catch (fallbackError) {
+        console.error(`  download failed: ${fallbackError.message.split("\n")[0]}`);
+        failures += 1;
+        continue;
+      }
     }
   }
 

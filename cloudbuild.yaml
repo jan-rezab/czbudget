@@ -18,24 +18,23 @@ steps:
     args:
       - -ceu
       - |
+        set -o pipefail
         BASE="gs://czbudget-janrezab-data-layers/2026-08-30"
-        # The four layers are independent trees, and the cost here is per-file rather than per
-        # byte: roughly 36,000 small objects took 1,526s of a 1,800s build sequentially, which
-        # left under five minutes for everything after it. Pulled concurrently instead, with
-        # every exit status checked — a layer that fails silently would be hydrated as empty and
-        # the verify step would blame the manifest.
-        gcloud storage rsync -r "$$BASE/serving/municipal-expansion" data/municipal-expansion & P1=$$!
-        gcloud storage rsync -r "$$BASE/pages/municipalities"        municipalities          & P2=$$!
-        gcloud storage rsync -r "$$BASE/pages/cz"                    cz                      & P3=$$!
-        gcloud storage rsync -r "$$BASE/entities/entities"           data/entities           & P4=$$!
-        FAILED=0
-        for PID in $$P1 $$P2 $$P3 $$P4; do
-          wait $$PID || FAILED=1
+        # Hydration was 2,057s of a 3,019s build — 68% of it. The cost is per object rather
+        # than per byte: these four layers are 70,695 files and 1.17 GB, which rsync moved at
+        # 34 objects a second. That is round-trip latency, not bandwidth, which is why pulling
+        # the four concurrently made it worse rather than better (1,526s sequential against
+        # 2,057s concurrent) — each rsync still walks its own object list, and four of them
+        # contend for one thread budget.
+        #
+        # The same trees gzip to 74 MB in four objects, streamed straight into tar so the
+        # archive never lands on disk. Measured end to end at 26s for all 70,696 files, with
+        # every layer still matching the manifest. Rebuild them with:
+        #   node scripts/hydrate-data-layers.mjs --layer <id> --pack
+        for LAYER in serving pages pages_cz entities; do
+          gcloud storage cat "$$BASE/$$LAYER.tar.gz" | tar -C . -xzf -
+          echo "hydrated $$LAYER"
         done
-        if [ "$$FAILED" -ne 0 ]; then
-          echo "At least one layer failed to hydrate. Refusing to continue on partial data." >&2
-          exit 1
-        fi
 
   - id: verify-data-layers
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
@@ -184,10 +183,10 @@ steps:
       - /workspace/.deploy-current-main
       - ${_PUBLIC_SNAPSHOT_BASE_URL}
 
-# Hydration alone took 1,526s of the previous 1,800s, so the build could not finish whatever
-# came after it. The four layers now hydrate concurrently, and the ceiling is raised to leave
-# real headroom for the exports, the 35,000-profile snapshot and the image build.
-timeout: 3600s
+# With hydration at roughly 30s rather than 2,057s the whole build should land near 1,000s.
+# The ceiling is set at 1800s to leave real headroom for the exports, the snapshot and the
+# image build while still being tight enough that a regression fails rather than hides.
+timeout: 1800s
 
 images:
   - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
