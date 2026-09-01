@@ -81,13 +81,17 @@ async function publishedFromInternational(country, limit) {
 
   const published = new Map();
   for (const entity of chosen) {
-    for (const year of entity.years || []) {
-      if (!Number.isFinite(entity.revenue) && !Number.isFinite(entity.expenditure)) continue;
-      published.set(`${entity.code}|${year}`, {
-        revenue: Number.isFinite(entity.revenue) ? entity.revenue : null,
-        expenditure: Number.isFinite(entity.expenditure) ? entity.expenditure : null,
-      });
-    }
+    if (!Number.isFinite(entity.revenue) && !Number.isFinite(entity.expenditure)) continue;
+    // The directory carries one revenue and one expenditure per entity while listing every
+    // year it covers. That pair belongs to the latest of them — attributing it to all of them
+    // scored France at 50%, which reads as a half-broken rule rather than a misread baseline.
+    const years = (entity.years || []).filter(Number.isFinite);
+    const year = years.length ? Math.max(...years) : null;
+    if (year === null) continue;
+    published.set(`${entity.code}|${year}`, {
+      revenue: Number.isFinite(entity.revenue) ? entity.revenue : null,
+      expenditure: Number.isFinite(entity.expenditure) ? entity.expenditure : null,
+    });
   }
   return { published, codes: chosen.map((entity) => String(entity.code)) };
 }

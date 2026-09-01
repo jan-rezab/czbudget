@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-31",
+  "generated_at": "2026-09-01",
   "note": "Which warehouse rows are a municipality's headline revenue and expenditure, per country. Derived by scoring every candidate (stage, code) against the headline each profile already publishes, not transcribed by hand — a misread rule would move a published figure silently. `match_rate` is the share of the sample the rule reproduces exactly; anything short of 1.0 is a country whose profiles cannot yet be regenerated from the warehouse alone.",
   "sample_size": 40,
   "countries": [
@@ -100,7 +100,7 @@
             "eligible": 39,
             "match_rate": 1,
             "runner_up": {
-              "rule": "actual-paid@FY ReceitasExcetoIntraOrcamentarias",
+              "rule": "actual-carried_over@FY ReceitasExcetoIntraOrcamentarias",
               "matched": 39
             }
           },
@@ -115,7 +115,7 @@
             "eligible": 39,
             "match_rate": 1,
             "runner_up": {
-              "rule": "committed-carried_over@FY TotalDespesas",
+              "rule": "committed-carried_over@FY SubtotalDasDespesas",
               "matched": 26
             }
           }
@@ -131,6 +131,11 @@
         "eligible": 49,
         "match_rate": 1
       }
+    },
+    {
+      "country_code": "CHE",
+      "status": "no_published_headline",
+      "detail": "the sampled profiles publish no revenue or expenditure"
     },
     {
       "country_code": "CHL",
@@ -272,6 +277,59 @@
         "eligible": 40,
         "match_rate": 1
       }
+    },
+    {
+      "country_code": "CZE",
+      "sample_size": 40,
+      "years": {
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "net_of_stage": null,
+            "fiscal_period": "2025-12",
+            "code": null,
+            "code_length": 4,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@2025-12 *",
+              "matched": 40
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "net_of_stage": null,
+            "fiscal_period": "2025-12",
+            "code": null,
+            "code_length": 4,
+            "aggregate": "sum_at_code_depth",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@2025-12 *",
+              "matched": 40
+            }
+          }
+        }
+      },
+      "revenue": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
+      }
+    },
+    {
+      "country_code": "DEU",
+      "status": "not_in_warehouse",
+      "detail": "no facts for 40 sampled entities"
     },
     {
       "country_code": "DNK",
@@ -424,6 +482,62 @@
       }
     },
     {
+      "country_code": "FIN",
+      "status": "not_in_warehouse",
+      "detail": "no facts for 40 sampled entities"
+    },
+    {
+      "country_code": "FRA",
+      "sample_size": 40,
+      "years": {
+        "2024": {},
+        "2025": {
+          "revenue": {
+            "stage": "actual",
+            "net_of_stage": null,
+            "fiscal_period": "FY",
+            "code": "OFGL.RecettesTotales",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": {
+              "rule": "actual@FY OFGL.RecettesFonctionnement",
+              "matched": 1
+            }
+          },
+          "expenditure": {
+            "stage": "actual",
+            "net_of_stage": null,
+            "fiscal_period": "FY",
+            "code": "OFGL.DepensesTotales",
+            "code_length": null,
+            "aggregate": "single_row",
+            "matched": 40,
+            "eligible": 40,
+            "match_rate": 1,
+            "runner_up": null
+          }
+        }
+      },
+      "revenue": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
+      },
+      "expenditure": {
+        "matched": 40,
+        "eligible": 40,
+        "match_rate": 1
+      }
+    },
+    {
+      "country_code": "GBR",
+      "status": "no_published_headline",
+      "detail": "the sampled profiles publish no revenue or expenditure"
+    },
+    {
       "country_code": "GEO",
       "sample_size": 80,
       "years": {
@@ -454,7 +568,7 @@
             "eligible": 40,
             "match_rate": 1,
             "runner_up": {
-              "rule": "actual@FY 7",
+              "rule": "actual@FY E",
               "matched": 40
             }
           }
@@ -732,6 +846,16 @@
       }
     },
     {
+      "country_code": "NLD",
+      "status": "not_in_warehouse",
+      "detail": "no facts for 40 sampled entities"
+    },
+    {
+      "country_code": "NOR",
+      "status": "not_in_warehouse",
+      "detail": "no facts for 40 sampled entities"
+    },
+    {
       "country_code": "PER",
       "sample_size": 40,
       "years": {
@@ -821,6 +945,11 @@
       }
     },
     {
+      "country_code": "PRY",
+      "status": "no_published_headline",
+      "detail": "the sampled profiles publish no revenue or expenditure"
+    },
+    {
       "country_code": "SLV",
       "sample_size": 40,
       "years": {
@@ -867,6 +996,21 @@
         "eligible": 40,
         "match_rate": 1
       }
+    },
+    {
+      "country_code": "SWE",
+      "status": "no_published_headline",
+      "detail": "the sampled profiles publish no revenue or expenditure"
+    },
+    {
+      "country_code": "UKR",
+      "status": "no_published_headline",
+      "detail": "the sampled profiles publish no revenue or expenditure"
+    },
+    {
+      "country_code": "USA",
+      "status": "not_in_warehouse",
+      "detail": "no facts for 40 sampled entities"
     }
   ]
 }

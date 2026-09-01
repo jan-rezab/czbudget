@@ -213,12 +213,30 @@ if (verify) {
   let checked = 0;
   let agreed = 0;
   const drift = [];
+  // Countries that never had a fan-out are checked against the international directory, which
+  // carries one revenue and expenditure per entity for its latest year. Without this a country
+  // like Czechia verifies 0 of 0 and looks like it passed.
+  let fallback = null;
+  const directoryBaseline = async () => {
+    if (fallback) return fallback;
+    const payload = await readJSON("data/international-municipalities.v1.json");
+    fallback = new Map();
+    for (const entity of payload.entities || []) {
+      if (String(entity.country).toUpperCase() !== country) continue;
+      const years = (entity.years || []).filter(Number.isFinite);
+      if (!years.length) continue;
+      fallback.set(String(entity.code), { year: Math.max(...years), revenue: entity.revenue, expenditure: entity.expenditure });
+    }
+    return fallback;
+  };
   for (const profile of profiles) {
     let published;
     try {
       published = JSON.parse(await readFile(path.join(ROOT, "data/municipal-expansion", country.toLowerCase(), `${profile.code}.json`), "utf8"));
     } catch {
-      continue;
+      const entry = (await directoryBaseline()).get(String(profile.code));
+      if (!entry) continue;
+      published = { history: [{ year: entry.year, revenue: entry.revenue, expenditure: entry.expenditure }] };
     }
     for (const entry of published.history || []) {
       for (const side of ["revenue", "expenditure"]) {
