@@ -79,6 +79,32 @@ async function publishedFromInternational(country, limit) {
   const step = Math.max(1, Math.floor(entities.length / limit));
   const chosen = entities.filter((_, index) => index % step === 0).slice(0, limit);
 
+  // Then top up per year, as the fan-out path already does. Only 97 of France's 34,875 communes
+  // report 2024 rather than 2025, so an even spread never saw one and no 2024 rule was derived —
+  // leaving exactly those communes without a headline. Stratifying was implemented once and only
+  // on the other baseline, which is how the gap survived.
+  const latestOf = (entity) => {
+    const years = (entity.years || []).filter(Number.isFinite);
+    return years.length ? Math.max(...years) : null;
+  };
+  const seen = new Map();
+  const picked = new Set(chosen);
+  for (const entity of chosen) {
+    const year = latestOf(entity);
+    if (year !== null) seen.set(year, (seen.get(year) || 0) + 1);
+  }
+  const perYear = Math.max(8, Math.floor(limit / 4));
+  for (const entity of entities) {
+    if (picked.has(entity)) continue;
+    const year = latestOf(entity);
+    if (year === null || (seen.get(year) || 0) >= perYear) continue;
+    if (!Number.isFinite(entity.revenue) && !Number.isFinite(entity.expenditure)) continue;
+    picked.add(entity);
+    seen.set(year, (seen.get(year) || 0) + 1);
+  }
+  chosen.length = 0;
+  chosen.push(...picked);
+
   const published = new Map();
   for (const entity of chosen) {
     if (!Number.isFinite(entity.revenue) && !Number.isFinite(entity.expenditure)) continue;
