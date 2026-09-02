@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "CZE_PUBLIC_EMPLOYMENT_OBSERVATORY",
+  "country_code": "CZE",
+  "generated_at": "2026-09-01T21:41:00+00:00",
+  "period": {
+    "from": 2015,
+    "to": 2024,
+    "years": 10
+  },
+  "canonical_measure": "full_time_equivalent_jobs",
+  "headline": {
+    "year": 2024,
+    "public_sector_fte": 1112290,
+    "general_government_fte": 947878,
+    "public_corporations_combined_fte": 164412,
+    "total_economy_fte": 4588564,
+    "public_sector_share_pct": 24.2,
+    "change_since_first_fte": 121744,
+    "change_since_first_pct": 12.3
+  },
+  "history": [
+    {
+      "year": 2015,
+      "total_economy_fte": 4371324,
+      "public_sector_fte": 990546,
+      "general_government_fte": 827904,
+      "public_nonfinancial_corporations_fte": 161186,
+      "public_financial_corporations_fte": 1456,
+      "public_corporations_combined_fte": 162642,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 22.7
+    },
+    {
+      "year": 2016,
+      "total_economy_fte": 4394433,
+      "public_sector_fte": 1000416,
+      "general_government_fte": 840450,
+      "public_nonfinancial_corporations_fte": 158487,
+      "public_financial_corporations_fte": 1479,
+      "public_corporations_combined_fte": 159966,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 22.8
+    },
+    {
+      "year": 2017,
+      "total_economy_fte": 4447583,
+      "public_sector_fte": 1021246,
+      "general_government_fte": 859048,
+      "public_nonfinancial_corporations_fte": 160675,
+      "public_financial_corporations_fte": 1523,
+      "public_corporations_combined_fte": 162198,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 23.0
+    },
+    {
+      "year": 2018,
+      "total_economy_fte": 4500109,
+      "public_sector_fte": 1041778,
+      "general_government_fte": 882071,
+      "public_nonfinancial_corporations_fte": 158130,
+      "public_financial_corporations_fte": 1577,
+      "public_corporations_combined_fte": 159707,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 23.2
+    },
+    {
+      "year": 2019,
+      "total_economy_fte": 4513951,
+      "public_sector_fte": 1071763,
+      "general_government_fte": 900031,
+      "public_nonfinancial_corporations_fte": 170121,
+      "public_financial_corporations_fte": 1611,
+      "public_corporations_combined_fte": 171732,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 23.7
+    },
+    {
+      "year": 2020,
+      "total_economy_fte": 4410176,
+      "public_sector_fte": 1072275,
+      "general_government_fte": 907187,
+      "public_nonfinancial_corporations_fte": 163461,
+      "public_financial_corporations_fte": 1627,
+      "public_corporations_combined_fte": 165088,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 24.3
+    },
+    {
+      "year": 2021,
+      "total_economy_fte": 4447418,
+      "public_sector_fte": 1090083,
+      "general_government_fte": 927473,
+      "public_nonfinancial_corporations_fte": 160999,
+      "public_financial_corporations_fte": 1611,
+      "public_corporations_combined_fte": 162610,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 24.5
+    },
+    {
+      "year": 2022,
+      "total_economy_fte": 4484506,
+      "public_sector_fte": 1100557,
+      "general_government_fte": 937619,
+      "public_nonfinancial_corporations_fte": 161290,
+      "public_financial_corporations_fte": 1648,
+      "public_corporations_combined_fte": 162938,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 24.5
+    },
+    {
+      "year": 2023,
+      "total_economy_fte": 4552159,
+      "public_sector_fte": 1110702,
+      "general_government_fte": 946771,
+      "public_nonfinancial_corporations_fte": 162269,
+      "public_financial_corporations_fte": 1662,
+      "public_corporations_combined_fte": 163931,
+      "public_corporations_combined_status": "official_components",
+      "public_sector_share_pct": 24.4
+    },
+    {
+      "year": 2024,
+      "total_economy_fte": 4588564,
+      "public_sector_fte": 1112290,
+      "general_government_fte": 947878,
+      "public_nonfinancial_corporations_fte": null,
+      "public_financial_corporations_fte": null,
+      "public_corporations_combined_fte": 164412,
+      "public_corporations_combined_status": "derived_residual",
+      "public_sector_share_pct": 24.2
+    }
+  ],
+  "evidence_layers": [
+    {
+      "id": "state_budget_regulated",
+      "label_cs": "Státní organizační a příspěvkové organizace",
+      "label_en": "State organisational and contributory organisations",
+      "year": 2024,
+      "value": 487078,
+      "unit": "average_employees",
+      "source_id": "mf_state_final_account_2024",
+      "coverage_status": "official",
+      "share_of_public_sector_pct": 43.8,
+      "additive_to_public_sector_total": false,
+      "boundary_note": "Overlaps regional education and other general-government units."
+    },
+    {
+      "id": "regional_education",
+      "label_cs": "Regionální školství",
+      "label_en": "Regional education",
+      "year": 2024,
+      "value": 301048,
+      "unit": "FTE",
+      "source_id": "msmt_regional_education_workforce_2024",
+      "coverage_status": "official",
+      "share_of_public_sector_pct": 27.1,
+      "additive_to_public_sector_total": false,
+      "boundary_note": "All founders and funding sources; overlaps the state-budget-regulated layer."
+    },
+    {
+      "id": "local_administration",
+      "label_cs": "Správa obcí a krajů",
+      "label_en": "Municipal and regional administration",
+      "year": 2024,
+      "value": 83450,
+      "unit": "FTE",
+      "source_id": "mv_local_government_employment_2024",
+      "coverage_status": "partial",
+      "share_of_public_sector_pct": 7.5,
+      "additive_to_public_sector_total": false,
+      "boundary_note": "Incomplete reporting: 3,741 of 6,254 municipalities."
+    },
+    {
+      "id": "strategic_entities",
+      "label_cs": "38 strategických subjektů",
+      "label_en": "38 strategic entities",
+      "year": 2024,
+      "value": 84308,
+      "unit": "persons",
+      "source_id": "mf_strategic_entities_2024",
+      "coverage_status": "official",
+      "share_of_public_sector_pct": 7.6,
+      "additive_to_public_sector_total": false,
+      "boundary_note": "Persons, not FTE; some entities may be classified inside general government."
+    }
+  ],
+  "entity_resolution": {
+    "public_entity_register_period": "2026",
+    "registered_entities": 18238,
+    "entities_with_employee_observation": 38,
+    "employee_field_status": "not_available_in_consolidation_register",
+    "join_key": "ICO where published"
+  },
+  "reconciliation": {
+    "control_total_source_id": "czso_public_sector_satellite_account_2024",
+    "rule": "Detailed evidence layers explain the control total but are never summed because their perimeters overlap and their units differ.",
+    "latest_identity": "public_sector_fte = general_government_fte + public_corporations_combined_fte",
+    "latest_identity_difference": 0
+  },
+  "definitions": {
+    "public_sector": "All institutional units controlled by government: general government plus public non-financial and financial corporations.",
+    "general_government": "ESA 2010 sector S.13: central and local government and social-security funds, including controlled non-market units.",
+    "public_corporations": "Government-controlled market producers and public financial corporations, including the central bank.",
+    "fte": "Full-time-equivalent jobs. Persons, positions and budgeted posts are retained as different units and never silently converted."
+  },
+  "sources": [
+    {
+      "id": "czso_public_sector_satellite_account_2024",
+      "publisher": "Český statistický úřad",
+      "title_cs": "Satelitní účet veřejného sektoru",
+      "title_en": "Public Sector Satellite Account",
+      "url": "https://csu.gov.cz/public-sector-satellite-account",
+      "period": "2015–2024"
+    },
+    {
+      "id": "mf_state_final_account_2024",
+      "publisher": "Ministerstvo financí ČR",
+      "title_cs": "Zpráva o výsledcích hospodaření státního rozpočtu 2024, tabulka 54",
+      "title_en": "State budget final account 2024, table 54",
+      "url": "https://www.mfcr.cz/assets/attachments/2025-04-28_C-Zprava-o-vysledcich-hospodareni-statniho-rozpoctu.pdf",
+      "period": "2024"
+    },
+    {
+      "id": "msmt_regional_education_workforce_2024",
+      "publisher": "Ministerstvo školství, mládeže a tělovýchovy",
+      "title_cs": "Zaměstnanci a mzdové prostředky v regionálním školství 2024",
+      "title_en": "Employees and payroll in regional education 2024",
+      "url": "https://msmt.gov.cz/file/64520_1_1/download/",
+      "period": "2024"
+    },
+    {
+      "id": "mv_local_government_employment_2024",
+      "publisher": "Ministerstvo vnitra ČR",
+      "title_cs": "Veřejná správa v České republice 2024",
+      "title_en": "Public administration in the Czech Republic 2024",
+      "url": "https://mv.gov.cz/migration/ViewFile.aspx?docid=22544701",
+      "period": "2024"
+    },
+    {
+      "id": "mf_strategic_entities_2024",
+      "publisher": "Ministerstvo financí ČR",
+      "title_cs": "Strategické společnosti a organizace 2024",
+      "title_en": "Strategic companies and organisations 2024",
+      "url": "https://www.mfcr.cz/assets/attachments/2024-12-31_Zprava-o-cinnosti-strategickych-subjektu-za-rok-2024.pdf",
+      "period": "2024"
+    },
+    {
+      "id": "mf_consolidation_units_2026",
+      "publisher": "Ministerstvo financí ČR",
+      "title_cs": "Výčet konsolidovaných jednotek státu 2026",
+      "title_en": "State consolidation units register 2026",
+      "url": "https://mf.gov.cz/cs/dane-a-ucetnictvi/ucetnictvi/ucetni-reforma-verejnych-financi-ucetnic/ucetni-vykaznictvi-statu/vycet-konsolidovanych-jednotek-statu-a-d",
+      "period": "2026"
+    }
+  ]
+}
