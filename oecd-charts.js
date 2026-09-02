@@ -81,11 +81,18 @@
   }
 
   const scenarioValue=(c,key)=>data.countries[c]?.tax?.labour?.scenarios?.find(s=>`${s.household_type}|${s.principal_income}|${s.spouse_income}`===key)?.metrics?.av_tw;
+  const heatColor=(value,values)=>{
+    const finite=values.filter(Number.isFinite),min=Math.min(...finite),max=Math.max(...finite),position=max===min?.5:(value-min)/(max-min);
+    const stops=position<=.5?[[228,232,189],[245,241,232],position*2]:[[245,241,232],[217,136,116],(position-.5)*2];
+    return `rgb(${stops[0].map((channel,i)=>Math.round(channel+(stops[1][i]-channel)*stops[2])).join(" ")})`;
+  };
   function renderTaxMatrix(root){
     const scenarioDefs=[["S_C0|AW67|_Z",lang==="en"?"Single · 67%":"Jednotlivec · 67 %"],["S_C0|AW100|_Z",lang==="en"?"Single · 100%":"Jednotlivec · 100 %"],["S_C0|AW167|_Z",lang==="en"?"Single · 167%":"Jednotlivec · 167 %"],["C_C2|AW100|NOEARN_UNEMP",lang==="en"?"Family · one earner":"Rodina · jeden příjem"]];
     const rows=Object.keys(data.countries).filter(c=>scenarioDefs.some(([k])=>Number.isFinite(scenarioValue(c,k))));
+    const columns=scenarioDefs.map(([key])=>rows.map(c=>scenarioValue(c,key)));
     const title=lang==="en"?"The tax wedge by household type":"Daňový klín podle typu domácnosti";
-    root.innerHTML=`<section class="oecd-chart-block">${header("OECD Taxing Wages",title,lang==="en"?"The same country can move materially when children, a second earner or the earnings level changes.":"Stejná země se může výrazně posunout podle dětí, druhého příjmu nebo úrovně výdělku.")}${canvas(title,"oecd-matrix-wrap")}<table class="oecd-data-table"><thead><tr><th>${lang==="en"?"Country":"Země"}</th>${scenarioDefs.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr></thead><tbody>${rows.map(c=>`<tr class="${c===code?"is-selected":""}"><td>${esc(name(c))}</td>${scenarioDefs.map(([k])=>`<td>${fmt(scenarioValue(c,k))}${Number.isFinite(scenarioValue(c,k))?" %":""}</td>`).join("")}</tr>`).join("")}</tbody></table></div></section>`;
+    const legend=lang==="en"?["Lower tax wedge","Middle","Higher tax wedge"]:["Nižší daňový klín","Střed","Vyšší daňový klín"];
+    root.innerHTML=`<section class="oecd-chart-block">${header("OECD Taxing Wages",title,lang==="en"?"The same country can move materially when children, a second earner or the earnings level changes.":"Stejná země se může výrazně posunout podle dětí, druhého příjmu nebo úrovně výdělku.")}${canvas(title,"oecd-matrix-wrap")}<table class="oecd-data-table oecd-heat-table"><thead><tr><th>${lang==="en"?"Country":"Země"}</th>${scenarioDefs.map(([,l])=>`<th>${esc(l)}</th>`).join("")}</tr></thead><tbody>${rows.map(c=>`<tr class="${c===code?"is-selected":""}"><td>${esc(name(c))}</td>${scenarioDefs.map(([k],i)=>{const value=scenarioValue(c,k);return Number.isFinite(value)?`<td class="oecd-heat-cell" style="--heat-color:${heatColor(value,columns[i])}">${fmt(value)} %</td>`:`<td>—</td>`;}).join("")}</tr>`).join("")}</tbody></table><div class="oecd-heat-legend" aria-label="${esc(legend.join(", "))}">${legend.map((label,i)=>`<span><i data-level="${i}"></i>${esc(label)}</span>`).join("")}</div></div></section>`;
   }
 
   function renderCorporate(root){
