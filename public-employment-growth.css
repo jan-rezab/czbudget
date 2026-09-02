@@ -1,0 +1,279 @@
+.employment-growth-accounting {
+  margin-top: 18px;
+  border: 1px solid #171918;
+  background: #faf7ef;
+}
+
+.employment-growth-accounting > header {
+  padding: 30px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr);
+  gap: 48px;
+  align-items: end;
+  border-bottom: 1px solid #171918;
+}
+
+.employment-growth-accounting > header span,
+.employment-profession-evidence header span,
+.employment-cost-waterfall > header > div > span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--coral, #c93237);
+  font: 800 10px Arial, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.employment-growth-accounting h3,
+.employment-profession-evidence h3 {
+  margin: 0;
+  font: 800 clamp(30px, 3.7vw, 48px)/.98 Arial, sans-serif;
+  letter-spacing: -.05em;
+}
+
+.employment-growth-accounting > header p,
+.employment-profession-evidence header p {
+  margin: 0;
+  color: #555852;
+  font: 14px/1.55 Arial, sans-serif;
+}
+
+.employment-growth-accounting > #employment-regulated-growth,
+.employment-cost-waterfall > #employment-function-growth {
+  overflow-x: auto;
+}
+
+.employment-accounting-total {
+  min-width: 760px;
+  padding: 25px 30px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px 28px;
+  align-items: end;
+  background: #171918;
+  color: #faf7ef;
+}
+
+.employment-accounting-total > span,
+.employment-accounting-total > small {
+  font: 800 9px Arial, sans-serif;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.employment-accounting-total > strong,
+.employment-accounting-total > b {
+  font: 800 clamp(30px, 4vw, 50px)/.95 Arial, sans-serif;
+  letter-spacing: -.055em;
+}
+
+.employment-accounting-total > strong i,
+.employment-accounting-total > b {
+  color: var(--acid, #a8b63f);
+}
+
+.employment-accounting-total > strong i { font-style: normal; }
+.employment-accounting-total > small { grid-column: 3; text-align: right; }
+
+.employment-accounting-head,
+.employment-growth-row {
+  min-width: 760px;
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(150px, 1fr) minmax(150px, 1fr) 90px;
+  gap: 14px;
+  align-items: center;
+}
+
+.employment-accounting-head {
+  padding: 13px 30px;
+  border-bottom: 1px solid #d2ccc1;
+  color: #70736c;
+  font: 800 9px Arial, sans-serif;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.employment-accounting-head b:last-child,
+.employment-growth-row > strong { text-align: right; }
+
+.employment-growth-row {
+  padding: 14px 30px;
+  border-bottom: 1px solid #e0dcd2;
+}
+
+.employment-growth-row:last-child { border: 0; }
+.employment-growth-row > span { font: 800 11px/1.25 Arial, sans-serif; }
+.employment-growth-row > strong { color: #5d6625; font: 800 15px Arial, sans-serif; }
+.employment-growth-row.negative > strong { color: var(--coral, #c93237); }
+
+.employment-compare-bar,
+.employment-cost-pair {
+  position: relative;
+  height: 28px;
+  background: #e6e2d8;
+  overflow: hidden;
+}
+
+.employment-compare-bar > i,
+.employment-cost-pair > i { display: block; height: 100%; background: #bab6ac; }
+.employment-compare-bar.current > i,
+.employment-cost-pair.current > i { background: var(--acid, #a8b63f); }
+.employment-compare-bar > b { position: absolute; right: 8px; top: 8px; font: 800 10px Arial, sans-serif; }
+
+.employment-growth-accounting > footer,
+.employment-profession-evidence > footer {
+  padding: 18px 30px;
+  border-top: 1px solid #d2ccc1;
+  color: #5b5e52;
+  font: 12px/1.55 Arial, sans-serif;
+}
+
+.employment-evidence-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.employment-evidence-grid .employment-school-evidence { margin: 0; }
+.employment-evidence-grid .employment-school-evidence > div:first-child { display: block; }
+.employment-evidence-grid .employment-school-evidence > div:first-child p { margin-top: 20px; }
+
+.employment-profession-evidence {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #171918;
+  background: #faf7ef;
+}
+
+.employment-profession-evidence > header { padding: 26px; }
+.employment-profession-evidence h3 { font-size: 31px; }
+.employment-profession-evidence header p { margin-top: 16px; }
+.employment-profession-evidence > #employment-profession-growth { padding: 0 26px 20px; }
+
+.employment-profession-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 0;
+  border-top: 1px solid #171918;
+  border-bottom: 1px solid #171918;
+}
+
+.employment-profession-total span,
+.employment-profession-total small { font: 800 8px Arial, sans-serif; text-transform: uppercase; }
+.employment-profession-total strong { font: 800 13px Arial, sans-serif; }
+.employment-profession-row { padding: 9px 0; border-bottom: 1px solid #e0dcd2; }
+.employment-profession-row > div:first-child { display: flex; justify-content: space-between; gap: 12px; }
+.employment-profession-row span,
+.employment-profession-row strong,
+.employment-profession-row small { font: 800 9px/1.25 Arial, sans-serif; }
+.employment-profession-row span { text-transform: uppercase; }
+.employment-profession-row small { display: block; margin-top: 4px; color: #777a73; }
+.employment-profession-track { height: 5px; margin-top: 5px; background: #e4e0d6; }
+.employment-profession-track i { display: block; height: 100%; background: var(--acid, #a8b63f); }
+.employment-profession-row.newly_reported .employment-profession-track i { background: #9c9e98; }
+.employment-profession-row.newly_reported strong { color: #686b65; }
+
+.employment-cost-waterfall {
+  margin-top: 18px;
+  border: 1px solid #171918;
+  background: #faf7ef;
+}
+
+.employment-cost-waterfall > header,
+.employment-salary-panel > header {
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: end;
+  border-bottom: 1px solid #171918;
+}
+
+.employment-cost-waterfall > header strong,
+.employment-salary-panel > header strong { font: 800 14px Arial, sans-serif; }
+.employment-cost-waterfall > header > span,
+.employment-salary-panel > header span { color: #6e716b; font: 800 8px Arial, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.employment-cost-stacks { min-width: 760px; padding: 24px 20px; background: #171918; color: #faf7ef; }
+
+.employment-cost-stack-row {
+  display: grid;
+  grid-template-columns: 45px 1fr 105px;
+  gap: 14px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.employment-cost-stack-row > b,
+.employment-cost-stack-row > strong { font: 800 11px Arial, sans-serif; }
+.employment-cost-stack-row > strong { text-align: right; }
+.employment-cost-stack-row > div { height: 30px; display: flex; background: #343733; }
+.employment-cost-stack-row i { display: block; height: 100%; border-right: 1px solid #171918; }
+
+.employment-cost-function-head,
+.employment-cost-function-rows > article {
+  min-width: 760px;
+  display: grid;
+  grid-template-columns: minmax(190px, 1.15fr) minmax(150px, 1fr) minmax(150px, 1fr) 80px;
+  gap: 14px;
+  align-items: center;
+}
+
+.employment-cost-function-head {
+  padding: 12px 20px;
+  color: #74776f;
+  font: 800 8px Arial, sans-serif;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #d2ccc1;
+}
+
+.employment-cost-function-head b:last-child,
+.employment-cost-function-rows > article > strong { text-align: right; }
+.employment-cost-function-rows > article { padding: 10px 20px; border-bottom: 1px solid #e0dcd2; }
+.employment-cost-function-rows > article:last-child { border: 0; }
+.employment-cost-function-rows > article > span { display: flex; align-items: center; gap: 8px; font: 800 9px/1.2 Arial, sans-serif; text-transform: uppercase; }
+.employment-cost-function-rows > article > span i { flex: 0 0 8px; height: 8px; }
+.employment-cost-function-rows > article > strong { font: 800 12px Arial, sans-serif; }
+.employment-cost-pair { height: 23px; }
+.employment-cost-pair > b { position: absolute; right: 6px; top: 6px; font: 800 9px Arial, sans-serif; }
+
+.tone-0 { background: #a8b63f !important; }
+.tone-1 { background: #d9a53b !important; }
+.tone-2 { background: #dd7866 !important; }
+.tone-3 { background: #8fb9b0 !important; }
+.tone-4 { background: #c9c2e4 !important; }
+.tone-5 { background: #817f78 !important; }
+.tone-6 { background: #5f756f !important; }
+.tone-7 { background: #b67d55 !important; }
+.tone-8 { background: #747b34 !important; }
+.tone-9 { background: #9d6967 !important; }
+
+.employment-salary-panel { background: #faf7ef; border: 1px solid #171918; }
+.employment-salary-panel > header { min-height: 54px; }
+.employment-salary-panel > #employment-salary-comparison { padding: 10px 20px; }
+.employment-salary-panel article { padding: 10px 0; border-bottom: 1px solid #e0dcd2; }
+.employment-salary-panel article:last-child { border: 0; }
+.employment-salary-panel article > div:first-child { display: flex; justify-content: space-between; gap: 12px; }
+.employment-salary-panel article span,
+.employment-salary-panel article strong { font: 800 9px/1.25 Arial, sans-serif; }
+.employment-salary-panel article span { text-transform: uppercase; }
+.employment-salary-bars { display: grid; gap: 4px; margin-top: 7px; }
+.employment-salary-bars > i { position: relative; display: block; height: 16px; background: #b9b5ab; font-style: normal; }
+.employment-salary-bars > i.current { background: var(--acid, #a8b63f); }
+.employment-salary-bars b { position: absolute; right: 5px; top: 3px; font: 800 8px Arial, sans-serif; }
+
+@media (max-width: 900px) {
+  .employment-growth-accounting > header,
+  .employment-evidence-grid { grid-template-columns: 1fr; }
+  .employment-growth-accounting > header { gap: 18px; }
+}
+
+@media (max-width: 600px) {
+  .employment-growth-accounting > header,
+  .employment-profession-evidence > header { padding: 22px; }
+  .employment-cost-waterfall > header,
+  .employment-salary-panel > header { align-items: flex-start; flex-direction: column; }
+  .employment-profession-total { display: grid; }
+}

@@ -1,5 +1,5 @@
 (() => {
-  const datasetUrl = "../../data/cz-public-employment.v1.json?v=1.2.0";
+  const datasetUrl = "../../data/cz-public-employment.v1.json?v=1.3.0";
   const lang = document.documentElement.lang === "en" ? "en" : "cs";
   const locale = lang === "en" ? "en-GB" : "cs-CZ";
   const copy = {
@@ -35,10 +35,23 @@
       growthExact: "přesný přírůstek",
       growthReadingTitle: "Téměř celý čistý nárůst je vláda, ne firmy",
       growthReadingBody: "Vládní instituce přidaly {government} FTE, zatímco veřejné korporace skončily jen o {corporations} FTE výše. Korporace tedy nebyly motorem desetiletého růstu.",
-      schoolKicker: "Nejlépe doložený motor",
+      accountingKicker: "Nejhlubší srovnatelný rozpad",
+      accountingTitle: "Ve vládou regulované sféře přibylo 64 633 zaměstnanců",
+      accountingIntro: "Stejná tabulka Ministerstva financí za roky 2015 a 2024 rozděluje změnu beze zbytku. Ukazuje růst školství, bezpečnostních sborů a příspěvkových organizací i pokles civilních zaměstnanců státu.",
+      accountingCaveat: "Tento rozpad se přesně sčítá uvnitř vládou regulované sféry. Není však úplným rozkladem sektoru S.13: jiné veřejné jednotky leží mimo tento rozpočtový výkaz.",
+      stateRegulated: "Vládou regulovaná sféra",
+      comparedTotal: "srovnávaný celek",
+      growthChange: "Změna",
+      ofComparedGrowth: "z přírůstku v tomto řezu",
+      schoolKicker: "Širší desetiletý pohled",
       schoolTitle: "Regionální školství: +65 899 FTE",
-      schoolIntro: "Samostatná řada MŠMT ukazuje, kde leží velká část růstu: ve školách přibylo 56 743 pedagogických a 9 156 nepedagogických FTE.",
-      schoolCaveat: "Pozor na hranici: školská řada zahrnuje všechny zřizovatele a zdroje financování, tedy i soukromé a církevní školy. Je to silný důkaz o motoru růstu, nikoli přesná část sektoru S.13, kterou lze mechanicky odečíst.",
+      schoolIntro: "Samostatná řada MŠMT zahrnuje všechny zřizovatele: přibylo 56 743 pedagogických a 9 156 nepedagogických FTE.",
+      schoolCaveat: "Řada zahrnuje veřejné, soukromé i církevní školy. Proto potvrzuje motor růstu, ale nelze ji odečíst od sektoru S.13.",
+      professionKicker: "Uvnitř školství",
+      professionTitle: "Které profese rostly v letech 2020–2024",
+      professionIntro: "Novější tabulka MŠMT umožňuje rozdělit pedagogický přírůstek až na jednotlivé profese.",
+      professionCaveat: "Školští logopedi byli v roce 2024 poprvé vykázáni samostatně; jejich 45,4 FTE proto není označeno jako čistý přírůstek.",
+      newlyReported: "nově vykázáno",
       pedagogical: "Pedagogičtí pracovníci",
       nonpedagogical: "Nepedagogičtí zaměstnanci",
       schoolTotal: "Regionální školství celkem",
@@ -49,8 +62,11 @@
       costAria: "Průměrná měsíční kompenzace zaměstnavatele na jeden FTE nominálně a v cenách roku 2015",
       nominal: "Nominálně",
       real2015: "V cenách roku 2015",
-      functionTitle: "Kde vzrostla kompenzace",
-      functionUnit: "změna 2015–2024 · mld. Kč",
+      costFunctionKicker: "Úplný nákladový rozpad",
+      functionTitle: "Kam šlo dalších 377,9 mld. Kč",
+      functionUnit: "kompenzace zaměstnanců podle funkce · 2015 → 2024",
+      salaryTitle: "Hrubý měsíční plat ve státní sféře",
+      salaryUnit: "2015 → 2024 · Kč",
       costCaveat: "Funkční rozpad měří růst mzdových nákladů, nikoli počtu lidí: kombinuje více FTE, vyšší platy a příspěvky. Po očištění spotřebitelskou inflací vzrostl průměrný náklad na FTE o 12,5 %.",
       totalCompensation: "Kompenzace celkem",
       monthlyEmployerCost: "Náklad na FTE / měsíc",
@@ -165,10 +181,23 @@
       growthExact: "exact increase",
       growthReadingTitle: "Almost all net growth is government, not corporations",
       growthReadingBody: "General government added {government} FTE while public corporations ended just {corporations} FTE higher. Corporations were not the engine of the decade's growth.",
-      schoolKicker: "Best-documented driver",
+      accountingKicker: "Deepest comparable breakdown",
+      accountingTitle: "The state-regulated sphere added 64,633 employees",
+      accountingIntro: "The same Ministry of Finance table for 2015 and 2024 allocates the change completely. It shows growth in education, security forces and contributory organisations—and a decline in civil state employment.",
+      accountingCaveat: "This breakdown adds exactly inside the state-regulated sphere. It is not a complete decomposition of ESA sector S.13: other public units sit outside this budget return.",
+      stateRegulated: "State-regulated sphere",
+      comparedTotal: "compared total",
+      growthChange: "Change",
+      ofComparedGrowth: "of growth in this view",
+      schoolKicker: "Broader ten-year view",
       schoolTitle: "Regional education: +65,899 FTE",
-      schoolIntro: "A separate Ministry of Education series locates a large part of the growth: schools added 56,743 pedagogical and 9,156 non-pedagogical FTE.",
-      schoolCaveat: "Boundary warning: the education series covers every founder and funding source, including private and church schools. It is strong evidence of a growth driver, not an exact S.13 slice that can simply be subtracted.",
+      schoolIntro: "A separate Ministry of Education series covers every founder: schools added 56,743 pedagogical and 9,156 non-pedagogical FTE.",
+      schoolCaveat: "The series includes public, private and church schools. It confirms the growth driver but cannot be subtracted from sector S.13.",
+      professionKicker: "Inside education",
+      professionTitle: "Which professions grew from 2020 to 2024",
+      professionIntro: "The newer Ministry of Education table splits pedagogical growth into individual professions.",
+      professionCaveat: "School speech therapists were first reported separately in 2024; their 45.4 FTE are therefore not labelled as a net increase.",
+      newlyReported: "newly reported",
       pedagogical: "Pedagogical workers",
       nonpedagogical: "Non-pedagogical workers",
       schoolTotal: "Regional education total",
@@ -179,8 +208,11 @@
       costAria: "Average monthly employer compensation per FTE in nominal and 2015 prices",
       nominal: "Nominal",
       real2015: "In 2015 prices",
-      functionTitle: "Where compensation increased",
-      functionUnit: "change 2015–2024 · CZK bn",
+      costFunctionKicker: "Complete cost breakdown",
+      functionTitle: "Where the additional CZK 377.9bn went",
+      functionUnit: "employee compensation by function · 2015 → 2024",
+      salaryTitle: "Gross monthly pay in the state sphere",
+      salaryUnit: "2015 → 2024 · CZK",
       costCaveat: "The functional split measures growth in employment costs, not people: it combines more FTE, higher pay and contributions. After consumer-price inflation, average cost per FTE increased 12.5%.",
       totalCompensation: "Total compensation",
       monthlyEmployerCost: "Cost per FTE / month",
@@ -424,19 +456,40 @@
   function renderGrowth(data) {
     const growth = data.growth;
     const school = growth.regional_education_evidence;
+    const regulated = growth.state_regulated_comparison;
+    const professions = growth.education_profession_comparison;
     const compensation = data.compensation;
     const cost = compensation.headline;
     const latestCost = compensation.history.at(-1);
+    const itemLabel = (row) => row[lang === "en" ? "label_en" : "label_cs"];
     $("#employment-growth-split").innerHTML = `<div class="employment-growth-donut" style="--government-share:${growth.general_government_share_of_public_growth_pct}" role="img" aria-label="${esc(copy.growthAria)}"><div><strong>${pct(growth.general_government_share_of_public_growth_pct)} %</strong><span>${copy.generalGovernment}</span></div></div><div class="employment-growth-legend"><article><i class="government"></i><div><span>${copy.generalGovernment}</span><strong>+${fmt(growth.general_government_change_fte)}</strong><small>${pct(growth.general_government_share_of_public_growth_pct)} %</small></div></article><article><i class="corporations"></i><div><span>${copy.publicCorporations}</span><strong>+${fmt(growth.public_corporations_change_fte)}</strong><small>${pct(growth.public_corporations_share_of_public_growth_pct)} %</small></div></article></div>`;
     $("#employment-growth-reading").innerHTML = `<span>${copy.growthExact}</span><strong>+${fmt(growth.public_sector_change_fte)}</strong><small>FTE · ${growth.year_from} → ${growth.year_to}</small><h3>${copy.growthReadingTitle}</h3><p>${copy.growthReadingBody.replace("{government}", fmt(growth.general_government_change_fte)).replace("{corporations}", fmt(growth.public_corporations_change_fte))}</p>`;
+
+    const regulatedMax = Math.max(...regulated.components.flatMap((row) => [row.employees_2015, row.employees_2024]));
+    $("#employment-regulated-growth").innerHTML = `<div class="employment-accounting-total"><span>${copy.comparedTotal}</span><strong>${fmt(regulated.employees_from)} <i>→</i> ${fmt(regulated.employees_to)}</strong><b>+${fmt(regulated.change_employees)}</b><small>${copy.average_employees}</small></div><div class="employment-accounting-head"><span></span><b>${regulated.year_from}</b><b>${regulated.year_to}</b><b>${copy.growthChange}</b></div><div class="employment-accounting-rows">${regulated.components.map((row) => `<article class="employment-growth-row ${row.change_employees < 0 ? "negative" : "positive"}"><span>${esc(itemLabel(row))}</span><div class="employment-compare-bar"><i style="width:${row.employees_2015 / regulatedMax * 100}%"></i><b>${fmt(row.employees_2015)}</b></div><div class="employment-compare-bar current"><i style="width:${row.employees_2024 / regulatedMax * 100}%"></i><b>${fmt(row.employees_2024)}</b></div><strong>${signedCount(row.change_employees)}</strong></article>`).join("")}</div>`;
+
     const pedagogicalShare = school.pedagogical_change_fte / school.change_fte * 100;
     const nonpedagogicalShare = 100 - pedagogicalShare;
     $("#employment-school-growth").innerHTML = `<div class="employment-school-total"><span>${copy.schoolTotal}</span><strong>${fmt(school.total_fte_from)} <i>→</i> ${fmt(school.total_fte_to)}</strong><small>+${fmt(school.change_fte)} FTE</small></div><div class="employment-school-bar" aria-label="${esc(copy.schoolTitle)}"><i class="pedagogical" style="width:${pedagogicalShare}%"></i><i class="nonpedagogical" style="width:${nonpedagogicalShare}%"></i></div><div class="employment-school-legend"><article><i class="pedagogical"></i><span>${copy.pedagogical}</span><strong>+${fmt(school.pedagogical_change_fte)}</strong></article><article><i class="nonpedagogical"></i><span>${copy.nonpedagogical}</span><strong>+${fmt(school.nonpedagogical_change_fte)}</strong></article></div>`;
+
+    const professionMax = Math.max(...professions.components.map((row) => row.change_fte || row.fte_2024));
+    $("#employment-profession-growth").innerHTML = `<div class="employment-profession-total"><span>${copy.pedagogical}</span><strong>+${fmtCount(professions.pedagogical_change_fte)} FTE</strong><small>${professions.year_from} → ${professions.year_to}</small></div>${professions.components.map((row) => {
+      const value = row.change_fte === null ? row.fte_2024 : row.change_fte;
+      return `<article class="employment-profession-row ${row.comparison_status}"><div><span>${esc(itemLabel(row))}</span><strong>${row.change_fte === null ? fmtCount(row.fte_2024) : signedCount(row.change_fte)}</strong></div><div class="employment-profession-track"><i style="width:${value / professionMax * 100}%"></i></div><small>${row.change_fte === null ? copy.newlyReported : `${fmtCount(row.fte_2020)} → ${fmtCount(row.fte_2024)}`}</small></article>`;
+    }).join("")}`;
+
     const contributionsShare = latestCost.employer_social_contributions_czk_m / latestCost.compensation_employees_czk_m * 100;
     $("#employment-cost-kpis").innerHTML = `<article class="primary"><span>${copy.totalCompensation}</span><strong>${bn(cost.compensation_2024_czk_m)} <i>${copy.czkBn}</i></strong><small>+${bn(cost.change_czk_m)} ${copy.czkBn} · +${pct(cost.change_pct)} %</small></article><article><span>${copy.monthlyEmployerCost}</span><strong>${fmt(cost.average_monthly_cost_2024_czk)} <i>CZK</i></strong><small>+${pct(cost.average_monthly_cost_change_pct)} % ${copy.versus2015}</small></article><article><span>${copy.realMonthlyCost}</span><strong>${fmt(cost.average_monthly_real_cost_2024_2015_czk)} <i>CZK</i></strong><small>+${pct(cost.average_monthly_real_cost_change_pct)} % · ${copy.in2015Prices}</small></article><article><span>${copy.employerContributions}</span><strong>${bn(latestCost.employer_social_contributions_czk_m)} <i>${copy.czkBn}</i></strong><small>${pct(contributionsShare)} % ${copy.ofCompensation}</small></article>`;
     renderCostChart(compensation.history);
-    const maxFunctionChange = Math.max(...compensation.change_by_function.map((row) => row.change_czk_m));
-    $("#employment-function-growth").innerHTML = [...compensation.change_by_function].sort((a, b) => b.change_czk_m - a.change_czk_m).map((row) => `<article><div><span>${esc(row[lang === "en" ? "label_en" : "label_cs"])}</span><strong>+${bn(row.change_czk_m)}</strong></div><div class="employment-function-track"><i style="width:${row.change_czk_m / maxFunctionChange * 100}%"></i></div><small>${pct(row.share_of_total_change_pct)} %</small></article>`).join("");
+    const functions = [...compensation.change_by_function].sort((a, b) => b.change_czk_m - a.change_czk_m);
+    const total2015 = functions.reduce((sum, row) => sum + row.compensation_2015_czk_m, 0);
+    const total2024 = functions.reduce((sum, row) => sum + row.compensation_2024_czk_m, 0);
+    const functionMax = Math.max(...functions.flatMap((row) => [row.compensation_2015_czk_m, row.compensation_2024_czk_m]));
+    const stack = (year, total) => `<div class="employment-cost-stack-row"><b>${year}</b><div>${functions.map((row, index) => `<i class="tone-${index}" style="width:${row[`compensation_${year}_czk_m`] / total * 100}%" title="${esc(itemLabel(row))}: ${bn(row[`compensation_${year}_czk_m`])} ${copy.czkBn}"></i>`).join("")}</div><strong>${bn(total)} ${copy.czkBn}</strong></div>`;
+    $("#employment-function-growth").innerHTML = `<div class="employment-cost-stacks">${stack(2015, total2015)}${stack(2024, total2024)}</div><div class="employment-cost-function-head"><span></span><b>2015</b><b>2024</b><b>${copy.growthChange}</b></div><div class="employment-cost-function-rows">${functions.map((row, index) => `<article><span><i class="tone-${index}"></i>${esc(itemLabel(row))}</span><div class="employment-cost-pair"><i style="width:${row.compensation_2015_czk_m / functionMax * 100}%"></i><b>${bn(row.compensation_2015_czk_m)}</b></div><div class="employment-cost-pair current"><i style="width:${row.compensation_2024_czk_m / functionMax * 100}%"></i><b>${bn(row.compensation_2024_czk_m)}</b></div><strong>+${bn(row.change_czk_m)}</strong></article>`).join("")}</div>`;
+
+    const salaryMax = Math.max(...regulated.salary_comparison.map((row) => row.gross_monthly_2024_czk));
+    $("#employment-salary-comparison").innerHTML = regulated.salary_comparison.map((row) => `<article><div><span>${esc(itemLabel(row))}</span><strong>+${pct(row.change_pct)} %</strong></div><div class="employment-salary-bars"><i style="width:${row.gross_monthly_2015_czk / salaryMax * 100}%"><b>${fmt(row.gross_monthly_2015_czk)}</b></i><i class="current" style="width:${row.gross_monthly_2024_czk / salaryMax * 100}%"><b>${fmt(row.gross_monthly_2024_czk)}</b></i></div></article>`).join("");
   }
 
   function render(data) {

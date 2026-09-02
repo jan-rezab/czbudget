@@ -33,6 +33,14 @@ SOURCES = [
         "period": "2024",
     },
     {
+        "id": "mf_state_final_account_2015",
+        "publisher": "Ministerstvo financí ČR",
+        "title_cs": "Státní závěrečný účet 2015, tabulky 63–64",
+        "title_en": "State budget final account 2015, tables 63–64",
+        "url": "https://www.mfcr.cz/assets/cs/media/Statni-zaverecny-ucet_2015_Priloha-C.pdf",
+        "period": "2015",
+    },
+    {
         "id": "msmt_regional_education_workforce_2024",
         "publisher": "Ministerstvo školství, mládeže a tělovýchovy",
         "title_cs": "Zaměstnanci a mzdové prostředky v regionálním školství 2024",
@@ -278,6 +286,85 @@ def main() -> None:
     }
     if regional_education_growth["pedagogical_change_fte"] + regional_education_growth["nonpedagogical_change_fte"] != regional_education_growth["change_fte"]:
         raise ValueError("Regional-education growth components do not reconcile")
+
+    state_2015_source = "mf_state_final_account_2015"
+    state_2024_source = "mf_state_final_account_2024"
+    state_other_contributory_2015 = obs(state_2015_source, "state_contributory_organisations", 2015) - obs(state_2015_source, "state_regional_education_budget", 2015)
+    state_other_contributory_2024 = obs(state_2024_source, "state_contributory_organisations") - obs(state_2024_source, "state_regional_education_budget")
+    state_growth_specs = [
+        ("regional_education", "Regionální školství", "Regional education", obs(state_2015_source, "state_regional_education_budget", 2015), obs(state_2024_source, "state_regional_education_budget")),
+        ("uniformed_soldiers", "Příslušníci a vojáci", "Security-force members and soldiers", obs(state_2015_source, "state_uniformed_and_soldiers", 2015), obs(state_2024_source, "state_uniformed_and_soldiers")),
+        ("other_contributory", "Ostatní příspěvkové organizace", "Other contributory organisations", state_other_contributory_2015, state_other_contributory_2024),
+        ("prosecutors", "Státní zástupci a odvozené funkce", "Prosecutors and derived offices", obs(state_2015_source, "state_prosecutors_and_derived", 2015), obs(state_2024_source, "state_prosecutors_and_derived")),
+        ("labour_service", "Zaměstnanci podle zákoníku práce a služebního zákona", "Labour Code and civil-service employees", obs(state_2015_source, "state_employees_labour_service", 2015), obs(state_2024_source, "state_employees_labour_service")),
+    ]
+    state_regulated_components = [{
+        "id": component_id,
+        "label_cs": label_cs,
+        "label_en": label_en,
+        "employees_2015": value_2015,
+        "employees_2024": value_2024,
+        "change_employees": value_2024 - value_2015,
+    } for component_id, label_cs, label_en, value_2015, value_2024 in state_growth_specs]
+    state_regulated_2015 = obs(state_2015_source, "state_organisational_units", 2015) + obs(state_2015_source, "state_contributory_organisations", 2015)
+    state_regulated_2024 = obs(state_2024_source, "state_organisational_units") + obs(state_2024_source, "state_contributory_organisations")
+    state_regulated_change = state_regulated_2024 - state_regulated_2015
+    if sum(row["change_employees"] for row in state_regulated_components) != state_regulated_change:
+        raise ValueError("State-regulated growth components do not reconcile")
+    state_salary_specs = [
+        ("state_organisational", "Organizační složky státu", "State organisational units", "state_organisational_avg_salary_czk"),
+        ("labour_service", "Zaměstnanci ZP a služebního zákona", "Labour Code and civil-service employees", "state_labour_service_avg_salary_czk"),
+        ("uniformed_soldiers", "Příslušníci a vojáci", "Security-force members and soldiers", "state_uniformed_avg_salary_czk"),
+        ("prosecutors", "Státní zástupci a odvozené funkce", "Prosecutors and derived offices", "state_prosecutors_avg_salary_czk"),
+        ("contributory", "Příspěvkové organizace", "Contributory organisations", "state_contributory_avg_salary_czk"),
+        ("regional_education", "Regionální školství", "Regional education", "state_regional_education_avg_salary_czk"),
+    ]
+    state_salary_comparison = [{
+        "id": salary_id,
+        "label_cs": label_cs,
+        "label_en": label_en,
+        "gross_monthly_2015_czk": obs(state_2015_source, series_id, 2015),
+        "gross_monthly_2024_czk": obs(state_2024_source, series_id),
+        "change_pct": round((obs(state_2024_source, series_id) / obs(state_2015_source, series_id, 2015) - 1) * 100, 1),
+    } for salary_id, label_cs, label_en, series_id in state_salary_specs]
+
+    profession_specs = [
+        ("teachers", "Učitelé", "Teachers"),
+        ("assistants", "Asistenti pedagoga", "Teaching assistants"),
+        ("educators", "Vychovatelé", "Educators"),
+        ("vocational", "Učitelé odborného výcviku", "Vocational-training teachers"),
+        ("special", "Speciální pedagogové", "Special pedagogues"),
+        ("psychologists", "Psychologové", "Psychologists"),
+        ("other", "Ostatní pedagogové", "Other pedagogical workers"),
+        ("coaches", "Trenéři", "Coaches"),
+        ("speech", "Školští logopedi", "School speech therapists"),
+    ]
+    education_profession_components = []
+    for profession_id, label_cs, label_en in profession_specs:
+        previous_key = ("msmt_education_statistics_2024", f"education_profession_{profession_id}", 2020)
+        current_value = obs("msmt_education_statistics_2024", f"education_profession_{profession_id}")
+        previous_value = observation.get(previous_key)
+        education_profession_components.append({
+            "id": profession_id,
+            "label_cs": label_cs,
+            "label_en": label_en,
+            "fte_2020": previous_value,
+            "fte_2024": current_value,
+            "change_fte": round(current_value - previous_value, 1) if previous_value is not None else None,
+            "comparison_status": "comparable" if previous_value is not None else "newly_reported",
+        })
+    known_profession_change = sum(row["change_fte"] for row in education_profession_components if row["change_fte"] is not None)
+    education_profession_growth = {
+        "year_from": 2020,
+        "year_to": 2024,
+        "total_fte_from": obs("msmt_education_statistics_2024", "education_profession_pedagogical", 2020) + obs("msmt_education_statistics_2024", "education_profession_nonpedagogical", 2020),
+        "total_fte_to": obs("msmt_education_statistics_2024", "education_profession_pedagogical") + obs("msmt_education_statistics_2024", "education_profession_nonpedagogical"),
+        "pedagogical_change_fte": round(obs("msmt_education_statistics_2024", "education_profession_pedagogical") - obs("msmt_education_statistics_2024", "education_profession_pedagogical", 2020), 1),
+        "nonpedagogical_change_fte": round(obs("msmt_education_statistics_2024", "education_profession_nonpedagogical") - obs("msmt_education_statistics_2024", "education_profession_nonpedagogical", 2020), 1),
+        "known_profession_change_fte": round(known_profession_change, 1),
+        "components": education_profession_components,
+        "source_ids": ["msmt_education_statistics_2024"],
+    }
 
     strategic = json.loads(STRATEGIC.read_text(encoding="utf-8"))
     coverage = json.loads(COVERAGE.read_text(encoding="utf-8"))["countries"]["CZE"]
@@ -531,7 +618,7 @@ def main() -> None:
     first_cost = compensation_history[0]
     latest_cost = compensation_history[-1]
     payload = {
-        "schema_version": "1.2.0",
+        "schema_version": "1.3.0",
         "dataset_id": "CZE_PUBLIC_EMPLOYMENT_OBSERVATORY",
         "country_code": "CZE",
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -556,7 +643,21 @@ def main() -> None:
             "public_corporations_change_fte": corporation_change,
             "general_government_share_of_public_growth_pct": round(government_change / (latest["public_sector_fte"] - first["public_sector_fte"]) * 100, 1),
             "public_corporations_share_of_public_growth_pct": round(corporation_change / (latest["public_sector_fte"] - first["public_sector_fte"]) * 100, 1),
+            "state_regulated_comparison": {
+                "year_from": 2015,
+                "year_to": 2024,
+                "employees_from": state_regulated_2015,
+                "employees_to": state_regulated_2024,
+                "change_employees": state_regulated_change,
+                "share_of_public_sector_change_pct": round(state_regulated_change / (latest["public_sector_fte"] - first["public_sector_fte"]) * 100, 1),
+                "unit": "average_employees",
+                "components": state_regulated_components,
+                "salary_comparison": state_salary_comparison,
+                "source_ids": [state_2015_source, state_2024_source],
+                "scope": "A fully additive comparison inside the Ministry of Finance state-regulated perimeter. It is not a complete decomposition of ESA S.13 and must not be subtracted from general government.",
+            },
             "regional_education_evidence": regional_education_growth,
+            "education_profession_comparison": education_profession_growth,
         },
         "compensation": {
             "definition": "D.1 compensation of employees: wages and salaries plus employers' social contributions. It is an employer cost, not take-home pay.",

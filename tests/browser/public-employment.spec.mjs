@@ -24,9 +24,18 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator("#employment-growth-split")).toContainText(number(dataset.growth.general_government_change_fte));
   await expect(page.locator("#employment-growth-split")).toContainText(number(dataset.growth.public_corporations_change_fte));
   await expect(page.locator("#employment-school-growth")).toContainText(number(dataset.growth.regional_education_evidence.change_fte));
+  await expect(page.locator("#employment-regulated-growth .employment-growth-row")).toHaveCount(dataset.growth.state_regulated_comparison.components.length);
+  await expect(page.locator("#employment-regulated-growth")).toContainText("+64,633");
+  await expect(page.locator("#employment-regulated-growth")).toContainText("+58,347");
+  await expect(page.locator("#employment-regulated-growth")).toContainText("-2,130");
+  await expect(page.locator("#employment-profession-growth .employment-profession-row")).toHaveCount(dataset.growth.education_profession_comparison.components.length);
+  await expect(page.locator("#employment-profession-growth")).toContainText("Teaching assistants");
+  await expect(page.locator("#employment-profession-growth")).toContainText("+9,139.2");
   await expect(page.locator("#employment-cost-kpis")).toContainText(number(dataset.compensation.headline.average_monthly_cost_2024_czk));
   await expect(page.locator("#employment-cost-chart svg")).toBeVisible();
-  await expect(page.locator("#employment-function-growth > article")).toHaveCount(dataset.compensation.change_by_function.length);
+  await expect(page.locator("#employment-function-growth .employment-cost-function-rows > article")).toHaveCount(dataset.compensation.change_by_function.length);
+  await expect(page.locator("#employment-function-growth .employment-cost-stack-row")).toHaveCount(2);
+  await expect(page.locator("#employment-salary-comparison > article")).toHaveCount(dataset.growth.state_regulated_comparison.salary_comparison.length);
   await expect(page.locator("#employment-scope-tabs > button")).toHaveCount(dataset.employment_explorer.scopes.length);
   await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.general_government_fte));
   await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.public_corporations_combined_fte));
@@ -36,6 +45,8 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator("#employment-entity-status")).toContainText(number(dataset.entity_resolution.entities_with_employee_observation));
   expect(latest.public_sector_fte).toBe(latest.general_government_fte + latest.public_corporations_combined_fte);
   expect(dataset.growth.public_sector_change_fte).toBe(dataset.growth.general_government_change_fte + dataset.growth.public_corporations_change_fte);
+  expect(dataset.growth.state_regulated_comparison.components.reduce((sum, row) => sum + row.change_employees, 0)).toBe(dataset.growth.state_regulated_comparison.change_employees);
+  expect(dataset.compensation.change_by_function.reduce((sum, row) => sum + row.change_czk_m, 0)).toBe(dataset.compensation.headline.change_czk_m);
   expect(dataset.compensation.history.every((row) => row.compensation_employees_czk_m === row.wages_salaries_czk_m + row.employer_social_contributions_czk_m)).toBe(true);
   expect(datasetRequests).toHaveLength(1);
   expect(new URL(datasetRequests[0]).searchParams.get("v")).toBe(dataset.schema_version);
