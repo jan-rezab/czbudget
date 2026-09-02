@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "dataset_id": "CZE_PUBLIC_EMPLOYMENT_OBSERVATORY",
   "country_code": "CZE",
-  "generated_at": "2026-09-02T10:00:45+00:00",
+  "generated_at": "2026-09-02T10:57:19+00:00",
   "period": {
     "from": 2015,
     "to": 2024,
@@ -376,6 +376,1465 @@
       }
     ]
   },
+  "employment_explorer": {
+    "default_scope_id": "state_regulated",
+    "rule": "Values add only inside the currently selected tree. The six trees overlap and must never be summed together.",
+    "scopes": [
+      {
+        "id": "public_sector",
+        "label_cs": "Celý veřejný sektor",
+        "label_en": "Whole public sector",
+        "coverage_status": "control_total",
+        "source_ids": [
+          "czso_public_sector_satellite_account_2024"
+        ],
+        "root": {
+          "id": "public_sector",
+          "label_cs": "Veřejný sektor",
+          "label_en": "Public sector",
+          "value": 1112290,
+          "unit": "FTE",
+          "source_id": "czso_public_sector_satellite_account_2024",
+          "status": "official",
+          "children": [
+            {
+              "id": "general_government",
+              "label_cs": "Vládní instituce",
+              "label_en": "General government",
+              "value": 947878,
+              "unit": "FTE",
+              "source_id": "czso_public_sector_satellite_account_2024",
+              "status": "official",
+              "details": {
+                "previous_year": 2015,
+                "previous_value": 827904
+              },
+              "note_cs": "Detailnější zdrojové řezy se překrývají; otevřete další pohledy místo jejich sčítání.",
+              "note_en": "Deeper source views overlap; open the other views instead of adding them."
+            },
+            {
+              "id": "public_corporations",
+              "label_cs": "Veřejné korporace",
+              "label_en": "Public corporations",
+              "value": 164412,
+              "unit": "FTE",
+              "source_id": "czso_public_sector_satellite_account_2024",
+              "status": "derived",
+              "details": {
+                "previous_year": 2015,
+                "previous_value": 162642,
+                "reference_year": 2023,
+                "public_nonfinancial_fte": 162269,
+                "public_financial_fte": 1662
+              },
+              "note_cs": "Rok 2024 je přesný reziduál. Samostatné složky jsou naposledy oficiálně dostupné za 2023.",
+              "note_en": "The 2024 figure is the exact residual. Separate components were last published for 2023."
+            }
+          ],
+          "details": {
+            "previous_year": 2015,
+            "previous_value": 990546
+          }
+        }
+      },
+      {
+        "id": "state_regulated",
+        "label_cs": "Státní sféra",
+        "label_en": "State-regulated sphere",
+        "coverage_status": "official",
+        "source_ids": [
+          "mf_state_final_account_2024"
+        ],
+        "root": {
+          "id": "state_regulated",
+          "label_cs": "Vládou regulovaná sféra",
+          "label_en": "State-regulated sphere",
+          "value": 487078,
+          "unit": "average_employees",
+          "source_id": "mf_state_final_account_2024",
+          "status": "official",
+          "children": [
+            {
+              "id": "state_organisational",
+              "label_cs": "Organizační složky státu",
+              "label_en": "State organisational units",
+              "value": 195689,
+              "unit": "average_employees",
+              "source_id": "mf_state_final_account_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "state_labour_service",
+                  "label_cs": "Zaměstnanci podle zákoníku práce a služebního zákona",
+                  "label_en": "Labour Code and civil-service employees",
+                  "value": 105458,
+                  "unit": "average_employees",
+                  "source_id": "mf_state_final_account_2024",
+                  "status": "official",
+                  "details": {
+                    "previous_year": 2023,
+                    "previous_value": 108108,
+                    "average_monthly_gross_czk": 44245,
+                    "previous_average_monthly_gross_czk": 43077
+                  }
+                },
+                {
+                  "id": "state_uniformed",
+                  "label_cs": "Příslušníci bezpečnostních sborů a vojáci",
+                  "label_en": "Security-force members and soldiers",
+                  "value": 88946,
+                  "unit": "average_employees",
+                  "source_id": "mf_state_final_account_2024",
+                  "status": "official",
+                  "details": {
+                    "previous_year": 2023,
+                    "previous_value": 88013,
+                    "average_monthly_gross_czk": 52688,
+                    "previous_average_monthly_gross_czk": 52420
+                  }
+                },
+                {
+                  "id": "state_prosecutors",
+                  "label_cs": "Státní zástupci a odvozené funkce",
+                  "label_en": "Prosecutors and derived offices",
+                  "value": 1285,
+                  "unit": "average_employees",
+                  "source_id": "mf_state_final_account_2024",
+                  "status": "official",
+                  "details": {
+                    "previous_year": 2023,
+                    "previous_value": 1296,
+                    "average_monthly_gross_czk": 146715,
+                    "previous_average_monthly_gross_czk": 144873
+                  }
+                }
+              ],
+              "details": {
+                "previous_year": 2023,
+                "previous_value": 197417,
+                "average_monthly_gross_czk": 48756,
+                "previous_average_monthly_gross_czk": 47911
+              }
+            },
+            {
+              "id": "state_contributory",
+              "label_cs": "Příspěvkové organizace",
+              "label_en": "Contributory organisations",
+              "value": 291389,
+              "unit": "average_employees",
+              "source_id": "mf_state_final_account_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "state_regional_education",
+                  "label_cs": "Regionální školství v regulované sféře",
+                  "label_en": "Regional education in the regulated sphere",
+                  "value": 276856,
+                  "unit": "average_employees",
+                  "source_id": "mf_state_final_account_2024",
+                  "status": "official",
+                  "details": {
+                    "previous_year": 2023,
+                    "previous_value": 272007,
+                    "average_monthly_gross_czk": 42968,
+                    "previous_average_monthly_gross_czk": 42065
+                  }
+                },
+                {
+                  "id": "state_other_contributory",
+                  "label_cs": "Ostatní příspěvkové organizace",
+                  "label_en": "Other contributory organisations",
+                  "value": 14533,
+                  "unit": "average_employees",
+                  "source_id": "mf_state_final_account_2024",
+                  "status": "derived",
+                  "details": {
+                    "previous_year": 2023,
+                    "previous_value": 14704
+                  },
+                  "note_cs": "Dopočet: všechny příspěvkové organizace minus regionální školství.",
+                  "note_en": "Derived as all contributory organisations minus regional education."
+                }
+              ],
+              "details": {
+                "previous_year": 2023,
+                "previous_value": 286711,
+                "average_monthly_gross_czk": 42978,
+                "previous_average_monthly_gross_czk": 42027
+              }
+            }
+          ],
+          "details": {
+            "previous_year": 2023,
+            "previous_value": 484128
+          }
+        }
+      },
+      {
+        "id": "education_professions",
+        "label_cs": "Školství · profese",
+        "label_en": "Education · professions",
+        "coverage_status": "official",
+        "source_ids": [
+          "msmt_education_statistics_2024"
+        ],
+        "root": {
+          "id": "education_professions",
+          "label_cs": "Regionální školství podle profesí",
+          "label_en": "Regional education by profession",
+          "value": 301048,
+          "unit": "FTE",
+          "source_id": "msmt_education_statistics_2024",
+          "status": "official",
+          "children": [
+            {
+              "id": "education_pedagogical",
+              "label_cs": "Pedagogičtí pracovníci",
+              "label_en": "Pedagogical workers",
+              "value": 220607,
+              "unit": "FTE",
+              "source_id": "msmt_education_statistics_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "education_teachers",
+                  "label_cs": "Učitelé",
+                  "label_en": "Teachers",
+                  "value": 161069,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 50651,
+                    "previous_year": 2020,
+                    "previous_value": 145765.4
+                  }
+                },
+                {
+                  "id": "education_educators",
+                  "label_cs": "Vychovatelé",
+                  "label_en": "Educators",
+                  "value": 17347.6,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 41381,
+                    "previous_year": 2020,
+                    "previous_value": 15671.1
+                  }
+                },
+                {
+                  "id": "education_vocational",
+                  "label_cs": "Učitelé odborného výcviku",
+                  "label_en": "Vocational-training teachers",
+                  "value": 6764.3,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 45327,
+                    "previous_year": 2020,
+                    "previous_value": 5803.4
+                  }
+                },
+                {
+                  "id": "education_assistants",
+                  "label_cs": "Asistenti pedagoga",
+                  "label_en": "Teaching assistants",
+                  "value": 28970.4,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 31129,
+                    "previous_year": 2020,
+                    "previous_value": 19831.2
+                  }
+                },
+                {
+                  "id": "education_special",
+                  "label_cs": "Speciální pedagogové",
+                  "label_en": "Special pedagogues",
+                  "value": 2515.5,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 48093,
+                    "previous_year": 2020,
+                    "previous_value": 1959.5
+                  }
+                },
+                {
+                  "id": "education_speech",
+                  "label_cs": "Školští logopedi",
+                  "label_en": "School speech therapists",
+                  "value": 45.4,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 48765
+                  }
+                },
+                {
+                  "id": "education_psychologists",
+                  "label_cs": "Psychologové",
+                  "label_en": "Psychologists",
+                  "value": 1608.3,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 47676,
+                    "previous_year": 2020,
+                    "previous_value": 1285
+                  }
+                },
+                {
+                  "id": "education_coaches",
+                  "label_cs": "Trenéři",
+                  "label_en": "Coaches",
+                  "value": 194.7,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 47479,
+                    "previous_year": 2020,
+                    "previous_value": 177.4
+                  }
+                },
+                {
+                  "id": "education_other",
+                  "label_cs": "Ostatní pedagogové",
+                  "label_en": "Other pedagogical workers",
+                  "value": 2091.7,
+                  "unit": "FTE",
+                  "source_id": "msmt_education_statistics_2024",
+                  "status": "official",
+                  "details": {
+                    "average_monthly_gross_czk": 46335,
+                    "previous_year": 2020,
+                    "previous_value": 1970.3
+                  }
+                }
+              ],
+              "details": {
+                "previous_year": 2020,
+                "previous_value": 192463.4,
+                "average_monthly_gross_czk": 47100
+              },
+              "note_cs": "Součet profesí se kvůli zaokrouhlení zdroje liší od celku o 0,1 FTE.",
+              "note_en": "Published profession rows differ from the total by 0.1 FTE because of rounding."
+            },
+            {
+              "id": "education_nonpedagogical",
+              "label_cs": "Nepedagogičtí zaměstnanci",
+              "label_en": "Non-pedagogical workers",
+              "value": 80441,
+              "unit": "FTE",
+              "source_id": "msmt_education_statistics_2024",
+              "status": "official",
+              "details": {
+                "previous_year": 2020,
+                "previous_value": 76735.9,
+                "average_monthly_gross_czk": 30266
+              }
+            }
+          ],
+          "details": {
+            "previous_year": 2020,
+            "previous_value": 269199.3
+          }
+        }
+      },
+      {
+        "id": "education_school_types",
+        "label_cs": "Školství · typ školy",
+        "label_en": "Education · school type",
+        "coverage_status": "official",
+        "source_ids": [
+          "msmt_regional_education_workforce_2024"
+        ],
+        "root": {
+          "id": "education_school_types",
+          "label_cs": "Regionální školství podle druhu školy",
+          "label_en": "Regional education by school type",
+          "value": 301048,
+          "unit": "FTE",
+          "source_id": "msmt_regional_education_workforce_2024",
+          "status": "official",
+          "children": [
+            {
+              "id": "school_nursery",
+              "label_cs": "Mateřské školy",
+              "label_en": "Nursery schools",
+              "value": 53235,
+              "unit": "FTE",
+              "source_id": "msmt_regional_education_workforce_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "school_nursery_pedagogical",
+                  "label_cs": "Pedagogičtí",
+                  "label_en": "Pedagogical",
+                  "value": 41867,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                },
+                {
+                  "id": "school_nursery_nonpedagogical",
+                  "label_cs": "Nepedagogičtí",
+                  "label_en": "Non-pedagogical",
+                  "value": 11368,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                }
+              ]
+            },
+            {
+              "id": "school_primary",
+              "label_cs": "Základní školy",
+              "label_en": "Primary schools",
+              "value": 119161,
+              "unit": "FTE",
+              "source_id": "msmt_regional_education_workforce_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "school_primary_pedagogical",
+                  "label_cs": "Pedagogičtí",
+                  "label_en": "Pedagogical",
+                  "value": 98498,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                },
+                {
+                  "id": "school_primary_nonpedagogical",
+                  "label_cs": "Nepedagogičtí",
+                  "label_en": "Non-pedagogical",
+                  "value": 20663,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                }
+              ]
+            },
+            {
+              "id": "school_secondary",
+              "label_cs": "Střední školy",
+              "label_en": "Secondary schools",
+              "value": 56636,
+              "unit": "FTE",
+              "source_id": "msmt_regional_education_workforce_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "school_secondary_pedagogical",
+                  "label_cs": "Pedagogičtí",
+                  "label_en": "Pedagogical",
+                  "value": 45491,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                },
+                {
+                  "id": "school_secondary_nonpedagogical",
+                  "label_cs": "Nepedagogičtí",
+                  "label_en": "Non-pedagogical",
+                  "value": 11145,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                }
+              ]
+            },
+            {
+              "id": "school_conservatory",
+              "label_cs": "Konzervatoře",
+              "label_en": "Conservatories",
+              "value": 1241,
+              "unit": "FTE",
+              "source_id": "msmt_regional_education_workforce_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "school_conservatory_pedagogical",
+                  "label_cs": "Pedagogičtí",
+                  "label_en": "Pedagogical",
+                  "value": 1038,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                },
+                {
+                  "id": "school_conservatory_nonpedagogical",
+                  "label_cs": "Nepedagogičtí",
+                  "label_en": "Non-pedagogical",
+                  "value": 203,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                }
+              ]
+            },
+            {
+              "id": "school_vocational",
+              "label_cs": "Vyšší odborné školy",
+              "label_en": "Higher vocational schools",
+              "value": 1182,
+              "unit": "FTE",
+              "source_id": "msmt_regional_education_workforce_2024",
+              "status": "official",
+              "children": [
+                {
+                  "id": "school_vocational_pedagogical",
+                  "label_cs": "Pedagogičtí",
+                  "label_en": "Pedagogical",
+                  "value": 886,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                },
+                {
+                  "id": "school_vocational_nonpedagogical",
+                  "label_cs": "Nepedagogičtí",
+                  "label_en": "Non-pedagogical",
+                  "value": 296,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "official"
+                }
+              ]
+            },
+            {
+              "id": "school_other",
+              "label_cs": "Ostatní školy a školská zařízení",
+              "label_en": "Other schools and school facilities",
+              "value": 69593,
+              "unit": "FTE",
+              "source_id": "msmt_regional_education_workforce_2024",
+              "status": "derived",
+              "children": [
+                {
+                  "id": "school_other_pedagogical",
+                  "label_cs": "Pedagogičtí",
+                  "label_en": "Pedagogical",
+                  "value": 32827,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "derived"
+                },
+                {
+                  "id": "school_other_nonpedagogical",
+                  "label_cs": "Nepedagogičtí",
+                  "label_en": "Non-pedagogical",
+                  "value": 36766,
+                  "unit": "FTE",
+                  "source_id": "msmt_regional_education_workforce_2024",
+                  "status": "derived"
+                }
+              ],
+              "note_cs": "Dopočet do celku zahrnuje zejména školská zařízení a další druhy škol neuvedené samostatně v tomto zjednodušeném řezu.",
+              "note_en": "Residual to the published total, covering mainly school facilities and school types not shown separately in this simplified cut."
+            }
+          ]
+        }
+      },
+      {
+        "id": "local_administration",
+        "label_cs": "Samospráva",
+        "label_en": "Local administration",
+        "coverage_status": "partial",
+        "source_ids": [
+          "mv_local_government_employment_2024"
+        ],
+        "root": {
+          "id": "local_administration",
+          "label_cs": "Správa obcí, Prahy a krajů",
+          "label_en": "Municipal, Prague and regional administration",
+          "value": 83450,
+          "unit": "FTE",
+          "source_id": "mv_local_government_employment_2024",
+          "status": "partial",
+          "children": [
+            {
+              "id": "local_extended_authority",
+              "label_cs": "Obce s rozšířenou působností",
+              "label_en": "Municipalities with extended competence",
+              "value": 42383,
+              "unit": "FTE",
+              "source_id": "mv_local_government_employment_2024",
+              "status": "partial",
+              "details": {
+                "persons_during_year": 49325,
+                "men_persons": 15443,
+                "women_persons": 33882,
+                "payroll_czk_m": 22130,
+                "leaders": 7171
+              }
+            },
+            {
+              "id": "local_delegated_authority",
+              "label_cs": "Obce s pověřeným obecním úřadem",
+              "label_en": "Municipalities with an authorised office",
+              "value": 6682,
+              "unit": "FTE",
+              "source_id": "mv_local_government_employment_2024",
+              "status": "partial",
+              "details": {
+                "persons_during_year": 7911,
+                "men_persons": 2838,
+                "women_persons": 5073,
+                "payroll_czk_m": 3210,
+                "leaders": 1386
+              }
+            },
+            {
+              "id": "local_basic_authority",
+              "label_cs": "Obce se základní působností",
+              "label_en": "Municipalities with basic competence",
+              "value": 20872,
+              "unit": "FTE",
+              "source_id": "mv_local_government_employment_2024",
+              "status": "partial",
+              "details": {
+                "persons_during_year": 26053,
+                "men_persons": 11463,
+                "women_persons": 14590,
+                "payroll_czk_m": 8600,
+                "leaders": 1807
+              }
+            },
+            {
+              "id": "local_prague",
+              "label_cs": "Hlavní město Praha",
+              "label_en": "Capital City of Prague",
+              "value": 6783.5,
+              "unit": "FTE",
+              "source_id": "mv_local_government_employment_2024",
+              "status": "partial",
+              "details": {
+                "persons_during_year": 7990,
+                "men_persons": 2073,
+                "women_persons": 5917,
+                "payroll_czk_m": 4690,
+                "leaders": 1342
+              }
+            },
+            {
+              "id": "local_regions",
+              "label_cs": "Kraje",
+              "label_en": "Regional authorities",
+              "value": 6729.5,
+              "unit": "FTE",
+              "source_id": "mv_local_government_employment_2024",
+              "status": "partial",
+              "details": {
+                "persons_during_year": 7731,
+                "men_persons": 2072,
+                "women_persons": 5659,
+                "payroll_czk_m": 4280,
+                "leaders": 970
+              }
+            }
+          ],
+          "details": {
+            "persons_during_year": 99010,
+            "men_persons": 33889,
+            "women_persons": 65121,
+            "payroll_czk_m": 42910,
+            "leaders": 12676
+          },
+          "note_cs": "Částečné pokrytí: do přehledu o obcích vstoupilo 3 741 z 6 254 obcí; Praha a kraje jsou uvedeny zvlášť.",
+          "note_en": "Partial coverage: the municipal return covers 3,741 of 6,254 municipalities; Prague and regional authorities are shown separately."
+        }
+      },
+      {
+        "id": "strategic_entities",
+        "label_cs": "Veřejné podniky",
+        "label_en": "Public corporations",
+        "coverage_status": "portfolio",
+        "source_ids": [
+          "mf_strategic_entities_2024"
+        ],
+        "root": {
+          "id": "strategic_entities",
+          "label_cs": "Strategické společnosti a organizace",
+          "label_en": "Strategic companies and organisations",
+          "value": 84308,
+          "unit": "persons",
+          "source_id": "mf_strategic_entities_2024",
+          "status": "official",
+          "children": [
+            {
+              "id": "strategic_transport",
+              "label_cs": "Doprava a infrastruktura",
+              "label_en": "Transport and infrastructure",
+              "value": 36385,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_70994234",
+                  "label_cs": "Správa železnic, státní organizace",
+                  "label_en": "Správa železnic, státní organizace",
+                  "value": 16872,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "70994234",
+                    "turnover_czk_m": 36179,
+                    "assets_czk_m": 52984,
+                    "net_result_czk_m": -1677,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 4742
+                  }
+                },
+                {
+                  "id": "entity_70994226",
+                  "label_cs": "České dráhy, a.s.",
+                  "label_en": "České dráhy, a.s.",
+                  "value": 13183,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "70994226",
+                    "turnover_czk_m": 36841,
+                    "assets_czk_m": 113765,
+                    "net_result_czk_m": 2109,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 3802
+                  }
+                },
+                {
+                  "id": "entity_28244532",
+                  "label_cs": "Letiště Praha, a. s.",
+                  "label_en": "Letiště Praha, a. s.",
+                  "value": 2942,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "28244532",
+                    "turnover_czk_m": 9528,
+                    "assets_czk_m": 39880,
+                    "net_result_czk_m": 2471,
+                    "owner_transfer_czk_m": 305,
+                    "women_persons": 947
+                  }
+                },
+                {
+                  "id": "entity_65993390",
+                  "label_cs": "Ředitelství silnic a dálnic s. p.",
+                  "label_en": "Ředitelství silnic a dálnic s. p.",
+                  "value": 2398,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "65993390",
+                    "turnover_czk_m": 20833,
+                    "assets_czk_m": 29253,
+                    "net_result_czk_m": 3917,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 849
+                  }
+                },
+                {
+                  "id": "entity_49710371",
+                  "label_cs": "Řízení letového provozu České republiky, státní podnik",
+                  "label_en": "Řízení letového provozu České republiky, státní podnik",
+                  "value": 990,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "49710371",
+                    "turnover_czk_m": 4886,
+                    "assets_czk_m": 6633,
+                    "net_result_czk_m": 294,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 283
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_public_services",
+              "label_cs": "Digitální a veřejné služby",
+              "label_en": "Digital and public services",
+              "value": 20832,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_47114983",
+                  "label_cs": "Česká pošta, s.p.",
+                  "label_en": "Česká pošta, s.p.",
+                  "value": 19702,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "47114983",
+                    "turnover_czk_m": 18463,
+                    "assets_czk_m": 18047,
+                    "net_result_czk_m": -1249,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 14047
+                  }
+                },
+                {
+                  "id": "entity_04767543",
+                  "label_cs": "Národní agentura pro komunikační a informační technologie, s. p.",
+                  "label_en": "Národní agentura pro komunikační a informační technologie, s. p.",
+                  "value": 533,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "04767543",
+                    "turnover_czk_m": 1586,
+                    "assets_czk_m": 990,
+                    "net_result_czk_m": 8,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 145
+                  }
+                },
+                {
+                  "id": "entity_00001279",
+                  "label_cs": "Státní tiskárna cenin, s. p.",
+                  "label_en": "Státní tiskárna cenin, s. p.",
+                  "value": 359,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "00001279",
+                    "turnover_czk_m": 1642,
+                    "assets_czk_m": 3680,
+                    "net_result_czk_m": 340,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 158
+                  }
+                },
+                {
+                  "id": "entity_03630919",
+                  "label_cs": "Státní pokladna Centrum sdílených služeb, s. p.",
+                  "label_en": "Státní pokladna Centrum sdílených služeb, s. p.",
+                  "value": 238,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "03630919",
+                    "turnover_czk_m": 756,
+                    "assets_czk_m": 1953,
+                    "net_result_czk_m": 7,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 65
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_natural_resources",
+              "label_cs": "Přírodní zdroje a sanace",
+              "label_en": "Natural resources and remediation",
+              "value": 9554,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_42196451",
+                  "label_cs": "Lesy České republiky, s.p.",
+                  "label_en": "Lesy České republiky, s.p.",
+                  "value": 3815,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "42196451",
+                    "turnover_czk_m": 18316,
+                    "assets_czk_m": 74014,
+                    "net_result_czk_m": 4740,
+                    "owner_transfer_czk_m": 3500,
+                    "women_persons": 952
+                  }
+                },
+                {
+                  "id": "entity_00002739",
+                  "label_cs": "DIAMO, státní podnik",
+                  "label_en": "DIAMO, státní podnik",
+                  "value": 3175,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "00002739",
+                    "turnover_czk_m": 5416,
+                    "assets_czk_m": 5487,
+                    "net_result_czk_m": -120,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 719
+                  }
+                },
+                {
+                  "id": "entity_00000205",
+                  "label_cs": "Vojenské lesy a statky ČR, s.p.",
+                  "label_en": "Vojenské lesy a statky ČR, s.p.",
+                  "value": 2564,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "00000205",
+                    "turnover_czk_m": 3186,
+                    "assets_czk_m": 10577,
+                    "net_result_czk_m": 279,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 745
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_energy",
+              "label_cs": "Energetika",
+              "label_en": "Energy",
+              "value": 8502,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_45274649",
+                  "label_cs": "ČEZ, a. s.",
+                  "label_en": "ČEZ, a. s.",
+                  "value": 6698,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "45274649",
+                    "turnover_czk_m": 191576,
+                    "assets_czk_m": 692641,
+                    "net_result_czk_m": 19685,
+                    "owner_transfer_czk_m": 19521,
+                    "women_persons": 1447
+                  }
+                },
+                {
+                  "id": "entity_60193531",
+                  "label_cs": "ČEPRO, a.s.",
+                  "label_en": "ČEPRO, a.s.",
+                  "value": 892,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "60193531",
+                    "turnover_czk_m": 76836,
+                    "assets_czk_m": 22147,
+                    "net_result_czk_m": 1779,
+                    "owner_transfer_czk_m": 832,
+                    "women_persons": 176
+                  }
+                },
+                {
+                  "id": "entity_25702556",
+                  "label_cs": "ČEPS, a.s.",
+                  "label_en": "ČEPS, a.s.",
+                  "value": 708,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "25702556",
+                    "turnover_czk_m": 83402,
+                    "assets_czk_m": 90621,
+                    "net_result_czk_m": 7025,
+                    "owner_transfer_czk_m": 2000,
+                    "women_persons": 159
+                  }
+                },
+                {
+                  "id": "entity_60193468",
+                  "label_cs": "MERO ČR, a.s.",
+                  "label_en": "MERO ČR, a.s.",
+                  "value": 119,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "60193468",
+                    "turnover_czk_m": 2627,
+                    "assets_czk_m": 10418,
+                    "net_result_czk_m": 682,
+                    "owner_transfer_czk_m": 1330,
+                    "women_persons": 30
+                  }
+                },
+                {
+                  "id": "entity_26463318",
+                  "label_cs": "OTE, a.s.",
+                  "label_en": "OTE, a.s.",
+                  "value": 85,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "26463318",
+                    "turnover_czk_m": 152771,
+                    "assets_czk_m": 26132,
+                    "net_result_czk_m": 25,
+                    "owner_transfer_czk_m": 3,
+                    "women_persons": 36
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_water",
+              "label_cs": "Vodní hospodářství",
+              "label_en": "Water management",
+              "value": 3412,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_70889953",
+                  "label_cs": "Povodí Vltavy, státní podnik",
+                  "label_en": "Povodí Vltavy, státní podnik",
+                  "value": 857,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "70889953",
+                    "turnover_czk_m": 1592,
+                    "assets_czk_m": 9435,
+                    "net_result_czk_m": 131,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 327
+                  }
+                },
+                {
+                  "id": "entity_70890005",
+                  "label_cs": "Povodí Labe, státní podnik",
+                  "label_en": "Povodí Labe, státní podnik",
+                  "value": 830,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "70890005",
+                    "turnover_czk_m": 1353,
+                    "assets_czk_m": 5846,
+                    "net_result_czk_m": 46,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 207
+                  }
+                },
+                {
+                  "id": "entity_70890013",
+                  "label_cs": "Povodí Moravy, s.p.",
+                  "label_en": "Povodí Moravy, s.p.",
+                  "value": 695,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "70890013",
+                    "turnover_czk_m": 1103,
+                    "assets_czk_m": 6119,
+                    "net_result_czk_m": -14,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 192
+                  }
+                },
+                {
+                  "id": "entity_70889988",
+                  "label_cs": "Povodí Ohře, státní podnik",
+                  "label_en": "Povodí Ohře, státní podnik",
+                  "value": 597,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "70889988",
+                    "turnover_czk_m": 1168,
+                    "assets_czk_m": 5987,
+                    "net_result_czk_m": 162,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 216
+                  }
+                },
+                {
+                  "id": "entity_70890021",
+                  "label_cs": "Povodí Odry, státní podnik",
+                  "label_en": "Povodí Odry, státní podnik",
+                  "value": 433,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "70890021",
+                    "turnover_czk_m": 792,
+                    "assets_czk_m": 5220,
+                    "net_result_czk_m": -9,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 153
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_defence",
+              "label_cs": "Obrana a strategický průmysl",
+              "label_en": "Defence and strategic industry",
+              "value": 2695,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_00000515",
+                  "label_cs": "LOM PRAHA s.p.",
+                  "label_en": "LOM PRAHA s.p.",
+                  "value": 758,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "00000515",
+                    "turnover_czk_m": 2204,
+                    "assets_czk_m": 3935,
+                    "net_result_czk_m": 49,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 127
+                  }
+                },
+                {
+                  "id": "entity_25291581",
+                  "label_cs": "Explosia a.s.",
+                  "label_en": "Explosia a.s.",
+                  "value": 615,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "25291581",
+                    "turnover_czk_m": 1831,
+                    "assets_czk_m": 2702,
+                    "net_result_czk_m": 442,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 182
+                  }
+                },
+                {
+                  "id": "entity_00000493",
+                  "label_cs": "VOP CZ, s.p.",
+                  "label_en": "VOP CZ, s.p.",
+                  "value": 562,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "00000493",
+                    "turnover_czk_m": 1293,
+                    "assets_czk_m": 1369,
+                    "net_result_czk_m": 31,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 111
+                  }
+                },
+                {
+                  "id": "entity_24272523",
+                  "label_cs": "Vojenský technický ústav, s.p.",
+                  "label_en": "Vojenský technický ústav, s.p.",
+                  "value": 421,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "24272523",
+                    "turnover_czk_m": 1015,
+                    "assets_czk_m": 3816,
+                    "net_result_czk_m": 27,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 93
+                  }
+                },
+                {
+                  "id": "entity_00010669",
+                  "label_cs": "VZLU AEROSPACE, a.s.",
+                  "label_en": "VZLU AEROSPACE, a.s.",
+                  "value": 189,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "00010669",
+                    "turnover_czk_m": 299,
+                    "assets_czk_m": 1483,
+                    "net_result_czk_m": 8,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 52
+                  }
+                },
+                {
+                  "id": "entity_29372259",
+                  "label_cs": "Vojenský výzkumný ústav, s. p.",
+                  "label_en": "Vojenský výzkumný ústav, s. p.",
+                  "value": 150,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "29372259",
+                    "turnover_czk_m": 613,
+                    "assets_czk_m": 1098,
+                    "net_result_czk_m": 56,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 36
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_agriculture_food",
+              "label_cs": "Zemědělství a potraviny",
+              "label_en": "Agriculture and food",
+              "value": 731,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_00514152",
+                  "label_cs": "Budějovický Budvar, národní podnik",
+                  "label_en": "Budějovický Budvar, národní podnik",
+                  "value": 617,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "00514152",
+                    "turnover_czk_m": 3711,
+                    "assets_czk_m": 5807,
+                    "net_result_czk_m": 361,
+                    "owner_transfer_czk_m": 550,
+                    "women_persons": 184
+                  }
+                },
+                {
+                  "id": "entity_26162539",
+                  "label_cs": "Českomoravská společnost chovatelů, a.s.",
+                  "label_en": "Českomoravská společnost chovatelů, a.s.",
+                  "value": 114,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "26162539",
+                    "turnover_czk_m": 254,
+                    "assets_czk_m": 246,
+                    "net_result_czk_m": 5,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 84
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_finance",
+              "label_cs": "Finance a rozvoj",
+              "label_en": "Finance and development",
+              "value": 590,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_44848943",
+                  "label_cs": "Národní rozvojová banka, a.s.",
+                  "label_en": "Národní rozvojová banka, a.s.",
+                  "value": 263,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "44848943",
+                    "turnover_czk_m": 1418,
+                    "assets_czk_m": 36188,
+                    "net_result_czk_m": 1012,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 154
+                  }
+                },
+                {
+                  "id": "entity_63078333",
+                  "label_cs": "Česká exportní banka, a.s.",
+                  "label_en": "Česká exportní banka, a.s.",
+                  "value": 115,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "63078333",
+                    "turnover_czk_m": 2155,
+                    "assets_czk_m": 32355,
+                    "net_result_czk_m": 742,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 60
+                  }
+                },
+                {
+                  "id": "entity_45279314",
+                  "label_cs": "Exportní garanční a pojišťovací společnost, a.s.",
+                  "label_en": "Exportní garanční a pojišťovací společnost, a.s.",
+                  "value": 107,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "45279314",
+                    "turnover_czk_m": 562,
+                    "assets_czk_m": 23184,
+                    "net_result_czk_m": 363,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 56
+                  }
+                },
+                {
+                  "id": "entity_49241494",
+                  "label_cs": "Podpůrný a garanční rolnický a lesnický fond, a.s.",
+                  "label_en": "Podpůrný a garanční rolnický a lesnický fond, a.s.",
+                  "value": 102,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "49241494",
+                    "turnover_czk_m": 272,
+                    "assets_czk_m": 5123,
+                    "net_result_czk_m": 230,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 62
+                  }
+                },
+                {
+                  "id": "entity_46355901",
+                  "label_cs": "PRISKO a.s.",
+                  "label_en": "PRISKO a.s.",
+                  "value": 3,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "46355901",
+                    "turnover_czk_m": 2039,
+                    "assets_czk_m": 4248,
+                    "net_result_czk_m": 2015,
+                    "owner_transfer_czk_m": 1826,
+                    "women_persons": 2
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_real_estate_tourism",
+              "label_cs": "Reality a cestovní ruch",
+              "label_en": "Real estate and tourism",
+              "value": 416,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "working_classification",
+              "children": [
+                {
+                  "id": "entity_63080249",
+                  "label_cs": "Kongresové centrum Praha, a.s.",
+                  "label_en": "Kongresové centrum Praha, a.s.",
+                  "value": 239,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "63080249",
+                    "turnover_czk_m": 671,
+                    "assets_czk_m": 3724,
+                    "net_result_czk_m": 94,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 78
+                  }
+                },
+                {
+                  "id": "entity_25401726",
+                  "label_cs": "THERMAL-F, a.s.",
+                  "label_en": "THERMAL-F, a.s.",
+                  "value": 150,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "25401726",
+                    "turnover_czk_m": 335,
+                    "assets_czk_m": 1165,
+                    "net_result_czk_m": 31,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 102
+                  }
+                },
+                {
+                  "id": "entity_21333858",
+                  "label_cs": "Státní investiční a rozvojová společnost, a.s.",
+                  "label_en": "Státní investiční a rozvojová společnost, a.s.",
+                  "value": 27,
+                  "unit": "persons",
+                  "source_id": "mf_strategic_entities_2024",
+                  "status": "official",
+                  "details": {
+                    "ico": "21333858",
+                    "turnover_czk_m": 0,
+                    "assets_czk_m": 125,
+                    "net_result_czk_m": -36,
+                    "owner_transfer_czk_m": 0,
+                    "women_persons": 13
+                  }
+                }
+              ]
+            },
+            {
+              "id": "strategic_portfolio_residual",
+              "label_cs": "Rozdíl proti portfoliovému součtu MF",
+              "label_en": "Difference from MF portfolio total",
+              "value": 1191,
+              "unit": "persons",
+              "source_id": "mf_strategic_entities_2024",
+              "status": "derived",
+              "note_cs": "MF zveřejňuje portfoliový součet o 1 191 zaměstnanců vyšší než součet 38 individuálních karet.",
+              "note_en": "The MF portfolio total is 1,191 employees above the sum of the 38 individual cards."
+            }
+          ],
+          "note_cs": "Jde o fyzické osoby v portfoliu 38 subjektů, nikoli FTE. Odvětvové skupiny jsou pracovní klasifikace PSD; některé subjekty mohou být uvnitř vládních institucí.",
+          "note_en": "These are persons in a 38-entity portfolio, not FTE. Sector groups are a PSD working classification; some entities may be classified inside general government."
+        }
+      }
+    ]
+  },
   "evidence_layers": [
     {
       "id": "state_budget_regulated",
@@ -461,8 +1920,8 @@
     {
       "id": "mf_state_final_account_2024",
       "publisher": "Ministerstvo financí ČR",
-      "title_cs": "Zpráva o výsledcích hospodaření státního rozpočtu 2024, tabulka 54",
-      "title_en": "State budget final account 2024, table 54",
+      "title_cs": "Zpráva o výsledcích hospodaření státního rozpočtu 2024, tabulky 54–55",
+      "title_en": "State budget final account 2024, tables 54–55",
       "url": "https://www.mfcr.cz/assets/attachments/2025-04-28_C-Zprava-o-vysledcich-hospodareni-statniho-rozpoctu.pdf",
       "period": "2024"
     },
@@ -481,6 +1940,14 @@
       "title_en": "Regional education workforce 2015–2019",
       "url": "https://msmt.gov.cz/file/53494/download/",
       "period": "2015–2019"
+    },
+    {
+      "id": "msmt_education_statistics_2024",
+      "publisher": "Ministerstvo školství, mládeže a tělovýchovy",
+      "title_cs": "Vzdělávání v roce 2024 v datech, tabulka 21",
+      "title_en": "Education in 2024 in data, table 21",
+      "url": "https://msmt.gov.cz/file/65307/download/",
+      "period": "2020–2024"
     },
     {
       "id": "czso_general_government_compensation_2024",

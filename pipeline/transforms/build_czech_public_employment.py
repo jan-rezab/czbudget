@@ -27,8 +27,8 @@ SOURCES = [
     {
         "id": "mf_state_final_account_2024",
         "publisher": "Ministerstvo financí ČR",
-        "title_cs": "Zpráva o výsledcích hospodaření státního rozpočtu 2024, tabulka 54",
-        "title_en": "State budget final account 2024, table 54",
+        "title_cs": "Zpráva o výsledcích hospodaření státního rozpočtu 2024, tabulky 54–55",
+        "title_en": "State budget final account 2024, tables 54–55",
         "url": "https://www.mfcr.cz/assets/attachments/2025-04-28_C-Zprava-o-vysledcich-hospodareni-statniho-rozpoctu.pdf",
         "period": "2024",
     },
@@ -47,6 +47,14 @@ SOURCES = [
         "title_en": "Regional education workforce 2015–2019",
         "url": "https://msmt.gov.cz/file/53494/download/",
         "period": "2015–2019",
+    },
+    {
+        "id": "msmt_education_statistics_2024",
+        "publisher": "Ministerstvo školství, mládeže a tělovýchovy",
+        "title_cs": "Vzdělávání v roce 2024 v datech, tabulka 21",
+        "title_en": "Education in 2024 in data, table 21",
+        "url": "https://msmt.gov.cz/file/65307/download/",
+        "period": "2020–2024",
     },
     {
         "id": "czso_general_government_compensation_2024",
@@ -104,13 +112,60 @@ def load_rows() -> list[dict]:
         rows = list(csv.DictReader(handle))
     for row in rows:
         row["year"] = int(row["year"])
-        row["value"] = int(row["value"])
+        numeric_value = float(row["value"])
+        row["value"] = int(numeric_value) if numeric_value.is_integer() else numeric_value
     return rows
+
+
+def employment_node(
+    node_id: str,
+    label_cs: str,
+    label_en: str,
+    value: float,
+    unit: str,
+    source_id: str,
+    *,
+    children: list[dict] | None = None,
+    status: str = "official",
+    details: dict | None = None,
+    note_cs: str | None = None,
+    note_en: str | None = None,
+) -> dict:
+    node = {
+        "id": node_id,
+        "label_cs": label_cs,
+        "label_en": label_en,
+        "value": value,
+        "unit": unit,
+        "source_id": source_id,
+        "status": status,
+    }
+    if children:
+        node["children"] = children
+    if details:
+        node["details"] = details
+    if note_cs:
+        node["note_cs"] = note_cs
+    if note_en:
+        node["note_en"] = note_en
+    return node
+
+
+def validate_employment_tree(node: dict, tolerance: float = 0.11) -> None:
+    children = node.get("children", [])
+    if children:
+        difference = abs(sum(child["value"] for child in children) - node["value"])
+        if difference > tolerance:
+            raise ValueError(f"{node['id']}: children differ from parent by {difference}")
+        for child in children:
+            validate_employment_tree(child, tolerance)
 
 
 def main() -> None:
     observations = load_rows()
     observation = {(row["source_id"], row["series_id"], row["year"]): row["value"] for row in observations}
+    def obs(source_id: str, series_id: str, year: int = 2024) -> float:
+        return observation[(source_id, series_id, year)]
     by_year: dict[int, dict[str, int]] = defaultdict(dict)
     for row in observations:
         if row["source_id"] == "czso_public_sector_satellite_account_2024":
@@ -226,6 +281,233 @@ def main() -> None:
 
     strategic = json.loads(STRATEGIC.read_text(encoding="utf-8"))
     coverage = json.loads(COVERAGE.read_text(encoding="utf-8"))["countries"]["CZE"]
+
+    state_source = "mf_state_final_account_2024"
+    state_labour = employment_node(
+        "state_labour_service", "Zaměstnanci podle zákoníku práce a služebního zákona", "Labour Code and civil-service employees",
+        obs(state_source, "state_employees_labour_service"), "average_employees", state_source,
+        details={"previous_year": 2023, "previous_value": obs(state_source, "state_employees_labour_service", 2023), "average_monthly_gross_czk": obs(state_source, "state_labour_service_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_labour_service_avg_salary_czk", 2023)},
+    )
+    state_uniformed = employment_node(
+        "state_uniformed", "Příslušníci bezpečnostních sborů a vojáci", "Security-force members and soldiers",
+        obs(state_source, "state_uniformed_and_soldiers"), "average_employees", state_source,
+        details={"previous_year": 2023, "previous_value": obs(state_source, "state_uniformed_and_soldiers", 2023), "average_monthly_gross_czk": obs(state_source, "state_uniformed_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_uniformed_avg_salary_czk", 2023)},
+    )
+    state_prosecutors = employment_node(
+        "state_prosecutors", "Státní zástupci a odvozené funkce", "Prosecutors and derived offices",
+        obs(state_source, "state_prosecutors_and_derived"), "average_employees", state_source,
+        details={"previous_year": 2023, "previous_value": obs(state_source, "state_prosecutors_and_derived", 2023), "average_monthly_gross_czk": obs(state_source, "state_prosecutors_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_prosecutors_avg_salary_czk", 2023)},
+    )
+    state_organisational = employment_node(
+        "state_organisational", "Organizační složky státu", "State organisational units",
+        obs(state_source, "state_organisational_units"), "average_employees", state_source,
+        children=[state_labour, state_uniformed, state_prosecutors],
+        details={"previous_year": 2023, "previous_value": obs(state_source, "state_organisational_units", 2023), "average_monthly_gross_czk": obs(state_source, "state_organisational_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_organisational_avg_salary_czk", 2023)},
+    )
+    state_regional_education = employment_node(
+        "state_regional_education", "Regionální školství v regulované sféře", "Regional education in the regulated sphere",
+        obs(state_source, "state_regional_education_budget"), "average_employees", state_source,
+        details={"previous_year": 2023, "previous_value": obs(state_source, "state_regional_education_budget", 2023), "average_monthly_gross_czk": obs(state_source, "state_regional_education_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_regional_education_avg_salary_czk", 2023)},
+    )
+    other_contributory_2024 = obs(state_source, "state_contributory_organisations") - state_regional_education["value"]
+    other_contributory_2023 = obs(state_source, "state_contributory_organisations", 2023) - obs(state_source, "state_regional_education_budget", 2023)
+    state_other_contributory = employment_node(
+        "state_other_contributory", "Ostatní příspěvkové organizace", "Other contributory organisations",
+        other_contributory_2024, "average_employees", state_source, status="derived",
+        details={"previous_year": 2023, "previous_value": other_contributory_2023},
+        note_cs="Dopočet: všechny příspěvkové organizace minus regionální školství.",
+        note_en="Derived as all contributory organisations minus regional education.",
+    )
+    state_contributory = employment_node(
+        "state_contributory", "Příspěvkové organizace", "Contributory organisations",
+        obs(state_source, "state_contributory_organisations"), "average_employees", state_source,
+        children=[state_regional_education, state_other_contributory],
+        details={"previous_year": 2023, "previous_value": obs(state_source, "state_contributory_organisations", 2023), "average_monthly_gross_czk": obs(state_source, "state_contributory_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_contributory_avg_salary_czk", 2023)},
+    )
+    state_root = employment_node(
+        "state_regulated", "Vládou regulovaná sféra", "State-regulated sphere",
+        state_organisational["value"] + state_contributory["value"], "average_employees", state_source,
+        children=[state_organisational, state_contributory],
+        details={"previous_year": 2023, "previous_value": obs(state_source, "state_organisational_units", 2023) + obs(state_source, "state_contributory_organisations", 2023)},
+    )
+
+    education_source = "msmt_education_statistics_2024"
+    education_role_specs = [
+        ("teachers", "Učitelé", "Teachers"),
+        ("educators", "Vychovatelé", "Educators"),
+        ("vocational", "Učitelé odborného výcviku", "Vocational-training teachers"),
+        ("assistants", "Asistenti pedagoga", "Teaching assistants"),
+        ("special", "Speciální pedagogové", "Special pedagogues"),
+        ("speech", "Školští logopedi", "School speech therapists"),
+        ("psychologists", "Psychologové", "Psychologists"),
+        ("coaches", "Trenéři", "Coaches"),
+        ("other", "Ostatní pedagogové", "Other pedagogical workers"),
+    ]
+    education_role_nodes = []
+    for role_id, label_cs, label_en in education_role_specs:
+        details = {"average_monthly_gross_czk": obs(education_source, f"education_profession_{role_id}_wage")}
+        previous_key = (education_source, f"education_profession_{role_id}", 2020)
+        if previous_key in observation:
+            details.update({"previous_year": 2020, "previous_value": observation[previous_key]})
+        education_role_nodes.append(employment_node(
+            f"education_{role_id}", label_cs, label_en,
+            obs(education_source, f"education_profession_{role_id}"), "FTE", education_source,
+            details=details,
+        ))
+    education_pedagogical = employment_node(
+        "education_pedagogical", "Pedagogičtí pracovníci", "Pedagogical workers",
+        obs(education_source, "education_profession_pedagogical"), "FTE", education_source,
+        children=education_role_nodes,
+        details={"previous_year": 2020, "previous_value": obs(education_source, "education_profession_pedagogical", 2020), "average_monthly_gross_czk": obs(education_source, "education_profession_pedagogical_wage")},
+        note_cs="Součet profesí se kvůli zaokrouhlení zdroje liší od celku o 0,1 FTE.",
+        note_en="Published profession rows differ from the total by 0.1 FTE because of rounding.",
+    )
+    education_nonpedagogical = employment_node(
+        "education_nonpedagogical", "Nepedagogičtí zaměstnanci", "Non-pedagogical workers",
+        obs(education_source, "education_profession_nonpedagogical"), "FTE", education_source,
+        details={"previous_year": 2020, "previous_value": obs(education_source, "education_profession_nonpedagogical", 2020), "average_monthly_gross_czk": obs(education_source, "education_profession_nonpedagogical_wage")},
+    )
+    education_professions_root = employment_node(
+        "education_professions", "Regionální školství podle profesí", "Regional education by profession",
+        education_pedagogical["value"] + education_nonpedagogical["value"], "FTE", education_source,
+        children=[education_pedagogical, education_nonpedagogical],
+        details={"previous_year": 2020, "previous_value": education_pedagogical["details"]["previous_value"] + education_nonpedagogical["details"]["previous_value"]},
+    )
+
+    school_source = "msmt_regional_education_workforce_2024"
+    school_type_specs = [
+        ("nursery", "Mateřské školy", "Nursery schools"),
+        ("primary", "Základní školy", "Primary schools"),
+        ("secondary", "Střední školy", "Secondary schools"),
+        ("conservatory", "Konzervatoře", "Conservatories"),
+        ("vocational", "Vyšší odborné školy", "Higher vocational schools"),
+    ]
+    school_type_nodes = []
+    school_pedagogical_known = 0
+    school_nonpedagogical_known = 0
+    for school_id, label_cs, label_en in school_type_specs:
+        pedagogical = obs(school_source, f"education_school_{school_id}_pedagogical")
+        nonpedagogical = obs(school_source, f"education_school_{school_id}_nonpedagogical")
+        school_pedagogical_known += pedagogical
+        school_nonpedagogical_known += nonpedagogical
+        school_type_nodes.append(employment_node(
+            f"school_{school_id}", label_cs, label_en, pedagogical + nonpedagogical, "FTE", school_source,
+            children=[
+                employment_node(f"school_{school_id}_pedagogical", "Pedagogičtí", "Pedagogical", pedagogical, "FTE", school_source),
+                employment_node(f"school_{school_id}_nonpedagogical", "Nepedagogičtí", "Non-pedagogical", nonpedagogical, "FTE", school_source),
+            ],
+        ))
+    school_other_pedagogical = education_2024["pedagogical"] - school_pedagogical_known
+    school_other_nonpedagogical = education_2024["nonpedagogical"] - school_nonpedagogical_known
+    school_type_nodes.append(employment_node(
+        "school_other", "Ostatní školy a školská zařízení", "Other schools and school facilities",
+        school_other_pedagogical + school_other_nonpedagogical, "FTE", school_source, status="derived",
+        children=[
+            employment_node("school_other_pedagogical", "Pedagogičtí", "Pedagogical", school_other_pedagogical, "FTE", school_source, status="derived"),
+            employment_node("school_other_nonpedagogical", "Nepedagogičtí", "Non-pedagogical", school_other_nonpedagogical, "FTE", school_source, status="derived"),
+        ],
+        note_cs="Dopočet do celku zahrnuje zejména školská zařízení a další druhy škol neuvedené samostatně v tomto zjednodušeném řezu.",
+        note_en="Residual to the published total, covering mainly school facilities and school types not shown separately in this simplified cut.",
+    ))
+    education_school_types_root = employment_node(
+        "education_school_types", "Regionální školství podle druhu školy", "Regional education by school type",
+        education_2024["total"], "FTE", school_source, children=school_type_nodes,
+    )
+
+    local_source = "mv_local_government_employment_2024"
+    local_specs = [
+        ("extended_authority", "Obce s rozšířenou působností", "Municipalities with extended competence"),
+        ("delegated_authority", "Obce s pověřeným obecním úřadem", "Municipalities with an authorised office"),
+        ("basic_authority", "Obce se základní působností", "Municipalities with basic competence"),
+        ("prague", "Hlavní město Praha", "Capital City of Prague"),
+        ("regions", "Kraje", "Regional authorities"),
+    ]
+    local_nodes = []
+    for local_id, label_cs, label_en in local_specs:
+        persons = obs(local_source, f"local_{local_id}_persons")
+        men = obs(local_source, f"local_{local_id}_men")
+        women = obs(local_source, f"local_{local_id}_women")
+        if men + women != persons:
+            raise ValueError(f"{local_id}: gender counts do not reconcile to persons")
+        local_nodes.append(employment_node(
+            f"local_{local_id}", label_cs, label_en, obs(local_source, f"local_{local_id}_fte"), "FTE", local_source,
+            status="partial",
+            details={"persons_during_year": persons, "men_persons": men, "women_persons": women, "payroll_czk_m": obs(local_source, f"local_{local_id}_payroll_czk_m"), "leaders": obs(local_source, f"local_{local_id}_leaders")},
+        ))
+    local_root = employment_node(
+        "local_administration", "Správa obcí, Prahy a krajů", "Municipal, Prague and regional administration",
+        obs(local_source, "local_government_administration"), "FTE", local_source, children=local_nodes, status="partial",
+        details={"persons_during_year": sum(node["details"]["persons_during_year"] for node in local_nodes), "men_persons": sum(node["details"]["men_persons"] for node in local_nodes), "women_persons": sum(node["details"]["women_persons"] for node in local_nodes), "payroll_czk_m": sum(node["details"]["payroll_czk_m"] for node in local_nodes), "leaders": sum(node["details"]["leaders"] for node in local_nodes)},
+        note_cs="Částečné pokrytí: do přehledu o obcích vstoupilo 3 741 z 6 254 obcí; Praha a kraje jsou uvedeny zvlášť.",
+        note_en="Partial coverage: the municipal return covers 3,741 of 6,254 municipalities; Prague and regional authorities are shown separately.",
+    )
+
+    strategic_source = "mf_strategic_entities_2024"
+    strategic_sector_labels = {
+        "agriculture_food": "Agriculture and food", "defence": "Defence and strategic industry", "energy": "Energy",
+        "finance": "Finance and development", "natural_resources": "Natural resources and remediation",
+        "public_services": "Digital and public services", "real_estate_tourism": "Real estate and tourism",
+        "transport": "Transport and infrastructure", "water": "Water management",
+    }
+    strategic_groups: dict[str, list[dict]] = defaultdict(list)
+    for entity in strategic["entities"]:
+        metrics = entity["metrics"]
+        strategic_groups[entity["classification"]["sector_code"]].append(employment_node(
+            f"entity_{entity['ico']}", entity["name"], entity["name"], metrics["employees"], "persons", strategic_source,
+            details={
+                "ico": entity["ico"], "turnover_czk_m": metrics.get("turnover"), "assets_czk_m": metrics.get("total_assets"),
+                "net_result_czk_m": metrics.get("net_result"), "owner_transfer_czk_m": metrics.get("owner_transfer"),
+                "women_persons": metrics.get("women_employees"),
+            },
+        ))
+    strategic_sector_nodes = []
+    for sector_code, entities in sorted(strategic_groups.items(), key=lambda item: -sum(node["value"] for node in item[1])):
+        strategic_sector_nodes.append(employment_node(
+            f"strategic_{sector_code}", strategic["entities"][next(index for index, entity in enumerate(strategic["entities"]) if entity["classification"]["sector_code"] == sector_code)]["classification"]["sector_name"],
+            strategic_sector_labels[sector_code], sum(node["value"] for node in entities), "persons", strategic_source,
+            children=sorted(entities, key=lambda node: node["value"], reverse=True), status="working_classification",
+        ))
+    strategic_observed = sum(node["value"] for node in strategic_sector_nodes)
+    strategic_residual = strategic["summary"]["employees_portfolio_reported"] - strategic_observed
+    if strategic_residual:
+        strategic_sector_nodes.append(employment_node(
+            "strategic_portfolio_residual", "Rozdíl proti portfoliovému součtu MF", "Difference from MF portfolio total",
+            strategic_residual, "persons", strategic_source, status="derived",
+            note_cs="MF zveřejňuje portfoliový součet o 1 191 zaměstnanců vyšší než součet 38 individuálních karet.",
+            note_en="The MF portfolio total is 1,191 employees above the sum of the 38 individual cards.",
+        ))
+    strategic_root = employment_node(
+        "strategic_entities", "Strategické společnosti a organizace", "Strategic companies and organisations",
+        strategic["summary"]["employees_portfolio_reported"], "persons", strategic_source,
+        children=strategic_sector_nodes,
+        note_cs="Jde o fyzické osoby v portfoliu 38 subjektů, nikoli FTE. Odvětvové skupiny jsou pracovní klasifikace PSD; některé subjekty mohou být uvnitř vládních institucí.",
+        note_en="These are persons in a 38-entity portfolio, not FTE. Sector groups are a PSD working classification; some entities may be classified inside general government.",
+    )
+
+    public_sector_root = employment_node(
+        "public_sector", "Veřejný sektor", "Public sector", latest["public_sector_fte"], "FTE", "czso_public_sector_satellite_account_2024",
+        children=[
+            employment_node("general_government", "Vládní instituce", "General government", latest["general_government_fte"], "FTE", "czso_public_sector_satellite_account_2024", details={"previous_year": 2015, "previous_value": first["general_government_fte"]}, note_cs="Detailnější zdrojové řezy se překrývají; otevřete další pohledy místo jejich sčítání.", note_en="Deeper source views overlap; open the other views instead of adding them."),
+            employment_node("public_corporations", "Veřejné korporace", "Public corporations", latest["public_corporations_combined_fte"], "FTE", "czso_public_sector_satellite_account_2024", status="derived", details={"previous_year": 2015, "previous_value": first["public_corporations_combined_fte"], "reference_year": 2023, "public_nonfinancial_fte": history[-2]["public_nonfinancial_corporations_fte"], "public_financial_fte": history[-2]["public_financial_corporations_fte"]}, note_cs="Rok 2024 je přesný reziduál. Samostatné složky jsou naposledy oficiálně dostupné za 2023.", note_en="The 2024 figure is the exact residual. Separate components were last published for 2023."),
+        ],
+        details={"previous_year": 2015, "previous_value": first["public_sector_fte"]},
+    )
+
+    employment_explorer = {
+        "default_scope_id": "state_regulated",
+        "rule": "Values add only inside the currently selected tree. The six trees overlap and must never be summed together.",
+        "scopes": [
+            {"id": "public_sector", "label_cs": "Celý veřejný sektor", "label_en": "Whole public sector", "coverage_status": "control_total", "source_ids": ["czso_public_sector_satellite_account_2024"], "root": public_sector_root},
+            {"id": "state_regulated", "label_cs": "Státní sféra", "label_en": "State-regulated sphere", "coverage_status": "official", "source_ids": [state_source], "root": state_root},
+            {"id": "education_professions", "label_cs": "Školství · profese", "label_en": "Education · professions", "coverage_status": "official", "source_ids": [education_source], "root": education_professions_root},
+            {"id": "education_school_types", "label_cs": "Školství · typ školy", "label_en": "Education · school type", "coverage_status": "official", "source_ids": [school_source], "root": education_school_types_root},
+            {"id": "local_administration", "label_cs": "Samospráva", "label_en": "Local administration", "coverage_status": "partial", "source_ids": [local_source], "root": local_root},
+            {"id": "strategic_entities", "label_cs": "Veřejné podniky", "label_en": "Public corporations", "coverage_status": "portfolio", "source_ids": [strategic_source], "root": strategic_root},
+        ],
+    }
+    for scope in employment_explorer["scopes"]:
+        validate_employment_tree(scope["root"])
+
     evidence_specs = [
         ("state_budget_regulated", "Státní organizační a příspěvkové organizace", "State organisational and contributory organisations", observation[("mf_state_final_account_2024", "state_organisational_units", 2024)] + observation[("mf_state_final_account_2024", "state_contributory_organisations", 2024)], "average_employees", "mf_state_final_account_2024", "official", "Overlaps regional education and other general-government units."),
         ("regional_education", "Regionální školství", "Regional education", observation[("msmt_regional_education_workforce_2024", "regional_education_total", 2024)], "FTE", "msmt_regional_education_workforce_2024", "official", "All founders and funding sources; overlaps the state-budget-regulated layer."),
@@ -249,7 +531,7 @@ def main() -> None:
     first_cost = compensation_history[0]
     latest_cost = compensation_history[-1]
     payload = {
-        "schema_version": "1.1.0",
+        "schema_version": "1.2.0",
         "dataset_id": "CZE_PUBLIC_EMPLOYMENT_OBSERVATORY",
         "country_code": "CZE",
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -296,6 +578,7 @@ def main() -> None:
             "history": compensation_history,
             "change_by_function": function_cost_growth,
         },
+        "employment_explorer": employment_explorer,
         "evidence_layers": evidence_layers,
         "entity_resolution": {
             "public_entity_register_period": coverage["sources"][0]["period"],

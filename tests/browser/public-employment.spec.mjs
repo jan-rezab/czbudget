@@ -27,6 +27,7 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator("#employment-cost-kpis")).toContainText(number(dataset.compensation.headline.average_monthly_cost_2024_czk));
   await expect(page.locator("#employment-cost-chart svg")).toBeVisible();
   await expect(page.locator("#employment-function-growth > article")).toHaveCount(dataset.compensation.change_by_function.length);
+  await expect(page.locator("#employment-scope-tabs > button")).toHaveCount(dataset.employment_explorer.scopes.length);
   await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.general_government_fte));
   await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.public_corporations_combined_fte));
   await expect(page.locator("#employment-layer-grid > article")).toHaveCount(dataset.evidence_layers.length);
@@ -39,6 +40,46 @@ test("public-employment report reconciles the control total and source layers", 
   expect(datasetRequests).toHaveLength(1);
   expect(new URL(datasetRequests[0]).searchParams.get("v")).toBe(dataset.schema_version);
   expect(runtimeErrors).toEqual([]);
+});
+
+test("public-employment explorer drills from source scope to profession and organisation", async ({ page }) => {
+  const runtimeErrors = [];
+  page.on("pageerror", (error) => runtimeErrors.push(error.message));
+  page.on("console", (message) => { if (message.type() === "error") runtimeErrors.push(message.text()); });
+
+  await page.goto("/deep-dives/public-employment/?lang=en", {waitUntil: "networkidle"});
+  const explorer = page.locator("#explorer");
+  await expect(explorer).toBeVisible();
+  await expect(page.locator("#employment-scope-tabs [aria-pressed=true]")).toContainText("State-regulated sphere");
+  await expect(page.locator("#employment-treemap .employment-tile")).toHaveCount(2);
+
+  await page.locator('[data-explorer-scope="education_professions"]').click();
+  await page.locator('#employment-treemap [data-explorer-node="education_pedagogical"]').click();
+  await expect(page.locator("#employment-explorer-breadcrumbs")).toContainText("Pedagogical workers");
+  await expect(page.locator("#employment-treemap .employment-tile")).toHaveCount(9);
+  await page.locator('#employment-treemap [data-explorer-node="education_assistants"]').click();
+  await expect(page.locator("#employment-explorer-detail")).toContainText("Teaching assistants");
+  await expect(page.locator("#employment-explorer-detail")).toContainText("+9,139.2");
+  await expect(page.locator("#employment-explorer-detail")).toContainText("31,129 CZK");
+
+  await page.locator('[data-explorer-scope="strategic_entities"]').click();
+  await page.locator('#employment-treemap [data-explorer-node="strategic_transport"]').click();
+  await page.locator('#employment-treemap [data-explorer-node="entity_70994226"]').click();
+  await expect(page.locator("#employment-explorer-detail")).toContainText("České dráhy, a.s.");
+  await expect(page.locator("#employment-explorer-detail")).toContainText("IČO 70994226");
+  await expect(page.locator("#employment-explorer-detail")).toContainText("13,183");
+  expect(await page.evaluate(() => document.body.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  expect(runtimeErrors).toEqual([]);
+});
+
+test("every employment explorer tree reconciles within its declared scope", async () => {
+  const visit = (node) => {
+    if (!node.children?.length) return;
+    const childrenTotal = node.children.reduce((sum, child) => sum + child.value, 0);
+    expect(Math.abs(childrenTotal - node.value)).toBeLessThanOrEqual(0.11);
+    node.children.forEach(visit);
+  };
+  dataset.employment_explorer.scopes.forEach((scope) => visit(scope.root));
 });
 
 test("public-employment English shell releases the paint guard immediately", async ({ page }) => {
