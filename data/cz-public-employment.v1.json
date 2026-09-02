@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "dataset_id": "CZE_PUBLIC_EMPLOYMENT_OBSERVATORY",
   "country_code": "CZE",
-  "generated_at": "2026-09-02T08:56:22+00:00",
+  "generated_at": "2026-09-02T10:00:45+00:00",
   "period": {
     "from": 2015,
     "to": 2024,
@@ -131,6 +131,251 @@
       "public_sector_share_pct": 24.2
     }
   ],
+  "growth": {
+    "year_from": 2015,
+    "year_to": 2024,
+    "public_sector_change_fte": 121744,
+    "general_government_change_fte": 119974,
+    "public_corporations_change_fte": 1770,
+    "general_government_share_of_public_growth_pct": 98.5,
+    "public_corporations_share_of_public_growth_pct": 1.5,
+    "regional_education_evidence": {
+      "year_from": 2015,
+      "year_to": 2024,
+      "total_fte_from": 235149,
+      "total_fte_to": 301048,
+      "change_fte": 65899,
+      "pedagogical_change_fte": 56743,
+      "nonpedagogical_change_fte": 9156,
+      "scope": "All founders and funding sources, including public, private and church schools; evidence of a major driver, not an additive slice of S.13.",
+      "source_ids": [
+        "msmt_regional_education_workforce_history_2019",
+        "msmt_regional_education_workforce_2024"
+      ]
+    }
+  },
+  "compensation": {
+    "definition": "D.1 compensation of employees: wages and salaries plus employers' social contributions. It is an employer cost, not take-home pay.",
+    "price_basis": "Nominal CZK; real series deflated with CZSO annual-average CPI and expressed in 2015 CZK.",
+    "source_id": "czso_general_government_compensation_2024",
+    "cpi_source_id": "czso_consumer_price_index_2024",
+    "cofog_source_id": "czso_general_government_cofog_2024",
+    "headline": {
+      "compensation_2015_czk_m": 397775,
+      "compensation_2024_czk_m": 775674,
+      "change_czk_m": 377899,
+      "change_pct": 95.0,
+      "average_monthly_cost_2015_czk": 40038,
+      "average_monthly_cost_2024_czk": 68194,
+      "average_monthly_cost_change_pct": 70.3,
+      "average_monthly_real_cost_2024_2015_czk": 45037,
+      "average_monthly_real_cost_change_pct": 12.5
+    },
+    "history": [
+      {
+        "year": 2015,
+        "general_government_fte": 827904,
+        "compensation_employees_czk_m": 397775,
+        "wages_salaries_czk_m": 299078,
+        "employer_social_contributions_czk_m": 98697,
+        "annual_inflation_pct": 0.3,
+        "cpi_index_2015_100": 100.0,
+        "average_monthly_employer_compensation_per_fte_czk": 40038,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 40038
+      },
+      {
+        "year": 2016,
+        "general_government_fte": 840450,
+        "compensation_employees_czk_m": 419426,
+        "wages_salaries_czk_m": 315312,
+        "employer_social_contributions_czk_m": 104114,
+        "annual_inflation_pct": 0.7,
+        "cpi_index_2015_100": 100.7,
+        "average_monthly_employer_compensation_per_fte_czk": 41587,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 41298
+      },
+      {
+        "year": 2017,
+        "general_government_fte": 859048,
+        "compensation_employees_czk_m": 461842,
+        "wages_salaries_czk_m": 347426,
+        "employer_social_contributions_czk_m": 114416,
+        "annual_inflation_pct": 2.5,
+        "cpi_index_2015_100": 103.2,
+        "average_monthly_employer_compensation_per_fte_czk": 44802,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 43405
+      },
+      {
+        "year": 2018,
+        "general_government_fte": 882071,
+        "compensation_employees_czk_m": 520768,
+        "wages_salaries_czk_m": 391659,
+        "employer_social_contributions_czk_m": 129109,
+        "annual_inflation_pct": 2.1,
+        "cpi_index_2015_100": 105.4,
+        "average_monthly_employer_compensation_per_fte_czk": 49199,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 46685
+      },
+      {
+        "year": 2019,
+        "general_government_fte": 900031,
+        "compensation_employees_czk_m": 575632,
+        "wages_salaries_czk_m": 432958,
+        "employer_social_contributions_czk_m": 142674,
+        "annual_inflation_pct": 2.8,
+        "cpi_index_2015_100": 108.3,
+        "average_monthly_employer_compensation_per_fte_czk": 53297,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 49196
+      },
+      {
+        "year": 2020,
+        "general_government_fte": 907187,
+        "compensation_employees_czk_m": 633348,
+        "wages_salaries_czk_m": 475090,
+        "employer_social_contributions_czk_m": 158258,
+        "annual_inflation_pct": 3.2,
+        "cpi_index_2015_100": 111.8,
+        "average_monthly_employer_compensation_per_fte_czk": 58179,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 52037
+      },
+      {
+        "year": 2021,
+        "general_government_fte": 927473,
+        "compensation_employees_czk_m": 676345,
+        "wages_salaries_czk_m": 507223,
+        "employer_social_contributions_czk_m": 169122,
+        "annual_inflation_pct": 3.8,
+        "cpi_index_2015_100": 116.1,
+        "average_monthly_employer_compensation_per_fte_czk": 60770,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 52364
+      },
+      {
+        "year": 2022,
+        "general_government_fte": 937619,
+        "compensation_employees_czk_m": 690264,
+        "wages_salaries_czk_m": 517551,
+        "employer_social_contributions_czk_m": 172713,
+        "annual_inflation_pct": 15.1,
+        "cpi_index_2015_100": 133.6,
+        "average_monthly_employer_compensation_per_fte_czk": 61349,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 45929
+      },
+      {
+        "year": 2023,
+        "general_government_fte": 946771,
+        "compensation_employees_czk_m": 738502,
+        "wages_salaries_czk_m": 554914,
+        "employer_social_contributions_czk_m": 183588,
+        "annual_inflation_pct": 10.7,
+        "cpi_index_2015_100": 147.9,
+        "average_monthly_employer_compensation_per_fte_czk": 65002,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 43960
+      },
+      {
+        "year": 2024,
+        "general_government_fte": 947878,
+        "compensation_employees_czk_m": 775674,
+        "wages_salaries_czk_m": 580699,
+        "employer_social_contributions_czk_m": 194975,
+        "annual_inflation_pct": 2.4,
+        "cpi_index_2015_100": 151.4,
+        "average_monthly_employer_compensation_per_fte_czk": 68194,
+        "average_monthly_employer_compensation_per_fte_2015_czk": 45037
+      }
+    ],
+    "change_by_function": [
+      {
+        "id": "education",
+        "label_cs": "Vzdělávání",
+        "label_en": "Education",
+        "compensation_2015_czk_m": 108300,
+        "compensation_2024_czk_m": 234568,
+        "change_czk_m": 126268,
+        "share_of_total_change_pct": 33.4
+      },
+      {
+        "id": "health",
+        "label_cs": "Zdraví",
+        "label_en": "Health",
+        "compensation_2015_czk_m": 76793,
+        "compensation_2024_czk_m": 169920,
+        "change_czk_m": 93127,
+        "share_of_total_change_pct": 24.6
+      },
+      {
+        "id": "general_public_services",
+        "label_cs": "Všeobecné veřejné služby",
+        "label_en": "General public services",
+        "compensation_2015_czk_m": 62444,
+        "compensation_2024_czk_m": 105297,
+        "change_czk_m": 42853,
+        "share_of_total_change_pct": 11.3
+      },
+      {
+        "id": "public_order",
+        "label_cs": "Veřejný pořádek a bezpečnost",
+        "label_en": "Public order and safety",
+        "compensation_2015_czk_m": 56099,
+        "compensation_2024_czk_m": 92236,
+        "change_czk_m": 36137,
+        "share_of_total_change_pct": 9.6
+      },
+      {
+        "id": "social_protection",
+        "label_cs": "Sociální ochrana",
+        "label_en": "Social protection",
+        "compensation_2015_czk_m": 22225,
+        "compensation_2024_czk_m": 45406,
+        "change_czk_m": 23181,
+        "share_of_total_change_pct": 6.1
+      },
+      {
+        "id": "economic_affairs",
+        "label_cs": "Ekonomické záležitosti",
+        "label_en": "Economic affairs",
+        "compensation_2015_czk_m": 30263,
+        "compensation_2024_czk_m": 49822,
+        "change_czk_m": 19559,
+        "share_of_total_change_pct": 5.2
+      },
+      {
+        "id": "defence",
+        "label_cs": "Obrana",
+        "label_en": "Defence",
+        "compensation_2015_czk_m": 18129,
+        "compensation_2024_czk_m": 36826,
+        "change_czk_m": 18697,
+        "share_of_total_change_pct": 4.9
+      },
+      {
+        "id": "recreation_culture",
+        "label_cs": "Rekreace, kultura a náboženství",
+        "label_en": "Recreation, culture and religion",
+        "compensation_2015_czk_m": 14697,
+        "compensation_2024_czk_m": 26014,
+        "change_czk_m": 11317,
+        "share_of_total_change_pct": 3.0
+      },
+      {
+        "id": "environment",
+        "label_cs": "Ochrana životního prostředí",
+        "label_en": "Environmental protection",
+        "compensation_2015_czk_m": 5284,
+        "compensation_2024_czk_m": 9381,
+        "change_czk_m": 4097,
+        "share_of_total_change_pct": 1.1
+      },
+      {
+        "id": "housing",
+        "label_cs": "Bydlení a komunální služby",
+        "label_en": "Housing and community amenities",
+        "compensation_2015_czk_m": 3541,
+        "compensation_2024_czk_m": 6204,
+        "change_czk_m": 2663,
+        "share_of_total_change_pct": 0.7
+      }
+    ]
+  },
   "evidence_layers": [
     {
       "id": "state_budget_regulated",
@@ -228,6 +473,38 @@
       "title_en": "Employees and payroll in regional education 2024",
       "url": "https://msmt.gov.cz/file/64520_1_1/download/",
       "period": "2024"
+    },
+    {
+      "id": "msmt_regional_education_workforce_history_2019",
+      "publisher": "Ministerstvo školství, mládeže a tělovýchovy",
+      "title_cs": "Pracovníci v regionálním školství 2015–2019",
+      "title_en": "Regional education workforce 2015–2019",
+      "url": "https://msmt.gov.cz/file/53494/download/",
+      "period": "2015–2019"
+    },
+    {
+      "id": "czso_general_government_compensation_2024",
+      "publisher": "Český statistický úřad",
+      "title_cs": "Vládní instituce — časová řada D.1, D.11 a D.12",
+      "title_en": "General government time series — D.1, D.11 and D.12",
+      "url": "https://apl.czso.cz/pll/rocenka/rocenkavyber.sat_vs_cas?mylang=EN",
+      "period": "2015–2024"
+    },
+    {
+      "id": "czso_general_government_cofog_2024",
+      "publisher": "Český statistický úřad",
+      "title_cs": "Výdaje vládních institucí podle funkcí (COFOG)",
+      "title_en": "Government expenditure by function (COFOG)",
+      "url": "https://apl.czso.cz/pll/rocenka/rocenkavyber.gov_c?mylang=EN",
+      "period": "2015, 2024"
+    },
+    {
+      "id": "czso_consumer_price_index_2024",
+      "publisher": "Český statistický úřad",
+      "title_cs": "Míra inflace — průměrné roční indexy",
+      "title_en": "Inflation rate — annual averages",
+      "url": "https://csu.gov.cz/statistika/inflation_rate",
+      "period": "2015–2024"
     },
     {
       "id": "mv_local_government_employment_2024",
