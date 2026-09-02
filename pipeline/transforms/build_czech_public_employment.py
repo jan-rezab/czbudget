@@ -11,11 +11,20 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "pipeline" / "source_data" / "cze_public_employment_observations.csv"
+BENCHMARK_SOURCE = ROOT / "pipeline" / "source_data" / "oecd_public_employment_europe_2025.csv"
 STRATEGIC = ROOT / "data" / "cz-state-enterprises-2024.json"
 COVERAGE = ROOT / "data" / "public-entity-coverage.v1.json"
 OUTPUT = ROOT / "data" / "cz-public-employment.v1.json"
 
 SOURCES = [
+    {
+        "id": "oecd_government_at_a_glance_2025",
+        "publisher": "OECD",
+        "title_cs": "Government at a Glance 2025 — zaměstnanost ve vládních institucích",
+        "title_en": "Government at a Glance 2025 — employment in general government",
+        "url": "https://www.oecd.org/en/publications/government-at-a-glance-2025_0efd0bcd-en/full-report/employment-in-general-government_dafcfac5.html",
+        "period": "2019–2023",
+    },
     {
         "id": "czso_public_sector_satellite_account_2024",
         "publisher": "Český statistický úřad",
@@ -125,6 +134,47 @@ def load_rows() -> list[dict]:
     return rows
 
 
+def load_benchmark() -> dict:
+    with BENCHMARK_SOURCE.open(encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    average = next(row for row in rows if row["country_code"] == "OECD_REP")
+    countries = []
+    for row in rows:
+        if row["country_code"] == "OECD_REP":
+            continue
+        countries.append({
+            "country_code": row["country_code"],
+            "country_en": row["country_en"],
+            "country_cs": row["country_cs"],
+            "value_2019_pct": float(row["value_2019_pct"]),
+            "latest_year": int(row["latest_year"]),
+            "latest_value_pct": float(row["latest_value_pct"]),
+            "change_since_2019_pp": round(float(row["latest_value_pct"]) - float(row["value_2019_pct"]), 2),
+        })
+    countries.sort(key=lambda row: row["latest_value_pct"], reverse=True)
+    for rank, row in enumerate(countries, 1):
+        row["rank"] = rank
+    czechia = next(row for row in countries if row["country_code"] == "CZE")
+    leaders = countries[:4]
+    leader_average = sum(row["latest_value_pct"] for row in leaders) / len(leaders)
+    return {
+        "metric": "general_government_employment_as_pct_total_employment",
+        "unit": "percent_of_total_employment",
+        "source_id": "oecd_government_at_a_glance_2025",
+        "coverage": "European countries available in the OECD 2025-edition table; latest observation is used and its year is retained.",
+        "country_count": len(countries),
+        "oecd_average": {
+            "value_2019_pct": float(average["value_2019_pct"]),
+            "latest_year": int(average["latest_year"]),
+            "latest_value_pct": float(average["latest_value_pct"]),
+        },
+        "czech_rank": czechia["rank"],
+        "leader_average_pct": round(leader_average, 2),
+        "czech_gap_to_leader_average_pp": round(czechia["latest_value_pct"] - leader_average, 2),
+        "countries": countries,
+    }
+
+
 def employment_node(
     node_id: str,
     label_cs: str,
@@ -171,6 +221,7 @@ def validate_employment_tree(node: dict, tolerance: float = 0.11) -> None:
 
 def main() -> None:
     observations = load_rows()
+    international_benchmark = load_benchmark()
     observation = {(row["source_id"], row["series_id"], row["year"]): row["value"] for row in observations}
     def obs(source_id: str, series_id: str, year: int = 2024) -> float:
         return observation[(source_id, series_id, year)]
@@ -654,7 +705,7 @@ def main() -> None:
     first_cost = compensation_history[0]
     latest_cost = compensation_history[-1]
     payload = {
-        "schema_version": "1.4.0",
+        "schema_version": "1.5.0",
         "dataset_id": "CZE_PUBLIC_EMPLOYMENT_OBSERVATORY",
         "country_code": "CZE",
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -671,6 +722,7 @@ def main() -> None:
             "change_since_first_pct": round((latest["public_sector_fte"] / first["public_sector_fte"] - 1) * 100, 1),
         },
         "history": history,
+        "international_benchmark": international_benchmark,
         "growth": {
             "year_from": first["year"],
             "year_to": latest["year"],
