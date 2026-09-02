@@ -1,5 +1,5 @@
 (() => {
-  const datasetUrl = "../../data/cz-public-employment.v1.json?v=1.3.0";
+  const datasetUrl = "../../data/cz-public-employment.v1.json?v=1.4.0";
   const lang = document.documentElement.lang === "en" ? "en" : "cs";
   const locale = lang === "en" ? "en-GB" : "cs-CZ";
   const copy = {
@@ -35,7 +35,9 @@
       growthExact: "přesný přírůstek",
       growthReadingTitle: "Téměř celý čistý nárůst je vláda, ne firmy",
       growthReadingBody: "Vládní instituce přidaly {government} FTE, zatímco veřejné korporace skončily jen o {corporations} FTE výše. Korporace tedy nebyly motorem desetiletého růstu.",
-      accountingKicker: "Nejhlubší srovnatelný rozpad",
+      growthLimitTitle: "Zde končí přesný rozpad 121 744 FTE",
+      growthLimitBody: "ČSÚ pod sektorem S.13 nezveřejňuje pro roky 2015–2024 sčitatelný počet FTE podle ministerstva, funkce ani zaměstnavatele. Následující panely jsou samostatné výkazy — nejsou dalšími větvemi tohoto součtu.",
+      accountingKicker: "Samostatný výkaz 2015–2024",
       accountingTitle: "Ve vládou regulované sféře přibylo 64 633 zaměstnanců",
       accountingIntro: "Stejná tabulka Ministerstva financí za roky 2015 a 2024 rozděluje změnu beze zbytku. Ukazuje růst školství, bezpečnostních sborů a příspěvkových organizací i pokles civilních zaměstnanců státu.",
       accountingCaveat: "Tento rozpad se přesně sčítá uvnitř vládou regulované sféry. Není však úplným rozkladem sektoru S.13: jiné veřejné jednotky leží mimo tento rozpočtový výkaz.",
@@ -78,11 +80,20 @@
       in2015Prices: "v cenách 2015",
       ofCompensation: "kompenzace 2024",
       explorerKicker: "Klikací mapa pracovníků",
-      explorerTitle: "Rozbalte veřejný sektor až k profesi nebo organizaci",
-      explorerIntro: "Přepínejte mezi šesti oficiálními řezy. Uvnitř vybraného řezu se dlaždice sčítají; mezi řezy nikoli, protože se překrývají a používají různé jednotky.",
-      explorerRule: "Jeden strom najednou. Státní sféra, školství, samospráva a podniky nejsou další lidé k celkovému počtu 1 112 290 FTE.",
+      explorerTitle: "Vyberte jeden datový celek. Sčítejte jen jeho položky.",
+      explorerIntro: "Toto není jedna hierarchie. Jde o šest samostatných výkazů s různou hranicí a jednotkou; po přepnutí se celý jmenovatel nahradí.",
+      explorerRule: "Vždy je aktivní právě jeden datový celek. Čísla z horního přepínače se navzájem nikdy nesčítají.",
+      explorerDataset: "Datový celek",
+      explorerSelectedDataset: "Vybraný datový celek",
+      explorerDatasetTotal: "Celkem v tomto výkazu",
+      explorerOnlyAdd: "Pouze položky níže se sčítají",
+      explorerEquation: "Kontrola součtu",
+      explorerRowsSum: "položek dává součet",
+      explorerExact: "sedí přesně",
+      explorerRounded: "sedí v mezích zaokrouhlení zdroje",
+      explorerNoBreakdown: "Zdroj pod touto položkou nezveřejňuje další sčitatelný rozpad.",
       explorerBreakdown: "Rozpad",
-      explorerOfScope: "z vybraného řezu",
+      explorerOfScope: "z celku aktivního výkazu",
       explorerOpen: "Kliknutím rozbalit",
       explorerLeaf: "Nejnižší dostupný detail",
       explorerDetails: "Detail vybrané skupiny",
@@ -102,7 +113,7 @@
       explorerNonfinancial: "Nefinanční podniky",
       explorerFinancial: "Finanční instituce",
       explorerSource: "Otevřít oficiální zdroj",
-      explorerRows: "Položky v tomto řezu",
+      explorerRows: "Jediné sčitatelné položky pod",
       explorerCategory: "Skupina",
       explorerValue: "Počet",
       explorerStatus: "Stav",
@@ -181,7 +192,9 @@
       growthExact: "exact increase",
       growthReadingTitle: "Almost all net growth is government, not corporations",
       growthReadingBody: "General government added {government} FTE while public corporations ended just {corporations} FTE higher. Corporations were not the engine of the decade's growth.",
-      accountingKicker: "Deepest comparable breakdown",
+      growthLimitTitle: "This is where the exact 121,744-FTE breakdown ends",
+      growthLimitBody: "Below S.13, CZSO does not publish an additive 2015–2024 FTE split by ministry, function or employer. The panels that follow are independent returns—not further branches of this total.",
+      accountingKicker: "Separate 2015–2024 return",
       accountingTitle: "The state-regulated sphere added 64,633 employees",
       accountingIntro: "The same Ministry of Finance table for 2015 and 2024 allocates the change completely. It shows growth in education, security forces and contributory organisations—and a decline in civil state employment.",
       accountingCaveat: "This breakdown adds exactly inside the state-regulated sphere. It is not a complete decomposition of ESA sector S.13: other public units sit outside this budget return.",
@@ -224,11 +237,20 @@
       in2015Prices: "in 2015 prices",
       ofCompensation: "of 2024 compensation",
       explorerKicker: "Clickable workforce map",
-      explorerTitle: "Drill from the public sector to a profession or organisation",
-      explorerIntro: "Switch among six official views. Tiles add within the selected view, but never across views because the perimeters overlap and the units differ.",
-      explorerRule: "One tree at a time. The state-regulated sphere, education, local administration and corporations are not extra people on top of the 1,112,290 FTE total.",
+      explorerTitle: "Choose one dataset. Add only the rows inside it.",
+      explorerIntro: "This is not one hierarchy. These are six independent returns with different boundaries and units; switching replaces the entire denominator.",
+      explorerRule: "Exactly one dataset is active at a time. The numbers in the selector are never added to one another.",
+      explorerDataset: "Dataset",
+      explorerSelectedDataset: "Selected dataset",
+      explorerDatasetTotal: "Total in this return",
+      explorerOnlyAdd: "Only the rows below are additive",
+      explorerEquation: "Reconciliation check",
+      explorerRowsSum: "rows sum to",
+      explorerExact: "exact match",
+      explorerRounded: "matches within source rounding",
+      explorerNoBreakdown: "The source publishes no deeper additive breakdown below this item.",
       explorerBreakdown: "Breakdown",
-      explorerOfScope: "of selected view",
+      explorerOfScope: "of the active dataset total",
       explorerOpen: "Click to drill down",
       explorerLeaf: "Lowest available detail",
       explorerDetails: "Selected-group detail",
@@ -248,7 +270,7 @@
       explorerNonfinancial: "Non-financial corporations",
       explorerFinancial: "Financial corporations",
       explorerSource: "Open official source",
-      explorerRows: "Items in this view",
+      explorerRows: "Only additive rows under",
       explorerCategory: "Group",
       explorerValue: "Count",
       explorerStatus: "Status",
@@ -377,8 +399,22 @@
       const current = path.at(-1);
       const children = [...(current.children || [])].sort((a, b) => b.value - a.value);
       const rectangles = binaryTreemap(children);
+      const scopeIndex = explorer.scopes.findIndex((item) => item.id === scope.id);
+      const perimeter = scope[lang === "en" ? "perimeter_en" : "perimeter_cs"];
+      $("#employment-scope-summary").innerHTML = `<article><span>${copy.explorerSelectedDataset} · ${scopeIndex + 1}/${explorer.scopes.length}</span><strong>${esc(scope[lang === "en" ? "label_en" : "label_cs"])}</strong><p>${esc(perimeter)}</p></article><article><span>${copy.explorerDatasetTotal}</span><strong>${fmtCount(scope.root.value)}</strong><small>${esc(unit(scope.root))} · ${scope.year}</small></article>`;
       $("#employment-explorer-breadcrumbs").innerHTML = path.map((node, index) => `<button type="button" data-explorer-crumb="${index}" aria-current="${index === path.length - 1 ? "page" : "false"}">${esc(label(node))}</button>`).join("<i>/</i>");
-      $("#employment-explorer-status").innerHTML = `<b>${esc(status(scope.coverage_status))}</b><span>${fmtCount(scope.root.value)} ${esc(unit(scope.root))}</span>`;
+      $("#employment-explorer-status").innerHTML = `<b>${esc(status(scope.coverage_status))}</b><span>${scope.year} · ${esc(unit(scope.root))}</span>`;
+      if (children.length) {
+        const childrenTotal = children.reduce((sum, child) => sum + child.value, 0);
+        const difference = Math.abs(childrenTotal - current.value);
+        const exact = difference < 0.001;
+        const shortEquation = children.length <= 3
+          ? `${children.map((child) => `<span>${fmtCount(child.value)}</span>`).join("<b>+</b>")}<b>${exact ? "=" : "≈"}</b>`
+          : `<span>${children.length} ${copy.explorerRowsSum}</span><b>${exact ? "=" : "≈"}</b>`;
+        $("#employment-explorer-equation").innerHTML = `<small>${copy.explorerEquation}: ${esc(label(current))}</small><div>${shortEquation}<strong>${fmtCount(current.value)} ${esc(unit(current))}</strong><em>✓ ${exact ? copy.explorerExact : copy.explorerRounded}</em></div>`;
+      } else {
+        $("#employment-explorer-equation").innerHTML = `<small>${copy.explorerEquation}: ${esc(label(current))}</small><p>${copy.explorerNoBreakdown}</p>`;
+      }
       $("#employment-treemap").innerHTML = rectangles.map(({ item, x, y, width, height }, index) => {
         const share = item.value / current.value * 100;
         const compact = width < 22 || height < 25;
@@ -387,11 +423,11 @@
       const source = sources[selected.source_id];
       const selectedShare = selected.value / scope.root.value * 100;
       $("#employment-explorer-detail").innerHTML = `<span>${copy.explorerDetails}</span><div class="employment-detail-status"><b>${esc(status(selected.status))}</b>${selected.details?.ico ? `<code>IČO ${esc(selected.details.ico)}</code>` : ""}</div><h3>${esc(label(selected))}</h3><strong>${fmtCount(selected.value)} <small>${esc(unit(selected))}</small></strong><div class="employment-detail-share"><i style="width:${Math.min(100, selectedShare)}%"></i></div><p>${pct(selectedShare)} % ${copy.explorerOfScope}</p><div class="employment-detail-metrics">${detailsFor(selected)}</div>${note(selected) ? `<p class="employment-detail-note">${esc(note(selected))}</p>` : ""}${source ? `<a href="${esc(source.url)}" target="_blank" rel="noopener">${copy.explorerSource} ↗</a>` : ""}`;
-      $("#employment-explorer-table").innerHTML = children.length ? `<div><table><caption>${copy.explorerRows}: ${esc(label(current))}</caption><thead><tr><th>${copy.explorerCategory}</th><th>${copy.explorerValue}</th><th>${copy.explorerStatus}</th><th></th></tr></thead><tbody>${children.map((child) => `<tr class="${selected.id === child.id ? "selected" : ""}"><th>${esc(label(child))}</th><td>${fmtCount(child.value)} ${esc(unit(child))}</td><td>${esc(status(child.status))}</td><td><button type="button" data-explorer-node="${esc(child.id)}">${child.children?.length ? copy.explorerDrill : copy.explorerDetails} →</button></td></tr>`).join("")}</tbody></table></div>` : "";
+      $("#employment-explorer-table").innerHTML = children.length ? `<div><table><caption>${copy.explorerRows}: ${esc(label(current))} · ${copy.explorerOnlyAdd}</caption><thead><tr><th>${copy.explorerCategory}</th><th>${copy.explorerValue}</th><th>${copy.explorerStatus}</th><th></th></tr></thead><tbody>${children.map((child) => `<tr class="${selected.id === child.id ? "selected" : ""}"><th>${esc(label(child))}</th><td>${fmtCount(child.value)} ${esc(unit(child))}</td><td>${esc(status(child.status))}</td><td><button type="button" data-explorer-node="${esc(child.id)}">${child.children?.length ? copy.explorerDrill : copy.explorerDetails} →</button></td></tr>`).join("")}</tbody></table></div>` : "";
       $("#employment-explorer-source").innerHTML = scope.source_ids.map((sourceId) => { const item = sources[sourceId]; return `<a href="${esc(item.url)}" target="_blank" rel="noopener"><span>${esc(item.publisher)}</span><strong>${esc(item[lang === "en" ? "title_en" : "title_cs"])} · ${esc(item.period)} ↗</strong></a>`; }).join("");
     }
 
-    $("#employment-scope-tabs").innerHTML = explorer.scopes.map((item) => `<button type="button" data-explorer-scope="${esc(item.id)}" aria-pressed="${item.id === scope.id}"><span>${esc(item[lang === "en" ? "label_en" : "label_cs"])}</span><strong>${fmtCount(item.root.value)}</strong><small>${esc(copy[item.root.unit] || item.root.unit)}</small></button>`).join("");
+    $("#employment-scope-tabs").innerHTML = explorer.scopes.map((item, index) => `<button type="button" data-explorer-scope="${esc(item.id)}" aria-pressed="${item.id === scope.id}"><span>${copy.explorerDataset} ${index + 1}</span><strong>${esc(item[lang === "en" ? "label_en" : "label_cs"])}</strong><small>${item.year} · ${esc(status(item.coverage_status))}</small></button>`).join("");
     $("#employment-scope-tabs").addEventListener("click", (event) => {
       const button = event.target.closest("[data-explorer-scope]");
       if (!button) return;

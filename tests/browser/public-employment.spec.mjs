@@ -23,6 +23,8 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator("#growth")).toBeVisible();
   await expect(page.locator("#employment-growth-split")).toContainText(number(dataset.growth.general_government_change_fte));
   await expect(page.locator("#employment-growth-split")).toContainText(number(dataset.growth.public_corporations_change_fte));
+  await expect(page.locator(".employment-growth-limit")).toContainText("This is where the exact 121,744-FTE breakdown ends");
+  await expect(page.locator(".employment-growth-limit")).toContainText("independent returns");
   await expect(page.locator("#employment-school-growth")).toContainText(number(dataset.growth.regional_education_evidence.change_fte));
   await expect(page.locator("#employment-regulated-growth .employment-growth-row")).toHaveCount(dataset.growth.state_regulated_comparison.components.length);
   await expect(page.locator("#employment-regulated-growth")).toContainText("+64,633");
@@ -37,6 +39,12 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator("#employment-function-growth .employment-cost-stack-row")).toHaveCount(2);
   await expect(page.locator("#employment-salary-comparison > article")).toHaveCount(dataset.growth.state_regulated_comparison.salary_comparison.length);
   await expect(page.locator("#employment-scope-tabs > button")).toHaveCount(dataset.employment_explorer.scopes.length);
+  await expect(page.locator("#employment-scope-tabs")).not.toContainText(number(dataset.headline.public_sector_fte));
+  await expect(page.locator("#employment-scope-summary")).toContainText("Exact public-sector total");
+  await expect(page.locator("#employment-scope-summary")).toContainText(number(dataset.headline.public_sector_fte));
+  await expect(page.locator("#employment-explorer-equation")).toContainText(number(dataset.headline.general_government_fte));
+  await expect(page.locator("#employment-explorer-equation")).toContainText(number(dataset.headline.public_corporations_combined_fte));
+  await expect(page.locator("#employment-explorer-equation")).toContainText(number(dataset.headline.public_sector_fte));
   await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.general_government_fte));
   await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.public_corporations_combined_fte));
   await expect(page.locator("#employment-layer-grid > article")).toHaveCount(dataset.evidence_layers.length);
@@ -61,8 +69,9 @@ test("public-employment explorer drills from source scope to profession and orga
   await page.goto("/deep-dives/public-employment/?lang=en", {waitUntil: "networkidle"});
   const explorer = page.locator("#explorer");
   await expect(explorer).toBeVisible();
-  await expect(page.locator("#employment-scope-tabs [aria-pressed=true]")).toContainText("State-regulated sphere");
+  await expect(page.locator("#employment-scope-tabs [aria-pressed=true]")).toContainText("Exact public-sector total");
   await expect(page.locator("#employment-treemap .employment-tile")).toHaveCount(2);
+  await expect(page.locator("#employment-explorer-equation")).toContainText("exact match");
 
   await page.locator('[data-explorer-scope="education_professions"]').click();
   await page.locator('#employment-treemap [data-explorer-node="education_pedagogical"]').click();
@@ -74,6 +83,8 @@ test("public-employment explorer drills from source scope to profession and orga
   await expect(page.locator("#employment-explorer-detail")).toContainText("31,129 CZK");
 
   await page.locator('[data-explorer-scope="strategic_entities"]').click();
+  await expect(page.locator("#employment-scope-summary")).toContainText("Portfolio of 38 entities");
+  await expect(page.locator("#employment-scope-summary")).toContainText("This is not the 164,412-FTE public-corporation total");
   await page.locator('#employment-treemap [data-explorer-node="strategic_transport"]').click();
   await page.locator('#employment-treemap [data-explorer-node="entity_70994226"]').click();
   await expect(page.locator("#employment-explorer-detail")).toContainText("České dráhy, a.s.");
