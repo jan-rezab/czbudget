@@ -246,7 +246,7 @@
     $("#source-metadata").href=state.data.sources.metadata_url;
   }
 
-  Promise.all([fetch(`${assetRoot}data/eu-migration.v1.json`).then((response)=>{if(!response.ok)throw new Error(response.status);return response.json()}),fetch(`${assetRoot}data/world-map.v1.json`).then((response)=>{if(!response.ok)throw new Error(response.status);return response.json()})]).then(([data,geometry])=>{
+  Promise.all([fetch(`${assetRoot}data/eu-migration.v1.json?v=20260902-protection-33`).then((response)=>{if(!response.ok)throw new Error(response.status);return response.json()}),fetch(`${assetRoot}data/world-map.v1.json`).then((response)=>{if(!response.ok)throw new Error(response.status);return response.json()})]).then(([data,geometry])=>{
     state.data=data;state.geometry=geometry;
     state.year=Math.max(data.scope.first_year,Math.min(data.scope.last_year,state.year));
     if(state.country!=="EU27"&&!country(state.country))state.country="EU27";
