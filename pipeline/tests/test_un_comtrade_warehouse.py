@@ -74,6 +74,26 @@ class UnComtradeWarehouseTest(unittest.TestCase):
         self.assertIn("target.period_start BETWEEN min_observation_date AND max_observation_date", merge)
         self.assertNotIn("SELECT *", merge.upper())
 
+    def test_product_intelligence_views_use_one_import_reporting_lens(self):
+        schema = (ROOT / "pipeline/warehouse/un_comtrade_schema.sql").read_text()
+        self.assertIn("trade_product_import_flow_edges", schema)
+        self.assertIn("trade_product_country_positions", schema)
+        self.assertIn("observation.flow_code = 'M'", schema)
+        self.assertIn("observation.partner_area_code != 0", schema)
+        self.assertIn("'ORIGIN_SUPPLY_PROXY'", schema)
+        self.assertIn("'IMPORT_MARKET_DEMAND_PROXY'", schema)
+        self.assertIn("SAFE_DIVIDE", schema)
+
+    def test_business_area_views_offer_eu27_rollup_and_period_dimension(self):
+        schema = (ROOT / "pipeline/warehouse/un_comtrade_schema.sql").read_text()
+        self.assertIn("trade_business_area_flow_edges", schema)
+        self.assertIn("trade_business_area_positions", schema)
+        self.assertIn("'EU27_AGGREGATED'", schema)
+        self.assertIn("'European Union (EU-27)'", schema)
+        self.assertIn("is_intra_eu27", schema)
+        self.assertIn("business_area_code", schema)
+        self.assertIn("period_start", schema)
+
 
 if __name__ == "__main__":
     unittest.main()
