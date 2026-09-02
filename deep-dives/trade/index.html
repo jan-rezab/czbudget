@@ -7,8 +7,9 @@
   <meta name="description" content="Interaktivní vývoj dovozu, vývozu a obchodní bilance podle země, partnera a zboží z UN Comtrade.">
   <link rel="canonical" href="https://publicspendingdata.org/deep-dives/trade/">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/trade/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/trade/?lang=en">
-  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-country-markets">
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-country-markets"><link rel="stylesheet" href="../../trade-product-intelligence.css?v=20260902-product-intelligence">
   <script src="../../trade-deep-dive.js?v=20260901-trade-i18n" defer></script>
+  <script src="../../trade-product-intelligence.js?v=20260902-product-intelligence" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 </head>
   <body class="deep-dives-page trade-page">
@@ -16,7 +17,7 @@
   <main id="top">
     <section class="deep-hero deep-topic-hero trade-hero" id="overview"><div><span class="eyebrow" data-trade-copy="eyebrow">Report / Zahraniční obchod</span><h1><span data-trade-copy="titleLead">Obchodní trh</span> <em data-trade-copy="titleEm">na jednom plátně</em></h1><p data-trade-copy="intro">Velikost ukazuje hodnotu obchodu, barva přebytek nebo deficit. Klikněte na sektor, zboží a potom partnera.</p></div><div class="deep-hero-aside deep-filter-panel"><label><span data-trade-copy="countryLabel">Země</span><select id="trade-country" aria-label="Země"></select></label><div class="deep-country-readout"><b id="trade-country-code">DEU</b><strong id="trade-country-name">Německo</strong><small id="trade-data-vintage">UN Comtrade · —</small></div></div></section>
 
-    <nav class="deep-topic-rail" aria-label="Trade sections" data-sticky-filter="#trade-country" data-sticky-filter-kind="country"><a href="#pulse" data-trade-copy="pulseNav">Bilance</a><a href="#matrix" data-trade-copy="matrixNav">Mapa trhu</a><a href="#routes" data-trade-copy="routesNav">Směry obchodu</a><a href="#trend" data-trade-copy="trendNav">Vývoj</a><a href="#composition" data-trade-copy="compositionNav">Žebříčky</a><a href="#method" data-trade-copy="methodNav">Metodika</a></nav>
+    <nav class="deep-topic-rail" aria-label="Trade sections" data-sticky-filter="#trade-country" data-sticky-filter-kind="country"><a href="#pulse" data-trade-copy="pulseNav">Bilance</a><a href="#matrix" data-trade-copy="matrixNav">Mapa trhu</a><a href="#routes" data-trade-copy="routesNav">Směry obchodu</a><a href="#trend" data-trade-copy="trendNav">Vývoj</a><a href="#composition" data-trade-copy="compositionNav">Žebříčky</a><a href="#product-intelligence" data-product-copy="nav">Produktové trhy</a><a href="#method" data-trade-copy="methodNav">Metodika</a></nav>
 
     <section class="trade-section trade-pulse" id="pulse">
       <header class="trade-heading"><div><span data-trade-copy="pulseKicker">Poslední období</span><h2 data-trade-copy="pulseTitle">Obchodní bilance na první pohled</h2></div><p id="trade-period-context" data-trade-copy="pulseIntro">Vývoz minus dovoz. Červená znamená deficit, zelená přebytek.</p></header>
@@ -69,6 +70,38 @@
       <div class="trade-flow-tabs" id="trade-flow-tabs"><button type="button" data-flow="export" aria-pressed="true" data-trade-copy="exports">Vývoz</button><button type="button" data-flow="import" aria-pressed="false" data-trade-copy="imports">Dovoz</button></div>
       <div class="trade-composition-grid"><article><header><span>01</span><h3 data-trade-copy="partnersTitle">Největší obchodní partneři</h3></header><div id="trade-partners" class="trade-ranking"></div></article><article><header><span>02</span><h3 data-trade-copy="productsTitle">Největší kapitoly zboží</h3></header><div id="trade-products" class="trade-ranking"></div></article></div>
       <aside class="trade-detail" id="trade-detail" aria-live="polite"></aside>
+    </section>
+
+    <section class="trade-section trade-product-intelligence" id="product-intelligence">
+      <header class="trade-heading product-intelligence-heading"><div><span data-product-copy="kicker">Produktová inteligence / HS6</span><h2 data-product-copy="title">Kdo dodává. Kdo nakupuje. Kam se trh přesouvá.</h2></div><p data-product-copy="intro">Pět obchodně důležitých oblastí ve stejné metodice. Země původu je proxy nabídky; reportující dovozní trh je proxy poptávky.</p></header>
+
+      <div class="product-intelligence-controls">
+        <label><span data-product-copy="areaLabel">Obchodní oblast</span><select id="product-area" aria-label="Obchodní oblast"></select></label>
+        <label><span data-product-copy="geographyLabel">Geografie</span><select id="product-geography" aria-label="Geografie"><option value="EU27_AGGREGATED" data-product-copy="euOption">EU-27 jako jeden blok</option><option value="COUNTRY" data-product-copy="countryOption">Jednotlivé země</option></select></label>
+        <label><span data-product-copy="periodLabel">Roční období</span><select id="product-period" aria-label="Roční období"></select></label>
+      </div>
+
+      <div class="product-intelligence-status" id="product-intelligence-status" role="status" hidden></div>
+      <div class="product-intelligence-kpis" id="product-intelligence-kpis" aria-live="polite"></div>
+
+      <div class="product-position-grid">
+        <article><header><span>01</span><div><h3 data-product-copy="originsTitle">Hlavní země původu</h3><p data-product-copy="originsCopy">Proxy nabídky podle původu, který uvedl dovozní trh.</p></div></header><div id="product-origins" class="product-ranking"></div></article>
+        <article><header><span>02</span><div><h3 data-product-copy="marketsTitle">Hlavní dovozní trhy</h3><p data-product-copy="marketsCopy">Proxy poptávky podle reportujícího dovozního trhu.</p></div></header><div id="product-markets" class="product-ranking"></div></article>
+      </div>
+
+      <article class="product-flow-report">
+        <header><div><span data-product-copy="flowKicker">Tok produktu</span><h3 data-product-copy="flowTitle">Od vykázaného původu k dovoznímu trhu</h3></div><p id="product-flow-context">—</p></header>
+        <div class="product-flow-columns"><span data-product-copy="supplyProxy">Původ / proxy nabídky</span><span data-product-copy="demandProxy">Dovozní trh / proxy poptávky</span></div>
+        <div id="product-flow" class="product-flow" aria-live="polite"></div>
+        <div id="product-flow-detail" class="product-flow-detail" aria-live="polite"><span data-product-copy="flowHint">Přejeďte nebo klikněte na tok pro přesnou hodnotu.</span></div>
+      </article>
+
+      <article class="product-history-report">
+        <header><div><span data-product-copy="historyKicker">Roční řada</span><h3 data-product-copy="historyTitle">Pozorovaná hodnota v čase</h3></div><p id="product-history-context">—</p></header>
+        <div id="product-history" class="product-history" aria-live="polite"></div>
+      </article>
+
+      <div class="product-intelligence-notes"><p data-product-copy="euNote">Agregace EU-27 zachovává vnitrounijní obchod jako samostatný tok EU-27 → EU-27.</p><p data-product-copy="coverageNote">Pokrytí je pozorovaný výřez načtených reportujících trhů, nikoli úplný světový součet. Chybějící data nejsou nuly.</p></div>
     </section>
 
     <section class="trade-section trade-method" id="method">

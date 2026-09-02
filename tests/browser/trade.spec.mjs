@@ -94,6 +94,21 @@ test("country markets show destinations and origins with clickable bilateral det
   await expect(page.locator("#trade-route-detail")).toContainText("Share of imports");
 });
 
+test("product intelligence switches business areas and EU aggregation without losing flow totals", async ({ page }) => {
+  await page.goto("/deep-dives/trade/?code=CZE&lang=en#product-intelligence");
+  await expect(page.locator("#product-intelligence-kpis")).toContainText("$180.7B");
+  await expect(page.locator("#product-flow svg")).toHaveCount(1);
+  await expect(page.locator("#product-flow .flow-link")).toHaveCount(61);
+  await expect(page.locator("#product-markets")).toContainText("EU-27");
+  await page.locator("#product-area").selectOption("PASSENGER_VEHICLES");
+  await expect(page.locator("#product-intelligence-kpis")).toContainText("$693.2B");
+  await page.locator("#product-geography").selectOption("COUNTRY");
+  await expect(page.locator("#product-origins .product-rank-row").first()).toContainText("Germany");
+  await expect(page).toHaveURL(/area=PASSENGER_VEHICLES/);
+  await expect(page).toHaveURL(/geo=COUNTRY/);
+  await expect(page.locator("#product-history .history-point")).toHaveCount(1);
+});
+
 test("trade is registered in reports and the language switch translates the whole page", async ({ page }) => {
   await page.goto("/deep-dives/trade/?code=CZE&lang=cs");
   await expect(page).toHaveTitle("Zahraniční obchod — Public Spending Data");
@@ -106,6 +121,7 @@ test("trade is registered in reports and the language switch translates the whol
   await expect(page.locator("#overview h1")).toContainText("The trade market");
   await expect(page.locator("#matrix h2")).toHaveText("The goods market as a portfolio");
   await expect(page.locator("#routes h2")).toHaveText("Where exports go. Where imports come from.");
+  await expect(page.locator("#product-intelligence h2")).toHaveText("Who supplies. Who buys. Where the market is moving.");
   await expect(page.locator("#method h2")).toHaveText("One balance, two valuation bases");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /Imports, exports, the trade balance/);
 

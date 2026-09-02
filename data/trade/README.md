@@ -87,4 +87,23 @@ Views:
 - `latest_trade_dataset_coverage`
 - `trade_goods_bilateral_hs6`
 - `trade_goods_country_totals`
+- `trade_product_import_flow_edges`
+- `trade_product_country_positions`
+- `trade_business_area_flow_edges`
+- `trade_business_area_positions`
 - `trade_services_bilateral_leaf`
+
+## Public product-intelligence snapshot
+
+`product-intelligence.v1.json` is generated directly from the business-area
+views for every production build:
+
+```bash
+npm run build:trade-product-intelligence
+```
+
+It contains annual product-family totals, country and EU-27 rankings, and a
+bounded origin-to-import-market flow matrix. EU-27 aggregation retains
+intra-EU trade as an explicit EU-27 → EU-27 flow. Origins are supply proxies
+and reporting import markets are demand proxies; neither is presented as
+factory output or final consumption.

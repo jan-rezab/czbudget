@@ -124,6 +124,15 @@ steps:
           < scripts/export-municipal-budget-codebook.sql \
           > data/.municipal-budget-codebook-query.json
 
+  # Product intelligence is a deployment-time BigQuery snapshot. The public
+  # report therefore follows the currently loaded annual warehouse periods and
+  # cannot silently fall back to a hand-maintained or stale embedded dataset.
+  - id: export-trade-product-intelligence
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [scripts/build_trade_product_intelligence.py]
+
   - id: merge-municipal-breakdowns
     waitFor: ["merge-municipal-headlines", "export-municipal-breakdowns"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
