@@ -152,6 +152,10 @@
       cs: ["Zahraniční obchod — Public Spending Data", "Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade."],
       en: ["Foreign trade — Public Spending Data", "Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer."],
     },
+    "/deep-dives/product-markets/": {
+      cs: ["Globální produktové trhy — Public Spending Data", "Globální obchodní toky podle produktů HS6: kdo dodává, které trhy nakupují a jak se obchod mění v čase."],
+      en: ["Global product markets — Public Spending Data", "Global HS6 product flows: who supplies, which markets buy, and how observed trade changes over time."],
+    },
     "/deep-dives/budget-planner/": {
       cs: ["Plánovač státního rozpočtu 2027 — Public Spending Data", "Prozkoumejte návrh státního rozpočtu ČR na rok 2027, upravte výdaje a příjmy a sledujte dopad na schodek."],
       en: ["Czech state budget planner 2027 — Public Spending Data", "Explore the proposed 2027 Czech state budget, adjust expenditure and revenue, and see the effect on the deficit."],

@@ -40,6 +40,8 @@
   Object.assign(copy.en,{money:"Where did the money go?",moneyCopy:"Money supply, purchasing power and CNB and Fed interventions in two separate national reports."});
   Object.assign(copy.cs,{trade:"Zahraniční obchod",tradeCopy:"Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade."});
   Object.assign(copy.en,{trade:"Foreign trade",tradeCopy:"Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer."});
+  Object.assign(copy.cs,{productMarkets:"Globální produktové trhy",productMarketsCopy:"Sledujte chytré telefony, vozidla, léčiva, čipy a baterie od vykázaného původu až po dovozní trh."});
+  Object.assign(copy.en,{productMarkets:"Global product markets",productMarketsCopy:"Follow smartphones, vehicles, medicines, chips, and batteries from reported origin to importing market."});
   Object.assign(copy.cs,{czechBudget:"Český státní rozpočet",budgetPlanner:"Plánovač rozpočtu 2027",budgetPlannerCopy:"Projděte návrh podle funkcí, změňte výdaje nebo příjmy a sledujte dopad na schodek."});
   Object.assign(copy.en,{czechBudget:"Czech state budget",budgetPlanner:"2027 budget planner",budgetPlannerCopy:"Explore the proposal by function, change expenditure or revenue and see the effect on the deficit."});
   Object.assign(copy.cs,{special:"Datový speciál",municipalSpecials:"Městské příběhy",municipalSpecialsCopy:"Jednorázové pohledy, které jdou hlouběji než standardní profil města.",plzenContracts:"Plzeň: smlouvy a skutečné platby",plzenContractsCopy:"Od podpisu a zveřejnění smlouvy až ke skutečně uhrazeným částkám investičních akcí po fiskálních letech."});
