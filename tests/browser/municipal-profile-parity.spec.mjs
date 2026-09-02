@@ -232,6 +232,17 @@ test("French communes expose DGFiP account lines separately from functional purp
   expect(await page.locator(".municipality-card").first().locator("dd").allTextContents()).not.toContain("—");
   await expect(page.locator('.municipality-card a[href*="/municipalities/france/profile/?code="]').first()).toBeVisible();
   await expect(page.locator('#country-context-grid a[href*="balances-comptables-des-regions"]')).toBeVisible();
+  await expect(page.locator("#country-insight-grid")).toContainText("Total revenue");
+  await expect(page.locator("#country-insight-grid")).toContainText("34,778");
+  await expect(page.locator("#municipal-balance-split")).toContainText("Communes in surplus");
+  await expect(page.locator("#municipal-ranking-grid .municipal-ranking-card")).toHaveCount(3);
+  await expect(page.locator("#municipal-ranking-grid .municipal-ranking-card").first()).toContainText("Paris");
+  await expect(page.locator("#country-municipality-grid .municipality-card").first().locator("h3")).toHaveText("Paris");
+  await page.locator("#country-municipality-search").fill("Toulouse");
+  await expect(page.locator("#country-municipality-grid .municipality-card").first().locator("h3")).toHaveText("Toulouse");
+  await page.locator("#country-municipality-search").fill("");
+  await page.locator("#country-balance-filter").selectOption("deficit");
+  await expect(page.locator("#country-municipality-grid .municipality-card").first().locator("dd.negative")).toBeVisible();
 });
 
 test("a French commune without functional codes still surfaces economic accounts honestly", async ({ page }) => {

@@ -119,6 +119,7 @@
 .municipal-balance-split article:nth-child(2) strong { color: #c93237; }
 .municipal-balance-split>p { display: flex; align-items: center; color: #4f5954; font-size: 16px; line-height: 1.55; }
 .municipal-balance-split>p strong { margin-left: .35em; color: #287158; font-size: 20px; }
+.municipal-balance-split>p strong.negative { color: #c93237; }
 .municipal-ranking-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
 .municipal-ranking-card { min-width: 0; border: 1px solid #aeb6ac; background: #fffdf7; }
 .municipal-ranking-card>header { min-height: 92px; padding: 19px 20px; border-top: 4px solid #171918; border-bottom: 1px solid #d4d6cf; }
@@ -141,6 +142,13 @@
 .municipal-ranking-card li i b { display: block; height: 100%; background: #171918; }
 .municipal-ranking-card.surplus li i b { background: #287158; }
 .municipal-ranking-card.deficit li i b { background: #c93237; }
+.france-ranking-note,.france-directory-order { color: #69716c; font-size: 12px; line-height: 1.55; }
+.france-ranking-note { max-width: 900px; margin: 20px 0 0; }
+.france-directory-order { margin: -14px 0 24px; }
+.france-directory-controls { grid-template-columns: minmax(240px,1.5fr) repeat(3,minmax(150px,.7fr)) auto; }
+.country-municipalities-page .municipality-card dd.positive { color: #287158; }
+.country-municipalities-page .municipality-card dd.negative { color: #c93237; }
+.country-municipalities-page[data-country-code="FRA"] #country-insight-grid strong { font-size: clamp(35px,4vw,58px); }
 .czechia-inline-directory { background: #f7f4ed; }
 .municipal-inline-search { margin-bottom: 22px; }
 .municipal-inline-search>label { display: block; margin-bottom: 9px; color: #59635e; font: 700 11px monospace; text-transform: uppercase; letter-spacing: .08em; }
