@@ -45,17 +45,39 @@
 .municipality-switch select:focus-visible { outline: 2px solid #c93237; outline-offset: 3px; }
 .municipality-switch a.active { background: #15201d; color: #fff; }
 .municipality-switch label.active { background: #15201d; color: #fff; }
-.municipality-switch label.dynamic-country-picker { position: relative; min-width: 270px; padding: 0; transition: background .16s ease, color .16s ease; }
-.dynamic-country-picker > span:first-child { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap; }
-.country-picker-readout { min-height: 48px; padding: 7px 12px; display: flex; align-items: center; gap: 10px; pointer-events: none; }
+.municipality-switch .dynamic-country-picker { position: relative; min-width: 270px; padding: 0; border-left: 1px solid #15201d; transition: background .16s ease, color .16s ease; }
+.municipality-switch .dynamic-country-picker.active { background: #15201d; color: #fff; }
+.dynamic-country-picker > .country-picker-label { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap; }
+.country-picker-readout { width: 100%; min-height: 48px; padding: 7px 12px; display: flex; align-items: center; gap: 10px; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
 .country-picker-readout img { width: 30px; height: 20px; object-fit: cover; border: 1px solid #ffffff66; }
 .country-picker-readout > span { min-width: 0; display: block; }
 .country-picker-readout strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
-.country-picker-readout small { display:none; }
-.country-picker-readout > b { margin-left: auto; color: #d9ff69; font-size: 18px; }
-.municipality-switch .dynamic-country-picker select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.country-picker-readout small { display:block; margin-top: 3px; color: #b9c1bc; font: 10px/1.2 monospace; }
+.country-picker-readout > b { width: 8px; height: 8px; margin-left: auto; border-right: 2px solid #d9ff69; border-bottom: 2px solid #d9ff69; transform: rotate(45deg); transition: transform .16s ease; }
+.country-picker-readout[aria-expanded="true"] > b { transform: rotate(225deg); }
+.municipality-switch .dynamic-country-picker select { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); opacity: 0; }
 .municipality-switch .dynamic-country-picker:hover,
 .municipality-switch .dynamic-country-picker:focus-within { background: #293630; box-shadow: inset 0 -4px 0 #d9ff69; }
+.country-picker-popover { position: absolute; z-index: 35; top: calc(100% + 8px); right: 0; width: min(420px, 92vw); padding: 10px; border: 1px solid #111b18; background: #111b18; color: #111b18; box-shadow: 10px 10px 0 #111b1824; }
+.country-picker-popover[hidden] { display: none; }
+.country-picker-search { display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; padding: 12px; background: #f1ede3; }
+.country-picker-search > span { font: 700 11px/1 monospace; letter-spacing: .04em; text-transform: uppercase; }
+.country-picker-search input { grid-column: 1/-1; width: 100%; height: 42px; padding: 9px 11px; border: 1px solid #8b8d83; border-radius: 0; background: #fff; color: #111b18; font: 600 14px/1 Arial,sans-serif; }
+.country-picker-search input:focus { outline: 3px solid #a8b63f; outline-offset: -3px; }
+.country-picker-popover > output { display: block; padding: 9px 12px; background: #e4e0d7; color: #656963; font: 700 11px/1 monospace; }
+.country-picker-options { max-height: min(430px, calc(100dvh - 230px)); overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #111b18; }
+.country-picker-options > button { min-height: 58px; padding: 9px 10px; display: grid; grid-template-columns: 30px minmax(0,1fr) 18px; gap: 8px; align-items: center; border: 0; background: #f1ede3; color: #111b18; text-align: left; cursor: pointer; }
+.country-picker-options > button:hover,.country-picker-options > button:focus-visible { z-index: 1; outline: 3px solid #a8b63f; outline-offset: -3px; background: #f0efc9; }
+.country-picker-options > button[aria-selected="true"] { background: #e7edc9; box-shadow: inset 4px 0 0 #a8b63f; }
+.country-picker-options > button[hidden] { display: none; }
+.country-picker-options img,.country-picker-flag-placeholder { width: 26px; height: 18px; display: block; object-fit: cover; border: 1px solid #111b1828; box-shadow: 2px 2px 0 #111b1814; }
+.country-picker-flag-placeholder { background: #d6d2c8; }
+.country-picker-options span,.country-picker-options strong,.country-picker-options small { min-width: 0; display: block; }
+.country-picker-options strong { overflow: hidden; font: 700 13px/1.15 Arial,sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.country-picker-options small { margin-top: 4px; color: #686d68; font: 10px/1.1 monospace; }
+.country-picker-options > button > b { color: #698026; font: 800 14px/1 Arial,sans-serif; text-align: center; }
+.country-picker-empty { margin: 1px 0 0; padding: 18px 12px; background: #f1ede3; color: #656963; font: 600 13px/1.4 Arial,sans-serif; }
+.country-picker-empty[hidden] { display: none; }
 .municipal-country-card footer { gap: 18px; align-items: center; }
 .municipal-country-card footer a { padding: 8px 0; font-weight: 700; text-underline-offset: 4px; }
 .municipal-country-card footer a:last-child { margin-left: auto; text-align: right; }
@@ -377,7 +399,9 @@
   .municipality-switch { margin-top: 20px; width: 100%; }
   .municipality-switch a { min-width: 95px; }
   .municipality-switch label { min-width: 0; flex: 1; }
-  .municipality-switch label.dynamic-country-picker { min-width: 0; }
+  .municipality-switch .dynamic-country-picker { min-width: 0; flex: 1; }
+  .country-picker-popover { position: fixed; top: 118px; right: 4vw; left: 4vw; width: auto; }
+  .country-picker-options { grid-template-columns: 1fr; max-height: calc(100dvh - 250px); }
   .municipal-controls { grid-template-columns: 1fr; }
   .czechia-destination-grid > a { min-height: 280px; }
   .municipality-lang-switch button { min-width: 36px; padding-inline: 8px; }

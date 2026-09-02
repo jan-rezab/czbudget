@@ -1,5 +1,6 @@
 (() => {
   const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "../";
+  const pickerReady=window.PSDMunicipalityCountryPicker?Promise.resolve():new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=`${assetRoot}municipality-country-picker.js?v=20260902-searchable-picker`;script.onload=resolve;script.onerror=reject;document.head.append(script);});
   const params = new URLSearchParams(location.search);
   const requestedType = params.get("type");
   const requestedLanguage = params.get("lang");
@@ -45,7 +46,19 @@
 
   function renderCountrySwitch(){
     const select=$("#municipality-country-switch"); if(!select||!state.data)return;
-    select.innerHTML=`<option value="">${state.lang==="cs"?"Vyberte zemi…":"Choose a country…"}</option>`+state.data.countries.filter((country)=>slugs[country.code]).map((country)=>`<option value="${slugs[country.code]}">${esc(name(country))}</option>`).join("");
+    if(!window.PSDMunicipalityCountryPicker){pickerReady.then(renderCountrySwitch).catch(console.error);return;}
+    window.PSDMunicipalityCountryPicker?.enhance(select,{
+      label:state.lang==="en"?"Municipality country":"Obecní země",
+      placeholder:state.lang==="en"?"Choose a country":"Vyberte zemi",
+      hint:state.lang==="en"?"Open a country directory":"Otevřete adresář země",
+      searchLabel:state.lang==="en"?"Search countries":"Hledat země",
+      searchPlaceholder:state.lang==="en"?"Country name…":"Název země…",
+      emptyLabel:state.lang==="en"?"No countries match.":"Žádná země neodpovídá.",
+      resultSingular:state.lang==="en"?"country":"země",
+      resultPlural:state.lang==="en"?"countries":"zemí",
+      selected:"",
+      options:state.data.countries.filter((country)=>slugs[country.code]).map((country)=>({value:slugs[country.code],label:name(country),search:`${country.name_cs} ${country.name_en} ${country.code}`,meta:`${fmt(country.directory_count)} ${t().entities}`,flag:`${assetRoot}assets/flags/${country.alpha2.toLowerCase()}.svg`})),
+    });
   }
 
   function updateUrl() {
