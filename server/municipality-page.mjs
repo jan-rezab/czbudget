@@ -48,7 +48,7 @@ export function municipalityPage({ route, release_id, history }) {
     <link rel="stylesheet" href="/municipal-expanded-profile.css?v=20260828-snapshot-serving" />
     <link rel="stylesheet" href="/global-footer.css" />
     <script src="/global-nav.js?v=20260827-country-methodology" defer></script>
-    <script src="/municipal-expanded-profile.js?v=20260902-cze-line-detail" defer></script>
+    <script src="/municipal-expanded-profile.js?v=20260902-cze-line-detail-2" defer></script>
     <script src="/global-footer.js?v=20260825-footer-align" defer></script>
   </head>
   <body class="municipalities-page benchmark-profile expanded-profile cz-budget-page detail-page international-municipality-profile" data-profile-url="${profileEndpoint}"${historyAttribute} data-snapshot-release="${escapeHTML(release_id)}"${warehouse}>
