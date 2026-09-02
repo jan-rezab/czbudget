@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """Load comparable education-capacity observations for the site's core countries.
 
-Eurostat's UOE collection supplies harmonised learner headcounts, learner FTE,
-teacher/academic FTE and pupil-teacher ratios. It does not disseminate a
-harmonised count of schools or institutions, so that field remains explicitly
-missing until a national-source adapter is added for each country.
+Eurostat UOE supplies harmonised learner and teaching measures. Official
+institution-register counts are joined from education-institutions.v1.json.
 """
 
 from __future__ import annotations
@@ -22,6 +20,7 @@ from typing import Any
 
 WEB = Path(os.environ.get("CZBUDGET_WEBSITE_ROOT", Path(__file__).resolve().parents[1])).resolve()
 OUTPUT = WEB / "data/education-capacity-international.v1.json"
+INSTITUTIONS = WEB / "data/education-institutions.v1.json"
 EUROSTAT_API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
 REFERENCE_YEAR = "2024"
 USER_AGENT = "PublicSpendingData/1.0 education-capacity-loader"
@@ -120,6 +119,10 @@ def atomic_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def main() -> None:
+    institution_data = json.loads(INSTITUTIONS.read_text(encoding="utf-8"))
+    institutions_by_country = {country["code"]: country for country in institution_data["countries"]}
+    if set(institutions_by_country) != {country[0] for country in COUNTRIES}:
+        raise RuntimeError("Institution source must cover all six core countries")
     geos = [country[1] for country in COUNTRIES]
     common = {"lang": "en", "time": REFERENCE_YEAR, "geo": geos, "sector": "TOT_SEC", "sex": "T"}
     early_headcount, early_headcount_url = fetch("educ_uoe_enrp01", {**common, "worktime": "TOTAL"})
@@ -143,6 +146,10 @@ def main() -> None:
             teacher_code = "ED5-8" if level_id == "tertiary" else components[0]
             teachers, teacher_status = observation(teacher_fte, {**coordinates, "isced11": teacher_code})
             ratio, ratio_status = observation(ratios, {**coordinates, "isced11": teacher_code})
+            ratio_provenance = "published"
+            if ratio is None and learner_fte is not None and teachers is not None and teachers > 0:
+                ratio = learner_fte / teachers
+                ratio_provenance = "derived_from_eurostat_fte"
             flags = headcount_flags + learner_fte_flags
             if teacher_status:
                 flags.append(f"teacher_fte:{teacher_status}")
@@ -157,7 +164,9 @@ def main() -> None:
                 "learners_fte": rounded(learner_fte),
                 "teaching_fte": rounded(teachers),
                 "learners_per_teaching_fte": rounded(ratio),
-                "schools_or_institutions": None,
+                "ratio_provenance": ratio_provenance,
+                "schools_or_institutions": institutions_by_country[code]["counts"][level_id],
+                "institutions_period": institutions_by_country[code]["period"],
                 "observation_flags": sorted(set(flags)),
             })
         metric_counts = {
@@ -172,6 +181,10 @@ def main() -> None:
             "period": REFERENCE_YEAR,
             "levels": level_rows,
             "coverage": metric_counts,
+            "institution_source": {
+                key: institutions_by_country[code][key]
+                for key in ("period", "source_title", "source_url", "definition")
+            },
         })
 
     payload = {
@@ -188,14 +201,15 @@ def main() -> None:
             "learner_headcount": "Students with working-time category TOTAL; tertiary is the sum of ISCED 5, 6, 7 and 8.",
             "learner_fte": "Students with working-time category TOT_FTE; tertiary is the sum of ISCED 5, 6, 7 and 8.",
             "teaching_fte": "Classroom teachers at ISCED 02–3 and academic staff at ISCED 5–8, working-time category TOT_FTE.",
-            "ratio": "Eurostat's published ratio; not recalculated where Eurostat withholds the comparable observation.",
-            "school_counts": "Not disseminated in the harmonised UOE tables. National institution registers require separate country adapters.",
+            "ratio": "Eurostat's published ratio where available. When withheld, the ratio is derived from the same Eurostat learner-FTE and teaching-FTE observations and explicitly marked.",
+            "school_counts": "Official register counts joined by ISCED level. They are not a harmonised UOE indicator; definitions, periods and cross-level double-counting are preserved per source.",
         },
         "sources": [
             {"dataset": "educ_uoe_enrp01", "title": "Pupils enrolled in early childhood education", "requests": [early_headcount_url, early_fte_url]},
             {"dataset": "educ_uoe_enra01", "title": "Pupils and students enrolled by education level", "requests": [enrolment_headcount_url, enrolment_fte_url]},
             {"dataset": "educ_uoe_perp02", "title": "Classroom teachers and academic staff by employment status", "requests": [teacher_fte_url]},
             {"dataset": "educ_uoe_perp04", "title": "Ratio of pupils and students to teachers and academic staff", "requests": [ratio_url]},
+            {"dataset": "education-institutions", "title": "Official national and GISCO institution registers", "requests": [country["source_url"] for country in institution_data["countries"]]},
         ],
     }
     atomic_json(OUTPUT, payload)

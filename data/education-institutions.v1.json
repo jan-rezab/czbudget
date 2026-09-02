@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "education-institutions",
+  "generated_at": "2026-09-02T17:18:19.974194+00:00",
+  "country_count": 6,
+  "level_count": 5,
+  "countries": [
+    {
+      "code": "CZE",
+      "period": "2023 register",
+      "counts": {
+        "preprimary": 5442,
+        "primary": 4798,
+        "lower_secondary": 5925,
+        "upper_secondary": 1335,
+        "tertiary": 184
+      },
+      "source_title": "Eurostat GISCO — Education services in Europe",
+      "source_url": "https://gisco-services.ec.europa.eu/pub/education/2023/csv/CZ.csv",
+      "source_sha256": "d9c53cab11433e3545575dfb4e771d1e4bdcf40faf60aa3f85330876b255a950",
+      "definition": "Unique education-service identifiers tagged with each ISCED level; a service spanning levels is counted in every applicable level."
+    },
+    {
+      "code": "CHE",
+      "period": "2024/25",
+      "counts": {
+        "preprimary": 5447,
+        "primary": 4621,
+        "lower_secondary": 1635,
+        "upper_secondary": 769,
+        "tertiary": 419
+      },
+      "source_title": "Swiss Federal Statistical Office — Educational institutions by educational level",
+      "source_url": "https://opendata.swiss/en/dataset/bildungsinstitutionen-nach-bildungsstufe-tragerschaft-und-kanton3",
+      "source_sha256": "62a3191a51a6ae16258e55c6f11d393da034d22b508764bceb45e5c0eceaadc1",
+      "appendix_sha256": "28b7ef221c74411c570ff980475cdbc7cea7a053a37b57b822f9336d35a37f25",
+      "definition": "National totals across public and private institutions; schools spanning levels are counted at every level. Primary level 1–2 is mapped to pre-primary and primary level 3–8 to primary."
+    },
+    {
+      "code": "SWE",
+      "period": "2023 register",
+      "counts": {
+        "preprimary": 3608,
+        "primary": 4737,
+        "lower_secondary": 2263,
+        "upper_secondary": 1579,
+        "tertiary": 50
+      },
+      "source_title": "Eurostat GISCO and Swedish Higher Education Authority institution list",
+      "source_url": "https://www.uka.se/swedish-higher-education-authority/about-higher-education/universities-university-colleges-and-other-education-providers/higher-education-institutions",
+      "source_sha256": "019d5e311ff28350e1f964d55f1f54e96f64a7cbe5e2381e349a9c47e54ac1d7",
+      "definition": "GISCO service identifiers by ISCED level through upper-secondary; tertiary is the 50 providers listed by the Swedish Higher Education Authority. Level-spanning services can appear in more than one row.",
+      "secondary_source_url": "https://gisco-services.ec.europa.eu/pub/education/2023/csv/SE.csv",
+      "secondary_source_sha256": "a85992c359dd2e9d214b92d5c8b98241fa9eaa63f071d392094a60c83a747b62"
+    },
+    {
+      "code": "DNK",
+      "period": "2023–2024",
+      "counts": {
+        "preprimary": 4006,
+        "primary": 2644,
+        "lower_secondary": 571,
+        "upper_secondary": 242,
+        "tertiary": 9
+      },
+      "source_title": "Eurostat GISCO and Statistics Denmark institution tables",
+      "source_url": "https://www.statbank.dk/BOERN4",
+      "source_sha256": "919de3a4cfc2525c1732713914153cf3102f711797bee49ce7c1a6a38f0ad77d",
+      "definition": "GISCO service identifiers for ISCED 1–3; pre-primary is day-care units plus pool schemes in 2024, and tertiary is the nine universities enumerated in Statistics Denmark's INST20 table.",
+      "secondary_source_url": "https://www.statbank.dk/INST20",
+      "secondary_source_sha256": "3f4c105ec8fadf12ab212d79104c3caeb760816aaaa182cebea9fde2883119a4",
+      "gisco_source_url": "https://gisco-services.ec.europa.eu/pub/education/2023/csv/DK.csv",
+      "gisco_source_sha256": "0a6523e0fd161c7ceacbbc42a72a1ea0d91a49932658893e45362a3e3d7e9cdf"
+    },
+    {
+      "code": "FIN",
+      "period": "2024",
+      "counts": {
+        "preprimary": 2072,
+        "primary": 2072,
+        "lower_secondary": 2072,
+        "upper_secondary": 481,
+        "tertiary": 38
+      },
+      "source_title": "Statistics Finland — Educational institutions",
+      "source_url": "https://pxweb2.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__kjarj/125j.px/",
+      "source_sha256": "025842decfe7cb469f9201c08e2d2497e9b5dcb6e00c3b43e4a325674fdfd37a",
+      "definition": "National institution types mapped to ISCED bands. Comprehensive institutions are shown for pre-primary, primary and lower-secondary because the register reports them as one institution type; pre-primary delivered only in day-care centres is outside this institution register.",
+      "gisco_source_url": "https://gisco-services.ec.europa.eu/pub/education/2023/csv/FI.csv",
+      "gisco_source_sha256": "cbf36af4802a1c0238ccb82c5811c89b97a4217e854ce6f28d91fc8ec42b7e83"
+    },
+    {
+      "code": "NOR",
+      "period": "2023–2024",
+      "counts": {
+        "preprimary": 5222,
+        "primary": 2714,
+        "lower_secondary": 1733,
+        "upper_secondary": 576,
+        "tertiary": 21
+      },
+      "source_title": "Eurostat GISCO, Statistics Norway and Norwegian Ministry of Education",
+      "source_url": "https://www.ssb.no/en/statbank/table/09220",
+      "source_sha256": "461a5976703b3cf4a6145d2bcf9233bd7ea253b8f03fe02e178fa556530a04be",
+      "definition": "GISCO service identifiers for ISCED 1–3; pre-primary is all public and private kindergartens in 2024. Tertiary is the 21 state universities, university colleges and specialised colleges documented in HK-dir's 2024 key figures; private providers are outside this count.",
+      "secondary_source_url": "https://dbh.hkdir.no/static/files/esdata/2024/nokkeltall_statlige_2024.pdf",
+      "secondary_source_sha256": "6d7060f128da2c61cbf3bf0a6ce081727f5457d3238c9bb19cc20f9608b709b0",
+      "gisco_source_url": "https://gisco-services.ec.europa.eu/pub/education/2023/csv/NO.csv",
+      "gisco_source_sha256": "d11e32021cca20d69bca814aa25a1090c8a8ce2433646598fef04cff701b77ff"
+    }
+  ],
+  "methodology": "Institution counts are official register measures, not a harmonised Eurostat UOE indicator. Level-spanning institutions can appear in more than one row."
+}

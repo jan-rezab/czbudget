@@ -7,13 +7,18 @@
   <meta name="description" content="Follow Czech education spending, students, schools and teaching staff from the ministry to school type, with a harmonised international staffing benchmark.">
   <link rel="canonical" href="https://publicspendingdata.org/deep-dives/education/">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/education/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/education/?lang=en">
-  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../education-deep-dive.css?v=20260902-country-load">
-  <script src="../../education-deep-dive.js?v=20260902-country-load-2" defer></script>
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../education-deep-dive.css?v=20260902-global-controls">
+  <script src="../../education-deep-dive.js?v=20260902-global-controls" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="deep-dives-page education-page">
   <psd-site-header></psd-site-header>
   <main id="top">
+    <section class="education-global-controls" aria-label="Education report controls">
+      <label><span data-edu-copy="countryControl">Benchmark country</span><select id="education-country" aria-label="Benchmark country"></select></label>
+      <label><span data-edu-copy="currencyControl">Display currency</span><select id="education-currency" aria-label="Display currency"><option value="CZK">CZK</option><option value="EUR">EUR</option><option value="USD">USD</option></select></label>
+      <p id="education-control-note" data-edu-copy="controlNote">Country changes the harmonised benchmark; the audited spending flow remains Czech. Currency conversion applies to every money value.</p>
+    </section>
     <section class="deep-hero deep-topic-hero education-hero" id="overview"><div><span class="eyebrow" data-edu-copy="eyebrow">Report / Školství</span><h1><span data-edu-copy="titleLead">Výdaje na školství</span> <em data-edu-copy="titleEm">od ministerstva k typu školy</em></h1><p data-edu-copy="intro">Konsolidujeme stát, kraje a obce, odstraňujeme transfery mezi nimi a ukazujeme, které typy škol peníze skutečně čerpají.</p></div><aside class="education-hero-total"><span data-edu-copy="totalLabel">Veřejné výdaje na vzdělávání</span><strong id="hero-total">—</strong><small data-edu-copy="totalNote">2025 · skutečnost · po konsolidaci</small><div><b>CZE</b><span data-edu-copy="auditReady">auditní detail do typu školy</span></div></aside></section>
     <nav class="deep-topic-rail" aria-label="Education report sections"><a href="#system" data-edu-copy="systemNav">Celý systém</a><a href="#flow" data-edu-copy="flowNav">Tok peněz</a><a href="#school-types" data-edu-copy="schoolsNav">Typy škol</a><a href="#capacity" data-edu-copy="capacityNav">Žáci a učitelé</a><a href="#regions" data-edu-copy="regionsNav">Kraje</a><a href="#coverage" data-edu-copy="coverageNav">Pokrytí zemí</a><a href="#method" data-edu-copy="methodNav">Metodika</a></nav>
 

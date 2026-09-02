@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "dataset_id": "education-deep-dive",
-  "generated_at": "2026-09-02T15:23:59.258563+00:00",
+  "generated_at": "2026-09-02T17:18:25.109130+00:00",
   "country": "CZE",
   "period": {
     "year": 2025,
@@ -551,7 +551,7 @@
     "benchmark": {
       "period": "2024",
       "unit": "full-time-equivalent pupils or students per full-time-equivalent teacher or academic staff member",
-      "core_peer_definition": "Site core: Czechia plus countries tagged anchor or responsible_benchmark in the sovereign benchmark; Switzerland has no comparable observation in this Eurostat table.",
+      "core_peer_definition": "Site core: Czechia plus countries tagged anchor or responsible_benchmark in the sovereign benchmark. Published Eurostat ratios are used where available; otherwise the ratio is derived from the same learner- and teaching-FTE observations and marked in the source data.",
       "levels": [
         {
           "id": "preprimary",
@@ -559,7 +559,7 @@
           "label_en": "Pre-primary",
           "isced": "ISCED 02",
           "czech_value": 11.8,
-          "reported_peer_median": 10.8,
+          "reported_peer_median": 11.2,
           "observations": [
             {
               "code": "CZE",
@@ -571,7 +571,7 @@
               "code": "CHE",
               "name_cs": "Švýcarsko",
               "name_en": "Switzerland",
-              "value": null
+              "value": 17.53
             },
             {
               "code": "SWE",
@@ -605,7 +605,7 @@
           "label_en": "Primary",
           "isced": "ISCED 1",
           "czech_value": 17.9,
-          "reported_peer_median": 12.1,
+          "reported_peer_median": 12.2,
           "observations": [
             {
               "code": "CZE",
@@ -617,7 +617,7 @@
               "code": "CHE",
               "name_cs": "Švýcarsko",
               "name_en": "Switzerland",
-              "value": null
+              "value": 15.47
             },
             {
               "code": "SWE",
@@ -651,7 +651,7 @@
           "label_en": "Lower secondary",
           "isced": "ISCED 2",
           "czech_value": 12.5,
-          "reported_peer_median": 10.2,
+          "reported_peer_median": 11.2,
           "observations": [
             {
               "code": "CZE",
@@ -663,7 +663,7 @@
               "code": "CHE",
               "name_cs": "Švýcarsko",
               "name_en": "Switzerland",
-              "value": null
+              "value": 12.39
             },
             {
               "code": "SWE",
@@ -697,7 +697,7 @@
           "label_en": "Upper secondary",
           "isced": "ISCED 3",
           "czech_value": 11.1,
-          "reported_peer_median": 12.9,
+          "reported_peer_median": 13.1,
           "observations": [
             {
               "code": "CZE",
@@ -709,7 +709,7 @@
               "code": "CHE",
               "name_cs": "Švýcarsko",
               "name_en": "Switzerland",
-              "value": null
+              "value": 16.78
             },
             {
               "code": "SWE",
@@ -743,7 +743,7 @@
           "label_en": "Tertiary",
           "isced": "ISCED 5–8",
           "czech_value": 16.8,
-          "reported_peer_median": 11.9,
+          "reported_peer_median": 14,
           "observations": [
             {
               "code": "CZE",
@@ -755,7 +755,7 @@
               "code": "CHE",
               "name_cs": "Švýcarsko",
               "name_en": "Switzerland",
-              "value": null
+              "value": 14.43
             },
             {
               "code": "SWE",
@@ -807,7 +807,9 @@
               "learners_fte": 371833,
               "teaching_fte": 31575,
               "learners_per_teaching_fte": 11.8,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 5442,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -819,7 +821,9 @@
               "learners_fte": 581782,
               "teaching_fte": 32591,
               "learners_per_teaching_fte": 17.9,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 4798,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -831,7 +835,9 @@
               "learners_fte": 479496,
               "teaching_fte": 38501,
               "learners_per_teaching_fte": 12.5,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 5925,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -843,7 +849,9 @@
               "learners_fte": 453494,
               "teaching_fte": 37702,
               "learners_per_teaching_fte": 11.1,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 1335,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -855,7 +863,9 @@
               "learners_fte": 339538,
               "teaching_fte": 19854,
               "learners_per_teaching_fte": 16.8,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 184,
+              "institutions_period": "2023 register",
               "observation_flags": []
             }
           ],
@@ -864,7 +874,13 @@
             "learners_fte": 5,
             "teaching_fte": 5,
             "learners_per_teaching_fte": 5,
-            "schools_or_institutions": 0
+            "schools_or_institutions": 5
+          },
+          "institution_source": {
+            "period": "2023 register",
+            "source_title": "Eurostat GISCO — Education services in Europe",
+            "source_url": "https://gisco-services.ec.europa.eu/pub/education/2023/csv/CZ.csv",
+            "definition": "Unique education-service identifiers tagged with each ISCED level; a service spanning levels is counted in every applicable level."
           }
         },
         {
@@ -882,8 +898,10 @@
               "learners_headcount": 184539,
               "learners_fte": 184539,
               "teaching_fte": 10530,
-              "learners_per_teaching_fte": null,
-              "schools_or_institutions": null,
+              "learners_per_teaching_fte": 17.53,
+              "ratio_provenance": "derived_from_eurostat_fte",
+              "schools_or_institutions": 5447,
+              "institutions_period": "2024/25",
               "observation_flags": []
             },
             {
@@ -894,8 +912,10 @@
               "learners_headcount": 556945,
               "learners_fte": 556945,
               "teaching_fte": 35999,
-              "learners_per_teaching_fte": null,
-              "schools_or_institutions": null,
+              "learners_per_teaching_fte": 15.47,
+              "ratio_provenance": "derived_from_eurostat_fte",
+              "schools_or_institutions": 4621,
+              "institutions_period": "2024/25",
               "observation_flags": []
             },
             {
@@ -906,8 +926,10 @@
               "learners_headcount": 282698,
               "learners_fte": 282698,
               "teaching_fte": 22820,
-              "learners_per_teaching_fte": null,
-              "schools_or_institutions": null,
+              "learners_per_teaching_fte": 12.39,
+              "ratio_provenance": "derived_from_eurostat_fte",
+              "schools_or_institutions": 1635,
+              "institutions_period": "2024/25",
               "observation_flags": []
             },
             {
@@ -918,8 +940,10 @@
               "learners_headcount": 353683,
               "learners_fte": 350666,
               "teaching_fte": 20904,
-              "learners_per_teaching_fte": null,
-              "schools_or_institutions": null,
+              "learners_per_teaching_fte": 16.78,
+              "ratio_provenance": "derived_from_eurostat_fte",
+              "schools_or_institutions": 769,
+              "institutions_period": "2024/25",
               "observation_flags": [
                 "teacher_fte:d"
               ]
@@ -932,8 +956,10 @@
               "learners_headcount": 337303,
               "learners_fte": 293215,
               "teaching_fte": 20319,
-              "learners_per_teaching_fte": null,
-              "schools_or_institutions": null,
+              "learners_per_teaching_fte": 14.43,
+              "ratio_provenance": "derived_from_eurostat_fte",
+              "schools_or_institutions": 419,
+              "institutions_period": "2024/25",
               "observation_flags": [
                 "teacher_fte:d"
               ]
@@ -943,8 +969,14 @@
             "learners_headcount": 5,
             "learners_fte": 5,
             "teaching_fte": 5,
-            "learners_per_teaching_fte": 0,
-            "schools_or_institutions": 0
+            "learners_per_teaching_fte": 5,
+            "schools_or_institutions": 5
+          },
+          "institution_source": {
+            "period": "2024/25",
+            "source_title": "Swiss Federal Statistical Office — Educational institutions by educational level",
+            "source_url": "https://opendata.swiss/en/dataset/bildungsinstitutionen-nach-bildungsstufe-tragerschaft-und-kanton3",
+            "definition": "National totals across public and private institutions; schools spanning levels are counted at every level. Primary level 1–2 is mapped to pre-primary and primary level 3–8 to primary."
           }
         },
         {
@@ -963,7 +995,9 @@
               "learners_fte": 458336,
               "teaching_fte": 34270,
               "learners_per_teaching_fte": 13.4,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 3608,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -975,7 +1009,9 @@
               "learners_fte": 799078,
               "teaching_fte": 64209,
               "learners_per_teaching_fte": 12.4,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 4737,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -987,7 +1023,9 @@
               "learners_fte": 401489,
               "teaching_fte": 35908,
               "learners_per_teaching_fte": 11.2,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 2263,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -999,7 +1037,9 @@
               "learners_fte": 468109,
               "teaching_fte": 35002,
               "learners_per_teaching_fte": 13.1,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 1579,
+              "institutions_period": "2023 register",
               "observation_flags": []
             },
             {
@@ -1011,7 +1051,9 @@
               "learners_fte": 361059,
               "teaching_fte": 32570,
               "learners_per_teaching_fte": 9.9,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 50,
+              "institutions_period": "2023 register",
               "observation_flags": []
             }
           ],
@@ -1020,7 +1062,13 @@
             "learners_fte": 5,
             "teaching_fte": 5,
             "learners_per_teaching_fte": 5,
-            "schools_or_institutions": 0
+            "schools_or_institutions": 5
+          },
+          "institution_source": {
+            "period": "2023 register",
+            "source_title": "Eurostat GISCO and Swedish Higher Education Authority institution list",
+            "source_url": "https://www.uka.se/swedish-higher-education-authority/about-higher-education/universities-university-colleges-and-other-education-providers/higher-education-institutions",
+            "definition": "GISCO service identifiers by ISCED level through upper-secondary; tertiary is the 50 providers listed by the Swedish Higher Education Authority. Level-spanning services can appear in more than one row."
           }
         },
         {
@@ -1039,7 +1087,9 @@
               "learners_fte": 182553,
               "teaching_fte": 17528,
               "learners_per_teaching_fte": 10.4,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 4006,
+              "institutions_period": "2023–2024",
               "observation_flags": [
                 "ED02:d"
               ]
@@ -1053,7 +1103,9 @@
               "learners_fte": 432238,
               "teaching_fte": 35390,
               "learners_per_teaching_fte": 12.2,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 2644,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             },
             {
@@ -1065,7 +1117,9 @@
               "learners_fte": 245081,
               "teaching_fte": 21672,
               "learners_per_teaching_fte": 11.3,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 571,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             },
             {
@@ -1077,7 +1131,9 @@
               "learners_fte": 273349,
               "teaching_fte": 21581,
               "learners_per_teaching_fte": 12.7,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 242,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             },
             {
@@ -1089,7 +1145,9 @@
               "learners_fte": 275378,
               "teaching_fte": 19485,
               "learners_per_teaching_fte": 14,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 9,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             }
           ],
@@ -1098,7 +1156,13 @@
             "learners_fte": 5,
             "teaching_fte": 5,
             "learners_per_teaching_fte": 5,
-            "schools_or_institutions": 0
+            "schools_or_institutions": 5
+          },
+          "institution_source": {
+            "period": "2023–2024",
+            "source_title": "Eurostat GISCO and Statistics Denmark institution tables",
+            "source_url": "https://www.statbank.dk/BOERN4",
+            "definition": "GISCO service identifiers for ISCED 1–3; pre-primary is day-care units plus pool schemes in 2024, and tertiary is the nine universities enumerated in Statistics Denmark's INST20 table."
           }
         },
         {
@@ -1117,7 +1181,9 @@
               "learners_fte": 183354,
               "teaching_fte": 20946,
               "learners_per_teaching_fte": 8.5,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 2072,
+              "institutions_period": "2024",
               "observation_flags": []
             },
             {
@@ -1129,7 +1195,9 @@
               "learners_fte": 360117,
               "teaching_fte": 29932,
               "learners_per_teaching_fte": 12,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 2072,
+              "institutions_period": "2024",
               "observation_flags": []
             },
             {
@@ -1141,7 +1209,9 @@
               "learners_fte": 198019,
               "teaching_fte": 21424,
               "learners_per_teaching_fte": 9.2,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 2072,
+              "institutions_period": "2024",
               "observation_flags": []
             },
             {
@@ -1153,7 +1223,9 @@
               "learners_fte": 345331,
               "teaching_fte": 19825,
               "learners_per_teaching_fte": 17.4,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 481,
+              "institutions_period": "2024",
               "observation_flags": []
             },
             {
@@ -1165,7 +1237,9 @@
               "learners_fte": 267252,
               "teaching_fte": 16381,
               "learners_per_teaching_fte": 16.3,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 38,
+              "institutions_period": "2024",
               "observation_flags": [
                 "ED5:m"
               ]
@@ -1176,7 +1250,13 @@
             "learners_fte": 5,
             "teaching_fte": 5,
             "learners_per_teaching_fte": 5,
-            "schools_or_institutions": 0
+            "schools_or_institutions": 5
+          },
+          "institution_source": {
+            "period": "2024",
+            "source_title": "Statistics Finland — Educational institutions",
+            "source_url": "https://pxweb2.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__kjarj/125j.px/",
+            "definition": "National institution types mapped to ISCED bands. Comprehensive institutions are shown for pre-primary, primary and lower-secondary because the register reports them as one institution type; pre-primary delivered only in day-care centres is outside this institution register."
           }
         },
         {
@@ -1195,7 +1275,9 @@
               "learners_fte": 165918,
               "teaching_fte": 14761,
               "learners_per_teaching_fte": 11.2,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 5222,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             },
             {
@@ -1207,7 +1289,9 @@
               "learners_fte": 434422,
               "teaching_fte": 44172,
               "learners_per_teaching_fte": 9.8,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 2714,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             },
             {
@@ -1219,7 +1303,9 @@
               "learners_fte": 210015,
               "teaching_fte": 27009,
               "learners_per_teaching_fte": 7.8,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 1733,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             },
             {
@@ -1231,7 +1317,9 @@
               "learners_fte": 251215,
               "teaching_fte": 24334,
               "learners_per_teaching_fte": 10.3,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 576,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             },
             {
@@ -1243,7 +1331,9 @@
               "learners_fte": 261576,
               "teaching_fte": 28378,
               "learners_per_teaching_fte": 9.2,
-              "schools_or_institutions": null,
+              "ratio_provenance": "published",
+              "schools_or_institutions": 21,
+              "institutions_period": "2023–2024",
               "observation_flags": []
             }
           ],
@@ -1252,7 +1342,13 @@
             "learners_fte": 5,
             "teaching_fte": 5,
             "learners_per_teaching_fte": 5,
-            "schools_or_institutions": 0
+            "schools_or_institutions": 5
+          },
+          "institution_source": {
+            "period": "2023–2024",
+            "source_title": "Eurostat GISCO, Statistics Norway and Norwegian Ministry of Education",
+            "source_url": "https://www.ssb.no/en/statbank/table/09220",
+            "definition": "GISCO service identifiers for ISCED 1–3; pre-primary is all public and private kindergartens in 2024. Tertiary is the 21 state universities, university colleges and specialised colleges documented in HK-dir's 2024 key figures; private providers are outside this count."
           }
         }
       ],
@@ -1262,8 +1358,8 @@
         "learner_headcount": "Students with working-time category TOTAL; tertiary is the sum of ISCED 5, 6, 7 and 8.",
         "learner_fte": "Students with working-time category TOT_FTE; tertiary is the sum of ISCED 5, 6, 7 and 8.",
         "teaching_fte": "Classroom teachers at ISCED 02–3 and academic staff at ISCED 5–8, working-time category TOT_FTE.",
-        "ratio": "Eurostat's published ratio; not recalculated where Eurostat withholds the comparable observation.",
-        "school_counts": "Not disseminated in the harmonised UOE tables. National institution registers require separate country adapters."
+        "ratio": "Eurostat's published ratio where available. When withheld, the ratio is derived from the same Eurostat learner-FTE and teaching-FTE observations and explicitly marked.",
+        "school_counts": "Official register counts joined by ISCED level. They are not a harmonised UOE indicator; definitions, periods and cross-level double-counting are preserved per source."
       },
       "sources": [
         {
@@ -1294,6 +1390,18 @@
           "title": "Ratio of pupils and students to teachers and academic staff",
           "requests": [
             "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/educ_uoe_perp04?lang=en&time=2024&geo=CZ&geo=CH&geo=SE&geo=DK&geo=FI&geo=NO"
+          ]
+        },
+        {
+          "dataset": "education-institutions",
+          "title": "Official national and GISCO institution registers",
+          "requests": [
+            "https://gisco-services.ec.europa.eu/pub/education/2023/csv/CZ.csv",
+            "https://opendata.swiss/en/dataset/bildungsinstitutionen-nach-bildungsstufe-tragerschaft-und-kanton3",
+            "https://www.uka.se/swedish-higher-education-authority/about-higher-education/universities-university-colleges-and-other-education-providers/higher-education-institutions",
+            "https://www.statbank.dk/BOERN4",
+            "https://pxweb2.stat.fi/PxWeb/pxweb/en/StatFin/StatFin__kjarj/125j.px/",
+            "https://www.ssb.no/en/statbank/table/09220"
           ]
         }
       ]
@@ -1503,7 +1611,7 @@
     {
       "title": "Eurostat — pupils and students per teacher",
       "url": "https://ec.europa.eu/eurostat/databrowser/view/educ_uoe_perp04/default/table?lang=en",
-      "scope": "Harmonised 2023 UOE ratios by ISCED level"
+      "scope": "Harmonised 2024 UOE ratios and underlying FTE observations by ISCED level"
     }
   ],
   "methodology": {

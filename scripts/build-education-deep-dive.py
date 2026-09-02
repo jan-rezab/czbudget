@@ -350,7 +350,7 @@ def capacity() -> dict:
         "benchmark": {
             "period": international["period"],
             "unit": "full-time-equivalent pupils or students per full-time-equivalent teacher or academic staff member",
-            "core_peer_definition": "Site core: Czechia plus countries tagged anchor or responsible_benchmark in the sovereign benchmark; Switzerland has no comparable observation in this Eurostat table.",
+            "core_peer_definition": "Site core: Czechia plus countries tagged anchor or responsible_benchmark in the sovereign benchmark. Published Eurostat ratios are used where available; otherwise the ratio is derived from the same learner- and teaching-FTE observations and marked in the source data.",
             "levels": levels,
             "source_url": "https://ec.europa.eu/eurostat/databrowser/view/educ_uoe_perp04/default/table?lang=en",
         },
@@ -393,7 +393,7 @@ def main() -> None:
             {"title": "CZSO / MŠMT — Schools and school facilities 2025/26", "url": "https://csu.gov.cz/produkty/skoly-a-skolska-zarizeni-skolni-rok-202526", "scope": "Learners, school-type units and teaching FTE from kindergarten through higher vocational education"},
             {"title": "CZSO — Universities 2025", "url": "https://csu.gov.cz/vysoke-a-vyssi-odborne-skoly", "scope": "University students and institutions"},
             {"title": "CZSO — Education staff and wages", "url": "https://csu.gov.cz/pracovnici-a-mzdy-ve-vzdelavani", "scope": "University academic staff FTE"},
-            {"title": "Eurostat — pupils and students per teacher", "url": capacity()["benchmark"]["source_url"], "scope": "Harmonised 2023 UOE ratios by ISCED level"},
+            {"title": "Eurostat — pupils and students per teacher", "url": capacity()["benchmark"]["source_url"], "scope": "Harmonised 2024 UOE ratios and underlying FTE observations by ISCED level"},
         ],
         "methodology": {
             "education_scope": "Czech budget paragraphs 31 and 32",
