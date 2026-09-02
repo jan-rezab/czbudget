@@ -53,6 +53,26 @@ keeps a UTC daily call counter, retries transient failures, and subdivides any
 response that reaches the API record ceiling. A capped response is never marked
 complete.
 
+Raw gzip responses are archived after every successful BigQuery load in the
+private regional bucket `gs://czbudget-janrezab-un-comtrade-raw`. Cloud Storage
+is the durable source of truth; BigQuery holds normalized analytical rows. The
+live SQLite queue remains local and is copied to both a dated checkpoint and a
+`latest` checkpoint in the bucket. Once remote size and MD5 verification pass,
+the local raw files and reproducible warehouse bundle are removed. If a later
+full warehouse build needs responses that are no longer local,
+`prepare_un_comtrade_warehouse.py` temporarily hydrates them from the archive.
+
+To archive manually after a confirmed warehouse load:
+
+```bash
+python3 pipeline/transforms/archive_un_comtrade_raw.py \
+  --delete-local-raw \
+  --delete-warehouse
+```
+
+Set `UN_COMTRADE_ARCHIVE_AFTER_LOAD=0` only when deliberately retaining a local
+debug copy after `load_un_comtrade.sh`.
+
 Current detailed profiles are:
 
 - annual HS6 merchandise by reporter, bilateral partner and flow;
