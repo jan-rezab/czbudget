@@ -587,7 +587,7 @@ test("every covered country homepage exists and the navigator connects them", as
   await expect(page.locator("#country-municipality-grid .municipality-card")).toHaveCount(1);
   await page.locator("#municipality-country-switch").selectOption("france");
   await expect(page).toHaveURL(/\/municipalities\/france\/\?lang=en/);
-  await expect(page.locator("#country-title")).toContainText("Budgets of French municipalities");
+  await expect(page.locator("#country-title")).toContainText("French municipalities");
 });
 
 test("German municipality directory opens the Bayreuth detail profile", async ({ page }) => {
