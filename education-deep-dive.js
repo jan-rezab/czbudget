@@ -87,5 +87,5 @@
     $("#education-method-grid").innerHTML=[{n:"01",h:copy.method1,p:copy.method1p},{n:"02",h:copy.method2,p:copy.method2p},{n:"03",h:copy.method3,p:copy.method3p}].map(row=>`<article><b>${row.n}</b><h3>${row.h}</h3><p>${row.p}</p></article>`).join("");
     $("#education-sources").innerHTML=data.sources.map(source=>`<a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.title)} ↗</a>`).join("");
   }
-  fetch("../../data/education-deep-dive.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(payload=>{data=payload;renderSystem();renderRouting();renderLevels();renderCapacity();renderRegions();renderCoverage();renderMethod()}).catch(error=>{console.error("education deep dive",error);$("main").insertAdjacentHTML("afterbegin",`<p class="education-load-error">${copy.loadError}</p>`)});
+  fetch("../../data/education-deep-dive.v1.json?v=20260902-country-load").then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(payload=>{data=payload;renderSystem();renderRouting();renderLevels();renderCapacity();renderRegions();renderCoverage();renderMethod()}).catch(error=>{console.error("education deep dive",error);$("main").insertAdjacentHTML("afterbegin",`<p class="education-load-error">${copy.loadError}</p>`)});
 })();
