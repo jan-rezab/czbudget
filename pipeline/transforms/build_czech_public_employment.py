@@ -581,15 +581,51 @@ def main() -> None:
     )
 
     employment_explorer = {
-        "default_scope_id": "state_regulated",
-        "rule": "Values add only inside the currently selected tree. The six trees overlap and must never be summed together.",
+        "default_scope_id": "public_sector",
+        "rule": "Each view is an independent dataset. Only the children of the currently selected parent are additive.",
         "scopes": [
-            {"id": "public_sector", "label_cs": "Celý veřejný sektor", "label_en": "Whole public sector", "coverage_status": "control_total", "source_ids": ["czso_public_sector_satellite_account_2024"], "root": public_sector_root},
-            {"id": "state_regulated", "label_cs": "Státní sféra", "label_en": "State-regulated sphere", "coverage_status": "official", "source_ids": [state_source], "root": state_root},
-            {"id": "education_professions", "label_cs": "Školství · profese", "label_en": "Education · professions", "coverage_status": "official", "source_ids": [education_source], "root": education_professions_root},
-            {"id": "education_school_types", "label_cs": "Školství · typ školy", "label_en": "Education · school type", "coverage_status": "official", "source_ids": [school_source], "root": education_school_types_root},
-            {"id": "local_administration", "label_cs": "Samospráva", "label_en": "Local administration", "coverage_status": "partial", "source_ids": [local_source], "root": local_root},
-            {"id": "strategic_entities", "label_cs": "Veřejné podniky", "label_en": "Public corporations", "coverage_status": "portfolio", "source_ids": [strategic_source], "root": strategic_root},
+            {
+                "id": "public_sector", "label_cs": "Přesný veřejný sektor", "label_en": "Exact public-sector total",
+                "coverage_status": "control_total", "year": 2024, "source_ids": ["czso_public_sector_satellite_account_2024"],
+                "perimeter_cs": "Jediný úplný celek: všechny jednotky kontrolované vládou. Dvě položky níže se přesně rovnají kontrolnímu součtu.",
+                "perimeter_en": "The only complete universe: every government-controlled unit. The two rows below exactly equal the control total.",
+                "root": public_sector_root,
+            },
+            {
+                "id": "state_regulated", "label_cs": "Rozpočtová státní sféra", "label_en": "State-budget workforce",
+                "coverage_status": "official", "year": 2024, "source_ids": [state_source],
+                "perimeter_cs": "Samostatný výkaz MF. Není podmnožinou S.13, kterou lze odečíst od celkového veřejného sektoru.",
+                "perimeter_en": "A separate Ministry of Finance return. It is not an S.13 subset that can be subtracted from the public-sector total.",
+                "root": state_root,
+            },
+            {
+                "id": "education_professions", "label_cs": "Školství podle profesí", "label_en": "Education by profession",
+                "coverage_status": "official", "year": 2024, "source_ids": [education_source],
+                "perimeter_cs": "Samostatný výkaz regionálního školství za všechny zřizovatele; profese mají srovnatelnou základnu od roku 2020.",
+                "perimeter_en": "A separate regional-education return covering every founder; professions have a comparable baseline from 2020.",
+                "root": education_professions_root,
+            },
+            {
+                "id": "education_school_types", "label_cs": "Školství podle druhu školy", "label_en": "Education by school type",
+                "coverage_status": "official", "year": 2024, "source_ids": [school_source],
+                "perimeter_cs": "Tentýž školský celek jako profesní pohled, rozdělený jinou osou. Nikdy se s profesním pohledem nesčítá.",
+                "perimeter_en": "The same education universe as the profession view, split on another axis. Never add the two education views.",
+                "root": education_school_types_root,
+            },
+            {
+                "id": "local_administration", "label_cs": "Výkaz místní správy", "label_en": "Local-administration return",
+                "coverage_status": "partial", "year": 2024, "source_ids": [local_source],
+                "perimeter_cs": "Částečný výkaz obecních a krajských úřadů; pokrývá 3 741 z 6 254 obcí. Není celkem místní vlády.",
+                "perimeter_en": "A partial return for municipal and regional offices, covering 3,741 of 6,254 municipalities. It is not total local government.",
+                "root": local_root,
+            },
+            {
+                "id": "strategic_entities", "label_cs": "Portfolio 38 subjektů", "label_en": "Portfolio of 38 entities",
+                "coverage_status": "portfolio", "year": 2024, "source_ids": [strategic_source],
+                "perimeter_cs": "Pouze 38 strategických společností a organizací, měřeno v osobách. Není to celkových 164 412 FTE veřejných korporací.",
+                "perimeter_en": "Only 38 strategic companies and organisations, measured in persons. This is not the 164,412-FTE public-corporation total.",
+                "root": strategic_root,
+            },
         ],
     }
     for scope in employment_explorer["scopes"]:
@@ -618,7 +654,7 @@ def main() -> None:
     first_cost = compensation_history[0]
     latest_cost = compensation_history[-1]
     payload = {
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "dataset_id": "CZE_PUBLIC_EMPLOYMENT_OBSERVATORY",
         "country_code": "CZE",
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -649,7 +685,6 @@ def main() -> None:
                 "employees_from": state_regulated_2015,
                 "employees_to": state_regulated_2024,
                 "change_employees": state_regulated_change,
-                "share_of_public_sector_change_pct": round(state_regulated_change / (latest["public_sector_fte"] - first["public_sector_fte"]) * 100, 1),
                 "unit": "average_employees",
                 "components": state_regulated_components,
                 "salary_comparison": state_salary_comparison,
