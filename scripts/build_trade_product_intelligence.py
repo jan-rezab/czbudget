@@ -374,6 +374,7 @@ def write_json(payload: dict, output: Path) -> None:
         handle.write("\n")
         temporary = Path(handle.name)
     temporary.replace(output)
+    output.chmod(0o644)
 
 
 def main() -> None:

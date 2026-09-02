@@ -643,5 +643,7 @@ for (const required of ["deep-dives/defense/index.html", "defense-deep-dive.js",
 for (const required of ["deep-dives/education/index.html", "education-deep-dive.js", "education-deep-dive.css", "data/education-deep-dive.v1.json", "scripts/build-education-deep-dive.py"]) await stat(required);
 for (const required of ["deep-dives/public-employment/index.html", "public-employment.js", "public-employment.css", "data/cz-public-employment.v1.json", "pipeline/transforms/build_czech_public_employment.py", "pipeline/source_data/cze_public_employment_observations.csv"]) await stat(required);
 for (const required of ["trade-product-intelligence.js", "trade-product-intelligence.css", "data/trade/product-intelligence.v1.json", "scripts/build_trade_product_intelligence.py"]) await stat(required);
+const tradeProductSnapshotStat = await stat("data/trade/product-intelligence.v1.json");
+if ((tradeProductSnapshotStat.mode & 0o044) !== 0o044) throw new Error("Product-intelligence snapshot must be world-readable by the production web server");
 for (const required of ["data-freshness.js", "data-freshness.css", "data/data-freshness.v1.json", "scripts/build-data-freshness.mjs"]) await stat(required);
 console.log("CZ Budget site validation passed");
