@@ -48,6 +48,8 @@
   Object.assign(copy.en,{education:"Education",educationCopy:"The full flow from ministry through regions and municipalities to school types, without double-counting transfers.",indexCoverage:"up to 48 countries"});
   Object.assign(copy.cs,{indexEyebrow:"Reporty napříč zeměmi",open:"Otevřít report",next:"Další report",contractTitle:"Co v každém reportu najdete"});
   Object.assign(copy.en,{indexEyebrow:"Reports across countries",open:"Open report",next:"Next report",contractTitle:"What every report covers"});
+  Object.assign(copy.cs,{publicSector:"Český veřejný sektor",publicEmployment:"Veřejná zaměstnanost",publicEmploymentCopy:"Úplná institucionální hranice, desetiletá řada a oddělené zdrojové vrstvy bez dvojího započtení."});
+  Object.assign(copy.en,{publicSector:"Czech public sector",publicEmployment:"Public employment",publicEmploymentCopy:"The complete institutional boundary, a ten-year series and source layers kept separate to prevent double counting."});
   const t=copy[lang];
   const name=(code)=>{const row=countries.find(item=>item[0]===code);return row?.[lang==="en"?2:1]??code};
   function translate(){

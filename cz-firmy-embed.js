@@ -15,6 +15,11 @@
     sector:{Energetika:"Energy","Doprava a infrastruktura":"Transport and infrastructure","Finance a rozvoj":"Finance and development","Reality a cestovní ruch":"Real estate and tourism","Digitální a veřejné služby":"Digital and public services","Obrana a strategický průmysl":"Defence and strategic industry","Přírodní zdroje a sanace":"Natural resources and remediation","Zemědělství a potraviny":"Agriculture and food","Vodní hospodářství":"Water management"},
     topLine:{obrat:"turnover",výnosy:"revenue"},source:{"MF strategické subjekty":"Ministry of Finance strategic entities","ČSÚIS VZZ":"CSUIS income statement"}
   };
+  const employmentBridge = select(".public-employment-bridge");
+  if (employmentBridge) {
+    employmentBridge.href = `deep-dives/public-employment/?lang=${language}`;
+    if (english) employmentBridge.innerHTML = `<span><b>New complete employment boundary</b><small>CZSO · 2015–2024 · FTE</small></span><strong>1,112,290</strong><p>How many people work across the whole public sector—government, schools, hospitals, local authorities, infrastructure and public corporations—with overlapping sources kept separate.</p><i>Open report →</i>`;
+  }
   const tr=(group,value)=>english?(translations[group]?.[value]||value):value;
 
   function rows(items, metric, kind) {

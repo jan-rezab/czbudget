@@ -36,6 +36,7 @@ const publicEntityHistory = JSON.parse(await readFile("data/cz-public-entity-his
 const countryParity = JSON.parse(await readFile("data/country-parity.v1.json", "utf8"));
 const countryDemography = JSON.parse(await readFile("data/country-demography.v1.json", "utf8"));
 const publicEntityCoverage = JSON.parse(await readFile("data/public-entity-coverage.v1.json", "utf8"));
+const publicEmployment = JSON.parse(await readFile("data/cz-public-employment.v1.json", "utf8"));
 const publicEntityAggregates = JSON.parse(await readFile("data/public-entity-aggregates.v1.json", "utf8"));
 const publicEntityDirectory = JSON.parse(await readFile("data/public-entity-directory/manifest.v1.json", "utf8"));
 const methodologySources = JSON.parse(await readFile("data/methodology-sources.v1.json", "utf8"));
@@ -65,6 +66,7 @@ const deepDivePage = await readFile("deep-dives/index.html", "utf8");
 const transportDeepDivePage = await readFile("deep-dives/transportation/index.html", "utf8");
 const healthDeepDivePage = await readFile("deep-dives/health/index.html", "utf8");
 const stateEnterpriseDeepDivePage = await readFile("deep-dives/state-owned-enterprises/index.html", "utf8");
+const publicEmploymentDeepDivePage = await readFile("deep-dives/public-employment/index.html", "utf8");
 const capitalCitiesDeepDivePage = await readFile("deep-dives/capital-cities/index.html", "utf8");
 const capitalCitiesDeepDiveScript = await readFile("capital-cities-deep-dive.js", "utf8");
 const ageingDeepDivePage = await readFile("deep-dives/ageing/index.html", "utf8");
@@ -93,6 +95,14 @@ const czechBudgetPage = await readFile("cesky-rozpocet.html", "utf8");
 const czechBudgetScript = await readFile("app.js", "utf8");
 const demography = JSON.parse(await readFile("data/demography-social.v1.json", "utf8"));
 const globalNav = await readFile("global-nav.js", "utf8");
+{
+  const latest = publicEmployment.history.at(-1);
+  if (publicEmployment.history.length !== publicEmployment.period.years || publicEmployment.period.from !== publicEmployment.history[0].year || publicEmployment.period.to !== latest.year) throw new Error("Public-employment period must reconcile with its history");
+  if (latest.public_sector_fte !== latest.general_government_fte + latest.public_corporations_combined_fte || publicEmployment.reconciliation.latest_identity_difference !== 0) throw new Error("Public-employment institutional sectors must reconcile to the control total");
+  if (publicEmployment.evidence_layers.some((layer) => layer.additive_to_public_sector_total !== false)) throw new Error("Public-employment source layers must remain explicitly non-additive");
+  if (publicEmployment.entity_resolution.registered_entities !== publicEntityCoverage.countries.CZE.registry_record_count) throw new Error("Public-employment entity coverage must reconcile to the public-entity register");
+  if (!publicEmploymentDeepDivePage.includes('id="employment-history-chart"') || !publicEmploymentDeepDivePage.includes('id="employment-layer-grid"') || !publicEmploymentDeepDivePage.includes('../../data/cz-public-employment.v1.json')) throw new Error("Public-employment report must expose its history, evidence layers and auditable download");
+}
 const globalFooter = await readFile("global-footer.js", "utf8");
 const globalFooterStyles = await readFile("global-footer.css", "utf8");
 const countryRoutes = await readFile("country-routes.js", "utf8");
@@ -589,7 +599,7 @@ for (const path of await htmlFiles()) {
   if (headerlessPages.has(path)) continue;
   const page = await readFile(path, "utf8");
   if ((page.match(/<psd-site-header\b/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared site-header component`);
-  if ((page.match(/global-nav\.js\?v=(?:20260822-component|20260824-identity-outlines|20260824-logo-120|20260824-budget-stages|20260825-country-expansion|20260826-migration|20260828-education|20260829-oecd-reports|20260901-trade-menu)/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared header script`);
+  if ((page.match(/global-nav\.js\?v=(?:20260822-component|20260824-identity-outlines|20260824-logo-120|20260824-budget-stages|20260825-country-expansion|20260826-migration|20260828-education|20260829-oecd-reports|20260901-trade-menu|20260901-public-employment)/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared header script`);
   if ((page.match(/site-header\.css\?v=(?:20260822-component|20260824-header-lockup)/g) || []).length !== 1 || !page.includes("data-psd-site-header")) throw new Error(`${path}: expected exactly one shared header stylesheet`);
   if (page.includes('<header class="site-header')) throw new Error(`${path}: contains a duplicated legacy header`);
 }
@@ -614,5 +624,6 @@ await stat("ageing-bill.css");
 for (const required of ["deep-dives/migration/index.html", "migration-deep-dive.js", "migration-deep-dive.css", "data/eu-migration.v1.json", "scripts/build-eu-migration.mjs"]) await stat(required);
 for (const required of ["deep-dives/defense/index.html", "defense-deep-dive.js", "defense-deep-dive.css", "data/defense-deep-dive.v1.json", "scripts/build-defense-deep-dive.py"]) await stat(required);
 for (const required of ["deep-dives/education/index.html", "education-deep-dive.js", "education-deep-dive.css", "data/education-deep-dive.v1.json", "scripts/build-education-deep-dive.py"]) await stat(required);
+for (const required of ["deep-dives/public-employment/index.html", "public-employment.js", "public-employment.css", "data/cz-public-employment.v1.json", "pipeline/transforms/build_czech_public_employment.py", "pipeline/source_data/cze_public_employment_observations.csv"]) await stat(required);
 for (const required of ["data-freshness.js", "data-freshness.css", "data/data-freshness.v1.json", "scripts/build-data-freshness.mjs"]) await stat(required);
 console.log("CZ Budget site validation passed");
