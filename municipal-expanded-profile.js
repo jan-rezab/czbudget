@@ -128,6 +128,22 @@
   };
 
   function adaptProfile(data, historyData = null, frenchLines = null, warehouseLines = null, itemLabels = null) {
+    const warehouseDetail = (warehouseLines?.lines || []).map((row) => {
+      const labels = itemLabels?.countries?.[warehouseLines.country] || {};
+      return {
+        year: row.year,
+        stage: row.stage,
+        side: row.side,
+        code: row.code,
+        name_native: row.name_native || labels[row.code] || row.code,
+        name_en: row.name_en || null,
+        name_cs: row.name_cs || null,
+        name: row.name_native || row.name_en || labels[row.code] || row.code,
+        amount: row.amount,
+        ...(row.dimension ? { dimension: row.dimension } : {}),
+        ...(row.period && row.period !== "FY" ? { period: row.period } : {}),
+      };
+    });
     if (data.country?.code === "FRA" && data.profiles) {
       const entity = data.profiles[requestedProfileCode];
       if (!entity) throw new Error(`Unknown French commune ${requestedProfileCode || "(missing code)"}`);
@@ -211,7 +227,17 @@
       return {
         country: "CZE", code: entity.national_id, name: entity.short_name || entity.name,
         region: entity.territory?.region_name, currency: entity.currency_code || "CZK",
-        years: history.map((row) => row.year), history, latest, detail,
+        years: history.map((row) => row.year), history, latest,
+        detail: warehouseDetail.length
+          ? [...detail.map((row) => ({ ...row, dimension: "summary" })), ...warehouseDetail]
+          : detail,
+        source_url: data.sources?.budget || null,
+        ...(warehouseDetail.length ? {
+          classificationCoverage: warehouseLines.coverage || null,
+          detail_source: "warehouse",
+          detail_url: `/public-data/municipality-lines?country=${encodeURIComponent(warehouseLines.country)}&code=${encodeURIComponent(warehouseLines.entity_code)}`,
+          detail_source_url: warehouseLines.source_url || data.sources?.budget || null,
+        } : {}),
       };
     }
     if (Array.isArray(data.detail) || warehouseLines) {
@@ -221,18 +247,10 @@
       // Item names live in the label registry rather than being repeated on every row,
       // which is what made the per-municipality files 580 MB.
       if (warehouseLines?.lines?.length) {
-        const labels = itemLabels?.countries?.[warehouseLines.country] || {};
         return {
           ...data,
-          detail: warehouseLines.lines.map((row) => ({
-            year: row.year,
-            stage: row.stage,
-            side: row.side,
-            code: row.code,
-            name: row.name_native || row.name_en || labels[row.code] || row.code,
-            amount: row.amount,
-            ...(row.period && row.period !== "FY" ? { period: row.period } : {}),
-          })),
+          detail: warehouseDetail,
+          classificationCoverage: warehouseLines.coverage?.dimensions ? warehouseLines.coverage : null,
           detail_source: "warehouse",
           detail_url: `/public-data/municipality-lines?country=${encodeURIComponent(warehouseLines.country)}&code=${encodeURIComponent(warehouseLines.entity_code)}`,
           detail_source_url: warehouseLines.source_url || null,
@@ -406,7 +424,8 @@
   function detailRows() {
     const query = detailQuery.trim().toLocaleLowerCase();
     return profile.normalizedDetail.filter((row) => {
-      const dimensionMatches = !profile.franceLineCoverage || row.dimension === detailDimension;
+      const dimensionMatches = !(profile.franceLineCoverage || profile.classificationCoverage?.dimensions)
+        || row.dimension === detailDimension;
       return dimensionMatches && (detailYear === "all" || String(row.year) === detailYear) && (detailStage === "all" || row.stage === detailStage) && row.side === detailSide && (!query || [row.code, row.name, row.column, row.table_title, row.side].some((value) => String(value || "").toLocaleLowerCase().includes(query)));
     });
   }
@@ -508,9 +527,34 @@
     };
   }
 
-  function franceSourceLinks(t) {
-    if (!profile.franceLineCoverage) return "";
-    return `${profile.detail_source_url ? `<a href="${escapeHtml(profile.detail_source_url)}" target="_blank" rel="noopener"><span>${lang === "en" ? "DGFiP accounting balances" : "Účetní bilance DGFiP"}</span><strong>${t.open}</strong></a>` : ""}${profile.detail_url ? `<a href="${escapeHtml(profile.detail_url)}"><span>${lang === "en" ? "Detailed account data" : "Detailní účetní data"}</span><strong>${t.json}</strong></a>` : ""}`;
+  function czechDetailPresentation() {
+    const coverage = profile.country === "CZE" ? profile.classificationCoverage : null;
+    if (!coverage?.dimensions) return null;
+    const number = new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB");
+    const functional = detailDimension === "functional";
+    const title = functional
+      ? (lang === "en" ? "Spending by public purpose" : "Výdaje podle veřejného účelu")
+      : (lang === "en" ? "Revenue and spending by economic item" : "Příjmy a výdaje podle rozpočtové položky");
+    const body = functional
+      ? (lang === "en" ? "Functional paragraphs show which public service or purpose the municipality funded. These are official FIN 2-12 M classifications, with consolidation transfers removed." : "Funkční paragrafy ukazují, kterou veřejnou službu nebo účel obec financovala. Jde o oficiální klasifikaci FIN 2-12 M bez konsolidačních převodů.")
+      : (lang === "en" ? "Economic items show what kind of receipt, input, transfer or asset was reported. Switch classifications without adding the two views together." : "Rozpočtové položky ukazují druh příjmu, vstupu, transferu nebo majetku. Obě klasifikace jsou dva pohledy na stejné peníze a nesčítají se.");
+    const economicCount = Number(coverage.dimensions.economic || 0);
+    const functionalCount = Number(coverage.dimensions.functional || 0);
+    return {
+      kicker: lang === "en" ? "Ministry of Finance line items" : "Položky Ministerstva financí",
+      title,
+      body,
+      controls: `<div class="france-detail-contract"><div><strong>${lang === "en" ? "Economic-item detail" : "Detail rozpočtových položek"}</strong><span>${number.format(economicCount)} ${lang === "en" ? "reported lines" : "vykázaných řádků"}</span></div><div class="available"><strong>${lang === "en" ? "Functional-purpose detail" : "Detail veřejného účelu"}</strong><span>${number.format(functionalCount)} ${lang === "en" ? "reported lines" : "vykázaných řádků"}</span></div></div><div class="detail-dimension-tabs" role="group" aria-label="${lang === "en" ? "Detail classification" : "Klasifikace detailu"}"><button type="button" data-detail-dimension="functional" class="${functional ? "active" : ""}" aria-pressed="${functional}">${lang === "en" ? "Public purpose" : "Veřejný účel"}</button><button type="button" data-detail-dimension="economic" class="${functional ? "" : "active"}" aria-pressed="${!functional}">${lang === "en" ? "Economic item" : "Rozpočtová položka"}</button></div>`,
+    };
+  }
+
+  function detailSourceLinks(t) {
+    if (profile.franceLineCoverage) {
+      return `${profile.detail_source_url ? `<a href="${escapeHtml(profile.detail_source_url)}" target="_blank" rel="noopener"><span>${lang === "en" ? "DGFiP accounting balances" : "Účetní bilance DGFiP"}</span><strong>${t.open}</strong></a>` : ""}${profile.detail_url ? `<a href="${escapeHtml(profile.detail_url)}"><span>${lang === "en" ? "Detailed account data" : "Detailní účetní data"}</span><strong>${t.json}</strong></a>` : ""}`;
+    }
+    return profile.detail_url
+      ? `<a href="${escapeHtml(profile.detail_url)}"><span>${lang === "en" ? "Detailed line-item data" : "Detailní položková data"}</span><strong>${t.json}</strong></a>`
+      : "";
   }
 
   function bindControls() {
@@ -556,7 +600,12 @@
     const history = [...(profile.history || [])].sort((a, b) => Number(a.year) - Number(b.year));
     const latest = [...history].reverse().find((row) => numeric(row.revenue) !== null || numeric(row.expenditure) !== null) || history.at(-1) || {};
     const latestYear = latest.year || Math.max(...(profile.years || []).map(Number));
-    const financialDetail = profile.normalizedDetail.filter((row) => row.dimension !== "functional");
+    // The Czech endpoint publishes two complete views over the same facts. Headline cards and
+    // mixes continue to use the reconciled snapshot rows; the two itemised dimensions belong in
+    // the explorer and must never be summed into those totals.
+    const financialDetail = profile.country === "CZE" && profile.classificationCoverage?.dimensions
+      ? profile.normalizedDetail.filter((row) => row.dimension === "summary")
+      : profile.normalizedDetail.filter((row) => row.dimension !== "functional");
     const yearRows = financialDetail.filter((row) => row.year === latestYear);
     const revisedExpenditure = headline(yearRows, "revised", "expenditure");
     const actualExpenditure = numeric(latest.expenditure) ?? headline(yearRows, "actual", "expenditure");
@@ -564,8 +613,9 @@
     const fourthMetric = numeric(latest.cash) !== null ? [t.cashBalance, latest.cash, latestYear] : numeric(latest.debt) !== null ? [t.debt, latest.debt, latestYear] : [t.executionRate, executionRate, t.latestPeriod];
     const revenueMix = mixRows(financialDetail, "revenue", latestYear);
     const expenditureMix = mixRows(financialDetail, "expenditure", latestYear);
-    const stages = [...new Set(profile.normalizedDetail.filter((row) => !profile.franceLineCoverage || row.dimension === detailDimension).map((row) => row.stage).filter(Boolean))].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
-    const detailYears = [...new Set(profile.normalizedDetail.filter((row) => !profile.franceLineCoverage || row.dimension === detailDimension).map((row) => Number(row.year)).filter(Number.isFinite))].sort((a, b) => b - a);
+    const classifiedDetail = profile.normalizedDetail.filter((row) => !(profile.franceLineCoverage || profile.classificationCoverage?.dimensions) || row.dimension === detailDimension);
+    const stages = [...new Set(classifiedDetail.map((row) => row.stage).filter(Boolean))].sort((a, b) => stageOrder.indexOf(a) - stageOrder.indexOf(b));
+    const detailYears = [...new Set(classifiedDetail.map((row) => Number(row.year)).filter(Number.isFinite))].sort((a, b) => b - a);
 
     document.documentElement.lang = lang;
     document.body.classList.add("cz-budget-page", "detail-page", "international-municipality-profile");
@@ -601,7 +651,7 @@
     });
 
     const frenchSummary = profile.summaryOnly && profile.country === "FRA";
-    const presentation = franceDetailPresentation();
+    const presentation = czechDetailPresentation() || franceDetailPresentation();
     const nativeKicker = presentation.kicker || (profile.summaryOnly ? (lang === "en" ? "Published detail" : "Publikovaný detail") : t.nativeKicker);
     const nativeTitle = presentation.title || (profile.summaryOnly ? (lang === "en" ? "National headline totals" : "Celostátní souhrnné hodnoty") : t.nativeTitle);
     const nativeCopy = presentation.body || (profile.summaryOnly ? (lang === "en" ? "The national 2025 layer publishes adjusted receipts and payments excluding financing. No item-level city budget is inferred from these totals." : "Celostátní vrstva za rok 2025 publikuje očištěné příjmy a výdaje bez financování. Z těchto součtů nedopočítáváme položkový rozpočet města.") : t.nativeCopy);
@@ -613,7 +663,7 @@
       <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(financialDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
         <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div>${presentation.controls}<div class="detail-side-tabs" role="group" aria-label="${escapeHtml(t.side)}"><button type="button" data-detail-side="expenditure" class="${detailSide === "expenditure" ? "active" : ""}" aria-pressed="${detailSide === "expenditure"}">${t.spendingTab}</button><button type="button" data-detail-side="revenue" class="${detailSide === "revenue" ? "active" : ""}" aria-pressed="${detailSide === "revenue"}">${t.incomeTab}</button></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.year}</span><select id="profile-detail-year"><option value="all">${t.allYears}</option>${detailYears.map((year) => `<option value="${year}"${String(year) === detailYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label></div><div id="profile-detail-visual-wrap">${visualDetailMarkup()}</div><details class="raw-detail-audit"><summary><span>${t.rawRows}</span><strong>${t.rawRowsOpen} · <b id="profile-detail-count"></b></strong></summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></details></section>
       </section>
-      <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(profile.source_url || document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a>${franceSourceLinks(t)}${profile.approved_budget_url ? `<a href="${escapeHtml(profile.approved_budget_url)}" target="_blank" rel="noopener"><span>${t.approvedBudget} ${escapeHtml(profile.approved_budget_year)}</span><strong>${t.open}</strong></a>` : ""}${profile.region_source_url ? `<a href="${escapeHtml(profile.region_source_url)}" target="_blank" rel="noopener"><span>${t.regionalAccounts}</span><strong>${t.open}</strong></a>` : ""}<a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
+      <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(profile.source_url || document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a>${detailSourceLinks(t)}${profile.approved_budget_url ? `<a href="${escapeHtml(profile.approved_budget_url)}" target="_blank" rel="noopener"><span>${t.approvedBudget} ${escapeHtml(profile.approved_budget_year)}</span><strong>${t.open}</strong></a>` : ""}${profile.region_source_url ? `<a href="${escapeHtml(profile.region_source_url)}" target="_blank" rel="noopener"><span>${t.regionalAccounts}</span><strong>${t.open}</strong></a>` : ""}<a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();
     renderDetailTable();
     bindControls();
@@ -640,6 +690,7 @@
     .then(([data, historyData, rates, frenchLines, warehouseLines, itemLabels]) => {
       fxData = rates;
       profile = adaptProfile(data, historyData, frenchLines, warehouseLines, itemLabels);
+      if (profile.country === "CZE" && profile.classificationCoverage?.dimensions?.functional) detailDimension = "functional";
       if (displayCurrency !== "native" && conversion(profile.latest?.year ?? profile.years?.at(-1)).currency !== displayCurrency) displayCurrency = "native";
       profile.normalizedDetail = localizedRows(profile.detail || []);
       const availableSides = new Set(profile.normalizedDetail.map((row) => row.side));

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { COUNTRIES, MunicipalLinesStore, resolveCountry } from "../../server/municipal-lines.mjs";
+import { COUNTRIES, CZE_MUNICIPAL_LINES_SQL, MunicipalLinesStore, resolveCountry } from "../../server/municipal-lines.mjs";
 import { FRANCE_MUNICIPAL_LINES_SQL } from "../../server/france-municipal-lines.mjs";
 
 const FIELDS = [
@@ -143,6 +143,48 @@ test("France answers through the generic endpoint with its own structure intact"
   assert.equal(capture.body.queryParameters[0].parameterValue.value, "FR:55001");
 });
 
+test("Czech lines preserve economic items and functional purposes with warehouse labels", async () => {
+  const capture = {};
+  const store = new MunicipalLinesStore({
+    tokenProvider: async () => "test-token",
+    fetchImpl: async (_url, options) => {
+      capture.body = JSON.parse(options.body);
+      return new Response(JSON.stringify({
+        jobComplete: true,
+        schema: {
+          fields: ["dimension", "fiscal_year", "fiscal_period", "budget_stage", "budget_side",
+            "reporting_scope", "code", "name_native", "name_en", "name_cs", "amount_local",
+            "source_ids"].map((name) => ({ name })),
+        },
+        rows: [
+          { f: ["economic", "2025", "2025-12", "actual", "expenditure", "standalone_accounting_unit", "5011", "Platy zaměstnanců", null, "Platy zaměstnanců", "1250.50", "cz-monitor-finm-2025-12"].map((v) => ({ v })) },
+          { f: ["functional", "2025", "2025-12", "actual", "expenditure", "standalone_accounting_unit", "3113", "Základní školy", null, "Základní školy", "980.25", "cz-monitor-finm-2025-12"].map((v) => ({ v })) },
+        ],
+      }), { status: 200, headers: { "content-type": "application/json" } });
+    },
+  });
+
+  const result = await store.profile("CZE", "00075370");
+  assert.equal(result.country, "CZE");
+  assert.equal(result.entity_code, "00075370");
+  assert.equal(result.currency, "CZK");
+  assert.deepEqual(result.coverage.dimensions, { economic: 1, functional: 1 });
+  assert.equal(result.lines.find((line) => line.dimension === "economic").name_native, "Platy zaměstnanců");
+  assert.equal(result.lines.find((line) => line.dimension === "functional").name_cs, "Základní školy");
+  assert.equal(capture.body.query, CZE_MUNICIPAL_LINES_SQL);
+  assert.equal(capture.body.queryParameters[0].parameterValue.value, "CZ:00075370");
+});
+
+test("the Czech query exposes both classifications without serving consolidation rows", () => {
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /economic_item_code AS code/);
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /functional_paragraph_code AS code/);
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /budget_nodes/);
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /NOT is_consolidation_item/);
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /NOT is_summary_row/);
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /reporting_scope = 'standalone_accounting_unit'/);
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /UNION ALL/);
+});
+
 test("a single-classification country carries no dimension or label fields", async () => {
   const capture = {};
   const store = storeReturning([
@@ -200,7 +242,7 @@ test("every configured country's code pattern accepts its real entity codes", as
   // representative code per country must validate — a pattern that rejects real data would
   // 400 every request for that country while looking correct in review.
   const REAL_CODES = {
-    BOL: "3101", BRA: "5218300", CHL: "02101", COL: "210205002", CRI: "SIPP-ABANGARES",
+    BOL: "3101", BRA: "5218300", CHL: "02101", COL: "210205002", CRI: "SIPP-ABANGARES", CZE: "00075370",
     ESP: "44001AA000", FRA: "55001", GEO: "MOF-033", GTM: "12101612", ITA: "000105310",
     KOR: "4213000", MEX: "01001", PER: "300023", SLV: "8301", DNK: "306",
     JPN: "011002", POL: "0201011",

@@ -28,6 +28,7 @@ process.env.NODE_ENV = "test";
 
 const { handler } = await import("../../server/index.mjs");
 const { SnapshotStore, canonicalMunicipalityPath } = await import("../../server/snapshot-store.mjs");
+const { municipalityPage } = await import("../../server/municipality-page.mjs");
 
 test.after(async () => {
   await fs.rm(fixtureRoot, { recursive: true, force: true });
@@ -45,6 +46,20 @@ test("snapshot store resolves and verifies an immutable profile", async () => {
 test("canonical municipality paths reject unrelated routes", () => {
   assert.equal(canonicalMunicipalityPath(`${routePath}?lang=en`), routePath);
   assert.throws(() => canonicalMunicipalityPath("/countries/testland/"), /canonical municipality profile path/);
+});
+
+test("every Czech snapshot page advertises its warehouse line-item target", () => {
+  const page = municipalityPage({
+    route: {
+      path: "/cz/municipalities/plzen/", country_code: "CZE", entity_code: "00075370",
+      entity_name: "Plzeň",
+    },
+    release_id: "test-release",
+    history: { series: [] },
+  });
+  assert.match(page, /data-warehouse-country="CZE"/);
+  assert.match(page, /data-warehouse-code="00075370"/);
+  assert.match(page, /data-profile-url="\/public-data\/municipality-profile/);
 });
 
 test("public endpoints and dynamic HTML do not require API authentication", async () => {

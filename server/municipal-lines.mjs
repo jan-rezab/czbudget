@@ -34,12 +34,115 @@ const DEFAULT_LOCATION = "EU";
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const CACHE_SIZE = 256;
 
+// Czech FIN 2-12 M reports two independent classifications on every fact:
+// - the economic item says what was bought or received;
+// - the functional paragraph says which public purpose the money served.
+//
+// Serving one while dropping the other is a lossy migration, and combining both without a
+// dimension flag would double-count the budget. Keep them as two explicitly named views over
+// the same filtered leaf facts. Labels come from the warehouse classification registry so all
+// 6,254 Czech entities can use the endpoint without a per-profile JSON fan-out.
+export const CZE_MUNICIPAL_LINES_SQL = `
+  WITH facts AS (
+    SELECT
+      fiscal_year,
+      fiscal_period,
+      budget_stage,
+      budget_side,
+      reporting_scope,
+      functional_paragraph_code,
+      economic_item_code,
+      amount_local,
+      source_id
+    FROM \`czbudget-janrezab.budget_detail.municipal_budget_line_facts\`
+    WHERE fiscal_year BETWEEN @min_year AND @max_year
+      AND public_entity_id = @entity_id
+      AND budget_side IN ('revenue', 'expenditure')
+      AND NOT is_consolidation_item
+      AND NOT is_summary_row
+      AND reporting_scope = 'standalone_accounting_unit'
+  ),
+  labels AS (
+    SELECT
+      classification_id,
+      node_code,
+      ANY_VALUE(node_name_native) AS name_native,
+      ANY_VALUE(node_name_en) AS name_en,
+      ANY_VALUE(node_name_cs) AS name_cs
+    FROM \`czbudget-janrezab.budget_detail.budget_nodes\`
+    WHERE country_code = 'CZE'
+      AND classification_id IN ('CZ_RS_PARAGRAPH_2025', 'CZ_RS_ITEM_2025')
+    GROUP BY 1, 2
+  ),
+  economic AS (
+    SELECT
+      'economic' AS dimension,
+      fiscal_year,
+      fiscal_period,
+      budget_stage,
+      budget_side,
+      reporting_scope,
+      economic_item_code AS code,
+      labels.name_native,
+      labels.name_en,
+      labels.name_cs,
+      CAST(SUM(amount_local) AS STRING) AS amount_local,
+      STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
+    FROM facts
+    LEFT JOIN labels
+      ON labels.classification_id = 'CZ_RS_ITEM_2025'
+      AND labels.node_code = facts.economic_item_code
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  ),
+  functional AS (
+    SELECT
+      'functional' AS dimension,
+      fiscal_year,
+      fiscal_period,
+      budget_stage,
+      budget_side,
+      reporting_scope,
+      functional_paragraph_code AS code,
+      labels.name_native,
+      labels.name_en,
+      labels.name_cs,
+      CAST(SUM(amount_local) AS STRING) AS amount_local,
+      STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
+    FROM facts
+    LEFT JOIN labels
+      ON labels.classification_id = 'CZ_RS_PARAGRAPH_2025'
+      AND labels.node_code = facts.functional_paragraph_code
+    WHERE functional_paragraph_code IS NOT NULL
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  )
+  SELECT * FROM economic
+  UNION ALL
+  SELECT * FROM functional
+  ORDER BY fiscal_year, fiscal_period, dimension, budget_side, code
+`;
+
 /**
  * One entry per warehouse-backed country. `prefix` is the entity-id namespace the warehouse
  * uses — alpha-2 by its own established convention, which is why the entity registry exists
  * to map it to the canonical alpha-3 the artifacts carry.
  */
 export const COUNTRIES = {
+  CZE: {
+    prefix: "CZ",
+    currency: "CZK",
+    codePattern: /^\d{8}$/,
+    codeHint: "Expected an eight-digit Czech accounting-unit IČO.",
+    scopes: ["standalone_accounting_unit"],
+    years: [2025, 2025],
+    sql: CZE_MUNICIPAL_LINES_SQL,
+    dimensions: ["economic", "functional"],
+    nativeLanguage: "cs",
+    sourceUrl: "https://monitor.statnipokladna.gov.cz/datovy-katalog/",
+    methodology:
+      "Czech Ministry of Finance FIN 2-12 M municipal returns for December 2025. Economic items " +
+      "describe the kind of receipt or expenditure; functional paragraphs describe public purpose. " +
+      "Published totals and consolidation transfers are excluded from both views.",
+  },
   // France reports two classifications where every other country reports one, and its codes
   // resolve through published nomenclature tables. Rather than flatten that away for the
   // sake of a uniform shape, the country brings its own query and its own labeller; the
@@ -364,10 +467,10 @@ export class MunicipalLinesStore {
         ...(dimension ? { dimension } : {}),
         code: row.code,
         ...(row.nomenclature ? { nomenclature: row.nomenclature } : {}),
-        ...(labels ? {
-          name_native: labels[country.nativeLanguage] ?? labels.en ?? null,
-          name_en: labels.en ?? null,
-          name_cs: labels.cs ?? null,
+        ...((row.name_native || row.name_en || row.name_cs || labels) ? {
+          name_native: row.name_native || labels?.[country.nativeLanguage] || labels?.en || null,
+          name_en: row.name_en || labels?.en || null,
+          name_cs: row.name_cs || labels?.cs || null,
         } : {}),
         // The source's own column heading, kept verbatim: it is the only label the
         // upstream filing provides, and inventing a translation would misreport it.

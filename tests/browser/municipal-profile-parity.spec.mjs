@@ -49,6 +49,59 @@ test("Brno keeps the full Czech budget template while sharing the municipal hier
   }
 });
 
+test("Czech profiles surface warehouse purpose and economic detail without changing reconciled totals", async ({ page }) => {
+  await page.route("**/fixture/cze-profile.json", (route) => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({
+      period: { fiscal_year: 2025 },
+      entity: {
+        national_id: "44992785", short_name: "Brno", currency_code: "CZK", fiscal_year: 2025,
+        territory: { region_name: "Jihomoravský kraj" },
+        amounts: {
+          revenue_approved: 21000000000, revenue_adjusted: 23000000000, revenue_actual: 23700000000,
+          expense_approved: 26000000000, expense_adjusted: 27600000000, expense_actual: 23000000000,
+          tax_revenue: 17000000000, transfer_revenue: 4000000000, nontax_revenue: 2000000000,
+          capital_revenue: 700000000, current_expense: 15000000000, capital_expense: 8000000000,
+          budget_balance: 700000000, cash_current: 9600000000,
+        },
+      },
+      sources: { budget: "https://monitor.statnipokladna.gov.cz/" },
+    }),
+  }));
+  await page.route("**/public-data/municipality-lines?country=CZE&code=44992785", (route) => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({
+      schema_version: "1.0.0",
+      country: "CZE",
+      entity_code: "44992785",
+      currency: "CZK",
+      years: [2025],
+      coverage: { line_count: 4, stages: ["actual"], dimensions: { economic: 2, functional: 2 } },
+      lines: [
+        { year: 2025, period: "2025-12", stage: "actual", side: "expenditure", dimension: "functional", code: "3113", name_native: "Základní školy", name_cs: "Základní školy", amount: 980000000, currency: "CZK" },
+        { year: 2025, period: "2025-12", stage: "actual", side: "expenditure", dimension: "functional", code: "2212", name_native: "Silnice", name_cs: "Silnice", amount: 720000000, currency: "CZK" },
+        { year: 2025, period: "2025-12", stage: "actual", side: "expenditure", dimension: "economic", code: "5011", name_native: "Platy zaměstnanců", name_cs: "Platy zaměstnanců", amount: 410000000, currency: "CZK" },
+        { year: 2025, period: "2025-12", stage: "actual", side: "expenditure", dimension: "economic", code: "5137", name_native: "Drobný dlouhodobý hmotný majetek", name_cs: "Drobný dlouhodobý hmotný majetek", amount: 90000000, currency: "CZK" },
+      ],
+      source_url: "https://monitor.statnipokladna.gov.cz/",
+    }),
+  }));
+
+  await page.goto("/about.html?lang=cs");
+  await page.setContent(`<!doctype html><html lang="cs"><head><meta name="description" content=""><link rel="canonical" href=""><link rel="alternate" hreflang="cs" href=""><link rel="alternate" hreflang="en" href=""></head><body data-profile-url="/fixture/cze-profile.json" data-warehouse-country="CZE" data-warehouse-code="44992785"><psd-site-header></psd-site-header><main><p class="municipal-profile-loading">Loading</p></main><footer></footer><script src="/municipal-expanded-profile.js"></script></body></html>`);
+  await expect(page.locator('[data-detail-dimension="functional"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#native-detail h2")).toHaveText("Výdaje podle veřejného účelu");
+  await expect(page.locator("#profile-detail-visual")).toContainText("Základní školy");
+  await expect(page.locator("#profile-detail-visual")).not.toContainText("Platy zaměstnanců");
+
+  await page.locator('[data-detail-dimension="economic"]').click();
+  await expect(page.locator('[data-detail-dimension="economic"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#profile-detail-visual")).toContainText("Platy zaměstnanců");
+  await expect(page.locator("#profile-detail-visual")).not.toContainText("Základní školy");
+  await expect(page.locator(".budget-stage-actual")).toBeVisible();
+  await expect(page.locator('a[href*="/public-data/municipality-lines?country=CZE"]')).toBeVisible();
+});
+
 test("Brazilian profile reconciles stages and keeps tax rows on the revenue side", async ({ page }) => {
   await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
   await page.locator('[data-profile-currency="native"]').click();
