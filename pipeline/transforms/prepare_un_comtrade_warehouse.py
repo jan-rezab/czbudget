@@ -5,11 +5,15 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import contextlib
 import gzip
 import hashlib
 import json
 import os
+import shutil
 import sqlite3
+import subprocess
+import tempfile
 from datetime import date, datetime, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -222,12 +226,62 @@ def observation(
     }
 
 
-def raw_payloads(connection: sqlite3.Connection, include_seed: bool) -> Iterable[tuple[Path, dict[str, Any], dict[str, Any]]]:
+def raw_relative_path(raw_path: str, configured_raw_path: str) -> Path:
+    return Path(raw_path).relative_to(Path(configured_raw_path))
+
+
+@contextlib.contextmanager
+def archived_raw_fallback(config: dict[str, Any], connection: sqlite3.Connection) -> Iterable[Path | None]:
+    crawl_config = config["warehouse_crawl"]
+    configured_raw_path = str(crawl_config["raw_path"])
+    rows = connection.execute(
+        "SELECT raw_path FROM tasks WHERE status IN ('completed', 'no_data') AND raw_path IS NOT NULL"
+    ).fetchall()
+    missing = [
+        str(row[0]) for row in rows
+        if not (WORKSPACE / str(row[0])).exists()
+    ]
+    if not missing:
+        yield None
+        return
+    archive = crawl_config.get("archive") or {}
+    bucket_uri = str(archive.get("bucket_uri") or "").rstrip("/")
+    raw_prefix = str(archive.get("raw_prefix") or "raw").strip("/")
+    gcloud = shutil.which("gcloud")
+    if not bucket_uri or not gcloud:
+        raise RuntimeError(f"{len(missing)} raw responses are missing locally and no usable GCS archive is configured")
+    for raw_path in missing:
+        raw_relative_path(raw_path, configured_raw_path)
+    with tempfile.TemporaryDirectory(prefix="un-comtrade-raw-") as directory:
+        archive_root = Path(directory) / "raw"
+        archive_root.mkdir(parents=True)
+        subprocess.run(
+            [gcloud, "storage", "rsync", f"{bucket_uri}/{raw_prefix}", str(archive_root),
+             "--recursive", "--checksums-only", "--do-not-decompress"],
+            check=True,
+        )
+        still_missing = [
+            raw_path for raw_path in missing
+            if not (archive_root / raw_relative_path(raw_path, configured_raw_path)).is_file()
+        ]
+        if still_missing:
+            raise RuntimeError(f"GCS archive is missing {len(still_missing)} required raw responses")
+        yield archive_root
+
+
+def raw_payloads(
+    connection: sqlite3.Connection,
+    include_seed: bool,
+    configured_raw_path: str,
+    archive_root: Path | None = None,
+) -> Iterable[tuple[Path, dict[str, Any], dict[str, Any]]]:
     connection.row_factory = sqlite3.Row
     for task in connection.execute("SELECT * FROM tasks WHERE status IN ('completed', 'no_data') AND raw_path IS NOT NULL ORDER BY task_id"):
         path = WORKSPACE / task["raw_path"]
-        if not path.exists():
-            continue
+        if not path.exists() and archive_root is not None:
+            path = archive_root / raw_relative_path(str(task["raw_path"]), configured_raw_path)
+        if not path.is_file():
+            raise FileNotFoundError(f"Missing raw UN Comtrade response: {task['raw_path']}")
         payload = read_json_gz(path)
         metadata = {
             "task_id": task["task_id"], "product_type": task["product_type"], "frequency": task["frequency"],
@@ -332,16 +386,19 @@ def main() -> None:
     }
     raw_response_count = 0
     observation_count = 0
-    with gzip.open(output / "trade_observations.jsonl.gz", "wt", encoding="utf-8", compresslevel=6) as handle:
-        for path, payload, metadata in raw_payloads(connection, args.include_seed):
-            raw_response_count += 1
-            response_hash = sha256(path)
-            for source in payload.get("data", []):
-                row = observation(source, metadata, area_lookup, product_lookup, availability, ingestion_run_id, started_at, response_hash)
-                if row is None:
-                    continue
-                handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
-                observation_count += 1
+    with archived_raw_fallback(config, connection) as archive_root:
+        with gzip.open(output / "trade_observations.jsonl.gz", "wt", encoding="utf-8", compresslevel=6) as handle:
+            for path, payload, metadata in raw_payloads(
+                connection, args.include_seed, str(crawl_config["raw_path"]), archive_root
+            ):
+                raw_response_count += 1
+                response_hash = sha256(path)
+                for source in payload.get("data", []):
+                    row = observation(source, metadata, area_lookup, product_lookup, availability, ingestion_run_id, started_at, response_hash)
+                    if row is None:
+                        continue
+                    handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+                    observation_count += 1
     (output / "trade_observations.jsonl.gz").chmod(0o644)
     counts["trade_observations"] = observation_count
 

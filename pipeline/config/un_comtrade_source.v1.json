@@ -37,6 +37,14 @@
     "raw_path": "data/sources/trade/crawler/raw",
     "availability_path": "data/sources/trade/crawler/availability",
     "output_path": "outputs/un-comtrade/warehouse",
+    "archive": {
+      "bucket_uri": "gs://czbudget-janrezab-un-comtrade-raw",
+      "raw_prefix": "raw",
+      "availability_prefix": "availability",
+      "reference_prefix": "reference",
+      "checkpoint_prefix": "checkpoints",
+      "manifest_prefix": "manifests"
+    },
     "freshness": {
       "annual_year_offset": 1,
       "recent_complete_months": 6,

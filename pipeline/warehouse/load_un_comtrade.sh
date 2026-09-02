@@ -40,3 +40,10 @@ for table_name in trade_areas trade_products trade_observations trade_dataset_co
 done
 
 echo "Loaded UN Comtrade warehouse bundle from $input_dir"
+
+if [[ "${UN_COMTRADE_ARCHIVE_AFTER_LOAD:-1}" == "1" ]]; then
+  CZBUDGET_WORKSPACE_ROOT="$(cd "$warehouse_root/../../.." && pwd)" \
+    python3 "$warehouse_root/../transforms/archive_un_comtrade_raw.py" \
+      --delete-local-raw \
+      --delete-warehouse
+fi

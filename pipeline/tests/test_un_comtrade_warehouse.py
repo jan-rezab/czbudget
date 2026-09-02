@@ -64,6 +64,17 @@ class UnComtradeWarehouseTest(unittest.TestCase):
         self.assertEqual(PREPARE.period_bounds("2025", "A"), ("2025-01-01", "2025-12-31", 2025, 52))
         self.assertEqual(PREPARE.period_bounds("202602", "M"), ("2026-02-01", "2026-02-28", 2026, 2))
 
+    def test_archived_raw_path_preserves_only_the_raw_relative_key(self):
+        self.assertEqual(
+            PREPARE.raw_relative_path(
+                "data/sources/trade/crawler/raw/C/A/2025/USA/response.json.gz",
+                "data/sources/trade/crawler/raw",
+            ),
+            Path("C/A/2025/USA/response.json.gz"),
+        )
+        with self.assertRaises(ValueError):
+            PREPARE.raw_relative_path("data/other/file.json.gz", "data/sources/trade/crawler/raw")
+
     def test_bigquery_sql_has_partitioning_clustering_and_dedup(self):
         schema = (ROOT / "pipeline/warehouse/un_comtrade_schema.sql").read_text()
         merge = (ROOT / "pipeline/warehouse/merge_un_comtrade.sql").read_text()
@@ -93,6 +104,13 @@ class UnComtradeWarehouseTest(unittest.TestCase):
         self.assertIn("is_intra_eu27", schema)
         self.assertIn("business_area_code", schema)
         self.assertIn("period_start", schema)
+
+    def test_successful_loader_archives_raw_and_discards_reproducible_bundle(self):
+        loader = (ROOT / "pipeline/warehouse/load_un_comtrade.sh").read_text()
+        self.assertIn("archive_un_comtrade_raw.py", loader)
+        self.assertIn("--delete-local-raw", loader)
+        self.assertIn("--delete-warehouse", loader)
+        self.assertIn("UN_COMTRADE_ARCHIVE_AFTER_LOAD", loader)
 
 
 if __name__ == "__main__":
