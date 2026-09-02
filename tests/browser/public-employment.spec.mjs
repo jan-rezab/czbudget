@@ -38,17 +38,13 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator("#employment-function-growth .employment-cost-function-rows > article")).toHaveCount(dataset.compensation.change_by_function.length);
   await expect(page.locator("#employment-function-growth .employment-cost-stack-row")).toHaveCount(2);
   await expect(page.locator("#employment-salary-comparison > article")).toHaveCount(dataset.growth.state_regulated_comparison.salary_comparison.length);
-  await expect(page.locator("#employment-scope-tabs > button")).toHaveCount(dataset.employment_explorer.scopes.length);
-  await expect(page.locator("#employment-scope-tabs")).not.toContainText(number(dataset.headline.public_sector_fte));
-  await expect(page.locator("#employment-scope-summary")).toContainText("Exact public-sector total");
-  await expect(page.locator("#employment-scope-summary")).toContainText(number(dataset.headline.public_sector_fte));
-  await expect(page.locator("#employment-explorer-equation")).toContainText(number(dataset.headline.general_government_fte));
-  await expect(page.locator("#employment-explorer-equation")).toContainText(number(dataset.headline.public_corporations_combined_fte));
-  await expect(page.locator("#employment-explorer-equation")).toContainText(number(dataset.headline.public_sector_fte));
-  await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.general_government_fte));
-  await expect(page.locator("#employment-boundary-equation")).toContainText(number(latest.public_corporations_combined_fte));
-  await expect(page.locator("#employment-layer-grid > article")).toHaveCount(dataset.evidence_layers.length);
-  await expect(page.locator("#employment-layer-grid")).toContainText("do not add");
+  await expect(page.locator("#employment-unified-map")).toContainText("The only additive frame");
+  await expect(page.locator("#employment-unified-map")).toContainText(number(dataset.headline.public_sector_fte));
+  await expect(page.locator(".unified-exact-split")).toContainText(number(dataset.headline.general_government_fte));
+  await expect(page.locator(".unified-exact-split")).toContainText(number(dataset.headline.public_corporations_combined_fte));
+  await expect(page.locator(".unified-lens")).toHaveCount(4);
+  await expect(page.locator(".unified-no-residual")).toContainText("No false residual is created");
+  await expect(page.locator(".unified-cost-row")).toHaveCount(dataset.compensation.change_by_function.length);
   await expect(page.locator("#employment-entity-status")).toContainText(number(dataset.entity_resolution.registered_entities));
   await expect(page.locator("#employment-entity-status")).toContainText(number(dataset.entity_resolution.entities_with_employee_observation));
   expect(latest.public_sector_fte).toBe(latest.general_government_fte + latest.public_corporations_combined_fte);
@@ -61,7 +57,7 @@ test("public-employment report reconciles the control total and source layers", 
   expect(runtimeErrors).toEqual([]);
 });
 
-test("public-employment explorer drills from source scope to profession and organisation", async ({ page }) => {
+test("public-employment unified map exposes every source layer without double counting", async ({ page }) => {
   const runtimeErrors = [];
   page.on("pageerror", (error) => runtimeErrors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") runtimeErrors.push(message.text()); });
@@ -69,27 +65,17 @@ test("public-employment explorer drills from source scope to profession and orga
   await page.goto("/deep-dives/public-employment/?lang=en", {waitUntil: "networkidle"});
   const explorer = page.locator("#explorer");
   await expect(explorer).toBeVisible();
-  await expect(page.locator("#employment-scope-tabs [aria-pressed=true]")).toContainText("Exact public-sector total");
-  await expect(page.locator("#employment-treemap .employment-tile")).toHaveCount(2);
-  await expect(page.locator("#employment-explorer-equation")).toContainText("exact match");
-
-  await page.locator('[data-explorer-scope="education_professions"]').click();
-  await page.locator('#employment-treemap [data-explorer-node="education_pedagogical"]').click();
-  await expect(page.locator("#employment-explorer-breadcrumbs")).toContainText("Pedagogical workers");
-  await expect(page.locator("#employment-treemap .employment-tile")).toHaveCount(9);
-  await page.locator('#employment-treemap [data-explorer-node="education_assistants"]').click();
-  await expect(page.locator("#employment-explorer-detail")).toContainText("Teaching assistants");
-  await expect(page.locator("#employment-explorer-detail")).toContainText("+9,139.2");
-  await expect(page.locator("#employment-explorer-detail")).toContainText("31,129 CZK");
-
-  await page.locator('[data-explorer-scope="strategic_entities"]').click();
-  await expect(page.locator("#employment-scope-summary")).toContainText("Portfolio of 38 entities");
-  await expect(page.locator("#employment-scope-summary")).toContainText("This is not the 164,412-FTE public-corporation total");
-  await page.locator('#employment-treemap [data-explorer-node="strategic_transport"]').click();
-  await page.locator('#employment-treemap [data-explorer-node="entity_70994226"]').click();
-  await expect(page.locator("#employment-explorer-detail")).toContainText("České dráhy, a.s.");
-  await expect(page.locator("#employment-explorer-detail")).toContainText("IČO 70994226");
-  await expect(page.locator("#employment-explorer-detail")).toContainText("13,183");
+  await expect(page.locator(".state-lens")).toContainText("487,078");
+  await expect(page.locator(".state-lens")).toContainText("Regional education in the regulated sphere");
+  await expect(page.locator(".education-lens")).toContainText("Teaching assistants");
+  await expect(page.locator(".education-lens")).toContainText("31,129 CZK/month");
+  await expect(page.locator(".education-lens")).toContainText("Primary schools");
+  await expect(page.locator(".education-lens")).toContainText("Same total — do not count twice");
+  await expect(page.locator(".local-lens")).toContainText("83,450");
+  await expect(page.locator(".portfolio-lens")).toContainText("84,308");
+  await expect(page.locator(".portfolio-lens")).toContainText("České dráhy, a.s.");
+  await expect(page.locator(".portfolio-lens")).toContainText("IČO 70994226");
+  await expect(page.locator(".portfolio-lens .unified-sector article")).toHaveCount(38);
   expect(await page.evaluate(() => document.body.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   expect(runtimeErrors).toEqual([]);
 });

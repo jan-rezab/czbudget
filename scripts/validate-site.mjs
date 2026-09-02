@@ -103,7 +103,7 @@ const globalNav = await readFile("global-nav.js", "utf8");
   if (latest.public_sector_fte !== latest.general_government_fte + latest.public_corporations_combined_fte || publicEmployment.reconciliation.latest_identity_difference !== 0) throw new Error("Public-employment institutional sectors must reconcile to the control total");
   if (publicEmployment.evidence_layers.some((layer) => layer.additive_to_public_sector_total !== false)) throw new Error("Public-employment source layers must remain explicitly non-additive");
   if (publicEmployment.entity_resolution.registered_entities !== publicEntityCoverage.countries.CZE.registry_record_count) throw new Error("Public-employment entity coverage must reconcile to the public-entity register");
-  if (!publicEmploymentDeepDivePage.includes('id="employment-history-chart"') || !publicEmploymentDeepDivePage.includes('id="employment-layer-grid"') || !publicEmploymentDeepDivePage.includes('../../data/cz-public-employment.v1.json')) throw new Error("Public-employment report must expose its history, evidence layers and auditable download");
+  if (!publicEmploymentDeepDivePage.includes('id="employment-history-chart"') || !publicEmploymentDeepDivePage.includes('id="employment-unified-map"') || !publicEmploymentDeepDivePage.includes('../../data/cz-public-employment.v1.json')) throw new Error("Public-employment report must expose its history, unified source map and auditable download");
 }
 const globalFooter = await readFile("global-footer.js", "utf8");
 const globalFooterStyles = await readFile("global-footer.css", "utf8");

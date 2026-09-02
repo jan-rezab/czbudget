@@ -13,7 +13,7 @@
       heroShare: "všech pracovních míst v ekonomice",
       navHistory: "Vývoj",
       navGrowth: "Růst",
-      navExplorer: "Prohlížeč",
+      navExplorer: "Celá mapa",
       navBoundary: "Hranice",
       navLayers: "Detail",
       navEntities: "Subjekty",
@@ -79,9 +79,27 @@
       versus2015: "proti 2015",
       in2015Prices: "v cenách 2015",
       ofCompensation: "kompenzace 2024",
-      explorerKicker: "Klikací mapa pracovníků",
-      explorerTitle: "Vyberte jeden datový celek. Sčítejte jen jeho položky.",
-      explorerIntro: "Toto není jedna hierarchie. Jde o šest samostatných výkazů s různou hranicí a jednotkou; po přepnutí se celý jmenovatel nahradí.",
+      explorerKicker: "Jedna mapa celé pracovní síly",
+      explorerTitle: "Veškerý dostupný detail v jednom sladěném obrazu",
+      explorerIntro: "Plný rámeček je jediný součet. Přerušované zdrojové čočky ukazují překryvný detail; nikdy se nepřičítají a vždy si ponechávají vlastní jednotku, rok a hranici.",
+      mapExactFrame: "Jediný sčitatelný rámec",
+      mapExactRule: "Tyto dvě části jsou vzájemně výlučné a dávají přesný veřejný sektor.",
+      mapGrowth: "změna od 2015",
+      mapSourceLenses: "Zdrojové čočky uvnitř rámce — překrývají se, nepřičítají se",
+      mapLensRule: "Každý člověk je v kontrolním součtu jen jednou. Níže je znovu popsán podle dostupného výkazu; čísla mezi čočkami nelze sčítat ani odečítat.",
+      mapStateLens: "Rozpočtová státní sféra",
+      mapEducationLens: "Regionální školství — stejných 301 048 FTE ve dvou osách",
+      mapLocalLens: "Místní a krajská administrativa — neúplné pokrytí",
+      mapPortfolioLens: "38 strategických subjektů — portfolio, nikoli celý podnikový sektor",
+      mapProfessionAxis: "Osa A · profese",
+      mapSchoolAxis: "Osa B · typ školy",
+      mapSamePeople: "Stejný celek — nepřičítat podruhé",
+      mapObserved: "přímo pozorováno",
+      mapUnallocated: "Nevysvětlený zbytek se nepočítá odčítáním",
+      mapUnallocatedBody: "Bez jednotného IČO/FTE převodníku nelze přesně určit, které řádky čoček patří do vládních institucí a které do veřejných korporací. Proto zde nevzniká falešný reziduál.",
+      mapCostLayer: "Nákladová vrstva · nikoli další lidé",
+      mapCostRule: "Kompenzace podle funkce vysvětlují peníze, ne rozdělení osob.",
+      mapEntities: "subjektů",
       explorerRule: "Vždy je aktivní právě jeden datový celek. Čísla z horního přepínače se navzájem nikdy nesčítají.",
       explorerDataset: "Datový celek",
       explorerSelectedDataset: "Vybraný datový celek",
@@ -170,7 +188,7 @@
       heroShare: "of all jobs in the economy",
       navHistory: "History",
       navGrowth: "Growth",
-      navExplorer: "Explorer",
+      navExplorer: "Full map",
       navBoundary: "Boundary",
       navLayers: "Detail",
       navEntities: "Entities",
@@ -236,9 +254,27 @@
       versus2015: "versus 2015",
       in2015Prices: "in 2015 prices",
       ofCompensation: "of 2024 compensation",
-      explorerKicker: "Clickable workforce map",
-      explorerTitle: "Choose one dataset. Add only the rows inside it.",
-      explorerIntro: "This is not one hierarchy. These are six independent returns with different boundaries and units; switching replaces the entire denominator.",
+      explorerKicker: "One map of the whole workforce",
+      explorerTitle: "Every available detail in one reconciled picture",
+      explorerIntro: "The solid frame is the only total. Dashed source lenses show overlapping detail; they are never added and always retain their own unit, year and boundary.",
+      mapExactFrame: "The only additive frame",
+      mapExactRule: "These two parts are mutually exclusive and exactly equal the public sector.",
+      mapGrowth: "change since 2015",
+      mapSourceLenses: "Source lenses inside the frame — overlapping, never additive",
+      mapLensRule: "Every worker is counted once in the control total. Below, the same workforce is described again through available returns; values across lenses cannot be added or subtracted.",
+      mapStateLens: "State-budget workforce",
+      mapEducationLens: "Regional education — the same 301,048 FTE on two axes",
+      mapLocalLens: "Local and regional administration — partial coverage",
+      mapPortfolioLens: "38 strategic entities — a portfolio, not the whole corporate sector",
+      mapProfessionAxis: "Axis A · profession",
+      mapSchoolAxis: "Axis B · school type",
+      mapSamePeople: "Same total — do not count twice",
+      mapObserved: "directly observed",
+      mapUnallocated: "The unexplained remainder is not calculated by subtraction",
+      mapUnallocatedBody: "Without a common entity-ID/FTE crosswalk, we cannot determine exactly which lens rows belong to general government and which belong to public corporations. No false residual is created here.",
+      mapCostLayer: "Cost layer · not additional people",
+      mapCostRule: "Compensation by function explains money, not the allocation of workers.",
+      mapEntities: "entities",
       explorerRule: "Exactly one dataset is active at a time. The numbers in the selector are never added to one another.",
       explorerDataset: "Dataset",
       explorerSelectedDataset: "Selected dataset",
@@ -355,102 +391,59 @@
   function renderEmploymentExplorer(data) {
     const explorer = data.employment_explorer;
     const sources = sourceMap(data);
-    let scope = explorer.scopes.find((item) => item.id === explorer.default_scope_id) || explorer.scopes[0];
-    let path = [scope.root];
-    let selected = scope.root;
+    const scope = (id) => explorer.scopes.find((item) => item.id === id);
+    const publicScope = scope("public_sector");
+    const stateScope = scope("state_regulated");
+    const professionScope = scope("education_professions");
+    const schoolScope = scope("education_school_types");
+    const localScope = scope("local_administration");
+    const portfolioScope = scope("strategic_entities");
     const label = (node) => node[lang === "en" ? "label_en" : "label_cs"];
-    const note = (node) => node[lang === "en" ? "note_en" : "note_cs"];
     const unit = (node) => copy[node.unit] || node.unit;
-    const status = (value) => copy[value] || value;
-    const money = (value) => Math.abs(value) >= 1000 ? `${bn(value)} ${copy.czkBn}` : `${fmtCount(value)} ${copy.czkM}`;
-    const metric = (name, value, suffix = "") => value === null || value === undefined ? "" : `<article><span>${esc(name)}</span><strong>${esc(value)}${suffix ? ` <small>${esc(suffix)}</small>` : ""}</strong></article>`;
-
-    function detailsFor(node) {
-      const details = node.details || {};
-      const rows = [];
-      if (details.previous_value !== undefined) {
-        rows.push(metric(`${copy.explorerPrevious} · ${details.previous_year}`, fmtCount(details.previous_value), unit(node)));
-        rows.push(metric(copy.explorerChange, signedCount(node.value - details.previous_value), unit(node)));
-      }
-      if (details.average_monthly_gross_czk != null) rows.push(metric(copy.explorerGrossPay, fmt(details.average_monthly_gross_czk), "CZK"));
-      if (details.previous_average_monthly_gross_czk != null) rows.push(metric(`${copy.explorerPriorPay} · ${details.previous_year}`, fmt(details.previous_average_monthly_gross_czk), "CZK"));
-      if (details.persons_during_year != null) rows.push(metric(copy.explorerPersons, fmt(details.persons_during_year)));
-      const peopleBase = details.persons_during_year || node.value;
-      if (details.women_persons != null) rows.push(metric(copy.explorerWomen, `${fmt(details.women_persons)} · ${pct(details.women_persons / peopleBase * 100)} %`));
-      if (details.men_persons != null) rows.push(metric(copy.explorerMen, `${fmt(details.men_persons)} · ${pct(details.men_persons / peopleBase * 100)} %`));
-      if (details.payroll_czk_m != null) rows.push(metric(copy.explorerPayroll, money(details.payroll_czk_m)));
-      if (details.leaders != null) rows.push(metric(copy.explorerLeaders, fmt(details.leaders)));
-      if (details.turnover_czk_m != null) rows.push(metric(copy.explorerTurnover, money(details.turnover_czk_m)));
-      if (details.assets_czk_m != null) rows.push(metric(copy.explorerAssets, money(details.assets_czk_m)));
-      if (details.net_result_czk_m != null) rows.push(metric(copy.explorerResult, money(details.net_result_czk_m)));
-      if (details.owner_transfer_czk_m != null) rows.push(metric(copy.explorerOwnerTransfer, money(details.owner_transfer_czk_m)));
-      if (details.public_nonfinancial_fte != null) rows.push(metric(`${copy.explorerNonfinancial} · ${details.reference_year}`, fmt(details.public_nonfinancial_fte), "FTE"));
-      if (details.public_financial_fte != null) rows.push(metric(`${copy.explorerFinancial} · ${details.reference_year}`, fmt(details.public_financial_fte), "FTE"));
-      return rows.join("");
-    }
-
-    function openNode(node) {
-      selected = node;
-      if (node.children?.length) path = [...path, node];
-      draw();
-    }
-
-    function draw() {
-      const current = path.at(-1);
-      const children = [...(current.children || [])].sort((a, b) => b.value - a.value);
-      const rectangles = binaryTreemap(children);
-      const scopeIndex = explorer.scopes.findIndex((item) => item.id === scope.id);
-      const perimeter = scope[lang === "en" ? "perimeter_en" : "perimeter_cs"];
-      $("#employment-scope-summary").innerHTML = `<article><span>${copy.explorerSelectedDataset} · ${scopeIndex + 1}/${explorer.scopes.length}</span><strong>${esc(scope[lang === "en" ? "label_en" : "label_cs"])}</strong><p>${esc(perimeter)}</p></article><article><span>${copy.explorerDatasetTotal}</span><strong>${fmtCount(scope.root.value)}</strong><small>${esc(unit(scope.root))} · ${scope.year}</small></article>`;
-      $("#employment-explorer-breadcrumbs").innerHTML = path.map((node, index) => `<button type="button" data-explorer-crumb="${index}" aria-current="${index === path.length - 1 ? "page" : "false"}">${esc(label(node))}</button>`).join("<i>/</i>");
-      $("#employment-explorer-status").innerHTML = `<b>${esc(status(scope.coverage_status))}</b><span>${scope.year} · ${esc(unit(scope.root))}</span>`;
-      if (children.length) {
-        const childrenTotal = children.reduce((sum, child) => sum + child.value, 0);
-        const difference = Math.abs(childrenTotal - current.value);
-        const exact = difference < 0.001;
-        const shortEquation = children.length <= 3
-          ? `${children.map((child) => `<span>${fmtCount(child.value)}</span>`).join("<b>+</b>")}<b>${exact ? "=" : "≈"}</b>`
-          : `<span>${children.length} ${copy.explorerRowsSum}</span><b>${exact ? "=" : "≈"}</b>`;
-        $("#employment-explorer-equation").innerHTML = `<small>${copy.explorerEquation}: ${esc(label(current))}</small><div>${shortEquation}<strong>${fmtCount(current.value)} ${esc(unit(current))}</strong><em>✓ ${exact ? copy.explorerExact : copy.explorerRounded}</em></div>`;
-      } else {
-        $("#employment-explorer-equation").innerHTML = `<small>${copy.explorerEquation}: ${esc(label(current))}</small><p>${copy.explorerNoBreakdown}</p>`;
-      }
-      $("#employment-treemap").innerHTML = rectangles.map(({ item, x, y, width, height }, index) => {
-        const share = item.value / current.value * 100;
-        const compact = width < 22 || height < 25;
-        return `<button type="button" class="employment-tile tone-${index % 6} ${selected.id === item.id ? "selected" : ""} ${compact ? "compact" : ""}" data-explorer-node="${esc(item.id)}" style="--tile-x:${x}%;--tile-y:${y}%;--tile-w:${width}%;--tile-h:${height}%" aria-label="${esc(label(item))}: ${fmtCount(item.value)} ${esc(unit(item))}"><span>${esc(label(item))}</span><strong>${fmtCount(item.value)}</strong><small>${pct(share)} %${item.children?.length ? ` · ${copy.explorerOpen}` : ""}</small></button>`;
-      }).join("") || `<div class="employment-treemap-leaf"><strong>${fmtCount(current.value)}</strong><span>${esc(unit(current))}</span><small>${copy.explorerLeaf}</small></div>`;
-      const source = sources[selected.source_id];
-      const selectedShare = selected.value / scope.root.value * 100;
-      $("#employment-explorer-detail").innerHTML = `<span>${copy.explorerDetails}</span><div class="employment-detail-status"><b>${esc(status(selected.status))}</b>${selected.details?.ico ? `<code>IČO ${esc(selected.details.ico)}</code>` : ""}</div><h3>${esc(label(selected))}</h3><strong>${fmtCount(selected.value)} <small>${esc(unit(selected))}</small></strong><div class="employment-detail-share"><i style="width:${Math.min(100, selectedShare)}%"></i></div><p>${pct(selectedShare)} % ${copy.explorerOfScope}</p><div class="employment-detail-metrics">${detailsFor(selected)}</div>${note(selected) ? `<p class="employment-detail-note">${esc(note(selected))}</p>` : ""}${source ? `<a href="${esc(source.url)}" target="_blank" rel="noopener">${copy.explorerSource} ↗</a>` : ""}`;
-      $("#employment-explorer-table").innerHTML = children.length ? `<div><table><caption>${copy.explorerRows}: ${esc(label(current))} · ${copy.explorerOnlyAdd}</caption><thead><tr><th>${copy.explorerCategory}</th><th>${copy.explorerValue}</th><th>${copy.explorerStatus}</th><th></th></tr></thead><tbody>${children.map((child) => `<tr class="${selected.id === child.id ? "selected" : ""}"><th>${esc(label(child))}</th><td>${fmtCount(child.value)} ${esc(unit(child))}</td><td>${esc(status(child.status))}</td><td><button type="button" data-explorer-node="${esc(child.id)}">${child.children?.length ? copy.explorerDrill : copy.explorerDetails} →</button></td></tr>`).join("")}</tbody></table></div>` : "";
-      $("#employment-explorer-source").innerHTML = scope.source_ids.map((sourceId) => { const item = sources[sourceId]; return `<a href="${esc(item.url)}" target="_blank" rel="noopener"><span>${esc(item.publisher)}</span><strong>${esc(item[lang === "en" ? "title_en" : "title_cs"])} · ${esc(item.period)} ↗</strong></a>`; }).join("");
-    }
-
-    $("#employment-scope-tabs").innerHTML = explorer.scopes.map((item, index) => `<button type="button" data-explorer-scope="${esc(item.id)}" aria-pressed="${item.id === scope.id}"><span>${copy.explorerDataset} ${index + 1}</span><strong>${esc(item[lang === "en" ? "label_en" : "label_cs"])}</strong><small>${item.year} · ${esc(status(item.coverage_status))}</small></button>`).join("");
-    $("#employment-scope-tabs").addEventListener("click", (event) => {
-      const button = event.target.closest("[data-explorer-scope]");
-      if (!button) return;
-      scope = explorer.scopes.find((item) => item.id === button.dataset.explorerScope);
-      path = [scope.root];
-      selected = scope.root;
-      $("#employment-scope-tabs").querySelectorAll("button").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-      draw();
-    });
-    $("#employment-explorer-breadcrumbs").addEventListener("click", (event) => {
-      const button = event.target.closest("[data-explorer-crumb]");
-      if (!button) return;
-      path = path.slice(0, Number(button.dataset.explorerCrumb) + 1);
-      selected = path.at(-1);
-      draw();
-    });
-    [$("#employment-treemap"), $("#employment-explorer-table")].forEach((container) => container.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-explorer-node]");
-      if (!button) return;
-      const node = (path.at(-1).children || []).find((item) => item.id === button.dataset.explorerNode);
-      if (node) openNode(node);
-    }));
-    draw();
+    const sourceLink = (sourceScope) => sourceScope.source_ids.map((id) => sources[id]).filter(Boolean).map((source) => `<a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.publisher)} · ${esc(source.period)} ↗</a>`).join("");
+    const row = (node, extra = "") => `<div class="unified-row"><span>${esc(label(node))}</span><strong>${fmtCount(node.value)} <small>${esc(unit(node))}</small></strong>${extra ? `<em>${extra}</em>` : ""}</div>`;
+    const growth = Object.fromEntries(data.growth.state_regulated_comparison.components.map((item) => [item.id, item]));
+    const stateGrowthIds = {
+      state_regional_education: "regional_education",
+      state_uniformed: "uniformed_soldiers",
+      state_other_contributory: "other_contributory",
+      state_prosecutors: "prosecutors",
+      state_labour_service: "labour_service",
+    };
+    const stateExtra = (node) => {
+      const item = growth[stateGrowthIds[node.id]];
+      const pay = node.details?.average_monthly_gross_czk;
+      return [item ? `${signedCount(item.change_employees)} · 2015→24` : "", pay ? `${fmt(pay)} CZK/${lang === "en" ? "month" : "měsíc"}` : ""].filter(Boolean).join(" · ");
+    };
+    const stateGroups = stateScope.root.children.map((group) => `<section><header><span>${esc(label(group))}</span><strong>${fmtCount(group.value)}</strong><small>${esc(unit(group))}</small></header>${group.children.map((item) => row(item, stateExtra(item))).join("")}</section>`).join("");
+    const professionRows = [...professionScope.root.children[0].children, professionScope.root.children[1]].map((item) => row(item, item.details?.average_monthly_gross_czk ? `${fmt(item.details.average_monthly_gross_czk)} CZK/${lang === "en" ? "month" : "měsíc"}` : "")).join("");
+    const schoolRows = schoolScope.root.children.map((item) => `<div class="unified-school-row"><span>${esc(label(item))}</span><strong>${fmtCount(item.value)}</strong><small>${item.children.map((part) => `${esc(label(part))} ${fmtCount(part.value)}`).join(" · ")}</small></div>`).join("");
+    const localRows = localScope.root.children.map((item) => row(item)).join("");
+    const portfolioRows = portfolioScope.root.children.map((sector) => sector.children?.length
+      ? `<section class="unified-sector"><header><span>${esc(label(sector))}</span><strong>${fmtCount(sector.value)}</strong></header><div>${sector.children.map((entity) => `<article><span>${esc(label(entity))}</span><strong>${fmtCount(entity.value)}</strong><small>${entity.details?.ico ? `IČO ${esc(entity.details.ico)}` : ""}</small></article>`).join("")}</div></section>`
+      : row(sector)).join("");
+    const functions = data.compensation.change_by_function;
+    const costRows = functions.map((item) => `<div class="unified-cost-row"><span>${esc(label(item))}</span><i><b style="width:${item.share_of_total_change_pct}%"></b></i><strong>+${bn(item.change_czk_m)} ${copy.czkBn}</strong><small>${pct(item.share_of_total_change_pct)} %</small></div>`).join("");
+    const government = publicScope.root.children.find((item) => item.id === "general_government");
+    const corporations = publicScope.root.children.find((item) => item.id === "public_corporations");
+    $("#employment-unified-map").innerHTML = `
+      <div class="unified-map-head"><span>${copy.mapExactFrame}</span><p>${copy.mapExactRule}</p></div>
+      <div class="unified-total"><div><span>${esc(label(publicScope.root))} · ${publicScope.year}</span><strong>${fmtCount(publicScope.root.value)} <small>${esc(unit(publicScope.root))}</small></strong></div><b>${fmtCount(publicScope.root.details.previous_value)} <i>→</i> ${fmtCount(publicScope.root.value)} <em>+${fmtCount(data.growth.public_sector_change_fte)} ${copy.mapGrowth}</em></b></div>
+      <div class="unified-exact-split" role="img" aria-label="${esc(label(government))} ${fmtCount(government.value)} plus ${esc(label(corporations))} ${fmtCount(corporations.value)} equals ${fmtCount(publicScope.root.value)} FTE">
+        <article class="government"><span>${esc(label(government))}</span><strong>${fmtCount(government.value)}</strong><small>${pct(government.value / publicScope.root.value * 100)} % · +${fmtCount(data.growth.general_government_change_fte)} ${copy.mapGrowth}</small></article>
+        <article class="corporations"><span>${esc(label(corporations))}</span><strong>${fmtCount(corporations.value)}</strong><small>${pct(corporations.value / publicScope.root.value * 100)} % · +${fmtCount(data.growth.public_corporations_change_fte)} ${copy.mapGrowth}</small></article>
+      </div>
+      <div class="unified-lens-head"><span>${copy.mapSourceLenses}</span><p>${copy.mapLensRule}</p></div>
+      <div class="unified-lenses">
+        <div class="unified-lens-top">
+          <article class="unified-lens state-lens"><header><div><span>MF · 2015→2024</span><h3>${copy.mapStateLens}</h3></div><strong>${fmtCount(stateScope.root.value)} <small>${esc(unit(stateScope.root))}</small></strong></header><div class="unified-growth-equation"><b>${fmtCount(data.growth.state_regulated_comparison.employees_from)}</b><i>→</i><b>${fmtCount(data.growth.state_regulated_comparison.employees_to)}</b><strong>+${fmtCount(data.growth.state_regulated_comparison.change_employees)}</strong></div><div class="unified-state-groups">${stateGroups}</div><footer>${sourceLink(stateScope)}</footer></article>
+          <article class="unified-lens local-lens"><header><div><span>MV · 2024</span><h3>${copy.mapLocalLens}</h3></div><strong>${fmtCount(localScope.root.value)} <small>${esc(unit(localScope.root))}</small></strong></header><div class="unified-rows">${localRows}</div><p>${esc(localScope.root[lang === "en" ? "note_en" : "note_cs"])}</p><footer>${sourceLink(localScope)}</footer></article>
+        </div>
+        <article class="unified-lens education-lens"><header><div><span>MŠMT · 2024</span><h3>${copy.mapEducationLens}</h3></div><strong>${fmtCount(professionScope.root.value)} <small>${esc(unit(professionScope.root))}</small></strong></header><div class="unified-education-growth"><span>2015 → 2024</span><strong>+${fmtCount(data.growth.regional_education_evidence.change_fte)} FTE</strong><small>${copy.pedagogical} +${fmtCount(data.growth.regional_education_evidence.pedagogical_change_fte)} · ${copy.nonpedagogical} +${fmtCount(data.growth.regional_education_evidence.nonpedagogical_change_fte)}</small></div><div class="unified-education-axes"><section><h4>${copy.mapProfessionAxis}</h4>${professionRows}</section><b class="unified-same-people">↔<small>${copy.mapSamePeople}</small></b><section><h4>${copy.mapSchoolAxis}</h4>${schoolRows}</section></div><footer>${sourceLink(professionScope)}${sourceLink(schoolScope)}</footer></article>
+        <article class="unified-lens portfolio-lens"><header><div><span>MF · 2024 · 38 ${copy.mapEntities}</span><h3>${copy.mapPortfolioLens}</h3></div><strong>${fmtCount(portfolioScope.root.value)} <small>${esc(unit(portfolioScope.root))}</small></strong></header><div class="unified-portfolio">${portfolioRows}</div><p>${esc(portfolioScope.root[lang === "en" ? "note_en" : "note_cs"])}</p><footer>${sourceLink(portfolioScope)}</footer></article>
+      </div>
+      <aside class="unified-no-residual"><strong>${copy.mapUnallocated}</strong><p>${copy.mapUnallocatedBody}</p></aside>
+      <article class="unified-cost-lens"><header><div><span>ČSÚ · COFOG · 2015→2024</span><h3>${copy.mapCostLayer}</h3><p>${copy.mapCostRule}</p></div><strong>${bn(data.compensation.headline.compensation_2015_czk_m)} <i>→</i> ${bn(data.compensation.headline.compensation_2024_czk_m)} <small>${copy.czkBn}</small></strong></header><div class="unified-cost-summary"><b>+${bn(data.compensation.headline.change_czk_m)} ${copy.czkBn}</b><span>${fmt(data.compensation.headline.average_monthly_cost_2015_czk)} → ${fmt(data.compensation.headline.average_monthly_cost_2024_czk)} CZK / FTE / ${lang === "en" ? "month" : "měsíc"}</span></div><div class="unified-cost-rows">${costRows}</div></article>`;
   }
 
   function renderChart(history) {
@@ -538,11 +531,6 @@
     $("#employment-history-body").innerHTML = [...data.history].reverse().map((row) => `<tr><th>${row.year}</th><td>${fmt(row.public_sector_fte)}</td><td>${fmt(row.general_government_fte)}</td><td>${fmt(row.public_corporations_combined_fte)}${row.public_corporations_combined_status === "derived_residual" ? "*" : ""}</td><td>${pct(row.public_sector_share_pct)} %</td></tr>`).join("");
     renderGrowth(data);
     renderEmploymentExplorer(data);
-    $("#employment-boundary-equation").innerHTML = `<article><span>${copy.generalGovernment}</span><strong>${fmt(headline.general_government_fte)}</strong><small>${pct(headline.general_government_fte / headline.public_sector_fte * 100)} %</small></article><b>+</b><article><span>${copy.publicCorporations}</span><strong>${fmt(headline.public_corporations_combined_fte)}</strong><small>${pct(headline.public_corporations_combined_fte / headline.public_sector_fte * 100)} %</small></article><b>=</b><article class="final"><span>${copy.publicSector}</span><strong>${fmt(headline.public_sector_fte)}</strong><small>100 %</small></article>`;
-    $("#employment-layer-grid").innerHTML = data.evidence_layers.map((layer) => {
-      const source = sources[layer.source_id];
-      return `<article class="${layer.coverage_status}"><header><span>${esc(layer[lang === "en" ? "label_en" : "label_cs"])}</span><b>${copy[layer.coverage_status]}</b></header><strong>${fmt(layer.value)}</strong><small>${copy[layer.unit] || layer.unit} · ${layer.year}</small><div><i style="width:${layer.share_of_public_sector_pct}%"></i></div><p>${pct(layer.share_of_public_sector_pct)} % ${copy.ofPublicSector}</p><footer><a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.publisher)} ↗</a><b>${copy.notAdd}</b></footer></article>`;
-    }).join("");
     const entities = data.entity_resolution;
     $("#employment-entity-status").innerHTML = `<article><span>${copy.registered}</span><strong>${fmt(entities.registered_entities)}</strong><small>${entities.public_entity_register_period}</small></article><article><span>${copy.observed}</span><strong>${fmt(entities.entities_with_employee_observation)}</strong><small>2024</small></article><article><span>${copy.missing}</span><strong>${fmt(entities.registered_entities - entities.entities_with_employee_observation)}</strong><small>${copy.coverage}</small></article><article><span>${copy.join}</span><strong>IČO</strong><small>${esc(entities.join_key)}</small></article>`;
     $("#employment-method-grid").innerHTML = copy.methodCards.map((row) => `<article><b>${row[0]}</b><h3>${row[1]}</h3><p>${row[2]}</p></article>`).join("");
