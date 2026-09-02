@@ -57,6 +57,7 @@ test("Czech profiles surface warehouse purpose and economic detail without chang
       entity: {
         national_id: "44992785", short_name: "Brno", currency_code: "CZK", fiscal_year: 2025,
         territory: { region_name: "Jihomoravský kraj" },
+        sources: { budget: "https://monitor.statnipokladna.gov.cz/ucetni-jednotka/44992785/rozpocet/souhrnny?obdobi=2512&rad=t" },
         amounts: {
           revenue_approved: 21000000000, revenue_adjusted: 23000000000, revenue_actual: 23700000000,
           expense_approved: 26000000000, expense_adjusted: 27600000000, expense_actual: 23000000000,
@@ -65,7 +66,6 @@ test("Czech profiles surface warehouse purpose and economic detail without chang
           budget_balance: 700000000, cash_current: 9600000000,
         },
       },
-      sources: { budget: "https://monitor.statnipokladna.gov.cz/" },
     }),
   }));
   await page.route("**/public-data/municipality-lines?country=CZE&code=44992785", (route) => route.fulfill({
@@ -99,6 +99,7 @@ test("Czech profiles surface warehouse purpose and economic detail without chang
   await expect(page.locator("#profile-detail-visual")).toContainText("Platy zaměstnanců");
   await expect(page.locator("#profile-detail-visual")).not.toContainText("Základní školy");
   await expect(page.locator(".budget-stage-actual")).toBeVisible();
+  await expect(page.locator('.source-list a').first()).toHaveAttribute("href", /ucetni-jednotka\/44992785/);
   await expect(page.locator('a[href*="/public-data/municipality-lines?country=CZE"]')).toBeVisible();
 });
 

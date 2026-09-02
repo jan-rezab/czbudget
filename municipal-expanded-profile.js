@@ -231,7 +231,7 @@
         detail: warehouseDetail.length
           ? [...detail.map((row) => ({ ...row, dimension: "summary" })), ...warehouseDetail]
           : detail,
-        source_url: data.sources?.budget || null,
+        source_url: entity.sources?.budget || data.sources?.budget || warehouseLines?.source_url || null,
         ...(warehouseDetail.length ? {
           classificationCoverage: warehouseLines.coverage || null,
           detail_source: "warehouse",
