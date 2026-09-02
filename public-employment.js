@@ -193,6 +193,7 @@
   document.querySelectorAll("[data-emp-copy]").forEach((node) => {
     if (copy[node.dataset.empCopy]) node.textContent = copy[node.dataset.empCopy];
   });
+  window.psdLanguageReady?.();
 
   const $ = (selector) => document.querySelector(selector);
   const fmt = (value) => new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value);

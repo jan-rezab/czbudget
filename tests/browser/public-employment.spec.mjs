@@ -35,6 +35,15 @@ test("public-employment report reconciles the control total and source layers", 
   expect(runtimeErrors).toEqual([]);
 });
 
+test("public-employment English shell releases the paint guard immediately", async ({ page }) => {
+  await page.goto("/deep-dives/public-employment/?lang=en", {waitUntil: "domcontentloaded"});
+  await expect.poll(
+    () => page.locator("html").getAttribute("data-language-pending"),
+    { timeout: 1500 },
+  ).toBeNull();
+  await expect(page.locator("#growth h2")).toBeVisible();
+});
+
 test("public-employment report is discoverable from the Czech budget and report index", async ({ page }) => {
   await page.goto("/cesky-rozpocet.html?lang=en", {waitUntil: "networkidle"});
   const bridge = page.locator(".public-employment-bridge");
