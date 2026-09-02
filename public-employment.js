@@ -79,9 +79,9 @@
       versus2015: "proti 2015",
       in2015Prices: "v cenách 2015",
       ofCompensation: "kompenzace 2024",
-      explorerKicker: "Jedna mapa celé pracovní síly",
-      explorerTitle: "Veškerý dostupný detail v jednom sladěném obrazu",
-      explorerIntro: "Plný rámeček je jediný součet. Přerušované zdrojové čočky ukazují překryvný detail; nikdy se nepřičítají a vždy si ponechávají vlastní jednotku, rok a hranici.",
+      explorerKicker: "Úplná rekonciliace",
+      explorerTitle: "Kam patří všech 1 112 290 veřejných FTE",
+      explorerIntro: "Jediný kruh rozděluje celý kontrolní součet bez překryvu. Funkční členění vládních institucí je transparentní model podle oficiálních podílů nákladů; veřejné korporace a celkové součty zůstávají přesné.",
       mapExactFrame: "Jediný sčitatelný rámec",
       mapExactRule: "Tyto dvě části jsou vzájemně výlučné a dávají přesný veřejný sektor.",
       mapGrowth: "změna od 2015",
@@ -254,9 +254,9 @@
       versus2015: "versus 2015",
       in2015Prices: "in 2015 prices",
       ofCompensation: "of 2024 compensation",
-      explorerKicker: "One map of the whole workforce",
-      explorerTitle: "Every available detail in one reconciled picture",
-      explorerIntro: "The solid frame is the only total. Dashed source lenses show overlapping detail; they are never added and always retain their own unit, year and boundary.",
+      explorerKicker: "Complete reconciliation",
+      explorerTitle: "Where all 1,112,290 public-sector FTE belong",
+      explorerIntro: "One circle allocates the entire control total without overlap. The functional split of general government is a transparent model based on official compensation shares; public corporations and the top-level totals remain exact.",
       mapExactFrame: "The only additive frame",
       mapExactRule: "These two parts are mutually exclusive and exactly equal the public sector.",
       mapGrowth: "change since 2015",
@@ -368,6 +368,182 @@
   const signedCount = (value) => `${value > 0 ? "+" : ""}${fmtCount(value)}`;
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
   const sourceMap = (data) => Object.fromEntries(data.sources.map((source) => [source.id, source]));
+  const reconciliationCopy = {
+    cs: {
+      corporations: "Veřejné korporace",
+      corporationsExact: "přesný počet",
+      educationModel: "Vzdělávání · model v S.13",
+      educationDirect: "Přímý výkaz MŠMT: {value} FTE",
+      missing: "Dříve nevysvětlený blok",
+      missingNote: "devět funkcí mimo vzdělávání",
+      pieTitle: "Všech {value} FTE — bez duplicit",
+      pieUnit: "FTE · započteno jednou",
+      function: "Funkce",
+      model2015: "Model 2015",
+      model2024: "Model 2024",
+      change: "Změna",
+      stackKicker: "Stohovatelný zoom",
+      stackTitle: "Jak se složení posunulo od roku 2015",
+      stackIntro: "Oba pruhy dávají přesný veřejný sektor. Korporace jsou přímo pozorované; funkce vlády jsou rozdělené podle podílu na kompenzacích zaměstnanců v daném roce.",
+      selected: "Vybraná funkce",
+      fte2015: "2015",
+      fte2024: "2024",
+      cost2024: "Náklad 2024",
+      costChange: "Nárůst nákladu",
+      directCheck: "Nejbližší přímý výkaz",
+      methodTitle: "Co je přesné a co je model",
+      methodBody: "ČSÚ publikuje přesný celkový počet FTE pro veřejný sektor a vládní instituce, ale nikoli FTE podle funkcí COFOG. Funkční řezy proto alokují přesný počet vládních FTE podle oficiálních podílů kompenzací zaměstnanců. Je to úplný, neduplicitní odhad — nikoli pozorovaný počet lidí v každé funkci.",
+      exact: "přesně",
+      modelled: "model",
+      exactNote: "Přímo pozorovaná a srovnatelná řada ČSÚ.",
+      modelNote: "Odhad FTE z podílu funkce na kompenzacích zaměstnanců.",
+      noDirect: "Pro tuto funkci není zveřejněn srovnatelný sčitatelný výkaz FTE. Zobrazený vývoj je model podle nákladových podílů.",
+      educationCheck: "MŠMT napříč všemi zřizovateli: {from} → {to} FTE, tedy {change}. Širší hranice zahrnuje veřejné, soukromé i církevní školy.",
+      corporationsCheck: "ČSÚ: {from} → {to} FTE, tedy {change}. Jde o přesný, srovnatelný vývoj veřejných korporací.",
+      securityCheck: "MF, užší překryv členů bezpečnostních sborů a vojáků: {from} → {to} průměrných zaměstnanců, tedy {change}.",
+      source: "Zdroj",
+    },
+    en: {
+      corporations: "Public corporations",
+      corporationsExact: "exact count",
+      educationModel: "Education · model inside S.13",
+      educationDirect: "Direct MŠMT return: {value} FTE",
+      missing: "Previously unexplained block",
+      missingNote: "nine functions outside education",
+      pieTitle: "All {value} FTE — no duplicates",
+      pieUnit: "FTE · counted once",
+      function: "Function",
+      model2015: "Model 2015",
+      model2024: "Model 2024",
+      change: "Change",
+      stackKicker: "Stackable zoom",
+      stackTitle: "How the composition shifted from 2015",
+      stackIntro: "Both bars equal the exact public-sector total. Corporations are observed directly; government functions are allocated using their share of employee compensation in each year.",
+      selected: "Selected function",
+      fte2015: "2015",
+      fte2024: "2024",
+      cost2024: "2024 cost",
+      costChange: "Cost increase",
+      directCheck: "Nearest direct return",
+      methodTitle: "What is exact and what is modelled",
+      methodBody: "CZSO publishes exact total FTE for the public sector and general government, but not FTE by COFOG function. The functional slices therefore allocate the exact government FTE using official employee-compensation shares. This is a complete, non-duplicated estimate—not an observed employee count for every function.",
+      exact: "exact",
+      modelled: "modelled",
+      exactNote: "Directly observed, comparable CZSO series.",
+      modelNote: "FTE estimate based on the function’s share of employee compensation.",
+      noDirect: "No comparable additive FTE return is published for this function. The displayed change is modelled from compensation shares.",
+      educationCheck: "MŠMT across all founders: {from} → {to} FTE, a change of {change}. Its broader boundary includes public, private and church schools.",
+      corporationsCheck: "CZSO: {from} → {to} FTE, a change of {change}. This is the exact comparable public-corporation series.",
+      securityCheck: "MF's narrower overlapping return for security-force members and soldiers: {from} → {to} average employees, a change of {change}.",
+      source: "Source",
+    },
+  }[lang];
+
+  function allocateByWeight(total, rows, weightKey) {
+    const weightTotal = rows.reduce((sum, row) => sum + row[weightKey], 0);
+    const allocated = rows.map((row) => {
+      const raw = total * row[weightKey] / weightTotal;
+      return { id: row.id, value: Math.floor(raw), remainder: raw - Math.floor(raw) };
+    });
+    let remaining = total - allocated.reduce((sum, row) => sum + row.value, 0);
+    [...allocated].sort((a, b) => b.remainder - a.remainder).slice(0, remaining).forEach((row) => { row.value += 1; });
+    return Object.fromEntries(allocated.map((row) => [row.id, row.value]));
+  }
+
+  function renderReconciledWorkforce(data) {
+    const target = $("#employment-reconciliation");
+    if (!target) return;
+    const first = data.history[0];
+    const latest = data.history.at(-1);
+    const functions = data.compensation.change_by_function;
+    const fte2015 = allocateByWeight(first.general_government_fte, functions, "compensation_2015_czk_m");
+    const fte2024 = allocateByWeight(latest.general_government_fte, functions, "compensation_2024_czk_m");
+    const label = (row) => row[lang === "en" ? "label_en" : "label_cs"];
+    const toneOrder = ["education", "health", "public_corporations", "general_public_services", "public_order", "economic_affairs", "social_protection", "defence", "recreation_culture", "environment", "housing"];
+    const items = functions.map((row) => ({
+      ...row,
+      name: label(row),
+      fte2015: fte2015[row.id],
+      fte2024: fte2024[row.id],
+      exact: false,
+    }));
+    items.push({
+      id: "public_corporations",
+      name: reconciliationCopy.corporations,
+      fte2015: first.public_corporations_combined_fte,
+      fte2024: latest.public_corporations_combined_fte,
+      compensation_2015_czk_m: null,
+      compensation_2024_czk_m: null,
+      change_czk_m: null,
+      exact: true,
+    });
+    items.forEach((item) => {
+      item.changeFte = item.fte2024 - item.fte2015;
+      item.tone = toneOrder.indexOf(item.id);
+    });
+    const ordered = toneOrder.map((id) => items.find((item) => item.id === id));
+    const ranked = [...items].sort((a, b) => b.fte2024 - a.fte2024);
+    const education = items.find((item) => item.id === "education");
+    const corporations = items.find((item) => item.id === "public_corporations");
+    const missing = latest.public_sector_fte - education.fte2024 - corporations.fte2024;
+    const maxFte = Math.max(...items.map((item) => item.fte2024));
+    const radius = 154;
+    const inner = 82;
+    const cx = 190;
+    const cy = 190;
+    const polar = (angle, r) => [cx + Math.cos(angle - Math.PI / 2) * r, cy + Math.sin(angle - Math.PI / 2) * r];
+    const arc = (start, end) => {
+      const [x1, y1] = polar(start, radius);
+      const [x2, y2] = polar(end, radius);
+      const [ix2, iy2] = polar(end, inner);
+      const [ix1, iy1] = polar(start, inner);
+      return `M${x1},${y1}A${radius},${radius} 0 ${end - start > Math.PI ? 1 : 0} 1 ${x2},${y2}L${ix2},${iy2}A${inner},${inner} 0 ${end - start > Math.PI ? 1 : 0} 0 ${ix1},${iy1}Z`;
+    };
+    let angle = 0;
+    const slices = ordered.map((item) => {
+      const start = angle;
+      angle += item.fte2024 / latest.public_sector_fte * Math.PI * 2;
+      return `<path class="tone-recon-${item.tone}" data-recon-id="${item.id}" d="${arc(start, angle)}"><title>${esc(item.name)}: ${fmt(item.fte2024)} FTE · ${item.exact ? reconciliationCopy.exact : reconciliationCopy.modelled}</title></path>`;
+    }).join("");
+    const segment = (item, field, total) => `<i class="tone-recon-${item.tone}" data-recon-id="${item.id}" style="width:${item[field] / total * 100}%" title="${esc(item.name)}: ${fmt(item[field])} FTE"></i>`;
+    const stack = (year, field, total) => `<div class="recon-stack-row"><b>${year}</b><div class="recon-stack-bar">${ordered.map((item) => segment(item, field, total)).join("")}</div><strong>${fmt(total)} FTE</strong></div>`;
+    const rows = ranked.map((item) => `<button class="recon-row" type="button" data-recon-id="${item.id}" aria-pressed="false"><span class="recon-row-name"><span class="recon-row-label"><i class="recon-swatch tone-recon-${item.tone}"></i>${esc(item.name)}</span><span class="recon-track"><i class="tone-recon-${item.tone}" style="width:${item.fte2024 / maxFte * 100}%"></i></span></span><strong>${item.exact ? "" : "≈"}${fmt(item.fte2015)}</strong><strong>${item.exact ? "" : "≈"}${fmt(item.fte2024)}</strong><strong class="change ${item.changeFte < 0 ? "negative" : "positive"}">${item.exact ? "" : "≈"}${signedCount(item.changeFte)}</strong></button>`).join("");
+    target.innerHTML = `
+      <div class="recon-summary">
+        <article><span>${reconciliationCopy.corporations} · ${reconciliationCopy.corporationsExact}</span><strong>${fmt(corporations.fte2024)} FTE</strong><small>${fmt(corporations.fte2015)} → ${fmt(corporations.fte2024)}</small></article>
+        <article><span>${reconciliationCopy.educationModel}</span><strong>≈${fmt(education.fte2024)} FTE</strong><small>${reconciliationCopy.educationDirect.replace("{value}", fmt(data.growth.regional_education_evidence.total_fte_to))}</small></article>
+        <article><span>${reconciliationCopy.missing}</span><strong>≈${fmt(missing)} FTE</strong><small>${reconciliationCopy.missingNote}</small></article>
+      </div>
+      <div class="recon-main">
+        <article class="recon-pie-panel"><div class="recon-panel-head"><div><span>2024</span><h3>${reconciliationCopy.pieTitle.replace("{value}", fmt(latest.public_sector_fte))}</h3></div><b>100 %</b></div><svg class="recon-pie" viewBox="0 0 380 380" role="img" aria-label="${esc(reconciliationCopy.pieTitle.replace("{value}", fmt(latest.public_sector_fte)))}">${slices}<text class="total" x="${cx}" y="${cy - 2}">${fmt(latest.public_sector_fte)}</text><text class="unit" x="${cx}" y="${cy + 20}">${reconciliationCopy.pieUnit}</text></svg></article>
+        <div class="recon-breakdown"><div class="recon-table-head"><span>${reconciliationCopy.function}</span><span>${reconciliationCopy.model2015}</span><span>${reconciliationCopy.model2024}</span><span>${reconciliationCopy.change}</span></div>${rows}</div>
+      </div>
+      <article class="recon-zoom"><header class="recon-stack-head"><div><span>${reconciliationCopy.stackKicker}</span><h3>${reconciliationCopy.stackTitle}</h3></div><p>${reconciliationCopy.stackIntro}</p></header><div class="recon-stacks">${stack(first.year, "fte2015", first.public_sector_fte)}${stack(latest.year, "fte2024", latest.public_sector_fte)}</div><div class="recon-selected" id="recon-selected"></div><div class="recon-direct-check"><strong>${reconciliationCopy.directCheck}</strong><p id="recon-direct-copy"></p></div></article>
+      <aside class="recon-method"><strong>${reconciliationCopy.methodTitle}</strong><p>${reconciliationCopy.methodBody}</p></aside>`;
+
+    const selected = target.querySelector("#recon-selected");
+    const direct = target.querySelector("#recon-direct-copy");
+    const regulated = data.growth.state_regulated_comparison;
+    const security = regulated.components.find((row) => row.id === "uniformed_soldiers");
+    const directCopy = (item) => {
+      if (item.id === "education") return reconciliationCopy.educationCheck.replace("{from}", fmt(data.growth.regional_education_evidence.total_fte_from)).replace("{to}", fmt(data.growth.regional_education_evidence.total_fte_to)).replace("{change}", signedCount(data.growth.regional_education_evidence.change_fte));
+      if (item.id === "public_corporations") return reconciliationCopy.corporationsCheck.replace("{from}", fmt(item.fte2015)).replace("{to}", fmt(item.fte2024)).replace("{change}", signedCount(item.changeFte));
+      if ((item.id === "public_order" || item.id === "defence") && security) return reconciliationCopy.securityCheck.replace("{from}", fmt(security.employees_2015)).replace("{to}", fmt(security.employees_2024)).replace("{change}", signedCount(security.change_employees));
+      return reconciliationCopy.noDirect;
+    };
+    const select = (item) => {
+      target.querySelectorAll("[data-recon-id]").forEach((node) => node.classList.toggle("dimmed", node.dataset.reconId !== item.id));
+      target.querySelectorAll(".recon-row").forEach((node) => node.setAttribute("aria-pressed", node.dataset.reconId === item.id ? "true" : "false"));
+      selected.innerHTML = `<div><span>${reconciliationCopy.selected}</span><strong>${esc(item.name)} · ${item.exact ? reconciliationCopy.exact : reconciliationCopy.modelled}</strong><p>${item.exact ? reconciliationCopy.exactNote : reconciliationCopy.modelNote}</p></div><div><span>${reconciliationCopy.fte2015}</span><strong>${item.exact ? "" : "≈"}${fmt(item.fte2015)}</strong></div><div><span>${reconciliationCopy.fte2024}</span><strong>${item.exact ? "" : "≈"}${fmt(item.fte2024)}</strong></div><div><span>${reconciliationCopy.cost2024}</span><strong>${item.compensation_2024_czk_m ? `${bn(item.compensation_2024_czk_m)} ${copy.czkBn}` : "—"}</strong></div><div><span>${reconciliationCopy.costChange}</span><strong>${item.change_czk_m ? `+${bn(item.change_czk_m)} ${copy.czkBn}` : "—"}</strong></div>`;
+      direct.textContent = directCopy(item);
+    };
+    target.querySelectorAll("[data-recon-id]").forEach((node) => {
+      node.addEventListener("click", () => select(items.find((item) => item.id === node.dataset.reconId)));
+      if (node.tagName !== "BUTTON") node.addEventListener("mouseenter", () => select(items.find((item) => item.id === node.dataset.reconId)));
+    });
+    select(education);
+    target.querySelectorAll("[data-recon-id]").forEach((node) => node.classList.remove("dimmed"));
+  }
 
   function binaryTreemap(items, x = 0, y = 0, width = 100, height = 100) {
     if (!items.length) return [];
@@ -530,7 +706,7 @@
     renderChart(data.history);
     $("#employment-history-body").innerHTML = [...data.history].reverse().map((row) => `<tr><th>${row.year}</th><td>${fmt(row.public_sector_fte)}</td><td>${fmt(row.general_government_fte)}</td><td>${fmt(row.public_corporations_combined_fte)}${row.public_corporations_combined_status === "derived_residual" ? "*" : ""}</td><td>${pct(row.public_sector_share_pct)} %</td></tr>`).join("");
     renderGrowth(data);
-    renderEmploymentExplorer(data);
+    renderReconciledWorkforce(data);
     const entities = data.entity_resolution;
     $("#employment-entity-status").innerHTML = `<article><span>${copy.registered}</span><strong>${fmt(entities.registered_entities)}</strong><small>${entities.public_entity_register_period}</small></article><article><span>${copy.observed}</span><strong>${fmt(entities.entities_with_employee_observation)}</strong><small>2024</small></article><article><span>${copy.missing}</span><strong>${fmt(entities.registered_entities - entities.entities_with_employee_observation)}</strong><small>${copy.coverage}</small></article><article><span>${copy.join}</span><strong>IČO</strong><small>${esc(entities.join_key)}</small></article>`;
     $("#employment-method-grid").innerHTML = copy.methodCards.map((row) => `<article><b>${row[0]}</b><h3>${row[1]}</h3><p>${row[2]}</p></article>`).join("");

@@ -38,13 +38,12 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator("#employment-function-growth .employment-cost-function-rows > article")).toHaveCount(dataset.compensation.change_by_function.length);
   await expect(page.locator("#employment-function-growth .employment-cost-stack-row")).toHaveCount(2);
   await expect(page.locator("#employment-salary-comparison > article")).toHaveCount(dataset.growth.state_regulated_comparison.salary_comparison.length);
-  await expect(page.locator("#employment-unified-map")).toContainText("The only additive frame");
-  await expect(page.locator("#employment-unified-map")).toContainText(number(dataset.headline.public_sector_fte));
-  await expect(page.locator(".unified-exact-split")).toContainText(number(dataset.headline.general_government_fte));
-  await expect(page.locator(".unified-exact-split")).toContainText(number(dataset.headline.public_corporations_combined_fte));
-  await expect(page.locator(".unified-lens")).toHaveCount(4);
-  await expect(page.locator(".unified-no-residual")).toContainText("No false residual is created");
-  await expect(page.locator(".unified-cost-row")).toHaveCount(dataset.compensation.change_by_function.length);
+  await expect(page.locator("#employment-reconciliation")).toContainText("Previously unexplained block");
+  await expect(page.locator("#employment-reconciliation")).toContainText(number(dataset.headline.public_sector_fte));
+  await expect(page.locator(".recon-pie path")).toHaveCount(dataset.compensation.change_by_function.length + 1);
+  await expect(page.locator(".recon-row")).toHaveCount(dataset.compensation.change_by_function.length + 1);
+  await expect(page.locator(".recon-stack-row")).toHaveCount(2);
+  await expect(page.locator(".recon-method")).toContainText("complete, non-duplicated estimate");
   await expect(page.locator("#employment-entity-status")).toContainText(number(dataset.entity_resolution.registered_entities));
   await expect(page.locator("#employment-entity-status")).toContainText(number(dataset.entity_resolution.entities_with_employee_observation));
   expect(latest.public_sector_fte).toBe(latest.general_government_fte + latest.public_corporations_combined_fte);
@@ -57,7 +56,7 @@ test("public-employment report reconciles the control total and source layers", 
   expect(runtimeErrors).toEqual([]);
 });
 
-test("public-employment unified map exposes every source layer without double counting", async ({ page }) => {
+test("public-employment reconciliation exposes the complete non-duplicated model", async ({ page }) => {
   const runtimeErrors = [];
   page.on("pageerror", (error) => runtimeErrors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") runtimeErrors.push(message.text()); });
@@ -65,17 +64,17 @@ test("public-employment unified map exposes every source layer without double co
   await page.goto("/deep-dives/public-employment/?lang=en", {waitUntil: "networkidle"});
   const explorer = page.locator("#explorer");
   await expect(explorer).toBeVisible();
-  await expect(page.locator(".state-lens")).toContainText("487,078");
-  await expect(page.locator(".state-lens")).toContainText("Regional education in the regulated sphere");
-  await expect(page.locator(".education-lens")).toContainText("Teaching assistants");
-  await expect(page.locator(".education-lens")).toContainText("31,129 CZK/month");
-  await expect(page.locator(".education-lens")).toContainText("Primary schools");
-  await expect(page.locator(".education-lens")).toContainText("Same total — do not count twice");
-  await expect(page.locator(".local-lens")).toContainText("83,450");
-  await expect(page.locator(".portfolio-lens")).toContainText("84,308");
-  await expect(page.locator(".portfolio-lens")).toContainText("České dráhy, a.s.");
-  await expect(page.locator(".portfolio-lens")).toContainText("IČO 70994226");
-  await expect(page.locator(".portfolio-lens .unified-sector article")).toHaveCount(38);
+  await expect(page.locator(".recon-summary")).toContainText("661,235");
+  await expect(page.locator(".recon-summary")).toContainText("286,643");
+  await expect(page.locator(".recon-summary")).toContainText("164,412");
+  await expect(page.locator(".recon-stack-row").first()).toContainText("990,546 FTE");
+  await expect(page.locator(".recon-stack-row").last()).toContainText("1,112,290 FTE");
+  await page.locator('.recon-row[data-recon-id="public_corporations"]').click();
+  await expect(page.locator("#recon-selected")).toContainText("Public corporations · exact");
+  await expect(page.locator("#recon-direct-copy")).toContainText("exact comparable public-corporation series");
+  await page.locator('.recon-row[data-recon-id="education"]').click();
+  await expect(page.locator("#recon-selected")).toContainText("Education · modelled");
+  await expect(page.locator("#recon-direct-copy")).toContainText("235,149 → 301,048 FTE");
   expect(await page.evaluate(() => document.body.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   expect(runtimeErrors).toEqual([]);
 });
