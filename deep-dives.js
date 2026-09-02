@@ -30,8 +30,10 @@
   Object.assign(copy.en,{ageing:"Population ageing",ageingCopy:"Official population projections, age structure and a demographic calculator; we do not forecast fiscal outcomes.",ageingEyebrow:"Report / Ageing",ageingTitle:"Population ageing",ageingIntro:"Official population projections and the demographic arithmetic that follows from them. We do not forecast costs or taxes.",projectionStats:"Projection",calculator:"Calculator"});
   Object.assign(copy.cs,{economy:"Ekonomika v kontextu",economyCopy:"Globální dlouhé řady, hospodářský cyklus, pokrytí a datový kontrakt pro další ekonometrické reporty."});
   Object.assign(copy.en,{economy:"Economy in context",economyCopy:"Global long-run series, the economic cycle, coverage and a reusable contract for econometric reporting."});
-  Object.assign(copy.cs,{migration:"Evropská migrace",migrationCopy:"Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024.",indexCoverage:"až 27 zemí"});
-  Object.assign(copy.en,{migration:"European migration",migrationCopy:"Immigration, emigration and migration balance across all 27 EU countries from 2000 to 2024.",indexCoverage:"up to 27 countries"});
+  Object.assign(copy.cs,{migration:"Evropská migrace",migrationCopy:"Migrační toky a rozhodnutí o ochraně ve 33 evropských zemích.",indexCoverage:"až 33 zemí"});
+  Object.assign(copy.en,{migration:"European migration",migrationCopy:"Migration flows and protection decisions across 33 European countries.",indexCoverage:"up to 33 countries"});
+  const migrationCoverage = document.querySelector("#migration header b");
+  if (migrationCoverage) migrationCoverage.textContent = "33 / 33";
   Object.assign(copy.cs,{defense:"Výdaje na obranu",defenseCopy:"Výdaje vůči HDP, závazek NATO a nejpodrobnější dostupné řádky národních rozpočtů."});
   Object.assign(copy.en,{defense:"Defense spending",defenseCopy:"Spending relative to GDP, the NATO commitment and the most detailed available national budget lines."});
   Object.assign(copy.cs,{taxBurden:"Daňové zatížení",taxBurdenCopy:"Zdanění práce, firem a uhlíku a daňová pravomoc obcí podle definic OECD.",redistribution:"Přerozdělení a výsledky",redistributionCopy:"Nerovnost před transfery a po nich, sociální výdaje a důchody."});

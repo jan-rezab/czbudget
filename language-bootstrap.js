@@ -121,8 +121,8 @@
       en: ["Where the state gets its money — Public Spending Data", "The tax mix, the first recipient of each tax and the path to municipal budgets across ten countries, based on OECD data."],
     },
     "/deep-dives/migration/": {
-      cs: ["Evropská migrace v čase — Public Spending Data", "Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024 podle Eurostatu."],
-      en: ["European migration over time — Public Spending Data", "Immigration, emigration and migration balance across all 27 EU countries from 2000 to 2024, based on Eurostat."],
+      cs: ["Evropská migrace v čase — Public Spending Data", "Přistěhování, vystěhování a rozhodnutí o statusu ochrany ve 33 evropských zemích podle Eurostatu."],
+      en: ["European migration over time — Public Spending Data", "Immigration, emigration and protection-status decisions across 33 European countries, based on Eurostat."],
     },
     "/deep-dives/economy/": {
       cs: ["Ekonomika v kontextu — Public Spending Data", "Dlouhé ekonomické řady, hospodářský cyklus a fiskální kontext v globální datové vrstvě."],

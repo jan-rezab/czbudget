@@ -84,6 +84,8 @@
   };
   Object.assign(copy.cs, {publicEmployment:"Veřejná zaměstnanost", publicEmploymentCopy:"Vláda, školy, nemocnice, samosprávy a veřejné korporace"});
   Object.assign(copy.en, {publicEmployment:"Public employment", publicEmploymentCopy:"Government, schools, hospitals, local authorities and public corporations"});
+  Object.assign(copy.cs, {migrationCopy:"33 zemí, migrační toky a status ochrany"});
+  Object.assign(copy.en, {migrationCopy:"33 countries, migration flows and protection status"});
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const href = (path, lang = language()) => `${assetRoot}${path}${path.includes("?") ? "&" : "?"}lang=${lang}`;
   const countryHref = (code, lang = language()) => window.PSDCountryRoutes?.href
