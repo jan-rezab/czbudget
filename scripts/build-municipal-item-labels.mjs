@@ -68,6 +68,18 @@ const payload = {
   countries,
 };
 
+// Reader-facing translations are maintained separately from the source extraction. Preserve
+// them when this script refreshes the native registry so a data rebuild cannot silently turn
+// translated municipal pages back into bare codes.
+try {
+  const existing = JSON.parse(await readFile(path.join(ROOT, OUT), "utf8"));
+  if (existing.localized) payload.localized = existing.localized;
+  if (existing.localized) {
+    payload.note = "Native-language labels for municipal line-item codes, as published by each national source. "
+      + "Selected countries additionally include reader-facing translations while retaining the source label for auditability.";
+  }
+} catch {}
+
 const bytes = Buffer.byteLength(`${JSON.stringify(payload, null, 2)}\n`);
 console.log(`${Object.keys(countries).length} countries, ${totalCodes.toLocaleString("en-US")} codes, ${(bytes / 1024).toFixed(1)} KB`);
 for (const [code, labels] of Object.entries(countries)) {
