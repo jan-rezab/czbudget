@@ -7,8 +7,12 @@ const number = (value) => new Intl.NumberFormat("en-GB", {maximumFractionDigits:
 
 test("public-employment report reconciles the control total and source layers", async ({ page }) => {
   const runtimeErrors = [];
+  const datasetRequests = [];
   page.on("pageerror", (error) => runtimeErrors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") runtimeErrors.push(message.text()); });
+  page.on("request", (request) => {
+    if (request.url().includes("cz-public-employment.v1.json")) datasetRequests.push(request.url());
+  });
 
   await page.goto("/deep-dives/public-employment/?lang=en", {waitUntil: "networkidle"});
 
@@ -32,6 +36,8 @@ test("public-employment report reconciles the control total and source layers", 
   expect(latest.public_sector_fte).toBe(latest.general_government_fte + latest.public_corporations_combined_fte);
   expect(dataset.growth.public_sector_change_fte).toBe(dataset.growth.general_government_change_fte + dataset.growth.public_corporations_change_fte);
   expect(dataset.compensation.history.every((row) => row.compensation_employees_czk_m === row.wages_salaries_czk_m + row.employer_social_contributions_czk_m)).toBe(true);
+  expect(datasetRequests).toHaveLength(1);
+  expect(new URL(datasetRequests[0]).searchParams.get("v")).toBe(dataset.schema_version);
   expect(runtimeErrors).toEqual([]);
 });
 

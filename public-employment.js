@@ -1,4 +1,5 @@
 (() => {
+  const datasetUrl = "../../data/cz-public-employment.v1.json?v=1.1.0";
   const lang = document.documentElement.lang === "en" ? "en" : "cs";
   const locale = lang === "en" ? "en-GB" : "cs-CZ";
   const copy = {
@@ -276,7 +277,7 @@
     $("#employment-sources").innerHTML = data.sources.map((source) => `<a href="${esc(source.url)}" target="_blank" rel="noopener"><span>${esc(source.publisher)}</span><strong>${esc(source[lang === "en" ? "title_en" : "title_cs"])} · ${esc(source.period)} ↗</strong></a>`).join("");
   }
 
-  fetch("../../data/cz-public-employment.v1.json")
+  fetch(datasetUrl, { cache: "no-store" })
     .then((response) => {
       if (!response.ok) throw new Error(response.status);
       return response.json();
