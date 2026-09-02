@@ -578,14 +578,19 @@ test("every covered country homepage exists and the navigator connects them", as
   }
   await page.goto("/municipalities/denmark/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#country-title")).toContainText("Budgets of Danish municipalities");
-  await expect(page.locator(".dynamic-country-picker")).toContainText("Choose a country");
+  await expect(page.locator(".dynamic-country-picker")).toContainText("Municipality country");
   await expect(page.locator(".country-picker-readout")).toContainText("Denmark");
   await expect(page.locator("#municipality-country-switch option")).toHaveCount(25);
   await expect(page.locator("#country-insight-grid article")).toHaveCount(4);
   await expect(page.locator("#country-directory-count")).toContainText("98 entities");
   await page.locator("#country-municipality-search").fill("Copenhagen");
   await expect(page.locator("#country-municipality-grid .municipality-card")).toHaveCount(1);
-  await page.locator("#municipality-country-switch").selectOption("france");
+  await page.locator(".country-picker-readout").click();
+  await expect(page.locator(".country-picker-search input")).toBeFocused();
+  await page.locator(".country-picker-search input").fill("France");
+  await expect(page.locator(".country-picker-options [data-country-picker-value]:visible")).toHaveCount(1);
+  await expect(page.locator(".country-picker-popover output")).toHaveText("1 country");
+  await page.locator('[data-country-picker-value="france"]').click();
   await expect(page).toHaveURL(/\/municipalities\/france\/\?lang=en/);
   await expect(page.locator("#country-title")).toContainText("French municipalities");
 });

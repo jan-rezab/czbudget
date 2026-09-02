@@ -1,5 +1,6 @@
 (()=>{
   const assetRoot=document.currentScript?.src?new URL(".",document.currentScript.src).href:"../../";
+  const pickerReady=window.PSDMunicipalityCountryPicker?Promise.resolve():new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=`${assetRoot}municipality-country-picker.js?v=20260902-searchable-picker`;script.onload=resolve;script.onerror=reject;document.head.append(script);});
   const requestedLanguage=new URLSearchParams(location.search).get("lang"), initialLanguage=["cs","en"].includes(requestedLanguage)?requestedLanguage:(document.documentElement.lang==="en"?"en":"cs");
   const state={lang:initialLanguage,data:null,country:null,structure:null,query:"",year:"all",balance:"all",sort:"expenditure",shown:48};
   const code=document.body.dataset.countryCode;
@@ -53,13 +54,20 @@
     if(state.data)render();
   }
   function renderSwitch(){
-    const select=$("#municipality-country-switch"), wrapper=select.closest("label"), country=state.country;
-    select.innerHTML=state.data.countries.filter(c=>slugs[c.code]).map(c=>`<option value="${slugs[c.code]}"${c.code===code?" selected":""}>${esc(c[`name_${state.lang}`])} · ${fmt(c.directory_count)}</option>`).join("");
-    wrapper.classList.add("dynamic-country-picker");
-    wrapper.querySelector(":scope > span")?.replaceChildren(state.lang==="en"?"Choose a country":"Vyberte zemi");
-    let readout=wrapper.querySelector(".country-picker-readout");
-    if(!readout){readout=document.createElement("span");readout.className="country-picker-readout";select.before(readout);}
-    readout.innerHTML=`<img src="${assetRoot}assets/flags/${country.alpha2.toLowerCase()}.svg" alt=""><span><strong>${esc(country[`name_${state.lang}`])}</strong><small>${fmt(country.directory_count)} ${t().entities} · ${country.years.join(" + ")}</small></span><b aria-hidden="true">⌄</b>`;
+    const select=$("#municipality-country-switch"), country=state.country;
+    if(!window.PSDMunicipalityCountryPicker){pickerReady.then(renderSwitch).catch(console.error);return;}
+    window.PSDMunicipalityCountryPicker?.enhance(select,{
+      label:state.lang==="en"?"Municipality country":"Obecní země",
+      placeholder:state.lang==="en"?"Choose a country":"Vyberte zemi",
+      hint:state.lang==="en"?"Search all municipality countries":"Prohledejte všechny obecní země",
+      searchLabel:state.lang==="en"?"Search countries":"Hledat země",
+      searchPlaceholder:state.lang==="en"?"Country name…":"Název země…",
+      emptyLabel:state.lang==="en"?"No countries match.":"Žádná země neodpovídá.",
+      resultSingular:state.lang==="en"?"country":"země",
+      resultPlural:state.lang==="en"?"countries":"zemí",
+      selected:slugs[code],
+      options:state.data.countries.filter(c=>slugs[c.code]).map(c=>({value:slugs[c.code],label:c[`name_${state.lang}`],search:`${c.name_cs} ${c.name_en} ${c.code}`,meta:`${fmt(c.directory_count)} ${t().entities}`,flag:`${assetRoot}assets/flags/${c.alpha2.toLowerCase()}.svg`})),
+    });
   }
   function render(){
     const c=state.country, profile=p();
