@@ -13,11 +13,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-WEB = Path(os.environ.get("CZBUDGET_WEBSITE_ROOT", Path(__file__).resolve().parents[1]))
-ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", WEB.parent))
+WEB = Path(os.environ.get("CZBUDGET_WEBSITE_ROOT", Path(__file__).resolve().parents[1])).resolve()
+ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", WEB.parent)).resolve()
 FINM = ROOT / "data/source_cache/2025_12_FINM.zip"
 FINOSS = ROOT / "data/sources/ministries/CZE/fin-1-12-oss-2025-12.zip"
 MUNICIPAL_SNAPSHOT = WEB / "data/municipal-snapshot.v1.json"
+INTERNATIONAL_CAPACITY = WEB / "data/education-capacity-international.v1.json"
 OUTPUT = WEB / "data/education-deep-dive.v1.json"
 
 REGIONS = [
@@ -305,45 +306,39 @@ def capacity() -> dict:
             "learners_per_teaching_fte": round(learners / teaching_fte, 1) if teaching_fte else None,
         })
 
-    countries = [
-        ("CZE", "Česko", "Czechia"),
-        ("CHE", "Švýcarsko", "Switzerland"),
-        ("SWE", "Švédsko", "Sweden"),
-        ("DNK", "Dánsko", "Denmark"),
-        ("FIN", "Finsko", "Finland"),
-        ("NOR", "Norsko", "Norway"),
-    ]
-    values = {
-        "preprimary": {"CZE": 11.9, "CHE": None, "SWE": 13.6, "DNK": 10.3, "FIN": 7.7, "NOR": 11.4},
-        "primary": {"CZE": 17.7, "CHE": None, "SWE": 12.6, "DNK": 12.2, "FIN": 12.4, "NOR": 10.0},
-        "lower_secondary": {"CZE": 12.7, "CHE": None, "SWE": 11.1, "DNK": 11.2, "FIN": 9.2, "NOR": 7.6},
-        "upper_secondary": {"CZE": 10.9, "CHE": None, "SWE": 13.1, "DNK": 12.8, "FIN": 17.4, "NOR": 10.5},
-        "tertiary": {"CZE": 16.6, "CHE": None, "SWE": 10.1, "DNK": 14.3, "FIN": 15.3, "NOR": 9.0},
-    }
-    level_labels = {
-        "preprimary": ("Předškolní", "Pre-primary", "ISCED 02"),
-        "primary": ("Primární", "Primary", "ISCED 1"),
-        "lower_secondary": ("Nižší sekundární", "Lower secondary", "ISCED 2"),
-        "upper_secondary": ("Vyšší sekundární", "Upper secondary", "ISCED 3"),
-        "tertiary": ("Terciární", "Tertiary", "ISCED 5–8"),
-    }
+    international = json.loads(INTERNATIONAL_CAPACITY.read_text(encoding="utf-8"))
+    country_profiles = international["countries"]
+    level_ids = [level["id"] for level in country_profiles[0]["levels"]]
     levels = []
-    for level_id, level_values in values.items():
-        reported_peer_values = [value for code, value in level_values.items() if code != "CZE" and value is not None]
+    for level_id in level_ids:
+        rows_by_country = {
+            country["code"]: next(level for level in country["levels"] if level["id"] == level_id)
+            for country in country_profiles
+        }
+        reported_peer_values = [
+            row["learners_per_teaching_fte"]
+            for code, row in rows_by_country.items()
+            if code != "CZE" and row["learners_per_teaching_fte"] is not None
+        ]
         ordered = sorted(reported_peer_values)
         midpoint = len(ordered) // 2
         peer_median = (ordered[midpoint - 1] + ordered[midpoint]) / 2 if len(ordered) % 2 == 0 else ordered[midpoint]
-        label_cs, label_en, isced = level_labels[level_id]
+        czech_row = rows_by_country["CZE"]
         levels.append({
             "id": level_id,
-            "label_cs": label_cs,
-            "label_en": label_en,
-            "isced": isced,
-            "czech_value": level_values["CZE"],
+            "label_cs": czech_row["label_cs"],
+            "label_en": czech_row["label_en"],
+            "isced": czech_row["isced"],
+            "czech_value": czech_row["learners_per_teaching_fte"],
             "reported_peer_median": round(peer_median, 1),
             "observations": [
-                {"code": code, "name_cs": name_cs, "name_en": name_en, "value": level_values[code]}
-                for code, name_cs, name_en in countries
+                {
+                    "code": country["code"],
+                    "name_cs": country["name_cs"],
+                    "name_en": country["name_en"],
+                    "value": rows_by_country[country["code"]]["learners_per_teaching_fte"],
+                }
+                for country in country_profiles
             ],
         })
     return {
@@ -353,11 +348,19 @@ def capacity() -> dict:
         "category_units": sum(row[5] for row in categories),
         "categories": rows,
         "benchmark": {
-            "period": "2023",
+            "period": international["period"],
             "unit": "full-time-equivalent pupils or students per full-time-equivalent teacher or academic staff member",
             "core_peer_definition": "Site core: Czechia plus countries tagged anchor or responsible_benchmark in the sovereign benchmark; Switzerland has no comparable observation in this Eurostat table.",
             "levels": levels,
             "source_url": "https://ec.europa.eu/eurostat/databrowser/view/educ_uoe_perp04/default/table?lang=en",
+        },
+        "international": {
+            "period": international["period"],
+            "country_count": international["country_count"],
+            "level_count": international["level_count"],
+            "countries": country_profiles,
+            "methodology": international["methodology"],
+            "sources": international["sources"],
         },
     }
 
