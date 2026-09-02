@@ -7,6 +7,11 @@
   // pin this route's default as the visitor's sitewide preference.
   const lang = requested === "en" || requested === "cs" ? requested : (window.PSDLanguage?.current() || document.documentElement.lang || routeDefault);
   document.documentElement.lang = lang;
+  const plzenContractSpecial = document.querySelector("[data-plzen-contract-special]");
+  if (plzenContractSpecial) {
+    plzenContractSpecial.href = `../../../deep-dives/plzen-contracts/?lang=${lang}`;
+    plzenContractSpecial.textContent = lang === "en" ? "Special: contracts and payments ↗" : "Speciál: smlouvy a platby ↗";
+  }
 
   const root = location.pathname.includes("/cz/municipalities/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/")
     ? (location.pathname.split("/").filter(Boolean).length > 2 ? "../../../" : "../../")

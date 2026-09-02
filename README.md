@@ -42,6 +42,25 @@ Volba jazyka se přenáší v URL parametru `lang` a ukládá do `localStorage`.
 Nové texty mají být přidávány do slovníků `I` a `T`, nikoli natvrdo do
 dynamicky generovaného rozhraní.
 
+### Datový speciál: smlouvy a platby Plzně
+
+Speciál `/deep-dives/plzen-contracts/` propojuje kompletní lokální snapshot
+registru smluv města s 555 stavebními investicemi a skutečnými platbami po
+fiskálních letech. Klient nikdy nevolá API a token se nezapisuje do webových
+dat. Obnovení zdrojů a lokální transformace:
+
+```bash
+HLIDACSTATU_API_TOKEN=... npm run fetch:plzen-contracts-full
+npm run fetch:plzen-budget-projects
+npm run build:plzen-contract-timeline
+npm run test:contracts
+```
+
+Smluvní hodnoty zůstávají v datu podpisu nebo zveřejnění. Platby jsou přesné
+na úrovni městské investiční akce; vazba smlouva–projekt je označena jistotou.
+Import městských projektů je sekvenční, čeká nejméně 250 ms mezi požadavky a má
+bezpečnostní strop 900 požadavků.
+
 ## Autentizované API
 
 Produkční kontejner provozuje vedle statického webu API v téže Cloud Run
