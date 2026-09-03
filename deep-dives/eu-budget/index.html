@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <script src="/language-bootstrap.js?v=20260902-eu-budget"></script>
+  <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Peníze mezi Českem a EU — Public Spending Data</title>
+  <meta name="description" content="Kolik každá země odvádí do rozpočtu EU, kolik výdajů EU je jí přiřazeno a proč tato čísla nejsou jedním řádkem státního rozpočtu.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/eu-budget/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/eu-budget/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/eu-budget/?lang=en">
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../styles.css?v=20260822-section-rail">
+  <link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives">
+  <link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter">
+  <link rel="stylesheet" href="../../eu-budget-deep-dive.css?v=20260902-launch">
+  <script src="../../deep-dives.js?v=20260824-sticky-filter" defer></script>
+  <script src="../../eu-budget-deep-dive.js?v=20260902-launch" defer></script>
+  <script src="../../global-nav.js?v=20260902-eu-budget" defer></script>
+</head>
+<body class="deep-dives-page eu-budget-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <section class="eu-hero" id="overview">
+      <div class="eu-hero-copy">
+        <span class="eyebrow" data-eu-copy="eyebrow">Report / rozpočet EU</span>
+        <h1><span data-eu-copy="titleLead">Toky</span> <em id="hero-country-name">Česko</em> <span data-eu-copy="titleTail">↔ EU</span></h1>
+        <p data-eu-copy="intro">Kolik výdajů Evropské unie je přiřazeno zemi, kolik země odvádí a kde se tyto toky potkávají se státním rozpočtem.</p>
+        <div class="eu-hero-controls"><label><span data-eu-copy="country">Země</span><select id="eu-country"></select></label><label><span data-eu-copy="year">Rok</span><select id="eu-year"></select></label></div>
+      </div>
+      <aside class="eu-hero-ledger" aria-live="polite">
+        <header><span data-eu-copy="ledger">Účetní pohled</span><b id="hero-year">2024</b></header>
+        <div class="eu-ledger-row incoming"><span><i>↓</i><b data-eu-copy="moneyIn">Výdaje EU přiřazené zemi</b></span><strong id="hero-in">—</strong></div>
+        <div class="eu-ledger-row outgoing"><span><i>↑</i><b data-eu-copy="moneyOut">Národní příspěvek do EU</b></span><strong id="hero-out">—</strong></div>
+        <div class="eu-ledger-net"><span data-eu-copy="difference">Rozdíl</span><strong id="hero-net">—</strong><small data-eu-copy="differenceNote">Přiřazené výdaje minus národní příspěvek</small></div>
+      </aside>
+    </section>
+
+    <nav class="deep-topic-rail eu-rail" aria-label="EU budget sections" data-sticky-filter="#eu-country" data-sticky-filter-kind="country">
+      <a href="#flow" data-eu-copy="navFlow">Tok peněz</a><a href="#state-budget" data-eu-copy="navState">Státní rozpočet</a><a href="#history" data-eu-copy="navHistory">Vývoj</a><a href="#breakdown" data-eu-copy="navBreakdown">Kam peníze míří</a><a href="#comparison" data-eu-copy="navComparison">EU-27</a><a href="#method" data-eu-copy="navMethod">Metodika</a>
+    </nav>
+
+    <section class="eu-definition-strip" id="flow">
+      <article><b data-eu-copy="inLabel">DOVNITŘ</b><strong id="definition-in">—</strong><p data-eu-copy="inDefinition">Výdaje rozpočtu EU přiřazené zemi, včetně samostatně vykázaného NextGenerationEU.</p></article>
+      <article><b data-eu-copy="outLabel">VEN</b><strong id="definition-out">—</strong><p data-eu-copy="outDefinition">Příspěvek založený na DPH, HND a nerecyklovaných plastech, včetně vyrovnání.</p></article>
+      <article><b data-eu-copy="customsLabel">CELNÍ ZDROJE</b><strong id="definition-customs">—</strong><p data-eu-copy="customsDefinition">Rozdíl mezi celkovými vlastními zdroji a národním příspěvkem; není součástí našeho hlavního „ven“.</p></article>
+    </section>
+
+    <section class="eu-section eu-boundary" id="state-budget">
+      <div class="eu-heading"><div><span class="kicker" data-eu-copy="stateKicker">Kde to je ve státním rozpočtu?</span><h2 data-eu-copy="stateTitle">Není to jeden příjmový a jeden výdajový řádek</h2></div><p data-eu-copy="stateIntro">Rozpočet EU a národní státní rozpočet jsou dva různé účetní celky. Část toků státní pokladnou projde, část jde přímo jiným veřejným nebo soukromým příjemcům.</p></div>
+      <div class="boundary-map">
+        <article class="boundary-node eu-node"><span>EU</span><strong data-eu-copy="euBudget">Rozpočet Evropské unie</strong><small data-eu-copy="euBudgetNote">vlastní příjmy a výdajové programy</small></article>
+        <div class="boundary-paths">
+          <article><b>01</b><span data-eu-copy="pathContribution">Národní příspěvek</span><p data-eu-copy="pathContributionCopy">V národním rozpočtu je výdajem; v rozpočtu EU příjmem.</p></article>
+          <article><b>02</b><span data-eu-copy="pathManaged">Sdílené řízení</span><p data-eu-copy="pathManagedCopy">Kohezní a zemědělské fondy administrují národní orgány a mohou procházet veřejnými rozpočty.</p></article>
+          <article><b>03</b><span data-eu-copy="pathDirect">Přímí příjemci</span><p data-eu-copy="pathDirectCopy">Univerzita, firma nebo obec může dostat platbu přímo z programu EU; ve státním rozpočtu ji proto neuvidíte.</p></article>
+          <article><b>04</b><span data-eu-copy="pathCustoms">Cla</span><p data-eu-copy="pathCustomsCopy">Celní správa je vybírá jako tradiční vlastní zdroj EU. Vedeme je odděleně od národního příspěvku.</p></article>
+        </div>
+        <article class="boundary-node state-node"><span id="boundary-country-code">CZ</span><strong data-eu-copy="nationalBudgets">Národní a další rozpočty</strong><small data-eu-copy="nationalBudgetsNote">stát · fondy · kraje · obce · přímí příjemci</small></article>
+      </div>
+      <aside class="boundary-answer"><b data-eu-copy="shortAnswer">Krátká odpověď</b><p data-eu-copy="shortAnswerCopy">Na stránce státního rozpočtu hledáte jen tu část, kterou skutečně účtuje stát. Číslo „výdaje EU přiřazené zemi“ je širší a nesmí se do státního rozpočtu přičítat jako další příjem.</p></aside>
+    </section>
+
+    <section class="eu-section" id="history">
+      <div class="eu-heading"><div><span class="kicker" data-eu-copy="historyKicker">2000–2024</span><h2 data-eu-copy="historyTitle">Dvě strany toku v čase</h2></div><p data-eu-copy="historyIntro">Před vstupem země do EU může zdroj vykazovat předvstupní výdaje. Graf členského vztahu proto začíná rokem vstupu.</p></div>
+      <figure class="eu-chart-card"><div class="eu-chart-legend"><span><i class="in"></i><b data-eu-copy="moneyInShort">Přiřazené výdaje</b></span><span><i class="out"></i><b data-eu-copy="moneyOutShort">Národní příspěvek</b></span><span><i class="net"></i><b data-eu-copy="difference">Rozdíl</b></span></div><div id="eu-history-chart"></div><figcaption id="history-caption">—</figcaption></figure>
+    </section>
+
+    <section class="eu-section eu-breakdown" id="breakdown">
+      <div class="eu-heading"><div><span class="kicker" data-eu-copy="breakdownKicker">Výdajové okruhy</span><h2 data-eu-copy="breakdownTitle">Kam přiřazené výdaje míří</h2></div><p data-eu-copy="breakdownIntro">Hlavní okruhy dlouhodobého rozpočtu. Částky kombinují standardní výdaje a samostatně zveřejněnou složku NextGenerationEU.</p></div>
+      <div class="breakdown-layout"><div id="eu-breakdown-bars"></div><aside><span data-eu-copy="ngeu">z toho NextGenerationEU</span><strong id="ngeu-value">—</strong><p data-eu-copy="ngeuNote">Dočasný nástroj obnovy je ve zdroji vykázán odděleně. Na této stránce jej zahrnujeme do „peněz dovnitř“.</p></aside></div>
+    </section>
+
+    <section class="eu-section" id="comparison">
+      <div class="eu-heading"><div><span class="kicker" data-eu-copy="comparisonKicker">Všech 27 členů</span><h2 data-eu-copy="comparisonTitle">Kdo dostává a kdo přispívá</h2></div><p data-eu-copy="comparisonIntro">Absolutní částky ukazují velikost toku, ne ekonomický přínos členství. Tabulku lze seřadit kliknutím na záhlaví.</p></div>
+      <div class="comparison-summary" id="comparison-summary"></div>
+      <div class="eu-table-wrap" tabindex="0" role="region" aria-label="EU budget country comparison"><table id="eu-comparison-table"><thead><tr><th data-sort="name" data-eu-copy="country">Země</th><th data-sort="in" data-eu-copy="moneyInShort">Přiřazené výdaje</th><th data-sort="out" data-eu-copy="moneyOutShort">Národní příspěvek</th><th data-sort="net" data-eu-copy="difference">Rozdíl</th><th data-sort="own" data-eu-copy="ownResources">Vlastní zdroje celkem</th></tr></thead><tbody id="eu-comparison-body"></tbody></table></div>
+    </section>
+
+    <section class="eu-section eu-method" id="method">
+      <div class="eu-heading"><div><span class="kicker" data-eu-copy="methodKicker">Jak čísla číst</span><h2 data-eu-copy="methodTitle">Účetní mapa, ne účet členství</h2></div><p data-eu-copy="methodIntro">Rozdíl na této stránce je průhledný výpočet přiřazené výdaje minus národní příspěvek. Není to oficiální provozní rozpočtové saldo ani ocenění jednotného trhu.</p></div>
+      <div class="method-grid"><article><b>01</b><h3 data-eu-copy="methodAllocatedTitle">Přiřazení</h3><p data-eu-copy="methodAllocated">Komise přiřazuje výdaje zemi příjemce, kde je to možné. Přeshraniční přínosy tím zachytit nelze.</p></article><article><b>02</b><h3 data-eu-copy="methodOutTitle">Co znamená „ven“</h3><p data-eu-copy="methodOut">Používáme národní příspěvek. Cla zobrazujeme zvlášť, protože jsou tradičním vlastním zdrojem EU.</p></article><article><b>03</b><h3 data-eu-copy="methodPriceTitle">Běžné ceny</h3><p data-eu-copy="methodPrice">Částky jsou nominální miliony eur daného roku. Historie není očištěna o inflaci.</p></article><article><b>04</b><h3 data-eu-copy="methodTimingTitle">Časování</h3><p data-eu-copy="methodTiming">Výdaje a příspěvky jsou skutečnost za kalendářní rozpočtový rok, nikoli plán nebo přislíbená alokace.</p></article></div>
+      <div class="eu-source-card"><div><span data-eu-copy="primarySource">Primární zdroj</span><strong>European Commission · DG Budget</strong><p data-eu-copy="sourceName">EU spending and revenue — Data 2000–2024</p></div><a id="eu-source-link" target="_blank" rel="noreferrer" data-eu-copy="openSource">Otevřít zdroj a XLSX ↗</a></div>
+    </section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small data-eu-copy="footer">EU budget flows · European Commission</small></div><a href="#top">↑</a></footer>
+  <noscript>This page needs JavaScript to load the EU budget dataset.</noscript>
+</body>
+</html>

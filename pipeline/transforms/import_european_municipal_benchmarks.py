@@ -15,6 +15,7 @@ import gzip
 import json
 import os
 import re
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -22,6 +23,9 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from raw_cache_archives import restore as restore_raw_cache
 
 
 # Imported from the unversioned sibling scripts/ directory. Workspace root is
@@ -284,6 +288,7 @@ def cbs_pages(base_url: str, page_dir: Path, refresh: bool) -> Iterable[dict[str
 
 
 def netherlands(output: Path, facts: gzip.GzipFile, years: list[int], refresh: bool) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    restore_raw_cache(CACHE / "NLD")
     by_entity: dict[str, dict[int, dict[str, Any]]] = defaultdict(dict)
     names: dict[str, str] = {}
     fact_count = 0

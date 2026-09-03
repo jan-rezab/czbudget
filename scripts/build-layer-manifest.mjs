@@ -19,6 +19,7 @@ import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { readFile, readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { archivedInventory } from '../pipeline/raw-cache-inventory.mjs';
 
 const REPO = process.env.SITE_ROOT || process.cwd();
 const PARENT = path.dirname(REPO);
@@ -120,6 +121,17 @@ for (const layer of config.layers) {
   let files = 0;
 
   for (const [key, groupFiles] of [...groups].sort()) {
+    const archived = layer.id === 'raw' ? await archivedInventory(path.join(base, key)) : null;
+    if (archived) {
+      const hash = createHash('sha256');
+      for (const item of archived) hash.update(path.join(key, item.name)).update(item.sha256);
+      const groupBytes = archived.reduce((sum, item) => sum + item.bytes, 0);
+      entries.push({ group: key, file_count: archived.length, bytes: groupBytes,
+        sha256: archived.length === 1 ? archived[0].sha256 : hash.digest('hex') });
+      bytes += groupBytes;
+      files += archived.length;
+      continue;
+    }
     let groupBytes = 0;
     for (const file of groupFiles) groupBytes += (await stat(file)).size;
     entries.push({

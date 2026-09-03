@@ -31,15 +31,16 @@
   const main = document.querySelector("main");
   if (main && !document.querySelector(".context-rail")) {
     const labels = lang === "en"
-      ? { overview:"Overview", combined:"Combined", entities:"Entities", trend:"Trend", budget:"Budget", breakdown:"Breakdown", method:"Method" }
-      : { overview:"Přehled", combined:"Součet", entities:"Subjekty", trend:"Vývoj", budget:"Rozpočet", breakdown:"Členění", method:"Metodika" };
+      ? { overview:"Overview", combined:"Combined", entities:"Entities", trend:"Trend", contracts:"Contracts", budget:"Budget", breakdown:"Breakdown", method:"Method" }
+      : { overview:"Přehled", combined:"Součet", entities:"Subjekty", trend:"Vývoj", contracts:"Smlouvy", budget:"Rozpočet", breakdown:"Členění", method:"Metodika" };
     const firstSection = main.querySelector("section"); if (firstSection && !firstSection.id) firstSection.id = "overview";
     const combined = document.querySelector(".territorial-stack"); if (combined) combined.id = "combined";
     const directory = document.querySelector(".directory"); if (directory && !directory.id) directory.id = "entities";
     const budget = document.querySelector("#rozpocet");
     const history = document.querySelector("#history-explorer") || document.querySelector("#municipal-history-explorer");
+    const contracts = document.querySelector("#smlouvy");
     const method = document.querySelector("#metodika");
-    const items = [["overview",labels.overview],["combined",labels.combined],[history?.id,labels.trend],[budget?.id,labels.budget],[directory?.id,labels.entities],[method?.id,labels.method]].filter(([id]) => id && document.getElementById(id));
+    const items = [["overview",labels.overview],["combined",labels.combined],[history?.id,labels.trend],[contracts?.id,labels.contracts],[budget?.id,labels.budget],[directory?.id,labels.entities],[method?.id,labels.method]].filter(([id]) => id && document.getElementById(id));
     const rail = document.createElement("nav"); rail.className = "context-rail municipal-context-rail"; rail.setAttribute("aria-label", lang === "en" ? "Page sections" : "Sekce stránky");
     rail.innerHTML = items.map(([id,label]) => `<a href="#${id}">${label}</a>`).join("");
     const railAnchor = header;
@@ -313,6 +314,7 @@
     "20 let / 2006–2025": "20 years / 2006-2025", "16 let / 2010–2025": "16 years / 2010-2025", "Výsledek hospodaření a stav účtů.": "Fiscal balance and cash.", "Vyberte město": "Select a city",
     "Roční data v tabulce": "Annual data table", "Rok": "Year", "Profily": "Profiles", "Profily měst": "City profiles", "Nejnovější rok i celá časová řada na jedné trvalé adrese.": "The latest year and full time series on one permanent URL.",
     "Obecní účetní jednotka": "Municipal reporting entity", "Rozpočet 2025": "2025 budget", "Trend 20 let": "20-year trend", "Trend 16 let": "16-year trend", "Stáhnout JSON": "Download JSON",
+    "Registr smluv · Hlídač státu": "Contract register · Hlídač státu", "Kam směřují smlouvy města": "Where the city's contracts go", "Stažený vzorek": "Downloaded sample", "Kompletní historie": "Complete history", "smluv od července 2016": "contracts since July 2016", "nejnovějších smluv": "newest contracts", "Známá hodnota": "Known value", "smluv má cenu": "of contracts have a price", "Dodavatelé": "Suppliers", "unikátních názvů nebo IČO": "unique names or registration IDs", "Rozpočtově přiřazeno": "Budget-matched", "kvalifikovaný odhad": "qualified estimate", "Oblasti podle hodnoty": "Categories by value", "Největší dodavatelé": "Largest suppliers", "Největší dodavatelé ve vzorku": "Largest suppliers in the sample", "Velikost smluv": "Contract size", "Aktivita po měsících": "Monthly activity", "Stáří zveřejnění": "Publication recency", "Pravděpodobná položka rozpočtu": "Likely budget line", "Pravděpodobná položka": "Likely budget line", "Jistota rozpočtového párování": "Budget-match confidence", "Historie podle roku": "History by year", "Vyšší jistota": "Higher confidence", "Střední jistota": "Medium confidence", "Nízká jistota": "Low confidence", "20 nejnovějších smluv v tabulce": "20 newest contracts in a table", "Uzavřeno / stáří": "Signed / recency", "Předmět": "Subject", "Dodavatel": "Supplier", "Hodnota": "Value", "Stáhnout celý lokální vzorek JSON →": "Download the full local JSON sample →", "Stáhnout celý lokální dataset JSON →": "Download the full local JSON dataset →", "Cena neuvedena": "Price not stated", "Do 100 tis. Kč": "Under CZK 100k", "100 tis.–1 mil. Kč": "CZK 100k–1m", "1–10 mil. Kč": "CZK 1–10m", "Nad 10 mil. Kč": "Over CZK 10m", "Posledních 7 dní": "Last 7 days", "8–30 dní": "8–30 days", "31–90 dní": "31–90 days", "Více než 90 dní": "Over 90 days", "Datum neuvedeno": "Date unavailable", "Bez spolehlivého přiřazení": "No reliable match", "vyšší jistota": "higher confidence", "střední jistota": "medium confidence", "nízká jistota": "low confidence", "Sloupce ukazují hodnotu smluv ve vzorku; částka „rozpočet 2025“ je pouze orientační skutečnost dané ekonomické položky.": "Bars show contract value in the sample; the ‘2025 budget’ amount is only the actual expenditure of that economic line for context.", "Sloupce ukazují hodnotu smluv v datasetu za celé období; částka „rozpočet 2025“ je pouze jednoroční orientační skutečnost dané ekonomické položky.": "Bars show contract value for the entire dataset period; the ‘2025 budget’ amount is only one year of actual expenditure for context.", "Odborné služby": "Professional services", "Stavby a infrastruktura": "Construction & infrastructure", "Nemovitosti a pozemky": "Property & land", "IT a digitalizace": "IT & digital", "Doprava a mobilita": "Transport & mobility", "Životní prostředí a odpady": "Environment & waste", "Kultura, sport a komunita": "Culture, sport & community", "Školství, zdraví a sociální oblast": "Education, health & social", "Dodávky a vybavení": "Supplies & equipment", "Dotace a spolupráce": "Grants & cooperation", "Ostatní": "Other",
     "ročních výdajů kryto stavem účtů": "of annual expenditure covered by cash", "upraveného rozpočtu": "of the amended budget", "meziročně": "year on year",
     "Plán a skutečnost.": "Budget and actuals.", "Struktura příjmů": "Revenue mix", "Struktura výdajů": "Expenditure mix", "Daňové příjmy": "Tax revenue", "Přijaté transfery": "Transfers received", "Nedaňové příjmy": "Non-tax revenue", "Kapitálové příjmy": "Capital revenue", "Běžné výdaje": "Current expenditure", "Kapitálové výdaje": "Capital expenditure",
     "Nominální Kč. Počet obcí odpovídá dnešním IČO nalezeným v ročním extraktu. Stav účtů 2010–2011 vychází z FIN 2-12 M; od roku 2012 z rozvahy, proto je v roce 2012 metodický zlom.": "Nominal CZK. Municipality counts reflect current registration IDs found in each annual extract. Cash for 2010–2011 comes from FIN 2-12 M and from the balance sheet from 2012, creating a methodological break in 2012.",
@@ -365,9 +367,33 @@
     const translated = dictionary.get(value) || translateAmountSentence(value);
     if (translated) node.nodeValue = node.nodeValue.replace(value, translated);
   });
+  const contractIntro = document.querySelector(".contract-explorer .directory-title > p");
+  if (contractIntro) {
+    const match = contractIntro.textContent.match(/^Analytický vzorek ([\d, ]+) nejnovějších smluv z ([\d ]+) nalezených, kde je město plátcem\./);
+    if (match) contractIntro.textContent = `An analytical sample of the newest ${match[1].replace(/ /g, ",")} contracts out of ${match[2].replace(/ /g, ",")} matches where the city is the payer. Data are cached at build time, so page views do not call the API.`;
+    const fullMatch = contractIntro.textContent.match(/^Kompletní historie ([\d, ]+) smluv, kde je město plátcem\./);
+    if (fullMatch) contractIntro.textContent = `Complete history of ${fullMatch[1].replace(/ /g, ",")} contracts where the city is the payer. Data are cached at build time, so page views do not call the API.`;
+  }
+  document.querySelectorAll(".contract-explorer .contract-bar span").forEach((node) => {
+    node.textContent = node.textContent.replace(/(\d+) smluv/, "$1 contracts").replace(/^1 contracts/, "1 contract").replace("vzorek", "sample").replace("rozpočet 2025", "2025 budget").replace("více možných položek", "multiple possible lines");
+  });
+  const contractCoverage = document.querySelector(".contract-kpis article:nth-child(2) small");
+  if (contractCoverage) contractCoverage.textContent = contractCoverage.textContent.replace("smluv má cenu", "of contracts have a price").replace(/(\d),(\d)/, "$1.$2");
+  const contractBudgetCoverage = document.querySelector(".contract-kpis article:nth-child(4) small");
+  if (contractBudgetCoverage) contractBudgetCoverage.textContent = contractBudgetCoverage.textContent.replace("smluv · kvalifikovaný odhad", "contracts · qualified estimate").replace(/^([\d ]+) contracts/, (_, number) => `${number.replace(/ /g, ",")} contracts`);
+  const contractBudgetPercent = document.querySelector(".contract-kpis article:nth-child(4) strong");
+  if (contractBudgetPercent) contractBudgetPercent.textContent = contractBudgetPercent.textContent.replace(/(\d),(\d)/, "$1.$2");
+  document.querySelectorAll(".contract-kpis article:nth-child(1) strong, .contract-kpis article:nth-child(3) strong").forEach((node) => { node.textContent = node.textContent.replace(/ /g, ","); });
+  const contractRecencyNote = document.querySelector(".contract-panel-note.recency-note");
+  if (contractRecencyNote) contractRecencyNote.textContent = contractRecencyNote.textContent.replace("Vztaženo k nejnovějšímu zveřejnění ve vzorku:", "Relative to the newest publication in the sample:").replace("Vztaženo k nejnovějšímu zveřejnění v datasetu:", "Relative to the newest publication in the dataset:");
+  const contractMethod = document.querySelector(".contract-explorer .method-warning");
+  if (contractMethod) { const href = contractMethod.querySelector("a")?.getAttribute("href") || "../../../data/contracts/00075370.v1.json"; contractMethod.innerHTML = `Recency is calculated relative to the newest record in the dataset (<code>relative_to_dataset_max_published_at_v1</code>). The budget line is inferred from the subject; when the text is insufficient it may be marked low-confidence from the broader category (<code>subject_to_economic_item_v1</code>, <code>category_to_economic_item_v1</code>). It is not supplied by the contract register and is not proof of the actual accounting entry. Multi-year contracts and 2025 cash expenditure cannot be reconciled or matched 1:1. Categories use <code>subject_keyword_v1</code>; the query is <code>icoPlatce:00075370</code>. <a href="${href}">Download the full local JSON dataset →</a>`; }
   const translatePhrases = (selector, replacements) => document.querySelectorAll(selector).forEach((node) => {
     for (const [source, translation] of replacements) node.textContent = node.textContent.replace(source, translation);
   });
+  translatePhrases(".contract-insight-grid .contract-bar strong, .contract-table .budget-match span", [
+    ["Nákup materiálu jinde nezařazený", "Other material purchases"], ["Studená voda včetně stočného a poplatku za odvod dešťových vod", "Cold water, sewerage and stormwater charges"], ["Plyn", "Gas"], ["Elektrická energie", "Electricity"], ["Pohonné hmoty a maziva", "Fuel and lubricants"], ["Poštovní služby", "Postal services"], ["Služby elektronických komunikací", "Electronic communications"], ["Služby peněžních ústavů", "Financial institution services"], ["Nájemné", "Rent"], ["Konzultační, poradenské a právní služby", "Consulting, advisory and legal services"], ["Služby školení a vzdělávání", "Training and education services"], ["Zpracování dat a ICT služby", "Data processing and ICT services"], ["Nákup ostatních služeb", "Other purchased services"], ["Opravy a udržování", "Repairs and maintenance"], ["Stavby", "Construction"], ["Stroje, přístroje a zařízení", "Machinery and equipment"], ["Dopravní prostředky", "Vehicles"], ["Pozemky", "Land"], ["Transfery a dotace", "Transfers and grants"]
+  ]);
   translatePhrases(".detail-hero .eyebrow, .detail-score small, .detail-kpis small", [
     ["Obecní účetní jednotka", "Municipal reporting entity"],
     ["IČO", "ID"],

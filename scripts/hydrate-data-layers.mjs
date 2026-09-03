@@ -20,6 +20,7 @@ import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
+import { archivedInventory, restoreArchivedGroups } from '../pipeline/raw-cache-inventory.mjs';
 
 const run = promisify(execFile);
 
@@ -95,6 +96,8 @@ for (const layer of layers) {
   console.log(`\n${layer.id}: ${pack ? archive : remote}\n  -> ${localBase}`);
 
   if (pack) {
+    // Cloud archives contain ordinary raw files, not the hidden local storage format.
+    if (layer.id === 'raw') await restoreArchivedGroups(localBase);
     // The inverse of hydration, run from a machine that already holds a verified tree.
     // Dotfiles are excluded to match both what walk() hashes and what rsync uploaded, so a
     // packed layer and an rsynced one verify against the same manifest digest.
@@ -137,6 +140,18 @@ for (const layer of layers) {
   // Compare what is on disk against the manifest, group by group.
   let checked = 0;
   for (const entry of layer.entries) {
+    const archived = layer.id === 'raw'
+      ? await archivedInventory(path.join(localBase, entry.group)) : null;
+    if (archived) {
+      const hash = createHash('sha256');
+      for (const item of archived) hash.update(path.join(entry.group, item.name)).update(item.sha256);
+      const digest = archived.length === 1 ? archived[0].sha256 : hash.digest('hex');
+      if (digest !== entry.sha256 || archived.length !== entry.file_count) {
+        console.error(`  ✗ ${entry.group}: archived source mismatch`);
+        failures += 1;
+      } else checked += 1;
+      continue;
+    }
     let files;
     if (layer.group_by === "flat") {
       // No subdirectories to group by: the whole layer is a single group.

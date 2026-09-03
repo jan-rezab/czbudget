@@ -352,6 +352,13 @@ for (const [code, expected] of Object.entries(expectedPublicEntityCounts)) {
     const index = shard.fields.indexOf(field), dictionary = shard.dictionaries[field];
     assert(index >= 0 && Array.isArray(dictionary) && shard.records.every((row) => Number.isInteger(row[index]) && row[index] >= 0 && row[index] < dictionary.length), `${code}/${field}: invalid dictionary reference`);
   }
+  if (code === "CZE") {
+    const classIndex = shard.fields.indexOf("entity_class"), ownerIndex = shard.fields.indexOf("ownership_level");
+    const classDictionary = shard.dictionaries.entity_class, ownerDictionary = shard.dictionaries.ownership_level;
+    const healthInsurers = shard.records.filter((row) => classDictionary[row[classIndex]] === "public_health_insurer");
+    assert(healthInsurers.length === 7, "CZE: all seven public health insurers must have a visible entity class");
+    assert(healthInsurers.every((row) => ownerDictionary[row[ownerIndex]] === "social_insurance_fund"), "CZE: health insurers must sit in the social-insurance layer");
+  }
 }
 assert(publicEntityCoverage.countries.POL.broad_entity_count === 112145, "Polish broad public-sector count mismatch");
 assert(publicEntityCoverage.countries.DEU.broad_entity_count === 20658, "German all-level public-enterprise count mismatch");
@@ -463,10 +470,10 @@ if (!dataOnly) {
   // means the gate self-heals if that route is ever removed.
   const accountabilityPages = existsSync(path.join(root, "cz/kraje/accountability/index.html")) ? 1 : 0;
   const municipalSpecialPages = existsSync(path.join(root, "deep-dives/plzen-contracts/index.html")) ? 1 : 0;
-  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 13 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 7 + municipalSpecialPages + accountabilityPages;
+  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 15 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 7 + municipalSpecialPages + accountabilityPages;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
-  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/education/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/deep-dives/tax-burden/", "/deep-dives/redistribution/", "/deep-dives/trade/", "/deep-dives/budget-planner/", "/deep-dives/plzen-contracts/", "/deep-dives/public-employment/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/", "/cz/kraje/accountability/"]) {
+  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/eu-budget/", "/deep-dives/education/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/deep-dives/tax-burden/", "/deep-dives/redistribution/", "/deep-dives/trade/", "/deep-dives/budget-planner/", "/deep-dives/plzen-contracts/", "/deep-dives/digital-spillover/", "/deep-dives/public-employment/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/", "/cz/kraje/accountability/"]) {
     assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);

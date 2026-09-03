@@ -5,6 +5,7 @@ import { gunzipSync } from "node:zlib";
 
 const POINTER_TTL_MS = setting("PUBLIC_SNAPSHOT_POINTER_TTL_MS", 60_000);
 const PROFILE_CACHE_SIZE = setting("PUBLIC_SNAPSHOT_PROFILE_CACHE_SIZE", 250);
+const SHARD_CACHE_SIZE = setting("PUBLIC_SNAPSHOT_SHARD_CACHE_SIZE", 16);
 const FETCH_TIMEOUT_MS = setting("PUBLIC_SNAPSHOT_FETCH_TIMEOUT_MS", 8_000);
 
 export class SnapshotError extends Error {
@@ -26,6 +27,8 @@ export class SnapshotStore {
     this.profileIdMap = new Map();
     this.routeReleaseId = "";
     this.profileCache = new Map();
+    this.shards = new Map();
+    this.shardCache = new Map();
     this.accessToken = null;
   }
 
@@ -44,7 +47,9 @@ export class SnapshotStore {
       return { route, release_id: cached.releaseId, profile: cached.value.profile, history: cached.value.history };
     }
 
-    const wrapper = JSON.parse((await this.readObject(route.object_key, true)).toString("utf8"));
+    const wrapper = route.shard_key
+      ? await this.profileFromShard(route)
+      : JSON.parse((await this.readObject(route.object_key, true)).toString("utf8"));
     if (wrapper.release_id !== this.routeReleaseId || wrapper.profile_id !== route.profile_id || wrapper.payload_sha256 !== route.payload_sha256) {
       throw new SnapshotError(502, "snapshot_contract_mismatch", "The profile object does not match the active route index.");
     }
@@ -56,6 +61,35 @@ export class SnapshotStore {
     this.profileCache.set(route.profile_id, { releaseId: wrapper.release_id, value: wrapper });
     while (this.profileCache.size > PROFILE_CACHE_SIZE) this.profileCache.delete(this.profileCache.keys().next().value);
     return { route, release_id: wrapper.release_id, profile: wrapper.profile, history: wrapper.history };
+  }
+
+  async profileFromShard(route) {
+    const descriptor = this.shards.get(route.shard_key);
+    if (!descriptor || descriptor.object_key !== route.shard_key) {
+      throw new SnapshotError(502, "snapshot_contract_mismatch", "The route references an unknown profile shard.");
+    }
+    let cached = this.shardCache.get(route.shard_key);
+    if (cached?.releaseId === this.routeReleaseId) {
+      this.shardCache.delete(route.shard_key);
+      this.shardCache.set(route.shard_key, cached);
+    } else {
+      const body = await this.readObject(route.shard_key, true);
+      if (sha256(body) !== descriptor.body_sha256) throw new SnapshotError(502, "snapshot_hash_mismatch", "The profile shard failed its integrity check.");
+      const profiles = new Map();
+      for (const line of body.toString("utf8").split("\n")) {
+        if (!line) continue;
+        const wrapper = JSON.parse(line);
+        if (profiles.has(wrapper.profile_id)) throw new SnapshotError(502, "snapshot_contract_mismatch", `Duplicate profile in shard: ${wrapper.profile_id}`);
+        profiles.set(wrapper.profile_id, wrapper);
+      }
+      if (profiles.size !== descriptor.profile_count) throw new SnapshotError(502, "snapshot_contract_mismatch", "The profile shard count does not match its index.");
+      cached = { releaseId: this.routeReleaseId, profiles };
+      this.shardCache.set(route.shard_key, cached);
+      while (this.shardCache.size > SHARD_CACHE_SIZE) this.shardCache.delete(this.shardCache.keys().next().value);
+    }
+    const wrapper = cached.profiles.get(route.profile_id);
+    if (!wrapper) throw new SnapshotError(502, "snapshot_contract_mismatch", "The profile is absent from its indexed shard.");
+    return wrapper;
   }
 
   async routeForPath(requestPath) {
@@ -84,17 +118,25 @@ export class SnapshotStore {
       }
       const next = new Map();
       const nextIds = new Map();
+      const nextShards = new Map();
+      for (const descriptor of Object.values(routeDocument.shards || {})) {
+        if (!descriptor.object_key || nextShards.has(descriptor.object_key)) throw new SnapshotError(502, "invalid_snapshot_routes", "The shard index is invalid.");
+        nextShards.set(descriptor.object_key, descriptor);
+      }
       for (const route of routeDocument.routes) {
         const canonicalPath = canonicalMunicipalityPath(route.path);
         if (next.has(canonicalPath)) throw new SnapshotError(502, "duplicate_snapshot_route", `Duplicate route in snapshot: ${canonicalPath}`);
         next.set(canonicalPath, route);
         if (nextIds.has(route.profile_id)) throw new SnapshotError(502, "duplicate_snapshot_profile_id", `Duplicate profile ID in snapshot: ${route.profile_id}`);
         nextIds.set(route.profile_id, route);
+        if (!route.object_key && !route.shard_key) throw new SnapshotError(502, "invalid_snapshot_routes", "A profile route has no storage object.");
       }
       this.routeMap = next;
       this.profileIdMap = nextIds;
+      this.shards = nextShards;
       this.routeReleaseId = pointer.release_id;
       this.profileCache.clear();
+      this.shardCache.clear();
     }
     this.pointer = pointer;
     this.pointerLoadedAt = now;

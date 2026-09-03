@@ -42,24 +42,54 @@ Volba jazyka se přenáší v URL parametru `lang` a ukládá do `localStorage`.
 Nové texty mají být přidávány do slovníků `I` a `T`, nikoli natvrdo do
 dynamicky generovaného rozhraní.
 
-### Datový speciál: smlouvy a platby Plzně
+### Smlouvy města Plzně
 
-Speciál `/deep-dives/plzen-contracts/` propojuje kompletní lokální snapshot
-registru smluv města s 555 stavebními investicemi a skutečnými platbami po
-fiskálních letech. Klient nikdy nevolá API a token se nezapisuje do webových
-dat. Obnovení zdrojů a lokální transformace:
+Profil Plzně může zobrazit kompaktní snapshot nejnovějších smluv z Hlídače
+státu. Token se předává pouze procesu přes prostředí a nikdy se nezapisuje do
+JSONu ani do klientského JavaScriptu. Výchozí běh stáhne přibližně 2 000 záznamů;
+vícestránkový běh je sekvenční, čeká nejméně půl sekundy mezi požadavky a má
+pevný strop sto stran.
 
 ```bash
+HLIDACSTATU_API_TOKEN=... npm run fetch:plzen-contracts
+# Kompletní historie od spuštění registru; datumová okna a checkpoint obejdou
+# stránkovací strop bez zvýšení tempa nad dva požadavky za sekundu:
 HLIDACSTATU_API_TOKEN=... npm run fetch:plzen-contracts-full
-npm run fetch:plzen-budget-projects
-npm run build:plzen-contract-timeline
-npm run test:contracts
+# Přepočet tagů a rozpočtových odhadů nad cache, bez dalších API požadavků:
+python3 pipeline/transforms/fetch_hlidac_contracts.py --reuse-existing
+python3 pipeline/transforms/build_municipal_public_site.py --profiles-only
+# Samostatný prohledávatelný detail smluv zveřejněných v roce 2026:
+python3 pipeline/transforms/build_plzen_contract_detail.py
+# Jednorázový, sekvenční a omezený snapshot investičních projektů města:
+python3 pipeline/transforms/fetch_plzen_budget_projects.py
+# Časová osa smluv, projektových rozpočtů a plateb bez síťových požadavků:
+python3 pipeline/transforms/build_plzen_contract_timeline.py
 ```
 
-Smluvní hodnoty zůstávají v datu podpisu nebo zveřejnění. Platby jsou přesné
-na úrovni městské investiční akce; vazba smlouva–projekt je označena jistotou.
-Import městských projektů je sekvenční, čeká nejméně 250 ms mezi požadavky a má
-bezpečnostní strop 900 požadavků.
+Vzorek je v `data/contracts/00075370.v1.json`; kompletní historie se ukládá
+komprimovaně do `data/contracts/00075370.full.v1.json.gz`. Průběžný checkpoint
+je v `.cache/contracts/00075370.full.checkpoint.jsonl`, takže přerušený import
+pokračuje pouze chybějícími stránkami. Stránka nikdy nevolá API
+přímo z prohlížeče, takže se token nezveřejní a návštěvnost webu nezvyšuje
+provoz na Hlídači státu. Stáří smlouvy se počítá vůči nejnovějšímu datu
+zveřejnění v cache. Rozpočtová položka je transparentní odhad z předmětu
+smlouvy a porovnává se s ekonomickými položkami skutečnosti roku 2025 z
+`.warehouse-profiles/cze/00075370.json`; nejde o účetní zaúčtování ani
+reconciliaci smlouvy s peněžním výdajem.
+Roční detail se generuje bez dalšího volání API do
+`data/contracts/00075370.2026.v1.json`; obsahuje také projektové kódy a čísla
+SAP objednávek rozpoznané z předmětu smlouvy.
+
+Oficiální aplikace Rozpočet města Plzně nemá zdokumentované datové API a
+publikuje stavební investice přes Next.js server actions. Snapshot
+`data/contracts/00075370.plzen-projects.v1.json` proto vzniká sekvenčně,
+s minimálním odstupem 250 ms, bezpečnostním stropem 900 požadavků a nulovým
+provozem za běhu webu. Obsahuje 555 unikátních projektů, rozpočtovou skutečnost,
+fakturaci a pole `paid_by_fiscal_year`. Transformace z něj a z lokálního
+registru vytvoří `data/contracts/00075370.timeline.v1.json`. Smluvní hodnotu
+zobrazuje pouze v okamžiku podpisu nebo zveřejnění; mezi roky ji nerozpočítává.
+Skutečné platby jsou časově přesné na úrovni projektu. Vazba smlouva–projekt je
+samostatně označena jako přímá shoda kódu, silná shoda názvu a IČO, nebo odhad.
 
 ## Autentizované API
 

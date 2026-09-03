@@ -10,6 +10,11 @@ repository. Pipeline scripts retain that workspace layout while the migration
 is completed. Set `CZBUDGET_WORKSPACE_ROOT` when running from another checkout.
 No pipeline writes to the quarantined legacy `gcp/site` tree.
 
+Inactive BRA, UKR and NLD raw caches support verified local `.tar.gz` bundles
+with on-demand restoration. See [raw-cache archive instructions](docs/README_raw_cache_archives.md).
+Source checksums continue to describe the original member bytes, not their local
+storage format.
+
 Reproducibility contract:
 
 1. Install Python dependencies from `requirements.lock` and use Node 22.

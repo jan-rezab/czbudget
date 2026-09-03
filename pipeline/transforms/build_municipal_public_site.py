@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 import shutil
+from collections import defaultdict
 from pathlib import Path
 
 from build_czech_site import PUBLIC_ORIGIN, WEB, amount, esc, footer, head, header, mix_row, pct, slugify, stat_bar
@@ -113,6 +115,139 @@ def history_section(ico: str | None, depth: int, municipal: bool = False) -> str
     return f"""<section class="history-explorer" id="history-explorer" data-source="{source}"{fixed}><div class="directory-title"><div><span class="kicker">{kicker}</span><h2>Výsledek hospodaření a stav účtů</h2></div>{selector}</div><div class="history-kpis" id="history-kpis"></div><div class="history-legend"><span><i class="revenue-key"></i>Příjmy</span><span><i class="expense-key"></i>Výdaje</span><span><i class="cash-key"></i>Stav účtů</span></div><div class="history-chart" id="history-chart"></div><details class="history-table"><summary>Roční data v tabulce</summary><div><table><thead><tr><th>Rok</th><th>Příjmy</th><th>Výdaje</th><th>Výsledek</th><th>Stav účtů</th></tr></thead><tbody id="history-table-body"></tbody></table></div></details><p class="method-warning">{warning}</p></section>"""
 
 
+def contracts_section(ico: str) -> str:
+    full_path = WEB / f"data/contracts/{ico}.full.v1.json.gz"
+    source_path = full_path if full_path.exists() else WEB / f"data/contracts/{ico}.v1.json"
+    if not source_path.exists():
+        return ""
+    if source_path.suffix == ".gz":
+        with gzip.open(source_path, "rt", encoding="utf-8") as handle:
+            data = json.load(handle)
+    else:
+        data = json.loads(source_path.read_text(encoding="utf-8"))
+    download_name = source_path.name
+    all_contracts = data.get("contracts", [])
+    contracts = all_contracts[:20]
+    total = int(data.get("summary", {}).get("matching_contracts", len(all_contracts)))
+    total_text = f"{total:,}".replace(",", " ")
+    contract_count_text = f"{len(all_contracts):,}".replace(",", " ")
+    known_values = [float(item["value_czk"]) for item in all_contracts if item.get("value_czk") is not None]
+    value_total = sum(known_values)
+    supplier_names = {party.get("name") or party.get("ico") for item in all_contracts for party in item.get("suppliers", []) if party.get("name") or party.get("ico")}
+    supplier_count_text = f"{len(supplier_names):,}".replace(",", " ")
+    category_labels = {
+        "professional": "Odborné služby", "construction": "Stavby a infrastruktura", "property": "Nemovitosti a pozemky",
+        "digital": "IT a digitalizace", "transport": "Doprava a mobilita", "environment": "Životní prostředí a odpady",
+        "community": "Kultura, sport a komunita", "public_services": "Školství, zdraví a sociální oblast",
+        "supplies": "Dodávky a vybavení", "grants": "Dotace a spolupráce", "other": "Ostatní",
+    }
+    categories = defaultdict(lambda: {"count": 0, "value": 0.0})
+    suppliers = defaultdict(lambda: {"count": 0, "value": 0.0})
+    budget_matches = defaultdict(lambda: {"count": 0, "value": 0.0, "labels": [], "confidence": "low"})
+    budget_confidence = defaultdict(lambda: {"count": 0, "value": 0.0})
+    recency_bands = defaultdict(int)
+    months = defaultdict(int)
+    years = defaultdict(lambda: {"count": 0, "value": 0.0})
+    size_bands = {"Cena neuvedena": 0, "Do 100 tis. Kč": 0, "100 tis.–1 mil. Kč": 0, "1–10 mil. Kč": 0, "Nad 10 mil. Kč": 0}
+    for item in all_contracts:
+        category_id = item.get("category", {}).get("id", "other")
+        value = float(item.get("value_czk") or 0)
+        categories[category_id]["count"] += 1
+        categories[category_id]["value"] += value
+        recency_bands[item.get("recency", {}).get("band", "unknown")] += 1
+        budget_match = item.get("budget_match", {})
+        if budget_match.get("status") == "inferred":
+            budget_key = tuple(budget_match.get("codes", []))
+            budget_matches[budget_key]["count"] += 1
+            budget_matches[budget_key]["value"] += value
+            budget_matches[budget_key]["labels"] = budget_match.get("labels", [])
+            budget_matches[budget_key]["confidence"] = budget_match.get("confidence", "low")
+        month = (item.get("published_at") or "")[:7]
+        if month:
+            months[month] += 1
+            years[month[:4]]["count"] += 1
+            years[month[:4]]["value"] += value
+        confidence_key = budget_match.get("confidence") if budget_match.get("status") == "inferred" else "unmatched"
+        budget_confidence[confidence_key]["count"] += 1
+        budget_confidence[confidence_key]["value"] += value
+        if item.get("value_czk") is None:
+            size_bands["Cena neuvedena"] += 1
+        elif abs(value) < 100_000:
+            size_bands["Do 100 tis. Kč"] += 1
+        elif abs(value) < 1_000_000:
+            size_bands["100 tis.–1 mil. Kč"] += 1
+        elif abs(value) < 10_000_000:
+            size_bands["1–10 mil. Kč"] += 1
+        else:
+            size_bands["Nad 10 mil. Kč"] += 1
+        for party in item.get("suppliers", []):
+            name = party.get("name") or party.get("ico")
+            if name:
+                suppliers[name]["count"] += 1
+                suppliers[name]["value"] += value
+
+    def bars(values: list[tuple[str, float, str]], css_class: str) -> str:
+        maximum = max((abs(value) for _, value, _ in values), default=1) or 1
+        return "".join(
+            f'<div class="contract-bar"><div><strong>{esc(label)}</strong><span>{esc(note)}</span></div><i style="--contract-bar:{abs(value) / maximum * 100:.2f}%"></i></div>'
+            for label, value, note in values
+        )
+
+    category_values = sorted(categories.items(), key=lambda pair: pair[1]["value"], reverse=True)
+    category_bars = bars([(category_labels.get(key, key), stats["value"], f'{stats["count"]} smluv · {amount(stats["value"])}') for key, stats in category_values], "categories")
+    supplier_values = sorted(suppliers.items(), key=lambda pair: pair[1]["value"], reverse=True)[:10]
+    supplier_bars = bars([(name, stats["value"], f'{stats["count"]} smluv · {amount(stats["value"])}') for name, stats in supplier_values], "suppliers")
+    band_bars = bars([(label, count_value, f"{count_value} smluv") for label, count_value in size_bands.items()], "sizes")
+    month_values = sorted(months.items())[-12:]
+    month_bars = bars([(month, count_value, f"{count_value} smluv") for month, count_value in month_values], "months")
+    recency_labels = {"last_7_days": "Posledních 7 dní", "last_30_days": "8–30 dní", "last_90_days": "31–90 dní", "older": "Více než 90 dní", "unknown": "Datum neuvedeno"}
+    recency_order = ["last_7_days", "last_30_days", "last_90_days", "older", "unknown"]
+    recency_bars = bars([(recency_labels[key], recency_bands[key], f'{recency_bands[key]} smluv') for key in recency_order if recency_bands[key]], "recency")
+    recency_reference = (data.get("recency_reference", {}).get("latest_published_at") or "")[:10] or "neuvedeno"
+    budget_context = data.get("budget_context", {})
+    budget_items = budget_context.get("items", {})
+    budget_values = sorted(budget_matches.items(), key=lambda pair: pair[1]["value"], reverse=True)
+    budget_bar_rows = []
+    for codes, stats in budget_values:
+        if len(codes) == 1:
+            code = codes[0]
+            label = f'{code} · {stats["labels"][0]}'
+            actual = budget_items.get(code, {}).get("actual_czk")
+            comparator = f' · rozpočet 2025: {amount(actual)}' if actual is not None else ""
+        else:
+            label = " / ".join(codes) + " · Transfery a dotace"
+            comparator = " · více možných položek"
+        budget_bar_rows.append((label, stats["value"], f'{stats["count"]} smluv · vzorek {amount(stats["value"])}{comparator}'))
+    budget_bars = bars(budget_bar_rows, "budget")
+    confidence_labels = {"high": "Vyšší jistota", "medium": "Střední jistota", "low": "Nízká jistota", "unmatched": "Bez spolehlivého přiřazení"}
+    confidence_bars = bars([(confidence_labels[key], budget_confidence[key]["count"], f'{budget_confidence[key]["count"]} smluv · {amount(budget_confidence[key]["value"])}') for key in ("high", "medium", "low", "unmatched")], "confidence")
+    year_bars = bars([(year, stats["count"], f'{stats["count"]} smluv · {amount(stats["value"])}') for year, stats in sorted(years.items())], "years")
+    matched_count = sum(stats["count"] for stats in budget_matches.values())
+    rows = []
+    for item in contracts:
+        suppliers = ", ".join(party.get("name") or party.get("ico") or "—" for party in item.get("suppliers", [])) or "—"
+        signed = (item.get("signed_at") or "")[:10] or "—"
+        subject = item.get("subject") or "Předmět neuveden"
+        source_url = item.get("source_url") or "https://www.hlidacstatu.cz/"
+        recency = item.get("recency", {})
+        recency_label = recency_labels.get(recency.get("band"), "Datum neuvedeno")
+        budget_match = item.get("budget_match", {})
+        if budget_match.get("status") == "inferred":
+            codes = " / ".join(budget_match.get("codes", []))
+            labels = " / ".join(budget_match.get("labels", []))
+            visible_label = budget_match.get("labels", [""])[0] if len(budget_match.get("labels", [])) == 1 else "Transfery a dotace"
+            confidence = {"high": "vyšší jistota", "medium": "střední jistota", "low": "nízká jistota"}.get(budget_match.get("confidence"), "odhad")
+            budget_cell = f'<a class="budget-match" href="#rozpocet" title="{esc(labels)}"><b>{esc(codes)}</b><span>{esc(visible_label)}</span><small>{esc(confidence)}</small></a>'
+        else:
+            budget_cell = '<span class="budget-match unmatched">Bez spolehlivého přiřazení</span>'
+        rows.append(f'<tr><td>{esc(signed)}<span class="recency-tag recency-{esc(recency.get("band") or "unknown")}">{esc(recency_label)}</span></td><td><a href="{esc(source_url)}" target="_blank" rel="noopener">{esc(subject)}</a></td><td>{esc(suppliers)}</td><td>{budget_cell}</td><td>{amount(item.get("value_czk"))}</td></tr>')
+    coverage = len(known_values) / len(all_contracts) if all_contracts else 0
+    scope_label = "Kompletní historie" if source_path == full_path else "Stažený vzorek"
+    scope_intro = f"Kompletní historie {contract_count_text} smluv" if source_path == full_path else f"Analytický vzorek {contract_count_text} nejnovějších smluv z {total_text} nalezených"
+    matched_count_text = f"{matched_count:,}".replace(",", " ")
+    return f'''<section class="contract-explorer" id="smlouvy"><div class="directory-title"><div><span class="kicker">Registr smluv · Hlídač státu</span><h2>Kam směřují smlouvy města</h2></div><p>{scope_intro}, kde je město plátcem. Data jsou stažená při sestavení webu; návštěva stránky API nezatěžuje.</p></div><div class="contract-kpis"><article><span>{scope_label}</span><strong>{contract_count_text}</strong><small>smluv od července 2016</small></article><article><span>Známá hodnota</span><strong>{amount(value_total)}</strong><small>{pct(coverage)} smluv má cenu</small></article><article><span>Dodavatelé</span><strong>{supplier_count_text}</strong><small>unikátních názvů nebo IČO</small></article><article><span>Rozpočtově přiřazeno</span><strong>{pct(matched_count / len(all_contracts) if all_contracts else 0)}</strong><small>{matched_count_text} smluv · kvalifikovaný odhad</small></article></div><div class="contract-insight-grid"><article><header><span>01</span><h3>Oblasti podle hodnoty</h3></header><div class="contract-bars">{category_bars}</div></article><article><header><span>02</span><h3>Největší dodavatelé</h3></header><div class="contract-bars">{supplier_bars}</div></article><article><header><span>03</span><h3>Velikost smluv</h3></header><div class="contract-bars">{band_bars}</div></article><article><header><span>04</span><h3>Aktivita po měsících</h3></header><div class="contract-bars">{month_bars}</div></article><article><header><span>05</span><h3>Stáří zveřejnění</h3></header><div class="contract-bars">{recency_bars}</div><p class="contract-panel-note recency-note">Vztaženo k nejnovějšímu zveřejnění v datasetu: {esc(recency_reference)}.</p></article><article><header><span>06</span><h3>Pravděpodobná položka rozpočtu</h3></header><div class="contract-bars">{budget_bars}</div><p class="contract-panel-note">Sloupce ukazují hodnotu smluv v datasetu za celé období; částka „rozpočet 2025“ je pouze jednoroční orientační skutečnost dané ekonomické položky.</p></article><article><header><span>07</span><h3>Jistota rozpočtového párování</h3></header><div class="contract-bars">{confidence_bars}</div></article><article><header><span>08</span><h3>Historie podle roku</h3></header><div class="contract-bars">{year_bars}</div></article></div><details class="contract-latest"><summary>20 nejnovějších smluv v tabulce</summary><div class="contract-table"><table><thead><tr><th>Uzavřeno / stáří</th><th>Předmět</th><th>Dodavatel</th><th>Pravděpodobná položka</th><th>Hodnota</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></details><p class="method-warning">Stáří se počítá vůči nejnovějšímu záznamu v datasetu (<code>relative_to_dataset_max_published_at_v1</code>). Rozpočtová položka je odhad z textu předmětu; pokud text nestačí, může být označena jako nízká jistota podle širší kategorie (<code>subject_to_economic_item_v1</code>, <code>category_to_economic_item_v1</code>). Nejde o údaj Registru smluv ani doklad o skutečném zaúčtování. Víceletou historii smluv a peněžní výdaje rozpočtu 2025 proto nelze účetně sčítat ani párovat 1:1. Kategorie používají <code>subject_keyword_v1</code>; výběr <code>icoPlatce:{esc(ico)}</code>. <a href="../../../data/contracts/{esc(download_name)}">Stáhnout celý lokální dataset JSON →</a></p></section>'''
+
+
 def build_large_cities(data: dict, history: dict, large_ids: set[str]) -> None:
     cities = [entity for entity in data["municipalities"] if entity["national_id"] in large_ids]
     cities.sort(key=lambda item: item["amounts"]["revenue_actual"], reverse=True)
@@ -134,6 +269,7 @@ def build_detail(data: dict, entity: dict, has_large_city_history: bool) -> None
     history_label = "JSON · kohorta 2006–2025 ↗" if has_large_city_history else "JSON · 2010–2025 ↗"
     schema = {"@context": "https://schema.org", "@type": "Dataset", "name": f"{entity['short_name']} town and municipality budget 2025", "description": description, "url": PUBLIC_ORIGIN + canonical, "inLanguage": "en", "temporalCoverage": f"{history_from}/2025", "spatialCoverage": {"@type": "AdministrativeArea", "name": entity["short_name"], "addressCountry": "CZ"}, "about": {"@type": "GovernmentOrganization", "name": entity["name"], "identifier": entity["national_id"]}}
     history_html = history_section(entity["national_id"], 3, municipal=not has_large_city_history)
+    contracts_html = contracts_section(entity["national_id"])
     special_link = (
         '<a data-plzen-contract-special href="../../../deep-dives/plzen-contracts/?lang=cs">Speciál: smlouvy a platby ↗</a>'
         if entity["national_id"] == "00075370"
@@ -147,7 +283,7 @@ def build_detail(data: dict, entity: dict, has_large_city_history: bool) -> None
     cash_change_class = "" if cash_change is None else ("positive" if cash_change >= 0 else "negative")
     cash_change_text = "Data rozvahy nejsou dostupná" if cash_change is None else f"{pct(r.get('cash_yoy'))} meziročně"
     cash_story = "<p class=\"data-quality-warning\">Stav účtů nelze zobrazit: ve zdrojové rozvaze chybí odpovídající řádky.</p>" if cash_change is None else f"<div class=\"cash-story\"><article><span>31. 12. 2024</span><strong>{amount(a['cash_previous'])}</strong></article><i class=\"{'up' if cash_change >= 0 else 'down'}\">{'+' if cash_change >= 0 else '−'}{amount(abs(cash_change))}</i><article><span>31. 12. 2025</span><strong>{amount(a['cash_current'])}</strong></article></div>"
-    out.write_text(f"""<!doctype html><html lang="en">{head(f"{entity['short_name']} town and municipality budget 2025 — revenue, expenditure and cash", description, canonical, 3, schema, language="en")}<body class="cz-budget-page detail-page" data-entity-id="{esc(entity['entity_id'])}">{header('../../../')}<main><nav class="breadcrumbs"><a href="../../../index.html">Domů</a><span>›</span><a href="../">Obce</a><span>›</span><strong>{esc(entity['short_name'])}</strong></nav><section class="detail-hero"><div><span class="eyebrow"><i class="live-dot"></i>Obecní účetní jednotka · IČO {esc(entity['national_id'])} · 2025</span><h1>{esc(entity['short_name'])}</h1><p>{esc(description)}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">Rozpočet 2025 <b>↓</b></a><a href="#history-explorer">Trend {2025 - history_from + 1} let</a>{special_link}<a href="../../../data/entities/{esc(entity['national_id'])}.json" download>Stáhnout JSON</a></div></div><aside class="detail-score"><span>{esc(entity['territory'].get('region_name') or 'Česko')}</span><strong>{pct(r.get('cash_to_expense'))}</strong><small>{'ročních výdajů kryto stavem účtů' if cash_available else 'data rozvahy nejsou dostupná'}</small></aside></section><section class="detail-kpis"><article><span>Příjmy</span><strong>{amount(a['revenue_actual'])}</strong><small>{pct(r.get('revenue_execution'))} upraveného rozpočtu</small></article><article><span>Výdaje</span><strong>{amount(a['expense_actual'])}</strong><small>{pct(r.get('expense_execution'))} upraveného rozpočtu</small></article><article><span>Výsledek</span><strong class="{'positive' if a['budget_balance'] >= 0 else 'negative'}">{amount(a['budget_balance'])}</strong><small>{pct(r.get('balance_to_revenue'))} příjmů</small></article><article><span>Stav účtů</span><strong>{amount(a['cash_current'])}</strong><small class="{cash_change_class}">{cash_change_text}</small></article></section>{history_html}<section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">Rozpočet 2025</span><h2>Plán a skutečnost</h2></div></div><article class="detail-panel plan-panel">{stat_bar('Příjmy', a['revenue_actual'], a['revenue_adjusted'])}{stat_bar('Výdaje', a['expense_actual'], a['expense_adjusted'])}</article><div class="detail-grid"><article class="detail-panel"><div class="panel-title"><h3>Struktura příjmů</h3><strong>{amount(a['revenue_actual'])}</strong></div>{revenue_mix}</article><article class="detail-panel"><div class="panel-title"><h3>Struktura výdajů</h3><strong>{amount(a['expense_actual'])}</strong></div>{expense_mix}</article></div>{cash_story}</section><section class="data-contract" id="metodika"><div><span class="kicker">Data a metodika</span><h2>Zdroje a data</h2><p>Samostatná účetní jednotka obce; příspěvkové organizace nejsou přičítány. Výsledek je po konsolidaci uvnitř rozpočtu obce.</p></div><div class="source-list"><a href="{esc(entity['sources']['budget'])}" target="_blank" rel="noopener"><span>Rozpočet</span><strong>Monitor MF ČR ↗</strong></a><a href="../../../data/entities/{esc(entity['national_id'])}.json"><span>Strojová data</span><strong>JSON ↗</strong></a><a href="{history_href}"><span>Historická data</span><strong>{history_label}</strong></a></div></section></main>{footer('../../../')}<script src="../../../municipal-i18n.js" defer></script>{history_script}</body></html>\n""", encoding="utf-8")
+    out.write_text(f"""<!doctype html><html lang="en">{head(f"{entity['short_name']} town and municipality budget 2025 — revenue, expenditure and cash", description, canonical, 3, schema, language="en")}<body class="cz-budget-page detail-page" data-entity-id="{esc(entity['entity_id'])}">{header('../../../')}<main><nav class="breadcrumbs"><a href="../../../index.html">Domů</a><span>›</span><a href="../">Obce</a><span>›</span><strong>{esc(entity['short_name'])}</strong></nav><section class="detail-hero"><div><span class="eyebrow"><i class="live-dot"></i>Obecní účetní jednotka · IČO {esc(entity['national_id'])} · 2025</span><h1>{esc(entity['short_name'])}</h1><p>{esc(description)}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">Rozpočet 2025 <b>↓</b></a><a href="#history-explorer">Trend {2025 - history_from + 1} let</a>{special_link}<a href="../../../data/entities/{esc(entity['national_id'])}.json" download>Stáhnout JSON</a></div></div><aside class="detail-score"><span>{esc(entity['territory'].get('region_name') or 'Česko')}</span><strong>{pct(r.get('cash_to_expense'))}</strong><small>{'ročních výdajů kryto stavem účtů' if cash_available else 'data rozvahy nejsou dostupná'}</small></aside></section><section class="detail-kpis"><article><span>Příjmy</span><strong>{amount(a['revenue_actual'])}</strong><small>{pct(r.get('revenue_execution'))} upraveného rozpočtu</small></article><article><span>Výdaje</span><strong>{amount(a['expense_actual'])}</strong><small>{pct(r.get('expense_execution'))} upraveného rozpočtu</small></article><article><span>Výsledek</span><strong class="{'positive' if a['budget_balance'] >= 0 else 'negative'}">{amount(a['budget_balance'])}</strong><small>{pct(r.get('balance_to_revenue'))} příjmů</small></article><article><span>Stav účtů</span><strong>{amount(a['cash_current'])}</strong><small class="{cash_change_class}">{cash_change_text}</small></article></section>{history_html}{contracts_html}<section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">Rozpočet 2025</span><h2>Plán a skutečnost</h2></div></div><article class="detail-panel plan-panel">{stat_bar('Příjmy', a['revenue_actual'], a['revenue_adjusted'])}{stat_bar('Výdaje', a['expense_actual'], a['expense_adjusted'])}</article><div class="detail-grid"><article class="detail-panel"><div class="panel-title"><h3>Struktura příjmů</h3><strong>{amount(a['revenue_actual'])}</strong></div>{revenue_mix}</article><article class="detail-panel"><div class="panel-title"><h3>Struktura výdajů</h3><strong>{amount(a['expense_actual'])}</strong></div>{expense_mix}</article></div>{cash_story}</section><section class="data-contract" id="metodika"><div><span class="kicker">Data a metodika</span><h2>Zdroje a data</h2><p>Samostatná účetní jednotka obce; příspěvkové organizace nejsou přičítány. Výsledek je po konsolidaci uvnitř rozpočtu obce.</p></div><div class="source-list"><a href="{esc(entity['sources']['budget'])}" target="_blank" rel="noopener"><span>Rozpočet</span><strong>Monitor MF ČR ↗</strong></a><a href="../../../data/entities/{esc(entity['national_id'])}.json"><span>Strojová data</span><strong>JSON ↗</strong></a><a href="{history_href}"><span>Historická data</span><strong>{history_label}</strong></a></div></section></main>{footer('../../../')}<script src="../../../municipal-i18n.js" defer></script>{history_script}</body></html>\n""", encoding="utf-8")
 
 
 def build_machine_data(data: dict, benchmark: dict) -> None:

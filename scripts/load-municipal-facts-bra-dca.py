@@ -29,6 +29,9 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
+from raw_cache_archives import restore as restore_raw_cache
+
 WEB = Path(__file__).resolve().parent.parent
 WORKSPACE = WEB.parent
 CACHE = WORKSPACE / "data/source_cache/municipal-expansion/BRA"
@@ -97,6 +100,8 @@ def main() -> int:
     parser.add_argument("--report", action="store_true", help="report only (the default)")
     parser.add_argument("--run-id", default=f"dca2024-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}")
     args = parser.parse_args()
+
+    restore_raw_cache(CACHE)
 
     loaded_at = datetime.now(timezone.utc).isoformat()
     handle = args.write.open("w", encoding="utf-8") if args.write else None

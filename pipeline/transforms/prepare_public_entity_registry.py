@@ -67,12 +67,15 @@ def cze():
     finance={e["ico"]:e for e in json.loads((ROOT/"data/cz-public-entities-2024.json").read_text())["entities"]}
     out=[]
     for i,r in df.iterrows():
-        ico=re.sub(r"\D","",clean(r.iloc[0])).zfill(8); form=clean(r.iloc[2]); f=finance.get(ico,{})
-        cls="controlled_enterprise" if any(x in form.lower() for x in ["podnik","akciová","ručením"]) else "statutory_public_body"
-        owner="local" if any(x in form.lower() for x in ["obec","svazek obcí"]) else "regional" if "kraj" in form.lower() else "central_or_mixed"
+        ico=re.sub(r"\D","",clean(r.iloc[0])).zfill(8); form=clean(r.iloc[2]); form_lower=form.lower(); f=finance.get(ico,{})
+        is_health_insurer="zdravotní pojišťovna" in form_lower
+        cls="public_health_insurer" if is_health_insurer else "controlled_enterprise" if any(x in form_lower for x in ["podnik","akciová","ručením"]) else "statutory_public_body"
+        owner="social_insurance_fund" if is_health_insurer else "local" if form_lower in {"obec","svazek obcí","městská část, městský obvod"} else "regional" if form_lower == "kraj" else "central_or_mixed"
         has_finance=f.get("revenue_mczk") is not None
         out.append(row("CZE","cze_mf_consolidation_units_2026","public_sector_consolidation_units","2026",r.iloc[1],i+1,national_id=ico,entity_class=cls,legal_form_native=form,ownership_level=owner,status="open_ended",region=clean(r.iloc[7]),revenue=f.get("revenue_mczk") if has_finance else "",net_result=f.get("net_result_mczk","") if f.get("net_result_mczk") is not None else "",assets=f.get("assets_mczk","") if f.get("assets_mczk") is not None else "",currency="CZK" if has_finance else "",monetary_unit="million" if has_finance else "",financial_period="2024" if has_finance else "",source_url=URL["CZE"],notes=f"valid_from={clean(r.iloc[10])}; valid_to={clean(r.iloc[11])}"))
     assert len(out)==18238 and sum(x["revenue"] != "" for x in out)==134
+    assert sum(x["entity_class"] == "public_health_insurer" for x in out)==7
+    assert all(x["ownership_level"] == "social_insurance_fund" for x in out if x["entity_class"] == "public_health_insurer")
     return out
 
 def pol():

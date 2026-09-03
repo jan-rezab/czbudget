@@ -20,6 +20,15 @@ test("public-employment report reconciles the control total and source layers", 
   await expect(page.locator(".employment-hero-total")).toBeVisible();
   await expect(page.locator("#employment-hero-total")).toHaveText(number(latest.public_sector_fte));
   await expect(page.locator("#employment-history-body tr")).toHaveCount(dataset.history.length);
+  await expect(page.locator("#europe")).toBeVisible();
+  await expect(page.locator("#employment-benchmark")).toContainText(/17\.8\s%/);
+  await expect(page.locator("#employment-benchmark")).toContainText(/18\.4\s%/);
+  await expect(page.locator("#employment-benchmark")).toContainText("Nordic four average");
+  await expect(page.locator(".employment-benchmark-row")).toHaveCount(11);
+  await expect(page.locator(".employment-benchmark-row.is-czech")).toContainText("Czechia");
+  await expect(page.locator(".employment-benchmark-row.is-czech")).toContainText("14");
+  await expect(page.locator(".employment-benchmark-reading")).toContainText(/24\.2\s%/);
+  await expect(page.locator(".employment-benchmark-reading")).toContainText(/17\.8\s%/);
   await expect(page.locator("#growth")).toBeVisible();
   await expect(page.locator("#employment-growth-split")).toContainText(number(dataset.growth.general_government_change_fte));
   await expect(page.locator("#employment-growth-split")).toContainText(number(dataset.growth.public_corporations_change_fte));
@@ -87,6 +96,17 @@ test("every employment explorer tree reconciles within its declared scope", asyn
     node.children.forEach(visit);
   };
   dataset.employment_explorer.scopes.forEach((scope) => visit(scope.root));
+});
+
+test("European employment benchmark is ranked and keeps the OECD boundary separate", async () => {
+  const benchmark = dataset.international_benchmark;
+  const czechia = benchmark.countries.find((row) => row.country_code === "CZE");
+  expect(benchmark.country_count).toBe(29);
+  expect(benchmark.czech_rank).toBe(14);
+  expect(czechia.latest_value_pct).toBe(17.78);
+  expect(benchmark.oecd_average.latest_value_pct).toBe(18.41);
+  expect(benchmark.countries.every((row, index, rows) => index === 0 || rows[index - 1].latest_value_pct >= row.latest_value_pct)).toBe(true);
+  expect(benchmark.metric).toBe("general_government_employment_as_pct_total_employment");
 });
 
 test("public-employment English shell releases the paint guard immediately", async ({ page }) => {

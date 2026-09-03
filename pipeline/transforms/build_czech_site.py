@@ -107,7 +107,7 @@ def head(title: str, description: str, canonical_path: str, depth: int, schema: 
   <meta name="twitter:description" content="{esc(description)}">
   <link rel="icon" href="{root}assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{root}styles.css?v=20260822-brand">
-  <link rel="stylesheet" href="{root}cz-budget.css">
+  <link rel="stylesheet" href="{root}cz-budget.css?v=20260901-contracts">
   <link rel="stylesheet" href="{root}chart-system.css">
   <script type="application/ld+json">{schema_json}</script>
 </head>"""

@@ -27,7 +27,7 @@ OECD_API = "https://sdmx.oecd.org/public/rest/data/OECD.CTP.TPS,DSD_REV_COMP_GLO
 OECD_TRANSFER_URL = "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/fiscal-federalism-network/table17_intergov_rev-tot_rev-gov-rev-by-sector.xlsx"
 EUROSTAT_API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/env_ac_tax"
 SOURCE_CATEGORIES = ["1000", "2000", "3000", "4000", "5000", "6000"]
-DETAIL_CATEGORIES = ["1100", "1200"]
+DETAIL_CATEGORIES = ["1100", "1200", "5111", "5121"]
 SECTORS = {"S1311": "central", "S1312": "state", "S1313": "local", "S1314": "social_security"}
 
 
@@ -124,6 +124,7 @@ def parse_oecd(rows: list[dict[str, str]]) -> dict[str, dict]:
     result: dict[str, dict] = {}
     for code in COUNTRIES:
         timeline = []
+        detail_timeline = []
         for year in sorted(values[code]):
             general = values[code][year].get("S13", {})
             total = general.get("TOTALTAX")
@@ -134,6 +135,21 @@ def parse_oecd(rows: list[dict[str, str]]) -> dict[str, dict]:
                 continue
             shares = {key: rounded(value / total * 100) for key, value in categories.items()}
             timeline.append({"year": year, "shares": shares})
+            detail_codes = {
+                "personal_income": "1100",
+                "corporate_income": "1200",
+                "vat": "5111",
+                "excise": "5121",
+                "social_security": "2000",
+                "property": "4000",
+            }
+            if all(revenue_code in general for revenue_code in detail_codes.values()):
+                detail_shares = {
+                    key: rounded(general[revenue_code] / total * 100)
+                    for key, revenue_code in detail_codes.items()
+                }
+                detail_shares["other"] = rounded(100 - sum(detail_shares.values()))
+                detail_timeline.append({"year": year, "shares": detail_shares})
         if not timeline:
             continue
         latest = timeline[-1]
@@ -165,9 +181,11 @@ def parse_oecd(rows: list[dict[str, str]]) -> dict[str, dict]:
         result[code] = {
             "latest_year": latest_year,
             "tax_mix": latest["shares"],
+            "tax_detail": detail_timeline[-1]["shares"] if detail_timeline else None,
             "government_levels": level_shares,
             "economic_base_proxy": proxy,
             "timeline": timeline,
+            "tax_detail_timeline": detail_timeline,
         }
     return result
 
@@ -185,12 +203,14 @@ def main() -> None:
         "generated_at": generated_at,
         "scope": {
             "tax_mix": "OECD tax revenue, general government, broad tax categories",
+            "tax_detail": "OECD tax revenue, general government, selected standard subcategories as shares of total tax revenue",
             "government_levels": "OECD tax revenue by receiving government subsector, normalised to 100",
             "environmental_taxes": "Eurostat environmental taxes as a share of taxes and actual social contributions",
             "municipal_transfers": "OECD intergovernmental transfer revenue as a share of local-government total revenue",
         },
         "definitions": {
             "source_categories": {"1000": "income", "2000": "social_security", "3000": "payroll", "4000": "property", "5000": "consumption", "6000": "other"},
+            "detail_categories": {"personal_income": "1100", "corporate_income": "1200", "vat": "5111", "excise": "5121", "social_security": "2000", "property": "4000", "other": "remainder_to_100"},
             "economic_base_proxy": "Analytical grouping: personal income + social contributions + payroll as labour; corporate income + property as capital; goods and services as consumption. Personal income and property taxes are not pure economic-base measures.",
             "non_additivity": "Environmental taxes overlap OECD goods-and-services and property categories and are shown as a memorandum item, not an additional slice.",
         },

@@ -16,6 +16,7 @@ import io
 import json
 import re
 import subprocess
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -27,6 +28,9 @@ from pathlib import Path
 from typing import Iterable
 
 import openpyxl
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
+from raw_cache_archives import restore as restore_raw_cache
 
 
 WEB = Path(__file__).resolve().parents[1]
@@ -235,6 +239,7 @@ def paced_request_json(url: str) -> dict:
 
 
 def import_brazil(resume: bool = True, limit: int | None = None, shard_index: int = 0, shard_count: int = 1) -> dict:
+    restore_raw_cache(CACHE / "BRA")
     base = "https://apidatalake.tesouro.gov.br/ords/cdwhprd/siconfi/tt"
     entities = [row for row in paced_request_json(f"{base}/entes").get("items", []) if clean(row.get("esfera")) == "M"]
     if limit: entities = entities[:limit]

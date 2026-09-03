@@ -1,5 +1,5 @@
 (() => {
-  const datasetUrl = "../../data/cz-public-employment.v1.json?v=1.4.0";
+  const datasetUrl = "../../data/cz-public-employment.v1.json?v=1.5.0";
   const lang = document.documentElement.lang === "en" ? "en" : "cs";
   const locale = lang === "en" ? "en-GB" : "cs-CZ";
   const copy = {
@@ -12,6 +12,7 @@
       heroUnit: "FTE · 2024 · oficiální kontrolní součet",
       heroShare: "všech pracovních míst v ekonomice",
       navHistory: "Vývoj",
+      navEurope: "Evropa",
       navGrowth: "Růst",
       navExplorer: "Celá mapa",
       navBoundary: "Hranice",
@@ -27,6 +28,24 @@
       publicCorporations: "Veřejné korporace",
       year: "Rok",
       share: "Podíl",
+      benchmarkKicker: "Evropský benchmark",
+      benchmarkTitle: "Česko je uprostřed Evropy, daleko od severských hodnot",
+      benchmarkIntro: "Srovnání OECD používá jednu harmonizovanou hranici: zaměstnanost ve vládních institucích jako podíl celkové zaměstnanosti. „Nejvyšší“ zde znamená největší podíl, nikoli nejlepší výkon státu.",
+      benchmarkCzech: "Česko",
+      benchmarkRank: "pořadí v Evropě",
+      benchmarkOf: "z",
+      benchmarkOECD: "průměr OECD",
+      benchmarkLeaders: "průměr severské čtyřky",
+      benchmarkGap: "rozdíl Česka",
+      benchmarkChange: "změna od roku 2019",
+      benchmarkTop: "Země s nejvyšším podílem",
+      benchmarkMetric: "vládní instituce · % celkové zaměstnanosti",
+      benchmarkLatest: "nejnovější dostupný rok",
+      benchmarkBoundaryTitle: "Dvě hranice, dvě správná čísla",
+      benchmarkBoundaryBody: "Českých 24,2 % na této stránce zahrnuje celý veřejný sektor včetně veřejných korporací a používá FTE. Mezinárodních 17,8 % je harmonizovaný ukazatel OECD pouze pro vládní instituce. V žebříčku proto vždy používáme 17,8 %.",
+      benchmarkSource: "Otevřít OECD Government at a Glance 2025",
+      benchmarkHigher: "vyšší",
+      benchmarkLower: "nižší",
       growthKicker: "Kam šel růst",
       growthTitle: "98,5 % nových veřejných FTE vzniklo uvnitř vládních institucí",
       growthIntro: "Mezi roky 2015 a 2024 přibylo 121 744 veřejných FTE. Vládní instituce vysvětlují 119 974; veřejné korporace pouze 1 770. To je přesný, plně srovnatelný rozklad.",
@@ -187,6 +206,7 @@
       heroUnit: "FTE · 2024 · official control total",
       heroShare: "of all jobs in the economy",
       navHistory: "History",
+      navEurope: "Europe",
       navGrowth: "Growth",
       navExplorer: "Full map",
       navBoundary: "Boundary",
@@ -202,6 +222,24 @@
       publicCorporations: "Public corporations",
       year: "Year",
       share: "Share",
+      benchmarkKicker: "European benchmark",
+      benchmarkTitle: "Czechia sits mid-table, well below Nordic levels",
+      benchmarkIntro: "The OECD comparison uses one harmonised boundary: employment in general government as a share of total employment. “Highest” means the largest share here, not the best-performing state.",
+      benchmarkCzech: "Czechia",
+      benchmarkRank: "European rank",
+      benchmarkOf: "of",
+      benchmarkOECD: "OECD average",
+      benchmarkLeaders: "Nordic four average",
+      benchmarkGap: "Czech gap",
+      benchmarkChange: "change since 2019",
+      benchmarkTop: "Countries with the highest shares",
+      benchmarkMetric: "general government · % of total employment",
+      benchmarkLatest: "latest available year",
+      benchmarkBoundaryTitle: "Two boundaries, two valid numbers",
+      benchmarkBoundaryBody: "The 24.2% Czech figure on this page covers the whole public sector, including public corporations, and uses FTE. The international 17.8% figure is the OECD's harmonised measure for general government only. The ranking therefore always uses 17.8%.",
+      benchmarkSource: "Open OECD Government at a Glance 2025",
+      benchmarkHigher: "higher",
+      benchmarkLower: "lower",
       growthKicker: "Where the growth went",
       growthTitle: "98.5% of new public-sector FTE appeared inside general government",
       growthIntro: "Between 2015 and 2024, the public sector added 121,744 FTE. General government explains 119,974; public corporations just 1,770. This is the exact, like-for-like split.",
@@ -658,6 +696,49 @@
     $("#employment-cost-chart").innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(copy.costAria)}"><g class="emp-grid">${grid}${labels}</g><path class="emp-cost-area" d="${path(nominal)} L${x(history.length - 1)},${y(min)} L${x(0)},${y(min)} Z"/><path class="emp-cost-line nominal" d="${path(nominal)}"/><path class="emp-cost-line real" d="${path(real)}"/>${history.map((row, index) => `<circle class="emp-cost-point nominal" cx="${x(index)}" cy="${y(row[nominal])}" r="4"><title>${row.year}: ${fmt(row[nominal])} CZK</title></circle><circle class="emp-cost-point real" cx="${x(index)}" cy="${y(row[real])}" r="3"><title>${row.year}: ${fmt(row[real])} CZK (${copy.real2015.toLowerCase()})</title></circle>`).join("")}</svg>`;
   }
 
+  function renderBenchmark(data) {
+    const target = $("#employment-benchmark");
+    const benchmark = data.international_benchmark;
+    if (!target || !benchmark) return;
+    const czechia = benchmark.countries.find((row) => row.country_code === "CZE");
+    const average = benchmark.oecd_average.latest_value_pct;
+    const averageGap = czechia.latest_value_pct - average;
+    const source = sourceMap(data)[benchmark.source_id];
+    const displayed = [...benchmark.countries.slice(0, 10), czechia];
+    const countryName = (row) => row[lang === "en" ? "country_en" : "country_cs"];
+    const signedPp = (value) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${pct(Math.abs(value))} pp`;
+    const benchmarkRow = (row, index) => `
+      ${index === 10 ? `<div class="employment-benchmark-break"><span>⋮</span></div>` : ""}
+      <article class="employment-benchmark-row ${row.country_code === "CZE" ? "is-czech" : ""}">
+        <b>${row.rank}</b>
+        <span>${esc(countryName(row))}<small>${row.latest_year}</small></span>
+        <div><i style="width:${Math.min(row.latest_value_pct / 32 * 100, 100)}%"></i></div>
+        <strong>${pct(row.latest_value_pct)} %</strong>
+        <em class="${row.change_since_2019_pp < 0 ? "negative" : "positive"}">${signedPp(row.change_since_2019_pp)}</em>
+      </article>`;
+    target.innerHTML = `
+      <div class="employment-benchmark-kpis">
+        <article class="primary"><span>${copy.benchmarkCzech}</span><strong>${pct(czechia.latest_value_pct)} %</strong><small>${copy.benchmarkRank} ${benchmark.czech_rank} ${copy.benchmarkOf} ${benchmark.country_count}</small></article>
+        <article><span>${copy.benchmarkOECD}</span><strong>${pct(average)} %</strong><small>${signedPp(averageGap)} · ${averageGap < 0 ? copy.benchmarkLower : copy.benchmarkHigher}</small></article>
+        <article><span>${copy.benchmarkLeaders}</span><strong>${pct(benchmark.leader_average_pct)} %</strong><small>${signedPp(benchmark.czech_gap_to_leader_average_pp)} · ${copy.benchmarkGap.toLowerCase()}</small></article>
+        <article><span>${copy.benchmarkChange}</span><strong>${signedPp(czechia.change_since_2019_pp)}</strong><small>2019 → ${czechia.latest_year}</small></article>
+      </div>
+      <div class="employment-benchmark-layout">
+        <article class="employment-benchmark-ranking">
+          <header><div><strong>${copy.benchmarkTop}</strong><small>${copy.benchmarkMetric}</small></div><span>2019 → ${copy.benchmarkLatest}</span></header>
+          <div class="employment-benchmark-column-head"><span>#</span><span></span><span></span><b>${czechia.latest_year}</b><em>Δ</em></div>
+          <div>${displayed.map(benchmarkRow).join("")}</div>
+        </article>
+        <aside class="employment-benchmark-reading">
+          <span>OECD · S.13</span>
+          <strong>${copy.benchmarkBoundaryTitle}</strong>
+          <div><b>${pct(data.headline.public_sector_share_pct)} %</b><i>≠</i><b>${pct(czechia.latest_value_pct)} %</b></div>
+          <p>${copy.benchmarkBoundaryBody}</p>
+          ${source ? `<a href="${esc(source.url)}" target="_blank" rel="noopener">${copy.benchmarkSource} ↗</a>` : ""}
+        </aside>
+      </div>`;
+  }
+
   function renderGrowth(data) {
     const growth = data.growth;
     const school = growth.regional_education_evidence;
@@ -705,6 +786,7 @@
     $("#employment-kpis").innerHTML = `<article class="primary"><span>${copy.control}</span><strong>${fmt(headline.public_sector_fte)}</strong><small>FTE · ${headline.year}</small></article><article><span>${copy.share}</span><strong>${pct(headline.public_sector_share_pct)} %</strong><small>${copy.ofEconomy}</small></article><article><span>${copy.change}</span><strong>+${fmt(headline.change_since_first_fte)}</strong><small>+${pct(headline.change_since_first_pct)} %</small></article><article><span>${copy.generalGovernment}</span><strong>${fmt(headline.general_government_fte)}</strong><small>FTE · ${headline.year}</small></article>`;
     renderChart(data.history);
     $("#employment-history-body").innerHTML = [...data.history].reverse().map((row) => `<tr><th>${row.year}</th><td>${fmt(row.public_sector_fte)}</td><td>${fmt(row.general_government_fte)}</td><td>${fmt(row.public_corporations_combined_fte)}${row.public_corporations_combined_status === "derived_residual" ? "*" : ""}</td><td>${pct(row.public_sector_share_pct)} %</td></tr>`).join("");
+    renderBenchmark(data);
     renderGrowth(data);
     renderReconciledWorkforce(data);
     const entities = data.entity_resolution;

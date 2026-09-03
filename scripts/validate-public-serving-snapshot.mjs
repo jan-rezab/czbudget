@@ -37,33 +37,46 @@ if (routeIndex.routes.length !== manifest.profile_count) throw new Error("Route 
 
 let prior = "";
 const ids = new Set();
+const routesByShard = new Map();
 for (const route of routeIndex.routes) {
   if (route.path <= prior) throw new Error(`Routes are duplicated or unsorted at ${route.path}`);
   if (ids.has(route.profile_id)) throw new Error(`Duplicate profile ID ${route.profile_id}`);
-  const objectPath = path.resolve(root, route.object_key);
-  if (!objectPath.startsWith(`${root}${path.sep}`)) throw new Error(`Object escapes release root: ${route.object_key}`);
-  await fs.access(objectPath);
+  if (!route.shard_key) throw new Error(`Route is not sharded: ${route.profile_id}`);
+  if (!routesByShard.has(route.shard_key)) routesByShard.set(route.shard_key, []);
+  routesByShard.get(route.shard_key).push(route);
   prior = route.path;
   ids.add(route.profile_id);
 }
 
-const first = routeIndex.routes[0];
-const last = routeIndex.routes.at(-1);
-for (const route of [first, last]) {
-  const wrapper = JSON.parse(gunzipSync(await fs.readFile(path.join(root, route.object_key))));
-  if (wrapper.profile_id !== route.profile_id || wrapper.payload_sha256 !== route.payload_sha256) {
-    throw new Error(`Profile wrapper mismatch for ${route.profile_id}`);
+let checkedProfiles = 0;
+for (const [shardKey, shardRoutes] of routesByShard) {
+  const descriptor = Object.values(routeIndex.shards || {}).find((item) => item.object_key === shardKey);
+  if (!descriptor) throw new Error(`Missing shard descriptor: ${shardKey}`);
+  const objectPath = path.resolve(root, shardKey);
+  if (!objectPath.startsWith(`${root}${path.sep}`)) throw new Error(`Object escapes release root: ${shardKey}`);
+  const body = gunzipSync(await fs.readFile(objectPath));
+  if (sha256(body) !== descriptor.body_sha256) throw new Error(`Shard hash mismatch: ${shardKey}`);
+  const wrappers = new Map(body.toString("utf8").trimEnd().split("\n").filter(Boolean).map((line) => {
+    const wrapper = JSON.parse(line);
+    return [wrapper.profile_id, wrapper];
+  }));
+  if (wrappers.size !== descriptor.profile_count || wrappers.size !== shardRoutes.length) throw new Error(`Shard count mismatch: ${shardKey}`);
+  for (const route of shardRoutes) {
+    const wrapper = wrappers.get(route.profile_id);
+    if (!wrapper || wrapper.release_id !== routeIndex.release_id || wrapper.payload_sha256 !== route.payload_sha256) throw new Error(`Profile wrapper mismatch for ${route.profile_id}`);
+    const profileJson = JSON.stringify(wrapper.profile);
+    const historyJson = wrapper.history === null ? "null" : JSON.stringify(wrapper.history);
+    if (sha256(`${profileJson}\n${historyJson}`) !== wrapper.payload_sha256) throw new Error(`Payload hash mismatch for ${route.profile_id}`);
+    checkedProfiles += 1;
   }
-  const profileJson = JSON.stringify(wrapper.profile);
-  const historyJson = wrapper.history === null ? "null" : JSON.stringify(wrapper.history);
-  if (sha256(`${profileJson}\n${historyJson}`) !== wrapper.payload_sha256) throw new Error(`Payload hash mismatch for ${route.profile_id}`);
 }
 
 process.stdout.write(`${JSON.stringify({
   status: "ok",
   release_id: manifest.release_id,
   profile_count: manifest.profile_count,
-  checked_profile_objects: [first.profile_id, last.profile_id],
+  shard_count: routesByShard.size,
+  checked_profiles: checkedProfiles,
 }, null, 2)}\n`);
 
 async function readJSON(file) {

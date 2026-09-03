@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <script src="/language-bootstrap.js?v=20260901-digital-spillover"></script>
+  <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260901-digital-spillover" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Digitální hodnota: co zůstává doma — Public Spending Data</title>
+  <meta name="description" content="Scénářový model digitální hodnoty pro deset ekonomik: zahraniční únik, domácí reinvestice a multiplikační efekt oddělené od pozorovaných dat.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/digital-spillover/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/digital-spillover/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/digital-spillover/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://publicspendingdata.org/deep-dives/digital-spillover/">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../styles.css?v=20260822-section-rail">
+  <link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives">
+  <link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter">
+  <link rel="stylesheet" href="../../digital-spillover.css?v=20260901-a">
+  <script src="../../digital-spillover.js?v=20260901-a" defer></script>
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Public Spending Data">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Digitální hodnota: co zůstává doma","publisher":{"@type":"Organization","name":"Public Spending Data"},"mainEntityOfPage":"https://publicspendingdata.org/deep-dives/digital-spillover/","inLanguage":["cs","en"]}</script>
+</head>
+<body class="deep-dives-page digital-spillover-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <section class="deep-hero deep-topic-hero digital-hero" id="overview">
+      <div>
+        <span class="eyebrow" data-digital-copy="eyebrow">Report / Digitální hodnota</span>
+        <h1><span data-digital-copy="titleLead">Kdo si ponechá</span> <em data-digital-copy="titleEm">digitální ekonomiku?</em></h1>
+        <p data-digital-copy="intro">Deset ekonomik pod stejným scénářem. Pozorovaná data držíme odděleně od tří předpokladů, abychom ukázali rozsah problému bez předstírání falešně přesného odhadu.</p>
+      </div>
+      <div class="deep-hero-aside digital-hero-aside">
+        <span data-digital-copy="heroLabel">Srovnávací panel</span>
+        <strong><b id="digital-country-count">10</b> × 3</strong>
+        <small data-digital-copy="heroNote">10 zemí · 3 měřené vstupy · 3 otevřené předpoklady</small>
+      </div>
+    </section>
+
+    <nav class="deep-topic-rail" aria-label="Digital value sections">
+      <a href="#model" data-digital-copy="modelNav">Scénář</a>
+      <a href="#comparison" data-digital-copy="comparisonNav">10 zemí</a>
+      <a href="#capacity" data-digital-copy="capacityNav">Kapacita</a>
+      <a href="#sensitivity" data-digital-copy="sensitivityNav">Citlivost</a>
+      <a href="#method" data-digital-copy="methodNav">Metodika</a>
+    </nav>
+
+    <section class="digital-section digital-model" id="model">
+      <div class="deep-section-heading">
+        <div><span class="kicker" data-digital-copy="modelKicker">Tři otevřené předpoklady</span><h2 data-digital-copy="modelTitle">Stejný test pro každou ekonomiku</h2></div>
+        <p data-digital-copy="modelIntro">HDP, úspory a výzkum pocházejí ze zdrojových řad. Velikost digitálního sektoru, podíl zahraničních platforem a multiplikátor mění čtenář.</p>
+      </div>
+      <div class="digital-scenario-presets" role="group" aria-label="Scenarios">
+        <button type="button" data-foreign-preset="35"><b data-digital-copy="lowerExposure">Nižší expozice</b><span>35%</span></button>
+        <button type="button" data-foreign-preset="72" aria-pressed="true"><b data-digital-copy="baseline">Výchozí scénář</b><span>72%</span></button>
+        <button type="button" data-foreign-preset="85"><b data-digital-copy="higherExposure">Vyšší expozice</b><span>85%</span></button>
+      </div>
+      <div class="digital-controls">
+        <label>
+          <span><b data-digital-copy="digitalShare">Digitální sektor</b><output id="digital-share-output" for="digital-share">12%</output></span>
+          <input id="digital-share" type="range" min="5" max="20" step="1" value="12">
+          <small data-digital-copy="digitalShareHint">Předpokládaný podíl digitálních aktivit na HDP.</small>
+        </label>
+        <label>
+          <span><b data-digital-copy="foreignShare">Zahraniční dominance</b><output id="foreign-share-output" for="foreign-share">72%</output></span>
+          <input id="foreign-share" type="range" min="20" max="90" step="1" value="72">
+          <small data-digital-copy="foreignShareHint">Scénářový podíl digitálního trhu pod zahraniční kontrolou.</small>
+        </label>
+        <label>
+          <span><b data-digital-copy="multiplier">Investiční multiplikátor</b><output id="multiplier-output" for="investment-multiplier">1,5×</output></span>
+          <input id="investment-multiplier" type="range" min="10" max="25" step="1" value="15">
+          <small data-digital-copy="multiplierHint">Kolikrát se domácí reinvestice promítne do podporovaného výkonu.</small>
+        </label>
+      </div>
+      <p class="digital-scenario-warning"><b data-digital-copy="scenarioLabel">Scénář, ne prognóza.</b> <span data-digital-copy="scenarioWarning">Změna ovladače nemění historická data; pouze přepočítá hypotetickou expozici.</span></p>
+    </section>
+
+    <section class="digital-section" id="comparison">
+      <div class="deep-section-heading">
+        <div><span class="kicker" data-digital-copy="comparisonKicker">Hodnota doma a venku</span><h2 data-digital-copy="comparisonTitle">Co se stane se 100 dolary digitálního výkonu</h2></div>
+        <p data-digital-copy="comparisonIntro">Stejná zahraniční dominance neznamená stejný výsledek. Výzkumná intenzita v modelu tlumí únik a hrubé úspory určují, kolik z ponechané hodnoty lze znovu investovat.</p>
+      </div>
+      <div class="digital-chart-toolbar">
+        <div class="digital-unit-toggle" role="group" aria-label="Chart unit">
+          <button type="button" data-chart-unit="share" aria-pressed="true" data-digital-copy="perHundred">Ze 100 USD</button>
+          <button type="button" data-chart-unit="scale" data-digital-copy="economyScale">Miliardy USD</button>
+        </div>
+        <div class="digital-legend"><span class="kept" data-digital-copy="kept">Zůstává doma</span><span class="leaked" data-digital-copy="leaked">Modelovaný únik</span></div>
+      </div>
+      <div id="digital-country-bars" class="digital-country-bars" aria-live="polite"></div>
+      <p class="chart-source"><span data-digital-copy="comparisonSource">Zdroje faktických vstupů: IMF WEO, World Bank WDI. Výsledek: scénářový výpočet PSD.</span></p>
+    </section>
+
+    <section class="digital-section" id="capacity">
+      <div class="deep-section-heading">
+        <div><span class="kicker" data-digital-copy="capacityKicker">Pouze měřená data</span><h2 data-digital-copy="capacityTitle">Kapacita znovu investovat není stejná</h2></div>
+        <p data-digital-copy="capacityIntro">Vodorovně jsou hrubé národní úspory, svisle výdaje na výzkum a vývoj. Velikost bodu odpovídá HDP; zde není žádný scénářový vstup.</p>
+      </div>
+      <div id="digital-capacity-chart" class="digital-svg-chart"></div>
+      <p class="chart-source" data-digital-copy="capacitySource">World Bank WDI · nejnovější dostupný rok podle země; nominální HDP IMF WEO 2024.</p>
+    </section>
+
+    <section class="digital-section" id="sensitivity">
+      <div class="deep-section-heading">
+        <div><span class="kicker" data-digital-copy="sensitivityKicker">Co mění výsledek</span><h2 data-digital-copy="sensitivityTitle">Jedna země, celé rozpětí dominance</h2></div>
+        <p data-digital-copy="sensitivityIntro">Křivky ukazují, jak se při nezměněných faktických vstupech mění únik a výkon podpořený domácí reinvesticí.</p>
+      </div>
+      <div class="digital-country-picker">
+        <label><span data-digital-copy="countryLabel">Země</span><select id="digital-country-select"></select></label>
+        <p id="digital-selected-summary" aria-live="polite"></p>
+      </div>
+      <div id="digital-sensitivity-chart" class="digital-svg-chart"></div>
+      <p class="chart-source" data-digital-copy="sensitivitySource">PSD scenario model · foreign-platform share from 20% to 90%; other controls follow the scenario above.</p>
+    </section>
+
+    <section class="digital-section" id="table">
+      <div class="deep-section-heading">
+        <div><span class="kicker" data-digital-copy="tableKicker">Čísla za grafem</span><h2 data-digital-copy="tableTitle">Data a scénář v jednom pohledu</h2></div>
+        <p data-digital-copy="tableIntro">Rok zůstává u každého měřeného vstupu. Modelované sloupce se přepočítávají podle ovladačů nahoře.</p>
+      </div>
+      <div class="digital-table-wrap">
+        <table class="digital-table">
+          <thead><tr>
+            <th data-digital-copy="country">Země</th>
+            <th data-digital-copy="gdp">HDP</th>
+            <th data-digital-copy="saving">Hrubé úspory</th>
+            <th data-digital-copy="research">Výzkum a vývoj</th>
+            <th data-digital-copy="investment">Tvorba kapitálu</th>
+            <th data-digital-copy="digitalOutput">Digitální výkon</th>
+            <th data-digital-copy="leakage">Únik</th>
+            <th data-digital-copy="reinvestment">Reinvestice</th>
+            <th data-digital-copy="supported">Podpořený výkon</th>
+          </tr></thead>
+          <tbody id="digital-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="digital-section digital-method" id="method">
+      <div class="deep-section-heading">
+        <div><span class="kicker" data-digital-copy="methodKicker">Auditovatelná hranice</span><h2 data-digital-copy="methodTitle">Co víme a co pouze testujeme</h2></div>
+        <p data-digital-copy="methodIntro">Report záměrně nevydává zahraniční dominanci za pozorovanou hodnotu. Cílem je ukázat mechanismus a hodnotu dat, která ještě chybějí.</p>
+      </div>
+      <div class="digital-method-grid">
+        <article><span data-digital-copy="observedTag">Pozorováno</span><h3 data-digital-copy="observedTitle">Tři vstupy ze zdrojů</h3><p data-digital-copy="observedCopy">Nominální HDP, hrubé úspory a výdaje na výzkum a vývoj. Tvorba kapitálu slouží jako kontext, nikoli jako skrytý vstup.</p></article>
+        <article><span data-digital-copy="assumedTag">Předpoklad</span><h3 data-digital-copy="assumedTitle">Tři ovladače scénáře</h3><p data-digital-copy="assumedCopy">Velikost digitálního sektoru, zahraniční dominance a investiční multiplikátor. Všem zemím dáváme stejnou hodnotu.</p></article>
+        <article><span data-digital-copy="missingTag">Chybí</span><h3 data-digital-copy="missingTitle">Data pro skutečný odhad</h3><p data-digital-copy="missingCopy">Tržby platforem podle vlastníka, repatriace zisku, domácí nákupy a skutečné reinvestice digitálních firem.</p></article>
+      </div>
+      <div class="digital-formula" aria-label="Model equations">
+        <code>digital output = GDP × digital share</code>
+        <code>leakage = digital output × foreign share × leakage intensity</code>
+        <code>retained value = digital output − leakage</code>
+        <code>reinvestment = retained value × effective saving rate</code>
+        <code>supported GDP = reinvestment × multiplier</code>
+      </div>
+      <div class="digital-method-note">
+        <b data-digital-copy="proxyTitle">Dvě transparentní proxy</b>
+        <p data-digital-copy="proxyCopy">Podpora politiky = výdaje na VaV dělené 3 %, nejvýše 100 %. Reinvestiční míra = hrubé úspory upravené touto podporou. Proxy nejsou měřením chování digitálních firem.</p>
+      </div>
+      <div class="source-register digital-source-register">
+        <a href="https://data.imf.org/en/Datasets/WEO" target="_blank" rel="noopener"><strong>IMF WEO</strong><span data-digital-copy="imfSource">HDP · 2024 actual ↗</span></a>
+        <a href="https://data.worldbank.org/indicator" target="_blank" rel="noopener"><strong>World Bank WDI</strong><span data-digital-copy="wdiSource">Úspory, VaV, investice ↗</span></a>
+        <a href="https://www.perplexity.ai/computer/a/652cfd0c-8817-544f-8b06-5dc84f53f172" target="_blank" rel="noopener"><strong data-digital-copy="inspiration">Výchozí model</strong><span data-digital-copy="inspirationSource">Logika scénáře ↗</span></a>
+      </div>
+    </section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small data-digital-copy="footer">Digital value capture · scenario, not forecast</small></div><a href="#top">↑</a></footer>
+</body>
+</html>

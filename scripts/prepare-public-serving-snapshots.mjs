@@ -7,7 +7,8 @@ import path from "node:path";
 import process from "node:process";
 import { createInterface } from "node:readline";
 import { once } from "node:events";
-import { gzipSync } from "node:zlib";
+import { createGzip, gzipSync } from "node:zlib";
+import { pipeline } from "node:stream/promises";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const args = parseArgs(process.argv.slice(2));
@@ -16,9 +17,10 @@ const outputRoot = path.resolve(args.output || path.join(ROOT, ".public-serving"
 const releaseRoot = path.join(outputRoot, "releases", releaseId);
 const stagingRoot = path.join(outputRoot, "staging");
 const generatedAt = new Date().toISOString();
+const shardCount = args.shardCount || 128;
 
 await assertFreshOutput(outputRoot);
-await fs.mkdir(path.join(releaseRoot, "profiles"), { recursive: true });
+await fs.mkdir(path.join(releaseRoot, "shards"), { recursive: true });
 await fs.mkdir(stagingRoot, { recursive: true });
 await fs.writeFile(path.join(outputRoot, ".public-serving-output"), `${releaseId}\n`);
 
@@ -32,6 +34,7 @@ const seenIds = new Set();
 const seenPaths = new Set();
 const profileStagePath = path.join(stagingRoot, "public_profile_snapshots.jsonl");
 const profileStage = createWriteStream(profileStagePath, { encoding: "utf8", flags: "wx" });
+const shardStreams = new Map();
 
 let totalBytes = 0;
 let totalNestedRecords = 0;
@@ -64,8 +67,8 @@ for await (const source of profileSources(sources)) {
   const payloadBytes = Buffer.byteLength(profileJson) + (historyJson === "null" ? 0 : Buffer.byteLength(historyJson));
   const payloadSha256 = sha256(`${profileJson}\n${historyJson}`);
   const nestedRecordCount = countNestedRecords(normalized.profile_payload) + countNestedRecords(normalized.history_payload);
-  const objectKey = `releases/${releaseId}/profiles/${normalized.country_code.toLowerCase()}/${safeFileName(normalized.entity_code)}.json.gz`;
-  const objectPath = path.join(outputRoot, objectKey);
+  const shard = shardFor(normalized.profile_id, shardCount);
+  const shardKey = `releases/${releaseId}/shards/${shard}.jsonl.gz`;
   const wrapper = {
     schema_version: "1.0.0",
     release_id: releaseId,
@@ -75,8 +78,13 @@ for await (const source of profileSources(sources)) {
     profile: normalized.profile_payload,
     history: normalized.history_payload,
   };
-  await fs.mkdir(path.dirname(objectPath), { recursive: true });
-  await fs.writeFile(objectPath, gzipSync(`${JSON.stringify(wrapper)}\n`, { level: 9 }));
+  if (!shardStreams.has(shard)) {
+    const file = path.join(stagingRoot, `profiles-${shard}.jsonl`);
+    shardStreams.set(shard, { file, stream: createWriteStream(file, { encoding: "utf8", flags: "wx" }), count: 0 });
+  }
+  const destination = shardStreams.get(shard);
+  await writeLine(destination.stream, wrapper);
+  destination.count += 1;
 
   const row = {
     ...normalized,
@@ -93,7 +101,7 @@ for await (const source of profileSources(sources)) {
     country_code: normalized.country_code,
     entity_code: normalized.entity_code,
     entity_name: normalized.entity_name,
-    object_key: objectKey,
+    shard_key: shardKey,
     payload_sha256: payloadSha256,
   });
   addInventory(inventory, normalized, payloadBytes, nestedRecordCount);
@@ -105,16 +113,27 @@ for await (const source of profileSources(sources)) {
 profileStage.end();
 await once(profileStage, "finish");
 
+const shards = {};
+for (const [shard, item] of [...shardStreams].sort()) {
+  item.stream.end();
+  await once(item.stream, "finish");
+  const bodySha256 = await sha256File(item.file);
+  const objectKey = `releases/${releaseId}/shards/${shard}.jsonl.gz`;
+  await pipeline(createReadStream(item.file), createGzip({ level: 9 }), createWriteStream(path.join(outputRoot, objectKey), { flags: "wx" }));
+  shards[shard] = { object_key: objectKey, profile_count: item.count, body_sha256: bodySha256 };
+}
+
 for (const [country, skipped] of [...skippedWithoutUrl].sort()) {
   process.stdout.write(`${country}: ${skipped.toLocaleString("en-US")} profiles carry no url and cannot be served\n`);
 }
 
 routes.sort((a, b) => a.path.localeCompare(b.path));
 const routesDocument = {
-  schema_version: "1.0.0",
+  schema_version: "2.0.0",
   release_id: releaseId,
   generated_at: generatedAt,
   routes,
+  shards,
 };
 const routesBody = `${JSON.stringify(routesDocument)}\n`;
 const routesPath = path.join(releaseRoot, "routes.v1.json.gz");
@@ -136,10 +155,11 @@ const metrics = coverageMetrics(inventoryRows, warehouseCoverage, itemizedCovera
 await fs.writeFile(path.join(releaseRoot, "coverage-metrics.v1.json"), `${JSON.stringify(metrics, null, 2)}\n`);
 
 const manifestCore = {
-  schema_version: "1.0.0",
+  schema_version: "2.0.0",
   release_id: releaseId,
   generated_at: generatedAt,
   profile_count: count,
+  shard_count: Object.keys(shards).length,
   country_count: inventory.size,
   nested_record_count: totalNestedRecords,
   payload_bytes: totalBytes,
@@ -153,7 +173,7 @@ const manifestSha256 = sha256(JSON.stringify(manifestCore));
 const manifest = { ...manifestCore, manifest_sha256: manifestSha256 };
 await fs.writeFile(path.join(releaseRoot, "manifest.v1.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 await fs.writeFile(path.join(outputRoot, "current.json"), `${JSON.stringify({
-  schema_version: "1.0.0",
+  schema_version: "2.0.0",
   release_id: releaseId,
   manifest: `releases/${releaseId}/manifest.v1.json`,
   routes: manifest.route_index,
@@ -180,8 +200,12 @@ function parseArgs(argv) {
     if (arg === "--output" && value) parsed.output = argv[++index];
     else if (arg === "--release-id" && value) parsed.releaseId = argv[++index];
     else if (arg === "--processed-structured-rows" && value) parsed.processedStructuredRows = positiveInteger(argv[++index], arg);
+    else if (arg === "--shards" && value) {
+      parsed.shardCount = positiveInteger(argv[++index], arg);
+      if (parsed.shardCount < 16 || parsed.shardCount > 1024) throw new Error("--shards must be between 16 and 1024");
+    }
     else if (arg === "--help") {
-      process.stdout.write("Usage: node scripts/prepare-public-serving-snapshots.mjs [--output DIR] [--release-id ID] [--processed-structured-rows N]\n");
+      process.stdout.write("Usage: node scripts/prepare-public-serving-snapshots.mjs [--output DIR] [--release-id ID] [--processed-structured-rows N] [--shards N]\n");
       process.exit(0);
     } else throw new Error(`Unknown or incomplete argument: ${arg}`);
   }
@@ -193,6 +217,18 @@ function positiveInteger(value, flag) {
   const number = Number(value);
   if (!Number.isSafeInteger(number) || number < 1) throw new Error(`${flag} must be a positive integer`);
   return number;
+}
+
+function shardFor(profileId, count) {
+  const number = crypto.createHash("sha256").update(profileId).digest().readUInt32BE(0) % count;
+  return number.toString(16).padStart(3, "0");
+}
+
+function sha256File(file) {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash("sha256");
+    createReadStream(file).on("data", (chunk) => hash.update(chunk)).on("error", reject).on("end", () => resolve(hash.digest("hex")));
+  });
 }
 
 async function assertFreshOutput(directory) {

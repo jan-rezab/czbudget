@@ -23,6 +23,9 @@ import sys
 import urllib.parse
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
+from raw_cache_archives import restore as restore_raw_cache
+
 WEB = Path(__file__).resolve().parent.parent
 WORKSPACE = WEB.parent
 CACHE = WORKSPACE / "data/source_cache/municipal-expansion"
@@ -57,6 +60,8 @@ def main() -> int:
     parser.add_argument("--report", action="store_true", help="report only (the default)")
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
+
+    restore_raw_cache(CACHE / "BRA")
 
     codes = entities_on_dca()
     if args.limit:

@@ -12,17 +12,19 @@
   };
   const copy = {
     cs: {
-      eyebrow:"Report / EU-27",titleLead:"Evropská migrace",titleEm:"2000–2024",intro:"Přistěhování, vystěhování a výsledné saldo všech 27 členských států v jedné srovnatelné časové řadě.",heroCta:"Otevřít migrační mapu ↓",dataset:"Nejnovější úplný součet EU",arrivals:"Přistěhování",departures:"Vystěhování",balance:"Saldo",coverage:"Pokrytí",heroNote:"Počet migračních událostí; předběžné a odhadované hodnoty zůstávají označené.",
-      navMap:"Mapa",navTrend:"Vývoj",navRanking:"Srovnání",navAtlas:"Atlas zemí",navMethod:"Metodika",arrivalLabel:"PŘISTĚHOVÁNÍ",arrivalDefinition:"Nové obvyklé bydliště alespoň na 12 měsíců.",departureLabel:"VYSTĚHOVÁNÍ",departureDefinition:"Ukončení obvyklého bydliště alespoň na 12 měsíců.",netLabel:"SALDO",netDefinition:"Přistěhování minus vystěhování; ne totéž co statisticky dopočtená čistá migrace.",
-      mapKicker:"Mapa EU-27",mapTitle:"Intenzita migrace podle zemí",mapIntro:"Mapa přepočítává migrační toky na 1 000 obyvatel, aby malé a velké státy šlo číst na stejné stupnici.",year:"Rok",metric:"Ukazatel",perThousand:"na 1 000 obyvatel",mapSource:"Zdroj: Eurostat migr_imm8, migr_emi2 a demo_gind.",trendKicker:"Vývoj v čase",trendTitle:"Přistěhování, vystěhování a saldo",trendIntro:"Stejné saldo může vzniknout z malých i velmi velkých protisměrných toků. Proto zobrazujeme obě strany vedle výsledku.",country:"Země",unit:"Jednotka",people:"Osoby",trendSource:"Roční migrační události. Mezery znamenají chybějící data, nikoli nulu.",
-      rankingKicker:"Srovnání zemí",rankingTitle:"Absolutní počty a přepočet na obyvatele",rankingIntro:"Přepínač odděluje absolutní počet lidí od intenzity vzhledem k velikosti populace.",rankingMeasure:"Zobrazení",atlasKicker:"Atlas EU-27",atlasTitle:"Všech 27 zemí ve zvoleném roce",atlasIntro:"Tabulka používá rok zvolený na mapě; chybějící nebo označené hodnoty nechává viditelné.",netRate:"Saldo / 1 000",quality:"Kvalita",methodKicker:"Jak data číst",methodTitle:"Co přesně čísla měří",methodIntro:"Jedna osoba může během delšího období vytvořit více migračních událostí. Čísla neříkají státní občanství, důvod přesunu ani právní status.",
+      eyebrow:"Report / 33 zemí",titleLead:"Evropská migrace",titleEm:"2000–2024",intro:"Přistěhování, vystěhování a výsledné saldo 33 evropských zemí v jedné srovnatelné časové řadě.",heroCta:"Otevřít migrační mapu ↓",dataset:"Nejnovější úplný součet EU-27",arrivals:"Přistěhování",departures:"Vystěhování",balance:"Saldo",coverage:"Pokrytí EU",heroNote:"Počet migračních událostí; předběžné a odhadované hodnoty zůstávají označené.",
+      navMap:"Mapa",navTrend:"Vývoj",navProtection:"Ochrana",navRanking:"Srovnání",navAtlas:"Atlas zemí",navMethod:"Metodika",arrivalLabel:"PŘISTĚHOVÁNÍ",arrivalDefinition:"Nové obvyklé bydliště alespoň na 12 měsíců.",departureLabel:"VYSTĚHOVÁNÍ",departureDefinition:"Ukončení obvyklého bydliště alespoň na 12 měsíců.",netLabel:"SALDO",netDefinition:"Přistěhování minus vystěhování; ne totéž co statisticky dopočtená čistá migrace.",
+      mapKicker:"Mapa Evropy / 33 zemí",mapTitle:"Intenzita migrace podle zemí",mapIntro:"Mapa přepočítává migrační toky na 1 000 obyvatel, aby malé a velké státy šlo číst na stejné stupnici.",year:"Rok",metric:"Ukazatel",perThousand:"na 1 000 obyvatel",mapSource:"Zdroj: Eurostat migr_imm8, migr_emi2 a demo_gind.",trendKicker:"Vývoj v čase",trendTitle:"Přistěhování, vystěhování a saldo",trendIntro:"Stejné saldo může vzniknout z malých i velmi velkých protisměrných toků. Proto zobrazujeme obě strany vedle výsledku.",country:"Země",unit:"Jednotka",people:"Osoby",trendSource:"Roční migrační události. Mezery znamenají chybějící data, nikoli nulu.",
+      protectionKicker:"Azyl a ochrana",protectionTitle:"Udělená ochrana podle právního statusu",protectionIntro:"Počet osob s kladným rozhodnutím v prvním stupni nebo po odvolání. Jde o rozhodnutí vydaná v daném roce, nikoli o počet lidí žijících v zemi se statusem ochrany.",protectionLatest:"Udělená ochrana · nejnovější rok",protectionTrend:"Vývoj kladných rozhodnutí",refugeeStatus:"Status uprchlíka",subsidiaryStatus:"Doplňková ochrana",humanitarianStatus:"Humanitární status",protectionShare:"z udělené ochrany",protectionSource:"Zdroj: Eurostat migr_asydcfsta a migr_asydcfina. První a konečná kladná rozhodnutí jsou sečtena; dočasná ochrana není zahrnuta.",openProtection:"Otevřít data ↗",openProtectionFinal:"Konečná rozhodnutí o ochraně ↗",
+      rankingKicker:"Srovnání zemí",rankingTitle:"Absolutní počty a přepočet na obyvatele",rankingIntro:"Přepínač odděluje absolutní počet lidí od intenzity vzhledem k velikosti populace.",rankingMeasure:"Zobrazení",atlasKicker:"Atlas Evropy",atlasTitle:"Všech 33 zemí ve zvoleném roce",atlasIntro:"Tabulka používá rok zvolený na mapě; chybějící nebo označené hodnoty nechává viditelné.",netRate:"Saldo / 1 000",quality:"Kvalita",methodKicker:"Jak data číst",methodTitle:"Co přesně čísla měří",methodIntro:"Jedna osoba může během delšího období vytvořit více migračních událostí. Migrační toky v první části neříkají státní občanství, důvod přesunu ani právní status; modul ochrany proto stojí samostatně.",
       methodFlowTitle:"Událost",methodFlow:"Roční počet přistěhování a vystěhování podle obvyklého bydliště a dvanáctiměsíčního pravidla.",methodAggregateTitle:"Součet EU",methodAggregate:"Pohyb mezi dvěma státy EU vstupuje do přistěhování jedné země a vystěhování druhé. Součet není počet překročení vnější hranice.",methodRateTitle:"Intenzita",methodRate:"Sazba dělí tok průměrnou roční populací z demo_gind a násobí jej 1 000.",methodQualityTitle:"Revize",methodQuality:"Eurostat označuje zlomy, odhady, předběžná čísla a hodnoty s metodickou poznámkou. Zdroj se může revidovat.",openImmigration:"Otevřít přistěhování v Eurostatu ↗",openEmigration:"Otevřít vystěhování v Eurostatu ↗",openMetadata:"Metodika Eurostatu ↗",footer:"European migration · Eurostat",eu27:"Evropská unie — 27 zemí",noData:"Pro tento rok není srovnatelná hodnota.",ofPopulation:"na 1 000 obyvatel",population:"Průměrná populace",status:"Označení Eurostatu",countriesAvailable:(n,total)=>`${n} z ${total} zemí má hodnotu pro vybraný rok.`,flag_b:"zlom řady",flag_e:"odhad",flag_i:"viz metodika",flag_p:"předběžné",selectedYear:"Vybraný rok",positive:"kladné saldo",negative:"záporné saldo",chartUnitPeople:"osob",chartUnitRate:"na 1 000 obyvatel",loadError:"Migrační data se nepodařilo načíst."
     },
     en: {
-      eyebrow:"Report / EU-27",titleLead:"European migration",titleEm:"2000–2024",intro:"Immigration, emigration and the resulting balance for all 27 Member States in one comparable time series.",heroCta:"Open the migration map ↓",dataset:"Latest complete EU total",arrivals:"Immigration",departures:"Emigration",balance:"Balance",coverage:"Coverage",heroNote:"Migration events; provisional and estimated values remain visibly flagged.",
-      navMap:"Map",navTrend:"Trend",navRanking:"Comparison",navAtlas:"Country atlas",navMethod:"Method",arrivalLabel:"IMMIGRATION",arrivalDefinition:"A new usual residence expected to last at least 12 months.",departureLabel:"EMIGRATION",departureDefinition:"Ending usual residence for at least 12 months.",netLabel:"BALANCE",netDefinition:"Immigration minus emigration; not the same as statistically adjusted net migration.",
-      mapKicker:"EU-27 map",mapTitle:"Migration intensity by country",mapIntro:"The map scales migration flows per 1,000 residents so small and large Member States can be read on the same footing.",year:"Year",metric:"Measure",perThousand:"per 1,000 residents",mapSource:"Source: Eurostat migr_imm8, migr_emi2 and demo_gind.",trendKicker:"Change over time",trendTitle:"Immigration, emigration and the balance",trendIntro:"The same balance can come from small or very large flows in opposite directions. Both sides therefore remain visible beside the result.",country:"Country",unit:"Unit",people:"People",trendSource:"Annual migration events. Gaps mean missing data, not zero.",
-      rankingKicker:"Country comparison",rankingTitle:"Absolute numbers and per-capita rates",rankingIntro:"The switch separates the absolute number of people from intensity relative to population size.",rankingMeasure:"View",atlasKicker:"EU-27 atlas",atlasTitle:"All 27 countries in the selected year",atlasIntro:"The table follows the year selected on the map and keeps missing or flagged values visible.",netRate:"Balance / 1,000",quality:"Quality",methodKicker:"How to read it",methodTitle:"What the numbers measure",methodIntro:"One person can generate more than one migration event over a longer period. These numbers do not describe citizenship, reason for moving or legal status.",
+      eyebrow:"Report / 33 countries",titleLead:"European migration",titleEm:"2000–2024",intro:"Immigration, emigration and the resulting balance across 33 European countries in one comparable time series.",heroCta:"Open the migration map ↓",dataset:"Latest complete EU-27 total",arrivals:"Immigration",departures:"Emigration",balance:"Balance",coverage:"EU coverage",heroNote:"Migration events; provisional and estimated values remain visibly flagged.",
+      navMap:"Map",navTrend:"Trend",navProtection:"Protection",navRanking:"Comparison",navAtlas:"Country atlas",navMethod:"Method",arrivalLabel:"IMMIGRATION",arrivalDefinition:"A new usual residence expected to last at least 12 months.",departureLabel:"EMIGRATION",departureDefinition:"Ending usual residence for at least 12 months.",netLabel:"BALANCE",netDefinition:"Immigration minus emigration; not the same as statistically adjusted net migration.",
+      mapKicker:"Europe map / 33 countries",mapTitle:"Migration intensity by country",mapIntro:"The map scales migration flows per 1,000 residents so countries of different sizes can be read on the same footing.",year:"Year",metric:"Measure",perThousand:"per 1,000 residents",mapSource:"Source: Eurostat migr_imm8, migr_emi2 and demo_gind.",trendKicker:"Change over time",trendTitle:"Immigration, emigration and the balance",trendIntro:"The same balance can come from small or very large flows in opposite directions. Both sides therefore remain visible beside the result.",country:"Country",unit:"Unit",people:"People",trendSource:"Annual migration events. Gaps mean missing data, not zero.",
+      protectionKicker:"Asylum and protection",protectionTitle:"Protection granted by legal status",protectionIntro:"People receiving a positive first-instance or final decision after appeal. These are decisions issued during the year, not the number of people currently living in the country with protection status.",protectionLatest:"Protection granted · latest year",protectionTrend:"Positive decisions over time",refugeeStatus:"Refugee status",subsidiaryStatus:"Subsidiary protection",humanitarianStatus:"Humanitarian status",protectionShare:"of protection granted",protectionSource:"Source: Eurostat migr_asydcfsta and migr_asydcfina. Positive first-instance and final decisions are combined; temporary protection is excluded.",openProtection:"Open data ↗",openProtectionFinal:"Final protection decisions ↗",
+      rankingKicker:"Country comparison",rankingTitle:"Absolute numbers and per-capita rates",rankingIntro:"The switch separates the absolute number of people from intensity relative to population size.",rankingMeasure:"View",atlasKicker:"European atlas",atlasTitle:"All 33 countries in the selected year",atlasIntro:"The table follows the year selected on the map and keeps missing or flagged values visible.",netRate:"Balance / 1,000",quality:"Quality",methodKicker:"How to read it",methodTitle:"What the numbers measure",methodIntro:"One person can generate more than one migration event over a longer period. The migration-flow figures in the first part do not describe citizenship, reason for moving or legal status, so the protection module is kept separate.",
       methodFlowTitle:"Event",methodFlow:"Annual immigration and emigration under the usual-residence and twelve-month definitions.",methodAggregateTitle:"EU total",methodAggregate:"A move between two EU states enters immigration in one country and emigration in the other. The total is not a count of external-border crossings.",methodRateTitle:"Intensity",methodRate:"The rate divides each flow by average annual population from demo_gind and multiplies by 1,000.",methodQualityTitle:"Revisions",methodQuality:"Eurostat flags breaks, estimates, provisional figures and values with methodological notes. Source data can be revised.",openImmigration:"Open immigration in Eurostat ↗",openEmigration:"Open emigration in Eurostat ↗",openMetadata:"Eurostat methodology ↗",footer:"European migration · Eurostat",eu27:"European Union — 27 countries",noData:"No comparable value is available for this year.",ofPopulation:"per 1,000 residents",population:"Average population",status:"Eurostat flag",countriesAvailable:(n,total)=>`${n} of ${total} countries have a value for the selected year.`,flag_b:"break in series",flag_e:"estimated",flag_i:"see metadata",flag_p:"provisional",selectedYear:"Selected year",positive:"positive balance",negative:"negative balance",chartUnitPeople:"people",chartUnitRate:"per 1,000 residents",loadError:"Migration data could not be loaded."
     }
   };
@@ -38,6 +40,7 @@
   const country = (code = state.country) => state.data.countries.find((item) => item.iso3 === code);
   const countryName = (item) => lang() === "en" ? item.name_en : item.name_cs;
   const rows = (code = state.country) => code === "EU27" ? state.data.eu27 : country(code)?.rows || [];
+  const protectionRows = (code = state.country) => code === "EU27" ? state.data.eu27_protection || [] : country(code)?.protection_rows || [];
   const rowAt = (code, year) => rows(code).find((row) => row.year === year);
   const selectedName = () => state.country === "EU27" ? t("eu27") : countryName(country());
 
@@ -47,7 +50,7 @@
       if (typeof value === "string") node.textContent = value;
     });
     document.title = lang() === "en" ? "European migration over time — Public Spending Data" : "Evropská migrace v čase — Public Spending Data";
-    document.querySelector('meta[name="description"]').content = lang() === "en" ? "Immigration, emigration and migration balance across all 27 EU countries from 2000 to 2024, based on Eurostat." : "Přistěhování, vystěhování a migrační saldo všech 27 zemí EU v letech 2000–2024 podle Eurostatu.";
+    document.querySelector('meta[name="description"]').content = lang() === "en" ? "Immigration, emigration and protection-status decisions across 33 European countries, based on Eurostat." : "Přistěhování, vystěhování a rozhodnutí o statusu ochrany ve 33 evropských zemích podle Eurostatu.";
   }
 
   function statusLabels(flags) {
@@ -151,6 +154,51 @@
     svg.querySelector(".migration-hit").addEventListener("pointermove", (event) => { const rect = svg.getBoundingClientRect(); const viewX = (event.clientX-rect.left)/rect.width*W; detail(minYear + (viewX-left)/(W-left-right)*(maxYear-minYear)); });
   }
 
+  function renderProtection() {
+    const dataRows = protectionRows();
+    const latest = [...dataRows].reverse().find((row) => Number.isFinite(row.total));
+    if (!latest) {
+      $("#protection-total").textContent = "—";
+      $("#protection-types").innerHTML = `<p class="migration-empty">${esc(t("noData"))}</p>`;
+      $("#migration-protection-chart").innerHTML = "";
+      return;
+    }
+    $("#protection-total").textContent = number(latest.total);
+    $("#protection-year").textContent = latest.year;
+    $("#protection-country-name").textContent = selectedName();
+    const types = [
+      { key:"refugee", label:t("refugeeStatus") },
+      { key:"subsidiary", label:t("subsidiaryStatus") },
+      { key:"humanitarian", label:t("humanitarianStatus") },
+    ];
+    $("#protection-types").innerHTML = types.map(({ key, label }) => {
+      const value = latest[key];
+      const share = Number.isFinite(value) && latest.total ? value / latest.total * 100 : null;
+      return `<article class="${key}"><span>${esc(label)}</span><strong>${number(value)}</strong><small>${share == null ? "—" : `${number(share,1)} % ${esc(t("protectionShare"))}`}</small></article>`;
+    }).join("");
+
+    const W = 1040, H = 390, left = 70, right = 20, top = 18, bottom = 48;
+    const max = Math.max(1, ...dataRows.map((row) => row.total || 0));
+    const plotHeight = H - top - bottom;
+    const slot = (W - left - right) / dataRows.length;
+    const barWidth = Math.min(34, slot * .68);
+    const y = (value) => top + (max - value) / max * plotHeight;
+    const grid = Array.from({ length:5 }, (_, index) => max * index / 4).map((tick) => `<line class="migration-grid-line" x1="${left}" x2="${W-right}" y1="${y(tick)}" y2="${y(tick)}"></line><text class="migration-axis-label" x="${left-10}" y="${y(tick)+4}" text-anchor="end">${esc(compact(tick))}</text>`).join("");
+    const bars = dataRows.map((row, index) => {
+      const x = left + slot * index + (slot - barWidth) / 2;
+      let bottomY = H - bottom;
+      const rects = types.map(({ key, label }) => {
+        const value = Number.isFinite(row[key]) ? row[key] : 0;
+        const height = value / max * plotHeight;
+        bottomY -= height;
+        return `<rect class="migration-protection-bar ${key}" x="${x}" y="${bottomY}" width="${barWidth}" height="${height}"><title>${row.year} · ${esc(label)}: ${number(value)}</title></rect>`;
+      }).join("");
+      const label = row.year === dataRows[0].year || row.year === dataRows.at(-1).year || row.year % 2 === 0 ? `<text class="migration-axis-label" x="${x+barWidth/2}" y="${H-18}" text-anchor="middle">${row.year}</text>` : "";
+      return `${rects}${label}`;
+    }).join("");
+    $("#migration-protection-chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`${selectedName()} — ${t("protectionTrend")}`)}">${grid}${bars}</svg>`;
+  }
+
   function rankingRows() {
     const key = metricKey(state.mapMetric, state.rankingUnit);
     return state.data.countries.map((item) => ({ item, value:rowAt(item.iso3,state.year)?.[key] })).filter((entry) => Number.isFinite(entry.value)).sort((a,b) => b.value-a.value);
@@ -175,10 +223,10 @@
     state.country = country(code) ? code : "EU27";
     $("#migration-country").value = state.country;
     updateUrl();
-    renderMap(); renderTrend(); renderRanking(); renderTable();
+    renderMap(); renderTrend(); renderProtection(); renderRanking(); renderTable();
   }
 
-  function renderAll() { translate(); renderHero(); renderMap(); renderTrend(); renderRanking(); renderTable(); }
+  function renderAll() { translate(); renderHero(); renderMap(); renderTrend(); renderProtection(); renderRanking(); renderTable(); }
 
   function bindControls() {
     const select = $("#migration-country");
@@ -193,6 +241,8 @@
     document.querySelectorAll("[data-ranking-unit]").forEach((button)=>button.addEventListener("click",()=>{state.rankingUnit=button.dataset.rankingUnit;document.querySelectorAll("[data-ranking-unit]").forEach((item)=>item.classList.toggle("active",item===button));renderRanking()}));
     $("#source-immigration").href=state.data.sources.immigration.browser_url;
     $("#source-emigration").href=state.data.sources.emigration.browser_url;
+    $("#source-protection-first").href=state.data.sources.protection_first_instance.browser_url;
+    $("#source-protection-final").href=state.data.sources.protection_final.browser_url;
     $("#source-metadata").href=state.data.sources.metadata_url;
   }
 

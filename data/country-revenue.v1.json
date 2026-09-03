@@ -1,9 +1,10 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-revenue.v1",
-  "generated_at": "2026-08-26T16:04:26+00:00",
+  "generated_at": "2026-09-01T21:30:25+00:00",
   "scope": {
     "tax_mix": "OECD tax revenue, general government, broad tax categories",
+    "tax_detail": "OECD tax revenue, general government, selected standard subcategories as shares of total tax revenue",
     "government_levels": "OECD tax revenue by receiving government subsector, normalised to 100",
     "environmental_taxes": "Eurostat environmental taxes as a share of taxes and actual social contributions",
     "municipal_transfers": "OECD intergovernmental transfer revenue as a share of local-government total revenue"
@@ -16,6 +17,15 @@
       "4000": "property",
       "5000": "consumption",
       "6000": "other"
+    },
+    "detail_categories": {
+      "personal_income": "1100",
+      "corporate_income": "1200",
+      "vat": "5111",
+      "excise": "5121",
+      "social_security": "2000",
+      "property": "4000",
+      "other": "remainder_to_100"
     },
     "economic_base_proxy": "Analytical grouping: personal income + social contributions + payroll as labour; corporate income + property as capital; goods and services as consumption. Personal income and property taxes are not pure economic-base measures.",
     "non_additivity": "Environmental taxes overlap OECD goods-and-services and property categories and are shown as a memorandum item, not an additional slice."
@@ -50,6 +60,15 @@
         "4000": 0.49,
         "5000": 30.86,
         "6000": 0.02
+      },
+      "tax_detail": {
+        "personal_income": 9.74,
+        "corporate_income": 13.34,
+        "vat": 22.49,
+        "excise": 6.22,
+        "social_security": 45.55,
+        "property": 0.49,
+        "other": 2.17
       },
       "government_levels": {
         "central": 53.31,
@@ -252,6 +271,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 11.84,
+            "corporate_income": 13.06,
+            "vat": 17.65,
+            "excise": 10.14,
+            "social_security": 43.57,
+            "property": 1.18,
+            "other": 2.56
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 10.57,
+            "corporate_income": 12.09,
+            "vat": 19.34,
+            "excise": 10.11,
+            "social_security": 44.24,
+            "property": 1.13,
+            "other": 2.52
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 10.72,
+            "corporate_income": 10.51,
+            "vat": 20.38,
+            "excise": 10.81,
+            "social_security": 43.95,
+            "property": 1.11,
+            "other": 2.52
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 10.23,
+            "corporate_income": 9.96,
+            "vat": 20.47,
+            "excise": 10.75,
+            "social_security": 44.76,
+            "property": 1.27,
+            "other": 2.56
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 10.64,
+            "corporate_income": 9.67,
+            "vat": 20.61,
+            "excise": 11.16,
+            "social_security": 43.9,
+            "property": 1.52,
+            "other": 2.5
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 10.59,
+            "corporate_income": 9.89,
+            "vat": 20.93,
+            "excise": 11.1,
+            "social_security": 43.65,
+            "property": 1.5,
+            "other": 2.34
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 10.73,
+            "corporate_income": 10.06,
+            "vat": 21.76,
+            "excise": 10.72,
+            "social_security": 43.18,
+            "property": 1.38,
+            "other": 2.17
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 10.77,
+            "corporate_income": 10.64,
+            "vat": 22.38,
+            "excise": 8.75,
+            "social_security": 43.81,
+            "property": 1.37,
+            "other": 2.28
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 10.75,
+            "corporate_income": 10.77,
+            "vat": 21.75,
+            "excise": 10.03,
+            "social_security": 43.05,
+            "property": 1.43,
+            "other": 2.22
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 11.22,
+            "corporate_income": 10.95,
+            "vat": 21.68,
+            "excise": 9.7,
+            "social_security": 42.86,
+            "property": 1.43,
+            "other": 2.16
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 11.49,
+            "corporate_income": 10.7,
+            "vat": 22.02,
+            "excise": 9.32,
+            "social_security": 43.02,
+            "property": 1.36,
+            "other": 2.09
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 12.21,
+            "corporate_income": 10.36,
+            "vat": 21.59,
+            "excise": 8.74,
+            "social_security": 43.84,
+            "property": 1.3,
+            "other": 1.96
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 12.69,
+            "corporate_income": 10.08,
+            "vat": 21.62,
+            "excise": 8.35,
+            "social_security": 44.15,
+            "property": 1.2,
+            "other": 1.91
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 13.52,
+            "corporate_income": 9.4,
+            "vat": 21.29,
+            "excise": 7.93,
+            "social_security": 45.44,
+            "property": 0.59,
+            "other": 1.83
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 9.36,
+            "corporate_income": 11.42,
+            "vat": 21.84,
+            "excise": 7.61,
+            "social_security": 47.33,
+            "property": 0.56,
+            "other": 1.88
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 9.15,
+            "corporate_income": 12.88,
+            "vat": 22.95,
+            "excise": 6.78,
+            "social_security": 45.91,
+            "property": 0.53,
+            "other": 1.8
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 9.74,
+            "corporate_income": 13.34,
+            "vat": 22.49,
+            "excise": 6.22,
+            "social_security": 45.55,
+            "property": 0.49,
+            "other": 2.17
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 77.88
@@ -270,6 +495,15 @@
         "4000": 2.45,
         "5000": 26.7,
         "6000": 0.03
+      },
+      "tax_detail": {
+        "personal_income": 26.41,
+        "corporate_income": 6.01,
+        "vat": 18.54,
+        "excise": 4.17,
+        "social_security": 38.4,
+        "property": 2.45,
+        "other": 4.02
       },
       "government_levels": {
         "central": 28.61,
@@ -472,6 +706,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 24.53,
+            "corporate_income": 6.14,
+            "vat": 19.1,
+            "excise": 8.07,
+            "social_security": 35.95,
+            "property": 2.45,
+            "other": 3.76
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 26.11,
+            "corporate_income": 5.27,
+            "vat": 19.12,
+            "excise": 7.91,
+            "social_security": 35.65,
+            "property": 2.31,
+            "other": 3.63
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 24.67,
+            "corporate_income": 3.58,
+            "vat": 19.61,
+            "excise": 8.22,
+            "social_security": 37.96,
+            "property": 2.24,
+            "other": 3.72
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 23.85,
+            "corporate_income": 4.18,
+            "vat": 19.63,
+            "excise": 7.85,
+            "social_security": 38.52,
+            "property": 2.28,
+            "other": 3.69
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 24.21,
+            "corporate_income": 4.62,
+            "vat": 19.3,
+            "excise": 8.11,
+            "social_security": 37.7,
+            "property": 2.34,
+            "other": 3.72
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 25.22,
+            "corporate_income": 4.61,
+            "vat": 18.96,
+            "excise": 7.73,
+            "social_security": 37.38,
+            "property": 2.4,
+            "other": 3.7
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 25.51,
+            "corporate_income": 4.7,
+            "vat": 18.63,
+            "excise": 8.03,
+            "social_security": 37.05,
+            "property": 2.46,
+            "other": 3.62
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 25.65,
+            "corporate_income": 4.6,
+            "vat": 18.47,
+            "excise": 8.05,
+            "social_security": 37.02,
+            "property": 2.56,
+            "other": 3.65
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 26.0,
+            "corporate_income": 4.52,
+            "vat": 18.4,
+            "excise": 7.65,
+            "social_security": 36.89,
+            "property": 2.82,
+            "other": 3.72
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 26.07,
+            "corporate_income": 5.13,
+            "vat": 18.15,
+            "excise": 7.36,
+            "social_security": 36.89,
+            "property": 2.82,
+            "other": 3.58
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 26.6,
+            "corporate_income": 5.25,
+            "vat": 18.03,
+            "excise": 7.35,
+            "social_security": 37.11,
+            "property": 2.72,
+            "other": 2.94
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 26.67,
+            "corporate_income": 5.46,
+            "vat": 17.85,
+            "excise": 6.92,
+            "social_security": 36.97,
+            "property": 2.75,
+            "other": 3.38
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 26.97,
+            "corporate_income": 5.02,
+            "vat": 17.89,
+            "excise": 6.66,
+            "social_security": 37.19,
+            "property": 2.83,
+            "other": 3.44
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 26.52,
+            "corporate_income": 4.17,
+            "vat": 16.87,
+            "excise": 6.73,
+            "social_security": 38.94,
+            "property": 3.22,
+            "other": 3.55
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 26.39,
+            "corporate_income": 5.75,
+            "vat": 18.13,
+            "excise": 6.11,
+            "social_security": 37.16,
+            "property": 3.11,
+            "other": 3.35
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 26.97,
+            "corporate_income": 5.99,
+            "vat": 18.97,
+            "excise": 4.4,
+            "social_security": 36.77,
+            "property": 2.8,
+            "other": 4.1
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 26.41,
+            "corporate_income": 6.01,
+            "vat": 18.54,
+            "excise": 4.17,
+            "social_security": 38.4,
+            "property": 2.45,
+            "other": 4.02
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 41.55
@@ -490,6 +930,15 @@
         "4000": 3.9,
         "5000": 28.21,
         "6000": 0.48
+      },
+      "tax_detail": {
+        "personal_income": 57.2,
+        "corporate_income": 8.38,
+        "vat": 20.78,
+        "excise": 4.64,
+        "social_security": 0.17,
+        "property": 3.9,
+        "other": 4.93
       },
       "government_levels": {
         "central": 72.9,
@@ -692,6 +1141,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 52.51,
+            "corporate_income": 7.15,
+            "vat": 21.38,
+            "excise": 10.22,
+            "social_security": 0.25,
+            "property": 3.89,
+            "other": 4.6
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 53.91,
+            "corporate_income": 5.9,
+            "vat": 21.26,
+            "excise": 9.26,
+            "social_security": 0.21,
+            "property": 4.24,
+            "other": 5.22
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 55.86,
+            "corporate_income": 4.38,
+            "vat": 21.38,
+            "excise": 8.89,
+            "social_security": 0.2,
+            "property": 4.07,
+            "other": 5.22
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 51.96,
+            "corporate_income": 5.24,
+            "vat": 20.81,
+            "excise": 9.06,
+            "social_security": 0.28,
+            "property": 4.13,
+            "other": 8.52
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 51.69,
+            "corporate_income": 5.04,
+            "vat": 20.93,
+            "excise": 9.16,
+            "social_security": 0.3,
+            "property": 4.21,
+            "other": 8.67
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 51.01,
+            "corporate_income": 5.96,
+            "vat": 20.73,
+            "excise": 9.08,
+            "social_security": 0.27,
+            "property": 3.9,
+            "other": 9.05
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 54.28,
+            "corporate_income": 6.26,
+            "vat": 19.59,
+            "excise": 9.19,
+            "social_security": 0.24,
+            "property": 3.93,
+            "other": 6.51
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 53.89,
+            "corporate_income": 5.88,
+            "vat": 18.47,
+            "excise": 8.29,
+            "social_security": 0.2,
+            "property": 3.76,
+            "other": 9.51
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 54.4,
+            "corporate_income": 6.55,
+            "vat": 19.4,
+            "excise": 8.67,
+            "social_security": 0.2,
+            "property": 4.17,
+            "other": 6.61
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 52.71,
+            "corporate_income": 6.62,
+            "vat": 20.28,
+            "excise": 8.64,
+            "social_security": 0.18,
+            "property": 4.02,
+            "other": 7.55
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 53.07,
+            "corporate_income": 7.22,
+            "vat": 20.35,
+            "excise": 8.17,
+            "social_security": 0.16,
+            "property": 3.94,
+            "other": 7.09
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 54.42,
+            "corporate_income": 6.25,
+            "vat": 21.62,
+            "excise": 8.13,
+            "social_security": 0.17,
+            "property": 4.13,
+            "other": 5.28
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 52.23,
+            "corporate_income": 6.7,
+            "vat": 19.98,
+            "excise": 7.07,
+            "social_security": 0.16,
+            "property": 4.27,
+            "other": 9.59
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 54.06,
+            "corporate_income": 6.16,
+            "vat": 20.71,
+            "excise": 6.92,
+            "social_security": 0.2,
+            "property": 4.15,
+            "other": 7.8
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 52.78,
+            "corporate_income": 8.43,
+            "vat": 20.04,
+            "excise": 6.09,
+            "social_security": 0.21,
+            "property": 3.88,
+            "other": 8.57
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 55.52,
+            "corporate_income": 8.07,
+            "vat": 22.04,
+            "excise": 5.61,
+            "social_security": 0.2,
+            "property": 4.07,
+            "other": 4.49
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 57.2,
+            "corporate_income": 8.38,
+            "vat": 20.78,
+            "excise": 4.64,
+            "social_security": 0.17,
+            "property": 3.9,
+            "other": 4.93
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 55.94
@@ -710,6 +1365,15 @@
         "4000": 3.29,
         "5000": 31.09,
         "6000": 0.07
+      },
+      "tax_detail": {
+        "personal_income": 29.82,
+        "corporate_income": 6.67,
+        "vat": 21.5,
+        "excise": 6.4,
+        "social_security": 29.07,
+        "property": 3.29,
+        "other": 3.25
       },
       "government_levels": {
         "central": 59.59,
@@ -912,6 +1576,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 30.21,
+            "corporate_income": 8.99,
+            "vat": 19.64,
+            "excise": 7.76,
+            "social_security": 27.61,
+            "property": 2.6,
+            "other": 3.19
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 30.81,
+            "corporate_income": 8.11,
+            "vat": 19.62,
+            "excise": 7.7,
+            "social_security": 27.98,
+            "property": 2.57,
+            "other": 3.21
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 31.05,
+            "corporate_income": 4.72,
+            "vat": 20.48,
+            "excise": 7.95,
+            "social_security": 29.76,
+            "property": 2.57,
+            "other": 3.47
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 29.54,
+            "corporate_income": 5.97,
+            "vat": 20.35,
+            "excise": 8.24,
+            "social_security": 29.68,
+            "property": 2.73,
+            "other": 3.49
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 29.22,
+            "corporate_income": 6.23,
+            "vat": 20.92,
+            "excise": 8.84,
+            "social_security": 28.73,
+            "property": 2.58,
+            "other": 3.48
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 29.31,
+            "corporate_income": 4.94,
+            "vat": 21.09,
+            "excise": 8.81,
+            "social_security": 29.63,
+            "property": 2.77,
+            "other": 3.45
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 29.31,
+            "corporate_income": 5.41,
+            "vat": 21.3,
+            "excise": 8.47,
+            "social_security": 28.9,
+            "property": 2.93,
+            "other": 3.68
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 30.57,
+            "corporate_income": 4.39,
+            "vat": 21.05,
+            "excise": 8.25,
+            "social_security": 28.89,
+            "property": 3.02,
+            "other": 3.83
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 30.24,
+            "corporate_income": 4.94,
+            "vat": 20.62,
+            "excise": 8.35,
+            "social_security": 28.95,
+            "property": 3.28,
+            "other": 3.62
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 29.58,
+            "corporate_income": 5.04,
+            "vat": 20.71,
+            "excise": 8.62,
+            "social_security": 29.05,
+            "property": 3.22,
+            "other": 3.78
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 29.16,
+            "corporate_income": 6.32,
+            "vat": 21.04,
+            "excise": 8.25,
+            "social_security": 27.84,
+            "property": 3.57,
+            "other": 3.82
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 28.87,
+            "corporate_income": 6.0,
+            "vat": 21.59,
+            "excise": 8.41,
+            "social_security": 27.94,
+            "property": 3.38,
+            "other": 3.81
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 28.98,
+            "corporate_income": 5.98,
+            "vat": 21.66,
+            "excise": 8.0,
+            "social_security": 27.89,
+            "property": 3.43,
+            "other": 4.06
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 29.99,
+            "corporate_income": 5.11,
+            "vat": 22.09,
+            "excise": 8.04,
+            "social_security": 27.43,
+            "property": 3.58,
+            "other": 3.76
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 29.79,
+            "corporate_income": 6.32,
+            "vat": 21.74,
+            "excise": 7.23,
+            "social_security": 27.87,
+            "property": 3.5,
+            "other": 3.55
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 29.94,
+            "corporate_income": 6.97,
+            "vat": 21.68,
+            "excise": 6.83,
+            "social_security": 27.65,
+            "property": 3.34,
+            "other": 3.59
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 29.82,
+            "corporate_income": 6.67,
+            "vat": 21.5,
+            "excise": 6.4,
+            "social_security": 29.07,
+            "property": 3.29,
+            "other": 3.25
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 55.53
@@ -930,6 +1800,15 @@
         "4000": 7.88,
         "5000": 25.75,
         "6000": 1.97
+      },
+      "tax_detail": {
+        "personal_income": 21.45,
+        "corporate_income": 5.35,
+        "vat": 16.59,
+        "excise": 4.53,
+        "social_security": 33.17,
+        "property": 7.88,
+        "other": 11.03
       },
       "government_levels": {
         "central": 30.03,
@@ -1132,6 +2011,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 17.72,
+            "corporate_income": 6.48,
+            "vat": 16.37,
+            "excise": 5.33,
+            "social_security": 36.52,
+            "property": 7.86,
+            "other": 9.72
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 18.3,
+            "corporate_income": 6.25,
+            "vat": 16.15,
+            "excise": 5.24,
+            "social_security": 36.66,
+            "property": 7.62,
+            "other": 9.78
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 18.15,
+            "corporate_income": 3.45,
+            "vat": 15.93,
+            "excise": 5.5,
+            "social_security": 38.47,
+            "property": 7.92,
+            "other": 10.58
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 17.89,
+            "corporate_income": 4.8,
+            "vat": 16.02,
+            "excise": 5.45,
+            "social_security": 37.93,
+            "property": 8.4,
+            "other": 9.51
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 18.0,
+            "corporate_income": 5.19,
+            "vat": 15.68,
+            "excise": 5.45,
+            "social_security": 37.23,
+            "property": 8.43,
+            "other": 10.02
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 18.96,
+            "corporate_income": 4.95,
+            "vat": 15.29,
+            "excise": 5.4,
+            "social_security": 36.84,
+            "property": 8.53,
+            "other": 10.03
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 19.18,
+            "corporate_income": 5.11,
+            "vat": 14.97,
+            "excise": 5.47,
+            "social_security": 36.71,
+            "property": 8.5,
+            "other": 10.06
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 19.12,
+            "corporate_income": 4.48,
+            "vat": 15.13,
+            "excise": 5.48,
+            "social_security": 37.03,
+            "property": 8.62,
+            "other": 10.14
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 19.1,
+            "corporate_income": 4.28,
+            "vat": 15.14,
+            "excise": 5.73,
+            "social_security": 36.66,
+            "property": 8.99,
+            "other": 10.1
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 18.99,
+            "corporate_income": 4.04,
+            "vat": 15.2,
+            "excise": 5.88,
+            "social_security": 36.61,
+            "property": 9.13,
+            "other": 10.15
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 18.66,
+            "corporate_income": 4.73,
+            "vat": 15.24,
+            "excise": 5.89,
+            "social_security": 36.19,
+            "property": 9.27,
+            "other": 10.02
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 20.65,
+            "corporate_income": 4.15,
+            "vat": 15.43,
+            "excise": 6.04,
+            "social_security": 34.76,
+            "property": 8.77,
+            "other": 10.2
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 20.78,
+            "corporate_income": 4.57,
+            "vat": 15.89,
+            "excise": 5.98,
+            "social_security": 32.86,
+            "property": 8.74,
+            "other": 11.18
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 20.91,
+            "corporate_income": 5.02,
+            "vat": 15.37,
+            "excise": 5.81,
+            "social_security": 32.48,
+            "property": 8.84,
+            "other": 11.57
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 20.73,
+            "corporate_income": 5.33,
+            "vat": 16.34,
+            "excise": 5.81,
+            "social_security": 32.66,
+            "property": 8.63,
+            "other": 10.5
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 21.14,
+            "corporate_income": 6.21,
+            "vat": 16.34,
+            "excise": 4.91,
+            "social_security": 32.34,
+            "property": 8.1,
+            "other": 10.96
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 21.45,
+            "corporate_income": 5.35,
+            "vat": 16.59,
+            "excise": 4.53,
+            "social_security": 33.17,
+            "property": 7.88,
+            "other": 11.03
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 20.62
@@ -1150,6 +2235,15 @@
         "4000": 10.51,
         "5000": 30.18,
         "6000": 0.0
+      },
+      "tax_detail": {
+        "personal_income": 30.16,
+        "corporate_income": 9.66,
+        "vat": 20.56,
+        "excise": 4.92,
+        "social_security": 19.09,
+        "property": 10.51,
+        "other": 5.1
       },
       "government_levels": {
         "central": 76.11,
@@ -1352,6 +2446,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 29.68,
+            "corporate_income": 9.85,
+            "vat": 18.34,
+            "excise": 7.94,
+            "social_security": 18.3,
+            "property": 12.45,
+            "other": 3.44
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 30.16,
+            "corporate_income": 8.95,
+            "vat": 18.24,
+            "excise": 8.14,
+            "social_security": 19.19,
+            "property": 11.73,
+            "other": 3.59
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 30.3,
+            "corporate_income": 8.07,
+            "vat": 16.85,
+            "excise": 9.12,
+            "social_security": 19.62,
+            "property": 12.14,
+            "other": 3.9
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 28.52,
+            "corporate_income": 8.88,
+            "vat": 18.94,
+            "excise": 8.82,
+            "social_security": 18.89,
+            "property": 11.98,
+            "other": 3.97
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 27.99,
+            "corporate_income": 8.28,
+            "vat": 20.77,
+            "excise": 8.45,
+            "social_security": 18.57,
+            "property": 11.6,
+            "other": 4.34
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 27.38,
+            "corporate_income": 7.85,
+            "vat": 21.15,
+            "excise": 8.5,
+            "social_security": 18.94,
+            "property": 11.86,
+            "other": 4.32
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 27.6,
+            "corporate_income": 7.57,
+            "vat": 21.29,
+            "excise": 8.17,
+            "social_security": 18.6,
+            "property": 12.27,
+            "other": 4.5
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 27.11,
+            "corporate_income": 7.62,
+            "vat": 21.61,
+            "excise": 7.98,
+            "social_security": 18.48,
+            "property": 12.63,
+            "other": 4.57
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 27.61,
+            "corporate_income": 7.16,
+            "vat": 21.72,
+            "excise": 7.73,
+            "social_security": 18.66,
+            "property": 12.49,
+            "other": 4.63
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 27.24,
+            "corporate_income": 7.98,
+            "vat": 21.22,
+            "excise": 7.42,
+            "social_security": 18.86,
+            "property": 12.56,
+            "other": 4.72
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 27.27,
+            "corporate_income": 8.01,
+            "vat": 21.02,
+            "excise": 7.14,
+            "social_security": 19.13,
+            "property": 12.54,
+            "other": 4.89
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 27.34,
+            "corporate_income": 7.8,
+            "vat": 21.17,
+            "excise": 6.97,
+            "social_security": 19.2,
+            "property": 12.5,
+            "other": 5.02
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 27.32,
+            "corporate_income": 7.15,
+            "vat": 21.36,
+            "excise": 6.79,
+            "social_security": 19.82,
+            "property": 12.41,
+            "other": 5.15
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 28.69,
+            "corporate_income": 7.26,
+            "vat": 20.26,
+            "excise": 6.5,
+            "social_security": 20.79,
+            "property": 11.59,
+            "other": 4.91
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 29.13,
+            "corporate_income": 8.6,
+            "vat": 20.21,
+            "excise": 6.18,
+            "social_security": 19.97,
+            "property": 11.46,
+            "other": 4.45
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 28.65,
+            "corporate_income": 9.11,
+            "vat": 20.5,
+            "excise": 5.38,
+            "social_security": 20.09,
+            "property": 11.34,
+            "other": 4.93
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 30.16,
+            "corporate_income": 9.66,
+            "vat": 20.56,
+            "excise": 4.92,
+            "social_security": 19.09,
+            "property": 10.51,
+            "other": 5.1
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 62.16
@@ -1367,6 +2667,15 @@
         "4000": 3.29,
         "5000": 36.97,
         "6000": 0.14
+      },
+      "tax_detail": {
+        "personal_income": 12.65,
+        "corporate_income": 7.49,
+        "vat": 20.93,
+        "excise": 8.9,
+        "social_security": 37.83,
+        "property": 3.29,
+        "other": 8.91
       },
       "government_levels": {
         "central": 51.61,
@@ -1569,6 +2878,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 14.95,
+            "corporate_income": 7.86,
+            "vat": 23.79,
+            "excise": 12.01,
+            "social_security": 34.06,
+            "property": 4.16,
+            "other": 3.17
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 15.44,
+            "corporate_income": 7.83,
+            "vat": 23.12,
+            "excise": 13.28,
+            "social_security": 32.71,
+            "property": 4.16,
+            "other": 3.46
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 14.44,
+            "corporate_income": 7.14,
+            "vat": 23.13,
+            "excise": 12.3,
+            "social_security": 35.33,
+            "property": 4.28,
+            "other": 3.38
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 13.88,
+            "corporate_income": 6.21,
+            "vat": 24.21,
+            "excise": 13.68,
+            "social_security": 34.42,
+            "property": 4.21,
+            "other": 3.39
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 13.62,
+            "corporate_income": 6.35,
+            "vat": 24.62,
+            "excise": 13.06,
+            "social_security": 34.97,
+            "property": 4.03,
+            "other": 3.35
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 13.91,
+            "corporate_income": 6.48,
+            "vat": 22.27,
+            "excise": 12.66,
+            "social_security": 37.29,
+            "property": 4.16,
+            "other": 3.23
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 14.05,
+            "corporate_income": 5.56,
+            "vat": 22.08,
+            "excise": 12.56,
+            "social_security": 38.36,
+            "property": 4.38,
+            "other": 3.01
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 14.34,
+            "corporate_income": 5.47,
+            "vat": 22.35,
+            "excise": 12.23,
+            "social_security": 37.91,
+            "property": 4.37,
+            "other": 3.33
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 14.38,
+            "corporate_income": 5.67,
+            "vat": 21.56,
+            "excise": 12.09,
+            "social_security": 38.27,
+            "property": 4.22,
+            "other": 3.81
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 14.48,
+            "corporate_income": 5.5,
+            "vat": 21.65,
+            "excise": 12.16,
+            "social_security": 37.99,
+            "property": 4.12,
+            "other": 4.1
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 14.6,
+            "corporate_income": 5.65,
+            "vat": 22.79,
+            "excise": 11.63,
+            "social_security": 37.55,
+            "property": 3.99,
+            "other": 3.79
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 15.11,
+            "corporate_income": 5.95,
+            "vat": 23.1,
+            "excise": 11.02,
+            "social_security": 37.24,
+            "property": 3.74,
+            "other": 3.84
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 15.15,
+            "corporate_income": 6.29,
+            "vat": 22.63,
+            "excise": 10.41,
+            "social_security": 37.56,
+            "property": 3.6,
+            "other": 4.36
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 14.79,
+            "corporate_income": 6.36,
+            "vat": 22.37,
+            "excise": 9.77,
+            "social_security": 37.95,
+            "property": 3.64,
+            "other": 5.12
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 14.56,
+            "corporate_income": 7.1,
+            "vat": 23.3,
+            "excise": 10.13,
+            "social_security": 35.31,
+            "property": 3.48,
+            "other": 6.12
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 13.08,
+            "corporate_income": 8.11,
+            "vat": 21.13,
+            "excise": 9.66,
+            "social_security": 37.13,
+            "property": 3.39,
+            "other": 7.5
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 12.65,
+            "corporate_income": 7.49,
+            "vat": 20.93,
+            "excise": 8.9,
+            "social_security": 37.83,
+            "property": 3.29,
+            "other": 8.91
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 53.77
@@ -1587,6 +3102,15 @@
         "4000": 1.98,
         "5000": 28.39,
         "6000": 0.08
+      },
+      "tax_detail": {
+        "personal_income": 26.91,
+        "corporate_income": 8.54,
+        "vat": 21.56,
+        "excise": 5.04,
+        "social_security": 21.47,
+        "property": 1.98,
+        "other": 14.5
       },
       "government_levels": {
         "central": 51.8,
@@ -1789,6 +3313,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 31.15,
+            "corporate_income": 7.77,
+            "vat": 18.95,
+            "excise": 5.69,
+            "social_security": 26.05,
+            "property": 2.43,
+            "other": 7.96
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 30.0,
+            "corporate_income": 6.37,
+            "vat": 19.83,
+            "excise": 5.75,
+            "social_security": 24.84,
+            "property": 2.31,
+            "other": 10.9
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 29.03,
+            "corporate_income": 6.37,
+            "vat": 20.51,
+            "excise": 6.12,
+            "social_security": 24.47,
+            "property": 2.35,
+            "other": 11.15
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 28.12,
+            "corporate_income": 7.56,
+            "vat": 21.05,
+            "excise": 5.97,
+            "social_security": 25.1,
+            "property": 2.38,
+            "other": 9.82
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 27.81,
+            "corporate_income": 7.23,
+            "vat": 21.15,
+            "excise": 5.73,
+            "social_security": 23.14,
+            "property": 2.34,
+            "other": 12.6
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 28.35,
+            "corporate_income": 6.01,
+            "vat": 20.88,
+            "excise": 5.72,
+            "social_security": 23.82,
+            "property": 2.38,
+            "other": 12.84
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 28.7,
+            "corporate_income": 6.15,
+            "vat": 20.79,
+            "excise": 5.43,
+            "social_security": 23.19,
+            "property": 2.53,
+            "other": 13.21
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 28.92,
+            "corporate_income": 6.3,
+            "vat": 20.99,
+            "excise": 5.17,
+            "social_security": 23.08,
+            "property": 2.49,
+            "other": 13.05
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 29.38,
+            "corporate_income": 6.82,
+            "vat": 20.87,
+            "excise": 5.04,
+            "social_security": 22.29,
+            "property": 2.41,
+            "other": 13.19
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 30.06,
+            "corporate_income": 6.19,
+            "vat": 20.81,
+            "excise": 4.91,
+            "social_security": 22.54,
+            "property": 2.38,
+            "other": 13.11
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 30.22,
+            "corporate_income": 6.31,
+            "vat": 20.84,
+            "excise": 4.81,
+            "social_security": 21.73,
+            "property": 2.23,
+            "other": 13.86
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 29.5,
+            "corporate_income": 6.5,
+            "vat": 21.07,
+            "excise": 4.83,
+            "social_security": 21.92,
+            "property": 2.17,
+            "other": 14.01
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 28.67,
+            "corporate_income": 7.03,
+            "vat": 21.25,
+            "excise": 4.83,
+            "social_security": 21.4,
+            "property": 2.19,
+            "other": 14.63
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 29.0,
+            "corporate_income": 6.95,
+            "vat": 21.57,
+            "excise": 4.91,
+            "social_security": 21.3,
+            "property": 2.24,
+            "other": 14.03
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 28.94,
+            "corporate_income": 7.8,
+            "vat": 21.37,
+            "excise": 4.65,
+            "social_security": 20.96,
+            "property": 2.23,
+            "other": 14.05
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 27.96,
+            "corporate_income": 8.05,
+            "vat": 22.15,
+            "excise": 4.76,
+            "social_security": 20.79,
+            "property": 2.21,
+            "other": 14.08
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 26.91,
+            "corporate_income": 8.54,
+            "vat": 21.56,
+            "excise": 5.04,
+            "social_security": 21.47,
+            "property": 1.98,
+            "other": 14.5
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 38.05
@@ -1807,6 +3537,15 @@
         "4000": 7.65,
         "5000": 19.4,
         "6000": 0.49
+      },
+      "tax_detail": {
+        "personal_income": 31.22,
+        "corporate_income": 12.69,
+        "vat": 11.58,
+        "excise": 3.7,
+        "social_security": 24.75,
+        "property": 7.65,
+        "other": 8.41
       },
       "government_levels": {
         "central": 33.47,
@@ -2009,6 +3748,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 31.57,
+            "corporate_income": 10.66,
+            "vat": 12.9,
+            "excise": 5.19,
+            "social_security": 23.17,
+            "property": 8.12,
+            "other": 8.39
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 30.84,
+            "corporate_income": 11.03,
+            "vat": 12.73,
+            "excise": 4.99,
+            "social_security": 23.11,
+            "property": 7.68,
+            "other": 9.62
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 31.9,
+            "corporate_income": 10.41,
+            "vat": 12.4,
+            "excise": 5.01,
+            "social_security": 24.06,
+            "property": 7.73,
+            "other": 8.49
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 31.75,
+            "corporate_income": 10.08,
+            "vat": 12.72,
+            "excise": 5.14,
+            "social_security": 23.74,
+            "property": 7.68,
+            "other": 8.89
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 31.1,
+            "corporate_income": 10.42,
+            "vat": 12.88,
+            "excise": 4.82,
+            "social_security": 24.58,
+            "property": 7.36,
+            "other": 8.84
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 31.43,
+            "corporate_income": 10.32,
+            "vat": 12.97,
+            "excise": 4.9,
+            "social_security": 24.89,
+            "property": 6.88,
+            "other": 8.61
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 30.97,
+            "corporate_income": 10.3,
+            "vat": 13.0,
+            "excise": 4.71,
+            "social_security": 24.86,
+            "property": 7.0,
+            "other": 9.16
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 30.87,
+            "corporate_income": 10.33,
+            "vat": 12.83,
+            "excise": 4.64,
+            "social_security": 24.89,
+            "property": 7.2,
+            "other": 9.24
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 30.99,
+            "corporate_income": 10.73,
+            "vat": 12.34,
+            "excise": 4.47,
+            "social_security": 24.51,
+            "property": 7.29,
+            "other": 9.67
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 30.96,
+            "corporate_income": 11.33,
+            "vat": 12.14,
+            "excise": 4.43,
+            "social_security": 24.44,
+            "property": 7.41,
+            "other": 9.29
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 30.23,
+            "corporate_income": 10.76,
+            "vat": 12.02,
+            "excise": 4.27,
+            "social_security": 23.78,
+            "property": 7.55,
+            "other": 11.39
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 30.7,
+            "corporate_income": 11.36,
+            "vat": 11.66,
+            "excise": 4.38,
+            "social_security": 23.82,
+            "property": 7.51,
+            "other": 10.57
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 30.66,
+            "corporate_income": 11.19,
+            "vat": 11.26,
+            "excise": 4.21,
+            "social_security": 23.74,
+            "property": 7.67,
+            "other": 11.27
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 32.09,
+            "corporate_income": 11.0,
+            "vat": 11.34,
+            "excise": 4.14,
+            "social_security": 25.16,
+            "property": 8.09,
+            "other": 8.18
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 30.35,
+            "corporate_income": 10.93,
+            "vat": 11.26,
+            "excise": 4.06,
+            "social_security": 24.23,
+            "property": 7.99,
+            "other": 11.18
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 31.28,
+            "corporate_income": 11.77,
+            "vat": 11.61,
+            "excise": 3.9,
+            "social_security": 24.76,
+            "property": 7.97,
+            "other": 8.71
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 31.22,
+            "corporate_income": 12.69,
+            "vat": 11.58,
+            "excise": 3.7,
+            "social_security": 24.75,
+            "property": 7.65,
+            "other": 8.41
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2023,
         "local_revenue_from_transfers_pct": 11.01
@@ -2027,6 +3972,15 @@
         "4000": 1.97,
         "5000": 39.44,
         "6000": 0.0
+      },
+      "tax_detail": {
+        "personal_income": 22.41,
+        "corporate_income": 7.19,
+        "vat": 26.23,
+        "excise": 8.57,
+        "social_security": 28.98,
+        "property": 1.97,
+        "other": 4.65
       },
       "government_levels": {
         "central": 51.62,
@@ -2174,6 +4128,152 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 13.07,
+            "corporate_income": 10.71,
+            "vat": 26.65,
+            "excise": 7.38,
+            "social_security": 34.32,
+            "property": 0.03,
+            "other": 7.84
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 14.08,
+            "corporate_income": 10.73,
+            "vat": 25.03,
+            "excise": 7.15,
+            "social_security": 36.79,
+            "property": 0.03,
+            "other": 6.19
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 14.64,
+            "corporate_income": 7.83,
+            "vat": 27.06,
+            "excise": 8.78,
+            "social_security": 35.26,
+            "property": 0.03,
+            "other": 6.4
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 15.12,
+            "corporate_income": 5.9,
+            "vat": 26.98,
+            "excise": 10.7,
+            "social_security": 28.07,
+            "property": 2.36,
+            "other": 10.87
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 18.83,
+            "corporate_income": 8.17,
+            "vat": 31.95,
+            "excise": 13.8,
+            "social_security": 17.88,
+            "property": 3.36,
+            "other": 6.01
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 19.36,
+            "corporate_income": 7.65,
+            "vat": 32.74,
+            "excise": 12.66,
+            "social_security": 18.85,
+            "property": 3.0,
+            "other": 5.74
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 19.59,
+            "corporate_income": 9.05,
+            "vat": 31.92,
+            "excise": 11.3,
+            "social_security": 19.43,
+            "property": 2.64,
+            "other": 6.07
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 21.31,
+            "corporate_income": 9.08,
+            "vat": 29.29,
+            "excise": 10.6,
+            "social_security": 21.14,
+            "property": 2.92,
+            "other": 5.66
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 21.45,
+            "corporate_income": 8.61,
+            "vat": 29.12,
+            "excise": 11.18,
+            "social_security": 21.39,
+            "property": 2.71,
+            "other": 5.54
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 20.38,
+            "corporate_income": 9.55,
+            "vat": 31.26,
+            "excise": 10.51,
+            "social_security": 20.33,
+            "property": 2.51,
+            "other": 5.46
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 23.34,
+            "corporate_income": 7.24,
+            "vat": 25.91,
+            "excise": 6.4,
+            "social_security": 30.66,
+            "property": 2.04,
+            "other": 4.41
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 22.41,
+            "corporate_income": 7.19,
+            "vat": 26.23,
+            "excise": 8.57,
+            "social_security": 28.98,
+            "property": 1.97,
+            "other": 4.65
+          }
+        }
+      ],
       "municipal_transfers": null,
       "environmental_taxes": null
     },
@@ -2186,6 +4286,15 @@
         "4000": 11.34,
         "5000": 16.57,
         "6000": 0.0
+      },
+      "tax_detail": {
+        "personal_income": 39.97,
+        "corporate_income": 8.56,
+        "vat": 0.0,
+        "excise": 2.33,
+        "social_security": 23.51,
+        "property": 11.34,
+        "other": 14.29
       },
       "government_levels": {
         "central": 41.53,
@@ -2388,6 +4497,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 38.23,
+            "corporate_income": 9.98,
+            "vat": 0.0,
+            "excise": 3.55,
+            "social_security": 23.45,
+            "property": 11.97,
+            "other": 12.82
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 39.54,
+            "corporate_income": 6.58,
+            "vat": 0.0,
+            "excise": 3.53,
+            "social_security": 24.56,
+            "property": 12.44,
+            "other": 13.35
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 34.32,
+            "corporate_income": 5.95,
+            "vat": 0.0,
+            "excise": 4.3,
+            "social_security": 27.2,
+            "property": 14.45,
+            "other": 13.78
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 34.78,
+            "corporate_income": 7.55,
+            "vat": 0.0,
+            "excise": 4.17,
+            "social_security": 26.08,
+            "property": 13.46,
+            "other": 13.96
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 38.85,
+            "corporate_income": 7.35,
+            "vat": 0.0,
+            "excise": 3.97,
+            "social_security": 22.85,
+            "property": 12.67,
+            "other": 14.31
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 38.49,
+            "corporate_income": 8.37,
+            "vat": 0.0,
+            "excise": 3.99,
+            "social_security": 22.65,
+            "property": 12.37,
+            "other": 14.13
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 38.81,
+            "corporate_income": 8.21,
+            "vat": 0.0,
+            "excise": 3.6,
+            "social_security": 24.01,
+            "property": 11.68,
+            "other": 13.69
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 39.08,
+            "corporate_income": 8.72,
+            "vat": 0.0,
+            "excise": 3.44,
+            "social_security": 23.72,
+            "property": 11.41,
+            "other": 13.63
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 40.44,
+            "corporate_income": 8.07,
+            "vat": 0.0,
+            "excise": 3.29,
+            "social_security": 23.58,
+            "property": 11.27,
+            "other": 13.35
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 40.3,
+            "corporate_income": 7.55,
+            "vat": 0.0,
+            "excise": 3.28,
+            "social_security": 23.85,
+            "property": 11.58,
+            "other": 13.44
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 39.29,
+            "corporate_income": 5.49,
+            "vat": 0.0,
+            "excise": 3.11,
+            "social_security": 23.23,
+            "property": 15.83,
+            "other": 13.05
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 40.23,
+            "corporate_income": 5.56,
+            "vat": 0.0,
+            "excise": 3.23,
+            "social_security": 24.5,
+            "property": 11.87,
+            "other": 14.61
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 40.68,
+            "corporate_income": 5.28,
+            "vat": 0.0,
+            "excise": 3.1,
+            "social_security": 24.41,
+            "property": 11.85,
+            "other": 14.68
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 41.0,
+            "corporate_income": 5.49,
+            "vat": 0.0,
+            "excise": 2.9,
+            "social_security": 24.39,
+            "property": 12.12,
+            "other": 14.1
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 42.36,
+            "corporate_income": 7.09,
+            "vat": 0.0,
+            "excise": 2.75,
+            "social_security": 22.54,
+            "property": 11.14,
+            "other": 14.12
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 44.32,
+            "corporate_income": 7.73,
+            "vat": 0.0,
+            "excise": 2.34,
+            "social_security": 21.38,
+            "property": 10.34,
+            "other": 13.89
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 39.97,
+            "corporate_income": 8.56,
+            "vat": 0.0,
+            "excise": 2.33,
+            "social_security": 23.51,
+            "property": 11.34,
+            "other": 14.29
+          }
+        }
+      ],
       "municipal_transfers": null,
       "environmental_taxes": null
     },
@@ -2400,6 +4715,15 @@
         "4000": 4.86,
         "5000": 40.94,
         "6000": -0.01
+      },
+      "tax_detail": {
+        "personal_income": 9.66,
+        "corporate_income": 11.52,
+        "vat": 20.11,
+        "excise": 2.12,
+        "social_security": 25.26,
+        "property": 4.86,
+        "other": 26.47
       },
       "government_levels": {
         "central": 45.37,
@@ -2602,6 +4926,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 6.76,
+            "corporate_income": 11.11,
+            "vat": 20.98,
+            "excise": 4.4,
+            "social_security": 24.05,
+            "property": 6.94,
+            "other": 25.76
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 7.27,
+            "corporate_income": 11.86,
+            "vat": 21.86,
+            "excise": 4.2,
+            "social_security": 23.94,
+            "property": 4.05,
+            "other": 26.82
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 7.12,
+            "corporate_income": 11.62,
+            "vat": 21.37,
+            "excise": 3.14,
+            "social_security": 26.23,
+            "property": 3.93,
+            "other": 26.59
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 7.13,
+            "corporate_income": 10.41,
+            "vat": 21.77,
+            "excise": 3.92,
+            "social_security": 25.5,
+            "property": 4.34,
+            "other": 26.93
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 7.33,
+            "corporate_income": 10.8,
+            "vat": 20.9,
+            "excise": 3.77,
+            "social_security": 25.32,
+            "property": 4.44,
+            "other": 27.44
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 7.6,
+            "corporate_income": 9.7,
+            "vat": 21.31,
+            "excise": 3.21,
+            "social_security": 26.3,
+            "property": 4.27,
+            "other": 27.61
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 7.45,
+            "corporate_income": 10.1,
+            "vat": 21.46,
+            "excise": 2.83,
+            "social_security": 26.08,
+            "property": 4.06,
+            "other": 28.02
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 7.83,
+            "corporate_income": 9.55,
+            "vat": 21.42,
+            "excise": 3.01,
+            "social_security": 26.67,
+            "property": 4.1,
+            "other": 27.42
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 7.93,
+            "corporate_income": 8.75,
+            "vat": 21.15,
+            "excise": 3.08,
+            "social_security": 26.59,
+            "property": 4.52,
+            "other": 27.98
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 8.19,
+            "corporate_income": 10.01,
+            "vat": 20.94,
+            "excise": 2.81,
+            "social_security": 26.89,
+            "property": 4.41,
+            "other": 26.75
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 8.53,
+            "corporate_income": 8.85,
+            "vat": 21.29,
+            "excise": 2.92,
+            "social_security": 26.9,
+            "property": 4.46,
+            "other": 27.05
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 8.78,
+            "corporate_income": 8.72,
+            "vat": 21.44,
+            "excise": 3.0,
+            "social_security": 25.92,
+            "property": 4.54,
+            "other": 27.6
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 9.42,
+            "corporate_income": 8.81,
+            "vat": 21.54,
+            "excise": 2.79,
+            "social_security": 25.98,
+            "property": 4.78,
+            "other": 26.68
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 9.75,
+            "corporate_income": 8.63,
+            "vat": 22.56,
+            "excise": 2.95,
+            "social_security": 26.34,
+            "property": 3.98,
+            "other": 25.79
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 9.06,
+            "corporate_income": 11.15,
+            "vat": 22.55,
+            "excise": 2.91,
+            "social_security": 24.02,
+            "property": 4.9,
+            "other": 25.41
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 9.27,
+            "corporate_income": 13.33,
+            "vat": 21.0,
+            "excise": 2.24,
+            "social_security": 24.33,
+            "property": 4.75,
+            "other": 25.08
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 9.66,
+            "corporate_income": 11.52,
+            "vat": 20.11,
+            "excise": 2.12,
+            "social_security": 25.26,
+            "property": 4.86,
+            "other": 26.47
+          }
+        }
+      ],
       "municipal_transfers": null,
       "environmental_taxes": null
     },
@@ -2614,6 +5144,15 @@
         "4000": 6.18,
         "5000": 26.78,
         "6000": 0.03
+      },
+      "tax_detail": {
+        "personal_income": 24.38,
+        "corporate_income": 7.98,
+        "vat": 17.59,
+        "excise": 4.56,
+        "social_security": 34.66,
+        "property": 6.18,
+        "other": 4.65
       },
       "government_levels": {
         "central": 41.84,
@@ -2816,6 +5355,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 20.62,
+            "corporate_income": 12.61,
+            "vat": 16.03,
+            "excise": 6.53,
+            "social_security": 32.46,
+            "property": 8.21,
+            "other": 3.54
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 21.85,
+            "corporate_income": 8.6,
+            "vat": 14.7,
+            "excise": 6.95,
+            "social_security": 37.07,
+            "property": 7.19,
+            "other": 3.64
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 22.27,
+            "corporate_income": 7.46,
+            "vat": 11.59,
+            "excise": 7.55,
+            "social_security": 40.51,
+            "property": 6.85,
+            "other": 3.77
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 22.09,
+            "corporate_income": 5.87,
+            "vat": 16.49,
+            "excise": 7.27,
+            "social_security": 37.92,
+            "property": 6.61,
+            "other": 3.75
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 23.02,
+            "corporate_income": 5.69,
+            "vat": 16.31,
+            "excise": 7.05,
+            "social_security": 37.95,
+            "property": 6.28,
+            "other": 3.7
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 23.06,
+            "corporate_income": 6.63,
+            "vat": 16.49,
+            "excise": 6.76,
+            "social_security": 36.11,
+            "property": 6.56,
+            "other": 4.39
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 22.86,
+            "corporate_income": 6.05,
+            "vat": 17.85,
+            "excise": 7.27,
+            "social_security": 34.6,
+            "property": 7.18,
+            "other": 4.19
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 22.74,
+            "corporate_income": 5.88,
+            "vat": 18.33,
+            "excise": 7.07,
+            "social_security": 34.35,
+            "property": 7.43,
+            "other": 4.2
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 21.64,
+            "corporate_income": 6.51,
+            "vat": 19.01,
+            "excise": 7.11,
+            "social_security": 33.69,
+            "property": 7.64,
+            "other": 4.4
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 21.5,
+            "corporate_income": 6.59,
+            "vat": 19.18,
+            "excise": 6.88,
+            "social_security": 33.97,
+            "property": 7.65,
+            "other": 4.23
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 21.81,
+            "corporate_income": 6.6,
+            "vat": 19.21,
+            "excise": 6.73,
+            "social_security": 34.08,
+            "property": 7.48,
+            "other": 4.09
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 22.15,
+            "corporate_income": 7.11,
+            "vat": 19.0,
+            "excise": 6.42,
+            "social_security": 33.87,
+            "property": 7.32,
+            "other": 4.13
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 22.69,
+            "corporate_income": 5.95,
+            "vat": 18.73,
+            "excise": 6.09,
+            "social_security": 35.33,
+            "property": 7.08,
+            "other": 4.13
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 23.71,
+            "corporate_income": 5.34,
+            "vat": 17.14,
+            "excise": 5.62,
+            "social_security": 37.42,
+            "property": 6.73,
+            "other": 4.04
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 22.81,
+            "corporate_income": 6.99,
+            "vat": 18.08,
+            "excise": 5.21,
+            "social_security": 35.44,
+            "property": 7.28,
+            "other": 4.19
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 24.15,
+            "corporate_income": 7.23,
+            "vat": 18.62,
+            "excise": 4.7,
+            "social_security": 34.08,
+            "property": 6.85,
+            "other": 4.37
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 24.38,
+            "corporate_income": 7.98,
+            "vat": 17.59,
+            "excise": 4.56,
+            "social_security": 34.66,
+            "property": 6.18,
+            "other": 4.65
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 42.28
@@ -2834,6 +5579,15 @@
         "4000": 8.15,
         "5000": 20.23,
         "6000": 0.25
+      },
+      "tax_detail": {
+        "personal_income": 18.32,
+        "corporate_income": 13.95,
+        "vat": 14.65,
+        "excise": 3.76,
+        "social_security": 39.1,
+        "property": 8.15,
+        "other": 2.07
       },
       "government_levels": {
         "central": 38.63,
@@ -3036,6 +5790,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 19.56,
+            "corporate_income": 16.79,
+            "vat": 8.78,
+            "excise": 6.41,
+            "social_security": 36.47,
+            "property": 8.98,
+            "other": 3.01
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 19.91,
+            "corporate_income": 13.63,
+            "vat": 8.91,
+            "excise": 6.23,
+            "social_security": 38.85,
+            "property": 9.39,
+            "other": 3.08
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 19.98,
+            "corporate_income": 9.55,
+            "vat": 9.57,
+            "excise": 6.68,
+            "social_security": 40.97,
+            "property": 10.14,
+            "other": 3.11
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 18.62,
+            "corporate_income": 11.59,
+            "vat": 9.57,
+            "excise": 6.51,
+            "social_security": 41.11,
+            "property": 9.72,
+            "other": 2.88
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 18.39,
+            "corporate_income": 11.75,
+            "vat": 9.39,
+            "excise": 6.43,
+            "social_security": 41.52,
+            "property": 9.66,
+            "other": 2.86
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 18.59,
+            "corporate_income": 12.46,
+            "vat": 9.24,
+            "excise": 6.25,
+            "social_security": 41.62,
+            "property": 9.11,
+            "other": 2.73
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 19.38,
+            "corporate_income": 13.21,
+            "vat": 9.19,
+            "excise": 5.95,
+            "social_security": 40.77,
+            "property": 8.82,
+            "other": 2.68
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 18.9,
+            "corporate_income": 12.93,
+            "vat": 12.2,
+            "excise": 5.3,
+            "social_security": 39.68,
+            "property": 8.48,
+            "other": 2.51
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 18.81,
+            "corporate_income": 12.3,
+            "vat": 13.71,
+            "excise": 5.11,
+            "social_security": 39.45,
+            "property": 8.2,
+            "other": 2.42
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 18.53,
+            "corporate_income": 11.99,
+            "vat": 13.3,
+            "excise": 5.04,
+            "social_security": 40.42,
+            "property": 8.36,
+            "other": 2.36
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 18.81,
+            "corporate_income": 11.84,
+            "vat": 12.95,
+            "excise": 5.96,
+            "social_security": 39.94,
+            "property": 8.19,
+            "other": 2.31
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 19.07,
+            "corporate_income": 12.87,
+            "vat": 12.81,
+            "excise": 4.62,
+            "social_security": 40.22,
+            "property": 8.08,
+            "other": 2.33
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 18.78,
+            "corporate_income": 12.0,
+            "vat": 13.19,
+            "excise": 4.5,
+            "social_security": 41.07,
+            "property": 8.17,
+            "other": 2.29
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 18.72,
+            "corporate_income": 11.7,
+            "vat": 14.89,
+            "excise": 4.04,
+            "social_security": 40.36,
+            "property": 8.08,
+            "other": 2.21
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 18.85,
+            "corporate_income": 13.07,
+            "vat": 14.93,
+            "excise": 3.94,
+            "social_security": 39.2,
+            "property": 7.86,
+            "other": 2.15
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 18.8,
+            "corporate_income": 13.7,
+            "vat": 15.05,
+            "excise": 3.87,
+            "social_security": 38.55,
+            "property": 7.87,
+            "other": 2.16
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 18.32,
+            "corporate_income": 13.95,
+            "vat": 14.65,
+            "excise": 3.76,
+            "social_security": 39.1,
+            "property": 8.15,
+            "other": 2.07
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2023,
         "local_revenue_from_transfers_pct": 45.05
@@ -3051,6 +6011,15 @@
         "4000": 3.22,
         "5000": 29.16,
         "6000": 0.33
+      },
+      "tax_detail": {
+        "personal_income": 23.29,
+        "corporate_income": 12.66,
+        "vat": 18.41,
+        "excise": 5.45,
+        "social_security": 31.33,
+        "property": 3.22,
+        "other": 5.64
       },
       "government_levels": {
         "central": 65.15,
@@ -3253,6 +6222,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 18.74,
+            "corporate_income": 9.53,
+            "vat": 19.4,
+            "excise": 8.02,
+            "social_security": 34.88,
+            "property": 4.69,
+            "other": 4.74
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 18.16,
+            "corporate_income": 9.1,
+            "vat": 18.58,
+            "excise": 8.02,
+            "social_security": 37.02,
+            "property": 4.25,
+            "other": 4.87
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 22.08,
+            "corporate_income": 6.09,
+            "vat": 18.36,
+            "excise": 8.18,
+            "social_security": 36.11,
+            "property": 3.97,
+            "other": 5.21
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 21.5,
+            "corporate_income": 6.4,
+            "vat": 18.72,
+            "excise": 8.07,
+            "social_security": 36.3,
+            "property": 3.85,
+            "other": 5.16
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 20.77,
+            "corporate_income": 6.09,
+            "vat": 18.05,
+            "excise": 7.9,
+            "social_security": 38.38,
+            "property": 3.43,
+            "other": 5.38
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 19.44,
+            "corporate_income": 5.89,
+            "vat": 17.94,
+            "excise": 7.46,
+            "social_security": 40.82,
+            "property": 3.04,
+            "other": 5.41
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 18.8,
+            "corporate_income": 5.98,
+            "vat": 17.79,
+            "excise": 7.26,
+            "social_security": 40.83,
+            "property": 3.39,
+            "other": 5.95
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 18.72,
+            "corporate_income": 6.87,
+            "vat": 17.17,
+            "excise": 7.18,
+            "social_security": 39.64,
+            "property": 3.86,
+            "other": 6.56
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 20.52,
+            "corporate_income": 7.22,
+            "vat": 17.58,
+            "excise": 7.06,
+            "social_security": 37.76,
+            "property": 3.83,
+            "other": 6.03
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 18.49,
+            "corporate_income": 8.71,
+            "vat": 17.59,
+            "excise": 6.97,
+            "social_security": 38.19,
+            "property": 3.96,
+            "other": 6.09
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 21.55,
+            "corporate_income": 8.47,
+            "vat": 17.44,
+            "excise": 6.89,
+            "social_security": 35.67,
+            "property": 4.02,
+            "other": 5.96
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 20.53,
+            "corporate_income": 9.03,
+            "vat": 17.55,
+            "excise": 6.99,
+            "social_security": 35.98,
+            "property": 4.04,
+            "other": 5.88
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 21.6,
+            "corporate_income": 9.41,
+            "vat": 18.2,
+            "excise": 6.9,
+            "social_security": 34.24,
+            "property": 3.82,
+            "other": 5.83
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 22.95,
+            "corporate_income": 7.75,
+            "vat": 18.51,
+            "excise": 6.41,
+            "social_security": 34.11,
+            "property": 4.25,
+            "other": 6.02
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 21.82,
+            "corporate_income": 9.8,
+            "vat": 19.17,
+            "excise": 6.17,
+            "social_security": 33.03,
+            "property": 4.14,
+            "other": 5.87
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 20.26,
+            "corporate_income": 12.47,
+            "vat": 18.62,
+            "excise": 5.92,
+            "social_security": 32.9,
+            "property": 3.91,
+            "other": 5.92
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 23.29,
+            "corporate_income": 12.66,
+            "vat": 18.41,
+            "excise": 5.45,
+            "social_security": 31.33,
+            "property": 3.22,
+            "other": 5.64
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 73.51
@@ -3271,6 +6446,15 @@
         "4000": 2.81,
         "5000": 23.01,
         "6000": 0.0
+      },
+      "tax_detail": {
+        "personal_income": 23.05,
+        "corporate_income": 28.82,
+        "vat": 17.77,
+        "excise": 3.38,
+        "social_security": 22.18,
+        "property": 2.81,
+        "other": 1.99
       },
       "government_levels": {
         "central": 87.38,
@@ -3473,6 +6657,212 @@
           }
         }
       ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 22.37,
+            "corporate_income": 25.72,
+            "vat": 19.05,
+            "excise": 7.17,
+            "social_security": 20.64,
+            "property": 2.5,
+            "other": 2.55
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 21.74,
+            "corporate_income": 28.96,
+            "vat": 17.12,
+            "excise": 6.62,
+            "social_security": 20.77,
+            "property": 2.27,
+            "other": 2.52
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 24.16,
+            "corporate_income": 21.74,
+            "vat": 18.58,
+            "excise": 7.16,
+            "social_security": 23.24,
+            "property": 2.62,
+            "other": 2.5
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 23.66,
+            "corporate_income": 23.52,
+            "vat": 18.5,
+            "excise": 7.02,
+            "social_security": 22.35,
+            "property": 2.56,
+            "other": 2.39
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 23.15,
+            "corporate_income": 25.59,
+            "vat": 17.96,
+            "excise": 6.55,
+            "social_security": 22.03,
+            "property": 2.48,
+            "other": 2.24
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 23.57,
+            "corporate_income": 24.87,
+            "vat": 18.14,
+            "excise": 6.28,
+            "social_security": 22.49,
+            "property": 2.5,
+            "other": 2.15
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 24.96,
+            "corporate_income": 20.67,
+            "vat": 19.14,
+            "excise": 6.4,
+            "social_security": 23.83,
+            "property": 2.68,
+            "other": 2.32
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 25.58,
+            "corporate_income": 17.06,
+            "vat": 19.96,
+            "excise": 6.55,
+            "social_security": 25.58,
+            "property": 2.73,
+            "other": 2.54
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 28.01,
+            "corporate_income": 11.68,
+            "vat": 21.26,
+            "excise": 6.57,
+            "social_security": 27.09,
+            "property": 2.76,
+            "other": 2.63
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 27.72,
+            "corporate_income": 10.37,
+            "vat": 22.26,
+            "excise": 6.57,
+            "social_security": 27.36,
+            "property": 2.93,
+            "other": 2.79
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 26.68,
+            "corporate_income": 12.52,
+            "vat": 22.1,
+            "excise": 6.33,
+            "social_security": 26.49,
+            "property": 3.02,
+            "other": 2.86
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 25.54,
+            "corporate_income": 16.35,
+            "vat": 21.15,
+            "excise": 5.98,
+            "social_security": 25.45,
+            "property": 2.84,
+            "other": 2.69
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 26.15,
+            "corporate_income": 14.92,
+            "vat": 21.42,
+            "excise": 5.56,
+            "social_security": 26.3,
+            "property": 2.94,
+            "other": 2.71
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 29.27,
+            "corporate_income": 7.2,
+            "vat": 23.25,
+            "excise": 6.09,
+            "social_security": 28.45,
+            "property": 3.28,
+            "other": 2.46
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 25.7,
+            "corporate_income": 23.6,
+            "vat": 18.96,
+            "excise": 4.45,
+            "social_security": 22.49,
+            "property": 2.66,
+            "other": 2.14
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 18.72,
+            "corporate_income": 42.24,
+            "vat": 14.98,
+            "excise": 2.93,
+            "social_security": 17.26,
+            "property": 2.23,
+            "other": 1.64
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 23.05,
+            "corporate_income": 28.82,
+            "vat": 17.77,
+            "excise": 3.38,
+            "social_security": 22.18,
+            "property": 2.81,
+            "other": 1.99
+          }
+        }
+      ],
       "municipal_transfers": {
         "year": 2024,
         "local_revenue_from_transfers_pct": 44.15
@@ -3491,6 +6881,15 @@
         "4000": 6.54,
         "5000": 40.72,
         "6000": 0.0
+      },
+      "tax_detail": {
+        "personal_income": 15.51,
+        "corporate_income": 7.4,
+        "vat": 22.54,
+        "excise": 8.29,
+        "social_security": 28.8,
+        "property": 6.54,
+        "other": 10.92
       },
       "government_levels": {
         "central": 68.56,
@@ -3690,6 +7089,212 @@
             "4000": 6.54,
             "5000": 40.72,
             "6000": 0.0
+          }
+        }
+      ],
+      "tax_detail_timeline": [
+        {
+          "year": 2007,
+          "shares": {
+            "personal_income": 14.26,
+            "corporate_income": 7.17,
+            "vat": 22.32,
+            "excise": 7.94,
+            "social_security": 33.71,
+            "property": 6.63,
+            "other": 7.97
+          }
+        },
+        {
+          "year": 2008,
+          "shares": {
+            "personal_income": 14.36,
+            "corporate_income": 6.74,
+            "vat": 22.06,
+            "excise": 7.47,
+            "social_security": 33.77,
+            "property": 6.79,
+            "other": 8.81
+          }
+        },
+        {
+          "year": 2009,
+          "shares": {
+            "personal_income": 14.54,
+            "corporate_income": 8.16,
+            "vat": 20.37,
+            "excise": 8.63,
+            "social_security": 33.06,
+            "property": 6.47,
+            "other": 8.77
+          }
+        },
+        {
+          "year": 2010,
+          "shares": {
+            "personal_income": 12.45,
+            "corporate_income": 7.89,
+            "vat": 22.04,
+            "excise": 10.45,
+            "social_security": 34.18,
+            "property": 5.17,
+            "other": 7.82
+          }
+        },
+        {
+          "year": 2011,
+          "shares": {
+            "personal_income": 14.2,
+            "corporate_income": 6.15,
+            "vat": 21.57,
+            "excise": 11.52,
+            "social_security": 31.79,
+            "property": 7.36,
+            "other": 7.41
+          }
+        },
+        {
+          "year": 2012,
+          "shares": {
+            "personal_income": 19.26,
+            "corporate_income": 3.02,
+            "vat": 19.83,
+            "excise": 11.37,
+            "social_security": 30.27,
+            "property": 7.48,
+            "other": 8.77
+          }
+        },
+        {
+          "year": 2013,
+          "shares": {
+            "personal_income": 16.53,
+            "corporate_income": 3.18,
+            "vat": 19.31,
+            "excise": 11.76,
+            "social_security": 29.68,
+            "property": 8.74,
+            "other": 10.8
+          }
+        },
+        {
+          "year": 2014,
+          "shares": {
+            "personal_income": 16.32,
+            "corporate_income": 5.15,
+            "vat": 19.49,
+            "excise": 11.54,
+            "social_security": 28.57,
+            "property": 7.89,
+            "other": 11.04
+          }
+        },
+        {
+          "year": 2015,
+          "shares": {
+            "personal_income": 15.58,
+            "corporate_income": 5.83,
+            "vat": 19.77,
+            "excise": 11.63,
+            "social_security": 28.86,
+            "property": 8.31,
+            "other": 10.02
+          }
+        },
+        {
+          "year": 2016,
+          "shares": {
+            "personal_income": 15.21,
+            "corporate_income": 6.41,
+            "vat": 20.95,
+            "excise": 11.33,
+            "social_security": 28.23,
+            "property": 8.03,
+            "other": 9.84
+          }
+        },
+        {
+          "year": 2017,
+          "shares": {
+            "personal_income": 15.98,
+            "corporate_income": 5.0,
+            "vat": 20.84,
+            "excise": 10.69,
+            "social_security": 29.57,
+            "property": 7.91,
+            "other": 10.01
+          }
+        },
+        {
+          "year": 2018,
+          "shares": {
+            "personal_income": 15.94,
+            "corporate_income": 5.52,
+            "vat": 21.1,
+            "excise": 10.7,
+            "social_security": 29.6,
+            "property": 7.67,
+            "other": 9.47
+          }
+        },
+        {
+          "year": 2019,
+          "shares": {
+            "personal_income": 15.19,
+            "corporate_income": 4.81,
+            "vat": 21.25,
+            "excise": 10.86,
+            "social_security": 30.74,
+            "property": 7.74,
+            "other": 9.41
+          }
+        },
+        {
+          "year": 2020,
+          "shares": {
+            "personal_income": 16.02,
+            "corporate_income": 3.6,
+            "vat": 19.82,
+            "excise": 10.65,
+            "social_security": 32.75,
+            "property": 7.73,
+            "other": 9.43
+          }
+        },
+        {
+          "year": 2021,
+          "shares": {
+            "personal_income": 14.91,
+            "corporate_income": 5.0,
+            "vat": 20.86,
+            "excise": 10.31,
+            "social_security": 32.22,
+            "property": 7.28,
+            "other": 9.42
+          }
+        },
+        {
+          "year": 2022,
+          "shares": {
+            "personal_income": 13.55,
+            "corporate_income": 6.02,
+            "vat": 21.85,
+            "excise": 9.22,
+            "social_security": 29.56,
+            "property": 6.64,
+            "other": 13.16
+          }
+        },
+        {
+          "year": 2023,
+          "shares": {
+            "personal_income": 15.51,
+            "corporate_income": 7.4,
+            "vat": 22.54,
+            "excise": 8.29,
+            "social_security": 28.8,
+            "property": 6.54,
+            "other": 10.92
           }
         }
       ],

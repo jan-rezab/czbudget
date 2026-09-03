@@ -34,6 +34,9 @@ from openpyxl import load_workbook
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from raw_cache_archives import restore as restore_raw_cache
+
 
 ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[3]))
 DEFAULT_CONFIG = ROOT / "website/pipeline/config/international_municipal_sources.json"
@@ -1268,6 +1271,7 @@ def first_value(row: dict[str, Any], aliases: Iterable[str]) -> Any:
 
 
 def run_ukraine(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    restore_raw_cache(ctx.args.cache_dir / country)
     year, currency = cfg["year"], cfg["currency"]
     source = cfg["sources"][0]
     path = ctx.download(country, source, optional=True)
@@ -1376,6 +1380,7 @@ def _ukraine_download_csv(ctx: Context, country: str, source: dict[str, Any], ye
 
 
 def run_ukraine_public_api(ctx: Context, country: str, cfg: dict[str, Any]) -> dict[str, Any]:
+    restore_raw_cache(ctx.args.cache_dir / country)
     year, currency = cfg["year"], cfg["currency"]
     sources = {source["kind"]: source for source in cfg["sources"]}
     directory_source = sources["entities"]

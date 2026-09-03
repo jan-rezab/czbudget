@@ -8,6 +8,14 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const API = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data";
 const FIRST_YEAR = 2000;
 const LAST_YEAR = 2024;
+const PROTECTION_FIRST_YEAR = 2008;
+const PROTECTION_LAST_YEAR = 2025;
+const PROTECTION_TYPES = ["refugee", "subsidiary", "humanitarian"];
+const PROTECTION_DECISIONS = {
+  refugee: "POS_RFG",
+  subsidiary: "POS_SPROT",
+  humanitarian: "POS_HUM",
+};
 
 const MEMBERS = [
   ["AUT", "AT", "at", "Rakousko", "Austria"],
@@ -37,7 +45,20 @@ const MEMBERS = [
   ["SVN", "SI", "si", "Slovinsko", "Slovenia"],
   ["ESP", "ES", "es", "Španělsko", "Spain"],
   ["SWE", "SE", "se", "Švédsko", "Sweden"],
-].map(([iso3, eurostat_geo, map_id, name_cs, name_en]) => ({ iso3, eurostat_geo, map_id, name_cs, name_en }));
+  ["CHE", "CH", "ch", "Švýcarsko", "Switzerland"],
+  ["GBR", "UK", "gb", "Spojené království", "United Kingdom"],
+  ["ISL", "IS", "is", "Island", "Iceland"],
+  ["LIE", "LI", "li", "Lichtenštejnsko", "Liechtenstein"],
+  ["MNE", "ME", "me", "Černá Hora", "Montenegro"],
+  ["NOR", "NO", "no", "Norsko", "Norway"],
+].map(([iso3, eurostat_geo, map_id, name_cs, name_en]) => ({
+  iso3,
+  eurostat_geo,
+  map_id,
+  name_cs,
+  name_en,
+  eu_member: !["CHE", "GBR", "ISL", "LIE", "MNE", "NOR"].includes(iso3),
+}));
 
 function url(dataset, aggregate = false) {
   const params = new URLSearchParams({
@@ -59,6 +80,31 @@ function url(dataset, aggregate = false) {
 
 async function download(dataset, aggregate = false) {
   const sourceUrl = url(dataset, aggregate);
+  const response = await fetch(sourceUrl, { headers: { "user-agent": "PublicSpendingData/1.0" } });
+  if (!response.ok) throw new Error(`${dataset} returned HTTP ${response.status}`);
+  const payload = await response.json();
+  if (payload.class !== "dataset") throw new Error(`${dataset} did not return a JSON-stat dataset`);
+  return { payload, sourceUrl };
+}
+
+function protectionUrl(dataset, aggregate = false) {
+  const params = new URLSearchParams({
+    lang: "en",
+    freq: "A",
+    unit: "PER",
+    citizen: "TOTAL",
+    age: "TOTAL",
+    sex: "T",
+    sinceTimePeriod: String(PROTECTION_FIRST_YEAR),
+    untilTimePeriod: String(PROTECTION_LAST_YEAR),
+  });
+  if (aggregate) params.set("geo", "EU27_2020");
+  else params.set("geoLevel", "country");
+  return `${API}/${dataset}?${params}`;
+}
+
+async function downloadProtection(dataset, aggregate = false) {
+  const sourceUrl = protectionUrl(dataset, aggregate);
   const response = await fetch(sourceUrl, { headers: { "user-agent": "PublicSpendingData/1.0" } });
   if (!response.ok) throw new Error(`${dataset} returned HTTP ${response.status}`);
   const payload = await response.json();
@@ -146,19 +192,51 @@ function countryRows(country, payloads) {
   }).filter((row) => row.immigration != null || row.emigration != null || row.population != null);
 }
 
+function protectionRows(firstInstance, finalInstance, geo) {
+  return Array.from({ length: PROTECTION_LAST_YEAR - PROTECTION_FIRST_YEAR + 1 }, (_, offset) => PROTECTION_FIRST_YEAR + offset).map((year) => {
+    const row = { year };
+    PROTECTION_TYPES.forEach((type) => {
+      const dimensions = {
+        geo,
+        time: String(year),
+        unit: "PER",
+        citizen: "TOTAL",
+        age: "TOTAL",
+        sex: "T",
+        decision: PROTECTION_DECISIONS[type],
+      };
+      const values = [valueAt(firstInstance, dimensions), valueAt(finalInstance, dimensions)].filter(Boolean);
+      row[type] = values.length ? values.reduce((sum, item) => sum + item.value, 0) : null;
+      row[`${type}_flags`] = [...new Set(values.map((item) => item.status).filter(Boolean))];
+    });
+    const available = PROTECTION_TYPES.map((type) => row[type]).filter(Number.isFinite);
+    row.total = available.length ? available.reduce((sum, value) => sum + value, 0) : null;
+    return row;
+  }).filter((row) => row.total != null);
+}
+
 async function main() {
-  const [immigration, emigration, population, immigrationAggregate, emigrationAggregate, populationAggregate] = await Promise.all([
+  const [immigration, emigration, population, immigrationAggregate, emigrationAggregate, populationAggregate, protectionFirst, protectionFinal, protectionFirstAggregate, protectionFinalAggregate] = await Promise.all([
     download("migr_imm8"),
     download("migr_emi2"),
     download("demo_gind"),
     download("migr_imm8", true),
     download("migr_emi2", true),
     download("demo_gind", true),
+    downloadProtection("migr_asydcfsta"),
+    downloadProtection("migr_asydcfina"),
+    downloadProtection("migr_asydcfsta", true),
+    downloadProtection("migr_asydcfina", true),
   ]);
   const nationalPayloads = { immigration: immigration.payload, emigration: emigration.payload, population: population.payload };
   const aggregatePayloads = { immigration: immigrationAggregate.payload, emigration: emigrationAggregate.payload, population: populationAggregate.payload };
-  const countries = MEMBERS.map((country) => ({ ...country, rows: countryRows(country, nationalPayloads) }));
+  const countries = MEMBERS.map((country) => ({
+    ...country,
+    rows: countryRows(country, nationalPayloads),
+    protection_rows: protectionRows(protectionFirst.payload, protectionFinal.payload, country.eurostat_geo),
+  }));
   const aggregate = countryRows({ eurostat_geo: "EU27_2020" }, aggregatePayloads);
+  const aggregateProtection = protectionRows(protectionFirstAggregate.payload, protectionFinalAggregate.payload, "EU27_2020");
   const latestAggregate = [...aggregate].reverse().find((row) => row.immigration != null && row.emigration != null);
   const payload = {
     schema_version: "1.0.0",
@@ -166,10 +244,13 @@ async function main() {
     generated_at: new Date().toISOString(),
     scope: {
       membership: "EU27_2020",
+      country_coverage: "EU-27 plus Iceland, Liechtenstein, Montenegro, Norway, Switzerland and the United Kingdom",
       country_count: countries.length,
       first_year: FIRST_YEAR,
       last_year: LAST_YEAR,
       latest_complete_aggregate_year: latestAggregate?.year ?? null,
+      protection_first_year: aggregateProtection.at(0)?.year ?? null,
+      protection_last_year: aggregateProtection.at(-1)?.year ?? null,
     },
     definitions: {
       immigration_en: "A person establishing usual residence in the reporting country for at least 12 months after previously residing elsewhere.",
@@ -191,14 +272,18 @@ async function main() {
       immigration: { dataset: "migr_imm8", title: immigration.payload.label, updated: immigration.payload.updated, url: immigration.sourceUrl, browser_url: "https://ec.europa.eu/eurostat/databrowser/view/migr_imm8/default/table" },
       emigration: { dataset: "migr_emi2", title: emigration.payload.label, updated: emigration.payload.updated, url: emigration.sourceUrl, browser_url: "https://ec.europa.eu/eurostat/databrowser/view/migr_emi2/default/table" },
       population: { dataset: "demo_gind", title: population.payload.label, updated: population.payload.updated, url: population.sourceUrl, browser_url: "https://ec.europa.eu/eurostat/databrowser/view/demo_gind/default/table" },
+      protection_first_instance: { dataset: "migr_asydcfsta", title: protectionFirst.payload.label, updated: protectionFirst.payload.updated, url: protectionFirst.sourceUrl, browser_url: "https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfsta/default/table" },
+      protection_final: { dataset: "migr_asydcfina", title: protectionFinal.payload.label, updated: protectionFinal.payload.updated, url: protectionFinal.sourceUrl, browser_url: "https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfina/default/table" },
       metadata_url: "https://ec.europa.eu/eurostat/cache/metadata/en/migr_immi_esms.htm",
+      protection_metadata_url: "https://ec.europa.eu/eurostat/cache/metadata/en/migr_asydec_esms.htm",
     },
     eu27: aggregate,
+    eu27_protection: aggregateProtection,
     countries,
   };
   const target = resolve(ROOT, "data/eu-migration.v1.json");
   await writeFile(target, `${JSON.stringify(payload, null, 2)}\n`);
-  console.log(`Stored ${countries.length} EU countries and ${aggregate.length} EU aggregate years in ${target}`);
+  console.log(`Stored ${countries.length} European countries and ${aggregate.length} EU aggregate years in ${target}`);
 }
 
 main().catch((error) => {

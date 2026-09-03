@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { archivedInventory } from './raw-cache-inventory.mjs';
 
 const websiteRoot = path.resolve(import.meta.dirname, "..");
 const workspaceRoot = path.resolve(process.env.CZBUDGET_WORKSPACE_ROOT || path.join(websiteRoot, ".."));
@@ -97,8 +98,9 @@ async function fileEntry(file) {
 // Tree digest = sha256 over sorted "<path relative to the tree>\0<file sha256>\n"
 // lines, so it is reproducible without depending on read order or file sizes.
 async function treeEntry(directory) {
-  const files = (await filesBelow(directory)).sort();
-  const hashed = await mapPool(files, async (file) => ({
+  const archived = await archivedInventory(directory);
+  const files = archived ? [] : (await filesBelow(directory)).sort();
+  const hashed = archived || await mapPool(files, async (file) => ({
     name: path.relative(directory, file).split(path.sep).join("/"),
     bytes: (await stat(file)).size,
     sha256: await fileDigest(file),

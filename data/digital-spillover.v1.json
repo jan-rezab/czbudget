@@ -1,0 +1,450 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "digital_value_capture_ten_country_scenario",
+  "generated_at": "2026-09-01T21:30:28.839Z",
+  "scope": {
+    "country_codes": [
+      "CZE",
+      "DEU",
+      "FRA",
+      "ITA",
+      "ESP",
+      "POL",
+      "GBR",
+      "USA",
+      "CHN",
+      "IND"
+    ],
+    "comparison_currency": "current USD billions",
+    "interpretation": "Scenario model. Digital-sector share, foreign-platform dominance and multiplier are assumptions, not observed country estimates."
+  },
+  "default_scenario": {
+    "digital_sector_share_pct": 12,
+    "foreign_platform_dominance_pct": 72,
+    "investment_multiplier": 1.5,
+    "policy_proxy_anchor_research_development_pct_gdp": 3
+  },
+  "model": {
+    "digital_output": "nominal_gdp_usd_bn * digital_sector_share",
+    "policy_proxy": "min(1, research_development_pct_gdp / 3)",
+    "leakage_intensity": "0.58 - policy_proxy * 0.18",
+    "leakage": "digital_output * foreign_platform_dominance * leakage_intensity",
+    "retained_value": "digital_output - leakage",
+    "effective_reinvestment_rate": "gross_saving_pct_gdp * (0.85 + policy_proxy * 0.35)",
+    "domestic_reinvestment": "retained_value * effective_reinvestment_rate",
+    "gdp_supported": "domestic_reinvestment * investment_multiplier",
+    "incremental_multiplier_effect": "domestic_reinvestment * (investment_multiplier - 1)"
+  },
+  "sources": [
+    {
+      "source_id": "imf_weo",
+      "label": "IMF World Economic Outlook, April 2026",
+      "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+      "metric": "Nominal GDP in current USD",
+      "period": "2024 actual"
+    },
+    {
+      "source_id": "world_bank_wdi",
+      "label": "World Bank World Development Indicators",
+      "url": "https://data.worldbank.org/indicator",
+      "metrics": [
+        "Gross saving",
+        "Research and development expenditure",
+        "Gross fixed capital formation"
+      ],
+      "note": "Latest available observation is retained separately for every country and metric."
+    }
+  ],
+  "countries": [
+    {
+      "code": "CZE",
+      "iso2": "cz",
+      "name_cs": "Česko",
+      "name_en": "Czechia",
+      "nominal_gdp_usd_bn": {
+        "value": 347.083,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 27.741352139237,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 1.83369,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 26.4083991822779,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "DEU",
+      "iso2": "de",
+      "name_cs": "Německo",
+      "name_en": "Germany",
+      "nominal_gdp_usd_bn": {
+        "value": 4684.182,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 26.3665827976479,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 3.1539,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 20.312556628657,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "FRA",
+      "iso2": "fr",
+      "name_cs": "Francie",
+      "name_en": "France",
+      "nominal_gdp_usd_bn": {
+        "value": 3161.042,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 21.4586170922043,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 2.17832,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 22.0193072027382,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "ITA",
+      "iso2": "it",
+      "name_cs": "Itálie",
+      "name_en": "Italy",
+      "nominal_gdp_usd_bn": {
+        "value": 2382.718,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 23.4323210040421,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 1.37935,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 21.8347372224523,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "ESP",
+      "iso2": "es",
+      "name_cs": "Španělsko",
+      "name_en": "Spain",
+      "nominal_gdp_usd_bn": {
+        "value": 1725.152,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 24.324531738509,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 1.49362,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 20.6085758722391,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "POL",
+      "iso2": "pl",
+      "name_cs": "Polsko",
+      "name_en": "Poland",
+      "nominal_gdp_usd_bn": {
+        "value": 917.623,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 17.0894316634177,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 1.55525,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 17.0286414261905,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "GBR",
+      "iso2": "gb",
+      "name_cs": "Spojené království",
+      "name_en": "United Kingdom",
+      "nominal_gdp_usd_bn": {
+        "value": 3695.355,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 17.1796140057167,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 2.67614,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 18.8835936906326,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "USA",
+      "iso2": "us",
+      "name_cs": "USA",
+      "name_en": "United States",
+      "nominal_gdp_usd_bn": {
+        "value": 29298.025,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 16.6047608757631,
+        "period": "2024",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 3.44716,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 21.3498335194267,
+        "period": "2024",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "CHN",
+      "iso2": "cn",
+      "name_cs": "Čína",
+      "name_en": "China",
+      "nominal_gdp_usd_bn": {
+        "value": 18945.112,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 42.7150109198495,
+        "period": "2024",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 2.57729,
+        "period": "2023",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 39.6519325237885,
+        "period": "2024",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    },
+    {
+      "code": "IND",
+      "iso2": "in",
+      "name_cs": "Indie",
+      "name_en": "India",
+      "nominal_gdp_usd_bn": {
+        "value": 3760.814,
+        "period": "2024",
+        "unit": "USD_bn",
+        "status": "actual"
+      },
+      "gross_saving_pct_gdp": {
+        "value": 34.6967494989384,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NY.GNS.ICTR.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "research_development_pct_gdp": {
+        "value": 0.64558,
+        "period": "2020",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/GB.XPD.RSDV.GD.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      },
+      "gross_fixed_capital_formation_pct_gdp": {
+        "value": 31.6790977460161,
+        "period": "2025",
+        "unit": "percent_gdp",
+        "source_id": "world_bank",
+        "source_url": "https://api.worldbank.org/v2/country/all/indicator/NE.GDI.FTOT.ZS?date=1960:2025&format=json&per_page=20000",
+        "source_vintage": "2026-07-13",
+        "retrieved_at": "2026-08-26T16:26:27Z"
+      }
+    }
+  ]
+}

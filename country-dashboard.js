@@ -30,7 +30,7 @@
   };
   const chapters = [
     {anchor:"scope", ids:["scope"]},
-    {anchor:"trend", ids:["trend", "cash-in", "oecd-benchmark", "macro", "recovery"]},
+    {anchor:"trend", ids:["trend", "cash-in", "tax-detail", "oecd-benchmark", "macro", "recovery"]},
     {anchor:"spending", ids:["spending", "budget-map"]},
     {anchor:"public-entities", ids:["public-entities"]},
     {anchor:"healthcare", ids:["healthcare", "healthcare-system", "provider-network", "hospital-benchmark"]},
