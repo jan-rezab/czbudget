@@ -103,6 +103,35 @@ test("Czech profiles surface warehouse purpose and economic detail without chang
   await expect(page.locator('a[href*="/public-data/municipality-lines?country=CZE"]')).toBeVisible();
 });
 
+test("Polish budget codes show English labels with the official Polish label beneath", async ({ page }) => {
+  await page.route("**/fixture/pol-profile.json", (route) => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({
+      country: "POL", code: "0611032", name: "Adamów", currency: "PLN", years: [2024],
+      history: [{ year: 2024, revenue: 10_000_000, expenditure: 7_350_000, balance: 2_650_000 }],
+      latest: { year: 2024, revenue: 10_000_000, expenditure: 7_350_000, balance: 2_650_000 },
+      detail: [], source_url: "https://finansejst.mf.gov.pl/",
+    }),
+  }));
+  await page.route("**/public-data/municipality-lines?country=POL&code=0611032", (route) => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({
+      country: "POL", entity_code: "0611032", currency: "PLN", years: [2024],
+      lines: [{ year: 2024, stage: "actual", side: "expenditure", code: "4010", amount: 7_350_000 }],
+      source_url: "https://finansejst.mf.gov.pl/",
+    }),
+  }));
+
+  await page.goto("/about.html?lang=en");
+  await page.setContent(`<!doctype html><html lang="en"><head><meta name="description" content=""><link rel="canonical" href=""><link rel="alternate" hreflang="cs" href=""><link rel="alternate" hreflang="en" href=""></head><body data-profile-url="/fixture/pol-profile.json" data-warehouse-country="POL" data-warehouse-code="0611032"><main><p class="municipal-profile-loading">Loading</p></main><footer></footer><script src="/municipal-expanded-profile.js"></script></body></html>`);
+
+  const row = page.locator("#profile-detail-visual .native-visual-row").first();
+  await expect(row.locator("strong").first()).toHaveText("Employee salaries");
+  await expect(row.locator("small")).toContainText("Wynagrodzenia osobowe pracowników · 4010");
+  expect(await row.locator("small").evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize)))
+    .toBeLessThan(await row.locator("strong").first().evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize)));
+});
+
 test("Brazilian profile reconciles stages and keeps tax rows on the revenue side", async ({ page }) => {
   await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
   await page.locator('[data-profile-currency="native"]').click();

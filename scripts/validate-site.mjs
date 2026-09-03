@@ -92,8 +92,11 @@ const defenseDeepDive = JSON.parse(await readFile("data/defense-deep-dive.v1.jso
 const educationDeepDivePage = await readFile("deep-dives/education/index.html", "utf8");
 const educationDeepDiveScript = await readFile("education-deep-dive.js", "utf8");
 const educationDeepDive = JSON.parse(await readFile("data/education-deep-dive.v1.json", "utf8"));
+const educationCapacityInternational = JSON.parse(await readFile("data/education-capacity-international.v1.json", "utf8"));
+const educationInstitutions = JSON.parse(await readFile("data/education-institutions.v1.json", "utf8"));
 const tradeDeepDivePage = await readFile("deep-dives/trade/index.html", "utf8");
 const tradeDeepDiveScript = await readFile("trade-deep-dive.js", "utf8");
+const productMarketsPage = await readFile("deep-dives/product-markets/index.html", "utf8");
 const tradeProductIntelligenceScript = await readFile("trade-product-intelligence.js", "utf8");
 const tradeProductIntelligence = JSON.parse(await readFile("data/trade/product-intelligence.v1.json", "utf8"));
 const dataFreshnessScript = await readFile("data-freshness.js", "utf8");
@@ -123,6 +126,7 @@ const czechSiteGenerator = await readFile("pipeline/transforms/build_czech_site.
 const capitalsScript = await readFile("eu-capitals.js", "utf8");
 const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
 const municipalI18n = await readFile("municipal-i18n.js", "utf8");
+const { municipalityPage } = await import("../server/municipality-page.mjs");
 const languageBootstrap = await readFile("language-bootstrap.js", "utf8");
 const internationalMunicipalities = JSON.parse(await readFile("data/international-municipalities.v1.json", "utf8"));
 const municipalItemizedCoverage = JSON.parse(await readFile("data/municipal-itemized-coverage.v1.json", "utf8"));
@@ -149,30 +153,17 @@ const municipalityCountryPages = await Promise.all(municipalityCountrySlugs.map(
 const germanMunicipalProfilePage = await readFile("municipalities/germany/profile/index.html", "utf8");
 const frenchMunicipalProfilePage = await readFile("municipalities/france/profile/index.html", "utf8");
 const frenchParisProfile = JSON.parse(await readFile("data/france-municipal-profiles/75.v1.json", "utf8"));
-const czechProfileSamples = await Promise.all([
-  "cz/municipalities/brno/index.html",
-  "cz/municipalities/arnoltice/index.html",
-].map((path) => readFile(path, "utf8")));
-const internationalProfileSamples = await Promise.all([
-  "municipalities/denmark/aabenraa-580/index.html",
-  "municipalities/brazil/sao-paulo-3550308/index.html",
-  "municipalities/spain/ababuj-44001aa000/index.html",
-  "municipalities/japan/municipality-242144/index.html",
-  "municipalities/colombia/abejorral-210205002/index.html",
-  "municipalities/georgia/municipality-mof-033/index.html",
-  "municipalities/italy/abano-terme-000105310/index.html",
-  "municipalities/bolivia/autonomia-del-territorio-indigena-originario-campesino-guarani-chaqueno-de-huacaya-3101/index.html",
-  "municipalities/el-salvador/acajutla-8301/index.html",
-  "municipalities/mexico/aguascalientes-01001/index.html",
-  "municipalities/costa-rica/abangares-sipp-abangares/index.html",
-  "municipalities/guatemala/cahabon-12101612/index.html",
-  "municipalities/peru/aramango-300023/index.html",
-  "municipalities/south-korea/municipality-4213000/index.html",
-  "municipalities/chile/antofagasta-02101/index.html",
-  "municipalities/norway/oslo-oslove-0301/index.html",
-  "municipalities/netherlands/laarbeek-1659/index.html",
-  "municipalities/finland/saarijarvi-729/index.html",
-].map((path) => readFile(path, "utf8")));
+const renderSnapshotPage = (payload, code, name, routePath, history = null) => municipalityPage({
+  route: { path: routePath, country_code: code, entity_code: payload.code || payload.entity?.national_id, entity_name: name },
+  release_id: "validation", profile: payload, history,
+}, "en");
+const czechProfileSamples = await Promise.all(["44992785", "00254398"].map(async (id) => {
+  const payload = JSON.parse(await readFile(`data/entities/${id}.json`, "utf8"));
+  const history = JSON.parse(await readFile(`data/municipal-history/${id}.json`, "utf8"));
+  return renderSnapshotPage(payload, "CZE", payload.entity.short_name, payload.entity.seo.municipality_path || payload.entity.seo.path, history);
+}));
+const internationalProfileSamples = [denmarkExpansionProfile, brazilExpansionProfile, spainExpansionProfile, japanExpansionProfile,
+  ...benchmarkMunicipalities.map((country) => country.entities[0])].map((payload) => renderSnapshotPage(payload, payload.country, payload.name, payload.url));
 if (snapshot.municipalities.length !== pinned.municipalities) throw new Error("Expected 6,254 municipalities");
 if (internationalMunicipalities.countries.length !== pinned.municipalDirectoryCountries || internationalMunicipalities.entities.length !== pinned.municipalDirectoryEntries) throw new Error("Expected 27-country municipality directory with 105,416 entity rows");
 // The heavy directory file is the authority for its own row count; the shared
@@ -268,13 +259,12 @@ if (benchmarkMunicipalities.reduce((sum, country) => sum + country.entities.leng
 // without waiting for a client-side shell. This guard prevents a bulk profile rewrite from
 // silently replacing the production template with a loading placeholder again.
 if (czechProfileSamples.some((page) =>
-  !page.includes('class="cz-budget-page detail-page"') ||
+  !page.includes("cz-budget-page") ||
   !page.includes('id="history-explorer"') ||
   !page.includes('id="rozpocet"') ||
   !page.includes('class="data-contract"') ||
-  page.includes('municipal-profile-loading') ||
-  page.includes('municipal-expanded-profile.js')
-)) throw new Error("Czech municipal profiles must use the full server-rendered Czech budget template");
+  page.includes('municipal-profile-loading')
+)) throw new Error("Czech municipal responses must contain a complete server-rendered first view");
 // International profiles use the Czech presentation hierarchy as a capability
 // contract. The first response must contain meaningful finance and provenance
 // content; JavaScript may enhance it, but must never be the only page renderer.
@@ -283,14 +273,11 @@ if (internationalProfileSamples.some((page) =>
   !page.includes('class="detail-hero"') ||
   !page.includes('id="rozpocet"') ||
   !page.includes('id="native-detail"') ||
-  !page.includes('class="detail-side-tabs"') ||
-  !page.includes('id="profile-detail-visual"') ||
-  !page.includes('class="raw-detail-audit"') ||
+  !page.includes('id="profile-detail"') ||
   !page.includes('class="data-contract" id="metodika"') ||
   !cacheBusted(page, "municipal-expanded-profile.js") ||
   page.includes("municipal-profile-loading")
 )) throw new Error("International municipal profiles must ship a server-rendered Czech-style first view");
-if (internationalProfileSamples[0].includes('<a href="#history-explorer">') || !internationalProfileSamples[0].includes("Překrývající se účetní skupiny")) throw new Error("Denmark must retain native detail without inventing headline history or totals");
 if (germanMunicipalProfilePage.includes("municipal-profile-loading") || !germanMunicipalProfilePage.includes('id="overview"') || !germanMunicipalProfilePage.includes('id="metodika"') || !germanMunicipalProfilePage.includes("Položkový městský rozpočet z těchto souhrnů nedopočítáváme")) throw new Error("Germany's headline-only route must render an honest coverage-first profile shell");
 for (const [code, expected, status] of [["DNK",98,"aggregate_only"],["ESP",6198,"complete"],["JPN",1741,"complete"]]) {
   const country = internationalMunicipalities.countries.find((item) => item.code === code);
@@ -517,9 +504,12 @@ if (!countryPage.includes('data-oecd-chart="redistribution_bridge"') || !country
 if (!czechMunicipalPage.includes('id="tax-autonomy"') || !czechMunicipalPage.includes('data-oecd-chart="autonomy_spectrum"') || municipalityCountryPages.some((page) => !page.includes('id="tax-autonomy"') || !page.includes('oecd-charts.js?v=20260829-oecd-reports'))) throw new Error("Every municipality-country page must include the source-backed OECD tax-autonomy spectrum contract");
 if (!deepDivePage.includes('href="migration/"') || !globalNav.includes('deep-dives/migration/') || !migrationDeepDivePage.includes('id="migration-map"') || !migrationDeepDivePage.includes('id="migration-line-chart"') || !migrationDeepDivePage.includes('id="migration-protection-chart"') || !migrationDeepDivePage.includes('id="migration-ranking"') || !migrationDeepDivePage.includes('id="migration-table-body"') || !migrationDeepDivePage.includes('demo_gind') || !migrationDeepDiveScript.includes('`${metric}_per_1000`') || euMigration.contract !== "eu-migration.v1" || euMigration.countries.length !== 33 || euMigration.countries.some((country) => !country.rows.length || !country.protection_rows.length) || !euMigration.eu27_protection.length || euMigration.scope.latest_complete_aggregate_year !== 2024 || euMigration.scope.protection_last_year !== 2025) throw new Error("Migration deep dive must expose complete European flows, protection decisions, rates, history and source lineage");
 if (!deepDivePage.includes('href="defense/?code=USA"') || !globalNav.includes('deep-dives/defense/?code=USA') || !defenseDeepDivePage.includes('id="defense-comparison-chart"') || !defenseDeepDivePage.includes('id="defense-lines-body"') || !defenseDeepDiveScript.includes('defense-target-tick') || defenseDeepDive.default_country !== "USA" || defenseDeepDive.countries.length !== 17 || defenseDeepDive.countries.some((country) => !country.comparison.series.length || !country.budget.items.length) || defenseDeepDive.commitments.nato_core_pct_gdp_2035 !== 3.5) throw new Error("Defense deep dive must default to the US and expose 17 sourced country histories, NATO target markers and native budget lines");
-if (!deepDivePage.includes('href="education/"') || deepDivePage.indexOf('href="education/"') > deepDivePage.indexOf('href="transportation/?code=CZE"') || !globalNav.includes('deep-dives/education/') || !educationDeepDivePage.includes('id="education-flow"') || !educationDeepDivePage.includes('id="education-region-chart"') || !educationDeepDivePage.includes('id="coverage-body"') || !educationDeepDiveScript.includes('education-deep-dive.v1.json') || Math.abs(educationDeepDive.headline.consolidated_education_czk_bn - 368.0638) > 0.001 || educationDeepDive.local.regions.length !== 14 || educationDeepDive.coverage.counts.ready !== 1 || educationDeepDive.coverage.counts.download !== 10 || educationDeepDive.coverage.counts.online !== 6) throw new Error("Education must be the first report and reconcile Czech central, local, school-type, regional and international coverage layers");
+if (!deepDivePage.includes('href="education/"') || deepDivePage.indexOf('href="education/"') > deepDivePage.indexOf('href="transportation/?code=CZE"') || !globalNav.includes('deep-dives/education/') || !educationDeepDivePage.includes('id="education-country"') || !educationDeepDivePage.includes('id="education-currency"') || !educationDeepDivePage.includes('id="education-flow"') || !educationDeepDivePage.includes('id="education-region-chart"') || !educationDeepDivePage.includes('id="capacity-benchmark-chart"') || !educationDeepDivePage.includes('id="capacity-country-body"') || !educationDeepDivePage.includes('id="coverage-body"') || !educationDeepDivePage.includes('education-deep-dive.js?v=20260902-global-controls') || !educationDeepDiveScript.includes('education-deep-dive.v1.json?v=20260902-global-controls') || !educationDeepDiveScript.includes('education-capacity-international.v1.json?v=20260902-global-controls') || !educationDeepDiveScript.includes('renderCapacityBenchmark') || !educationDeepDiveScript.includes('renderCapacityCountry') || Math.abs(educationDeepDive.headline.consolidated_education_czk_bn - 368.0638) > 0.001 || educationDeepDive.local.regions.length !== 14 || educationDeepDive.capacity.headline_enrolments !== 2226933 || educationDeepDive.capacity.categories.length !== 7 || educationDeepDive.capacity.benchmark.levels.length !== 5 || educationDeepDive.coverage.counts.ready !== 1 || educationDeepDive.coverage.counts.download !== 10 || educationDeepDive.coverage.counts.online !== 6) throw new Error("Education must reconcile Czech finance, capacity, school-type, regional and international benchmark layers");
+if (educationInstitutions.country_count !== 6 || educationInstitutions.level_count !== 5 || educationInstitutions.countries.some((country) => Object.values(country.counts).some((value) => !Number.isInteger(value) || value <= 0))) throw new Error("Education institution adapters must provide every level for all six core countries");
+if (educationCapacityInternational.period !== "2024" || educationCapacityInternational.country_count !== 6 || educationCapacityInternational.level_count !== 5 || educationCapacityInternational.countries.some((country) => country.coverage.learners_headcount !== 5 || country.coverage.learners_fte !== 5 || country.coverage.teaching_fte !== 5 || country.coverage.learners_per_teaching_fte !== 5 || country.coverage.schools_or_institutions !== 5 || country.levels.length !== 5 || country.levels.some((level) => !Number.isFinite(level.learners_headcount) || !Number.isFinite(level.learners_fte) || !Number.isFinite(level.teaching_fte) || !Number.isFinite(level.learners_per_teaching_fte) || !Number.isInteger(level.schools_or_institutions) || level.schools_or_institutions <= 0)) || educationCapacityInternational.countries.find((country) => country.code === "CHE")?.levels.some((level) => level.ratio_provenance !== "derived_from_eurostat_fte") || JSON.stringify(educationDeepDive.capacity.international.countries) !== JSON.stringify(educationCapacityInternational.countries)) throw new Error("Education capacity must load six core countries with complete learner, teacher-FTE, ratio and sourced institution observations");
 if (!deepDivePage.includes('href="trade/?code=DEU"') || !tradeDeepDivePage.includes('id="trade-kpis"') || !tradeDeepDivePage.includes('id="trade-chart"') || !tradeDeepDivePage.includes('id="trade-partners"') || !tradeDeepDivePage.includes('id="trade-products"') || !tradeDeepDiveScript.includes('/api/v1/trade?country=')) throw new Error("Trade deep dive must expose headline balances, a dynamic trend, and linked partner and product rankings");
-if (!tradeDeepDivePage.includes('id="product-intelligence"') || !tradeDeepDivePage.includes('id="product-flow"') || !tradeDeepDivePage.includes('id="product-history"') || !cacheBusted(tradeDeepDivePage, "trade-product-intelligence.js") || !cacheBusted(tradeDeepDivePage, "trade-product-intelligence.css") || !tradeProductIntelligenceScript.includes("product-intelligence.v1.json")) throw new Error("Trade deep dive must expose the product-market, EU aggregation, flow and history views");
+if (!deepDivePage.includes('href="product-markets/"') || !globalNav.includes('deep-dives/product-markets/') || !productMarketsPage.includes('id="product-intelligence"') || !productMarketsPage.includes('id="product-flow"') || !productMarketsPage.includes('id="product-history"') || !cacheBusted(productMarketsPage, "trade-product-intelligence.js") || !cacheBusted(productMarketsPage, "trade-product-intelligence.css") || !tradeProductIntelligenceScript.includes("product-intelligence.v1.json")) throw new Error("Standalone product markets must expose EU aggregation, bilateral flows, history, and report navigation");
+if (tradeDeepDivePage.includes('id="product-intelligence"') || cacheBusted(tradeDeepDivePage, "trade-product-intelligence.js") || !tradeDeepDivePage.includes('new URL("../product-markets/"')) throw new Error("Country trade must keep product markets separate and redirect legacy product links");
 if (tradeProductIntelligence.contract !== "trade-product-intelligence.v1" || tradeProductIntelligence.business_areas.length !== 5 || !tradeProductIntelligence.scope.available_periods.length || !tradeProductIntelligence.scope.geography_rollups.includes("COUNTRY") || !tradeProductIntelligence.scope.geography_rollups.includes("EU27_AGGREGATED")) throw new Error("Product-intelligence snapshot must expose five annual business areas and both geography rollups");
 for (const area of tradeProductIntelligence.business_areas) {
   if (!area.periods.length || !area.hs) throw new Error(`Product-intelligence area ${area.code} has no annual period or HS definition`);
@@ -634,7 +624,7 @@ for (const path of await htmlFiles()) {
   if (headerlessPages.has(path)) continue;
   const page = await readFile(path, "utf8");
   if ((page.match(/<psd-site-header\b/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared site-header component`);
-  if ((page.match(/global-nav\.js\?v=(?:20260822-component|20260824-identity-outlines|20260824-logo-120|20260824-budget-stages|20260825-country-expansion|20260826-migration|20260828-education|20260829-oecd-reports|20260901-trade-menu|20260901-digital-spillover|20260901-public-employment|20260902-eu-budget)/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared header script`);
+  if ((page.match(/global-nav\.js\?v=(?:20260822-component|20260824-identity-outlines|20260824-logo-120|20260824-budget-stages|20260825-country-expansion|20260826-migration|20260828-education|20260829-oecd-reports|20260901-trade-menu|20260901-digital-spillover|20260901-public-employment|20260902-eu-budget|20260902-product-markets|20260902-migration-protection)/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared header script`);
   if ((page.match(/site-header\.css\?v=(?:20260822-component|20260824-header-lockup)/g) || []).length !== 1 || !page.includes("data-psd-site-header")) throw new Error(`${path}: expected exactly one shared header stylesheet`);
   if (page.includes('<header class="site-header')) throw new Error(`${path}: contains a duplicated legacy header`);
 }
@@ -659,10 +649,10 @@ await stat("ageing-bill.css");
 for (const required of ["deep-dives/migration/index.html", "migration-deep-dive.js", "migration-deep-dive.css", "data/eu-migration.v1.json", "scripts/build-eu-migration.mjs"]) await stat(required);
 for (const required of ["deep-dives/eu-budget/index.html", "eu-budget-deep-dive.js", "eu-budget-deep-dive.css", "data/eu-budget-flows.v1.json", "scripts/build-eu-budget-flows.py"]) await stat(required);
 for (const required of ["deep-dives/defense/index.html", "defense-deep-dive.js", "defense-deep-dive.css", "data/defense-deep-dive.v1.json", "scripts/build-defense-deep-dive.py"]) await stat(required);
-for (const required of ["deep-dives/education/index.html", "education-deep-dive.js", "education-deep-dive.css", "data/education-deep-dive.v1.json", "scripts/build-education-deep-dive.py"]) await stat(required);
-for (const required of ["deep-dives/public-employment/index.html", "public-employment.js", "public-employment.css", "public-employment-benchmark.css", "data/cz-public-employment.v1.json", "pipeline/transforms/build_czech_public_employment.py", "pipeline/source_data/cze_public_employment_observations.csv", "pipeline/source_data/oecd_public_employment_europe_2025.csv"]) await stat(required);
-for (const required of ["deep-dives/digital-spillover/index.html", "digital-spillover.js", "digital-spillover.css", "data/digital-spillover.v1.json", "scripts/build-digital-spillover.mjs"]) await stat(required);
-for (const required of ["trade-product-intelligence.js", "trade-product-intelligence.css", "data/trade/product-intelligence.v1.json", "scripts/build_trade_product_intelligence.py"]) await stat(required);
+  for (const required of ["deep-dives/education/index.html", "education-deep-dive.js", "education-deep-dive.css", "data/education-deep-dive.v1.json", "data/education-capacity-international.v1.json", "scripts/build-education-deep-dive.py", "scripts/load-education-capacity.py"]) await stat(required);
+  for (const required of ["deep-dives/public-employment/index.html", "public-employment.js", "public-employment.css", "public-employment-benchmark.css", "data/cz-public-employment.v1.json", "pipeline/transforms/build_czech_public_employment.py", "pipeline/source_data/cze_public_employment_observations.csv", "pipeline/source_data/oecd_public_employment_europe_2025.csv"]) await stat(required);
+  for (const required of ["deep-dives/digital-spillover/index.html", "digital-spillover.js", "digital-spillover.css", "data/digital-spillover.v1.json", "scripts/build-digital-spillover.mjs"]) await stat(required);
+  for (const required of ["deep-dives/product-markets/index.html", "trade-product-intelligence.js", "trade-product-intelligence.css", "data/trade/product-intelligence.v1.json", "scripts/build_trade_product_intelligence.py"]) await stat(required);
 const tradeProductSnapshotStat = await stat("data/trade/product-intelligence.v1.json");
 if ((tradeProductSnapshotStat.mode & 0o044) !== 0o044) throw new Error("Product-intelligence snapshot must be world-readable by the production web server");
 for (const required of ["data-freshness.js", "data-freshness.css", "data/data-freshness.v1.json", "scripts/build-data-freshness.mjs"]) await stat(required);

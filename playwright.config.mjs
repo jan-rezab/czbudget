@@ -5,7 +5,7 @@ export default defineConfig({
   timeout: 30_000,
   retries: 1,
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:4173",
     trace: "retain-on-failure",
   },
   projects: [
@@ -14,7 +14,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "node scripts/test-server.mjs",
-    port: 4173,
+    port: Number(process.env.PORT || 4173),
     reuseExistingServer: true,
   },
 });

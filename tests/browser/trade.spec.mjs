@@ -95,7 +95,8 @@ test("country markets show destinations and origins with clickable bilateral det
 });
 
 test("product intelligence switches business areas and EU aggregation without losing flow totals", async ({ page }) => {
-  await page.goto("/deep-dives/trade/?code=CZE&lang=en#product-intelligence");
+  await page.goto("/deep-dives/product-markets/?lang=en#product-intelligence-view");
+  await expect(page).toHaveTitle("Global product markets — Public Spending Data");
   await expect(page.locator("#product-intelligence-kpis")).toContainText("$180.7B");
   await expect(page.locator("#product-flow svg")).toHaveCount(1);
   await expect(page.locator("#product-flow .flow-link")).toHaveCount(61);
@@ -121,11 +122,30 @@ test("trade is registered in reports and the language switch translates the whol
   await expect(page.locator("#overview h1")).toContainText("The trade market");
   await expect(page.locator("#matrix h2")).toHaveText("The goods market as a portfolio");
   await expect(page.locator("#routes h2")).toHaveText("Where exports go. Where imports come from.");
-  await expect(page.locator("#product-intelligence h2")).toHaveText("Who supplies. Who buys. Where the market is moving.");
   await expect(page.locator("#method h2")).toHaveText("One balance, two valuation bases");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /Imports, exports, the trade balance/);
 
   await page.goto("/deep-dives/?lang=en");
   await expect(page.locator("#trade")).toContainText("Foreign trade");
+  await expect(page.locator("#product-markets")).toContainText("Global product markets");
   await expect(page.locator('psd-site-header .deep-dive-menu-panel a[href*="/deep-dives/trade/"]')).toContainText("Foreign trade");
+  await expect(page.locator('psd-site-header .deep-dive-menu-panel a[href*="/deep-dives/product-markets/"]')).toContainText("Global product markets");
+});
+
+test("product markets translate independently from the country trade report", async ({ page }) => {
+  await page.goto("/deep-dives/product-markets/?lang=cs");
+  await expect(page).toHaveTitle("Globální produktové trhy — Public Spending Data");
+  await expect(page.locator("#overview h1")).toContainText("Sledujte produkt");
+  await page.locator('psd-site-header [data-lang="en"]').click();
+  await expect(page).toHaveURL(/lang=en/);
+  await expect(page).toHaveTitle("Global product markets — Public Spending Data");
+  await expect(page.locator("#overview h1")).toContainText("Follow a product");
+  await expect(page.locator("#product-intelligence-view h2")).toHaveText("Who supplies. Who buys. Where the market is moving.");
+  await expect(page.locator("#method h2")).toHaveText("Origin is not the same as manufacturer");
+});
+
+test("legacy country-report product links move to the standalone report and preserve filters", async ({ page }) => {
+  await page.goto("/deep-dives/trade/?code=CZE&lang=en&area=SMARTPHONES&geo=COUNTRY&product_period=2025#product-intelligence");
+  await expect(page).toHaveURL(/\/deep-dives\/product-markets\/\?lang=en&area=SMARTPHONES&geo=COUNTRY&product_period=2025#product-intelligence-view/);
+  await expect(page.locator("#product-geography")).toHaveValue("COUNTRY");
 });

@@ -13,11 +13,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[2]))
-WEB = ROOT / "website"
+WEB = Path(os.environ.get("CZBUDGET_WEBSITE_ROOT", Path(__file__).resolve().parents[1])).resolve()
+ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", WEB.parent)).resolve()
 FINM = ROOT / "data/source_cache/2025_12_FINM.zip"
 FINOSS = ROOT / "data/sources/ministries/CZE/fin-1-12-oss-2025-12.zip"
 MUNICIPAL_SNAPSHOT = WEB / "data/municipal-snapshot.v1.json"
+INTERNATIONAL_CAPACITY = WEB / "data/education-capacity-international.v1.json"
 OUTPUT = WEB / "data/education-deep-dive.v1.json"
 
 REGIONS = [
@@ -281,6 +282,89 @@ def coverage() -> dict:
     }
 
 
+def capacity() -> dict:
+    """Current Czech capacity plus a like-for-like Eurostat staffing benchmark."""
+    categories = [
+        ("kindergarten", "Mateřské školy", "Kindergartens", "2025/26", 347_798, 5_409, 35_745.77),
+        ("primary", "Základní školy", "Primary schools", "2025/26", 1_002_916, 4_320, 76_683.39),
+        ("secondary", "Střední školy", "Secondary schools", "2025/26", 514_881, 1_328, 46_370.62),
+        ("conservatory", "Konzervatoře", "Conservatories", "2025/26", 3_839, 18, 1_106.79),
+        ("higher_vocational", "Vyšší odborné školy", "Higher vocational schools", "2025/26", 22_900, 153, 1_392.53),
+        ("universities", "Veřejné a soukromé vysoké školy", "Public and private universities", "2025", 330_547, 53, 20_119.0),
+        ("state_universities", "Státní vysoké školy", "State universities", "2025", 4_052, 2, None),
+    ]
+    rows = []
+    for category_id, label_cs, label_en, period, learners, institutions, teaching_fte in categories:
+        rows.append({
+            "id": category_id,
+            "label_cs": label_cs,
+            "label_en": label_en,
+            "period": period,
+            "learners": learners,
+            "schools_or_institutions": institutions,
+            "teaching_fte": teaching_fte,
+            "learners_per_teaching_fte": round(learners / teaching_fte, 1) if teaching_fte else None,
+        })
+
+    international = json.loads(INTERNATIONAL_CAPACITY.read_text(encoding="utf-8"))
+    country_profiles = international["countries"]
+    level_ids = [level["id"] for level in country_profiles[0]["levels"]]
+    levels = []
+    for level_id in level_ids:
+        rows_by_country = {
+            country["code"]: next(level for level in country["levels"] if level["id"] == level_id)
+            for country in country_profiles
+        }
+        reported_peer_values = [
+            row["learners_per_teaching_fte"]
+            for code, row in rows_by_country.items()
+            if code != "CZE" and row["learners_per_teaching_fte"] is not None
+        ]
+        ordered = sorted(reported_peer_values)
+        midpoint = len(ordered) // 2
+        peer_median = (ordered[midpoint - 1] + ordered[midpoint]) / 2 if len(ordered) % 2 == 0 else ordered[midpoint]
+        czech_row = rows_by_country["CZE"]
+        levels.append({
+            "id": level_id,
+            "label_cs": czech_row["label_cs"],
+            "label_en": czech_row["label_en"],
+            "isced": czech_row["isced"],
+            "czech_value": czech_row["learners_per_teaching_fte"],
+            "reported_peer_median": round(peer_median, 1),
+            "observations": [
+                {
+                    "code": country["code"],
+                    "name_cs": country["name_cs"],
+                    "name_en": country["name_en"],
+                    "value": rows_by_country[country["code"]]["learners_per_teaching_fte"],
+                }
+                for country in country_profiles
+            ],
+        })
+    return {
+        "domestic_period": "2025/26",
+        "headline_enrolments": sum(row[4] for row in categories),
+        "measured_teaching_fte": round(sum(row[6] or 0 for row in categories), 2),
+        "category_units": sum(row[5] for row in categories),
+        "categories": rows,
+        "benchmark": {
+            "period": international["period"],
+            "unit": "full-time-equivalent pupils or students per full-time-equivalent teacher or academic staff member",
+            "core_peer_definition": "Site core: Czechia plus countries tagged anchor or responsible_benchmark in the sovereign benchmark. Published Eurostat ratios are used where available; otherwise the ratio is derived from the same learner- and teaching-FTE observations and marked in the source data.",
+            "levels": levels,
+            "source_url": "https://ec.europa.eu/eurostat/databrowser/view/educ_uoe_perp04/default/table?lang=en",
+        },
+        "international": {
+            "period": international["period"],
+            "country_count": international["country_count"],
+            "level_count": international["level_count"],
+            "countries": country_profiles,
+            "methodology": international["methodology"],
+            "sources": international["sources"],
+        },
+    }
+
+
 def main() -> None:
     local = local_data()
     ministry = ministry_data()
@@ -299,12 +383,17 @@ def main() -> None:
         },
         "local": local,
         "ministry": ministry,
+        "capacity": capacity(),
         "coverage": coverage(),
         "sources": [
             {"title": "FIN 1-12 OSS 2025", "url": "https://monitor.statnipokladna.gov.cz/datovy-katalog/transakcni-data", "scope": "Ministry chapter 333 actual expenditure"},
             {"title": "FIN 2-12 M 2025", "url": "https://monitor.statnipokladna.gov.cz/datovy-katalog/transakcni-data", "scope": "Municipal and regional actual expenditure"},
             {"title": "State budget in the context of performance", "url": "https://www.mfcr.cz/assets/attachments/2025-10-01_Statni-rozpocet-v-kontextu-vykonnosti.pdf", "scope": "Approved state-funded education envelope"},
             {"title": "OECD Education Finance", "url": coverage()["benchmark_source"], "scope": "International benchmark coverage"},
+            {"title": "CZSO / MŠMT — Schools and school facilities 2025/26", "url": "https://csu.gov.cz/produkty/skoly-a-skolska-zarizeni-skolni-rok-202526", "scope": "Learners, school-type units and teaching FTE from kindergarten through higher vocational education"},
+            {"title": "CZSO — Universities 2025", "url": "https://csu.gov.cz/vysoke-a-vyssi-odborne-skoly", "scope": "University students and institutions"},
+            {"title": "CZSO — Education staff and wages", "url": "https://csu.gov.cz/pracovnici-a-mzdy-ve-vzdelavani", "scope": "University academic staff FTE"},
+            {"title": "Eurostat — pupils and students per teacher", "url": capacity()["benchmark"]["source_url"], "scope": "Harmonised 2024 UOE ratios and underlying FTE observations by ISCED level"},
         ],
         "methodology": {
             "education_scope": "Czech budget paragraphs 31 and 32",

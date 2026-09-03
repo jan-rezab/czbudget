@@ -8,23 +8,31 @@
     cs: {
       nav: "Produktové trhy", kicker: "Produktová inteligence / HS6", title: "Kdo dodává. Kdo nakupuje. Kam se trh přesouvá.",
       intro: "Pět obchodně důležitých oblastí ve stejné metodice. Země původu je proxy nabídky; reportující dovozní trh je proxy poptávky.",
+      pageTitle: "Globální produktové trhy — Public Spending Data", pageDescription: "Globální obchodní toky podle produktů HS6: kdo dodává, které trhy nakupují a jak se obchod mění v čase.",
+      heroEyebrow: "Report / Globální produktové trhy", heroTitleLead: "Sledujte produkt", heroTitleEm: "napříč světem", heroIntro: "Začněte produktem místo zemí. Uvidíte vykázaný původ, dovozní trhy, bilaterální toky a dostupný roční vývoj.", heroAsideKicker: "Datová úroveň", heroAsideCopy: "Šestimístné produktové kódy propojené s reportujícími dovozními trhy a zeměmi původu.", heroAsideLink: "Jak číst data ↓",
+      overviewNav: "Přehled", positionsNav: "Pozice", flowNav: "Toky", historyNav: "Vývoj", methodNav: "Metodika",
       areaLabel: "Obchodní oblast", geographyLabel: "Geografie", periodLabel: "Roční období", euOption: "EU-27 jako jeden blok", countryOption: "Jednotlivé země",
       originsTitle: "Hlavní země původu", originsCopy: "Proxy nabídky podle původu, který uvedl dovozní trh.", marketsTitle: "Hlavní dovozní trhy", marketsCopy: "Proxy poptávky podle reportujícího dovozního trhu.",
       flowKicker: "Tok produktu", flowTitle: "Od vykázaného původu k dovoznímu trhu", supplyProxy: "Původ / proxy nabídky", demandProxy: "Dovozní trh / proxy poptávky", flowHint: "Přejeďte nebo klikněte na tok pro přesnou hodnotu.",
       historyKicker: "Roční řada", historyTitle: "Pozorovaná hodnota v čase", euNote: "Agregace EU-27 zachovává vnitrounijní obchod jako samostatný tok EU-27 → EU-27.", coverageNote: "Pokrytí je pozorovaný výřez načtených reportujících trhů, nikoli úplný světový součet. Chybějící data nejsou nuly.",
       observedValue: "Pozorovaná bilaterální hodnota", observedCoverage: "Pozorované pokrytí", productDefinition: "Definice produktu", routes: "tras země–země", originCountries: "zemí původu", importMarkets: "dovozních trhů", completeMarkets: "úplných", partialMarkets: "částečný",
       importerReported: "hlášeno dovozními trhy", annualPoint: "načtený roční bod", annualPoints: "načtené roční body", sourceRelease: "vydání zdroje", share: "podíl", counterparties: "protistran", otherOrigins: "Ostatní původy", otherMarkets: "Ostatní pozorované trhy", eu27: "Evropská unie (EU-27)", loading: "Načítám produktové trhy z BigQuery snapshotu…", loadError: "Produktovou inteligenci se nepodařilo načíst.",
+      methodKicker: "Jak číst produktový trh", methodTitle: "Původ není totéž co výrobce", methodIntro: "Toky jsou hlášeny dovozními trhy. Země původu proto slouží jako konzistentní proxy nabídky, ne jako důkaz sídla značky nebo výrobní firmy.", methodProductTitle: "Definice HS6", methodProductCopy: "Každá obchodní oblast je transparentní sada šestimístných kódů Harmonizovaného systému.", methodFlowTitle: "Bilaterální tok", methodFlowCopy: "Každý spoj vede od vykázané země původu k reportujícímu dovoznímu trhu.", methodCoverageTitle: "Chybějící není nula", methodCoverageCopy: "Součty popisují načtené reportující trhy a dostupná období; nezveřejněná data nedoplňujeme nulou.", sourceLabel: "Zdroj",
       areas: { SMARTPHONES:"Chytré telefony", PASSENGER_VEHICLES:"Osobní vozidla", MEDICAMENTS:"Léčiva", INTEGRATED_CIRCUITS:"Integrované obvody", ELECTRIC_BATTERIES:"Elektrické baterie" },
     },
     en: {
       nav: "Product markets", kicker: "Product intelligence / HS6", title: "Who supplies. Who buys. Where the market is moving.",
       intro: "Five business-critical product areas under one method. Reported origin is a supply proxy; the reporting import market is a demand proxy.",
+      pageTitle: "Global product markets — Public Spending Data", pageDescription: "Global HS6 product flows: who supplies, which markets buy, and how observed trade changes over time.",
+      heroEyebrow: "Report / Global product markets", heroTitleLead: "Follow a product", heroTitleEm: "across the world", heroIntro: "Start with the product rather than the country. See reported origins, import markets, bilateral flows, and the available annual history.", heroAsideKicker: "Data grain", heroAsideCopy: "Six-digit product codes connected to reporting import markets and reported countries of origin.", heroAsideLink: "How to read the data ↓",
+      overviewNav: "Overview", positionsNav: "Positions", flowNav: "Flows", historyNav: "History", methodNav: "Method",
       areaLabel: "Business area", geographyLabel: "Geography", periodLabel: "Annual period", euOption: "EU-27 as one bloc", countryOption: "Individual countries",
       originsTitle: "Leading origins", originsCopy: "Supply proxy based on the origin reported by importing markets.", marketsTitle: "Leading import markets", marketsCopy: "Demand proxy based on the reporting importing market.",
       flowKicker: "Product flow", flowTitle: "From reported origin to import market", supplyProxy: "Origin / supply proxy", demandProxy: "Import market / demand proxy", flowHint: "Hover or click a flow for its exact value.",
       historyKicker: "Annual series", historyTitle: "Observed value over time", euNote: "EU-27 aggregation retains intra-EU trade as a separate EU-27 → EU-27 flow.", coverageNote: "Coverage is the observed slice of loaded reporting markets, not a complete world total. Missing data are not zeroes.",
       observedValue: "Observed bilateral value", observedCoverage: "Observed coverage", productDefinition: "Product definition", routes: "country-to-country routes", originCountries: "origin countries", importMarkets: "import markets", completeMarkets: "complete", partialMarkets: "partial",
       importerReported: "importer-reported", annualPoint: "annual point loaded", annualPoints: "annual points loaded", sourceRelease: "source release", share: "share", counterparties: "counterparties", otherOrigins: "Other origins", otherMarkets: "Other observed markets", eu27: "European Union (EU-27)", loading: "Loading product markets from the BigQuery snapshot…", loadError: "Product intelligence could not be loaded.",
+      methodKicker: "How to read a product market", methodTitle: "Origin is not the same as manufacturer", methodIntro: "Flows are reported by importing markets. Country of origin is therefore a consistent supply proxy, not evidence of a brand's headquarters or a specific manufacturer.", methodProductTitle: "HS6 definition", methodProductCopy: "Each business area is a transparent set of six-digit Harmonized System product codes.", methodFlowTitle: "Bilateral flow", methodFlowCopy: "Each connection runs from the reported country of origin to the reporting import market.", methodCoverageTitle: "Missing is not zero", methodCoverageCopy: "Totals describe loaded reporting markets and available periods; unreleased data are never filled with zero.", sourceLabel: "Source",
       areas: { SMARTPHONES:"Smartphones", PASSENGER_VEHICLES:"Passenger vehicles", MEDICAMENTS:"Medicaments", INTEGRATED_CIRCUITS:"Integrated circuits", ELECTRIC_BATTERIES:"Electric batteries" },
     },
   }[lang];
@@ -33,6 +41,20 @@
     const value = copy[node.dataset.productCopy];
     if (value) node.textContent = value;
   });
+  if (document.body.classList.contains("product-markets-page")) {
+    document.title = copy.pageTitle;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", copy.pageDescription);
+    window.psdLanguageReady?.();
+    document.addEventListener("click", (event) => {
+      const control = event.target.closest("[data-lang],[data-deep-lang],[data-budget-lang]");
+      const nextLanguage = control?.dataset.lang || control?.dataset.deepLang || control?.dataset.budgetLang;
+      if (!nextLanguage || nextLanguage === lang) return;
+      try { localStorage.setItem("psd-lang", nextLanguage); } catch {}
+      const url = new URL(location.href);
+      url.searchParams.set("lang", nextLanguage);
+      location.href = url.href;
+    });
+  }
 
   const areaSelect = root.querySelector("#product-area");
   const geographySelect = root.querySelector("#product-geography");

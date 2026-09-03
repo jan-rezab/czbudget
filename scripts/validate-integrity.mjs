@@ -430,6 +430,16 @@ let htmlCount = 0;
 let localReferenceCount = 0;
 const readableCountrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FIN:"finland",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states",BRA:"brazil",ESP:"spain",JPN:"japan",NLD:"netherlands",NOR:"norway",GRC:"greece"};
 const countryPaths = sovereign.countries.map((country) => `/countries/${readableCountrySlugs[country.country_code] || country.country_code.toLowerCase()}`);
+// Municipality detail URLs are application routes backed by the immutable
+// serving snapshot. They deliberately have no corresponding HTML file in the
+// checkout or container, so local-link validation must use the published route
+// registries instead of treating the removed prerender fan-out as required.
+const dynamicMunicipalityPaths = new Set([
+  ...municipalities.map((entity) => entity.seo.path),
+  ...municipalities.map((entity) => entity.seo.municipality_path),
+  ...internationalMunicipalities.entities.map((entity) => entity.url),
+  ...benchmarkMunicipalities.map((entity) => entity.url),
+].filter(Boolean).map((value) => value.endsWith("/") ? value : `${value}/`));
 if (!dataOnly) {
   const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html"));
   htmlCount = htmlFiles.length;
@@ -451,7 +461,9 @@ if (!dataOnly) {
         ? path.resolve(root, clean.slice(1))
         : path.resolve(path.dirname(file), clean);
       const candidates = [target, `${target}.html`, path.join(target, "index.html")];
-      let exists = countryPaths.includes(clean);
+      const resolvedPath = `/${path.relative(root, target).split(path.sep).join("/")}`;
+      const dynamicPath = resolvedPath.endsWith("/") ? resolvedPath : `${resolvedPath}/`;
+      let exists = countryPaths.includes(clean) || dynamicMunicipalityPaths.has(dynamicPath);
       for (const candidate of candidates) { try { if ((await stat(candidate)).isFile()) { exists = true; break; } } catch {} }
       assert(exists, `Broken local reference ${relative} -> ${reference}`);
     }
@@ -470,10 +482,11 @@ if (!dataOnly) {
   // means the gate self-heals if that route is ever removed.
   const accountabilityPages = existsSync(path.join(root, "cz/kraje/accountability/index.html")) ? 1 : 0;
   const municipalSpecialPages = existsSync(path.join(root, "deep-dives/plzen-contracts/index.html")) ? 1 : 0;
-  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 15 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 7 + municipalSpecialPages + accountabilityPages;
+  const productMarketPages = existsSync(path.join(root, "deep-dives/product-markets/index.html")) ? 1 : 0;
+  const expectedSitemapUrls = municipalities.length + 1 + municipalityCountryPaths.length + 15 + 6 + 6 + benchmarkMunicipalities.length + 4 + countryPaths.length + expansionProfiles.length + 7 + municipalSpecialPages + productMarketPages + accountabilityPages;
   assert(locations.length === expectedSitemapUrls, `Expected ${expectedSitemapUrls.toLocaleString("en-US")} sitemap URLs, received ${locations.length}`);
   assert(new Set(locations).size === locations.length, "Duplicate sitemap URLs");
-  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/eu-budget/", "/deep-dives/education/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/deep-dives/tax-burden/", "/deep-dives/redistribution/", "/deep-dives/trade/", "/deep-dives/budget-planner/", "/deep-dives/plzen-contracts/", "/deep-dives/digital-spillover/", "/deep-dives/public-employment/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/", "/cz/kraje/accountability/"]) {
+  for (const publicPath of ["/", "/cesko.html", "/cesky-rozpocet.html", "/eu-capitals.html", ...countryPaths, "/municipalities/", ...municipalityCountryPaths, "/deep-dives/", "/deep-dives/eu-budget/", "/deep-dives/education/", "/deep-dives/transportation/", "/deep-dives/health/", "/deep-dives/state-owned-enterprises/", "/deep-dives/capital-cities/", "/deep-dives/revenue/", "/deep-dives/ageing/", "/deep-dives/migration/", "/deep-dives/defense/", "/deep-dives/tax-burden/", "/deep-dives/redistribution/", "/deep-dives/trade/", "/deep-dives/product-markets/", "/deep-dives/budget-planner/", "/deep-dives/plzen-contracts/", "/deep-dives/digital-spillover/", "/deep-dives/public-employment/", "/cz/municipalities/", "/cz/mesta/", "/cz/kraje/", "/cz/kraje/accountability/"]) {
     assert(locations.includes(`https://publicspendingdata.org${publicPath}`), `Sitemap missing ${publicPath}`);
   }
   for (const entity of municipalities) assert(locations.some((url) => url.endsWith(entity.seo.path)), `Sitemap missing ${entity.seo.path}`);

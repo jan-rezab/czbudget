@@ -84,6 +84,7 @@
     DEU: { cs: "Německo", en: "Germany", slug: "germany" },
     FRA: { cs: "Francie", en: "France", slug: "france" },
     CZE: { cs: "Česko", en: "Czechia", slug: "czechia", profileRoot: "cz/municipalities" },
+    POL: { cs: "Polsko", en: "Poland", slug: "poland" },
   };
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
@@ -130,15 +131,20 @@
   function adaptProfile(data, historyData = null, frenchLines = null, warehouseLines = null, itemLabels = null) {
     const warehouseDetail = (warehouseLines?.lines || []).map((row) => {
       const labels = itemLabels?.countries?.[warehouseLines.country] || {};
+      const polishLabel = warehouseLines.country === "POL"
+        ? itemLabels?.localized?.POL?.[row.side]?.[String(row.code || "").slice(0, 3)]
+        : null;
+      const nativeName = row.name_native || polishLabel?.pl || labels[row.code] || row.code;
+      const englishName = row.name_en || polishLabel?.en || null;
       return {
         year: row.year,
         stage: row.stage,
         side: row.side,
         code: row.code,
-        name_native: row.name_native || labels[row.code] || row.code,
-        name_en: row.name_en || null,
+        name_native: nativeName,
+        name_en: englishName,
         name_cs: row.name_cs || null,
-        name: row.name_native || row.name_en || labels[row.code] || row.code,
+        name: englishName || nativeName,
         amount: row.amount,
         ...(row.dimension ? { dimension: row.dimension } : {}),
         ...(row.period && row.period !== "FY" ? { period: row.period } : {}),
@@ -319,6 +325,12 @@
     }));
   }
 
+  function itemLabelMarkup(row, fallback) {
+    const primary = row.name || row.column || row.code || fallback;
+    const native = row.name_native && row.name_native !== primary ? row.name_native : null;
+    return { primary, native };
+  }
+
   // Brazil's execution lifecycle in the order money moves through it, so the selector reads
   // as a sequence rather than an alphabetical list.
   const stageOrder = ["enacted", "revised", "committed", "actual", "paid", "cash", "carried_over", "period", "remaining"];
@@ -426,7 +438,7 @@
     return profile.normalizedDetail.filter((row) => {
       const dimensionMatches = !(profile.franceLineCoverage || profile.classificationCoverage?.dimensions)
         || row.dimension === detailDimension;
-      return dimensionMatches && (detailYear === "all" || String(row.year) === detailYear) && (detailStage === "all" || row.stage === detailStage) && row.side === detailSide && (!query || [row.code, row.name, row.column, row.table_title, row.side].some((value) => String(value || "").toLocaleLowerCase().includes(query)));
+      return dimensionMatches && (detailYear === "all" || String(row.year) === detailYear) && (detailStage === "all" || row.stage === detailStage) && row.side === detailSide && (!query || [row.code, row.name, row.name_native, row.column, row.table_title, row.side].some((value) => String(value || "").toLocaleLowerCase().includes(query)));
     });
   }
 
@@ -450,9 +462,9 @@
     const visible = rows.slice(0, visualShown);
     const items = visible.map((row, index) => {
       const width = maximum ? Math.max(1.5, Math.abs(Number(row.amount)) / maximum * 100) : 0;
-      const label = row.name || row.column || row.code || t.specificItems;
-      const meta = [row.code, row.table_title, row.column && row.column !== row.name ? row.column : null].filter(Boolean).join(" · ");
-      return `<article class="native-visual-row"><div class="native-visual-rank">${String(index + 1).padStart(2, "0")}</div><div class="native-visual-body"><div class="native-visual-label"><div><strong>${escapeHtml(label)}</strong>${meta ? `<small>${escapeHtml(meta)}</small>` : ""}</div><b>${money(Math.abs(Number(row.amount)), true, row.year)}</b></div><div class="native-visual-track"><i style="width:${width.toFixed(2)}%"></i></div></div></article>`;
+      const label = itemLabelMarkup(row, t.specificItems);
+      const meta = [label.native, row.code, row.table_title, row.column && row.column !== row.name ? row.column : null].filter(Boolean).join(" · ");
+      return `<article class="native-visual-row"><div class="native-visual-rank">${String(index + 1).padStart(2, "0")}</div><div class="native-visual-body"><div class="native-visual-label"><div><strong>${escapeHtml(label.primary)}</strong>${meta ? `<small>${escapeHtml(meta)}</small>` : ""}</div><b>${money(Math.abs(Number(row.amount)), true, row.year)}</b></div><div class="native-visual-track"><i style="width:${width.toFixed(2)}%"></i></div></div></article>`;
     }).join("");
     return `<div class="native-visual-summary"><span>${t.specificItems}</span><strong>${new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(rows.length)}</strong></div><div class="native-visual-list" id="profile-detail-visual">${items || `<p class="profile-empty-note">${t.noItems}</p>`}</div><p class="native-visual-note">${t.compareNote}</p><button id="profile-visual-more" class="load-more" type="button"${visualShown >= rows.length ? " hidden" : ""}>${t.visualMore}</button>`;
   }
@@ -463,7 +475,11 @@
     const rows = detailRows();
     const table = document.querySelector("#profile-detail");
     if (!table) return;
-    table.innerHTML = `<thead><tr><th>${t.year}</th><th>${t.stage}</th><th>${t.side}</th><th>${t.account}</th><th>${t.amount}</th></tr></thead><tbody>${rows.slice(0, detailShown).map((row) => `<tr><td>${row.year}</td><td>${escapeHtml(t[row.stage] || row.stage)}</td><td>${escapeHtml(row.side === "revenue" ? t.revenue : row.side === "expenditure" ? t.expenditure : row.side || "")}</td><td><b>${escapeHtml(row.code)}</b><small>${escapeHtml(row.name || row.column || "")}${row.column && row.name ? ` · ${escapeHtml(row.column)}` : ""}</small></td><td>${money(row.amount, false, row.year)}</td></tr>`).join("")}</tbody>`;
+    table.innerHTML = `<thead><tr><th>${t.year}</th><th>${t.stage}</th><th>${t.side}</th><th>${t.account}</th><th>${t.amount}</th></tr></thead><tbody>${rows.slice(0, detailShown).map((row) => {
+      const label = itemLabelMarkup(row, "");
+      const secondary = [label.native, row.column && row.column !== row.name ? row.column : null].filter(Boolean).join(" · ");
+      return `<tr><td>${row.year}</td><td>${escapeHtml(t[row.stage] || row.stage)}</td><td>${escapeHtml(row.side === "revenue" ? t.revenue : row.side === "expenditure" ? t.expenditure : row.side || "")}</td><td><b>${escapeHtml(row.code)} · ${escapeHtml(label.primary)}</b>${secondary ? `<small>${escapeHtml(secondary)}</small>` : ""}</td><td>${money(row.amount, false, row.year)}</td></tr>`;
+    }).join("")}</tbody>`;
     document.querySelector("#profile-detail-count").textContent = `${new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(Math.min(detailShown, rows.length))} / ${new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(rows.length)} ${t.shown}`;
     const more = document.querySelector("#profile-detail-more");
     more.textContent = t.more;
@@ -687,7 +703,7 @@
       ? fetchJson(`/public-data/municipality-lines?country=${encodeURIComponent(warehouseTarget.country)}&code=${encodeURIComponent(warehouseTarget.code)}`).catch(() => null)
       : Promise.resolve(null),
     warehouseTarget
-      ? fetchJson(new URL("data/registry/municipal-item-labels.v1.json", assetRoot).href).catch(() => null)
+      ? fetchJson(new URL("data/registry/municipal-item-labels.v1.json?v=20260902-polish-labels", assetRoot).href).catch(() => null)
       : Promise.resolve(null),
   ])
     .then(([data, historyData, rates, frenchLines, warehouseLines, itemLabels]) => {
