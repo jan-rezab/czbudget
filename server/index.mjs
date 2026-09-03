@@ -387,7 +387,7 @@ export async function handler(request, response) {
     if (/^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(url.pathname)) {
       if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
       const snapshot = await publicSnapshotStore.profileForPath(url.pathname);
-      return sendHTML(request, response, municipalityPage(snapshot, url.searchParams.get("lang")));
+      return sendHTML(request, response, municipalityPage(snapshot));
     }
 
     // The two payload trees the pages fetch by file path — 28,559 expansion profiles and 6,254

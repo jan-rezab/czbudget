@@ -352,13 +352,6 @@ for (const [code, expected] of Object.entries(expectedPublicEntityCounts)) {
     const index = shard.fields.indexOf(field), dictionary = shard.dictionaries[field];
     assert(index >= 0 && Array.isArray(dictionary) && shard.records.every((row) => Number.isInteger(row[index]) && row[index] >= 0 && row[index] < dictionary.length), `${code}/${field}: invalid dictionary reference`);
   }
-  if (code === "CZE") {
-    const classIndex = shard.fields.indexOf("entity_class"), ownerIndex = shard.fields.indexOf("ownership_level");
-    const classDictionary = shard.dictionaries.entity_class, ownerDictionary = shard.dictionaries.ownership_level;
-    const healthInsurers = shard.records.filter((row) => classDictionary[row[classIndex]] === "public_health_insurer");
-    assert(healthInsurers.length === 7, "CZE: all seven public health insurers must have a visible entity class");
-    assert(healthInsurers.every((row) => ownerDictionary[row[ownerIndex]] === "social_insurance_fund"), "CZE: health insurers must sit in the social-insurance layer");
-  }
 }
 assert(publicEntityCoverage.countries.POL.broad_entity_count === 112145, "Polish broad public-sector count mismatch");
 assert(publicEntityCoverage.countries.DEU.broad_entity_count === 20658, "German all-level public-enterprise count mismatch");
@@ -430,16 +423,6 @@ let htmlCount = 0;
 let localReferenceCount = 0;
 const readableCountrySlugs = {CZE:"czechia",DEU:"germany",DNK:"denmark",FIN:"finland",FRA:"france",GBR:"united-kingdom",POL:"poland",SWE:"sweden",CHE:"switzerland",UKR:"ukraine",USA:"united-states",BRA:"brazil",ESP:"spain",JPN:"japan",NLD:"netherlands",NOR:"norway",GRC:"greece"};
 const countryPaths = sovereign.countries.map((country) => `/countries/${readableCountrySlugs[country.country_code] || country.country_code.toLowerCase()}`);
-// Municipality detail URLs are application routes backed by the immutable
-// serving snapshot. They deliberately have no corresponding HTML file in the
-// checkout or container, so local-link validation must use the published route
-// registries instead of treating the removed prerender fan-out as required.
-const dynamicMunicipalityPaths = new Set([
-  ...municipalities.map((entity) => entity.seo.path),
-  ...municipalities.map((entity) => entity.seo.municipality_path),
-  ...internationalMunicipalities.entities.map((entity) => entity.url),
-  ...benchmarkMunicipalities.map((entity) => entity.url),
-].filter(Boolean).map((value) => value.endsWith("/") ? value : `${value}/`));
 if (!dataOnly) {
   const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html"));
   htmlCount = htmlFiles.length;
@@ -461,9 +444,7 @@ if (!dataOnly) {
         ? path.resolve(root, clean.slice(1))
         : path.resolve(path.dirname(file), clean);
       const candidates = [target, `${target}.html`, path.join(target, "index.html")];
-      const resolvedPath = `/${path.relative(root, target).split(path.sep).join("/")}`;
-      const dynamicPath = resolvedPath.endsWith("/") ? resolvedPath : `${resolvedPath}/`;
-      let exists = countryPaths.includes(clean) || dynamicMunicipalityPaths.has(dynamicPath);
+      let exists = countryPaths.includes(clean);
       for (const candidate of candidates) { try { if ((await stat(candidate)).isFile()) { exists = true; break; } } catch {} }
       assert(exists, `Broken local reference ${relative} -> ${reference}`);
     }

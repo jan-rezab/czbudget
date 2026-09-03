@@ -45,10 +45,7 @@ steps:
         # same 65,920 profiles the 635 MB fan-out does. prepare-public-serving-snapshots.mjs
         # reads it in preference to `serving`, which is retired and kept only as the baseline
         # the derivation tools check against.
-        # Per-route HTML is no longer a build input. The server renders it from
-        # the release snapshot, so hydrating pages/pages_cz would only recreate
-        # 35,869 files that neither Nginx nor the image uses.
-        for LAYER in serving entities bundles; do
+        for LAYER in serving pages pages_cz entities bundles; do
           gcloud storage cat "$$BASE/$$LAYER.tar.gz" | tar -C . -xzf -
           echo "hydrated $$LAYER"
         done
@@ -61,6 +58,8 @@ steps:
       - -ceu
       - |
         node scripts/hydrate-data-layers.mjs --layer serving  --verify
+        node scripts/hydrate-data-layers.mjs --layer pages    --verify
+        node scripts/hydrate-data-layers.mjs --layer pages_cz --verify
         node scripts/hydrate-data-layers.mjs --layer entities --verify
         node scripts/hydrate-data-layers.mjs --layer bundles  --verify
 
@@ -139,34 +138,6 @@ steps:
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/merge-municipal-breakdowns.mjs]
-
-  # Export one immutable municipal release into 128 compressed shards. This is
-  # the only profile representation used by the runtime; no per-route HTML is
-  # copied into the image or uploaded as one object per municipality.
-  - id: build-public-snapshot
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: sh
-    args:
-      - -ceu
-      - |
-        node scripts/prepare-public-serving-snapshots.mjs \
-          --output /workspace/.public-serving-build \
-          --release-id "$COMMIT_SHA-$BUILD_ID" \
-          --shards 128
-        node scripts/validate-public-serving-snapshot.mjs /workspace/.public-serving-build
-
-  # Upload immutable release objects now, but not current.json. The currently
-  # deployed revision may predate shard support; activation happens only after
-  # the compatible image is live.
-  - id: upload-public-snapshot
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
-    entrypoint: bash
-    args:
-      - -ceu
-      - |
-        release="$COMMIT_SHA-$BUILD_ID"
-        gcloud storage rsync -r "/workspace/.public-serving-build/releases/$$release" \
-          "${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$release"
 
   # Manifest/validation ordering is load-bearing — do not collapse these four steps.
   # validate-integrity.mjs both (a) verifies every artifact hash in
@@ -260,17 +231,6 @@ steps:
       - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
       - /workspace/.deploy-current-main
       - ${_PUBLIC_SNAPSHOT_BASE_URL}
-
-  # Atomic data activation follows deployment. An obsolete build cannot switch
-  # the pointer after assert-current-main has withdrawn its deploy marker.
-  - id: publish-public-snapshot
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
-    entrypoint: sh
-    args:
-      - scripts/publish-public-snapshot.sh
-      - /workspace/.deploy-current-main
-      - /workspace/.public-serving-build/current.json
-      - ${_PUBLIC_SNAPSHOT_BASE_URL}/current.json
 
 # Measured on build 6d00ef4f (2026-09-01), the first with archive hydration: 875s total,
 # spent as build 221 / validate 153 / verify-release-manifest 139 / deploy 88 / breakdown

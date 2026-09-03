@@ -93,29 +93,6 @@ samostatně označena jako přímá shoda kódu, silná shoda názvu a IČO, neb
 
 ## Autentizované API
 
-### Obecní profily bez souboru pro každou URL
-
-Produkce negeneruje ani neobsluhuje jeden HTML soubor pro každou obec. Cloud
-Build vytvoří neměnný release se 128 gzipovanými JSONL shardy, kompaktním
-indexem cest a kontrolními součty. Release se nahraje do soukromého Cloud
-Storage; ukazatel `current.json` se přepne až po nasazení kompatibilní revize.
-
-Node renderer načte pouze shard příslušné obce, ověří jeho SHA-256 a drží
-omezenou LRU cache. První odpověď už obsahuje název, souhrnné finance, historii,
-zdroj, canonical metadata a Dataset JSON-LD; JavaScript ji pouze rozšíří o
-grafy a položkový průzkumník. Běžný požadavek proto nevolá BigQuery. Nginx
-směruje obecní detail vždy do rendereru, takže starý lokální `index.html`
-nemůže zastínit aktivní release. Starší objektové snapshoty zůstávají po dobu
-migrace čitelné pro bezpečný rollback.
-
-```bash
-npm run build:public-serving-snapshots -- --output /tmp/municipal-release --release-id local --shards 128
-npm run validate:public-serving-snapshots -- /tmp/municipal-release
-```
-
-Generátory historických profilů zůstávají reprodukčními nástroji, ale jejich
-HTML výstup není vstupem produkčního buildu.
-
 Produkční kontejner provozuje vedle statického webu API v téže Cloud Run
 službě `czbudget-public`. Nginx obsluhuje veřejný web a předává cesty `/api`,
 `/auth`, `/developers` a `/docs` internímu Node procesu.
