@@ -254,6 +254,8 @@ images:
   - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
 
 options:
+  env:
+    - CLOUDSDK_CORE_ACCOUNT=258433468858-compute@developer.gserviceaccount.com
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:
