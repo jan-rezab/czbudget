@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+  <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260824-logo-120" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>French municipalities — Public Spending Data</title>
+  <meta name="description" content="2025 revenue, expenditure, surplus and deficit rankings with a budget-sized directory of all 34,875 French communes.">
+  <link rel="canonical" href="https://publicspendingdata.org/municipalities/france/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/municipalities/france/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/municipalities/france/?lang=en">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../styles.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../chart-system.css?v=20260822-country-municipalities">
+  <link rel="stylesheet" href="../../municipalities.css?v=20260823-layout-fix">
+  <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260902-france-editorial">
+  <link rel="stylesheet" href="../../oecd-charts.css?v=20260829-oecd-reports">
+  <script src="../../municipality-country-picker.js?v=20260902-searchable-picker" defer></script>
+  <script src="../../municipalities-country.js?v=20260902-france-editorial" defer></script>
+  <script src="../../oecd-charts.js?v=20260829-oecd-reports" defer></script>
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Public Spending Data">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://publicspendingdata.org/assets/og.png">
+</head>
+<body class="municipalities-page country-municipalities-page france-municipalities-page" data-country-code="FRA" data-country-slug="france">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <nav class="municipality-switch" aria-label="Municipality views"><a href="../?lang=cs" data-view-link="europe" data-copy="viewEurope">Evropa</a><label class="active"><span data-copy="countryHomepage">Stránka země</span><select id="municipality-country-switch" aria-label="Stránka obcí podle země"></select></label></nav>
+    <section class="municipal-hero france-hero"><div><span class="eyebrow"><i class="live-dot"></i><span id="country-eyebrow">—</span></span><h1 id="country-title">—</h1><p id="country-intro">—</p></div><div class="municipal-hero-stat"><span data-copy="covered">Pokryté místní jednotky</span><strong id="country-total">—</strong><small id="country-coverage">—</small></div></section>
+    <nav class="municipal-rail"><a href="#insights" data-copy="navInsights">Co data říkají</a><a href="#budget-rankings" data-copy="navRankings">Rozpočtové žebříčky</a><a id="budget-structure-nav" href="#budget-structure" data-copy="navStructure" hidden>Struktura rozpočtu</a><a id="tax-autonomy-nav" href="#tax-autonomy" data-copy="taxAutonomy">OECD · daňová pravomoc</a><a href="#directory" data-copy="navDirectory">Adresář</a><a href="#context" data-copy="navContext">Kontext a zdroj</a></nav>
+    <section id="insights" class="municipal-section france-national-summary"><div class="section-heading"><div><span class="kicker" data-copy="insightsKicker">Datový profil</span><h2 id="insights-title">—</h2></div><p id="insights-copy">—</p></div><div id="country-insight-grid" class="insight-grid"></div></section>
+
+    <section id="budget-rankings" class="municipal-section municipal-budget-rankings" aria-labelledby="budget-rankings-title"><div class="section-heading"><div><span class="kicker" data-copy="rankingsKicker">Rozpočtové žebříčky</span><h2 id="budget-rankings-title" data-copy="rankingsTitle">Největší rozpočty, přebytky a schodky</h2></div><p data-copy="rankingsCopy">Skutečné výdaje ukazují velikost rozpočtu. Přebytek a schodek jsou příjmy minus výdaje za jediný rok, nikoli známka kvality vedení.</p></div><div class="municipal-balance-split" id="municipal-balance-split" aria-live="polite"></div><div class="municipal-ranking-grid" id="municipal-ranking-grid" aria-live="polite"></div><p class="france-ranking-note" data-copy="rankingsNote">„Dobré“ a „špatné“ zde znamená pouze přebytek nebo schodek v jediném roce. Schodek může financovat plánovanou investici z dřívějších úspor.</p></section>
+    <section id="budget-structure" class="municipal-section municipal-budget-structure" hidden><div class="section-heading"><div><span class="kicker" data-copy="structureKicker">Průměrný místní rozpočet</span><h2 data-copy="structureTitle">Složení průměrného místního rozpočtu</h2></div><p data-copy="structureCopy">Každý místní rozpočet má stejnou váhu, takže největší města nepřehluší okresní a menší obecní rozpočty.</p></div><div id="budget-structure-content"></div></section>
+    <section id="tax-autonomy" class="municipal-section" hidden><div data-oecd-chart="autonomy_spectrum" data-hide-when-missing="true"></div></section>
+    <section id="directory" class="municipal-section france-directory"><div class="section-heading"><div><span class="kicker" data-copy="directoryKicker">Všech 34 875 obcí</span><h2 data-copy="directoryTitle">Najděte obec</h2></div><div class="france-directory-intro"><p data-copy="directoryIntro">Hledejte podle názvu, regionu nebo kódu INSEE. Každý výsledek vede na úplný finanční profil obce.</p><strong id="country-directory-count">—</strong></div></div><div class="france-search-lead"><label for="country-municipality-search" data-copy="searchLabel">Hledat obec</label><div><input id="country-municipality-search" type="search" autocomplete="off" data-placeholder="franceSearchPlaceholder" placeholder="Název, region nebo kód INSEE…"><button id="country-reset" type="button" data-copy="resetShort">Vymazat</button></div></div><div class="municipal-controls country-directory-controls france-directory-controls"><label><span data-copy="profileYear">Rok v profilu</span><select id="country-year-filter"></select></label><label><span data-copy="balanceFilter">Výsledek</span><select id="country-balance-filter"><option value="all" data-copy="allBalances">Přebytky i schodky</option><option value="surplus" data-copy="surplusOnly">Přebytky</option><option value="deficit" data-copy="deficitOnly">Schodky</option></select></label><label><span data-copy="sort">Řazení</span><select id="country-sort"><option value="expenditure" data-copy="sortBudget">Podle velikosti rozpočtu</option><option value="revenue" data-copy="sortRevenue">Podle příjmů</option><option value="balance" data-copy="sortBalance">Podle výsledku</option><option value="population" data-copy="sortPopulation">Podle počtu obyvatel</option><option value="name" data-copy="sortName">Podle názvu</option></select></label></div><p class="france-directory-order" data-copy="directoryOrderNote">Bez hledání jsou obce seřazené od největšího rozpočtu podle skutečných výdajů.</p><div id="country-municipality-grid" class="municipality-grid"></div><button id="country-load-more" class="load-more" type="button" data-copy="more">Načíst další</button></section>
+    <section id="context" class="municipal-section"><div class="section-heading"><div><span class="kicker" data-copy="contextKicker">Co je uvnitř</span><h2 data-copy="contextTitle">Zdroj a rozsah dat</h2></div><p data-copy="contextCopy">U každého čísla uvádíme národní zdroj a účetní hranici.</p></div><div id="country-context-grid" class="country-context-grid"></div></section>
+  </main>
+  <footer data-global-footer></footer>
+  <script src="../../global-footer.js?v=20260823-footer" defer></script>
+</body>
+</html>
