@@ -182,3 +182,12 @@
 @media(max-width:800px){.recovery-kpis,.recovery-timeline ol{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.recovery-kpis,.recovery-timeline ol{grid-template-columns:1fr}}
 .country-flag-emoji{font-size:1.6rem;line-height:1}
+
+/* Keep inherited chapter colors on dark surfaces and reset light inset cards. */
+.country-page #demography .age-legend span,
+.country-page #demography .demography-year > small { color: var(--paper); }
+.country-page #sources .source-cards article > span,
+.country-page #sources .source-cards small,
+.country-page #sources .source-cards p,
+.country-page #sources .source-cards a { color: var(--paper); }
+.country-page .cash-consolidated dd.negative { background: var(--paper); padding: 2px 6px; }

@@ -760,14 +760,14 @@ test("nationwide municipal explorer drives the aggregate story and directory yea
 
 test("municipal profiles expose 2010–2025 history and preserve genuine coverage gaps", async ({ page }) => {
   await page.goto("/cz/municipalities/abertamy/?lang=cs", { waitUntil: "networkidle" });
-  await expect(page.locator("#history-explorer .kicker")).toHaveText("16 let / 2010–2025");
+  await expect(page.locator("#history-explorer .kicker")).toHaveText("Vývoj · 2010–2025");
   await expect(page.locator("#history-table-body tr")).toHaveCount(16);
   await expect(page.locator("#history-kpis")).toContainText("Součet výsledků za 16 let");
-  await expect(page.locator('.source-list a[href$="/data/municipal-history/00254398.json"]')).toBeVisible();
+  await expect(page.locator('.source-list a[href^="/public-data/municipality-history?"]')).toBeVisible();
 
   await page.goto("/cz/municipalities/abertamy/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#history-explorer .kicker")).toHaveText("16 years / 2010-2025");
-  await expect(page.locator("#history-kpis")).toContainText("16-year cumulative balance");
+  await expect(page.locator("#history-explorer .kicker")).toHaveText("Trend · 2010–2025");
+  await expect(page.locator("#history-kpis")).toContainText("Sum of results over 16 years");
 
   await page.goto("/cz/municipalities/policna/?lang=cs", { waitUntil: "networkidle" });
   await expect(page.locator("#history-table-body tr")).toHaveCount(13);
@@ -775,23 +775,25 @@ test("municipal profiles expose 2010–2025 history and preserve genuine coverag
   await expect(page.locator("#history-table-body")).not.toContainText("2010");
 });
 
-test("municipal detail charts use meaningful units, hover values and currency recalculation", async ({ page }) => {
-  await page.goto("/cz/municipalities/arnoltice/?lang=en", { waitUntil: "networkidle" });
-  await expect(page).toHaveTitle(/Arnoltice town and municipality budget 2025/);
+test("municipal history tables preserve source amounts and annual currency conversion", async ({ page }) => {
+  const history = await readJson("data/municipal-history/00261173.json");
+  const fx = await readJson("data/municipal-fx-rates.v1.json");
+  const latest = history.series.at(-1);
+  const money = (value, currency) => new Intl.NumberFormat("en-GB", {style:"currency",currency,maximumFractionDigits:0}).format(value);
+  await page.goto("/cz/municipalities/arnoltice/?lang=en", {waitUntil:"networkidle"});
+  await expect(page).toHaveTitle(/Arnoltice — Czechia municipal budget/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/cz\/municipalities\/arnoltice\/$/);
+  expect(await page.locator('script[type="application/ld+json"]').textContent()).toContain('"inLanguage":"en"');
   await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute("content", "en_GB");
-  expect(await page.locator('script[type="application\/ld\+json"]').textContent()).toContain('"inLanguage":"en"');
-  await expect(page.locator("#history-kpis article").first()).toContainText(/CZK\s?[\d.,]+/);
-  await expect(page.locator("#history-kpis")).not.toContainText("CZK 0bn");
-  await expect(page.locator(".history-year-hit")).toHaveCount(16);
-  await page.locator(".history-year-hit").last().hover();
-  await expect(page.locator(".history-tooltip")).toBeVisible();
-  await expect(page.locator(".history-tooltip")).toContainText("2025");
-  await expect(page.locator(".history-tooltip")).toContainText(/CZK\s?[\d.,]+/);
-  await page.locator(".municipal-currency-control select").selectOption("EUR");
-  await expect(page.locator(".detail-kpis article").first()).toContainText("€769.3k");
-  await expect(page.locator("#history-kpis article").first()).toContainText("€770.3k");
-  await expect(page.locator("#history-chart .history-grid")).toContainText("EUR m");
+  await expect(page.locator('#history-table-body tr')).toHaveCount(history.series.length);
+  await page.locator('[data-profile-currency="native"]').click();
+  await expect(page.locator('#history-table-body tr').first()).toContainText(money(latest.revenue_actual, "CZK"));
+  await page.locator('[data-profile-currency="EUR"]').click();
+  const rateYear = Math.max(...Object.keys(fx.rates.CZE.years).map(Number).filter(year => year <= latest.year));
+  const converted = latest.revenue_actual * fx.eur_per_usd[rateYear] / fx.rates.CZE.years[rateYear].local_per_usd;
+  await expect(page.locator('#history-table-body tr').first()).toContainText(money(converted, "EUR"));
+  await expect(page.locator('.profile-currency-converter')).toContainText(`IMF WEO annual rate ${rateYear}`);
+  await expect(page.locator('#history-kpis')).not.toContainText("€0bn");
 });
 
 test("all representative page menus resolve and primary navigation routes correctly", async ({ page, request }) => {

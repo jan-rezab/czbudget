@@ -142,9 +142,9 @@ test("shared page modules do not retain Czech UI copy in English", async ({ page
   await expect(page.locator("#reconciliation-note")).not.toContainText("Součet 38 individuálních karet");
 
   await page.goto("/cz/municipalities/praha/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator(".detail-hero .eyebrow")).toContainText("Municipal reporting entity · ID 00064581 · 2025");
+  await expect(page.locator(".detail-hero .eyebrow")).toContainText("Czechia · official municipal finance");
   await expect(page.locator(".method-warning")).toContainText("The fiscal balance is consolidated throughout the series.");
-  await expect(page.locator(".data-contract p")).toContainText("A separate municipal reporting entity");
+  await expect(page.locator(".data-contract p")).toContainText("Missing cash, debt or history is not estimated.");
 });
 
 test("warehouse-only itemized coverage reads honestly in both languages", async ({ page }) => {

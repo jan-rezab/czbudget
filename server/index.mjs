@@ -302,7 +302,12 @@ export async function handler(request, response) {
   if (Buffer.byteLength(request.url || "") > MAX_REQUEST_URL_BYTES) {
     return sendError(response, 414, "request_uri_too_long", "The request URL exceeds the API safety limit.", id);
   }
-  const url = new URL(request.url, "http://api.internal");
+  let url;
+  try {
+    url = new URL(request.url, "http://api.internal");
+  } catch {
+    return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
+  }
   try {
     if (url.pathname.startsWith("/auth/")) {
       if (!enforceRateLimit(response, id, { key: clientIP(request), limit: AUTH_IP_WINDOW_LIMIT, windowMs: 15 * 60 * 1000, group: "auth-ip" })) return;

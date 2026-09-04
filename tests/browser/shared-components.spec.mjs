@@ -1,6 +1,16 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 const origin = "http://127.0.0.1:4173";
+
+test("shared dropdown values remain readable in page-specific labels", async ({ page }) => {
+  for (const route of ["/?lang=en", "/comparison.html?lang=en"]) {
+    await page.goto(route, { waitUntil: "networkidle" });
+    await expect(page.locator(".custom-select-value").first()).toBeVisible();
+    const audit = await new AxeBuilder({ page }).include(".custom-select-button").withRules(["color-contrast"]).analyze();
+    expect(audit.violations).toEqual([]);
+  }
+});
 
 function collectRuntimeFailures(page) {
   const failures = [];

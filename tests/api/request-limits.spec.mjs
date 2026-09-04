@@ -47,3 +47,19 @@ test("rejects an oversized request URL before API processing", async () => {
   assert.equal(response.status, 414);
   assert.equal((await response.json()).error.code, "request_uri_too_long");
 });
+
+test("a malformed request target returns 400 and leaves the server available", async () => {
+  const result = await new Promise((resolve, reject) => {
+    const request = http.request(baseURL, { path: "http://[" }, (response) => {
+      let body = "";
+      response.setEncoding("utf8");
+      response.on("data", (chunk) => { body += chunk; });
+      response.on("end", () => resolve({ status: response.statusCode, body: JSON.parse(body) }));
+    });
+    request.on("error", reject);
+    request.end();
+  });
+  assert.equal(result.status, 400);
+  assert.equal(result.body.error.code, "invalid_request_url");
+  assert.equal((await fetch(`${baseURL}/api/v1`)).status, 200);
+});

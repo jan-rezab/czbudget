@@ -212,3 +212,23 @@ Při produkčním buildu se z BigQuery načtou také konsolidované řádky FIN 
 pro všech 6 254 obcí. Do každého profilového JSONu se vloží kompaktní členění
 podle funkčních paragrafů a ekonomických položek pro schválený, upravený i
 skutečný rozpočet; oficiální názvy sdílí jeden společný číselník.
+
+### Browser release checks
+
+`npm run test:browser` now builds a temporary municipal snapshot release from
+local serving inputs and dispatches municipal pages to the production Node
+renderer. Warehouse bundles are preferred; retired profile HTML is not restored.
+The temporary release is removed when the test server stops. To reuse an existing
+release, set `PUBLIC_SNAPSHOT_RELEASE_ROOT` to its directory (containing
+`current.json`). The tests still need the normal hydrated site data.
+
+BigQuery line-item responses are replayed from the small, recorded fixtures in
+`tests/fixtures/municipal-lines/`; tests never query the warehouse or production.
+Their manifest records URLs and capture time. Refresh them deliberately with
+`node scripts/refresh-browser-line-fixtures.mjs` when testing a new source vintage.
+Unrecorded line-item requests fail explicitly instead of fabricating data.
+
+`tests/browser/contrast.spec.mjs` checks the full homepage, comparison, country,
+Czech municipal and international municipal pages in CS/EN and desktop/mobile,
+including currency changes and expanded municipal rows. Cloud Build runs this
+suite against its freshly built release and blocks deployment on failure.

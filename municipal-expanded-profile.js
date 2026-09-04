@@ -424,13 +424,17 @@
   function stageTableMarkup(rows, latestYear) {
     const t = copy[lang];
     const yearRows = rows.filter((row) => row.year === latestYear);
+    const actual = profile.history?.find((row) => Number(row.year) === Number(latestYear));
     const stages = ["enacted", "revised", "actual"].map((stage) => {
-      const revenue = headline(yearRows, stage, "revenue");
-      const expenditure = headline(yearRows, stage, "expenditure");
+      // Warehouse detail excludes some totals and intra-budgetary transfers.
+      // Keep audited snapshot totals consistent with the headline cards.
+      const revenue = stage === "actual" && actual ? numeric(actual.revenue) : headline(yearRows, stage, "revenue");
+      const expenditure = stage === "actual" && actual ? numeric(actual.expenditure) : headline(yearRows, stage, "expenditure");
       return { stage, revenue, expenditure, balance: revenue !== null && expenditure !== null ? revenue - expenditure : null };
     }).filter((row) => row.revenue !== null || row.expenditure !== null);
     if (!stages.length) return `<p class="profile-empty-note">${t.noValue}</p>`;
-    return `<div class="budget-stage-scroll" tabindex="0"><table class="budget-stage-table"><caption>${t.budgetTitle} · ${latestYear}</caption><thead><tr><th>${t.stage}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th></tr></thead><tbody>${stages.map((row) => `<tr class="budget-stage-${row.stage}"><th>${t[row.stage] || row.stage}</th><td>${money(row.revenue, false)}</td><td>${money(row.expenditure, false)}</td><td class="${numeric(row.balance) !== null && row.balance < 0 ? "negative" : "positive"}">${money(row.balance, false)}</td></tr>`).join("")}</tbody></table></div>`;
+    const note = profile.detail_source === "warehouse" ? `<p class="native-visual-note">${lang === "en" ? "Actual totals follow the audited profile. Detailed source rows retain their original scope and execution stages and may not reconcile to these totals." : "Skutečné součty odpovídají ověřenému profilu. Detailní zdrojové řádky zachovávají původní rozsah a fáze plnění a nemusí se s těmito součty shodovat."}</p>` : "";
+    return `${note}<div class="budget-stage-scroll" tabindex="0"><table class="budget-stage-table"><caption>${t.budgetTitle} · ${latestYear}</caption><thead><tr><th>${t.stage}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th></tr></thead><tbody>${stages.map((row) => `<tr class="budget-stage-${row.stage}"><th>${t[row.stage] || row.stage}</th><td>${money(row.revenue, false)}</td><td>${money(row.expenditure, false)}</td><td class="${numeric(row.balance) !== null && row.balance < 0 ? "negative" : "positive"}">${money(row.balance, false)}</td></tr>`).join("")}</tbody></table></div>`;
   }
 
   function detailRows() {

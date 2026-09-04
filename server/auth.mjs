@@ -94,11 +94,19 @@ export async function verifyIdToken(token, { requireVerified = true } = {}) {
 }
 
 function parseCookies(request) {
-  const cookies = {};
+  const cookies = Object.create(null);
   for (const part of (request.headers.cookie || "").split(";")) {
     const index = part.indexOf("=");
     if (index < 0) continue;
-    cookies[part.slice(0, index).trim()] = decodeURIComponent(part.slice(index + 1).trim());
+    const name = part.slice(0, index).trim();
+    const value = part.slice(index + 1).trim();
+    try {
+      cookies[name] = decodeURIComponent(value);
+    } catch {
+      // Cookies need not be URI-encoded. Preserve malformed values so unrelated
+      // cookies cannot break a visit and invalid auth cookies still fail auth.
+      cookies[name] = value;
+    }
   }
   return cookies;
 }

@@ -92,7 +92,7 @@
 }
 
 .profile-currency-options button.active {
-  background: var(--cz-yellow);
+  background: var(--cz-acid);
   color: var(--cz-ink);
 }
 
@@ -581,4 +581,12 @@
     align-items: flex-start;
     flex-direction: column;
   }
+}
+
+/* Keep the desktop section rail outside the full-width profile content. */
+@media (min-width: 861px) {
+  .international-municipality-profile.benchmark-profile:has(.context-rail) > main { margin-left: 112px; }
+}
+@media (min-width: 861px) and (max-width: 1180px) {
+  .international-municipality-profile.benchmark-profile:has(.context-rail) > main { margin-left: 82px; }
 }

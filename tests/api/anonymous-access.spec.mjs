@@ -50,6 +50,25 @@ test("anonymous answers are shared-cacheable and carry no user identity", async 
   assert.equal(response.headers.get("x-authenticated-user"), null);
 });
 
+test("a malformed unrelated cookie does not break anonymous or authenticated access", async () => {
+  for (const cookie of ["analytics=%", "analytics=%; psd_session=test-token"]) {
+    const response = await fetch(`${baseURL}/api/v1/countries`, { headers: { cookie } });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("x-authenticated-user"), cookie.includes("psd_session") ? "test-user" : null);
+  }
+});
+
+test("a malformed session cookie is rejected as invalid authentication", async () => {
+  process.env.AUTH_DISABLED_FOR_TESTS = "0";
+  try {
+    const response = await fetch(`${baseURL}/api/v1/countries`, { headers: { cookie: "psd_session=%" } });
+    assert.equal(response.status, 401);
+    assert.equal((await response.json()).error.code, "invalid_token");
+  } finally {
+    process.env.AUTH_DISABLED_FOR_TESTS = "1";
+  }
+});
+
 test("a token still buys the higher quota and a private answer", async () => {
   const response = await authenticated("/api/v1/countries");
   assert.equal(response.status, 200);

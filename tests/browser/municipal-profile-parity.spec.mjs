@@ -148,8 +148,8 @@ test("Brazilian profile reconciles stages and keeps tax rows on the revenue side
   await expect(page.locator("#profile-detail-visual")).toContainText("ReceitaTributaria");
   const taxRow = page.locator("#profile-detail tbody tr", { hasText: "ReceitaTributaria" }).first();
   await expect(taxRow).toContainText("Revenue");
-  await expect(page.locator("#profile-detail-stage")).toContainText("In period");
-  await expect(page.locator("#profile-detail-stage")).toContainText("Remaining");
+  await expect(page.locator("#profile-detail-stage")).toContainText("Paid");
+  await expect(page.locator("#profile-detail-stage")).toContainText("Carried-over payables");
 
   await page.locator("#profile-detail-search").fill("Taxas");
   await expect(page.locator("#profile-detail-visual")).toContainText("Taxas");
@@ -198,7 +198,7 @@ test("every generated country family renders the shared municipal hierarchy", as
   }
 });
 
-test("international profiles remain useful without JavaScript", async ({ browser }) => {
+test("international profiles remain useful without JavaScript", async ({ browser, request }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
@@ -206,18 +206,23 @@ test("international profiles remain useful without JavaScript", async ({ browser
   await expect(page.locator(".detail-kpis article")).toHaveCount(4);
   await expect(page.locator("#history-explorer")).toBeVisible();
   await expect(page.locator("#rozpocet .plan-panel")).toBeVisible();
-  await expect(page.locator(".detail-kpis")).toContainText("BRL");
-  await expect(page.locator("#profile-detail-visual .native-visual-row")).toHaveCount(10);
-  await expect(page.locator(".raw-detail-audit")).not.toHaveAttribute("open", "");
-  await expect(page.locator("#profile-detail tbody tr")).toHaveCount(11);
+  const response = await request.get('/public-data/municipality-profile?path=/municipalities/brazil/sao-paulo-3550308/');
+  expect(response.ok()).toBeTruthy();
+  const profile = await response.json();
+  const latest = profile.history.at(-1);
+  const currency = new Intl.NumberFormat('en-GB', {style: 'currency', currency: profile.currency, maximumFractionDigits: 0});
+  await expect(page.locator('#rozpocet .plan-panel')).toContainText(currency.format(latest.revenue));
+  await expect(page.locator('#history-explorer tbody tr')).toHaveCount(profile.history.length);
+  await expect(page.locator('#native-detail')).toContainText('Detailed line items load with JavaScript');
+  await expect(page.locator('#profile-detail tbody tr')).toHaveCount(0);
   await expect(page.locator("#metodika.data-contract")).toBeVisible();
   await context.close();
 });
 
 test("section navigation follows the data available for each country", async ({ page }) => {
   await page.goto("/municipalities/denmark/aabenraa-580/?lang=en");
-  await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Budget", "Detail", "Method"]);
-  await expect(page.locator(".detail-kpis article").first()).toContainText("Not available");
+  await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Trend", "Budget", "Detail", "Method"]);
+  await expect(page.locator(".detail-kpis article").first()).toContainText("€");
 
   await page.goto("/municipalities/norway/oslo-oslove-0301/?lang=en");
   await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Trend", "Accounts", "Detail", "Method"]);

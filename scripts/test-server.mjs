@@ -1,10 +1,31 @@
 import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
+import { execFileSync } from "node:child_process";
+import { tmpdir } from "node:os";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
 
 const root = resolve(process.cwd());
 const port = Number(process.env.PORT || 4173);
+// Exercise the same immutable snapshots and renderer as production. A caller may
+// reuse a prepared release; otherwise build one from the local serving inputs.
+let temporaryRelease;
+if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT) {
+  temporaryRelease = await mkdtemp(join(tmpdir(), "czbudget-browser-release-"));
+  execFileSync(process.execPath, ["scripts/prepare-public-serving-snapshots.mjs", "--output", temporaryRelease, "--release-id", "browser-test"], { cwd: root, stdio: "inherit" });
+  process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT = temporaryRelease;
+}
+process.env.NODE_ENV = "test";
+process.env.SITE_ROOT = root;
+const { handler } = await import("../server/index.mjs");
+const lineFixtures = JSON.parse(await readFile(join(root, "tests/fixtures/municipal-lines/manifest.json"), "utf8"));
+const cleanup = async () => {
+  if (temporaryRelease) await rm(temporaryRelease, { recursive: true, force: true });
+  process.exit(0);
+};
+process.on("SIGTERM", cleanup);
+process.on("SIGINT", cleanup);
 const countrySlugs = new Set([
   "czechia", "germany", "denmark", "france", "united-kingdom",
   "poland", "sweden", "switzerland", "ukraine", "united-states",
@@ -39,6 +60,28 @@ createServer(async (request, response) => {
   try {
     const url = new URL(request.url || "/", `http://127.0.0.1:${port}`);
     let pathname = decodeURIComponent(url.pathname);
+    // BigQuery has its own API contract tests. Browser tests replay recorded
+    // public responses so they neither need cloud credentials nor spend quota.
+    if (pathname === "/public-data/municipality-lines") {
+      const fixture = lineFixtures.responses.find((item) => item.country === url.searchParams.get("country") && item.code === url.searchParams.get("code"));
+      if (!fixture) {
+        response.writeHead(503, { "Content-Type": "application/json" });
+        response.end(JSON.stringify({ error: { code: "missing_browser_fixture", message: "Record this municipality response before testing its detail." } }));
+        return;
+      }
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.end(gunzipSync(await readFile(join(root, "tests/fixtures/municipal-lines", fixture.file))));
+      return;
+    }
+    const queryProfile = /^\/municipalities\/(?:france|germany)\/profile\/$/.test(pathname);
+    if ((!queryProfile && /^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(pathname))
+      || /^\/(?:public-data|api|auth|docs|developers)(?:\/|$)/.test(pathname)
+      || /^\/(?:data\/)?municipal-expansion\/[a-z]{3}\/[^/]+\.json$/.test(pathname)
+      || /^\/data\/entities\/\d{8}\.json$/.test(pathname)
+      || pathname === "/healthz") {
+      await handler(request, response);
+      return;
+    }
     const countryMatch = pathname.match(/^\/countries\/([^/]+)(\/?)$/);
 
     if (countryMatch && (countrySlugs.has(countryMatch[1]) || /^[a-z]{3}$/.test(countryMatch[1]))) {

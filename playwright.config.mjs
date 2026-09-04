@@ -15,6 +15,7 @@ export default defineConfig({
   webServer: {
     command: "node scripts/test-server.mjs",
     port: Number(process.env.PORT || 4173),
+    timeout: 180_000,
     reuseExistingServer: true,
   },
 });

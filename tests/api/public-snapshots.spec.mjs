@@ -107,3 +107,10 @@ test("public endpoints and dynamic HTML do not require API authentication", asyn
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   }
 });
+
+test("server-rendered snapshot keeps missing money distinct from zero", () => {
+  const page = municipalityPage({ route, release_id: releaseId, profile: {currency: 'EUR', history: [{year: 2025, revenue: null, expenditure: 0}]}, history: null });
+  assert.match(page, /<span>Revenue<\/span><strong>—<\/strong>/);
+  assert.match(page, /<span>Expenditure<\/span><strong>€0<\/strong>/);
+  assert.match(page, /class="detail-panel plan-panel"/);
+});
