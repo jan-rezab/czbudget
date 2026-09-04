@@ -111,7 +111,7 @@ function money(value, currency, lang, compact = true) {
   const amount = Number(value);
   if (!Number.isFinite(amount)) return "—";
   try {
-    return escapeHTML(new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", { style: "currency", currency: currency || "EUR", notation: compact ? "compact" : "standard", maximumFractionDigits: compact ? 2 : 0 }).format(amount));
+    return escapeHTML(new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", { style: "currency", currency: currency || "EUR", notation: compact ? "compact" : "standard", minimumFractionDigits: 0, maximumFractionDigits: compact ? 2 : 0 }).format(amount));
   } catch {
     return escapeHTML(new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", { notation: compact ? "compact" : "standard", maximumFractionDigits: 2 }).format(amount));
   }

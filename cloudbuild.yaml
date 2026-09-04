@@ -166,6 +166,9 @@ steps:
     args:
       - -ceu
       - |
+        # Preserve a bounded failure summary in build metadata as well as logs.
+        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
+        exec > >(tee /tmp/browser-gate.log) 2>&1
         npm ci
         npx playwright install --with-deps chromium
         npm run test:api
@@ -179,6 +182,8 @@ steps:
     args:
       - -ceu
       - |
+        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/nginx-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
+        exec > /tmp/nginx-gate.log 2>&1
         mkdir -p /etc/nginx/templates
         cp nginx.conf.template /etc/nginx/templates/default.conf.template
         /docker-entrypoint.d/20-envsubst-on-templates.sh
