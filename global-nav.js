@@ -96,6 +96,8 @@
   Object.assign(copy.en,{euBudget:"Country ↔ EU money",euBudgetCopy:"27 countries, contributions and attributed spending"});
   Object.assign(copy.cs, {migrationCopy:"33 zemí, migrační toky a status ochrany"});
   Object.assign(copy.en, {migrationCopy:"33 countries, migration flows and protection status"});
+  Object.assign(copy.cs,{politics:"Evropská politika",politicsCopy:"Vlády, programy a ekonomika · 10 zemí"});
+  Object.assign(copy.en,{politics:"European politics",politicsCopy:"Governments, programs and the economy · 10 countries"});
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const href = (path, lang = language()) => `${assetRoot}${path}${path.includes("?") ? "&" : "?"}lang=${lang}`;
   const countryHref = (code, lang = language()) => window.PSDCountryRoutes?.href
@@ -199,6 +201,7 @@
 */
       nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/economy/?code=CZE&lang=${lang}"><b>09</b><span><strong>${t.economy}</strong><small>${t.economyCopy}</small></span></a><a href="${assetRoot}deep-dives/defense/?code=USA&lang=${lang}"><b>10</b><span><strong>${t.defense}</strong><small>${t.defenseCopy}</small></span></a><a href="${assetRoot}deep-dives/tax-burden/?code=CZE&lang=${lang}"><b>11</b><span><strong>${t.taxBurden}</strong><small>${t.taxBurdenCopy}</small></span></a><a href="${assetRoot}deep-dives/redistribution/?code=CZE&lang=${lang}"><b>12</b><span><strong>${t.redistribution}</strong><small>${t.redistributionCopy}</small></span></a><a href="${assetRoot}deep-dives/money/cze/?lang=${lang}"><b>13</b><span><strong>${t.money}</strong><small>${t.moneyCopy}</small></span></a><a href="${assetRoot}deep-dives/trade/?code=DEU&lang=${lang}"><b>14</b><span><strong>${t.trade}</strong><small>${t.tradeCopy}</small></span></a><a href="${assetRoot}deep-dives/budget-planner/?lang=${lang}"><b>15</b><span><strong>${t.budgetPlanner}</strong><small>${t.budgetPlannerCopy}</small></span></a><a href="${assetRoot}deep-dives/public-employment/?lang=${lang}"><b>17</b><span><strong>${t.publicEmployment}</strong><small>${t.publicEmploymentCopy}</small></span></a><a href="${assetRoot}deep-dives/product-markets/?lang=${lang}"><b>18</b><span><strong>${t.productMarkets}</strong><small>${t.productMarketsCopy}</small></span></a>`);
       nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/digital-spillover/?lang=${lang}"><b>19</b><span><strong>${t.digitalSpillover}</strong><small>${t.digitalSpilloverCopy}</small></span></a><a href="${assetRoot}deep-dives/eu-budget/?code=CZE&lang=${lang}"><b>20</b><span><strong>${t.euBudget}</strong><small>${t.euBudgetCopy}</small></span></a>`);
+      nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/european-politics/?code=CZE&lang=${lang}"><b>21</b><span><strong>${t.politics}</strong><small>${t.politicsCopy}</small></span></a>`);
       const active = activeSection(this);
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");

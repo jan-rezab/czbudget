@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="/language-bootstrap.js?v=20260905"></script>
+<title>European politics | Public Spending Data</title>
+<meta name="description" content="Government timelines, stated programmes and GDP and public-debt context across the original ten-country benchmark, 2015–2024.">
+<link rel="canonical" href="https://publicspendingdata.org/deep-dives/european-politics/">
+<link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/european-politics/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/european-politics/?lang=en">
+<meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
+<link rel="icon" href="../../assets/favicon.svg">
+<link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+<link rel="stylesheet" href="../../styles.css"><link rel="stylesheet" href="../../styles-v2.css"><link rel="stylesheet" href="../../chart-system.css"><link rel="stylesheet" href="../../deep-dives.css"><link rel="stylesheet" href="../../psd-chart.css"><link rel="stylesheet" href="../../european-politics.css?v=20260905">
+<script src="../../global-nav.js?v=20260905-politics" defer></script><script src="../../psd-chart.js" defer></script><script src="../../european-politics.js?v=20260905" defer></script>
+</head>
+<body class="deep-dives-page politics-page"><psd-site-header></psd-site-header>
+<main id="top">
+<section class="deep-hero"><div><span class="eyebrow" data-copy="eyebrow">Report / Evropská politika</span><h1 data-copy="title">Kdo vládl.<br><em>Co slíbil.</em></h1><p data-copy="intro">Vládní programy a ekonomika na společné časové ose. Vyberte zemi a vládu; otevřete původní dokument a sledujte HDP i veřejný dluh.</p></div><div class="deep-hero-aside"><span>2015–2024</span><strong>10</strong><small data-copy="cohort">Původní benchmark: devět evropských zemí a USA.</small></div></section>
+<div id="load-status" role="status" data-copy="loading">Načítání reportu…</div>
+<div id="report" hidden>
+<section class="politics-controls" aria-label="Report filters"><label><span data-copy="country">Země</span><select id="politics-country"></select></label><label><span data-copy="chartView">Pohled na ekonomiku</span><select id="politics-view"><option value="nominal" data-copy="nominal">HDP a dluh · mld. USD</option><option value="real" data-copy="real">Reálné HDP · 2015 = 100</option><option value="debt" data-copy="debt">Veřejný dluh · % HDP</option></select></label><a href="#benchmark" data-copy="allTen">Všech deset zemí ↓</a><a href="#method" data-copy="methodLink">Jak report číst ↓</a></section>
+<section class="politics-focus" id="country-detail"><header class="politics-heading"><div><span class="kicker" data-copy="history">Vlády v čase</span><h2 id="country-title"></h2></div><p data-copy="selectHint">Klikněte na úsek pod grafem nebo vyberte vládu ze seznamu.</p></header><div id="country-stats" class="politics-stats"></div><div class="politics-layout"><div><div id="chart-container"></div><label class="government-select"><span data-copy="government">Vláda / období</span><select id="politics-government"></select></label><div id="government-buttons" class="government-buttons"></div></div><article id="program-detail" class="program-detail" aria-live="polite"></article></div><p id="country-note" class="politics-note"></p></section>
+<section id="promise-comparison" class="politics-section"><header class="politics-heading"><div><span class="kicker" id="promise-kicker"></span><h2 id="promise-title"></h2></div><p id="promise-scope"></p></header><div id="promise-coverage"></div><div id="promise-list" class="promise-list"></div></section>
+<section id="benchmark" class="politics-section"><header class="politics-heading"><div><span class="kicker" data-copy="comparison">Stejných deset zemí</span><h2 data-copy="benchmarkTitle">Kdo řídil kterou ekonomiku?</h2></div><p data-copy="benchmarkHint">Každá karta má vlastní měřítko. Vyberte zemi pro programy a podrobnou časovou osu.</p></header><div class="politics-grid" id="benchmark-grid"></div></section>
+<section id="method" class="politics-section politics-method"><span class="kicker" data-copy="methodLink">Jak report číst</span><h2 data-copy="methodTitle">Program, mandát a výsledek</h2><div class="politics-method-grid"><article><h3 data-copy="m1title">Co bylo slíbeno</h3><p data-copy="m1"></p></article><article><h3 data-copy="m2title">Kdo byl u vlády</h3><p data-copy="m2"></p></article><article><h3 data-copy="m3title">Co ukazují čísla</h3><p data-copy="m3"></p></article><article><h3 data-copy="m4title">Co z toho neplyne</h3><p data-copy="m4"></p></article></div><p id="coverage-note"></p><p id="fiscal-source"></p><details id="source-register"><summary>Sources / Zdroje</summary><div id="source-register-content"></div></details><details><summary>Portrait credits / Autoři portrétů</summary><div id="portrait-credits"></div></details><a href="../../data/european-politics.v1.json" download data-copy="download">Stáhnout data a zdroje (JSON) ↓</a></section>
+</div>
+<noscript>JavaScript is required to explore the timeline. <a href="../../data/european-politics.v1.json">Download the data and sources.</a></noscript>
+</main></body></html>

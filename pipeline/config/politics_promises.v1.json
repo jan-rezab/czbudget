@@ -1,0 +1,415 @@
+{
+  "schema_version": "1.0.0",
+  "as_of": "2024-12-31",
+  "selection_en": "A reviewed selection from ten governing-party election programs, one per benchmark country. The crawl finds candidate passages across each document; these are not all confirmed promises. Opposition parties and every historical manifesto are not yet covered.",
+  "selection_cs": "Ověřený výběr z deseti volebních programů vládních stran, jeden pro každou zemi benchmarku. Crawler hledá kandidátní pasáže v celých dokumentech; nejde o samé potvrzené sliby. Opoziční strany ani všechny historické programy zatím nejsou pokryty.",
+  "promises": [
+    {
+      "id": "cze-employer-contributions",
+      "country": "CZE",
+      "source_id": "cz-spolu-2021",
+      "page": 9,
+      "quote": "straně zaměstnavatelů o 2 procentní body.",
+      "title_en": "Cut employer social contributions by two percentage points",
+      "title_cs": "Snížit sociální pojistné zaměstnavatelů o dva procentní body",
+      "party": "SPOLU",
+      "government_ids": [
+        "cze-2021-12-17",
+        "cze-2024-10-01"
+      ],
+      "target": -2,
+      "actual": 0,
+      "unit": "pp_change",
+      "status": "not_implemented",
+      "detail_en": "The standard employer rate was still 24.8% in January 2024: no general two-point cut. This is an interim check; the manifesto gives no precise date for this item. Targeted part-time relief is a different measure.",
+      "detail_cs": "Základní sazba zaměstnavatele v lednu 2024 zůstala 24,8 %: plošný pokles o dva body nenastal. Jde o průběžné ověření; bod programu nemá přesný termín. Sleva pro vybrané částečné úvazky je jiné opatření.",
+      "evidence": [
+        {
+          "source_id": "cz-cssz-2024",
+          "page": 13,
+          "locator": "základní pojistná sazba pro zaměstnavatele činí 24,8 %",
+          "source_sha256": "4daa955a95fd573a48a17309097d38b2fae7ed8cd9e1b6e57107c6710551e922"
+        },
+        {
+          "source_id": "cz-cssz-2021",
+          "page": null,
+          "locator": "u zaměstnavatele 24,8 %",
+          "source_sha256": "1e225ede2f69248cbe79b78a0dc3887011601db1b3808c794ae3bc9df34a5829"
+        }
+      ],
+      "observed_on": "2024-01-31",
+      "deadline": null,
+      "comparison": "matched",
+      "target_label_en": "−2 pp",
+      "target_label_cs": "−2 p. b.",
+      "actual_label_en": "0 pp · rate 24.8%",
+      "actual_label_cs": "0 p. b. · sazba 24,8 %",
+      "baseline": 24.8,
+      "source_sha256": "eb5f08477bfaab64dcee6b6896293d5cd4078872fb2d6993abbccb28d71849c7",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "deu-wealth-tax",
+      "country": "DEU",
+      "source_id": "de-spd-2021",
+      "page": 23,
+      "quote": "Steuersatz von einem Prozent für sehr hohe Vermögen",
+      "title_en": "Introduce a 1% tax on very high wealth",
+      "title_cs": "Zavést 1% daň z velmi vysokého majetku",
+      "party": "SPD",
+      "government_ids": [
+        "deu-2021-12-08",
+        "deu-2024-11-07"
+      ],
+      "target": 1,
+      "actual": null,
+      "unit": "percent",
+      "status": "not_implemented",
+      "detail_en": "Germany had not resumed wealth-tax collection by 2024. SPD proposed this as a party policy; its coalition partners did not adopt every manifesto pledge. An uncollected tax is not plotted as a statutory 0% rate.",
+      "detail_cs": "Do roku 2024 nebyl výběr majetkové daně obnoven. Jde o slib SPD, nikoli automaticky celé koalice. Nevybíranou daň nezobrazujeme jako zákonnou sazbu 0 %.",
+      "evidence": [
+        {
+          "source_id": "de-bmf-2026",
+          "page": 147,
+          "locator": "Die Erhebung der Vermögensteuer ist allerdings seit dem Jahr 1997 ausgesetzt.",
+          "source_sha256": "50ca190c453e170f7300ab4f1b9a15145756bc2f1a26bd3e52c0d7f837b6af01"
+        }
+      ],
+      "observed_on": "2024-12-31",
+      "deadline": null,
+      "comparison": "policy",
+      "actual_label_en": "Not levied",
+      "actual_label_cs": "Nevybírána",
+      "source_sha256": "2674e1db4c5037bf77a3675fc44db70a03f1d81fc3315d5c7392277d70077e82",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "dnk-education-cuts",
+      "country": "DNK",
+      "source_id": "dk-sd-2019",
+      "page": 16,
+      "quote": "Afskaffelse af regeringens årlige nedskæringer på uddannelserne.",
+      "title_en": "End annual education budget cuts",
+      "title_cs": "Zrušit každoroční škrty v rozpočtech vzdělávání",
+      "party": "Socialdemokratiet",
+      "government_ids": [
+        "dnk-2019-06-27"
+      ],
+      "target": 0,
+      "actual": 0,
+      "unit": "percent_cut",
+      "status": "implemented",
+      "detail_en": "The 2020 education budget records cancellation of the annual reprioritisation levy from 2020. This checks the removal of that budget rule, not the quality of education or every institution’s real funding.",
+      "detail_cs": "Rozpočet školství na rok 2020 uvádí zrušení každoročního plošného krácení od roku 2020. Ověřujeme zrušení tohoto pravidla, nikoli kvalitu vzdělávání či reálné financování každé školy.",
+      "evidence": [
+        {
+          "source_id": "dk-budget-2020",
+          "page": 41,
+          "locator": "omprioriteringsbidraget annulleret",
+          "source_sha256": "3b0161173eb7fd3a81b71202cf488f2a5e5eb584e5c7be37261c0936b4d39a30"
+        }
+      ],
+      "observed_on": "2020-01-01",
+      "deadline": null,
+      "comparison": "matched",
+      "target_label_en": "Annual cut abolished",
+      "target_label_cs": "Roční škrt zrušen",
+      "actual_label_en": "Abolished from 2020",
+      "actual_label_cs": "Zrušen od roku 2020",
+      "source_sha256": "87fea09f597e0e1c8697d28b3d5254974082994dfaa28a90f6a0e00db841079e",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "dnk-welfare-envelope",
+      "country": "DNK",
+      "source_id": "dk-sd-2019",
+      "page": 8,
+      "quote": "20½ MILLIARDER EKSTRA TIL VELFÆRD I 2025",
+      "title_en": "Welfare funding to follow demographic demand",
+      "title_cs": "Financování sociálního státu podle demografických potřeb",
+      "party": "Socialdemokratiet",
+      "government_ids": [
+        "dnk-2019-06-27",
+        "dnk-2022-12-15"
+      ],
+      "target": 20.5,
+      "actual": null,
+      "unit": "dkk_bn",
+      "status": "not_due",
+      "detail_en": "The program illustrates its demographic funding rule with an extra DKK 20.5bn in 2025 relative to the then-current level. The final year is outside this report. A matching constant-price welfare outturn has not been established; total government spending is not a substitute.",
+      "detail_cs": "Program ilustruje demografické pravidlo navýšením o 20,5 mld. DKK v roce 2025 oproti tehdejší úrovni. Cílový rok je mimo report. Srovnatelný výsledek ve stálých cenách zatím není doložen; celkové veřejné výdaje jej nenahrazují.",
+      "evidence": [],
+      "observed_on": "2024-12-31",
+      "deadline": "2025-12-31",
+      "comparison": "unmatched",
+      "actual_label_en": "Matching outturn unavailable",
+      "actual_label_cs": "Srovnatelný výsledek chybí",
+      "target_is_illustration": true,
+      "source_sha256": "87fea09f597e0e1c8697d28b3d5254974082994dfaa28a90f6a0e00db841079e",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "fra-corporation-tax",
+      "country": "FRA",
+      "source_id": "fr-macron-2017",
+      "page": 6,
+      "quote": "Nous baisserons l’impôt sur les sociétés de 33,3% à 25%",
+      "title_en": "Reduce the standard corporate tax rate to 25%",
+      "title_cs": "Snížit základní daň z příjmů firem na 25 %",
+      "party": "En Marche / Emmanuel Macron",
+      "government_ids": [
+        "fra-2017-05-15",
+        "fra-2020-07-03"
+      ],
+      "target": 25,
+      "actual": 25,
+      "unit": "percent",
+      "status": "implemented",
+      "detail_en": "The standard corporate tax rate became 25% for financial years beginning on or after 1 January 2022. The comparison is of the headline statutory rate; small-company relief and effective tax burdens are separate.",
+      "detail_cs": "Základní sazba je 25 % pro účetní období začínající 1. ledna 2022 a později. Srovnáváme zákonnou základní sazbu; úlevy malým firmám a efektivní daňové zatížení jsou jiné ukazatele.",
+      "evidence": [
+        {
+          "source_id": "fr-tax-2022",
+          "page": null,
+          "locator": "25 % à compter des exercices ouverts",
+          "source_sha256": "0148a27d8fca427716e53fa9525951bf16fbe02ba47cd66b085f7a92360b3fad"
+        }
+      ],
+      "observed_on": "2022-01-01",
+      "deadline": null,
+      "comparison": "matched",
+      "baseline": 33.3,
+      "source_sha256": "6168deb21f550540a6850703501746975f65a3c55604f4b019993300cf97cf59",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "gbr-ni-freeze",
+      "country": "GBR",
+      "source_id": "uk-con-2019",
+      "page": 2,
+      "quote": "We will not raise the rate of income tax, VAT or National Insurance.",
+      "title_en": "Do not raise National Insurance rates",
+      "title_cs": "Nezvyšovat sazby National Insurance",
+      "party": "Conservative Party",
+      "government_ids": [
+        "gbr-2019-07-24",
+        "gbr-2022-09-06",
+        "gbr-2022-10-25"
+      ],
+      "target": 0,
+      "actual": 1.25,
+      "unit": "pp_change",
+      "status": "breached_reversed",
+      "detail_en": "Rates rose by 1.25 percentage points in April 2022. The increase was reversed on 6 November 2022. The promise applied across the Parliament, so the reversal does not erase the earlier breach. This row assesses National Insurance only.",
+      "detail_cs": "Sazby v dubnu 2022 vzrostly o 1,25 procentního bodu. Zvýšení bylo zrušeno 6. listopadu 2022. Slib platil po celé volební období, takže návrat sazeb neruší předchozí porušení. Tento řádek hodnotí pouze National Insurance.",
+      "evidence": [
+        {
+          "source_id": "uk-ni-2022",
+          "page": null,
+          "locator": "reversal of April’s rise",
+          "source_sha256": "a51ca83a33a419d0785ffc1ebd405fd9dddab117046b0fb6aa1f69231281112c"
+        }
+      ],
+      "observed_on": "2022-04-06",
+      "deadline": null,
+      "comparison": "matched",
+      "reversed_on": "2022-11-06",
+      "target_label_en": "No increase · 0 pp",
+      "target_label_cs": "Bez zvýšení · 0 p. b.",
+      "actual_label_en": "+1.25 pp in April 2022",
+      "actual_label_cs": "+1,25 p. b. v dubnu 2022",
+      "history": [
+        {
+          "date": "2022-04-06",
+          "value": 1.25
+        },
+        {
+          "date": "2022-11-06",
+          "value": 0
+        }
+      ],
+      "source_sha256": "889676274bd121cadd6b07e5fc7fcf72e56797afc4954fda8e3d252d924ac2ba",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "pol-minimum-pension",
+      "country": "POL",
+      "source_id": "pl-pis-2019",
+      "page": 59,
+      "quote": "zwiększymy kwotę emerytury minimalnej do 1200 zł",
+      "title_en": "Raise the minimum monthly pension to PLN 1,200",
+      "title_cs": "Zvýšit minimální měsíční důchod na 1 200 PLN",
+      "party": "Prawo i Sprawiedliwość",
+      "government_ids": [
+        "pol-2019-11-15"
+      ],
+      "target": 1200,
+      "actual": 1200,
+      "unit": "pln_month",
+      "status": "implemented",
+      "detail_en": "ZUS reports a minimum gross pension of PLN 1,200 from 1 March 2020. This is the statutory monthly benefit for eligible pensioners, not average pensions or total pension expenditure.",
+      "detail_cs": "ZUS uvádí minimální hrubý důchod 1 200 PLN od 1. března 2020. Jde o zákonnou měsíční dávku pro oprávněné důchodce, nikoli průměrný důchod či celkové výdaje.",
+      "evidence": [
+        {
+          "source_id": "pl-pension-2020",
+          "page": 7,
+          "locator": "Wysokość najniższych świadczeń (brutto) od 1 marca 2020 r.",
+          "source_sha256": "e619c36f36ed57d7e8416538dbda4c5a7eea6a0d44e7fb31fba2c4206065db53"
+        }
+      ],
+      "observed_on": "2020-03-01",
+      "deadline": null,
+      "comparison": "matched",
+      "source_sha256": "e43f2bdd9fba20227bb7f23192bedf9bf5bef3c8f370fc6b6ba3a0f58cb5cf6a",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "swe-incineration-tax",
+      "country": "SWE",
+      "source_id": "se-m-2022",
+      "page": 18,
+      "quote": "Avskaffa avfallsförbränningsskatten",
+      "title_en": "Abolish the waste incineration tax",
+      "title_cs": "Zrušit daň ze spalování odpadu",
+      "party": "Moderaterna",
+      "government_ids": [
+        "swe-2022-10-18"
+      ],
+      "target": 0,
+      "actual": 0,
+      "unit": "sek_tonne",
+      "status": "implemented",
+      "detail_en": "Skatteverket confirms repeal from 1 January 2023. The promise was to remove this tax; it is assessed as enacted policy, without claiming that repeal increased energy capacity.",
+      "detail_cs": "Skatteverket potvrzuje zrušení od 1. ledna 2023. Ověřujeme zrušení daně; netvrdíme, že díky němu vzrostla energetická kapacita.",
+      "evidence": [
+        {
+          "source_id": "se-tax-2023",
+          "page": null,
+          "locator": "Från och med 1 januari 2023 tas avfallsförbränningsskatten bort.",
+          "source_sha256": "2888abfc5044c8459ddae6b12d0b1d38ac3221dfc20e0d3c9265951f02ba74ad"
+        }
+      ],
+      "observed_on": "2023-01-01",
+      "deadline": null,
+      "comparison": "matched",
+      "target_label_en": "Tax abolished",
+      "target_label_cs": "Daň zrušena",
+      "actual_label_en": "Abolished from January 2023",
+      "actual_label_cs": "Zrušena od ledna 2023",
+      "source_sha256": "d47a978d8af289a6740715a5dfc714a165d10763d4f266b18b67724d983cb5c6",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "che-vat-position",
+      "country": "CHE",
+      "source_id": "ch-svp-2019",
+      "page": 31,
+      "quote": "ist gegen jede Erhöhung der Mehrwertsteuer",
+      "title_en": "Oppose any VAT increase",
+      "title_cs": "Odmítat jakékoli zvýšení DPH",
+      "party": "SVP",
+      "government_ids": [
+        "che-2019-12-02"
+      ],
+      "target": 7.7,
+      "actual": 8.1,
+      "unit": "percent",
+      "status": "position_only",
+      "detail_en": "The standard rate stayed at 7.7% through 2023, then rose to 8.1% on 1 January 2024. This is a party position in the 2019–2023 program, not a promise by the collective Federal Council to control the result. The 2024 change is shown as subsequent context and is not scored as a broken mandate promise.",
+      "detail_cs": "Základní sazba zůstala do konce roku 2023 na 7,7 %, od 1. ledna 2024 vzrostla na 8,1 %. Jde o postoj SVP v programu 2019–2023, nikoli slib celé kolektivní vlády. Změnu v roce 2024 uvádíme jako následný kontext, ne jako porušený slib za daný mandát.",
+      "evidence": [
+        {
+          "source_id": "ch-vat-2024",
+          "page": 1,
+          "locator": "Bis 31. Dezember 2023",
+          "source_sha256": "d70124b29a33efd39415d3403633050f64aa5f4a963ccb6447070ce13e07001c"
+        }
+      ],
+      "observed_on": "2024-01-01",
+      "deadline": "2023-12-31",
+      "comparison": "context",
+      "target_label_en": "2019 baseline · 7.7%",
+      "target_label_cs": "Výchozí sazba 2019 · 7,7 %",
+      "actual_label_en": "2024 · 8.1% (2023: 7.7%)",
+      "actual_label_cs": "2024 · 8,1 % (2023: 7,7 %)",
+      "baseline": 7.7,
+      "source_sha256": "86d7ac7e26d7f12106a2c90bf29f2d5baca750a60d80b09735effc0efc3efb36",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "ukr-defence-floor",
+      "country": "UKR",
+      "source_id": "ua-sn-2019",
+      "page": null,
+      "quote": "Встановимо видатки на оборону в розмірі не менше 5% ВВП",
+      "title_en": "Spend at least 5% of GDP on defence",
+      "title_cs": "Vydávat na obranu alespoň 5 % HDP",
+      "party": "Слуга народу / Servant of the People",
+      "government_ids": [
+        "ukr-2019-08-29",
+        "ukr-2020-03-04"
+      ],
+      "target": 5,
+      "actual": 39.2,
+      "unit": "percent_gdp",
+      "status": "scope_mismatch",
+      "detail_en": "The 2024 Ministry of Finance report gives 39.2% of expected GDP for security and defence resources, including guarantees. That broader aggregate does not match defence expenditure alone. It is context, not a fulfilment score. Russia’s full-scale invasion fundamentally changed the spending environment.",
+      "detail_cs": "Ministerstvo financí uvádí za rok 2024 prostředky na bezpečnost a obranu včetně záruk ve výši 39,2 % očekávaného HDP. Širší souhrn neodpovídá samotným výdajům na obranu. Jde o kontext, nikoli skóre plnění. Plnohodnotná ruská invaze zásadně změnila výdajové podmínky.",
+      "evidence": [
+        {
+          "source_id": "ua-budget-2024",
+          "page": 8,
+          "locator": "39,2 відсотка очікуваного ВВП",
+          "source_sha256": "62860a0829ea961d65a4748820a405519c861f86542ed63986f00b8a4d7ec59f"
+        }
+      ],
+      "observed_on": "2024-12-31",
+      "deadline": null,
+      "comparison": "context",
+      "target_label_en": "Defence ≥5% GDP",
+      "target_label_cs": "Obrana ≥5 % HDP",
+      "actual_label_en": "Security + defence + guarantees · 39.2%",
+      "actual_label_cs": "Bezpečnost + obrana + záruky · 39,2 %",
+      "source_sha256": "5e546caa4d21c4b19a21672ed5f8e57475db2dff389d811db7800347d4129fcc",
+      "reviewed_on": "2026-09-05"
+    },
+    {
+      "id": "usa-corporation-tax",
+      "country": "USA",
+      "source_id": "us-dem-2020",
+      "page": null,
+      "quote": "Corporate tax rates, which were cut sharply by the 2017 Republican tax cut, must be raised",
+      "title_en": "Raise the federal corporate income tax rate",
+      "title_cs": "Zvýšit federální daň z příjmů firem",
+      "party": "Democratic Party",
+      "government_ids": [
+        "usa-2021-01-20"
+      ],
+      "target": 21,
+      "actual": 21,
+      "unit": "percent",
+      "status": "not_implemented",
+      "detail_en": "The 2020 platform calls for a higher corporate rate without specifying a new percentage. The regular federal rate remained 21% for tax year 2024. This tests the regular rate only; the separate corporate alternative minimum tax is not the same measure.",
+      "detail_cs": "Program 2020 požaduje vyšší sazbu, ale neuvádí nové procento. Základní federální sazba za daňový rok 2024 zůstala 21 %. Ověřujeme pouze běžnou sazbu; samostatná alternativní minimální daň je jiné opatření.",
+      "evidence": [
+        {
+          "source_id": "us-irs-2024",
+          "page": 21,
+          "locator": "Multiply taxable income (page 1, line 30) by 21% (0.21).",
+          "source_sha256": "adb05b78d6dc3d2e7ec3856f235fcd55d9adcb6b0a7d04ced58601d99341af16"
+        }
+      ],
+      "observed_on": "2024-12-31",
+      "deadline": null,
+      "comparison": "matched",
+      "operator": "gt",
+      "target_label_en": "Higher than 21% · no exact target",
+      "target_label_cs": "Více než 21 % · bez přesného cíle",
+      "actual_label_en": "21% in tax year 2024",
+      "actual_label_cs": "21 % za daňový rok 2024",
+      "baseline": 21,
+      "source_sha256": "7664ad63620afc59330163a899220ac22c122bac78a52d52a95e112af759dac9",
+      "reviewed_on": "2026-09-05"
+    }
+  ]
+}

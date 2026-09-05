@@ -58,6 +58,8 @@
   Object.assign(copy.en,{publicSector:"Czech public sector",publicEmployment:"Public employment",publicEmploymentCopy:"The complete institutional boundary, a ten-year series and source layers kept separate to prevent double counting."});
   Object.assign(copy.cs,{euBudget:"Peníze mezi zeměmi a EU",euBudgetCopy:"Přiřazené výdaje, národní příspěvky a vysvětlení, proč nejde o jeden řádek státního rozpočtu."});
   Object.assign(copy.en,{euBudget:"Money between countries and the EU",euBudgetCopy:"Attributed spending, national contributions and why they are not a single national-budget line."});
+  Object.assign(copy.cs,{politics:"Evropská politika",politicsCopy:"Kdo vládl, co slíbil a jak se vyvíjelo HDP a dluh v původním benchmarku deseti zemí."});
+  Object.assign(copy.en,{politics:"European politics",politicsCopy:"Who governed, what they promised and how GDP and debt evolved across the original ten-country benchmark."});
   const t=copy[lang];
   const name=(code)=>{const row=countries.find(item=>item[0]===code);return row?.[lang==="en"?2:1]??code};
   function translate(){
