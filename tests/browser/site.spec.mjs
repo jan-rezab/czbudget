@@ -704,6 +704,8 @@ test("all countries use the Czech-style dashboard chapters and loaded-data secti
       await expect(page.locator("#country-dashboard-index a")).toHaveCount(8);
       await expect(page.locator(".country-context-rail a")).toHaveCount(9);
       await expect(page.locator("#budget-map .budget-map-row").first()).toBeVisible();
+      // The register is fetched when its section approaches the viewport.
+      await page.locator("#public-entities").scrollIntoViewIfNeeded();
       await expect(page.locator("#public-entities .pe-directory")).toBeVisible();
       await expect(page.locator("#demography .demography-year")).toHaveCount(5);
       await expect(page.locator("#data-parity")).toBeVisible();
