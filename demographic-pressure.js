@@ -37,7 +37,7 @@
   const locale = () => lang() === "en" ? "en-GB" : "cs-CZ";
   const fmt = (value, digits=1, sign=false) => Number.isFinite(value) ? `${sign && value > 0 ? "+" : ""}${value.toLocaleString(locale(), {minimumFractionDigits:digits, maximumFractionDigits:digits})}` : "—";
   const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
-  const flag = code => `<span class="demographic-flag"><img src="/assets/flags/${flags[code]}.svg" alt=""><b>${code}</b></span>`;
+  const flag = code => `<span class="demographic-flag"><img src="/assets/flags/${flags[code]}.svg" alt="" loading="lazy" decoding="async"><b>${code}</b></span>`;
   const name = profile => profile[`name_${lang()}`];
   const profileLink = code => window.PSDCountryRoutes?.href(code, lang(), "demography") || `country.html?code=${code}&lang=${lang()}#demography`;
   const wpp = (profile, year) => profile.wpp.find(row => row.year === year);

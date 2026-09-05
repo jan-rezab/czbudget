@@ -46,7 +46,7 @@
   loadCompactFooter();
   const portalStylesHref = `${assetRoot}portal-ui.css?v=20260824-logo-120`;
   const existingPortalStyles = document.querySelector("link[data-portal-ui]");
-  if (existingPortalStyles) existingPortalStyles.href = portalStylesHref;
+  if (existingPortalStyles) { if (new URL(existingPortalStyles.getAttribute("href"), location.href).href !== new URL(portalStylesHref, location.href).href) existingPortalStyles.href = portalStylesHref; }
   else { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = portalStylesHref; styles.dataset.portalUi = "true"; document.head.append(styles); }
   if (!document.querySelector("script[data-portal-ui]")) { const script = document.createElement("script"); script.src = `${assetRoot}portal-ui.js?v=20260823`; script.defer = true; script.dataset.portalUi = "true"; document.head.append(script); }
   if (!document.querySelector("link[data-ux-refinements]")) { const styles = document.createElement("link"); styles.rel = "stylesheet"; styles.href = `${assetRoot}ux-refinements.css?v=20260827`; styles.dataset.uxRefinements = "true"; document.head.append(styles); }
@@ -180,10 +180,10 @@
       const t = copy[lang];
       const nav = this.querySelector(".global-nav");
       if (!nav) return;
-      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${countryHref(code,lang)}" data-country-code="${code}">${flag && !flag.startsWith(":") ? `<img src="${assetRoot}assets/flags/${flag}.svg" alt="">` : `<i class="country-menu-flag-emoji" aria-hidden="true">${flagEmoji(flag.slice(1))}</i>`}<span>${lang === "en" ? en : cs}</span></a>`).join("");
+      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${countryHref(code,lang)}" data-country-code="${code}">${flag && !flag.startsWith(":") ? `<img src="${assetRoot}assets/flags/${flag}.svg" alt="" loading="lazy" decoding="async">` : `<i class="country-menu-flag-emoji" aria-hidden="true">${flagEmoji(flag.slice(1))}</i>`}<span>${lang === "en" ? en : cs}</span></a>`).join("");
       const municipalityLinks = municipalityCountries.map(([code, cs, en, flag, slug]) => {
         const destination = slug ? `${assetRoot}municipalities/${slug}/?lang=${lang}` : `${assetRoot}municipalities/?lang=${lang}&country=${code}#directory`;
-        return `<a href="${destination}" data-country-code="${code}"><img src="${assetRoot}assets/flags/${flag}.svg" alt=""><span>${lang === "en" ? en : cs}</span>${depthIcon(municipalityDepth(code), t)}</a>`;
+        return `<a href="${destination}" data-country-code="${code}"><img src="${assetRoot}assets/flags/${flag}.svg" alt="" loading="lazy" decoding="async"><span>${lang === "en" ? en : cs}</span>${depthIcon(municipalityDepth(code), t)}</a>`;
       }).join("");
       const municipalityLegend = `<div class="municipal-depth-key"><strong>${t.coverageDepth}</strong>${depthIcon(1,t,true)}${depthIcon(2,t,true)}${depthIcon(3,t,true)}</div>`;
       const contextCountry = String(document.body.dataset.countryCode || "").toUpperCase();
@@ -233,9 +233,12 @@
   }
 
   const headerStylesHref = `${assetRoot}site-header.css?v=20260902-municipal-depth`;
-  const existingHeaderStyles = document.querySelector("link[data-psd-site-header]");
+  const existingHeaderStyles = document.querySelector("link[data-psd-site-header]") || document.querySelector('link[rel="stylesheet"][href*="site-header.css"]');
   if (existingHeaderStyles) {
-    existingHeaderStyles.href = headerStylesHref;
+    // The page already requested this stylesheet. Swapping the href would start a second
+    // download of the same file under a new cache key, so adopt the link and leave the URL
+    // alone; nginx rewrites stale keys in the HTML it serves.
+    existingHeaderStyles.dataset.psdSiteHeader = "true";
   } else {
     const styles = document.createElement("link");
     styles.rel = "stylesheet";

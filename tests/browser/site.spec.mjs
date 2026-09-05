@@ -639,6 +639,8 @@ test("country profiles expose sortable ten-year health, social and transport com
 
 test("public-entity profiles expose broad perimeters, economics and the full searchable registry", async ({ page }) => {
   await page.goto("/country.html?code=CHE&lang=en", { waitUntil: "networkidle" });
+  // The register shard, and the heading it renders, load when the section nears the viewport.
+  await page.locator("#public-entities").scrollIntoViewIfNeeded();
   await expect(page.locator("#country-public-entities-title")).toHaveText("The public-entity register");
   await expect(page.locator("#public-entities .pe-kpis")).toContainText("5,152");
   await expect(page.locator("#public-entities .pe-kpis")).toContainText("22");

@@ -6,7 +6,7 @@
   if (!document.querySelector('link[data-portal-ui]')) {
     const portalStyles = document.createElement("link");
     portalStyles.rel = "stylesheet";
-    portalStyles.href = `${assetRoot}portal-ui.css?v=20260824-header-lockup-2`;
+    portalStyles.href = `${assetRoot}portal-ui.css?v=20260824-logo-120`;
     portalStyles.dataset.portalUi = "true";
     document.head.append(portalStyles);
   }

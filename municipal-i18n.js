@@ -16,7 +16,7 @@
   const root = location.pathname.includes("/cz/municipalities/") || location.pathname.includes("/cz/obce/") || location.pathname.includes("/cz/kraje/")
     ? (location.pathname.split("/").filter(Boolean).length > 2 ? "../../../" : "../../")
     : "../../";
-  if (!document.querySelector('link[href*="section-rail"]')) {
+  if (!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')) {
     const railStyles = document.createElement("link");
     railStyles.rel = "stylesheet"; railStyles.href = `${root}styles.css?v=20260822-section-rail`; document.head.append(railStyles);
   }

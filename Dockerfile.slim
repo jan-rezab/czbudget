@@ -30,6 +30,21 @@ RUN rm -rf \
   && chmod 0555 /app/start.sh \
   && node --version
 
+# Precompress what nginx serves straight from disk (gzip_static in nginx.conf.template).
+# Level 9 output is 15-35 % smaller than the level-1 gzip nginx produced per request, and
+# the CPU moves from every request to this one build step. HTML is skipped on purpose:
+# sub_filter cannot rewrite a precompressed body. The per-profile trees are skipped because
+# they are tens of thousands of small files the slim image does not carry anyway.
+RUN find /usr/share/nginx/html \
+      -type f \( -name '*.json' -o -name '*.js' -o -name '*.css' -o -name '*.svg' \) \
+      -size +1k \
+      -not -path '*/data/municipal-expansion/*' \
+      -not -path '*/data/municipal-benchmarks/*' \
+      -not -path '*/data/entities/*' \
+      -not -path '*/data/municipal-history/*' \
+      -exec sh -c 'for f; do gzip -9 -c "$f" > "$f.gz" && touch -r "$f" "$f.gz"; done' _ {} + \
+  && echo "precompressed $(find /usr/share/nginx/html -name '*.gz' | wc -l) files"
+
 EXPOSE 8080
 
 CMD ["/app/start.sh"]

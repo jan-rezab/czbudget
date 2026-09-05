@@ -61,7 +61,7 @@ export function municipalityPage({ route, release_id, profile: payload, history 
     <link rel="alternate" hreflang="en" href="https://publicspendingdata.org${canonicalPath}?lang=en" />
     <script type="application/ld+json">${jsonLd}</script>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header />
+    <link rel="stylesheet" href="/site-header.css?v=20260902-municipal-depth" data-psd-site-header />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/chart-system.css" />
     <link rel="stylesheet" href="/municipalities.css" />

@@ -259,7 +259,7 @@
   }
   function renderDataHealth(){
     const root=document.querySelector("#data-health-root");if(!root||!qualityData||!methodologyData||!municipalityData)return;
-    const sc=statusCopy[current],countries=municipalityData.countries||[],itemizedCountries=itemizedBudgetData?.countries||[],scope=countries.reduce((sum,country)=>sum+(Number(country.directory_count)||0),0),itemizedProfiles=itemizedCountries.reduce((sum,country)=>sum+(Number(country.profile_count)||0),0),entityRows=municipalityData.entities?.length||0,aggregateRows=Math.max(0,scope-entityRows),historySpans=countries.map(country=>municipalHistoryStats(country.code)),countryYears=historySpans.reduce((sum,span)=>sum+span.count,0),municipalYears=yearSpan(historySpans.flatMap(span=>span.values));
+    const sc=statusCopy[current],countries=municipalityData.countries||[],itemizedCountries=itemizedBudgetData?.countries||[],scope=countries.reduce((sum,country)=>sum+(Number(country.directory_count)||0),0),itemizedProfiles=itemizedCountries.reduce((sum,country)=>sum+(Number(country.profile_count)||0),0),entityRows=Number(municipalityData.totals?.entity_count)||municipalityData.entities?.length||0,aggregateRows=Math.max(0,scope-entityRows),historySpans=countries.map(country=>municipalHistoryStats(country.code)),countryYears=historySpans.reduce((sum,span)=>sum+span.count,0),municipalYears=yearSpan(historySpans.flatMap(span=>span.values));
     const generatedValues=[municipalityData.generated_at,itemizedBudgetData?.generated_at,methodologyData.generated_at,transportPerformanceData?.generated_at,transportBudgetData?.generated_at,releaseData?.data_generated_at].filter(Boolean).map(value=>new Date(value)).filter(value=>!Number.isNaN(value.getTime())),generated=generatedValues.length?new Date(Math.max(...generatedValues)):null;
     const generatedLabel=generated?new Intl.DateTimeFormat(current==="cs"?"cs-CZ":"en-GB",{dateStyle:"medium",timeStyle:"short"}).format(generated):"—";
     // Itemized coverage counts only what the site actually publishes. Countries
@@ -321,7 +321,7 @@
     fetch("data/methodology-sources.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/data-quality-report.v1.json?v=20260825-entry-count").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/release-manifest.v1.json").then(response=>response.ok?response.json():null),
-    fetch("data/international-municipalities.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/international-municipalities/index.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/municipal-itemized-coverage.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/transport-performance.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
     fetch("data/transport-budget-detail.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),

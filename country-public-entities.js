@@ -176,6 +176,21 @@
     const csv=[fields.map(quote).join(","),...records.map(record=>fields.map(field=>quote(value(record,field))).join(","))].join("\n");
     const link=document.createElement("a");link.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));link.download=`public-entities-${state.code}.csv`;link.click();URL.revokeObjectURL(link.href);
   }
+  // The register shard is the largest payload on the profile (4.4 MB for Czechia) and sits
+  // well below the fold. Defer it until the section is within a screen of the viewport;
+  // anchors (#public-entities) and hash navigation scroll first, so they resolve at once.
+  // Observe the enclosing section: the root itself is empty, and therefore zero-height,
+  // until the shard renders.
+  function nearViewport(element) {
+    if (!("IntersectionObserver" in window)) return Promise.resolve();
+    return new Promise(resolve => {
+      const observer = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        observer.disconnect(); resolve();
+      }, { rootMargin: "100% 0px" });
+      observer.observe(element);
+    });
+  }
   async function loadCountry() {
     const request=++state.request; state.shard=null;state.selected=null;state.query="";state.perimeter="";state.entityClass="";state.page=1;
     root.innerHTML=`<p class="pe-loading">${t().loading}</p>`;
@@ -197,6 +212,6 @@
   });
   Promise.all([fetch("/data/public-entity-coverage.v1.json"),fetch("/data/public-entity-aggregates.v1.json"),fetch("/data/public-entity-directory/manifest.v1.json")]).then(async responses=>{
     for(const response of responses)if(!response.ok)throw new Error(response.status);
-    [state.coverage,state.aggregates,state.manifest]=await Promise.all(responses.map(response=>response.json()));return loadCountry();
+    [state.coverage,state.aggregates,state.manifest]=await Promise.all(responses.map(response=>response.json()));root.innerHTML=`<p class="pe-loading">${t().loading}</p>`;await nearViewport(root.closest("section")||root.parentElement||root);return loadCountry();
   }).catch(error=>{root.innerHTML=`<p>${esc(error.message)}</p>`;console.error("Public entity coverage",error)});
 })();

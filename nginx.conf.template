@@ -276,6 +276,8 @@ server {
     sub_filter 'homepage-health-performance.js?v=20260824-topline-compare' 'homepage-health-performance.js?v=20260824-language-contract';
     sub_filter 'ageing-bill.js?v=20260824-ageing' 'ageing-bill.js?v=20260824-readable-country-routes';
     sub_filter 'assets/favicon.svg"' 'assets/favicon.svg?v=20260824-archivo-lockup"';
+    sub_filter 'site-header.css?v=20260824-header-lockup"' 'site-header.css?v=20260902-municipal-depth"';
+    sub_filter 'site-header.css?v=20260822-component"' 'site-header.css?v=20260902-municipal-depth"';
     try_files $uri $uri/ $uri/index.html =404;
   }
 
@@ -303,6 +305,18 @@ server {
     try_files $uri =404;
   }
 
+  # Compression. Level 1 (the nginx default) left the 11 MB Czech municipal snapshot at
+  # 1.95 MB on the wire; level 6 brings it to 1.48 MB for a few ms of CPU. gzip_static goes
+  # further for anything the image build precompressed at level 9 (see the Dockerfiles):
+  # nginx then serves the ready-made .gz next to the file and spends no CPU at all.
+  # gzip_proxied is what compresses the Node API's responses on the way out of the
+  # container - Cloudflare recompresses for browsers either way, but origin egress was
+  # leaving uncompressed (a municipality-lines response is 305 kB raw, 20 kB gzipped).
   gzip on;
+  gzip_comp_level 6;
+  gzip_min_length 1024;
+  gzip_proxied any;
+  gzip_vary on;
+  gzip_static on;
   gzip_types text/plain text/css application/javascript application/json image/svg+xml;
 }
