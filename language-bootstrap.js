@@ -124,6 +124,10 @@
       cs: ["Evropská migrace v čase — Public Spending Data", "Přistěhování, vystěhování a rozhodnutí o statusu ochrany ve 33 evropských zemích podle Eurostatu."],
       en: ["European migration over time — Public Spending Data", "Immigration, emigration and protection-status decisions across 33 European countries, based on Eurostat."],
     },
+    "/deep-dives/industry/": {
+      cs: ["Průmysl měsíc po měsíci — Public Spending Data", "Odvětvový vývoj průmyslu v jednotlivých zemích. Měsíční a roční statistiky z národních úřadů i Eurostatu."],
+      en: ["Industry month by month — Public Spending Data", "Industrial production by country and sector. Monthly and annual statistics from national sources and Eurostat."],
+    },
     "/deep-dives/economy/": {
       cs: ["Ekonomika v kontextu — Public Spending Data", "Dlouhé ekonomické řady, hospodářský cyklus a fiskální kontext v globální datové vrstvě."],
       en: ["Economy in context — Public Spending Data", "Long-run economic series, the business cycle and fiscal context in a global data layer."],

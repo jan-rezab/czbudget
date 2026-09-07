@@ -53,6 +53,12 @@ steps:
           echo "hydrated $$LAYER"
         done
 
+  - id: hydrate-industry
+    waitFor: ["-"]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/hydrate-industry.mjs]
+
   - id: verify-data-layers
     waitFor: ["hydrate-data-layers"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32

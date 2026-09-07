@@ -65,3 +65,8 @@ data/entities/
 # Resumable download checkpoints (Hlídač státu contract pages and similar). Regenerable from
 # the source API; the published dataset lives under data/contracts/.
 .cache/
+
+# Industry country payloads are committed compressed and hydrated in Cloud Build.
+/data/industry/*.json
+!/data/industry/index.json
+!/data/industry/archive-manifest.json

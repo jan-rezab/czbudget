@@ -98,6 +98,8 @@
   Object.assign(copy.en, {migrationCopy:"33 countries, migration flows and protection status"});
   Object.assign(copy.cs,{politics:"Evropská politika",politicsCopy:"Vlády, programy a ekonomika · 10 zemí"});
   Object.assign(copy.en,{politics:"European politics",politicsCopy:"Governments, programs and the economy · 10 countries"});
+  Object.assign(copy.cs,{industry:"Průmysl měsíc po měsíci",industryCopy:"Odvětví, měsíční a roční vývoj, národní zdroje i Eurostat"});
+  Object.assign(copy.en,{industry:"Industry month by month",industryCopy:"Sectors, monthly and annual trends, national sources and Eurostat"});
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const href = (path, lang = language()) => `${assetRoot}${path}${path.includes("?") ? "&" : "?"}lang=${lang}`;
   const countryHref = (code, lang = language()) => window.PSDCountryRoutes?.href
@@ -206,6 +208,7 @@
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
       if (active === "cities") nav.querySelector(".municipality-menu")?.classList.add("active");
+      nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/industry/?code=CZE&lang=${lang}"><b>22</b><span><strong>${t.industry}</strong><small>${t.industryCopy}</small></span></a>`);
       if (active === "deep-dives") nav.querySelector(".deep-dive-menu")?.classList.add("active");
       const fold=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase(lang==="cs"?"cs":"en");
       nav.querySelectorAll(".country-menu").forEach(menu=>{
