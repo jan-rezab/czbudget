@@ -43,12 +43,15 @@ npm run validate
 echo "pre-push: API contract tests"
 npm run test:api
 
-# A push to main deploys to production, and nothing else runs the browser suite: Cloud Build
-# has no browsers and the GitHub Actions workflow was removed on purpose. It costs about seven
-# minutes, so feature-branch pushes skip it; run `npm run test:browser` by hand when in doubt.
+# The complete browser suite runs in Cloud Build against the actual release
+# snapshot. Do not launch a desktop browser from a Git hook on the user's Mac.
+# Fail closed if the production configuration stops carrying this release gate.
 if [ "$push_to_main" = 1 ]; then
-  echo "pre-push: browser suite (this push targets main)"
-  npm run test:browser
+  if ! grep -q 'npx playwright test --workers=2' cloudbuild.yaml; then
+    echo "Push blocked: the full Cloud Build browser gate is missing." >&2
+    exit 1
+  fi
+  echo "pre-push: full browser suite is required in Cloud Build before deployment"
 fi
 
 # The ~16k source files behind pipeline/source-assets.manifest.json are not in
