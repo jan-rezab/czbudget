@@ -208,7 +208,7 @@
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
       if (active === "cities") nav.querySelector(".municipality-menu")?.classList.add("active");
-      nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/industry/?code=CZE&lang=${lang}"><b>22</b><span><strong>${t.industry}</strong><small>${t.industryCopy}</small></span></a>`);
+      nav.querySelector(".deep-dive-menu-panel")?.insertAdjacentHTML("beforeend", `<a href="${assetRoot}deep-dives/industry/?code=CZE&channel=eurostat&lang=${lang}"><b>22</b><span><strong>${t.industry}</strong><small>${t.industryCopy}</small></span></a>`);
       if (active === "deep-dives") nav.querySelector(".deep-dive-menu")?.classList.add("active");
       const fold=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase(lang==="cs"?"cs":"en");
       nav.querySelectorAll(".country-menu").forEach(menu=>{

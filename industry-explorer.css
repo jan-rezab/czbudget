@@ -3,3 +3,23 @@
 .industry-period-strip{display:flex;gap:4px;border-top:1px solid var(--grid);padding-top:16px;flex-wrap:wrap}.industry-period-strip button{flex:1;min-width:42px;background:transparent;border:1px solid var(--grid);padding:10px 6px;font:12px monospace;cursor:pointer;color:var(--ink)}.industry-period-strip button[aria-pressed=true]{background:var(--ink);color:var(--white);border-color:var(--ink)}.industry-period-strip button:disabled{opacity:.3;cursor:default}.industry-annual-help{font:11px/1.7 monospace;color:#66685f;margin:12px 0 0}.industry-secondary{flex-wrap:wrap}
 
 .industry-years { flex-basis:100%; display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+
+/* Follow the report pattern: global controls first, then a compact editorial hero. */
+.industry-global-controls{position:sticky;top:72px;z-index:20;background:var(--ink);color:var(--white);margin:24px 0 0;border:0;grid-template-columns:1.4fr 1.5fr 1fr 1.2fr}
+.industry-global-controls label{padding:14px 18px!important;border-color:#454843!important;color:var(--acid,#a8b63f)}
+.industry-global-controls label>span{font:700 10px Arial,sans-serif;letter-spacing:.08em}
+.industry-global-controls select{background:var(--white);color:var(--ink);font-size:14px;padding:10px;border:1px solid #8b8d83}
+.industry-global-controls .custom-select-button{background:var(--white);color:var(--ink);font:700 13px Arial,sans-serif;min-height:42px}
+.industry-section-nav{display:flex;gap:28px;padding:18px 0;border-bottom:1px solid var(--grid);font:700 11px Arial,sans-serif;text-transform:uppercase;letter-spacing:.05em}
+.industry-section-nav a{color:var(--ink);text-decoration:none}.industry-section-nav a:first-child{margin-right:auto}
+.industry-hero{padding-top:34px}.industry-hero h1{font-size:clamp(48px,6vw,80px);margin:24px 0;line-height:1.02;letter-spacing:-.045em}.industry-hero h1 em{font-style:normal}
+.industry-intro{margin-bottom:30px}.industry-secondary{padding-top:20px}
+.industry-visuals{display:flex;flex-direction:column;gap:38px}.industry-trend{order:-1;border-left:0;padding:0 0 28px;border-bottom:1px solid var(--grid)}
+.industry-trend svg{max-height:none;width:100%;margin:16px 0}.industry-trend h3{font-size:30px;margin:12px 0}.industry-trend .industry-big-value{font-size:40px;margin:12px 0}.industry-trend .industry-value-unit{font-size:12px}
+.industry-ranking{width:100%}.industry-ranking>header h2{font-size:32px}.industry-history-link{border:0;background:transparent;padding:4px 0;color:var(--ink);font:700 13px Arial,sans-serif;text-decoration:underline;cursor:pointer}
+#industry-trend-chart,#industry-ranked-chart,#method{scroll-margin-top:190px}
+@media(max-width:780px){.industry-global-controls{top:112px;margin-top:16px;grid-template-columns:1fr 1fr}.industry-global-controls label{padding:8px 10px!important}.industry-global-controls .custom-select-button{min-height:36px;font-size:12px}.industry-section-nav{gap:16px;overflow:auto;white-space:nowrap;font-size:10px}.industry-hero h1{font-size:52px}.industry-trend svg{min-height:210px}.industry-trend{padding-top:0;border-top:0}#industry-trend-chart,#industry-ranked-chart,#method{scroll-margin-top:290px}}
+
+.industry-global-controls label>span{color:#a8b63f!important}.industry-history-range{font:13px/1.5 Arial,sans-serif;color:#55584e;margin:12px 0}.industry-hero h1{font-size:clamp(44px,5.6vw,76px)}
+
+.industry-global-controls{top:0}.industry-section-nav{column-gap:28px}.industry-section-nav a{flex-shrink:0}
