@@ -10,10 +10,39 @@
   <link rel="icon" href="assets/mark.png" type="image/png">
   <title>Many sources. One place. — Public Spending Data</title>
   <link rel="stylesheet" href="style.css?v=20260907">
+  <link rel="stylesheet" href="film.css?v=20260907-sources">
 </head>
 <body>
 <main id="one-place">
   <header><img src="assets/wordmark.png" alt="Public Spending Data"><span class="eyebrow">THE DATA, BROUGHT TOGETHER</span><a href="https://publicspendingdata.org" target="_blank" rel="noopener">Explore the website ↗</a></header>
+
+<section class="film" id="source-film" aria-label="From Czech municipalities to a global source network">
+  <div class="film-stage" id="film-stage">
+    <canvas id="network-canvas" aria-hidden="true"></canvas>
+    <div class="film-copy"><div class="film-kicker" id="film-kicker">01 / 06 · CZECH MUNICIPALITIES</div><h1 id="film-title">Start with every town.</h1><p id="film-subtitle">Budgets from Prague to the smallest municipality. Every dot is an actual municipal profile.</p></div>
+    <div class="film-stat"><strong id="film-number">6,254</strong><span id="film-number-label">Czech municipalities</span></div>
+    <div class="film-labels" id="film-labels"></div>
+    <div class="film-hub" id="film-hub" hidden><img src="assets/mark.png" alt=""><strong>Public money.<br>Connected.</strong><small id="film-hub-note">Country · institution · source</small></div>
+    <div class="film-volumes" id="film-volumes" hidden></div>
+    <div class="film-note" id="film-note">One dot per municipality · dot positions are a layout, not geographic coordinates.</div>
+  </div>
+  <div class="film-controls"><button type="button" class="primary" id="film-play">Pause</button><button type="button" id="film-restart">Restart</button><span class="film-time" id="film-time">00 / 60</span><input type="range" id="film-seek" min="0" max="60" step="0.1" value="0" aria-label="Animation time in seconds"><button type="button" id="film-fullscreen">Full screen</button><a href="#source-explorer">Explore sources ↓</a></div>
+  <div class="film-chapters" id="film-chapters" aria-label="Animation chapters"></div>
+  <div class="film-scope"><span>Remix the network</span><button type="button" data-network-origin="all">World</button><button type="button" data-network-origin="czech">Czech sources</button><button type="button" data-network-origin="international">International institutions</button></div>
+</section>
+<section class="source-explorer" id="source-explorer">
+  <h2>Every source has a name.</h2><p>Explore the references behind the animation, individual Czech municipalities and all 47 state-budget chapters.</p>
+  <div class="network-filters">
+    <label>Browse<select id="network-kind"><option value="sources">Source references</option><option value="municipalities">Czech municipalities</option><option value="chapters">State-budget chapters</option></select></label>
+    <label>Source origin<select id="network-origin"><option value="all">World · all sources</option><option value="czech">Czech sources</option><option value="international">International institutions</option><option value="national">Other national sources</option></select></label>
+    <label>Source family<select id="network-family"><option value="all">All families</option><option value="municipal">Municipal budgets</option><option value="state">Ministries & state budgets</option><option value="statistics">National statistics</option><option value="international">International institutions</option><option value="services">Health, education & transport</option><option value="registers">Registers & public entities</option></select></label>
+    <label>Search<input id="network-search" type="search" placeholder="UN, OECD, Prague, ministry…" autocomplete="off"></label>
+  </div>
+  <div class="network-summary" aria-live="polite"><span id="network-count"></span><span id="network-scope"></span></div>
+  <div class="network-grid" id="network-grid"></div><button type="button" class="network-more" id="network-more">Show more</button>
+  <details class="source-methodology"><summary>What is counted · snapshot and source definitions</summary><p id="network-methodology"></p><p>Municipalities and ministries are entities, not independent data feeds. The state-budget scene includes 14 ministries within 47 chapters. The global map highlights countries with national observations in the published IMF snapshot. Source references include datasets, publications and source documentation cited by published reports.</p><p>The three volume figures are separate measures from the 30 August 2026 coverage release. Cumulative processing can include overlapping historical versions; validated facts and published municipal lines have different populations. These numbers are never added together.</p><p><a href="network-data.json" download>Download the source inventory and entity names</a> · <a href="/methodology.html">Project methodology</a></p></details>
+</section>
+<details class="volume-explorer"><summary>Explore exact record counts by country, year and indicator</summary>
   <section class="intro">
     <div><h1>Many sources.<br><em>One place.</em></h1><p>From Czech municipal budgets to national indicators around the world.</p></div>
     <div class="intro-actions"><button id="tour" class="primary" type="button">Play the 60-second story</button><button id="replay" type="button">Replay the gathering</button><span id="tour-status" aria-live="polite">Choose a filter and watch the data regroup.</span></div>
@@ -40,7 +69,9 @@
   </section>
   <details class="details"><summary>What the counts mean · sources</summary><p id="definition"></p><ul id="notes"></ul><p><a href="data.json">Download the measured coverage snapshot</a></p><div id="source-details"></div></details>
   <footer><span>Animated coverage snapshot · published data only</span><span id="flow-status" aria-live="polite">Gathering the view…</span></footer>
+</details>
 </main>
-<script src="data.js?v=20260907"></script><script src="app.js?v=20260907"></script>
+<script src="data.js?v=20260907"></script><script src="app.js?v=20260907-source-explorer"></script>
+<script src="network-data.js?v=20260907-sources"></script><script src="film.js?v=20260907-sources"></script>
 </body>
 </html>

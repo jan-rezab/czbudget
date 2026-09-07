@@ -94,6 +94,7 @@
   }
   function bezier(a,b,p,bend=0){const q=1-p;const c1={x:a.x+(b.x-a.x)*.48,y:a.y+bend},c2={x:a.x+(b.x-a.x)*.55,y:b.y-bend};return{x:q*q*q*a.x+3*q*q*p*c1.x+3*q*p*p*c2.x+p*p*p*b.x,y:q*q*q*a.y+3*q*q*p*c1.y+3*q*p*p*c2.y+p*p*p*b.y};}
   function draw(){
+    if(!width||!height||!particles.every(p=>p.source))return;
     ctx.clearRect(0,0,width,height);
     ctx.lineWidth=1;ctx.strokeStyle='#717c5428';
     for(const a of Object.values(anchors)){
