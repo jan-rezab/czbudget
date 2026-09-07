@@ -59,6 +59,12 @@ steps:
     entrypoint: node
     args: [scripts/hydrate-industry.mjs]
 
+  - id: verify-industrial-diagnostics
+    waitFor: ["-"]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/validate-industrial-release.mjs]
+
   - id: verify-data-layers
     waitFor: ["hydrate-data-layers"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
@@ -178,7 +184,8 @@ steps:
         npm ci
         npx playwright install --with-deps chromium
         npm run test:api
-        npx playwright test tests/browser/contrast.spec.mjs --workers=2
+        node --test tests/industrial-data.test.cjs
+        npx playwright test tests/browser/contrast.spec.mjs tests/browser/industrial-diagnostics.spec.mjs --workers=2
 
   - id: nginx-routing
     name: nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
