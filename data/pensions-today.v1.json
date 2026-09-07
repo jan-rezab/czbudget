@@ -1,0 +1,4805 @@
+{
+  "schema_version": 1,
+  "extracted_at": "2026-09-08",
+  "sources": {
+    "cssz": {
+      "url": "https://www.cssz.gov.cz/documents/20143/2946719/Rocenka_2025.zip/a927732b-31f5-7f4c-8487-5ca9223e4dda",
+      "table": "07.03 — S-celkem, S-muži, S-ženy",
+      "extracted_at": "2026-09-08",
+      "vintage": "outturn",
+      "file": "cssz-2025.zip",
+      "sha256": "6748162aef32cab9e475d2025ac6d127caca6ca50d5386a614d6da8aa1a5f53b",
+      "year": 2025
+    },
+    "income": {
+      "url": "https://www.oecd.org/en/publications/pensions-at-a-glance-2025_e40274c1-en/full-report/incomes-of-older-people_24a65c56.html",
+      "table": "OECD Pensions at a Glance 2025 — Table 7.1",
+      "extracted_at": "2026-09-08",
+      "vintage": "outturn",
+      "file": "oecd-income.xlsx",
+      "sha256": "f3bbe842ea11b5e350be308f3edb238883dcdbefd239cc695d162deb03aae532",
+      "download_url": "https://stat.link/crov86",
+      "year": 2025
+    },
+    "poverty": {
+      "url": "https://www.oecd.org/en/publications/pensions-at-a-glance-2025_e40274c1-en/full-report/old-age-income-poverty_3cd946d7.html",
+      "table": "OECD Pensions at a Glance 2025 — Table 7.2",
+      "extracted_at": "2026-09-08",
+      "vintage": "outturn",
+      "file": "oecd-poverty.xlsx",
+      "sha256": "07e1c4de7ac079aa709086931772890b4d0f09a72810773920e378ebb7c4bd74",
+      "download_url": "https://stat.link/2sqwtk",
+      "year": 2025
+    },
+    "ssa": {
+      "url": "https://www.ssa.gov/policy/docs/statcomps/supplement/2026/5a.html#table5.a1.1",
+      "table": "SSA Annual Statistical Supplement 2026 — Table 5.A1.1",
+      "extracted_at": "2026-09-08",
+      "vintage": "outturn",
+      "file": "ssa-2026-table-5a11.csv",
+      "sha256": "5187611ff15796658a94c31c19d719ab8769a7e3f68f02908854d322d3f2f710",
+      "year": 2026,
+      "extraction_method": "Transcribed published age-band rows; counts and weighted means reconciled to published totals"
+    },
+    "dwp": {
+      "url": "https://www.gov.uk/government/statistics/dwp-benefit-statistics-february-2026/dwp-benefit-statistics-february-2026#pensions",
+      "table": "DWP benefit statistics, February 2026 — Figure 4 and accompanying means",
+      "extracted_at": "2026-09-08",
+      "vintage": "outturn",
+      "file": "dwp-2026-february-state-pension.csv",
+      "sha256": "073e1c2e7792870b43b65dffd794aec9eea0daab2f3806123119263a3dd53e9b",
+      "year": 2026,
+      "extraction_method": "Transcribed published scheme/sex means"
+    },
+    "drees_level": {
+      "url": "https://www.drees.solidarites-sante.gouv.fr/sites/default/files/2025-07/Fiche%2005%20-%20Le%20niveau%20des%20pensions.xlsx",
+      "table": "DREES 2025 — Fiche 05, Tableau 1 / Graphique 4",
+      "extracted_at": "2026-09-08",
+      "vintage": "outturn",
+      "file": "drees-2025-05.xlsx",
+      "sha256": "1afa7997f30591f9191b0f75a4228478be97a20ff5ebbddfdb3456d74a0cb7ad",
+      "year": 2025
+    },
+    "drees_cohort": {
+      "url": "https://www.drees.solidarites-sante.gouv.fr/sites/default/files/2025-07/Fiche%2006%20-%20Les%20%C3%A9carts%20de%20pensions%20de%20droit%20direct%20entre%20g%C3%A9n%C3%A9rations.xlsx",
+      "table": "DREES 2025 — Fiche 06, Graphique 1 / complémentaire, resident cohorts 1930–1953",
+      "extracted_at": "2026-09-08",
+      "vintage": "outturn",
+      "file": "drees-2025-06.xlsx",
+      "sha256": "489da7058f7436aefe8daf662ab78a8e152951974f6064a9a9bf6f68da5e2df9",
+      "year": 2025
+    }
+  },
+  "countries": {
+    "CZE": {
+      "name": {
+        "en": "Czechia",
+        "cs": "Česko"
+      },
+      "national": {
+        "date": "2025-12-31",
+        "currency": "CZK",
+        "frequency": "month",
+        "source_id": "cssz",
+        "distribution": {
+          "total": {
+            "all": {
+              "count": 1772834,
+              "mean": 21094.0,
+              "median_band": {
+                "lower": 21000,
+                "upper": 21499
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 9410
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 2561
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 4547
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 5067
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 6123
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 8159
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 9953
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 6558
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 7046
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 7967
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 9137
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 10378
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 12332
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 14886
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 18737
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 23871
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 29992
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 36900
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 46702
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 51752
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 60370
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 69941
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 78091
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 83473
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 87224
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 90695
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 90709
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 92080
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 90739
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 87155
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 82343
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 78252
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 72215
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 61531
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 50224
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 43088
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 34481
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 41399
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 23819
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 18854
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 14866
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 12171
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 10216
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 8396
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 7324
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 6167
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 5297
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 4563
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 3962
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 6688
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 5310
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 4471
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 3687
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 2907
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 2540
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 15508
+                }
+              ]
+            },
+            "regular": {
+              "count": 1061191,
+              "mean": 22301.0,
+              "median_band": {
+                "lower": 22000,
+                "upper": 22499
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 7510
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 1662
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 1604
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 1834
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 2158
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 2756
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 3461
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 2064
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 2259
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 2471
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 2717
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 3019
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 3372
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 4052
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 4716
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 5602
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 7053
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 9437
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 12791
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 17371
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 23338
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 30910
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 38566
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 44167
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 48827
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 53798
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 56236
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 59620
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 61857
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 61582
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 60357
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 59705
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 56755
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 48974
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 39965
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 33816
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 27147
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 30388
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 18817
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 14955
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 11897
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 9736
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 8197
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 6769
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 5941
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 5106
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 4378
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 3756
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 3236
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 5465
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 4422
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 3752
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 3107
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 2462
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 2123
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 13155
+                }
+              ]
+            },
+            "early": {
+              "count": 627821,
+              "mean": 19566.0,
+              "median_band": {
+                "lower": 19000,
+                "upper": 19499
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 1060
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 322
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 439
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 703
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 1476
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 2583
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 4020
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 2872
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 3408
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 4255
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 5361
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 6506
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 8051
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 10077
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 12926
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 16956
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 21184
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 25009
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 28628
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 31449
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 33724
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 35686
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 36057
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 35615
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 34702
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 33004
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 30501
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 28614
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 25430
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 22802
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 19569
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 16485
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 13805
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 11403
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 9475
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 8087
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 6942
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 10577
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 4704
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 3730
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 2821
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 2305
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 1915
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 1534
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 1317
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 1018
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 864
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 746
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 690
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 1146
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 836
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 696
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 567
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 436
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 406
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 2327
+                }
+              ]
+            }
+          },
+          "male": {
+            "all": {
+              "count": 861074,
+              "mean": 22347.0,
+              "median_band": {
+                "lower": 22000,
+                "upper": 22499
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 4630
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 1455
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 2616
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 2553
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 2731
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 3529
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 3729
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 2506
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 2547
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 2763
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 3238
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 3605
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 4247
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 4947
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 6008
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 7445
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 8648
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 10716
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 14157
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 15254
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 18596
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 22401
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 25646
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 29085
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 32345
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 35958
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 39674
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 44014
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 46955
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 47434
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 47169
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 46813
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 45384
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 39553
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 32701
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 28842
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 23098
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 32293
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 16852
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 13346
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 10631
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 8797
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 7382
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 6109
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 5365
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 4483
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 3964
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 3399
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 2936
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 5044
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 4044
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 3464
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 2840
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 2266
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 1975
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 12892
+                }
+              ]
+            },
+            "regular": {
+              "count": 513296,
+              "mean": 23670.0,
+              "median_band": {
+                "lower": 23000,
+                "upper": 23499
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 3564
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 864
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 914
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 967
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 925
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 1074
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 1190
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 750
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 743
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 754
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 824
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 883
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 995
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 1209
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 1382
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 1647
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 1872
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 2459
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 3196
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 4081
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 5525
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 7587
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 9767
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 11812
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 14127
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 16886
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 20180
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 24551
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 28765
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 30729
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 32260
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 33919
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 34597
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 30802
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 25436
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 22084
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 17863
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 23037
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 13208
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 10445
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 8382
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 6927
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 5845
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 4869
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 4290
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 3680
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 3247
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 2765
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 2375
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 4078
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 3318
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 2877
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 2362
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 1905
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 1637
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 10866
+                }
+              ]
+            },
+            "early": {
+              "count": 304802,
+              "mean": 20775.0,
+              "median_band": {
+                "lower": 20500,
+                "upper": 20999
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 545
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 201
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 264
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 369
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 562
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 856
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 1280
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 918
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 1124
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 1449
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 1876
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 2255
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 2786
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 3411
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 4168
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 5250
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 6133
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 7184
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 8606
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 10096
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 11781
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 13560
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 14592
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 15855
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 16669
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 17246
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 17333
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 17282
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 16131
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 14927
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 13287
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 11455
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 9596
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 7944
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 6675
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 5728
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 4935
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 8888
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 3399
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 2769
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 2132
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 1763
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 1451
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 1175
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 1023
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 775
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 669
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 586
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 531
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 906
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 680
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 570
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 469
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 352
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 332
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 2003
+                }
+              ]
+            }
+          },
+          "female": {
+            "all": {
+              "count": 911760,
+              "mean": 19912.0,
+              "median_band": {
+                "lower": 19500,
+                "upper": 19999
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 4780
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 1106
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 1931
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 2514
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 3392
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 4630
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 6224
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 4052
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 4499
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 5204
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 5899
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 6773
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 8085
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 9939
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 12729
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 16426
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 21344
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 26184
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 32545
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 36498
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 41774
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 47540
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 52445
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 54388
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 54879
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 54737
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 51035
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 48066
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 43784
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 39721
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 35174
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 31439
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 26831
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 21978
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 17523
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 14246
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 11383
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 9106
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 6967
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 5508
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 4235
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 3374
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 2834
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 2287
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 1959
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 1684
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 1333
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 1164
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 1026
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 1644
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 1266
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 1007
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 847
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 641
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 565
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 2616
+                }
+              ]
+            },
+            "regular": {
+              "count": 547895,
+              "mean": 21019.0,
+              "median_band": {
+                "lower": 20500,
+                "upper": 20999
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 3946
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 798
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 690
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 867
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 1233
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 1682
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 2271
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 1314
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 1516
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 1717
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 1893
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 2136
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 2377
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 2843
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 3334
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 3955
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 5181
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 6978
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 9595
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 13290
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 17813
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 23323
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 28799
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 32355
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 34700
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 36912
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 36056
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 35069
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 33092
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 30853
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 28097
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 25786
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 22158
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 18172
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 14529
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 11732
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 9284
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 7351
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 5609
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 4510
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 3515
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 2809
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 2352
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 1900
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 1651
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 1426
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 1131
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 991
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 861
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 1387
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 1104
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 875
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 745
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 557
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 486
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 2289
+                }
+              ]
+            },
+            "early": {
+              "count": 323019,
+              "mean": 18426.0,
+              "median_band": {
+                "lower": 18000,
+                "upper": 18499
+              },
+              "bands": [
+                {
+                  "lower": 1,
+                  "upper": 4999,
+                  "count": 515
+                },
+                {
+                  "lower": 5000,
+                  "upper": 5999,
+                  "count": 121
+                },
+                {
+                  "lower": 6000,
+                  "upper": 6999,
+                  "count": 175
+                },
+                {
+                  "lower": 7000,
+                  "upper": 7999,
+                  "count": 334
+                },
+                {
+                  "lower": 8000,
+                  "upper": 8999,
+                  "count": 914
+                },
+                {
+                  "lower": 9000,
+                  "upper": 9999,
+                  "count": 1727
+                },
+                {
+                  "lower": 10000,
+                  "upper": 10999,
+                  "count": 2740
+                },
+                {
+                  "lower": 11000,
+                  "upper": 11499,
+                  "count": 1954
+                },
+                {
+                  "lower": 11500,
+                  "upper": 11999,
+                  "count": 2284
+                },
+                {
+                  "lower": 12000,
+                  "upper": 12499,
+                  "count": 2806
+                },
+                {
+                  "lower": 12500,
+                  "upper": 12999,
+                  "count": 3485
+                },
+                {
+                  "lower": 13000,
+                  "upper": 13499,
+                  "count": 4251
+                },
+                {
+                  "lower": 13500,
+                  "upper": 13999,
+                  "count": 5265
+                },
+                {
+                  "lower": 14000,
+                  "upper": 14499,
+                  "count": 6666
+                },
+                {
+                  "lower": 14500,
+                  "upper": 14999,
+                  "count": 8758
+                },
+                {
+                  "lower": 15000,
+                  "upper": 15499,
+                  "count": 11706
+                },
+                {
+                  "lower": 15500,
+                  "upper": 15999,
+                  "count": 15051
+                },
+                {
+                  "lower": 16000,
+                  "upper": 16499,
+                  "count": 17825
+                },
+                {
+                  "lower": 16500,
+                  "upper": 16999,
+                  "count": 20022
+                },
+                {
+                  "lower": 17000,
+                  "upper": 17499,
+                  "count": 21353
+                },
+                {
+                  "lower": 17500,
+                  "upper": 17999,
+                  "count": 21943
+                },
+                {
+                  "lower": 18000,
+                  "upper": 18499,
+                  "count": 22126
+                },
+                {
+                  "lower": 18500,
+                  "upper": 18999,
+                  "count": 21465
+                },
+                {
+                  "lower": 19000,
+                  "upper": 19499,
+                  "count": 19760
+                },
+                {
+                  "lower": 19500,
+                  "upper": 19999,
+                  "count": 18033
+                },
+                {
+                  "lower": 20000,
+                  "upper": 20499,
+                  "count": 15758
+                },
+                {
+                  "lower": 20500,
+                  "upper": 20999,
+                  "count": 13168
+                },
+                {
+                  "lower": 21000,
+                  "upper": 21499,
+                  "count": 11332
+                },
+                {
+                  "lower": 21500,
+                  "upper": 21999,
+                  "count": 9299
+                },
+                {
+                  "lower": 22000,
+                  "upper": 22499,
+                  "count": 7875
+                },
+                {
+                  "lower": 22500,
+                  "upper": 22999,
+                  "count": 6282
+                },
+                {
+                  "lower": 23000,
+                  "upper": 23499,
+                  "count": 5030
+                },
+                {
+                  "lower": 23500,
+                  "upper": 23999,
+                  "count": 4209
+                },
+                {
+                  "lower": 24000,
+                  "upper": 24499,
+                  "count": 3459
+                },
+                {
+                  "lower": 24500,
+                  "upper": 24999,
+                  "count": 2800
+                },
+                {
+                  "lower": 25000,
+                  "upper": 25499,
+                  "count": 2359
+                },
+                {
+                  "lower": 25500,
+                  "upper": 25999,
+                  "count": 2007
+                },
+                {
+                  "lower": 26000,
+                  "upper": 26499,
+                  "count": 1689
+                },
+                {
+                  "lower": 26500,
+                  "upper": 26999,
+                  "count": 1305
+                },
+                {
+                  "lower": 27000,
+                  "upper": 27499,
+                  "count": 961
+                },
+                {
+                  "lower": 27500,
+                  "upper": 27999,
+                  "count": 689
+                },
+                {
+                  "lower": 28000,
+                  "upper": 28499,
+                  "count": 542
+                },
+                {
+                  "lower": 28500,
+                  "upper": 28999,
+                  "count": 464
+                },
+                {
+                  "lower": 29000,
+                  "upper": 29499,
+                  "count": 359
+                },
+                {
+                  "lower": 29500,
+                  "upper": 29999,
+                  "count": 294
+                },
+                {
+                  "lower": 30000,
+                  "upper": 30499,
+                  "count": 243
+                },
+                {
+                  "lower": 30500,
+                  "upper": 30999,
+                  "count": 195
+                },
+                {
+                  "lower": 31000,
+                  "upper": 31499,
+                  "count": 160
+                },
+                {
+                  "lower": 31500,
+                  "upper": 31999,
+                  "count": 159
+                },
+                {
+                  "lower": 32000,
+                  "upper": 32999,
+                  "count": 240
+                },
+                {
+                  "lower": 33000,
+                  "upper": 33999,
+                  "count": 156
+                },
+                {
+                  "lower": 34000,
+                  "upper": 34999,
+                  "count": 126
+                },
+                {
+                  "lower": 35000,
+                  "upper": 35999,
+                  "count": 98
+                },
+                {
+                  "lower": 36000,
+                  "upper": 36999,
+                  "count": 84
+                },
+                {
+                  "lower": 37000,
+                  "upper": 37999,
+                  "count": 74
+                },
+                {
+                  "lower": 38000,
+                  "upper": null,
+                  "count": 324
+                }
+              ]
+            }
+          }
+        },
+        "payment_by_age": null,
+        "payment_by_retirement_year": null
+      },
+      "income": {
+        "all": 76.687285,
+        "male": 82.680781,
+        "female": 72.210041,
+        "age_66_75": 80.428774,
+        "age_76_plus": 70.755681,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 7.580583,
+        "age_66_75": 6.764921,
+        "age_76_plus": 8.873699,
+        "male": 3.427501,
+        "female": 10.683006,
+        "total_population": 6.159209,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "AUS": {
+      "name": {
+        "en": "Australia",
+        "cs": "Austrálie"
+      },
+      "income": {
+        "all": 73.787261,
+        "male": 77.119026,
+        "female": 70.749742,
+        "age_66_75": 78.326633,
+        "age_76_plus": 66.779108,
+        "year": 2020,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 22.6,
+        "age_66_75": 19.7,
+        "age_76_plus": 27,
+        "male": 18.205797,
+        "female": 26.601316,
+        "total_population": 12.6,
+        "year": 2020,
+        "source_id": "poverty"
+      }
+    },
+    "AUT": {
+      "name": {
+        "en": "Austria",
+        "cs": "Rakousko"
+      },
+      "income": {
+        "all": 91.499412,
+        "male": 99.716026,
+        "female": 85.037444,
+        "age_66_75": 96.245009,
+        "age_76_plus": 84.832311,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 11.615394,
+        "age_66_75": 11.562535,
+        "age_76_plus": 11.689655,
+        "male": 9.399501,
+        "female": 13.358086,
+        "total_population": 9.553173,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "BEL": {
+      "name": {
+        "en": "Belgium",
+        "cs": "Belgie"
+      },
+      "income": {
+        "all": 76.164145,
+        "male": 79.717734,
+        "female": 73.225329,
+        "age_66_75": 81.192134,
+        "age_76_plus": 69.311938,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 7.738117,
+        "age_66_75": 6.88779,
+        "age_76_plus": 8.896954,
+        "male": 6.990572,
+        "female": 8.356337,
+        "total_population": 6.912423,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "CAN": {
+      "name": {
+        "en": "Canada",
+        "cs": "Kanada"
+      },
+      "income": {
+        "all": 93.731076,
+        "male": 97.076294,
+        "female": 90.855631,
+        "age_66_75": 96.713615,
+        "age_76_plus": 89.201878,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 10.1,
+        "age_66_75": 10.4,
+        "age_76_plus": 9.6,
+        "male": 8.681873,
+        "female": 11.320829,
+        "total_population": 12.2,
+        "year": 2023,
+        "source_id": "poverty"
+      }
+    },
+    "CHL": {
+      "name": {
+        "en": "Chile",
+        "cs": "Chile"
+      },
+      "income": {
+        "all": 84.881988,
+        "male": 86.738146,
+        "female": 83.467851,
+        "age_66_75": 86.074282,
+        "age_76_plus": 83.06713,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 16.156845,
+        "age_66_75": 15.605399,
+        "age_76_plus": 16.99623,
+        "male": 15.000049,
+        "female": 17.038164,
+        "total_population": 16.289548,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "COL": {
+      "name": {
+        "en": "Colombia",
+        "cs": "Kolumbie"
+      },
+      "income": null,
+      "poverty": null
+    },
+    "CRI": {
+      "name": {
+        "en": "Costa Rica",
+        "cs": "Kostarika"
+      },
+      "income": {
+        "all": 96.089685,
+        "male": 95.899824,
+        "female": 96.235262,
+        "age_66_75": 97.134452,
+        "age_76_plus": 94.382845,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 25.782993,
+        "age_66_75": 24.238728,
+        "age_76_plus": 28.305866,
+        "male": 26.001781,
+        "female": 25.615237,
+        "total_population": 21.160656,
+        "year": 2023,
+        "source_id": "poverty"
+      }
+    },
+    "DNK": {
+      "name": {
+        "en": "Denmark",
+        "cs": "Dánsko"
+      },
+      "income": {
+        "all": 79.736999,
+        "male": 85.11367,
+        "female": 75.236439,
+        "age_66_75": 86.040955,
+        "age_76_plus": 72.382385,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 5.01,
+        "age_66_75": 3.8,
+        "age_76_plus": 6.4,
+        "male": 4.176667,
+        "female": 5.732075,
+        "total_population": 6.31,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "EST": {
+      "name": {
+        "en": "Estonia",
+        "cs": "Estonsko"
+      },
+      "income": {
+        "all": 66.248058,
+        "male": 72.386594,
+        "female": 62.95664,
+        "age_66_75": 72.24783,
+        "age_76_plus": 58.522521,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 37.444339,
+        "age_66_75": 31.287259,
+        "age_76_plus": 45.372433,
+        "male": 24.197094,
+        "female": 44.547373,
+        "total_population": 16.167326,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "FIN": {
+      "name": {
+        "en": "Finland",
+        "cs": "Finsko"
+      },
+      "income": {
+        "all": 86.931094,
+        "male": 93.566164,
+        "female": 81.71589,
+        "age_66_75": 91.032174,
+        "age_76_plus": 82.058524,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 4.8,
+        "age_66_75": 4,
+        "age_76_plus": 5.7,
+        "male": 2.908247,
+        "female": 6.33871,
+        "total_population": 6.8,
+        "year": 2023,
+        "source_id": "poverty"
+      }
+    },
+    "FRA": {
+      "name": {
+        "en": "France",
+        "cs": "Francie"
+      },
+      "income": {
+        "all": 94.29623,
+        "male": 98.991058,
+        "female": 90.627342,
+        "age_66_75": 97.704918,
+        "age_76_plus": 89.868852,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 6.1,
+        "age_66_75": 5.6,
+        "age_76_plus": 6.7,
+        "male": 4.759091,
+        "female": 7.165179,
+        "total_population": 8.3,
+        "year": 2022,
+        "source_id": "poverty"
+      },
+      "national": {
+        "date": "2023-12-31",
+        "currency": "EUR",
+        "frequency": "month",
+        "source_id": "drees_level",
+        "means": {
+          "total": {
+            "direct": 1666,
+            "combined": 1827
+          },
+          "male": {
+            "direct": 2089,
+            "combined": 2118
+          },
+          "female": {
+            "direct": 1306,
+            "combined": 1580
+          }
+        },
+        "payment_by_retirement_year": null,
+        "distribution_pct": {
+          "total": [
+            {
+              "upper": 100,
+              "share": 1.2
+            },
+            {
+              "upper": 200,
+              "share": 2.5
+            },
+            {
+              "upper": 300,
+              "share": 3.1
+            },
+            {
+              "upper": 400,
+              "share": 3.1
+            },
+            {
+              "upper": 500,
+              "share": 2.9
+            },
+            {
+              "upper": 600,
+              "share": 3
+            },
+            {
+              "upper": 700,
+              "share": 3.1
+            },
+            {
+              "upper": 800,
+              "share": 3.9
+            },
+            {
+              "upper": 900,
+              "share": 5.4
+            },
+            {
+              "upper": 1000,
+              "share": 5.1
+            },
+            {
+              "upper": 1100,
+              "share": 4.3
+            },
+            {
+              "upper": 1200,
+              "share": 4.3
+            },
+            {
+              "upper": 1300,
+              "share": 4.4
+            },
+            {
+              "upper": 1400,
+              "share": 4.6
+            },
+            {
+              "upper": 1500,
+              "share": 4.6
+            },
+            {
+              "upper": 1600,
+              "share": 4.4
+            },
+            {
+              "upper": 1700,
+              "share": 4
+            },
+            {
+              "upper": 1800,
+              "share": 3.7
+            },
+            {
+              "upper": 1900,
+              "share": 3.4
+            },
+            {
+              "upper": 2000,
+              "share": 3.3
+            },
+            {
+              "upper": 2100,
+              "share": 3.3
+            },
+            {
+              "upper": 2200,
+              "share": 2.7
+            },
+            {
+              "upper": 2300,
+              "share": 2.4
+            },
+            {
+              "upper": 2400,
+              "share": 2.1
+            },
+            {
+              "upper": 2500,
+              "share": 1.8
+            },
+            {
+              "upper": 2600,
+              "share": 1.6
+            },
+            {
+              "upper": 2700,
+              "share": 1.4
+            },
+            {
+              "upper": 2800,
+              "share": 1.2
+            },
+            {
+              "upper": 2900,
+              "share": 1.1
+            },
+            {
+              "upper": 3000,
+              "share": 0.9
+            },
+            {
+              "upper": 3100,
+              "share": 0.8
+            },
+            {
+              "upper": 3200,
+              "share": 0.7
+            },
+            {
+              "upper": 3300,
+              "share": 0.6
+            },
+            {
+              "upper": 3400,
+              "share": 0.5
+            },
+            {
+              "upper": 3500,
+              "share": 0.4
+            },
+            {
+              "upper": 3600,
+              "share": 0.4
+            },
+            {
+              "upper": 3700,
+              "share": 0.3
+            },
+            {
+              "upper": 3800,
+              "share": 0.3
+            },
+            {
+              "upper": 3900,
+              "share": 0.3
+            },
+            {
+              "upper": 4000,
+              "share": 0.3
+            },
+            {
+              "upper": 4100,
+              "share": 0.2
+            },
+            {
+              "upper": 4200,
+              "share": 0.2
+            },
+            {
+              "upper": 4300,
+              "share": 0.2
+            },
+            {
+              "upper": 4400,
+              "share": 0.2
+            },
+            {
+              "upper": 4500,
+              "share": 0.1
+            },
+            {
+              "upper": null,
+              "share": 1.7
+            }
+          ],
+          "male": [
+            {
+              "upper": 100,
+              "share": 0.7
+            },
+            {
+              "upper": 200,
+              "share": 0.7
+            },
+            {
+              "upper": 300,
+              "share": 0.7
+            },
+            {
+              "upper": 400,
+              "share": 0.8
+            },
+            {
+              "upper": 500,
+              "share": 0.9
+            },
+            {
+              "upper": 600,
+              "share": 1
+            },
+            {
+              "upper": 700,
+              "share": 1.2
+            },
+            {
+              "upper": 800,
+              "share": 1.7
+            },
+            {
+              "upper": 900,
+              "share": 3.1
+            },
+            {
+              "upper": 1000,
+              "share": 3.7
+            },
+            {
+              "upper": 1100,
+              "share": 3.6
+            },
+            {
+              "upper": 1200,
+              "share": 3.9
+            },
+            {
+              "upper": 1300,
+              "share": 4.3
+            },
+            {
+              "upper": 1400,
+              "share": 5
+            },
+            {
+              "upper": 1500,
+              "share": 5.5
+            },
+            {
+              "upper": 1600,
+              "share": 5.6
+            },
+            {
+              "upper": 1700,
+              "share": 5.3
+            },
+            {
+              "upper": 1800,
+              "share": 4.9
+            },
+            {
+              "upper": 1900,
+              "share": 4.5
+            },
+            {
+              "upper": 2000,
+              "share": 4.3
+            },
+            {
+              "upper": 2100,
+              "share": 4.3
+            },
+            {
+              "upper": 2200,
+              "share": 3.6
+            },
+            {
+              "upper": 2300,
+              "share": 3.2
+            },
+            {
+              "upper": 2400,
+              "share": 2.9
+            },
+            {
+              "upper": 2500,
+              "share": 2.5
+            },
+            {
+              "upper": 2600,
+              "share": 2.3
+            },
+            {
+              "upper": 2700,
+              "share": 2.1
+            },
+            {
+              "upper": 2800,
+              "share": 1.8
+            },
+            {
+              "upper": 2900,
+              "share": 1.6
+            },
+            {
+              "upper": 3000,
+              "share": 1.4
+            },
+            {
+              "upper": 3100,
+              "share": 1.2
+            },
+            {
+              "upper": 3200,
+              "share": 1.1
+            },
+            {
+              "upper": 3300,
+              "share": 1
+            },
+            {
+              "upper": 3400,
+              "share": 0.8
+            },
+            {
+              "upper": 3500,
+              "share": 0.8
+            },
+            {
+              "upper": 3600,
+              "share": 0.7
+            },
+            {
+              "upper": 3700,
+              "share": 0.6
+            },
+            {
+              "upper": 3800,
+              "share": 0.6
+            },
+            {
+              "upper": 3900,
+              "share": 0.5
+            },
+            {
+              "upper": 4000,
+              "share": 0.5
+            },
+            {
+              "upper": 4100,
+              "share": 0.4
+            },
+            {
+              "upper": 4200,
+              "share": 0.4
+            },
+            {
+              "upper": 4300,
+              "share": 0.3
+            },
+            {
+              "upper": 4400,
+              "share": 0.3
+            },
+            {
+              "upper": 4500,
+              "share": 0.3
+            },
+            {
+              "upper": null,
+              "share": 3.3
+            }
+          ],
+          "female": [
+            {
+              "upper": 100,
+              "share": 1.7
+            },
+            {
+              "upper": 200,
+              "share": 4.1
+            },
+            {
+              "upper": 300,
+              "share": 5.2
+            },
+            {
+              "upper": 400,
+              "share": 5
+            },
+            {
+              "upper": 500,
+              "share": 4.6
+            },
+            {
+              "upper": 600,
+              "share": 4.6
+            },
+            {
+              "upper": 700,
+              "share": 4.7
+            },
+            {
+              "upper": 800,
+              "share": 5.8
+            },
+            {
+              "upper": 900,
+              "share": 7.4
+            },
+            {
+              "upper": 1000,
+              "share": 6.3
+            },
+            {
+              "upper": 1100,
+              "share": 4.8
+            },
+            {
+              "upper": 1200,
+              "share": 4.6
+            },
+            {
+              "upper": 1300,
+              "share": 4.4
+            },
+            {
+              "upper": 1400,
+              "share": 4.2
+            },
+            {
+              "upper": 1500,
+              "share": 3.8
+            },
+            {
+              "upper": 1600,
+              "share": 3.3
+            },
+            {
+              "upper": 1700,
+              "share": 2.9
+            },
+            {
+              "upper": 1800,
+              "share": 2.6
+            },
+            {
+              "upper": 1900,
+              "share": 2.5
+            },
+            {
+              "upper": 2000,
+              "share": 2.4
+            },
+            {
+              "upper": 2100,
+              "share": 2.4
+            },
+            {
+              "upper": 2200,
+              "share": 2
+            },
+            {
+              "upper": 2300,
+              "share": 1.7
+            },
+            {
+              "upper": 2400,
+              "share": 1.5
+            },
+            {
+              "upper": 2500,
+              "share": 1.3
+            },
+            {
+              "upper": 2600,
+              "share": 1
+            },
+            {
+              "upper": 2700,
+              "share": 0.8
+            },
+            {
+              "upper": 2800,
+              "share": 0.7
+            },
+            {
+              "upper": 2900,
+              "share": 0.6
+            },
+            {
+              "upper": 3000,
+              "share": 0.5
+            },
+            {
+              "upper": 3100,
+              "share": 0.4
+            },
+            {
+              "upper": 3200,
+              "share": 0.3
+            },
+            {
+              "upper": 3300,
+              "share": 0.3
+            },
+            {
+              "upper": 3400,
+              "share": 0.2
+            },
+            {
+              "upper": 3500,
+              "share": 0.2
+            },
+            {
+              "upper": 3600,
+              "share": 0.2
+            },
+            {
+              "upper": 3700,
+              "share": 0.1
+            },
+            {
+              "upper": 3800,
+              "share": 0.1
+            },
+            {
+              "upper": 3900,
+              "share": 0.1
+            },
+            {
+              "upper": 4000,
+              "share": 0.1
+            },
+            {
+              "upper": 4100,
+              "share": 0.1
+            },
+            {
+              "upper": 4200,
+              "share": 0.1
+            },
+            {
+              "upper": 4300,
+              "share": 0.1
+            },
+            {
+              "upper": 4400,
+              "share": 0
+            },
+            {
+              "upper": 4500,
+              "share": 0
+            },
+            {
+              "upper": null,
+              "share": 0.3
+            }
+          ]
+        },
+        "distribution_date": "2020-12-31",
+        "payment_by_birth_year": {
+          "total": [
+            {
+              "birth_year": 1930,
+              "mean": 1265,
+              "full_career_mean": 1680
+            },
+            {
+              "birth_year": 1931,
+              "mean": 1302,
+              "full_career_mean": 1705
+            },
+            {
+              "birth_year": 1932,
+              "mean": 1309,
+              "full_career_mean": 1741
+            },
+            {
+              "birth_year": 1933,
+              "mean": 1345,
+              "full_career_mean": 1759
+            },
+            {
+              "birth_year": 1934,
+              "mean": 1339,
+              "full_career_mean": 1752
+            },
+            {
+              "birth_year": 1935,
+              "mean": 1369,
+              "full_career_mean": 1779
+            },
+            {
+              "birth_year": 1936,
+              "mean": 1377,
+              "full_career_mean": 1801
+            },
+            {
+              "birth_year": 1937,
+              "mean": 1438,
+              "full_career_mean": 1832
+            },
+            {
+              "birth_year": 1938,
+              "mean": 1444,
+              "full_career_mean": 1832
+            },
+            {
+              "birth_year": 1939,
+              "mean": 1469,
+              "full_career_mean": 1851
+            },
+            {
+              "birth_year": 1940,
+              "mean": 1506,
+              "full_career_mean": 1886
+            },
+            {
+              "birth_year": 1941,
+              "mean": 1545,
+              "full_career_mean": 1898
+            },
+            {
+              "birth_year": 1942,
+              "mean": 1552,
+              "full_career_mean": 1926
+            },
+            {
+              "birth_year": 1943,
+              "mean": 1575,
+              "full_career_mean": 1920
+            },
+            {
+              "birth_year": 1944,
+              "mean": 1571,
+              "full_career_mean": 1915
+            },
+            {
+              "birth_year": 1945,
+              "mean": 1577,
+              "full_career_mean": 1920
+            },
+            {
+              "birth_year": 1946,
+              "mean": 1596,
+              "full_career_mean": 1915
+            },
+            {
+              "birth_year": 1947,
+              "mean": 1601,
+              "full_career_mean": 1918
+            },
+            {
+              "birth_year": 1948,
+              "mean": 1587,
+              "full_career_mean": 1897
+            },
+            {
+              "birth_year": 1949,
+              "mean": 1587,
+              "full_career_mean": 1888
+            },
+            {
+              "birth_year": 1950,
+              "mean": 1555,
+              "full_career_mean": 1857
+            },
+            {
+              "birth_year": 1951,
+              "mean": 1558,
+              "full_career_mean": 1844
+            },
+            {
+              "birth_year": 1952,
+              "mean": 1555,
+              "full_career_mean": 1840
+            },
+            {
+              "birth_year": 1953,
+              "mean": 1570,
+              "full_career_mean": 1861
+            }
+          ],
+          "female": [
+            {
+              "birth_year": 1930,
+              "mean": 801,
+              "full_career_mean": 1277
+            },
+            {
+              "birth_year": 1931,
+              "mean": 838,
+              "full_career_mean": 1312
+            },
+            {
+              "birth_year": 1932,
+              "mean": 844,
+              "full_career_mean": 1337
+            },
+            {
+              "birth_year": 1933,
+              "mean": 849,
+              "full_career_mean": 1326
+            },
+            {
+              "birth_year": 1934,
+              "mean": 871,
+              "full_career_mean": 1353
+            },
+            {
+              "birth_year": 1935,
+              "mean": 896,
+              "full_career_mean": 1367
+            },
+            {
+              "birth_year": 1936,
+              "mean": 912,
+              "full_career_mean": 1400
+            },
+            {
+              "birth_year": 1937,
+              "mean": 943,
+              "full_career_mean": 1411
+            },
+            {
+              "birth_year": 1938,
+              "mean": 994,
+              "full_career_mean": 1456
+            },
+            {
+              "birth_year": 1939,
+              "mean": 1018,
+              "full_career_mean": 1470
+            },
+            {
+              "birth_year": 1940,
+              "mean": 1064,
+              "full_career_mean": 1502
+            },
+            {
+              "birth_year": 1941,
+              "mean": 1103,
+              "full_career_mean": 1527
+            },
+            {
+              "birth_year": 1942,
+              "mean": 1122,
+              "full_career_mean": 1541
+            },
+            {
+              "birth_year": 1943,
+              "mean": 1154,
+              "full_career_mean": 1551
+            },
+            {
+              "birth_year": 1944,
+              "mean": 1166,
+              "full_career_mean": 1559
+            },
+            {
+              "birth_year": 1945,
+              "mean": 1185,
+              "full_career_mean": 1572
+            },
+            {
+              "birth_year": 1946,
+              "mean": 1208,
+              "full_career_mean": 1572
+            },
+            {
+              "birth_year": 1947,
+              "mean": 1239,
+              "full_career_mean": 1594
+            },
+            {
+              "birth_year": 1948,
+              "mean": 1241,
+              "full_career_mean": 1590
+            },
+            {
+              "birth_year": 1949,
+              "mean": 1254,
+              "full_career_mean": 1584
+            },
+            {
+              "birth_year": 1950,
+              "mean": 1247,
+              "full_career_mean": 1568
+            },
+            {
+              "birth_year": 1951,
+              "mean": 1264,
+              "full_career_mean": 1571
+            },
+            {
+              "birth_year": 1952,
+              "mean": 1262,
+              "full_career_mean": 1560
+            },
+            {
+              "birth_year": 1953,
+              "mean": 1287,
+              "full_career_mean": 1588
+            }
+          ],
+          "male": [
+            {
+              "birth_year": 1930,
+              "mean": 1730,
+              "full_career_mean": 1846
+            },
+            {
+              "birth_year": 1931,
+              "mean": 1756,
+              "full_career_mean": 1873
+            },
+            {
+              "birth_year": 1932,
+              "mean": 1769,
+              "full_career_mean": 1926
+            },
+            {
+              "birth_year": 1933,
+              "mean": 1820,
+              "full_career_mean": 1940
+            },
+            {
+              "birth_year": 1934,
+              "mean": 1792,
+              "full_career_mean": 1931
+            },
+            {
+              "birth_year": 1935,
+              "mean": 1851,
+              "full_career_mean": 1980
+            },
+            {
+              "birth_year": 1936,
+              "mean": 1855,
+              "full_career_mean": 2000
+            },
+            {
+              "birth_year": 1937,
+              "mean": 1935,
+              "full_career_mean": 2034
+            },
+            {
+              "birth_year": 1938,
+              "mean": 1898,
+              "full_career_mean": 2029
+            },
+            {
+              "birth_year": 1939,
+              "mean": 1937,
+              "full_career_mean": 2065
+            },
+            {
+              "birth_year": 1940,
+              "mean": 1951,
+              "full_career_mean": 2103
+            },
+            {
+              "birth_year": 1941,
+              "mean": 1970,
+              "full_career_mean": 2112
+            },
+            {
+              "birth_year": 1942,
+              "mean": 1981,
+              "full_career_mean": 2163
+            },
+            {
+              "birth_year": 1943,
+              "mean": 1997,
+              "full_career_mean": 2154
+            },
+            {
+              "birth_year": 1944,
+              "mean": 1959,
+              "full_career_mean": 2135
+            },
+            {
+              "birth_year": 1945,
+              "mean": 1962,
+              "full_career_mean": 2151
+            },
+            {
+              "birth_year": 1946,
+              "mean": 1982,
+              "full_career_mean": 2147
+            },
+            {
+              "birth_year": 1947,
+              "mean": 1955,
+              "full_career_mean": 2142
+            },
+            {
+              "birth_year": 1948,
+              "mean": 1936,
+              "full_career_mean": 2124
+            },
+            {
+              "birth_year": 1949,
+              "mean": 1918,
+              "full_career_mean": 2116
+            },
+            {
+              "birth_year": 1950,
+              "mean": 1868,
+              "full_career_mean": 2084
+            },
+            {
+              "birth_year": 1951,
+              "mean": 1862,
+              "full_career_mean": 2072
+            },
+            {
+              "birth_year": 1952,
+              "mean": 1859,
+              "full_career_mean": 2074
+            },
+            {
+              "birth_year": 1953,
+              "mean": 1864,
+              "full_career_mean": 2092
+            }
+          ]
+        },
+        "birth_year_date": "2020-12-31"
+      }
+    },
+    "DEU": {
+      "name": {
+        "en": "Germany",
+        "cs": "Německo"
+      },
+      "income": {
+        "all": 86.598635,
+        "male": 89.554635,
+        "female": 84.24593,
+        "age_66_75": 86.523789,
+        "age_76_plus": 86.669561,
+        "year": 2021,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 12.620001,
+        "age_66_75": 14.85,
+        "age_76_plus": 10.97,
+        "male": 9.956088,
+        "female": 15.167588,
+        "total_population": 11.8,
+        "year": 2021,
+        "source_id": "poverty"
+      }
+    },
+    "GRC": {
+      "name": {
+        "en": "Greece",
+        "cs": "Řecko"
+      },
+      "income": {
+        "all": 91.649767,
+        "male": 99.478822,
+        "female": 85.379444,
+        "age_66_75": 99.718457,
+        "age_76_plus": 82.947258,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 9.962382,
+        "age_66_75": 8.5184,
+        "age_76_plus": 11.519793,
+        "male": 7.236218,
+        "female": 12.145778,
+        "total_population": 11.163579,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "HUN": {
+      "name": {
+        "en": "Hungary",
+        "cs": "Maďarsko"
+      },
+      "income": {
+        "all": 81.757242,
+        "male": 88.836865,
+        "female": 77.433969,
+        "age_66_75": 84.189788,
+        "age_76_plus": 77.66532,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 10.138018,
+        "age_66_75": 9.218601,
+        "age_76_plus": 11.68462,
+        "male": 4.660545,
+        "female": 13.482914,
+        "total_population": 9.854387,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "ISL": {
+      "name": {
+        "en": "Iceland",
+        "cs": "Island"
+      },
+      "income": {
+        "all": 95.037475,
+        "male": 99.535951,
+        "female": 90.817503,
+        "age_66_75": 103.77244,
+        "age_76_plus": 77.518068,
+        "year": 2017,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 3.051073,
+        "age_66_75": 4.019393,
+        "age_76_plus": 1.10895,
+        "male": 4.478473,
+        "female": 1.712045,
+        "total_population": 4.859176,
+        "year": 2017,
+        "source_id": "poverty"
+      }
+    },
+    "IRL": {
+      "name": {
+        "en": "Ireland",
+        "cs": "Irsko"
+      },
+      "income": {
+        "all": 90.413505,
+        "male": 94.653774,
+        "female": 86.675808,
+        "age_66_75": 95.669564,
+        "age_76_plus": 82.425763,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 9.461848,
+        "age_66_75": 7.886389,
+        "age_76_plus": 11.856106,
+        "male": 8.885568,
+        "female": 9.969825,
+        "total_population": 6.996775,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "ISR": {
+      "name": {
+        "en": "Israel",
+        "cs": "Izrael"
+      },
+      "income": {
+        "all": 106.489909,
+        "male": 113.89122,
+        "female": 100.397766,
+        "age_66_75": 110.240236,
+        "age_76_plus": 100.59446,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 15.338556,
+        "age_66_75": 14.016056,
+        "age_76_plus": 17.417504,
+        "male": 13.136712,
+        "female": 17.150933,
+        "total_population": 16.822187,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "ITA": {
+      "name": {
+        "en": "Italy",
+        "cs": "Itálie"
+      },
+      "income": {
+        "all": 98.824305,
+        "male": 105.770135,
+        "female": 93.400835,
+        "age_66_75": 108.271712,
+        "age_76_plus": 89.211421,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 11.993604,
+        "age_66_75": 11.258831,
+        "age_76_plus": 12.741247,
+        "male": 9.680527,
+        "female": 13.79971,
+        "total_population": 12.229304,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "JPN": {
+      "name": {
+        "en": "Japan",
+        "cs": "Japonsko"
+      },
+      "income": {
+        "all": 83.934911,
+        "male": 88.547501,
+        "female": 80.168419,
+        "age_66_75": 91.496599,
+        "age_76_plus": 75.85034,
+        "year": 2021,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 20,
+        "age_66_75": 16.23178,
+        "age_76_plus": 24.096064,
+        "male": 16.602123,
+        "female": 22.84331,
+        "total_population": 15.4,
+        "year": 2021,
+        "source_id": "poverty"
+      }
+    },
+    "KOR": {
+      "name": {
+        "en": "Korea",
+        "cs": "Jižní Korea"
+      },
+      "income": {
+        "all": 68.163836,
+        "male": 75.544828,
+        "female": 62.723042,
+        "age_66_75": 76.219512,
+        "age_76_plus": 56.605691,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 39.712376,
+        "age_66_75": 29.8,
+        "age_76_plus": 54,
+        "male": 32.605556,
+        "female": 45.028421,
+        "total_population": 14.875408,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "LVA": {
+      "name": {
+        "en": "Latvia",
+        "cs": "Lotyšsko"
+      },
+      "income": {
+        "all": 70.001667,
+        "male": 78.378372,
+        "female": 66.071165,
+        "age_66_75": 75.611333,
+        "age_76_plus": 63.35528,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 34.317807,
+        "age_66_75": 28.111267,
+        "age_76_plus": 41.671377,
+        "male": 24.072706,
+        "female": 39.124996,
+        "total_population": 16.16534,
+        "year": 2023,
+        "source_id": "poverty"
+      }
+    },
+    "LTU": {
+      "name": {
+        "en": "Lithuania",
+        "cs": "Litva"
+      },
+      "income": {
+        "all": 66.509357,
+        "male": 77.387358,
+        "female": 60.772107,
+        "age_66_75": 69.685889,
+        "age_76_plus": 62.932992,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 24.597586,
+        "age_66_75": 25.298218,
+        "age_76_plus": 23.808765,
+        "male": 11.424406,
+        "female": 31.545354,
+        "total_population": 14.091151,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "LUX": {
+      "name": {
+        "en": "Luxembourg",
+        "cs": "Lucembursko"
+      },
+      "income": {
+        "all": 107.013446,
+        "male": 113.536183,
+        "female": 99.956611,
+        "age_66_75": 108.205022,
+        "age_76_plus": 104.360478,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 7.025012,
+        "age_66_75": 7.048071,
+        "age_76_plus": 6.973673,
+        "male": 6.156435,
+        "female": 7.96471,
+        "total_population": 8.883532,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "MEX": {
+      "name": {
+        "en": "Mexico",
+        "cs": "Mexiko"
+      },
+      "income": {
+        "all": 101.586163,
+        "male": 105.63982,
+        "female": 98.301397,
+        "age_66_75": 106.350067,
+        "age_76_plus": 93.859266,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 18.292951,
+        "age_66_75": 15.513632,
+        "age_76_plus": 22.800917,
+        "male": 17.259534,
+        "female": 19.130352,
+        "total_population": 14.997931,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "NLD": {
+      "name": {
+        "en": "Netherlands",
+        "cs": "Nizozemsko"
+      },
+      "income": {
+        "all": 81.162431,
+        "male": 85.307622,
+        "female": 77.772676,
+        "age_66_75": 87.121212,
+        "age_76_plus": 72.727273,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 4.6,
+        "age_66_75": 3.3,
+        "age_76_plus": 6.5,
+        "male": 4.481818,
+        "female": 4.720202,
+        "total_population": 7.0,
+        "year": 2023,
+        "source_id": "poverty"
+      }
+    },
+    "NZL": {
+      "name": {
+        "en": "New Zealand",
+        "cs": "Nový Zéland"
+      },
+      "income": {
+        "all": 75.165657,
+        "male": 80.490923,
+        "female": 70.394359,
+        "age_66_75": 83.543058,
+        "age_76_plus": 61.877365,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 33.7,
+        "age_66_75": 26.9,
+        "age_76_plus": 44.7,
+        "male": 30.235211,
+        "female": 36.910127,
+        "total_population": 14.3,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "NOR": {
+      "name": {
+        "en": "Norway",
+        "cs": "Norsko"
+      },
+      "income": {
+        "all": 89.611147,
+        "male": 96.135375,
+        "female": 83.820123,
+        "age_66_75": 97.936582,
+        "age_76_plus": 78.715444,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 4.06,
+        "age_66_75": 3.2,
+        "age_76_plus": 5.2,
+        "male": 2.632138,
+        "female": 5.332151,
+        "total_population": 7.98,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "POL": {
+      "name": {
+        "en": "Poland",
+        "cs": "Polsko"
+      },
+      "income": {
+        "all": 86.560589,
+        "male": 90.074402,
+        "female": 84.230028,
+        "age_66_75": 85.952789,
+        "age_76_plus": 87.642026,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 12.779631,
+        "age_66_75": 13.1416,
+        "age_76_plus": 12.135593,
+        "male": 8.499044,
+        "female": 15.618761,
+        "total_population": 9.104769,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "PRT": {
+      "name": {
+        "en": "Portugal",
+        "cs": "Portugalsko"
+      },
+      "income": {
+        "all": 97.070694,
+        "male": 103.111806,
+        "female": 92.533967,
+        "age_66_75": 104.018841,
+        "age_76_plus": 89.28181,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 10.990491,
+        "age_66_75": 10.198199,
+        "age_76_plus": 11.878651,
+        "male": 7.783073,
+        "female": 13.399183,
+        "total_population": 11.241674,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "SVK": {
+      "name": {
+        "en": "Slovak Republic",
+        "cs": "Slovensko"
+      },
+      "income": {
+        "all": 95.948928,
+        "male": 97.595236,
+        "female": 94.844713,
+        "age_66_75": 96.117397,
+        "age_76_plus": 95.560975,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 7.171045,
+        "age_66_75": 6.936213,
+        "age_76_plus": 7.711823,
+        "male": 4.978744,
+        "female": 8.641471,
+        "total_population": 9.389975,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "SVN": {
+      "name": {
+        "en": "Slovenia",
+        "cs": "Slovinsko"
+      },
+      "income": {
+        "all": 84.515127,
+        "male": 89.923356,
+        "female": 80.333882,
+        "age_66_75": 85.931371,
+        "age_76_plus": 82.189938,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 12.809187,
+        "age_66_75": 12.200554,
+        "age_76_plus": 13.808441,
+        "male": 10.177764,
+        "female": 14.84361,
+        "total_population": 7.867626,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "ESP": {
+      "name": {
+        "en": "Spain",
+        "cs": "Španělsko"
+      },
+      "income": {
+        "all": 96.661056,
+        "male": 102.095577,
+        "female": 92.392834,
+        "age_66_75": 105.33667,
+        "age_76_plus": 86.548316,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 13.142756,
+        "age_66_75": 11.475468,
+        "age_76_plus": 15.061424,
+        "male": 10.730847,
+        "female": 15.016595,
+        "total_population": 13.747536,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "SWE": {
+      "name": {
+        "en": "Sweden",
+        "cs": "Švédsko"
+      },
+      "income": {
+        "all": 88.917073,
+        "male": 95.88813,
+        "female": 82.778864,
+        "age_66_75": 100.374702,
+        "age_76_plus": 75.764198,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 7.312662,
+        "age_66_75": 6.200887,
+        "age_76_plus": 8.588933,
+        "male": 5.355243,
+        "female": 9.036246,
+        "total_population": 8.029864,
+        "year": 2023,
+        "source_id": "poverty"
+      }
+    },
+    "CHE": {
+      "name": {
+        "en": "Switzerland",
+        "cs": "Švýcarsko"
+      },
+      "income": {
+        "all": 77.979554,
+        "male": 83.875614,
+        "female": 72.712121,
+        "age_66_75": 83.228156,
+        "age_76_plus": 71.618921,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 18.830319,
+        "age_66_75": 15.855804,
+        "age_76_plus": 22.435051,
+        "male": 16.325675,
+        "female": 21.067923,
+        "total_population": 10.722358,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "TUR": {
+      "name": {
+        "en": "Türkiye",
+        "cs": "Turecko"
+      },
+      "income": {
+        "all": 84.492632,
+        "male": 88.174352,
+        "female": 81.631007,
+        "age_66_75": 86.871149,
+        "age_76_plus": 79.613624,
+        "year": 2022,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 11.9,
+        "age_66_75": 10.29,
+        "age_76_plus": 15.2,
+        "male": 10.258273,
+        "female": 13.171832,
+        "total_population": 13.15,
+        "year": 2022,
+        "source_id": "poverty"
+      }
+    },
+    "GBR": {
+      "name": {
+        "en": "United Kingdom",
+        "cs": "Spojené království"
+      },
+      "income": {
+        "all": 83.973098,
+        "male": 87.915611,
+        "female": 80.67081,
+        "age_66_75": 90.797215,
+        "age_76_plus": 75.558978,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 15.049131,
+        "age_66_75": 11.992612,
+        "age_76_plus": 18.817813,
+        "male": 13.307993,
+        "female": 16.507526,
+        "total_population": 12.566769,
+        "year": 2023,
+        "source_id": "poverty"
+      },
+      "national": {
+        "date": "2025-08",
+        "currency": "GBP",
+        "frequency": "week",
+        "source_id": "dwp",
+        "payment_by_scheme": {
+          "total": {
+            "pre_2016": 207.2,
+            "new": 216.46
+          },
+          "male": {
+            "pre_2016": 225.04,
+            "new": 218.06
+          },
+          "female": {
+            "pre_2016": 194.94,
+            "new": 214.51
+          }
+        },
+        "payment_by_retirement_year": null
+      }
+    },
+    "USA": {
+      "name": {
+        "en": "United States",
+        "cs": "Spojené státy"
+      },
+      "income": {
+        "all": 94.485451,
+        "male": 100.91137,
+        "female": 89.134282,
+        "age_66_75": 100.668841,
+        "age_76_plus": 84.922435,
+        "year": 2023,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 22.874,
+        "age_66_75": 20.3902,
+        "age_76_plus": 26.7154,
+        "male": 19.856667,
+        "female": 25.386679,
+        "total_population": 18.0883,
+        "year": 2023,
+        "source_id": "poverty"
+      },
+      "national": {
+        "date": "2025-12-31",
+        "currency": "USD",
+        "frequency": "month",
+        "source_id": "ssa",
+        "payment_by_age": {
+          "total": {
+            "count": 53624664,
+            "mean": 2071.3,
+            "ages": [
+              {
+                "age": "62–64",
+                "count": 2614309,
+                "mean": 1450.74
+              },
+              {
+                "age": "65–69",
+                "count": 12509796,
+                "mean": 1967.07
+              },
+              {
+                "age": "70–74",
+                "count": 14896326,
+                "mean": 2225.12
+              },
+              {
+                "age": "75–79",
+                "count": 11456863,
+                "mean": 2153.59
+              },
+              {
+                "age": "80–84",
+                "count": 6760500,
+                "mean": 2101.73
+              },
+              {
+                "age": "85–89",
+                "count": 3512033,
+                "mean": 2018.02
+              },
+              {
+                "age": "90–94",
+                "count": 1425803,
+                "mean": 1902.18
+              },
+              {
+                "age": "95–99",
+                "count": 391956,
+                "mean": 1887.53
+              },
+              {
+                "age": "100+",
+                "count": 57078,
+                "mean": 1832.64
+              }
+            ]
+          },
+          "male": {
+            "count": 26019071,
+            "mean": 2282.28,
+            "ages": [
+              {
+                "age": "62–64",
+                "count": 1260532,
+                "mean": 1597.27
+              },
+              {
+                "age": "65–69",
+                "count": 6145461,
+                "mean": 2179.63
+              },
+              {
+                "age": "70–74",
+                "count": 7366805,
+                "mean": 2462.21
+              },
+              {
+                "age": "75–79",
+                "count": 5614602,
+                "mean": 2369.94
+              },
+              {
+                "age": "80–84",
+                "count": 3250549,
+                "mean": 2301.47
+              },
+              {
+                "age": "85–89",
+                "count": 1617958,
+                "mean": 2182.8
+              },
+              {
+                "age": "90–94",
+                "count": 607444,
+                "mean": 1992.75
+              },
+              {
+                "age": "95–99",
+                "count": 140613,
+                "mean": 1973.41
+              },
+              {
+                "age": "100+",
+                "count": 15107,
+                "mean": 1922.92
+              }
+            ]
+          },
+          "female": {
+            "count": 27605593,
+            "mean": 1872.43,
+            "ages": [
+              {
+                "age": "62–64",
+                "count": 1353777,
+                "mean": 1314.3
+              },
+              {
+                "age": "65–69",
+                "count": 6364335,
+                "mean": 1761.81
+              },
+              {
+                "age": "70–74",
+                "count": 7529521,
+                "mean": 1993.16
+              },
+              {
+                "age": "75–79",
+                "count": 5842261,
+                "mean": 1945.68
+              },
+              {
+                "age": "80–84",
+                "count": 3509951,
+                "mean": 1916.76
+              },
+              {
+                "age": "85–89",
+                "count": 1894075,
+                "mean": 1877.27
+              },
+              {
+                "age": "90–94",
+                "count": 818359,
+                "mean": 1834.95
+              },
+              {
+                "age": "95–99",
+                "count": 251343,
+                "mean": 1839.48
+              },
+              {
+                "age": "100+",
+                "count": 41971,
+                "mean": 1800.15
+              }
+            ]
+          }
+        },
+        "payment_by_retirement_year": null
+      }
+    },
+    "BRA": {
+      "name": {
+        "en": "Brazil",
+        "cs": "Brazílie"
+      }
+    },
+    "UKR": {
+      "name": {
+        "en": "Ukraine",
+        "cs": "Ukrajina"
+      }
+    },
+    "OECD": {
+      "name": {
+        "en": "OECD average",
+        "cs": "Průměr OECD"
+      },
+      "income": {
+        "all": 86.610186,
+        "male": 91.92595,
+        "female": 82.484089,
+        "age_66_75": 91.540356,
+        "age_76_plus": 79.923794,
+        "year": null,
+        "source_id": "income"
+      },
+      "poverty": {
+        "all": 14.77456,
+        "age_66_75": 13.072941,
+        "age_76_plus": 17.160459,
+        "male": 11.743934,
+        "female": 16.904718,
+        "total_population": 11.453513,
+        "year": null,
+        "source_id": "poverty"
+      }
+    }
+  }
+}

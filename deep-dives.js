@@ -26,8 +26,8 @@
   Object.assign(copy.en,{capitalCities:"Capital cities",capitalCitiesCopy:"Capital-city budget plans, visitor numbers and comparisons within groups of similar cities."});
   Object.assign(copy.cs,{revenue:"Odkud stát bere peníze",revenueCopy:"Daňový mix, úrovně vlády, vývoj v krizích a cesta k obecním transferům."});
   Object.assign(copy.en,{revenue:"Where the state gets its money",revenueCopy:"The tax mix, government levels, behaviour in downturns and the path to municipal transfers."});
-  Object.assign(copy.cs,{ageing:"Stárnutí populace",ageingCopy:"Oficiální populační projekce, věková struktura a demografická kalkulačka; fiskální předpovědi neděláme.",ageingEyebrow:"Report / Stárnutí",ageingTitle:"Stárnutí populace",ageingIntro:"Oficiální populační projekce a demografická aritmetika, která z nich plyne. Náklady ani daně nepředpovídáme.",projectionStats:"Projekce",calculator:"Kalkulačka"});
-  Object.assign(copy.en,{ageing:"Population ageing",ageingCopy:"Official population projections, age structure and a demographic calculator; we do not forecast fiscal outcomes.",ageingEyebrow:"Report / Ageing",ageingTitle:"Population ageing",ageingIntro:"Official population projections and the demographic arithmetic that follows from them. We do not forecast costs or taxes.",projectionStats:"Projection",calculator:"Calculator"});
+  Object.assign(copy.cs,{ageing:"Stárnutí populace",ageingCopy:"Vyplácené důchody, mezinárodní srovnání příjmů seniorů a oficiální populační projekce.",ageingEyebrow:"Report / Stárnutí",ageingTitle:"Stárnutí populace",ageingIntro:"Vyplácené důchody a příjmy seniorů dnes, oficiální populační projekce do budoucna. Náklady ani daně nepředpovídáme.",projectionStats:"Projekce",calculator:"Kalkulačka"});
+  Object.assign(copy.en,{ageing:"Population ageing",ageingCopy:"Observed pensions, international comparisons of older people’s income and official population projections.",ageingEyebrow:"Report / Ageing",ageingTitle:"Population ageing",ageingIntro:"Pension payments and older people’s income today, official population projections for the future. We do not forecast costs or taxes.",projectionStats:"Projection",calculator:"Calculator"});
   Object.assign(copy.cs,{industry:"Průmysl měsíc po měsíci",industryCopy:"Která odvětví rostou a která klesají. Měsíce, roční souhrny a dohledatelné národní i evropské zdroje."});
   Object.assign(copy.en,{industry:"Industry month by month",industryCopy:"Which sectors grow and which contract. Monthly trends, annual summaries, and traceable national and European sources."});
   Object.assign(copy.cs,{economy:"Ekonomika v kontextu",economyCopy:"Globální dlouhé řady, hospodářský cyklus, pokrytí a datový kontrakt pro další ekonometrické reporty."});
@@ -38,8 +38,8 @@
   if (migrationCoverage) migrationCoverage.textContent = "33 / 33";
   Object.assign(copy.cs,{defense:"Výdaje na obranu",defenseCopy:"Výdaje vůči HDP, závazek NATO a nejpodrobnější dostupné řádky národních rozpočtů."});
   Object.assign(copy.en,{defense:"Defense spending",defenseCopy:"Spending relative to GDP, the NATO commitment and the most detailed available national budget lines."});
-  Object.assign(copy.cs,{taxBurden:"Daňové zatížení",taxBurdenCopy:"Zdanění práce, firem a uhlíku a daňová pravomoc obcí podle definic OECD.",redistribution:"Přerozdělení a výsledky",redistributionCopy:"Nerovnost před transfery a po nich, sociální výdaje a důchody."});
-  Object.assign(copy.en,{taxBurden:"Tax burden",taxBurdenCopy:"Taxes on labour, business and carbon, plus municipal taxing power, under OECD definitions.",redistribution:"Redistribution and outcomes",redistributionCopy:"Inequality before and after transfers, social spending and pensions."});
+  Object.assign(copy.cs,{pensionToday:"Důchody dnes",pensionBenchmark:"Důchodový benchmark",taxBurden:"Daňové zatížení",taxBurdenCopy:"Zdanění práce, firem a uhlíku a daňová pravomoc obcí podle definic OECD.",redistribution:"Přerozdělení a výsledky",redistributionCopy:"Nerovnost před transfery a po nich, sociální výdaje a důchody."});
+  Object.assign(copy.en,{pensionToday:"Pensions today",pensionBenchmark:"Pension benchmark",taxBurden:"Tax burden",taxBurdenCopy:"Taxes on labour, business and carbon, plus municipal taxing power, under OECD definitions.",redistribution:"Redistribution and outcomes",redistributionCopy:"Inequality before and after transfers, social spending and pensions."});
   Object.assign(copy.cs,{money:"Kam šly peníze?",moneyCopy:"Peněžní zásoba, kupní síla a zásahy ČNB a Fedu ve dvou samostatných národních reportech."});
   Object.assign(copy.en,{money:"Where did the money go?",moneyCopy:"Money supply, purchasing power and CNB and Fed interventions in two separate national reports."});
   Object.assign(copy.cs,{trade:"Zahraniční obchod",tradeCopy:"Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade."});
@@ -128,6 +128,7 @@
       selector.addEventListener("change",()=>{const url=new URL(location.href);url.searchParams.set("code",selector.value);url.searchParams.set("lang",lang);history.replaceState({},"",url);setCountry(selector.value)});
     }
     setupStickyFilter();
-    document.querySelectorAll("[data-deep-lang]").forEach(button=>button.addEventListener("click",()=>{const url=new URL(location.href);url.searchParams.set("lang",button.dataset.deepLang);location.href=url.href}));
+    // The shared header replaces its buttons when navigation data arrives.
+    document.addEventListener("click",event=>{const button=event.target.closest("[data-deep-lang]");if(!button)return;const url=new URL(location.href);url.searchParams.set("lang",button.dataset.deepLang);location.href=url.href});
   });
 })();

@@ -1,0 +1,19 @@
+.pension-section{background:var(--paper,#f1ede3)}
+.pension-controls{display:flex;flex-wrap:wrap;align-items:end;gap:22px;margin-bottom:18px}
+.pension-controls label{display:grid;gap:8px;min-width:170px;font:700 12px Arial,sans-serif}
+.pension-controls select{width:100%;min-height:43px;padding:9px 32px 9px 12px;background:#faf7ef;border:1px solid #8b8d83;border-radius:0;color:#171918;font:14px Arial,sans-serif}
+.pension-controls p{margin:0 0 3px auto;font:12px/1.7 monospace;text-align:right}
+.pension-note,.pension-source{font:13px/1.65 Arial,sans-serif;color:#59605a}
+.pension-kpis{margin:22px 0 28px}.pension-kpis strong{font-size:clamp(25px,2.9vw,42px)}
+.pension-figure{margin:25px 0;padding:25px;border:1px solid #171918;background:#faf7ef}
+.pension-figure h3,.pension-question h3{margin:0 0 12px;font:500 clamp(25px,3vw,36px)/1.12 Georgia,serif;letter-spacing:-.025em}
+.pension-figure>p,.pension-question p{font:14px/1.65 Arial,sans-serif;max-width:900px}
+.pension-figure svg{display:block;width:100%;height:auto;margin-top:22px}
+.pension-source a{color:inherit;text-underline-offset:3px}.pension-source{padding-top:10px}
+.pension-question{padding:26px 30px;border-left:4px solid #a8b63f;background:#e6e1d6}
+.pension-question p:last-child{margin-bottom:0}
+.pension-section :focus-visible{outline:3px solid #171918;outline-offset:4px}
+.pension-country-heading{font:500 26px Georgia,serif}.pension-chart-scroll{overflow-x:auto}.pension-chart-scroll svg{min-width:680px}
+.pension-method{margin-top:25px;padding:22px;border:1px solid #8b8d83;font:14px/1.7 Arial,sans-serif}.pension-method summary{cursor:pointer;font-weight:700}.pension-method a{color:inherit}
+.pension-cohort-legend{display:flex;flex-wrap:wrap;gap:22px;font:13px Arial,sans-serif}.pension-cohort-legend i{display:inline-block;width:22px;height:3px;margin:0 8px 4px 0;background:#a8b63f}.pension-cohort-legend span+span i{background:#8b8d83}
+@media(max-width:700px){.pension-controls{gap:15px}.pension-controls label{flex:1;min-width:135px}.pension-controls p{width:100%;text-align:left;margin:0}.pension-figure{padding:15px 10px}.pension-question{padding:22px}.pension-kpis{grid-template-columns:1fr 1fr}.pension-kpis article{padding:16px;min-height:155px}.pension-kpis strong{font-size:27px}.pension-chart-scroll svg{min-width:680px}}

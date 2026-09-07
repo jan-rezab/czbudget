@@ -16,6 +16,7 @@
   const names = {
     CZE:["Česko","Czechia"], DEU:["Německo","Germany"], DNK:["Dánsko","Denmark"],
     FRA:["Francie","France"], GBR:["Spojené království","United Kingdom"], POL:["Polsko","Poland"],
+    FIN:["Finsko","Finland"], ESP:["Španělsko","Spain"], NLD:["Nizozemsko","Netherlands"], NOR:["Norsko","Norway"], GRC:["Řecko","Greece"], BRA:["Brazílie","Brazil"], JPN:["Japonsko","Japan"],
     SWE:["Švédsko","Sweden"], CHE:["Švýcarsko","Switzerland"], UKR:["Ukrajina","Ukraine"], USA:["Spojené státy","United States"],
   };
   const copy = {
@@ -23,14 +24,14 @@
       projectionKicker:"Oficiální projekce", projectionTitle:"Vývoj populace do vybraného roku", projectionCopy:"Všechny hodnoty jsou počty osob z hlavní nebo střední varianty uvedeného zdroje. Vyberte rok 2025–2045.",
       totalPopulation:"Celková populace", populationChange:"Změna od roku 2025", workingAge:"Věk 20–64", olderPopulation:"Věk 65+", oldestPopulation:"Věk 80+", dependency:"65+ na 100 lidí 20–64", people:"osob", from2025:"od 2025", selectedYear:"Vybraný rok", indexTitle:"Vývoj populace · index 2025 = 100", total:"Celkem", age20:"20–64", age65:"65+", age80:"80+", composition:"Složení populace", age0:"0–19", projectionVariant:"Varianta projekce",
       calculatorKicker:"Demografická kalkulačka", calculatorTitle:"Posuňte si věkovou hranici", calculatorCopy:"Kalkulačka sčítá uložené řádky věk × pohlaví × rok. Hranice je statistická, nikoli předpoklad skutečného věku odchodu do důchodu.", year:"Rok", boundary:"Statistická hranice", boundaryHint:"Pracovní věk je zde pouze počet osob od 20 let do roku před zvolenou hranicí.", group:"Skupina", all:"Celkem", men:"Muži", women:"Ženy", belowBoundary:"Věk 20 až", atBoundary:"Věk", andOlder:"a více", per100:"na 100 osob pod hranicí", peopleBelow:"Osob pod hranicí na jednu osobu nad ní", shareTotal:"Podíl skupiny nad hranicí", noFiscal:"Toto není projekce zaměstnanosti, důchodů, zdravotních nákladů, daní ani veřejného dluhu. Výpočet používá pouze věk, pohlaví a počet osob.",
-      comparisonKicker:"Deset zemí", comparisonTitle:"Deset zemí ve stejném roce", comparisonCopy:"Pořadí je pouze podle poměru osob ve věku 65+ k populaci 20–64. Nejde o žebříček kvality politik ani fiskální udržitelnosti.", country:"Země", change:"Populace vs. 2025", workingChange:"20–64 vs. 2025", share65:"Podíl 65+", share80:"Podíl 80+", ratio:"65+ / 100 lidí 20–64",
+      comparisonKicker:"Oficiální projekce", comparisonTitle:"Země ve stejném roce", comparisonCopy:"Pořadí je pouze podle poměru osob ve věku 65+ k populaci 20–64. Nejde o žebříček kvality politik ani fiskální udržitelnosti.", country:"Země", change:"Populace vs. 2025", workingChange:"20–64 vs. 2025", share65:"Podíl 65+", share80:"Podíl 80+", ratio:"65+ / 100 lidí 20–64",
       methodKicker:"Rozsah a zdroj", methodTitle:"Oficiální varianty projekcí a vlastní součty", methodCopy:"Každá země používá pojmenovanou oficiální hlavní nebo střední variantu. Společné statistiky počítáme přímo z uložených jednoletých věkových řádků.", referenceDate:"Referenční datum", rows:"uložených řádků", openSource:"Otevřít zdroj", download:"Stáhnout věk × pohlaví × rok", commonMethod:"Společná metodika", methodBody:"Období pro srovnání je omezeno na roky 2025–2045, které mají všechny země. Věk 100+ zůstává otevřeným horním pásmem. Chybějící údaj není nula a žádná hodnota není převáděna na peníze.", loading:"Načítám detailní věková data…", error:"Projekční data se nepodařilo načíst.",
     },
     en: {
       projectionKicker:"Official projection", projectionTitle:"Population change to the selected year", projectionCopy:"Every value is a person count from the named principal or middle projection variant. Select a year from 2025 to 2045.",
       totalPopulation:"Total population", populationChange:"Change since 2025", workingAge:"Ages 20–64", olderPopulation:"Ages 65+", oldestPopulation:"Ages 80+", dependency:"People 65+ per 100 aged 20–64", people:"people", from2025:"since 2025", selectedYear:"Selected year", indexTitle:"Population path · index 2025 = 100", total:"Total", age20:"20–64", age65:"65+", age80:"80+", composition:"Population composition", age0:"0–19", projectionVariant:"Projection variant",
       calculatorKicker:"Demographic calculator", calculatorTitle:"Set your own age boundary", calculatorCopy:"The calculator sums the stored age × sex × year rows. The boundary is statistical, not an assumption about the actual retirement age.", year:"Year", boundary:"Statistical age boundary", boundaryHint:"Working age here means only the number of people from age 20 through the year before the selected boundary.", group:"Group", all:"Total", men:"Men", women:"Women", belowBoundary:"Ages 20 to", atBoundary:"Ages", andOlder:"and over", per100:"per 100 people below the boundary", peopleBelow:"People below the boundary per one person above it", shareTotal:"Share of total at or above boundary", noFiscal:"This is not a forecast of employment, pensions, healthcare costs, taxes or public debt. The calculation uses only age, sex and person counts.",
-      comparisonKicker:"Ten countries", comparisonTitle:"Ten countries in the same year", comparisonCopy:"Countries are ordered only by people aged 65+ relative to ages 20–64. This is not a ranking of policy quality or fiscal sustainability.", country:"Country", change:"Population vs 2025", workingChange:"20–64 vs 2025", share65:"Share aged 65+", share80:"Share aged 80+", ratio:"65+ / 100 aged 20–64",
+      comparisonKicker:"Official projections", comparisonTitle:"Countries in the same year", comparisonCopy:"Countries are ordered only by people aged 65+ relative to ages 20–64. This is not a ranking of policy quality or fiscal sustainability.", country:"Country", change:"Population vs 2025", workingChange:"20–64 vs 2025", share65:"Share aged 65+", share80:"Share aged 80+", ratio:"65+ / 100 aged 20–64",
       methodKicker:"Scope and source", methodTitle:"Official projection variants and our own sums", methodCopy:"Each country uses a named official principal or middle variant. Shared statistics are calculated directly from the stored single-year-of-age rows.", referenceDate:"Reference date", rows:"stored rows", openSource:"Open source", download:"Download age × sex × year", commonMethod:"Shared method", methodBody:"The comparison window is limited to 2025–2045, available for every country. Age 100+ remains an open-ended top band. Missing data are not zero and no value is converted into money.", loading:"Loading detailed age data…", error:"Projection data could not be loaded.",
     },
   };
@@ -137,14 +138,16 @@
   }
 
   async function loadDetail() {
+    const code = state.code;
     const country = profile();
     if (!country) return;
-    if (!state.detailCache.has(state.code)) {
+    if (!state.detailCache.has(code)) {
       const response = await fetch(`../../${country.detail}`);
       if (!response.ok) throw new Error(response.status);
-      state.detailCache.set(state.code, await response.json());
+      state.detailCache.set(code, await response.json());
     }
-    state.detail = state.detailCache.get(state.code);
+    if (code !== state.code) return;
+    state.detail = state.detailCache.get(code);
     updateCalculator();
   }
 
@@ -157,6 +160,7 @@
     const title = document.querySelector("#deep-dive-country-name"), badge = document.querySelector("#deep-dive-country-code"), link = document.querySelector("#deep-dive-country-profile");
     if (title) title.textContent = countryName(code); if (badge) badge.textContent = code; if (link) link.href = window.PSDCountryRoutes.href(code,state.lang);
     render(); loadDetail().catch(showError);
+    dispatchEvent(new CustomEvent("countryprofilechange", {detail:{code:state.code,lang:state.lang}}));
   }
 
   function showError(error) {
