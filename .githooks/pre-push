@@ -47,7 +47,7 @@ npm run test:api
 # snapshot. Do not launch a desktop browser from a Git hook on the user's Mac.
 # Fail closed if the production configuration stops carrying this release gate.
 if [ "$push_to_main" = 1 ]; then
-  if ! grep -q 'npx playwright test --workers=2' cloudbuild.yaml; then
+  if ! grep -Eq 'npx playwright test --workers=[1-9][0-9]* --max-failures=[1-9][0-9]*' cloudbuild.yaml; then
     echo "Push blocked: the full Cloud Build browser gate is missing." >&2
     exit 1
   fi

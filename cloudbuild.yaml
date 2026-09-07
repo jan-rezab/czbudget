@@ -185,7 +185,7 @@ steps:
         npx playwright install --with-deps chromium
         npm run test:api
         node --test tests/industrial-data.test.cjs
-        npx playwright test --workers=2
+        npx playwright test --workers=4 --max-failures=5
 
   - id: nginx-routing
     name: nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
@@ -349,14 +349,17 @@ steps:
 # @municipality_profile snapshot fallback in nginx.conf.template has never actually served
 # a request. Turning it on is a serving change, not a build change, and needs its own test.
 #
-# The ceiling stays at 1800s to leave real headroom for the exports, the snapshot and the
-# image build while still being tight enough that a regression fails rather than hides.
-timeout: 1800s
+# The full desktop/mobile suite now precedes the image build. Four browser workers
+# run on eight build CPUs, fail fast after five failures, and stay inside a 40-minute
+# bound for the complete release. This does not change production runtime sizing.
+timeout: 2400s
 
 images:
   - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
 
 options:
+  # The full browser suite runs on the builder, never on a developer desktop.
+  machineType: E2_HIGHCPU_8
   env:
     - CLOUDSDK_CORE_ACCOUNT=258433468858-compute@developer.gserviceaccount.com
   logging: CLOUD_LOGGING_ONLY
