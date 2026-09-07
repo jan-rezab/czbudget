@@ -194,6 +194,16 @@ steps:
         wget -qO /tmp/germany.html 'http://127.0.0.1:8080/municipalities/germany/profile/?code=F07235500700010'
         grep -q 'data-profile-root=' /tmp/france.html
         grep -q 'data-profile-url=' /tmp/germany.html
+        # Check the deployed routing contract for the unlisted animation, including
+        # its direct file alias and data assets. Normal pages remain indexable.
+        for path in studio/data-in-one-place/ studio/data-in-one-place/index.html studio/data-in-one-place/data.js; do
+          wget -S -O /tmp/studio-response "http://127.0.0.1:8080/$$path" 2>/tmp/studio-headers
+          grep -qi 'X-Robots-Tag: noindex, nofollow, noarchive' /tmp/studio-headers
+        done
+        wget -qO /tmp/studio.html 'http://127.0.0.1:8080/studio/data-in-one-place/'
+        grep -q 'name="robots" content="noindex, nofollow, noarchive"' /tmp/studio.html
+        wget -S -O /dev/null 'http://127.0.0.1:8080/' 2>/tmp/home-headers
+        if grep -qi 'X-Robots-Tag: noindex' /tmp/home-headers; then exit 1; fi
 
   # Upload immutable release objects now, but not current.json. The currently
   # deployed revision may predate shard support; activation happens only after

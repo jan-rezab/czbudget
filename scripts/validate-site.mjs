@@ -619,7 +619,13 @@ for (const path of await javascriptFiles()) {
   const leakedToken = privateSharedComponentTokens.find((token) => source.includes(token));
   if (leakedToken) throw new Error(`${path}: reaches into private shared-component DOM via ${leakedToken}`);
 }
-const headerlessPages = new Set(["brand-preview.html", "cz-obce.html", "municipalities.html"]);
+// This standalone animation is deliberately outside the site's navigation shell.
+// Keep the exception exact and require its unlisted/no-index contract.
+const studioAnimationPath = "studio/data-in-one-place/index.html";
+const studioAnimation = await readFile(studioAnimationPath, "utf8");
+if (!studioAnimation.includes('<meta name="robots" content="noindex, nofollow, noarchive">')) throw new Error("Studio animation must remain noindex");
+if ((await readFile("sitemap.xml", "utf8")).includes("/studio/") || globalNav.includes("/studio/")) throw new Error("Studio animation must remain unlisted");
+const headerlessPages = new Set(["brand-preview.html", "cz-obce.html", "municipalities.html", studioAnimationPath]);
 for (const path of await htmlFiles()) {
   if (headerlessPages.has(path)) continue;
   const page = await readFile(path, "utf8");

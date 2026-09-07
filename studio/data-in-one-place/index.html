@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <link rel="canonical" href="https://publicspendingdata.org/studio/data-in-one-place/">
+  <link rel="icon" href="assets/mark.png" type="image/png">
+  <title>Many sources. One place. — Public Spending Data</title>
+  <link rel="stylesheet" href="style.css?v=20260907">
+</head>
+<body>
+<main id="one-place">
+  <header><img src="assets/wordmark.png" alt="Public Spending Data"><span class="eyebrow">THE DATA, BROUGHT TOGETHER</span><a href="https://publicspendingdata.org" target="_blank" rel="noopener">Explore the website ↗</a></header>
+  <section class="intro">
+    <div><h1>Many sources.<br><em>One place.</em></h1><p>From Czech municipal budgets to national indicators around the world.</p></div>
+    <div class="intro-actions"><button id="tour" class="primary" type="button">Play the 60-second story</button><button id="replay" type="button">Replay the gathering</button><span id="tour-status" aria-live="polite">Choose a filter and watch the data regroup.</span></div>
+  </section>
+  <section class="filters" aria-label="Filter the animation">
+    <div class="field scope-field"><span class="field-label">Geography</span><div class="segmented" role="group" aria-label="Geographic scope"><button type="button" data-scope="world" aria-pressed="true">World</button><button type="button" data-scope="czech" aria-pressed="false">Czechia</button><button type="button" data-scope="rest" aria-pressed="false">Rest of world</button></div></div>
+    <label class="field"><span class="field-label">Data layer</span><select id="layer"><option value="municipal">Municipal lines</option><option value="national">National data</option></select></label>
+    <label class="field"><span class="field-label">Country</span><select id="country"><option value="all">All countries</option></select></label>
+    <label class="field national-filter" hidden><span class="field-label">Year</span><select id="year"><option value="all">2005–2024 (all)</option></select></label>
+    <label class="field national-filter" hidden><span class="field-label">Indicator</span><select id="indicator"><option value="all">All indicators</option></select></label>
+  </section>
+  <div class="view-summary" aria-live="polite"><div><span id="view-label">WORLD · PUBLISHED MUNICIPAL DATA</span><h2><span id="count">15,297,839</span> <small id="unit">budget lines</small></h2></div><div class="coverage"><span id="secondary">69,125 municipal profiles</span><strong id="country-count">17 countries</strong><span id="snapshot">Snapshot 27 Aug 2026</span></div></div>
+  <section class="pipeline" aria-label="Data travels from official sources into one structured, filterable view">
+    <canvas id="flow" aria-hidden="true"></canvas>
+    <div class="sources-panel"><div class="panel-kicker">01 · OFFICIAL SOURCES</div><div id="source-list"></div><div class="source-rest" id="source-rest"></div></div>
+    <div class="hub-panel"><div class="hub" id="hub"><img src="assets/mark.png" alt=""><h3>One place<br>to explore.</h3><span>Country · year · source</span></div></div>
+    <div class="output-panel"><div class="panel-kicker">02 · YOUR FILTERED VIEW</div><div id="field" role="img" aria-label="Weighted points representing the selected records"></div><div class="particle-caption"><span id="particle-key"></span><button id="motion" type="button">Pause motion</button></div></div>
+  </section>
+  <section class="comparison" aria-label="Czechia compared with the rest of the covered world">
+    <div class="comparison-top"><span class="panel-kicker">CZECHIA IN THE GLOBAL PICTURE</span><span id="share">3.9% of covered records</span></div>
+    <div class="split-labels"><div><i class="swatch cz"></i><span>Czechia</span><strong id="cz-count">600,126</strong></div><div><i class="swatch world"></i><span>Rest of covered world</span><strong id="rest-count">14,697,713</strong></div></div>
+    <div class="split-track" role="img" aria-label="Share of records"><div id="cz-segment"></div><div id="rest-segment"></div></div>
+    <div class="comparison-note">World includes Czechia. This strip uses the selected layer, year and indicator across all covered countries.</div>
+  </section>
+  <details class="details"><summary>What the counts mean · sources</summary><p id="definition"></p><ul id="notes"></ul><p><a href="data.json">Download the measured coverage snapshot</a></p><div id="source-details"></div></details>
+  <footer><span>Animated coverage snapshot · published data only</span><span id="flow-status" aria-live="polite">Gathering the view…</span></footer>
+</main>
+<script src="data.js?v=20260907"></script><script src="app.js?v=20260907"></script>
+</body>
+</html>

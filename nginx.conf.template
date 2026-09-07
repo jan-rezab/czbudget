@@ -84,6 +84,13 @@ map $host $psd_head_inject {
   default '<head><script defer src="https://cloud.umami.is/script.js" data-website-id="b80e941b-3a25-40ef-bdf4-3ecb0e91e053" data-domains="publicspendingdata.org,www.publicspendingdata.org" data-do-not-track="true" data-exclude-search="true"></script>';
 }
 
+# Studio pages are unlisted snapshots, omitted from navigation and the sitemap.
+# An empty value leaves all other routes unchanged; this is not authentication.
+map $uri $studio_robots {
+  default "";
+  ~^/studio/ "noindex, nofollow, noarchive";
+}
+
 server {
   listen ${PORT};
   server_name publicspendingdata.org www.publicspendingdata.org _;
@@ -99,6 +106,7 @@ server {
     return 301 $index_redirect_path$is_args$args;
   }
 
+  add_header X-Robots-Tag $studio_robots always;
   add_header Strict-Transport-Security "max-age=31536000" always;
   add_header X-Content-Type-Options "nosniff" always;
   add_header X-Frame-Options "SAMEORIGIN" always;
