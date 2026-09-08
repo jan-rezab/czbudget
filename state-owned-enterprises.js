@@ -320,7 +320,7 @@
 
   async function init() {
     translate();
-    const response = await fetch("../../data/state-owned-enterprises.v1.json");
+    const response = await fetch("../../data/state-owned-enterprises.v1.json?v=20260908-czech-inventory");
     if (!response.ok) throw new Error(`State-enterprise dataset failed: ${response.status}`);
     dataset = await response.json();
     records = dataset.records.map(record=>({...record,fx_rate:dataset.fx.rates[record.currency]}));
