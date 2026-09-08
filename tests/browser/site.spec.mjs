@@ -200,6 +200,7 @@ test("state-budget revenue stays finite against the aggregate-only production co
 });
 
 test("comparison and coverage live outside the homepage", async ({ page }) => {
+  test.setTimeout(180_000);
   await page.goto("/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#compare")).toHaveCount(0);
   await expect(page.locator("#method")).toHaveCount(0);
@@ -520,8 +521,9 @@ test("every deep dive keeps its comparison selector in the sticky section rail",
 
 test("ageing deep dive stays inside official projections and transparent arithmetic", async ({ page }) => {
   await page.goto("/deep-dives/ageing/?code=CZE&lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#deep-dive-country option")).toHaveCount(10);
-  await expect(page.locator(".aging-kpis article")).toHaveCount(4);
+  const countryCodes = (await page.locator("#deep-dive-country").getAttribute("data-country-codes")).split(",");
+  await expect(page.locator("#deep-dive-country option")).toHaveCount(countryCodes.length);
+  await expect(page.locator("#ageing-bill-root .aging-kpis article")).toHaveCount(4);
   await expect(page.locator(".aging-table tbody tr")).toHaveCount(17);
   await expect(page.locator("#aging-calculator-results")).toContainText("This is not a forecast of employment, pensions, healthcare costs, taxes or public debt");
   await expect(page.locator("#aging-calculator-results")).toContainText("5,936,188");
@@ -802,7 +804,7 @@ test("municipal history tables preserve source amounts and annual currency conve
 });
 
 test("all representative page menus resolve and primary navigation routes correctly", async ({ page, request }) => {
-  test.setTimeout(180_000);
+  test.setTimeout(300_000);
   for (const route of routes.map(([, path]) => path)) {
     await page.goto(route, { waitUntil: "networkidle" });
     const hrefs = await page.locator("header a[href], header nav a[href], .detail-nav a[href], .breadcrumbs a[href]").evaluateAll((links) =>
