@@ -62,3 +62,13 @@ test('checksum failure has a retry path and never plots damaged data',async({pag
 });
 
 test('language switching keeps the selected product and dates',async({page})=>{await page.goto(report+'&view=products');await ready(page);const product=await page.locator('#dim-product').inputValue();await page.locator('[data-lang="cs"]').click();await ready(page);await expect(page.locator('html')).toHaveAttribute('lang','cs');await expect(page.locator('h1')).toContainText('Co se děje');await expect(page.locator('#dim-product')).toHaveValue(product);});
+
+
+test('English report discovery uses current shared translations',async({page})=>{
+  await page.goto('/deep-dives/?lang=en');
+  await expect(page.locator('#industrial-diagnostics h3')).toHaveText('Inside industry');
+  await expect(page.locator('#industrial-diagnostics p')).toContainText('Business earnings and investment');
+  await expect(page.locator('script[src*="deep-dives.js"]')).toHaveAttribute('src',/v=20260908-industrial-diagnostics-final/);
+  await page.locator('#industrial-diagnostics').click();await ready(page);
+  await expect(page.locator('h1')).toContainText('What powers');
+});
