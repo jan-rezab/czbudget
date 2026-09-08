@@ -128,7 +128,8 @@
     const first = ordered.slice(0, split);
     const second = ordered.slice(split);
     const firstTotal = first.reduce((sum,item)=>sum+item.value,0);
-    const gap = 2;
+    // Keep small enterprises in narrow/mobile layouts: a fixed gap can consume the entire tile.
+    const gap = Math.min(2, Math.min(width, height) * 0.05);
     if (width >= height) {
       const firstWidth = Math.max(0, (width - gap) * firstTotal / total);
       return [...layoutBinary(first,x,y,firstWidth,height),...layoutBinary(second,x+firstWidth+gap,y,Math.max(0,width-firstWidth-gap),height)];

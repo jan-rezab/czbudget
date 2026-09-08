@@ -23,3 +23,16 @@ test('other countries retain their sourced comparison records',()=>{
     if(code!=='CZE') assert.equal(catalogue.records.filter(r=>r.country_code===code).length,3);
   }
 });
+
+test('treemap keeps small revenue tiles at mobile widths', async()=>{
+  const {runInNewContext} = await import('node:vm');
+  const script = readFileSync(new URL('../../state-owned-enterprises.js',import.meta.url),'utf8');
+  const fn = script.slice(script.indexOf('  function layoutBinary('),script.indexOf('  function svgElement('));
+  const layout = runInNewContext(`${fn}; layoutBinary`);
+  const companies = catalogue.records.filter(r=>r.source_revenue_m>0).map(r=>({id:r.id,value:r.source_revenue_m/catalogue.fx.rates[r.currency]}));
+  for (const width of [20,100,300,390,1280]) {
+    const tiles = layout(companies,0,0,width,420);
+    assert.equal(tiles.length,companies.length);
+    assert.ok(tiles.every(t=>Number.isFinite(t.width)&&t.width>0&&Number.isFinite(t.height)&&t.height>0));
+  }
+});
