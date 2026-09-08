@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 const catalog = { data: { countries: [{ code: "CZE", name: "Czechia", latest_annual_period: "2025", latest_monthly_period: "202506" }] } };
 const profile = { data: {
@@ -97,17 +98,22 @@ test("country markets show destinations and origins with clickable bilateral det
 test("product intelligence switches business areas and EU aggregation without losing flow totals", async ({ page }) => {
   await page.goto("/deep-dives/product-markets/?lang=en#product-intelligence-view");
   await expect(page).toHaveTitle("Global product markets — Public Spending Data");
-  await expect(page.locator("#product-intelligence-kpis")).toContainText("$180.7B");
+  // Cloud builds refresh this source; assert against that release's actual data.
+  const source = JSON.parse(await readFile(new URL("../../data/trade/product-intelligence.v1.json", import.meta.url), "utf8"));
+  const area = code => source.business_areas.find(row => row.code === code);
+  const latest = code => [...area(code).periods].sort((a,b) => b.period.localeCompare(a.period))[0];
+  const dollars = value => new Intl.NumberFormat("en", {style:"currency", currency:"USD", notation:"compact", maximumFractionDigits:1}).format(value);
+  await expect(page.locator("#product-intelligence-kpis")).toContainText(dollars(latest("SMARTPHONES").primary_value_usd));
   await expect(page.locator("#product-flow svg")).toHaveCount(1);
-  await expect(page.locator("#product-flow .flow-link")).toHaveCount(61);
+  await expect(page.locator("#product-flow .flow-link")).toHaveCount(latest("SMARTPHONES").geographies.EU27_AGGREGATED.flows.length);
   await expect(page.locator("#product-markets")).toContainText("EU-27");
   await page.locator("#product-area").selectOption("PASSENGER_VEHICLES");
-  await expect(page.locator("#product-intelligence-kpis")).toContainText("$693.2B");
+  await expect(page.locator("#product-intelligence-kpis")).toContainText(dollars(latest("PASSENGER_VEHICLES").primary_value_usd));
   await page.locator("#product-geography").selectOption("COUNTRY");
-  await expect(page.locator("#product-origins .product-rank-row").first()).toContainText("Germany");
+  await expect(page.locator("#product-origins .product-rank-row").first()).toContainText(latest("PASSENGER_VEHICLES").geographies.COUNTRY.origins[0].name);
   await expect(page).toHaveURL(/area=PASSENGER_VEHICLES/);
   await expect(page).toHaveURL(/geo=COUNTRY/);
-  await expect(page.locator("#product-history .history-point")).toHaveCount(1);
+  await expect(page.locator("#product-history .history-point")).toHaveCount(area("PASSENGER_VEHICLES").periods.length);
 });
 
 test("trade is registered in reports and the language switch translates the whole page", async ({ page }) => {

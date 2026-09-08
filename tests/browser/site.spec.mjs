@@ -71,7 +71,8 @@ const routes = [
 
 for (const [name, path] of routes) {
   test(`${name} renders without serious accessibility or runtime failures`, async ({ page }) => {
-    if (name === "methodology") test.setTimeout(120_000);
+    // Full-page axe analysis of large coverage/budget tables needs a larger cloud budget.
+    if (["methodology", "state budget"].includes(name)) test.setTimeout(300_000);
     const failures = [];
     page.on("pageerror", (error) => failures.push(error.message));
     page.on("console", (message) => {

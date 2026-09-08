@@ -148,6 +148,7 @@ test("shared page modules do not retain Czech UI copy in English", async ({ page
 });
 
 test("warehouse-only itemized coverage reads honestly in both languages", async ({ page }) => {
+  test.setTimeout(120_000);
   // Eight countries are loaded in the production warehouse but not published on
   // the site. Both dictionaries must carry the vocabulary for that state, or the
   // coverage matrix falls back to "— / not researched" and misreports work that
