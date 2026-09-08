@@ -898,10 +898,13 @@ test("every page family renders the same shared header component", async ({ page
   }
 });
 
-test("state-owned enterprise catalogue ranks, filters and translates thirty sourced records", async ({ page }) => {
+test("state-owned enterprise catalogue includes the Czech inventory and handles missing financials", async ({ page }) => {
+  const dataset = JSON.parse(await readFile(new URL("../../data/state-owned-enterprises.v1.json", import.meta.url), "utf8"));
+  const revenueRows = dataset.records.filter(row => row.source_revenue_m > 0);
+  const total = revenueRows.reduce((sum,row)=>sum+row.source_revenue_m/dataset.fx.rates[row.currency]/1000,0);
   await page.goto("/deep-dives/state-owned-enterprises/?lang=en", { waitUntil: "networkidle" });
-  await expect(page.locator("#soe-map .map-company-link")).toHaveCount(30);
-  await expect(page.locator("#soe-map-total")).toContainText("€625.6 bn");
+  await expect(page.locator("#soe-map .map-company-link")).toHaveCount(revenueRows.length);
+  await expect(page.locator("#soe-map-total")).toContainText(`€${total.toFixed(1)} bn`);
   await expect(page.locator("#soe-map-detail-name")).toHaveText("EDF Group");
   await page.locator('[data-map-value="weighted"]').click();
   await expect(page.locator("#soe-map-total")).toContainText("€567.0 bn");
@@ -913,13 +916,25 @@ test("state-owned enterprise catalogue ranks, filters and translates thirty sour
   await page.locator("#soe-map .map-company-link").first().click();
   await expect(page.locator("#soe-map-detail-name")).not.toHaveText("EDF Group");
   await page.locator("#soe-map-country").selectOption("all");
-  await expect(page.locator("#soe-body tr")).toHaveCount(30);
+  await expect(page.locator("#soe-body tr")).toHaveCount(dataset.records.length);
   await expect(page.locator("#soe-body tr").first()).toContainText("EDF Group");
   await expect(page.locator("#soe-body tr").first()).toContainText("€118.7 bn");
   await expect(page.locator("#soe-country-grid article")).toHaveCount(10);
   await page.locator("#soe-country").selectOption("SWE");
   await expect(page.locator("#soe-body tr")).toHaveCount(3);
   await expect(page.locator("#soe-body")).toContainText("Vattenfall");
+  await page.locator("#soe-country").selectOption("CZE");
+  await expect(page.locator("#soe-body tr")).toHaveCount(49);
+  await expect(page.locator("#soe-body")).toContainText("České dráhy");
+  await expect(page.locator("#soe-body")).toContainText("Lesy České republiky");
+  const missing = page.locator("#soe-body tr").filter({hasText:"CENDIS"});
+  await expect(missing).toContainText("Not available");
+  await expect(missing).not.toContainText("€0.0");
+  await expect(page.locator("#soe-map .map-company-link")).toHaveCount(3);
+  await page.locator('[data-map-value="revenue"]').click();
+  await expect(page.locator("#soe-map .map-company-link")).toHaveCount(revenueRows.filter(row=>row.country_code==="CZE").length);
+  await page.locator("#soe-search").fill("CENDIS");
+  await expect(page.locator("#soe-body tr")).toHaveCount(1);
   await page.locator("#soe-reset").click();
   await page.locator("#soe-search").fill("postal");
   await expect(page.locator("#soe-body tr")).toHaveCount(3);

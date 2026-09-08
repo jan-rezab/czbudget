@@ -41,17 +41,38 @@
       ]
     }
   };
+  Object.assign(copy.en, {
+    unavailable:"Not available",
+    intro:"Czech state-controlled companies from our public-entity inventory, alongside three selected enterprises in each of nine other countries. Available 2024 revenue is converted to euros; companies with missing revenue remain in the catalogue.",
+    mapIntro:"Tiles show enterprises with available revenue. The ownership-weighted view includes only documented ownership percentages. Companies with missing values remain searchable in the catalogue.",
+    countryIntro:"Totals cover only the three largest entries with available revenue per country, not the entire state portfolio or fiscal exposure.",
+  });
+  Object.assign(copy.cs, {
+    unavailable:"Nedostupné",
+    intro:"České státem ovládané firmy z našeho inventáře veřejných subjektů a tři vybrané podniky v každé z devíti dalších zemí. Dostupné výnosy za rok 2024 převádíme na eura; firmy bez výnosů zůstávají v katalogu.",
+    mapIntro:"Dlaždice zobrazují podniky s dostupnými výnosy. Zobrazení podle podílu státu zahrnuje jen doložené vlastnické podíly. Firmy s chybějícími hodnotami zůstávají vyhledatelné v katalogu.",
+    countryIntro:"Součty zahrnují pouze tři největší položky s dostupnými výnosy za každou zemi, nikoli celé státní portfolio nebo fiskální expozici.",
+  });
+  Object.assign(copy.en.sectors, {finance:"Finance",real_estate_tourism:"Real estate & tourism",public_services:"Public services",defence:"Defence",natural_resources:"Natural resources",agriculture_food:"Agriculture & food",water:"Water",other:"Other / unclassified"});
+  Object.assign(copy.cs.sectors, {finance:"Finance",real_estate_tourism:"Nemovitosti a cestovní ruch",public_services:"Veřejné služby",defence:"Obrana",natural_resources:"Přírodní zdroje",agriculture_food:"Zemědělství a potraviny",water:"Vodní hospodářství",other:"Ostatní / nezařazeno"});
+  copy.en.methods[0][2] = "Czech coverage includes all companies identified as state-controlled in our 2024 public-entity inventory; municipal, regional and other public owners are excluded. Other countries retain three selected enterprises each. Coverage is uneven and does not claim a complete state portfolio. Financial institutions are included and labelled separately.";
+  copy.cs.methods[0][2] = "Český katalog zahrnuje všechny firmy označené jako státem ovládané v našem inventáři veřejných subjektů za rok 2024; obce, kraje a další veřejní vlastníci jsou vynecháni. Ostatní země obsahují po třech vybraných podnicích. Pokrytí není rovnoměrné ani úplným státním portfoliem. Finanční instituce jsou zahrnuty a samostatně označeny.";
+  copy.en.methods[2][2] += " Additional Czech rows use individual-entity turnover from the Ministry of Finance strategic-company report, not consolidated group revenue. Missing revenue is not zero; missing ownership shares are excluded from the weighted map.";
+  copy.cs.methods[2][2] += " Doplněné české řádky používají obrat samostatných subjektů ze zprávy MF o strategických společnostech, nikoli výnosy konsolidované skupiny. Chybějící výnos není nula; chybějící vlastnický podíl je vynechán z vážené mapy.";
+  copy.en.methods[5][2] = "2024 financial snapshot; Czech inventory integration checked on 8 September 2026. Ownership and group boundaries may change after the reporting period.";
+  copy.cs.methods[5][2] = "Finanční snímek roku 2024; propojení českého inventáře ověřeno 8. září 2026. Vlastnictví a hranice skupin se mohou po účetním období změnit.";
   const t = copy[lang];
   const flag = {CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us"};
   const number = new Intl.NumberFormat(lang === "en" ? "en-GB" : "cs-CZ", {maximumFractionDigits:1});
   const euro = new Intl.NumberFormat(lang === "en" ? "en-GB" : "cs-CZ", {style:"currency",currency:"EUR",maximumFractionDigits:1});
   const escape = value => String(value ?? "").replace(/[&<>'"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[character]);
   const countryName = record => record[lang === "en" ? "country_en" : "country_cs"];
-  const localRevenue = record => `${number.format(record.source_revenue_m)} mil. ${record.currency}`;
-  const eurBn = record => record.source_revenue_m / record.fx_rate / 1000;
-  const formatEur = value => `${euro.format(value)} ${lang === "en" ? "bn" : "mld."}`;
-  const ownershipWeightedBn = record => eurBn(record) * record.ownership_pct / 100;
-  const formatOwnership = value => `${number.format(value)} %`;
+  const localRevenue = record => record.source_revenue_m === null ? t.unavailable : `${number.format(record.source_revenue_m)} mil. ${record.currency}`;
+  const eurBn = record => record.source_revenue_m === null ? null : record.source_revenue_m / record.fx_rate / 1000;
+  const formatEur = value => value === null ? t.unavailable : Math.abs(value) > 0 && Math.abs(value) < 0.1 ? `${euro.format(value * 1000)} ${lang === "en" ? "m" : "mil."}` : `${euro.format(value)} ${lang === "en" ? "bn" : "mld."}`;
+  const revenueOrder = (a,b) => (a.source_revenue_m === null) - (b.source_revenue_m === null) || eurBn(b)-eurBn(a);
+  const ownershipWeightedBn = record => record.ownership_pct === null || eurBn(record) === null ? null : eurBn(record) * record.ownership_pct / 100;
+  const formatOwnership = value => value === null ? t.unavailable : `${number.format(value)} %`;
   const svgNs = "http://www.w3.org/2000/svg";
 
   let dataset;
@@ -82,7 +103,7 @@
     return records.filter(record => state.country === "all" || record.country_code === state.country)
       .filter(record => state.sector === "all" || record.sector === state.sector)
       .filter(record => !query || [record.company,countryName(record),t.sectors[record.sector],record[lang === "en" ? "ownership_en" : "ownership_cs"]].join(" ").toLocaleLowerCase(lang).includes(query))
-      .sort((a,b) => state.sort === "country" ? countryName(a).localeCompare(countryName(b),lang) || eurBn(b)-eurBn(a) : eurBn(b)-eurBn(a));
+      .sort((a,b) => state.sort === "country" ? countryName(a).localeCompare(countryName(b),lang) || revenueOrder(a,b) : revenueOrder(a,b));
   }
 
   function mapRecordValue(record) {
@@ -162,7 +183,7 @@
     svg.querySelectorAll("g.map-chart").forEach(node=>node.remove());
     const chart = svgElement("g",{class:"map-chart"});
     svg.append(chart);
-    const shown = records.filter(record=>state.country==="all"||record.country_code===state.country);
+    const shown = records.filter(record=>state.country==="all"||record.country_code===state.country).filter(record=>mapRecordValue(record) > 0);
     const groupMap = new Map();
     shown.forEach(record=>{
       const key = state.mapGroup === "country" ? record.country_code : record.sector;
@@ -231,7 +252,7 @@
     document.querySelector("#soe-map-method").textContent = state.mapValue === "weighted" ? t.mapMethodWeighted : t.mapMethodRevenue;
     svg.querySelector("title").textContent = lang === "en" ? "Revenue of selected state-owned enterprises" : "Výnosy vybraných státních podniků";
     svg.querySelector("desc").textContent = lang === "en" ? "Each rectangle represents one enterprise and its area is proportional to the selected revenue measure." : "Každý obdélník představuje jeden podnik a jeho plocha odpovídá zvolenému ukazateli výnosů.";
-    updateMapDetail(selected);
+    if (selected) updateMapDetail(selected);
   }
 
   function renderTable() {
@@ -239,17 +260,17 @@
     document.querySelector("#soe-count").textContent = shown.length;
     document.querySelector("#soe-empty").hidden = shown.length > 0;
     document.querySelector("#soe-body").innerHTML = shown.map((record,index) => {
-      const rank = records.slice().sort((a,b)=>eurBn(b)-eurBn(a)).findIndex(item=>item.id===record.id)+1;
+      const rank = records.slice().sort((a,b)=>revenueOrder(a,b)).findIndex(item=>item.id===record.id)+1;
       const note = record[lang === "en" ? "note_en" : "note_cs"];
       const metric = record[lang === "en" ? "metric_en" : "metric_cs"];
-      return `<tr data-country="${record.country_code}"><td class="soe-rank">${state.sort === "revenue" ? index+1 : rank}</td><td class="soe-company"><div><img src="../../assets/flags/${flag[record.country_code]}.svg" alt=""><span><strong>${escape(record.company)}</strong><small>${escape(countryName(record))} · ${escape(t.sectors[record.sector])} · ${escape(record.period)}</small></span></div><details><summary>${t.detail}</summary><p>${escape(note)}</p></details></td><td><strong>${escape(record[lang === "en" ? "ownership_en" : "ownership_cs"])}</strong></td><td><strong>${escape(localRevenue(record))}</strong><small>${escape(metric)}</small></td><td class="soe-eur"><strong>${formatEur(eurBn(record))}</strong><small>${t.convertedAt} ${number.format(record.fx_rate)} ${record.currency} ${t.perEuro}</small></td><td><a class="soe-source-link" href="${escape(record.source_url)}" target="_blank" rel="noopener"><span>${t.openSource}</span> ↗</a></td></tr>`;
+      return `<tr data-country="${record.country_code}"><td class="soe-rank">${record.source_revenue_m === null ? "—" : state.sort === "revenue" ? index+1 : rank}</td><td class="soe-company"><div><img src="../../assets/flags/${flag[record.country_code]}.svg" alt=""><span><strong>${escape(record.company)}</strong><small>${escape(countryName(record))} · ${escape(t.sectors[record.sector])} · ${escape(record.period)}</small></span></div><details><summary>${t.detail}</summary><p>${escape(note)}</p></details></td><td><strong>${escape(record[lang === "en" ? "ownership_en" : "ownership_cs"])}</strong></td><td><strong>${escape(localRevenue(record))}</strong><small>${escape(metric)}</small></td><td class="soe-eur"><strong>${formatEur(eurBn(record))}</strong><small>${record.source_revenue_m === null ? "" : `${t.convertedAt} ${number.format(record.fx_rate)} ${record.currency} ${t.perEuro}`}</small></td><td><a class="soe-source-link" href="${escape(record.source_url)}" target="_blank" rel="noopener"><span>${t.openSource}</span> ↗</a></td></tr>`;
     }).join("");
   }
 
   function renderCountries() {
     const grouped = [...new Set(records.map(record=>record.country_code))].map(code => {
-      const items = records.filter(record=>record.country_code===code).sort((a,b)=>eurBn(b)-eurBn(a));
-      return {code, name:countryName(items[0]), items, total:items.reduce((sum,item)=>sum+eurBn(item),0)};
+      const items = records.filter(record=>record.country_code===code).sort((a,b)=>revenueOrder(a,b));
+      return {code, name:countryName(items[0]), items, total:items.slice(0,3).reduce((sum,item)=>sum+eurBn(item),0)};
     }).sort((a,b)=>b.items[0] && eurBn(b.items[0])-eurBn(a.items[0]));
     document.querySelector("#soe-country-grid").innerHTML = grouped.map((group,index)=>`<article class="soe-country-card"><header><span>${String(index+1).padStart(2,"0")}</span><img src="../../assets/flags/${flag[group.code]}.svg" alt=""><h3>${escape(group.name)}</h3></header><dl><div><dt>${t.leader}</dt><dd><b>${escape(group.items[0].company)}</b><strong>${formatEur(eurBn(group.items[0]))}</strong></dd></div><div><dt>${t.topThree}</dt><dd><strong>${formatEur(group.total)}</strong></dd></div></dl><button type="button" data-country-pick="${group.code}">${t.openCountry} →</button></article>`).join("");
     document.querySelectorAll("[data-country-pick]").forEach(button=>button.addEventListener("click",()=>{setCountry(button.dataset.countryPick);document.querySelector("#catalogue").scrollIntoView({behavior:"smooth"});}));
@@ -302,8 +323,13 @@
     if (!response.ok) throw new Error(`State-enterprise dataset failed: ${response.status}`);
     dataset = await response.json();
     records = dataset.records.map(record=>({...record,fx_rate:dataset.fx.rates[record.currency]}));
-    if (records.length !== 30 || records.some(record=>!Number.isFinite(record.fx_rate)||!record.source_url)) throw new Error("State-enterprise catalogue is incomplete");
-    const largest = records.slice().sort((a,b)=>eurBn(b)-eurBn(a))[0];
+    if (!records.length || records.some(record=>!Number.isFinite(record.fx_rate)||!record.source_url)) throw new Error("State-enterprise catalogue is incomplete");
+    const countryCount = new Set(records.map(record=>record.country_code)).size;
+    t.heroNote = `${records.length} ${lang === "en" ? "enterprises" : "podniků"} · ${countryCount} ${lang === "en" ? "countries" : "zemí"} · 2024`;
+    t.catalogueKicker = `${records.length} ${lang === "en" ? "enterprises / available revenue" : "podniků / dostupné výnosy"}`;
+    t.mapKicker = lang === "en" ? "Enterprises with available revenue" : "Podniky s dostupnými výnosy";
+    translate();
+    const largest = records.slice().sort((a,b)=>revenueOrder(a,b))[0];
     state.selectedId = largest.id;
     document.querySelector("#largest-value").textContent = formatEur(eurBn(largest));
     document.querySelector("#largest-name").textContent = largest.company;
