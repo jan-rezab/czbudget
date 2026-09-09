@@ -25,6 +25,6 @@ test('Czech budget profile exposes its own PAQ territory',async({page})=>{
   await page.goto('/cz/municipalities/plzen/?lang=cs');
   const context=page.locator('#paq-context');
   await expect(context).toContainText('Plzeň');await expect(context).toContainText('554791');
-  await context.getByRole('button').click();await expect(context.locator('tbody > tr')).toHaveCount(6);
+  await context.getByRole('button').click();await expect(context.locator('[data-table] > .paq-table-scroll > table > tbody > tr')).toHaveCount(6);
   await expect(context.getByRole('link',{name:/Všechny ukazatele/})).toHaveAttribute('href','/paq.html?level=obec&code=554791&lang=cs');
 });
