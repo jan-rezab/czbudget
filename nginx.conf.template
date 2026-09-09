@@ -113,7 +113,7 @@ server {
   add_header Referrer-Policy "strict-origin-when-cross-origin" always;
   add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
   add_header Cross-Origin-Opener-Policy "same-origin" always;
-  add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self' https://cloud.umami.is https://gateway.umami.is; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
+  add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self' https://cloud.umami.is https://gateway.umami.is https://www.google.com/recaptcha/; frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline' https://cloud.umami.is https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
 
   client_max_body_size 32k;
 

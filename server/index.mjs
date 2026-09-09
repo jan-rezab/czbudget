@@ -1,4 +1,6 @@
 import http from "node:http";
+import { createReportService, reportConfig } from "./data-reports.mjs";
+const submitDataReport = createReportService();
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -309,6 +311,19 @@ export async function handler(request, response) {
     return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
   }
   try {
+    if (url.pathname === "/api/data-reports/config" || url.pathname === "/api/data-reports") {
+      response.setHeader("Cache-Control", "no-store");
+      if (url.pathname.endsWith("/config") && request.method === "GET") return sendJSON(response, 200, reportConfig());
+      if (url.pathname.endsWith("/config") || request.method !== "POST") throw new DataError(405, "method_not_allowed", "Method not allowed.");
+      const origin = process.env.PUBLIC_ORIGIN || "https://publicspendingdata.org";
+      if (request.headers.origin !== origin) throw new DataError(403, "invalid_origin", "Submit reports from the website.");
+      if (!String(request.headers["content-type"] || "").startsWith("application/json")) throw new DataError(415, "invalid_content_type", "Use JSON.");
+      if (!enforceRateLimit(response, id, { key: "global", limit: 30, windowMs: 60000, group: "reports-global" })) return;
+      if (!acquireAPISlot(response, id)) return;
+      try { return sendJSON(response, 201, await submitDataReport(await readBody(request), origin)); }
+      finally { apiRequestsInFlight -= 1; }
+    }
+
     if (url.pathname.startsWith("/auth/")) {
       if (!enforceRateLimit(response, id, { key: clientIP(request), limit: AUTH_IP_WINDOW_LIMIT, windowMs: 15 * 60 * 1000, group: "auth-ip" })) return;
       const handled = await handleAuth(request, response, url.pathname.replace(/\/$/, ""), await readBody(request), sendJSON);

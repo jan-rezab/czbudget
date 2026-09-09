@@ -5,6 +5,12 @@
     return;
   }
   const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "";
+  if (!document.querySelector('script[data-report-loader]')) {
+    const script = document.createElement('script');
+    script.src = `${assetRoot}data-report.js?v=20260909`;
+    script.dataset.reportLoader = 'true';
+    document.head.append(script);
+  }
   const copy = {
     cs: {
       maker: "Projekt připravuje Hlidac statu, z.u.",
