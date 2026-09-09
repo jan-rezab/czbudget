@@ -91,9 +91,12 @@ steps:
         mkdir -p "$$serving/releases/$$release"
         tar -C "$$serving/releases/$$release" -xzf "$$archive" || exit 43
         cp data/cityvizor-current.v1.json "$$serving/current.json" || exit 44
-        # The archive hash binds this tree to the fully traversed release. The
-        # build gate rechecks its index, global counts, codelists and file count.
-        python3 scripts/validate-cityvizor-explorer.py --index-only "$$serving/releases/$$release" || exit 45
+
+  - id: verify-cityvizor
+    waitFor: ["hydrate-cityvizor"]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/validate-cityvizor-cloud-release.mjs, /workspace/.cityvizor-serving/releases/20260909-2294793cff54]
 
   - id: verify-industrial-diagnostics
     waitFor: ["-"]
