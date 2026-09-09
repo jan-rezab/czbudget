@@ -53,10 +53,10 @@ for(const [slug,page] of selectedPages){
   <link rel="stylesheet" href="../../styles.css?v=20260822-brand">
   <link rel="stylesheet" href="../../chart-system.css?v=20260822-country-municipalities">
   <link rel="stylesheet" href="../../municipalities.css?v=20260823-layout-fix">
-  <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260902-searchable-picker">
+  <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260909-country-spending-splits">
   <link rel="stylesheet" href="../../oecd-charts.css?v=20260829-oecd-reports">
   <script src="../../municipality-country-picker.js?v=20260902-searchable-picker" defer></script>
-  <script src="../../municipalities-country.js?v=20260902-searchable-picker" defer></script>
+  <script src="../../municipalities-country.js?v=20260909-country-spending-splits" defer></script>
   <script src="../../oecd-charts.js?v=20260829-oecd-reports" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -70,9 +70,10 @@ for(const [slug,page] of selectedPages){
   <main id="top">
     <nav class="municipality-switch" aria-label="Municipality views"><a href="../?lang=cs" data-view-link="europe" data-copy="viewEurope">Evropa</a><label class="active"><span data-copy="countryHomepage">Stránka země</span><select id="municipality-country-switch" aria-label="Stránka obcí podle země"></select></label></nav>
     <section class="municipal-hero${france?' france-hero':''}"><div><span class="eyebrow"><i class="live-dot"></i><span id="country-eyebrow">—</span></span><h1 id="country-title">—</h1><p id="country-intro">—</p></div><div class="municipal-hero-stat"><span data-copy="covered">Pokryté místní jednotky</span><strong id="country-total">—</strong><small id="country-coverage">—</small></div></section>
-    <nav class="municipal-rail"><a href="#insights" data-copy="navInsights">Co data říkají</a>${rankingNav}<a id="budget-structure-nav" href="#budget-structure" data-copy="navStructure" hidden>Struktura rozpočtu</a><a id="tax-autonomy-nav" href="#tax-autonomy" data-copy="taxAutonomy">OECD · daňová pravomoc</a><a href="#directory" data-copy="navDirectory">Adresář</a><a href="#context" data-copy="navContext">Kontext a zdroj</a></nav>
+    <nav class="municipal-rail"><a href="#insights" data-copy="navInsights">Co data říkají</a>${rankingNav}<a id="spending-mix-nav" href="#spending-mix" data-copy="navSpendingMix" hidden>Provoz vs. investice</a><a id="budget-structure-nav" href="#budget-structure" data-copy="navStructure" hidden>Struktura rozpočtu</a><a id="tax-autonomy-nav" href="#tax-autonomy" data-copy="taxAutonomy">OECD · daňová pravomoc</a><a href="#directory" data-copy="navDirectory">Adresář</a><a href="#context" data-copy="navContext">Kontext a zdroj</a></nav>
     <section id="insights" class="municipal-section${france?' france-national-summary':''}"><div class="section-heading"><div><span class="kicker" data-copy="insightsKicker">Datový profil</span><h2 id="insights-title">—</h2></div><p id="insights-copy">—</p></div><div id="country-insight-grid" class="insight-grid"></div></section>
-    ${rankingSection}
+${rankingSection}
+    <section id="spending-mix" class="municipal-section municipal-spending-mix" aria-labelledby="spending-mix-title" hidden><div class="section-heading"><div><span id="spending-mix-kicker" class="kicker" data-copy="spendingMixKicker">Struktura výdajů</span><h2 id="spending-mix-title" data-copy="spendingMixTitle">Provozní versus investiční výdaje</h2></div><p id="spending-mix-copy" data-copy="spendingMixCopy">Národní účetní členění zachováváme podle definice zdroje.</p></div><div id="country-spending-mix" aria-live="polite"><p class="benchmark-loading" data-copy="loadingSpendingMix">Načítám strukturu výdajů…</p></div></section>
     <section id="budget-structure" class="municipal-section municipal-budget-structure" hidden><div class="section-heading"><div><span class="kicker" data-copy="structureKicker">Průměrný místní rozpočet</span><h2 data-copy="structureTitle">Složení průměrného místního rozpočtu</h2></div><p data-copy="structureCopy">Každý místní rozpočet má stejnou váhu, takže největší města nepřehluší okresní a menší obecní rozpočty.</p></div><div id="budget-structure-content"></div></section>
     <section id="tax-autonomy" class="municipal-section" hidden><div data-oecd-chart="autonomy_spectrum" data-hide-when-missing="true"></div></section>
     <section id="directory" class="municipal-section${france?' france-directory':''}"><div class="section-heading"><div><span class="kicker" data-copy="directoryKicker">${france?'Všech 34 875 obcí':'Místní úroveň'}</span><h2 data-copy="directoryTitle">Najděte obec</h2></div>${france?'<div class="france-directory-intro"><p data-copy="directoryIntro">Hledejte podle názvu, regionu nebo kódu INSEE. Každý výsledek vede na úplný finanční profil obce.</p><strong id="country-directory-count">—</strong></div>':'<p id="country-directory-count">—</p>'}</div>${directoryControls}<div id="country-municipality-grid" class="municipality-grid"></div><button id="country-load-more" class="load-more" type="button" data-copy="more">Načíst další</button></section>
@@ -91,7 +92,7 @@ async function refreshPickerAssets(path,depth,hostScript,oldVersion){
   let html=await readFile(url,"utf8");
   const prefix="../".repeat(depth);
   if(!html.includes("municipality-country-picker.js"))html=html.replace(`<script src="${prefix}${hostScript}`,`<script src="${prefix}municipality-country-picker.js?v=20260902-searchable-picker" defer></script>\n  <script src="${prefix}${hostScript}`);
-  html=html.replace(/municipalities-navigator\.css\?v=[^"]+/,"municipalities-navigator.css?v=20260902-searchable-picker").replace(`${hostScript}?v=${oldVersion}`,`${hostScript}?v=20260902-searchable-picker`);
+  html=html.replace(/municipalities-navigator\.css\?v=[^"]+/,"municipalities-navigator.css?v=20260909-country-spending-splits").replace(`${hostScript}?v=${oldVersion}`,`${hostScript}?v=20260902-searchable-picker`);
   await writeFile(url,html);
 }
 
