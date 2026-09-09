@@ -84,13 +84,14 @@ steps:
         archive=/workspace/.cityvizor-release.tar.gz
         serving=/workspace/.cityvizor-serving
         release=20260909-2294793cff54
-        python3 -c 'import sys, urllib.request; urllib.request.urlretrieve(sys.argv[1], sys.argv[2])' \
-          "https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-explorer-2026-09-09.tar.gz" "$$archive"
-        echo "962238753f9aaa1a090b687371e558df5e54f38c034f7d1140771d9ce4951da0  $$archive" | sha256sum -c -
+        curl --fail --location --retry 4 --retry-all-errors \
+          --output "$$archive" \
+          "https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-explorer-2026-09-09.tar.gz" || exit 41
+        echo "962238753f9aaa1a090b687371e558df5e54f38c034f7d1140771d9ce4951da0  $$archive" | sha256sum -c - || exit 42
         mkdir -p "$$serving/releases/$$release"
-        tar -C "$$serving/releases/$$release" -xzf "$$archive"
-        cp data/cityvizor-current.v1.json "$$serving/current.json"
-        python3 scripts/validate-cityvizor-explorer.py "$$serving/releases/$$release"
+        tar -C "$$serving/releases/$$release" -xzf "$$archive" || exit 43
+        cp data/cityvizor-current.v1.json "$$serving/current.json" || exit 44
+        python3 scripts/validate-cityvizor-explorer.py "$$serving/releases/$$release" || exit 45
 
   - id: verify-industrial-diagnostics
     waitFor: ["-"]
