@@ -91,7 +91,9 @@ steps:
         mkdir -p "$$serving/releases/$$release"
         tar -C "$$serving/releases/$$release" -xzf "$$archive" || exit 43
         cp data/cityvizor-current.v1.json "$$serving/current.json" || exit 44
-        python3 scripts/validate-cityvizor-explorer.py "$$serving/releases/$$release" || exit 45
+        # The archive hash binds this tree to the fully traversed release. The
+        # build gate rechecks its index, global counts, codelists and file count.
+        python3 scripts/validate-cityvizor-explorer.py --index-only "$$serving/releases/$$release" || exit 45
 
   - id: verify-industrial-diagnostics
     waitFor: ["-"]
