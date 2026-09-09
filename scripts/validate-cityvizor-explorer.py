@@ -38,7 +38,9 @@ def safe(root: Path, relative: str) -> Path:
     if relative.startswith("/") or ".." in Path(relative).parts:
         raise ValueError(f"Unsafe asset path: {relative}")
     path = (root / relative).resolve()
-    if not path.is_relative_to(root.resolve()):
+    try:
+        path.relative_to(root.resolve())
+    except ValueError:
         raise ValueError(f"Asset escapes release root: {relative}")
     return path
 
