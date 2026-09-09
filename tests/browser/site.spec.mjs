@@ -799,7 +799,8 @@ test("municipal history tables preserve source amounts and annual currency conve
   const rateYear = Math.max(...Object.keys(fx.rates.CZE.years).map(Number).filter(year => year <= latest.year));
   const converted = latest.revenue_actual * fx.eur_per_usd[rateYear] / fx.rates.CZE.years[rateYear].local_per_usd;
   await expect(page.locator('#history-table-body tr').first()).toContainText(money(converted, "EUR"));
-  await expect(page.locator('.profile-currency-converter')).toContainText(`IMF WEO annual rate ${rateYear}`);
+  await expect(page.locator('.profile-currency-converter')).toContainText(`ECB annual reference rate ${rateYear}`);
+  await expect(page.locator('.profile-currency-converter a')).toHaveAttribute('href', fx.rates.CZE.years[rateYear].source_url);
   await expect(page.locator('#history-kpis')).not.toContainText("€0bn");
 });
 
