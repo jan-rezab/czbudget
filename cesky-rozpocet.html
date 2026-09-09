@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="health-budget.css?v=20260820-1">
   <script src="psd-glossary.js?v=20260901-glossary" defer></script><script src="app.js?v=20260902-finance-tax-fallback" defer></script>
   <script src="budget-i18n.js?v=20260901-finance-structure" defer></script>
-  <script src="cz-firmy-embed.js?v=20260822-1" defer></script>
+  <script src="cz-firmy-embed.js?v=20260909-insurers" defer></script>
 
   <script src="budget-shell.js?v=20260901-finance-first" defer></script>
   <script src="cz-spending.js?v=20260901-finance-structure" defer></script>
@@ -208,7 +208,7 @@
         <label><span>Seřadit podle</span><select id="embed-entity-sort"><option value="topline">Výnosy / obrat</option><option value="result">Výsledek</option><option value="margin">Čistá marže</option><option value="name">Název</option></select></label>
       </div>
       <div class="registry-table-wrap" tabindex="0"><table class="registry-table"><thead><tr><th>Subjekt</th><th>Typ</th><th>Veřejná úroveň / systém</th><th>Top line</th><th>Výsledek</th><th>Čistá marže</th><th>Data</th></tr></thead><tbody id="embed-public-entity-rows"></tbody></table></div>
-      <div class="registry-footer"><span id="embed-registry-count">—</span><small>Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.</small></div>
+      <div class="registry-footer"><span id="embed-registry-count">—</span><small>Top line znamená obrat firem, výnosy jednotek ČSÚIS a příjmy pojišťoven. U pojišťoven uvádíme saldo příjmů a výdajů, nikoli zisk; jejich peněžní toky nejsou součástí účetních součtů. Chybějící výkaz není nula.</small></div>
       <div class="registry-bottom-tabs" id="embed-entity-tabs" role="tablist" aria-label="Typ veřejného subjektu">
         <button type="button" role="tab" data-category="all" aria-selected="true"><span>Vše</span><small id="embed-tab-all">—</small></button>
         <button type="button" role="tab" data-category="Firma" aria-selected="false"><span>Firmy</span><small id="embed-tab-companies">—</small></button>

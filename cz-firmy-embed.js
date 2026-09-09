@@ -13,7 +13,7 @@
     category:{Firma:"Company",Nemocnice:"Hospital","Vysoká škola":"University","Zdravotní pojišťovna":"Health insurer"},
     owner:{"Jiný veřejný vlastník":"Other public owner",Obec:"Municipality",Kraj:"Region",Stát:"State",DSO:"Municipal association","Územní veřejná úroveň":"Territorial public tier","Stát / ústřední úroveň":"State / central tier","Veřejné zdravotní pojištění":"Public health insurance"},
     sector:{Energetika:"Energy","Doprava a infrastruktura":"Transport and infrastructure","Finance a rozvoj":"Finance and development","Reality a cestovní ruch":"Real estate and tourism","Digitální a veřejné služby":"Digital and public services","Obrana a strategický průmysl":"Defence and strategic industry","Přírodní zdroje a sanace":"Natural resources and remediation","Zemědělství a potraviny":"Agriculture and food","Vodní hospodářství":"Water management"},
-    topLine:{obrat:"turnover",výnosy:"revenue"},source:{"MF strategické subjekty":"Ministry of Finance strategic entities","ČSÚIS VZZ":"CSUIS income statement"}
+    topLine:{obrat:"turnover",výnosy:"revenue",příjmy:"cash receipts"},source:{"MF strategické subjekty":"Ministry of Finance strategic entities","ČSÚIS VZZ":"CSUIS income statement","MZ/MF výkazy pojišťoven":"MZ/MF insurer statements"}
   };
   const employmentBridge = select(".public-employment-bridge");
   if (employmentBridge) {
@@ -40,6 +40,12 @@
     }).join("");
   }
 
+  function registryTopLine(entity) {
+    const health = entity.health_insurance;
+    return health ? {value_mczk: health.receipts_mczk, definition: "příjmy",
+      net_result_mczk: health.cash_balance_mczk, net_margin_pct: null} : entity.top_line;
+  }
+
   function renderRegistry(data) {
     const search = select("#embed-entity-search");
     const owner = select("#embed-entity-owner");
@@ -59,12 +65,33 @@
     };
     Object.entries(tabCounts).forEach(([key, selector]) => {
       const group = data.summary.groups[key];
-      select(selector).textContent = `${format(group.entity_count)} · ${format(group.financial_result_count)} ${english ? "with results" : "s výsledkem"}`;
+      select(selector).textContent = `${format(group.entity_count)} · ${format(group.financial_data_count)} ${english ? "with data" : "s daty"}`;
     });
 
     function updateSummary() {
       const group = data.summary.groups[activeCategory];
       const label = english ? (activeCategory === "all" ? "all entities" : activeCategory === "Firma" ? "companies" : activeCategory === "Vysoká škola" ? "universities" : activeCategory === "Nemocnice" ? "hospitals" : "health insurers") : (activeCategory === "all" ? "všechny subjekty" : activeCategory === "Firma" ? "firmy" : activeCategory === "Vysoká škola" ? "vysoké školy" : activeCategory === "Nemocnice" ? "nemocnice" : "zdravotní pojišťovny");
+      const health = group.health_insurance;
+      const cardIds = ["profit-sum", "loss-sum", "net-sum", "turnover-sum"];
+      const cardLabels = health
+        ? (english ? ["Cash receipts", "Cash expenditure", "Cash balance", "Assets"] : ["Příjmy", "Výdaje", "Saldo", "Aktiva"])
+        : (english ? ["Sum of profits", "Sum of losses", "Net result", "Revenue / turnover"] : ["Suma zisků", "Suma ztrát", "Čistý výsledek", "Výnosy / obrat"]);
+      cardIds.forEach((id, index) => {
+        const card = select("#embed-" + id).parentElement;
+        card.querySelector("span").textContent = cardLabels[index];
+        card.querySelector("small").textContent = health && index === 3
+          ? (english ? "CZK bn · 31 Dec 2024" : "mld. Kč · k 31. 12. 2024")
+          : (english ? "CZK bn · available statements" : "mld. Kč · dostupné výkazy");
+      });
+      if (health) {
+        const values = [health.receipts_mczk, health.expenditure_mczk, health.cash_balance_mczk, health.assets_mczk];
+        cardIds.forEach((id, index) => { select("#embed-" + id).textContent = billions(values[index]); });
+        select("#embed-aggregate-scope").textContent = english
+          ? "All 7 insurers · actual 2024 cash receipts and expenditure including taxable activities. Cash balance is not accounting profit. Assets are net book values."
+          : "Všech 7 pojišťoven · skutečné příjmy a výdaje 2024 včetně zdaňovaných činností. Saldo není účetní zisk. Aktiva jsou v čisté účetní výši.";
+        select("#embed-registry-coverage").textContent = "7 / 7 " + (english ? "with data" : "s daty");
+        return;
+      }
       const hasFinancials = group.financial_result_count > 0;
       select("#embed-profit-sum").textContent = hasFinancials ? billions(group.positive_net_result_sum_mczk) : "—";
       select("#embed-loss-sum").textContent = hasFinancials ? `−${billions(group.negative_net_result_absolute_sum_mczk)}` : "—";
@@ -76,7 +103,7 @@
 
     function renderTable() {
       const query = search.value.trim().toLocaleLowerCase("cs");
-      const visible = data.entities.filter(item =>
+      const visible = data.entities.map(entity => ({...entity, top_line: registryTopLine(entity)})).filter(item =>
         (activeCategory === "all" || item.category === activeCategory) &&
         (owner.value === "all" || item.owner_level === owner.value) &&
         (!query || `${item.name} ${item.ico}`.toLocaleLowerCase("cs").includes(query))
@@ -95,10 +122,10 @@
         <td><strong>${escapeHtml(item.name)}</strong><small>${english ? "ID" : "IČO"} ${escapeHtml(item.ico)} · ${escapeHtml(item.legal_form)}</small></td>
         <td><span class="entity-type">${escapeHtml(tr("category",item.category))}</span></td>
         <td>${escapeHtml(tr("owner",item.owner_level))}</td>
-        <td class="numeric">${item.top_line.value_mczk == null ? "—" : `${money(item.top_line.value_mczk)} <small>${english ? "CZK m" : "mil. Kč"} · ${escapeHtml(tr("topLine",item.top_line.definition))}</small>`}</td>
-        <td class="numeric ${item.top_line.net_result_mczk < 0 ? "negative" : ""}">${item.top_line.net_result_mczk == null ? "—" : `${signedMoney(item.top_line.net_result_mczk)} <small>${english ? "CZK m" : "mil. Kč"}</small>`}</td>
+        <td class="numeric">${item.top_line.value_mczk == null ? "—" : `${money(item.top_line.value_mczk)} <small>${english ? "CZK m" : "mil. Kč"} · ${escapeHtml(tr("topLine",item.top_line.definition))}</small>`}${item.health_insurance ? `<small>${english ? "Expenditure" : "Výdaje"}: ${money(item.health_insurance.expenditure_mczk)} ${english ? "CZK m" : "mil. Kč"}</small>` : ""}</td>
+        <td class="numeric ${item.top_line.net_result_mczk < 0 ? "negative" : ""}">${item.top_line.net_result_mczk == null ? "—" : `${signedMoney(item.top_line.net_result_mczk)} <small>${english ? "CZK m" : "mil. Kč"}</small>`}${item.health_insurance ? `<small>${english ? "cash balance" : "saldo příjmů a výdajů"}</small>` : ""}</td>
         <td class="numeric ${item.top_line.net_margin_pct < 0 ? "negative" : ""}">${percent(item.top_line.net_margin_pct)}</td>
-        <td>${item.financial_source_kind ? `<span class="data-available">${escapeHtml(tr("source",item.financial_source_kind))}</span>` : item.category === "Zdravotní pojišťovna" ? `<span class="data-missing">${english ? "special statement outside the income-statement dataset" : "speciální výkaz mimo VZZ"}</span>` : `<span class="data-missing">${english ? "statement unavailable" : "výkaz chybí"}</span>`}${item.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
+        <td>${item.financial_source_kind ? `<span class="data-available">${escapeHtml(tr("source",item.financial_source_kind))}</span>` : item.category === "Zdravotní pojišťovna" ? `<span class="data-missing">${english ? "special statement outside the income-statement dataset" : "speciální výkaz mimo VZZ"}</span>` : `<span class="data-missing">${english ? "statement unavailable" : "výkaz chybí"}</span>`}${item.health_insurance ? `<small>${english ? "Assets" : "Aktiva"}: ${money(item.assets_mczk)} ${english ? "CZK m" : "mil. Kč"}</small><a href="${escapeHtml(item.source_financial)}" target="_blank" rel="noreferrer">${english ? "Source tables" : "Zdrojové tabulky"}</a>` : ""}${item.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
       </tr>`).join("");
       select("#embed-registry-count").textContent = english ? `Showing ${format(visible.length)} of ${format(data.summary.groups[activeCategory].entity_count)} entities in this tab` : `Zobrazeno ${format(visible.length)} z ${format(data.summary.groups[activeCategory].entity_count)} subjektů v záložce`;
     }
@@ -116,7 +143,7 @@
 
   Promise.all([
     fetch("data/cz-state-enterprises-2024.json?v=20260820-3"),
-    fetch("data/cz-public-entities-2024.json?v=20260822-1")
+    fetch("data/cz-public-entities-2024.json?v=20260909-insurers")
   ])
     .then(async responses => {
       for (const response of responses) if (!response.ok) throw new Error(`Dataset odpověděl ${response.status}`);

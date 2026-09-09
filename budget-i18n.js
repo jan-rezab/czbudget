@@ -67,7 +67,7 @@
     "Vysoké školy": "Universities",
     "Nemocnice": "Hospitals",
     "Zdravotní pojišťovny": "Health insurers",
-    "Top line znamená obrat u strategických firem a celkové výnosy u jednotek ČSÚIS. Chybějící výkaz není nula.": "Top line means turnover for strategic companies and total revenue for CSUIS entities. A missing statement is not zero.",
+    "Top line znamená obrat firem, výnosy jednotek ČSÚIS a příjmy pojišťoven. U pojišťoven uvádíme saldo příjmů a výdajů, nikoli zisk; jejich peněžní toky nejsou součástí účetních součtů. Chybějící výkaz není nula.": "Top line means company turnover, CSUIS revenue and insurer cash receipts. Insurers show the cash balance rather than profit; their cash flows are excluded from accounting totals. A missing statement is not zero.",
     "{n} / Celý rozpočet {n}": "{n} / The full {n} budget",
     "Příjmy a výdaje. Bez zkratek.": "Revenue and expenditure. The full picture.",
     "Každá koruna schváleného státního rozpočtu v jednom pohledu: {n} mld. Kč příjmů proti {n} mld. Kč výdajů. Klikněte na výseč a otevřete její úplný detail.": "Every koruna in the approved state budget, in one view: CZK {n}bn in revenue against CZK {n}bn in expenditure. Select a slice to open its complete detail.",

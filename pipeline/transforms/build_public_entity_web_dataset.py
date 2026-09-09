@@ -15,6 +15,7 @@ INVENTORY_PATH = ROOT / "data" / "public_entity_revenues_2006_2025.json"
 STRATEGIC_PATH = ROOT / "website" / "data" / "cz-state-enterprises-2024.json"
 OUTPUT_PATH = ROOT / "website" / "data" / "cz-public-entities-2024.json"
 HISTORY_OUTPUT_PATH = ROOT / "website" / "data" / "cz-public-entity-history.v1.json"
+HEALTH_PATH = ROOT / "website" / "data" / "cz-health-insurers-2024.json"
 
 
 def mczk(value: float | None) -> float | None:
@@ -24,6 +25,9 @@ def mczk(value: float | None) -> float | None:
 def main() -> None:
     inventory = json.loads(INVENTORY_PATH.read_text(encoding="utf-8"))
     strategic = json.loads(STRATEGIC_PATH.read_text(encoding="utf-8"))
+    health = json.loads(HEALTH_PATH.read_text(encoding="utf-8"))
+    health_by_ico = {row["ico"]: row for row in health["entities"]}
+    assert len(health_by_ico) == 7
     master = {row["ico"]: row for row in inventory["entities"]}
     rows_2024 = {row["ico"]: row for row in inventory["annual"] if row["year"] == 2024}
     strategic_by_ico = {row["ico"]: row for row in strategic["entities"]}
@@ -95,6 +99,14 @@ def main() -> None:
             "year": 2024,
             "scope": "individual_entity",
         }
+        if ico in health_by_ico:
+            insurer = health_by_ico[ico]
+            assert entity["category"] == "Zdravotní pojišťovna"
+            entity.update({"health_insurance": insurer,
+                           "assets_mczk": insurer["assets_mczk"],
+                           "financial_source_kind": "MZ/MF výkazy pojišťoven",
+                           "source_financial": insurer["source_url"]})
+            # Cash-flow data stays outside company income-statement fields/totals.
         entities.append(entity)
 
     documented = [row for row in entities if row["net_result_mczk"] is not None]
@@ -111,6 +123,7 @@ def main() -> None:
         group_negative = sum(row["net_result_mczk"] for row in financial if row["net_result_mczk"] < 0)
         return {
             "entity_count": len(rows),
+            "financial_data_count": sum(row["financial_source_kind"] is not None for row in rows),
             "financial_result_count": len(financial),
             "revenue_count": len(revenue_rows),
             "positive_net_result_sum_mczk": round(group_positive, 3),
@@ -122,15 +135,16 @@ def main() -> None:
     groups = {"all": group_summary(entities)}
     for category in ("Firma", "Vysoká škola", "Nemocnice", "Zdravotní pojišťovna"):
         groups[category] = group_summary([row for row in entities if row["category"] == category])
+    groups["Zdravotní pojišťovna"]["health_insurance"] = health["summary"]
 
     payload = {
-        "schema_version": "1.1.0",
+        "schema_version": "1.2.0",
         "country_code": "CZE",
         "year": 2024,
         "currency_code": "CZK",
         "units": "mil. Kč",
         "scope": "Vybrané kategorie veřejných subjektů evidované pro rok 2024: veřejně ovládané firmy, veřejné vysoké školy, nemocnice a zdravotní pojišťovny. Přímé rozpočty obcí a krajů nejsou subjekty této tabulky.",
-        "coverage_note": "Účetní součty zahrnují pouze subjekty s doloženými částkami v otevřeném VZZ nebo ve zprávě MF o strategických subjektech. Zdravotní pojišťovny používají speciální výkazy; jejich pojistné a úhrady nejsou zaměňovány za firemní obrat a náklady.",
+        "coverage_note": "Účetní součty zahrnují pouze subjekty s doloženými částkami v otevřeném VZZ nebo ve zprávě MF o strategických subjektech. Všech sedm zdravotních pojišťoven má doplněné výkazy MZ/MF za rok 2024. Jejich příjmy, výdaje a saldo jsou vedeny samostatně a nejsou přičteny k firemním výnosům, nákladům ani zisku.",
         "summary": {
             "entity_count": len(entities),
             "strategic_highlight_count": len(strategic_by_ico),
@@ -146,7 +160,7 @@ def main() -> None:
             "groups": groups,
         },
         "entities": sorted(entities, key=lambda row: (row["category"], row["name"].casefold())),
-        "sources": inventory["sources"] + strategic["sources"],
+        "sources": inventory["sources"] + strategic["sources"] + health["sources"],
     }
     OUTPUT_PATH.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
 
