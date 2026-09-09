@@ -44,13 +44,42 @@
     const arrow = document.createElement("span"); arrow.className = "custom-select-arrow"; arrow.setAttribute("aria-hidden", "true"); arrow.textContent = "⌄";
     const list = document.createElement("span"); list.className = "custom-select-options"; list.setAttribute("role", "listbox"); list.tabIndex = 0;
     button.append(value, arrow); select.before(shell); shell.append(select, button, list);
+    const searchable = document.body.classList.contains("tax-burden-page") && (select.id === "deep-dive-country" || select.closest(".deep-sticky-filter"));
+    let search;
+    if (searchable) {
+      shell.classList.add("custom-select-searchable");
+      search = document.createElement("input"); search.type = "search"; search.className = "custom-select-search";
+      search.placeholder = lang() === "en" ? "Search countries…" : "Hledat zemi…";
+      search.setAttribute("aria-label", search.placeholder); button.after(search);
+      const noResults = document.createElement("span"); noResults.className = "custom-select-no-results"; noResults.setAttribute("role", "status"); noResults.hidden = true;
+      noResults.textContent = lang() === "en" ? "No countries found" : "Žádná země nenalezena"; shell.append(noResults);
+      const filter = () => {
+        const normalise = text => text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
+        const query = normalise(search.value.trim());
+        [...list.children].forEach(item => { item.hidden = !normalise(item.textContent + " " + select.options[item.dataset.optionIndex]?.value).includes(query); });
+        noResults.hidden = [...list.children].some(item => !item.hidden);
+      };
+      search.addEventListener("input", filter);
+      search.addEventListener("keydown", event => {
+        if (event.key === "Escape") { event.preventDefault(); close(component, true); }
+        if (event.key === "Enter") { event.preventDefault(); const first = [...list.children].find(item => !item.hidden); if (first) choose(Number(first.dataset.optionIndex)); }
+        if (["ArrowDown", "ArrowUp"].includes(event.key)) { event.preventDefault(); const items = [...list.children].filter(item => !item.hidden); const next = items[event.key === "ArrowDown" ? 0 : items.length - 1]; next?.focus(); }
+      });
+      list.addEventListener("keydown", event => {
+        const items = [...list.children].filter(item => !item.hidden), index = items.indexOf(document.activeElement);
+        if (event.key === "Escape") { event.preventDefault(); close(component, true); }
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); if (index >= 0) choose(Number(items[index].dataset.optionIndex)); }
+        if (["ArrowDown", "ArrowUp"].includes(event.key)) { event.preventDefault(); items[Math.max(0, Math.min(items.length - 1, index + (event.key === "ArrowDown" ? 1 : -1)))]?.focus(); }
+      });
+      shell.addEventListener("focusout", () => requestAnimationFrame(() => { if (!shell.contains(document.activeElement)) close(component); }));
+    }
     const component = { shell, select, button, value, list, activeIndex:0 };
     const options = () => [...select.options].filter((option) => !option.hidden);
     const selectedIndex = () => Math.max(0, options().findIndex((option) => option.selected));
     const setActive = (index) => { const items = [...list.querySelectorAll("[role='option']")]; if (!items.length) return; component.activeIndex = Math.max(0, Math.min(index, items.length - 1)); items.forEach((item, i) => item.classList.toggle("active", i === component.activeIndex)); const active = items[component.activeIndex]; button.setAttribute("aria-activedescendant", active.id); active.scrollIntoView({ block:"nearest" }); };
-    const sync = () => { const available = options(); const selected = available.find((option) => option.selected) || available[0]; value.textContent = selected?.textContent?.trim() || copy().choose; button.disabled = select.disabled; const label = select.closest("label")?.querySelector(":scope > span")?.textContent?.trim(); const accessibleName = select.getAttribute("aria-label") || label || selected?.textContent?.trim() || copy().choose; button.setAttribute("aria-label", accessibleName); list.setAttribute("aria-label", accessibleName); list.innerHTML = available.map((option, index) => `<span id="custom-option-${Math.random().toString(36).slice(2)}" role="option" data-option-index="${index}" aria-selected="${option === selected}" class="${option === selected ? "selected" : ""}">${esc(option.textContent)}</span>`).join(""); component.activeIndex = selectedIndex(); shell.classList.toggle("disabled", select.disabled); };
+    const sync = () => { const available = options(); const selected = available.find((option) => option.selected) || available[0]; value.textContent = selected?.textContent?.trim() || copy().choose; button.disabled = select.disabled; const label = select.closest("label")?.querySelector(":scope > span")?.textContent?.trim(); const accessibleName = select.getAttribute("aria-label") || label || selected?.textContent?.trim() || copy().choose; button.setAttribute("aria-label", accessibleName); list.setAttribute("aria-label", accessibleName); list.innerHTML = available.map((option, index) => `<span id="custom-option-${Math.random().toString(36).slice(2)}" role="option" tabindex="-1" data-option-index="${index}" aria-selected="${option === selected}" class="${option === selected ? "selected" : ""}">${esc(option.textContent)}</span>`).join(""); component.activeIndex = selectedIndex(); shell.classList.toggle("disabled", select.disabled); };
     const choose = (index) => { const option = options()[index]; if (!option || option.disabled) return; select.value = option.value; select.dispatchEvent(new Event("input", { bubbles:true })); select.dispatchEvent(new Event("change", { bubbles:true })); sync(); close(component, true); };
-    const open = () => { if (select.disabled) return; if (openSelect && openSelect !== component) close(openSelect); sync(); shell.classList.add("open"); button.setAttribute("aria-expanded", "true"); openSelect = component; requestAnimationFrame(() => setActive(component.activeIndex)); };
+    const open = () => { if (select.disabled) return; if (openSelect && openSelect !== component) close(openSelect); sync(); shell.classList.add("open"); button.setAttribute("aria-expanded", "true"); openSelect = component; requestAnimationFrame(() => { if (search) { search.value = ""; shell.querySelector(".custom-select-no-results").hidden = true; search.focus(); } else setActive(component.activeIndex); }); };
     button.addEventListener("click", (event) => { event.preventDefault(); event.stopPropagation(); shell.classList.contains("open") ? close(component) : open(); });
     button.addEventListener("keydown", (event) => { const count = options().length; if (!count) return; if (["ArrowDown","ArrowUp","Home","End","Enter"," ","Escape"].includes(event.key)) event.preventDefault(); if (event.key === "Escape") return close(component, true); if (!shell.classList.contains("open")) { if (["ArrowDown","ArrowUp","Enter"," "].includes(event.key)) open(); return; } if (event.key === "ArrowDown") setActive(component.activeIndex + 1); if (event.key === "ArrowUp") setActive(component.activeIndex - 1); if (event.key === "Home") setActive(0); if (event.key === "End") setActive(count - 1); if (event.key === "Enter" || event.key === " ") choose(component.activeIndex); });
     list.addEventListener("click", (event) => { event.preventDefault(); event.stopPropagation(); const option = event.target.closest("[data-option-index]"); if (option) choose(Number(option.dataset.optionIndex)); });

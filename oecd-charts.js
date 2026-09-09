@@ -86,6 +86,17 @@
     const stops=position<=.5?[[228,232,189],[245,241,232],position*2]:[[245,241,232],[217,136,116],(position-.5)*2];
     return `rgb(${stops[0].map((channel,i)=>Math.round(channel+(stops[1][i]-channel)*stops[2])).join(" ")})`;
   };
+  function renderEmployeeTaxes(root){
+    const en=lang==="en", title=en?"Employee taxes across countries":"Zdanění zaměstnanců napříč zeměmi";
+    const earnings=root.dataset.earnings||"AW100";
+    const rows=Object.keys(data.countries).map(c=>({c,s:data.countries[c].tax?.labour?.scenarios?.find(s=>s.household_type==="S_C0"&&s.spouse_income==="_Z"&&s.principal_income===earnings)}));
+    rows.sort((a,b)=>(b.s?.metrics.av_riteessc??-Infinity)-(a.s?.metrics.av_riteessc??-Infinity));
+    const labels=en?["Country","Year","Income tax","Employee social contributions","Employee total","Employer contributions","Tax wedge"]:["Země","Rok","Daň z příjmu","Odvody zaměstnance","Zaměstnanec celkem","Odvody zaměstnavatele","Daňový klín"];
+    const keys=["av_itr","av_r_empee_ssc","av_riteessc","av_r_emper_ssc","av_tw"];
+    root.innerHTML=`<section class="oecd-chart-block">${header("OECD Taxing Wages",title,en?"Single worker without children. Compare income tax and compulsory social contributions at the same relative earnings level in every country.":"Jednotlivec bez dětí. Srovnání daně z příjmu a povinných odvodů při stejné relativní výši výdělku ve všech zemích.")}<label class="employee-earnings">${en?"Earnings relative to average wage":"Výdělek vůči průměrné mzdě"}<select data-custom-select="true" aria-label="${en?"Earnings relative to average wage":"Výdělek vůči průměrné mzdě"}">${["AW67","AW100","AW167"].map(v=>`<option value="${v}" ${v===earnings?"selected":""}>${v.slice(2)} %</option>`).join("")}</select></label><p class="oecd-chart-note">${en?"Income tax, employee total and both contribution rates are % of gross earnings. Employer contributions are paid on top of gross pay. The tax wedge is % of total labour cost and is not the sum of these rates. Employee total = income tax + employee contributions; rounding may differ.":"Daň, celkové srážky zaměstnance a obě sazby odvodů jsou v % hrubé mzdy. Odvody zaměstnavatele se platí nad rámec hrubé mzdy. Daňový klín je v % celkových nákladů práce a není součtem těchto sazeb. Zaměstnanec celkem = daň z příjmu + odvody zaměstnance; zaokrouhlení se může lišit."}</p>${canvas(title,"oecd-matrix-wrap")}<table class="oecd-data-table employee-tax-table"><thead><tr>${labels.map(l=>`<th scope="col">${esc(l)}</th>`).join("")}</tr></thead><tbody>${rows.map(({c,s})=>`<tr class="${c===code?"is-selected":""}"><th scope="row">${esc(name(c))}</th><td>${s?.year??"—"}</td>${keys.map(k=>`<td>${Number.isFinite(s?.metrics[k])?`${fmt(s.metrics[k])} %`:"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="oecd-chart-note">${en?"Source: OECD Taxing Wages. All countries in this dataset are shown; — means no available observation. Average effective rates, not statutory marginal tax brackets.":"Zdroj: OECD Taxing Wages. Zobrazeny jsou všechny země v datové sadě; — označuje chybějící údaj. Průměrné efektivní sazby, nikoli zákonná mezní daňová pásma."} <a href="${esc(data.sources.oecd_taxing_wages.url)}" target="_blank" rel="noreferrer">${esc(t().source)}</a></p></section>`;
+    root.querySelector("select").addEventListener("change",event=>{root.dataset.earnings=event.target.value;renderEmployeeTaxes(root)});
+  }
+
   function renderTaxMatrix(root){
     const scenarioDefs=[["S_C0|AW67|_Z",lang==="en"?"Single · 67%":"Jednotlivec · 67 %"],["S_C0|AW100|_Z",lang==="en"?"Single · 100%":"Jednotlivec · 100 %"],["S_C0|AW167|_Z",lang==="en"?"Single · 167%":"Jednotlivec · 167 %"],["C_C2|AW100|NOEARN_UNEMP",lang==="en"?"Family · one earner":"Rodina · jeden příjem"]];
     const rows=Object.keys(data.countries).filter(c=>scenarioDefs.some(([k])=>Number.isFinite(scenarioValue(c,k))));
@@ -135,7 +146,7 @@
     root.innerHTML=ids.map(id=>{const source=data.sources[id];return source?`<a href="${esc(source.url)}" target="_blank" rel="noreferrer"><span>OECD</span><strong>${esc(source.title)}</strong><small>${lang==="en"?"Open original source ↗":"Otevřít původní zdroj ↗"}</small></a>`:""}).join("");
   }
 
-  const RENDERERS={tax_wedge:renderTaxWedge,redistribution_bridge:renderBridge,socx_composition:renderSocx,pension_curve:renderPension,autonomy_spectrum:renderAutonomy,tax_matrix:renderTaxMatrix,corporate_rates:renderCorporate,carbon_autonomy:renderCarbonAutonomy,page_scatter:renderPageScatter,outcomes_table:renderOutcomes,deep_kpis:renderDeepKpis,source_grid:renderSources};
+  const RENDERERS={tax_wedge:renderTaxWedge,redistribution_bridge:renderBridge,socx_composition:renderSocx,pension_curve:renderPension,autonomy_spectrum:renderAutonomy,tax_matrix:renderTaxMatrix,employee_taxes:renderEmployeeTaxes,corporate_rates:renderCorporate,carbon_autonomy:renderCarbonAutonomy,page_scatter:renderPageScatter,outcomes_table:renderOutcomes,deep_kpis:renderDeepKpis,source_grid:renderSources};
   function render(){if(!data)return;roots.forEach(root=>RENDERERS[root.dataset.oecdChart]?.(root));}
   addEventListener("countryprofilechange",event=>{code=event.detail.code;lang=event.detail.lang;render()});
   addEventListener("psdlanguagechange",event=>{lang=event.detail?.lang||lang;render()});

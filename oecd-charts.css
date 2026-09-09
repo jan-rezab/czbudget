@@ -12,3 +12,22 @@ html[lang="en"] [data-lang-copy="cs"],html:not([lang="en"]) [data-lang-copy="en"
 .oecd-heat-legend i[data-level="0"]{background:#e4e8bd}
 .oecd-heat-legend i[data-level="2"]{background:#d98874}
 @media(max-width:620px){.oecd-heat-legend{justify-content:flex-start;min-width:650px}}
+
+/* The tax report country menu expands naturally without nested scrollbars. */
+.tax-burden-page .deep-filter-panel{min-width:0;overflow:visible}
+.tax-burden-page .custom-select-search{display:none;box-sizing:border-box;width:100%;min-width:0;padding:12px;border:1px solid #171918;background:#fff;color:#171918;font:14px Arial,sans-serif}
+.tax-burden-page .custom-select-searchable.open .custom-select-search{display:block}
+.tax-burden-page .custom-select-searchable .custom-select-options{max-height:none;overflow:visible;box-sizing:border-box}
+.tax-burden-page .custom-select-options [role=option]{white-space:normal;overflow-wrap:anywhere;min-width:0}
+.tax-burden-page .custom-select-options [hidden]{display:none}
+.tax-burden-page .custom-select-options [role=option]:focus-visible{outline:3px solid #a8b63f;outline-offset:-3px}
+.tax-burden-page .custom-select-value{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.tax-burden-page .deep-topic-links{flex-wrap:wrap;overflow:visible}
+.employee-earnings{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:20px;font:700 14px Arial,sans-serif}
+.employee-earnings select{padding:10px;background:#fff;color:#171918;border:1px solid #8b8d83}
+.employee-tax-table th[scope=row]{text-align:left;background:transparent;color:inherit}
+.employee-tax-table tr.is-selected>*{background:#eef0d4;box-shadow:inset 0 2px #a8b63f,inset 0 -2px #a8b63f}
+@media(max-width:700px){.tax-burden-page .deep-topic-rail.has-sticky-filter{flex-wrap:wrap}.tax-burden-page .deep-topic-links{flex-basis:100%}.tax-burden-page .deep-sticky-filter{width:100%;box-sizing:border-box}.tax-burden-page .deep-topic-links a{padding:10px}}
+
+.tax-burden-page .custom-select-no-results{display:none;padding:12px;background:#fff;color:#171918;font:14px Arial,sans-serif}
+.tax-burden-page .custom-select.open .custom-select-no-results:not([hidden]){display:block}
