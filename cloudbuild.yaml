@@ -312,6 +312,20 @@ steps:
       - $COMMIT_SHA
       - /workspace/.deploy-current-main
 
+  - id: prepare-reporting
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    env:
+      - BUILD_ID=$BUILD_ID
+      - PROJECT_ID=$PROJECT_ID
+    args:
+      - -ceu
+      - |
+        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 12000 /tmp/reporting-setup.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
+        exec > >(tee /tmp/reporting-setup.log) 2>&1
+        python3 -m unittest discover -s tests -p test_prepare_reporting.py
+        python3 scripts/prepare-reporting.py
+
   - id: deploy
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: sh

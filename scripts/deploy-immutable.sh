@@ -32,8 +32,17 @@ set -- gcloud run deploy "$service" \
   --timeout=30s \
   --labels=app=czbudget-public,source=github \
   --quiet
+deploy_env_updates=""
 if [ -n "$snapshot_base" ]; then
-  set -- "$@" --update-env-vars="PUBLIC_SNAPSHOT_BASE_URL=${snapshot_base}"
+  deploy_env_updates="PUBLIC_SNAPSHOT_BASE_URL=${snapshot_base}"
+fi
+if [ -f /workspace/.reporting-env ]; then
+  reporting_env_updates="$(cat /workspace/.reporting-env)"
+  reporting_env_updates="${reporting_env_updates#^|^}"
+  deploy_env_updates="${deploy_env_updates:+${deploy_env_updates}|}${reporting_env_updates}"
+fi
+if [ -n "$deploy_env_updates" ]; then
+  set -- "$@" --update-env-vars="^|^${deploy_env_updates}"
 fi
 "$@"
 

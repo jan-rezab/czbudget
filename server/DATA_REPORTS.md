@@ -50,3 +50,14 @@ Evidence URLs are stored as text; the server never fetches them. Reviewers must 
 4. Publish a deliberately redacted correction history with citations and revision diffs. Avoid exposing original free text automatically. Add verified contributor accounts, moderation roles, conflict handling and rollback before direct editing.
 
 Firestore remains adequate for reports and review events. Reconsider PostgreSQL if relational revision workflows and contributor permissions become central; do not migrate the analytical warehouse for that reason.
+
+## Review admin (implemented in the second release)
+
+`/admin/reports` uses the existing Identity Platform login and a server-side `REPORTS_ADMIN_EMAILS` allowlist of verified email addresses. The default is deny-all. Both page/assets and every `/api/admin/data-reports` request enforce review authorization. A developer account alone grants no review access. Set the allowlist through the canonical deployment configuration; never accept roles from request bodies or the browser.
+
+The queue pages through 40 reports at a time and filters the current page by status. Selecting a report loads the explanation, evidence link, private email (if retained), and latest 100 review events. Decisions require a rationale; `resolved` also requires a published correction/release reference. The report update and immutable event creation commit atomically with an update-time precondition, so concurrent edits return a conflict instead of overwriting another reviewer. There is no delete action, outbound email action or automatic fact editing.
+
+Status decisions remain private. `accepted` means the correction is valid and pending publication; `resolved` means it has shipped. A rejected report can be reopened by selecting a new status and recording why. Reviewer identity is recorded from the verified server-side session. Review history has no edit endpoint. Access and storage failures remain visible rather than appearing as an empty queue.
+
+
+The admin release adds `scripts/prepare-reporting.py` to the canonical Cloud Build pipeline after the current-main gate. It uses the existing build/runtime identity to use the owner-enabled APIs, create the dedicated `data-reports` Native database in europe-west1, deploy deny-all client rules only to that database, enable contact TTL, and create/reuse a score key restricted to the canonical domain. It does not grant IAM roles or change the default database. Setup must succeed before `/workspace/.reporting-env` enables intake on the new revision; unrelated service environment variables are preserved. If the deployment identity lacks setup permissions, the build fails with an explicit setup error. `REPORTS_ADMIN_EMAILS` remains independently configured and deny-all until the owner supplies reviewer addresses.

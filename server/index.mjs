@@ -1,4 +1,6 @@
 import http from "node:http";
+import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
+const reportAdmin = createReportAdmin();
 import { createReportService, reportConfig } from "./data-reports.mjs";
 const submitDataReport = createReportService();
 import crypto from "node:crypto";
@@ -311,6 +313,34 @@ export async function handler(request, response) {
     return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
   }
   try {
+    if (url.pathname === "/admin/reports" || url.pathname.startsWith("/admin/reports/") || url.pathname === "/api/admin/data-reports" || url.pathname.startsWith("/api/admin/data-reports/")) {
+      response.setHeader("Cache-Control", "no-store");
+      response.setHeader("X-Robots-Tag", "noindex, nofollow");
+      const page = url.pathname === "/admin/reports" || url.pathname === "/admin/reports/";
+      let reviewer;
+      try { reviewer = requireReportReviewer(await verifyIdToken(requestToken(request))); }
+      catch (error) {
+        if (page && error.status === 401) { response.writeHead(302, { Location: "/developers/login?next=/admin/reports" }); return response.end(); }
+        throw error;
+      }
+      if (!enforceRateLimit(response, id, { key: reviewer.sub, limit: 60, windowMs: 60000, group: "report-reviewer" })) return;
+      if (request.method === "GET") {
+        if (page) return sendPage(response, "report-admin.html", "text/html; charset=utf-8");
+        if (url.pathname === "/admin/reports/style.css") return sendPage(response, "report-admin.css", "text/css; charset=utf-8");
+        if (url.pathname === "/admin/reports/app.js") return sendPage(response, "report-admin.js", "application/javascript; charset=utf-8");
+      }
+      if (!acquireAPISlot(response, id)) return;
+      try {
+        if (url.pathname === "/api/admin/data-reports" && request.method === "GET") return sendJSON(response, 200, await reportAdmin.list(url.searchParams.get("cursor") || ""));
+        const match = /^\/api\/admin\/data-reports\/([a-f0-9-]{36})$/.exec(url.pathname);
+        if (!match) throw new DataError(404, "not_found", "Report route not found.");
+        if (request.method === "GET") return sendJSON(response, 200, await reportAdmin.detail(match[1]));
+        if (request.method !== "POST") throw new DataError(405, "method_not_allowed", "Method not allowed.");
+        if (request.headers.origin !== (process.env.PUBLIC_ORIGIN || "https://publicspendingdata.org")) throw new DataError(403, "invalid_origin", "Submit reviews from the website.");
+        return sendJSON(response, 200, await reportAdmin.decide(match[1], await readBody(request), reviewer));
+      } finally { apiRequestsInFlight -= 1; }
+    }
+
     if (url.pathname === "/api/data-reports/config" || url.pathname === "/api/data-reports") {
       response.setHeader("Cache-Control", "no-store");
       if (url.pathname.endsWith("/config") && request.method === "GET") return sendJSON(response, 200, reportConfig());
