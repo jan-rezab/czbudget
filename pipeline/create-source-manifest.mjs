@@ -212,6 +212,18 @@ if (selfCheck) {
     if (paths.has(item.path)) problems.push(`Duplicate manifest entry ${item.path}`);
     paths.add(item.path);
     if (!roots.some((root) => item.path === root || item.path.startsWith(`${root}/`))) problems.push(`Entry outside the declared source roots: ${item.path}`);
+    if (item.in_flight_since !== undefined) {
+      const declarations = (expected.in_flight ?? []).filter((entry) => entry.path === item.path);
+      if (!item.path.endsWith("/**") || !Number.isFinite(Date.parse(item.in_flight_since))
+          || declarations.length !== 1 || declarations[0].since !== item.in_flight_since
+          || item.sha256 !== undefined || item.bytes !== undefined || item.files !== undefined) {
+        problems.push(`Invalid in-flight declaration for ${item.path}`);
+      }
+      // Match summarise(): an explicitly unfinished tree is one inventory entry,
+      // with no settled byte count or checksum. Completed entries still require both.
+      files += 1;
+      continue;
+    }
     if (!/^[0-9a-f]{64}$/.test(item.sha256 ?? "")) problems.push(`Malformed sha256 for ${item.path}`);
     if (!Number.isInteger(item.bytes) || item.bytes < 0) problems.push(`Malformed byte count for ${item.path}`);
     if (item.path.endsWith("/**") && !Number.isInteger(item.files)) problems.push(`Tree entry without a file count: ${item.path}`);
