@@ -37,6 +37,10 @@ const links=JSON.parse(fs.readFileSync(root+'links.json'));
 for(const key of Object.values(links))assert(index.regions[key]?.shard);
 assert.equal(links['/cz/municipalities/plzen/'],'obec:554791');
 assert.equal(links['/cz/kraje/plzensky-kraj/'],'kraj:3042');
+assert.equal(links['/cz/kraje/praha/'],'kraj:3018');
+for(const directory of fs.readdirSync('cz/kraje',{withFileTypes:true}).filter(d=>d.isDirectory()&&d.name!=='accountability')){
+  assert.equal(index.regions[links[`/cz/kraje/${directory.name}/`]]?.level,'kraj',directory.name);
+}
 const panels=JSON.parse(fs.readFileSync(root+'panels.json'));
 assert.equal(panels.unavailable.length,0);
 for(const chart of panels.charts){

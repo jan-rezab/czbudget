@@ -91,6 +91,7 @@ def main():
     for r in regions.values():
         if r['level'] == 'kraj':
             slug = unicodedata.normalize('NFKD', r['name']).encode('ascii','ignore').decode().lower().replace(' ', '-')
+            if r['code'] == '3018': slug = 'praha'
             links[f'/cz/kraje/{slug}/'] = r['key']
     (out/'links.json').write_bytes(encoded(links))
     print(json.dumps({k:index[k] for k in ['variables','fields','observations','non_null_observations','region_counts']}, ensure_ascii=False), flush=True)
