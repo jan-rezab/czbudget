@@ -22,7 +22,11 @@ def main():
         uid=hashlib.sha256(url.encode()).hexdigest(); suffix=Path(urllib.parse.urlparse(url).path).suffix.lower()
         suffix=suffix if suffix in ['.pdf','.xlsx','.xls','.csv','.zip','.json','.tsv','.sav','.dta','.rds'] else '.html'
         target=out/(uid+suffix);meta=out/(uid+'.meta.json')
-        if meta.exists() and target.exists():return json.loads(meta.read_text())
+        if meta.exists() and target.exists():
+            result=json.loads(meta.read_text())
+            if suffix=='.pdf' and b'%PDF-' not in target.read_bytes()[:1024]:
+                result['error']='Expected PDF; source returned a non-PDF response (preserved for audit)'
+            return result
         error=None
         for attempt in range(3):
             try:
@@ -30,6 +34,8 @@ def main():
                 with urllib.request.urlopen(request,timeout=60) as response:
                     content=response.read();final=response.url;ctype=response.headers.get('Content-Type','')
                 target.write_bytes(content);r={'url':url,'final_url':final,'file':target.name,'sha256':hashlib.sha256(content).hexdigest(),'bytes':len(content),'content_type':ctype}
+                if suffix=='.pdf' and b'%PDF-' not in content[:1024]:
+                    r['error']='Expected PDF; source returned a non-PDF response (preserved for audit)'
                 if 'html' in ctype or suffix=='.html':
                     parser=Links();parser.feed(content.decode('utf-8',errors='replace'));r['links']=sorted(set(urllib.parse.urljoin(final,u) for u in parser.urls))
                 meta.write_text(json.dumps(r,ensure_ascii=False));time.sleep(.2);return r
