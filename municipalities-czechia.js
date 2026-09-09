@@ -14,6 +14,8 @@
   Object.assign(C.en,{navRankings:"Budget rankings",navDirectory:"Find a municipality",rankingsKicker:"Budget rankings",rankingsTitle:"The largest municipal budgets",rankingsCopy:"Actual expenditure shows budget size. Surplus and deficit mean revenue minus expenditure for one year; neither is a score of management quality.",loadingBudgets:"Loading budget rankings…",directoryKicker:"All 6,254 municipalities",inlineDirectoryTitle:"Find a municipality",inlineDirectoryCopy:"Search by name, national ID, district or region. Every result opens the municipality's complete budget profile.",searchLabel:"Find a municipality",searchPlaceholder:"Municipality, national ID, district or region…",clearSearch:"Clear",noResults:"No municipality matches this search.",showMoreResults:"Show more results",advancedFilters:"Need a year, region, balance or sorting filter?",openAdvancedDirectory:"Open the advanced directory →"});
   Object.assign(C.cs,{insightsTitle:"Vývoj obecních rozpočtů",insightsCopy:"Příjmy, výdaje a stav účtů všech obcí od roku 2010. Částky lze zobrazit v korunách nebo přepočítat na eura.",historyYear:"Vybraný rok",currencyLabel:"Měna",historyNote:"Nominální hodnoty. Součty jsou konsolidované uvnitř každé obce, nikoli mezi obcemi navzájem.",municipalitiesSurplus:"Obce v přebytku"});
   Object.assign(C.en,{insightsTitle:"Municipal budgets over time",insightsCopy:"Revenue, expenditure and cash for all municipalities since 2010. Display the amounts in Czech koruna or convert them to euros.",historyYear:"Selected year",currencyLabel:"Currency",historyNote:"Nominal values. Totals are consolidated within each municipality, not between municipalities.",municipalitiesSurplus:"Municipalities in surplus"});
+  Object.assign(C.cs,{navSpendingMix:"Běžné vs. kapitálové",spendingMixKicker:"Struktura výdajů · skutečnost 2025",spendingMixTitle:"Běžné versus kapitálové výdaje",spendingMixCopy:"Oficiální rozpočtová skladba rozděluje výdaje obcí na třídu 5 — běžné výdaje a třídu 6 — kapitálové výdaje.",loadingSpendingMix:"Načítám strukturu výdajů…",currentSpending:"Běžné výdaje",currentSpendingCopy:"Provoz, služby, platy, neinvestiční nákupy a transfery.",capitalSpending:"Kapitálové výdaje",capitalSpendingCopy:"Pořízení a rozvoj majetku a investiční transfery.",shareOfSpending:"všech výdajů",totalSpending:"Skutečné výdaje obcí",classificationTitle:"Co tento řez znamená",classificationNote:"Jde o oficiální účetní členění na běžné a kapitálové výdaje. Není to rozdělení na mandatorní a volitelné výdaje — povinné závazky mohou být v obou třídách.",spendingMixSource:"Zdroj a detail klasifikace: Monitor MF ČR"});
+  Object.assign(C.en,{navSpendingMix:"Current vs capital",spendingMixKicker:"Expenditure structure · 2025 actuals",spendingMixTitle:"Current versus capital expenditure",spendingMixCopy:"The official Czech budget classification divides municipal expenditure into class 5 — current expenditure and class 6 — capital expenditure.",loadingSpendingMix:"Loading expenditure structure…",currentSpending:"Current expenditure",currentSpendingCopy:"Operations, services, payroll, non-investment purchases and transfers.",capitalSpending:"Capital expenditure",capitalSpendingCopy:"Acquisition and development of assets and investment transfers.",shareOfSpending:"of all expenditure",totalSpending:"Actual municipal expenditure",classificationTitle:"What this split means",classificationNote:"This is the official accounting split between current and capital expenditure. It is not a mandatory-versus-discretionary split: binding obligations can appear in either class.",spendingMixSource:"Source and classification detail: Czech Ministry of Finance Monitor"});
   const t=()=>C[state.lang], english=()=>state.lang==="en";
   const routes={bolivia:["Bolívie","Bolivia"],brazil:["Brazílie","Brazil"],chile:["Chile","Chile"],colombia:["Kolumbie","Colombia"],"costa-rica":["Kostarika","Costa Rica"],czechia:["Česko","Czechia"],denmark:["Dánsko","Denmark"],"el-salvador":["Salvador","El Salvador"],england:["Anglie","England"],finland:["Finsko","Finland"],france:["Francie","France"],georgia:["Gruzie","Georgia"],guatemala:["Guatemala","Guatemala"],italy:["Itálie","Italy"],japan:["Japonsko","Japan"],mexico:["Mexiko","Mexico"],netherlands:["Nizozemsko","Netherlands"],norway:["Norsko","Norway"],peru:["Peru","Peru"],poland:["Polsko","Poland"],"south-korea":["Jižní Korea","South Korea"],spain:["Španělsko","Spain"],sweden:["Švédsko","Sweden"],ukraine:["Ukrajina","Ukraine"]};
   const converted=(value)=>state.currency==="EUR"&&Number.isFinite(state.fx?.local_per_eur?.CZK)?value/state.fx.local_per_eur.CZK:value;
@@ -55,7 +57,7 @@
     document.querySelector('[data-destination="cityvizor"]')?.setAttribute("href",`${assetRoot}cityvizor/?lang=${state.lang}`);
     document.querySelector('[data-destination="cities"]')?.setAttribute("href",`${assetRoot}cz/mesta/?lang=${state.lang}`);
     document.querySelector('[data-destination="prague"]')?.setAttribute("href",`${assetRoot}eu-capitals.html?lang=${state.lang}&city=prague-cz#city-detail`);
-    if(state.data){renderInsights();renderBudgetRankings();renderInlineDirectory();}
+    if(state.data){renderInsights();renderSpendingMix();renderBudgetRankings();renderInlineDirectory();}
     if(state.benchmark)renderMunicipalSizeBenchmark();
   }
 
@@ -70,6 +72,23 @@
     const fxNote=document.querySelector("#cz-fx-note"),rate=state.fx?.local_per_eur?.CZK;
     if(fxNote)fxNote.textContent=Number.isFinite(rate)?(english()?`ECB reference rate · 18 Aug 2026 · EUR 1 = CZK ${rate}`:`Referenční kurz ECB · 18. 8. 2026 · 1 EUR = ${rate.toLocaleString("cs-CZ")} CZK`):"";
     renderHistoryChart();
+  }
+
+  function renderSpendingMix(){
+    const host=document.querySelector("#cz-spending-mix");
+    if(!host||!state.data)return;
+    const totals=state.data.municipalities.reduce((sum,entity)=>{
+      sum.current+=Number(entity.amounts?.current_expense)||0;
+      sum.capital+=Number(entity.amounts?.capital_expense)||0;
+      return sum;
+    },{current:0,capital:0});
+    const total=totals.current+totals.capital;
+    if(total<=0){host.innerHTML=`<p class="benchmark-loading">${english()?"Expenditure structure is unavailable.":"Struktura výdajů není dostupná."}</p>`;return;}
+    const share=(value)=>value/total*100;
+    const percent=(value)=>`${value.toLocaleString(english()?"en-GB":"cs-CZ",{minimumFractionDigits:1,maximumFractionDigits:1})} %`;
+    const currentShare=share(totals.current),capitalShare=share(totals.capital);
+    const chartLabel=english()?`Current expenditure ${percent(currentShare)}, capital expenditure ${percent(capitalShare)}`:`Běžné výdaje ${percent(currentShare)}, kapitálové výdaje ${percent(capitalShare)}`;
+    host.innerHTML=`<div class="municipal-spending-summary"><article class="current"><span>${t().currentSpending}</span><strong>${format(totals.current)}</strong><b>${percent(currentShare)} ${t().shareOfSpending}</b><p>${t().currentSpendingCopy}</p></article><article class="capital"><span>${t().capitalSpending}</span><strong>${format(totals.capital)}</strong><b>${percent(capitalShare)} ${t().shareOfSpending}</b><p>${t().capitalSpendingCopy}</p></article><aside><span>${t().totalSpending}</span><strong>${format(total)}</strong><small>${integer(state.data.summary.municipalities.entity_count)} · 2025 · ${state.currency}</small></aside></div><div class="municipal-spending-bar" role="img" aria-label="${escapeHtml(chartLabel)}"><i class="current" style="width:${currentShare.toFixed(4)}%"><span>${percent(currentShare)}</span></i><i class="capital" style="width:${capitalShare.toFixed(4)}%"><span>${percent(capitalShare)}</span></i></div><div class="municipal-spending-explainer"><div><strong>${t().classificationTitle}</strong><p>${t().classificationNote}</p></div><a href="https://monitor.statnipokladna.gov.cz/uzemni-samosprava/rozpocet" target="_blank" rel="noopener">${t().spendingMixSource} ↗</a></div>`;
   }
 
   function niceAxis(maximum,target=5){const rough=maximum/target,power=10**Math.floor(Math.log10(rough)),step=([1,2,2.5,5,10].find((candidate)=>candidate>=rough/power)||10)*power,max=Math.ceil(maximum/step)*step;return {max,ticks:Array.from({length:Math.round(max/step)+1},(_,index)=>index*step)};}
