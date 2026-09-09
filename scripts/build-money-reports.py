@@ -92,31 +92,9 @@ class TableParser(HTMLParser):
 
 
 def cnb_series() -> dict[str, list[list[float | str]]]:
-    parser = TableParser()
-    parser.feed(fetch_text(CNB_MONEY_URL))
-    header = parser.rows[0]
-    periods = [value.replace("/", "-") for value in header[1:]]
-    patterns = {
-        "currency": r"\(1\.1\) Oběživo$",
-        "m1": r"\(1\.3\) M1 ",
-        "m2": r"\(1\.7\) M2 ",
-        "m3": r"\(1\) M3 ",
-        "m1_yoy": r"^M1 - roční míra růstu",
-        "m2_yoy": r"^M2- roční míra růstu",
-        "m3_yoy": r"^M3 - roční míra růstu",
-        "private_credit": r"^\(4\.2\) Úvěry soukromému sektoru",
-        "government_credit": r"^\(4\.1\) Úvěry vládním institucím",
-        "net_foreign_assets": r"^\(5\) Čistá zahraniční aktiva",
-    }
-    result: dict[str, list[list[float | str]]] = {}
-    for code, pattern in patterns.items():
-        row = next((item for item in parser.rows if item and re.search(pattern, item[0])), None)
-        if not row:
-            raise RuntimeError(f"CNB table row missing: {code}")
-        values = [parse_czech_number(value) for value in row[1:1 + len(periods)]]
-        scale = 1 if code.endswith("_yoy") else 1 / 1_000_000  # CZK millions -> trillions
-        result[code] = [[period, round(value * scale, 4)] for period, value in zip(periods, values) if value is not None]
-    return result
+    from cnb_arad import acquire
+    series, _ = acquire()
+    return series
 
 
 def fred_series() -> dict[str, list[list[float | str]]]:
@@ -216,11 +194,15 @@ def build() -> None:
         "series":{"cash":cnb["currency"],"m1":cnb["m1"],"m2":cnb["m2"],"broad":cnb["m3"],"m1_yoy":cnb["m1_yoy"],"m2_yoy":cnb["m2_yoy"],"broad_yoy":cnb["m3_yoy"],"broad_to_gdp":econ_cze.get("broad_money", []),"inflation":econ_cze.get("consumer_price_inflation_annual", []),"price_index":annual_index_from_inflation(econ_cze.get("consumer_price_inflation_annual", [])),"real_gdp_per_capita":econ_cze.get("real_gdp_per_capita", []),"policy_rate":econ_cze.get("central_bank_policy_rate", []),"government_credit":cnb["government_credit"],"private_credit":cnb["private_credit"],"net_foreign_assets":cnb["net_foreign_assets"]},
         "interventions":events["CZE"],
         "sources":[
-            {"name":"CNB monetary overview / ARAD","url":CNB_MONEY_URL,"note_cs":"Měsíční stavy, růst a protipoložky M3; poslední období předběžné.","note_en":"Monthly stocks, growth and M3 counterparts; latest period provisional."},
+            {"name":"CNB monetary overview / ARAD","url":"https://www.cnb.cz/arad/","note_cs":"Měsíční stavy, růst a protipoložky M3; poslední období předběžné.","note_en":"Monthly stocks, growth and M3 counterparts; latest period provisional."},
             {"name":"World Bank WDI","url":"https://data.worldbank.org/indicator/FM.LBL.BMNY.GD.ZS","note_cs":"Dlouhá roční řada širokých peněz vůči HDP a makroekonomické kontextové řady.","note_en":"Long annual broad-money-to-GDP series and macroeconomic context."},
             {"name":"BIS","url":"https://data.bis.org/topics/CBPOL","note_cs":"Srovnatelná měsíční měnověpolitická sazba.","note_en":"Comparable monthly central-bank policy rate."},
         ]
     }
+    from cnb_arad import CODES
+    cze["arad_provenance"] = json.loads((OUTPUT_DIR / "cze-arad-native.v1.json").read_text())["sources"]
+    cze["series_metadata"] = { {"currency":"cash","m3":"broad","m3_yoy":"broad_yoy"}.get(k,k): {"source_series_id":code,"unit":"percent" if k.endswith("_yoy") else "CZK trillion","first_period":cnb[k][0][0],"last_period":cnb[k][-1][0]} for k,code in CODES.items()}
+    cze["sources"].append({"name":"ČNB ARAD · native series and provenance","url":"/data/money-reports/cze-arad-native.v1.json","note_cs":"Stavy, finanční transakce a oficiální roční růst jsou oddělené řady.","note_en":"Stocks, financial transactions and official annual growth are separate series."})
     usa = {
         "schema_version":"1.0.0","generated_at":retrieved_at,
         "country":{"code":"USA","slug":"usa","name_cs":"Spojené státy","name_en":"United States","currency":"USD","currency_unit_cs":"bil. USD","currency_unit_en":"USD tn","central_bank_cs":"Federální rezervní systém","central_bank_en":"Federal Reserve System","peer":{"code":"CZE","slug":"cze","name_cs":"Česko","name_en":"Czechia"}},

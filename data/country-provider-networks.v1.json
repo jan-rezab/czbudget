@@ -7,9 +7,9 @@
   },
   "countries": {
     "CZE": {
-      "coverage": "facility_register",
-      "facility_count": 642,
-      "provider_count": 367,
+      "coverage": "inpatient_care_locations",
+      "facility_count": 643,
+      "provider_count": 368,
       "regions": {
         "Karlovarský kraj": 144,
         "Zlínský kraj": 20,
@@ -22,7 +22,7 @@
         "Moravskoslezský kraj": 53,
         "Plzeňský kraj": 29,
         "Jihočeský kraj": 24,
-        "Jihomoravský kraj": 58,
+        "Jihomoravský kraj": 59,
         "Hlavní město Praha": 79,
         "Kraj Vysočina": 19
       },
@@ -30,14 +30,25 @@
         "title": "ÚZIS NRPZS · Místa poskytování zdravotních služeb",
         "url": "https://datanzis.uzis.gov.cz/data/NR-01-NRPZS/NR-01-06/Otevrena-data-NR-01-06-nrpzs-mista-poskytovani-zdravotnich-sluzeb.csv",
         "license": "CC BY 4.0",
-        "update_frequency": "monthly"
+        "update_frequency": "monthly",
+        "sha256": "4f45485e316aa4e5b0eff04b33c5e264d67d8ebcd9aa1fed9eff2b17d03cea58",
+        "retrieved_at": "2026-09-09T13:13:10.672Z",
+        "source_reference_date": null
       },
       "payments": {
-        "coverage": "not_open_at_facility_level",
-        "note_cs": "NRHZS obsahuje individuální úhrady, veřejný otevřený export na úrovni poskytovatele však není publikován.",
-        "note_en": "NRHZS contains individual reimbursements, but no public facility-level open export is published."
+        "coverage": "scoped_provider_reimbursements_available",
+        "note_cs": "Veřejná data NR-04-17 obsahují úhrady za individuálně připravovaná léčiva podle identifikátorů poskytovatele. Úplné úhrady všech služeb zde nejsou načteny.",
+        "note_en": "Public NR-04-17 data include reimbursement for individually prepared medicines by provider identifiers. Comprehensive all-service reimbursements are not loaded here.",
+        "source_url": "https://www.nzip.cz/data/2288-individualne-pripravovane-lecive-pripravky-sukl-mesic-icp-predpis-icz-vydej-otevrena-data",
+        "loaded": true,
+        "records": "data/cze-medicine-reimbursements.v1.json",
+        "scope": "NR-04-17 individually prepared medicines only"
       },
-      "records": "data/countries/cze/providers.v1.json"
+      "records": "data/countries/cze/providers.v1.json",
+      "methodology": {
+        "cs": "Místa poskytování s formou péče obsahující lůžkovou péči, včetně následné a dlouhodobé péče. Jde o aktuální distribuci registru; platnost není samostatně ověřena. Počet míst není počet nemocnic, budov ani lůžek.",
+        "en": "Locations whose care form contains inpatient care, including follow-up and long-term care. Current registry distribution; validity is not independently checked. Site counts are not hospital, building or bed counts."
+      }
     },
     "DEU": {
       "coverage": "destatis_hospital_directory",

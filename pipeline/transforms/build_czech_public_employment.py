@@ -17,6 +17,7 @@ COVERAGE = ROOT / "data" / "public-entity-coverage.v1.json"
 OUTPUT = ROOT / "data" / "cz-public-employment.v1.json"
 
 SOURCES = [
+    {"id":"mf_state_final_account_2025","publisher":"Ministerstvo financí ČR","title_cs":"Závěrečný účet 2025, tabulky 50–51, strany 82–83; aktualizace 21. 8. 2026","title_en":"Final account 2025, tables 50–51, pages 82–83; updated 21 August 2026","url":"https://mf.gov.cz/assets/attachments/2026-04-30_C-Zprava-o-vysledcich-hospodareni-statniho-rozpoctu_v01.pdf","period":"2024–2025","stage":"actual"},
     {
         "id": "oecd_government_at_a_glance_2025",
         "publisher": "OECD",
@@ -223,7 +224,8 @@ def main() -> None:
     observations = load_rows()
     international_benchmark = load_benchmark()
     observation = {(row["source_id"], row["series_id"], row["year"]): row["value"] for row in observations}
-    def obs(source_id: str, series_id: str, year: int = 2024) -> float:
+    def obs(source_id: str, series_id: str, year: int | None = None) -> float:
+        year = year if year is not None else (2025 if source_id == "mf_state_final_account_2025" else 2024)
         return observation[(source_id, series_id, year)]
     by_year: dict[int, dict[str, int]] = defaultdict(dict)
     for row in observations:
@@ -420,53 +422,53 @@ def main() -> None:
     strategic = json.loads(STRATEGIC.read_text(encoding="utf-8"))
     coverage = json.loads(COVERAGE.read_text(encoding="utf-8"))["countries"]["CZE"]
 
-    state_source = "mf_state_final_account_2024"
+    state_source = "mf_state_final_account_2025"
     state_labour = employment_node(
         "state_labour_service", "Zaměstnanci podle zákoníku práce a služebního zákona", "Labour Code and civil-service employees",
-        obs(state_source, "state_employees_labour_service"), "average_employees", state_source,
-        details={"previous_year": 2023, "previous_value": obs(state_source, "state_employees_labour_service", 2023), "average_monthly_gross_czk": obs(state_source, "state_labour_service_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_labour_service_avg_salary_czk", 2023)},
+        obs(state_source, "state_employees_labour_service"), "average_FTE", state_source,
+        details={"previous_year": 2024, "previous_value": obs(state_source, "state_employees_labour_service", 2024), "average_monthly_gross_czk": obs(state_source, "state_labour_service_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_labour_service_avg_salary_czk", 2024)},
     )
     state_uniformed = employment_node(
         "state_uniformed", "Příslušníci bezpečnostních sborů a vojáci", "Security-force members and soldiers",
-        obs(state_source, "state_uniformed_and_soldiers"), "average_employees", state_source,
-        details={"previous_year": 2023, "previous_value": obs(state_source, "state_uniformed_and_soldiers", 2023), "average_monthly_gross_czk": obs(state_source, "state_uniformed_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_uniformed_avg_salary_czk", 2023)},
+        obs(state_source, "state_uniformed_and_soldiers"), "average_FTE", state_source,
+        details={"previous_year": 2024, "previous_value": obs(state_source, "state_uniformed_and_soldiers", 2024), "average_monthly_gross_czk": obs(state_source, "state_uniformed_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_uniformed_avg_salary_czk", 2024)},
     )
     state_prosecutors = employment_node(
         "state_prosecutors", "Státní zástupci a odvozené funkce", "Prosecutors and derived offices",
-        obs(state_source, "state_prosecutors_and_derived"), "average_employees", state_source,
-        details={"previous_year": 2023, "previous_value": obs(state_source, "state_prosecutors_and_derived", 2023), "average_monthly_gross_czk": obs(state_source, "state_prosecutors_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_prosecutors_avg_salary_czk", 2023)},
+        obs(state_source, "state_prosecutors_and_derived"), "average_FTE", state_source,
+        details={"previous_year": 2024, "previous_value": obs(state_source, "state_prosecutors_and_derived", 2024), "average_monthly_gross_czk": obs(state_source, "state_prosecutors_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_prosecutors_avg_salary_czk", 2024)},
     )
     state_organisational = employment_node(
         "state_organisational", "Organizační složky státu", "State organisational units",
-        obs(state_source, "state_organisational_units"), "average_employees", state_source,
+        obs(state_source, "state_organisational_units"), "average_FTE", state_source,
         children=[state_labour, state_uniformed, state_prosecutors],
-        details={"previous_year": 2023, "previous_value": obs(state_source, "state_organisational_units", 2023), "average_monthly_gross_czk": obs(state_source, "state_organisational_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_organisational_avg_salary_czk", 2023)},
+        details={"previous_year": 2024, "previous_value": obs(state_source, "state_organisational_units", 2024), "average_monthly_gross_czk": obs(state_source, "state_organisational_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_organisational_avg_salary_czk", 2024)},
     )
     state_regional_education = employment_node(
         "state_regional_education", "Regionální školství v regulované sféře", "Regional education in the regulated sphere",
-        obs(state_source, "state_regional_education_budget"), "average_employees", state_source,
-        details={"previous_year": 2023, "previous_value": obs(state_source, "state_regional_education_budget", 2023), "average_monthly_gross_czk": obs(state_source, "state_regional_education_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_regional_education_avg_salary_czk", 2023)},
+        obs(state_source, "state_regional_education_budget"), "average_FTE", state_source,
+        details={"previous_year": 2024, "previous_value": obs(state_source, "state_regional_education_budget", 2024), "average_monthly_gross_czk": obs(state_source, "state_regional_education_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_regional_education_avg_salary_czk", 2024)},
     )
-    other_contributory_2024 = obs(state_source, "state_contributory_organisations") - state_regional_education["value"]
-    other_contributory_2023 = obs(state_source, "state_contributory_organisations", 2023) - obs(state_source, "state_regional_education_budget", 2023)
+    other_contributory_current = obs(state_source, "state_contributory_organisations") - state_regional_education["value"]
+    other_contributory_2024 = obs(state_source, "state_contributory_organisations", 2024) - obs(state_source, "state_regional_education_budget", 2024)
     state_other_contributory = employment_node(
         "state_other_contributory", "Ostatní příspěvkové organizace", "Other contributory organisations",
-        other_contributory_2024, "average_employees", state_source, status="derived",
-        details={"previous_year": 2023, "previous_value": other_contributory_2023},
+        other_contributory_current, "average_FTE", state_source, status="derived",
+        details={"previous_year": 2024, "previous_value": other_contributory_2024},
         note_cs="Dopočet: všechny příspěvkové organizace minus regionální školství.",
         note_en="Derived as all contributory organisations minus regional education.",
     )
     state_contributory = employment_node(
         "state_contributory", "Příspěvkové organizace", "Contributory organisations",
-        obs(state_source, "state_contributory_organisations"), "average_employees", state_source,
+        obs(state_source, "state_contributory_organisations"), "average_FTE", state_source,
         children=[state_regional_education, state_other_contributory],
-        details={"previous_year": 2023, "previous_value": obs(state_source, "state_contributory_organisations", 2023), "average_monthly_gross_czk": obs(state_source, "state_contributory_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_contributory_avg_salary_czk", 2023)},
+        details={"previous_year": 2024, "previous_value": obs(state_source, "state_contributory_organisations", 2024), "average_monthly_gross_czk": obs(state_source, "state_contributory_avg_salary_czk"), "previous_average_monthly_gross_czk": obs(state_source, "state_contributory_avg_salary_czk", 2024)},
     )
     state_root = employment_node(
         "state_regulated", "Vládou regulovaná sféra", "State-regulated sphere",
-        state_organisational["value"] + state_contributory["value"], "average_employees", state_source,
+        state_organisational["value"] + state_contributory["value"], "average_FTE", state_source,
         children=[state_organisational, state_contributory],
-        details={"previous_year": 2023, "previous_value": obs(state_source, "state_organisational_units", 2023) + obs(state_source, "state_contributory_organisations", 2023)},
+        details={"previous_year": 2024, "previous_value": obs(state_source, "state_organisational_units", 2024) + obs(state_source, "state_contributory_organisations", 2024)},
     )
 
     education_source = "msmt_education_statistics_2024"
@@ -644,7 +646,7 @@ def main() -> None:
             },
             {
                 "id": "state_regulated", "label_cs": "Rozpočtová státní sféra", "label_en": "State-budget workforce",
-                "coverage_status": "official", "year": 2024, "source_ids": [state_source],
+                "coverage_status": "official", "year": 2025, "source_ids": [state_source],
                 "perimeter_cs": "Samostatný výkaz MF. Není podmnožinou S.13, kterou lze odečíst od celkového veřejného sektoru.",
                 "perimeter_en": "A separate Ministry of Finance return. It is not an S.13 subset that can be subtracted from the public-sector total.",
                 "root": state_root,

@@ -92,7 +92,12 @@ NOT_A_LEGAL_FORM = {
 }
 
 
-def classify(country: str, legal_form: str | None) -> str:
+def classify(country: str, legal_form: str | None, founder_type: str | None = None) -> str:
+    # NRPZS founder category is explicit public-founder evidence, not a company ownership chain.
+    if country == "CZE":
+        founder = {"MZ": "state", "Ostatní centrální orgány": "state", "Kraj": "regional", "Obec, město": "municipal", "Církev": "private_nonprofit"}.get(founder_type)
+        if founder:
+            return founder
     if not legal_form:
         return "unknown"
     form = legal_form.strip()
@@ -115,7 +120,7 @@ def main() -> None:
         unresolved: Counter[str] = Counter()
         for facility in facilities:
             form = facility.get("legal_form")
-            owner = classify(code, form)
+            owner = classify(code, form, facility.get("founder_type"))
             counts[owner] += 1
             if owner == "unknown":
                 unresolved[(form or "—").strip()] += 1
@@ -179,13 +184,13 @@ def main() -> None:
         "vocabulary": CLASSES,
         "methodology": {
             "en": (
-                "Each facility's native legal-form string is mapped onto one owner "
+                "Explicit Czech founder categories, otherwise native legal forms, determine the owner "
                 "class. Forms that do not reveal the beneficial owner resolve to "
                 "unknown rather than to a guess. Facility counts are not bed counts "
                 "and not spending; they answer who operates, not who pays."
             ),
             "cs": (
-                "Původní právní forma každého zařízení je namapována na jednu třídu "
+                "Výslovná česká kategorie zřizovatele, jinak právní forma, určuje třídu "
                 "vlastníka. Formy, které skutečného vlastníka neprozrazují, končí "
                 "jako neznámé, nikoli jako odhad. Počty zařízení nejsou počty lůžek "
                 "ani výdaje; odpovídají na otázku kdo provozuje, ne kdo platí."

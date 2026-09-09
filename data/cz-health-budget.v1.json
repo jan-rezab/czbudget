@@ -1,7 +1,99 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-20T22:08:44.972Z",
+  "generated_at": "2026-09-09T13:16:23.558Z",
   "units": "CZK billion unless stated otherwise",
+  "medicine_reimbursements": {
+    "schema_version": "1.0.0",
+    "source": {
+      "url": "https://datanzis.uzis.gov.cz/data/NR-04-NRHZS/NR-04-17/Otevrena-data-NR-04-17-individualne-pripravovane-lecive-pripravky-sukl-mesic-icp-predpis-icz-vydej.csv.gz",
+      "sha256": "0b5f8e08f1925d2a662cb9b2e79adcb4e83d6f5f4ae2190ca2f7ae9d19e70473",
+      "dataset": "NR-04-17",
+      "license": "CC BY 4.0",
+      "documentation": "https://www.nzip.cz/data/2288-individualne-pripravovane-lecive-pripravky-sukl-mesic-icp-predpis-icz-vydej-otevrena-data"
+    },
+    "source_row_count": 1737907,
+    "first_period": "2025-01",
+    "last_period": "2026-03",
+    "unit": "CZK",
+    "scope": "Individually prepared medicines reported to public health insurers. Excludes private payments, nonreported inpatient drug lump sums and specified sensitive diagnoses. Latest quarter subject to revision. Prescribing and dispensing are two views of the same expenditure; never add them together.",
+    "patient_counts": "Not aggregated: patients can overlap across rows/providers/months.",
+    "monthly": [
+      {
+        "period": "2025-01",
+        "reimbursement_czk": 424360395.25
+      },
+      {
+        "period": "2025-02",
+        "reimbursement_czk": 380437534.13
+      },
+      {
+        "period": "2025-03",
+        "reimbursement_czk": 411862439.5
+      },
+      {
+        "period": "2025-04",
+        "reimbursement_czk": 407292358.04
+      },
+      {
+        "period": "2025-05",
+        "reimbursement_czk": 406279929.44
+      },
+      {
+        "period": "2025-06",
+        "reimbursement_czk": 417853332.86
+      },
+      {
+        "period": "2025-07",
+        "reimbursement_czk": 404511012.48
+      },
+      {
+        "period": "2025-08",
+        "reimbursement_czk": 368859228.29
+      },
+      {
+        "period": "2025-09",
+        "reimbursement_czk": 424503705.96
+      },
+      {
+        "period": "2025-10",
+        "reimbursement_czk": 437076721.18
+      },
+      {
+        "period": "2025-11",
+        "reimbursement_czk": 406039885.11
+      },
+      {
+        "period": "2025-12",
+        "reimbursement_czk": 385415843
+      },
+      {
+        "period": "2026-01",
+        "reimbursement_czk": 412282827.91
+      },
+      {
+        "period": "2026-02",
+        "reimbursement_czk": 371422105.94
+      },
+      {
+        "period": "2026-03",
+        "reimbursement_czk": 305743005.13
+      }
+    ],
+    "records_url": "/data/cze-medicine-reimbursements.v1.json",
+    "dispensing_provider_count": 1149
+  },
+  "system_2024_summary": {
+    "year": 2024,
+    "status": "preliminary",
+    "published_at": "2026-06-11",
+    "total_bn": 696.7,
+    "insurers_bn": 514.2,
+    "public_budgets_bn": 81.9,
+    "households_bn": 94.5,
+    "gdp_pct": 8.6,
+    "source_url": "https://csu.gov.cz/vydaje-na-zdravotni-peci",
+    "scope": "SHA healthcare expenditure; rounded published summary. Financing schemes are not provider revenue. Detailed 2023 flow remains separately dated."
+  },
   "system_2023": {
     "total_bn": 641.996,
     "sources": [
@@ -82,6 +174,11 @@
     ]
   },
   "insurers_2024": {
+    "year": 2024,
+    "stage": "actual",
+    "source_locator": "MF final account 2024, Sešit F, table 12 (PDF page 37); reserves PDF page 39",
+    "source_native_unit": "CZK thousand",
+    "scope": "Public health-insurance fund receipts and expenditure; distinct from SHA health accounts",
     "insured_people": 10853476,
     "insurer_count": 7,
     "reserves_bn": 47.717,
@@ -1190,12 +1287,16 @@
   },
   "sources": [
     {
+      "title": "ČSÚ — zdravotní výdaje 2024, předběžné, 11. 6. 2026",
+      "url": "https://csu.gov.cz/vydaje-na-zdravotni-peci"
+    },
+    {
       "title": "ČSÚ — Zdravotnické účty ČR 2010–2023",
       "url": "https://csu.gov.cz/docs/107508/3183dddf-79c3-3d97-07bf-0660173c563e/26000525.pdf?version=1.1"
     },
     {
       "title": "MF ČR — Státní závěrečný účet 2024",
-      "url": "https://www.mfcr.cz/assets/attachments/2024-04-28_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf"
+      "url": "https://mf.gov.cz/assets/attachments/2024-04-28_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf"
     },
     {
       "title": "ÚZIS ČR — Ekonomické výsledky nemocnic 2022",

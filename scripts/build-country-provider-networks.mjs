@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "node:fs/promises";
+import { createHash } from "node:crypto";
 
 const NRPZS = "https://datanzis.uzis.gov.cz/data/NR-01-NRPZS/NR-01-06/Otevrena-data-NR-01-06-nrpzs-mista-poskytovani-zdravotnich-sluzeb.csv";
 const CMS_HOSPITALS = "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0";
@@ -27,9 +28,9 @@ function csvRows(text,delimiter=",") {
   return rows.map(values=>Object.fromEntries(header.map((key,index)=>[key,values[index]||""])));
 }
 
-const response=await fetch(NRPZS,{headers:{"user-agent":"PublicSpendingData/1.0"}});
-if(!response.ok)throw new Error(`NRPZS ${response.status}`);
-const source=await response.text();
+const response=process.env.NRPZS_INPUT ? null : await fetch(NRPZS,{headers:{"user-agent":"PublicSpendingData/1.0"}});
+if(response && !response.ok)throw new Error(`NRPZS ${response.status}`);
+const source=process.env.NRPZS_INPUT ? await fs.readFile(process.env.NRPZS_INPUT,"utf8") : await response.text();
 const all=csvRows(source);
 const hospitalRows=all.filter(row=>row.ZZ_forma_pece.toLocaleLowerCase("cs").includes("lůžková"));
 const facilities=new Map();
@@ -37,11 +38,13 @@ for(const row of hospitalRows) {
   const id=row.ZZ_misto_poskytovani_ID||row.ZZ_ID;
   const current=facilities.get(id)||{
     id:`CZE:${id}`,provider_id:row.poskytovatel_ICO||null,name:row.ZZ_nazev||row.poskytovatel_nazev,
+    founder_type:row.zrizovatel_typ||null,native_records:[],
     provider_name:row.poskytovatel_nazev,facility_type:row.ZZ_druh_nazev,legal_form:row.poskytovatel_pravni_forma_nazev||null,
     region:row.ZZ_kraj_nazev,district:row.ZZ_okres_nazev,municipality:row.ZZ_obec,
     address:[row.ZZ_ulice,row.ZZ_cislo_domovni_orientacni,row.ZZ_PSC,row.ZZ_obec].filter(Boolean).join(" "),
     coordinates:null,care_fields:new Set(),care_forms:new Set(),website:row.poskytovatel_web||null
   };
+  current.native_records.push(Object.fromEntries(["ZZ_ID","ZZ_kod","PCZ","PCDP","ZZ_misto_poskytovani_ID","ZZ_druh_kod","ZZ_druh_nazev_sekundarni","ZZ_RUIAN_kod","ZZ_datum_zahajeni_cinnosti","ZZ_obor_pece","ZZ_forma_pece","ZZ_druh_pece","ZZ_rozsah_pece","poskytovatel_druh","poskytovatel_pravni_forma_kod","zrizovatel_typ"].map(key=>[key,row[key]||null])));
   const match=row.ZZ_GPS.match(/POINT\(([-\d.]+) ([-\d.]+)\)/);
   if(match)current.coordinates={lat:Number(match[1]),lon:Number(match[2])};
   row.ZZ_obor_pece.split(",").map(item=>item.trim()).filter(Boolean).forEach(item=>current.care_fields.add(item));
@@ -49,8 +52,20 @@ for(const row of hospitalRows) {
   facilities.set(id,current);
 }
 const records=[...facilities.values()].map(item=>({...item,care_fields:[...item.care_fields].sort(),care_forms:[...item.care_forms].sort()})).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
+if(records.some(r=>!r.id || r.id==="CZE:undefined"))throw new Error("Missing NRPZS site identity");
 const providers=new Set(records.map(item=>item.provider_id).filter(Boolean));
 const regions=Object.fromEntries(Object.entries(Object.groupBy(records,item=>item.region||"—")).map(([key,items])=>[key,items.length]));
+const czechScope = {cs:"Místa poskytování s formou péče obsahující lůžkovou péči, včetně následné a dlouhodobé péče. Jde o aktuální distribuci registru; platnost není samostatně ověřena. Počet míst není počet nemocnic, budov ani lůžek.",en:"Locations whose care form contains inpatient care, including follow-up and long-term care. Current registry distribution; validity is not independently checked. Site counts are not hospital, building or bed counts."};
+const czechPayments={coverage:"scoped_provider_reimbursements_available",note_cs:"Veřejná data NR-04-17 obsahují úhrady za individuálně připravovaná léčiva podle identifikátorů poskytovatele. Úplné úhrady všech služeb zde nejsou načteny.",note_en:"Public NR-04-17 data include reimbursement for individually prepared medicines by provider identifiers. Comprehensive all-service reimbursements are not loaded here.",source_url:"https://www.nzip.cz/data/2288-individualne-pripravovane-lecive-pripravky-sukl-mesic-icp-predpis-icz-vydej-otevrena-data",loaded:true,records:"data/cze-medicine-reimbursements.v1.json",scope:"NR-04-17 individually prepared medicines only"};
+const czechSource={title:"ÚZIS NRPZS · Místa poskytování zdravotních služeb",url:NRPZS,license:"CC BY 4.0",update_frequency:"monthly",sha256:createHash("sha256").update(source).digest("hex"),retrieved_at:new Date().toISOString(),source_reference_date:null};
+if(process.argv.includes("--cze-only")) {
+ const manifestUrl=new URL("../data/country-provider-networks.v1.json",import.meta.url);
+ const manifest=JSON.parse(await fs.readFile(manifestUrl,"utf8"));
+ manifest.countries.CZE={...manifest.countries.CZE,coverage:"inpatient_care_locations",facility_count:records.length,provider_count:providers.size,regions,source:czechSource,methodology:czechScope,payments:czechPayments};
+ await fs.writeFile(new URL("../data/countries/cze/providers.v1.json",import.meta.url),JSON.stringify({schema_version:"1.1.0",generated_at:new Date().toISOString(),country_code:"CZE",coverage:"inpatient_care_locations",methodology:czechScope,source:czechSource,facilities:records})+"\n");
+ await fs.writeFile(manifestUrl,JSON.stringify(manifest,null,2)+"\n");console.log(`Updated Czech NRPZS: ${records.length} sites`);process.exit(0);
+}
+
 const cmsRows=[];
 for(let offset=0;;offset+=1000){
   const cmsResponse=await fetch(`${CMS_HOSPITALS}?offset=${offset}&limit=1000`,{headers:{accept:"application/json","user-agent":"PublicSpendingData/1.0"}});
@@ -90,7 +105,7 @@ const payload={
   schema_version:"1.0.0",generated_at:new Date().toISOString(),
   methodology:{cs:"Síť obsahuje aktivní místa NRPZS, u nichž forma péče zahrnuje lůžkovou péči. Více řádků oborů stejného místa je sloučeno. Počet zařízení není počet budov ani počet nemocničních lůžek.",en:"The network contains active NRPZS locations whose care form includes inpatient care. Multiple specialty rows for the same location are merged. Facility count is neither a building count nor a bed count."},
   countries:{
-    CZE:{coverage:"facility_register",facility_count:records.length,provider_count:providers.size,regions,facilities:records,source:{title:"ÚZIS NRPZS · Místa poskytování zdravotních služeb",url:NRPZS,license:"CC BY 4.0",update_frequency:"monthly"},payments:{coverage:"not_open_at_facility_level",note_cs:"NRHZS obsahuje individuální úhrady, veřejný otevřený export na úrovni poskytovatele však není publikován.",note_en:"NRHZS contains individual reimbursements, but no public facility-level open export is published."}},
+    CZE:{coverage:"inpatient_care_locations",facility_count:records.length,provider_count:providers.size,regions,facilities:records,source:czechSource,methodology:czechScope,payments:czechPayments},
     DEU:{coverage:"source_adapter_pending"},DNK:{coverage:"source_adapter_pending"},
     FRA:{coverage:"finess_hospital_activity_establishments",facility_count:frRecords.length,provider_count:frProviders.size,regions:frRegions,facilities:frRecords,source:{title:"FINESS · restructured establishment register",url:"https://www.data.gouv.fr/datasets/reexposition-des-donnees-finess",download_url:FINESS_ESTABLISHMENTS,license:"Licence Ouverte 2.0",update_frequency:"monthly"},payments:{coverage:"sae_and_accounts_separate_adapter",note_cs:"Načteny jsou aktivní záznamy FINESS s činností nemocnic 8610Z; výkony SAE a účetní výkazy zůstávají oddělené.",note_en:"FINESS establishments classified to hospital activities 8610Z are loaded; SAE activity and accounting returns remain separate."}},
     GBR:{coverage:"nhs_trust_sites",facility_count:gbRecords.length,provider_count:nhsTrusts.length,regions:gbRegions,facilities:gbRecords,source:{title:"NHS England ODS · NHS trusts and trust sites",url:"https://digital.nhs.uk/services/organisation-data-service/data-search-and-export/csv-downloads/other-nhs-organisations",api_url:NHS_TRUST_SITES,license:"Open Government Licence",update_frequency:"nightly"},payments:{coverage:"trust_accounts_separate_adapter",note_cs:"Registr organizací a pracovišť je načten; účetní výkazy jednotlivých trustů jsou samostatná účetní vrstva.",note_en:"The organisation and site register is loaded; individual trust accounts are a separate accounting layer."}},

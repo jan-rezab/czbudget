@@ -30,6 +30,13 @@ class ContractCompactionTest(unittest.TestCase):
         self.assertEqual(compact["parent_contract_id"], "parent-1")
         self.assertNotIn("token", str(compact).lower())
 
+    def test_zero_price_and_false_validity_are_preserved(self):
+        compact = MODULE.compact_contract({"calculatedPriceWithVATinCZK": 0, "platnyZaznam": False, "hodnotaBezDph": 0})
+        self.assertEqual(compact["value_czk"], 0)
+        self.assertEqual(compact["source_price"]["hodnotaBezDph"], 0)
+        self.assertIs(compact["source_validity"]["platnyZaznam"], False)
+        self.assertIsNone(MODULE.compact_contract({})["value_czk"])
+
     def test_keyword_categories_are_deterministic(self):
         self.assertEqual(MODULE.categorize("Licence informačního systému")["id"], "digital")
         self.assertEqual(MODULE.categorize("Bez bližšího popisu")["id"], "other")

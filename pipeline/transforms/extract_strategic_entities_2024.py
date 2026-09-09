@@ -77,6 +77,8 @@ def ratio(numerator: int | None, denominator: int | None, multiplier: int = 100)
 
 
 def add_comparison_fields(entity: dict) -> None:
+    if entity.get("ico") == "45274649":
+        entity["additional_financial_sources"] = [{"dataset": "data/cez-issuer-2025.v1.json", "period_end": "2025-12-31", "scopes": ["individual_company", "consolidated_group"], "replaces_2024_card": False, "issuer_url": "https://www.cez.cz/cs/pro-investory/hospodarske-vysledky/vyrocni-zpravy"}]
     if entity["name"] not in CLASSIFICATION:
         raise RuntimeError(f"Missing classification for {entity['name']}")
     sector_code, sector_name, role_code, peer_group = CLASSIFICATION[entity["name"]]
@@ -87,6 +89,8 @@ def add_comparison_fields(entity: dict) -> None:
         "international_peer_group": peer_group,
         "status": "working_classification",
     }
+    entity["financial_perimeter"] = "individual_MF_report_card"
+    entity["metric_definitions"] = {"debt": "Reported cizi zdroje (liabilities); not necessarily interest-bearing debt", "owner_transfer": "Card-specific owner receipt; original transfer type retained", "employees": "Persons reported on individual card, not assumed group FTE"}
     metrics = entity["metrics"]
     entity["fair_metrics"] = {
         "return_on_assets_pct": ratio(metrics["net_result"], metrics["total_assets"]),
@@ -131,6 +135,8 @@ def parse_entity(page_number: int, text: str) -> dict | None:
             continue
         try:
             entity["metrics"][METRICS[parts[0]]] = integer(parts[-1])
+            if METRICS[parts[0]] == "owner_transfer":
+                entity["owner_transfer_type_cs"] = parts[0]
         except ValueError:
             continue
 

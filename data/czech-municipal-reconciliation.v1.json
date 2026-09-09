@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "country_code": "CZE",
+  "source": {
+    "url": "https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinM/2025_12_Data_CSUIS_FINM.zip",
+    "sha256": "3d48d2ea5e273273301b4c28888c03c4c3ae694c0620480d51ac8524a4f9b123",
+    "retrieved_at": "2026-09-09T13:30:25.421627+00:00"
+  },
+  "generated_at": "2026-09-09T13:30:57.514798+00:00",
+  "snapshot_entities": 6254,
+  "comparison_counts": {
+    "revenue_approved": 6254,
+    "revenue_adjusted": 6254,
+    "revenue_actual": 6254,
+    "expense_approved": 6254,
+    "expense_adjusted": 6254,
+    "expense_actual": 6254,
+    "balance_approved": 6254,
+    "balance_adjusted": 6254,
+    "balance_actual": 6254
+  },
+  "total_comparisons": 56286,
+  "mismatch_count": 4,
+  "mismatches": [
+    {
+      "ico": "00287253",
+      "name": "Obec Kostelany",
+      "measure": "expense_adjusted",
+      "source": "19907585.80",
+      "snapshot": "19898565.8",
+      "difference": "-9020.00"
+    },
+    {
+      "ico": "00287253",
+      "name": "Obec Kostelany",
+      "measure": "expense_actual",
+      "source": "17224575.95",
+      "snapshot": "17215555.95",
+      "difference": "-9020.00"
+    },
+    {
+      "ico": "00287253",
+      "name": "Obec Kostelany",
+      "measure": "balance_adjusted",
+      "source": "-1380430.21",
+      "snapshot": "-1371410.21",
+      "difference": "9020.00"
+    },
+    {
+      "ico": "00287253",
+      "name": "Obec Kostelany",
+      "measure": "balance_actual",
+      "source": "1208393.39",
+      "snapshot": "1217413.39",
+      "difference": "9020.00"
+    }
+  ],
+  "limitation": "Comparison of the specified official FINM203 export with the local 2025 serving snapshot. FINM201 detailed and FINM203 summary source differences are retained, not silently corrected. This does not verify a deployed warehouse."
+}

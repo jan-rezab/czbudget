@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0.0",
- "generated_at": "2026-08-26",
+ "generated_at": "2026-09-09",
  "dataset_id": "HOSPITAL_OWNERSHIP_V1",
  "vocabulary": [
   "state",
@@ -13,39 +13,43 @@
   "unknown"
  ],
  "methodology": {
-  "en": "Each facility's native legal-form string is mapped onto one owner class. Forms that do not reveal the beneficial owner resolve to unknown rather than to a guess. Facility counts are not bed counts and not spending; they answer who operates, not who pays.",
-  "cs": "Původní právní forma každého zařízení je namapována na jednu třídu vlastníka. Formy, které skutečného vlastníka neprozrazují, končí jako neznámé, nikoli jako odhad. Počty zařízení nejsou počty lůžek ani výdaje; odpovídají na otázku kdo provozuje, ne kdo platí."
+  "en": "Explicit Czech founder categories, otherwise native legal forms, determine the owner class. Forms that do not reveal the beneficial owner resolve to unknown rather than to a guess. Facility counts are not bed counts and not spending; they answer who operates, not who pays.",
+  "cs": "Výslovná česká kategorie zřizovatele, jinak právní forma, určuje třídu vlastníka. Formy, které skutečného vlastníka neprozrazují, končí jako neznámé, nikoli jako odhad. Počty zařízení nejsou počty lůžek ani výdaje; odpovídají na otázku kdo provozuje, ne kdo platí."
  },
  "countries": {
   "CZE": {
-   "coverage": "facility_register",
-   "facility_count": 642,
-   "resolved_count": 213,
-   "resolved_share_pct": 33.2,
+   "coverage": "inpatient_care_locations",
+   "facility_count": 643,
+   "resolved_count": 296,
+   "resolved_share_pct": 46.0,
    "owner_class": {
-    "state": 89,
-    "subnational_unspecified": 95,
-    "private_nonprofit": 29,
-    "unknown": 429
+    "state": 96,
+    "regional": 114,
+    "municipal": 38,
+    "subnational_unspecified": 20,
+    "private_nonprofit": 28,
+    "unknown": 347
    },
    "owner_class_pct": {
-    "state": 13.9,
-    "subnational_unspecified": 14.8,
-    "private_nonprofit": 4.5,
-    "unknown": 66.8
+    "state": 14.9,
+    "regional": 17.7,
+    "municipal": 5.9,
+    "subnational_unspecified": 3.1,
+    "private_nonprofit": 4.4,
+    "unknown": 54.0
    },
    "unresolved_forms": [
     {
-     "legal_form": "Akciová společnost",
-     "count": 232
+     "legal_form": "Společnost s ručením omezeným",
+     "count": 171
     },
     {
-     "legal_form": "Společnost s ručením omezeným",
-     "count": 183
+     "legal_form": "Akciová společnost",
+     "count": 166
     },
     {
      "legal_form": "—",
-     "count": 13
+     "count": 9
     },
     {
      "legal_form": "Evropská společnost",

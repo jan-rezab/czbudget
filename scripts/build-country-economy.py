@@ -181,7 +181,18 @@ def fetch_world_bank(contract: dict, raw_dir: Path, retrieved_at: str, refresh: 
         payload = json.loads(target.read_text(encoding="utf-8"))
         metadata = payload[0] if isinstance(payload, list) and payload else {}
         records = payload[1] if isinstance(payload, list) and len(payload) > 1 and payload[1] else []
-        raw_bundle["series"][code] = {"url": url, "metadata": metadata, "file": str(target.relative_to(raw_dir))}
+        page_files = [str(target.relative_to(raw_dir))]
+        for page in range(2, int(metadata.get("pages", 1)) + 1):
+            page_target = target.with_name(f"{code}.page-{page}.json")
+            download(f"{url}&page={page}", page_target, refresh=refresh)
+            page_payload = json.loads(page_target.read_text(encoding="utf-8"))
+            if not isinstance(page_payload, list) or len(page_payload) != 2:
+                raise ValueError(f"Invalid World Bank page {page}: {code}")
+            records.extend(page_payload[1] or [])
+            page_files.append(str(page_target.relative_to(raw_dir)))
+        if metadata.get("total") is not None and len(records) != int(metadata["total"]):
+            raise ValueError(f"Incomplete World Bank response: {code}")
+        raw_bundle["series"][code] = {"url": url, "metadata": metadata, "file": str(target.relative_to(raw_dir)), "page_files": page_files}
         definitions.append({**definition, "source_id": "world_bank", "frequencies": ["A"]})
         for record in records:
             value = numeric(record.get("value"))

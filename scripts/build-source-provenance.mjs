@@ -17,7 +17,10 @@
  *   node scripts/build-source-provenance.mjs --write
  */
 import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { gzipSync } from "node:zlib";
 import path from "node:path";
+import { readSources, reconcileSourceDeclarations, mergeSourceDeclaration } from "./lib/source-provenance.mjs";
 
 const ROOT = process.env.SITE_ROOT || process.cwd();
 const OUT = "data/registry/source-provenance.v1.json";
@@ -29,48 +32,21 @@ const write = process.argv.includes("--write");
 const sourceKey = (source) =>
   source.url || source.source_url || `${source.provider || source.title || source.name || "unnamed"}`;
 
-function readSources(payload, artifact) {
-  const found = [];
-
-  // Form one: a single `source` object describing where the whole artifact came from.
-  const single = payload?.source;
-  if (single && typeof single === "object" && !Array.isArray(single)) {
-    found.push({
-      key: sourceKey(single),
-      provider: single.provider || null,
-      title: single.dataset || single.title || null,
-      url: single.download_page || single.url || null,
-      // The publication edition, not the build date. "World Economic Outlook, April 2026"
-      // is a vintage; 2026-08-28 is when we happened to fetch it.
-      edition: single.dataset || single.edition || null,
-      extracted: (payload.generated_at || "").slice(0, 10) || null,
-      artifact,
-    });
+async function artifactFiles(directory) {
+  const result=[];
+  for(const entry of await readdir(path.join(ROOT,directory),{withFileTypes:true})) {
+    const relative=path.posix.join(directory,entry.name);
+    if(relative === "data/registry") continue;
+    if(entry.isDirectory()) result.push(...await artifactFiles(relative));
+    else if(entry.isFile()&&entry.name.endsWith(".json")) result.push(relative);
   }
-
-  // Form two: a `sources` array, which is what most artifacts carry.
-  for (const entry of Array.isArray(payload?.sources) ? payload.sources : []) {
-    if (!entry || typeof entry !== "object") continue;
-    found.push({
-      key: sourceKey(entry),
-      provider: entry.provider || entry.publisher || null,
-      title: entry.title || entry.label || entry.name || null,
-      url: entry.url || entry.source_url || null,
-      edition: entry.edition || entry.dataset || entry.vintage || null,
-      extracted: entry.extracted || entry.retrieved || (payload.generated_at || "").slice(0, 10) || null,
-      artifact,
-    });
-  }
-  return found;
+  return result.sort();
 }
-
-const artifacts = (await readdir(path.join(ROOT, "data")))
-  .filter((name) => name.endsWith(".v1.json") && name !== "manifest.v1.json")
-  .sort();
+const artifacts=await artifactFiles("data");
 
 const sources = new Map();
 
-for (const artifact of [...artifacts.map((a) => `data/${a}`), "lib/data/sovereign-benchmark.v1.json"]) {
+for (const artifact of [...artifacts, "lib/data/sovereign-benchmark.v1.json"]) {
   let payload;
   try {
     payload = JSON.parse(await readFile(path.join(ROOT, artifact), "utf8"));
@@ -80,12 +56,14 @@ for (const artifact of [...artifacts.map((a) => `data/${a}`), "lib/data/sovereig
   for (const entry of readSources(payload, artifact)) {
     const existing = sources.get(entry.key);
     if (!existing) {
-      sources.set(entry.key, { ...entry, artifacts: [entry.artifact] });
+      const created={...entry,artifacts:[entry.artifact],declarations:[]};
+      mergeSourceDeclaration(created,entry);sources.set(entry.key,created);
       continue;
     }
+    mergeSourceDeclaration(existing,entry);
     if (!existing.artifacts.includes(entry.artifact)) existing.artifacts.push(entry.artifact);
     // Keep the most specific answer any artifact gives for each field.
-    for (const field of ["provider", "title", "url", "edition", "extracted"]) {
+    for (const field of ["provider", "title", "url", "edition", "extracted", "retrieved_at", "published_at", "reviewed_at"]) {
       if (!existing[field] && entry[field]) existing[field] = entry[field];
     }
   }
@@ -114,14 +92,14 @@ try {
   }
 } catch { /* the registry is optional to this report */ }
 
-const rows = [...sources.values()].map((row) => ({
+const rows = [...sources.values()].map(reconcileSourceDeclarations).map((row) => ({
   ...row,
   artifact_count: (row.artifacts || []).length,
   licence_status: row.licence_status || "unrecorded",
 }));
 
-const withEdition = rows.filter((r) => r.edition).length;
-const withExtracted = rows.filter((r) => r.extracted).length;
+const withEdition = rows.filter((r) => r.edition || r.metadata_variants?.edition?.length).length;
+const withExtracted = rows.filter((r) => r.extracted || r.metadata_variants?.extracted?.length).length;
 const withLicence = rows.filter((r) => r.licence_status && r.licence_status !== "unrecorded" && r.licence_status !== "unverified").length;
 
 console.log(`sources declared across published artifacts: ${rows.length}`);
@@ -138,16 +116,29 @@ if (!write) {
 }
 
 await mkdir(path.join(ROOT, "data", "registry"), { recursive: true });
+const orderedRows=rows.sort((a,b)=>String(a.key).localeCompare(String(b.key)));
+const shardDirectory="data/registry/source-provenance";
+await mkdir(path.join(ROOT,shardDirectory),{recursive:true});
+const shards=[];
+for(let start=0;start<orderedRows.length;start+=5000){
+  const records=orderedRows.slice(start,start+5000);
+  const body=gzipSync(Buffer.from(`${JSON.stringify({schema_version:"1.0.0",records})}\n`),{level:9,mtime:0});
+  const name=`sources-${String(start/5000+1).padStart(3,"0")}.json.gz`;
+  await writeFile(path.join(ROOT,shardDirectory,name),body);
+  shards.push({path:`/${shardDirectory}/${name}`,records:records.length,bytes:body.length,sha256:createHash("sha256").update(body).digest("hex")});
+}
 await writeFile(
   path.join(ROOT, OUT),
   `${JSON.stringify({
-    schema_version: "1.0.0",
+    schema_version: "1.1.0",
     registry: "source-provenance",
     generated_at: new Date().toISOString().slice(0, 10),
     note: "One row per source the published artifacts declare. `edition` is the publication "
         + "vintage the source itself names — \"World Economic Outlook, April 2026\" — not the "
-        + "date we fetched it. A null edition means no artifact records one, which is a gap to "
-        + "close rather than a value to invent.",
+        + "date we fetched it. A null edition without metadata_variants.edition means no artifact records one, a gap to "
+        + "close rather than a value to invent. For reused URLs, conflicting metadata values "
+        + "are retained in metadata_variants and declarations; the corresponding top-level "
+        + "field is null rather than a synthesized mixed vintage. Coverage counts any recorded edition/date.",
     source_count: rows.length,
     coverage: {
       with_edition: withEdition,
@@ -155,7 +146,8 @@ await writeFile(
       with_verified_licence: withLicence,
       licence_unverified: unverified,
     },
-    sources: rows.sort((a, b) => String(a.key).localeCompare(String(b.key))),
+    storage: "gzip-compressed JSON shards; each record retains compacted declaration variants, artifact references and representative locations",
+    shards,
   }, null, 2)}\n`,
   "utf8",
 );
