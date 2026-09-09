@@ -61,7 +61,7 @@ def asset(root: Path, descriptor: dict, expected_kind: str | None = None):
     return payload
 
 
-def validate(root: Path):
+def validate(root: Path, index_only: bool = False):
     report = json.loads((root / "build-report.json").read_text())
     index_asset_descriptor = {**report["index_asset"], "path": report["index_asset"]["file"]}
     index = asset(root, index_asset_descriptor)
@@ -81,6 +81,20 @@ def validate(root: Path):
     codelists = asset(root, {**index["codelist_asset"], "path": index["codelist_asset"]["file"]})
     if not codelists.get("codelists", {}).get("items") or not codelists["codelists"].get("paragraphs"):
         raise ValueError("Core budget codelists are absent")
+
+    if index_only:
+        files = sum(path.is_file() for path in root.rglob("*"))
+        if files != report["files"]:
+            raise ValueError(f"Release file count mismatch: {files} != {report['files']}")
+        print(json.dumps({
+            "status": "ok",
+            "scope": "index-only",
+            "profiles": index["profile_count"],
+            "record_counts": index["record_counts"],
+            "files": files,
+            "index_bytes": report["index_asset"]["bytes"],
+        }, ensure_ascii=False, indent=2))
+        return
 
     files = {path.resolve() for path in root.rglob("*") if path.is_file()}
     referenced = {
@@ -173,4 +187,6 @@ def validate(root: Path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("root", nargs="?", type=Path, default=WORKSPACE_ROOT / "outputs/cityvizor-explorer-2026-09-09/release")
-    validate(parser.parse_args().root.resolve())
+    parser.add_argument("--index-only", action="store_true", help="Verify the checksum-pinned release index, codelists, totals and file count without traversing every shard")
+    args = parser.parse_args()
+    validate(args.root.resolve(), index_only=args.index_only)
