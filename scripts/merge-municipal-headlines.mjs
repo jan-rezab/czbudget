@@ -57,6 +57,11 @@ for (const [ico, entity] of municipalities) {
 
   const entityPath = path.join("data", "entities", `${ico}.json`);
   const payload = JSON.parse(await readFile(entityPath, "utf8"));
+  // The pinned entity archive can predate the snapshot's ARES provenance audit.
+  // Carry that explicit metadata forward without replacing financial/identity fields.
+  if (Object.hasOwn(entity, "identity_provenance")) {
+    payload.entity.identity_provenance = entity.identity_provenance;
+  }
   payload.entity.budget_stages = requiredStages.map((stage) => stages.get(stage));
   payload.entity.budget_stage_lineage = lineageByIco.get(ico);
   await writeFile(entityPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
