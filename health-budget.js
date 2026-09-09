@@ -93,6 +93,11 @@
 
   function flowFacts() {
     if (flowMode === "system") {
+      const latest = data.system_2024_summary;
+      if (latest) {
+        const vintage = lang === "cs" ? "2024 · předběžné; tok níže 2023" : "2024 · preliminary; flow below 2023";
+        return [[tr("totalSystem"),bn(latest.total_bn),vintage],[tr("publicShare"),pct(100*(latest.insurers_bn+latest.public_budgets_bn)/latest.total_bn),vintage],[tr("householdShare"),bn(latest.households_bn),vintage],["% HDP / GDP",pct(latest.gdp_pct),vintage]];
+      }
       const total = data.system_2023.total_bn;
       const publicValue = sum(data.system_2023.sources.slice(0,3).map(item => item.value_bn));
       return [[tr("totalSystem"),bn(total),"2023"],[tr("hospitalShare"),pct(100*288.19/total),"2023"],[tr("publicShare"),pct(100*publicValue/total),"2023"],[tr("householdShare"),pct(100*93.711/total),"2023"]];
@@ -122,7 +127,12 @@
     $("#health-flow-out").innerHTML = flowRows(current.output,"output");
     $("#health-center-label").textContent = current.label;
     $("#health-flow-facts").innerHTML = flowFacts().map(item => `<article><span>${esc(item[0])}</span><strong>${esc(item[1])}</strong><small>${esc(item[2])}</small></article>`).join("");
-    $("#health-flow-sources").innerHTML = `<span class="sr-only">${tr("sources")}</span>${data.sources.slice(0,3).map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.title)} ↗</a>`).join("")}<span class="health-editable-note">${tr("flowEditable")}</span>`;
+    $("#health-flow-sources").innerHTML = `<span class="sr-only">${tr("sources")}</span>${data.sources.filter(source => !source.url.includes("monitor.statnipokladna")).map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.title)} ↗</a>`).join("")}<span class="health-editable-note">${tr("flowEditable")}</span>`;
+    if(data.medicine_reimbursements) {
+      const m=data.medicine_reimbursements;
+      const total=sum(m.monthly.map(row=>row.reimbursement_czk))/1e9;
+      $("#health-flow-sources").insertAdjacentHTML("beforeend",`<p>${lang==="cs"?"Individuálně připravovaná léčiva":"Individually prepared medicines"}: ${bn(total)} · ${esc(m.first_period)}–${esc(m.last_period)}. ${lang==="cs"?"Pouze vykázané úhrady veřejného pojištění v tomto rozsahu; nejde o celkové úhrady nemocnic. Poslední čtvrtletí podléhá revizím. Počty pacientů nelze sčítat.":"Reported public-insurance reimbursement in this scope only; not total hospital payments. Latest quarter subject to revision. Patient counts cannot be summed."} <a href="data/cze-medicine-reimbursements.v1.json">${lang==="cs"?"Měsíce, poskytovatelé a léčiva":"Months, providers and medicines"} ↗</a></p>`);
+    }
     document.querySelectorAll(".health-flow-row input").forEach(input => input.addEventListener("input", () => {
       flowState[flowMode][input.dataset.side][Number(input.dataset.index)] = Math.max(0, Number(input.value) || 0);
       updateFlowTotals();
@@ -179,7 +189,7 @@
     $("#hospital-hundred-ring").style.setProperty("--cost-angle",`${Math.min(100,costPerHundred)*3.6}deg`);
     $("#hospital-hundred-note").textContent = tr(costPerHundred <= 100 ? "perHundredPositive" : "perHundredNegative").replace("{value}",number(remainder,1));
     $("#hospital-peer-bars").innerHTML = `<div class="peer-heading"><span>${tr("peerGroup")}</span><small>${esc(peerLabel)} · n = ${peers.length}</small></div>${peerBar(tr("revenue"),selected.revenue_mczk,peers.map(h=>h.revenue_mczk),value=>bn(value/1000))}${peerBar(tr("result"),selected.result_mczk,peers.map(h=>h.result_mczk),million)}${peerBar(tr("margin"),selected.margin_pct,peers.map(h=>h.margin_pct),pct)}`;
-    $("#hospital-benchmark-sources").innerHTML = data.sources.slice(2).map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.title)} ↗</a>`).join("");
+    $("#hospital-benchmark-sources").innerHTML = data.sources.filter(source => source.url.includes("monitor.statnipokladna")).map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.title)} ↗</a>`).join("");
   }
 
   function renderAll() {

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import csv
 import json
+import runpy
 import urllib.request
 from collections import defaultdict
 from datetime import date
@@ -236,6 +237,8 @@ def main() -> None:
     }
     OUT.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {OUT}: {len(countries)} countries, {sum(c['budget']['item_count'] for c in countries)} budget lines")
+    runpy.run_path(str(ROOT / 'scripts/build-sipri-direct.py'), run_name='__main__')
+    runpy.run_path(str(ROOT / 'scripts/build-czech-defense-definitions.py'), run_name='__main__')
 
 
 if __name__ == "__main__":

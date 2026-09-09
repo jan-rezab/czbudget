@@ -139,6 +139,7 @@ def main() -> None:
         name = large_city_names.get(ico) or clean_name(record.get("obchodniJmeno") or ico)
         municipalities.append({
             "entity_id": f"CZ:{ico}",
+            "identity_provenance": {"source_id": "ARES_2025", "source_updated_at": record.get("datumAktualizace"), "retrieved_at": None, "valid_from": None, "valid_to": None, "historical_validity": "unverified_for_fiscal_2025", "note": "Cached ARES identity/address/legal form; source update date is not retrieval or effective date. No historical ownership inferred."},
             "country_code": "CZE",
             "currency_code": "CZK",
             "fiscal_year": 2025,
@@ -234,7 +235,10 @@ def main() -> None:
         "municipalities": municipalities,
         "sources": benchmark["source_registry"] + [{
             "source_id": "ARES_2025",
-            "label_cs": "ARES — identita účetních jednotek",
+            "label_cs": "ARES — identita účetních jednotek (časová platnost neověřena)",
+            "retrieved_at": None,
+            "historical_validity": "unverified_for_fiscal_2025",
+            "note": "Cache filename 2025 identifies the financial cohort, not identity validity. Original retrieval timestamp was not retained. Current cached legal form selects the cohort; historical inclusion remains unverified.",
             "url": "https://ares.gov.cz/swagger-ui/",
         }, {
             "source_id": "CZSO_DATASTAT_OBY01B01_9379W",

@@ -124,6 +124,10 @@ const countries = map.locations
     const readinessScore = score === null ? null : Math.min(100, score + municipalBonus);
     const index = {
       score: readinessScore,
+      publisher:"PublicSpendingData",
+      is_official_obs_score:false,
+      label_en:"PSD composite source readiness",
+      label_cs:"Složené hodnocení dostupnosti zdrojů PSD",
       band: readinessBand(readinessScore),
       obs_component: score,
       municipal_score: localScore,
@@ -143,7 +147,9 @@ const countries = map.locations
         research_status: score === null ? "not_researched" : "assessed",
         score,
         band: nationalBand(score),
-        survey: score === null ? null : "OBS 2023"
+        survey: score === null ? null : "OBS 2023",
+        publisher:"International Budget Partnership",
+        is_official_obs_score:true
       },
       budget_transparency_index: index,
       portal_readiness: index,

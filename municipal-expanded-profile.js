@@ -25,6 +25,8 @@
   let visualShown = 12;
   let detailShown = 160;
   let fxData = null;
+  let cityvizorProfiles = [];
+  let sourceReconciliation = null;
   let displayCurrency = "EUR";
   try {
     const storedCurrency = localStorage.getItem("psd-international-municipal-currency");
@@ -675,11 +677,16 @@
     const nativeKicker = presentation.kicker || (profile.summaryOnly ? (lang === "en" ? "Published detail" : "Publikovaný detail") : t.nativeKicker);
     const nativeTitle = presentation.title || (profile.summaryOnly ? (lang === "en" ? "National headline totals" : "Celostátní souhrnné hodnoty") : t.nativeTitle);
     const nativeCopy = presentation.body || (profile.summaryOnly ? (lang === "en" ? "The national 2025 layer publishes adjusted receipts and payments excluding financing. No item-level city budget is inferred from these totals." : "Celostátní vrstva za rok 2025 publikuje očištěné příjmy a výdaje bez financování. Z těchto součtů nedopočítáváme položkový rozpočet města.") : t.nativeCopy);
+    const auditRows=sourceReconciliation?.mismatches?.filter(row=>row.ico===profile.code)||[];
+    const auditExpense=auditRows.find(row=>row.measure==='expense_actual');
+    const auditNote=auditExpense?`<p class="detail-source-exception">${lang==='en'?`The official 2025 detailed and summary exports differ by CZK ${new Intl.NumberFormat('en-GB').format(Math.abs(Number(auditExpense.difference)))} in expenditure. The published detail is preserved; see the reconciliation.`:`Oficiální podrobný a souhrnný export za rok 2025 se ve výdajích liší o ${new Intl.NumberFormat('cs-CZ').format(Math.abs(Number(auditExpense.difference)))} Kč. Podrobná data zachováváme; viz kontrola součtů.`} <a href="${assetRoot}data/czech-municipal-reconciliation.v1.json">${lang==='en'?'Source check':'Kontrola zdroje'}</a></p>`:'';
+    const cityvizorLink=cityvizorProfiles.length?`<a href="${assetRoot}czech-sources.html?lang=${lang}&ico=${encodeURIComponent(profile.code)}#cityvizor">${lang==='en'?'CityVizor source records':'Zdrojové záznamy CityVizor'}</a>`:'';
     const plzenSpecial = profile.country === "CZE" && profile.code === "00075370"
       ? `<a href="${assetRoot}deep-dives/plzen-contracts/?lang=${lang}">${t.plzenSpecial}</a>`
       : "";
     document.querySelector("main").innerHTML = `<nav class="breadcrumbs"><a href="${assetRoot}municipalities/?lang=${lang}">${t.municipalities}</a><span>›</span><a href="${assetRoot}${country.profileRoot || `municipalities/${country.slug}`}/?lang=${lang}">${escapeHtml(country[lang])}</a><span>›</span><strong>${escapeHtml(profile.name)}</strong></nav>
-      <section class="detail-hero" id="overview"><div><span class="eyebrow"><i class="live-dot"></i>${escapeHtml(country[lang])} · ${t.official}</span><h1>${escapeHtml(profile.name)}</h1><p>${t.code} ${escapeHtml(profile.code)}${profile.region ? ` · ${escapeHtml(profile.region)}` : ""}. ${t.sourceCopy}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">${t.budget} ${latestYear} <b>↓</b></a><a href="#native-detail">${t.nativeKicker}</a>${plzenSpecial}<a href="${escapeHtml(profileUrl)}" download>${t.profileData}</a></div></div><aside class="detail-score"><span>${executionRate !== null ? t.executionRate : t.latest}</span><strong>${executionRate !== null ? percentage(executionRate) : latestYear || "—"}</strong><small>${executionRate !== null ? `${t.actual} / ${t.revised}` : escapeHtml(profile.currency)}</small></aside></section>
+      <section class="detail-hero" id="overview"><div><span class="eyebrow"><i class="live-dot"></i>${escapeHtml(country[lang])} · ${t.official}</span><h1>${escapeHtml(profile.name)}</h1><p>${t.code} ${escapeHtml(profile.code)}${profile.region ? ` · ${escapeHtml(profile.region)}` : ""}. ${t.sourceCopy}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">${t.budget} ${latestYear} <b>↓</b></a><a href="#native-detail">${t.nativeKicker}</a>${plzenSpecial}${cityvizorLink}<a href="${escapeHtml(profileUrl)}" download>${t.profileData}</a></div></div><aside class="detail-score"><span>${executionRate !== null ? t.executionRate : t.latest}</span><strong>${executionRate !== null ? percentage(executionRate) : latestYear || "—"}</strong><small>${executionRate !== null ? `${t.actual} / ${t.revised}` : escapeHtml(profile.currency)}</small></aside></section>
+      ${auditNote}
       <section class="detail-kpis">${[[t.revenue, latest.revenue, latestYear], [t.expenditure, latest.expenditure, latestYear], [t.balance, latest.balance, latestYear], fourthMetric].map(([label, value, note], index) => `<article><span>${label}</span><strong class="${index === 2 && numeric(value) !== null ? (Number(value) >= 0 ? "positive" : "negative") : ""}">${index === 3 && label === t.executionRate ? percentage(value) : money(value)}</strong><small>${numeric(value) !== null ? note : t.noValue}</small></article>`).join("")}</section>
       ${currencyControlMarkup(latestYear)}
       ${historyMarkup(history)}
@@ -710,9 +717,14 @@
       ? fetchJson(new URL("data/registry/municipal-item-labels.v1.json?v=20260902-polish-labels", assetRoot).href).catch(() => null)
       : Promise.resolve(null),
   ])
-    .then(([data, historyData, rates, frenchLines, warehouseLines, itemLabels]) => {
+    .then(async ([data, historyData, rates, frenchLines, warehouseLines, itemLabels]) => {
       fxData = rates;
       profile = adaptProfile(data, historyData, frenchLines, warehouseLines, itemLabels);
+      if(profile.country==='CZE'){
+        const [catalogue,audit]=await Promise.all([fetchJson(new URL('data/cityvizor-catalogue.v1.json',assetRoot).href).catch(()=>null),fetchJson(new URL('data/czech-municipal-reconciliation.v1.json',assetRoot).href).catch(()=>null)]);
+        cityvizorProfiles=catalogue?.profiles?.filter(row=>row.ico===profile.code)||[];
+        sourceReconciliation=audit;
+      }
       if (profile.country === "CZE" && profile.classificationCoverage?.dimensions?.functional) detailDimension = "functional";
       if (displayCurrency !== "native" && conversion(profile.latest?.year ?? profile.years?.at(-1)).currency !== displayCurrency) displayCurrency = "native";
       profile.normalizedDetail = localizedRows(profile.detail || []);

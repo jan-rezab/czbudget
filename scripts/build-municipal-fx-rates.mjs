@@ -29,6 +29,7 @@ for (const series of source.series || []) {
     if (!(localValue > 0) || !(usdValue > 0)) continue;
     years[year] = {
       local_per_usd: rounded(localValue / usdValue),
+      method: "IMF WEO nominal local GDP divided by USD GDP",
       status: localRow.status === "actual" && usdRow.status === "actual" ? "actual" : "estimate",
     };
   }
@@ -45,13 +46,49 @@ for (const year of allYears) {
   if (rate) eurPerUsd[year] = rounded(rate);
 }
 
+// Prefer the archived official annual series over GDP-implied euro rates.
+const ecb = JSON.parse(await readFile(new URL("../data/fx-eur-annual.v1.json", import.meta.url), "utf8"));
+const ecbYears=[];
+for(const point of ecb.values||[]) {
+  if(!(Number(point.usd_per_eur)>0)) continue;
+  const year=Number(point.year), direct=rounded(1/Number(point.usd_per_eur));
+  eurPerUsd[year]=direct;ecbYears.push(year);
+  for(const entry of Object.values(rates)) if(entry.currency==="EUR") {
+    entry.years[year]={local_per_usd:direct,status:"actual",method:"ECB annual average USD per EUR, inverted",source_url:ecb.source.url};
+  }
+}
+
+const direct = JSON.parse(await readFile(new URL("../data/ecb-annual-exchange-rates.v1.json", import.meta.url), "utf8"));
+const usdByYear = new Map(direct.observations.filter(row => row.currency === "USD").map(row => [row.year, row]));
+for (const [year, usd] of usdByYear) {
+  eurPerUsd[year] = rounded(1 / usd.value);
+  if (!ecbYears.includes(year)) ecbYears.push(year);
+  for (const entry of Object.values(rates)) if (entry.currency === "EUR") {
+    entry.years[year] = {local_per_usd: eurPerUsd[year], status: "actual", method: "ECB annual average USD per EUR, inverted", source_url: direct.source.url};
+  }
+}
+let directCount = 0;
+for (const row of direct.observations) {
+  const usd = usdByYear.get(row.year);
+  if (!usd || !(row.value > 0) || !(usd.value > 0)) continue;
+  for (const entry of Object.values(rates)) if (entry.currency === row.currency) {
+    entry.years[row.year] = {local_per_usd: rounded(row.value / usd.value), status: "actual",
+      method: "Ratio of ECB annual mean local per EUR to annual mean USD per EUR", observation_status: row.observation_status,
+      source_url: direct.source.url};
+    directCount++;
+  }
+}
+const finalYears = [...new Set(Object.values(rates).flatMap(entry => Object.keys(entry.years).map(Number)))].sort((a,b)=>a-b);
 const output = {
   schema_version: "1.0.0",
   generated_at: new Date().toISOString(),
-  method: "Implied annual market exchange rate: nominal GDP in local currency divided by nominal GDP in USD. EUR cross-rates use the median implied EUR-per-USD rate across euro-area countries in the same dataset.",
+  method: "ECB annual reference rates are preferred where available. Local per USD is the ratio of annual mean local per EUR and USD per EUR, not the mean of daily cross-rates. Uncovered currencies/years retain explicitly labeled GDP-implied rates.",
+  direct_ecb_years: ecbYears.sort((a,b)=>a-b),
+  sources: [direct.source, ecb.source, source.source],
+  direct_ecb_country_years: directCount,
   fallback_policy: "Use the nearest available annual rate and disclose the rate year in the interface.",
   source: source.source,
-  period: { start_year: allYears[0], end_year: allYears.at(-1), year_count: allYears.length },
+  period: { start_year: finalYears[0], end_year: finalYears.at(-1), year_count: finalYears.length },
   eur_per_usd: eurPerUsd,
   rates,
 };

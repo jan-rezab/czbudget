@@ -1,0 +1,2538 @@
+{
+  "id": "rsd-network-22",
+  "name": "Silnice pro motorová vozidla",
+  "complete": true,
+  "feature_count": 657,
+  "native_project_record_ids": null,
+  "object_id_field": "OBJECTID",
+  "source_schema": {
+    "currentVersion": 10.91,
+    "cimVersion": "2.9.0",
+    "id": 22,
+    "name": "Silnice pro motorová vozidla",
+    "type": "Feature Layer",
+    "description": "",
+    "geometryType": "esriGeometryPolyline",
+    "sourceSpatialReference": {
+      "wkid": 102067,
+      "latestWkid": 5514,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -33699800,
+      "falseY": -33699800,
+      "xyUnits": 10000,
+      "falseZ": 0,
+      "zUnits": 1,
+      "falseM": 0,
+      "mUnits": 1
+    },
+    "copyrightText": "",
+    "parentLayer": {
+      "id": 17,
+      "name": "Silniční a dálniční síť"
+    },
+    "subLayers": [],
+    "minScale": 0,
+    "maxScale": 0,
+    "referenceScale": 0.0,
+    "drawingInfo": {
+      "renderer": {
+        "type": "simple",
+        "symbol": {
+          "type": "esriSLS",
+          "style": "esriSLSSolid",
+          "color": [
+            56,
+            168,
+            0,
+            255
+          ],
+          "width": 3
+        }
+      },
+      "scaleSymbols": true,
+      "transparency": 0,
+      "labelingInfo": null
+    },
+    "defaultVisibility": true,
+    "extent": {
+      "xmin": -903073.0560999997,
+      "ymin": -1219950.4717000015,
+      "xmax": -432226.06159999967,
+      "ymax": -936466.6972000003,
+      "spatialReference": {
+        "wkid": 102067,
+        "latestWkid": 5514,
+        "xyTolerance": 0.001,
+        "zTolerance": 0.0002,
+        "mTolerance": 0.0002,
+        "falseX": -33699800,
+        "falseY": -33699800,
+        "xyUnits": 133638764.24698351,
+        "falseZ": -100000,
+        "zUnits": 10000,
+        "falseM": -100000,
+        "mUnits": 10000
+      }
+    },
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "displayField": "CIS_USEKU",
+    "typeIdField": null,
+    "subtypeFieldName": null,
+    "subtypeField": null,
+    "defaultSubtypeCode": null,
+    "fields": [
+      {
+        "name": "CIS_USEKU",
+        "type": "esriFieldTypeString",
+        "alias": "Číslo úseku",
+        "length": 20,
+        "domain": null
+      },
+      {
+        "name": "SILNICE",
+        "type": "esriFieldTypeString",
+        "alias": "Označení komunikace",
+        "length": 8,
+        "domain": null
+      },
+      {
+        "name": "DuvodZmeny",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Důvod změny úseku proti minulé aktualizaci",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD07",
+          "description": "Lokalizace - Grafické změny úseků",
+          "codedValues": [
+            {
+              "name": "bez změny",
+              "code": 0
+            },
+            {
+              "name": "grafická změna zpřesnění průběhu dle ortofoto",
+              "code": 1
+            },
+            {
+              "name": "nový úsek (obchvaty, okružní křížovatky, přeložky apod.)",
+              "code": 2
+            },
+            {
+              "name": "spojení stávajících úseků",
+              "code": 3
+            },
+            {
+              "name": "rozdělení stávajících úseků",
+              "code": 4
+            },
+            {
+              "name": "grafické prodloužení úseku",
+              "code": 5
+            },
+            {
+              "name": "grafické zkrácení úseku",
+              "code": 6
+            },
+            {
+              "name": "napojení na novou nebo změněnou okružní křížovatku",
+              "code": 7
+            },
+            {
+              "name": "napojení na obchvat, přeložku",
+              "code": 8
+            },
+            {
+              "name": "posun UB do jiné křižovatky (většinou u silnic III. tříd)",
+              "code": 9
+            },
+            {
+              "name": "změna okružní křižovatky",
+              "code": 10
+            },
+            {
+              "name": "grafická změna - pouze změna napojení v UB dle ortofoto (není opraven celý průběh)",
+              "code": 11
+            },
+            {
+              "name": "změna křižovatky",
+              "code": 12
+            },
+            {
+              "name": "změna průběhu úseku - většinou jiný průjezd obcí",
+              "code": 13
+            },
+            {
+              "name": "změna průběhu úseku - zakončení nebo začátek jinde",
+              "code": 14
+            },
+            {
+              "name": "změna čísla úseku",
+              "code": 15
+            },
+            {
+              "name": "otočení úseku",
+              "code": 16
+            },
+            {
+              "name": "přečíslování silnice",
+              "code": 17
+            },
+            {
+              "name": "změna délky v atributové tabulce a číslo úseku zůstává stejné",
+              "code": 18
+            },
+            {
+              "name": "žádost o přeměření úseku",
+              "code": 19
+            },
+            {
+              "name": "oprava délky v atributové tabulce  - dle přeměření reportéra",
+              "code": 20
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "DuvodZmeny2",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Důvod změny úseku proti minulé aktualizaci 2",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD07",
+          "description": "Lokalizace - Grafické změny úseků",
+          "codedValues": [
+            {
+              "name": "bez změny",
+              "code": 0
+            },
+            {
+              "name": "grafická změna zpřesnění průběhu dle ortofoto",
+              "code": 1
+            },
+            {
+              "name": "nový úsek (obchvaty, okružní křížovatky, přeložky apod.)",
+              "code": 2
+            },
+            {
+              "name": "spojení stávajících úseků",
+              "code": 3
+            },
+            {
+              "name": "rozdělení stávajících úseků",
+              "code": 4
+            },
+            {
+              "name": "grafické prodloužení úseku",
+              "code": 5
+            },
+            {
+              "name": "grafické zkrácení úseku",
+              "code": 6
+            },
+            {
+              "name": "napojení na novou nebo změněnou okružní křížovatku",
+              "code": 7
+            },
+            {
+              "name": "napojení na obchvat, přeložku",
+              "code": 8
+            },
+            {
+              "name": "posun UB do jiné křižovatky (většinou u silnic III. tříd)",
+              "code": 9
+            },
+            {
+              "name": "změna okružní křižovatky",
+              "code": 10
+            },
+            {
+              "name": "grafická změna - pouze změna napojení v UB dle ortofoto (není opraven celý průběh)",
+              "code": 11
+            },
+            {
+              "name": "změna křižovatky",
+              "code": 12
+            },
+            {
+              "name": "změna průběhu úseku - většinou jiný průjezd obcí",
+              "code": 13
+            },
+            {
+              "name": "změna průběhu úseku - zakončení nebo začátek jinde",
+              "code": 14
+            },
+            {
+              "name": "změna čísla úseku",
+              "code": 15
+            },
+            {
+              "name": "otočení úseku",
+              "code": 16
+            },
+            {
+              "name": "přečíslování silnice",
+              "code": 17
+            },
+            {
+              "name": "změna délky v atributové tabulce a číslo úseku zůstává stejné",
+              "code": 18
+            },
+            {
+              "name": "žádost o přeměření úseku",
+              "code": 19
+            },
+            {
+              "name": "oprava délky v atributové tabulce  - dle přeměření reportéra",
+              "code": 20
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "ADMINJ",
+        "type": "esriFieldTypeString",
+        "alias": "Administrativní jednotka",
+        "length": 6,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDMAB",
+          "description": "Administrativní jednotka",
+          "codedValues": [
+            {
+              "name": "Česká republika",
+              "code": "CZ"
+            },
+            {
+              "name": "Česká republika",
+              "code": "CZ0"
+            },
+            {
+              "name": "Praha",
+              "code": "CZ01"
+            },
+            {
+              "name": "Hlavní město Praha",
+              "code": "CZ010"
+            },
+            {
+              "name": "Praha",
+              "code": "CZ0100"
+            },
+            {
+              "name": "Střední Čechy",
+              "code": "CZ02"
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": "CZ020"
+            },
+            {
+              "name": "okres Benešov",
+              "code": "CZ0201"
+            },
+            {
+              "name": "okres Beroun",
+              "code": "CZ0202"
+            },
+            {
+              "name": "okres Kladno",
+              "code": "CZ0203"
+            },
+            {
+              "name": "okres Kolín",
+              "code": "CZ0204"
+            },
+            {
+              "name": "okres Kutná Hora",
+              "code": "CZ0205"
+            },
+            {
+              "name": "okres Mělník",
+              "code": "CZ0206"
+            },
+            {
+              "name": "okres Mladá Boleslav",
+              "code": "CZ0207"
+            },
+            {
+              "name": "okres Nymburk",
+              "code": "CZ0208"
+            },
+            {
+              "name": "okres Praha - východ",
+              "code": "CZ0209"
+            },
+            {
+              "name": "okres Praha - západ",
+              "code": "CZ020A"
+            },
+            {
+              "name": "okres Příbram",
+              "code": "CZ020B"
+            },
+            {
+              "name": "okres Rakovník",
+              "code": "CZ020C"
+            },
+            {
+              "name": "Jihozápad",
+              "code": "CZ03"
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": "CZ031"
+            },
+            {
+              "name": "okres České Budějovice",
+              "code": "CZ0311"
+            },
+            {
+              "name": "okres Český Krumlov",
+              "code": "CZ0312"
+            },
+            {
+              "name": "okres Jindřichův Hradec",
+              "code": "CZ0313"
+            },
+            {
+              "name": "okres Písek",
+              "code": "CZ0314"
+            },
+            {
+              "name": "okres Prachatice",
+              "code": "CZ0315"
+            },
+            {
+              "name": "okres Strakonice",
+              "code": "CZ0316"
+            },
+            {
+              "name": "okres Tábor",
+              "code": "CZ0317"
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": "CZ032"
+            },
+            {
+              "name": "okres Domažlice",
+              "code": "CZ0321"
+            },
+            {
+              "name": "okres Klatovy",
+              "code": "CZ0322"
+            },
+            {
+              "name": "okres Plzeň - město",
+              "code": "CZ0323"
+            },
+            {
+              "name": "okres Plzeň - jih",
+              "code": "CZ0324"
+            },
+            {
+              "name": "okres Plzeň - sever",
+              "code": "CZ0325"
+            },
+            {
+              "name": "okres Rokycany",
+              "code": "CZ0326"
+            },
+            {
+              "name": "okres Tachov",
+              "code": "CZ0327"
+            },
+            {
+              "name": "Severozápad",
+              "code": "CZ04"
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": "CZ041"
+            },
+            {
+              "name": "okres Cheb",
+              "code": "CZ0411"
+            },
+            {
+              "name": "okres Karlovy Vary",
+              "code": "CZ0412"
+            },
+            {
+              "name": "okres Sokolov",
+              "code": "CZ0413"
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": "CZ042"
+            },
+            {
+              "name": "okres Děčín",
+              "code": "CZ0421"
+            },
+            {
+              "name": "okres Chomutov",
+              "code": "CZ0422"
+            },
+            {
+              "name": "okres Litoměřice",
+              "code": "CZ0423"
+            },
+            {
+              "name": "okres Louny",
+              "code": "CZ0424"
+            },
+            {
+              "name": "okres Most",
+              "code": "CZ0425"
+            },
+            {
+              "name": "okres Teplice",
+              "code": "CZ0426"
+            },
+            {
+              "name": "okres Ústí nad Labem - město",
+              "code": "CZ0427"
+            },
+            {
+              "name": "Severovýchod",
+              "code": "CZ05"
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": "CZ051"
+            },
+            {
+              "name": "okres Česká Lípa",
+              "code": "CZ0511"
+            },
+            {
+              "name": "okres Jablonec nad Nisou",
+              "code": "CZ0512"
+            },
+            {
+              "name": "okres Liberec",
+              "code": "CZ0513"
+            },
+            {
+              "name": "okres Semily",
+              "code": "CZ0514"
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": "CZ052"
+            },
+            {
+              "name": "okres Hradec Králové",
+              "code": "CZ0521"
+            },
+            {
+              "name": "okres Jičín",
+              "code": "CZ0522"
+            },
+            {
+              "name": "okres Náchod",
+              "code": "CZ0523"
+            },
+            {
+              "name": "okres Rychnov nad Kněžnou",
+              "code": "CZ0524"
+            },
+            {
+              "name": "okres Trutnov",
+              "code": "CZ0525"
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": "CZ053"
+            },
+            {
+              "name": "okres Chrudim",
+              "code": "CZ0531"
+            },
+            {
+              "name": "okres Pardubice",
+              "code": "CZ0532"
+            },
+            {
+              "name": "okres Svitavy",
+              "code": "CZ0533"
+            },
+            {
+              "name": "okres Ústí nad Orlicí",
+              "code": "CZ0534"
+            },
+            {
+              "name": "Jihovýchod",
+              "code": "CZ06"
+            },
+            {
+              "name": "Vysočina kraj",
+              "code": "CZ063"
+            },
+            {
+              "name": "okres Havlíčkův Brod",
+              "code": "CZ0631"
+            },
+            {
+              "name": "okres Jihlava",
+              "code": "CZ0632"
+            },
+            {
+              "name": "okres Pelhřimov",
+              "code": "CZ0633"
+            },
+            {
+              "name": "okres Třebíč",
+              "code": "CZ0634"
+            },
+            {
+              "name": "okres Žďár nad Sázavou",
+              "code": "CZ0635"
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": "CZ064"
+            },
+            {
+              "name": "okres Blansko",
+              "code": "CZ0641"
+            },
+            {
+              "name": "okres Brno - město",
+              "code": "CZ0642"
+            },
+            {
+              "name": "okres Brno - venkov",
+              "code": "CZ0643"
+            },
+            {
+              "name": "okres Břeclav",
+              "code": "CZ0644"
+            },
+            {
+              "name": "okres Hodonín",
+              "code": "CZ0645"
+            },
+            {
+              "name": "okres Vyškov",
+              "code": "CZ0646"
+            },
+            {
+              "name": "okres Znojmo",
+              "code": "CZ0647"
+            },
+            {
+              "name": "Střední Morava",
+              "code": "CZ07"
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": "CZ071"
+            },
+            {
+              "name": "okres Jeseník",
+              "code": "CZ0711"
+            },
+            {
+              "name": "okres Olomouc",
+              "code": "CZ0712"
+            },
+            {
+              "name": "okres Prostějov",
+              "code": "CZ0713"
+            },
+            {
+              "name": "okres Přerov",
+              "code": "CZ0714"
+            },
+            {
+              "name": "okres Šumperk",
+              "code": "CZ0715"
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": "CZ072"
+            },
+            {
+              "name": "okres Kroměříž",
+              "code": "CZ0721"
+            },
+            {
+              "name": "okres Uherské Hradiště",
+              "code": "CZ0722"
+            },
+            {
+              "name": "okres Vsetín",
+              "code": "CZ0723"
+            },
+            {
+              "name": "okres Zlín",
+              "code": "CZ0724"
+            },
+            {
+              "name": "Moravskoslezsko",
+              "code": "CZ08"
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": "CZ080"
+            },
+            {
+              "name": "okres Bruntál",
+              "code": "CZ0801"
+            },
+            {
+              "name": "okres Frýdek - Místek",
+              "code": "CZ0802"
+            },
+            {
+              "name": "okres Karviná",
+              "code": "CZ0803"
+            },
+            {
+              "name": "okres Nový Jičín",
+              "code": "CZ0804"
+            },
+            {
+              "name": "okres Opava",
+              "code": "CZ0805"
+            },
+            {
+              "name": "okres Ostrava - město",
+              "code": "CZ0806"
+            },
+            {
+              "name": "Spolková republika Německo",
+              "code": "DE"
+            },
+            {
+              "name": "Polská republika",
+              "code": "PL"
+            },
+            {
+              "name": "Rakouská republika",
+              "code": "AT"
+            },
+            {
+              "name": "Slovenská republika",
+              "code": "SK"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "PAPR_VETEV",
+        "type": "esriFieldTypeString",
+        "alias": "Označení paprsku, větve",
+        "length": 5,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD09",
+          "description": "Lokalizace - Označení paprsku, větve",
+          "codedValues": [
+            {
+              "name": "paprsek",
+              "code": "PAPRS"
+            },
+            {
+              "name": "větev",
+              "code": "VETEV"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "DOPR_SMERY",
+        "type": "esriFieldTypeString",
+        "alias": "Dopravní směry úseku",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDFP09",
+          "description": "Pasport - Dopravní směry na úseku",
+          "codedValues": [
+            {
+              "name": "oba dopravní směry",
+              "code": "0"
+            },
+            {
+              "name": "dopravní směr souhlasný s orientací úseku",
+              "code": "1"
+            },
+            {
+              "name": "dopravní směr proti orientaci úseku",
+              "code": "2"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "KOD_TR_KOM",
+        "type": "esriFieldTypeString",
+        "alias": "Kód třídy komunikace - základní",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD03",
+          "description": "Lokalizace - Třída komunikace",
+          "codedValues": [
+            {
+              "name": "dálnice I. a II. třídy",
+              "code": "1"
+            },
+            {
+              "name": "silnice I. třídy (včetně SMV)",
+              "code": "2"
+            },
+            {
+              "name": "silnice II. třídy",
+              "code": "3"
+            },
+            {
+              "name": "silnice III. třídy",
+              "code": "4"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "DELKA_US",
+        "type": "esriFieldTypeInteger",
+        "alias": "Délka úseku (m)",
+        "domain": null
+      },
+      {
+        "name": "VYM_TAHY",
+        "type": "esriFieldTypeString",
+        "alias": "Vymezené tahy",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD05_2",
+          "description": "Lokalizace - Vymezené tahy",
+          "codedValues": [
+            {
+              "name": "N předběžně správním úřadem zařazená SMV nezpoplatněná",
+              "code": "1"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená SMV zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "2"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená silnice I. tř. zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "3"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice zpoplatnění časové i výkonové (systémem elektronického mýta)",
+              "code": "4"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice nezpoplatněná",
+              "code": "5"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice zpoplatnění pouze výkonové (systémem elektronického mýta)",
+              "code": "6"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice zpoplatnění časové",
+              "code": "7"
+            },
+            {
+              "name": "nezpoplatněná silnice pro motorová vozidla (SMV)",
+              "code": "F"
+            },
+            {
+              "name": "silnice pro motorová vozidla (SMV) zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "G"
+            },
+            {
+              "name": "ostatní silnice I. třídy zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "I"
+            },
+            {
+              "name": "dálnice zpoplatnění časové i výkonové (systémem elektronického mýta)",
+              "code": "K"
+            },
+            {
+              "name": "nezpoplatněná dálnice",
+              "code": "L"
+            },
+            {
+              "name": "dálnice zpoplatnění pouze výkonové (systémem elektronického mýta)",
+              "code": "O"
+            },
+            {
+              "name": "předběžně vložený tah, který je pojížděn (kód pro úseky silnic s indexem H až Z s výjimkou N)",
+              "code": "P"
+            },
+            {
+              "name": "předběžně vložený tah, který není pojížděn",
+              "code": "Q"
+            },
+            {
+              "name": "předběžně zrušený tah, který je pojížděn (v Praze)",
+              "code": "R"
+            },
+            {
+              "name": "předběžně zrušený tah, který je pojížděn (ostatní)",
+              "code": "S"
+            },
+            {
+              "name": "předběžně zrušený tah, který není pojížděn (kód pro úseky silnic s indexem H až Z s výjimkou N)",
+              "code": "T"
+            },
+            {
+              "name": "dálnice zpoplatnění pouze časové",
+              "code": "U"
+            },
+            {
+              "name": "odpočívka",
+              "code": "Y"
+            },
+            {
+              "name": "silnice II. nebo III. třídy v dočasné správě ŘSD",
+              "code": "J"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "PEAZ_KOM1",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 1",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "PEAZ_KOM2",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 2",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "PEAZ_KOM3",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 3",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "PEAZ_KOM4",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 4",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "ETAH1",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 1",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "ETAH2",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 2",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "ETAH3",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 3",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "PORADI_US",
+        "type": "esriFieldTypeString",
+        "alias": "Pořadové číslo úseku na tahu komunikace",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "ETAH4",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 4",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "STANICENI1",
+        "type": "esriFieldTypeInteger",
+        "alias": "Provozní staničení POČÁTEČNÍHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "STANICENI2",
+        "type": "esriFieldTypeInteger",
+        "alias": "Provozní staničení KONCOVÉHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "OBLAST",
+        "type": "esriFieldTypeString",
+        "alias": "Oblast ",
+        "length": 2,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD02",
+          "description": "Lokalizace - Oblast",
+          "codedValues": [
+            {
+              "name": "oblast Benešov",
+              "code": "21"
+            },
+            {
+              "name": "oblast Kladno",
+              "code": "22"
+            },
+            {
+              "name": "oblast Kutná Hora",
+              "code": "23"
+            },
+            {
+              "name": "oblast Mnichovo Hradiště",
+              "code": "24"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "KOD_R",
+        "type": "esriFieldTypeString",
+        "alias": "Kód třídy komunikace - rozšířený",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD08",
+          "description": "Lokalizace - Třída komunikace (rozšířená)",
+          "codedValues": [
+            {
+              "name": "dálnice I. třídy",
+              "code": "1"
+            },
+            {
+              "name": "silnice I. třídy",
+              "code": "2"
+            },
+            {
+              "name": "silnice II. třídy",
+              "code": "3"
+            },
+            {
+              "name": "silnice III. třídy",
+              "code": "4"
+            },
+            {
+              "name": "dálnice II. třídy",
+              "code": "5"
+            },
+            {
+              "name": "silnice pro motorová vozidla",
+              "code": "6"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "CESTMISTR",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Cestmistrovství",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD04",
+          "description": "Lokalizace - Označení cestmistrů",
+          "codedValues": [
+            {
+              "name": "úsek dálnice nebo silnice I. třídy",
+              "code": 0
+            },
+            {
+              "name": "Havlíčkův Brod",
+              "code": 6311
+            },
+            {
+              "name": "Chotěboř",
+              "code": 6312
+            },
+            {
+              "name": "Ledeč nad Sázavou",
+              "code": 6313
+            },
+            {
+              "name": "Jihlava",
+              "code": 6321
+            },
+            {
+              "name": "Telč",
+              "code": 6323
+            },
+            {
+              "name": "Pelhřimov",
+              "code": 6331
+            },
+            {
+              "name": "Pacov",
+              "code": 6332
+            },
+            {
+              "name": "Humpolec",
+              "code": 6334
+            },
+            {
+              "name": "Třebíč",
+              "code": 6341
+            },
+            {
+              "name": "Moravské Budějovice",
+              "code": 6342
+            },
+            {
+              "name": "Náměšť nad Oslavou",
+              "code": 6343
+            },
+            {
+              "name": "Bystřice nad Pernštejnem",
+              "code": 6351
+            },
+            {
+              "name": "Velké Meziříčí",
+              "code": 6352
+            },
+            {
+              "name": "Žďár nad Sázavou",
+              "code": 6353
+            },
+            {
+              "name": "cestmistr nevyplněn",
+              "code": 9999
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "KM_STAN1",
+        "type": "esriFieldTypeInteger",
+        "alias": "Kilometrovníkové staničení POČÁTEČNÍHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "KM_STAN2",
+        "type": "esriFieldTypeInteger",
+        "alias": "Kilometrovníkové staničení KONCOVÉHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "DAT_ZAZNAM",
+        "type": "esriFieldTypeDate",
+        "alias": "Datum vložení do databáze",
+        "length": 8,
+        "domain": null
+      },
+      {
+        "name": "POPIS",
+        "type": "esriFieldTypeString",
+        "alias": "Označení komunikace - zjednodušené",
+        "length": 7,
+        "domain": null
+      },
+      {
+        "name": "SPRAVCE1",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 1",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE2",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 2",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE31",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 3.1",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE32",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 3.2",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE4",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 4",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "OBJECTID",
+        "type": "esriFieldTypeOID",
+        "alias": "OBJECTID",
+        "domain": null
+      },
+      {
+        "name": "Shape",
+        "type": "esriFieldTypeGeometry",
+        "alias": "Shape",
+        "domain": null
+      },
+      {
+        "name": "Shape.STLength()",
+        "type": "esriFieldTypeDouble",
+        "alias": "Shape.STLength()",
+        "domain": null
+      }
+    ],
+    "geometryField": {
+      "name": "Shape",
+      "type": "esriFieldTypeGeometry",
+      "alias": "Shape"
+    },
+    "indexes": null,
+    "subtypes": [],
+    "relationships": [],
+    "canModifyLayer": true,
+    "canScaleSymbols": false,
+    "hasLabels": false,
+    "capabilities": "Map,Query,Data",
+    "maxRecordCount": 2000,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "isDataVersioned": false,
+    "ownershipBasedAccessControlForFeatures": {
+      "allowOthersToQuery": true
+    },
+    "useStandardizedQueries": true,
+    "supportedSpatialRelationships": [
+      "esriSpatialRelIntersects",
+      "esriSpatialRelContains",
+      "esriSpatialRelCrosses",
+      "esriSpatialRelEnvelopeIntersects",
+      "esriSpatialRelIndexIntersects",
+      "esriSpatialRelOverlaps",
+      "esriSpatialRelTouches",
+      "esriSpatialRelWithin",
+      "esriSpatialRelRelation"
+    ],
+    "advancedQueryCapabilities": {
+      "useStandardizedQueries": true,
+      "supportsStatistics": true,
+      "supportsPercentileStatistics": true,
+      "supportsHavingClause": true,
+      "supportsOrderBy": true,
+      "supportsDistinct": true,
+      "supportsCountDistinct": true,
+      "supportsPagination": true,
+      "supportsLod": false,
+      "supportsQueryWithLodSR": false,
+      "supportsTrueCurve": true,
+      "supportsQueryWithDatumTransformation": true,
+      "supportsReturningQueryExtent": true,
+      "supportsQueryWithDistance": true,
+      "supportsSqlExpression": true,
+      "supportsTimeRelation": true,
+      "supportsSqlFormat": false,
+      "supportsQueryAnalytic": true
+    },
+    "supportsDatumTransformation": true,
+    "advancedQueryAnalyticCapabilities": {
+      "supportsLinearRegression": true,
+      "supportsAsync": false,
+      "supportsPercentileAnalytic": true
+    },
+    "dateFieldsTimeReference": null,
+    "preferredTimeReference": null,
+    "datesInUnknownTimezone": false,
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+      "shapeLengthFieldName": "Shape.STLength()",
+      "units": "esriMeters"
+    },
+    "hasMetadata": true,
+    "isDataArchived": false,
+    "archivingInfo": {
+      "supportsQueryWithHistoricMoment": false,
+      "startArchivingMoment": -1
+    },
+    "supportsCoordinatesQuantization": true,
+    "supportsDynamicLegends": true
+  },
+  "source": {
+    "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/22",
+    "retrieved_at": "2026-09-09T14:12:54.487449+00:00",
+    "raw_sha256": "7b155f7b61a19c3c6b307360391068d12c311be98915e5914b2db5d94bc7e739",
+    "landing_page": "https://geoportal.rsd.cz/web",
+    "publisher": "ŘSD",
+    "reference_date": "2026-07-01",
+    "reference_date_basis": "ISSDS date displayed by the official Geoportal on 2026-09-09; not a verified update timestamp for each individual feature.",
+    "scope": "Silnice pro motorová vozidla"
+  },
+  "retrieved_from": "2026-09-09T14:12:55.637013+00:00",
+  "retrieved_to": "2026-09-09T14:12:57.133431+00:00",
+  "controls": {
+    "source_count": 657,
+    "source_ids": 657,
+    "retrieved_unique_ids": 657,
+    "matched": true,
+    "ids_source": {
+      "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/22/query?f=json&where=1%3D1&returnIdsOnly=true",
+      "retrieved_at": "2026-09-09T14:12:54.808701+00:00",
+      "sha256": "5fd72ecd9ac6a406e19490e2d8896a0144908e6c6c325877f618915f4de7d352",
+      "bytes": 4645
+    },
+    "count_source": {
+      "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/22/query?f=json&where=1%3D1&returnCountOnly=true",
+      "retrieved_at": "2026-09-09T14:12:55.134449+00:00",
+      "sha256": "806e9e0c1a8a1b15136c238167209a9fdd1fedc3e86c17842736a1b20e066045",
+      "bytes": 13
+    }
+  },
+  "pages": [
+    {
+      "path": "data/czech-project-geography/rsd-network-22/features-0000000.native.json.gz",
+      "rows": 200,
+      "sha256": "eb4fc1e1fcb10a5358d49a0440ccbf6013c4c996583d21ff82ce0271152cf643",
+      "bytes": 73066,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/22/query?f=json&objectIds=529450%2C529592%2C529593%2C529729%2C529858%2C529859%2C529861%2C530322%2C530365%2C530366%2C530369%2C530506%2C530552%2C531324%2C531325%2C531386%2C531393%2C531453%2C531456%2C531457%2C531461%2C531462%2C531463%2C531465%2C531490%2C531500%2C531568%2C531569%2C531644%2C531703%2C531705%2C531706%2C531707%2C531708%2C531711%2C531713%2C531714%2C531752%2C531753%2C531754%2C531755%2C531756%2C531757%2C531758%2C531777%2C531778%2C531779%2C531784%2C531793%2C531794%2C531795%2C531796%2C531797%2C531799%2C531800%2C531801%2C531802%2C531805%2C531812%2C531813%2C532219%2C532220%2C534211%2C534212%2C534213%2C534214%2C534226%2C534227%2C534228%2C534235%2C534248%2C534250%2C534252%2C534253%2C534254%2C534255%2C534256%2C534261%2C534262%2C534263%2C534264%2C534265%2C534266%2C534267%2C534268%2C534269%2C534270%2C534271%2C534272%2C534273%2C534322%2C534323%2C534330%2C534360%2C534363%2C534376%2C534377%2C534378%2C534379%2C534380%2C534381%2C534382%2C534383%2C534480%2C534481%2C534482%2C534483%2C534484%2C534485%2C534486%2C534487%2C534501%2C534502%2C534503%2C534504%2C534505%2C534506%2C534507%2C534508%2C534514%2C534515%2C534516%2C534527%2C534528%2C534529%2C534531%2C534532%2C534533%2C534534%2C534535%2C534536%2C534537%2C534538%2C534539%2C534619%2C534620%2C534621%2C534622%2C534623%2C534624%2C534625%2C534626%2C534682%2C535790%2C537228%2C539537%2C539538%2C539539%2C539540%2C540978%2C540979%2C540980%2C540981%2C540982%2C540983%2C540984%2C540985%2C540986%2C540987%2C540988%2C540989%2C540993%2C540994%2C540995%2C540996%2C540997%2C540998%2C540999%2C541000%2C541001%2C541006%2C541007%2C542684%2C543222%2C543225%2C543226%2C543227%2C543228%2C543243%2C543246%2C543247%2C543248%2C543249%2C543250%2C543251%2C543252%2C543253%2C543254%2C543255%2C543256%2C543273%2C543274%2C543275%2C543276%2C543277%2C543278%2C543279%2C544761%2C544762%2C544763&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:12:55.637013+00:00",
+        "sha256": "dd780926e6227fd404a4de4b64bdea2b7d901a3423247f98a81b8b9227e72d64",
+        "bytes": 326701
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-22/features-0000200.native.json.gz",
+      "rows": 200,
+      "sha256": "77411622a797948811ab36ee7a9f1dbedd7dd72162d7c5d9f476f3a1b5b2aa21",
+      "bytes": 91280,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/22/query?f=json&objectIds=544764%2C544840%2C544841%2C544842%2C544843%2C544844%2C544845%2C544846%2C544847%2C544848%2C544963%2C545711%2C545712%2C545713%2C545870%2C546410%2C546437%2C546579%2C546580%2C546581%2C546582%2C546583%2C546584%2C546585%2C546591%2C546592%2C548000%2C548021%2C548022%2C548068%2C548069%2C548070%2C548071%2C548083%2C549640%2C549641%2C550517%2C550518%2C550519%2C550526%2C550527%2C550528%2C550529%2C550530%2C550531%2C550532%2C550533%2C550534%2C550535%2C550542%2C550543%2C550544%2C550572%2C550573%2C550575%2C550932%2C552216%2C552217%2C552218%2C552219%2C552220%2C552221%2C552222%2C552235%2C552249%2C552511%2C552512%2C552513%2C552514%2C552548%2C552573%2C552574%2C552578%2C552581%2C553130%2C553131%2C553132%2C553133%2C553134%2C553135%2C553136%2C553137%2C553138%2C553139%2C553140%2C553141%2C553142%2C553143%2C553144%2C553145%2C553146%2C553147%2C553148%2C553149%2C553150%2C553151%2C553152%2C553153%2C553154%2C553155%2C553156%2C553157%2C553158%2C553159%2C553161%2C553168%2C553176%2C553177%2C553178%2C553180%2C553185%2C553186%2C553188%2C553189%2C553190%2C553191%2C553220%2C553221%2C553222%2C553223%2C553224%2C553225%2C553226%2C553227%2C553228%2C553229%2C553230%2C556696%2C556734%2C558469%2C558470%2C558594%2C558595%2C558596%2C558597%2C558598%2C558599%2C558600%2C558601%2C558602%2C558603%2C558604%2C558809%2C558857%2C558863%2C558867%2C558868%2C558869%2C558870%2C558871%2C558872%2C558875%2C558876%2C558877%2C558879%2C558887%2C558888%2C558889%2C558890%2C558891%2C558892%2C558893%2C558894%2C558895%2C558896%2C558908%2C559033%2C559034%2C559035%2C559036%2C559037%2C559038%2C559039%2C559040%2C559041%2C559042%2C559043%2C559044%2C559045%2C559046%2C559047%2C559048%2C559049%2C559050%2C559051%2C559054%2C559061%2C559062%2C559063%2C559064%2C559065%2C559066%2C559067%2C559069%2C559070%2C559071%2C559072%2C559073%2C559074%2C559075&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:12:56.176699+00:00",
+        "sha256": "b74c32eee0014697ecee4b1d401d2077493f1fa148006431992ab52e2eba059e",
+        "bytes": 386244
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-22/features-0000400.native.json.gz",
+      "rows": 200,
+      "sha256": "e1e9b8e7292336c0581f678dcc44ff53c2ecf3dafaa15b2c1d3a09d2a5d6a72c",
+      "bytes": 101744,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/22/query?f=json&objectIds=559076%2C559077%2C559078%2C559079%2C559080%2C559082%2C559083%2C559084%2C559085%2C559086%2C559087%2C559088%2C559089%2C559090%2C559091%2C559092%2C559093%2C559094%2C559095%2C559096%2C559097%2C559098%2C559099%2C559100%2C559101%2C559133%2C559134%2C559135%2C559136%2C559137%2C559138%2C559139%2C559140%2C559141%2C559142%2C559143%2C559144%2C559145%2C559146%2C559147%2C559148%2C559149%2C559150%2C559151%2C559152%2C559153%2C559154%2C559155%2C559292%2C559294%2C559295%2C559296%2C559297%2C559818%2C559819%2C559820%2C559821%2C559891%2C559892%2C559903%2C559904%2C559905%2C559906%2C562449%2C562450%2C562451%2C562452%2C562453%2C562454%2C562455%2C562456%2C562457%2C562458%2C562459%2C562460%2C562472%2C562473%2C562474%2C562479%2C562480%2C562481%2C562482%2C562483%2C562535%2C562536%2C562537%2C562538%2C562540%2C562541%2C562621%2C564784%2C564786%2C564787%2C564804%2C564936%2C564937%2C564938%2C564939%2C564978%2C564979%2C565036%2C565037%2C565038%2C565039%2C565040%2C565041%2C565042%2C565043%2C565044%2C565045%2C565046%2C565047%2C565049%2C565058%2C565059%2C565060%2C565061%2C565062%2C565063%2C565064%2C565067%2C565068%2C565069%2C565080%2C565191%2C565311%2C565313%2C565458%2C565459%2C565460%2C565461%2C565594%2C565595%2C565596%2C565597%2C565598%2C565601%2C565602%2C565606%2C565607%2C565630%2C565717%2C565718%2C565719%2C565720%2C565739%2C565753%2C565754%2C565755%2C565756%2C565758%2C565759%2C565778%2C565782%2C565783%2C565818%2C565819%2C565820%2C565821%2C565822%2C565823%2C565824%2C565825%2C565827%2C565828%2C567511%2C567556%2C567557%2C567649%2C567650%2C567651%2C567906%2C568194%2C568195%2C568196%2C568198%2C568199%2C568200%2C568201%2C568202%2C568203%2C568204%2C568205%2C568206%2C568207%2C568208%2C568209%2C568210%2C568211%2C568213%2C568214%2C568215%2C568216%2C568487%2C568488%2C568489%2C568507%2C568508%2C568667%2C568668&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:12:56.715687+00:00",
+        "sha256": "14f912cf1425c1ad0ba09ea25d6640642b40ba34a88fb69a542a88e1186c8317",
+        "bytes": 420499
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-22/features-0000600.native.json.gz",
+      "rows": 57,
+      "sha256": "8d8a85729bc562579701452b259b4239091b291ca483f195285617d70e40a187",
+      "bytes": 21544,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/22/query?f=json&objectIds=568669%2C568670%2C568671%2C568681%2C568682%2C568683%2C568684%2C568685%2C568686%2C568687%2C568688%2C568689%2C568701%2C568702%2C569364%2C569365%2C569366%2C569367%2C569370%2C569371%2C569372%2C569375%2C569376%2C569377%2C569378%2C569379%2C569380%2C569381%2C569383%2C569384%2C569385%2C569389%2C569391%2C569396%2C569397%2C569399%2C569400%2C569401%2C569402%2C569405%2C569462%2C569464%2C569465%2C569466%2C569467%2C569468%2C569484%2C569570%2C569571%2C569572%2C569573%2C569574%2C569575%2C569576%2C569577%2C569578%2C569579&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:12:57.133431+00:00",
+        "sha256": "ab338b4fbb0a8a90de0c4ac72d33645d0f08e39c53a0a1a852eda6de7893a257",
+        "bytes": 96324
+      }
+    }
+  ],
+  "definitions": {
+    "geometry": "Native ArcGIS geometry and spatial reference retained; do not assume WGS84 or GeoJSON.",
+    "identifier": "ArcGIS object ID identifies a layer feature, not a globally stable project. RECORD_ID is retained where supplied; multiple features may represent one investment.",
+    "finance": "Geometry, dates, status and any expected cost do not establish payments, final outturn or a procurement-to-project link.",
+    "snapshot": "Non-atomic public-service acquisition. Explicit source ID and count controls match the archived feature set; no private layers or document binaries."
+  }
+}

@@ -88,7 +88,10 @@ def value(row: dict[str, str]) -> float | None:
 def observation(row: dict[str, str] | None, source_id: str) -> dict | None:
     if not row or value(row) is None:
         return None
-    return {"value": round(value(row), 3), "year": int(row["TIME_PERIOD"]), "source_id": source_id}
+    return {"value": round(value(row), 3), "year": int(row["TIME_PERIOD"]), "source_id": source_id,
+            "observation_status": row.get("OBS_STATUS") or None,
+            "unit": row.get("UNIT_MEASURE") or None, "unit_multiplier": row.get("UNIT_MULT") or None,
+            "source_dimensions": {key: val for key, val in row.items() if key not in {"OBS_VALUE", "TIME_PERIOD"} and val}}
 
 
 def latest(items: list[dict[str, str]]) -> dict[str, str] | None:

@@ -141,7 +141,14 @@ def compact_contract(item: dict) -> dict:
         "subject": subject,
         "signed_at": first(item, "datumUzavreni", "DatumUzavreni"),
         "published_at": first(item, "casZverejneni", "CasZverejneni"),
-        "value_czk": value_czk if value_czk else None,
+        "value_czk": value_czk,
+        "source_price": {key: item[key] for key in (
+            "calculatedPriceWithVATinCZK", "CalculatedPriceWithVATinCZK",
+            "hodnotaBezDph", "HodnotaBezDph", "hodnotaVcetneDph", "HodnotaVcetneDph",
+            "ciziMena", "CiziMena") if key in item},
+        "source_validity": {key: item[key] for key in (
+            "platnyZaznam", "PlatnyZaznam", "platnost", "Platnost",
+            "zneplatnena", "Zneplatnena") if key in item},
         "payer": compact_party(first(item, "platce", "Platce")),
         "suppliers": [party for party in (compact_party(value) for value in recipients) if party],
         "category": categorize(subject),
