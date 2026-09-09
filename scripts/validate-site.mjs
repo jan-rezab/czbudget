@@ -148,6 +148,7 @@ const internationalMunicipalPage = await readFile("municipalities/index.html", "
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
 const cityvizorPage = await readFile("cityvizor/index.html", "utf8");
 const cityvizorScript = await readFile("cityvizor.js", "utf8");
+const municipalExpandedProfileScript = await readFile("municipal-expanded-profile.js", "utf8");
 const cityvizorRelease = JSON.parse(await readFile("data/cityvizor-explorer-release.v1.json", "utf8"));
 const cityvizorPointer = JSON.parse(await readFile("data/cityvizor-current.v1.json", "utf8"));
 const internationalMunicipalScript = await readFile("municipalities.js", "utf8");
@@ -568,6 +569,7 @@ if (!cacheBusted(cityvizorPage, "cityvizor.js") || !cacheBusted(cityvizorPage, "
 if (!cityvizorPage.includes("fakturačního pohledu") || !cityvizorPage.includes("účten") || !cityvizorPage.includes("bankovní") || !cityvizorScript.includes("income_cents") || !cityvizorScript.includes("expenditure_cents")) throw new Error("CityVizor explorer must state the invoice-view row boundary and preserve integer-cent directions");
 if (cityvizorRelease.status !== "prepared_not_published" || cityvizorRelease.profile_count !== 557 || cityvizorRelease.record_counts.payments !== 1270458 || cityvizorPointer.release_id !== cityvizorRelease.release_id || !cityvizorPointer.index.startsWith(`releases/${cityvizorRelease.release_id}/`)) throw new Error("CityVizor committed release pointer and validated release descriptor disagree");
 if (!cloudbuild.includes("_CITYVIZOR_SNAPSHOT_BASE_URL") || !cloudbuild.includes("publish-cityvizor-snapshot") || !cloudbuild.includes("CITYVIZOR_SNAPSHOT_BASE_URL")) throw new Error("Cloud Build must configure and atomically publish the CityVizor snapshot");
+if (!municipalExpandedProfileScript.includes("cityvizorSectionMarkup") || !municipalExpandedProfileScript.includes("/public-data/municipality-cityvizor?ico=") || !municipalExpandedProfileScript.includes("data.related_sources?.cityvizor")) throw new Error("Czech municipality profiles must embed their CityVizor relationship and expose the municipal integration API");
 if (!cacheBusted(homepage, "styles-v2.css") || !cacheBusted(homepage, "homepage-v2.js") || !cacheBusted(homepage, "global-nav.js") || !cacheBusted(homepage, "site-header.css")) throw new Error("Homepage assets must all be cache-busted");
 if (homepage.includes('id="compare"') || homepage.includes('id="method"') || !comparisonPage.includes('id="benchmark-overview"') || !comparisonPage.includes('id="benchmark-country"') || !homepageScript.includes("function benchmark")) throw new Error("Comparison and methodology must be separated from the homepage");
 if (globalNav.includes('code === "CZE"') || !globalNav.includes('assets/flags/${flag}.svg') || !countryScript.includes("czech-view-grid")) throw new Error("Country navigation must use shared profiles, SVG flags, and both Czech detail views");

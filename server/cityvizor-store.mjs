@@ -51,6 +51,30 @@ export class CityVizorStore {
     return { payload: await this.readAsset({ ...descriptor, path: descriptor.file }), etag: descriptor.content_sha256 };
   }
 
+  async municipality(icoValue) {
+    await this.refresh();
+    const ico = canonicalIco(icoValue);
+    const municipalityProfiles = this.indexDocument.profiles.filter((profile) => profile.type === "municipality" && profile.ico === ico);
+    const parentKeys = new Set(municipalityProfiles.map((profile) => profile.key));
+    const organizations = this.indexDocument.profiles.filter((profile) => parentKeys.has(profile.parent_profile_key));
+    const payload = {
+      schema_version: "1.0.0",
+      dataset_id: "cityvizor-municipality-integration",
+      release_id: this.pointer.release_id,
+      municipality_ico: ico,
+      status: municipalityProfiles.length ? "available" : "not_published",
+      matched: municipalityProfiles.length > 0,
+      definitions: {
+        relationship: "Municipality profiles are matched by exact eight-digit IČO. Organizations are included only when CityVizor publishes their parent_profile_key against a matched municipality profile.",
+        coverage: "CityVizor publication is voluntary. Absence here does not mean that the municipality has no accounting records or invoices.",
+        non_additive: "CityVizor invoice-view, accounting, event and plan layers overlap each other and the national municipal accounts. Their totals must not be added.",
+      },
+      municipality_profiles: municipalityProfiles.map(publicProfileDescriptor),
+      organizations: organizations.map(publicProfileDescriptor),
+    };
+    return { payload, etag: sha256(JSON.stringify(payload)) };
+  }
+
   async profile(profileKey, yearValue) {
     await this.refresh();
     const descriptor = this.profileDescriptor(profileKey);
@@ -241,6 +265,30 @@ export function canonicalProfileKey(value) {
   const key = String(value || "");
   if (!/^[a-z0-9.-]+\/[0-9]+$/.test(key) || key.length > 160) throw new CityVizorError(400, "invalid_cityvizor_profile_key", "Expected a CityVizor instance/profile key.");
   return key;
+}
+
+function canonicalIco(value) {
+  const ico = String(value || "").trim();
+  if (!/^\d{8}$/.test(ico)) throw new CityVizorError(400, "invalid_cityvizor_municipality_ico", "Expected an eight-digit Czech municipality IČO.");
+  return ico;
+}
+
+function publicProfileDescriptor(profile) {
+  return {
+    key: profile.key,
+    name: profile.name,
+    ico: profile.ico,
+    type: profile.type,
+    parent_profile_key: profile.parent_profile_key,
+    pbo_category_cs: profile.pbo_category_cs,
+    pbo_category_en: profile.pbo_category_en,
+    instance: profile.instance,
+    profile_url: profile.profile_url,
+    available_years: profile.available_years,
+    payment_years: profile.payment_years,
+    noticeboard_rows: profile.noticeboard_rows,
+    record_counts: profile.record_counts,
+  };
 }
 
 function requiredYear(value, availableYears) {

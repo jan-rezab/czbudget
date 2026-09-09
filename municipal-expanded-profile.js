@@ -26,6 +26,7 @@
   let detailShown = 160;
   let fxData = null;
   let cityvizorProfiles = [];
+  let cityvizorIntegration = null;
   let sourceReconciliation = null;
   let displayCurrency = "EUR";
   try {
@@ -515,6 +516,7 @@
     if (hasHistory) links.push(["history-explorer", t.trend]);
     if (hasFinance) links.push(["rozpocet", hasPlan ? t.budget : t.accounts]);
     if (hasDetail) links.push(["native-detail", profile.summaryOnly ? t.coverage : t.detail]);
+    if (cityvizorIntegration?.matched) links.push(["cityvizor", "CityVizor"]);
     links.push(["metodika", t.method]);
     const rail = document.createElement("nav");
     rail.className = "context-rail municipal-context-rail international-context-rail";
@@ -581,6 +583,46 @@
     return profile.detail_url
       ? `<a href="${escapeHtml(profile.detail_url)}"><span>${lang === "en" ? "Detailed line-item data" : "Detailní položková data"}</span><strong>${t.json}</strong></a>`
       : "";
+  }
+
+  function normalizeCatalogueCityvizorProfile(item) {
+    if (Array.isArray(item.available_years)) return item;
+    const years = item.years || [];
+    const recordCounts = years.reduce((totals, year) => {
+      totals.accounting += Number(year.records?.accounting || 0);
+      totals.events += Number(year.records?.events || 0);
+      totals.payments += Number(year.records?.payments || 0);
+      totals.plans += Number(year.plan_rows || 0);
+      return totals;
+    }, { accounting: 0, events: 0, payments: 0, plans: 0 });
+    return {
+      ...item,
+      available_years: years.map((year) => Number(year.year)).filter(Number.isFinite),
+      payment_years: years.filter((year) => Number(year.records?.payments || 0) > 0).map((year) => Number(year.year)),
+      record_counts: recordCounts,
+    };
+  }
+
+  function cityvizorSectionMarkup() {
+    if (!cityvizorIntegration?.matched || !cityvizorProfiles.length) return "";
+    const number = new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB");
+    const municipalityProfiles = cityvizorIntegration.municipality_profiles || [];
+    const organizations = cityvizorIntegration.organizations || [];
+    const main = municipalityProfiles[0] || cityvizorProfiles[0];
+    const years = [...new Set(municipalityProfiles.flatMap((item) => item.available_years || []))].sort((a, b) => a - b);
+    const latestYear = Math.max(...municipalityProfiles.flatMap((item) => item.available_years || []).map(Number).filter(Number.isFinite));
+    const profileLink = (item) => {
+      const available = (item.available_years || []).map(Number).filter(Number.isFinite);
+      const year = available.length ? `&year=${Math.max(...available)}` : "";
+      return `${assetRoot}cityvizor/?lang=${lang}&profile=${encodeURIComponent(item.key)}${year}`;
+    };
+    const card = (item, organization = false) => {
+      const counts = item.record_counts || {};
+      const category = lang === "en" ? item.pbo_category_en : item.pbo_category_cs;
+      return `<article class="municipal-cityvizor-profile"><header><span>${organization ? (lang === "en" ? "Organization" : "Organizace") : (lang === "en" ? "Municipality profile" : "Profil samosprávy")}</span><small>${category ? `${escapeHtml(category)} · ` : ""}IČO ${escapeHtml(item.ico || "—")}</small></header><h3>${escapeHtml(item.name)}</h3><dl><div><dt>${lang === "en" ? "Invoice-view rows" : "Řádky fakturačního pohledu"}</dt><dd>${number.format(counts.payments || 0)}</dd></div><div><dt>${lang === "en" ? "Accounting rows" : "Účetní řádky"}</dt><dd>${number.format(counts.accounting || 0)}</dd></div><div><dt>${lang === "en" ? "Plans" : "Plány"}</dt><dd>${number.format(counts.plans || 0)}</dd></div></dl><a href="${escapeHtml(profileLink(item))}">${lang === "en" ? "Open records" : "Otevřít záznamy"} →</a></article>`;
+    };
+    const shownOrganizations = organizations.slice(0, 8);
+    return `<section class="municipal-cityvizor" id="cityvizor" data-cityvizor-integration="${escapeHtml(cityvizorIntegration.release_id || "")}"><div class="detail-section-title"><div><span class="kicker">CityVizor · ${lang === "en" ? "voluntary transparency layer" : "dobrovolná vrstva transparentnosti"}</span><h2>${lang === "en" ? "Invoices, counterparties and organizations" : "Faktury, protistrany a organizace"}</h2></div><p>${lang === "en" ? "This municipality publishes additional CityVizor detail. These records overlap the national municipal accounts above and are never added to them." : "Tato obec zveřejňuje další detail v CityVizoru. Záznamy se překrývají s národními účty výše a nikdy se k nim nepřičítají."}</p></div><div class="municipal-cityvizor-summary"><article><span>${lang === "en" ? "Published years" : "Publikované roky"}</span><strong>${years.length ? `${years[0]}–${years.at(-1)}` : "—"}</strong><small>${number.format(years.length)} ${lang === "en" ? "years" : "roků"}</small></article><article><span>${lang === "en" ? "Invoice-view rows" : "Řádky fakturačního pohledu"}</span><strong>${number.format(main?.record_counts?.payments || 0)}</strong><small>${lang === "en" ? "not receipts or bank settlements" : "nejde o účtenky ani bankovní úhrady"}</small></article><article><span>${lang === "en" ? "Linked organizations" : "Navázané organizace"}</span><strong>${number.format(organizations.length)}</strong><small>${lang === "en" ? "explicit CityVizor parent links" : "explicitní vazby CityVizoru"}</small></article><article><span>${lang === "en" ? "Latest publication year" : "Poslední publikovaný rok"}</span><strong>${Number.isFinite(latestYear) ? latestYear : "—"}</strong><small>${escapeHtml(cityvizorIntegration.release_id || "")}</small></article></div><div class="municipal-cityvizor-grid">${municipalityProfiles.map((item) => card(item)).join("")}${shownOrganizations.map((item) => card(item, true)).join("")}</div>${organizations.length > shownOrganizations.length ? `<p class="municipal-cityvizor-more">${lang === "en" ? `${number.format(organizations.length - shownOrganizations.length)} more linked organizations are available in the explorer.` : `Dalších ${number.format(organizations.length - shownOrganizations.length)} navázaných organizací je dostupných v průzkumníku.`}</p>` : ""}<div class="detail-actions"><a class="primary-button" href="${assetRoot}cityvizor/?lang=${lang}&ico=${encodeURIComponent(profile.code)}">${lang === "en" ? "Open the complete CityVizor explorer" : "Otevřít celý průzkumník CityVizor"} →</a><a href="/public-data/municipality-cityvizor?ico=${encodeURIComponent(profile.code)}">${lang === "en" ? "Municipality integration JSON" : "Integrační JSON obce"} →</a></div></section>`;
   }
 
   function bindControls() {
@@ -697,6 +739,7 @@
       <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(financialDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
         <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div>${presentation.controls}<div class="detail-side-tabs" role="group" aria-label="${escapeHtml(t.side)}"><button type="button" data-detail-side="expenditure" class="${detailSide === "expenditure" ? "active" : ""}" aria-pressed="${detailSide === "expenditure"}">${t.spendingTab}</button><button type="button" data-detail-side="revenue" class="${detailSide === "revenue" ? "active" : ""}" aria-pressed="${detailSide === "revenue"}">${t.incomeTab}</button></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.year}</span><select id="profile-detail-year"><option value="all">${t.allYears}</option>${detailYears.map((year) => `<option value="${year}"${String(year) === detailYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label></div><div id="profile-detail-visual-wrap">${visualDetailMarkup()}</div><details class="raw-detail-audit"><summary><span>${t.rawRows}</span><strong>${t.rawRowsOpen} · <b id="profile-detail-count"></b></strong></summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></details></section>
       </section>
+      ${cityvizorSectionMarkup()}
       <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(profile.source_url || document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a>${detailSourceLinks(t)}${profile.approved_budget_url ? `<a href="${escapeHtml(profile.approved_budget_url)}" target="_blank" rel="noopener"><span>${t.approvedBudget} ${escapeHtml(profile.approved_budget_year)}</span><strong>${t.open}</strong></a>` : ""}${profile.region_source_url ? `<a href="${escapeHtml(profile.region_source_url)}" target="_blank" rel="noopener"><span>${t.regionalAccounts}</span><strong>${t.open}</strong></a>` : ""}<a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();
     renderDetailTable();
@@ -725,8 +768,18 @@
       fxData = rates;
       profile = adaptProfile(data, historyData, frenchLines, warehouseLines, itemLabels);
       if(profile.country==='CZE'){
-        const [catalogue,audit]=await Promise.all([fetchJson(new URL('data/cityvizor-catalogue.v1.json',assetRoot).href).catch(()=>null),fetchJson(new URL('data/czech-municipal-reconciliation.v1.json',assetRoot).href).catch(()=>null)]);
-        cityvizorProfiles=catalogue?.profiles?.filter(row=>row.ico===profile.code)||[];
+        const embedded=data.related_sources?.cityvizor;
+        const [catalogue,audit]=await Promise.all([embedded?Promise.resolve(null):fetchJson(new URL('data/cityvizor-catalogue.v1.json',assetRoot).href).catch(()=>null),fetchJson(new URL('data/czech-municipal-reconciliation.v1.json',assetRoot).href).catch(()=>null)]);
+        if(embedded){
+          cityvizorIntegration=embedded;
+        }else{
+          const normalized=(catalogue?.profiles||[]).map(normalizeCatalogueCityvizorProfile);
+          const direct=normalized.filter(row=>row.type==='municipality'&&row.ico===profile.code);
+          const parents=new Set(direct.map(row=>row.key));
+          const organizations=normalized.filter(row=>parents.has(row.parent_profile_key));
+          cityvizorIntegration={release_id:catalogue?.snapshot_completed_at||catalogue?.generated_at,status:direct.length?'available':'not_published',matched:direct.length>0,municipality_profiles:direct,organizations};
+        }
+        cityvizorProfiles=[...(cityvizorIntegration.municipality_profiles||[]),...(cityvizorIntegration.organizations||[])];
         sourceReconciliation=audit;
       }
       if (profile.country === "CZE" && profile.classificationCoverage?.dimensions?.functional) detailDimension = "functional";

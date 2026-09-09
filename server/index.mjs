@@ -219,6 +219,7 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/capital-cities") return sendJSON(response, 200, await listCapitalCities(url.searchParams));
   if ((match = pathname.match(/^\/api\/v1\/capital-cities\/([^/]+)$/))) return sendJSON(response, 200, { data: await capitalCity(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/municipalities") return sendJSON(response, 200, await listMunicipalities(url.searchParams));
+  if ((match = pathname.match(/^\/api\/v1\/municipalities\/CZE\/(\d{8})\/cityvizor$/))) return sendJSON(response, 200, { data: (await cityVizorStore.municipality(match[1])).payload });
   if ((match = pathname.match(/^\/api\/v1\/municipalities\/CZE\/(\d{8})\/budget$/))) return sendJSON(response, 200, { data: await czechMunicipalityBudget(match[1]) });
   if ((match = pathname.match(/^\/api\/v1\/municipalities\/CZE\/(\d{8})\/history$/))) return sendJSON(response, 200, { data: await czechMunicipalityHistory(match[1]) });
   if ((match = pathname.match(/^\/api\/v1\/municipalities\/([^/]+)\/([^/]+)$/))) return sendJSON(response, 200, { data: await municipality(match[1], decodeURIComponent(match[2])) });
@@ -385,7 +386,7 @@ export async function handler(request, response) {
       cityvizor: await cityVizorStore.status(),
     });
 
-    if (url.pathname === "/public-data/cityvizor/index" || url.pathname === "/public-data/cityvizor/codelists" || url.pathname === "/public-data/cityvizor/profile" || url.pathname === "/public-data/cityvizor/shard") {
+    if (url.pathname === "/public-data/cityvizor/index" || url.pathname === "/public-data/cityvizor/codelists" || url.pathname === "/public-data/cityvizor/profile" || url.pathname === "/public-data/cityvizor/shard" || url.pathname === "/public-data/municipality-cityvizor") {
       if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
       if (!enforceRateLimit(response, id, { key: "global", limit: 600, windowMs: 60 * 1000, group: "cityvizor-global" })) return;
       if (!enforceRateLimit(response, id, { key: clientIP(request), limit: 120, windowMs: 60 * 1000, group: "cityvizor-ip" })) return;
@@ -395,6 +396,8 @@ export async function handler(request, response) {
           ? await cityVizorStore.index()
           : url.pathname.endsWith("/codelists")
             ? await cityVizorStore.codelists()
+          : url.pathname.endsWith("municipality-cityvizor")
+            ? await cityVizorStore.municipality(url.searchParams.get("ico"))
           : url.pathname.endsWith("/profile")
             ? await cityVizorStore.profile(url.searchParams.get("key"), url.searchParams.get("year"))
             : await cityVizorStore.shard(url.searchParams.get("key"), url.searchParams.get("year"), url.searchParams.get("layer"), url.searchParams.get("part"));
@@ -453,7 +456,32 @@ export async function handler(request, response) {
         if (snapshot.history === null) throw new DataError(404, "municipality_history_not_found", "A separate history payload is not available for this profile.");
         return sendPublicJSON(request, response, 200, snapshot.history, { ETag: `"${snapshot.route.payload_sha256}-history"` });
       }
-      return sendPublicJSON(request, response, 200, snapshot.profile, { ETag: `"${snapshot.route.payload_sha256}"` });
+      let payload = snapshot.profile;
+      let etag = snapshot.route.payload_sha256;
+      const ico = snapshot.route.country_code === "CZE" ? snapshot.profile?.entity?.national_id : null;
+      if (cityVizorStore.enabled && /^\d{8}$/.test(String(ico || ""))) {
+        try {
+          const related = await cityVizorStore.municipality(ico);
+          payload = {
+            ...snapshot.profile,
+            related_sources: {
+              ...(snapshot.profile.related_sources || {}),
+              cityvizor: related.payload,
+            },
+          };
+          etag = `${etag}-${related.etag}`;
+        } catch (error) {
+          if (!(error instanceof CityVizorError)) throw error;
+          payload = {
+            ...snapshot.profile,
+            related_sources: {
+              ...(snapshot.profile.related_sources || {}),
+              cityvizor: { schema_version: "1.0.0", dataset_id: "cityvizor-municipality-integration", municipality_ico: ico, status: "unavailable", matched: false },
+            },
+          };
+        }
+      }
+      return sendPublicJSON(request, response, 200, payload, { ETag: `"${etag}"` });
     }
 
     if (/^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(url.pathname)) {

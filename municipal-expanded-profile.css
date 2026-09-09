@@ -510,6 +510,64 @@
   margin: 0;
 }
 
+.municipal-cityvizor {
+  margin: 0;
+  padding: 72px clamp(20px, 5vw, 72px);
+  border-top: 1px solid var(--cz-line);
+  background: #f3f0e7;
+}
+
+.municipal-cityvizor-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 34px 0;
+  border: 1px solid var(--cz-line);
+  background: #fff;
+}
+
+.municipal-cityvizor-summary article {
+  display: grid;
+  min-height: 132px;
+  padding: 20px;
+  border-right: 1px solid var(--cz-line);
+}
+
+.municipal-cityvizor-summary article:last-child { border-right: 0; }
+.municipal-cityvizor-summary span,
+.municipal-cityvizor-summary small { color: var(--cz-muted); }
+.municipal-cityvizor-summary strong { align-self: center; font-size: clamp(24px, 3vw, 40px); }
+
+.municipal-cityvizor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.municipal-cityvizor-profile {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid var(--cz-line);
+  background: #fff;
+}
+
+.municipal-cityvizor-profile header,
+.municipal-cityvizor-profile dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.municipal-cityvizor-profile header span,
+.municipal-cityvizor-profile header small,
+.municipal-cityvizor-profile dt { color: var(--cz-muted); }
+.municipal-cityvizor-profile h3,
+.municipal-cityvizor-profile dl { margin: 0; }
+.municipal-cityvizor-profile dd { margin: 0; font-weight: 700; }
+.municipal-cityvizor-profile > a { align-self: end; font-weight: 700; }
+.municipal-cityvizor-more { color: var(--cz-muted); }
+.municipal-cityvizor .detail-actions { margin-top: 24px; }
+
 .international-context-rail {
   z-index: 20;
 }
@@ -559,6 +617,11 @@
   .expanded-detail-controls {
     grid-template-columns: 1fr;
   }
+
+  .municipal-cityvizor-summary,
+  .municipal-cityvizor-grid { grid-template-columns: 1fr; }
+  .municipal-cityvizor-summary article { border-right: 0; border-bottom: 1px solid var(--cz-line); }
+  .municipal-cityvizor-summary article:last-child { border-bottom: 0; }
 
   .native-visual-row {
     grid-template-columns: 42px minmax(0, 1fr);

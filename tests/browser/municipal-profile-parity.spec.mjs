@@ -66,6 +66,22 @@ test("Czech profiles surface warehouse purpose and economic detail without chang
           budget_balance: 700000000, cash_current: 9600000000,
         },
       },
+      related_sources: {
+        cityvizor: {
+          schema_version: "1.0.0", dataset_id: "cityvizor-municipality-integration", release_id: "cityvizor-test",
+          municipality_ico: "44992785", status: "available", matched: true,
+          municipality_profiles: [{
+            key: "cityvizor.cz/37", name: "Brno", ico: "44992785", type: "municipality",
+            available_years: [2024, 2025], payment_years: [2024, 2025], noticeboard_rows: 25,
+            record_counts: { accounting: 1200, events: 30, payments: 5600, plans: 0 },
+          }],
+          organizations: [{
+            key: "cityvizor.cz/401", name: "Městská organizace", ico: "12345678", type: "pbo", parent_profile_key: "cityvizor.cz/37",
+            pbo_category_cs: "Školství", pbo_category_en: "Education", available_years: [2025], payment_years: [], noticeboard_rows: 0,
+            record_counts: { accounting: 0, events: 0, payments: 0, plans: 140 },
+          }],
+        },
+      },
     }),
   }));
   await page.route("**/public-data/municipality-lines?country=CZE&code=44992785", (route) => route.fulfill({
@@ -101,6 +117,11 @@ test("Czech profiles surface warehouse purpose and economic detail without chang
   await expect(page.locator(".budget-stage-actual")).toBeVisible();
   await expect(page.locator('.source-list a').first()).toHaveAttribute("href", /ucetni-jednotka\/44992785/);
   await expect(page.locator('a[href*="/public-data/municipality-lines?country=CZE"]')).toBeVisible();
+  await expect(page.locator('#cityvizor[data-cityvizor-integration="cityvizor-test"]')).toBeVisible();
+  await expect(page.locator("#cityvizor")).toContainText("5 600");
+  await expect(page.locator("#cityvizor")).toContainText("Městská organizace");
+  await expect(page.locator('#cityvizor a[href*="/public-data/municipality-cityvizor?ico=44992785"]')).toBeVisible();
+  await expect(page.locator('.international-context-rail a[href="#cityvizor"]')).toBeVisible();
 });
 
 test("Polish budget codes show English labels with the official Polish label beneath", async ({ page }) => {
