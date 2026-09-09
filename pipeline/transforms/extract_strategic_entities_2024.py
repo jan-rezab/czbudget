@@ -227,6 +227,9 @@ def main() -> None:
             }
         ],
     }
+    # Preserve reviewed individual balance sheets when regenerating MF cards.
+    from prepare_state_enterprise_balance_sheets import CONFIG, attach, build
+    attach(payload, build(payload, json.loads(CONFIG.read_text(encoding="utf-8"))))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
