@@ -25,7 +25,7 @@ def main():
         return
     env = dict(os.environ, CLOUDSDK_CORE_ACCOUNT=args.account, CLOUDSDK_ACTIVE_CONFIG_NAME='czbudget')
     subprocess.run(['bq', '--project_id=czbudget-janrezab', '--location=EU', 'query',
-                    '--use_legacy_sql=false', '--format=prettyjson', '--maximum_bytes_billed=1000000000',
+                    '--use_legacy_sql=false', '--format=prettyjson', '--maximum_bytes_billed=5000000000',
                     '--parameter=payload:JSON:' + json.dumps(payload, ensure_ascii=False, separators=(',', ':'))],
                    input=Path(__file__).with_suffix('.sql').read_text(), text=True, env=env, check=True)
 
