@@ -146,6 +146,10 @@ const japanExpansionProfile = JSON.parse(await readFile("data/municipal-expansio
 const brazilExpansionProfile = JSON.parse(await readFile("data/municipal-expansion/bra/5200555.json", "utf8"));
 const internationalMunicipalPage = await readFile("municipalities/index.html", "utf8");
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
+const cityvizorPage = await readFile("cityvizor/index.html", "utf8");
+const cityvizorScript = await readFile("cityvizor.js", "utf8");
+const cityvizorRelease = JSON.parse(await readFile("data/cityvizor-explorer-release.v1.json", "utf8"));
+const cityvizorPointer = JSON.parse(await readFile("data/cityvizor-current.v1.json", "utf8"));
 const internationalMunicipalScript = await readFile("municipalities.js", "utf8");
 const municipalityCountryScript = await readFile("municipalities-country.js", "utf8");
 const municipalityCountrySlugs = ["germany", "poland", "denmark", "france", "sweden", "england", "ukraine", "norway", "netherlands", "finland", "brazil", "spain", "japan", "colombia", "georgia", "italy", "bolivia", "el-salvador", "mexico", "costa-rica", "guatemala", "peru", "south-korea", "chile"];
@@ -560,6 +564,10 @@ if (!nginx.includes("global-nav.js?v=20260828-education") || nginx.includes("glo
 if (!nginx.includes("denmark|finland|france") || !nginx.includes("greece|[a-z][a-z][a-z])/$") || !nginx.includes("greece|[a-z][a-z][a-z])$") || nginx.includes("try_files /countries/$1/index.html =404")) throw new Error("All IMF-covered countries must use the shared national dashboard route");
 if (!countryParityStyles.includes("background:#fff;color:#17241f") || !countryParityStyles.includes("color:#4f5a55")) throw new Error("Country data-layer cards must keep readable dark text on white backgrounds");
 if (!czechMunicipalPage.includes('municipalities-czechia.js') || !internationalMunicipalScript.includes('CZE:"czechia"') || !internationalMunicipalScript.includes('DEU:"germany"') || !municipalityCountryScript.includes('profiles.DEU=') || !germanMunicipalProfilePage.includes('data/international-municipalities/DEU.v1.json')) throw new Error("Municipality hub must link to the Czechia and Germany detail routes");
+if (!cacheBusted(cityvizorPage, "cityvizor.js") || !cacheBusted(cityvizorPage, "cityvizor.css") || !cityvizorScript.includes("/public-data/cityvizor/index") || !cityvizorScript.includes("/public-data/cityvizor/profile") || !cityvizorScript.includes("/public-data/cityvizor/shard")) throw new Error("CityVizor explorer must use the normalized bounded public API");
+if (!cityvizorPage.includes("fakturačního pohledu") || !cityvizorPage.includes("účten") || !cityvizorPage.includes("bankovní") || !cityvizorScript.includes("income_cents") || !cityvizorScript.includes("expenditure_cents")) throw new Error("CityVizor explorer must state the invoice-view row boundary and preserve integer-cent directions");
+if (cityvizorRelease.status !== "prepared_not_published" || cityvizorRelease.profile_count !== 557 || cityvizorRelease.record_counts.payments !== 1270458 || cityvizorPointer.release_id !== cityvizorRelease.release_id || !cityvizorPointer.index.startsWith(`releases/${cityvizorRelease.release_id}/`)) throw new Error("CityVizor committed release pointer and validated release descriptor disagree");
+if (!cloudbuild.includes("_CITYVIZOR_SNAPSHOT_BASE_URL") || !cloudbuild.includes("publish-cityvizor-snapshot") || !cloudbuild.includes("CITYVIZOR_SNAPSHOT_BASE_URL")) throw new Error("Cloud Build must configure and atomically publish the CityVizor snapshot");
 if (!cacheBusted(homepage, "styles-v2.css") || !cacheBusted(homepage, "homepage-v2.js") || !cacheBusted(homepage, "global-nav.js") || !cacheBusted(homepage, "site-header.css")) throw new Error("Homepage assets must all be cache-busted");
 if (homepage.includes('id="compare"') || homepage.includes('id="method"') || !comparisonPage.includes('id="benchmark-overview"') || !comparisonPage.includes('id="benchmark-country"') || !homepageScript.includes("function benchmark")) throw new Error("Comparison and methodology must be separated from the homepage");
 if (globalNav.includes('code === "CZE"') || !globalNav.includes('assets/flags/${flag}.svg') || !countryScript.includes("czech-view-grid")) throw new Error("Country navigation must use shared profiles, SVG flags, and both Czech detail views");

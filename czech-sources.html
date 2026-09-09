@@ -12,14 +12,15 @@
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header>
   <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/styles-v2.css?v=20260822-brand">
-  <link rel="stylesheet" href="/global-footer.css?v=20260824-dark"><link rel="stylesheet" href="/czech-sources.css">
+  <link rel="stylesheet" href="/global-footer.css?v=20260824-dark"><link rel="stylesheet" href="/czech-sources.css?v=20260909-explorer">
   <script src="/global-nav.js?v=20260824-logo-120" defer></script>
-  <script src="/czech-sources.js" defer></script><script src="/global-footer.js?v=20260827-coverage-menu" defer></script>
+  <script src="/czech-sources.js?v=20260909-explorer" defer></script><script src="/global-footer.js?v=20260827-coverage-menu" defer></script>
 </head>
 <body class="standalone-page"><psd-site-header></psd-site-header>
 <main class="czech-sources">
   <header><p class="eyebrow" id="source-eyebrow">Public Spending Data · Česko</p><h1 id="source-title">Česká zdrojová data</h1><p id="source-intro">Původní tabulky, podrobnější záznamy a jejich účetní význam.</p></header>
   <section aria-labelledby="city-title" id="cityvizor"><h2 id="city-title">CityVizor: obce a jejich organizace</h2><p id="city-definition"></p><p id="city-stats" role="status">Načítám…</p>
+    <p class="city-explorer-cta"><a href="/cityvizor/?lang=cs" id="city-explorer-link">Otevřít fakturační a účetní pohledy →</a> <a href="https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-public-2026-09-09.zip" id="city-archive-link">Stáhnout celý zdrojový archiv ZIP →</a></p>
     <label for="city-search" id="city-search-label">Název nebo IČO</label><input type="search" id="city-search" autocomplete="off">
     <p id="city-result-count" aria-live="polite"></p><div class="source-table-wrap"><table><thead><tr><th id="city-head-name" scope="col">Organizace</th><th scope="col">IČO</th><th id="city-head-years" scope="col">Roky a exporty</th><th id="city-head-records" scope="col">Záznamy plateb</th></tr></thead><tbody id="city-rows"></tbody></table></div>
     <button type="button" id="city-more" hidden>Zobrazit další</button><p id="city-download-note" class="source-note"></p>

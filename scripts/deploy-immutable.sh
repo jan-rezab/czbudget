@@ -7,6 +7,7 @@ service="${3:?service is required}"
 tag="${4:?image tag is required}"
 deploy_marker="${5:?current-main deployment marker is required}"
 snapshot_base="${6:-}"
+cityvizor_snapshot_base="${7:-}"
 
 if [ ! -f "$deploy_marker" ]; then
   echo "Skipping deployment because this build is no longer the current main commit"
@@ -35,6 +36,9 @@ set -- gcloud run deploy "$service" \
 deploy_env_updates=""
 if [ -n "$snapshot_base" ]; then
   deploy_env_updates="PUBLIC_SNAPSHOT_BASE_URL=${snapshot_base}"
+fi
+if [ -n "$cityvizor_snapshot_base" ]; then
+  deploy_env_updates="${deploy_env_updates:+${deploy_env_updates}|}CITYVIZOR_SNAPSHOT_BASE_URL=${cityvizor_snapshot_base}"
 fi
 if [ -f /workspace/.reporting-env ]; then
   reporting_env_updates="$(cat /workspace/.reporting-env)"

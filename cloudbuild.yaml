@@ -71,6 +71,26 @@ steps:
     entrypoint: node
     args: [scripts/validate-paq.mjs]
 
+  # The complete normalized CityVizor layer is a checksum-pinned GitHub release
+  # asset. Hydrate it into a private build directory, validate every referenced
+  # object, and expose the pointer-shaped root to API and browser tests.
+  - id: hydrate-cityvizor
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        archive=/workspace/.cityvizor-release.tar.gz
+        serving=/workspace/.cityvizor-serving
+        release=20260909-2294793cff54
+        wget -qO "$$archive" "https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-explorer-2026-09-09.tar.gz"
+        echo "962238753f9aaa1a090b687371e558df5e54f38c034f7d1140771d9ce4951da0  $$archive" | sha256sum -c -
+        mkdir -p "$$serving/releases/$$release"
+        tar -C "$$serving/releases/$$release" -xzf "$$archive"
+        cp data/cityvizor-current.v1.json "$$serving/current.json"
+        python3 scripts/validate-cityvizor-explorer.py "$$serving/releases/$$release"
+
   - id: verify-industrial-diagnostics
     waitFor: ["-"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
@@ -187,6 +207,7 @@ steps:
     env:
       - CI=true
       - PUBLIC_SNAPSHOT_RELEASE_ROOT=/workspace/.public-serving-build
+      - CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/workspace/.cityvizor-serving
     args:
       - -ceu
       - |
@@ -242,6 +263,16 @@ steps:
         release="$COMMIT_SHA-$BUILD_ID"
         gcloud storage rsync -r "/workspace/.public-serving-build/releases/$$release" \
           "${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$release"
+
+  - id: upload-cityvizor-snapshot
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: gcloud
+    args:
+      - storage
+      - rsync
+      - -r
+      - /workspace/.cityvizor-serving/releases/20260909-2294793cff54
+      - ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/20260909-2294793cff54
 
   # Manifest/validation ordering is load-bearing — do not collapse these four steps.
   # validate-integrity.mjs both (a) verifies every artifact hash in
@@ -349,6 +380,7 @@ steps:
       - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
       - /workspace/.deploy-current-main
       - ${_PUBLIC_SNAPSHOT_BASE_URL}
+      - ${_CITYVIZOR_SNAPSHOT_BASE_URL}
 
   # Atomic data activation follows deployment. An obsolete build cannot switch
   # the pointer after assert-current-main has withdrawn its deploy marker.
@@ -360,6 +392,18 @@ steps:
       - /workspace/.deploy-current-main
       - /workspace/.public-serving-build/current.json
       - ${_PUBLIC_SNAPSHOT_BASE_URL}/current.json
+
+  # The complete CityVizor layer is prepared from the checksum-pinned source
+  # archive outside the image. Only switch its small pointer after compatible
+  # API and UI code is live, using the same current-main deployment marker.
+  - id: publish-cityvizor-snapshot
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: sh
+    args:
+      - scripts/publish-public-snapshot.sh
+      - /workspace/.deploy-current-main
+      - data/cityvizor-current.v1.json
+      - ${_CITYVIZOR_SNAPSHOT_BASE_URL}/current.json
 
 # Measured on build 6d00ef4f (2026-09-01), the first with archive hydration: 875s total,
 # spent as build 221 / validate 153 / verify-release-manifest 139 / deploy 88 / breakdown
@@ -393,3 +437,4 @@ options:
 substitutions:
   _DOCKERFILE: Dockerfile.slim
   _PUBLIC_SNAPSHOT_BASE_URL: "gs://czbudget-janrezab-public-snapshots/municipal"
+  _CITYVIZOR_SNAPSHOT_BASE_URL: "gs://czbudget-janrezab-public-snapshots/cityvizor"

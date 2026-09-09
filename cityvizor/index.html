@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Řádky fakturačního pohledu CityVizoru — Public Spending Data</title>
+    <meta
+      name="description"
+      content="Rozúčtované řádky došlých a vydaných faktur obcí a příspěvkových organizací v CityVizoru."
+    />
+    <link rel="canonical" href="https://publicspendingdata.org/cityvizor/" />
+    <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/cityvizor/?lang=cs" />
+    <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/cityvizor/?lang=en" />
+    <link rel="alternate" hreflang="x-default" href="https://publicspendingdata.org/cityvizor/" />
+    <link rel="icon" href="/assets/favicon.svg" />
+    <link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header />
+    <link rel="stylesheet" href="/styles.css?v=20260822-brand" />
+    <link rel="stylesheet" href="/styles-v2.css?v=20260822-brand" />
+    <link rel="stylesheet" href="/global-footer.css?v=20260824-dark" />
+    <link rel="stylesheet" href="/cityvizor.css?v=20260909-explorer" />
+    <script src="/global-nav.js?v=20260824-logo-120" defer></script>
+    <script src="/cityvizor.js?v=20260909-explorer" defer></script>
+    <script src="/global-footer.js?v=20260909" defer></script>
+  </head>
+  <body class="cityvizor-page">
+    <psd-site-header></psd-site-header>
+
+    <main id="top">
+      <nav class="cv-breadcrumb" aria-label="Drobečková navigace" data-copy-aria="breadcrumb">
+        <a href="/municipalities/czechia/?lang=cs" data-lang-link data-copy="municipalities">České obce</a>
+        <span aria-hidden="true">/</span>
+        <span>CityVizor</span>
+      </nav>
+
+      <header class="cv-hero">
+        <div>
+          <span class="cv-kicker"><i aria-hidden="true"></i><span data-copy="eyebrow">Česko · fakturační pohled CityVizoru</span></span>
+          <h1><span data-copy="titleLead">Řádky fakturačního pohledu</span><br /> <em data-copy="titleAccent">CityVizoru</em></h1>
+          <p data-copy="intro">Projděte řádky fakturačního pohledu CityVizoru podle roku, protistrany, částky a klasifikace. Řádek není účtenkou a nemusí být unikátní fakturou ani potvrzením bankovní úhrady.</p>
+        </div>
+        <form id="profile-search" class="cv-profile-search" role="search">
+          <label for="profile-query" data-copy="profileSearchLabel">Najít organizaci</label>
+          <div>
+            <input id="profile-query" type="search" autocomplete="off" placeholder="Název nebo IČO…" data-copy-placeholder="profileSearchPlaceholder" />
+            <button type="reset" data-copy="clear">Vymazat</button>
+          </div>
+          <output id="profile-result-count" for="profile-query" aria-live="polite"></output>
+          <div id="profile-results" class="cv-profile-results" role="listbox" aria-label="Organizace" data-copy-aria="organizations"></div>
+        </form>
+      </header>
+
+      <section id="explorer" class="cv-explorer" aria-labelledby="profile-name" hidden>
+        <header class="cv-profile-head">
+          <div>
+            <span id="profile-kind" class="cv-kicker"></span>
+            <h2 id="profile-name">—</h2>
+            <p id="profile-meta">—</p>
+          </div>
+          <div class="cv-profile-actions">
+            <label for="profile-year" data-copy="year">Rok</label>
+            <select id="profile-year"></select>
+            <a id="profile-source" href="#" target="_blank" rel="noopener" data-copy="openSource">Otevřít v CityVizoru ↗</a>
+          </div>
+        </header>
+
+        <p id="data-status" class="cv-status" role="status" aria-live="polite"></p>
+
+        <section class="cv-kpis" aria-label="Souhrn vybraných záznamů" data-copy-aria="summary">
+          <article><span data-copy="records">Řádky faktur</span><strong id="kpi-records">—</strong><small id="kpi-records-note"></small></article>
+          <article><span data-copy="expenditure">Výdaje</span><strong id="kpi-expenditure">—</strong><small data-copy="sumDisplayed">součet vybraných záznamů</small></article>
+          <article><span data-copy="income">Příjmy</span><strong id="kpi-income">—</strong><small data-copy="sumDisplayed">součet vybraných záznamů</small></article>
+          <article><span data-copy="counterparties">Protistrany</span><strong id="kpi-counterparties">—</strong><small data-copy="uniqueNamesIds">unikátní názvy nebo IČO</small></article>
+        </section>
+
+        <section class="cv-overview" aria-labelledby="overview-title">
+          <div class="cv-section-heading">
+            <div><span class="cv-kicker" data-copy="overviewKicker">Složení výdajů</span><h3 id="overview-title" data-copy="overviewTitle">Největší rozpočtové skupiny</h3></div>
+            <p data-copy="overviewCopy">Výdaje seskupené podle paragrafu. Sloupec ukazuje podíl na právě vybraných záznamech.</p>
+          </div>
+          <div id="category-bars" class="cv-category-bars"></div>
+        </section>
+
+        <section class="cv-record-layers" aria-labelledby="layers-title">
+          <div class="cv-section-heading">
+            <div><span class="cv-kicker" data-copy="layersKicker">Celý profil</span><h3 id="layers-title" data-copy="layersTitle">Rozpočet, účetnictví a akce</h3></div>
+            <p data-copy="layersCopy">Každá záložka zachovává význam původní vrstvy CityVizoru. Účetní obraty, rozpočtové plány, akce a platby se překrývají a nesčítají se.</p>
+          </div>
+          <div class="cv-layer-tabs" role="tablist" aria-label="Datové vrstvy CityVizoru" data-copy-aria="layers">
+            <button id="tab-accounting" type="button" role="tab" aria-selected="true" aria-controls="panel-accounting" data-layer="accounting" data-copy="accounting">Účetnictví</button>
+            <button id="tab-events" type="button" role="tab" aria-selected="false" aria-controls="panel-events" data-layer="events" data-copy="events">Akce a projekty</button>
+            <button id="tab-plans" type="button" role="tab" aria-selected="false" aria-controls="panel-plans" data-layer="plans" data-copy="plans">Plány organizace</button>
+            <button id="tab-notices" type="button" role="tab" aria-selected="false" aria-controls="panel-notices" data-layer="notices" data-copy="notices">Úřední deska</button>
+          </div>
+          <section id="panel-accounting" class="cv-layer-panel" role="tabpanel" aria-labelledby="tab-accounting">
+            <header><p data-copy="accountingDefinition">Účetní nebo rozpočtové řádky v klasifikaci zdroje. Plán, upravený rozpočet a skutečnost zůstávají oddělené.</p><strong id="accounting-count">—</strong></header>
+            <div class="cv-annual-table" id="annual-finance"></div>
+            <div class="cv-layer-table-wrap"><table><thead><tr><th data-copy="classification">Klasifikace</th><th data-copy="stage">Typ</th><th data-copy="incomeActual">Příjem · skutečnost</th><th data-copy="incomeBudget">Příjem · rozpočet</th><th data-copy="expenditureActual">Výdaj · skutečnost</th><th data-copy="expenditureBudget">Výdaj · rozpočet</th></tr></thead><tbody id="accounting-rows"></tbody></table></div>
+            <p id="accounting-empty" class="cv-empty" hidden data-copy="noAccounting">Tento profil pro vybraný rok nezveřejnil účetní řádky.</p>
+          </section>
+          <section id="panel-events" class="cv-layer-panel" role="tabpanel" aria-labelledby="tab-events" hidden>
+            <header><p data-copy="eventsDefinition">Akce a projekty jsou analytické štítky zdroje. Jejich částky mohou být obsaženy také v účetnictví a platbách.</p><strong id="events-count">—</strong></header>
+            <div id="event-cards" class="cv-event-cards"></div>
+            <p id="events-empty" class="cv-empty" hidden data-copy="noEvents">Tento profil pro vybraný rok nezveřejnil akce ani projekty.</p>
+          </section>
+          <section id="panel-plans" class="cv-layer-panel" role="tabpanel" aria-labelledby="tab-plans" hidden>
+            <header><p data-copy="plansDefinition">Plán ukazuje zamýšlené rozpočtové nebo akruální hodnoty příspěvkové organizace. Nejde o uskutečněné platby.</p><strong id="plans-count">—</strong></header>
+            <div class="cv-layer-table-wrap"><table><thead><tr><th data-copy="account">Účet / položka</th><th data-copy="incomeActual">Příjem · skutečnost</th><th data-copy="incomeBudget">Příjem · plán</th><th data-copy="expenditureActual">Výdaj · skutečnost</th><th data-copy="expenditureBudget">Výdaj · plán</th></tr></thead><tbody id="plan-rows"></tbody></table></div>
+            <p id="plans-empty" class="cv-empty" hidden data-copy="noPlans">Tento profil pro vybraný rok nezveřejnil plán organizace.</p>
+          </section>
+          <section id="panel-notices" class="cv-layer-panel" role="tabpanel" aria-labelledby="tab-notices" hidden>
+            <header><p data-copy="noticesDefinition">Metadata veřejné úřední desky jsou samostatná publikační vrstva. Odkazy vedou na zdrojové dokumenty; nejde o účetní záznamy.</p><strong id="notices-count">—</strong></header>
+            <div id="notice-cards" class="cv-event-cards cv-notice-cards"></div>
+            <p id="notices-empty" class="cv-empty" hidden data-copy="noNotices">Tento profil v archivním snímku nemá záznamy úřední desky.</p>
+          </section>
+        </section>
+
+        <section class="cv-payments" aria-labelledby="payments-title">
+          <div class="cv-section-heading">
+            <div><span class="cv-kicker" data-copy="paymentsKicker">Fakturační pohled</span><h3 id="payments-title" data-copy="paymentsTitle">Řádky a jejich rozúčtování</h3></div>
+            <p data-copy="paymentsCopy">Filtry se kombinují. Částky jsou v korunách a odpovídají původním znaménkům a členění zdroje.</p>
+          </div>
+
+          <form id="payment-filters" class="cv-filters">
+            <label class="cv-filter-wide"><span data-copy="searchPayment">Protistrana nebo popis</span><input id="filter-query" type="search" autocomplete="off" data-copy-placeholder="searchPaymentPlaceholder" placeholder="Název, IČO, účel…" /></label>
+            <label><span data-copy="direction">Typ částky</span><select id="filter-direction"><option value="" data-copy="allDirections">Příjmy i výdaje</option><option value="expenditure" data-copy="expenditureOnly">Pouze výdaje</option><option value="income" data-copy="incomeOnly">Pouze příjmy</option></select></label>
+            <label><span data-copy="dateFrom">Datum od</span><input id="filter-from" type="date" /></label>
+            <label><span data-copy="dateTo">Datum do</span><input id="filter-to" type="date" /></label>
+            <label><span data-copy="amountMin">Částka od</span><input id="filter-min" type="number" inputmode="decimal" step="1" placeholder="0" /></label>
+            <label><span data-copy="amountMax">Částka do</span><input id="filter-max" type="number" inputmode="decimal" step="1" /></label>
+            <label><span data-copy="paragraph">Paragraf</span><select id="filter-paragraph"><option value="" data-copy="all">Vše</option></select></label>
+            <label><span id="filter-item-label" data-copy="item">Položka</span><select id="filter-item"><option value="" data-copy="all">Vše</option></select></label>
+            <label><span data-copy="event">Akce / organizace</span><select id="filter-event"><option value="" data-copy="all">Vše</option></select></label>
+            <button type="reset" data-copy="resetFilters">Zrušit filtry</button>
+          </form>
+
+          <div class="cv-table-heading">
+            <p id="payment-result-count" aria-live="polite"></p>
+            <label><span data-copy="sort">Řazení</span><select id="payment-sort"><option value="date-desc" data-copy="newest">Nejnovější</option><option value="date-asc" data-copy="oldest">Nejstarší</option><option value="amount-desc" data-copy="largest">Nejvyšší částka</option><option value="amount-asc" data-copy="smallest">Nejnižší částka</option></select></label>
+          </div>
+          <div class="cv-table-wrap">
+            <table>
+              <thead><tr><th scope="col" data-copy="date">Datum</th><th scope="col" data-copy="counterparty">Protistrana</th><th scope="col" data-copy="description">Popis</th><th scope="col" data-copy="classification">Klasifikace</th><th scope="col" data-copy="income">Příjem</th><th scope="col" data-copy="expenditure">Výdaj</th></tr></thead>
+              <tbody id="payment-rows"></tbody>
+            </table>
+          </div>
+          <p id="payment-empty" class="cv-empty" hidden data-copy="noPayments">Žádný záznam neodpovídá zvoleným filtrům.</p>
+          <nav class="cv-pagination" aria-label="Stránkování plateb" data-copy-aria="pagination">
+            <button id="page-prev" type="button" data-copy="previous">← Předchozí</button>
+            <span id="page-state"></span>
+            <button id="page-next" type="button" data-copy="next">Další →</button>
+          </nav>
+        </section>
+
+        <section class="cv-method" aria-labelledby="method-title">
+          <div><span class="cv-kicker" data-copy="methodKicker">Jak data číst</span><h3 id="method-title" data-copy="methodTitle">Řádek nepotvrzuje bankovní úhradu</h3></div>
+          <div class="cv-definition-grid">
+            <article><b>01</b><h4 data-copy="definitionRecord">Řádek fakturačního pohledu</h4><p data-copy="definitionRecordCopy">Řádek fakturačního pohledu CityVizoru může být účetním rozúčtováním. Není identifikátorem unikátní faktury ani potvrzením bankovní úhrady.</p></article>
+            <article><b>02</b><h4 data-copy="definitionAmounts">Příjem a výdaj</h4><p data-copy="definitionAmountsCopy">Částky zachovávají členění zdroje. Nulová hodnota není chybějící údaj. Příjmy a výdaje nesčítáme do jedné hodnoty.</p></article>
+            <article><b>03</b><h4 data-copy="definitionOverlap">Překryv dat</h4><p data-copy="definitionOverlapCopy">Rozpočty, účetnictví, plány, platby a smlouvy se mohou vztahovat ke stejné ekonomické události. Jejich součty se nesčítají.</p></article>
+          </div>
+          <p class="cv-source-note"><span data-copy="sourceNote">Zdroj: veřejné exporty CityVizor. Zobrazená data jsou archivním snímkem; živý zdroj se může změnit.</span> <a href="/czech-sources.html?lang=cs#cityvizor" data-lang-link data-copy="sourceCatalogue">Katalog zdrojů a kontrolní součty →</a> <a href="https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-public-2026-09-09.zip" data-copy="sourceArchive">Celý zdrojový archiv ZIP →</a> <a href="https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-explorer-2026-09-09.tar.gz" data-copy="normalizedArchive">Normalizovaná data TAR.GZ →</a></p>
+        </section>
+      </section>
+
+      <section id="welcome" class="cv-welcome" aria-labelledby="welcome-title">
+        <span class="cv-kicker" data-copy="startKicker">Začněte organizací</span>
+        <h2 id="welcome-title" data-copy="startTitle">Vyhledejte obec nebo její organizaci</h2>
+        <p data-copy="startCopy">Průzkumník zobrazí veřejnou strukturu profilu po jednotlivých letech. Dostupnost účetnictví, akcí, plánů a plateb se mezi organizacemi liší.</p>
+      </section>
+    </main>
+
+    <footer data-global-footer></footer>
+  </body>
+</html>
