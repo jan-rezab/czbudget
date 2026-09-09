@@ -46,7 +46,7 @@ class ReportingSetupTests(unittest.TestCase):
         self.assertIn('DATA_REPORTS_ENABLED=true',value)
         self.assertIn('REPORTS_DATABASE_ID=data-reports',value)
         self.assertNotIn('private-token',value)
-        self.assertNotIn('REPORTS_ADMIN_EMAILS',value)
+        self.assertIn('REPORTS_ADMIN_EMAILS=jan@janrezab.com|',value)
 
     def test_storage_permission_failure_never_enables_intake(self):
         destination=MagicMock();destination.exists.return_value=True

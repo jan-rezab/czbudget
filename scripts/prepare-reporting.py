@@ -72,7 +72,7 @@ def main():
         raise RuntimeError('The reporting CAPTCHA key has unexpected domain restrictions.')
     # Verify the existing runtime/build identity can read this dedicated database.
     api('https://firestore.googleapis.com/v1/projects/'+PROJECT+'/databases/'+DATABASE+'/documents/dataReports?pageSize=1')
-    values = {'DATA_REPORTS_ENABLED':'true','REPORTS_PROJECT_ID':PROJECT,'REPORTS_DATABASE_ID':DATABASE,'REPORTS_RECAPTCHA_SITE_KEY':key['name'].split('/')[-1]}
+    values = {'REPORTS_ADMIN_EMAILS':'jan@janrezab.com','DATA_REPORTS_ENABLED':'true','REPORTS_PROJECT_ID':PROJECT,'REPORTS_DATABASE_ID':DATABASE,'REPORTS_RECAPTCHA_SITE_KEY':key['name'].split('/')[-1]}
     Path('/workspace/.reporting-env').write_text('^|^'+'|'.join(name+'='+value for name,value in values.items()))
     print('Reporting database, deny-all client rules, contact TTL and domain-restricted CAPTCHA are ready.')
 
