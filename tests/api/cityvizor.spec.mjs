@@ -74,7 +74,7 @@ const indexPayload = {
   dataset_id: "cityvizor-normalized-financial-records",
   complete: true,
   money_unit: "integer_cents",
-  profile_count: 1,
+  profile_count: 2,
   profiles_with_payments: 1,
   record_counts: { profile_years: 1, accounting: 0, events: 0, payments: 2, plans: 0, noticeboard: 0 },
   definitions: { payment_record: "A row from CityVizor's KDF/KOF invoice view, not a receipt or proof of bank settlement." },
@@ -82,6 +82,10 @@ const indexPayload = {
   profiles: [{
     key: profileKey, name: "Uherský Brod", ico: "00291463", type: "municipality",
     available_years: [year], payment_years: [year], record_counts: { accounting: 0, events: 0, payments: 2, plans: 0 },
+    profile_asset: profile.descriptor,
+  }, {
+    key: "cityvizor.cz/9", name: "Městská organizace", ico: "12345678", type: "pbo", parent_profile_key: profileKey,
+    available_years: [year], payment_years: [], record_counts: { accounting: 0, events: 0, payments: 0, plans: 1 },
     profile_asset: profile.descriptor,
   }],
 };
@@ -109,13 +113,20 @@ test.after(async () => fs.rm(root, { recursive: true, force: true }));
 
 test("CityVizor store serves only indexed profile/year/layer assets", async () => {
   const store = new CityVizorStore({ localRoot: root });
-  assert.equal((await store.index()).payload.profile_count, 1);
+  assert.equal((await store.index()).payload.profile_count, 2);
   assert.equal((await store.codelists()).payload.codelists.paragraphs[0].id, "6171");
   assert.equal((await store.profile(profileKey, year)).payload.years[0].year, year);
   const paymentRows = (await store.shard(profileKey, year, "payments", 1)).payload.rows;
   assert.equal(paymentRows.length, 2);
   assert.equal(paymentRows[1][3], -500, "negative corrections remain signed integer cents");
   assert.equal((await store.shard(profileKey, year, "pbo_payment_source_rows", 1)).payload.kind, "pbo-payment-source");
+  const municipality = (await store.municipality("00291463")).payload;
+  assert.equal(municipality.status, "available");
+  assert.equal(municipality.municipality_profiles[0].key, profileKey);
+  assert.equal(municipality.organizations[0].key, "cityvizor.cz/9");
+  assert.equal("profile_asset" in municipality.municipality_profiles[0], false, "storage descriptors stay private");
+  assert.equal((await store.municipality("00000000")).payload.status, "not_published");
+  await assert.rejects(store.municipality("291463"), (error) => error.code === "invalid_cityvizor_municipality_ico");
   await assert.rejects(store.shard(profileKey, year, "payments", 2), (error) => error.code === "cityvizor_part_not_found");
   await assert.rejects(store.shard(profileKey, year, "../../secrets", 1), (error) => error.code === "invalid_cityvizor_layer");
   await assert.rejects(store.profile("../escape", year), (error) => error.code === "invalid_cityvizor_profile_key");
@@ -142,6 +153,12 @@ test("CityVizor public endpoints expose index, selected year and invoice-view ro
     const shardResponse = await fetch(`${base}/public-data/cityvizor/shard?key=${encodeURIComponent(profileKey)}&year=${year}&layer=payments&part=1`);
     assert.equal(shardResponse.status, 200);
     assert.equal((await shardResponse.json()).rows[1][3], -500);
+
+    const municipalityResponse = await fetch(`${base}/public-data/municipality-cityvizor?ico=00291463`);
+    assert.equal(municipalityResponse.status, 200);
+    const municipality = await municipalityResponse.json();
+    assert.equal(municipality.matched, true);
+    assert.equal(municipality.organizations.length, 1);
 
     const unbounded = await fetch(`${base}/public-data/cityvizor/profile?key=${encodeURIComponent(profileKey)}`);
     assert.equal(unbounded.status, 400);
