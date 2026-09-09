@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-09",
+  "definition": "Country-native operating/current and investment/capital expenditure splits. Values are comparable within a country and year; terminology and accounting boundaries are not silently harmonised across countries.",
+  "countries": [
+    {
+      "code": "FRA",
+      "year": 2025,
+      "stage": "provisional_actual",
+      "currency": "EUR",
+      "municipality_count": 34778,
+      "operating_expenditure": 83996078976.04,
+      "investment_expenditure": 38326593391.85,
+      "classified_expenditure": 122322672367.89,
+      "labels": {
+        "cs": {
+          "operating": "Provozní výdaje",
+          "investment": "Investiční výdaje"
+        },
+        "en": {
+          "operating": "Operating expenditure",
+          "investment": "Investment expenditure"
+        }
+      },
+      "methodology_cs": "Hlavní rozpočet OFGL rozděluje výdaje na section de fonctionnement a section d’investissement. Investiční část zahrnuje také finanční toky, například splátky jistiny dluhu, a není proto totožná s firemním CAPEX.",
+      "methodology_en": "The OFGL main budget separates the operating section (fonctionnement) from the investment section (investissement). Investment also includes financing flows such as debt-principal repayment, so it is not identical to corporate CAPEX.",
+      "source_title": "OFGL · Base communes",
+      "source_url": "https://data.ofgl.fr/explore/dataset/ofgl-base-communes/"
+    },
+    {
+      "code": "FIN",
+      "year": 2020,
+      "stage": "actual",
+      "currency": "EUR",
+      "municipality_count": 310,
+      "operating_expenditure": 38605917000,
+      "investment_expenditure": 4332743000,
+      "classified_expenditure": 42938660000,
+      "labels": {
+        "cs": {
+          "operating": "Provozní náklady",
+          "investment": "Investiční výdaje"
+        },
+        "en": {
+          "operating": "Operating expenses",
+          "investment": "Investment expenses"
+        }
+      },
+      "methodology_cs": "Finské obecní účetní výkazy vykazují provozní náklady a investiční výdaje jako samostatné ukazatele. Jmenovatelem je jejich součet; nejde o mandatorní versus volitelné výdaje ani o rozklad výsledovkových nákladů.",
+      "methodology_en": "Finnish municipal financial statements publish operating expenses and investment expenses as separate measures. The denominator is their sum; this is neither mandatory versus discretionary spending nor a decomposition of income-statement expenditure.",
+      "source_title": "Statistics Finland · Municipal finances",
+      "source_url": "https://pxdata.stat.fi/PxWeb/pxweb/en/Kuntien_talous_ja_toiminta/"
+    }
+  ]
+}
