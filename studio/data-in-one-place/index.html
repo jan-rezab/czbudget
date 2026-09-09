@@ -6,15 +6,15 @@
   <meta name="color-scheme" content="dark">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="referrer" content="no-referrer">
-  <link rel="canonical" href="https://publicspendingdata.org/studio/data-in-one-place/">
-  <link rel="icon" href="assets/mark.png" type="image/png">
+  <link rel="canonical" href="https://publicspendingdata.org/demo">
+  <link rel="icon" href="/studio/data-in-one-place/assets/mark.png" type="image/png">
   <title>Many sources. One place. — Public Spending Data</title>
-  <link rel="stylesheet" href="style.css?v=20260907">
-  <link rel="stylesheet" href="film.css?v=20260907-sources">
+  <link rel="stylesheet" href="/studio/data-in-one-place/style.css?v=20260907">
+  <link rel="stylesheet" href="/studio/data-in-one-place/film.css?v=20260907-sources">
 </head>
 <body>
 <main id="one-place">
-  <header><img src="assets/wordmark.png" alt="Public Spending Data"><span class="eyebrow">THE DATA, BROUGHT TOGETHER</span><a href="https://publicspendingdata.org" target="_blank" rel="noopener">Explore the website ↗</a></header>
+  <header><img src="/studio/data-in-one-place/assets/wordmark.png" alt="Public Spending Data"><span class="eyebrow">THE DATA, BROUGHT TOGETHER</span><a href="https://publicspendingdata.org" target="_blank" rel="noopener">Explore the website ↗</a></header>
 
 <section class="film" id="source-film" aria-label="From Czech municipalities to a global source network">
   <div class="film-stage" id="film-stage">
@@ -22,7 +22,7 @@
     <div class="film-copy"><div class="film-kicker" id="film-kicker">01 / 06 · CZECH MUNICIPALITIES</div><h1 id="film-title">Start with every town.</h1><p id="film-subtitle">Budgets from Prague to the smallest municipality. Every dot is an actual municipal profile.</p></div>
     <div class="film-stat"><strong id="film-number">6,254</strong><span id="film-number-label">Czech municipalities</span></div>
     <div class="film-labels" id="film-labels"></div>
-    <div class="film-hub" id="film-hub" hidden><img src="assets/mark.png" alt=""><strong>Public money.<br>Connected.</strong><small id="film-hub-note">Country · institution · source</small></div>
+    <div class="film-hub" id="film-hub" hidden><img src="/studio/data-in-one-place/assets/mark.png" alt=""><strong>Public money.<br>Connected.</strong><small id="film-hub-note">Country · institution · source</small></div>
     <div class="film-volumes" id="film-volumes" hidden></div>
     <div class="film-note" id="film-note">One dot per municipality · dot positions are a layout, not geographic coordinates.</div>
   </div>
@@ -40,7 +40,7 @@
   </div>
   <div class="network-summary" aria-live="polite"><span id="network-count"></span><span id="network-scope"></span></div>
   <div class="network-grid" id="network-grid"></div><button type="button" class="network-more" id="network-more">Show more</button>
-  <details class="source-methodology"><summary>What is counted · snapshot and source definitions</summary><p id="network-methodology"></p><p>Municipalities and ministries are entities, not independent data feeds. The state-budget scene includes 14 ministries within 47 chapters. The global map highlights countries with national observations in the published IMF snapshot. Source references include datasets, publications and source documentation cited by published reports.</p><p>The three volume figures are separate measures from the 30 August 2026 coverage release. Cumulative processing can include overlapping historical versions; validated facts and published municipal lines have different populations. These numbers are never added together.</p><p><a href="network-data.json" download>Download the source inventory and entity names</a> · <a href="/methodology.html">Project methodology</a></p></details>
+  <details class="source-methodology"><summary>What is counted · snapshot and source definitions</summary><p id="network-methodology"></p><p>Municipalities and ministries are entities, not independent data feeds. The state-budget scene includes 14 ministries within 47 chapters. The global map highlights countries with national observations in the published IMF snapshot. Source references include datasets, publications and source documentation cited by published reports.</p><p>The three volume figures are separate measures from the 30 August 2026 coverage release. Cumulative processing can include overlapping historical versions; validated facts and published municipal lines have different populations. These numbers are never added together.</p><p><a href="/studio/data-in-one-place/network-data.json" download>Download the source inventory and entity names</a> · <a href="/methodology.html">Project methodology</a></p></details>
 </section>
 <details class="volume-explorer"><summary>Explore exact record counts by country, year and indicator</summary>
   <section class="intro">
@@ -58,7 +58,7 @@
   <section class="pipeline" aria-label="Data travels from official sources into one structured, filterable view">
     <canvas id="flow" aria-hidden="true"></canvas>
     <div class="sources-panel"><div class="panel-kicker">01 · OFFICIAL SOURCES</div><div id="source-list"></div><div class="source-rest" id="source-rest"></div></div>
-    <div class="hub-panel"><div class="hub" id="hub"><img src="assets/mark.png" alt=""><h3>One place<br>to explore.</h3><span>Country · year · source</span></div></div>
+    <div class="hub-panel"><div class="hub" id="hub"><img src="/studio/data-in-one-place/assets/mark.png" alt=""><h3>One place<br>to explore.</h3><span>Country · year · source</span></div></div>
     <div class="output-panel"><div class="panel-kicker">02 · YOUR FILTERED VIEW</div><div id="field" role="img" aria-label="Weighted points representing the selected records"></div><div class="particle-caption"><span id="particle-key"></span><button id="motion" type="button">Pause motion</button></div></div>
   </section>
   <section class="comparison" aria-label="Czechia compared with the rest of the covered world">
@@ -67,11 +67,11 @@
     <div class="split-track" role="img" aria-label="Share of records"><div id="cz-segment"></div><div id="rest-segment"></div></div>
     <div class="comparison-note">World includes Czechia. This strip uses the selected layer, year and indicator across all covered countries.</div>
   </section>
-  <details class="details"><summary>What the counts mean · sources</summary><p id="definition"></p><ul id="notes"></ul><p><a href="data.json">Download the measured coverage snapshot</a></p><div id="source-details"></div></details>
+  <details class="details"><summary>What the counts mean · sources</summary><p id="definition"></p><ul id="notes"></ul><p><a href="/studio/data-in-one-place/data.json">Download the measured coverage snapshot</a></p><div id="source-details"></div></details>
   <footer><span>Animated coverage snapshot · published data only</span><span id="flow-status" aria-live="polite">Gathering the view…</span></footer>
 </details>
 </main>
-<script src="data.js?v=20260907"></script><script src="app.js?v=20260907-source-explorer"></script>
-<script src="network-data.js?v=20260907-sources"></script><script src="film.js?v=20260907-sources"></script>
+<script src="/studio/data-in-one-place/data.js?v=20260907"></script><script src="/studio/data-in-one-place/app.js?v=20260907-source-explorer"></script>
+<script src="/studio/data-in-one-place/network-data.js?v=20260907-sources"></script><script src="/studio/data-in-one-place/film.js?v=20260907-sources"></script>
 </body>
 </html>

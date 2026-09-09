@@ -89,6 +89,7 @@ map $host $psd_head_inject {
 map $uri $studio_robots {
   default "";
   ~^/studio/ "noindex, nofollow, noarchive";
+  ~^/demo/?$ "noindex, nofollow, noarchive";
 }
 
 server {
@@ -260,6 +261,15 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
   }
+
+  location = /demo {
+    sub_filter '<head>' $psd_head_inject;
+    try_files /studio/data-in-one-place/index.html =404;
+  }
+
+  location = /demo/ { return 301 /demo$is_args$args; }
+  location = /studio/data-in-one-place { return 301 /demo$is_args$args; }
+  location = /studio/data-in-one-place/ { return 301 /demo$is_args$args; }
 
   location / {
     sub_filter_once off;

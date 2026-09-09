@@ -60,6 +60,11 @@ createServer(async (request, response) => {
   try {
     const url = new URL(request.url || "/", `http://127.0.0.1:${port}`);
     let pathname = decodeURIComponent(url.pathname);
+    if (["/demo/", "/studio/data-in-one-place", "/studio/data-in-one-place/", "/studio/data-in-one-place/index.html"].includes(pathname)) {
+      redirect(response, `/demo${url.search}`);
+      return;
+    }
+    if (pathname === "/demo") pathname = "/studio/data-in-one-place/index.html";
     // BigQuery has its own API contract tests. Browser tests replay recorded
     // public responses so they neither need cloud credentials nor spend quota.
     if (pathname === "/public-data/municipality-lines") {

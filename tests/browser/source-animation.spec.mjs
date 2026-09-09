@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-const url='/studio/data-in-one-place/';
+const url='/demo';
 
 test('the source film exposes municipalities, ministries and global institutions',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
