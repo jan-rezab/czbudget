@@ -12,6 +12,25 @@ test('industry opens historical data with global country controls before the her
   await expect(page.locator('#industry-subtitle')).toContainText('2010');
 });
 
+test('industry ranking stays compact with the full division list', async ({page}) => {
+  await page.goto('/deep-dives/industry/?code=CZE&channel=eurostat&lang=en&country=FRA&frequency=M&measure=yoy_pct&adjustment=CA&base=none&level=division&period=2026-06');
+  const chart=page.locator('#industry-ranked-chart svg');
+  await expect(chart).toBeAttached();
+  const geometry=await chart.evaluate(svg=>({
+    width:svg.viewBox.baseVal.width,
+    height:svg.viewBox.baseVal.height,
+    rows:svg.querySelectorAll('[data-series]').length,
+    renderedWidth:svg.getBoundingClientRect().width
+  }));
+  const desktop=page.viewportSize().width>=600;
+  const expectedWidth=desktop?760:500;
+  const maximumRowHeight=desktop?26:40;
+  expect(geometry.rows).toBeGreaterThan(20);
+  expect(geometry.width).toBe(expectedWidth);
+  expect(geometry.height).toBeLessThanOrEqual(geometry.rows*maximumRowHeight+50);
+  expect(geometry.renderedWidth).toBeLessThanOrEqual(expectedWidth);
+});
+
 test('report catalogue links directly to industry history', async ({page}) => {
   await page.goto('/deep-dives/?lang=cs');
   const card=page.locator('.deep-card-grid #industry');
