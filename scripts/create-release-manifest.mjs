@@ -10,7 +10,7 @@ const selected = [
   "data/country-demography.v1.json", "data/public-entity-coverage.v1.json", "data/public-entity-aggregates.v1.json", "data/public-entity-directory/manifest.v1.json", "data/methodology-sources.v1.json", "data/coverage-source-research.v1.json", "data/coverage-metrics.v1.json", "data/data-quality-report.v1.json",
   "data/trade/product-intelligence.v1.json",
   "data/cz-public-entities-2024.json", "data/cz-public-entity-history.v1.json", "data/cz-public-employment.v1.json",
-  "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json", "data/state-owned-enterprises.v1.json",
+  "data/cz-spending-2026.v1.json", "data/cz-state-enterprises-2024.json", "data/cz-state-enterprise-balance-sheets-2024.v1.json", "data/state-owned-enterprises.v1.json",
   "data/czech-budget.v1.json", "data/demography-social.v1.json", "data/digital-spillover.v1.json",
   "data/eu-capital-budgets.v1.json", "data/eu-migration.v1.json", "data/municipal-snapshot.v1.json", "data/municipal-history-directory.v1.json",
   "data/international-municipalities.v1.json", "data/international-itemized-warehouse.v1.json", "data/municipal-itemized-coverage.v1.json", "data/municipal-itemized-acquisition-audit.v1.json", "data/municipal-transparency.v1.json", "data/global-budget-transparency.v1.json", "data/world-map.v1.json",
