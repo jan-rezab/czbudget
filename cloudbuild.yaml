@@ -59,6 +59,18 @@ steps:
     entrypoint: node
     args: [scripts/hydrate-industry.mjs]
 
+  - id: hydrate-paq
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [scripts/hydrate-paq.py]
+
+  - id: verify-paq
+    waitFor: ["hydrate-paq"]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/validate-paq.mjs]
+
   - id: verify-industrial-diagnostics
     waitFor: ["-"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
