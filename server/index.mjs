@@ -17,6 +17,7 @@ import { FranceLinesError, FranceMunicipalLinesStore } from "./france-municipal-
 import { COUNTRIES as WAREHOUSED_COUNTRIES, MunicipalLinesStore } from "./municipal-lines.mjs";
 import { municipalityPage } from "./municipality-page.mjs";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
+import { cityVizorStore, CityVizorError } from "./cityvizor-store.mjs";
 import { TradeError, TradeStore } from "./trade-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
@@ -378,7 +379,28 @@ export async function handler(request, response) {
       return response.end();
     }
 
-    if (url.pathname === "/healthz") return sendJSON(response, 200, { status: "ok", public_snapshots: await publicSnapshotStore.status() });
+    if (url.pathname === "/healthz") return sendJSON(response, 200, {
+      status: "ok",
+      public_snapshots: await publicSnapshotStore.status(),
+      cityvizor: await cityVizorStore.status(),
+    });
+
+    if (url.pathname === "/public-data/cityvizor/index" || url.pathname === "/public-data/cityvizor/codelists" || url.pathname === "/public-data/cityvizor/profile" || url.pathname === "/public-data/cityvizor/shard") {
+      if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
+      if (!enforceRateLimit(response, id, { key: "global", limit: 600, windowMs: 60 * 1000, group: "cityvizor-global" })) return;
+      if (!enforceRateLimit(response, id, { key: clientIP(request), limit: 120, windowMs: 60 * 1000, group: "cityvizor-ip" })) return;
+      if (!acquireAPISlot(response, id)) return;
+      try {
+        const result = url.pathname.endsWith("/index")
+          ? await cityVizorStore.index()
+          : url.pathname.endsWith("/codelists")
+            ? await cityVizorStore.codelists()
+          : url.pathname.endsWith("/profile")
+            ? await cityVizorStore.profile(url.searchParams.get("key"), url.searchParams.get("year"))
+            : await cityVizorStore.shard(url.searchParams.get("key"), url.searchParams.get("year"), url.searchParams.get("layer"), url.searchParams.get("part"));
+        return sendPublicJSON(request, response, 200, result.payload, { ETag: `"${result.etag}"` });
+      } finally { apiRequestsInFlight -= 1; }
+    }
 
     if (url.pathname === "/public-data/france-municipality-lines") {
       if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
@@ -503,7 +525,7 @@ export async function handler(request, response) {
 
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
-    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof FranceLinesError || error instanceof TradeError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

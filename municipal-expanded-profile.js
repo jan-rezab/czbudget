@@ -684,7 +684,7 @@
     const auditRows=sourceReconciliation?.mismatches?.filter(row=>row.ico===profile.code)||[];
     const auditExpense=auditRows.find(row=>row.measure==='expense_actual');
     const auditNote=auditExpense?`<p class="detail-source-exception">${lang==='en'?`The official 2025 detailed and summary exports differ by CZK ${new Intl.NumberFormat('en-GB').format(Math.abs(Number(auditExpense.difference)))} in expenditure. The published detail is preserved; see the reconciliation.`:`Oficiální podrobný a souhrnný export za rok 2025 se ve výdajích liší o ${new Intl.NumberFormat('cs-CZ').format(Math.abs(Number(auditExpense.difference)))} Kč. Podrobná data zachováváme; viz kontrola součtů.`} <a href="${assetRoot}data/czech-municipal-reconciliation.v1.json">${lang==='en'?'Source check':'Kontrola zdroje'}</a></p>`:'';
-    const cityvizorLink=cityvizorProfiles.length?`<a href="${assetRoot}czech-sources.html?lang=${lang}&ico=${encodeURIComponent(profile.code)}#cityvizor">${lang==='en'?'CityVizor source records':'Zdrojové záznamy CityVizor'}</a>`:'';
+    const cityvizorLink=cityvizorProfiles.length?`<a href="${assetRoot}cityvizor/?lang=${lang}&ico=${encodeURIComponent(profile.code)}">${lang==='en'?'Explore CityVizor records':'Procházet záznamy CityVizor'}</a>`:'';
     const plzenSpecial = profile.country === "CZE" && profile.code === "00075370"
       ? `<a href="${assetRoot}deep-dives/plzen-contracts/?lang=${lang}">${t.plzenSpecial}</a>`
       : "";

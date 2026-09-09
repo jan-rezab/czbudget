@@ -3,21 +3,24 @@
 This layer turns the verified CityVizor source snapshot into bounded, immutable
 objects that an organization page and invoice explorer can query. It includes
 all downloaded financial record types: annual accounting rows, event/project
-rows, invoice allocations, PBO plan-versus-actual rows, PBO's alternate raw
+rows, invoice-view rows, PBO plan-versus-actual rows, PBO's alternate raw
 invoice view, current noticeboard records and versioned source codelists.
 
 ## What a payment row means
 
-CityVizor's official import specification calls the detailed records invoices.
-`KDF` is an incoming invoice and `KOF` is an outgoing invoice. CityVizor only
-processes invoice date, counterparty, description and identifier for these
-types. The public payment export does not expose a source invoice number.
+CityVizor's official import specification describes `KDF` as an incoming
+invoice and `KOF` as an outgoing invoice. CityVizor processes date,
+counterparty, description and identifier fields for these types. The public
+payment export does not expose a source invoice number.
 
-Consequently, PSD labels these records **invoice allocations**, not receipts or
-bank settlements. An invoice split over multiple paragraph, item or event
-combinations appears in multiple rows. Exact duplicate rows and negative
-corrections remain present. The generated `row_id` is a hash of exposed fields
-plus an occurrence number; it is a stable PSD row key, not an invoice ID.
+PSD treats each payment record as a row from the KDF/KOF invoice view that
+preserves the source allocation. It is not a receipt, proof of bank settlement
+or a unique invoice identifier. An invoice split over multiple paragraph, item
+or event combinations may appear in multiple rows. Exact duplicate rows and
+negative corrections remain present. The generated `row_id` is a hash of
+exposed fields plus an occurrence number; it is a stable PSD row key, not an
+invoice ID. The date is the source-published date from the invoice view: null
+remains null, and a populated date does not prove settlement.
 
 PBO profiles expose two representations of the same rows. The preferred public
 payments API maps expense accounts to expenditure and omits the analytic unit.

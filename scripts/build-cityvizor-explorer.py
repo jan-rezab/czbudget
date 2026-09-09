@@ -2,7 +2,7 @@
 """Build the normalized, static CityVizor financial-record layer used by PSD.
 
 The source snapshot stays outside the web repository.  The generated layer keeps
-every published accounting, event, plan and preferred invoice-allocation row in
+every published accounting, event, plan and preferred invoice-view row in
 small deterministic gzip shards and adds compact organization/year summaries.
 """
 from __future__ import annotations
@@ -521,7 +521,7 @@ def build_year(snapshot: Path, target: Path, profile: dict, year_meta: dict, pre
         add_finance(plan_accounts[row[0] or "unknown"], row[3], row[4], row[5], row[6])
     payment_summary = {
         "representation": preferred_kind,
-        "record_class": "invoice_allocation",
+        "record_class": "invoice_view_row",
         "rows": len(payments),
         "first_date": first_date,
         "last_date": last_date,
@@ -579,7 +579,7 @@ def build_year(snapshot: Path, target: Path, profile: dict, year_meta: dict, pre
     if pbo_source_payments:
         year_summary["alternate_pbo_payment_source_view"] = {
             "rows": len(pbo_source_payments),
-            "definition": "Bulk-export import representation of the same PBO invoice allocations. It retains the analytic unit and untransformed amount columns; do not add it to the preferred payments view.",
+            "definition": "Bulk-export import representation of the same PBO invoice-view rows. It retains the analytic unit and untransformed amount columns; do not add it to the preferred payments view.",
             "totals": money_totals(pbo_source_payments, {"income_cents": 2, "expenditure_cents": 3}),
             "assets": shard_rows(directory, "pbo-payment-source", key, year, PAYMENT_COLUMNS, pbo_source_payments, shard_size),
         }
@@ -738,7 +738,7 @@ def build(snapshot: Path, output: Path, shard_size: int, descriptor_path: Path |
             "currency": "CZK",
             "money_unit": "integer_cents",
             "definitions": {
-                "payment_record": "An invoice allocation exposed by CityVizor, not a receipt, bank settlement or source invoice identifier. One invoice split across classifications appears in multiple rows.",
+                "payment_record": "A row from CityVizor's KDF/KOF invoice view that preserves the source allocation. It is not a receipt, proof of bank settlement or a unique invoice identifier; a split invoice may appear in multiple rows.",
                 "payment_identity": "row_id is a PSD-generated hash of all exposed fields plus an occurrence ordinal. It is not a CityVizor invoice ID. Exact duplicate rows are retained.",
                 "accounting": "Accounting/budget records used by CityVizor to calculate annual actual and adjusted-budget totals. Invoice records overlap this layer and must not be added to it.",
                 "events": "Source-defined event/project aggregates. They are another grouping of accounting activity and must not be added to accounting or invoice totals.",
@@ -746,7 +746,7 @@ def build(snapshot: Path, output: Path, shard_size: int, descriptor_path: Path |
                 "pbo_payment_views": "The preferred PBO payments API maps expense-account activity to expenditure and omits the analytic unit. A separate bulk source view preserves the unit and raw import columns. Both contain the same row population and must never be added.",
                 "profiles": "Parent municipality and child PBO profiles may overlap. Summing profiles does not produce a consolidated municipal total.",
                 "amounts": "Signed integer cents exactly preserve source CZK values. Negative values are corrections/refunds and are not removed.",
-                "dates": "Invoice dates as published by CityVizor; null dates remain null. Snapshot retrieval time is not substituted.",
+                "dates": "The source-published date from CityVizor's invoice view. Null remains null, and the date does not prove bank settlement. Snapshot retrieval time is not substituted.",
                 "coverage": "Voluntary publication. Profiles and years without invoice rows remain explicit.",
                 "snapshot": "Verified but non-atomic public-source snapshot. Each source archive retains its own retrieval time, validity date and checksum.",
             },

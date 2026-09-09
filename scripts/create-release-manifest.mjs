@@ -17,7 +17,8 @@ const selected = [
   "lib/data/sovereign-benchmark.v1.json", "data/sovereign-benchmark-slim.v1.json",
   "data/municipal-directory-counts.v1.json", "data/international-municipalities/index.v1.json", "sitemap.xml",
   "czech-sources.html", "czech-sources.js", "czech-sources.css",
-  "data/cityvizor-catalogue.v1.json", "data/contracts/official-registry/manifest.v1.json", "data/contracts/official-registry/lineage.v1.json",
+  "cityvizor/index.html", "cityvizor.js", "cityvizor.css",
+  "data/cityvizor-catalogue.v1.json", "data/cityvizor-explorer-release.v1.json", "data/cityvizor-current.v1.json", "data/contracts/official-registry/manifest.v1.json", "data/contracts/official-registry/lineage.v1.json",
   "data/contracts/00075370.plzen-projects.v1.json", "data/money-reports/cze-arad-native.v1.json", "data/money-reports/cze.v1.json",
   "data/industry/CZE.json.gz", "data/registry/source-provenance.v1.json",
 ];

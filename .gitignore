@@ -44,6 +44,11 @@ data/entities/
 # are themselves tracked or hydrated, so nothing here is the only copy of anything.
 .public-serving/
 
+# Complete normalized CityVizor serving releases. They are built deterministically
+# from the verified source cache, validated, and uploaded under an immutable GCS
+# release prefix. The compact release descriptor and current pointer stay tracked.
+data/cityvizor-explorer/v1/
+
 # Warehouse load staging — NDJSON built by the load-municipal-facts-* scripts and handed to
 # `bq load`. Regenerable from the source cache, and the warehouse is where it belongs.
 .warehouse-staging/

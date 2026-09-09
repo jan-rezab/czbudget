@@ -7,7 +7,11 @@
   set('source-title',t('Česká zdrojová data','Czech source data'));
   set('source-intro',t('Původní tabulky, podrobnější záznamy a jejich účetní význam.','Original tables, detailed records and their accounting meaning.'));
   set('city-title',t('CityVizor: obce a jejich organizace','CityVizor: municipalities and their organizations'));
-  set('city-definition',t('Záznam může popisovat fakturu nebo její rozúčtování. Nejde automaticky o jedinečnou fakturu, účtenku ani samostatnou bankovní platbu. Rozpočty, účetnictví příspěvkových organizací, platby a smlouvy se navzájem překrývají a nesčítají se.','A record can describe an invoice or its accounting allocation. It does not necessarily identify a unique invoice, receipt or individual bank payment. Budgets, municipal organization accounts, payments and contracts overlap and must not be added together.'));
+  set('city-definition',t('Každý zveřejněný platební záznam je řádek z fakturačního pohledu KDF/KOF CityVizoru a zachovává zdrojové rozúčtování. Není to účtenka, potvrzení bankovní úhrady ani jedinečný identifikátor faktury; rozdělená faktura může mít více řádků. Rozpočty, účetnictví, plány, fakturační pohled a smlouvy se překrývají a nesčítají se.','Each published payment record is a row from CityVizor\'s KDF/KOF invoice view and preserves the source allocation. It is not a receipt, proof of bank settlement or unique invoice identifier; a split invoice may have several rows. Budgets, accounts, plans, the invoice view and contracts overlap and must not be added together.'));
+  const explorerLink=document.getElementById('city-explorer-link');
+  explorerLink.textContent=t('Otevřít fakturační a účetní pohledy →','Explore invoice-view records and accounts →');
+  explorerLink.href='/cityvizor/?lang='+(en?'en':'cs');
+  set('city-archive-link',t('Stáhnout celý zdrojový archiv ZIP →','Download the complete source archive ZIP →'));
   set('city-search-label',t('Název nebo IČO','Name or organization ID'));
   set('city-head-name',t('Organizace','Organization'));set('city-head-years',t('Roky a exporty','Years and exports'));set('city-head-records',t('Záznamy plateb','Payment records'));
   set('city-more',t('Zobrazit dalších 30','Show 30 more'));
