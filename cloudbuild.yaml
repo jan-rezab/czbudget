@@ -84,7 +84,8 @@ steps:
         archive=/workspace/.cityvizor-release.tar.gz
         serving=/workspace/.cityvizor-serving
         release=20260909-2294793cff54
-        wget -qO "$$archive" "https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-explorer-2026-09-09.tar.gz"
+        python3 -c 'import sys, urllib.request; urllib.request.urlretrieve(sys.argv[1], sys.argv[2])' \
+          "https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-explorer-2026-09-09.tar.gz" "$$archive"
         echo "962238753f9aaa1a090b687371e558df5e54f38c034f7d1140771d9ce4951da0  $$archive" | sha256sum -c -
         mkdir -p "$$serving/releases/$$release"
         tar -C "$$serving/releases/$$release" -xzf "$$archive"
