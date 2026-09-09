@@ -41,3 +41,22 @@ prázdná: pojišťovací peněžní toky se nesčítají s firemním obratem an
 Kontrolní součty (mil. Kč): příjmy 504 667,887; výdaje 512 186,394;
 saldo −7 518,507; aktiva 116 797,224. Saldo se nesmí zaměnit za účetní
 výsledek z rozvahy 30,482 mil. Kč.
+
+## BigQuery
+
+Autoritativní databáze: `czbudget-janrezab.budget_detail` (EU). Loader používá
+existující tabulky `public_entities`, `public_entity_sources`,
+`public_entity_metric_observations` a `public_entity_balance_sheet_facts`.
+
+```sh
+python3 pipeline/warehouse/load_health_insurers_2024.py --account <oprávněný-účet>
+python3 pipeline/warehouse/load_health_insurers_2024.py --account <oprávněný-účet> --execute
+```
+
+Sedm subjektů má stabilní identifikátory `CZ:<IČO>`. Loader respektuje existující
+identifikátor subjektu, pokud je v dimenzi již evidován. Zapisuje 42 ročních
+ukazatelů (příjmy, výdaje, saldo, náklady na péči, pojištěnci, zaměstnanci FTE),
+14 rozvahových údajů (aktiva a účetní výsledek) a 14 zdrojových záznamů.
+Peněžní hodnoty v databázi jsou v Kč, webový export v milionech Kč.
+Transakční MERGE kontroluje unikátnost a počty; opakovaný import nevytváří duplicity.
+Saldo není bankovní zůstatek, proto se neukládá do `public_entity_cash_facts`.
