@@ -162,8 +162,9 @@ test("municipal profiles always offer auditable EUR, USD and native currency vie
   const revenue = page.locator(".detail-kpis article").first().locator("strong");
   await expect(page.locator('[data-profile-currency="EUR"]')).toHaveAttribute("aria-pressed", "true");
   await expect(revenue).toContainText("€");
-  await expect(page.locator(".profile-currency-converter")).toContainText("IMF WEO annual rate 2024");
-  await expect(page.locator(".profile-currency-converter")).toContainText("nearest available year");
+  await expect(page.locator(".profile-currency-converter")).toContainText("ECB annual reference rate 2025");
+  await expect(page.locator(".profile-currency-converter")).not.toContainText("nearest available year");
+  await expect(page.locator('.profile-currency-converter a')).toHaveAttribute('href', /^https:\/\/data-api\.ecb\.europa\.eu\//);
 
   await page.locator('[data-profile-currency="USD"]').click();
   await expect(revenue).toContainText("$");
@@ -184,6 +185,24 @@ test("municipal profiles always offer auditable EUR, USD and native currency vie
     await expect(page.locator(".profile-currency-converter"), route).toBeVisible();
     await expect(page.locator('[data-profile-currency="EUR"]'), route).toHaveAttribute("aria-pressed", "true");
   }
+});
+
+test("municipal conversion discloses a missing-year fallback without mixing annual rates", async ({ page }) => {
+  await page.route("**/data/municipal-fx-rates.v1.json*", async route => {
+    const response = await route.fetch();
+    const fx = await response.json();
+    delete fx.rates.BRA.years[2025];
+    await route.fulfill({ response, json: fx });
+  });
+  await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
+  await expect(page.locator('.profile-currency-converter')).toContainText('ECB annual reference rate 2024');
+  await expect(page.locator('.profile-currency-converter')).toContainText('nearest available year');
+  const eur = await page.locator('.detail-kpis article').first().locator('strong').textContent();
+  await page.locator('[data-profile-currency="USD"]').click();
+  const usd = await page.locator('.detail-kpis article').first().locator('strong').textContent();
+  const fx = await (await page.request.get('/data/municipal-fx-rates.v1.json')).json();
+  const numeric = value => Number(value.replace(/[^0-9.]/g, ''));
+  expect(numeric(eur) / numeric(usd)).toBeCloseTo(fx.eur_per_usd[2024], 2);
 });
 
 test("every generated country family renders the shared municipal hierarchy", async ({ page }) => {
