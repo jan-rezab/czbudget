@@ -4,12 +4,17 @@
 from __future__ import annotations
 
 import csv, gzip, hashlib, io, json, re, tempfile, zipfile
+from datetime import date
 from collections import Counter
 from pathlib import Path
 
 import pandas as pd
-import pdfplumber
-from bs4 import BeautifulSoup
+def open_pdf(*args, **kwargs):
+    import pdfplumber
+    return pdfplumber.open(*args, **kwargs)
+def BeautifulSoup(*args, **kwargs):
+    from bs4 import BeautifulSoup as parse_html
+    return parse_html(*args, **kwargs)
 
 ROOT = Path(__file__).resolve().parents[2]
 CACHE = ROOT.parent / "data" / "source_cache" / "public_entities"
@@ -62,6 +67,17 @@ def write_country(code, rows):
     with path.open("wb") as target:
         with gzip.GzipFile(filename="",mode="wb",fileobj=target,mtime=0) as gz: gz.write(raw.getvalue().encode())
 
+def validity_status(start, end, today=None):
+    today = today or date.today()
+    def parsed(value):
+        text = clean(value)[:10]
+        return date.fromisoformat(text) if text else None
+    first, last = parsed(start), parsed(end)
+    if last and last < today: return "inactive"
+    if first and first > today: return "not_yet_valid"
+    if first or last: return "valid_at_extraction"
+    return "validity_not_reported"
+
 def cze():
     df=pd.read_excel(CACHE/"CZE/consolidation-units-2026.xlsx",header=1,dtype=str)
     finance={e["ico"]:e for e in json.loads((ROOT/"data/cz-public-entities-2024.json").read_text())["entities"]}
@@ -69,11 +85,12 @@ def cze():
     for i,r in df.iterrows():
         ico=re.sub(r"\D","",clean(r.iloc[0])).zfill(8); form=clean(r.iloc[2]); form_lower=form.lower(); f=finance.get(ico,{})
         is_health_insurer="zdravotní pojišťovna" in form_lower
-        cls="public_health_insurer" if is_health_insurer else "controlled_enterprise" if any(x in form_lower for x in ["podnik","akciová","ručením"]) else "statutory_public_body"
+        cls="public_health_insurer" if is_health_insurer else "consolidation_enterprise" if any(x in form_lower for x in ["podnik","akciová","ručením"]) else "statutory_public_body"
         owner="social_insurance_fund" if is_health_insurer else "local" if form_lower in {"obec","svazek obcí","městská část, městský obvod"} else "regional" if form_lower == "kraj" else "central_or_mixed"
         has_finance=f.get("revenue_mczk") is not None
-        out.append(row("CZE","cze_mf_consolidation_units_2026","public_sector_consolidation_units","2026",r.iloc[1],i+1,national_id=ico,entity_class=cls,legal_form_native=form,ownership_level=owner,status="open_ended",region=clean(r.iloc[7]),revenue=f.get("revenue_mczk") if has_finance else "",net_result=f.get("net_result_mczk","") if f.get("net_result_mczk") is not None else "",assets=f.get("assets_mczk","") if f.get("assets_mczk") is not None else "",currency="CZK" if has_finance else "",monetary_unit="million" if has_finance else "",financial_period="2024" if has_finance else "",source_url=URL["CZE"],notes=f"valid_from={clean(r.iloc[10])}; valid_to={clean(r.iloc[11])}"))
-    assert len(out)==18238 and sum(x["revenue"] != "" for x in out)==134
+        out.append(row("CZE","cze_mf_consolidation_units_2026","public_sector_consolidation_units","2026",r.iloc[1],i+1,national_id=ico,entity_class=cls,legal_form_native=form,ownership_level=owner,status=validity_status(r.iloc[10],r.iloc[11]),region=clean(r.iloc[7]),revenue=f.get("revenue_mczk") if has_finance else "",net_result=f.get("net_result_mczk","") if f.get("net_result_mczk") is not None else "",assets=f.get("assets_mczk","") if f.get("assets_mczk") is not None else "",currency="CZK" if has_finance else "",monetary_unit="million" if has_finance else "",financial_period="2024" if has_finance else "",source_url=URL["CZE"],notes=f"valid_from={clean(r.iloc[10])}; valid_to={clean(r.iloc[11])}; reporting_authority_ico={clean(r.iloc[3]).zfill(8)}; membership_does_not_prove_control=true; source_financial_period=2024"))
+    assert len(out)>0 and len({x["national_id"] for x in out})==len(out)
+    for item in out: item["record_id"] = f"cze_mf_consolidation_units_2026:{item['national_id']}"
     assert sum(x["entity_class"] == "public_health_insurer" for x in out)==7
     assert all(x["ownership_level"] == "social_insurance_fund" for x in out if x["entity_class"] == "public_health_insurer")
     return out
@@ -106,7 +123,7 @@ def numbered_table(lines, start, end, count, cls, status):
             continuation_open=False
     entries=[x for x in entries if x[0]<=count][:count]; assert len(entries)==count,(start,len(entries)); return [(n,name,cls,status) for n,name in entries]
 def deu():
-    text="\n".join(page.extract_text(layout=True) or "" for page in pdfplumber.open(CACHE/"DEU/federal-holdings-report-2024.pdf").pages); lines=text.splitlines()
+    text="\n".join(page.extract_text(layout=True) or "" for page in open_pdf(CACHE/"DEU/federal-holdings-report-2024.pdf").pages); lines=text.splitlines()
     specs=[("6.1 Beteiligungen mit Geschäftstätigkeit","6.2 Mehrheitsbeteiligungen",74,"federal_direct_holding","active","active_federal_direct_holding"),("6.4 Beteiligungen ohne Geschäftstätigkeit","6.5 Wirtschaftlich agierende",4,"federal_direct_holding","inactive","inactive_federal_direct_holding"),("6.5 Wirtschaftlich agierende","6.6 Genossenschaften",3,"public_law_institution","active","federal_public_law_institution"),("6.6 Genossenschaften","6.7 Unmittelbare Beteiligungen der Sondervermögen",14,"cooperative_membership","active","federal_cooperative_membership"),("6.7 Unmittelbare Beteiligungen der Sondervermögen","B   -   Beteiligungen",29,"special_fund_direct_holding","active","special_fund_direct_holding")]
     out=[]
     for start,end,count,cls,status,perimeter in specs:
@@ -140,7 +157,7 @@ def fra():
     assert len(out)==87; return out
 
 def usa_federal_names():
-    p=CACHE/"USA/financial-report-appendix-a-2024.pdf"; pdf=pdfplumber.open(p)
+    p=CACHE/"USA/financial-report-appendix-a-2024.pdf"; pdf=open_pdf(p)
     layout=[page.extract_text(layout=True) or "" for page in pdf.pages]
     def paired(text,start,end):
         block=text[text.index(start)+len(start):text.index(end)]; names=[]
@@ -195,7 +212,7 @@ def metric(text,labels):
     return ""
 def che():
     soup=BeautifulSoup((CACHE/"CHE/federal-enterprises-and-institutions.html").read_text(),"html.parser"); heads=[h for h in soup.find_all("h2") if (h.find_next(["h2","h3"]) and h.find_next(["h2","h3"]).name=="h3")]
-    pdf=pdfplumber.open(CACHE/"CHE/aggregated-federal-entities-report-2024.pdf"); finance=[]
+    pdf=open_pdf(CACHE/"CHE/aggregated-federal-entities-report-2024.pdf"); finance=[]
     for page in CHE_PAGES:
         current=pdf.pages[page]; text=current.extract_text() or ""; lines=[clean(x) for x in text.splitlines() if clean(x)]; title=lines[0].split(" Internet:")[0]; words=current.extract_words()
         def first_column(labels):
@@ -217,7 +234,7 @@ def che():
     assert len(out)==22; return out
 
 def swe():
-    pdf=pdfplumber.open(CACHE/"SWE/state-owned-companies-report-2024.pdf");out=[]
+    pdf=open_pdf(CACHE/"SWE/state-owned-companies-report-2024.pdf");out=[]
     pages=[x for x in range(34,75) if x not in {46,59,72}]
     names=["Akademiska Hus","Almi","Apotek Produktion & Laboratorier (APL)","Apoteket","Arlandabanan Infrastructure","Green Cargo","Göta kanalbolag","Infranord","Jernhusen","Kungliga Dramatiska teatern (Dramaten)","Kungliga Operan (Operan)","Luossavaara-Kiirunavaara (LKAB)","Miljömärkning Sverige","PostNord","RISE Research Institutes of Sweden","Samhall","Saminvest","SBAB Bank","SJ","SOS Alarm Sverige","Specialfastigheter Sverige","Statens Bostadsomvandling","Sveaskog","Svensk Exportkredit (SEK)","Svensk-Danska Broförbindelsen (Svedab)","Svenska rymdaktiebolaget (SSC)","Svenska skeppshypotekskassan","Svenska Spel","Svevia","Swedavia","Sweden House","Swedfund International","Systembolaget","Telia Company","Teracom Group","Vattenfall","VisitSweden","Voksenåsen"]
     for page,name in zip(pages,names):

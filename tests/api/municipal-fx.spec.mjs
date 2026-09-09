@@ -12,8 +12,8 @@ test("annual municipal FX rates cover every published municipal currency", async
 
   assert.equal(fx.source.provider, "International Monetary Fund");
   assert.equal(fx.period.start_year, 2005);
-  assert.equal(fx.period.end_year, 2024);
-  assert.ok(Number(fx.eur_per_usd[2024]) > 0);
+  assert.equal(fx.period.end_year, 2025);
+  assert.ok(Number(fx.eur_per_usd[2025]) > 0);
 
   for (const country of municipalities.countries) {
     if (["EUR", "USD"].includes(country.currency)) continue;

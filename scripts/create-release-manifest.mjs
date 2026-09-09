@@ -16,7 +16,14 @@ const selected = [
   "data/international-municipalities.v1.json", "data/international-itemized-warehouse.v1.json", "data/municipal-itemized-coverage.v1.json", "data/municipal-itemized-acquisition-audit.v1.json", "data/municipal-transparency.v1.json", "data/global-budget-transparency.v1.json", "data/world-map.v1.json",
   "lib/data/sovereign-benchmark.v1.json", "data/sovereign-benchmark-slim.v1.json",
   "data/municipal-directory-counts.v1.json", "data/international-municipalities/index.v1.json", "sitemap.xml",
+  "czech-sources.html", "czech-sources.js", "czech-sources.css",
+  "data/cityvizor-catalogue.v1.json", "data/contracts/official-registry/manifest.v1.json", "data/contracts/official-registry/lineage.v1.json",
+  "data/contracts/00075370.plzen-projects.v1.json", "data/money-reports/cze-arad-native.v1.json", "data/money-reports/cze.v1.json",
+  "data/industry/CZE.json.gz", "data/registry/source-provenance.v1.json",
 ];
+for (const name of (await readdir(path.join(root, "data"))).sort()) {
+  if (/^(?:cze-|czech-|cez-issuer-|mv-administration-grants).*\.json$/.test(name) && !selected.includes(`data/${name}`)) selected.push(`data/${name}`);
+}
 try {
   await access(path.join(root, "data", "municipal-budget-codebook.v1.json"));
   selected.push("data/municipal-budget-codebook.v1.json");

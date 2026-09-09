@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "dataset_id": "DEFENSE_DEEP_DIVE_V1",
-  "generated_at": "2026-08-26",
+  "generated_at": "2026-09-09T13:46:17.662987+00:00",
   "default_country": "USA",
   "commitments": {
     "nato_core_pct_gdp_2035": 3.5,
@@ -2720,142 +2720,156 @@
       "name_en": "Czechia",
       "nato_member": true,
       "comparison": {
-        "indicator": "MS.MIL.XPND.GD.ZS",
+        "indicator": "SIPRI_SHARE_GDP",
         "unit": "pct_gdp",
         "series": [
           [
             1993,
-            2.3304
+            2.3304040663427026
           ],
           [
             1994,
-            2.2834
+            2.2834008576375737
           ],
           [
             1995,
-            1.7589
+            1.7588553307402193
           ],
           [
             1996,
-            1.6576
+            1.65758607725057
           ],
           [
             1997,
-            1.5803
+            1.5803034972858971
           ],
           [
             1998,
-            1.7356
+            1.735597662207845
           ],
           [
             1999,
-            1.8387
+            1.8386874110992273
           ],
           [
             2000,
-            1.8615
+            1.8614701837729717
           ],
           [
             2001,
-            1.7355
+            1.7355282928444258
           ],
           [
             2002,
-            1.809
+            1.809011464740174
           ],
           [
             2003,
-            1.8775
+            1.8775221066519556
           ],
           [
             2004,
-            1.6996
+            1.6996434651854717
           ],
           [
             2005,
-            1.7773
+            1.7772578503284027
           ],
           [
             2006,
-            1.5681
+            1.5681146841641898
           ],
           [
             2007,
-            1.4248
+            1.4247883319863022
           ],
           [
             2008,
-            1.2341
+            1.2340881779211426
           ],
           [
             2009,
-            1.3135
+            1.3134921892127878
           ],
           [
             2010,
-            1.1829
+            1.1828977880222726
           ],
           [
             2011,
-            1.0691
+            1.0691429680699231
           ],
           [
             2012,
-            1.0556
+            1.0556077065141536
           ],
           [
             2013,
-            1.0087
+            1.008704462521207
           ],
           [
             2014,
-            0.9591
+            0.9591157222570809
           ],
           [
             2015,
-            0.9412
+            0.9412029245371644
           ],
           [
             2016,
-            0.9866
+            0.9866344003650607
           ],
           [
             2017,
-            0.944
+            0.9439844119255257
           ],
           [
             2018,
-            1.0755
+            1.0920649924677301
           ],
           [
             2019,
-            1.1332
+            1.1601718428445258
           ],
           [
             2020,
-            1.2954
+            1.2749990649103224
           ],
           [
             2021,
-            1.3533
+            1.3466597862472465
           ],
           [
             2022,
-            1.3269
+            1.288065939353225
           ],
           [
             2023,
-            1.4718
+            1.3146284003652906
           ],
           [
             2024,
-            1.9168
+            1.8763857460166473
+          ],
+          [
+            2025,
+            1.835646969402079
           ]
         ],
         "latest": {
-          "year": 2024,
-          "value": 1.9168
-        }
+          "year": 2025,
+          "value": 1.835646969402079
+        },
+        "source": {
+          "provider": "SIPRI",
+          "title": "SIPRI Military Expenditure Database, April 2026 revision",
+          "url": "https://www.sipri.org/sites/default/files/SIPRI-Milex-data-1949-2025_v1.2.xlsx",
+          "edition": "1949–2025 v1.2; revised 27 April 2026",
+          "retrieved_at": "2026-09-09",
+          "sha256": "6cc3a30b1064f9f02e60236667eef82e08cad42910ce630909d004ad2c398a9d",
+          "attribution": "© SIPRI 2026. Direct-source terms apply; WDI licence is not inherited."
+        },
+        "method": "Percentage-formatted source fractions multiplied by 100. Full revised history replaces WDI vintage."
       },
       "budget": {
         "period": "2026",
@@ -2892,6 +2906,56 @@
         ],
         "item_count": 1,
         "total_amount": 154.7908
+      },
+      "definition_detail": {
+        "artifact": "data/czech-defense-definitions.v1.json",
+        "nato_latest": {
+          "year": 2026,
+          "status": "estimate",
+          "source_flag": "e",
+          "categories_pct_core_defence": {
+            "equipment": 25.09,
+            "personnel": 30.4,
+            "infrastructure": 7.91,
+            "other": 36.6
+          },
+          "total_current_million_czk": 179760,
+          "total_constant_2021_million_czk": 138339
+        },
+        "nato_source": {
+          "provider": "NATO",
+          "title": "Defence Investment of NATO Countries (2014–2026)",
+          "url": "https://www.nato.int/content/dam/nato/webready/documents/finance/def-exp-2026-en.pdf",
+          "edition": "2026 compendium",
+          "information_cutoff": "2026-07-03",
+          "retrieved_at": "2026-09-09",
+          "sha256": "efd05e4a7e715b361617390016356df04af83ea6febecb9475ce173bf2cffb75"
+        },
+        "chapter_latest": {
+          "year": 2025,
+          "status": "reported_outturn",
+          "unit": "thousand_CZK",
+          "total": 155952215.73,
+          "components": {
+            "armed_forces": 118536199.79,
+            "defence_system": 16445506.87,
+            "intelligence": 9732854.29,
+            "presidential_support": 895173.11,
+            "pensions": 5770451.83,
+            "service_benefits": 3818559.41,
+            "sport": 753470.42
+          }
+        },
+        "chapter_source": {
+          "provider": "Ministerstvo obrany ČR",
+          "title": "Návrh závěrečného účtu kapitoly 307 za rok 2025",
+          "url": "https://mocr.mo.gov.cz/assets/finance-a-zakazky/resortni-rozpocet/szu_2025.pdf",
+          "edition": "2025 final-account proposal",
+          "document_date": "2026-03-27",
+          "published_at": "2026-05-13",
+          "retrieved_at": "2026-09-09",
+          "sha256": "53410a5d3a9e1ae0eec5edc8171b41025e0272f750ea172f4d7bb86a6fe36b0f"
+        }
       }
     },
     {

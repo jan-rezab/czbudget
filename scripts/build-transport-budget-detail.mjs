@@ -78,11 +78,12 @@ for(const [code,country] of Object.entries(COUNTRIES)) {
   for(const year of years) {
     const total=valueAt(dataset,{sector:"S13",na_item:"TE",time:String(year)});
     if(!Number.isFinite(total)) continue;
-    const components=Object.fromEntries(Object.entries(COMPONENTS).map(([key,item])=>[key,valueAt(dataset,{sector:"S13",na_item:item,time:String(year)})??0]));
+    const components=Object.fromEntries(Object.entries(COMPONENTS).map(([key,item])=>[key,valueAt(dataset,{sector:"S13",na_item:item,time:String(year)})]));
     const allocated=Object.values(components).reduce((sum,value)=>sum+value,0);
-    components.other=Number((total-allocated).toFixed(3));
+    const componentsComplete=Object.values(components).every(Number.isFinite);
+    components.other=componentsComplete?Number((total-allocated).toFixed(3)):null;
     const levels=Object.fromEntries(Object.entries(LEVELS).map(([key,sector])=>[key,valueAt(dataset,{sector,na_item:"TE",time:String(year)})]));
-    records.push({year,total,components,levels});
+    records.push({year,total,components,levels,components_complete:componentsComplete});
   }
   const levelValues=records.flatMap(record=>Object.values(record.levels)).filter(Number.isFinite);
   countries[code]={...country,coverage:records.length?"available":"unavailable",latest_year:records.at(-1)?.year??null,records,level_coverage:levelValues.length?"available":"unavailable",public_data:PUBLIC_DATA[code]};

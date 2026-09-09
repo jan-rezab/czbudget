@@ -41,7 +41,12 @@ async function fetchCsv(url) {
 
 const wb={};
 for(const [key,url] of Object.entries(urls.world_bank)) {
-  const payload=await fetchJson(url), rows=payload[1]||[];
+  const payload=await fetchJson(url), rows=[...(payload[1]||[])];
+  for(let page=2;page<=Number(payload[0]?.pages||1);page++) {
+    const next=await fetchJson(`${url}&page=${page}`);
+    rows.push(...(next[1]||[]));
+  }
+  if(payload[0]?.total!=null&&rows.length!==Number(payload[0].total)) throw new Error(`Incomplete World Bank response: ${key}`);
   wb[key]=Object.fromEntries(COUNTRIES.map(code=>{
     const series=rows.filter(row=>row.countryiso3code===code&&row.value!==null)
       .map(row=>({year:Number(row.date),value:Number(row.value)})).sort((a,b)=>a.year-b.year);

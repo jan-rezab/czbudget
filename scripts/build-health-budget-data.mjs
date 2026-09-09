@@ -27,6 +27,13 @@ const output = {
   schema_version: "1.0.0",
   generated_at: new Date().toISOString(),
   units: "CZK billion unless stated otherwise",
+  medicine_reimbursements: JSON.parse(await readFile("data/cze-medicine-reimbursements-summary.v1.json", "utf8")),
+  system_2024_summary: {
+    year: 2024, status: "preliminary", published_at: "2026-06-11",
+    total_bn: 696.7, insurers_bn: 514.2, public_budgets_bn: 81.9, households_bn: 94.5, gdp_pct: 8.6,
+    source_url: "https://csu.gov.cz/vydaje-na-zdravotni-peci",
+    scope: "SHA healthcare expenditure; rounded published summary. Financing schemes are not provider revenue. Detailed 2023 flow remains separately dated.",
+  },
   system_2023: {
     total_bn: 641.996,
     sources: [
@@ -47,6 +54,8 @@ const output = {
     ],
   },
   insurers_2024: {
+    year: 2024, stage: "actual", source_locator: "MF final account 2024, Sešit F, table 12 (PDF page 37); reserves PDF page 39",
+    source_native_unit: "CZK thousand", scope: "Public health-insurance fund receipts and expenditure; distinct from SHA health accounts",
     insured_people: 10853476,
     insurer_count: 7,
     reserves_bn: 47.717,
@@ -93,8 +102,9 @@ const output = {
     hospitals,
   },
   sources: [
+    { title: "ČSÚ — zdravotní výdaje 2024, předběžné, 11. 6. 2026", url: "https://csu.gov.cz/vydaje-na-zdravotni-peci" },
     { title: "ČSÚ — Zdravotnické účty ČR 2010–2023", url: "https://csu.gov.cz/docs/107508/3183dddf-79c3-3d97-07bf-0660173c563e/26000525.pdf?version=1.1" },
-    { title: "MF ČR — Státní závěrečný účet 2024", url: "https://www.mfcr.cz/assets/attachments/2024-04-28_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf" },
+    { title: "MF ČR — Státní závěrečný účet 2024", url: "https://mf.gov.cz/assets/attachments/2024-04-28_F-Zprava-o-hospodareni-dalsich-slozek-verejnych-rozpoctu-a-o-fondech-organizacnich-slozek-statu.pdf" },
     { title: "ÚZIS ČR — Ekonomické výsledky nemocnic 2022", url: "https://www.uzis.cz/res/f/008448/eknem2022.pdf" },
     { title: "MONITOR Státní pokladny — transakční data ČSÚIS", url: "https://monitor.statnipokladna.gov.cz/datovy-katalog/transakcni-data" },
   ],

@@ -228,8 +228,8 @@ def write_reference_rows(
             "dataset_code": dataset_code,
             "archive_file": str(archive.relative_to(ROOT)) if archive else None,
             "archive_sha256": sha256(archive) if archive else None,
-            "retrieved_at": loaded_at,
-            "notes": source_note,
+            "retrieved_at": None,
+            "notes": source_note + (" ARES cached identity, address and legal form have unverified historical validity for fiscal 2025; no historical ownership inferred." if dataset_code == "ARES" else "") + " Original cache retrieval timestamp not retained; loaded_at is transform time, not retrieval time.",
             "loaded_at": loaded_at,
         })
     sources.close()

@@ -29,7 +29,7 @@ def czech():
             period=r.get('CASMKMMQR',r.get('CASMQ',''))
             # Retain monthly and quarterly rows, excluding cumulative periods.
             if period.endswith('K'): continue
-            if not re.fullmatch(r'2026-(?:0[1-9]|1[0-2]|Q[1-4])',period): continue
+            if not re.fullmatch(r'\d{4}-(?:0[1-9]|1[0-2]|Q[1-4])',period): continue
             kind=r.get('TYPUDAJEZ',r.get('TYPUDAJEP2'))
             adj={'P':'CA','O':'SCA','N':'NSA'}.get(r.get('OCIST2',r.get('OCIST3')),'unknown')
             code=r['NACEIPP.NACE2'] or r['NACEIPP.NACE1']; label=r['CZ-NACE-Oddíl'] or r['CZ-NACE-Sekce']

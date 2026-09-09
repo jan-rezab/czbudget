@@ -278,6 +278,7 @@ def build_payload(config: dict[str, Any], benchmark: dict[str, Any]) -> dict[str
             "international_coverage": "archetype_metadata_only",
         },
         "model_notes": config["model_notes"],
+        "legal_version_policy": config["legal_version_policy"],
         "tiers": config["tiers"],
         "tier_relations": config["tier_relations"],
         "actors": config["actors"],

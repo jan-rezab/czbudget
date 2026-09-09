@@ -20,8 +20,8 @@ ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().p
 HISTORY = ROOT / "website/data/large-city-history.v1.json"
 CACHE = ROOT / "data/source_cache/historical_2006_2009_large_cities.json"
 BASE = "https://monitor.statnipokladna.gov.cz/olap-aris/rest/olap-aris/"
-BUDGET_REPORT = Path("/tmp/hist0.xml")
-CASH_REPORT = Path("/tmp/hist1.xml")
+BUDGET_REPORT = Path(os.environ.get("ARIS_BUDGET_QUERY", Path(__file__).resolve().parents[1] / "config/aris/budget.xml"))
+CASH_REPORT = Path(os.environ.get("ARIS_CASH_QUERY", Path(__file__).resolve().parents[1] / "config/aris/cash.xml"))
 
 
 def minimal_query(report: Path, ico: str, year: int, row_codes: list[str]) -> str:
@@ -64,9 +64,11 @@ def run_query(session: requests.Session, xml: str) -> list[list[dict]]:
 
 def raw(cell: dict | None) -> float:
     if cell is None:
-        return 0.0
+        raise ValueError("Missing ARIS numeric cell")
     value = cell.get("properties", {}).get("raw")
-    return float(value) if value not in (None, "NaN", "Infinity", "-Infinity") else 0.0
+    if value in (None, "NaN", "Infinity", "-Infinity"):
+        raise ValueError(f"Missing or nonfinite ARIS numeric value: {value!r}")
+    return float(value)
 
 
 def fetch_one(ico: str, name: str, year: int) -> dict:
@@ -81,6 +83,8 @@ def fetch_one(ico: str, name: str, year: int) -> dict:
                 for row in budget_cells[1:]
                 if row and row[0] and len(row) > 3
             }
+            if revenue_code not in budget or expense_code not in budget:
+                raise ValueError(f"Missing ARIS budget totals for {ico}/{year}")
             cash_cells = run_query(session, minimal_query(CASH_REPORT, ico, year, ["6040"]))
             cash_row = next((row for row in cash_cells[1:] if row and row[0] and row[0].get("value") == "6040"), None)
             return {
@@ -90,8 +94,8 @@ def fetch_one(ico: str, name: str, year: int) -> dict:
                 "revenue_actual": round(budget.get(revenue_code, 0.0), 2),
                 "expense_actual": round(budget.get(expense_code, 0.0), 2),
                 "budget_balance": round(budget.get(balance_code, budget.get(revenue_code, 0.0) - budget.get(expense_code, 0.0)), 2),
-                "cash_current": round(raw(cash_row[2]), 2) if cash_row else 0.0,
-                "cash_previous": round(raw(cash_row[1]), 2) if cash_row else 0.0,
+                "cash_current": round(raw(cash_row[2]), 2) if cash_row else None,
+                "cash_previous": round(raw(cash_row[1]), 2) if cash_row else None,
                 "source_kind": "Monitor ARIS historical archive",
                 "comparability": "historical_budget_cash_break_2012",
             }
@@ -103,6 +107,9 @@ def fetch_one(ico: str, name: str, year: int) -> dict:
 
 
 def main() -> None:
+    missing = [str(path) for path in (BUDGET_REPORT, CASH_REPORT) if not path.is_file()]
+    if missing:
+        raise SystemExit("Missing reviewed ARIS query templates: " + ", ".join(missing) + ". Restore the original report XML; do not fabricate query definitions.")
     history = json.loads(HISTORY.read_text(encoding="utf-8"))
     jobs = [(city["national_id"], city["name"], year) for city in history["cities"] for year in range(2006, 2010)]
     records = []

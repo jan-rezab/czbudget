@@ -1,0 +1,3150 @@
+{
+  "id": "rsd-network-26",
+  "name": "Silnice II.třídy",
+  "complete": true,
+  "feature_count": 10857,
+  "native_project_record_ids": null,
+  "object_id_field": "OBJECTID",
+  "source_schema": {
+    "currentVersion": 10.91,
+    "cimVersion": "2.9.0",
+    "id": 26,
+    "name": "Silnice II.třídy",
+    "type": "Feature Layer",
+    "description": "",
+    "geometryType": "esriGeometryPolyline",
+    "sourceSpatialReference": {
+      "wkid": 102067,
+      "latestWkid": 5514,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -33699800,
+      "falseY": -33699800,
+      "xyUnits": 10000,
+      "falseZ": 0,
+      "zUnits": 1,
+      "falseM": 0,
+      "mUnits": 1
+    },
+    "copyrightText": "",
+    "parentLayer": {
+      "id": 17,
+      "name": "Silniční a dálniční síť"
+    },
+    "subLayers": [],
+    "minScale": 499999,
+    "maxScale": 0,
+    "referenceScale": 0.0,
+    "drawingInfo": {
+      "renderer": {
+        "type": "simple",
+        "symbol": {
+          "type": "esriSLS",
+          "style": "esriSLSSolid",
+          "color": [
+            0,
+            112,
+            255,
+            255
+          ],
+          "width": 2
+        }
+      },
+      "scaleSymbols": true,
+      "transparency": 0,
+      "labelingInfo": null
+    },
+    "defaultVisibility": true,
+    "extent": {
+      "xmin": -903073.0560999997,
+      "ymin": -1219950.4717000015,
+      "xmax": -432226.06159999967,
+      "ymax": -936466.6972000003,
+      "spatialReference": {
+        "wkid": 102067,
+        "latestWkid": 5514,
+        "xyTolerance": 0.001,
+        "zTolerance": 0.0002,
+        "mTolerance": 0.0002,
+        "falseX": -33699800,
+        "falseY": -33699800,
+        "xyUnits": 133638764.24698351,
+        "falseZ": -100000,
+        "zUnits": 10000,
+        "falseM": -100000,
+        "mUnits": 10000
+      }
+    },
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+    "displayField": "CIS_USEKU",
+    "typeIdField": null,
+    "subtypeFieldName": null,
+    "subtypeField": null,
+    "defaultSubtypeCode": null,
+    "fields": [
+      {
+        "name": "CIS_USEKU",
+        "type": "esriFieldTypeString",
+        "alias": "Číslo úseku",
+        "length": 20,
+        "domain": null
+      },
+      {
+        "name": "SILNICE",
+        "type": "esriFieldTypeString",
+        "alias": "Označení komunikace",
+        "length": 8,
+        "domain": null
+      },
+      {
+        "name": "DuvodZmeny",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Důvod změny úseku proti minulé aktualizaci",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD07",
+          "description": "Lokalizace - Grafické změny úseků",
+          "codedValues": [
+            {
+              "name": "bez změny",
+              "code": 0
+            },
+            {
+              "name": "grafická změna zpřesnění průběhu dle ortofoto",
+              "code": 1
+            },
+            {
+              "name": "nový úsek (obchvaty, okružní křížovatky, přeložky apod.)",
+              "code": 2
+            },
+            {
+              "name": "spojení stávajících úseků",
+              "code": 3
+            },
+            {
+              "name": "rozdělení stávajících úseků",
+              "code": 4
+            },
+            {
+              "name": "grafické prodloužení úseku",
+              "code": 5
+            },
+            {
+              "name": "grafické zkrácení úseku",
+              "code": 6
+            },
+            {
+              "name": "napojení na novou nebo změněnou okružní křížovatku",
+              "code": 7
+            },
+            {
+              "name": "napojení na obchvat, přeložku",
+              "code": 8
+            },
+            {
+              "name": "posun UB do jiné křižovatky (většinou u silnic III. tříd)",
+              "code": 9
+            },
+            {
+              "name": "změna okružní křižovatky",
+              "code": 10
+            },
+            {
+              "name": "grafická změna - pouze změna napojení v UB dle ortofoto (není opraven celý průběh)",
+              "code": 11
+            },
+            {
+              "name": "změna křižovatky",
+              "code": 12
+            },
+            {
+              "name": "změna průběhu úseku - většinou jiný průjezd obcí",
+              "code": 13
+            },
+            {
+              "name": "změna průběhu úseku - zakončení nebo začátek jinde",
+              "code": 14
+            },
+            {
+              "name": "změna čísla úseku",
+              "code": 15
+            },
+            {
+              "name": "otočení úseku",
+              "code": 16
+            },
+            {
+              "name": "přečíslování silnice",
+              "code": 17
+            },
+            {
+              "name": "změna délky v atributové tabulce a číslo úseku zůstává stejné",
+              "code": 18
+            },
+            {
+              "name": "žádost o přeměření úseku",
+              "code": 19
+            },
+            {
+              "name": "oprava délky v atributové tabulce  - dle přeměření reportéra",
+              "code": 20
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "DuvodZmeny2",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Důvod změny úseku proti minulé aktualizaci 2",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD07",
+          "description": "Lokalizace - Grafické změny úseků",
+          "codedValues": [
+            {
+              "name": "bez změny",
+              "code": 0
+            },
+            {
+              "name": "grafická změna zpřesnění průběhu dle ortofoto",
+              "code": 1
+            },
+            {
+              "name": "nový úsek (obchvaty, okružní křížovatky, přeložky apod.)",
+              "code": 2
+            },
+            {
+              "name": "spojení stávajících úseků",
+              "code": 3
+            },
+            {
+              "name": "rozdělení stávajících úseků",
+              "code": 4
+            },
+            {
+              "name": "grafické prodloužení úseku",
+              "code": 5
+            },
+            {
+              "name": "grafické zkrácení úseku",
+              "code": 6
+            },
+            {
+              "name": "napojení na novou nebo změněnou okružní křížovatku",
+              "code": 7
+            },
+            {
+              "name": "napojení na obchvat, přeložku",
+              "code": 8
+            },
+            {
+              "name": "posun UB do jiné křižovatky (většinou u silnic III. tříd)",
+              "code": 9
+            },
+            {
+              "name": "změna okružní křižovatky",
+              "code": 10
+            },
+            {
+              "name": "grafická změna - pouze změna napojení v UB dle ortofoto (není opraven celý průběh)",
+              "code": 11
+            },
+            {
+              "name": "změna křižovatky",
+              "code": 12
+            },
+            {
+              "name": "změna průběhu úseku - většinou jiný průjezd obcí",
+              "code": 13
+            },
+            {
+              "name": "změna průběhu úseku - zakončení nebo začátek jinde",
+              "code": 14
+            },
+            {
+              "name": "změna čísla úseku",
+              "code": 15
+            },
+            {
+              "name": "otočení úseku",
+              "code": 16
+            },
+            {
+              "name": "přečíslování silnice",
+              "code": 17
+            },
+            {
+              "name": "změna délky v atributové tabulce a číslo úseku zůstává stejné",
+              "code": 18
+            },
+            {
+              "name": "žádost o přeměření úseku",
+              "code": 19
+            },
+            {
+              "name": "oprava délky v atributové tabulce  - dle přeměření reportéra",
+              "code": 20
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "ADMINJ",
+        "type": "esriFieldTypeString",
+        "alias": "Administrativní jednotka",
+        "length": 6,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDMAB",
+          "description": "Administrativní jednotka",
+          "codedValues": [
+            {
+              "name": "Česká republika",
+              "code": "CZ"
+            },
+            {
+              "name": "Česká republika",
+              "code": "CZ0"
+            },
+            {
+              "name": "Praha",
+              "code": "CZ01"
+            },
+            {
+              "name": "Hlavní město Praha",
+              "code": "CZ010"
+            },
+            {
+              "name": "Praha",
+              "code": "CZ0100"
+            },
+            {
+              "name": "Střední Čechy",
+              "code": "CZ02"
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": "CZ020"
+            },
+            {
+              "name": "okres Benešov",
+              "code": "CZ0201"
+            },
+            {
+              "name": "okres Beroun",
+              "code": "CZ0202"
+            },
+            {
+              "name": "okres Kladno",
+              "code": "CZ0203"
+            },
+            {
+              "name": "okres Kolín",
+              "code": "CZ0204"
+            },
+            {
+              "name": "okres Kutná Hora",
+              "code": "CZ0205"
+            },
+            {
+              "name": "okres Mělník",
+              "code": "CZ0206"
+            },
+            {
+              "name": "okres Mladá Boleslav",
+              "code": "CZ0207"
+            },
+            {
+              "name": "okres Nymburk",
+              "code": "CZ0208"
+            },
+            {
+              "name": "okres Praha - východ",
+              "code": "CZ0209"
+            },
+            {
+              "name": "okres Praha - západ",
+              "code": "CZ020A"
+            },
+            {
+              "name": "okres Příbram",
+              "code": "CZ020B"
+            },
+            {
+              "name": "okres Rakovník",
+              "code": "CZ020C"
+            },
+            {
+              "name": "Jihozápad",
+              "code": "CZ03"
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": "CZ031"
+            },
+            {
+              "name": "okres České Budějovice",
+              "code": "CZ0311"
+            },
+            {
+              "name": "okres Český Krumlov",
+              "code": "CZ0312"
+            },
+            {
+              "name": "okres Jindřichův Hradec",
+              "code": "CZ0313"
+            },
+            {
+              "name": "okres Písek",
+              "code": "CZ0314"
+            },
+            {
+              "name": "okres Prachatice",
+              "code": "CZ0315"
+            },
+            {
+              "name": "okres Strakonice",
+              "code": "CZ0316"
+            },
+            {
+              "name": "okres Tábor",
+              "code": "CZ0317"
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": "CZ032"
+            },
+            {
+              "name": "okres Domažlice",
+              "code": "CZ0321"
+            },
+            {
+              "name": "okres Klatovy",
+              "code": "CZ0322"
+            },
+            {
+              "name": "okres Plzeň - město",
+              "code": "CZ0323"
+            },
+            {
+              "name": "okres Plzeň - jih",
+              "code": "CZ0324"
+            },
+            {
+              "name": "okres Plzeň - sever",
+              "code": "CZ0325"
+            },
+            {
+              "name": "okres Rokycany",
+              "code": "CZ0326"
+            },
+            {
+              "name": "okres Tachov",
+              "code": "CZ0327"
+            },
+            {
+              "name": "Severozápad",
+              "code": "CZ04"
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": "CZ041"
+            },
+            {
+              "name": "okres Cheb",
+              "code": "CZ0411"
+            },
+            {
+              "name": "okres Karlovy Vary",
+              "code": "CZ0412"
+            },
+            {
+              "name": "okres Sokolov",
+              "code": "CZ0413"
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": "CZ042"
+            },
+            {
+              "name": "okres Děčín",
+              "code": "CZ0421"
+            },
+            {
+              "name": "okres Chomutov",
+              "code": "CZ0422"
+            },
+            {
+              "name": "okres Litoměřice",
+              "code": "CZ0423"
+            },
+            {
+              "name": "okres Louny",
+              "code": "CZ0424"
+            },
+            {
+              "name": "okres Most",
+              "code": "CZ0425"
+            },
+            {
+              "name": "okres Teplice",
+              "code": "CZ0426"
+            },
+            {
+              "name": "okres Ústí nad Labem - město",
+              "code": "CZ0427"
+            },
+            {
+              "name": "Severovýchod",
+              "code": "CZ05"
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": "CZ051"
+            },
+            {
+              "name": "okres Česká Lípa",
+              "code": "CZ0511"
+            },
+            {
+              "name": "okres Jablonec nad Nisou",
+              "code": "CZ0512"
+            },
+            {
+              "name": "okres Liberec",
+              "code": "CZ0513"
+            },
+            {
+              "name": "okres Semily",
+              "code": "CZ0514"
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": "CZ052"
+            },
+            {
+              "name": "okres Hradec Králové",
+              "code": "CZ0521"
+            },
+            {
+              "name": "okres Jičín",
+              "code": "CZ0522"
+            },
+            {
+              "name": "okres Náchod",
+              "code": "CZ0523"
+            },
+            {
+              "name": "okres Rychnov nad Kněžnou",
+              "code": "CZ0524"
+            },
+            {
+              "name": "okres Trutnov",
+              "code": "CZ0525"
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": "CZ053"
+            },
+            {
+              "name": "okres Chrudim",
+              "code": "CZ0531"
+            },
+            {
+              "name": "okres Pardubice",
+              "code": "CZ0532"
+            },
+            {
+              "name": "okres Svitavy",
+              "code": "CZ0533"
+            },
+            {
+              "name": "okres Ústí nad Orlicí",
+              "code": "CZ0534"
+            },
+            {
+              "name": "Jihovýchod",
+              "code": "CZ06"
+            },
+            {
+              "name": "Vysočina kraj",
+              "code": "CZ063"
+            },
+            {
+              "name": "okres Havlíčkův Brod",
+              "code": "CZ0631"
+            },
+            {
+              "name": "okres Jihlava",
+              "code": "CZ0632"
+            },
+            {
+              "name": "okres Pelhřimov",
+              "code": "CZ0633"
+            },
+            {
+              "name": "okres Třebíč",
+              "code": "CZ0634"
+            },
+            {
+              "name": "okres Žďár nad Sázavou",
+              "code": "CZ0635"
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": "CZ064"
+            },
+            {
+              "name": "okres Blansko",
+              "code": "CZ0641"
+            },
+            {
+              "name": "okres Brno - město",
+              "code": "CZ0642"
+            },
+            {
+              "name": "okres Brno - venkov",
+              "code": "CZ0643"
+            },
+            {
+              "name": "okres Břeclav",
+              "code": "CZ0644"
+            },
+            {
+              "name": "okres Hodonín",
+              "code": "CZ0645"
+            },
+            {
+              "name": "okres Vyškov",
+              "code": "CZ0646"
+            },
+            {
+              "name": "okres Znojmo",
+              "code": "CZ0647"
+            },
+            {
+              "name": "Střední Morava",
+              "code": "CZ07"
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": "CZ071"
+            },
+            {
+              "name": "okres Jeseník",
+              "code": "CZ0711"
+            },
+            {
+              "name": "okres Olomouc",
+              "code": "CZ0712"
+            },
+            {
+              "name": "okres Prostějov",
+              "code": "CZ0713"
+            },
+            {
+              "name": "okres Přerov",
+              "code": "CZ0714"
+            },
+            {
+              "name": "okres Šumperk",
+              "code": "CZ0715"
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": "CZ072"
+            },
+            {
+              "name": "okres Kroměříž",
+              "code": "CZ0721"
+            },
+            {
+              "name": "okres Uherské Hradiště",
+              "code": "CZ0722"
+            },
+            {
+              "name": "okres Vsetín",
+              "code": "CZ0723"
+            },
+            {
+              "name": "okres Zlín",
+              "code": "CZ0724"
+            },
+            {
+              "name": "Moravskoslezsko",
+              "code": "CZ08"
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": "CZ080"
+            },
+            {
+              "name": "okres Bruntál",
+              "code": "CZ0801"
+            },
+            {
+              "name": "okres Frýdek - Místek",
+              "code": "CZ0802"
+            },
+            {
+              "name": "okres Karviná",
+              "code": "CZ0803"
+            },
+            {
+              "name": "okres Nový Jičín",
+              "code": "CZ0804"
+            },
+            {
+              "name": "okres Opava",
+              "code": "CZ0805"
+            },
+            {
+              "name": "okres Ostrava - město",
+              "code": "CZ0806"
+            },
+            {
+              "name": "Spolková republika Německo",
+              "code": "DE"
+            },
+            {
+              "name": "Polská republika",
+              "code": "PL"
+            },
+            {
+              "name": "Rakouská republika",
+              "code": "AT"
+            },
+            {
+              "name": "Slovenská republika",
+              "code": "SK"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "PAPR_VETEV",
+        "type": "esriFieldTypeString",
+        "alias": "Označení paprsku, větve",
+        "length": 5,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD09",
+          "description": "Lokalizace - Označení paprsku, větve",
+          "codedValues": [
+            {
+              "name": "paprsek",
+              "code": "PAPRS"
+            },
+            {
+              "name": "větev",
+              "code": "VETEV"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "DOPR_SMERY",
+        "type": "esriFieldTypeString",
+        "alias": "Dopravní směry úseku",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDFP09",
+          "description": "Pasport - Dopravní směry na úseku",
+          "codedValues": [
+            {
+              "name": "oba dopravní směry",
+              "code": "0"
+            },
+            {
+              "name": "dopravní směr souhlasný s orientací úseku",
+              "code": "1"
+            },
+            {
+              "name": "dopravní směr proti orientaci úseku",
+              "code": "2"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "KOD_TR_KOM",
+        "type": "esriFieldTypeString",
+        "alias": "Kód třídy komunikace - základní",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD03",
+          "description": "Lokalizace - Třída komunikace",
+          "codedValues": [
+            {
+              "name": "dálnice I. a II. třídy",
+              "code": "1"
+            },
+            {
+              "name": "silnice I. třídy (včetně SMV)",
+              "code": "2"
+            },
+            {
+              "name": "silnice II. třídy",
+              "code": "3"
+            },
+            {
+              "name": "silnice III. třídy",
+              "code": "4"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "DELKA_US",
+        "type": "esriFieldTypeInteger",
+        "alias": "Délka úseku (m)",
+        "domain": null
+      },
+      {
+        "name": "VYM_TAHY",
+        "type": "esriFieldTypeString",
+        "alias": "Vymezené tahy",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD05_2",
+          "description": "Lokalizace - Vymezené tahy",
+          "codedValues": [
+            {
+              "name": "N předběžně správním úřadem zařazená SMV nezpoplatněná",
+              "code": "1"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená SMV zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "2"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená silnice I. tř. zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "3"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice zpoplatnění časové i výkonové (systémem elektronického mýta)",
+              "code": "4"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice nezpoplatněná",
+              "code": "5"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice zpoplatnění pouze výkonové (systémem elektronického mýta)",
+              "code": "6"
+            },
+            {
+              "name": "N předběžně správním úřadem zařazená dálnice zpoplatnění časové",
+              "code": "7"
+            },
+            {
+              "name": "nezpoplatněná silnice pro motorová vozidla (SMV)",
+              "code": "F"
+            },
+            {
+              "name": "silnice pro motorová vozidla (SMV) zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "G"
+            },
+            {
+              "name": "ostatní silnice I. třídy zpoplatnění výkonové (systémem elektronického mýta)",
+              "code": "I"
+            },
+            {
+              "name": "dálnice zpoplatnění časové i výkonové (systémem elektronického mýta)",
+              "code": "K"
+            },
+            {
+              "name": "nezpoplatněná dálnice",
+              "code": "L"
+            },
+            {
+              "name": "dálnice zpoplatnění pouze výkonové (systémem elektronického mýta)",
+              "code": "O"
+            },
+            {
+              "name": "předběžně vložený tah, který je pojížděn (kód pro úseky silnic s indexem H až Z s výjimkou N)",
+              "code": "P"
+            },
+            {
+              "name": "předběžně vložený tah, který není pojížděn",
+              "code": "Q"
+            },
+            {
+              "name": "předběžně zrušený tah, který je pojížděn (v Praze)",
+              "code": "R"
+            },
+            {
+              "name": "předběžně zrušený tah, který je pojížděn (ostatní)",
+              "code": "S"
+            },
+            {
+              "name": "předběžně zrušený tah, který není pojížděn (kód pro úseky silnic s indexem H až Z s výjimkou N)",
+              "code": "T"
+            },
+            {
+              "name": "dálnice zpoplatnění pouze časové",
+              "code": "U"
+            },
+            {
+              "name": "odpočívka",
+              "code": "Y"
+            },
+            {
+              "name": "silnice II. nebo III. třídy v dočasné správě ŘSD",
+              "code": "J"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "PEAZ_KOM1",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 1",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "PEAZ_KOM2",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 2",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "PEAZ_KOM3",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 3",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "PEAZ_KOM4",
+        "type": "esriFieldTypeString",
+        "alias": "Peažující komunikace 4",
+        "length": 5,
+        "domain": null
+      },
+      {
+        "name": "ETAH1",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 1",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "ETAH2",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 2",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "ETAH3",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 3",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "PORADI_US",
+        "type": "esriFieldTypeString",
+        "alias": "Pořadové číslo úseku na tahu komunikace",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "ETAH4",
+        "type": "esriFieldTypeString",
+        "alias": "Mezinárodní tahy 4",
+        "length": 4,
+        "domain": null
+      },
+      {
+        "name": "STANICENI1",
+        "type": "esriFieldTypeInteger",
+        "alias": "Provozní staničení POČÁTEČNÍHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "STANICENI2",
+        "type": "esriFieldTypeInteger",
+        "alias": "Provozní staničení KONCOVÉHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "OBLAST",
+        "type": "esriFieldTypeString",
+        "alias": "Oblast ",
+        "length": 2,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD02",
+          "description": "Lokalizace - Oblast",
+          "codedValues": [
+            {
+              "name": "oblast Benešov",
+              "code": "21"
+            },
+            {
+              "name": "oblast Kladno",
+              "code": "22"
+            },
+            {
+              "name": "oblast Kutná Hora",
+              "code": "23"
+            },
+            {
+              "name": "oblast Mnichovo Hradiště",
+              "code": "24"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "KOD_R",
+        "type": "esriFieldTypeString",
+        "alias": "Kód třídy komunikace - rozšířený",
+        "length": 1,
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD08",
+          "description": "Lokalizace - Třída komunikace (rozšířená)",
+          "codedValues": [
+            {
+              "name": "dálnice I. třídy",
+              "code": "1"
+            },
+            {
+              "name": "silnice I. třídy",
+              "code": "2"
+            },
+            {
+              "name": "silnice II. třídy",
+              "code": "3"
+            },
+            {
+              "name": "silnice III. třídy",
+              "code": "4"
+            },
+            {
+              "name": "dálnice II. třídy",
+              "code": "5"
+            },
+            {
+              "name": "silnice pro motorová vozidla",
+              "code": "6"
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "CESTMISTR",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Cestmistrovství",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD04",
+          "description": "Lokalizace - Označení cestmistrů",
+          "codedValues": [
+            {
+              "name": "úsek dálnice nebo silnice I. třídy",
+              "code": 0
+            },
+            {
+              "name": "Havlíčkův Brod",
+              "code": 6311
+            },
+            {
+              "name": "Chotěboř",
+              "code": 6312
+            },
+            {
+              "name": "Ledeč nad Sázavou",
+              "code": 6313
+            },
+            {
+              "name": "Jihlava",
+              "code": 6321
+            },
+            {
+              "name": "Telč",
+              "code": 6323
+            },
+            {
+              "name": "Pelhřimov",
+              "code": 6331
+            },
+            {
+              "name": "Pacov",
+              "code": 6332
+            },
+            {
+              "name": "Humpolec",
+              "code": 6334
+            },
+            {
+              "name": "Třebíč",
+              "code": 6341
+            },
+            {
+              "name": "Moravské Budějovice",
+              "code": 6342
+            },
+            {
+              "name": "Náměšť nad Oslavou",
+              "code": 6343
+            },
+            {
+              "name": "Bystřice nad Pernštejnem",
+              "code": 6351
+            },
+            {
+              "name": "Velké Meziříčí",
+              "code": 6352
+            },
+            {
+              "name": "Žďár nad Sázavou",
+              "code": 6353
+            },
+            {
+              "name": "cestmistr nevyplněn",
+              "code": 9999
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "KM_STAN1",
+        "type": "esriFieldTypeInteger",
+        "alias": "Kilometrovníkové staničení POČÁTEČNÍHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "KM_STAN2",
+        "type": "esriFieldTypeInteger",
+        "alias": "Kilometrovníkové staničení KONCOVÉHO uzlového bodu (m)",
+        "domain": null
+      },
+      {
+        "name": "DAT_ZAZNAM",
+        "type": "esriFieldTypeDate",
+        "alias": "Datum vložení do databáze",
+        "length": 8,
+        "domain": null
+      },
+      {
+        "name": "POPIS",
+        "type": "esriFieldTypeString",
+        "alias": "Označení komunikace - zjednodušené",
+        "length": 7,
+        "domain": null
+      },
+      {
+        "name": "SPRAVCE1",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 1",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE2",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 2",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE31",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 3.1",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE32",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 3.2",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "SPRAVCE4",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Majetkový správce 4",
+        "domain": {
+          "type": "codedValue",
+          "name": "CDD16",
+          "description": "Lokalizace - Název správce",
+          "codedValues": [
+            {
+              "name": "nevyplněn",
+              "code": 0
+            },
+            {
+              "name": "ŘSD",
+              "code": 1
+            },
+            {
+              "name": "Magistrát hlavního města Prahy",
+              "code": 2
+            },
+            {
+              "name": "Správa České Budějovice",
+              "code": 3
+            },
+            {
+              "name": "Správa Hradec Králové",
+              "code": 4
+            },
+            {
+              "name": "Správa Chomutov",
+              "code": 5
+            },
+            {
+              "name": "Správa Jihlava",
+              "code": 6
+            },
+            {
+              "name": "Správa Karlovy Vary",
+              "code": 7
+            },
+            {
+              "name": "Správa Liberec",
+              "code": 8
+            },
+            {
+              "name": "Správa Olomouc",
+              "code": 9
+            },
+            {
+              "name": "Správa Ostrava",
+              "code": 10
+            },
+            {
+              "name": "Správa Pardubice",
+              "code": 11
+            },
+            {
+              "name": "Správa Plzeň",
+              "code": 12
+            },
+            {
+              "name": "Správa Zlín",
+              "code": 13
+            },
+            {
+              "name": "Závod Brno",
+              "code": 14
+            },
+            {
+              "name": "Závod Praha",
+              "code": 15
+            },
+            {
+              "name": "Správa dálnice Čechy",
+              "code": 16
+            },
+            {
+              "name": "Správa dálnice Morava",
+              "code": 17
+            },
+            {
+              "name": "TSK PRAHA",
+              "code": 18
+            },
+            {
+              "name": "SSÚD 1 Mirošovice",
+              "code": 19
+            },
+            {
+              "name": "SSÚD 2 Bernartice",
+              "code": 20
+            },
+            {
+              "name": "SSÚD 3 Velký Beranov",
+              "code": 21
+            },
+            {
+              "name": "SSÚD 4 Domašov",
+              "code": 22
+            },
+            {
+              "name": "SSÚD 5 Kocourovec",
+              "code": 23
+            },
+            {
+              "name": "SSÚD 6 Brno-Chrlice",
+              "code": 24
+            },
+            {
+              "name": "SSÚD 7 Podivín",
+              "code": 25
+            },
+            {
+              "name": "SSÚD 8 Rudná",
+              "code": 26
+            },
+            {
+              "name": "SSÚD 9 Svojkovice",
+              "code": 27
+            },
+            {
+              "name": "SSÚD 10 Ostrov u Stříbra",
+              "code": 28
+            },
+            {
+              "name": "SSÚD 11 Nová Ves",
+              "code": 29
+            },
+            {
+              "name": "SSÚD 12 Řehlovice",
+              "code": 30
+            },
+            {
+              "name": "SSÚD 13 Poříčany",
+              "code": 31
+            },
+            {
+              "name": "SSÚD 14 Pravy",
+              "code": 32
+            },
+            {
+              "name": "SSÚD 17 Chotoviny",
+              "code": 33
+            },
+            {
+              "name": "SSÚD 20 Ivanovice na Hané",
+              "code": 34
+            },
+            {
+              "name": "SSÚD 21 Přerov",
+              "code": 35
+            },
+            {
+              "name": "SSÚD 22 Mankovice",
+              "code": 36
+            },
+            {
+              "name": "SSÚD 23 Ostrava",
+              "code": 37
+            },
+            {
+              "name": "SSÚD 30 Rozvadov",
+              "code": 38
+            },
+            {
+              "name": "Správa Praha",
+              "code": 80
+            },
+            {
+              "name": "Středočeský kraj",
+              "code": 100
+            },
+            {
+              "name": "Jihočeský kraj",
+              "code": 101
+            },
+            {
+              "name": "Plzeňský kraj",
+              "code": 102
+            },
+            {
+              "name": "Karlovarský kraj",
+              "code": 103
+            },
+            {
+              "name": "Ústecký kraj",
+              "code": 104
+            },
+            {
+              "name": "Liberecký kraj",
+              "code": 105
+            },
+            {
+              "name": "Královéhradecký kraj",
+              "code": 106
+            },
+            {
+              "name": "Pardubický kraj",
+              "code": 107
+            },
+            {
+              "name": "kraj Vysočina",
+              "code": 108
+            },
+            {
+              "name": "Jihomoravský kraj",
+              "code": 109
+            },
+            {
+              "name": "Olomoucký kraj",
+              "code": 110
+            },
+            {
+              "name": "Zlínský kraj",
+              "code": 111
+            },
+            {
+              "name": "Moravskoslezský kraj",
+              "code": 112
+            },
+            {
+              "name": "SSÚD 33 Městec",
+              "code": 39
+            },
+            {
+              "name": "PPP projekty",
+              "code": 300
+            },
+            {
+              "name": "Via Salis Operations",
+              "code": 301
+            }
+          ],
+          "mergePolicy": "esriMPTDefaultValue",
+          "splitPolicy": "esriSPTDefaultValue"
+        }
+      },
+      {
+        "name": "OBJECTID",
+        "type": "esriFieldTypeOID",
+        "alias": "OBJECTID",
+        "domain": null
+      },
+      {
+        "name": "Shape",
+        "type": "esriFieldTypeGeometry",
+        "alias": "Shape",
+        "domain": null
+      },
+      {
+        "name": "Shape.STLength()",
+        "type": "esriFieldTypeDouble",
+        "alias": "Shape.STLength()",
+        "domain": null
+      }
+    ],
+    "geometryField": {
+      "name": "Shape",
+      "type": "esriFieldTypeGeometry",
+      "alias": "Shape"
+    },
+    "indexes": null,
+    "subtypes": [],
+    "relationships": [],
+    "canModifyLayer": true,
+    "canScaleSymbols": false,
+    "hasLabels": false,
+    "capabilities": "Map,Query,Data",
+    "maxRecordCount": 2000,
+    "supportsStatistics": true,
+    "supportsExceedsLimitStatistics": true,
+    "supportsAdvancedQueries": true,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "isDataVersioned": false,
+    "ownershipBasedAccessControlForFeatures": {
+      "allowOthersToQuery": true
+    },
+    "useStandardizedQueries": true,
+    "supportedSpatialRelationships": [
+      "esriSpatialRelIntersects",
+      "esriSpatialRelContains",
+      "esriSpatialRelCrosses",
+      "esriSpatialRelEnvelopeIntersects",
+      "esriSpatialRelIndexIntersects",
+      "esriSpatialRelOverlaps",
+      "esriSpatialRelTouches",
+      "esriSpatialRelWithin",
+      "esriSpatialRelRelation"
+    ],
+    "advancedQueryCapabilities": {
+      "useStandardizedQueries": true,
+      "supportsStatistics": true,
+      "supportsPercentileStatistics": true,
+      "supportsHavingClause": true,
+      "supportsOrderBy": true,
+      "supportsDistinct": true,
+      "supportsCountDistinct": true,
+      "supportsPagination": true,
+      "supportsLod": false,
+      "supportsQueryWithLodSR": false,
+      "supportsTrueCurve": true,
+      "supportsQueryWithDatumTransformation": true,
+      "supportsReturningQueryExtent": true,
+      "supportsQueryWithDistance": true,
+      "supportsSqlExpression": true,
+      "supportsTimeRelation": true,
+      "supportsSqlFormat": false,
+      "supportsQueryAnalytic": true
+    },
+    "supportsDatumTransformation": true,
+    "advancedQueryAnalyticCapabilities": {
+      "supportsLinearRegression": true,
+      "supportsAsync": false,
+      "supportsPercentileAnalytic": true
+    },
+    "dateFieldsTimeReference": null,
+    "preferredTimeReference": null,
+    "datesInUnknownTimezone": false,
+    "hasGeometryProperties": true,
+    "geometryProperties": {
+      "shapeLengthFieldName": "Shape.STLength()",
+      "units": "esriMeters"
+    },
+    "hasMetadata": true,
+    "isDataArchived": false,
+    "archivingInfo": {
+      "supportsQueryWithHistoricMoment": false,
+      "startArchivingMoment": -1
+    },
+    "supportsCoordinatesQuantization": true,
+    "supportsDynamicLegends": true
+  },
+  "source": {
+    "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26",
+    "retrieved_at": "2026-09-09T14:13:21.123174+00:00",
+    "raw_sha256": "418eedb994b5793c165423bfc7338c48baeaa1b95358e1338285df21e8031734",
+    "landing_page": "https://geoportal.rsd.cz/web",
+    "publisher": "ŘSD",
+    "reference_date": "2026-07-01",
+    "reference_date_basis": "ISSDS date displayed by the official Geoportal on 2026-09-09; not a verified update timestamp for each individual feature.",
+    "scope": "Silnice II.třídy"
+  },
+  "retrieved_from": "2026-09-09T14:13:22.158626+00:00",
+  "retrieved_to": "2026-09-09T14:14:00.448910+00:00",
+  "controls": {
+    "source_count": 10857,
+    "source_ids": 10857,
+    "retrieved_unique_ids": 10857,
+    "matched": true,
+    "ids_source": {
+      "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&where=1%3D1&returnIdsOnly=true",
+      "retrieved_at": "2026-09-09T14:13:21.443740+00:00",
+      "sha256": "cfe695478bada17f71da3796f25230d9b99d50b8c0aacfbc6faea3255fe36f74",
+      "bytes": 76045
+    },
+    "count_source": {
+      "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&where=1%3D1&returnCountOnly=true",
+      "retrieved_at": "2026-09-09T14:13:21.734515+00:00",
+      "sha256": "183ceb51facc45fca58a27ac183e8a80b5e6bcbe2b0ca370f07234cc1a0555e5",
+      "bytes": 15
+    }
+  },
+  "pages": [
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0000000.native.json.gz",
+      "rows": 200,
+      "sha256": "12c63795d1eaf066246d191ab89e68121c5710f1e3471cb70ee43694533066ec",
+      "bytes": 136930,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=529079%2C529080%2C529081%2C529082%2C529083%2C529084%2C529085%2C529086%2C529087%2C529088%2C529089%2C529090%2C529095%2C529096%2C529098%2C529101%2C529102%2C529106%2C529107%2C529108%2C529109%2C529110%2C529111%2C529112%2C529113%2C529114%2C529115%2C529125%2C529131%2C529132%2C529133%2C529134%2C529135%2C529136%2C529137%2C529138%2C529139%2C529140%2C529142%2C529144%2C529145%2C529146%2C529147%2C529148%2C529154%2C529158%2C529159%2C529160%2C529161%2C529162%2C529163%2C529164%2C529165%2C529166%2C529167%2C529168%2C529169%2C529170%2C529171%2C529172%2C529173%2C529176%2C529177%2C529178%2C529179%2C529180%2C529181%2C529182%2C529183%2C529184%2C529185%2C529186%2C529190%2C529197%2C529198%2C529199%2C529203%2C529204%2C529205%2C529210%2C529211%2C529212%2C529213%2C529217%2C529218%2C529219%2C529220%2C529221%2C529222%2C529223%2C529224%2C529225%2C529226%2C529227%2C529228%2C529229%2C529230%2C529231%2C529232%2C529233%2C529234%2C529236%2C529237%2C529238%2C529239%2C529240%2C529241%2C529242%2C529243%2C529244%2C529245%2C529246%2C529247%2C529248%2C529249%2C529250%2C529251%2C529252%2C529254%2C529255%2C529256%2C529257%2C529258%2C529260%2C529261%2C529262%2C529263%2C529264%2C529265%2C529266%2C529267%2C529268%2C529269%2C529270%2C529271%2C529272%2C529273%2C529274%2C529279%2C529280%2C529281%2C529282%2C529283%2C529284%2C529285%2C529286%2C529287%2C529288%2C529291%2C529292%2C529293%2C529296%2C529297%2C529298%2C529316%2C529317%2C529318%2C529321%2C529326%2C529327%2C529328%2C529329%2C529330%2C529331%2C529333%2C529334%2C529335%2C529336%2C529337%2C529338%2C529339%2C529340%2C529341%2C529343%2C529344%2C529345%2C529347%2C529348%2C529349%2C529359%2C529360%2C529361%2C529362%2C529364%2C529365%2C529366%2C529367%2C529368%2C529369%2C529370%2C529371%2C529372%2C529373%2C529374%2C529375%2C529378%2C529379%2C529380%2C529381%2C529382&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:22.158626+00:00",
+        "sha256": "4516e2e6be852a91ebebc63c3a83470aa90ae01acafdfb55ef6a527a17800010",
+        "bytes": 521979
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0000200.native.json.gz",
+      "rows": 200,
+      "sha256": "b66be385dc2df293e01b98dc347c45849e246229f1d3d02becbebf16b1853a15",
+      "bytes": 83610,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=529383%2C529393%2C529394%2C529395%2C529396%2C529397%2C529398%2C529399%2C529400%2C529401%2C529408%2C529410%2C529411%2C529412%2C529413%2C529414%2C529415%2C529416%2C529417%2C529418%2C529419%2C529420%2C529421%2C529422%2C529423%2C529424%2C529425%2C529426%2C529427%2C529428%2C529451%2C529452%2C529469%2C529470%2C529472%2C529475%2C529479%2C529480%2C529481%2C529482%2C529483%2C529484%2C529485%2C529491%2C529492%2C529494%2C529497%2C529500%2C529501%2C529502%2C529503%2C529506%2C529512%2C529524%2C529528%2C529529%2C529530%2C529533%2C529539%2C529540%2C529541%2C529543%2C529544%2C529550%2C529551%2C529552%2C529559%2C529560%2C529561%2C529562%2C529580%2C529581%2C529582%2C529598%2C529599%2C529600%2C529601%2C529602%2C529603%2C529609%2C529611%2C529612%2C529613%2C529614%2C529615%2C529616%2C529617%2C529634%2C529635%2C529638%2C529646%2C529647%2C529648%2C529655%2C529656%2C529657%2C529660%2C529662%2C529663%2C529664%2C529666%2C529667%2C529670%2C529676%2C529678%2C529684%2C529686%2C529688%2C529689%2C529691%2C529694%2C529695%2C529697%2C529699%2C529702%2C529706%2C529707%2C529708%2C529709%2C529710%2C529711%2C529712%2C529713%2C529714%2C529715%2C529716%2C529717%2C529718%2C529724%2C529726%2C529731%2C529733%2C529734%2C529735%2C529736%2C529737%2C529738%2C529739%2C529746%2C529747%2C529748%2C529749%2C529750%2C529755%2C529760%2C529769%2C529770%2C529771%2C529772%2C529773%2C529774%2C529775%2C529776%2C529798%2C529801%2C529804%2C529807%2C529819%2C529820%2C529821%2C529822%2C529829%2C529831%2C529832%2C529835%2C529836%2C529837%2C529838%2C529839%2C529840%2C529852%2C529853%2C529854%2C529860%2C529864%2C529865%2C529866%2C529872%2C529873%2C529877%2C529878%2C529879%2C529880%2C529881%2C529891%2C529892%2C529893%2C529894%2C529895%2C529896%2C529897%2C529898%2C529899%2C529905%2C529906%2C529908%2C529910%2C529911%2C529912%2C529913&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:23.001677+00:00",
+        "sha256": "64cd10934c5465e15a9f22a8f5425ceb9d0c55a9c497cdf372824d541f14dcd9",
+        "bytes": 362261
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0000400.native.json.gz",
+      "rows": 200,
+      "sha256": "c8f921bc601668eac20e3b67b643d09260f77540276df075d9674778294fd8ff",
+      "bytes": 68029,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=529915%2C529916%2C529917%2C529926%2C529927%2C529928%2C529929%2C529930%2C529937%2C529938%2C529940%2C529941%2C529942%2C529944%2C529945%2C529946%2C529947%2C529948%2C529950%2C529973%2C529974%2C529988%2C529993%2C530003%2C530004%2C530008%2C530009%2C530019%2C530020%2C530022%2C530023%2C530024%2C530029%2C530030%2C530031%2C530037%2C530038%2C530039%2C530040%2C530058%2C530060%2C530061%2C530062%2C530065%2C530067%2C530068%2C530069%2C530070%2C530071%2C530072%2C530073%2C530074%2C530078%2C530079%2C530081%2C530082%2C530092%2C530093%2C530094%2C530095%2C530096%2C530097%2C530106%2C530107%2C530108%2C530112%2C530116%2C530117%2C530118%2C530119%2C530120%2C530121%2C530122%2C530123%2C530124%2C530125%2C530131%2C530132%2C530133%2C530134%2C530135%2C530137%2C530138%2C530139%2C530149%2C530150%2C530151%2C530161%2C530162%2C530163%2C530164%2C530171%2C530172%2C530173%2C530179%2C530190%2C530199%2C530200%2C530201%2C530202%2C530204%2C530207%2C530208%2C530209%2C530220%2C530227%2C530230%2C530238%2C530239%2C530240%2C530256%2C530257%2C530258%2C530259%2C530268%2C530269%2C530275%2C530282%2C530283%2C530284%2C530285%2C530286%2C530287%2C530288%2C530289%2C530294%2C530295%2C530296%2C530297%2C530298%2C530299%2C530300%2C530308%2C530309%2C530310%2C530312%2C530313%2C530314%2C530324%2C530325%2C530326%2C530327%2C530328%2C530329%2C530330%2C530331%2C530332%2C530340%2C530341%2C530342%2C530343%2C530347%2C530348%2C530349%2C530350%2C530356%2C530357%2C530358%2C530362%2C530380%2C530381%2C530382%2C530389%2C530390%2C530391%2C530394%2C530395%2C530396%2C530397%2C530398%2C530399%2C530400%2C530401%2C530402%2C530403%2C530404%2C530407%2C530412%2C530413%2C530414%2C530415%2C530416%2C530417%2C530424%2C530426%2C530427%2C530428%2C530429%2C530431%2C530432%2C530433%2C530448%2C530449%2C530475%2C530476%2C530478%2C530479%2C530480%2C530482%2C530483&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:23.541411+00:00",
+        "sha256": "b382aba7d02c8115d7a6921ca284f6f4ce54d606a10f651540f374c26ce9a7fd",
+        "bytes": 315030
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0000600.native.json.gz",
+      "rows": 200,
+      "sha256": "f2da355b52bcfaa7c456038c85ca67d9a1bc4ca7a81313e56edef585a4b1ee14",
+      "bytes": 90972,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=530484%2C530489%2C530490%2C530491%2C530502%2C530503%2C530504%2C530507%2C530510%2C530511%2C530512%2C530520%2C530521%2C530528%2C530529%2C530530%2C530533%2C530534%2C530535%2C530536%2C530537%2C530538%2C530539%2C530540%2C530542%2C530543%2C530544%2C530557%2C530559%2C530560%2C530561%2C530577%2C530578%2C530579%2C530580%2C530581%2C530585%2C530586%2C530587%2C530588%2C530589%2C530590%2C530591%2C530592%2C530593%2C530594%2C530595%2C530596%2C530597%2C530598%2C530599%2C530600%2C530601%2C530602%2C530603%2C530604%2C530612%2C530614%2C530622%2C530624%2C530625%2C530626%2C530628%2C530629%2C530630%2C530631%2C530632%2C530634%2C530637%2C530638%2C530640%2C530641%2C530643%2C530644%2C530649%2C530650%2C530651%2C530652%2C530653%2C530654%2C530655%2C530659%2C530660%2C530661%2C530662%2C530663%2C530664%2C530665%2C530666%2C530667%2C530675%2C530676%2C530677%2C530678%2C530688%2C530689%2C530690%2C530691%2C530692%2C530693%2C530694%2C530695%2C530696%2C530723%2C530724%2C530725%2C530726%2C530727%2C530728%2C530729%2C530730%2C530731%2C530732%2C530733%2C530734%2C530735%2C530736%2C530737%2C530738%2C530739%2C530740%2C530741%2C530742%2C530743%2C530744%2C530745%2C530746%2C530754%2C530755%2C530756%2C530757%2C530758%2C530765%2C530767%2C530768%2C530769%2C530770%2C530772%2C530775%2C530776%2C530777%2C530778%2C530779%2C530780%2C530781%2C530782%2C530783%2C530784%2C530785%2C530786%2C530787%2C530788%2C530789%2C530790%2C530791%2C530792%2C530793%2C530794%2C530795%2C530796%2C530799%2C530800%2C530801%2C530802%2C530803%2C530804%2C530805%2C530806%2C530808%2C530812%2C530813%2C530814%2C530815%2C530816%2C530817%2C530818%2C530825%2C530826%2C530827%2C530828%2C530829%2C530830%2C530831%2C530834%2C530835%2C530836%2C530837%2C530839%2C530840%2C530841%2C530842%2C530843%2C530844%2C530845%2C530846%2C530847%2C530848%2C530849%2C530850%2C530851&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:23.968233+00:00",
+        "sha256": "f7417c1dc15dc2e8b49751ea0ce802d7c73932dccde669ef0ebd40aa7a14c3c4",
+        "bytes": 383647
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0000800.native.json.gz",
+      "rows": 200,
+      "sha256": "23860c33d18008c68004a876c66101e2d5ef1f1cb7460ca3cd932f5cc68b022a",
+      "bytes": 214722,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=530852%2C530856%2C530857%2C530865%2C530866%2C530867%2C530868%2C530869%2C530870%2C530871%2C530874%2C530875%2C530876%2C530877%2C530879%2C530884%2C530885%2C530886%2C530887%2C530888%2C530889%2C530890%2C530892%2C530893%2C530894%2C530895%2C530896%2C530897%2C530898%2C530899%2C530900%2C530901%2C530903%2C530905%2C530907%2C530909%2C530910%2C530911%2C530917%2C530918%2C530919%2C530920%2C530933%2C530934%2C530935%2C530954%2C530955%2C530956%2C530995%2C530996%2C530997%2C530998%2C530999%2C531000%2C531001%2C531002%2C531003%2C531004%2C531011%2C531024%2C531025%2C531026%2C531028%2C531029%2C531030%2C531031%2C531032%2C531033%2C531034%2C531035%2C531038%2C531039%2C531040%2C531041%2C531042%2C531043%2C531044%2C531045%2C531046%2C531047%2C531048%2C531049%2C531050%2C531051%2C531052%2C531053%2C531054%2C531055%2C531056%2C531057%2C531059%2C531060%2C531061%2C531062%2C531063%2C531065%2C531067%2C531068%2C531069%2C531070%2C531071%2C531072%2C531073%2C531075%2C531076%2C531077%2C531078%2C531079%2C531080%2C531082%2C531083%2C531084%2C531085%2C531086%2C531087%2C531088%2C531089%2C531090%2C531091%2C531092%2C531093%2C531094%2C531095%2C531097%2C531098%2C531099%2C531100%2C531101%2C531102%2C531103%2C531105%2C531106%2C531107%2C531109%2C531110%2C531111%2C531112%2C531113%2C531114%2C531115%2C531116%2C531117%2C531118%2C531119%2C531120%2C531121%2C531122%2C531123%2C531124%2C531125%2C531126%2C531127%2C531128%2C531129%2C531130%2C531131%2C531132%2C531133%2C531134%2C531135%2C531136%2C531137%2C531138%2C531139%2C531140%2C531141%2C531142%2C531143%2C531144%2C531145%2C531146%2C531147%2C531148%2C531149%2C531150%2C531151%2C531152%2C531155%2C531156%2C531157%2C531158%2C531159%2C531160%2C531161%2C531162%2C531163%2C531164%2C531165%2C531166%2C531167%2C531168%2C531169%2C531170%2C531171%2C531172%2C531173%2C531174%2C531175%2C531176%2C531178&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:24.510718+00:00",
+        "sha256": "a00aed8a92ab16bb21b28803ca01f506d1339fe0c3f1f93d94db5ce0f000b6f2",
+        "bytes": 781897
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0001000.native.json.gz",
+      "rows": 200,
+      "sha256": "8a1aa7208fb307ceba392bcddd5a381e0817509e6d87ea541ba29d1a147e9ef6",
+      "bytes": 151851,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=531180%2C531181%2C531182%2C531183%2C531184%2C531185%2C531186%2C531187%2C531188%2C531189%2C531190%2C531191%2C531192%2C531193%2C531194%2C531197%2C531204%2C531207%2C531208%2C531210%2C531213%2C531216%2C531217%2C531228%2C531231%2C531255%2C531256%2C531257%2C531278%2C531293%2C531294%2C531295%2C531296%2C531297%2C531298%2C531299%2C531300%2C531307%2C531308%2C531309%2C531310%2C531311%2C531312%2C531329%2C531330%2C531331%2C531332%2C531333%2C531334%2C531335%2C531341%2C531342%2C531343%2C531344%2C531345%2C531346%2C531347%2C531348%2C531349%2C531353%2C531354%2C531355%2C531363%2C531364%2C531365%2C531366%2C531367%2C531368%2C531373%2C531374%2C531375%2C531376%2C531377%2C531378%2C531379%2C531380%2C531381%2C531382%2C531397%2C531398%2C531399%2C531400%2C531401%2C531402%2C531403%2C531404%2C531405%2C531407%2C531408%2C531409%2C531410%2C531411%2C531431%2C531432%2C531433%2C531435%2C531436%2C531437%2C531439%2C531440%2C531466%2C531467%2C531479%2C531480%2C531481%2C531482%2C531483%2C531484%2C531485%2C531486%2C531487%2C531488%2C531493%2C531494%2C531497%2C531501%2C531506%2C531507%2C531514%2C531515%2C531516%2C531517%2C531519%2C531520%2C531524%2C531527%2C531530%2C531540%2C531544%2C531545%2C531546%2C531548%2C531549%2C531550%2C531551%2C531552%2C531553%2C531555%2C531556%2C531557%2C531558%2C531559%2C531560%2C531561%2C531563%2C531564%2C531566%2C531613%2C531618%2C531628%2C531629%2C531630%2C531631%2C531632%2C531633%2C531634%2C531635%2C531636%2C531637%2C531638%2C531639%2C531640%2C531641%2C531642%2C531643%2C531656%2C531657%2C531658%2C531660%2C531661%2C531664%2C531665%2C531667%2C531668%2C531671%2C531672%2C531673%2C531674%2C531675%2C531676%2C531677%2C531682%2C531683%2C531684%2C531685%2C531686%2C531689%2C531690%2C531704%2C531709%2C531710%2C531712%2C531724%2C531725%2C531726%2C531773%2C531774%2C531775%2C531776%2C531780&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:25.101790+00:00",
+        "sha256": "53bcfb401ab5e38081abf653b5bd619fc044cac4e5deeb0a7a02219abc323eae",
+        "bytes": 576203
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0001200.native.json.gz",
+      "rows": 200,
+      "sha256": "615a3dcafb040ad458a6b360aee081a5279f4a27ebe0365d3002da3c1c5cbd5f",
+      "bytes": 97844,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=531781%2C531782%2C531783%2C531798%2C531814%2C531817%2C531818%2C531820%2C531821%2C531822%2C531896%2C531997%2C531998%2C531999%2C532000%2C532006%2C532007%2C532008%2C532009%2C532010%2C532031%2C532032%2C532033%2C532073%2C532074%2C532075%2C532076%2C532102%2C532104%2C532105%2C532123%2C532124%2C532125%2C532126%2C532139%2C532140%2C532141%2C532142%2C532143%2C532145%2C532146%2C532147%2C532148%2C532150%2C532151%2C532154%2C532168%2C532169%2C532175%2C532180%2C532181%2C532182%2C532184%2C532187%2C532188%2C532189%2C532190%2C532191%2C532192%2C532193%2C532194%2C532196%2C532197%2C532198%2C532206%2C532215%2C532216%2C532217%2C532225%2C532226%2C532227%2C532229%2C532230%2C532231%2C532232%2C532233%2C532234%2C532235%2C532245%2C532264%2C532268%2C532269%2C532273%2C532275%2C532942%2C532943%2C532944%2C533572%2C533573%2C533574%2C533578%2C533579%2C533580%2C533581%2C533590%2C533591%2C533592%2C533605%2C533606%2C533607%2C533608%2C533610%2C533611%2C533612%2C533613%2C533619%2C533620%2C533621%2C533627%2C533628%2C533629%2C533649%2C533650%2C533652%2C533667%2C533673%2C533674%2C533675%2C533676%2C533677%2C533679%2C533682%2C533687%2C533688%2C533698%2C533700%2C533713%2C533714%2C533715%2C533716%2C533730%2C533731%2C533732%2C533733%2C533735%2C533736%2C533737%2C533738%2C533746%2C533747%2C533749%2C533752%2C533758%2C533762%2C533763%2C533770%2C533772%2C533831%2C533886%2C533889%2C533890%2C533891%2C533892%2C533893%2C533894%2C533900%2C533901%2C533916%2C533923%2C533924%2C533961%2C533966%2C533983%2C534038%2C534039%2C534042%2C534043%2C534048%2C534049%2C534076%2C534098%2C534099%2C534100%2C534113%2C534114%2C534118%2C534119%2C534120%2C534121%2C534124%2C534128%2C534201%2C534302%2C534312%2C534335%2C534337%2C534339%2C534345%2C534347%2C534349%2C534370%2C534371%2C534494%2C534495%2C534496%2C534633%2C534637%2C534642%2C534643%2C534651&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:25.632387+00:00",
+        "sha256": "5b843a1a6e6b5ddbc00d02c57db00b6fa9160c3f81c33af59a4185e70020bc28",
+        "bytes": 398691
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0001400.native.json.gz",
+      "rows": 200,
+      "sha256": "0b34982dfe74694724d499040d3a851bb29a22eab90316bfbe8dc7b5a4ded581",
+      "bytes": 156984,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=534652%2C534653%2C534658%2C534671%2C534676%2C534677%2C534697%2C534719%2C534720%2C534721%2C534726%2C534727%2C534728%2C534729%2C534730%2C534731%2C534732%2C534734%2C534763%2C534771%2C534775%2C534776%2C534834%2C534837%2C534838%2C534843%2C534844%2C534845%2C534846%2C534848%2C534849%2C534850%2C534853%2C534854%2C534857%2C534858%2C534859%2C534861%2C534863%2C534866%2C534869%2C534870%2C534893%2C534912%2C534913%2C535019%2C535129%2C535362%2C535363%2C535723%2C535724%2C535725%2C535726%2C535727%2C535728%2C535729%2C535730%2C535731%2C535733%2C535734%2C535751%2C535753%2C535754%2C535755%2C535756%2C535757%2C535758%2C535765%2C535766%2C535850%2C535851%2C535864%2C535865%2C535867%2C535868%2C535869%2C535870%2C535871%2C535872%2C535873%2C535874%2C535875%2C535877%2C535878%2C535879%2C535880%2C535881%2C535882%2C535883%2C535884%2C535886%2C535887%2C535888%2C535890%2C535906%2C535907%2C535908%2C535909%2C535910%2C535911%2C535912%2C535913%2C535914%2C535915%2C535916%2C535917%2C535918%2C535919%2C535920%2C535923%2C535924%2C535925%2C535926%2C535927%2C535928%2C535929%2C535930%2C535932%2C535934%2C535935%2C535936%2C535937%2C535938%2C535939%2C535941%2C535946%2C535954%2C535961%2C535969%2C535986%2C535987%2C535988%2C535989%2C535995%2C535996%2C535999%2C536000%2C536001%2C536002%2C536033%2C536035%2C536150%2C536151%2C536152%2C536439%2C536450%2C536451%2C536458%2C536459%2C536460%2C536462%2C536463%2C536464%2C536466%2C536468%2C536469%2C536470%2C536471%2C536472%2C536473%2C536474%2C536475%2C536476%2C536477%2C536478%2C536479%2C536480%2C536482%2C536483%2C536484%2C536485%2C536487%2C536488%2C536489%2C536491%2C536492%2C536493%2C536494%2C536504%2C536515%2C537115%2C537116%2C537117%2C537118%2C537119%2C537120%2C537121%2C537124%2C537125%2C537126%2C537129%2C537130%2C537131%2C537133%2C537134%2C537135%2C537136%2C537137%2C537138%2C537139&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:26.129700+00:00",
+        "sha256": "4e669e145d9d7d35a0890d836eb39e7c43b1641f344d74d3dd3804fe5efd1fd9",
+        "bytes": 597122
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0001600.native.json.gz",
+      "rows": 200,
+      "sha256": "30ea4a19d872a06fa805e86f1e8929ac48872b9bc65e8ac0b2170c7f18a8c048",
+      "bytes": 189219,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=537140%2C537141%2C537142%2C537143%2C537144%2C537145%2C537146%2C537147%2C537148%2C537149%2C537150%2C537151%2C537152%2C537155%2C537156%2C537157%2C537158%2C537159%2C537160%2C537161%2C537170%2C537171%2C537174%2C537175%2C537176%2C537177%2C537188%2C537189%2C537190%2C537191%2C537211%2C537212%2C537213%2C537214%2C537215%2C537216%2C537225%2C537226%2C537227%2C537233%2C537234%2C537235%2C537239%2C537240%2C537241%2C537242%2C537243%2C537244%2C537245%2C537246%2C537247%2C537248%2C537249%2C537278%2C537287%2C537288%2C537296%2C537298%2C537299%2C537300%2C537303%2C537304%2C537305%2C537306%2C537307%2C537308%2C537309%2C537310%2C537311%2C537312%2C537313%2C537314%2C537315%2C537316%2C537317%2C537318%2C537319%2C537320%2C537323%2C537324%2C537325%2C537326%2C537327%2C537328%2C537329%2C537330%2C537331%2C537332%2C537333%2C537334%2C537335%2C537336%2C537337%2C537338%2C537339%2C537340%2C537341%2C537342%2C537343%2C537344%2C537345%2C537346%2C537347%2C537348%2C537349%2C537350%2C537351%2C537352%2C537353%2C537354%2C537355%2C537356%2C537357%2C537358%2C537359%2C537360%2C537361%2C537362%2C537363%2C537364%2C537365%2C537366%2C537367%2C537368%2C537369%2C537370%2C537371%2C537372%2C537373%2C537374%2C537375%2C537376%2C537377%2C537378%2C537379%2C537380%2C537381%2C537382%2C537384%2C537385%2C537387%2C537388%2C537389%2C537390%2C537391%2C537392%2C537393%2C537394%2C537395%2C537396%2C537398%2C537399%2C537400%2C537401%2C537402%2C537403%2C537404%2C537405%2C537406%2C537407%2C537408%2C537409%2C537410%2C537411%2C537412%2C537413%2C537414%2C537415%2C537416%2C537417%2C537418%2C537419%2C537420%2C537421%2C537422%2C537423%2C537424%2C537425%2C537426%2C537427%2C537428%2C537429%2C537430%2C537431%2C537432%2C537433%2C537434%2C537435%2C537437%2C537438%2C537439%2C537440%2C537441%2C537442%2C537443%2C537444%2C537445%2C537446%2C537447%2C537448&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:27.044895+00:00",
+        "sha256": "d2fab425047a6c9c0a5ee09592d2d80076f0556ea078e3a98349d0b5c01cd657",
+        "bytes": 698097
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0001800.native.json.gz",
+      "rows": 200,
+      "sha256": "c287ad2615e617e9aabc3f1d369ce7628be3e1f2463f3fb73f863c6d31ef3545",
+      "bytes": 201800,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=537449%2C537450%2C537451%2C537463%2C537464%2C537465%2C537485%2C537486%2C537487%2C537489%2C537492%2C537493%2C537778%2C537779%2C537780%2C537787%2C537789%2C537790%2C537791%2C537797%2C537798%2C537802%2C537803%2C537804%2C537808%2C537809%2C537810%2C537820%2C537821%2C537822%2C537825%2C537826%2C537827%2C537828%2C537829%2C537830%2C537831%2C537835%2C537838%2C537839%2C537841%2C537842%2C537847%2C537939%2C537941%2C537944%2C537945%2C537948%2C537957%2C537958%2C537970%2C538293%2C538294%2C538313%2C538315%2C538316%2C538317%2C538361%2C538362%2C538366%2C538368%2C538369%2C538373%2C538376%2C538377%2C538380%2C538400%2C538401%2C538402%2C538403%2C538404%2C538405%2C538406%2C538408%2C538409%2C538410%2C538411%2C538412%2C538421%2C538432%2C538506%2C538545%2C538548%2C538549%2C538753%2C538754%2C538755%2C538756%2C538757%2C538758%2C538759%2C538760%2C538761%2C538762%2C538763%2C538764%2C538765%2C538766%2C538767%2C538768%2C538769%2C538770%2C538771%2C538772%2C538773%2C538774%2C538775%2C538776%2C538885%2C538886%2C538887%2C538916%2C538917%2C538918%2C538926%2C538927%2C538928%2C538933%2C538949%2C538950%2C538951%2C538952%2C538953%2C538954%2C538956%2C538957%2C538960%2C538961%2C538962%2C538964%2C538965%2C538966%2C538967%2C538968%2C538969%2C538970%2C538971%2C538972%2C538973%2C538974%2C538975%2C538976%2C538977%2C538979%2C538980%2C538981%2C538982%2C538984%2C538985%2C538990%2C538991%2C538992%2C538993%2C538994%2C538995%2C538996%2C538997%2C538998%2C538999%2C539000%2C539001%2C539002%2C539003%2C539016%2C539017%2C539018%2C539019%2C539020%2C539021%2C539022%2C539023%2C539024%2C539025%2C539026%2C539027%2C539035%2C539049%2C539050%2C539051%2C539052%2C539053%2C539054%2C539055%2C539056%2C539057%2C539058%2C539059%2C539060%2C539061%2C539070%2C539224%2C539229%2C539232%2C539233%2C539248%2C539249%2C539250%2C539251%2C539252%2C539253&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:27.739920+00:00",
+        "sha256": "db62fa4e285a4305518b3f815a0edf454a1fba7d36cd7f55a8c9669eee9197ff",
+        "bytes": 742454
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0002000.native.json.gz",
+      "rows": 200,
+      "sha256": "7e70aec2840d8dafad548da88d46deb573e6a18ceeee1c3da944e8cdc8c78133",
+      "bytes": 194962,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=539254%2C539255%2C539256%2C539257%2C539258%2C539259%2C539262%2C539263%2C539264%2C539265%2C539266%2C539267%2C539268%2C539269%2C539270%2C539271%2C539272%2C539273%2C539274%2C539275%2C539276%2C539277%2C539278%2C539279%2C539280%2C539281%2C539282%2C539283%2C539284%2C539285%2C539286%2C539287%2C539288%2C539289%2C539290%2C539291%2C539292%2C539293%2C539294%2C539298%2C539299%2C539300%2C539310%2C539311%2C539312%2C539315%2C539316%2C539467%2C539468%2C539477%2C539512%2C539513%2C539514%2C539515%2C539516%2C539517%2C539581%2C539582%2C539583%2C539584%2C539588%2C539589%2C539590%2C539596%2C539597%2C539598%2C539599%2C539600%2C539601%2C539604%2C539609%2C539610%2C539611%2C539625%2C539626%2C539627%2C539629%2C539630%2C539631%2C539632%2C539633%2C539634%2C539635%2C539636%2C539637%2C539638%2C539640%2C539641%2C539642%2C539643%2C539644%2C539646%2C539647%2C539658%2C539659%2C539664%2C539666%2C539667%2C539706%2C539815%2C539816%2C539817%2C539819%2C539821%2C539822%2C539823%2C539826%2C539827%2C539828%2C539829%2C539830%2C539831%2C539832%2C539833%2C539834%2C539835%2C539836%2C539837%2C539838%2C539840%2C539842%2C539843%2C539844%2C539845%2C539846%2C539847%2C539848%2C539849%2C539851%2C539852%2C539853%2C539854%2C539855%2C539856%2C539857%2C539858%2C539859%2C539860%2C539861%2C539862%2C539863%2C539864%2C539865%2C539866%2C539867%2C539868%2C539869%2C539870%2C539871%2C539872%2C539875%2C539876%2C539877%2C539878%2C539879%2C539880%2C539881%2C539882%2C539883%2C539884%2C539885%2C539886%2C539887%2C539888%2C539889%2C539890%2C539891%2C539892%2C539894%2C539895%2C539896%2C539897%2C539898%2C539899%2C539900%2C539901%2C539902%2C539904%2C539906%2C539907%2C539908%2C539909%2C539910%2C539913%2C539914%2C539915%2C539916%2C539917%2C539920%2C539921%2C539922%2C539924%2C539927%2C539928%2C539929%2C539930%2C539931%2C539932%2C539933%2C539934&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:28.241256+00:00",
+        "sha256": "b97abfd0cec60fd488cb3006e32c136f028dcb78f3e1d45246ca533a99b3b070",
+        "bytes": 717393
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0002200.native.json.gz",
+      "rows": 200,
+      "sha256": "5212ca5ec72b43740538bce102cc8b8ed8735103f75d8f15636d11f9eff0a9be",
+      "bytes": 178321,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=539935%2C539936%2C539937%2C539938%2C539941%2C539942%2C539956%2C539957%2C539958%2C539959%2C539960%2C539961%2C539962%2C539963%2C539964%2C539965%2C539966%2C539967%2C539968%2C539969%2C539970%2C539971%2C539972%2C539973%2C539974%2C539975%2C539976%2C539977%2C539979%2C539981%2C539982%2C539983%2C539984%2C539985%2C539987%2C539988%2C539989%2C539990%2C539991%2C539992%2C539993%2C539994%2C539995%2C539996%2C539997%2C539998%2C539999%2C540000%2C540001%2C540002%2C540003%2C540004%2C540005%2C540006%2C540007%2C540008%2C540009%2C540010%2C540011%2C540012%2C540013%2C540014%2C540015%2C540016%2C540017%2C540018%2C540019%2C540020%2C540021%2C540022%2C540023%2C540024%2C540025%2C540027%2C540028%2C540029%2C540030%2C540031%2C540032%2C540033%2C540034%2C540035%2C540087%2C540088%2C540093%2C540597%2C540598%2C540599%2C540600%2C540601%2C540602%2C540603%2C540604%2C540605%2C540606%2C540607%2C540608%2C540609%2C540789%2C540790%2C540791%2C540792%2C540793%2C540801%2C540802%2C540803%2C540804%2C540969%2C540970%2C540971%2C540972%2C540990%2C540991%2C540992%2C541003%2C541004%2C541005%2C541008%2C541009%2C541010%2C541011%2C541012%2C541013%2C541014%2C541015%2C541049%2C541056%2C541062%2C541063%2C541064%2C541272%2C541277%2C541278%2C541284%2C541296%2C541297%2C541298%2C541305%2C541313%2C541314%2C541321%2C541322%2C541323%2C541324%2C541325%2C541326%2C541327%2C541328%2C541329%2C541330%2C541331%2C541332%2C541333%2C541334%2C541337%2C541338%2C541339%2C541340%2C541341%2C541348%2C541349%2C541352%2C541353%2C541356%2C541357%2C541358%2C541359%2C541360%2C541361%2C541362%2C541363%2C541364%2C541366%2C541367%2C541368%2C541371%2C541372%2C541373%2C541374%2C541377%2C541378%2C541379%2C541385%2C541386%2C541387%2C541389%2C541390%2C541391%2C541392%2C541393%2C541394%2C541395%2C541396%2C541397%2C541409%2C541410%2C541411%2C541413%2C541420%2C541421&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:28.924167+00:00",
+        "sha256": "77546748ccb6b0813a8fdfaa0d7971755dfb8c16ebaf880b5de699e74390c9de",
+        "bytes": 666861
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0002400.native.json.gz",
+      "rows": 200,
+      "sha256": "2eea6cb8475470204271d7c8903d9aaa5abd031cc55c13290944edffcb93b616",
+      "bytes": 140935,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=541422%2C541432%2C541433%2C541437%2C541438%2C541439%2C541440%2C541441%2C541442%2C541443%2C541444%2C541446%2C541447%2C541451%2C541453%2C541456%2C541457%2C541459%2C541460%2C541461%2C541465%2C541468%2C541469%2C541470%2C541471%2C541472%2C541475%2C541480%2C541486%2C541493%2C541496%2C541497%2C541501%2C541503%2C541584%2C541595%2C541596%2C541597%2C541635%2C541715%2C541716%2C541717%2C541718%2C541719%2C541720%2C541721%2C541722%2C541723%2C541724%2C541725%2C541726%2C541727%2C541728%2C541729%2C541730%2C541731%2C541732%2C541733%2C541734%2C541735%2C541736%2C541737%2C541738%2C541739%2C541740%2C541741%2C541742%2C541743%2C541744%2C541745%2C541747%2C541748%2C541749%2C541750%2C541751%2C541752%2C541753%2C541754%2C541756%2C541757%2C541759%2C541760%2C541761%2C541762%2C541764%2C541765%2C541766%2C541832%2C542619%2C542624%2C542645%2C542646%2C542647%2C542648%2C542655%2C542657%2C542659%2C542662%2C542715%2C542716%2C542717%2C542718%2C542824%2C542825%2C542826%2C542835%2C542853%2C542862%2C542863%2C542893%2C542894%2C542917%2C542918%2C543217%2C543218%2C543219%2C543244%2C543245%2C543261%2C543376%2C543377%2C543412%2C543413%2C543414%2C543415%2C543459%2C543460%2C543461%2C543462%2C543463%2C543464%2C543465%2C543469%2C543470%2C543471%2C543510%2C543511%2C543512%2C543513%2C543516%2C543517%2C543518%2C543535%2C543536%2C543537%2C543545%2C543546%2C543547%2C543548%2C543549%2C543550%2C543551%2C543552%2C543553%2C543554%2C543555%2C543556%2C543562%2C543573%2C543574%2C543575%2C543576%2C543594%2C543609%2C543612%2C543616%2C543627%2C543629%2C543632%2C543743%2C543744%2C543745%2C544028%2C544029%2C544031%2C544032%2C544033%2C544034%2C544041%2C544042%2C544043%2C544044%2C544045%2C544047%2C544048%2C544052%2C544055%2C544056%2C544057%2C544060%2C544061%2C544074%2C544076%2C544079%2C544085%2C544086%2C544087%2C544088%2C544091%2C544092&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:29.606189+00:00",
+        "sha256": "ce714d53fd7eb8b8d1558d6395c34982b3ebcb9ff6e025300de378a3308feed3",
+        "bytes": 540846
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0002600.native.json.gz",
+      "rows": 200,
+      "sha256": "e5af80a68eec7c4f52f7d5228d7d7b3673c9da0f44e911eb43d234ebbc625495",
+      "bytes": 175523,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=544093%2C544094%2C544095%2C544096%2C544097%2C544099%2C544100%2C544102%2C544103%2C544104%2C544105%2C544106%2C544107%2C544108%2C544109%2C544110%2C544111%2C544112%2C544113%2C544114%2C544115%2C544116%2C544117%2C544118%2C544119%2C544120%2C544122%2C544123%2C544124%2C544125%2C544126%2C544128%2C544129%2C544130%2C544131%2C544132%2C544133%2C544134%2C544136%2C544137%2C544138%2C544139%2C544140%2C544141%2C544142%2C544143%2C544144%2C544145%2C544146%2C544147%2C544148%2C544149%2C544150%2C544151%2C544152%2C544153%2C544154%2C544155%2C544156%2C544157%2C544158%2C544159%2C544160%2C544161%2C544162%2C544163%2C544164%2C544165%2C544166%2C544167%2C544168%2C544169%2C544170%2C544171%2C544172%2C544177%2C544178%2C544179%2C544180%2C544190%2C544316%2C544317%2C544318%2C544319%2C544321%2C544322%2C544324%2C544325%2C544326%2C544327%2C544328%2C544339%2C544340%2C544341%2C544342%2C544343%2C544344%2C544345%2C544346%2C544347%2C544348%2C544350%2C544351%2C544352%2C544353%2C544356%2C544358%2C544359%2C544360%2C544361%2C544362%2C544363%2C544364%2C544365%2C544366%2C544367%2C544368%2C544369%2C544370%2C544371%2C544377%2C544384%2C544387%2C544388%2C544389%2C544390%2C544393%2C544395%2C544396%2C544535%2C544536%2C544537%2C544542%2C544543%2C544544%2C544545%2C544546%2C544547%2C544548%2C544549%2C544552%2C544553%2C544554%2C544555%2C544556%2C544557%2C544558%2C544559%2C544560%2C544561%2C544562%2C544563%2C544564%2C544565%2C544566%2C544567%2C544575%2C544576%2C544577%2C544578%2C544579%2C544581%2C544582%2C544583%2C544585%2C544586%2C544590%2C544591%2C544592%2C544616%2C544628%2C544731%2C544738%2C544739%2C544743%2C544744%2C544745%2C544746%2C544747%2C544748%2C544750%2C544754%2C544755%2C544760%2C544765%2C544766%2C544767%2C544768%2C544769%2C544770%2C544771%2C544772%2C544773%2C544775%2C544776%2C544777%2C544778%2C544779%2C544780%2C544781&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:30.263369+00:00",
+        "sha256": "d8960f5d7ab815df01c5d52767206bf8bd372fa7e0092064804e255e68892025",
+        "bytes": 649849
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0002800.native.json.gz",
+      "rows": 200,
+      "sha256": "8d5e77c3c7f0e197e0f5f112d2dac9763eb25e512043eb590218217d730ebf94",
+      "bytes": 234772,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=544782%2C544783%2C544784%2C544785%2C544786%2C544787%2C544788%2C544789%2C544790%2C544795%2C544796%2C544797%2C544798%2C544799%2C544800%2C544801%2C544802%2C544803%2C544804%2C544805%2C544806%2C544807%2C544808%2C544809%2C544810%2C544812%2C544814%2C544816%2C544821%2C544822%2C544823%2C544824%2C544825%2C544826%2C544827%2C544828%2C544829%2C544830%2C544850%2C544859%2C544934%2C544936%2C544939%2C544940%2C544942%2C544947%2C544948%2C544949%2C544950%2C544951%2C544962%2C545161%2C545163%2C545164%2C545165%2C545178%2C545179%2C545205%2C545215%2C545233%2C545237%2C545238%2C545239%2C545294%2C545298%2C545312%2C545313%2C545314%2C545315%2C545316%2C545317%2C545318%2C545319%2C545332%2C545333%2C545334%2C545335%2C545344%2C545345%2C545346%2C545347%2C545348%2C545369%2C545375%2C545376%2C545377%2C545380%2C545381%2C545382%2C545383%2C545384%2C545386%2C545387%2C545388%2C545389%2C545390%2C545391%2C545392%2C545393%2C545394%2C545395%2C545396%2C545397%2C545398%2C545399%2C545400%2C545401%2C545402%2C545403%2C545404%2C545405%2C545406%2C545407%2C545408%2C545409%2C545410%2C545411%2C545412%2C545413%2C545414%2C545415%2C545416%2C545417%2C545418%2C545419%2C545420%2C545421%2C545422%2C545429%2C545430%2C545431%2C545433%2C545434%2C545442%2C545443%2C545467%2C545478%2C545479%2C545480%2C545482%2C545483%2C545484%2C545485%2C545492%2C545507%2C545508%2C545509%2C545510%2C545511%2C545512%2C545513%2C545514%2C545515%2C545519%2C545520%2C545521%2C545522%2C545523%2C545524%2C545535%2C545536%2C545537%2C545539%2C545540%2C545541%2C545542%2C545543%2C545544%2C545545%2C545546%2C545547%2C545548%2C545549%2C545550%2C545551%2C545556%2C545558%2C545563%2C545564%2C545575%2C545576%2C545577%2C545633%2C545635%2C545639%2C545640%2C545641%2C545642%2C545643%2C545644%2C545645%2C545646%2C545648%2C545649%2C545650%2C545653%2C545664%2C545665%2C545672%2C545720&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:30.896638+00:00",
+        "sha256": "a8ff22882fb660328212689ff868a73390777134452b3f63d5fe34f3d3f11ea2",
+        "bytes": 893906
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0003000.native.json.gz",
+      "rows": 200,
+      "sha256": "51fadfc17096e723e96175f446609b4365181564215952ea256ca045210d8ba9",
+      "bytes": 253642,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=545723%2C545729%2C545873%2C545874%2C545875%2C545876%2C545877%2C545878%2C545879%2C545880%2C545881%2C545882%2C545883%2C545884%2C545885%2C545886%2C545887%2C545888%2C545889%2C545890%2C545891%2C545892%2C545893%2C545894%2C545895%2C545896%2C545897%2C545898%2C545899%2C545900%2C545901%2C545902%2C545903%2C545904%2C545905%2C545906%2C545973%2C545974%2C546007%2C546008%2C546009%2C546010%2C546011%2C546014%2C546015%2C546019%2C546020%2C546025%2C546026%2C546244%2C546245%2C546246%2C546250%2C546256%2C546257%2C546258%2C546259%2C546260%2C546264%2C546265%2C546268%2C546269%2C546308%2C546312%2C546313%2C546316%2C546317%2C546319%2C546320%2C546322%2C546324%2C546325%2C546326%2C546327%2C546328%2C546329%2C546330%2C546333%2C546334%2C546335%2C546343%2C546344%2C546345%2C546346%2C546357%2C546361%2C546362%2C546366%2C546371%2C546372%2C546373%2C546374%2C546375%2C546376%2C546377%2C546379%2C546380%2C546385%2C546386%2C546387%2C546388%2C546389%2C546393%2C546394%2C546395%2C546396%2C546397%2C546398%2C546399%2C546400%2C546403%2C546404%2C546405%2C546406%2C546409%2C546411%2C546412%2C546416%2C546417%2C546418%2C546419%2C546420%2C546421%2C546422%2C546423%2C546426%2C546428%2C546432%2C546447%2C546476%2C546477%2C546478%2C546483%2C546484%2C546487%2C546490%2C546492%2C546573%2C546574%2C546609%2C546611%2C546624%2C546627%2C546640%2C546641%2C546645%2C546647%2C546991%2C546992%2C546993%2C546994%2C546995%2C546996%2C546997%2C547068%2C547069%2C547070%2C547071%2C547072%2C547073%2C547089%2C547092%2C547107%2C547113%2C547191%2C547192%2C547193%2C547195%2C547196%2C547199%2C547200%2C547201%2C547202%2C547203%2C547204%2C547205%2C547206%2C547207%2C547209%2C547210%2C547211%2C547212%2C547213%2C547214%2C547216%2C547217%2C547218%2C547219%2C547220%2C547221%2C547288%2C547302%2C547355%2C547356%2C547389%2C547390%2C547391%2C547393%2C547394%2C547395&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:31.602233+00:00",
+        "sha256": "c4fd8e09b4a5ce90f6168f0f9239f99253235f96bc3d291df4fec461b63bb8b6",
+        "bytes": 948614
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0003200.native.json.gz",
+      "rows": 200,
+      "sha256": "dea0a8dedcbd0a6e7e287f493e9bb262f4e97b7a225ceb910af2d4cdfce78d05",
+      "bytes": 252488,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=547396%2C547397%2C547398%2C547399%2C547400%2C547401%2C547402%2C547414%2C547416%2C547418%2C547422%2C547423%2C547455%2C547456%2C547457%2C547462%2C547469%2C547472%2C547473%2C547474%2C547475%2C547476%2C547477%2C547478%2C547479%2C547485%2C547486%2C547487%2C547488%2C547490%2C547494%2C547495%2C547496%2C547497%2C547498%2C547508%2C547573%2C547574%2C547575%2C547576%2C547577%2C547578%2C547579%2C547580%2C547581%2C547582%2C547583%2C547584%2C547585%2C547586%2C547587%2C547588%2C547589%2C547590%2C547591%2C547592%2C547593%2C547597%2C547598%2C547599%2C547600%2C547601%2C547602%2C547603%2C547605%2C547606%2C547607%2C547610%2C547611%2C547612%2C547613%2C547616%2C547618%2C547619%2C547620%2C547621%2C547622%2C547623%2C547624%2C547625%2C547626%2C547627%2C547632%2C547633%2C547639%2C547640%2C547641%2C547642%2C547643%2C547646%2C547647%2C547649%2C547650%2C547651%2C547652%2C547653%2C547654%2C547655%2C547656%2C547657%2C547661%2C547662%2C547663%2C547664%2C547665%2C547667%2C547668%2C547669%2C547670%2C547671%2C547672%2C547673%2C547674%2C547675%2C547676%2C547677%2C547678%2C547679%2C547680%2C547681%2C547682%2C547683%2C547684%2C547689%2C547690%2C547695%2C547696%2C547697%2C547699%2C547707%2C547708%2C547709%2C547711%2C547712%2C547714%2C547718%2C547719%2C547720%2C547721%2C547722%2C547723%2C547724%2C547725%2C547728%2C547732%2C547733%2C547738%2C547739%2C547965%2C548007%2C548008%2C548009%2C548010%2C548011%2C548012%2C548013%2C548014%2C548015%2C548016%2C548017%2C548020%2C548023%2C548024%2C548059%2C548060%2C548075%2C548077%2C548079%2C548081%2C548082%2C548093%2C548096%2C548100%2C548105%2C548110%2C548111%2C548112%2C548113%2C548114%2C548115%2C548116%2C548117%2C548118%2C548119%2C548120%2C548121%2C548122%2C548132%2C548133%2C548135%2C548137%2C548138%2C548141%2C548142%2C548150%2C548151%2C548152%2C548153%2C548154%2C548155&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:32.353871+00:00",
+        "sha256": "b6a649695a49a28d63240fcee612ae299b3bd4ff468bfb124aa9e2c2bf82bd91",
+        "bytes": 918868
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0003400.native.json.gz",
+      "rows": 200,
+      "sha256": "f88dbc8facc573d620b27757a3a0ceaf5dea1ebc8492844de3c492481da681cc",
+      "bytes": 229921,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=548156%2C548157%2C548163%2C548164%2C548165%2C548166%2C548167%2C548168%2C548169%2C548170%2C548171%2C548172%2C548173%2C548174%2C548175%2C548176%2C548177%2C548180%2C548218%2C548273%2C548274%2C548275%2C548276%2C548277%2C548278%2C548282%2C548283%2C548284%2C548285%2C548286%2C548287%2C548288%2C548289%2C548290%2C548295%2C548299%2C548301%2C548302%2C548303%2C548315%2C548327%2C548328%2C548330%2C548331%2C548332%2C548333%2C548334%2C548335%2C548336%2C548337%2C548359%2C548360%2C548361%2C548366%2C548367%2C548368%2C548371%2C548372%2C548378%2C548379%2C548380%2C548415%2C548430%2C548435%2C548437%2C548438%2C548439%2C548440%2C548443%2C548446%2C548451%2C548453%2C548454%2C548455%2C548456%2C548457%2C548460%2C548462%2C548463%2C548464%2C548468%2C548469%2C548470%2C548480%2C548483%2C548491%2C548493%2C548494%2C548495%2C548496%2C548498%2C548499%2C548500%2C548501%2C548502%2C548503%2C548504%2C548505%2C548510%2C548512%2C548517%2C548518%2C548519%2C548522%2C548523%2C548526%2C548528%2C548529%2C548533%2C548534%2C548535%2C548536%2C548537%2C548538%2C548539%2C548548%2C548550%2C548551%2C548552%2C548553%2C548554%2C548555%2C548556%2C548557%2C548558%2C548559%2C548562%2C548564%2C548565%2C548566%2C548567%2C548568%2C548569%2C548570%2C548571%2C548572%2C548573%2C548574%2C548575%2C548576%2C548577%2C548578%2C548579%2C548580%2C548581%2C548582%2C548583%2C548584%2C548585%2C548586%2C548587%2C548588%2C548589%2C548606%2C548608%2C548609%2C548670%2C548671%2C548672%2C548673%2C548674%2C548676%2C548678%2C548679%2C548685%2C548691%2C548693%2C548702%2C548704%2C548705%2C548716%2C548718%2C548719%2C548720%2C548721%2C548722%2C548723%2C549175%2C549176%2C549177%2C549178%2C549179%2C549183%2C549184%2C549185%2C549197%2C549198%2C549199%2C549208%2C549209%2C549210%2C549250%2C549270%2C549271%2C549272%2C549273%2C549318%2C549319%2C549320%2C549321&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:33.317242+00:00",
+        "sha256": "eabe0ac5c6d76e8addcbd4174d1e15e9d9c5a9022275fb08b8dac872c8c0abdd",
+        "bytes": 844581
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0003600.native.json.gz",
+      "rows": 200,
+      "sha256": "e25ec3fffa89ad819103382ec70b2051ccf824e0bfad917804c0dd61184b2525",
+      "bytes": 211393,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=549322%2C549323%2C549324%2C549325%2C549327%2C549359%2C549360%2C549361%2C549362%2C549363%2C549364%2C549365%2C549367%2C549368%2C549369%2C549371%2C549449%2C549451%2C549463%2C549473%2C549474%2C549475%2C549476%2C549477%2C549478%2C549479%2C549480%2C549481%2C549482%2C549483%2C549484%2C549485%2C549486%2C549487%2C549489%2C549495%2C549496%2C549497%2C549498%2C549499%2C549500%2C549501%2C549533%2C549534%2C549535%2C549536%2C549537%2C549538%2C549539%2C549540%2C549541%2C549542%2C549543%2C549544%2C549545%2C549546%2C549547%2C549548%2C549594%2C549595%2C549596%2C549599%2C549606%2C549608%2C549609%2C549644%2C549652%2C549653%2C549654%2C549655%2C549656%2C549662%2C549663%2C549682%2C549683%2C549684%2C549685%2C549686%2C549687%2C549700%2C549701%2C549707%2C549708%2C549709%2C549710%2C549711%2C549712%2C549713%2C549723%2C549724%2C549725%2C549726%2C549727%2C549732%2C549734%2C549737%2C549738%2C549739%2C549810%2C549820%2C549821%2C549838%2C549842%2C549843%2C549845%2C549852%2C549854%2C549855%2C550001%2C550119%2C550120%2C550121%2C550122%2C550123%2C550124%2C550125%2C550126%2C550127%2C550128%2C550129%2C550130%2C550131%2C550132%2C550133%2C550134%2C550135%2C550136%2C550137%2C550138%2C550139%2C550140%2C550141%2C550142%2C550143%2C550144%2C550145%2C550146%2C550147%2C550148%2C550149%2C550150%2C550152%2C550153%2C550154%2C550155%2C550156%2C550157%2C550160%2C550161%2C550162%2C550163%2C550164%2C550166%2C550167%2C550168%2C550169%2C550170%2C550171%2C550172%2C550179%2C550184%2C550187%2C550188%2C550189%2C550193%2C550194%2C550198%2C550202%2C550203%2C550204%2C550205%2C550206%2C550207%2C550208%2C550210%2C550213%2C550217%2C550218%2C550228%2C550363%2C550364%2C550377%2C550413%2C550414%2C550420%2C550421%2C550436%2C550437%2C550438%2C550448%2C550449%2C550451%2C550452%2C550453%2C550456%2C550457%2C550458%2C550465%2C550467%2C550471&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:33.936369+00:00",
+        "sha256": "112d8703aa3410e9a6bfe04712f74c2f9343ebf1662161770a0886ff583d7b27",
+        "bytes": 831524
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0003800.native.json.gz",
+      "rows": 200,
+      "sha256": "9b4db5b3aa8fd9e9a0ae9116acf350bc9ae9fc713f14ec9c31f3548b621b43d2",
+      "bytes": 255917,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=550476%2C550477%2C550478%2C550493%2C550494%2C550496%2C550497%2C550501%2C550502%2C550503%2C550504%2C550505%2C550506%2C550507%2C550508%2C550512%2C550513%2C550514%2C550515%2C550516%2C550520%2C550536%2C550540%2C550545%2C550546%2C550548%2C550557%2C550562%2C550565%2C550583%2C550584%2C550585%2C550588%2C550589%2C550590%2C550591%2C550592%2C550593%2C550594%2C550595%2C550596%2C550597%2C550598%2C550599%2C550600%2C550601%2C550602%2C550603%2C550604%2C550605%2C550606%2C550607%2C550608%2C550609%2C550610%2C550611%2C550612%2C550613%2C550614%2C550615%2C550616%2C550617%2C550618%2C550619%2C550620%2C550621%2C550622%2C550623%2C550624%2C550625%2C550626%2C550627%2C550630%2C550631%2C550632%2C550633%2C550634%2C550636%2C550637%2C550639%2C550640%2C550641%2C550642%2C550643%2C550644%2C550645%2C550646%2C550647%2C550648%2C550649%2C550650%2C550651%2C550652%2C550653%2C550654%2C550655%2C550656%2C550657%2C550658%2C550659%2C550660%2C550661%2C550662%2C550663%2C550664%2C550665%2C550666%2C550667%2C550668%2C550669%2C550670%2C550671%2C550672%2C550673%2C550674%2C550675%2C550676%2C550677%2C550678%2C550679%2C550680%2C550681%2C550683%2C550684%2C550685%2C550686%2C550687%2C550688%2C550689%2C550690%2C550691%2C550692%2C550693%2C550694%2C550695%2C550697%2C550698%2C550699%2C550700%2C550701%2C550702%2C550703%2C550704%2C550705%2C550706%2C550707%2C550708%2C550709%2C550710%2C550711%2C550712%2C550713%2C550714%2C550715%2C550716%2C550718%2C550719%2C550720%2C550721%2C550722%2C550723%2C550724%2C550725%2C550726%2C550727%2C550729%2C550730%2C550736%2C550737%2C550738%2C550739%2C550740%2C550741%2C550742%2C550743%2C550744%2C550745%2C550746%2C550747%2C550748%2C550749%2C550750%2C550751%2C550752%2C550753%2C550754%2C550755%2C550756%2C550757%2C550758%2C550759%2C550760%2C550761%2C550762%2C550763%2C550764%2C550765%2C550766%2C550767%2C550768&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:34.533859+00:00",
+        "sha256": "efdbd352d05667c11b2dbafff465bc50c712afd3e52cd11a7135f5455418804d",
+        "bytes": 919255
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0004000.native.json.gz",
+      "rows": 200,
+      "sha256": "277c988896d3f53438507842331422ee5ddfec38721bc0f1c94e122d93203cca",
+      "bytes": 281813,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=550769%2C550770%2C550771%2C550772%2C550773%2C550774%2C550775%2C550776%2C550777%2C550778%2C550779%2C550780%2C550781%2C550782%2C550783%2C550784%2C550785%2C550787%2C550788%2C550795%2C550799%2C550801%2C550809%2C550811%2C550812%2C550826%2C550827%2C550828%2C550829%2C550830%2C550831%2C550832%2C550833%2C550836%2C550850%2C550854%2C550869%2C550877%2C550878%2C550902%2C550903%2C550904%2C550905%2C550906%2C550907%2C550935%2C550940%2C550943%2C550944%2C550947%2C550949%2C550953%2C550955%2C550967%2C550968%2C550969%2C550970%2C550971%2C550972%2C550973%2C550974%2C550975%2C550976%2C550977%2C550978%2C550979%2C550980%2C550981%2C550982%2C551523%2C551524%2C551525%2C551526%2C551527%2C551528%2C551530%2C551531%2C551532%2C551533%2C551534%2C551536%2C551537%2C551544%2C551545%2C551546%2C551547%2C551548%2C551549%2C551550%2C551551%2C551552%2C551553%2C551554%2C551555%2C551556%2C551557%2C551558%2C551559%2C551560%2C551561%2C551563%2C551564%2C551565%2C551566%2C551569%2C551570%2C551571%2C551572%2C551573%2C551574%2C551575%2C551576%2C551577%2C551578%2C551579%2C551580%2C551581%2C551582%2C551583%2C551584%2C551585%2C551586%2C551587%2C551588%2C551589%2C551590%2C551591%2C551592%2C551593%2C551594%2C551595%2C551596%2C551597%2C551599%2C551600%2C551601%2C551602%2C551603%2C551604%2C551605%2C551606%2C551607%2C551608%2C551609%2C551661%2C551662%2C551663%2C551664%2C551665%2C551666%2C551667%2C551668%2C551669%2C551670%2C551671%2C551672%2C551673%2C551674%2C551675%2C551676%2C551677%2C551719%2C551722%2C551725%2C551728%2C551729%2C551730%2C551732%2C551734%2C551736%2C551738%2C551752%2C551753%2C551758%2C551759%2C551793%2C551795%2C551796%2C551832%2C551833%2C551834%2C551835%2C551836%2C551837%2C551838%2C551839%2C551840%2C551841%2C551842%2C551843%2C551844%2C551845%2C551846%2C551884%2C551926%2C551927%2C551928%2C551929%2C551931%2C551932&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:35.221270+00:00",
+        "sha256": "7edd1e23071a59b2e202ba56c6c10e8b61c56ac2631fd4de46a27953b852530f",
+        "bytes": 1047175
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0004200.native.json.gz",
+      "rows": 200,
+      "sha256": "b5cf87076ef609402550d6d2a5e5b0aaedf65a75970fd1cf54a1c2c3d7bb71b1",
+      "bytes": 138403,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=551933%2C551934%2C551935%2C551936%2C551937%2C551938%2C551939%2C551940%2C551941%2C551943%2C551993%2C551994%2C551995%2C551996%2C552000%2C552001%2C552013%2C552014%2C552015%2C552016%2C552019%2C552020%2C552021%2C552022%2C552023%2C552024%2C552025%2C552026%2C552028%2C552029%2C552030%2C552042%2C552045%2C552046%2C552047%2C552048%2C552049%2C552050%2C552060%2C552063%2C552065%2C552066%2C552077%2C552078%2C552079%2C552080%2C552081%2C552082%2C552083%2C552097%2C552098%2C552099%2C552100%2C552101%2C552102%2C552103%2C552105%2C552106%2C552109%2C552110%2C552111%2C552115%2C552117%2C552125%2C552130%2C552131%2C552132%2C552133%2C552134%2C552135%2C552141%2C552142%2C552147%2C552148%2C552149%2C552152%2C552155%2C552156%2C552179%2C552180%2C552181%2C552182%2C552189%2C552190%2C552191%2C552192%2C552193%2C552194%2C552195%2C552196%2C552197%2C552198%2C552199%2C552200%2C552201%2C552223%2C552236%2C552237%2C552238%2C552239%2C552240%2C552241%2C552247%2C552248%2C552251%2C552252%2C552253%2C552254%2C552255%2C552256%2C552257%2C552258%2C552259%2C552265%2C552266%2C552277%2C552299%2C552300%2C552301%2C552302%2C552304%2C552305%2C552316%2C552318%2C552321%2C552322%2C552323%2C552324%2C552325%2C552326%2C552327%2C552328%2C552329%2C552332%2C552342%2C552343%2C552344%2C552345%2C552346%2C552347%2C552348%2C552349%2C552352%2C552353%2C552354%2C552355%2C552357%2C552358%2C552359%2C552360%2C552361%2C552362%2C552363%2C552364%2C552365%2C552366%2C552370%2C552382%2C552383%2C552384%2C552385%2C552386%2C552387%2C552389%2C552390%2C552400%2C552401%2C552402%2C552403%2C552404%2C552405%2C552427%2C552444%2C552445%2C552452%2C552453%2C552454%2C552455%2C552456%2C552457%2C552458%2C552459%2C552460%2C552461%2C552462%2C552463%2C552464%2C552465%2C552466%2C552467%2C552468%2C552469%2C552470%2C552471%2C552472%2C552473%2C552474%2C552475%2C552476%2C552477&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:35.904515+00:00",
+        "sha256": "19015408fb10f41785e5e87192d9e74b09d8302cc7508d5a4ca8a96f6b389d1d",
+        "bytes": 533347
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0004400.native.json.gz",
+      "rows": 200,
+      "sha256": "07d9cea71100f29360b239e9f37a29fbc017143f6c27665330e63cd2e33f77b9",
+      "bytes": 217789,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=552478%2C552479%2C552480%2C552481%2C552482%2C552483%2C552484%2C552485%2C552486%2C552487%2C552488%2C552489%2C552490%2C552491%2C552492%2C552493%2C552494%2C552510%2C552515%2C552516%2C552517%2C552518%2C552519%2C552520%2C552521%2C552522%2C552523%2C552524%2C552525%2C552526%2C552527%2C552528%2C552529%2C552530%2C552531%2C552532%2C552533%2C552536%2C552537%2C552538%2C552539%2C552540%2C552541%2C552542%2C552543%2C552544%2C552549%2C552564%2C552565%2C552584%2C552585%2C552590%2C552591%2C552592%2C552597%2C552598%2C552600%2C552607%2C552608%2C552611%2C552613%2C552614%2C552615%2C552616%2C552617%2C552618%2C552634%2C552635%2C552636%2C552637%2C552643%2C552644%2C552645%2C552646%2C552650%2C552671%2C552672%2C552681%2C552682%2C552683%2C552690%2C552692%2C552721%2C552728%2C552730%2C552731%2C552733%2C552734%2C552736%2C552737%2C552738%2C552742%2C552743%2C552744%2C552747%2C552749%2C552750%2C552751%2C552752%2C552754%2C552755%2C552764%2C552766%2C552773%2C552776%2C552777%2C552780%2C552781%2C552782%2C552783%2C552784%2C552786%2C552787%2C552788%2C552790%2C552793%2C552798%2C552802%2C552808%2C552811%2C552813%2C552814%2C552816%2C552818%2C552819%2C552820%2C552821%2C552826%2C552827%2C552828%2C552829%2C552830%2C552831%2C552832%2C552833%2C552834%2C552835%2C552836%2C552841%2C552842%2C552852%2C552853%2C552854%2C552855%2C552856%2C552859%2C552860%2C552861%2C552862%2C552863%2C552864%2C552866%2C552867%2C552868%2C552882%2C552885%2C552886%2C552887%2C552891%2C552892%2C552893%2C552897%2C552898%2C552899%2C552900%2C552901%2C552902%2C552904%2C552905%2C552906%2C552907%2C552908%2C552909%2C552910%2C552911%2C552912%2C552914%2C552915%2C552916%2C552917%2C552918%2C552924%2C552925%2C552926%2C552927%2C552929%2C552930%2C552931%2C552932%2C552934%2C552943%2C552944%2C552945%2C552946%2C552952%2C552953%2C552954%2C552955%2C552956%2C552961&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:36.534367+00:00",
+        "sha256": "21b06b4301c5caca09bc344dd6054f3f7123a461d4478a104e388f3143068bd0",
+        "bytes": 779003
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0004600.native.json.gz",
+      "rows": 200,
+      "sha256": "7d14e06e874c536a5542308be99f0b433a60593447ceb4e9800313edee08a28c",
+      "bytes": 334635,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=552962%2C552963%2C552964%2C552965%2C552969%2C552970%2C552972%2C552977%2C552978%2C552979%2C552980%2C552981%2C552984%2C552985%2C552986%2C552987%2C552988%2C552989%2C552990%2C552991%2C552992%2C552995%2C552996%2C552997%2C553002%2C553003%2C553004%2C553005%2C553006%2C553010%2C553013%2C553014%2C553015%2C553016%2C553017%2C553018%2C553020%2C553021%2C553022%2C553024%2C553027%2C553028%2C553035%2C553038%2C553039%2C553041%2C553042%2C553043%2C553044%2C553045%2C553046%2C553049%2C553055%2C553056%2C553057%2C553058%2C553059%2C553061%2C553062%2C553066%2C553072%2C553080%2C553083%2C553084%2C553085%2C553086%2C553087%2C553088%2C553089%2C553090%2C553091%2C553092%2C553093%2C553097%2C553101%2C553103%2C553104%2C553106%2C553107%2C553108%2C553109%2C553110%2C553114%2C553115%2C553116%2C553117%2C553118%2C553124%2C553125%2C553164%2C553165%2C553166%2C553167%2C553169%2C553171%2C553172%2C553173%2C553174%2C553184%2C553187%2C553192%2C553193%2C553207%2C553208%2C553209%2C553214%2C553233%2C553235%2C553238%2C553239%2C553244%2C553245%2C553249%2C553250%2C553253%2C553254%2C553255%2C553256%2C553257%2C553969%2C553971%2C553978%2C553979%2C553980%2C553985%2C554065%2C554067%2C554068%2C554069%2C554070%2C554071%2C554073%2C554074%2C554075%2C554081%2C554082%2C554083%2C554084%2C554085%2C554086%2C554087%2C554089%2C554091%2C554092%2C554097%2C554098%2C554155%2C554160%2C554161%2C554163%2C554165%2C554166%2C554169%2C554171%2C554172%2C554173%2C554189%2C554195%2C554197%2C554201%2C554202%2C554203%2C554204%2C554205%2C554207%2C554208%2C554210%2C554211%2C554212%2C554213%2C554215%2C554217%2C554219%2C554221%2C554225%2C554226%2C554227%2C554229%2C554231%2C554239%2C554254%2C554255%2C554257%2C554258%2C554259%2C554260%2C554261%2C554262%2C554263%2C554264%2C554265%2C554266%2C554267%2C554268%2C554269%2C554270%2C554271%2C554272%2C554274%2C554275&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:37.284666+00:00",
+        "sha256": "59a54ff0eeac6fc241610a97d15d80ef76b28c9d0d6752a246240d65908a3193",
+        "bytes": 1171250
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0004800.native.json.gz",
+      "rows": 200,
+      "sha256": "2ded6c61c9cb52b2b5caf2ff5a12f28424a1b133ddb2d69558c69f1bd3d78c03",
+      "bytes": 240865,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=554276%2C554277%2C554278%2C554279%2C554282%2C554283%2C554285%2C554286%2C554291%2C554295%2C554296%2C554297%2C554299%2C554301%2C554302%2C554303%2C554304%2C554305%2C554306%2C554310%2C554312%2C554313%2C554314%2C554315%2C554316%2C554317%2C554318%2C554319%2C554320%2C554326%2C554327%2C554328%2C554329%2C554330%2C554331%2C554332%2C554333%2C554334%2C554335%2C554336%2C554337%2C554338%2C554339%2C554340%2C554345%2C554346%2C554347%2C554348%2C554350%2C554351%2C554352%2C554353%2C554355%2C554356%2C554357%2C554358%2C554359%2C554360%2C554364%2C554365%2C554366%2C554367%2C554369%2C554370%2C554371%2C554373%2C554380%2C554381%2C554382%2C554383%2C554384%2C554385%2C554412%2C554413%2C554414%2C554416%2C554417%2C554418%2C554429%2C554435%2C554436%2C554437%2C554438%2C554440%2C554458%2C554459%2C554460%2C554461%2C554462%2C554463%2C554464%2C554615%2C554617%2C554618%2C554619%2C554632%2C554633%2C554634%2C554643%2C554686%2C554687%2C554688%2C554689%2C554692%2C554693%2C554709%2C554710%2C554712%2C554713%2C554714%2C554715%2C554716%2C554717%2C554718%2C554719%2C554720%2C554721%2C554722%2C554723%2C554724%2C554725%2C554726%2C554727%2C554729%2C554731%2C554732%2C554733%2C554738%2C554740%2C554741%2C554751%2C554755%2C554759%2C554766%2C554767%2C554768%2C554788%2C554806%2C554807%2C554808%2C554809%2C554827%2C554828%2C554847%2C554848%2C554849%2C554850%2C554851%2C554853%2C554854%2C554855%2C554856%2C554857%2C554858%2C554860%2C554861%2C554862%2C554863%2C554864%2C554892%2C554893%2C554907%2C554911%2C554912%2C554921%2C554922%2C554923%2C554924%2C554925%2C554926%2C554929%2C554930%2C554950%2C554951%2C554952%2C554957%2C554958%2C554959%2C554976%2C554982%2C554983%2C554984%2C554985%2C554986%2C554987%2C554988%2C554989%2C554992%2C554993%2C554994%2C554995%2C554996%2C554997%2C554999%2C555001%2C555004%2C555006%2C555007%2C555012%2C555013&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:38.134074+00:00",
+        "sha256": "48b1adf698a532b03e5eb713e78b837ef4bc5b870c70ac3a3a92a2e55947fbe3",
+        "bytes": 890845
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0005000.native.json.gz",
+      "rows": 200,
+      "sha256": "6c5d020d43fde9557dcabffbf936dd9763e8bfb3ec82c43fc11c4a450c1a469a",
+      "bytes": 148448,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=555014%2C555019%2C555020%2C555022%2C555023%2C555024%2C555025%2C555035%2C555036%2C555037%2C555038%2C555039%2C555040%2C555041%2C555042%2C555044%2C555045%2C555046%2C555047%2C555048%2C555049%2C555050%2C555051%2C555052%2C555053%2C555054%2C555055%2C555056%2C555057%2C555058%2C555067%2C555069%2C555072%2C555073%2C555074%2C555075%2C555076%2C555078%2C555079%2C555080%2C555081%2C555082%2C555083%2C555084%2C555085%2C555086%2C555087%2C555088%2C555089%2C555090%2C555098%2C555099%2C555108%2C555115%2C555116%2C555117%2C555134%2C555147%2C555172%2C555195%2C555196%2C555197%2C555198%2C555199%2C555200%2C555201%2C555202%2C555203%2C555206%2C555207%2C555208%2C555209%2C555210%2C555211%2C555212%2C555213%2C555214%2C555215%2C555216%2C555217%2C555218%2C555219%2C555220%2C555221%2C555222%2C555223%2C555224%2C555225%2C555226%2C555227%2C555228%2C555229%2C555230%2C555231%2C555233%2C555234%2C555235%2C555236%2C555237%2C555239%2C555240%2C555241%2C555242%2C555243%2C555245%2C555246%2C555247%2C555248%2C555249%2C555251%2C555254%2C555255%2C555256%2C555257%2C555258%2C555259%2C555260%2C555261%2C555262%2C555263%2C555264%2C555265%2C555269%2C555270%2C555271%2C555272%2C555273%2C555274%2C555275%2C555276%2C555280%2C555281%2C555282%2C555286%2C555287%2C555289%2C555290%2C555291%2C555292%2C555293%2C555294%2C555296%2C555297%2C555298%2C555301%2C555305%2C555306%2C555307%2C555309%2C555310%2C555311%2C555312%2C555317%2C555318%2C555319%2C555320%2C555321%2C555322%2C555323%2C555325%2C555326%2C555327%2C555328%2C555329%2C555330%2C555332%2C555333%2C555334%2C555336%2C555337%2C555343%2C555344%2C555345%2C555353%2C555354%2C555363%2C555364%2C555365%2C555366%2C555367%2C555368%2C555369%2C555370%2C555371%2C555372%2C555373%2C555374%2C555375%2C555376%2C555377%2C555378%2C555379%2C555380%2C555381%2C555382%2C555383%2C555384%2C555385%2C555386%2C555387&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:38.683285+00:00",
+        "sha256": "ede2e241bf807c09f71116c8a2e65c3e5caedfb8278098bc6334e6eea7e0195c",
+        "bytes": 556871
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0005200.native.json.gz",
+      "rows": 200,
+      "sha256": "7f6d7e7b1f094cb1de401a8a3b74312c61699f944c46dede68ad5f7700737160",
+      "bytes": 216199,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=555388%2C555389%2C555390%2C555391%2C555392%2C555393%2C555394%2C555395%2C555396%2C555397%2C555398%2C555399%2C555400%2C555401%2C555402%2C555403%2C555404%2C555405%2C555406%2C555407%2C555408%2C555409%2C555410%2C555411%2C555413%2C555414%2C555415%2C555416%2C555418%2C555420%2C555421%2C555422%2C555424%2C555425%2C555426%2C555427%2C555428%2C555429%2C555431%2C555432%2C555433%2C555434%2C555435%2C555436%2C555437%2C555438%2C555439%2C555440%2C555441%2C555442%2C555443%2C555444%2C555447%2C555459%2C555464%2C555473%2C555474%2C555476%2C555481%2C555482%2C555483%2C555484%2C555491%2C555494%2C555495%2C555496%2C555497%2C555498%2C555499%2C555500%2C555501%2C555502%2C555948%2C555952%2C555953%2C555954%2C555956%2C555957%2C555958%2C555959%2C555960%2C555961%2C555962%2C555963%2C555965%2C555966%2C555967%2C555968%2C555970%2C555971%2C555972%2C555974%2C555976%2C555977%2C555978%2C555979%2C555980%2C555981%2C555982%2C555984%2C555985%2C555987%2C555988%2C555989%2C555990%2C555991%2C555992%2C555998%2C556001%2C556002%2C556041%2C556042%2C556054%2C556079%2C556081%2C556086%2C556087%2C556088%2C556089%2C556161%2C556170%2C556176%2C556194%2C556195%2C556196%2C556197%2C556198%2C556205%2C556206%2C556207%2C556208%2C556209%2C556210%2C556211%2C556219%2C556220%2C556221%2C556264%2C556265%2C556266%2C556267%2C556268%2C556273%2C556274%2C556275%2C556276%2C556277%2C556280%2C556281%2C556282%2C556290%2C556291%2C556292%2C556293%2C556294%2C556302%2C556303%2C556305%2C556306%2C556307%2C556308%2C556309%2C556310%2C556311%2C556312%2C556313%2C556314%2C556315%2C556316%2C556317%2C556318%2C556319%2C556320%2C556321%2C556322%2C556323%2C556324%2C556325%2C556326%2C556327%2C556328%2C556332%2C556333%2C556334%2C556335%2C556336%2C556338%2C556339%2C556340%2C556344%2C556345%2C556488%2C556489%2C556589%2C556590%2C556591%2C556592%2C556593%2C556594%2C556595&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:39.248292+00:00",
+        "sha256": "62c87dbd03a47070ffc5e00308c677977057ca7cd2077c12f546f68a2006c873",
+        "bytes": 793071
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0005400.native.json.gz",
+      "rows": 200,
+      "sha256": "39ba5646f2af42bd2e79ceee341fffa58468b1053d00eee32fed77b147d01c44",
+      "bytes": 262937,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=556596%2C556597%2C556598%2C556599%2C556600%2C556601%2C556602%2C556603%2C556604%2C556605%2C556606%2C556607%2C556608%2C556609%2C556610%2C556611%2C556612%2C556613%2C556614%2C556615%2C556616%2C556617%2C556652%2C556653%2C556658%2C556664%2C556670%2C556673%2C556675%2C556688%2C556689%2C556691%2C556692%2C556693%2C556698%2C556700%2C556701%2C556705%2C556707%2C556708%2C556709%2C556713%2C556714%2C556715%2C556720%2C556722%2C556726%2C556728%2C556729%2C556731%2C556737%2C556739%2C556743%2C556744%2C556746%2C556752%2C556753%2C556755%2C556761%2C556762%2C556765%2C556767%2C556769%2C556770%2C556771%2C556772%2C556773%2C556774%2C556776%2C556777%2C556782%2C556789%2C556790%2C556791%2C556793%2C556794%2C556798%2C556799%2C556803%2C556814%2C556816%2C556817%2C556819%2C556820%2C556821%2C556822%2C556823%2C556824%2C556825%2C556827%2C556828%2C556830%2C556831%2C556832%2C556833%2C556834%2C556835%2C556837%2C556838%2C556839%2C556840%2C556849%2C556851%2C556852%2C556865%2C556866%2C556869%2C556870%2C556871%2C556872%2C556873%2C556874%2C556875%2C556877%2C556878%2C556880%2C556881%2C556882%2C556883%2C556884%2C556885%2C556886%2C556887%2C556890%2C556893%2C556894%2C556895%2C556896%2C556899%2C556901%2C556902%2C556903%2C556907%2C556908%2C556909%2C556911%2C556912%2C556914%2C556921%2C556922%2C556923%2C557123%2C557124%2C557143%2C557144%2C557145%2C557146%2C557147%2C557148%2C557166%2C557167%2C557168%2C557170%2C557171%2C557173%2C557174%2C557175%2C557176%2C557182%2C557194%2C557195%2C557196%2C557218%2C557219%2C557220%2C557221%2C557222%2C557223%2C557224%2C557225%2C557226%2C557227%2C557228%2C557229%2C557230%2C557231%2C557232%2C557233%2C557234%2C557235%2C557236%2C557237%2C557238%2C557239%2C557240%2C557241%2C557242%2C557243%2C557257%2C557258%2C557259%2C557260%2C557267%2C557268%2C557270%2C557272%2C557273%2C557276%2C557322%2C557323&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:39.974016+00:00",
+        "sha256": "7305344f3a018990e8f8f96b13ce25ed2f688a06add43ea432d31fb23136c73c",
+        "bytes": 956518
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0005600.native.json.gz",
+      "rows": 200,
+      "sha256": "2eb62f20ef6ba058f10582ded1ba10a271b1ee7854c07abe6de9eb18ea54177a",
+      "bytes": 237740,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=557324%2C557325%2C557398%2C557400%2C557401%2C557402%2C557403%2C557404%2C557405%2C557406%2C557407%2C557408%2C557412%2C557413%2C557414%2C557415%2C557416%2C557417%2C557418%2C557419%2C557420%2C557421%2C557422%2C557423%2C557424%2C557426%2C557427%2C557428%2C557430%2C557431%2C557432%2C557433%2C557434%2C557435%2C557437%2C557439%2C557440%2C557441%2C557442%2C557443%2C557444%2C557445%2C557446%2C557447%2C557448%2C557449%2C557450%2C557451%2C557452%2C557453%2C557454%2C557455%2C557456%2C557457%2C557458%2C557459%2C557460%2C557461%2C557462%2C557463%2C557464%2C557465%2C557466%2C557467%2C557468%2C557469%2C557470%2C557471%2C557473%2C557474%2C557475%2C557476%2C557477%2C557478%2C557479%2C557480%2C557481%2C557482%2C557483%2C557484%2C557485%2C557486%2C557487%2C557488%2C557489%2C557490%2C557491%2C557492%2C557493%2C557494%2C557495%2C557496%2C557497%2C557498%2C557499%2C557500%2C557501%2C557502%2C557503%2C557504%2C557505%2C557507%2C557508%2C557509%2C557510%2C557511%2C557512%2C557513%2C557514%2C557515%2C557516%2C557517%2C557518%2C557519%2C557520%2C557521%2C557522%2C557523%2C557524%2C557535%2C557536%2C557537%2C557540%2C557541%2C557542%2C557543%2C557544%2C557545%2C557546%2C557547%2C557548%2C557549%2C557550%2C557551%2C557552%2C557553%2C557554%2C557555%2C557556%2C557557%2C557565%2C557566%2C557570%2C557741%2C557769%2C557957%2C557958%2C557961%2C557966%2C557967%2C557968%2C557971%2C557972%2C557999%2C558000%2C558001%2C558002%2C558026%2C558029%2C558030%2C558032%2C558036%2C558037%2C558039%2C558041%2C558042%2C558043%2C558044%2C558046%2C558047%2C558051%2C558055%2C558056%2C558057%2C558058%2C558059%2C558060%2C558061%2C558062%2C558063%2C558064%2C558065%2C558066%2C558067%2C558068%2C558069%2C558070%2C558071%2C558072%2C558073%2C558074%2C558075%2C558076%2C558077%2C558078%2C558079%2C558080%2C558081%2C558082%2C558083&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:40.719107+00:00",
+        "sha256": "37bab85d45252d552aeeb9a39aad1a39e24541a131204ab15009132c34ed7d5b",
+        "bytes": 853015
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0005800.native.json.gz",
+      "rows": 200,
+      "sha256": "9ef6ff2885f6a9cecfd43030102f073ea1a19a002de0654de52f18062bd3e697",
+      "bytes": 214456,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=558084%2C558085%2C558086%2C558087%2C558088%2C558089%2C558090%2C558091%2C558092%2C558093%2C558094%2C558101%2C558102%2C558103%2C558104%2C558105%2C558175%2C558176%2C558177%2C558178%2C558179%2C558180%2C558181%2C558182%2C558183%2C558184%2C558185%2C558186%2C558187%2C558189%2C558190%2C558191%2C558192%2C558193%2C558202%2C558203%2C558205%2C558206%2C558207%2C558213%2C558214%2C558215%2C558216%2C558226%2C558227%2C558228%2C558405%2C558406%2C558407%2C558408%2C558409%2C558410%2C558412%2C558413%2C558414%2C558415%2C558420%2C558421%2C558422%2C558423%2C558424%2C558425%2C558426%2C558427%2C558428%2C558431%2C558432%2C558433%2C558443%2C558444%2C558445%2C558446%2C558447%2C558448%2C558458%2C558459%2C558460%2C558461%2C558462%2C558475%2C558476%2C558477%2C558478%2C558479%2C558480%2C558481%2C558482%2C558483%2C558484%2C558485%2C558486%2C558488%2C558489%2C558490%2C558491%2C558492%2C558493%2C558494%2C558495%2C558496%2C558497%2C558499%2C558500%2C558501%2C558502%2C558503%2C558504%2C558505%2C558506%2C558507%2C558508%2C558513%2C558520%2C558521%2C558522%2C558523%2C558664%2C558665%2C558666%2C558667%2C558668%2C558669%2C558674%2C558675%2C558676%2C558677%2C558678%2C558715%2C558719%2C558731%2C558732%2C558733%2C558734%2C558735%2C558736%2C558737%2C558738%2C558739%2C558740%2C558741%2C558742%2C558743%2C558744%2C558745%2C558746%2C558747%2C558748%2C558749%2C558750%2C558751%2C558752%2C558753%2C558754%2C558755%2C558756%2C558757%2C558758%2C558759%2C558760%2C558761%2C558762%2C558763%2C558764%2C558765%2C558766%2C558767%2C558768%2C558769%2C558770%2C558771%2C558772%2C558773%2C558774%2C558775%2C558776%2C558777%2C558778%2C558779%2C558780%2C558781%2C558782%2C558811%2C558812%2C558813%2C558884%2C558885%2C558886%2C558911%2C558912%2C558913%2C558914%2C558915%2C558916%2C558917%2C558918%2C558919%2C558920%2C558921%2C558922%2C558923&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:41.351584+00:00",
+        "sha256": "9a8b90bb60ba456f9b5c0ebf050b9e3a85cee848e6f052f613a148d320cd8e8a",
+        "bytes": 804410
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0006000.native.json.gz",
+      "rows": 200,
+      "sha256": "574cc983b43f9b23981332cdb09182e4cdc463a4b6875b91f6162cd12ad92246",
+      "bytes": 295226,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=558924%2C558925%2C558926%2C558927%2C558928%2C558929%2C558930%2C558931%2C558932%2C558933%2C558934%2C558935%2C558936%2C558937%2C558938%2C558939%2C558946%2C558947%2C558948%2C558949%2C558950%2C558951%2C558952%2C558957%2C558958%2C558959%2C558960%2C558961%2C558962%2C558963%2C558964%2C558965%2C558966%2C558967%2C558968%2C558969%2C558970%2C558971%2C558972%2C558973%2C558974%2C558975%2C558976%2C558977%2C558978%2C558979%2C558980%2C558981%2C559102%2C559103%2C559104%2C559106%2C559108%2C559109%2C559286%2C559287%2C559288%2C559289%2C559290%2C559291%2C559301%2C559306%2C559317%2C559320%2C559322%2C559323%2C559326%2C559327%2C559329%2C559330%2C559331%2C559332%2C559333%2C559335%2C559336%2C559337%2C559338%2C559339%2C559349%2C559350%2C559351%2C559352%2C559353%2C559354%2C559355%2C559356%2C559357%2C559358%2C559359%2C559360%2C559361%2C559362%2C559365%2C559366%2C559368%2C559383%2C559384%2C559385%2C559387%2C559388%2C559389%2C559390%2C559391%2C559393%2C559394%2C559395%2C559396%2C559397%2C559398%2C559399%2C559400%2C559401%2C559402%2C559403%2C559404%2C559405%2C559406%2C559407%2C559408%2C559409%2C559410%2C559411%2C559412%2C559413%2C559414%2C559415%2C559416%2C559417%2C559418%2C559419%2C559420%2C559421%2C559422%2C559423%2C559424%2C559425%2C559426%2C559427%2C559434%2C559435%2C559436%2C559437%2C559438%2C559439%2C559440%2C559441%2C559442%2C559445%2C559446%2C559447%2C559448%2C559449%2C559450%2C559451%2C559452%2C559453%2C559454%2C559455%2C559456%2C559484%2C559490%2C559491%2C559492%2C559493%2C559494%2C559495%2C559496%2C559497%2C559498%2C559499%2C559500%2C559501%2C559502%2C559503%2C559504%2C559505%2C559506%2C559507%2C559508%2C559509%2C559510%2C559512%2C559513%2C559514%2C559515%2C559516%2C559517%2C559518%2C559519%2C559520%2C559521%2C559522%2C559523%2C559524%2C559525%2C559526%2C559527%2C559528%2C559529%2C559530&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:43.428178+00:00",
+        "sha256": "9d18135193c4c081a5de2d00ff52ab6f0034e4909c510fd2942e9f9303922966",
+        "bytes": 1046502
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0006200.native.json.gz",
+      "rows": 200,
+      "sha256": "68edb751a4828209ad8ae975066adcd54d10d7821f110f1a24d932d47cbda07b",
+      "bytes": 154617,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=559531%2C559532%2C559533%2C559534%2C559535%2C559536%2C559537%2C559538%2C559539%2C559540%2C559541%2C559543%2C559544%2C559555%2C559556%2C559561%2C559562%2C559563%2C559564%2C559565%2C559566%2C559567%2C559568%2C559569%2C559570%2C559590%2C559591%2C559594%2C559595%2C559596%2C559597%2C559598%2C559599%2C559600%2C559604%2C559608%2C559615%2C559616%2C559617%2C559619%2C559620%2C559621%2C559622%2C559623%2C559624%2C559625%2C559626%2C559627%2C559628%2C559629%2C559630%2C559631%2C559632%2C559633%2C559634%2C559635%2C559636%2C559637%2C559638%2C559639%2C559640%2C559641%2C559642%2C559643%2C559644%2C559645%2C559663%2C559678%2C559680%2C559681%2C559699%2C559715%2C559716%2C559718%2C559719%2C559720%2C559723%2C559724%2C559725%2C559726%2C559733%2C559734%2C559735%2C559736%2C559737%2C559743%2C559749%2C559750%2C559751%2C559752%2C559753%2C559754%2C559755%2C559756%2C559757%2C559758%2C559759%2C559804%2C559805%2C559806%2C559807%2C559808%2C559809%2C559848%2C559849%2C559850%2C559851%2C559852%2C559853%2C559863%2C559864%2C559865%2C559866%2C559870%2C559873%2C559916%2C559917%2C559918%2C559923%2C559924%2C559925%2C559926%2C559927%2C559928%2C559929%2C559930%2C559932%2C559935%2C559936%2C559937%2C559938%2C559939%2C559940%2C559941%2C559942%2C559943%2C559950%2C559951%2C559952%2C559953%2C559959%2C559962%2C559963%2C559964%2C559965%2C559966%2C559967%2C559968%2C559969%2C559970%2C559971%2C559972%2C559973%2C559974%2C559975%2C559976%2C559977%2C559978%2C559983%2C559984%2C559985%2C559986%2C559987%2C559988%2C560020%2C560038%2C560039%2C560094%2C560095%2C560096%2C560097%2C560098%2C560099%2C560100%2C560101%2C560102%2C560103%2C560104%2C560105%2C560106%2C560107%2C560108%2C560109%2C560110%2C560111%2C560112%2C560113%2C560114%2C560115%2C560116%2C560117%2C560118%2C560119%2C560120%2C560121%2C560122%2C560123%2C560124%2C560125%2C560126&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:44.135706+00:00",
+        "sha256": "993913fd97f21362963a2e37aa2eb23f7827330c54aa5b8dcaeacd7e20d72e24",
+        "bytes": 593503
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0006400.native.json.gz",
+      "rows": 200,
+      "sha256": "b9cca7e34356a035dac78ba56b6aa28c5eabb37cf9face7b9c973945c2ea7598",
+      "bytes": 268054,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=560127%2C560128%2C560129%2C560130%2C560131%2C560133%2C560134%2C560135%2C560136%2C560137%2C560138%2C560139%2C560141%2C560142%2C560143%2C560144%2C560145%2C560146%2C560147%2C560148%2C560149%2C560150%2C560151%2C560152%2C560153%2C560154%2C560155%2C560156%2C560157%2C560158%2C560159%2C560161%2C560162%2C560164%2C560165%2C560166%2C560167%2C560168%2C560169%2C560170%2C560171%2C560172%2C560173%2C560174%2C560175%2C560176%2C560177%2C560178%2C560179%2C560180%2C560181%2C560182%2C560183%2C560184%2C560185%2C560186%2C560187%2C560188%2C560189%2C560190%2C560191%2C560192%2C560193%2C560194%2C560195%2C560196%2C560197%2C560198%2C560199%2C560200%2C560210%2C560247%2C560248%2C560249%2C560252%2C560253%2C560254%2C560255%2C560271%2C560288%2C560289%2C560296%2C560297%2C560354%2C560362%2C560363%2C560364%2C560365%2C560366%2C560367%2C560368%2C560369%2C560370%2C560375%2C560393%2C560395%2C560412%2C560427%2C560428%2C560429%2C560430%2C560431%2C560432%2C560433%2C560434%2C560435%2C560436%2C560437%2C560438%2C560439%2C560440%2C560441%2C560442%2C560443%2C560444%2C560445%2C560446%2C560447%2C560448%2C560449%2C560450%2C560451%2C560452%2C560453%2C560454%2C560455%2C560456%2C560457%2C560458%2C560459%2C560460%2C560461%2C560462%2C560463%2C560464%2C560465%2C560466%2C560467%2C560468%2C560469%2C560470%2C560471%2C560472%2C560473%2C560474%2C560475%2C560476%2C560477%2C560478%2C560479%2C560480%2C560481%2C560482%2C560483%2C560484%2C560485%2C560486%2C560487%2C560488%2C560489%2C560490%2C560491%2C560493%2C560494%2C560495%2C560496%2C560497%2C560498%2C560499%2C560500%2C560501%2C560502%2C560503%2C560504%2C560505%2C560506%2C560507%2C560508%2C560509%2C560510%2C560511%2C560512%2C560513%2C560514%2C560515%2C560516%2C560517%2C560518%2C560519%2C560520%2C560521%2C560522%2C560523%2C560524%2C560525%2C560526%2C560527%2C560528%2C560529%2C560530&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:44.832511+00:00",
+        "sha256": "97644308bd99108f4da810da853ca3b0d2dad6be003412f5c880d4b54fc9571b",
+        "bytes": 954884
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0006600.native.json.gz",
+      "rows": 200,
+      "sha256": "54174eb3e1a89b990425fb357b52913975688add4aacd6f4bac04cf8e115955f",
+      "bytes": 342022,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=560531%2C560532%2C560533%2C560534%2C560535%2C560536%2C560537%2C560538%2C560539%2C560540%2C560541%2C560542%2C560543%2C560544%2C560545%2C560546%2C560547%2C560548%2C560549%2C560550%2C560551%2C560553%2C560554%2C560555%2C560556%2C560557%2C560558%2C560559%2C560560%2C560561%2C560562%2C560563%2C560564%2C560565%2C560566%2C560567%2C560568%2C560569%2C560572%2C560573%2C560574%2C560575%2C560576%2C560577%2C560578%2C560579%2C560580%2C560581%2C560582%2C560585%2C560586%2C560587%2C560588%2C560590%2C560591%2C560592%2C560593%2C560608%2C560609%2C560629%2C560630%2C560631%2C560632%2C560633%2C560634%2C560635%2C560636%2C560644%2C560645%2C560646%2C560654%2C560655%2C560656%2C560657%2C560658%2C560659%2C560660%2C560662%2C560666%2C560667%2C560670%2C560671%2C560672%2C560684%2C560685%2C560688%2C560689%2C560690%2C560691%2C560692%2C560693%2C560694%2C560695%2C560696%2C560697%2C560698%2C560699%2C560700%2C560701%2C560702%2C560703%2C560704%2C560705%2C560706%2C560707%2C560708%2C560709%2C560714%2C560715%2C560716%2C560717%2C560718%2C560719%2C560720%2C560721%2C560722%2C560723%2C560724%2C560725%2C560726%2C560727%2C560728%2C560729%2C560730%2C560731%2C560732%2C560733%2C560734%2C560735%2C560736%2C560737%2C560738%2C560739%2C560740%2C560741%2C560756%2C560757%2C560758%2C560759%2C560760%2C560761%2C560762%2C560763%2C560764%2C560765%2C560773%2C560775%2C560776%2C560777%2C560778%2C560779%2C560780%2C560781%2C560782%2C560784%2C560785%2C560786%2C560787%2C560788%2C560789%2C560790%2C560791%2C560792%2C560793%2C560794%2C560795%2C560796%2C560797%2C560798%2C560799%2C560800%2C560801%2C560802%2C560803%2C560804%2C560808%2C560809%2C560820%2C560822%2C560823%2C560824%2C560825%2C560826%2C560827%2C560828%2C560829%2C560832%2C560845%2C560846%2C560848%2C560852%2C560857%2C560858%2C560859%2C560860%2C560861%2C560862%2C560863%2C560864%2C560865&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:45.704293+00:00",
+        "sha256": "ccd680c1ed0677cd9531fa6853393d49b478ce6ae443080301d9c05c2c289388",
+        "bytes": 1202100
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0006800.native.json.gz",
+      "rows": 200,
+      "sha256": "6e43ba0407a54249038645d39ac3b15141399e47950f1961aa7d719f965415d3",
+      "bytes": 207263,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=560866%2C560867%2C560868%2C560869%2C560870%2C560871%2C560872%2C560874%2C560875%2C560876%2C560877%2C560896%2C560897%2C560904%2C560905%2C560906%2C560907%2C560908%2C560909%2C560910%2C560916%2C560917%2C560918%2C560919%2C560923%2C560925%2C560926%2C560927%2C560928%2C560929%2C560935%2C560936%2C560937%2C560938%2C560939%2C560940%2C560941%2C560942%2C560943%2C560944%2C560945%2C560946%2C560947%2C560948%2C560949%2C560950%2C560951%2C560952%2C560953%2C560954%2C560955%2C560956%2C560957%2C560958%2C560960%2C560961%2C560962%2C560963%2C560964%2C560965%2C560966%2C560967%2C560968%2C560969%2C560970%2C560971%2C560972%2C560973%2C560974%2C560975%2C560976%2C560977%2C560978%2C560979%2C560980%2C560981%2C560982%2C560983%2C560984%2C560985%2C560987%2C560988%2C560989%2C561009%2C561012%2C561018%2C561019%2C561022%2C561083%2C561085%2C561086%2C561087%2C561088%2C561089%2C561090%2C561091%2C561092%2C561093%2C561102%2C561105%2C561106%2C561107%2C561108%2C561109%2C561117%2C561118%2C561119%2C561123%2C561124%2C561128%2C561129%2C561130%2C561131%2C561132%2C561133%2C561134%2C561137%2C561138%2C561141%2C561165%2C561166%2C561167%2C561168%2C561169%2C561170%2C561171%2C561172%2C561173%2C561174%2C561175%2C561207%2C561208%2C561209%2C561210%2C561211%2C561212%2C561231%2C561234%2C561235%2C561236%2C561237%2C561238%2C561239%2C561240%2C561241%2C561242%2C561243%2C561244%2C561245%2C561250%2C561251%2C561252%2C561255%2C561256%2C561257%2C561258%2C561259%2C561260%2C561261%2C561263%2C561264%2C561265%2C561266%2C561270%2C561276%2C561280%2C561308%2C561310%2C561311%2C561312%2C561314%2C561315%2C561316%2C561317%2C561320%2C561326%2C561327%2C561330%2C561331%2C561333%2C561334%2C561335%2C561336%2C561337%2C561338%2C561339%2C561340%2C561341%2C561342%2C561343%2C561344%2C561347%2C561379%2C561380%2C561381%2C561382%2C561383%2C561385%2C561387%2C561388&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:46.504033+00:00",
+        "sha256": "b069a3a20dbe39fdb3b2194104018bb2bf0b6fdb401bd7dcbf02b1d4a98f3ed0",
+        "bytes": 755972
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0007000.native.json.gz",
+      "rows": 200,
+      "sha256": "c91d03f4ebac953538cc7d295b908e1fe475c131d31c80a392627c509d4fa848",
+      "bytes": 275717,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=561389%2C561390%2C561391%2C561392%2C561393%2C561394%2C561395%2C561396%2C561397%2C561398%2C561399%2C561400%2C561401%2C561402%2C561403%2C561404%2C561405%2C561406%2C561407%2C561408%2C561409%2C561410%2C561411%2C561412%2C561415%2C561416%2C561417%2C561418%2C561419%2C561420%2C561421%2C561422%2C561423%2C561424%2C561425%2C561426%2C561427%2C561428%2C561429%2C561430%2C561431%2C561432%2C561433%2C561434%2C561436%2C561437%2C561438%2C561440%2C561442%2C561443%2C561444%2C561447%2C561448%2C561450%2C561451%2C561452%2C561453%2C561454%2C561456%2C561457%2C561458%2C561460%2C561461%2C561462%2C561463%2C561466%2C561467%2C561470%2C561478%2C561516%2C561517%2C561519%2C561520%2C561521%2C561522%2C561523%2C561524%2C561525%2C561526%2C561527%2C561528%2C561529%2C561530%2C561531%2C561532%2C561533%2C561534%2C561535%2C561536%2C561537%2C561541%2C561546%2C561547%2C561596%2C561597%2C561599%2C561600%2C561601%2C561602%2C561604%2C561605%2C561606%2C561607%2C561608%2C561609%2C561610%2C561611%2C561614%2C561615%2C561616%2C561617%2C561618%2C561619%2C561622%2C561631%2C561632%2C561633%2C561634%2C561635%2C561652%2C561659%2C561660%2C561661%2C561662%2C561663%2C561664%2C561665%2C561666%2C561667%2C561668%2C561669%2C561670%2C561671%2C561672%2C561673%2C561674%2C561676%2C561677%2C561678%2C561680%2C561681%2C561683%2C561684%2C561690%2C561691%2C561693%2C561694%2C561695%2C561696%2C561697%2C561698%2C561699%2C561700%2C561701%2C561702%2C561703%2C561704%2C561705%2C561723%2C561726%2C561727%2C561728%2C561731%2C561732%2C561733%2C561734%2C561735%2C561736%2C561737%2C561738%2C561739%2C561741%2C561767%2C561775%2C561776%2C561777%2C561779%2C561782%2C561784%2C561786%2C561809%2C561810%2C561811%2C561812%2C561813%2C561814%2C561815%2C561816%2C561817%2C561818%2C561819%2C561820%2C561822%2C561823%2C561824%2C561825%2C561826%2C561827%2C561828%2C561829&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:47.155517+00:00",
+        "sha256": "74b38fbbd636212f9c192bf0cbf59d6c673a0e8dca4b6f3c4b4d15a91637aaaa",
+        "bytes": 972379
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0007200.native.json.gz",
+      "rows": 200,
+      "sha256": "921185b2e8855e0e90128c25e7c9b43ec8325ba1318a679b83705926c6387f9c",
+      "bytes": 266182,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=561830%2C561831%2C561832%2C561833%2C561834%2C561835%2C561836%2C561837%2C561838%2C561839%2C561840%2C561841%2C561842%2C561843%2C561844%2C561846%2C561847%2C561848%2C561849%2C561850%2C561851%2C561852%2C561853%2C561854%2C561855%2C561856%2C561857%2C561858%2C561860%2C561861%2C561862%2C561863%2C561864%2C561865%2C561866%2C561867%2C561868%2C561869%2C561870%2C561871%2C561872%2C561873%2C561874%2C561875%2C561876%2C561877%2C561878%2C561879%2C561880%2C561881%2C561897%2C561898%2C561899%2C561900%2C561901%2C561904%2C561905%2C561906%2C561907%2C561908%2C561909%2C561910%2C561911%2C561912%2C561913%2C561914%2C561915%2C561916%2C561920%2C561922%2C561923%2C561924%2C561925%2C561927%2C561928%2C561929%2C561930%2C561931%2C561932%2C561976%2C561977%2C561978%2C561979%2C561981%2C561982%2C561983%2C561984%2C561985%2C561988%2C561989%2C561990%2C561991%2C561992%2C561993%2C561994%2C561995%2C561996%2C561997%2C562000%2C562001%2C562002%2C562003%2C562004%2C562005%2C562006%2C562007%2C562008%2C562010%2C562011%2C562012%2C562013%2C562014%2C562016%2C562017%2C562018%2C562019%2C562020%2C562021%2C562022%2C562023%2C562048%2C562049%2C562050%2C562051%2C562052%2C562053%2C562054%2C562055%2C562056%2C562057%2C562058%2C562061%2C562062%2C562063%2C562064%2C562065%2C562066%2C562067%2C562068%2C562069%2C562070%2C562071%2C562072%2C562073%2C562074%2C562075%2C562076%2C562077%2C562078%2C562079%2C562080%2C562081%2C562082%2C562083%2C562084%2C562085%2C562086%2C562087%2C562088%2C562089%2C562090%2C562091%2C562092%2C562093%2C562094%2C562095%2C562096%2C562097%2C562098%2C562099%2C562100%2C562101%2C562102%2C562103%2C562104%2C562105%2C562106%2C562107%2C562108%2C562109%2C562110%2C562111%2C562117%2C562118%2C562119%2C562128%2C562129%2C562130%2C562133%2C562134%2C562135%2C562136%2C562137%2C562141%2C562142%2C562148%2C562159%2C562160%2C562161%2C562162&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:47.856365+00:00",
+        "sha256": "b526c4dd6e7185d184dbac1c00207b0530a4cad6c7c4e98b30b595582c171e37",
+        "bytes": 948131
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0007400.native.json.gz",
+      "rows": 200,
+      "sha256": "6f413d90421d5d5705579c70cbd3864302fe51e5ae3bb43837441849014408d2",
+      "bytes": 277310,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=562163%2C562164%2C562165%2C562166%2C562167%2C562168%2C562169%2C562170%2C562171%2C562172%2C562173%2C562174%2C562175%2C562176%2C562177%2C562178%2C562179%2C562180%2C562181%2C562182%2C562183%2C562184%2C562186%2C562187%2C562188%2C562189%2C562190%2C562191%2C562192%2C562193%2C562194%2C562195%2C562196%2C562197%2C562198%2C562199%2C562200%2C562201%2C562202%2C562203%2C562204%2C562205%2C562206%2C562207%2C562208%2C562209%2C562210%2C562211%2C562212%2C562225%2C562226%2C562228%2C562229%2C562230%2C562231%2C562232%2C562233%2C562234%2C562235%2C562236%2C562237%2C562238%2C562239%2C562240%2C562252%2C562254%2C562255%2C562257%2C562258%2C562259%2C562261%2C562262%2C562263%2C562264%2C562265%2C562266%2C562267%2C562268%2C562269%2C562274%2C562275%2C562277%2C562278%2C562280%2C562281%2C562282%2C562284%2C562285%2C562286%2C562287%2C562288%2C562289%2C562290%2C562292%2C562293%2C562294%2C562295%2C562296%2C562297%2C562298%2C562299%2C562300%2C562301%2C562302%2C562303%2C562304%2C562305%2C562306%2C562307%2C562308%2C562309%2C562310%2C562311%2C562312%2C562313%2C562314%2C562315%2C562316%2C562317%2C562318%2C562319%2C562320%2C562321%2C562322%2C562323%2C562324%2C562325%2C562328%2C562331%2C562333%2C562334%2C562335%2C562336%2C562341%2C562344%2C562346%2C562347%2C562348%2C562349%2C562350%2C562351%2C562352%2C562353%2C562354%2C562357%2C562360%2C562361%2C562375%2C562376%2C562377%2C562378%2C562379%2C562380%2C562382%2C562384%2C562385%2C562386%2C562387%2C562390%2C562409%2C562410%2C562411%2C562412%2C562413%2C562445%2C562446%2C562447%2C562527%2C562528%2C562529%2C562530%2C562550%2C562551%2C562552%2C562553%2C562587%2C562588%2C562589%2C562590%2C562591%2C562592%2C562593%2C562594%2C562595%2C562600%2C562601%2C562602%2C562603%2C562604%2C562610%2C562611%2C562612%2C562613%2C562614%2C562615%2C562616%2C562617%2C562618%2C562619%2C562620&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:48.615302+00:00",
+        "sha256": "a0f9d4451ae1fa5225a23aa8d93d9b33dec65ee0afbafa541a3c30e8aeaa0579",
+        "bytes": 1007806
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0007600.native.json.gz",
+      "rows": 200,
+      "sha256": "aa0b59b43f4048ad61b3f6f1d6af7a434b99746aaaf966cc9ca5b2ba2799b8bc",
+      "bytes": 183111,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=562635%2C562637%2C562638%2C562639%2C562652%2C562653%2C562654%2C562655%2C562656%2C562657%2C562658%2C562659%2C562660%2C562670%2C562671%2C562672%2C562673%2C562674%2C562678%2C562679%2C562680%2C562684%2C562685%2C562686%2C562687%2C562688%2C562689%2C562690%2C562691%2C562692%2C562693%2C562694%2C562695%2C562696%2C562697%2C562698%2C562699%2C562700%2C562701%2C562702%2C562703%2C562704%2C562705%2C562706%2C562707%2C562708%2C562709%2C562710%2C562711%2C562712%2C562713%2C562719%2C562720%2C562721%2C562722%2C562723%2C562724%2C562725%2C562726%2C562727%2C562728%2C562743%2C562744%2C562745%2C562746%2C562747%2C562748%2C562764%2C562768%2C562774%2C562775%2C562778%2C562779%2C562780%2C562781%2C562782%2C562783%2C562784%2C562785%2C562786%2C562787%2C562788%2C562789%2C562790%2C562791%2C562792%2C562793%2C562794%2C562795%2C562796%2C562797%2C562798%2C562799%2C562800%2C562801%2C562802%2C562803%2C562804%2C562805%2C562806%2C562819%2C562822%2C562823%2C562831%2C562832%2C562833%2C562834%2C562871%2C562884%2C562885%2C562886%2C562900%2C562901%2C562902%2C562903%2C562904%2C562905%2C562906%2C562907%2C562908%2C562909%2C562910%2C562911%2C562912%2C562913%2C562914%2C562915%2C562916%2C562917%2C562918%2C562919%2C562920%2C562921%2C562922%2C562923%2C562924%2C562925%2C562926%2C562927%2C562928%2C562929%2C562930%2C562931%2C562932%2C562933%2C562934%2C562935%2C562936%2C562937%2C562938%2C562939%2C562940%2C562941%2C562942%2C562943%2C562944%2C562945%2C562964%2C562965%2C562966%2C562969%2C562972%2C562973%2C562974%2C562975%2C562976%2C562977%2C562979%2C562980%2C562981%2C562982%2C562983%2C562984%2C562985%2C562986%2C562987%2C562991%2C562992%2C562994%2C562996%2C562997%2C562999%2C563000%2C563001%2C563002%2C563003%2C563004%2C563005%2C563009%2C563010%2C563011%2C563013%2C563014%2C563015%2C563016%2C563017%2C563018%2C563019%2C563020%2C563023&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:49.251227+00:00",
+        "sha256": "3d2aa899f07a6d9dcf77bb893227de3ad86ea865e69007199cf2658070187485",
+        "bytes": 678150
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0007800.native.json.gz",
+      "rows": 200,
+      "sha256": "85692afbdbe520f1b813718c1cca84bcbe9bc48253152813dc16d888aa43e0b9",
+      "bytes": 220519,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=563027%2C563028%2C563029%2C563030%2C563031%2C563032%2C563033%2C563034%2C563035%2C563036%2C563037%2C563038%2C563039%2C563040%2C563041%2C563042%2C563043%2C563044%2C563045%2C563046%2C563047%2C563048%2C563049%2C563050%2C563051%2C563052%2C563053%2C563054%2C563055%2C563057%2C563058%2C563059%2C563060%2C563063%2C563064%2C563065%2C563066%2C563067%2C563068%2C563069%2C563070%2C563071%2C563072%2C563073%2C563074%2C563075%2C563076%2C563077%2C563078%2C563079%2C563080%2C563081%2C563082%2C563083%2C563086%2C563087%2C563089%2C563090%2C563091%2C563092%2C563093%2C563094%2C563095%2C563096%2C563097%2C563100%2C563101%2C563102%2C563103%2C563104%2C563105%2C563106%2C563107%2C563108%2C563109%2C563110%2C563111%2C563112%2C563113%2C563114%2C563115%2C563116%2C563122%2C563123%2C563124%2C563125%2C563126%2C563177%2C563178%2C563210%2C563231%2C563232%2C563233%2C563234%2C563235%2C563236%2C563237%2C563238%2C563239%2C563241%2C563242%2C563243%2C563244%2C563245%2C563246%2C563247%2C563248%2C563249%2C563250%2C563251%2C563252%2C563253%2C563254%2C563255%2C563256%2C563257%2C563258%2C563259%2C563260%2C563261%2C563262%2C563263%2C563264%2C563265%2C563266%2C563267%2C563268%2C563269%2C563270%2C563271%2C563273%2C563274%2C563275%2C563276%2C563277%2C563278%2C563279%2C563280%2C563281%2C563282%2C563283%2C563284%2C563285%2C563286%2C563287%2C563288%2C563289%2C563290%2C563291%2C563292%2C563294%2C563319%2C563321%2C563322%2C563333%2C563334%2C563335%2C563336%2C563337%2C563338%2C563339%2C563343%2C563344%2C563345%2C563347%2C563350%2C563351%2C563367%2C563368%2C563370%2C563371%2C563372%2C563373%2C563374%2C563375%2C563376%2C563377%2C563378%2C563379%2C563380%2C563381%2C563382%2C563383%2C563384%2C563385%2C563386%2C563387%2C563388%2C563389%2C563390%2C563392%2C563393%2C563394%2C563395%2C563396%2C563397%2C563398%2C563399%2C563400%2C563401&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:49.880700+00:00",
+        "sha256": "2299b7f059bb957050989b9255815977a3953564f4b30c5d1f50b5a36e5ddb7d",
+        "bytes": 798664
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0008000.native.json.gz",
+      "rows": 200,
+      "sha256": "cb8281995a76ff6b7f2bc178ac4556ce0b00b53b3bf7aea3a3415e5943b8071c",
+      "bytes": 164666,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=563402%2C563403%2C563404%2C563405%2C563406%2C563407%2C563408%2C563409%2C563410%2C563411%2C563413%2C563414%2C563417%2C563418%2C563419%2C563420%2C563421%2C563422%2C563423%2C563424%2C563432%2C563437%2C563438%2C563439%2C563441%2C563451%2C563452%2C563454%2C563456%2C563458%2C563460%2C563461%2C563466%2C563469%2C563472%2C563473%2C563474%2C563475%2C563476%2C563478%2C563479%2C563480%2C563481%2C563482%2C563483%2C563484%2C563485%2C563486%2C563487%2C563489%2C563490%2C563491%2C563495%2C563499%2C563500%2C563501%2C563502%2C563503%2C563504%2C563505%2C563506%2C563507%2C563508%2C563509%2C563510%2C563514%2C563515%2C563516%2C563517%2C563521%2C563531%2C563532%2C563533%2C563534%2C563535%2C563536%2C563537%2C563539%2C563540%2C563541%2C563542%2C563543%2C563545%2C563546%2C563547%2C563548%2C563549%2C563550%2C563551%2C563552%2C563553%2C563554%2C563559%2C563560%2C563567%2C563568%2C563569%2C563570%2C563571%2C563573%2C563574%2C563575%2C563576%2C563577%2C563582%2C563588%2C563589%2C563590%2C563591%2C563592%2C563593%2C563594%2C563596%2C563608%2C563613%2C563614%2C563634%2C563635%2C563644%2C563647%2C563648%2C563649%2C563650%2C563651%2C563666%2C563669%2C563670%2C563673%2C563674%2C563675%2C563676%2C563677%2C563678%2C563679%2C563681%2C563682%2C563684%2C563685%2C563686%2C563800%2C563801%2C563804%2C563805%2C563806%2C563807%2C563808%2C563809%2C563812%2C563813%2C563814%2C563815%2C563816%2C563826%2C563827%2C563828%2C563851%2C563861%2C563877%2C563879%2C563880%2C563881%2C563882%2C563883%2C563884%2C563885%2C563886%2C563887%2C563888%2C563889%2C563890%2C563891%2C563892%2C563893%2C563894%2C563895%2C563896%2C563897%2C563898%2C563899%2C563900%2C563901%2C563902%2C563903%2C563904%2C563905%2C563906%2C563907%2C563908%2C563909%2C563910%2C563911%2C563912%2C563914%2C563915%2C563916%2C563917%2C563918%2C563919%2C563920%2C563921&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:50.455993+00:00",
+        "sha256": "2d510dacfec017f9c4eb57ba2d584ce461cef7a3ba41fa969b89a28522e02417",
+        "bytes": 611313
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0008200.native.json.gz",
+      "rows": 200,
+      "sha256": "35e7e72a605515594803056b865dfd748b9cfdb1977d6b0d81eb18690496be2e",
+      "bytes": 198836,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=563922%2C563923%2C563924%2C563925%2C563926%2C563927%2C563928%2C563929%2C563930%2C563931%2C563932%2C563933%2C563934%2C563935%2C563936%2C563937%2C563938%2C563939%2C563940%2C563941%2C563942%2C563943%2C563944%2C563945%2C563946%2C563947%2C563948%2C563949%2C563950%2C563951%2C563952%2C563953%2C563954%2C563955%2C563956%2C563957%2C563958%2C563959%2C563960%2C563961%2C563962%2C563963%2C563964%2C563965%2C563966%2C563967%2C563968%2C563969%2C563970%2C563971%2C563972%2C563973%2C563974%2C563975%2C563977%2C563978%2C563979%2C563980%2C563981%2C563982%2C563983%2C563984%2C563985%2C563986%2C563987%2C563988%2C563989%2C563991%2C563992%2C563993%2C563994%2C563995%2C563996%2C563997%2C563998%2C563999%2C564000%2C564001%2C564002%2C564003%2C564004%2C564005%2C564006%2C564007%2C564011%2C564012%2C564035%2C564036%2C564048%2C564049%2C564050%2C564051%2C564060%2C564061%2C564062%2C564063%2C564064%2C564066%2C564067%2C564068%2C564069%2C564072%2C564073%2C564077%2C564078%2C564079%2C564080%2C564081%2C564082%2C564083%2C564084%2C564085%2C564087%2C564088%2C564089%2C564096%2C564097%2C564098%2C564099%2C564100%2C564101%2C564102%2C564103%2C564104%2C564105%2C564106%2C564107%2C564108%2C564109%2C564110%2C564111%2C564112%2C564113%2C564114%2C564115%2C564116%2C564117%2C564118%2C564119%2C564120%2C564121%2C564122%2C564123%2C564124%2C564125%2C564127%2C564128%2C564129%2C564130%2C564131%2C564132%2C564133%2C564134%2C564135%2C564136%2C564230%2C564231%2C564232%2C564233%2C564234%2C564235%2C564236%2C564237%2C564238%2C564239%2C564240%2C564241%2C564242%2C564243%2C564244%2C564245%2C564246%2C564247%2C564248%2C564249%2C564250%2C564251%2C564252%2C564253%2C564254%2C564255%2C564256%2C564257%2C564258%2C564259%2C564260%2C564261%2C564262%2C564263%2C564264%2C564265%2C564267%2C564268%2C564270%2C564271%2C564272%2C564274%2C564277%2C564278%2C564279&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:51.008619+00:00",
+        "sha256": "89f11be54206166722cad823bdf4b60d008bb35ea18dcf05b07f456be9941c1b",
+        "bytes": 725890
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0008400.native.json.gz",
+      "rows": 200,
+      "sha256": "dfc809527cd07a8faf7dd286a3b0689a174de532e4dfdff77f83505c691329f2",
+      "bytes": 190309,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=564280%2C564281%2C564282%2C564283%2C564284%2C564285%2C564286%2C564287%2C564288%2C564289%2C564290%2C564291%2C564292%2C564293%2C564294%2C564295%2C564296%2C564297%2C564298%2C564299%2C564300%2C564307%2C564308%2C564313%2C564315%2C564316%2C564317%2C564318%2C564320%2C564322%2C564325%2C564327%2C564328%2C564334%2C564335%2C564336%2C564337%2C564339%2C564341%2C564342%2C564350%2C564351%2C564360%2C564364%2C564371%2C564377%2C564386%2C564390%2C564391%2C564392%2C564393%2C564394%2C564395%2C564396%2C564403%2C564404%2C564410%2C564416%2C564417%2C564420%2C564421%2C564422%2C564423%2C564424%2C564425%2C564426%2C564427%2C564428%2C564429%2C564430%2C564431%2C564432%2C564433%2C564434%2C564435%2C564436%2C564437%2C564438%2C564439%2C564440%2C564441%2C564442%2C564461%2C564462%2C564463%2C564464%2C564465%2C564466%2C564467%2C564468%2C564469%2C564470%2C564471%2C564473%2C564474%2C564475%2C564476%2C564477%2C564478%2C564479%2C564480%2C564481%2C564482%2C564483%2C564484%2C564485%2C564486%2C564487%2C564488%2C564489%2C564490%2C564491%2C564492%2C564493%2C564494%2C564495%2C564496%2C564497%2C564498%2C564499%2C564500%2C564501%2C564502%2C564503%2C564504%2C564505%2C564506%2C564507%2C564508%2C564509%2C564510%2C564511%2C564512%2C564513%2C564515%2C564520%2C564526%2C564528%2C564529%2C564530%2C564531%2C564533%2C564535%2C564536%2C564552%2C564553%2C564554%2C564555%2C564556%2C564557%2C564558%2C564559%2C564560%2C564561%2C564563%2C564565%2C564577%2C564578%2C564579%2C564580%2C564581%2C564582%2C564583%2C564584%2C564585%2C564586%2C564587%2C564642%2C564653%2C564654%2C564655%2C564656%2C564657%2C564658%2C564659%2C564660%2C564661%2C564662%2C564663%2C564664%2C564665%2C564666%2C564667%2C564668%2C564669%2C564670%2C564671%2C564673%2C564674%2C564675%2C564676%2C564677%2C564678%2C564679%2C564680%2C564681%2C564682%2C564683%2C564686%2C564687&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:52.261397+00:00",
+        "sha256": "b5699d3861922d5b558ef3701d4846da8a691bfbd5e63664139fd118ac6b6765",
+        "bytes": 696813
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0008600.native.json.gz",
+      "rows": 200,
+      "sha256": "e7bba39b1330665b4dc80a6aca9e01e1089af07f96121fd44d3fa296199fbc14",
+      "bytes": 157212,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=564688%2C564689%2C564690%2C564691%2C564692%2C564693%2C564694%2C564695%2C564696%2C564697%2C564698%2C564699%2C564700%2C564701%2C564702%2C564703%2C564705%2C564706%2C564707%2C564708%2C564709%2C564710%2C564711%2C564712%2C564713%2C564714%2C564715%2C564716%2C564717%2C564719%2C564720%2C564721%2C564722%2C564723%2C564724%2C564725%2C564726%2C564727%2C564728%2C564729%2C564730%2C564731%2C564732%2C564733%2C564734%2C564735%2C564736%2C564737%2C564738%2C564739%2C564740%2C564741%2C564742%2C564743%2C564744%2C564745%2C564746%2C564747%2C564748%2C564749%2C564750%2C564751%2C564752%2C564753%2C564754%2C564755%2C564756%2C564757%2C564758%2C564759%2C564760%2C564761%2C564762%2C564763%2C564764%2C564765%2C564766%2C564767%2C564768%2C564769%2C564770%2C564771%2C564772%2C564773%2C564774%2C564775%2C564776%2C564777%2C564778%2C564779%2C564780%2C564781%2C564832%2C564917%2C564918%2C564923%2C564924%2C564928%2C564929%2C564930%2C564931%2C564932%2C564933%2C564934%2C564935%2C564940%2C564941%2C564942%2C564943%2C564944%2C564945%2C564946%2C564947%2C564949%2C564950%2C564951%2C564952%2C564958%2C564959%2C564960%2C564961%2C564962%2C564963%2C564967%2C564970%2C564971%2C564973%2C564974%2C564975%2C564976%2C564977%2C564984%2C564985%2C564986%2C564987%2C564988%2C564989%2C564990%2C564991%2C564992%2C565024%2C565025%2C565026%2C565027%2C565028%2C565029%2C565030%2C565031%2C565032%2C565033%2C565034%2C565035%2C565048%2C565053%2C565055%2C565057%2C565070%2C565081%2C565093%2C565094%2C565125%2C565126%2C565127%2C565128%2C565129%2C565130%2C565131%2C565132%2C565165%2C565167%2C565168%2C565169%2C565170%2C565171%2C565172%2C565173%2C565177%2C565187%2C565188%2C565189%2C565190%2C565192%2C565193%2C565194%2C565195%2C565196%2C565197%2C565198%2C565199%2C565200%2C565201%2C565202%2C565203%2C565204%2C565205%2C565206%2C565207%2C565208%2C565209%2C565210&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:52.757014+00:00",
+        "sha256": "c6c4fe0a22fc22ec084c1c187e70bae45aebd2978ab64219406ce43620de9e4e",
+        "bytes": 593560
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0008800.native.json.gz",
+      "rows": 200,
+      "sha256": "95f9f4de87df76ab9a827b93ffba1a0001bb06bddce287fe0701593fb3f775e4",
+      "bytes": 153659,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=565211%2C565212%2C565213%2C565214%2C565215%2C565216%2C565217%2C565223%2C565224%2C565225%2C565226%2C565227%2C565228%2C565229%2C565230%2C565231%2C565233%2C565234%2C565256%2C565284%2C565285%2C565286%2C565301%2C565302%2C565303%2C565304%2C565305%2C565306%2C565318%2C565320%2C565321%2C565322%2C565323%2C565324%2C565329%2C565330%2C565331%2C565337%2C565357%2C565358%2C565359%2C565360%2C565361%2C565362%2C565364%2C565365%2C565366%2C565367%2C565368%2C565370%2C565372%2C565373%2C565374%2C565375%2C565376%2C565377%2C565378%2C565380%2C565381%2C565382%2C565383%2C565384%2C565403%2C565409%2C565431%2C565432%2C565434%2C565435%2C565436%2C565437%2C565438%2C565439%2C565440%2C565441%2C565442%2C565443%2C565449%2C565455%2C565462%2C565463%2C565464%2C565465%2C565468%2C565469%2C565471%2C565472%2C565473%2C565474%2C565475%2C565476%2C565477%2C565478%2C565479%2C565480%2C565481%2C565482%2C565483%2C565484%2C565485%2C565489%2C565490%2C565495%2C565496%2C565497%2C565498%2C565499%2C565500%2C565501%2C565502%2C565503%2C565504%2C565505%2C565506%2C565623%2C565632%2C565633%2C565634%2C565636%2C565637%2C565638%2C565639%2C565640%2C565641%2C565642%2C565643%2C565645%2C565646%2C565647%2C565648%2C565649%2C565650%2C565651%2C565652%2C565653%2C565655%2C565656%2C565657%2C565658%2C565659%2C565660%2C565661%2C565662%2C565663%2C565664%2C565665%2C565666%2C565667%2C565668%2C565669%2C565670%2C565671%2C565672%2C565673%2C565674%2C565675%2C565676%2C565677%2C565678%2C565679%2C565680%2C565681%2C565682%2C565683%2C565684%2C565685%2C565686%2C565687%2C565688%2C565690%2C565691%2C565693%2C565695%2C565707%2C565710%2C565711%2C565712%2C565713%2C565714%2C565715%2C565716%2C565740%2C565741%2C565742%2C565743%2C565744%2C565745%2C565746%2C565747%2C565748%2C565752%2C565757%2C565767%2C565772%2C565773%2C565774%2C565777%2C565779%2C565780%2C565781%2C565784&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:53.311681+00:00",
+        "sha256": "68838cc647b8bbea5e948d0a56c854a954f279b26ef7c029a0aa07bc4df88d37",
+        "bytes": 590011
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0009000.native.json.gz",
+      "rows": 200,
+      "sha256": "7a1980027878e5a038fad1f6628eae69341fdf81a3eeb434d7041b3a7d24b683",
+      "bytes": 298529,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=565785%2C565786%2C565787%2C565788%2C565789%2C565790%2C565826%2C565829%2C565830%2C565843%2C565848%2C565851%2C565854%2C565860%2C565865%2C565893%2C565895%2C565896%2C565897%2C565898%2C565899%2C565900%2C565901%2C565902%2C565903%2C565904%2C565905%2C565906%2C565907%2C565908%2C565909%2C565910%2C565911%2C565912%2C565913%2C565914%2C565915%2C565916%2C565917%2C565918%2C565919%2C565920%2C565921%2C565922%2C565923%2C565924%2C565925%2C565926%2C565927%2C565928%2C565929%2C565930%2C565931%2C565932%2C565933%2C565934%2C565935%2C565936%2C565937%2C565938%2C565939%2C565940%2C565941%2C565942%2C565943%2C565944%2C565945%2C565946%2C565948%2C565949%2C565951%2C565952%2C565953%2C565954%2C565955%2C565958%2C565959%2C565960%2C565962%2C565963%2C565964%2C565965%2C565966%2C565967%2C565968%2C565970%2C565971%2C565972%2C565974%2C565975%2C565977%2C565980%2C565981%2C565982%2C565983%2C565984%2C565985%2C565986%2C565987%2C565988%2C565989%2C565990%2C565991%2C565992%2C565993%2C565994%2C565995%2C565996%2C565997%2C565998%2C565999%2C566000%2C566001%2C566002%2C566003%2C566004%2C566005%2C566006%2C566007%2C566009%2C566010%2C566011%2C566012%2C566013%2C566014%2C566015%2C566016%2C566017%2C566018%2C566019%2C566020%2C566021%2C566022%2C566023%2C566024%2C566025%2C566026%2C566027%2C566030%2C566032%2C566039%2C566040%2C566041%2C566043%2C566044%2C566045%2C566047%2C566048%2C566049%2C566050%2C566146%2C566147%2C566149%2C566150%2C566151%2C566152%2C566153%2C566154%2C566155%2C566156%2C566157%2C566158%2C566159%2C566160%2C566161%2C566162%2C566167%2C566168%2C566169%2C566170%2C566171%2C566172%2C566173%2C566174%2C566175%2C566176%2C566179%2C566180%2C566181%2C566182%2C566184%2C566185%2C566186%2C566187%2C566188%2C566189%2C566190%2C566191%2C566192%2C566193%2C566194%2C566195%2C566196%2C566197%2C566198%2C566203%2C566205%2C566206%2C566207%2C566208&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:53.868357+00:00",
+        "sha256": "2cb634461eb05c225fa490e093a5130259653f714c3d29d3ae5f12bd2f621320",
+        "bytes": 1057906
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0009200.native.json.gz",
+      "rows": 200,
+      "sha256": "666dc295425fdcd5f454c2d1c536dadeab2b4078c837ecb2f62ab232eca757ce",
+      "bytes": 261933,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=566209%2C566210%2C566211%2C566212%2C566213%2C566216%2C566217%2C566218%2C566219%2C566220%2C566221%2C566222%2C566223%2C566224%2C566232%2C566233%2C566234%2C566235%2C566236%2C566237%2C566238%2C566239%2C566240%2C566242%2C566243%2C566244%2C566245%2C566247%2C566248%2C566249%2C566250%2C566251%2C566252%2C566253%2C566254%2C566255%2C566256%2C566257%2C566258%2C566259%2C566260%2C566263%2C566264%2C566272%2C566273%2C566274%2C566275%2C566276%2C566277%2C566279%2C566285%2C566335%2C566338%2C566339%2C566341%2C566342%2C566345%2C566346%2C566347%2C566348%2C566349%2C566352%2C566358%2C566359%2C566360%2C566361%2C566362%2C566363%2C566366%2C566367%2C566368%2C566369%2C566373%2C566374%2C566376%2C566377%2C566378%2C566381%2C566382%2C566383%2C566384%2C566385%2C566386%2C566387%2C566388%2C566389%2C566390%2C566391%2C566392%2C566393%2C566395%2C566397%2C566398%2C566399%2C566400%2C566411%2C566412%2C566413%2C566446%2C566447%2C566448%2C566449%2C566450%2C566451%2C566452%2C566453%2C566454%2C566455%2C566456%2C566457%2C566458%2C566459%2C566460%2C566461%2C566462%2C566463%2C566464%2C566465%2C566466%2C566467%2C566468%2C566469%2C566470%2C566471%2C566472%2C566473%2C566474%2C566475%2C566476%2C566477%2C566478%2C566479%2C566480%2C566481%2C566482%2C566483%2C566484%2C566486%2C566487%2C566490%2C566491%2C566492%2C566494%2C566495%2C566496%2C566497%2C566498%2C566499%2C566500%2C566501%2C566502%2C566503%2C566504%2C566505%2C566506%2C566507%2C566508%2C566509%2C566510%2C566511%2C566512%2C566513%2C566514%2C566515%2C566516%2C566517%2C566522%2C566523%2C566524%2C566525%2C566532%2C566534%2C566535%2C566536%2C566537%2C566538%2C566540%2C566572%2C566575%2C566576%2C566577%2C566581%2C566582%2C566585%2C566586%2C566587%2C566588%2C566592%2C566593%2C566594%2C566597%2C566599%2C566600%2C566602%2C566603%2C566604%2C566605%2C566606%2C566607%2C566608&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:54.498972+00:00",
+        "sha256": "39e054e0909f72a8e339696a823bd18f2d78d2411ce20d43fe95f439197848d3",
+        "bytes": 942773
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0009400.native.json.gz",
+      "rows": 200,
+      "sha256": "b5a611705418cc05d202f7c282e0915e0d41edd4bfa3315f72dcba08b4c45f9d",
+      "bytes": 290420,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=566609%2C566610%2C566619%2C566624%2C566625%2C566631%2C566645%2C566646%2C566647%2C566648%2C566649%2C566650%2C566651%2C566652%2C566653%2C566662%2C566663%2C566665%2C566666%2C566667%2C566668%2C566669%2C566675%2C566676%2C566677%2C566678%2C566679%2C566680%2C566681%2C566682%2C566683%2C566684%2C566685%2C566686%2C566687%2C566688%2C566689%2C566690%2C566691%2C566692%2C566693%2C566694%2C566695%2C566696%2C566697%2C566698%2C566699%2C566700%2C566701%2C566702%2C566703%2C566704%2C566705%2C566706%2C566707%2C566708%2C566709%2C566710%2C566711%2C566712%2C566713%2C566714%2C566715%2C566716%2C566717%2C566718%2C566719%2C566720%2C566721%2C566722%2C566723%2C566724%2C566725%2C566726%2C566727%2C566728%2C566729%2C566730%2C566731%2C566732%2C566733%2C566734%2C566735%2C566736%2C566737%2C566738%2C566739%2C566740%2C566741%2C566742%2C566743%2C566744%2C566745%2C566746%2C566747%2C566748%2C566749%2C566750%2C566751%2C566752%2C566753%2C566754%2C566779%2C566781%2C566782%2C566783%2C566784%2C566785%2C566787%2C566788%2C566789%2C566790%2C566791%2C566792%2C566797%2C566798%2C566799%2C566800%2C566801%2C566802%2C566803%2C566886%2C566887%2C566889%2C566891%2C566892%2C566893%2C566894%2C566898%2C566900%2C566903%2C566905%2C566907%2C566908%2C566909%2C566910%2C566911%2C566912%2C566918%2C566919%2C566920%2C566921%2C566923%2C566924%2C566926%2C566927%2C566928%2C566929%2C566931%2C566939%2C566940%2C566942%2C566943%2C566945%2C566946%2C566948%2C566949%2C566950%2C566951%2C566952%2C566953%2C566954%2C566955%2C566956%2C566957%2C566958%2C566959%2C566960%2C566961%2C566963%2C566964%2C566965%2C566966%2C566967%2C566968%2C566969%2C566970%2C566971%2C566972%2C566973%2C566974%2C566975%2C566976%2C566977%2C566978%2C566979%2C566980%2C566981%2C566982%2C566983%2C566984%2C566985%2C566986%2C566995%2C566996%2C567000%2C567001%2C567003%2C567004%2C567008&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:55.349727+00:00",
+        "sha256": "709b34556c22994a15b18d0e37fa32d6e4eab46235985c611cf5ca22deeb3713",
+        "bytes": 1025009
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0009600.native.json.gz",
+      "rows": 200,
+      "sha256": "a8297a6b917a28124561ac8acfc6f7637e5d122b6934fd43351703bd1414cbe6",
+      "bytes": 210383,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=567009%2C567010%2C567011%2C567015%2C567017%2C567020%2C567021%2C567022%2C567033%2C567034%2C567035%2C567036%2C567037%2C567038%2C567039%2C567057%2C567058%2C567059%2C567071%2C567072%2C567073%2C567074%2C567075%2C567076%2C567077%2C567078%2C567079%2C567084%2C567085%2C567086%2C567087%2C567088%2C567089%2C567090%2C567091%2C567092%2C567094%2C567095%2C567096%2C567097%2C567098%2C567099%2C567100%2C567101%2C567102%2C567103%2C567104%2C567105%2C567106%2C567109%2C567110%2C567111%2C567112%2C567113%2C567114%2C567115%2C567118%2C567119%2C567129%2C567130%2C567131%2C567132%2C567133%2C567175%2C567176%2C567181%2C567182%2C567183%2C567184%2C567185%2C567239%2C567240%2C567241%2C567242%2C567243%2C567244%2C567245%2C567246%2C567247%2C567248%2C567249%2C567252%2C567255%2C567256%2C567257%2C567258%2C567259%2C567260%2C567261%2C567288%2C567289%2C567290%2C567291%2C567292%2C567293%2C567294%2C567295%2C567299%2C567300%2C567337%2C567338%2C567339%2C567340%2C567341%2C567342%2C567343%2C567350%2C567351%2C567352%2C567353%2C567419%2C567426%2C567427%2C567428%2C567429%2C567430%2C567431%2C567432%2C567433%2C567436%2C567437%2C567438%2C567439%2C567440%2C567441%2C567442%2C567443%2C567444%2C567445%2C567447%2C567448%2C567449%2C567453%2C567454%2C567455%2C567456%2C567457%2C567458%2C567459%2C567463%2C567464%2C567465%2C567467%2C567506%2C567523%2C567524%2C567529%2C567530%2C567531%2C567535%2C567537%2C567545%2C567559%2C567560%2C567561%2C567569%2C567572%2C567574%2C567576%2C567580%2C567582%2C567594%2C567595%2C567597%2C567598%2C567601%2C567607%2C567608%2C567614%2C567616%2C567617%2C567619%2C567634%2C567637%2C567638%2C567639%2C567641%2C567644%2C567645%2C567646%2C567656%2C567657%2C567658%2C567659%2C567663%2C567664%2C567665%2C567666%2C567667%2C567671%2C567679%2C567680%2C567682%2C567683%2C567689%2C567690%2C567691%2C567692%2C567698%2C567699&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:56.065764+00:00",
+        "sha256": "6463021fef0d88939cd1207a74641c526f504190076bd13ee74c5275e87a4b73",
+        "bytes": 780283
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0009800.native.json.gz",
+      "rows": 200,
+      "sha256": "dff1ef511991fb4ff91bed62fc63539a37af5bede4dd2368e173a8d8399cb52b",
+      "bytes": 326858,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=567701%2C567702%2C567703%2C567704%2C567705%2C567706%2C567728%2C567730%2C567731%2C567732%2C567737%2C567738%2C567753%2C567754%2C567763%2C567765%2C567768%2C567769%2C567772%2C567776%2C567777%2C567778%2C567779%2C567780%2C567781%2C567782%2C567783%2C567784%2C567785%2C567796%2C567797%2C567798%2C567799%2C567829%2C567830%2C567831%2C567832%2C567833%2C567834%2C567835%2C567836%2C567837%2C567838%2C567839%2C567840%2C567841%2C567842%2C567858%2C567859%2C567869%2C567870%2C567871%2C567872%2C567873%2C567874%2C567875%2C567876%2C567877%2C567878%2C567879%2C567880%2C567881%2C567882%2C567883%2C567884%2C567885%2C567886%2C567887%2C567888%2C567889%2C567890%2C567891%2C567892%2C567893%2C567894%2C567895%2C567896%2C567897%2C567898%2C567899%2C567907%2C567908%2C567909%2C567910%2C567912%2C567913%2C567914%2C567915%2C567917%2C567929%2C567935%2C567969%2C567970%2C567971%2C567972%2C567974%2C567975%2C567978%2C567979%2C567980%2C567983%2C567984%2C567985%2C567986%2C567987%2C567988%2C567989%2C567990%2C567991%2C567992%2C567993%2C567994%2C567995%2C567996%2C567997%2C567998%2C567999%2C568000%2C568001%2C568002%2C568003%2C568004%2C568005%2C568006%2C568007%2C568008%2C568011%2C568015%2C568017%2C568018%2C568019%2C568020%2C568021%2C568022%2C568023%2C568024%2C568025%2C568026%2C568027%2C568028%2C568029%2C568030%2C568031%2C568032%2C568033%2C568034%2C568035%2C568036%2C568037%2C568038%2C568039%2C568040%2C568041%2C568042%2C568043%2C568044%2C568045%2C568046%2C568047%2C568048%2C568049%2C568050%2C568051%2C568052%2C568053%2C568054%2C568055%2C568056%2C568057%2C568058%2C568059%2C568060%2C568061%2C568062%2C568063%2C568064%2C568065%2C568066%2C568067%2C568073%2C568074%2C568075%2C568076%2C568077%2C568085%2C568086%2C568088%2C568089%2C568090%2C568091%2C568092%2C568093%2C568094%2C568106%2C568152%2C568153%2C568155%2C568156%2C568157%2C568158&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:56.717835+00:00",
+        "sha256": "4fb53d1fa9e9fd2b6a03d357c0ddf8d1f9f75cef0fe72ec74bfe89c413265d8b",
+        "bytes": 1170358
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0010000.native.json.gz",
+      "rows": 200,
+      "sha256": "e1415a8369d0e93eded6caef2cd55486c7cf4959d2cf125de92c002b017576e8",
+      "bytes": 319842,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=568160%2C568162%2C568164%2C568165%2C568166%2C568167%2C568168%2C568169%2C568170%2C568171%2C568186%2C568187%2C568188%2C568220%2C568221%2C568222%2C568223%2C568224%2C568225%2C568226%2C568227%2C568228%2C568231%2C568232%2C568233%2C568275%2C568276%2C568277%2C568278%2C568279%2C568280%2C568281%2C568285%2C568286%2C568287%2C568292%2C568293%2C568297%2C568303%2C568304%2C568305%2C568326%2C568349%2C568350%2C568351%2C568359%2C568360%2C568361%2C568362%2C568363%2C568364%2C568365%2C568368%2C568369%2C568370%2C568382%2C568387%2C568388%2C568389%2C568392%2C568393%2C568396%2C568397%2C568398%2C568402%2C568403%2C568404%2C568405%2C568406%2C568412%2C568413%2C568422%2C568423%2C568424%2C568425%2C568426%2C568429%2C568430%2C568431%2C568432%2C568433%2C568435%2C568438%2C568441%2C568444%2C568445%2C568447%2C568448%2C568450%2C568457%2C568458%2C568461%2C568462%2C568466%2C568467%2C568469%2C568470%2C568471%2C568472%2C568476%2C568477%2C568479%2C568480%2C568481%2C568482%2C568483%2C568484%2C568485%2C568486%2C568490%2C568491%2C568492%2C568493%2C568517%2C568518%2C568519%2C568520%2C568521%2C568522%2C568523%2C568524%2C568525%2C568526%2C568527%2C568528%2C568529%2C568530%2C568531%2C568571%2C568572%2C568573%2C568574%2C568575%2C568588%2C568589%2C568590%2C568591%2C568592%2C568593%2C568594%2C568595%2C568596%2C568597%2C568598%2C568599%2C568600%2C568601%2C568602%2C568603%2C568604%2C568605%2C568606%2C568607%2C568608%2C568609%2C568610%2C568611%2C568612%2C568613%2C568614%2C568615%2C568616%2C568629%2C568630%2C568650%2C568651%2C568652%2C568653%2C568654%2C568655%2C568656%2C568657%2C568658%2C568659%2C568673%2C568675%2C568676%2C568690%2C568711%2C568712%2C568713%2C568714%2C568716%2C568717%2C568718%2C568724%2C568733%2C568734%2C568735%2C568737%2C568739%2C568740%2C568745%2C568749%2C568750%2C568751%2C568752%2C568753%2C568758%2C568759&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:57.449640+00:00",
+        "sha256": "e2113d42b0c779cb993488b7c244fad323a4da2400a55808c0dba7d0a2a10044",
+        "bytes": 1144412
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0010200.native.json.gz",
+      "rows": 200,
+      "sha256": "d31afc53bc1810e14c0e4dde62957b977f75fd1e78bf53aac50f92aa570d5a42",
+      "bytes": 178668,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=568760%2C568761%2C568762%2C568764%2C568765%2C568768%2C568770%2C568771%2C568772%2C568773%2C568774%2C568775%2C568776%2C568777%2C568778%2C568779%2C568781%2C568782%2C568784%2C568786%2C568787%2C568788%2C568789%2C568790%2C568791%2C568794%2C568795%2C568809%2C568810%2C568811%2C568812%2C568816%2C568817%2C568818%2C568824%2C568827%2C568828%2C568829%2C568830%2C568832%2C568833%2C568835%2C568836%2C568837%2C568838%2C568839%2C568840%2C568841%2C568842%2C568843%2C568844%2C568846%2C568847%2C568848%2C568849%2C568860%2C568861%2C568862%2C568866%2C568869%2C568870%2C568871%2C568880%2C568881%2C568882%2C568883%2C568885%2C568887%2C568888%2C568938%2C568939%2C568940%2C568941%2C568942%2C568943%2C568964%2C569023%2C569024%2C569025%2C569029%2C569030%2C569031%2C569032%2C569036%2C569037%2C569038%2C569040%2C569042%2C569048%2C569061%2C569062%2C569063%2C569094%2C569148%2C569149%2C569150%2C569151%2C569152%2C569153%2C569154%2C569155%2C569156%2C569157%2C569158%2C569159%2C569160%2C569161%2C569164%2C569167%2C569168%2C569169%2C569171%2C569172%2C569173%2C569174%2C569175%2C569176%2C569180%2C569184%2C569185%2C569187%2C569188%2C569190%2C569191%2C569193%2C569194%2C569195%2C569196%2C569197%2C569198%2C569199%2C569205%2C569212%2C569213%2C569214%2C569215%2C569216%2C569217%2C569218%2C569230%2C569234%2C569235%2C569236%2C569237%2C569238%2C569239%2C569241%2C569243%2C569256%2C569257%2C569261%2C569265%2C569266%2C569267%2C569268%2C569269%2C569270%2C569271%2C569272%2C569273%2C569277%2C569291%2C569316%2C569317%2C569318%2C569319%2C569325%2C569326%2C569336%2C569337%2C569338%2C569340%2C569341%2C569343%2C569344%2C569348%2C569349%2C569350%2C569351%2C569352%2C569353%2C569354%2C569355%2C569356%2C569357%2C569360%2C569373%2C569374%2C569393%2C569406%2C569407%2C569408%2C569409%2C569411%2C569412%2C569413%2C569414%2C569415%2C569416%2C569417&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:58.276315+00:00",
+        "sha256": "e53fe64383604e674b9b0f644c49791f8ae934884ffe8047cfff892851317aea",
+        "bytes": 664878
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0010400.native.json.gz",
+      "rows": 200,
+      "sha256": "38b3548f3b5edbf6d3a40d072a26ac6b50547a5e1bdd028b8672d1e5c0afca69",
+      "bytes": 285630,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=569418%2C569419%2C569420%2C569421%2C569422%2C569423%2C569424%2C569425%2C569426%2C569427%2C569428%2C569429%2C569430%2C569431%2C569432%2C569433%2C569434%2C569435%2C569436%2C569437%2C569438%2C569439%2C569440%2C569441%2C569445%2C569446%2C569448%2C569449%2C569450%2C569451%2C569452%2C569453%2C569454%2C569455%2C569456%2C569458%2C569459%2C569460%2C569470%2C569479%2C569480%2C569485%2C569514%2C569515%2C569516%2C569517%2C569519%2C569521%2C569523%2C569524%2C569525%2C569548%2C569549%2C569565%2C569566%2C569567%2C569568%2C569583%2C569586%2C569587%2C569588%2C569589%2C569590%2C569591%2C569626%2C569627%2C569628%2C569629%2C569630%2C569631%2C569632%2C569633%2C569635%2C569636%2C569637%2C569638%2C569639%2C569640%2C569642%2C569643%2C569644%2C569645%2C569646%2C569647%2C569648%2C569649%2C569650%2C569652%2C569653%2C569654%2C569655%2C569656%2C569657%2C569658%2C569660%2C569661%2C569662%2C569663%2C569664%2C569665%2C569666%2C569667%2C569668%2C569669%2C569670%2C569671%2C569672%2C569673%2C569674%2C569675%2C569676%2C569677%2C569678%2C569679%2C569680%2C569681%2C569682%2C569683%2C569684%2C569685%2C569686%2C569719%2C569720%2C569727%2C569728%2C569730%2C569738%2C569746%2C569747%2C569748%2C569749%2C569750%2C569751%2C569752%2C569753%2C569754%2C569755%2C569756%2C569757%2C569758%2C569759%2C569760%2C569761%2C569762%2C569763%2C569764%2C569765%2C569766%2C569767%2C569768%2C569769%2C569784%2C569785%2C569817%2C569818%2C569819%2C569820%2C569821%2C569822%2C569823%2C569824%2C569825%2C569826%2C569827%2C569828%2C569829%2C569830%2C569831%2C569832%2C569833%2C569842%2C569843%2C569844%2C569845%2C569847%2C569848%2C569850%2C569852%2C569853%2C569857%2C569943%2C569982%2C569983%2C569984%2C569985%2C569986%2C569987%2C569988%2C569989%2C569990%2C569991%2C569992%2C569993%2C569994%2C569996%2C570003%2C570004%2C570005%2C570269%2C571112&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:59.025063+00:00",
+        "sha256": "dc7a2c1f9b43e4b9449d5b81a7737bd9e1bbd125163d2a0dcd7cd1ed87fa13a2",
+        "bytes": 1043301
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0010600.native.json.gz",
+      "rows": 200,
+      "sha256": "9117087ad518c626ddd8cb3eed663fbff2e24b6f29cd89ecaa9163e0b7f7c547",
+      "bytes": 369330,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=571113%2C571114%2C571115%2C571117%2C571145%2C571189%2C571190%2C571221%2C571233%2C571234%2C571235%2C571236%2C571237%2C571257%2C571258%2C571259%2C571260%2C571261%2C571262%2C571263%2C571264%2C571265%2C571271%2C571272%2C571273%2C571274%2C571275%2C571276%2C571277%2C571278%2C571279%2C571280%2C571281%2C571282%2C571283%2C571284%2C571285%2C571286%2C571287%2C571288%2C571289%2C571290%2C571291%2C571292%2C571293%2C571294%2C571295%2C571299%2C571300%2C571301%2C571302%2C571303%2C571304%2C571305%2C571306%2C571307%2C571312%2C571313%2C571314%2C571315%2C571316%2C571317%2C571320%2C571321%2C571328%2C571330%2C571333%2C571334%2C571335%2C571336%2C571337%2C571338%2C571339%2C571340%2C571341%2C571342%2C571343%2C571344%2C571345%2C571346%2C571347%2C571348%2C571349%2C571350%2C571351%2C571352%2C571353%2C571354%2C571355%2C571356%2C571357%2C571358%2C571359%2C571360%2C571361%2C571371%2C571379%2C571381%2C571382%2C571383%2C571384%2C571385%2C571386%2C571387%2C571388%2C571389%2C571390%2C571391%2C571392%2C571393%2C571394%2C571395%2C571396%2C571397%2C571415%2C571416%2C571417%2C571418%2C571427%2C571434%2C571444%2C571448%2C571449%2C571450%2C571452%2C571460%2C571472%2C571473%2C571474%2C571476%2C571479%2C571482%2C571483%2C571491%2C571493%2C571494%2C571495%2C571496%2C571497%2C571498%2C571499%2C571500%2C571501%2C571502%2C571503%2C571504%2C571505%2C571506%2C571507%2C571508%2C571513%2C571514%2C571515%2C571516%2C571519%2C571520%2C571521%2C571525%2C571526%2C571527%2C571528%2C571529%2C571530%2C571531%2C571532%2C571533%2C571534%2C571535%2C571536%2C571537%2C571538%2C571539%2C571558%2C571559%2C571560%2C571561%2C571562%2C571563%2C571574%2C571575%2C571576%2C571577%2C571578%2C571579%2C571580%2C571581%2C571582%2C571583%2C571584%2C571585%2C571586%2C571587%2C571588%2C571589%2C571590%2C571591%2C571593%2C571594%2C571595%2C571596&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:13:59.740291+00:00",
+        "sha256": "279794231f2f4aeda8d432e0f2e66369469d5c9d8042d1b847d456d07458363d",
+        "bytes": 1312979
+      }
+    },
+    {
+      "path": "data/czech-project-geography/rsd-network-26/features-0010800.native.json.gz",
+      "rows": 57,
+      "sha256": "d2790708c5528c705056c73ff2534eea2951820b11ecf64e5c5880c151806071",
+      "bytes": 165463,
+      "source": {
+        "url": "https://geoportal.rsd.cz/arcgis/rest/services/PrezentaceULS/MapServer/26/query?f=json&objectIds=571597%2C571598%2C571599%2C571600%2C571601%2C571602%2C571603%2C571604%2C571605%2C571606%2C571607%2C571608%2C571609%2C571610%2C571611%2C571612%2C571613%2C571614%2C571615%2C571616%2C571617%2C571618%2C571619%2C571620%2C571621%2C571622%2C571623%2C571624%2C571625%2C571626%2C571627%2C571628%2C571629%2C571630%2C571631%2C571658%2C571660%2C571661%2C571664%2C571665%2C571666%2C571667%2C571671%2C571672%2C571673%2C571674%2C571675%2C571676%2C571677%2C571681%2C571683%2C571684%2C571685%2C571686%2C571687%2C571688%2C571689&outFields=%2A&returnGeometry=true&returnM=true&returnZ=true",
+        "retrieved_at": "2026-09-09T14:14:00.448910+00:00",
+        "sha256": "9094de1858a74328c398803d348c6accf96f0a0cbac1afed24bf7159e8275985",
+        "bytes": 575412
+      }
+    }
+  ],
+  "definitions": {
+    "geometry": "Native ArcGIS geometry and spatial reference retained; do not assume WGS84 or GeoJSON.",
+    "identifier": "ArcGIS object ID identifies a layer feature, not a globally stable project. RECORD_ID is retained where supplied; multiple features may represent one investment.",
+    "finance": "Geometry, dates, status and any expected cost do not establish payments, final outturn or a procurement-to-project link.",
+    "snapshot": "Non-atomic public-service acquisition. Explicit source ID and count controls match the archived feature set; no private layers or document binaries."
+  }
+}

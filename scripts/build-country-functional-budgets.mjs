@@ -67,7 +67,7 @@ for(const code of OECD_AREAS) {
       const row=rows.find(item=>Number(item.TIME_PERIOD)===year);
       if(!row) throw new Error(`Missing OECD ${category} ${code} ${year}`);
       const amount=Number(row.OBS_VALUE);
-      countries[code].categories[category].push({year,amount_local_mn:amount,pct_gdp:ratio(amount,code,year),status:row.OBS_STATUS||""});
+      countries[code].categories[category].push({year,amount_local_mn:amount,pct_gdp:ratio(amount,code,year),pct_gdp_method:"OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",gdp_source:benchmark.source,status:row.OBS_STATUS||""});
     }
   }
 }
