@@ -12,6 +12,13 @@
   copy.teachingFte=lang==="en"?"measured teaching / academic FTE":"měřených pedagogických / akademických FTE";
   Object.assign(copy,lang==="en"?{countryLoadKicker:"Loaded country detail",countryLoadIntro:"Select a country in the chart to inspect absolute student and teaching-staff counts in the same classification.",countryLoadBoundary:"Learners and personnel are harmonised Eurostat indicators. Institution counts come from official country registers; period, scope and cross-level double-counting are preserved below.",studentHeadcount:"Students",studentFte:"Student FTE",loadedLearners:"learner levels loaded",loadedTeachers:"teacher-FTE levels loaded",loadedInstitutions:"institution levels loaded",nationalPending:"national adapter pending",derivedRatio:"derived from official Eurostat FTE observations",institutionPeriod:"institution period"}:{countryLoadKicker:"Načtený detail zemí",countryLoadIntro:"Klikněte na zemi v grafu a prohlédněte si absolutní počty studentů a pedagogických úvazků ve stejné klasifikaci.",countryLoadBoundary:"Studenti a personál jsou harmonizované ukazatele Eurostatu. Počty institucí pocházejí z oficiálních registrů zemí; období, vymezení a vícenásobné započtení přes stupně uvádíme níže.",studentHeadcount:"Studenti",studentFte:"Studenti FTE",loadedLearners:"úrovní studentů načteno",loadedTeachers:"úrovní pedagogických FTE načteno",loadedInstitutions:"úrovní institucí načteno",nationalPending:"čeká na národní adaptér",derivedRatio:"odvozeno z oficiálních FTE pozorování Eurostatu",institutionPeriod:"období institucí"});
   Object.assign(copy,lang==="en"?{countryControl:"Benchmark country",currencyControl:"Display currency",controlNote:"Country changes the harmonised benchmark; the audited spending flow remains Czech. Currency conversion applies to every money value.",ratesNote:"2024 reference rates · IMF WEO",missingBenchmark:"No comparable ratio is reported for this country and level.",reconcileLead:"Do not add",reconcileMiddle:"Both contain the same",reconcileTail:"in transfers. Removing them produces"}:{countryControl:"Země benchmarku",currencyControl:"Měna zobrazení",controlNote:"Země mění harmonizovaný benchmark; auditovaný tok výdajů zůstává český. Přepočet měny platí pro všechny peněžní hodnoty.",ratesNote:"Referenční kurzy 2024 · IMF WEO",missingBenchmark:"Pro tuto zemi a stupeň není vykázán srovnatelný poměr.",reconcileLead:"Nesčítat",reconcileMiddle:"V obou částkách je stejných",reconcileTail:"transferů. Po jejich odstranění vychází"});
+  Object.assign(copy,lang==="en"?{
+    perLearner:"Per learner",regionView:"Spending view",regionLearners:"learners",perLearnerUnit:"per learner / year",
+    regionPerLearnerNote:"Indicative ratio: the entire regional spending bar is divided by the number of children and students in kindergartens, primary and secondary schools, conservatories and higher vocational schools in the region (all founders and study forms; no universities). Each colour uses this same denominator, not the enrolment of that school type. Spending is for calendar year 2025; enrolment is for school year 2025/26. Other regions exclude municipalities’ own spending; Prague includes its municipal role. This is not the full cost of education per learner or an efficiency ranking."
+  }:{
+    perLearner:"Na žáka",regionView:"Zobrazení výdajů",regionLearners:"dětí, žáků a studentů",perLearnerUnit:"na žáka / rok",
+    regionPerLearnerNote:"Orientační přepočet: celý sloupec výdajů kraje dělíme počtem dětí a studentů MŠ, ZŠ, SŠ, konzervatoří a VOŠ v kraji (všichni zřizovatelé a formy studia; bez VŠ). Každá barva má stejný jmenovatel, nikoli počet žáků daného typu školy. Výdaje jsou za kalendářní rok 2025, počty za školní rok 2025/26. U ostatních krajů chybějí vlastní výdaje obcí; Praha zahrnuje i svou obecní roli. Nejde o úplné náklady vzdělávání na žáka ani žebříček efektivity."
+  });
   document.querySelectorAll("[data-edu-copy]").forEach(node=>{const value=copy[node.dataset.eduCopy];if(value)node.textContent=value});
   const $=selector=>document.querySelector(selector);
   const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -19,7 +26,7 @@
   const currencyRates={CZK:1,EUR:0.924167762909/23.2168040498,USD:1/23.2168040498};
   const storedCurrency=(()=>{try{return localStorage.getItem("psd-municipal-currency")}catch{return null}})();
   const requestedCountry=new URLSearchParams(location.search).get("code")?.toUpperCase();
-  let data,state={coverage:"all",capacityLevel:"primary",capacityCountry:requestedCountry||"CZE",currency:currencyRates[storedCurrency]?storedCurrency:"CZK"};
+  let data,state={regionMode:new URLSearchParams(location.search).get("regionMetric")==="per-learner"?"per-learner":"total",coverage:"all",capacityLevel:"primary",capacityCountry:requestedCountry||"CZE",currency:currencyRates[storedCurrency]?storedCurrency:"CZK"};
   const amountLabel=()=>lang==="en"?`${state.currency} bn`:`mld. ${state.currency==="CZK"?"Kč":state.currency}`;
   const money=value=>n(value*currencyRates[state.currency],1);
   const bn=value=>`${money(value)} <small>${amountLabel()}</small>`;
@@ -92,11 +99,51 @@
     countrySelect.addEventListener("change",()=>selectCountry(countrySelect.value));
     currencySelect.addEventListener("change",()=>{state.currency=currencySelect.value;try{localStorage.setItem("psd-municipal-currency",state.currency)}catch{}renderSystem();renderRouting();renderLevels();renderRegions()});
   }
+  function setupRegionTabs(){
+    const tabs=$("#education-region-tabs");
+    tabs.setAttribute("aria-label",copy.regionView);
+    const buttons=[...tabs.querySelectorAll("button")];
+    const select=button=>{
+      state.regionMode=button.dataset.regionMode;
+      const url=new URL(location.href);
+      if(state.regionMode==="total")url.searchParams.delete("regionMetric");
+      else url.searchParams.set("regionMetric",state.regionMode);
+      history.replaceState(null,"",url);
+      renderRegions();
+    };
+    buttons.forEach((button,index)=>{
+      button.addEventListener("click",()=>select(button));
+      button.addEventListener("keydown",event=>{
+        const next=event.key==="Home"?0:event.key==="End"?buttons.length-1:event.key==="ArrowRight"?(index+1)%buttons.length:event.key==="ArrowLeft"?(index+buttons.length-1)%buttons.length:null;
+        if(next===null)return;
+        event.preventDefault();buttons[next].focus();select(buttons[next]);
+      });
+    });
+  }
   function renderRegions(){
+    const perLearner=state.regionMode==="per-learner";
+    const learners=new Map(data.regionalLearners.regions.map(row=>[row.id,row.learners]));
+    const value=row=>perLearner?(learners.get(row.id)>0?row.total_czk_bn*1e9/learners.get(row.id):null):row.total_czk_bn;
+    const formatted=amount=>amount===null?"—":perLearner?n(amount*currencyRates[state.currency],0):money(amount);
+    const unit=perLearner?`${state.currency==="CZK"&&lang==="cs"?"Kč":state.currency} ${copy.perLearnerUnit}`:amountLabel();
+    $("#education-region-tabs").querySelectorAll("button").forEach(button=>{
+      const active=button.dataset.regionMode===state.regionMode;
+      button.setAttribute("aria-selected",String(active));button.tabIndex=active?0:-1;
+    });
+    $("#education-region-panel").setAttribute("aria-labelledby",perLearner?"region-tab-per-learner":"region-tab-total");
+    $("#education-region-unit").textContent=`${unit} · ${data.period.year}${perLearner?` · ${lang==="en"?"enrolment":"počty žáků"} ${data.regionalLearners.period}`:""}`;
+    $("#education-region-note").hidden=!perLearner;
+    $("#education-region-note").textContent=copy.regionPerLearnerNote;
     const keys=["primary","secondary","preschool","services"],labelMap=Object.fromEntries(data.local.levels.map(row=>[row.id,row[lang==="en"?"label_en":"label_cs"]]));
-    $("#region-legend").innerHTML=keys.map(key=>`<span><i class="seg-${key}"></i>${esc(labelMap[key])}</span>`).join("")+`<span><i class="seg-other"></i>${esc(data.local.levels.find(row=>row.id==="other")[lang==="en"?"label_en":"label_cs"])}</span>`;
-    const rows=[...data.local.regions].sort((a,b)=>b.total_czk_bn-a.total_czk_bn),max=rows[0].total_czk_bn;
-    $("#education-region-chart").innerHTML=rows.map(row=>{const used=keys.reduce((sum,key)=>sum+(row.levels[key]||0),0),other=Math.max(0,row.total_czk_bn-used);const segments=keys.map(key=>`<i class="seg-${key}" style="width:${(row.levels[key]||0)/max*100}%"></i>`).join("")+`<i class="seg-other" style="width:${other/max*100}%"></i>`;return `<div class="region-row"><span>${esc(row[lang==="en"?"name_en":"name_cs"])}</span><span class="region-stack">${segments}</span><strong>${money(row.total_czk_bn)}</strong></div>`}).join("")+`<p class="chart-source"><span>${copy.source}:</span> FIN 2-12 M · ${amountLabel()}</p>`;
+    $("#region-legend").innerHTML=keys.map(key=>`<span><i class="seg-${key}"></i>${esc(labelMap[key])}</span>`).join("")+`<span><i class="seg-other"></i>${esc(labelMap.other)}</span>`;
+    const rows=[...data.local.regions].sort((a,b)=>(value(b)??-1)-(value(a)??-1)),max=Math.max(0,...rows.map(row=>value(row)??0));
+    $("#education-region-chart").innerHTML=rows.map(row=>{
+      const amount=value(row),count=learners.get(row.id),used=keys.reduce((sum,key)=>sum+(row.levels[key]||0),0),other=Math.max(0,row.total_czk_bn-used);
+      const width=part=>amount===null||!max||!row.total_czk_bn?0:part/row.total_czk_bn*amount/max*100;
+      const segment=(key,part)=>`<i class="seg-${key}" style="width:${width(part)}%" title="${esc(labelMap[key])}: ${formatted(perLearner?(count>0?part*1e9/count:null):part)} ${esc(unit)}"></i>`;
+      const segments=keys.map(key=>segment(key,row.levels[key]||0)).join("")+segment("other",other);
+      return `<div class="region-row" data-region-id="${esc(row.id)}"><span>${esc(row[lang==="en"?"name_en":"name_cs"])}${perLearner?`<small>${count>0?n(count,0):"—"} ${copy.regionLearners}</small>`:""}</span><span class="region-stack" aria-hidden="true">${segments}</span><strong aria-label="${formatted(amount)} ${esc(unit)}">${formatted(amount)}</strong></div>`;
+    }).join("")+`<p class="chart-source"><span>${copy.source}:</span> FIN 2-12 M · ${unit}${perLearner?` · <a href="${esc(data.regionalLearners.source_url)}" target="_blank" rel="noopener">ČSÚ / MŠMT ${esc(data.regionalLearners.period)}</a>`:""}</p>`;
   }
   const statusLabel=status=>copy[status];
   function renderCoverage(){
@@ -113,5 +160,5 @@
     $("#education-sources").innerHTML=data.sources.map(source=>`<a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.title)} ↗</a>`).join("");
   }
   const loadJson=url=>fetch(url).then(response=>{if(!response.ok)throw new Error(`${url}: ${response.status}`);return response.json()});
-  Promise.all([loadJson("../../data/education-deep-dive.v1.json?v=20260902-global-controls"),loadJson("../../data/education-capacity-international.v1.json?v=20260902-global-controls")]).then(([payload,international])=>{data=payload;data.capacity.international=international;setupControls();renderSystem();renderRouting();renderLevels();renderCapacity();renderRegions();renderCoverage();renderMethod()}).catch(error=>{console.error("education deep dive",error);$("main").insertAdjacentHTML("afterbegin",`<p class="education-load-error">${copy.loadError}</p>`)});
+  Promise.all([loadJson("../../data/education-deep-dive.v1.json?v=20260902-global-controls"),loadJson("../../data/education-capacity-international.v1.json?v=20260902-global-controls"),loadJson("../../data/education-regional-learners.v1.json")]).then(([payload,international,regionalLearners])=>{data=payload;data.regionalLearners=regionalLearners;setupRegionTabs();data.capacity.international=international;setupControls();renderSystem();renderRouting();renderLevels();renderCapacity();renderRegions();renderCoverage();renderMethod()}).catch(error=>{console.error("education deep dive",error);$("main").insertAdjacentHTML("afterbegin",`<p class="education-load-error">${copy.loadError}</p>`)});
 })();
