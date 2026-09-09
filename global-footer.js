@@ -5,6 +5,13 @@
     return;
   }
   const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "";
+  if (/^\/cz\/(municipalities|kraje)\//.test(location.pathname) || /^\/countries\/(czechia|cze)\/?$/.test(location.pathname) || location.pathname === '/cesko.html') {
+    if (!document.querySelector('script[data-paq-context]')) {
+      const script = document.createElement('script');
+      script.type = 'module'; script.src = `${assetRoot}paq-context.js`; script.dataset.paqContext = 'true';
+      document.head.append(script);
+    }
+  }
   if (!document.querySelector('script[data-report-loader]')) {
     const script = document.createElement('script');
     script.src = `${assetRoot}data-report.js?v=20260909`;
