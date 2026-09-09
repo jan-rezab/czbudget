@@ -6,11 +6,13 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import hashlib
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
 from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -118,6 +120,48 @@ def heading_rows(ws, total_row: int, start_row: int = 1):
     return headings
 
 
+def programme_rows(ws, end_row, start_row=1):
+    """Select leaves, excluding headings, clusters and intermediate subtotals."""
+    rows = {}
+    for row in range(start_row, end_row):
+        code = clean(ws.cell(row, 1).value).rstrip(".")
+        if code and code.split(".")[0] in HEADING_LABELS:
+            if code in rows:
+                raise ValueError(f"Duplicate programme code {code} in {ws.title}")
+            rows[code] = row
+    return {code: row for code, row in rows.items()
+            if code not in HEADING_LABELS and not any(
+                other != code and other.startswith(code) for other in rows)}
+
+
+def programme_breakdown(ws, code, base_rows, extra_rows, base_col, extra_col, labels):
+    programmes = []
+    for key in sorted(set(base_rows) | set(extra_rows)):
+        if key.split(".")[0] != code:
+            continue
+        base = row_value(ws, base_rows.get(key), base_col) or 0
+        extra = row_value(ws, extra_rows.get(key), extra_col) or 0
+        if not base and not extra:
+            continue
+        source_row = base_rows.get(key) or extra_rows[key]
+        label_en = clean(ws.cell(source_row, 2).value)
+        label_cs = labels.get(key)
+        if not label_cs:
+            suffixes = {"DAG": "Decentralizované agentury", "OTH": "Ostatní činnosti",
+                        "PPPA": "Pilotní projekty a přípravné akce",
+                        "SPEC": "Činnosti v pravomoci Evropské komise"}
+            label_cs = next((v for k, v in suffixes.items() if key.endswith(k)), label_en)
+        references = {}
+        for field, rows, col in (("mff", base_rows, base_col), ("ngeu", extra_rows, extra_col)):
+            if key in rows and col:
+                references[field] = f"'{ws.title}'!{get_column_letter(col)}{rows[key]}"
+        programmes.append({"code": key, "label_cs": label_cs, "label_en": label_en,
+                           "amount_m_eur": round(base + extra, 6),
+                           "mff_spending_m_eur": base, "ngeu_spending_m_eur": extra,
+                           "source_cells": references})
+    return sorted(programmes, key=lambda item: -item["amount_m_eur"])
+
+
 def download(force: bool = False):
     SOURCE_DIR.mkdir(parents=True, exist_ok=True)
     if SOURCE_FILE.exists() and not force:
@@ -130,6 +174,7 @@ def download(force: bool = False):
 
 def build(source: Path):
     workbook = load_workbook(source, read_only=False, data_only=True)
+    labels = json.loads((ROOT / "pipeline/config/eu-budget-programmes.cs.json").read_text())
     codes = {member[1] for member in MEMBERS}
     countries = {iso3: {"iso3": iso3, "eu_code": eu, "name_cs": cs, "name_en": en,
                         "member_since": MEMBERSHIP_START[iso3], "series": []}
@@ -152,6 +197,8 @@ def build(source: Path):
         revenue_header = nearest_header(ws, national_row, codes)
         ngeu_header = nearest_header(ws, ngeu_row, codes) if ngeu_row else {}
         main_headings = heading_rows(ws, expenditure_row) if year >= 2021 else {}
+        base_programmes = programme_rows(ws, expenditure_row) if year >= 2021 else {}
+        extra_programmes = programme_rows(ws, ngeu_row, expenditure_row + 1) if ngeu_row and year >= 2021 else {}
 
         for iso3, eu_code, *_ in MEMBERS:
             mff = row_value(ws, expenditure_row, spend_header.get(eu_code))
@@ -182,8 +229,15 @@ def build(source: Path):
                     extra = row_value(ws, ngeu_headings.get(code), ngeu_header.get(eu_code)) or 0
                     amount = base + extra
                     if amount:
+                        programmes = programme_breakdown(ws, code, base_programmes, extra_programmes,
+                                                         spend_header.get(eu_code), ngeu_header.get(eu_code), labels)
+                        for field, expected in (("mff_spending_m_eur", base), ("ngeu_spending_m_eur", extra)):
+                            actual = sum(item[field] for item in programmes)
+                            if abs(expected - actual) > 0.0001:
+                                raise ValueError(f"Programme mismatch {year}/{iso3}/{code}/{field}: {expected} vs {actual}")
                         breakdown.append({"code": code, "label_cs": label_cs, "label_en": label_en,
-                                          "amount_m_eur": round(amount, 6)})
+                                          "amount_m_eur": round(amount, 6), "mff_spending_m_eur": base,
+                                          "ngeu_spending_m_eur": extra, "programmes": programmes})
                 remainder = round(row["allocated_spending_m_eur"] - sum(item["amount_m_eur"] for item in breakdown), 6)
                 if abs(remainder) >= 0.01:
                     breakdown.append({"code": "O", "label_cs": "Jiné a nezařazené", "label_en": "Other and unallocated",
@@ -212,6 +266,9 @@ def build(source: Path):
             "source_file": str(SOURCE_FILE.relative_to(ROOT.parent)),
             "published": "2025-09-25",
             "title": "EU spending and revenue — Data 2000–2024",
+            "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+            "programme_detail_period": {"first": 2021, "last": max(available_years)},
+            "programme_method": "Leaf programme rows only; country columns from the expenditure and separate NGEU tables. Cluster and intermediate subtotals excluded. Both components reconcile to each heading within EUR 100.",
         },
         "countries": list(countries.values()),
     }
