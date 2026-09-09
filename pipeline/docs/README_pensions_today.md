@@ -57,3 +57,22 @@ rounded to at most two decimals; counts remain integers.
 Run `node --test tests/unit/pensions-today.spec.mjs` for reconciliations, coverage,
 source hashes and observation-period safeguards. Run the builder again and
 check the generated JSON has no diff for reproducibility.
+
+## Award-year analysis (2026-09-09)
+
+`build-pension-awards.py` appends two archived ČSSZ CSV datasets: distributions
+by monthly award amount and published award means, 2008–2025. The main builder
+calls this step automatically. Standalone invocation updates the existing JSON.
+The all-old-age aggregate uses PK_OLDAGE_S4 in 2008–2009 and PK_OLDAGE_S3
+thereafter; regular = PK_S, early = PK_ST. Each year preserves native bands,
+unknown counts, sex and pension type. Totals reconcile to source totals and
+men + women. Never aggregate historical open-ended bands across thresholds.
+
+The UI provides population, award-year and band-detail filters, exact counts
+and shares, a historical award-mean chart and a descriptive 2025 comparison.
+Award-year nominal amounts are not current cohort payments. Award flows and
+year-end standalone stocks differ in coverage; the latter include recent
+awards. Their subtraction cannot identify earlier retirees or a causal gap.
+The year-end comparison always uses 2025 on both sides, regardless of which
+historical distribution is selected. Inflation, later indexation, earnings,
+insurance duration and recipient composition are not adjusted.

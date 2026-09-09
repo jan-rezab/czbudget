@@ -65,3 +65,45 @@ test('French birth cohorts use one snapshot and UK retains sex-specific scheme d
   assert.ok(uk.male.pre_2016>uk.male.new);
   assert.ok(uk.female.pre_2016<uk.female.new);
 });
+
+test('award cohorts reconcile by sex, amount and pension type for every year', () => {
+  const cohorts=countries.CZE.national.awards_by_year;
+  assert.equal(Object.keys(cohorts).length,18);
+  for (const groups of Object.values(cohorts)) {
+    for (const kind of ['all','regular','early']) {
+      for (const sex of ['total','male','female']) {
+        const d=groups[sex][kind];
+        assert.equal(d.bands.reduce((n,b)=>n+b.count,0)+d.unknown_count,d.count);
+        assert.ok(d.mean>0);
+        for(let i=1;i<d.bands.length;i++) assert.equal(d.bands[i-1].upper+1,d.bands[i].lower);
+      }
+      assert.equal(groups.total[kind].count,groups.male[kind].count+groups.female[kind].count);
+      groups.total[kind].bands.forEach((b,i)=>assert.equal(b.count,groups.male[kind].bands[i].count+groups.female[kind].bands[i].count));
+    }
+  }
+  assert.equal(cohorts['2025'].total.all.count,55434);
+  assert.equal(Math.round(cohorts['2025'].total.regular.mean),23688);
+  // Composition changes the sign: all new awards are lower, regular awards higher.
+  assert.ok(cohorts['2025'].total.all.mean<countries.CZE.national.distribution.total.all.mean);
+  assert.ok(cohorts['2025'].total.regular.mean>countries.CZE.national.distribution.total.regular.mean);
+});
+
+import vm from 'node:vm';
+test('Czech rendering and chart exports preserve selected populations in both languages', async () => {
+  const source=readFileSync(new URL('../../pensions-today.js',import.meta.url),'utf8');
+  for (const lang of ['cs','en']) for (const query of ['', '?pensionPopulation=new&pensionYear=2008', '?pensionPopulation=new&pensionYear=2025&pensionType=regular&pensionSex=female&pensionDetail=native', '?pensionPopulation=new&pensionYear=invalid']) {
+    const root={innerHTML:''}, charts=[], errors=[];
+    const ctx={URLSearchParams,URL,console:{error:(...e)=>errors.push(e)},location:{search:query,hash:'',href:'https://example.org/'+query},addEventListener(){},document:{documentElement:{lang},querySelector:()=>root,getElementById:()=>({addEventListener(){}})},window:{PSDChart:{register:c=>charts.push(c)}},fetch:async()=>({ok:true,json:async()=>data})};
+    vm.runInNewContext(source,ctx);
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.deepEqual(errors,[]);
+    assert.ok(root.innerHTML.includes('pension-award-history'));
+    assert.ok(!/NaN|undefined/.test(root.innerHTML));
+    const distribution=charts.find(c=>c.slug==='ageing-pension-payment-distribution');
+    assert.ok(distribution);
+    const rows=distribution.rows();
+    assert.ok(Math.abs(rows.reduce((sum,r)=>sum+r.share,0)-100)<.2);
+    assert.ok(rows.every(r=>r.population===(query ? 'new':'paid')));
+    assert.equal(charts.find(c=>c.slug==='ageing-czech-pension-award-history').rows().length,18);
+  }
+});

@@ -187,6 +187,8 @@ def main():
     if args.stage == "all":
         oecd(data)
         national_extensions(data)
+    import runpy
+    data = runpy.run_path(str(ROOT / "scripts/build-pension-awards.py"))["build"](data)
     OUTPUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print(f"Built {OUTPUT.name}: Czech pension distributions reconcile to ČSSZ totals; "
           f"{sum(bool(c.get('income')) for code,c in data['countries'].items() if code != 'OECD')} international age-income profiles")
