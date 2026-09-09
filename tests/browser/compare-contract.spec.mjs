@@ -202,7 +202,12 @@ test("unresolved ownership is reported as its own metric", async ({ page }) => {
   await page.locator('[data-perimeter="facility_registers"]').click();
   await page.locator('[data-metric="hospital_unresolved_share"]').click();
 
-  // Two thirds of the Czech register records a legal form that does not name the owner.
+  // The register changes over time; reconcile the displayed share to native counts.
+  const ownership = await (await page.request.get("/data/hospital-ownership.v1.json")).json();
+  const czech = ownership.countries.CZE;
+  expect(czech.facility_count).toBeGreaterThan(0);
+  expect(czech.owner_class.unknown).toBeGreaterThan(0);
+  const expected = Math.round(czech.owner_class.unknown / czech.facility_count * 1000) / 10;
   const cz = page.locator("#compare-result .cmp-row", { has: page.locator('a[href*="czechia"]') });
-  await expect(cz.locator(".cmp-value")).toContainText("66");
+  await expect(cz.locator(".cmp-value")).toHaveText(new RegExp(`^${expected.toFixed(1).replace(".", "[,.]")}\\s*%$`));
 });

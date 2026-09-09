@@ -111,14 +111,17 @@
     if (!fxData) return { factor: 1, currency: sourceCurrency, rateYear: null, status: "unavailable" };
     const euro = nearestAnnual(fxData.eur_per_usd, year);
     if (!euro) return { factor: 1, currency: sourceCurrency, rateYear: null, status: "unavailable" };
-    if (sourceCurrency === "USD") return { factor: euro.value, currency: "EUR", rateYear: euro.year, status: "actual" };
-    if (sourceCurrency === "EUR") return { factor: 1 / euro.value, currency: "USD", rateYear: euro.year, status: "actual" };
+    const ecbSource = fxData.sources?.find(source => source.provider === "ECB" || source.name === "European Central Bank Data Portal");
+    if (sourceCurrency === "USD") return { factor: euro.value, currency: "EUR", rateYear: euro.year, status: "actual", provider: "ECB", sourceUrl: ecbSource?.url };
+    if (sourceCurrency === "EUR") return { factor: 1 / euro.value, currency: "USD", rateYear: euro.year, status: "actual", provider: "ECB", sourceUrl: ecbSource?.url };
     let countryRates = fxData.rates?.[profile.country];
     if (countryRates?.currency !== sourceCurrency) countryRates = Object.values(fxData.rates || {}).find((entry) => entry.currency === sourceCurrency);
     const local = nearestAnnual(countryRates?.years, year);
     if (!local?.value?.local_per_usd) return { factor: 1, currency: sourceCurrency, rateYear: null, status: "unavailable" };
-    const factor = targetCurrency === "USD" ? 1 / local.value.local_per_usd : euro.value / local.value.local_per_usd;
-    return { factor, currency: targetCurrency, rateYear: local.year, status: local.value.status || "estimate" };
+    const matchingEuro = nearestAnnual(fxData.eur_per_usd, local.year);
+    const factor = targetCurrency === "USD" ? 1 / local.value.local_per_usd : matchingEuro.value / local.value.local_per_usd;
+    const isEcb = /^https:\/\/data-api\.ecb\.europa\.eu\//.test(local.value.source_url || "");
+    return { factor, currency: targetCurrency, rateYear: local.year, status: local.value.status || "estimate", provider: isEcb ? "ECB" : "IMF WEO", sourceUrl: local.value.source_url || fxData.source?.download_page || fxData.source?.url };
   };
   const formatMoney = (value, currency, compact = true) => new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", {
     style: "currency", currency, notation: compact ? "compact" : "standard", maximumFractionDigits: compact ? 2 : 0,
@@ -396,11 +399,12 @@
     if (!fxData) return "";
     const t = copy[lang];
     const applied = conversion(latestYear);
-    const converted = displayCurrency !== "native" && applied.currency === displayCurrency;
+    const converted = displayCurrency !== "native" && applied.currency === displayCurrency && applied.status !== "native";
     const fallback = converted && Number(applied.rateYear) !== Number(latestYear) ? ` · ${t.fxLatest}` : "";
-    const method = converted ? `${t.fxRate} ${applied.rateYear}${fallback}` : `${t.nativeCurrency} · ${profile.currency}`;
-    const sourceUrl = fxData.source?.download_page || fxData.source?.url || "";
-    return `<section class="profile-currency-converter" aria-label="${escapeHtml(t.displayCurrency)}"><div><span>${t.displayCurrency}</span><strong>${escapeHtml(method)}</strong><small>${t.fxCopy}</small></div><div class="profile-currency-options" role="group" aria-label="${escapeHtml(t.displayCurrency)}">${[["native", `${t.nativeCurrency} · ${profile.currency}`], ["EUR", "EUR"], ["USD", "USD"]].map(([currency, label]) => `<button type="button" data-profile-currency="${currency}" class="${displayCurrency === currency ? "active" : ""}" aria-pressed="${displayCurrency === currency}">${escapeHtml(label)}</button>`).join("")}</div>${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(fxData.source?.provider || "IMF")} ↗</a>` : ""}</section>`;
+    const rateLabel = applied.provider === "ECB" ? (lang === "en" ? "ECB annual reference rate" : "Roční referenční kurz ECB") : (lang === "en" ? "IMF WEO implied annual rate" : "Roční odvozený kurz IMF WEO");
+    const method = converted ? `${rateLabel} ${applied.rateYear}${fallback}` : `${t.nativeCurrency} · ${profile.currency}`;
+    const sourceUrl = converted ? applied.sourceUrl || "" : "";
+    return `<section class="profile-currency-converter" aria-label="${escapeHtml(t.displayCurrency)}"><div><span>${t.displayCurrency}</span><strong>${escapeHtml(method)}</strong><small>${t.fxCopy}</small></div><div class="profile-currency-options" role="group" aria-label="${escapeHtml(t.displayCurrency)}">${[["native", `${t.nativeCurrency} · ${profile.currency}`], ["EUR", "EUR"], ["USD", "USD"]].map(([currency, label]) => `<button type="button" data-profile-currency="${currency}" class="${displayCurrency === currency ? "active" : ""}" aria-pressed="${displayCurrency === currency}">${escapeHtml(label)}</button>`).join("")}</div>${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(applied.provider)} ↗</a>` : ""}</section>`;
   }
 
   function historyMarkup(history) {
