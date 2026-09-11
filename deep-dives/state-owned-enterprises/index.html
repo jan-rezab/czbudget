@@ -6,8 +6,8 @@
   <meta name="description" content="A sourced catalogue of the largest state-controlled companies across ten countries, with 2024 revenue converted to euros.">
   <link rel="canonical" href="https://publicspendingdata.org/deep-dives/state-owned-enterprises/">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/state-owned-enterprises/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/state-owned-enterprises/?lang=en">
-  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../state-owned-enterprises.css?v=20260908-czech-inventory">
-  <script src="../../deep-dives.js?v=20260824-sticky-filter" defer></script><script src="../../state-owned-enterprises.js?v=20260908-czech-inventory" defer></script><script src="../../global-nav.js?v=20260824-logo-120" defer></script>
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter"><link rel="stylesheet" href="../../state-owned-enterprises.css?v=20260911-map-tooltip">
+  <script src="../../deep-dives.js?v=20260824-sticky-filter" defer></script><script src="../../state-owned-enterprises.js?v=20260911-map-tooltip" defer></script><script src="../../global-nav.js?v=20260824-logo-120" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og-cesko.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -29,8 +29,9 @@
         <fieldset><legend data-copy="mapGroupBy">Seskupit podle</legend><div><button type="button" class="active" data-map-group="country" aria-pressed="true" data-copy="mapGroupCountry">Země</button><button type="button" data-map-group="sector" aria-pressed="false" data-copy="mapGroupSector">Odvětví</button></div></fieldset>
         <div class="soe-map-total"><span id="soe-map-total-label">—</span><strong id="soe-map-total">—</strong></div>
       </div>
-      <div class="soe-map-key"><span><i></i><b data-copy="mapCompanyKey">Podnik</b></span><span><i></i><b data-copy="mapSelectedKey">Vybraný podnik</b></span><small id="soe-map-method">—</small></div>
+      <div class="soe-map-key"><span><i></i><b data-copy="mapCompanyKey">Podnik</b></span><span><i></i><b data-copy="mapSelectedKey">Vybraný podnik</b></span><span class="soe-map-hover-hint" data-copy="mapHoverHint">Najeďte nebo přejděte klávesnicí na dlaždici pro metriky</span><small id="soe-map-method">—</small></div>
       <div class="soe-map-stage"><svg id="soe-map" class="soe-map" role="group" aria-labelledby="soe-map-svg-title soe-map-svg-desc"><title id="soe-map-svg-title">State-owned enterprise revenue treemap</title><desc id="soe-map-svg-desc">Each rectangle represents one enterprise and its area is proportional to the selected revenue measure.</desc></svg></div>
+      <div id="soe-map-tooltip" class="soe-map-tooltip" role="tooltip" hidden></div>
       <article class="soe-map-detail" id="soe-map-detail" aria-live="polite">
         <div class="soe-map-detail-copy"><span id="soe-map-detail-context">—</span><h3 id="soe-map-detail-name">—</h3><p id="soe-map-detail-note">—</p></div>
         <dl><div><dt data-copy="mapRevenueLabel">Výnosy</dt><dd id="soe-map-detail-revenue">—</dd></div><div><dt data-copy="mapOwnershipLabel">Podíl státu</dt><dd id="soe-map-detail-ownership">—</dd></div><div><dt data-copy="mapWeightedLabel">Vlastnický podíl výnosů</dt><dd id="soe-map-detail-weighted">—</dd></div></dl>

@@ -138,7 +138,7 @@ function legend(id, items) {
 let budgetData, demographicData, sovereignData;
 let budgetState = { price:"nominal", year:2026, structure:"amount", revenueSlice:"insurance" };
 let demoState = { variant:"mid", retAge:65, wageGrowth:0, costGrowth:0 };
-let benchmarkState = { year:2024, metric:"expenditure_pct_gdp", country:"CZE" };
+let benchmarkState = { year:2024, metric:"expenditure_pct_gdp", country:"CZE", region:"all" };
 
 // A5 — the headline figures are read from the budget series, not typed into the markup.
 // They were hardcoded in cesky-rozpocet.html, which meant every one of them was a second
@@ -492,8 +492,8 @@ function renderPension(series) {
 // language-bootstrap.js resolved and re-renders itself when that changes.
 const bLang = () => (window.PSDLanguage?.current() || document.documentElement.lang) === "en" ? "en" : "cs";
 const B = {
-  cs: {indicator:"Ukazatel",countries:"zemí",revenue:"Příjmy",expense:"Výdaje",balance:"Saldo",debt:"Hrubý dluh",scope:"General government / sektor vládních institucí",note:"Harmonizovaný rozsah IMF zahrnuje ústřední, regionální a místní vládu i fondy sociálního zabezpečení po konsolidaci. Tržní veřejné korporace jsou mimo; řada není totožná s národním státním či federálním rozpočtem.",surplus:"Přebytek",deficit:"Schodek",ofGdp:"HDP",scatterLabel:year=>`Saldo a dluh zemí v roce ${year}`,usdBn:"mld. USD"},
-  en: {indicator:"Indicator",countries:"countries",revenue:"Revenue",expense:"Expenditure",balance:"Balance",debt:"Gross debt",scope:"General government",note:"The harmonised IMF perimeter covers central, regional and local government plus social-security funds after consolidation. Market public corporations are outside it; the series is not identical to a national state or federal budget.",surplus:"Surplus",deficit:"Deficit",ofGdp:"of GDP",scatterLabel:year=>`Fiscal balance and gross debt by country in ${year}`,usdBn:"bn USD"}
+  cs: {indicator:"Ukazatel",countries:"zemí",revenue:"Příjmy",expense:"Výdaje",balance:"Saldo",debt:"Hrubý dluh",scope:"General government / sektor vládních institucí",note:"Harmonizovaný rozsah IMF zahrnuje ústřední, regionální a místní vládu i fondy sociálního zabezpečení po konsolidaci. Tržní veřejné korporace jsou mimo; řada není totožná s národním státním či federálním rozpočtem.",surplus:"Přebytek",deficit:"Schodek",ofGdp:"HDP",scatterLabel:year=>`Saldo a dluh zemí v roce ${year}`,usdBn:"mld. USD",allRegions:"Všechny kontinenty",regions:{europe:"Evropa",asia:"Asie",africa:"Afrika",northAmerica:"Severní Amerika",southAmerica:"Jižní Amerika",oceania:"Oceánie"}},
+  en: {indicator:"Indicator",countries:"countries",revenue:"Revenue",expense:"Expenditure",balance:"Balance",debt:"Gross debt",scope:"General government",note:"The harmonised IMF perimeter covers central, regional and local government plus social-security funds after consolidation. Market public corporations are outside it; the series is not identical to a national state or federal budget.",surplus:"Surplus",deficit:"Deficit",ofGdp:"of GDP",scatterLabel:year=>`Fiscal balance and gross debt by country in ${year}`,usdBn:"bn USD",allRegions:"All continents",regions:{europe:"Europe",asia:"Asia",africa:"Africa",northAmerica:"North America",southAmerica:"South America",oceania:"Oceania"}}
 };
 // The benchmark dataset only ships label_cs for these metrics; English labels
 // belong here rather than in a post-hoc string replacement.
@@ -509,12 +509,30 @@ function metricValue(countryCode,metric,year){const entry=sovereignData.series.f
 function countryMeta(code){return sovereignData.countries.find(d=>d.country_code===code)}
 function metricMeta(code){return sovereignData.metrics.find(d=>d.metric_code===code)}
 function formatMetric(value,metric){if(value==null)return"—";const unit=metricMeta(metric)?.unit;return unit==="usd_per_capita"?`${bNum(value,0)} USD`:unit==="usd_bn"?`${bNum(value,1)} ${bt().usdBn}`:bPct(value);}
-// Keep the Czech budget page focused on the small reference cohort used for
-// fiscal benchmarking. The full global dataset belongs on the comparison page;
-// rendering it here turns both the ranking and scatter into an unreadable cloud.
-function benchmarkCountries(){return sovereignData.countries.filter(d=>d.role==="anchor"||d.role==="responsible_benchmark")}
+// The five largest 2024 economies in each inhabited continent, plus Czechia as
+// the page's permanent reference point. Fixed membership keeps past-year
+// comparisons stable while the continent filter keeps each view readable.
+const benchmarkRegionCodes = Object.freeze({
+  europe:["DEU","GBR","FRA","ITA","RUS"],
+  asia:["CHN","JPN","IND","KOR","IDN"],
+  africa:["ZAF","EGY","DZA","NGA","ETH"],
+  northAmerica:["USA","CAN","MEX","DOM","GTM"],
+  southAmerica:["BRA","ARG","COL","CHL","PER"],
+  oceania:["AUS","NZL","PNG","FJI","SLB"]
+});
+const benchmarkRegionEntries = () => Object.entries(benchmarkRegionCodes);
+function benchmarkRegionFor(code){return benchmarkRegionEntries().find(([,codes])=>codes.includes(code))?.[0] || (code==="CZE"?"europe":null)}
+function benchmarkCountries(){
+  const codes=benchmarkState.region==="all"?benchmarkRegionEntries().flatMap(([,items])=>items):benchmarkRegionCodes[benchmarkState.region]||[];
+  const selected=new Set(["CZE",...codes]);
+  return sovereignData.countries.filter(country=>selected.has(country.country_code));
+}
 
-function fillBenchmarkSelects(){$("#metric-select").innerHTML=sovereignData.metrics.filter(m=>["revenue_pct_gdp","expenditure_pct_gdp","balance_pct_gdp","primary_balance_pct_gdp","gross_debt_pct_gdp","real_gdp_growth_pct","inflation_pct","unemployment_pct"].includes(m.metric_code)).map(m=>`<option value="${m.metric_code}" ${m.metric_code===benchmarkState.metric?"selected":""}>${esc(metricName(m))}</option>`).join("");$("#country-select").innerHTML=benchmarkCountries().map(c=>`<option value="${c.country_code}" ${c.country_code===benchmarkState.country?"selected":""}>${esc(countryName(c))}</option>`).join("");}
+function fillBenchmarkSelects(){
+  $("#metric-select").innerHTML=sovereignData.metrics.filter(m=>["revenue_pct_gdp","expenditure_pct_gdp","balance_pct_gdp","primary_balance_pct_gdp","gross_debt_pct_gdp","real_gdp_growth_pct","inflation_pct","unemployment_pct"].includes(m.metric_code)).map(m=>`<option value="${m.metric_code}" ${m.metric_code===benchmarkState.metric?"selected":""}>${esc(metricName(m))}</option>`).join("");
+  $("#benchmark-region").innerHTML=`<option value="all">${esc(bt().allRegions)}</option>${benchmarkRegionEntries().map(([key])=>`<option value="${key}" ${key===benchmarkState.region?"selected":""}>${esc(bt().regions[key])}</option>`).join("")}`;
+  $("#country-select").innerHTML=benchmarkCountries().sort((a,b)=>(benchmarkRegionFor(a.country_code)||"").localeCompare(benchmarkRegionFor(b.country_code)||"")||countryName(a).localeCompare(countryName(b),bLang()==="en"?"en":"cs")).map(c=>`<option value="${c.country_code}" ${c.country_code===benchmarkState.country?"selected":""}>${esc(countryName(c))}</option>`).join("");
+}
 let benchmarkRenderedLang=null;
 function syncBenchmarkLanguage(){if(!sovereignData||benchmarkRenderedLang===bLang())return;benchmarkRenderedLang=bLang();fillBenchmarkSelects();renderBenchmark();}
 ["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,syncBenchmarkLanguage));
@@ -523,7 +541,7 @@ function syncBenchmarkLanguage(){if(!sovereignData||benchmarkRenderedLang===bLan
 ["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,renderHeadlineFigures));
 ["budgetlanguagechange","psdlanguagechange"].forEach(name=>addEventListener(name,()=>{if(budgetData){renderRevenuePie();renderHeadlineFigures();}}));
 
-function initBenchmark(){const years=Array.from({length:20},(_,i)=>2005+i);$("#year-select").innerHTML=years.reverse().map(y=>`<option ${y===2024?"selected":""}>${y}</option>`).join("");benchmarkRenderedLang=bLang();fillBenchmarkSelects();$("#year-select").addEventListener("change",e=>{benchmarkState.year=+e.target.value;renderBenchmark()});$("#metric-select").addEventListener("change",e=>{benchmarkState.metric=e.target.value;renderBenchmark()});$("#country-select").addEventListener("change",e=>{benchmarkState.country=e.target.value;renderBenchmark()});renderBenchmark();}
+function initBenchmark(){const years=Array.from({length:20},(_,i)=>2005+i);$("#year-select").innerHTML=years.reverse().map(y=>`<option ${y===2024?"selected":""}>${y}</option>`).join("");benchmarkRenderedLang=bLang();fillBenchmarkSelects();$("#year-select").addEventListener("change",e=>{benchmarkState.year=+e.target.value;renderBenchmark()});$("#metric-select").addEventListener("change",e=>{benchmarkState.metric=e.target.value;renderBenchmark()});$("#benchmark-region").addEventListener("change",e=>{benchmarkState.region=e.target.value;if(!benchmarkCountries().some(country=>country.country_code===benchmarkState.country))benchmarkState.country="CZE";fillBenchmarkSelects();renderBenchmark()});$("#country-select").addEventListener("change",e=>{benchmarkState.country=e.target.value;renderBenchmark()});renderBenchmark();}
 
 function renderBenchmark(){const countries=benchmarkCountries().map(c=>({...c,value:metricValue(c.country_code,benchmarkState.metric,benchmarkState.year)})).filter(d=>d.value!=null).sort((a,b)=>b.value-a.value),max=Math.max(...countries.map(d=>Math.abs(d.value)),1);$("#ranking-title").textContent=metricName(metricMeta(benchmarkState.metric))||bt().indicator;$("#ranking-count").textContent=`${countries.length} ${bt().countries}`;$("#comparison-year").textContent=benchmarkState.year;$("#rank-list").innerHTML=countries.map((d,i)=>`<button class="rank-row ${d.country_code===benchmarkState.country?"active":""}" data-country="${d.country_code}"><span class="position">${String(i+1).padStart(2,"0")}</span><strong>${esc(countryName(d))}</strong><span class="rank-track"><i style="width:${Math.abs(d.value)/max*100}%"></i></span><span class="rank-value">${formatMetric(d.value,benchmarkState.metric)}</span></button>`).join("");$$('.rank-row').forEach(button=>button.addEventListener('click',()=>{benchmarkState.country=button.dataset.country;$("#country-select").value=benchmarkState.country;renderBenchmark()}));renderCountryProfile();renderScatter();}
 

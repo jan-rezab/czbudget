@@ -64,11 +64,21 @@
   function renderExpenditurePie() {
     if (!window.PSDBudgetStructure?.renderFinanceDonut) return;
     const d=state.data,total=d.total_expenditure_including_eu_fm_czk/1e9;
-    const slices=d.functional_groups.map(group=>({
-      key:group.id,label:label(group),color:group.color,
-      value:d.functional.filter(row=>row.group===group.id).reduce((sum,row)=>sum+row.amount_czk_bn,0),
-    }));
     const english=lang()==="en";
+    const debtChapter=d.chapters.find(row=>Number(row.code)===396);
+    const debtService=Math.max(0,(debtChapter?.amount_2026_czk||0)/1e9);
+    const debtLabel=english?"Debt servicing":"Obsluha státního dluhu";
+    const governmentLabel=english?"Government and other financial operations":"Správa a ostatní finanční operace";
+    const slices=d.functional_groups.flatMap(group=>{
+      const value=d.functional.filter(row=>row.group===group.id).reduce((sum,row)=>sum+row.amount_czk_bn,0);
+      if(group.id!=="government"||!debtService)return [{key:group.id,label:label(group),color:group.color,value}];
+      return [
+        {key:"debtService",groupId:group.id,label:debtLabel,color:"#b64d2f",value:Math.min(debtService,value)},
+        {key:"governmentOther",groupId:group.id,label:governmentLabel,color:group.color,value:Math.max(0,value-debtService)}
+      ];
+    });
+    const count=document.querySelector(".expenditure-card header small");
+    if(count)count.textContent=english?"30 purposes in 7 highlighted groups":"30 účelů v 7 zvýrazněných skupinách";
     window.PSDBudgetStructure.renderFinanceDonut({
       containerId:"expenditure-pie-chart",legendId:"expenditure-pie-legend",detailId:"expenditure-pie-detail",
       slices,total,selectedKey:state.expenseGroup,totalUnit:english?"CZK bn":"mld. Kč",
@@ -76,8 +86,10 @@
       formatAmount:bn,
       onSelect:key=>{state.expenseGroup=key;renderExpenditurePie()},
       detailHTML:(slice,budgetTotal)=>{
-        const purposes=d.functional.filter(row=>row.group===slice.key).sort((a,b)=>b.amount_czk_bn-a.amount_czk_bn);
-        const rows=purposes.map(row=>`<button type="button" data-overview-purpose="${esc(row.code)}" data-overview-group="${esc(row.group)}"><span>${esc(label(row))}</span><b>${bn(row.amount_czk_bn)}</b><small>${pct(row.amount_czk_bn/budgetTotal*100)}</small></button>`).join("");
+        if(slice.key==="debtService")return `<div class="finance-detail-head"><i style="background:${slice.color}"></i><div><span>${esc(slice.label)}</span><strong>${bn(slice.value)}</strong></div><b>${pct(slice.value/budgetTotal*100)}</b></div><p>${english?"Interest and other costs recorded in State Debt chapter 396 are separated from general financial operations so the cost of carrying public debt is visible.":"Úroky a další náklady evidované v kapitole 396 Státní dluh jsou oddělené od obecných finančních operací, aby byla cena obsluhy dluhu viditelná."}</p><div class="finance-purpose-list"><button type="button" data-overview-chapter="396"><span>${english?"Chapter 396 · State Debt":"Kapitola 396 · Státní dluh"}</span><b>${bn(slice.value)}</b><small>${pct(slice.value/budgetTotal*100)}</small></button></div><a href="#utraceni">${english?"Open the complete expenditure ledger ↓":"Otevřít úplný přehled výdajů ↓"}</a>`;
+        const groupId=slice.groupId||slice.key;
+        const purposes=d.functional.filter(row=>row.group===groupId).map(row=>slice.key==="governmentOther"&&row.code==="financial_operations"?{...row,label_cs:"Ostatní finanční operace bez obsluhy dluhu",label_en:"Other financial operations excluding debt servicing",amount_czk_bn:Math.max(0,row.amount_czk_bn-debtService),virtual:true}:row).filter(row=>row.amount_czk_bn>0).sort((a,b)=>b.amount_czk_bn-a.amount_czk_bn);
+        const rows=purposes.map(row=>`<button type="button" ${row.virtual?"":`data-overview-purpose="${esc(row.code)}" data-overview-group="${esc(row.group)}"`}><span>${esc(label(row))}</span><b>${bn(row.amount_czk_bn)}</b><small>${pct(row.amount_czk_bn/budgetTotal*100)}</small></button>`).join("");
         return `<div class="finance-detail-head"><i style="background:${slice.color}"></i><div><span>${esc(slice.label)}</span><strong>${bn(slice.value)}</strong></div><b>${pct(slice.value/budgetTotal*100)}</b></div><p>${english?`${purposes.length} of the 30 expenditure purposes. Choose a line to open it in the complete ledger.`:`${purposes.length} z 30 výdajových účelů. Vyberte řádek a otevřete jej v úplném přehledu.`}</p><div class="finance-purpose-list">${rows}</div><a href="#utraceni">${english?"Open all 30 purposes ↓":"Otevřít všech 30 účelů ↓"}</a>`;
       },
     });
@@ -85,6 +97,12 @@
       state.group=button.dataset.overviewGroup;
       renderPurpose();
       renderPurposeDetail(button.dataset.overviewPurpose);
+      document.getElementById("utraceni")?.scrollIntoView({behavior:"smooth"});
+    });
+    document.querySelectorAll("[data-overview-chapter]").forEach(button=>button.onclick=()=>{
+      state.chapterQuery="";
+      const search=$("#spending-chapter-search");if(search)search.value="";
+      renderChapters();renderChapterDetail(Number(button.dataset.overviewChapter));
       document.getElementById("utraceni")?.scrollIntoView({behavior:"smooth"});
     });
   }

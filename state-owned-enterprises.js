@@ -6,7 +6,7 @@
   const copy = {
     cs: {
       eyebrow:"Report / Státní podniky", title:"Největší státní podniky", intro:"Katalog největších celostátně ovládaných podniků v deseti zemích. Výnosy za rok 2024 převádíme na eura jedním kurzem a necháváme viditelnou původní hodnotu i zdroj.", largestLabel:"Největší podnik v katalogu", heroNote:"30 podniků · 10 zemí · výnosy 2024 · EUR podle průměrného ročního kurzu",
-      map:"Mapa portfolia", mapKicker:"30 podniků / společná plocha", mapTitle:"Srovnání velikosti podniků", mapIntro:"Plocha každého obdélníku odpovídá výnosům podniku. Přepněte na vlastnický podíl státu, seskupte podniky podle země či odvětví a vyberte dlaždici pro detail.", mapSizeBy:"Velikost dlaždice", mapRevenue:"Vykázané výnosy", mapWeighted:"Podíl podle vlastnictví", mapGroupBy:"Seskupit podle", mapGroupCountry:"Země", mapGroupSector:"Odvětví", mapCompanyKey:"Podnik", mapSelectedKey:"Vybraný podnik", mapRevenueLabel:"Výnosy", mapOwnershipLabel:"Podíl státu", mapWeightedLabel:"Vlastnický podíl výnosů", mapTotalRevenue:"Součet vykázaných výnosů", mapTotalWeighted:"Součet podle podílu státu", mapMethodRevenue:"Výnosy převedené průměrným kurzem roku 2024.", mapMethodWeighted:"Výnosy × vlastnický podíl státu; analytický podíl, nikoli ocenění podniku.",
+      map:"Mapa portfolia", mapKicker:"30 podniků / společná plocha", mapTitle:"Srovnání velikosti podniků", mapIntro:"Plocha každého obdélníku odpovídá výnosům podniku. Přepněte na vlastnický podíl státu, seskupte podniky podle země či odvětví a najeďte nebo přejděte klávesnicí na libovolnou dlaždici pro detail.", mapHoverHint:"Najeďte nebo přejděte klávesnicí na dlaždici pro metriky", mapSizeBy:"Velikost dlaždice", mapRevenue:"Vykázané výnosy", mapWeighted:"Podíl podle vlastnictví", mapGroupBy:"Seskupit podle", mapGroupCountry:"Země", mapGroupSector:"Odvětví", mapCompanyKey:"Podnik", mapSelectedKey:"Vybraný podnik", mapRevenueLabel:"Výnosy", mapOwnershipLabel:"Podíl státu", mapWeightedLabel:"Vlastnický podíl výnosů", mapTotalRevenue:"Součet vykázaných výnosů", mapTotalWeighted:"Součet podle podílu státu", mapMethodRevenue:"Výnosy převedené průměrným kurzem roku 2024.", mapMethodWeighted:"Výnosy × vlastnický podíl státu; analytický podíl, nikoli ocenění podniku.",
       catalogue:"Katalog", countries:"Země", method:"Metodika", sources:"Zdroje", catalogueKicker:"30 podniků / seřazeno podle výnosů", catalogueTitle:"Výnosy 2024 přepočtené na eura", catalogueIntro:"Pořadí měří velikost provozu, nikoli hodnotu firmy, ziskovost nebo přínos veřejným rozpočtům. U každé položky uvádíme typ veřejné kontroly a případnou odchylku v účetním rozsahu.",
       search:"Hledat", searchPlaceholder:"Podnik nebo odvětví", countryFilter:"Země", sectorFilter:"Odvětví", sort:"Řazení", sortRevenue:"Výnosy: nejvyšší", sortCountry:"Země A–Z", displayed:"zobrazených podniků", reset:"Zrušit filtry", rank:"#", company:"Podnik", ownership:"Veřejná kontrola", reported:"Vykázané výnosy", eur:"Výnosy v EUR", source:"Zdroj", empty:"Tomuto filtru neodpovídá žádný podnik.", allCountries:"Všechny země", allSectors:"Všechna odvětví", openSource:"Otevřít zdroj", detail:"Rozsah a poznámka", convertedAt:"Přepočteno kurzem", perEuro:"za 1 EUR",
       countryKicker:"Podle zemí", countryTitle:"Tři největší podniky v každé zemi", countryIntro:"Součet je pouze součtem tří položek v tomto katalogu. Není to velikost celého státního portfolia a mezi zeměmi se nesmí zaměňovat za fiskální expozici státu.", leader:"Největší", topThree:"Součet prvních tří", openCountry:"Filtrovat katalog",
@@ -24,7 +24,7 @@
     },
     en: {
       eyebrow:"Report / State-owned enterprises", title:"The largest state-owned enterprises", intro:"A catalogue of the largest nationally controlled enterprises in ten countries. We convert 2024 revenue to euros using one exchange-rate basis while keeping the original value and source visible.", largestLabel:"Largest enterprise in the catalogue", heroNote:"30 enterprises · 10 countries · 2024 revenue · EUR at annual-average rates",
-      map:"Portfolio map", mapKicker:"30 enterprises / one shared area", mapTitle:"Enterprise size compared", mapIntro:"Each rectangle is sized by enterprise revenue. Switch to the state's ownership-weighted share, group by country or sector, and select a tile for the underlying detail.", mapSizeBy:"Size tiles by", mapRevenue:"Reported revenue", mapWeighted:"State-weighted share", mapGroupBy:"Group tiles by", mapGroupCountry:"Country", mapGroupSector:"Sector", mapCompanyKey:"Enterprise", mapSelectedKey:"Selected enterprise", mapRevenueLabel:"Revenue", mapOwnershipLabel:"State ownership", mapWeightedLabel:"State-weighted revenue", mapTotalRevenue:"Reported revenue total", mapTotalWeighted:"State-weighted total", mapMethodRevenue:"Revenue converted at 2024 annual-average exchange rates.", mapMethodWeighted:"Revenue × state ownership percentage; an analytical share, not an enterprise valuation.",
+      map:"Portfolio map", mapKicker:"30 enterprises / one shared area", mapTitle:"Enterprise size compared", mapIntro:"Each rectangle is sized by enterprise revenue. Switch to the state's ownership-weighted share, group by country or sector, and hover or keyboard-focus any tile for its detail.", mapHoverHint:"Hover or keyboard-focus any tile for metrics", mapSizeBy:"Size tiles by", mapRevenue:"Reported revenue", mapWeighted:"State-weighted share", mapGroupBy:"Group tiles by", mapGroupCountry:"Country", mapGroupSector:"Sector", mapCompanyKey:"Enterprise", mapSelectedKey:"Selected enterprise", mapRevenueLabel:"Revenue", mapOwnershipLabel:"State ownership", mapWeightedLabel:"State-weighted revenue", mapTotalRevenue:"Reported revenue total", mapTotalWeighted:"State-weighted total", mapMethodRevenue:"Revenue converted at 2024 annual-average exchange rates.", mapMethodWeighted:"Revenue × state ownership percentage; an analytical share, not an enterprise valuation.",
       catalogue:"Catalogue", countries:"Countries", method:"Method", sources:"Sources", catalogueKicker:"30 enterprises / ranked by revenue", catalogueTitle:"2024 revenue converted to euros", catalogueIntro:"The ranking measures operating scale, not enterprise value, profitability or benefit to public budgets. Each entry shows the type of public control and any accounting-scope exception.",
       search:"Search", searchPlaceholder:"Company or sector", countryFilter:"Country", sectorFilter:"Sector", sort:"Sort", sortRevenue:"Revenue: highest", sortCountry:"Country A–Z", displayed:"enterprises shown", reset:"Reset filters", rank:"#", company:"Enterprise", ownership:"Public control", reported:"Reported revenue", eur:"Revenue in EUR", source:"Source", empty:"No enterprise matches these filters.", allCountries:"All countries", allSectors:"All sectors", openSource:"Open source", detail:"Scope and note", convertedAt:"Converted at", perEuro:"per EUR",
       countryKicker:"By country", countryTitle:"The three largest enterprises in each country", countryIntro:"The sum is only the three entries in this catalogue. It is not the size of the entire state portfolio and must not be read as the state's fiscal exposure.", leader:"Largest", topThree:"Top-three total", openCountry:"Filter catalogue",
@@ -173,6 +173,34 @@
     document.querySelectorAll(".map-company-link").forEach(link=>link.classList.toggle("is-selected",link.dataset.id===record.id));
   }
 
+  function positionMapTooltip(clientX, clientY) {
+    const tooltip = document.querySelector("#soe-map-tooltip");
+    if (!tooltip) return;
+    const gap = 15;
+    const pad = 12;
+    const rect = tooltip.getBoundingClientRect();
+    let left = clientX + gap;
+    let top = clientY + gap;
+    if (left + rect.width > innerWidth - pad) left = clientX - rect.width - gap;
+    if (top + rect.height > innerHeight - pad) top = clientY - rect.height - gap;
+    tooltip.style.left = `${Math.max(pad, left)}px`;
+    tooltip.style.top = `${Math.max(pad, top)}px`;
+  }
+
+  function showMapTooltip(record, clientX, clientY) {
+    const tooltip = document.querySelector("#soe-map-tooltip");
+    if (!tooltip) return;
+    const note = record[lang === "en" ? "note_en" : "note_cs"];
+    tooltip.innerHTML = `<strong>${escape(record.company)}</strong><small>${escape(countryName(record))} · ${escape(t.sectors[record.sector])} · ${escape(record.period)}</small><dl><div><dt>${escape(t.mapRevenueLabel)}</dt><dd>${escape(formatEur(eurBn(record)))}</dd></div><div><dt>${escape(t.mapOwnershipLabel)}</dt><dd>${escape(formatOwnership(record.ownership_pct))}</dd></div><div><dt>${escape(t.mapWeightedLabel)}</dt><dd>${escape(formatEur(ownershipWeightedBn(record)))}</dd></div></dl><p>${escape(note)}</p>`;
+    tooltip.hidden = false;
+    positionMapTooltip(clientX, clientY);
+  }
+
+  function hideMapTooltip() {
+    const tooltip = document.querySelector("#soe-map-tooltip");
+    if (tooltip) tooltip.hidden = true;
+  }
+
   function renderPortfolioMap() {
     const svg = document.querySelector("#soe-map");
     const stage = document.querySelector(".soe-map-stage");
@@ -222,10 +250,7 @@
       const companyRects = layoutBinary(groupRect.items.map(record=>({record,value:mapRecordValue(record)})),groupRect.x+2,groupRect.y+headerHeight+2,Math.max(0,groupRect.width-4),Math.max(0,groupRect.height-headerHeight-4));
       companyRects.forEach(companyRect=>{
         const record = companyRect.record;
-        const link = svgElement("a",{class:`map-company-link${record.id===selected.id?" is-selected":""}`,href:"#soe-map-detail","data-id":record.id,"aria-label":`${record.company}, ${countryName(record)}, ${formatEur(mapRecordValue(record))}`});
-        const title = svgElement("title");
-        title.textContent = `${record.company} · ${countryName(record)} · ${t.sectors[record.sector]} · ${formatEur(mapRecordValue(record))}`;
-        link.append(title);
+        const link = svgElement("a",{class:`map-company-link${record.id===selected.id?" is-selected":""}`,href:"#soe-map-detail","data-id":record.id,"aria-label":`${record.company}, ${countryName(record)}, ${formatEur(mapRecordValue(record))}`,"aria-describedby":"soe-map-tooltip"});
         link.append(svgElement("rect",{class:"map-company-cell",x:companyRect.x,y:companyRect.y,width:Math.max(0,companyRect.width),height:Math.max(0,companyRect.height)}));
         if (companyRect.width > 58 && companyRect.height > 40) {
           const lines = companyLabelLines(record.company,companyRect.width,companyRect.height);
@@ -243,6 +268,11 @@
             link.append(meta);
           }
         }
+        link.addEventListener("pointerenter",event=>showMapTooltip(record,event.clientX,event.clientY));
+        link.addEventListener("pointermove",event=>positionMapTooltip(event.clientX,event.clientY));
+        link.addEventListener("pointerleave",hideMapTooltip);
+        link.addEventListener("focus",()=>{const rect=link.getBoundingClientRect();showMapTooltip(record,rect.left+rect.width/2,rect.top+rect.height/2);});
+        link.addEventListener("blur",hideMapTooltip);
         link.addEventListener("click",event=>{event.preventDefault();updateMapDetail(record);});
         chart.append(link);
       });

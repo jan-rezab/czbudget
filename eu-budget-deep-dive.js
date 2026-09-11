@@ -62,6 +62,30 @@
     $("#definition-customs").textContent=money(row?.traditional_own_resources_m_eur);
   }
 
+  function positionTooltip(clientX,clientY){
+    const tooltip=$("#eu-chart-tooltip");if(!tooltip)return;
+    const gap=15,pad=12,rect=tooltip.getBoundingClientRect();let left=clientX+gap,top=clientY+gap;
+    if(left+rect.width>innerWidth-pad)left=clientX-rect.width-gap;
+    if(top+rect.height>innerHeight-pad)top=clientY-rect.height-gap;
+    tooltip.style.left=`${Math.max(pad,left)}px`;tooltip.style.top=`${Math.max(pad,top)}px`;
+  }
+  function showTooltip(title,rows,clientX,clientY){
+    const tooltip=$("#eu-chart-tooltip");if(!tooltip)return;
+    tooltip.innerHTML=`<strong>${esc(title)}</strong>${rows.map(([label,value,tone])=>`<div><span>${esc(label)}</span><b class="${tone||""}">${esc(value)}</b></div>`).join("")}`;
+    tooltip.hidden=false;positionTooltip(clientX,clientY);
+  }
+  function hideTooltip(){const tooltip=$("#eu-chart-tooltip");if(tooltip)tooltip.hidden=true;document.querySelectorAll(".eu-history-point-group.is-hovered").forEach((node)=>node.classList.remove("is-hovered"));}
+  function showHistoryTooltip(year,clientX,clientY){
+    const item=country(),row=rowFor(item,year);if(!row)return;
+    document.querySelectorAll(".eu-history-point-group").forEach((node)=>node.classList.toggle("is-hovered",Number(node.dataset.euPointYear)===year));
+    showTooltip(`${countryName(item)} · ${year}`,[[t("moneyInShort"),money(row.allocated_spending_m_eur)],[t("moneyOutShort"),money(row.national_contribution_m_eur)],[t("difference"),money(row.accounting_difference_m_eur,true),row.accounting_difference_m_eur>=0?"positive":"negative"],[t("ownResources"),money(row.total_own_resources_m_eur)]],clientX,clientY);
+  }
+  function showBreakdownTooltip(code,clientX,clientY){
+    const row=selectedRow(),item=row?.spending_breakdown?.find((entry)=>entry.code===code);if(!item)return;
+    const share=row?.allocated_spending_m_eur?new Intl.NumberFormat(locale(),{style:"percent",maximumFractionDigits:1}).format(item.amount_m_eur/row.allocated_spending_m_eur):"—";
+    showTooltip(`${item[`label_${lang()}`]} · ${state.year}`,[[t("regular"),money(item.mff_spending_m_eur)],["NextGenerationEU",money(item.ngeu_spending_m_eur)],[t("total"),money(item.amount_m_eur)],[t("share"),share]],clientX,clientY);
+  }
+
   const pathFor=(rows,key,x,y)=>rows.map((row,index)=>`${index?"L":"M"}${x(row.year).toFixed(1)},${y(row[key]).toFixed(1)}`).join(" ");
   function renderHistory(){
     const item=country(),rows=item.series.filter((row)=>row.year>=item.member_since&&Number.isFinite(row.national_contribution_m_eur));
@@ -73,8 +97,10 @@
     const years=[rows[0].year,...rows.filter((_,i)=>i>0&&i<rows.length-1&&i%5===0).map((r)=>r.year),rows.at(-1).year];
     const grid=ticks.map((value)=>`<line class="chart-grid" x1="${m.l}" x2="${W-m.r}" y1="${y(value)}" y2="${y(value)}"/><text class="chart-axis" x="${m.l-10}" y="${y(value)+4}" text-anchor="end">${(value/1000).toFixed(value<1000?1:0)}</text>`).join("");
     const labels=years.map((year)=>`<text class="chart-axis" x="${x(year)}" y="${H-14}" text-anchor="middle">${year}</text>`).join("");
-    const last=rows.at(-1);const dots=[["allocated_spending_m_eur","var(--eu-mint)"],["national_contribution_m_eur","var(--eu-red)"],["accounting_difference_m_eur","var(--eu-blue)"]].map(([key,fill])=>`<circle class="chart-point" cx="${x(last.year)}" cy="${y(last[key])}" r="5" fill="${fill}"/>`).join("");
-    $("#eu-history-chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("historyTitle"))}">${grid}<line class="chart-zero" x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}"/><path class="chart-line-in" d="${pathFor(rows,"allocated_spending_m_eur",x,y)}"/><path class="chart-line-out" d="${pathFor(rows,"national_contribution_m_eur",x,y)}"/><path class="chart-line-net" d="${pathFor(rows,"accounting_difference_m_eur",x,y)}"/>${dots}${labels}<text class="chart-axis" x="8" y="15">€ bn</text></svg>`;
+    const last=rows.at(-1),band=(W-m.l-m.r)/Math.max(rows.length,1);
+    const dots=rows.map((row)=>`<g class="eu-history-point-group${row===last?" is-last":""}" data-eu-point-year="${row.year}">${[["allocated_spending_m_eur","var(--eu-mint)"],["national_contribution_m_eur","var(--eu-red)"],["accounting_difference_m_eur","var(--eu-blue)"]].filter(([key])=>Number.isFinite(row[key])).map(([key,fill])=>`<circle class="chart-point" cx="${x(row.year)}" cy="${y(row[key])}" r="5" fill="${fill}"/>`).join("")}</g>`).join("");
+    const hits=rows.map((row)=>`<rect class="eu-history-hit" data-eu-history-year="${row.year}" tabindex="0" role="img" aria-label="${esc(countryName(item))} ${row.year}" x="${x(row.year)-band/2}" y="${m.t}" width="${band}" height="${H-m.t-m.b}"/>`).join("");
+    $("#eu-history-chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("historyTitle"))}">${grid}<line class="chart-zero" x1="${m.l}" x2="${W-m.r}" y1="${y(0)}" y2="${y(0)}"/><path class="chart-line-in" d="${pathFor(rows,"allocated_spending_m_eur",x,y)}"/><path class="chart-line-out" d="${pathFor(rows,"national_contribution_m_eur",x,y)}"/><path class="chart-line-net" d="${pathFor(rows,"accounting_difference_m_eur",x,y)}"/>${dots}${hits}${labels}<text class="chart-axis" x="8" y="15">€ bn</text></svg>`;
     $("#history-caption").textContent=`${countryName(item)} · ${t("memberSince")} ${item.member_since} · ${t("currentPrices")}`;
   }
 
@@ -85,8 +111,8 @@
     $("#eu-breakdown-bars").innerHTML=items.length?items.map((item)=>{
       const programmes=item.programmes||[];
       const heading=`<span>${esc(item[`label_${lang()}`])}<small>${esc(programmes.length?t("detailHint"):t("noProgrammes"))}${programmes.length?` · ${programmes.length}`:""}</small></span><div class="breakdown-track" aria-hidden="true"><div class="breakdown-fill" style="width:${Math.max(0,item.amount_m_eur/max*100)}%"></div></div><strong>${money(item.amount_m_eur)}</strong>`;
-      if(!programmes.length)return `<div class="breakdown-row">${heading}</div>`;
-      return `<details class="eu-programme-group" data-heading="${esc(item.code)}"${openCodes.has(item.code)?" open":""}><summary class="breakdown-row">${heading}</summary><div class="eu-programme-content"><p>${esc(t("detailUnits"))} · ${esc(countryName(country()))} · ${state.year}</p><div class="eu-programme-scroll" tabindex="0" role="region" aria-label="${esc(item[`label_${lang()}`])}"><table><caption class="eu-programme-caption">${esc(item[`label_${lang()}`])}</caption><thead><tr><th scope="col">${esc(t("programme"))}</th><th scope="col">${esc(t("regular"))}</th><th scope="col">NextGenerationEU</th><th scope="col">${esc(t("total"))}</th><th scope="col">${esc(t("share"))}</th></tr></thead><tbody>${programmes.map((p)=>`<tr><th scope="row">${esc(p[`label_${lang()}`])}<small>${esc(p.code)} · ${esc(t("sourceCells"))}: ${esc(Object.values(p.source_cells||{}).join(" + "))}</small></th><td>${number(p.mff_spending_m_eur)}</td><td>${number(p.ngeu_spending_m_eur)}</td><td><strong>${number(p.amount_m_eur)}</strong></td><td>${item.amount_m_eur?new Intl.NumberFormat(locale(),{style:"percent",maximumFractionDigits:1}).format(p.amount_m_eur/item.amount_m_eur):"—"}</td></tr>`).join("")}</tbody><tfoot><tr><th scope="row">${esc(t("total"))}</th><td>${number(item.mff_spending_m_eur)}</td><td>${number(item.ngeu_spending_m_eur)}</td><td>${number(item.amount_m_eur)}</td><td>100 %</td></tr></tfoot></table></div></div></details>`;
+      if(!programmes.length)return `<div class="breakdown-row" data-eu-breakdown-code="${esc(item.code)}" tabindex="0">${heading}</div>`;
+      return `<details class="eu-programme-group" data-heading="${esc(item.code)}"${openCodes.has(item.code)?" open":""}><summary class="breakdown-row" data-eu-breakdown-code="${esc(item.code)}">${heading}</summary><div class="eu-programme-content"><p>${esc(t("detailUnits"))} · ${esc(countryName(country()))} · ${state.year}</p><div class="eu-programme-scroll" tabindex="0" role="region" aria-label="${esc(item[`label_${lang()}`])}"><table><caption class="eu-programme-caption">${esc(item[`label_${lang()}`])}</caption><thead><tr><th scope="col">${esc(t("programme"))}</th><th scope="col">${esc(t("regular"))}</th><th scope="col">NextGenerationEU</th><th scope="col">${esc(t("total"))}</th><th scope="col">${esc(t("share"))}</th></tr></thead><tbody>${programmes.map((p)=>`<tr><th scope="row">${esc(p[`label_${lang()}`])}<small>${esc(p.code)} · ${esc(t("sourceCells"))}: ${esc(Object.values(p.source_cells||{}).join(" + "))}</small></th><td>${number(p.mff_spending_m_eur)}</td><td>${number(p.ngeu_spending_m_eur)}</td><td><strong>${number(p.amount_m_eur)}</strong></td><td>${item.amount_m_eur?new Intl.NumberFormat(locale(),{style:"percent",maximumFractionDigits:1}).format(p.amount_m_eur/item.amount_m_eur):"—"}</td></tr>`).join("")}</tbody><tfoot><tr><th scope="row">${esc(t("total"))}</th><td>${number(item.mff_spending_m_eur)}</td><td>${number(item.ngeu_spending_m_eur)}</td><td>${number(item.amount_m_eur)}</td><td>100 %</td></tr></tfoot></table></div></div></details>`;
     }).join(""):`<p>${esc(t("detailUnavailable"))}</p>`;
     $("#ngeu-value").textContent=money(row?.ngeu_spending_m_eur);
     $("#eu-programme-source").href=state.data.sources.download_url;
@@ -116,6 +142,14 @@
   $("#eu-country").addEventListener("change",(event)=>{state.country=event.target.value;const item=country();state.year=Math.min(state.data.period.last,Math.max(item.member_since,state.year));render()});
   $("#eu-year").addEventListener("change",(event)=>{state.year=Number(event.target.value);render()});
   $("#eu-comparison-table").querySelectorAll("th[data-sort]").forEach((th)=>th.addEventListener("click",()=>{const next=th.dataset.sort;if(state.sort===next)state.direction*=-1;else{state.sort=next;state.direction=next==="name"?1:-1}renderComparison()}));
+  $("#eu-history-chart").addEventListener("pointermove",(event)=>{const hit=event.target.closest("[data-eu-history-year]");if(hit)showHistoryTooltip(Number(hit.dataset.euHistoryYear),event.clientX,event.clientY);else hideTooltip()});
+  $("#eu-history-chart").addEventListener("pointerleave",hideTooltip);
+  $("#eu-history-chart").addEventListener("focusin",(event)=>{const hit=event.target.closest("[data-eu-history-year]");if(!hit)return;const rect=hit.getBoundingClientRect();showHistoryTooltip(Number(hit.dataset.euHistoryYear),Math.min(innerWidth-24,rect.right),rect.top)});
+  $("#eu-history-chart").addEventListener("focusout",hideTooltip);
+  $("#eu-breakdown-bars").addEventListener("pointermove",(event)=>{const row=event.target.closest("[data-eu-breakdown-code]");if(row)showBreakdownTooltip(row.dataset.euBreakdownCode,event.clientX,event.clientY);else hideTooltip()});
+  $("#eu-breakdown-bars").addEventListener("pointerleave",hideTooltip);
+  $("#eu-breakdown-bars").addEventListener("focusin",(event)=>{const row=event.target.closest("[data-eu-breakdown-code]");if(!row)return;const rect=row.getBoundingClientRect();showBreakdownTooltip(row.dataset.euBreakdownCode,Math.min(innerWidth-24,rect.right),rect.top)});
+  $("#eu-breakdown-bars").addEventListener("focusout",hideTooltip);
   addEventListener("psdlanguagechange",()=>{if(state.data)render()});
   fetch(`${assetRoot}data/eu-budget-flows.v1.json`).then((response)=>{if(!response.ok)throw new Error(response.status);return response.json()}).then((data)=>{state.data=data;if(!data.countries.some((item)=>item.iso3===state.country))state.country="CZE";state.year=Math.min(state.year,data.period.last);$("#eu-source-link").href=data.sources.page_url;render()}).catch((error)=>{console.error("EU budget flows",error);document.querySelector("main").insertAdjacentHTML("afterbegin",`<p class="eu-load-error">${esc(t("loadError"))}</p>`)});
 })();
