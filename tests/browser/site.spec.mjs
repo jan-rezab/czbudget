@@ -174,7 +174,8 @@ test("state budget translates its Czech static body on an initial English visit"
   await expect(page.locator(".budget-hero")).toContainText("Twenty-five years of revenue and expenditure");
   await expect(page.locator(".finance-structure-section")).toContainText("Revenue and expenditure. The full picture.");
   await expect(page.locator("#revenue-pie-legend button")).toHaveCount(7);
-  await expect(page.locator("#expenditure-pie-legend button")).toHaveCount(6);
+  await expect(page.locator("#expenditure-pie-legend button")).toHaveCount(7);
+  await expect(page.locator('#expenditure-pie-legend button', {hasText:"Debt servicing"})).toContainText("110.0");
   await expect(page.locator("#finance-revenue-total")).toHaveText("2,117.8");
   await expect(page.locator("#finance-expenditure-total")).toHaveText("2,427.8");
   await page.locator('#expenditure-pie-legend button', {hasText:"Economy and infrastructure"}).click();
