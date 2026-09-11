@@ -14,7 +14,16 @@
     detailHint: "Fondy a programy", detailUnits: "Částky v mil. EUR, běžné ceny", detailUnavailable: "Podrobný rozpad podle současných výdajových okruhů je dostupný pro roky 2021–2024. Vyberte rok nahoře.",
     detailSource: "Zdroj: Evropská komise · DG Budget", downloadDetail: "Stáhnout programy CSV", workbook: "Zdrojový Excel ↗",
     detailMethod: "Součty obsahují pouze nejnižší vykázané položky, bez opětovného přičtení mezisoučtů. Jde o výdaje přiřazené zemi, nikoli seznam projektů nebo příjemců.",
-    sourceCells: "Buňky ve zdroji", noProgrammes: "Zdroj zde neuvádí podrobnější rozpad."
+    sourceCells: "Buňky ve zdroji", noProgrammes: "Zdroj zde neuvádí podrobnější rozpad.",
+    navBalance: "Vyrovnání", customsDefinition: "Cla a odvody z cukru vykázané pro zemi; nejsou součástí našeho hlavního „ven“.",
+    balanceKicker: "Kontrola součtu", balanceTitle: "Proč rozdíly zemí nedávají rozpočet EU", balanceIntro: "Tabulka zemí kombinuje výdaje přiřazené příjemcům s užší definicí národního příspěvku. Tady jsou obě chybějící části vidět.",
+    balanceWarning: "Tento kladný rozdíl není přebytek rozpočtu EU. Téměř celý vzniká tím, že výdaje NextGenerationEU jsou zahrnuté, ale odpovídající výnosy z dluhopisů nejsou národním příspěvkem.",
+    attributedSpending: "Výdaje přiřazené EU-27", nationalContributionsAll: "Národní příspěvky", apparentDifference: "Zdánlivý rozdíl", ngeuIncluded: "Přiřazené NextGenerationEU", regularDifference: "Rozdíl běžného rozpočtu", ofDifference: "z rozdílu",
+    auditedKicker: "Úplný auditovaný účet", auditedTitle: "Z čeho byl financován rozpočet EU", auditedIntro: "Konsolidovaná účetní závěrka doplňuje zdroje, které v porovnání zemí chybí.",
+    nonCustomsOwn: "Národní zdroje bez cel", traditionalOwn: "Celní zdroje", otherRevenue: "Ostatní příjmy", ngeuBorrowing: "Dluhopisy pro NGEU", totalRevenue: "Příjmy celkem", totalPayments: "Platby celkem", budgetResult: "Rozpočtový výsledek", auditedUnits: "mil. EUR · modifikované peněžní účetnictví",
+    budgetResultNote: "Rozpočtový výsledek není prostý rozdíl příjmů a plateb: auditovaný výpočet zahrnuje přenesené prostředky, kurzové rozdíly a další úpravy.",
+    scopeTitle: "Co ještě není v součtu 27 zemí", nonEuSpending: "Výdaje mimo EU", otherGeography: "Ostatní geografické přiřazení", otherEarmarked: "Ostatní účelově vázané výdaje", ngeuOutside: "NGEU mimo sloupce 27 zemí", eu27Collective: "EU-27 společně, bez přiřazení zemi", outsideCountryView: "Mimo porovnání zemí celkem",
+    referenceWorkbook: "— zdroj přiřazení zemím a národních příspěvků.", referenceAccounts: "— tabulky rozpočtových příjmů, plateb a výsledku.", referenceEca: "— nezávislé potvrzení skladby příjmů."
   });
   Object.assign(copy.en, {
     breakdownIntro: "Expand a heading to see funds and programmes. Regular EU spending and NextGenerationEU are shown separately; together they add up to the heading total.",
@@ -22,7 +31,16 @@
     detailHint: "Funds and programmes", detailUnits: "EUR million, current prices", detailUnavailable: "The detailed breakdown using current spending headings is available for 2021–2024. Select a year above.",
     detailSource: "Source: European Commission · DG Budget", downloadDetail: "Download programmes CSV", workbook: "Source workbook ↗",
     detailMethod: "Totals use only the lowest reported rows, without adding intermediate subtotals again. These are country-attributed expenditures, not a list of projects or beneficiaries.",
-    sourceCells: "Source cells", noProgrammes: "The source provides no further breakdown here."
+    sourceCells: "Source cells", noProgrammes: "The source provides no further breakdown here.",
+    navBalance: "Reconciliation", customsDefinition: "Customs duties and sugar levies reported for the country; excluded from our headline “out”.",
+    balanceKicker: "Reconciliation", balanceTitle: "Why the country differences do not equal the EU budget", balanceIntro: "The country table combines expenditure attributed to beneficiaries with a narrower national-contribution measure. Both missing sides are shown here.",
+    balanceWarning: "This positive difference is not an EU budget surplus. Almost all of it arises because NextGenerationEU expenditure is included while the corresponding bond proceeds are not a national contribution.",
+    attributedSpending: "EU-27 attributed spending", nationalContributionsAll: "National contributions", apparentDifference: "Apparent difference", ngeuIncluded: "Attributed NextGenerationEU", regularDifference: "Regular-budget difference", ofDifference: "of the difference",
+    auditedKicker: "Complete audited account", auditedTitle: "How the EU budget was financed", auditedIntro: "The consolidated accounts add the funding sources omitted from the country comparison.",
+    nonCustomsOwn: "National resources excluding customs", traditionalOwn: "Customs resources", otherRevenue: "Other revenue", ngeuBorrowing: "NGEU bond proceeds", totalRevenue: "Total revenue", totalPayments: "Total payments", budgetResult: "Budget result", auditedUnits: "EUR million · modified cash accounting",
+    budgetResultNote: "The budget result is not simply revenue minus payments: the audited calculation includes carried-over appropriations, exchange differences and other adjustments.",
+    scopeTitle: "What else is outside the 27-country total", nonEuSpending: "Spending outside the EU", otherGeography: "Other geographic attribution", otherEarmarked: "Other assigned expenditure", ngeuOutside: "NGEU outside the 27 country columns", eu27Collective: "EU-27 collectively, not assigned to a country", outsideCountryView: "Total outside country comparison",
+    referenceWorkbook: "— source for country attribution and national contributions.", referenceAccounts: "— budget revenue, payments and result tables.", referenceEca: "— independent confirmation of the revenue mix."
   });
   const lang = () => document.documentElement.lang === "en" ? "en" : "cs";
   const t = (key) => copy[lang()][key];
@@ -137,7 +155,28 @@
     $("#eu-comparison-body").innerHTML=rows.map(({item,row})=>`<tr><td><span class="country-cell"><img src="${assetRoot}assets/flags/${item.eu_code==="EL"?"gr":item.eu_code.toLowerCase()}.svg" alt="" loading="lazy" decoding="async"><span><b>${esc(countryName(item))}</b><small>${item.iso3}</small></span></span></td><td>${money(row.allocated_spending_m_eur)}</td><td>${money(row.national_contribution_m_eur)}</td><td class="${row.accounting_difference_m_eur>=0?"positive":"negative"}"><b>${money(row.accounting_difference_m_eur,true)}</b></td><td>${money(row.total_own_resources_m_eur)}</td></tr>`).join("");
   }
 
-  function render(){translate();renderSelectors();renderHero();renderHistory();renderBreakdown();renderComparison();updateUrl()}
+  function renderReconciliation(){
+    const row=state.data.eu_reconciliation?.find((item)=>item.year===state.year);if(!row)return;
+    const audited=state.data.audited_budget,breakdown=audited.revenue_breakdown;
+    const ngeuShare=row.accounting_difference_m_eur?row.ngeu_attributed_spending_m_eur/row.accounting_difference_m_eur:0;
+    $("#eu-balance-year").textContent=row.year;
+    $("#eu-balance-equation").innerHTML=`<article><span>${esc(t("attributedSpending"))}<a class="eu-source-marker" href="#eu-reference-1" aria-label="Source 1">[1]</a></span><strong>${money(row.attributed_spending_m_eur)}</strong></article><b aria-hidden="true">−</b><article><span>${esc(t("nationalContributionsAll"))}<a class="eu-source-marker" href="#eu-reference-1" aria-label="Source 1">[1]</a></span><strong>${money(row.national_contribution_m_eur)}</strong></article><b aria-hidden="true">=</b><article class="result"><span>${esc(t("apparentDifference"))}</span><strong>${money(row.accounting_difference_m_eur,true)}</strong></article>`;
+    $("#eu-balance-split").innerHTML=`<article><span>${esc(t("ngeuIncluded"))}</span><strong>${money(row.ngeu_attributed_spending_m_eur)}</strong><small>${new Intl.NumberFormat(locale(),{style:"percent",maximumFractionDigits:1}).format(ngeuShare)} ${esc(t("ofDifference"))}</small></article><article><span>${esc(t("regularDifference"))}</span><strong>${money(row.regular_difference_m_eur,true)}</strong><small>${money(row.regular_attributed_spending_m_eur)} − ${money(row.national_contribution_m_eur)}</small></article>`;
+
+    $("#eu-audited-year").textContent=audited.year;
+    const revenueItems=[["non-customs",t("nonCustomsOwn"),breakdown.non_customs_own_resources_m_eur],["customs",t("traditionalOwn"),breakdown.traditional_own_resources_m_eur],["other",t("otherRevenue"),breakdown.other_revenue_m_eur],["borrowing",t("ngeuBorrowing"),breakdown.ngeu_borrowing_proceeds_m_eur]];
+    $("#eu-revenue-stack").innerHTML=revenueItems.map(([tone,label,value])=>`<span class="${tone}" style="width:${value/audited.revenue_m_eur*100}%" title="${esc(label)}: ${esc(money(value))}"></span>`).join("");
+    $("#eu-revenue-legend").innerHTML=revenueItems.map(([tone,label,value])=>`<article><i class="${tone}"></i><span>${esc(label)}</span><strong>${money(value)}</strong></article>`).join("");
+    $("#eu-audited-totals").innerHTML=`<article><span>${esc(t("totalRevenue"))}</span><strong>${money(audited.revenue_m_eur)}</strong></article><article><span>${esc(t("totalPayments"))}</span><strong>${money(audited.payments_m_eur)}</strong></article><article><span>${esc(t("budgetResult"))}</span><strong>${money(audited.budget_result_m_eur,true)}</strong><small>${esc(t("auditedUnits"))}</small></article>`;
+
+    const scope=row.outside_country_view_breakdown;
+    $("#eu-scope-breakdown").innerHTML=`<dl><div><dt>${esc(t("nonEuSpending"))}</dt><dd>${money(scope.non_eu_spending_m_eur)}</dd></div><div><dt>${esc(t("otherGeography"))}</dt><dd>${money(scope.other_geographic_spending_m_eur)}</dd></div><div><dt>${esc(t("otherEarmarked"))}</dt><dd>${money(scope.non_ngeu_earmarked_spending_m_eur)}</dd></div><div><dt>${esc(t("ngeuOutside"))}</dt><dd>${money(scope.ngeu_not_attributed_to_eu27_m_eur)}</dd></div>${scope.eu27_collective_allocation_m_eur?`<div><dt>${esc(t("eu27Collective"))}</dt><dd>${money(scope.eu27_collective_allocation_m_eur)}</dd></div>`:""}<div class="total"><dt>${esc(t("outsideCountryView"))}</dt><dd>${money(row.outside_country_view_m_eur)}</dd></div></dl>`;
+    $("#eu-balance-workbook-source").href=state.data.sources.download_url;
+    $("#eu-annual-accounts-source").href=state.data.sources.annual_accounts_url;
+    $("#eu-eca-source").href=state.data.sources.eca_report_url;
+  }
+
+  function render(){translate();renderSelectors();renderHero();renderHistory();renderBreakdown();renderComparison();renderReconciliation();updateUrl()}
   $("#eu-programme-download").addEventListener("click",downloadProgrammes);
   $("#eu-country").addEventListener("change",(event)=>{state.country=event.target.value;const item=country();state.year=Math.min(state.data.period.last,Math.max(item.member_since,state.year));render()});
   $("#eu-year").addEventListener("change",(event)=>{state.year=Number(event.target.value);render()});

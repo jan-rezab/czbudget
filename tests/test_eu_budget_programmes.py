@@ -50,6 +50,71 @@ class EUProgrammeTests(unittest.TestCase):
                 if row["year"] < 2021:
                     self.assertNotIn("spending_breakdown", row)
 
+    def test_eu27_country_view_reconciles_for_each_displayed_year(self):
+        reconciliations = {row["year"]: row for row in self.data["eu_reconciliation"]}
+        self.assertEqual(set(reconciliations), {2021, 2022, 2023, 2024})
+        for year, aggregate in reconciliations.items():
+            country_rows = [
+                next(row for row in country["series"] if row["year"] == year)
+                for country in self.data["countries"]
+            ]
+            self.assertAlmostEqual(
+                sum(row["allocated_spending_m_eur"] for row in country_rows),
+                aggregate["attributed_spending_m_eur"], places=5,
+            )
+            self.assertAlmostEqual(
+                sum(row["national_contribution_m_eur"] for row in country_rows),
+                aggregate["national_contribution_m_eur"], places=5,
+            )
+            self.assertAlmostEqual(
+                aggregate["attributed_spending_m_eur"] - aggregate["national_contribution_m_eur"],
+                aggregate["accounting_difference_m_eur"], places=5,
+            )
+            self.assertAlmostEqual(
+                aggregate["ngeu_attributed_spending_m_eur"] + aggregate["regular_difference_m_eur"],
+                aggregate["accounting_difference_m_eur"], places=5,
+            )
+            self.assertAlmostEqual(
+                aggregate["total_budget_payments_m_eur"] - aggregate["attributed_spending_m_eur"],
+                aggregate["outside_country_view_m_eur"], places=5,
+            )
+            self.assertAlmostEqual(
+                sum(aggregate["outside_country_view_breakdown"].values()),
+                aggregate["outside_country_view_m_eur"], places=5,
+            )
+
+    def test_audited_2024_budget_revenue_is_fully_balanced(self):
+        audited = self.data["audited_budget"]
+        workbook = next(row for row in self.data["eu_reconciliation"] if row["year"] == 2024)
+        self.assertEqual(audited["year"], 2024)
+        self.assertEqual(sum(audited["revenue_breakdown"].values()), audited["revenue_m_eur"])
+        self.assertAlmostEqual(
+            audited["payments_m_eur"], workbook["total_budget_payments_m_eur"], delta=1,
+        )
+        self.assertEqual(audited["revenue_breakdown"]["ngeu_borrowing_proceeds_m_eur"], 73332)
+        self.assertEqual(audited["budget_result_m_eur"], 1345)
+
+    def test_2024_published_totals_are_pinned(self):
+        row = next(row for row in self.data["eu_reconciliation"] if row["year"] == 2024)
+        self.assertAlmostEqual(row["regular_attributed_spending_m_eur"], 122957.113404, places=6)
+        self.assertAlmostEqual(row["ngeu_attributed_spending_m_eur"], 71746.311564, places=6)
+        self.assertAlmostEqual(row["attributed_spending_m_eur"], 194703.424968, places=6)
+        self.assertAlmostEqual(row["national_contribution_m_eur"], 121016.662331, places=6)
+        self.assertAlmostEqual(row["accounting_difference_m_eur"], 73686.762637, places=6)
+        self.assertAlmostEqual(row["total_budget_payments_m_eur"], 246988.298444, places=6)
+        self.assertEqual(
+            self.data["sources"]["sha256"],
+            "ac05b66df6290b1a1eb73bd58dcab6e0833f7bcb414a7b401d482dc2dba4d58e",
+        )
+
+    def test_total_own_resources_definition_does_not_claim_false_additivity(self):
+        definition = self.data["definitions"]["total_own_resources_m_eur"]
+        self.assertIn("not exactly additive", definition)
+        czech = next(country for country in self.data["countries"] if country["iso3"] == "CZE")
+        row = next(row for row in czech["series"] if row["year"] == 2024)
+        additive_total = row["national_contribution_m_eur"] + row["traditional_own_resources_m_eur"]
+        self.assertNotAlmostEqual(additive_total, row["total_own_resources_m_eur"], places=3)
+
 
 if __name__ == "__main__":
     unittest.main()

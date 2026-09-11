@@ -16,9 +16,9 @@
   <link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
   <link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives">
   <link rel="stylesheet" href="../../deep-dives.css?v=20260824-sticky-filter">
-  <link rel="stylesheet" href="../../eu-budget-deep-dive.css?v=20260911-chart-tooltips">
+  <link rel="stylesheet" href="../../eu-budget-deep-dive.css?v=20260911-reconciliation">
   <script src="../../deep-dives.js?v=20260824-sticky-filter" defer></script>
-  <script src="../../eu-budget-deep-dive.js?v=20260911-chart-tooltips" defer></script>
+  <script src="../../eu-budget-deep-dive.js?v=20260911-reconciliation" defer></script>
   <script src="../../global-nav.js?v=20260902-eu-budget" defer></script>
 </head>
 <body class="deep-dives-page eu-budget-page">
@@ -40,13 +40,13 @@
     </section>
 
     <nav class="deep-topic-rail eu-rail" aria-label="EU budget sections" data-sticky-filter="#eu-country" data-sticky-filter-kind="country">
-      <a href="#flow" data-eu-copy="navFlow">Tok peněz</a><a href="#state-budget" data-eu-copy="navState">Státní rozpočet</a><a href="#history" data-eu-copy="navHistory">Vývoj</a><a href="#breakdown" data-eu-copy="navBreakdown">Kam peníze míří</a><a href="#comparison" data-eu-copy="navComparison">EU-27</a><a href="#method" data-eu-copy="navMethod">Metodika</a>
+      <a href="#flow" data-eu-copy="navFlow">Tok peněz</a><a href="#state-budget" data-eu-copy="navState">Státní rozpočet</a><a href="#history" data-eu-copy="navHistory">Vývoj</a><a href="#breakdown" data-eu-copy="navBreakdown">Kam peníze míří</a><a href="#comparison" data-eu-copy="navComparison">EU-27</a><a href="#reconciliation" data-eu-copy="navBalance">Vyrovnání</a><a href="#method" data-eu-copy="navMethod">Metodika</a>
     </nav>
 
     <section class="eu-definition-strip" id="flow">
       <article><b data-eu-copy="inLabel">DOVNITŘ</b><strong id="definition-in">—</strong><p data-eu-copy="inDefinition">Výdaje rozpočtu EU přiřazené zemi, včetně samostatně vykázaného NextGenerationEU.</p></article>
       <article><b data-eu-copy="outLabel">VEN</b><strong id="definition-out">—</strong><p data-eu-copy="outDefinition">Příspěvek založený na DPH, HND a nerecyklovaných plastech, včetně vyrovnání.</p></article>
-      <article><b data-eu-copy="customsLabel">CELNÍ ZDROJE</b><strong id="definition-customs">—</strong><p data-eu-copy="customsDefinition">Rozdíl mezi celkovými vlastními zdroji a národním příspěvkem; není součástí našeho hlavního „ven“.</p></article>
+      <article><b data-eu-copy="customsLabel">CELNÍ ZDROJE</b><strong id="definition-customs">—</strong><p data-eu-copy="customsDefinition">Cla a odvody z cukru vykázané pro zemi; nejsou součástí našeho hlavního „ven“.</p></article>
     </section>
 
     <section class="eu-section eu-boundary" id="state-budget">
@@ -79,6 +79,33 @@
       <div class="eu-heading"><div><span class="kicker" data-eu-copy="comparisonKicker">Všech 27 členů</span><h2 data-eu-copy="comparisonTitle">Kdo dostává a kdo přispívá</h2></div><p data-eu-copy="comparisonIntro">Absolutní částky ukazují velikost toku, ne ekonomický přínos členství. Tabulku lze seřadit kliknutím na záhlaví.</p></div>
       <div class="comparison-summary" id="comparison-summary"></div>
       <div class="eu-table-wrap" tabindex="0" role="region" aria-label="EU budget country comparison"><table id="eu-comparison-table"><thead><tr><th data-sort="name" data-eu-copy="country">Země</th><th data-sort="in" data-eu-copy="moneyInShort">Přiřazené výdaje</th><th data-sort="out" data-eu-copy="moneyOutShort">Národní příspěvek</th><th data-sort="net" data-eu-copy="difference">Rozdíl</th><th data-sort="own" data-eu-copy="ownResources">Vlastní zdroje celkem</th></tr></thead><tbody id="eu-comparison-body"></tbody></table></div>
+    </section>
+
+    <section class="eu-section eu-reconciliation" id="reconciliation">
+      <div class="eu-heading"><div><span class="kicker"><span data-eu-copy="balanceKicker">Kontrola součtu</span> · <span id="eu-balance-year">2024</span></span><h2 data-eu-copy="balanceTitle">Proč rozdíly zemí nedávají rozpočet EU</h2></div><p data-eu-copy="balanceIntro">Tabulka zemí kombinuje výdaje přiřazené příjemcům s užší definicí národního příspěvku. Tady jsou obě chybějící části vidět.</p></div>
+
+      <div class="eu-balance-equation" id="eu-balance-equation" aria-live="polite"></div>
+      <div class="eu-balance-split" id="eu-balance-split"></div>
+      <p class="eu-balance-warning" data-eu-copy="balanceWarning">Tento kladný rozdíl není přebytek rozpočtu EU. Téměř celý vzniká tím, že výdaje NextGenerationEU jsou zahrnuté, ale odpovídající výnosy z dluhopisů nejsou národním příspěvkem.</p>
+
+      <div class="eu-audited-account">
+        <div class="eu-audited-heading"><div><span data-eu-copy="auditedKicker">Úplný auditovaný účet</span><h3><span data-eu-copy="auditedTitle">Z čeho byl financován rozpočet EU</span> · <span id="eu-audited-year">2024</span><a class="eu-source-marker" href="#eu-reference-2" aria-label="Source 2">[2]</a></h3></div><p data-eu-copy="auditedIntro">Konsolidovaná účetní závěrka doplňuje zdroje, které v porovnání zemí chybí.</p></div>
+        <div class="eu-revenue-stack" id="eu-revenue-stack" aria-hidden="true"></div>
+        <div class="eu-revenue-legend" id="eu-revenue-legend"></div>
+        <div class="eu-audited-totals" id="eu-audited-totals"></div>
+        <p class="eu-budget-result-note" data-eu-copy="budgetResultNote">Rozpočtový výsledek není prostý rozdíl příjmů a plateb: auditovaný výpočet zahrnuje přenesené prostředky, kurzové rozdíly a další úpravy.</p>
+      </div>
+
+      <details class="eu-scope-detail">
+        <summary data-eu-copy="scopeTitle">Co ještě není v součtu přiřazeném zemím</summary>
+        <div id="eu-scope-breakdown"></div>
+      </details>
+
+      <ol class="eu-references" aria-label="Sources">
+        <li id="eu-reference-1"><a id="eu-balance-workbook-source" target="_blank" rel="noreferrer">European Commission, EU spending and revenue — Data 2000–2024</a> <span data-eu-copy="referenceWorkbook">— zdroj přiřazení zemím a národních příspěvků.</span></li>
+        <li id="eu-reference-2"><a id="eu-annual-accounts-source" target="_blank" rel="noreferrer">European Commission, Consolidated annual accounts of the European Union 2024</a> <span data-eu-copy="referenceAccounts">— tabulky rozpočtových příjmů, plateb a výsledku.</span></li>
+        <li id="eu-reference-3"><a id="eu-eca-source" target="_blank" rel="noreferrer">European Court of Auditors, Annual report 2024, Figure 4.1</a> <span data-eu-copy="referenceEca">— nezávislé potvrzení skladby příjmů.</span></li>
+      </ol>
     </section>
 
     <section class="eu-section eu-method" id="method">

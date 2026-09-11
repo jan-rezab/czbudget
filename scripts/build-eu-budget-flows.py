@@ -21,6 +21,25 @@ SOURCE_DIR = ROOT.parent / "data" / "source_cache" / "eu_budget_flows"
 SOURCE_FILE = SOURCE_DIR / "eu-budget-spending-and-revenue-2000-2024.xlsx"
 SOURCE_PAGE = "https://commission.europa.eu/strategy-and-policy/eu-budget/long-term-eu-budget/2021-2027/spending-and-revenue_en"
 SOURCE_URL = "https://commission.europa.eu/document/download/45d0623a-529e-44d2-aae4-2ca9bac87ec3_en?filename=eu_budget_spending_and_revenue_2000-2023.xlsx"
+ANNUAL_ACCOUNTS_URL = "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52025DC0359"
+ECA_REPORT_URL = "https://www.eca.europa.eu/ECAPublications/AR-2024/AR-2024_EN.pdf"
+
+# Consolidated annual accounts, financial year 2024, EUR million. The four
+# revenue components reconcile exactly to total revenue. The country workbook
+# supplies the more granular, unrounded payment and attribution values below.
+AUDITED_BUDGET_2024 = {
+    "year": 2024,
+    "revenue_m_eur": 250609,
+    "payments_m_eur": 246988,
+    "budget_result_m_eur": 1345,
+    "revenue_breakdown": {
+        "non_customs_own_resources_m_eur": 120981,
+        "traditional_own_resources_m_eur": 20066,
+        "other_revenue_m_eur": 36230,
+        "ngeu_borrowing_proceeds_m_eur": 73332,
+    },
+    "source_table": "Statements of comparison of budget and actual amounts, pp. 139-140",
+}
 
 MEMBERS = [
     ("AUT", "AT", "Rakousko", "Austria"), ("BEL", "BE", "Belgie", "Belgium"),
@@ -179,6 +198,7 @@ def build(source: Path):
     countries = {iso3: {"iso3": iso3, "eu_code": eu, "name_cs": cs, "name_en": en,
                         "member_since": MEMBERSHIP_START[iso3], "series": []}
                  for iso3, eu, cs, en in MEMBERS}
+    eu_reconciliation = []
 
     available_years = sorted(int(name) for name in workbook.sheetnames if name.isdigit())
     for year in available_years:
@@ -199,6 +219,62 @@ def build(source: Path):
         main_headings = heading_rows(ws, expenditure_row) if year >= 2021 else {}
         base_programmes = programme_rows(ws, expenditure_row) if year >= 2021 else {}
         extra_programmes = programme_rows(ws, ngeu_row, expenditure_row + 1) if ngeu_row and year >= 2021 else {}
+
+        if year >= 2021:
+            # The workbook's EU-27 aggregate can include amounts assigned to the
+            # Union collectively rather than to one of its 27 country columns
+            # (EUR 2.479bn of NGEU in 2022). The website comparison is a sum of
+            # country columns, so its reconciliation must use the same scope.
+            regular_attributed = sum(
+                row_value(ws, expenditure_row, spend_header.get(eu_code)) or 0
+                for _, eu_code, *_ in MEMBERS
+            )
+            ngeu_attributed = sum(
+                row_value(ws, ngeu_row, ngeu_header.get(eu_code)) or 0
+                for _, eu_code, *_ in MEMBERS
+            )
+            workbook_eu27 = row_value(ws, expenditure_row, spend_header.get("EU-27")) or 0
+            workbook_ngeu_eu27 = row_value(ws, ngeu_row, ngeu_header.get("EU-27")) or 0
+            national_eu27 = row_value(ws, national_row, revenue_header.get("EU-27")) or 0
+            total_payments = row_value(ws, expenditure_row, spend_header.get("Total")) or 0
+            total_ngeu = row_value(ws, ngeu_row, ngeu_header.get("Total")) or 0
+            earmarked = row_value(ws, expenditure_row, spend_header.get("earmarked")) or 0
+            non_eu = row_value(ws, expenditure_row, spend_header.get("non-EU")) or 0
+            other = row_value(ws, expenditure_row, spend_header.get("Other")) or 0
+            attributed = regular_attributed + ngeu_attributed
+            accounting_difference = attributed - national_eu27
+            outside_country_view = total_payments - attributed
+            eu_reconciliation.append({
+                "year": year,
+                "regular_attributed_spending_m_eur": round(regular_attributed, 6),
+                "ngeu_attributed_spending_m_eur": round(ngeu_attributed, 6),
+                "attributed_spending_m_eur": round(attributed, 6),
+                "national_contribution_m_eur": round(national_eu27, 6),
+                "regular_difference_m_eur": round(regular_attributed - national_eu27, 6),
+                "accounting_difference_m_eur": round(accounting_difference, 6),
+                "total_budget_payments_m_eur": round(total_payments, 6),
+                "outside_country_view_m_eur": round(outside_country_view, 6),
+                "outside_country_view_breakdown": {
+                    "non_eu_spending_m_eur": round(non_eu, 6),
+                    "other_geographic_spending_m_eur": round(other, 6),
+                    "non_ngeu_earmarked_spending_m_eur": round(earmarked - total_ngeu, 6),
+                    "ngeu_not_attributed_to_eu27_m_eur": round(total_ngeu - ngeu_attributed, 6),
+                    "eu27_collective_allocation_m_eur": round(
+                        (workbook_eu27 + workbook_ngeu_eu27)
+                        - (regular_attributed + ngeu_attributed), 6,
+                    ),
+                },
+                "workbook_eu27_collective_allocation_m_eur": round(
+                    (workbook_eu27 + workbook_ngeu_eu27)
+                    - (regular_attributed + ngeu_attributed), 6,
+                ),
+                "source_cells": {
+                    "total_payments": f"'{ws.title}'!{get_column_letter(spend_header['Total'])}{expenditure_row}",
+                    "regular_attributed": f"'{ws.title}'!{get_column_letter(spend_header['EU-27'])}{expenditure_row}",
+                    "ngeu_attributed": f"'{ws.title}'!{get_column_letter(ngeu_header['EU-27'])}{ngeu_row}",
+                    "national_contribution": f"'{ws.title}'!{get_column_letter(revenue_header['EU-27'])}{national_row}",
+                },
+            })
 
         for iso3, eu_code, *_ in MEMBERS:
             mff = row_value(ws, expenditure_row, spend_header.get(eu_code))
@@ -255,10 +331,12 @@ def build(source: Path):
         "definitions": {
             "allocated_spending_m_eur": "Country-attributed EU expenditure plus separately reported NextGenerationEU expenditure.",
             "national_contribution_m_eur": "VAT-, GNI- and plastics-based own resources plus balances and adjustments; excludes traditional own resources.",
-            "total_own_resources_m_eur": "National contribution plus traditional own resources, principally customs duties.",
+            "total_own_resources_m_eur": "VAT-, GNI-, plastics- and traditional-own-resource revenue before the separate balances and adjustments included in national_contribution_m_eur; the two measures are not exactly additive.",
             "traditional_own_resources_m_eur": "Sugar levies plus customs duties reported for the country.",
             "accounting_difference_m_eur": "Allocated spending minus national contribution; a transparent arithmetic comparison, not the Commission's operating budgetary balance.",
         },
+        "eu_reconciliation": eu_reconciliation,
+        "audited_budget": AUDITED_BUDGET_2024,
         "sources": {
             "publisher": "European Commission, Directorate-General for Budget",
             "page_url": SOURCE_PAGE,
@@ -269,6 +347,9 @@ def build(source: Path):
             "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
             "programme_detail_period": {"first": 2021, "last": max(available_years)},
             "programme_method": "Leaf programme rows only; country columns from the expenditure and separate NGEU tables. Cluster and intermediate subtotals excluded. Both components reconcile to each heading within EUR 100.",
+            "annual_accounts_url": ANNUAL_ACCOUNTS_URL,
+            "eca_report_url": ECA_REPORT_URL,
+            "reconciliation_method": "EU-27 country attribution and total payments are read from the workbook. Complete 2024 revenue and the budget result are from the consolidated annual accounts; the European Court of Auditors independently reproduces the revenue mix in Figure 4.1.",
         },
         "countries": list(countries.values()),
     }
