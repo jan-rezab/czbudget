@@ -865,7 +865,8 @@ test("all representative page menus resolve and primary navigation routes correc
   await countryMenu.locator("summary").click();
   await expect(countryMenu.locator(".country-menu-panel > a[data-country-code]")).toHaveCount(countryParity.countries.length);
   // Plus the "all profiles" head link and the CZ+ state-budget feature link.
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(countryParity.countries.length + 2);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(countryParity.countries.length + 3);
+  await expect(countryMenu.locator('a[href*="money-flow.html"]')).toHaveCount(1);
   const countrySearch = countryMenu.locator(".country-menu-search input");
   await expect(countrySearch).toHaveAttribute("placeholder", "Název země…");
   await countrySearch.fill("novy zeland");
@@ -969,7 +970,8 @@ test("cities use the functional unified menu on desktop and mobile", async ({ pa
   await expect(countryMenu).toHaveAttribute("open", "");
   // One link per country in data/country-parity.v1.json, plus the two fixed links
   // global-nav.js always renders: the "all profiles" head link and the CZ+ feature.
-  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(countryParity.countries.length + 2);
+  await expect(countryMenu.locator(".country-menu-panel a")).toHaveCount(countryParity.countries.length + 3);
+  await expect(countryMenu.locator('a[href*="money-flow.html"]')).toHaveCount(1);
   const panelBox = await countryMenu.locator(".country-menu-panel").boundingBox();
   // ux-refinements.css widened this menu to a three-column min(780px, 92vw) panel.
   // What matters is that it still fits the viewport rather than any fixed width.
