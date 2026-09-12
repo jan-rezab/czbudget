@@ -38,6 +38,7 @@ const countryCodes = {
   BRA: "brazil", ESP: "spain", JPN: "japan", NLD: "netherlands", NOR: "norway", FIN: "finland", GRC: "greece",
 };
 const mimeTypes = {
+  ".mjs": "application/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
   ".ico": "image/x-icon",

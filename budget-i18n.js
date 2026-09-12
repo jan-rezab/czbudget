@@ -1,5 +1,6 @@
 (() => {
   const csToEn = {
+    "Sledujte tok peněz ↗":"Follow the money flows ↗",
     "Domů":"Home","Rozpočet":"Budget","Firmy státu":"State firms","Struktura":"Structure","Na co":"Spending","Demografie":"Demography","Srovnání":"Comparison","Metodika":"Methodology","Přehled":"Overview","Veřejné subjekty":"Public entities","Země":"Countries","Příjmy / výdaje":"Revenue / expenditure","{n} účelů / {n} kapitol":"{n} purposes / {n} chapters","{n} organizací":"{n} organisations","{n} profilů":"{n} profiles","Zdroje":"Sources",
     "Státní rozpočet ČR · skutečnost, schválený plán a výhled":"Czech state budget · outturn, approved plan and outlook",
     "Státní rozpočet ČR · skutečnost, návrh a výhled":"Czech state budget · outturn, proposal and outlook",
@@ -177,6 +178,7 @@
     document.querySelectorAll("[data-budget-lang]").forEach(button => button.classList.toggle("active", button.dataset.budgetLang === lang));
     document.title = lang === "en" ? "Public Spending Data — Czech budget over time" : "Public Spending Data — český rozpočet v čase";
     const url = new URL(location.href); url.searchParams.set("lang", lang); history.replaceState(null,"",url);
+    document.querySelectorAll('a[href^="money-flow.html"]').forEach(link => { link.href = `money-flow.html?lang=${lang}`; });
     translating = false;
     dispatchEvent(new CustomEvent("budgetlanguagechange", { detail: { lang } }));
   }

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="language-bootstrap.js?v=20260824-bilingual-metadata"></script>
+  <title>Follow the money — Public Spending Data</title>
+  <meta name="description" content="Explore the Czech state budget as animated money flows. See where revenue comes from, where it goes and how the financing gap fits in.">
+  <link rel="canonical" href="https://publicspendingdata.org/money-flow.html">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/money-flow.html?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/money-flow.html?lang=en">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=20260911-feedback-tooltips">
+  <link rel="stylesheet" href="site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <link rel="stylesheet" href="psd-chart.css">
+  <link rel="stylesheet" href="money-flow.css?v=20260912-lesson">
+  <script src="global-nav.js?v=20260824-logo-120" defer></script>
+  <script src="psd-chart.js" defer></script>
+  <script src="money-flow.js?v=20260912-lesson" type="module"></script>
+</head>
+<body class="money-flow-page">
+  <a class="flow-skip" href="#flow-explorer">Skip to the money flows</a>
+  <psd-site-header></psd-site-header>
+  <main class="flow-main">
+    <header class="flow-hero">
+      <div>
+        <p class="flow-kicker" data-copy="eyebrow">THE PUBLIC MONEY ATLAS / CZECHIA</p>
+        <h1><span data-copy="title">Follow the</span> <em data-copy="money">money.</em></h1>
+        <p class="flow-intro" data-copy="intro">From the taxes we pay to the services we share. See an entire state budget moving in one picture.</p>
+      </div>
+      <div class="flow-edition"><span class="flow-country">CZ <i></i> 2026</span><strong data-copy="approved">Approved state budget</strong><span data-copy="editionNote">Annual plan · including EU funds</span><a id="budget-link" href="cesky-rozpocet.html?lang=en" data-copy="fullBudget">Explore the full budget ↗</a></div>
+    </header>
+
+    <section class="flow-equation" aria-label="Budget balance">
+      <div><span data-copy="revenue">Money coming in</span><strong id="total-income">—</strong><small data-copy="annualUnit">billion Kč / year</small></div>
+      <b aria-hidden="true">+</b>
+      <div class="flow-gap"><span data-copy="financing">Financing gap</span><strong id="total-gap">—</strong><small data-copy="gapHint">Spending above revenue</small></div>
+      <b aria-hidden="true">=</b>
+      <div><span data-copy="spending">Money going out</span><strong id="total-out">—</strong><small data-copy="annualUnit">billion Kč / year</small></div>
+      <p id="equation-story"></p>
+    </section>
+
+    <section class="flow-explorer" id="flow-explorer" aria-labelledby="flow-title">
+      <div class="flow-toolbar">
+        <div><span class="flow-kicker" data-copy="mapLabel">01 / THE FLOW MAP</span><h2 id="flow-title" data-copy="mapTitle">One budget. Millions of lives.</h2></div>
+        <div class="flow-controls">
+          <div class="flow-unit-switch" role="group" aria-label="Display unit"><button data-unit="annual" aria-pressed="false" data-copy="billions">Billion Kč</button><button data-unit="hundred" aria-pressed="true" data-copy="per100">Per 100 Kč spent</button></div>
+          <button id="flow-pause" type="button">Ⅱ Pause</button>
+        </div>
+      </div>
+      <div class="flow-lesson" id="flow-lesson">
+        <div class="lesson-heading"><span id="lesson-kicker">A BUDGET, EXPLAINED</span><button id="lesson-start" type="button">▶ Watch the 1-minute story</button></div>
+        <div class="lesson-body"><div class="lesson-copy" aria-live="polite"><h3 id="lesson-title">Who pays for the things we share?</h3><p id="lesson-copy">Schools. Roads. Help when people need it. Follow the money to see how a budget turns contributions into public services.</p></div><div class="lesson-visual" id="lesson-visual" aria-hidden="true"></div></div>
+        <div class="lesson-navigation" hidden><div id="lesson-steps" role="group" aria-label="Story chapters"></div><div class="lesson-playback"><button id="lesson-prev" type="button">← Back</button><button id="lesson-play" type="button">Ⅱ Pause story</button><button id="lesson-next" type="button">Next →</button></div></div>
+        <div id="lesson-quiz" hidden><p id="lesson-question"></p><div id="lesson-answers"></div><p id="lesson-feedback" role="status"></p></div>
+        <div class="lesson-timer" aria-hidden="true"><i id="lesson-progress"></i></div>
+      </div>
+      <div class="flow-depth-controls">
+        <p class="flow-explore-hint" data-copy="clickHint">Curious about a stream? Click it to look inside.</p>
+        <details class="flow-search-disclosure"><summary data-copy="searchCaption">Find a budget item</summary><label class="flow-search-label"><span id="flow-search-caption">Find a budget item</span><input id="flow-search" type="search" autocomplete="off" placeholder="Try rail, courts, healthcare…" aria-controls="flow-search-results"></label></details>
+      </div>
+      <div id="flow-search-results" hidden></div>
+      <nav id="flow-breadcrumb" aria-label="Budget path"></nav>
+      <p id="flow-depth-note"></p>
+      <p class="flow-mobile-hint" data-copy="scrollHint">Swipe across the map to follow the money →</p>
+      <div id="flow-chart-host">
+        <div class="flow-scroll" tabindex="0" role="region" aria-label="Interactive money flow diagram">
+          <div id="flow-loading" role="status" data-copy="loading">Loading the budget…</div>
+          <svg id="flow-svg" viewBox="0 0 1320 650" role="group" aria-labelledby="diagram-title diagram-desc" hidden></svg>
+        </div>
+        <div class="flow-chart-caption"><span><i></i><span data-copy="widthKey">Wider stream = more money</span></span><span data-copy="motionKey">Motion shows direction, not live transactions</span><button id="flow-source-link" data-copy="sourceLine">Source: Ministry of Finance · 2026 approved plan ↗</button></div>
+      </div>
+      <div class="flow-reading" aria-live="polite"><span id="reading-index">01—03</span><p id="flow-reading-text"></p><button id="flow-reset" hidden data-copy="reset">Show everything ↺</button></div>
+    </section>
+
+    <section class="flow-detail" aria-labelledby="detail-title">
+      <div class="flow-detail-heading"><span class="flow-kicker" data-copy="closer">02 / LOOK A LITTLE CLOSER</span><h2 id="detail-title"></h2><p id="detail-copy"></p><div id="detail-amount"></div></div>
+      <div id="detail-rows" class="flow-detail-rows"></div>
+    </section>
+    <aside class="flow-method"><strong data-copy="boundaryTitle">A clear boundary makes an honest picture.</strong><p data-copy="boundary">This is the central state budget. Municipal budgets, regional budgets and health insurers’ own revenues are outside it. Transfers from the state are counted once, as state spending. The map shows a shared funding pool, not earmarked links from individual taxes to services.</p><p id="rounding-note"></p><a href="data/czech-budget.v1.json" data-copy="incomeData">Revenue data (JSON) ↗</a><a href="data/cz-spending-2026.v1.json" data-copy="spendingData">Spending data (JSON) ↗</a><a href="data/money-flow-detail-2026.v1.json" data-copy="detailData">Detailed source data (JSON) ↗</a></aside>
+  </main>
+  <noscript><p>This interactive flow needs JavaScript. <a href="data/cz-spending-2026.v1.json">Download the spending data</a> or <a href="cesky-rozpocet.html">open the budget overview</a>.</p></noscript>
+</body>
+</html>
