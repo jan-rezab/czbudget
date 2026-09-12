@@ -32,8 +32,8 @@ test('guided explanation shows the gap, financing and a working quiz', async ({ 
 
 test('the Czech budget links to the lesson in the selected language', async ({ page }) => {
   await page.goto('/cesky-rozpocet.html?lang=en');
-  await expect(page.locator('.hero-actions a[href^="money-flow.html"]')).toHaveAttribute('href', /lang=en/);
-  await page.locator('.hero-actions a[href^="money-flow.html"]').click();
+  await expect(page.locator('.hero-actions a[href*="money-flow.html"]')).toHaveAttribute('href', /lang=en/);
+  await page.locator('.hero-actions a[href*="money-flow.html"]').click();
   await expect(page.locator('[data-node]')).toHaveCount(12);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await page.locator('[data-lang="cs"]').click();
