@@ -96,7 +96,7 @@
   // Title and description are translated like any other string: interpolating a
   // hardcoded English fragment produced Czech pages titled "… Česko municipal budget".
   const fillTemplate = (template, values) => String(template || "").replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "");
-  const numeric = (value) => Number.isFinite(Number(value)) ? Number(value) : null;
+  const numeric = (value) => value === null || value === undefined || value === "" ? null : Number.isFinite(Number(value)) ? Number(value) : null;
   const percentage = (value) => Number.isFinite(value) ? new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", { style: "percent", maximumFractionDigits: 1 }).format(value) : "—";
   const nearestAnnual = (values, requestedYear) => {
     const years = Object.keys(values || {}).map(Number).filter(Number.isFinite).sort((a, b) => a - b);
@@ -408,6 +408,100 @@
     return `<section class="profile-currency-converter" aria-label="${escapeHtml(t.displayCurrency)}"><div><span>${t.displayCurrency}</span><strong>${escapeHtml(method)}</strong><small>${t.fxCopy}</small></div><div class="profile-currency-options" role="group" aria-label="${escapeHtml(t.displayCurrency)}">${[["native", `${t.nativeCurrency} · ${profile.currency}`], ["EUR", "EUR"], ["USD", "USD"]].map(([currency, label]) => `<button type="button" data-profile-currency="${currency}" class="${displayCurrency === currency ? "active" : ""}" aria-pressed="${displayCurrency === currency}">${escapeHtml(label)}</button>`).join("")}</div>${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(applied.provider)} ↗</a>` : ""}</section>`;
   }
 
+  const historyChartFields = (history, fourthLabel, fourthValue) => [
+    { key: "revenue", label: copy[lang].revenue, color: "#47735c", value: (row) => numeric(row.revenue) },
+    { key: "expenditure", label: copy[lang].expenditure, color: "#d2674d", value: (row) => numeric(row.expenditure) },
+    { key: "position", label: fourthLabel, color: "#315ba6", value: fourthValue },
+  ].filter((field) => history.some((row) => field.value(row) !== null));
+
+  function historyChartMarkup(history, fourthLabel, fourthValue) {
+    const t = copy[lang];
+    const fields = historyChartFields(history, fourthLabel, fourthValue);
+    const width = 1120;
+    const height = 430;
+    const left = 72;
+    const right = 28;
+    const top = 36;
+    const bottom = 54;
+    const convertedValue = (row, field) => {
+      const value = field.value(row);
+      return value === null ? null : value * conversion(row.year).factor;
+    };
+    const values = history.flatMap((row) => fields.map((field) => convertedValue(row, field))).filter((value) => value !== null);
+    if (!values.length) return "";
+    const sourceMax = Math.max(...values, 0);
+    const roughStep = Math.max(sourceMax / 4, 1);
+    const power = 10 ** Math.floor(Math.log10(roughStep));
+    const fraction = roughStep / power;
+    const multiplier = [1, 2, 2.5, 5, 10].find((candidate) => candidate >= fraction) || 10;
+    const step = multiplier * power;
+    const maximum = Math.max(step, Math.ceil(sourceMax / step) * step);
+    const ticks = Array.from({ length: Math.round(maximum / step) + 1 }, (_, index) => index * step);
+    const divisor = maximum >= 1e9 ? 1e9 : maximum >= 1e6 ? 1e6 : maximum >= 1e3 ? 1e3 : 1;
+    const suffix = divisor === 1e9 ? (lang === "en" ? "bn" : "mld.") : divisor === 1e6 ? (lang === "en" ? "m" : "mil.") : divisor === 1e3 ? (lang === "en" ? "k" : "tis.") : "";
+    const currency = conversion(history.at(-1)?.year).currency;
+    const unit = `${currency}${suffix ? ` ${suffix}` : ""}`;
+    const number = new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB", { maximumFractionDigits: 1 });
+    const x = (index) => history.length === 1 ? (left + width - right) / 2 : left + index * ((width - left - right) / (history.length - 1));
+    const y = (value) => top + (maximum - value) / maximum * (height - top - bottom);
+    const grid = ticks.map((value) => {
+      const ordinate = y(value);
+      return `<line x1="${left}" x2="${width - right}" y1="${ordinate.toFixed(1)}" y2="${ordinate.toFixed(1)}"/><text x="${left - 12}" y="${(ordinate + 4).toFixed(1)}" text-anchor="end">${escapeHtml(number.format(value / divisor))}</text>`;
+    }).join("");
+    const years = history.map((row, index) => index % 2 === 0 || index === history.length - 1
+      ? `<text x="${x(index).toFixed(1)}" y="${height - 22}" text-anchor="middle">${escapeHtml(row.year)}</text>`
+      : "").join("");
+    const series = fields.map((field) => {
+      let drawing = false;
+      const path = history.map((row, index) => {
+        const value = convertedValue(row, field);
+        if (value === null) { drawing = false; return ""; }
+        const command = drawing ? "L" : "M";
+        drawing = true;
+        return `${command}${x(index).toFixed(1)},${y(value).toFixed(1)}`;
+      }).join(" ");
+      const points = history.map((row, index) => {
+        const value = convertedValue(row, field);
+        return value === null ? "" : `<circle cx="${x(index).toFixed(1)}" cy="${y(value).toFixed(1)}" r="3.5"/>`;
+      }).join("");
+      return `<g class="profile-history-series" style="--history-color:${field.color}"><path class="profile-history-line" d="${path}"/>${points}</g>`;
+    }).join("");
+    const hitWidth = (width - left - right) / Math.max(history.length - 1, 1);
+    const interactions = history.map((row, index) => `<rect class="profile-history-hit" data-history-index="${index}" x="${(x(index) - hitWidth / 2).toFixed(1)}" y="${top}" width="${hitWidth.toFixed(1)}" height="${height - top - bottom}" tabindex="0" role="img" aria-label="${escapeHtml(`${row.year}: ${fields.map((field) => `${field.label} ${money(field.value(row), false, row.year)}`).join(", ")}`)}"/>`).join("");
+    const legend = fields.map((field) => `<span><i style="background:${field.color}"></i>${escapeHtml(field.label)}</span>`).join("");
+    const sourceLabel = profile.country === "CZE"
+      ? (lang === "en" ? "Ministry of Finance FIN 2-12 M municipal returns" : "Výkazy FIN 2-12 M Ministerstva financí")
+      : t.officialSource;
+    return `<figure class="profile-history-figure"><div class="profile-history-legend">${legend}<small>${escapeHtml(unit)}</small></div><div class="profile-history-chart" id="profile-history-chart" tabindex="0"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(`${t.historyTitle}: ${fields.map((field) => field.label).join(", ")}`)}"><g class="profile-history-grid">${grid}${years}<text x="18" y="22">${escapeHtml(unit)}</text></g>${series}<g class="profile-history-interactions">${interactions}</g><line class="profile-history-guide" x1="0" x2="0" y1="${top}" y2="${height - bottom}" hidden/></svg><div class="profile-history-tooltip" role="status" aria-live="polite" hidden></div></div><figcaption>${lang === "en" ? "Source" : "Zdroj"}: ${profile.source_url ? `<a href="${escapeHtml(profile.source_url)}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)}</a>` : escapeHtml(sourceLabel)}. ${escapeHtml(t.sourceCopy)}</figcaption></figure>`;
+  }
+
+  function bindHistoryChart(history, fourthLabel, fourthValue) {
+    const chart = document.querySelector("#profile-history-chart");
+    if (!chart) return;
+    const tooltip = chart.querySelector(".profile-history-tooltip");
+    const guide = chart.querySelector(".profile-history-guide");
+    const fields = historyChartFields(history, fourthLabel, fourthValue);
+    const show = (target, clientX) => {
+      const hit = target.closest(".profile-history-hit");
+      const row = history[Number(hit?.dataset.historyIndex)];
+      if (!row) return;
+      tooltip.innerHTML = `<strong>${escapeHtml(row.year)}</strong>${fields.map((field) => `<span><i style="background:${field.color}"></i>${escapeHtml(field.label)}<b>${money(field.value(row), false, row.year)}</b></span>`).join("")}`;
+      tooltip.hidden = false;
+      const rect = chart.getBoundingClientRect();
+      const anchor = Number.isFinite(clientX) ? clientX - rect.left : Number(hit.getAttribute("x")) / 1120 * rect.width;
+      tooltip.style.left = `${Math.max(8, Math.min(rect.width - 250, anchor + 14))}px`;
+      tooltip.style.top = "48px";
+      guide.removeAttribute("hidden");
+      const centre = Number(hit.getAttribute("x")) + Number(hit.getAttribute("width")) / 2;
+      guide.setAttribute("x1", centre);
+      guide.setAttribute("x2", centre);
+    };
+    chart.addEventListener("pointermove", (event) => { if (event.target.closest(".profile-history-hit")) show(event.target, event.clientX); });
+    chart.addEventListener("focusin", (event) => { if (event.target.closest(".profile-history-hit")) show(event.target); });
+    chart.addEventListener("pointerleave", () => { tooltip.hidden = true; guide.setAttribute("hidden", ""); });
+    chart.addEventListener("focusout", (event) => { if (!chart.contains(event.relatedTarget)) { tooltip.hidden = true; guide.setAttribute("hidden", ""); } });
+  }
+
   function historyMarkup(history) {
     const t = copy[lang];
     const methodWarning = profile.country === "FRA"
@@ -425,7 +519,7 @@
       return sum + amount * conversion(entry.year).factor;
     }, 0);
     const totalCurrency = conversion(history.at(-1)?.year).currency;
-    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${t.historyCopy}</p><p class="method-warning">${methodWarning}</p></div><div class="history-kpis" id="history-kpis"><article class="history-total"><span>${fillTemplate(t.sumOfResults, { years: history.length })}</span><strong>${formatMoney(convertedTotal, totalCurrency)}</strong><small>${history.at(0)?.year}–${history.at(-1)?.year}</small></article></div><details class="history-table" open><summary>${t.historyTitle}</summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.historyTitle)}"><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody id="history-table-body">${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false, row.year)}</td><td>${money(row.expenditure, false, row.year)}</td><td>${money(row.balance, false, row.year)}</td><td>${money(fourthValue(row), false, row.year)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
+    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${t.historyCopy}</p><p class="method-warning">${methodWarning}</p></div><div class="history-kpis" id="history-kpis"><article class="history-total"><span>${fillTemplate(t.sumOfResults, { years: history.length })}</span><strong>${formatMoney(convertedTotal, totalCurrency)}</strong><small>${history.at(0)?.year}–${history.at(-1)?.year}</small></article></div>${historyChartMarkup(history, fourthLabel, fourthValue)}<details class="history-table" open><summary>${t.historyTitle}</summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.historyTitle)}"><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody id="history-table-body">${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false, row.year)}</td><td>${money(row.expenditure, false, row.year)}</td><td>${money(row.balance, false, row.year)}</td><td>${money(fourthValue(row), false, row.year)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
   }
 
   function stageTableMarkup(rows, latestYear) {
@@ -742,6 +836,11 @@
       ${cityvizorSectionMarkup()}
       <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(profile.source_url || document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a>${detailSourceLinks(t)}${profile.approved_budget_url ? `<a href="${escapeHtml(profile.approved_budget_url)}" target="_blank" rel="noopener"><span>${t.approvedBudget} ${escapeHtml(profile.approved_budget_year)}</span><strong>${t.open}</strong></a>` : ""}${profile.region_source_url ? `<a href="${escapeHtml(profile.region_source_url)}" target="_blank" rel="noopener"><span>${t.regionalAccounts}</span><strong>${t.open}</strong></a>` : ""}<a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();
+    if (history.length > 1) {
+      const fourthValue = (row) => numeric(row.cash) !== null ? numeric(row.cash) : numeric(row.debt);
+      const fourthLabel = history.some((row) => numeric(row.cash) !== null) ? t.cashBalance : t.debt;
+      bindHistoryChart(history, fourthLabel, fourthValue);
+    }
     renderDetailTable();
     bindControls();
   }
