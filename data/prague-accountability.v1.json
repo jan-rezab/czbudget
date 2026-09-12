@@ -1,0 +1,4129 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "prague-accountability.v1",
+  "generated_at": "2026-09-12T19:00:00+00:00",
+  "entity": {
+    "name": "Hlavní město Praha",
+    "ico": "00064581",
+    "public_entity_id": "CZ:00064581",
+    "cityvizor_name": "Hlavní město Praha",
+    "cityvizor_profile_key": "cityvizor.praha.eu/4"
+  },
+  "source": {
+    "snapshot": "2026-09-09",
+    "release_id": "20260909-2294793cff54",
+    "instance": "https://cityvizor.praha.eu",
+    "inputs": [
+      {
+        "file": "praha-events-2008-2026.csv.gz",
+        "sha256": "876f8ca00b7e8b7acccfb0d5f8706711c33dd4c48570c54fec21af54177574f7",
+        "bytes": 667056,
+        "role": "events"
+      },
+      {
+        "file": "praha-accounting-by-event.json.gz",
+        "sha256": "602a2bdf78096f39ddb68334f3e4d4256c8ffb78e6995fcbf5699fb28f55c6cc",
+        "bytes": 347564,
+        "role": "accounting_by_event"
+      },
+      {
+        "file": "praha-district-icos.csv",
+        "sha256": "c19bac0725bafd36e05c2b06236214ea99342c9b2f5152857d99ee5ad64be82b",
+        "bytes": 1353,
+        "role": "district_icos"
+      }
+    ],
+    "method_cs": "Rozpočet a název akce z events.csv; skutečnost z accounting.csv (vše kromě třídy ROZ) spárovaná přes sloupec event. Roky s poškozeným zveřejněním jsou vyloučeny z každého úsudku o čerpání a vyjmenovány.",
+    "method_en": "Budget and event name from events.csv; actuals from accounting.csv (all document classes except ROZ) joined on the event column. Years with a broken publication are excluded from every spend judgement and listed."
+  },
+  "rules": {
+    "band_czk": {
+      "min": 200000,
+      "max": 10000000
+    },
+    "stuck_rule": {
+      "min_trusted_years": 3,
+      "max_actual_share": 0.01
+    },
+    "broken_feed_rule": {
+      "min_events": 20,
+      "min_budget_czk": 50000000,
+      "max_execution_share": 0.05
+    }
+  },
+  "execution_baseline": [
+    {
+      "year": 2018,
+      "budget_czk": 83054983800.0,
+      "actual_czk": 75719877505.88,
+      "execution_share": 0.9117,
+      "trusted": true,
+      "partial_year": false
+    },
+    {
+      "year": 2019,
+      "budget_czk": 89218410600.0,
+      "actual_czk": 77317085157.36,
+      "execution_share": 0.8666,
+      "trusted": true,
+      "partial_year": false
+    },
+    {
+      "year": 2020,
+      "budget_czk": 98121502000.0,
+      "actual_czk": 84207167597.62,
+      "execution_share": 0.8582,
+      "trusted": true,
+      "partial_year": false
+    },
+    {
+      "year": 2021,
+      "budget_czk": 85036539800.0,
+      "actual_czk": 74151637084.74,
+      "execution_share": 0.872,
+      "trusted": true,
+      "partial_year": false
+    },
+    {
+      "year": 2022,
+      "budget_czk": 113599450700.0,
+      "actual_czk": 89520946054.91,
+      "execution_share": 0.788,
+      "trusted": true,
+      "partial_year": false
+    },
+    {
+      "year": 2023,
+      "budget_czk": 106358238300.0,
+      "actual_czk": 82979332398.33,
+      "execution_share": 0.7802,
+      "trusted": true,
+      "partial_year": false
+    },
+    {
+      "year": 2024,
+      "budget_czk": 110275723200.0,
+      "actual_czk": 88393428003.59,
+      "execution_share": 0.8016,
+      "trusted": true,
+      "partial_year": false
+    },
+    {
+      "year": 2025,
+      "budget_czk": 124059647600.0,
+      "actual_czk": 4922951114.87,
+      "execution_share": 0.0397,
+      "trusted": false,
+      "partial_year": false
+    },
+    {
+      "year": 2026,
+      "budget_czk": 133867690500.0,
+      "actual_czk": 57663914865.07,
+      "execution_share": 0.4308,
+      "trusted": true,
+      "partial_year": true
+    }
+  ],
+  "broken_feeds": [
+    {
+      "entity": "Hlavní město Praha",
+      "year": 2025,
+      "code": "duplicated_2026_bundle",
+      "note_cs": "Balík za rok 2025 je duplikát dat z roku 2026 (98–100 % řádků bajtově shodných, datovaných 1–2/2026). Skutečnost 2025 chybí; rozpočet 2025 platí.",
+      "note_en": "The 2025 bundle duplicates 2026 data (98–100% of rows byte-identical, dated Jan–Feb 2026). 2025 actuals are missing; the 2025 budget stands.",
+      "execution_share": 0.0397
+    },
+    {
+      "entity": "Praha 1",
+      "year": 2025,
+      "code": "duplicated_2026_bundle",
+      "note_cs": "Stejná chyba jako u hl. m. Prahy: balík 2025 je duplikát 2026.",
+      "note_en": "Same failure as the city: the 2025 bundle duplicates 2026.",
+      "execution_share": 0.0747
+    },
+    {
+      "entity": "Praha 6",
+      "year": 2025,
+      "code": "truncated_feed",
+      "note_cs": "Rok useknutý v lednu (138 řádků).",
+      "note_en": "Year truncated in January (138 rows).",
+      "execution_share": 0.0326
+    }
+  ],
+  "stuck_summary": {
+    "projects": 82,
+    "cum_budget_czk": 448878400.0,
+    "cum_actual_czk": 297177.31,
+    "still_live_2026": 37,
+    "abandoned": 45,
+    "excluded": {
+      "provision": {
+        "count": 23,
+        "cum_budget_czk": 274619000.0
+      }
+    }
+  },
+  "stuck_projects": [
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46194",
+      "name": "Inst. fotovolt. syst. na byt. domy hl.m. Prahy",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 26250000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 8750000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 8750000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 8750000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 8750000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 8750000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "delivered_elsewhere",
+        "confidence": "medium",
+        "verdict_cs": "Rada akci založila v září 2021. V únoru 2022 město založilo Pražské společenství obnovitelné energie a instalace šly přes něj (zápůjčky, 59 instalací na 73 budovách do ledna 2026). Rozpočtový řádek se dál opisoval a nikdy nebyl uzavřen.",
+        "verdict_en": "The council created the action in September 2021. In February 2022 the city founded the Prague Renewable Energy Community and installations went through it (loans, 59 installations on 73 buildings by January 2026). The budget line kept being copied and was never closed.",
+        "resolutions": [
+          {
+            "date": "2021-09-20",
+            "body": "RHMP",
+            "number": "2270",
+            "title": "k záměru odboru HOM MHMP na realizaci veřejné zakázky „Instalace fotovoltaických systémů na bytové domy hl. m. Prahy“ a zavedení nové investiční akce do centrálního číselníku akcí (tisk R-41067)",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          }
+        ],
+        "sources": [
+          {
+            "label": "praha.eu — instalace FVE na další městské objekty (1/2026)",
+            "url": "https://praha.eu/web/praha/w/praha-posouva-instalace-fotovoltaickych-elektraren-na-dalsi-mestske-objekty"
+          },
+          {
+            "label": "solarninovinky.cz — vznik PSOE (2/2022)",
+            "url": "https://www.solarninovinky.cz/v-praze-vzniklo-prazske-spolecenstvi-pro-obnovitelnou-energii-realizuje-solarni-elektrarny-na-mestskych-budovach/"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44736",
+      "name": "Severojižní magistrála - zvýšení bezpečnosti",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 7,
+      "first_year": 2019,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 21793000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 10000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 10000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 93000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 5000000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 5000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "stalled_in_study",
+        "confidence": "medium",
+        "verdict_cs": "Osm let v rozpočtu, tři koncepční usnesení 2016–2017, tři rozpočtové přesuny 2019, od té doby nic. Podle TSK je projekt ve fázi studie proveditelnosti s výhledem 5–7 let.",
+        "verdict_en": "Eight years in the budget, three concept resolutions in 2016–2017, three budget transfers in 2019, nothing since. TSK reports the project at feasibility-study stage with a 5–7 year horizon.",
+        "resolutions": [
+          {
+            "date": "2016-10-18",
+            "body": "RHMP",
+            "number": "2582",
+            "title": "ke spolupráci s Gehl Architects na Koncepci veřejného prostoru Severojižní magistrály",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          },
+          {
+            "date": "2016-10-25",
+            "body": "RHMP",
+            "number": "2583",
+            "title": "ke spolupráci s Gehl Architects na Koncepci veřejného prostoru Severojižní magistrály",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          },
+          {
+            "date": "2017-08-29",
+            "body": "RHMP",
+            "number": "2034",
+            "title": "k revitalizaci veřejného prostoru Severojižní magistrály",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          },
+          {
+            "date": "2019-04-23",
+            "body": "RHMP",
+            "number": "728",
+            "title": "k návrhu na úpravu rozpočtu kapitálových a běžných výdajů MHMP RFD-SK v kapitole 03 Doprava",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          },
+          {
+            "date": "2019-06-17",
+            "body": "RHMP",
+            "number": "1270",
+            "title": "k návrhu na úpravu rozpočtu kapitálových a běžných výdajů MHMP ODO-SK v kapitole 03 Doprava",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          },
+          {
+            "date": "2019-09-09",
+            "body": "RHMP",
+            "number": "1889",
+            "title": "k návrhu na úpravu rozpočtu kapitálových výdajů MHMP ODO-SK v kapitole 03 Doprava",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          }
+        ],
+        "sources": [
+          {
+            "label": "TSK Praha — rekonstrukce magistrály",
+            "url": "https://www.tsk-praha.cz/praha-planuje-rekonstrukci-magistraly-promeni-se-v-moderni-mestsky-bulvar-spolecne-s-jecnou-ulici/"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "94010",
+      "name": "OIC - 09 - datové centrum - Malovanka",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2021,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 20160000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 10000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2021,
+          "budget_czk": 3600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 2600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 3960000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 10000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "blocked_by_dependency",
+        "confidence": "medium",
+        "verdict_cs": "Datové centrum je součástí Multifunkčního operačního střediska Malovanka. Stavba hostitelské budovy byla přerušena 2016, znovu soutěžena 12/2021 a prakticky dokončena až 12/2025. Vybavení nemohlo začít.",
+        "verdict_en": "The data centre is part of the Malovanka multifunctional operations centre. The host building was suspended in 2016, re-tendered in 12/2021 and reached practical completion only in 12/2025. The fit-out could not start.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "Wikipedia — Multifunkční operační středisko Malovanka",
+            "url": "https://cs.wikipedia.org/wiki/Multifunk%C4%8Dn%C3%AD_opera%C4%8Dn%C3%AD_st%C5%99edisko_Malovanka"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44682",
+      "name": "Rozšířená podpora technol. OS krizového štábu HMP",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2019,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 18733300.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 4675500.0,
+      "carry_forward_pairs": 3,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 4675500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 4675500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 4675500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 4675500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 31300.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "lapsed_reprocured",
+        "confidence": "medium",
+        "verdict_cs": "Původní rozpočet propadl bez čerpání; modernizace technologií operačního střediska byla později soutěžena znovu a větší (~36 mil. Kč) kvůli dožitému vybavení.",
+        "verdict_en": "The original budget lapsed unspent; the operations-centre technology was later re-tendered at a larger scale (~CZK 36m) because the equipment had reached end of life.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "Ekonomický deník — Praha zainvestuje miliony do krizového štábu",
+            "url": "https://ekonomickydenik.cz/praha-zainvestuje-miliony-do-krizoveho-stabu/"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44686",
+      "name": "Multifunkční budova MHMP",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2019,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 17100000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 7000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 7000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 1100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 2500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 2500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "no_resolution_found",
+        "confidence": "high",
+        "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo jediné rozhodnutí, které by projekt jmenovalo. Objevuje se jen uvnitř rutinních zpráv o plnění rozpočtu.",
+        "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming the project. It appears only inside routine budget-execution reports.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46905",
+      "name": "Seifertova, rek. komunikace, P3",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 16704000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 9639000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 65000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 7000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 8300000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 9639000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "8783",
+      "name": "Podjezd Chlumecká",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 7,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 12768000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3000000.0,
+      "carry_forward_pairs": 3,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 2268000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 3000000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 3000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "identity_unresolved",
+        "confidence": "low",
+        "verdict_cs": "Stejnojmenný podjezd u Černého Mostu byl otevřen v roce 2008. Co přesně financuje řádek 2018–2026, se nepodařilo určit.",
+        "verdict_en": "An underpass of the same name at Černý Most opened in 2008. What the 2018–2026 line funds could not be established.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "KO-KA — Podjezd Chlumecká (2008)",
+            "url": "https://ko-ka.cz/projekty/podjezd-chlumecka/"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "40032",
+      "name": "Komunikace Toužimská",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 8,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 12500000.0,
+      "cum_actual_czk": 18250.0,
+      "peak_annual_budget_czk": 5000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 1000000.0,
+          "actual_czk": 6050.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 5000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 50000.0,
+          "actual_czk": 12200.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 1450000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 1450000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "sequenced_behind_other_project",
+        "confidence": "low",
+        "verdict_cs": "Podle MČ Praha 18 čeká úprava Toužimské na dokončení náhradního propojení Veselská–Kbely–Mladoboleslavská. Novější potvrzení blokace se nepodařilo najít.",
+        "verdict_en": "According to Prague 18, the Toužimská works wait for the replacement Veselská–Kbely–Mladoboleslavská link. No recent confirmation of the blocker was found.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "MČ Praha 18 — Toužimská, zaslepení ulice",
+            "url": "https://www.praha18.cz/touzimska-zaslepeni-ulice/d-40401"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "43358",
+      "name": "ZUŠ Stodůlky",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2018,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 12500000.0,
+      "cum_actual_czk": 84700.0,
+      "peak_annual_budget_czk": 4500000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 3000000.0,
+          "actual_czk": 50820.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 4500000.0,
+          "actual_czk": 33880.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46951",
+      "name": "ZŠ pro žáky se specif.poruch.učení - přístavba",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 12003800.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 8500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 2003800.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 8500000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 8500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44974",
+      "name": "Na Kleovce",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 7,
+      "first_year": 2019,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 11203800.0,
+      "cum_actual_czk": 47190.0,
+      "peak_annual_budget_czk": 5000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 5000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 200000.0,
+          "actual_czk": 47190.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 403800.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 2100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 2500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "identity_unresolved",
+        "confidence": "low",
+        "verdict_cs": "Ulice Na Kleovce prošla rekonstrukcí kanalizace duben–červenec 2025 a byla znovu otevřena v prosinci 2025 — z jiného rozpočtového řádku. Tento řádek zůstává na nule i v roce 2026.",
+        "verdict_en": "Na Kleovce street had its sewer rebuilt April–July 2025 and reopened in December 2025 — from a different budget line. This line stays at zero in 2026 as well.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "Městem na kole — Na Kleovce (12/2025)",
+            "url": "https://mestemnakole.cz/2025/12/praha-2-ulice-na-kleovce-je-nove-jednosmerna-cykloobousmerka-bude-po-kolaudaci/"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46547",
+      "name": "Košická, rek. komunikace, P10",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 10905000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 10000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 10000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 805000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44683",
+      "name": "Výstavba městského informačního systému",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2020,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 10860000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 4000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2020,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 860000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "not_found",
+        "confidence": "low",
+        "verdict_cs": "Žádné usnesení ani veřejná stopa se nenašly. Otevřená mezera, ne potvrzená příčina.",
+        "verdict_en": "No resolution or public trail was found. An open gap, not a confirmed cause.",
+        "resolutions": [],
+        "sources": []
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44565",
+      "name": "Uzel Vltavská",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2019,
+      "last_year": 2021,
+      "still_live_2026": false,
+      "cum_budget_czk": 10300000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 4800000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 4800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "identity_unresolved",
+        "confidence": "low",
+        "verdict_cs": "Jméno sdílí vestibul metra, tramvajový uzel i historická silniční křižovatka. Nelze určit, který projekt řádek financoval ani proč byl v roce 2021 vypuštěn.",
+        "verdict_en": "The name is shared by a metro vestibule, a tram junction and a historic road interchange. Which project the line funded, or why it was dropped in 2021, could not be determined.",
+        "resolutions": [],
+        "sources": []
+      }
+    },
+    {
+      "entity": "Praha 11",
+      "event_id": "8000",
+      "name": "Akce č. 0000000008000",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 10226100.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 7498200.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 94000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 2289800.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 304600.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 39500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 7498200.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44589",
+      "name": "MÚK Řevnická",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2019,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 10000000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 5000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 5000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "permitting_halted",
+        "confidence": "low",
+        "verdict_cs": "Územní řízení zahájeno v lednu 2012 a zastaveno v dubnu 2014 kvůli množství připomínek. Město akci financovalo dalších pět let (2019–2023) a pak ji tiše vypustilo.",
+        "verdict_en": "Zoning proceedings opened in January 2012 and were halted in April 2014 over the volume of objections. The city kept funding the action for five more years (2019–2023) and then quietly dropped it.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "IPR Praha — komplexní zdůvodnění (díl C)",
+            "url": "https://iprpraha.cz/uploads/assets/textova-cast/oduvodneni/DilC/DilC-Komplexni_zduvodneni_6.pdf"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Praha-Dolní Měcholupy",
+      "event_id": "81534000000",
+      "name": "Kontejnerová MŠ (ORJ 400)",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 9980500.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3993500.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 2993500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 3993500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 2993500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "not_found",
+        "confidence": "low",
+        "verdict_cs": "Žádné usnesení ani veřejná stopa se nenašly. Otevřená mezera, ne potvrzená příčina.",
+        "verdict_en": "No resolution or public trail was found. An open gap, not a confirmed cause.",
+        "resolutions": [],
+        "sources": []
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46953",
+      "name": "Smíchovská SPŠ a gymnázium - navýšení kapacity",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 9500000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 6000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 3000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 6000000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 6000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44273",
+      "name": "Braunova",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2019,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 9465000.0,
+      "cum_actual_czk": 23958.0,
+      "peak_annual_budget_czk": 8000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 8000000.0,
+          "actual_czk": 23958.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 365000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44593",
+      "name": "Parkovací dům Stodůlky",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2019,
+      "last_year": 2022,
+      "still_live_2026": false,
+      "cum_budget_czk": 9000000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 4000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "not_found",
+        "confidence": "low",
+        "verdict_cs": "Žádné usnesení ani veřejná stopa se nenašly. Otevřená mezera, ne potvrzená příčina.",
+        "verdict_en": "No resolution or public trail was found. An open gap, not a confirmed cause.",
+        "resolutions": [],
+        "sources": []
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "7119",
+      "name": "Karoliny Světlé",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2018,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 8973600.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 5000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 5000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 2575000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 1248600.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "40021",
+      "name": "TV Petrovice",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 7500000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3500000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 3500000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 3500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "no_resolution_found",
+        "confidence": "high",
+        "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo žádné rozhodnutí, které by akci „TV Petrovice“ jmenovalo. Žije jen v rutinních úpravách rozpočtu.",
+        "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming “TV Petrovice”. It lives only in routine budget adjustments.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "45864",
+      "name": "Horoměřická, rek. mostu S016, P6",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2021,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 7500000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 6300000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2021,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 6300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 700000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 22",
+      "event_id": "81170000000",
+      "name": "Akce č. 0081170000000",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2020,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 7200000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1800000.0,
+      "carry_forward_pairs": 3,
+      "trajectory": [
+        {
+          "year": 2020,
+          "budget_czk": 1800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 1800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 1800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 1800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha-Dolní Měcholupy",
+      "event_id": "81251000000",
+      "name": "Rekonstrukce DPS (ORJ 500)",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 7000000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 3000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "42813",
+      "name": "Výkupy pozemků ke kanalizačnímu sběrači G vč. G6",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 6,
+      "first_year": 2019,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 6748000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1689000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 1689000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 889000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 781000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 900000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 1689000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 1689000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "no_resolution_found",
+        "confidence": "high",
+        "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo žádné rozhodnutí, které by akci „Výkupy pozemků ke sběrači G“ jmenovalo. Žije jen v rutinních úpravách rozpočtu.",
+        "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming “land purchases for trunk sewer G”. It lives only in routine budget adjustments.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44141",
+      "name": "Lávka Horoměřická",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 7,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 6700000.0,
+      "cum_actual_czk": 20000.0,
+      "peak_annual_budget_czk": 1500000.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 1000000.0,
+          "actual_czk": 20000.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 400000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 400000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 900000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 900000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "design_contract_collapsed",
+        "confidence": "medium",
+        "verdict_cs": "Rada MČ Praha 6 schválila soutěžní podmínky (usn. 3374/18, 4. 4. 2018). Vítězný návrh byl dodatečně vyloučen pro nesplnění bezbariérovosti; následovalo jednací řízení s 2. a 3. místem. Bez smlouvy na projekt není co čerpat.",
+        "verdict_en": "Prague 6 district council approved the competition terms (res. 3374/18, 4 April 2018). The winning entry was later disqualified for failing barrier-free requirements; a negotiated procedure with the 2nd and 3rd place followed. With no design contract there is nothing to draw.",
+        "resolutions": [
+          {
+            "date": "2018-04-04",
+            "body": "RMČ Praha 6",
+            "number": "3374/18",
+            "title": "soutěžní podmínky architektonické soutěže Lávka Horoměřická",
+            "url": "https://old5.praha6.cz/lavka-horomericka"
+          }
+        ],
+        "sources": [
+          {
+            "label": "ČKA — databáze soutěží",
+            "url": "https://www.cka.cz/souteze/databaze/pesi-lavka-pres-ulici-horomericka-v-dejvicich-a-ve-vokovicich"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "2014",
+      "name": "Státní přís. na výk. pěstoun. péče z r. 2014",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 9,
+      "first_year": 2015,
+      "last_year": 2023,
+      "still_live_2026": false,
+      "cum_budget_czk": 6192000.0,
+      "cum_actual_czk": 22350.51,
+      "peak_annual_budget_czk": 694000.0,
+      "carry_forward_pairs": 6,
+      "trajectory": [
+        {
+          "year": 2015,
+          "budget_czk": 694000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2016,
+          "budget_czk": 694000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2017,
+          "budget_czk": 694000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2018,
+          "budget_czk": 694000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 694000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 694000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 694000.0,
+          "actual_czk": 22350.51,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 667000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 667000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "42359",
+      "name": "Papírenská - kanalizační sběrač",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 6,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 6019200.0,
+      "cum_actual_czk": 20200.0,
+      "peak_annual_budget_czk": 3500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 1000000.0,
+          "actual_czk": 1000.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 19200.0,
+          "actual_czk": 19200.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 3500000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 3500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": {
+        "status": "no_resolution_found",
+        "confidence": "high",
+        "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo žádné rozhodnutí, které by akci „Papírenská – kanalizační sběrač“ jmenovalo. Žije jen v rutinních úpravách rozpočtu.",
+        "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming “Papírenská trunk sewer”. It lives only in routine budget adjustments.",
+        "resolutions": [],
+        "sources": [
+          {
+            "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+            "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+          }
+        ]
+      }
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46552",
+      "name": "Most Mánesův, V014 – rek., P1",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 5542000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 5147000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 43000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 352000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 5000000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 5147000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46177",
+      "name": "Most v ul. Českobrodská, X680, P9",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2022,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 4837100.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 2150000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 2150000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 587100.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 1100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "729024",
+      "name": "ZŠ Letohradská - reko elektrorozvodů",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2024,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 4705000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3600000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2024,
+          "budget_czk": 495000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 610000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 3600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46906",
+      "name": "Kontrolní stanoviště Povltavská, P7",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 4558000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1950000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 730000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 1950000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 1878000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46168",
+      "name": "Barrandovská - Skalní, rek. schodiště, P5",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2022,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 4557000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3487000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 177000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 3487000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 93000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 12",
+      "event_id": "1163",
+      "name": "Rekonstrukce ZŠ Prague British International School - investice",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 4138000.0,
+      "cum_actual_czk": 18000.0,
+      "peak_annual_budget_czk": 4000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 20000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 18000.0,
+          "actual_czk": 18000.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 4000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46954",
+      "name": "Gymnázium Na Zatlance - půdní vestavba II-příprava",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 4000000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 3000000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 3000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 1",
+      "event_id": "5",
+      "name": "Vrchlického sady",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2017,
+      "last_year": 2021,
+      "still_live_2026": false,
+      "cum_budget_czk": 3999100.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1000000.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2017,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2018,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 977000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 22100.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "43643",
+      "name": "VOŠ a SŠSE Novovysočanská, P9 - montovaná hala",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 6,
+      "first_year": 2018,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 3904900.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 3000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 118600.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 118600.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 268600.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 3000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 199100.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "650022",
+      "name": "Výsadba stromů - Ortenovo nám.",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 3800000.0,
+      "cum_actual_czk": 8228.0,
+      "peak_annual_budget_czk": 1800000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 1800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 1800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 200000.0,
+          "actual_czk": 8228.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "45569",
+      "name": "Revitalizace náměstí Bohumila Hrabala",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2021,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 3650000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1500000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2021,
+          "budget_czk": 1150000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 12",
+      "event_id": "1179",
+      "name": "Příprava na projekty ZŠ - investice",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2024,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 3600400.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 2500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2024,
+          "budget_czk": 2500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 620800.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 479600.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "8263",
+      "name": "P - 14, Aloisov",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 3500000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 2000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 2000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "231090",
+      "name": "Kamerový monitor. systém na území MČ P/7",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2012,
+      "last_year": 2014,
+      "still_live_2026": false,
+      "cum_budget_czk": 2880000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 960000.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2012,
+          "budget_czk": 960000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2013,
+          "budget_czk": 960000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2014,
+          "budget_czk": 960000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46907",
+      "name": "Nad Strání, rek. komunikace, P8",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 2836000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 2659000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 77000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 2659000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "331012",
+      "name": "ZŠ Korunovační - modernizace osvětlení",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2012,
+      "last_year": 2015,
+      "still_live_2026": false,
+      "cum_budget_czk": 2800000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 700000.0,
+      "carry_forward_pairs": 3,
+      "trajectory": [
+        {
+          "year": 2012,
+          "budget_czk": 700000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2013,
+          "budget_czk": 700000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2014,
+          "budget_czk": 700000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2015,
+          "budget_czk": 700000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 14",
+      "event_id": "15330001444",
+      "name": "OI-EU-\"Vybíralka 25\"",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2022,
+      "last_year": 2025,
+      "still_live_2026": false,
+      "cum_budget_czk": 2748500.0,
+      "cum_actual_czk": 24300.8,
+      "peak_annual_budget_czk": 1524200.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 1524200.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 424300.0,
+          "actual_czk": 24300.8,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 400000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 400000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "45108",
+      "name": "TV Praha 10",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2020,
+      "last_year": 2022,
+      "still_live_2026": false,
+      "cum_budget_czk": 2500000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1500000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2020,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "697023",
+      "name": "Vertikální zelená infrastruktura v ulici U Uranie",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 2400000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1800000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 1800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46181",
+      "name": "Podlipného, rek. komunikace, P8",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 2320000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1000000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 320000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "710024",
+      "name": "Náměstí Ludvíka Vaculíka",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2024,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 2300000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 800000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2024,
+          "budget_czk": 700000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 12",
+      "event_id": "1176",
+      "name": "Příprava na projekty MŠ - investice",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2024,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 2205800.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2024,
+          "budget_czk": 1500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 5800.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 700000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 14",
+      "event_id": "1440",
+      "name": "OI - Infrastruktura Staré Kyje - Dar",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2022,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 2202000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 440400.0,
+      "carry_forward_pairs": 4,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 440400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 440400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 440400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 440400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 440400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 12",
+      "event_id": "1170",
+      "name": "Pítka a mlžítka na frekventovaných sportovních a dětských hřištích - investice",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2025,
+      "still_live_2026": false,
+      "cum_budget_czk": 2140000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1900000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 40000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 1900000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "43931",
+      "name": "Gym. J.Heyrovského, P5 - rek.oplocení areálu školy",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2018,
+      "last_year": 2020,
+      "still_live_2026": false,
+      "cum_budget_czk": 1800000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 600000.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "506017",
+      "name": "Přeměna ul. Antonínská",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2017,
+      "last_year": 2020,
+      "still_live_2026": false,
+      "cum_budget_czk": 1750000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2017,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2018,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46904",
+      "name": "Soborská, rek. komunikace, P6",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 1700000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 800000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 800000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "720024",
+      "name": "Majetkové akvizice - nákupy nemovitostí",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2024,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 1550000.0,
+      "cum_actual_czk": 10000.0,
+      "peak_annual_budget_czk": 750000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2024,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 750000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 750000.0,
+          "actual_czk": 10000.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 1",
+      "event_id": "81124000117",
+      "name": "Rekonstrukce služeben-Jungmannovo nám. 9, P1-rekonstrukce vstupu, výměna oken PČR",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2020,
+      "last_year": 2022,
+      "still_live_2026": false,
+      "cum_budget_czk": 1500000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 500000.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2020,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 14",
+      "event_id": "1371",
+      "name": "OI-Rekonstrukce a stavba chodníků, ul Tálinská, L,",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2022,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 1452000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 290400.0,
+      "carry_forward_pairs": 4,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 290400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 290400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 290400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 290400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 290400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46556",
+      "name": "Slivenecká, rek. komunikace, P5",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 1300000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 600000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 600000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        },
+        {
+          "year": 2026,
+          "budget_czk": 600000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "810",
+      "name": "SFZ",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2024,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 1250000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 900000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2024,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 900000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "45554",
+      "name": "Most v ul. Přílepská, S 033, P6",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2021,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 1218900.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2021,
+          "budget_czk": 69000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 149900.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 17",
+      "event_id": "407800",
+      "name": "Poliklinika Žufanova - zřízení EPS",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2019,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 1200000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 400000.0,
+      "carry_forward_pairs": 3,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 400000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 18",
+      "event_id": "1319",
+      "name": "Objekt SPŠ Letov - studie proveditelnosti",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2017,
+      "last_year": 2019,
+      "still_live_2026": false,
+      "cum_budget_czk": 1200000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 500000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2017,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2018,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "45552",
+      "name": "Most v ul. Jinočanská, S 032, P6",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2021,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 1170200.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2021,
+          "budget_czk": 20000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 150200.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "570020",
+      "name": "ZŠ Letohradská  - rozšíření kapacit",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2020,
+      "last_year": 2022,
+      "still_live_2026": false,
+      "cum_budget_czk": 1120000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 1000000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2020,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 20000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 1000000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "8653",
+      "name": "Realizace opatření na úsporu energie a adaptační opatření",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2018,
+      "last_year": 2025,
+      "still_live_2026": false,
+      "cum_budget_czk": 1056400.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 4500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 1037400.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 10000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 9000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 4500000.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "45551",
+      "name": "Most v ul. K Šeberáku, K 008, P4",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 1000000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 400000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 400000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "319012",
+      "name": "MŠ U Průhonu  (prac.PO MŠ Letohradská)-opr.objektu",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 4,
+      "first_year": 2012,
+      "last_year": 2015,
+      "still_live_2026": false,
+      "cum_budget_czk": 1000000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 250000.0,
+      "carry_forward_pairs": 3,
+      "trajectory": [
+        {
+          "year": 2012,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2013,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2014,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2015,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 9",
+      "event_id": "182303",
+      "name": "ZŠ Litvínovská 600 - únikové schodiště Pavilon H",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2023,
+      "last_year": 2025,
+      "still_live_2026": false,
+      "cum_budget_czk": 1000000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 400000.0,
+      "carry_forward_pairs": 1,
+      "trajectory": [
+        {
+          "year": 2023,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 400000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "42840",
+      "name": "SŠ a MŠ ALOYSE KLARA  P4 přístavba MŠ",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2018,
+      "last_year": 2020,
+      "still_live_2026": false,
+      "cum_budget_czk": 996000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 332000.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 332000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 332000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 332000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 11",
+      "event_id": "30000",
+      "name": "PD ZŠ",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2017,
+      "last_year": 2020,
+      "still_live_2026": false,
+      "cum_budget_czk": 907900.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 529000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2017,
+          "budget_czk": 281000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2018,
+          "budget_czk": 97900.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 529000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "431107",
+      "name": "ZPS - Obnova veř.svět.-Řezáčovo nám",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2014,
+      "last_year": 2016,
+      "still_live_2026": false,
+      "cum_budget_czk": 882000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 294000.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2014,
+          "budget_czk": 294000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2015,
+          "budget_czk": 294000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2016,
+          "budget_czk": 294000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "43929",
+      "name": "DM a ŠJ Lovosická, P9 - oplocení areálu DM",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2018,
+      "last_year": 2020,
+      "still_live_2026": false,
+      "cum_budget_czk": 823500.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 274500.0,
+      "carry_forward_pairs": 2,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 274500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 274500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 274500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "511018",
+      "name": "Ul. Kostelní - revit. hlídaného parkoviště a okolí",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2018,
+      "last_year": 2020,
+      "still_live_2026": false,
+      "cum_budget_czk": 750000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "546019",
+      "name": "Work flow",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2019,
+      "last_year": 2021,
+      "still_live_2026": false,
+      "cum_budget_czk": 720000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 370000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2019,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 370000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46542",
+      "name": "Most Palackého, V024 – rek., P2,5",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 700000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 7",
+      "event_id": "713024",
+      "name": "ZŠ Plamínkové - reko venkovního hřiště",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2024,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 700000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 500000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2024,
+          "budget_czk": 500000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 100000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 17",
+      "event_id": "203103",
+      "name": "ZŠ J. Wericha - řešení propadající se kanalizace",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 3,
+      "first_year": 2022,
+      "last_year": 2024,
+      "still_live_2026": false,
+      "cum_budget_czk": 691000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 300000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2022,
+          "budget_czk": 141000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 250000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 12",
+      "event_id": "1146",
+      "name": "Vyhlídkové místo Točná - investice",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 7,
+      "first_year": 2020,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 600000.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 300000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2020,
+          "budget_czk": 300000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 50000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 1",
+      "event_id": "150",
+      "name": "Rekonstrukce bytu Cihelná 2",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2020,
+      "last_year": 2025,
+      "still_live_2026": false,
+      "cum_budget_czk": 466100.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 200000.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2020,
+          "budget_czk": 200000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 66600.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2022,
+          "budget_czk": 66500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2023,
+          "budget_czk": 66500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2024,
+          "budget_czk": 66500.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2025,
+          "budget_czk": 66500.0,
+          "actual_czk": 0.0,
+          "trusted": false
+        }
+      ],
+      "trace": null
+    },
+    {
+      "entity": "Praha 11",
+      "event_id": "15000",
+      "name": "Příspěvek na akce MŠ a ZŠ",
+      "name_corrupted_at_source": false,
+      "years_budgeted": 5,
+      "first_year": 2018,
+      "last_year": 2026,
+      "still_live_2026": true,
+      "cum_budget_czk": 465300.0,
+      "cum_actual_czk": 0.0,
+      "peak_annual_budget_czk": 335300.0,
+      "carry_forward_pairs": 0,
+      "trajectory": [
+        {
+          "year": 2018,
+          "budget_czk": 50100.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2019,
+          "budget_czk": 59800.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2020,
+          "budget_czk": 100.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2021,
+          "budget_czk": 20000.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        },
+        {
+          "year": 2026,
+          "budget_czk": 335300.0,
+          "actual_czk": 0.0,
+          "trusted": true
+        }
+      ],
+      "trace": null
+    }
+  ],
+  "carry_forward": {
+    "cases": 242,
+    "projects": 178,
+    "budget_czk": 1394768100.0,
+    "band_cases": 220,
+    "band_budget_czk": 428083500.0
+  },
+  "district_compare": {
+    "year": 2024,
+    "min_budget_czk": 20000000,
+    "rows": [
+      {
+        "entity": "Praha-Klánovice",
+        "ico": "00240281",
+        "budget_czk": 129505700.0,
+        "actual_czk": 114884565.06,
+        "execution_share": 0.8871,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 11",
+        "ico": "00231126",
+        "budget_czk": 1103527700.0,
+        "actual_czk": 889707421.78,
+        "execution_share": 0.8062,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Hlavní město Praha",
+        "ico": "00064581",
+        "budget_czk": 110275723200.0,
+        "actual_czk": 88393428003.59,
+        "execution_share": 0.8016,
+        "is_city": true,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 6",
+        "ico": "00063703",
+        "budget_czk": 2000808600.0,
+        "actual_czk": 1594034016.6,
+        "execution_share": 0.7967,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 10",
+        "ico": "00063941",
+        "budget_czk": 2411543300.0,
+        "actual_czk": 1752933903.46,
+        "execution_share": 0.7269,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 7",
+        "ico": "00063754",
+        "budget_czk": 905822100.0,
+        "actual_czk": 654837982.63,
+        "execution_share": 0.7229,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 22",
+        "ico": "00240915",
+        "budget_czk": 643513500.0,
+        "actual_czk": 443283786.96,
+        "execution_share": 0.6888,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 12",
+        "ico": "00231151",
+        "budget_czk": 1141230500.0,
+        "actual_czk": 777525350.53,
+        "execution_share": 0.6813,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 14",
+        "ico": "00231312",
+        "budget_czk": 1469340900.0,
+        "actual_czk": 982709905.56,
+        "execution_share": 0.6688,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 1",
+        "ico": "00063410",
+        "budget_czk": 1572868000.0,
+        "actual_czk": 1041308143.07,
+        "execution_share": 0.662,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 3",
+        "ico": "00063517",
+        "budget_czk": 1622130600.0,
+        "actual_czk": 1042707567.0,
+        "execution_share": 0.6428,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 9",
+        "ico": "00063894",
+        "budget_czk": 994805200.0,
+        "actual_czk": 618609576.35,
+        "execution_share": 0.6218,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha 17",
+        "ico": "00231223",
+        "budget_czk": 761606900.0,
+        "actual_czk": 464163244.06,
+        "execution_share": 0.6095,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha-Dolní Měcholupy",
+        "ico": "00231347",
+        "budget_czk": 141829100.0,
+        "actual_czk": 72856693.83,
+        "execution_share": 0.5137,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha-Zbraslav",
+        "ico": "00241857",
+        "budget_czk": 365853200.0,
+        "actual_czk": 163542755.11,
+        "execution_share": 0.447,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha-Libuš",
+        "ico": "00231142",
+        "budget_czk": 133256200.0,
+        "actual_czk": 53517955.36,
+        "execution_share": 0.4016,
+        "is_city": false,
+        "review_flag": null
+      },
+      {
+        "entity": "Praha-Kolovraty",
+        "ico": "00240346",
+        "budget_czk": 574043200.0,
+        "actual_czk": 137250145.51,
+        "execution_share": 0.2391,
+        "is_city": false,
+        "review_flag": {
+          "code": "review",
+          "note_cs": "Rozpočet 574 mil. Kč na 4 000 obyvatel a plnění 24 %: před závěrem prověřit, zda nejde o jednu velkou stavbu nebo chybu feedu.",
+          "note_en": "A CZK 574m budget for 4,000 residents at 24% execution: check for a single large build or a feed error before drawing a conclusion."
+        }
+      }
+    ]
+  },
+  "integrity": {
+    "status": "passed",
+    "checks": {
+      "execution_measured_from_accounting_stream": true,
+      "broken_feed_years_excluded_from_spend": true,
+      "stuck_projects_have_three_or_more_trusted_years": true,
+      "stuck_projects_confirmed_by_events_feed": true,
+      "traces_reference_published_events": true,
+      "input_digests_pinned": true,
+      "city_baseline_trusted_years_within_band": true,
+      "compare_year_excludes_broken_feeds": true
+    },
+    "limitations_cs": [
+      "Akce v events.csv nejsou všechny projekty: prefix „XXX - NN -“ označuje provozní obálku odboru. Obálky a rezervy jsou z registru vyloučeny a spočítány zvlášť.",
+      "Hodnota „utraceno“ je účetní obrat přiřazený k akci, ne bankovní úhrada ani součet faktur.",
+      "Rok 2026 je částečný a nerovnoměrný napříč profily (platnost dat 28. 2. až 31. 8. 2026); mezi profily se nesrovnává.",
+      "Názvy akcí MČ Praha 11 za roky 2023–2024 jsou ve zdroji z 96 % znakově poškozené; pro klasifikaci jsou vzorově opraveny a označeny.",
+      "Stopy rozhodnutí jsou rešerše, ne odvození z dat: nesou zdroj a jistotu. „Žádné usnesení“ znamená nulový výsledek plnotextového hledání v archivu RHMP, ne důkaz, že rozhodnutí neexistuje jinde.",
+      "Registr smluv (Hlídač státu) není napojen; spojení projekt → smlouva → dodavatel v této verzi chybí."
+    ],
+    "limitations_en": [
+      "Not every events.csv row is a project: the “XXX - NN -” prefix marks a departmental operating envelope. Envelopes and reserves are excluded from the register and counted separately.",
+      "“Spent” is accounting turnover attributed to the event, not a bank settlement or a sum of invoices.",
+      "2026 is partial and uneven across profiles (data valid to 28 Feb–31 Aug 2026); it is never compared across profiles.",
+      "Prague 11 event names for 2023–2024 are 96% character-corrupted at source; they are pattern-repaired for classification and flagged.",
+      "Decision trails are research, not derived from data: each carries a source and a confidence. “No resolution” means a zero result from a full-text search of the RHMP archive, not proof that no decision exists elsewhere.",
+      "The contract register (Hlídač státu) is not connected; the project → contract → supplier join is missing in this version."
+    ]
+  },
+  "sources": [
+    {
+      "id": "cityvizor-praha",
+      "label_cs": "CityVizor Praha — účetnictví, akce a faktury hl. m. Prahy a městských částí (snapshot 2026-09-09)",
+      "label_en": "CityVizor Prague — accounting, events and invoices of the city and its districts (snapshot 2026-09-09)",
+      "url": "https://cityvizor.praha.eu"
+    },
+    {
+      "id": "rada-praha-usneseni",
+      "label_cs": "Archiv usnesení Rady hl. m. Prahy 2011–2026 (plné texty)",
+      "label_en": "Prague City Council resolution archive 2011–2026 (full texts)",
+      "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+    },
+    {
+      "id": "ares",
+      "label_cs": "ARES — IČO městských částí",
+      "label_en": "ARES — district IČO identifiers",
+      "url": "https://ares.gov.cz"
+    }
+  ]
+}

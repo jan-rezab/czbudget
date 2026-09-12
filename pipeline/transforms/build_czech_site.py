@@ -321,7 +321,7 @@ def build_machine_data(data: dict, entities: list[dict]) -> None:
 
 
 def build_sitemap(entities: list[dict]) -> None:
-    paths = ["/", "/eu-capitals.html", "/cz/municipalities/", "/cz/kraje/", "/cz/kraje/accountability/"]
+    paths = ["/", "/eu-capitals.html", "/cz/municipalities/", "/cz/kraje/", "/cz/kraje/accountability/", "/cz/kraje/praha/projekty/"]
     for entity in entities:
         for level in entity["administrative_levels"]:
             paths.append(entity_path(entity, level))

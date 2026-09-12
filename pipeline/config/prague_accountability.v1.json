@@ -1,0 +1,516 @@
+{
+  "contract": "prague-accountability-config.v1",
+  "data_generated_at": "2026-09-12T19:00:00+00:00",
+  "entity": {
+    "name": "Hlavní město Praha",
+    "ico": "00064581",
+    "public_entity_id": "CZ:00064581",
+    "cityvizor_name": "Hlavní město Praha",
+    "cityvizor_profile_key": "cityvizor.praha.eu/4"
+  },
+  "source": {
+    "snapshot": "2026-09-09",
+    "release_id": "20260909-2294793cff54",
+    "instance": "https://cityvizor.praha.eu",
+    "method_cs": "Rozpočet a název akce z events.csv; skutečnost z accounting.csv (vše kromě třídy ROZ) spárovaná přes sloupec event. Roky s poškozeným zveřejněním jsou vyloučeny z každého úsudku o čerpání a vyjmenovány.",
+    "method_en": "Budget and event name from events.csv; actuals from accounting.csv (all document classes except ROZ) joined on the event column. Years with a broken publication are excluded from every spend judgement and listed."
+  },
+  "inputs": [
+    {
+      "file": "praha-events-2008-2026.csv.gz",
+      "role": "events",
+      "description": "events.csv rows (year;id;name;budgetExpenditureAmount;expenditureAmount) for every Prague municipality profile on cityvizor.praha.eu, budget>0, extracted 2026-09-12 from snapshot 2026-09-09",
+      "sha256": "876f8ca00b7e8b7acccfb0d5f8706711c33dd4c48570c54fec21af54177574f7"
+    },
+    {
+      "file": "praha-accounting-by-event.json.gz",
+      "role": "accounting_by_event",
+      "description": "accounting.csv aggregated per entity|year|event: [sum of non-ROZ expenditureAmount, sum of ROZ budgetExpenditureAmount]",
+      "sha256": "602a2bdf78096f39ddb68334f3e4d4256c8ffb78e6995fcbf5699fb28f55c6cc"
+    },
+    {
+      "file": "praha-district-icos.csv",
+      "role": "district_icos",
+      "description": "IČO per městská část from the CityVizor catalogue; Praha 14 resolved from ARES",
+      "sha256": "c19bac0725bafd36e05c2b06236214ea99342c9b2f5152857d99ee5ad64be82b"
+    }
+  ],
+  "band_czk": {
+    "min": 200000,
+    "max": 10000000
+  },
+  "stuck_rule": {
+    "min_trusted_years": 3,
+    "max_actual_share": 0.01
+  },
+  "broken_feed_rule": {
+    "min_events": 20,
+    "min_budget_czk": 50000000,
+    "max_execution_share": 0.05
+  },
+  "partial_year": 2026,
+  "compare_year": 2024,
+  "compare_min_budget_czk": 20000000,
+  "broken_feeds": [
+    {
+      "entity": "Hlavní město Praha",
+      "year": 2025,
+      "code": "duplicated_2026_bundle",
+      "note_cs": "Balík za rok 2025 je duplikát dat z roku 2026 (98–100 % řádků bajtově shodných, datovaných 1–2/2026). Skutečnost 2025 chybí; rozpočet 2025 platí.",
+      "note_en": "The 2025 bundle duplicates 2026 data (98–100% of rows byte-identical, dated Jan–Feb 2026). 2025 actuals are missing; the 2025 budget stands."
+    },
+    {
+      "entity": "Praha 1",
+      "year": 2025,
+      "code": "duplicated_2026_bundle",
+      "note_cs": "Stejná chyba jako u hl. m. Prahy: balík 2025 je duplikát 2026.",
+      "note_en": "Same failure as the city: the 2025 bundle duplicates 2026."
+    },
+    {
+      "entity": "Praha 6",
+      "year": 2025,
+      "code": "truncated_feed",
+      "note_cs": "Rok useknutý v lednu (138 řádků).",
+      "note_en": "Year truncated in January (138 rows)."
+    }
+  ],
+  "review_flags": [
+    {
+      "entity": "Praha-Kolovraty",
+      "code": "review",
+      "note_cs": "Rozpočet 574 mil. Kč na 4 000 obyvatel a plnění 24 %: před závěrem prověřit, zda nejde o jednu velkou stavbu nebo chybu feedu.",
+      "note_en": "A CZK 574m budget for 4,000 residents at 24% execution: check for a single large build or a feed error before drawing a conclusion."
+    }
+  ],
+  "provision_patterns": [
+    "^IP pro",
+    "investorsk",
+    "dofakturac",
+    "rezerv",
+    "^Zaji[šs]t[ěe]n[íi] projekt",
+    "p[řr][íi]prava projekt",
+    "nespecifik",
+    "^Odbor ",
+    "^OE$",
+    "^OOS$",
+    "^Nákup movitého",
+    "^SML - ",
+    "^SLU - ",
+    "^OSZ - ",
+    "^HOM - ",
+    "^OBF - ",
+    "^ODO "
+  ],
+  "name_repairs": [
+    [
+      "Z� ",
+      "ZŠ "
+    ],
+    [
+      "M� ",
+      "MŠ "
+    ],
+    [
+      "�kol",
+      "škol"
+    ],
+    [
+      "p��sp�vek",
+      "příspěvek"
+    ],
+    [
+      "slu�b",
+      "služb"
+    ],
+    [
+      "�innost",
+      "činnost"
+    ],
+    [
+      "v�daje",
+      "výdaje"
+    ],
+    [
+      "h�i�t",
+      "hřišt"
+    ],
+    [
+      "opr�v",
+      "oprav"
+    ],
+    [
+      "d�t",
+      "dět"
+    ],
+    [
+      "spr�va",
+      "správa"
+    ]
+  ],
+  "traces": [
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44736",
+      "status": "stalled_in_study",
+      "confidence": "medium",
+      "verdict_cs": "Osm let v rozpočtu, tři koncepční usnesení 2016–2017, tři rozpočtové přesuny 2019, od té doby nic. Podle TSK je projekt ve fázi studie proveditelnosti s výhledem 5–7 let.",
+      "verdict_en": "Eight years in the budget, three concept resolutions in 2016–2017, three budget transfers in 2019, nothing since. TSK reports the project at feasibility-study stage with a 5–7 year horizon.",
+      "resolutions": [
+        {
+          "date": "2016-10-18",
+          "body": "RHMP",
+          "number": "2582",
+          "title": "ke spolupráci s Gehl Architects na Koncepci veřejného prostoru Severojižní magistrály",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        },
+        {
+          "date": "2016-10-25",
+          "body": "RHMP",
+          "number": "2583",
+          "title": "ke spolupráci s Gehl Architects na Koncepci veřejného prostoru Severojižní magistrály",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        },
+        {
+          "date": "2017-08-29",
+          "body": "RHMP",
+          "number": "2034",
+          "title": "k revitalizaci veřejného prostoru Severojižní magistrály",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        },
+        {
+          "date": "2019-04-23",
+          "body": "RHMP",
+          "number": "728",
+          "title": "k návrhu na úpravu rozpočtu kapitálových a běžných výdajů MHMP RFD-SK v kapitole 03 Doprava",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        },
+        {
+          "date": "2019-06-17",
+          "body": "RHMP",
+          "number": "1270",
+          "title": "k návrhu na úpravu rozpočtu kapitálových a běžných výdajů MHMP ODO-SK v kapitole 03 Doprava",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        },
+        {
+          "date": "2019-09-09",
+          "body": "RHMP",
+          "number": "1889",
+          "title": "k návrhu na úpravu rozpočtu kapitálových výdajů MHMP ODO-SK v kapitole 03 Doprava",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        }
+      ],
+      "sources": [
+        {
+          "label": "TSK Praha — rekonstrukce magistrály",
+          "url": "https://www.tsk-praha.cz/praha-planuje-rekonstrukci-magistraly-promeni-se-v-moderni-mestsky-bulvar-spolecne-s-jecnou-ulici/"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "46194",
+      "status": "delivered_elsewhere",
+      "confidence": "medium",
+      "verdict_cs": "Rada akci založila v září 2021. V únoru 2022 město založilo Pražské společenství obnovitelné energie a instalace šly přes něj (zápůjčky, 59 instalací na 73 budovách do ledna 2026). Rozpočtový řádek se dál opisoval a nikdy nebyl uzavřen.",
+      "verdict_en": "The council created the action in September 2021. In February 2022 the city founded the Prague Renewable Energy Community and installations went through it (loans, 59 installations on 73 buildings by January 2026). The budget line kept being copied and was never closed.",
+      "resolutions": [
+        {
+          "date": "2021-09-20",
+          "body": "RHMP",
+          "number": "2270",
+          "title": "k záměru odboru HOM MHMP na realizaci veřejné zakázky „Instalace fotovoltaických systémů na bytové domy hl. m. Prahy“ a zavedení nové investiční akce do centrálního číselníku akcí (tisk R-41067)",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        }
+      ],
+      "sources": [
+        {
+          "label": "praha.eu — instalace FVE na další městské objekty (1/2026)",
+          "url": "https://praha.eu/web/praha/w/praha-posouva-instalace-fotovoltaickych-elektraren-na-dalsi-mestske-objekty"
+        },
+        {
+          "label": "solarninovinky.cz — vznik PSOE (2/2022)",
+          "url": "https://www.solarninovinky.cz/v-praze-vzniklo-prazske-spolecenstvi-pro-obnovitelnou-energii-realizuje-solarni-elektrarny-na-mestskych-budovach/"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "94010",
+      "status": "blocked_by_dependency",
+      "confidence": "medium",
+      "verdict_cs": "Datové centrum je součástí Multifunkčního operačního střediska Malovanka. Stavba hostitelské budovy byla přerušena 2016, znovu soutěžena 12/2021 a prakticky dokončena až 12/2025. Vybavení nemohlo začít.",
+      "verdict_en": "The data centre is part of the Malovanka multifunctional operations centre. The host building was suspended in 2016, re-tendered in 12/2021 and reached practical completion only in 12/2025. The fit-out could not start.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Wikipedia — Multifunkční operační středisko Malovanka",
+          "url": "https://cs.wikipedia.org/wiki/Multifunk%C4%8Dn%C3%AD_opera%C4%8Dn%C3%AD_st%C5%99edisko_Malovanka"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44682",
+      "status": "lapsed_reprocured",
+      "confidence": "medium",
+      "verdict_cs": "Původní rozpočet propadl bez čerpání; modernizace technologií operačního střediska byla později soutěžena znovu a větší (~36 mil. Kč) kvůli dožitému vybavení.",
+      "verdict_en": "The original budget lapsed unspent; the operations-centre technology was later re-tendered at a larger scale (~CZK 36m) because the equipment had reached end of life.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Ekonomický deník — Praha zainvestuje miliony do krizového štábu",
+          "url": "https://ekonomickydenik.cz/praha-zainvestuje-miliony-do-krizoveho-stabu/"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44686",
+      "status": "no_resolution_found",
+      "confidence": "high",
+      "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo jediné rozhodnutí, které by projekt jmenovalo. Objevuje se jen uvnitř rutinních zpráv o plnění rozpočtu.",
+      "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming the project. It appears only inside routine budget-execution reports.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44141",
+      "status": "design_contract_collapsed",
+      "confidence": "medium",
+      "verdict_cs": "Rada MČ Praha 6 schválila soutěžní podmínky (usn. 3374/18, 4. 4. 2018). Vítězný návrh byl dodatečně vyloučen pro nesplnění bezbariérovosti; následovalo jednací řízení s 2. a 3. místem. Bez smlouvy na projekt není co čerpat.",
+      "verdict_en": "Prague 6 district council approved the competition terms (res. 3374/18, 4 April 2018). The winning entry was later disqualified for failing barrier-free requirements; a negotiated procedure with the 2nd and 3rd place followed. With no design contract there is nothing to draw.",
+      "resolutions": [
+        {
+          "date": "2018-04-04",
+          "body": "RMČ Praha 6",
+          "number": "3374/18",
+          "title": "soutěžní podmínky architektonické soutěže Lávka Horoměřická",
+          "url": "https://old5.praha6.cz/lavka-horomericka"
+        }
+      ],
+      "sources": [
+        {
+          "label": "ČKA — databáze soutěží",
+          "url": "https://www.cka.cz/souteze/databaze/pesi-lavka-pres-ulici-horomericka-v-dejvicich-a-ve-vokovicich"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44589",
+      "status": "permitting_halted",
+      "confidence": "low",
+      "verdict_cs": "Územní řízení zahájeno v lednu 2012 a zastaveno v dubnu 2014 kvůli množství připomínek. Město akci financovalo dalších pět let (2019–2023) a pak ji tiše vypustilo.",
+      "verdict_en": "Zoning proceedings opened in January 2012 and were halted in April 2014 over the volume of objections. The city kept funding the action for five more years (2019–2023) and then quietly dropped it.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "IPR Praha — komplexní zdůvodnění (díl C)",
+          "url": "https://iprpraha.cz/uploads/assets/textova-cast/oduvodneni/DilC/DilC-Komplexni_zduvodneni_6.pdf"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "40032",
+      "status": "sequenced_behind_other_project",
+      "confidence": "low",
+      "verdict_cs": "Podle MČ Praha 18 čeká úprava Toužimské na dokončení náhradního propojení Veselská–Kbely–Mladoboleslavská. Novější potvrzení blokace se nepodařilo najít.",
+      "verdict_en": "According to Prague 18, the Toužimská works wait for the replacement Veselská–Kbely–Mladoboleslavská link. No recent confirmation of the blocker was found.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "MČ Praha 18 — Toužimská, zaslepení ulice",
+          "url": "https://www.praha18.cz/touzimska-zaslepeni-ulice/d-40401"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "8783",
+      "status": "identity_unresolved",
+      "confidence": "low",
+      "verdict_cs": "Stejnojmenný podjezd u Černého Mostu byl otevřen v roce 2008. Co přesně financuje řádek 2018–2026, se nepodařilo určit.",
+      "verdict_en": "An underpass of the same name at Černý Most opened in 2008. What the 2018–2026 line funds could not be established.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "KO-KA — Podjezd Chlumecká (2008)",
+          "url": "https://ko-ka.cz/projekty/podjezd-chlumecka/"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44974",
+      "status": "identity_unresolved",
+      "confidence": "low",
+      "verdict_cs": "Ulice Na Kleovce prošla rekonstrukcí kanalizace duben–červenec 2025 a byla znovu otevřena v prosinci 2025 — z jiného rozpočtového řádku. Tento řádek zůstává na nule i v roce 2026.",
+      "verdict_en": "Na Kleovce street had its sewer rebuilt April–July 2025 and reopened in December 2025 — from a different budget line. This line stays at zero in 2026 as well.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Městem na kole — Na Kleovce (12/2025)",
+          "url": "https://mestemnakole.cz/2025/12/praha-2-ulice-na-kleovce-je-nove-jednosmerna-cykloobousmerka-bude-po-kolaudaci/"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44565",
+      "status": "identity_unresolved",
+      "confidence": "low",
+      "verdict_cs": "Jméno sdílí vestibul metra, tramvajový uzel i historická silniční křižovatka. Nelze určit, který projekt řádek financoval ani proč byl v roce 2021 vypuštěn.",
+      "verdict_en": "The name is shared by a metro vestibule, a tram junction and a historic road interchange. Which project the line funded, or why it was dropped in 2021, could not be determined.",
+      "resolutions": [],
+      "sources": []
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "8781",
+      "status": "unblocking",
+      "confidence": "medium",
+      "verdict_cs": "Územní rozhodnutí 2019. Stavební povolení vydané MČ Praha 13 nenabylo právní moci, protože se odvolala Římskokatolická farnost Ořech (čerpací stanice na jejím pozemku). V roce 2026 první čerpání.",
+      "verdict_en": "Zoning decision in 2019. The building permit issued by Prague 13 never became final because the Roman Catholic parish of Ořech appealed (the pumping station sits on its land). First spend recorded in 2026.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "MČ Praha 13 — stavební povolení na prodloužení kanalizace do Třebonic (31. 8. 2022)",
+          "url": "https://www.praha13.cz/stavebni-povoleni-na-prodlouzeni-kanalizace-do-trebonic/"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "42813",
+      "status": "no_resolution_found",
+      "confidence": "high",
+      "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo žádné rozhodnutí, které by akci „Výkupy pozemků ke sběrači G“ jmenovalo. Žije jen v rutinních úpravách rozpočtu.",
+      "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming “land purchases for trunk sewer G”. It lives only in routine budget adjustments.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "42359",
+      "status": "no_resolution_found",
+      "confidence": "high",
+      "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo žádné rozhodnutí, které by akci „Papírenská – kanalizační sběrač“ jmenovalo. Žije jen v rutinních úpravách rozpočtu.",
+      "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming “Papírenská trunk sewer”. It lives only in routine budget adjustments.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "40021",
+      "status": "no_resolution_found",
+      "confidence": "high",
+      "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo žádné rozhodnutí, které by akci „TV Petrovice“ jmenovalo. Žije jen v rutinních úpravách rozpočtu.",
+      "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming “TV Petrovice”. It lives only in routine budget adjustments.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "47114",
+      "status": "no_resolution_found",
+      "confidence": "high",
+      "verdict_cs": "Plnotextové vyhledávání v usneseních RHMP 2018–2026 nenašlo žádné rozhodnutí, které by akci „Rekonstrukce RN Dobrá Voda“ jmenovalo. Žije jen v rutinních úpravách rozpočtu.",
+      "verdict_en": "A full-text search of RHMP resolutions 2018–2026 found no decision naming “RN Dobrá Voda reconstruction”. It lives only in routine budget adjustments.",
+      "resolutions": [],
+      "sources": [
+        {
+          "label": "Archiv usnesení RHMP (plnotextové vyhledávání)",
+          "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+        }
+      ]
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44593",
+      "status": "not_found",
+      "confidence": "low",
+      "verdict_cs": "Žádné usnesení ani veřejná stopa se nenašly. Otevřená mezera, ne potvrzená příčina.",
+      "verdict_en": "No resolution or public trail was found. An open gap, not a confirmed cause.",
+      "resolutions": [],
+      "sources": []
+    },
+    {
+      "entity": "Hlavní město Praha",
+      "event_id": "44683",
+      "status": "not_found",
+      "confidence": "low",
+      "verdict_cs": "Žádné usnesení ani veřejná stopa se nenašly. Otevřená mezera, ne potvrzená příčina.",
+      "verdict_en": "No resolution or public trail was found. An open gap, not a confirmed cause.",
+      "resolutions": [],
+      "sources": []
+    },
+    {
+      "entity": "Praha-Dolní Měcholupy",
+      "event_id": "81534000000",
+      "status": "not_found",
+      "confidence": "low",
+      "verdict_cs": "Žádné usnesení ani veřejná stopa se nenašly. Otevřená mezera, ne potvrzená příčina.",
+      "verdict_en": "No resolution or public trail was found. An open gap, not a confirmed cause.",
+      "resolutions": [],
+      "sources": []
+    }
+  ],
+  "limitations_cs": [
+    "Akce v events.csv nejsou všechny projekty: prefix „XXX - NN -“ označuje provozní obálku odboru. Obálky a rezervy jsou z registru vyloučeny a spočítány zvlášť.",
+    "Hodnota „utraceno“ je účetní obrat přiřazený k akci, ne bankovní úhrada ani součet faktur.",
+    "Rok 2026 je částečný a nerovnoměrný napříč profily (platnost dat 28. 2. až 31. 8. 2026); mezi profily se nesrovnává.",
+    "Názvy akcí MČ Praha 11 za roky 2023–2024 jsou ve zdroji z 96 % znakově poškozené; pro klasifikaci jsou vzorově opraveny a označeny.",
+    "Stopy rozhodnutí jsou rešerše, ne odvození z dat: nesou zdroj a jistotu. „Žádné usnesení“ znamená nulový výsledek plnotextového hledání v archivu RHMP, ne důkaz, že rozhodnutí neexistuje jinde.",
+    "Registr smluv (Hlídač státu) není napojen; spojení projekt → smlouva → dodavatel v této verzi chybí."
+  ],
+  "limitations_en": [
+    "Not every events.csv row is a project: the “XXX - NN -” prefix marks a departmental operating envelope. Envelopes and reserves are excluded from the register and counted separately.",
+    "“Spent” is accounting turnover attributed to the event, not a bank settlement or a sum of invoices.",
+    "2026 is partial and uneven across profiles (data valid to 28 Feb–31 Aug 2026); it is never compared across profiles.",
+    "Prague 11 event names for 2023–2024 are 96% character-corrupted at source; they are pattern-repaired for classification and flagged.",
+    "Decision trails are research, not derived from data: each carries a source and a confidence. “No resolution” means a zero result from a full-text search of the RHMP archive, not proof that no decision exists elsewhere.",
+    "The contract register (Hlídač státu) is not connected; the project → contract → supplier join is missing in this version."
+  ],
+  "sources": [
+    {
+      "id": "cityvizor-praha",
+      "label_cs": "CityVizor Praha — účetnictví, akce a faktury hl. m. Prahy a městských částí (snapshot 2026-09-09)",
+      "label_en": "CityVizor Prague — accounting, events and invoices of the city and its districts (snapshot 2026-09-09)",
+      "url": "https://cityvizor.praha.eu"
+    },
+    {
+      "id": "rada-praha-usneseni",
+      "label_cs": "Archiv usnesení Rady hl. m. Prahy 2011–2026 (plné texty)",
+      "label_en": "Prague City Council resolution archive 2011–2026 (full texts)",
+      "url": "https://rada.praha.eu/ina/seznamlist.aspx?evidence=usneseni-RHMP-1"
+    },
+    {
+      "id": "ares",
+      "label_cs": "ARES — IČO městských částí",
+      "label_en": "ARES — district IČO identifiers",
+      "url": "https://ares.gov.cz"
+    }
+  ]
+}
