@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { shareInFlight } from "./in-flight.mjs";
 import { decodeRows, metadataToken, parameter, requestJSON } from "./france-municipal-lines.mjs";
 
 const DEFAULT_PROJECT = "czbudget-janrezab";
@@ -143,6 +144,8 @@ UNION ALL SELECT * FROM product_rows
 ORDER BY row_kind, period_start, flow_code, value_usd DESC
 `;
 
+// Both windows run over the same scope. Including ref_year in the grain window
+// preserves the latest-year result without a separate MAX(year) subquery scan.
 export const TRADE_PRODUCT_PARTNERS_SQL = `
 WITH scoped AS (
   SELECT period_start, ref_year, flow_code, partner_area_code, partner_iso3,
@@ -166,14 +169,11 @@ WITH scoped AS (
       WHERE is_partner AND NOT is_group
     )
 ),
-latest AS (
-  SELECT MAX(ref_year) AS ref_year FROM scoped
-),
 finest AS (
   SELECT scoped.*
   FROM scoped
-  WHERE ref_year = (SELECT ref_year FROM latest)
-  QUALIFY aggregation_level = MAX(aggregation_level) OVER (
+  QUALIFY ref_year = MAX(ref_year) OVER ()
+    AND aggregation_level = MAX(aggregation_level) OVER (
     PARTITION BY ref_year, flow_code, partner_area_code
   )
 ),
@@ -217,11 +217,16 @@ export class TradeStore {
     this.now = now;
     this.seedPath = seedPath;
     this.cache = new Map();
+    this.pending = new Map();
   }
 
   async countries() {
     const cached = this.cache.get("countries");
     if (cached?.expiresAt > this.now()) return cached.value;
+    return shareInFlight(this.pending, "countries", () => this.loadCountries());
+  }
+
+  async loadCountries() {
     const rows = await this.query(TRADE_COUNTRIES_SQL, []);
     const value = {
       schema_version: "1.0.0",
@@ -241,6 +246,10 @@ export class TradeStore {
     const code = normalizeCountryCode(countryCode);
     const cached = this.cache.get(code);
     if (cached?.expiresAt > this.now()) return cached.value;
+    return shareInFlight(this.pending, code, () => this.loadProfile(code));
+  }
+
+  async loadProfile(code) {
     const rows = await this.query(TRADE_PROFILE_SQL, [
       parameter("reporter_iso3", "STRING", code),
       parameter("min_date", "DATE", MIN_TRADE_DATE),
@@ -309,6 +318,10 @@ export class TradeStore {
     const cacheKey = `product-partners:${code}:${product}`;
     const cached = this.cache.get(cacheKey);
     if (cached?.expiresAt > this.now()) return cached.value;
+    return shareInFlight(this.pending, cacheKey, () => this.loadProductPartners(code, product, cacheKey));
+  }
+
+  async loadProductPartners(code, product, cacheKey) {
     const rows = await this.query(TRADE_PRODUCT_PARTNERS_SQL, [
       parameter("reporter_iso3", "STRING", code),
       parameter("product_code", "STRING", product),

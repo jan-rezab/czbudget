@@ -1,9 +1,13 @@
+import { shareInFlight } from "./in-flight.mjs";
+
 const DEFAULT_PROJECT = "czbudget-janrezab";
 const DEFAULT_LOCATION = "EU";
 const CACHE_TTL_MS = 60 * 60 * 1000;
 const CACHE_SIZE = 1_000;
 let metadataAccessToken = null;
 
+// Expand each filtered fact into its two classifications before aggregating, so
+// the fact scan and nomenclature extraction are not repeated for each dimension.
 export const FRANCE_MUNICIPAL_LINES_SQL = `
 WITH scoped AS (
   SELECT
@@ -28,32 +32,23 @@ WITH scoped AS (
     AND (reporting_scope = 'main_budget' OR coverage_type = 'published_subset')
 )
 SELECT
-  'economic' AS dimension,
+  classification.dimension,
   fiscal_year,
   budget_stage,
   budget_side,
   reporting_scope,
-  economic_item_code AS code,
+  classification.code,
   nomenclature,
   CAST(SUM(amount_local) AS STRING) AS amount_local,
   STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
 FROM scoped
-GROUP BY fiscal_year, budget_stage, budget_side, reporting_scope, code, nomenclature
-UNION ALL
-SELECT
-  'functional' AS dimension,
-  fiscal_year,
-  budget_stage,
-  budget_side,
-  reporting_scope,
-  functional_paragraph_code AS code,
-  nomenclature,
-  CAST(SUM(amount_local) AS STRING) AS amount_local,
-  STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
-FROM scoped
-WHERE functional_paragraph_code IS NOT NULL
-  AND functional_paragraph_code != 'UNSPECIFIED'
-GROUP BY fiscal_year, budget_stage, budget_side, reporting_scope, code, nomenclature
+CROSS JOIN UNNEST([
+  STRUCT('economic' AS dimension, economic_item_code AS code),
+  STRUCT('functional' AS dimension, functional_paragraph_code AS code)
+]) AS classification
+WHERE classification.dimension = 'economic'
+  OR (classification.code IS NOT NULL AND classification.code != 'UNSPECIFIED')
+GROUP BY dimension, fiscal_year, budget_stage, budget_side, reporting_scope, code, nomenclature
 ORDER BY fiscal_year DESC, budget_stage, budget_side, dimension, ABS(SAFE_CAST(amount_local AS NUMERIC)) DESC
 `;
 
@@ -79,6 +74,7 @@ export class FranceMunicipalLinesStore {
     this.location = location;
     this.now = now;
     this.cache = new Map();
+    this.pending = new Map();
   }
 
   async profile(code) {
@@ -90,6 +86,10 @@ export class FranceMunicipalLinesStore {
       return cached.value;
     }
 
+    return shareInFlight(this.pending, normalized, () => this.loadProfile(normalized));
+  }
+
+  async loadProfile(normalized) {
     const rows = await this.query(`FR:${normalized}`);
     const economic = [];
     const functional = [];

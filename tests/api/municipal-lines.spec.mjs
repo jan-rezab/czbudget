@@ -182,7 +182,7 @@ test("the Czech query exposes both classifications without serving consolidation
   assert.match(CZE_MUNICIPAL_LINES_SQL, /NOT is_consolidation_item/);
   assert.match(CZE_MUNICIPAL_LINES_SQL, /NOT is_summary_row/);
   assert.match(CZE_MUNICIPAL_LINES_SQL, /reporting_scope = 'standalone_accounting_unit'/);
-  assert.match(CZE_MUNICIPAL_LINES_SQL, /UNION ALL/);
+  assert.match(CZE_MUNICIPAL_LINES_SQL, /CROSS JOIN UNNEST/);
 });
 
 test("a single-classification country carries no dimension or label fields", async () => {

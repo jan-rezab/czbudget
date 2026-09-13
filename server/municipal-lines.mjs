@@ -18,6 +18,7 @@
  *
  * Adding a country is a COUNTRIES entry, not new code.
  */
+import { shareInFlight } from "./in-flight.mjs";
 import {
   FRANCE_MUNICIPAL_LINES_SQL,
   FranceLinesError,
@@ -42,6 +43,7 @@ const CACHE_SIZE = 256;
 // dimension flag would double-count the budget. Keep them as two explicitly named views over
 // the same filtered leaf facts. Labels come from the warehouse classification registry so all
 // 6,254 Czech entities can use the endpoint without a per-profile JSON fan-out.
+// Expand the two classifications after filtering, then join labels and aggregate once.
 export const CZE_MUNICIPAL_LINES_SQL = `
   WITH facts AS (
     SELECT
@@ -73,51 +75,30 @@ export const CZE_MUNICIPAL_LINES_SQL = `
     WHERE country_code = 'CZE'
       AND classification_id IN ('CZ_RS_PARAGRAPH_2025', 'CZ_RS_ITEM_2025')
     GROUP BY 1, 2
-  ),
-  economic AS (
-    SELECT
-      'economic' AS dimension,
-      fiscal_year,
-      fiscal_period,
-      budget_stage,
-      budget_side,
-      reporting_scope,
-      economic_item_code AS code,
-      labels.name_native,
-      labels.name_en,
-      labels.name_cs,
-      CAST(SUM(amount_local) AS STRING) AS amount_local,
-      STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
-    FROM facts
-    LEFT JOIN labels
-      ON labels.classification_id = 'CZ_RS_ITEM_2025'
-      AND labels.node_code = facts.economic_item_code
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-  ),
-  functional AS (
-    SELECT
-      'functional' AS dimension,
-      fiscal_year,
-      fiscal_period,
-      budget_stage,
-      budget_side,
-      reporting_scope,
-      functional_paragraph_code AS code,
-      labels.name_native,
-      labels.name_en,
-      labels.name_cs,
-      CAST(SUM(amount_local) AS STRING) AS amount_local,
-      STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
-    FROM facts
-    LEFT JOIN labels
-      ON labels.classification_id = 'CZ_RS_PARAGRAPH_2025'
-      AND labels.node_code = facts.functional_paragraph_code
-    WHERE functional_paragraph_code IS NOT NULL
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
   )
-  SELECT * FROM economic
-  UNION ALL
-  SELECT * FROM functional
+  SELECT
+    classification.dimension,
+    fiscal_year,
+    fiscal_period,
+    budget_stage,
+    budget_side,
+    reporting_scope,
+    classification.code,
+    labels.name_native,
+    labels.name_en,
+    labels.name_cs,
+    CAST(SUM(amount_local) AS STRING) AS amount_local,
+    STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
+  FROM facts
+  CROSS JOIN UNNEST([
+    STRUCT('economic' AS dimension, economic_item_code AS code, 'CZ_RS_ITEM_2025' AS classification_id),
+    STRUCT('functional' AS dimension, functional_paragraph_code AS code, 'CZ_RS_PARAGRAPH_2025' AS classification_id)
+  ]) AS classification
+  LEFT JOIN labels
+    ON labels.classification_id = classification.classification_id
+    AND labels.node_code = classification.code
+  WHERE classification.dimension = 'economic' OR classification.code IS NOT NULL
+  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
   ORDER BY fiscal_year, fiscal_period, dimension, budget_side, code
 `;
 
@@ -429,6 +410,7 @@ export class MunicipalLinesStore {
     this.location = location;
     this.now = now;
     this.cache = new Map();
+    this.pending = new Map();
   }
 
   async profile(countryCode, code) {
@@ -443,6 +425,10 @@ export class MunicipalLinesStore {
       return cached.value;
     }
 
+    return shareInFlight(this.pending, key, () => this.loadProfile(country, normalised, key));
+  }
+
+  async loadProfile(country, normalised, key) {
     const rows = await this.query(country, `${country.prefix}:${normalised}`);
     const lines = [];
     const sources = new Set();
