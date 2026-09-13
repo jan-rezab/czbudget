@@ -57,7 +57,8 @@ def pack(root, output):
 
 
 def verify_remote(descriptor, remote):
-    if (int(remote['size']) != descriptor['size'] or remote.get('md5Hash') != descriptor['md5']
+    if (int(remote['size']) != descriptor['size'] or remote.get('crc32c') != descriptor['crc32c']
+            or (remote.get('md5Hash') is not None and remote['md5Hash'] != descriptor['md5'])
             or remote.get('contentEncoding') or not str(remote.get('generation', '')).isdigit()):
         raise ValueError('Cloud pack failed size/checksum/encoding verification: ' + descriptor['key'])
     return str(remote['generation'])
@@ -67,6 +68,13 @@ def publish(manifest, output):
     token = subprocess.check_output(['gcloud', 'auth', 'print-access-token'], text=True, timeout=60).strip()
 
     def upload(descriptor):
+        # gcloud uses accelerated CRC32C and may upload large files as composite
+        # objects. Those objects have CRC32C but deliberately no MD5 metadata.
+        checksums = json.loads(subprocess.check_output(['gcloud', 'storage', 'hash',
+                               str(output / descriptor['file']), '--format=json'], text=True, timeout=180))
+        descriptor['crc32c'] = checksums[0]['crc32c_hash']
+        if checksums[0]['md5_hash'] != descriptor['md5']:
+            raise ValueError('Pack changed after assembly: ' + descriptor['key'])
         url = ('https://storage.googleapis.com/storage/v1/b/' + BUCKET + '/o/'
                + urllib.parse.quote(descriptor['key'], safe=''))
 

@@ -35,10 +35,12 @@ class RuntimeAssetsTest(unittest.TestCase):
                 assets.pack(root, root / 'bad')
 
     def test_cloud_verification_rejects_wrong_or_encoded_objects(self):
-        descriptor = {'size': 7, 'md5': 'expected', 'key': 'object'}
-        valid = {'size': '7', 'md5Hash': 'expected', 'generation': '123'}
+        descriptor = {'size': 7, 'md5': 'expected', 'crc32c': 'expected-crc', 'key': 'object'}
+        valid = {'size': '7', 'md5Hash': 'expected', 'crc32c': 'expected-crc', 'generation': '123'}
         self.assertEqual(assets.verify_remote(descriptor, valid), '123')
-        for change in [{'size': '8'}, {'md5Hash': 'other'}, {'contentEncoding': 'gzip'}, {'generation': None}]:
+        composite = {key: value for key, value in valid.items() if key != 'md5Hash'}
+        self.assertEqual(assets.verify_remote(descriptor, composite), '123')
+        for change in [{'size': '8'}, {'md5Hash': 'other'}, {'crc32c': 'wrong'}, {'contentEncoding': 'gzip'}, {'generation': None}]:
             with self.assertRaises(ValueError):
                 assets.verify_remote(descriptor, {**valid, **change})
 
