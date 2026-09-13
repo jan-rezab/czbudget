@@ -206,90 +206,10 @@ steps:
           --shards 128
         node scripts/validate-public-serving-snapshot.mjs /workspace/.public-serving-build
 
-  # Browser accessibility is a release gate against the actual snapshot renderer.
-  # Recorded line-item fixtures keep this check independent of BigQuery quotas.
-  - id: browser-contrast
-    name: node:22-bookworm@sha256:8a34c4ab3ea2c5cd194f07e317b2a8f09461d3c8b05c4e34c8ccd56d56024c4d
-    entrypoint: bash
-    env:
-      - CI=true
-      - PUBLIC_SNAPSHOT_RELEASE_ROOT=/workspace/.public-serving-build
-      - CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/workspace/.cityvizor-serving
-    args:
-      - -ceu
-      - |
-        # Preserve a bounded failure summary in build metadata as well as logs.
-        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
-        exec > >(tee /tmp/browser-gate.log) 2>&1
-        npm ci
-        npx playwright install --with-deps chromium
-        npm run test:api
-        node --test tests/industrial-data.test.cjs
-        npx playwright test --workers=4 --max-failures=5
-
-  - id: nginx-routing
-    name: nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
-    entrypoint: sh
-    env:
-      - PORT=8080
-    args:
-      - -ceu
-      - |
-        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/nginx-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
-        exec > /tmp/nginx-gate.log 2>&1
-        mkdir -p /etc/nginx/templates
-        cp nginx.conf.template /etc/nginx/templates/default.conf.template
-        /docker-entrypoint.d/20-envsubst-on-templates.sh
-        sed -i 's@root /usr/share/nginx/html;@root /workspace;@' /etc/nginx/conf.d/default.conf
-        nginx -t
-        nginx
-        wget -qO /tmp/france.html 'http://127.0.0.1:8080/municipalities/france/profile/?code=31555'
-        wget -qO /tmp/germany.html 'http://127.0.0.1:8080/municipalities/germany/profile/?code=F07235500700010'
-        grep -q 'data-profile-root=' /tmp/france.html
-        grep -q 'data-profile-url=' /tmp/germany.html
-        # Check the deployed routing contract for the unlisted animation, including
-        # its direct file alias and data assets. Normal pages remain indexable.
-        for path in studio/data-in-one-place/ studio/data-in-one-place/index.html studio/data-in-one-place/data.js; do
-          wget -S -O /tmp/studio-response "http://127.0.0.1:8080/$$path" 2>/tmp/studio-headers
-          grep -qi 'X-Robots-Tag: noindex, nofollow, noarchive' /tmp/studio-headers
-        done
-        wget -qO /tmp/studio.html 'http://127.0.0.1:8080/studio/data-in-one-place/'
-        grep -q 'name="robots" content="noindex, nofollow, noarchive"' /tmp/studio.html
-        wget -S -O /dev/null 'http://127.0.0.1:8080/' 2>/tmp/home-headers
-        if grep -qi 'X-Robots-Tag: noindex' /tmp/home-headers; then exit 1; fi
-
-  # Upload immutable release objects now, but not current.json. The currently
-  # deployed revision may predate shard support; activation happens only after
-  # the compatible image is live.
-  - id: upload-public-snapshot
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
-    entrypoint: bash
-    args:
-      - -ceu
-      - |
-        release="$COMMIT_SHA-$BUILD_ID"
-        gcloud storage rsync -r "/workspace/.public-serving-build/releases/$$release" \
-          "${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$release"
-
-  - id: upload-cityvizor-snapshot
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
-    entrypoint: gcloud
-    args:
-      - storage
-      - rsync
-      - -r
-      - /workspace/.cityvizor-serving/releases/20260909-2294793cff54
-      - ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/20260909-2294793cff54
-
-  # Manifest/validation ordering is load-bearing — do not collapse these four steps.
-  # validate-integrity.mjs both (a) verifies every artifact hash in
-  # data/release-manifest.v1.json against disk and (b) rewrites
-  # data/data-quality-report.v1.json, which the manifest itself hashes. So the
-  # manifest has to exist before validation runs, yet the published manifest has
-  # to be built after the report is final. The draft manifest satisfies (a), the
-  # final manifest is built from the post-validation tree, and the verify step
-  # proves the shipped manifest matches the tree the image is built from.
+  # Validation writes the quality report: draft -> validate -> final -> verify
+  # must finish before the immutable runtime surface is assembled.
   - id: release-manifest-draft
+    waitFor: ["build-public-snapshot"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/create-release-manifest.mjs]
@@ -325,36 +245,140 @@ steps:
     entrypoint: node
     args: [scripts/validate-integrity.mjs, --manifest-only]
 
+  - id: prepare-runtime-assets
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    env: [BUILD_ID=$BUILD_ID, PROJECT_ID=$PROJECT_ID]
+    args:
+      - -ceu
+      - |
+        python3 -m unittest discover -s tests -p test_runtime_assets.py
+        python3 scripts/prepare-runtime-assets.py --output /workspace/.asset-release --publish
+        python3 scripts/verify-runtime-assets-cloud.py /workspace/.asset-release/lock.json
+        python3 scripts/stage-runtime.py --output /workspace/.runtime-image --lock /workspace/.asset-release/lock.json
+
+  - id: browser-contrast
+    waitFor: ["prepare-runtime-assets"]
+    name: node:22-bookworm@sha256:8a34c4ab3ea2c5cd194f07e317b2a8f09461d3c8b05c4e34c8ccd56d56024c4d
+    entrypoint: bash
+    env:
+      - CI=true
+      - DATA_ASSET_LOCK=/workspace/.asset-release/lock.json
+      - DATA_ASSET_PACK_ROOT=/workspace/.asset-release
+      - PUBLIC_SNAPSHOT_RELEASE_ROOT=/workspace/.public-serving-build
+      - CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/workspace/.cityvizor-serving
+    args:
+      - -ceu
+      - |
+        # Preserve a bounded failure summary in build metadata as well as logs.
+        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
+        exec > >(tee /tmp/browser-gate.log) 2>&1
+        npm ci
+        npx playwright install --with-deps chromium
+        npm run test:api
+        node --test tests/industrial-data.test.cjs
+        npx playwright test --workers=4 --max-failures=5
+
+  - id: nginx-routing
+    waitFor: ["prepare-runtime-assets"]
+    name: nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+    entrypoint: sh
+    env:
+      - PORT=8080
+    args:
+      - -ceu
+      - |
+        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/nginx-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
+        exec > /tmp/nginx-gate.log 2>&1
+        mkdir -p /etc/nginx/templates
+        cp nginx.conf.template /etc/nginx/templates/default.conf.template
+        /docker-entrypoint.d/20-envsubst-on-templates.sh
+        sed -i 's@root /usr/share/nginx/html;@root /workspace;@' /etc/nginx/conf.d/default.conf
+        nginx -t
+        nginx
+        wget -qO /tmp/france.html 'http://127.0.0.1:8080/municipalities/france/profile/?code=31555'
+        wget -qO /tmp/germany.html 'http://127.0.0.1:8080/municipalities/germany/profile/?code=F07235500700010'
+        grep -q 'data-profile-root=' /tmp/france.html
+        grep -q 'data-profile-url=' /tmp/germany.html
+        # Check the deployed routing contract for the unlisted animation, including
+        # its direct file alias and data assets. Normal pages remain indexable.
+        for path in studio/data-in-one-place/ studio/data-in-one-place/index.html studio/data-in-one-place/data.js; do
+          wget -S -O /tmp/studio-response "http://127.0.0.1:8080/$$path" 2>/tmp/studio-headers
+          grep -qi 'X-Robots-Tag: noindex, nofollow, noarchive' /tmp/studio-headers
+        done
+        wget -qO /tmp/studio.html 'http://127.0.0.1:8080/studio/data-in-one-place/'
+        grep -q 'name="robots" content="noindex, nofollow, noarchive"' /tmp/studio.html
+        wget -S -O /dev/null 'http://127.0.0.1:8080/' 2>/tmp/home-headers
+        if grep -qi 'X-Robots-Tag: noindex' /tmp/home-headers; then exit 1; fi
+
+  # Upload immutable release objects now, but not current.json. The currently
+  # deployed revision may predate shard support; activation happens only after
+  # the compatible image is live.
+  - id: upload-public-snapshot
+    waitFor: ["build-public-snapshot"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        release="$COMMIT_SHA-$BUILD_ID"
+        gcloud storage rsync -r "/workspace/.public-serving-build/releases/$$release" \
+          "${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$release"
+
+  - id: upload-cityvizor-snapshot
+    waitFor: ["build-public-snapshot"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: gcloud
+    args:
+      - storage
+      - rsync
+      - -r
+      - /workspace/.cityvizor-serving/releases/20260909-2294793cff54
+      - ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/20260909-2294793cff54
+
   - id: build
+    waitFor: ["prepare-runtime-assets"]
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
-    # BuildKit is what makes Dockerfile.slim.dockerignore apply at all; the classic builder
-    # reads only .dockerignore, so the slim exclusions sat inert. They drop 1.17 GB of payload
-    # trees -- data/municipal-expansion, municipalities, cz, data/entities -- from a 1.5 GB
-    # image, and build + push + deploy were 389s of a 690s build, nearly all of it moving
-    # those bytes.
-    #
-    # This is only safe as of the release that added @municipality_payload. Until then the
-    # HTML routes had a fallback and the JSON payloads did not, so a slim image answered 404
-    # for every Czech breakdown and every expansion profile. Both prefixes now resolve
-    # against the snapshot release. Note BuildKit uses the per-Dockerfile ignore file
-    # *instead of* .dockerignore, not in addition: keep the slim file a superset.
+    # Only the explicit runtime surface enters Docker; bulk packs and validation
+    # inputs stay on the worker. This branch overlaps the full browser gate.
     env:
       - DOCKER_BUILDKIT=1
     args:
       - build
       - --file
-      - ${_DOCKERFILE}
+      - /workspace/.runtime-image/Dockerfile
       - --tag
       - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
-      - .
+      - /workspace/.runtime-image
 
   - id: push
+    waitFor: ["build"]
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
     args:
       - push
       - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
 
+  - id: image-contract
+    waitFor: ["build"]
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        docker run --rm --entrypoint node \
+          -v /workspace/scripts/verify-runtime-image.mjs:/tmp/verify-runtime-image.mjs:ro \
+          -v /workspace/.asset-release:/packs:ro \
+          -v /workspace/.public-serving-build:/municipal:ro \
+          -v /workspace/.cityvizor-serving:/cityvizor:ro \
+          -e PORT=8080 \
+          -e PUBLIC_SNAPSHOT_RELEASE_ROOT=/municipal \
+          -e CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/cityvizor \
+          -e DATA_ASSET_PACK_ROOT=/packs \
+          europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID \
+          /tmp/verify-runtime-image.mjs
+
   - id: assert-current-main
+    waitFor: ["browser-contrast", "nginx-routing", "push", "upload-public-snapshot", "upload-cityvizor-snapshot", "image-contract"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args:
@@ -412,23 +436,6 @@ steps:
       - data/cityvizor-current.v1.json
       - ${_CITYVIZOR_SNAPSHOT_BASE_URL}/current.json
 
-# Measured on build 6d00ef4f (2026-09-01), the first with archive hydration: 875s total,
-# spent as build 221 / validate 153 / verify-release-manifest 139 / deploy 88 / breakdown
-# export 64 / push 60 / hydrate 41 / verify-layers 33 / everything else 76. The two changes
-# above take roughly 180s out of that -- the gate stops re-running the full validator, and
-# the exports stop queueing behind hydration -- which should land the build near 700s.
-#
-# Still on the table and deliberately not changed here: `docker build` sends a 1.548 GB
-# context because Dockerfile.slim.dockerignore is inert. The classic builder reads only
-# .dockerignore; per-Dockerfile ignore files are a BuildKit feature, and the build log's
-# "Sending build context to Docker daemon" line is the classic builder. So the ~1.2 GB of
-# per-profile payloads that file excludes are still shipped in the image, and the
-# @municipality_profile snapshot fallback in nginx.conf.template has never actually served
-# a request. Turning it on is a serving change, not a build change, and needs its own test.
-#
-# The full desktop/mobile suite now precedes the image build. Four browser workers
-# run on eight build CPUs, fail fast after five failures, and stay inside a 40-minute
-# bound for the complete release. This does not change production runtime sizing.
 timeout: 2400s
 
 images:
@@ -442,6 +449,5 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:
-  _DOCKERFILE: Dockerfile.slim
   _PUBLIC_SNAPSHOT_BASE_URL: "gs://czbudget-janrezab-public-snapshots/municipal"
   _CITYVIZOR_SNAPSHOT_BASE_URL: "gs://czbudget-janrezab-public-snapshots/cityvizor"

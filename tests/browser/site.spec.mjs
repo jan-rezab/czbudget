@@ -8,6 +8,9 @@ import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-coun
 // stale "387,346" while the tree published a different number; asserting the
 // measured value against what the page renders is the check that actually
 // matters. See scripts/lib/expected-counts.mjs.
+// Each test owns its browser context and only reads shared datasets. Splitting
+// the two long desktop/mobile file queues keeps all four cloud workers useful.
+test.describe.configure({ mode: 'parallel' });
 const counts = await loadExpectedCounts();
 const readJson = async (relative) => JSON.parse(await readFile(new URL(`../../${relative}`, import.meta.url), "utf8"));
 

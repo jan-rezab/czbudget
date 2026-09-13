@@ -1,0 +1,19 @@
+# Application and data release architecture
+
+The canonical GitHub → Cloud Build → `czbudget-public` release now has three boundaries:
+
+1. Hydrate and validate complete data on the cloud worker. Preserve the draft-manifest, semantic validation, final-manifest and exact hash-verification sequence.
+2. Package the large static datasets into deterministic binary packs in the existing private `czbudget-janrezab-public-snapshots` bucket, under `static-assets/v1/<sha256>.pack`. A create-only upload is required only when pack bytes change. Verify remote size, MD5, encoding and generation; test first/last/largest file range reads. The final image embeds the per-file SHA-256/range index and exact object generations. This embedded lock is the completion boundary; a failed upload never reaches an image or deployment.
+3. Assemble an explicit runtime tree, capped at 768 MiB, then build/push the image alongside the full browser tests. Deployment joins both branches, the real-image routing test and snapshot uploads. No test gate is dropped. All independent tests in the slow site file share the existing four-worker budget.
+
+The five moved directories are `data/isred`, `data/industrial-intelligence`, `data/czech-nku`, `data/contracts` and `data/czech-project-geography`. Their existing HTTP URLs remain unchanged. Nginx forwards those paths to the existing Node server. Only indexed files are readable; range responses must match both expected boundaries and SHA-256 before being returned. `.gz` downloads retain their raw bytes and MIME type. Memory is bounded by a 16 MiB/256-file cache, 48 MiB of admitted file payloads and 32 distinct concurrent cold reads. Identical in-flight requests share one fetch. Errors are not publicly cached.
+
+Municipal and Cityvizor pointer documents are embedded in the image and selected by `PUBLIC_SNAPSHOT_POINTER_FILE` and `CITYVIZOR_POINTER_FILE`. These take precedence over the legacy global pointers. Old and new revisions can therefore use different data releases safely. Restore an earlier immutable image digest to restore its static pack lock and both snapshot pointers together. Preserve all referenced packs and snapshots; no lifecycle deletion rule is added.
+
+The source tree still holds data needed by the full build validators. This release removes it from the application image and avoids repeated uploads of unchanged static packs. Warehouse exports and full semantic validators remain mandatory on the worker. The two existing short manual offline processors remain separate from website releases; this change does not create a scheduler, another Cloud Run service, or a bulk local cache.
+
+Source-only developer checkouts run synthetic packaging, range-read and pinning tests plus source-manifest structural checks. Their pre-push hook requires a successful build of the exact commit through the canonical trigger before allowing promotion to main. Run the trigger on the candidate branch first: every normal gate runs, and `assert-current-main` skips deployment until the tested commit is main.
+
+The cloud log records reused/new packs, pack bytes, runtime bytes/files, Docker context transfer and existing step/test timings. The first release uploads all new packs and should be compared separately from subsequent releases that reuse them. The prior measured baseline was 24m17s execution with a 4.00 GB Docker context.
+
+Full cloud validation additionally boots the actual image with read-only test packs and snapshots and checks excluded paths, existing public asset URLs, checksums, HEAD/ETag behavior, missing paths, municipal rendering and Cityvizor access. No external browser or data restore is needed on the Mac.

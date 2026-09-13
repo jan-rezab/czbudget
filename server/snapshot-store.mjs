@@ -17,7 +17,8 @@ export class SnapshotError extends Error {
 }
 
 export class SnapshotStore {
-  constructor({ base = process.env.PUBLIC_SNAPSHOT_BASE_URL, localRoot = process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT, fetchImpl = globalThis.fetch } = {}) {
+  constructor({ base = process.env.PUBLIC_SNAPSHOT_BASE_URL, localRoot = process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT, fetchImpl = globalThis.fetch, pointerFile = process.env.PUBLIC_SNAPSHOT_POINTER_FILE } = {}) {
+    this.pointerFile = pointerFile;
     this.base = base ? String(base).replace(/\/+$/, "") : "";
     this.localRoot = localRoot ? path.resolve(localRoot) : "";
     this.fetchImpl = fetchImpl;
@@ -107,9 +108,10 @@ export class SnapshotStore {
   }
 
   async refreshRoutes(force = false) {
+    if (this.pointerFile && this.pointer) return;
     const now = Date.now();
     if (!force && this.pointer && now - this.pointerLoadedAt < POINTER_TTL_MS) return;
-    const pointer = JSON.parse((await this.readObject("current.json", false)).toString("utf8"));
+    const pointer = JSON.parse((this.pointerFile ? await fs.readFile(this.pointerFile) : await this.readObject("current.json", false)).toString("utf8"));
     if (!pointer.release_id || !pointer.routes) throw new SnapshotError(502, "invalid_snapshot_pointer", "The active snapshot pointer is incomplete.");
     if (pointer.release_id !== this.routeReleaseId) {
       const routeDocument = JSON.parse((await this.readObject(pointer.routes, true)).toString("utf8"));

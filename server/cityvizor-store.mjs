@@ -22,7 +22,9 @@ export class CityVizorStore {
     base = process.env.CITYVIZOR_SNAPSHOT_BASE_URL,
     localRoot = process.env.CITYVIZOR_SNAPSHOT_RELEASE_ROOT,
     fetchImpl = globalThis.fetch,
+    pointerFile = process.env.CITYVIZOR_POINTER_FILE,
   } = {}) {
+    this.pointerFile = pointerFile;
     this.base = base ? String(base).replace(/\/+$/, "") : "";
     this.localRoot = localRoot ? path.resolve(localRoot) : "";
     this.fetchImpl = fetchImpl;
@@ -154,10 +156,11 @@ export class CityVizorStore {
   }
 
   async refresh(force = false) {
+    if (this.pointerFile && this.pointer) return;
     if (!this.enabled) throw new CityVizorError(503, "cityvizor_store_disabled", "The CityVizor data store is not configured.");
     const now = Date.now();
     if (!force && this.pointer && now - this.pointerLoadedAt < POINTER_TTL_MS) return;
-    const pointer = JSON.parse((await this.readObject("current.json")).toString("utf8"));
+    const pointer = JSON.parse((this.pointerFile ? await fs.readFile(this.pointerFile) : await this.readObject("current.json")).toString("utf8"));
     if (!pointer.release_id || !pointer.index) throw new CityVizorError(502, "invalid_cityvizor_pointer", "The active CityVizor pointer is incomplete.");
     if (!this.pointer || pointer.release_id !== this.pointer.release_id || pointer.index !== this.pointer.index) {
       const raw = await this.readObject(pointer.index);

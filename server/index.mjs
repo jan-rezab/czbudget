@@ -1,4 +1,5 @@
 import http from "node:http";
+import { ASSET_PATH, AssetError, staticAssets } from './static-assets.mjs';
 import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
 const reportAdmin = createReportAdmin();
 import { createReportService, reportConfig } from "./data-reports.mjs";
@@ -315,6 +316,7 @@ export async function handler(request, response) {
     return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
   }
   try {
+    if (ASSET_PATH.test(url.pathname)) return await staticAssets.serve(request, response, url.pathname);
     if (url.pathname === "/admin/reports" || url.pathname.startsWith("/admin/reports/") || url.pathname === "/api/admin/data-reports" || url.pathname.startsWith("/api/admin/data-reports/")) {
       response.setHeader("Cache-Control", "no-store");
       response.setHeader("X-Robots-Tag", "noindex, nofollow");
@@ -553,6 +555,11 @@ export async function handler(request, response) {
 
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
+    if (ASSET_PATH.test(url.pathname)) {
+      response.setHeader('Cache-Control', 'no-store');
+      response.removeHeader('ETag');
+      if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);
+    }
     if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
@@ -560,6 +567,7 @@ export async function handler(request, response) {
 }
 
 if (process.env.NODE_ENV !== "test") {
+  await staticAssets.lock();
   const server = http.createServer(handler);
   server.requestTimeout = 15_000;
   server.headersTimeout = 10_000;

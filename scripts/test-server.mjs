@@ -5,6 +5,7 @@ import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
+import { ASSET_PATH } from '../server/static-assets.mjs';
 
 const root = resolve(process.cwd());
 const port = Number(process.env.PORT || 4173);
@@ -81,6 +82,7 @@ createServer(async (request, response) => {
     }
     const queryProfile = /^\/municipalities\/(?:france|germany)\/profile\/$/.test(pathname);
     if ((!queryProfile && /^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(pathname))
+      || (process.env.DATA_ASSET_LOCK && ASSET_PATH.test(pathname))
       || /^\/(?:public-data|api|auth|docs|developers)(?:\/|$)/.test(pathname)
       || /^\/(?:data\/)?municipal-expansion\/[a-z]{3}\/[^/]+\.json$/.test(pathname)
       || /^\/data\/entities\/\d{8}\.json$/.test(pathname)
