@@ -1,5 +1,7 @@
 import importlib.util
 import json
+import gzip
+import hashlib
 from pathlib import Path
 import tempfile
 import unittest
@@ -25,6 +27,8 @@ class RuntimeAssetsTest(unittest.TestCase):
                 directory.mkdir(parents=True)
                 (directory / 'index.json').write_bytes(b'{"ok":true}\n')
                 (directory / 'shard.json.gz').write_bytes(b'\x1f\x8b\x00\xff')
+                if group == 'industry':
+                    (directory / 'archive-manifest.json').write_text('[]')
             first = assets.pack(root, root / 'one')
             self.assertEqual(first, assets.pack(root, root / 'two'))
             for url, item in first['files'].items():
@@ -33,6 +37,27 @@ class RuntimeAssetsTest(unittest.TestCase):
             (root / 'data/isred/unsafe').symlink_to(root / 'data/isred/index.json')
             with self.assertRaises(ValueError):
                 assets.pack(root, root / 'bad')
+
+    def test_industry_json_alias_uses_only_verified_compressed_representation(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for group in assets.PREFIXES:
+                directory = root / 'data' / group
+                directory.mkdir(parents=True)
+                (directory / 'index.json').write_text('{}')
+            raw = b'{"values":[1,2,3]}\n'
+            compressed = gzip.compress(raw, mtime=0)
+            industry = root / 'data/industry'
+            (industry / 'CZE.json').write_bytes(raw)
+            (industry / 'CZE.json.gz').write_bytes(compressed)
+            (industry / 'archive-manifest.json').write_text(json.dumps([{'file': 'CZE.json', 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}]))
+            lock = assets.pack(root, root / 'packed')
+            alias = lock['files']['/data/industry/CZE.json']
+            stored = lock['files']['/data/industry/CZE.json.gz']
+            self.assertEqual(alias['offset'], stored['offset'])
+            self.assertEqual(alias['size'], len(compressed))
+            self.assertEqual(alias['raw_size'], len(raw))
+            self.assertEqual(alias['raw_sha256'], hashlib.sha256(raw).hexdigest())
 
     def test_cloud_verification_rejects_wrong_or_encoded_objects(self):
         descriptor = {'size': 7, 'md5': 'expected', 'crc32c': 'expected-crc', 'key': 'object'}

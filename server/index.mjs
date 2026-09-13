@@ -555,6 +555,7 @@ export async function handler(request, response) {
 
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
+    if (response.headersSent) { response.destroy(error); return; }
     if (ASSET_PATH.test(url.pathname)) {
       response.setHeader('Cache-Control', 'no-store');
       response.removeHeader('ETag');

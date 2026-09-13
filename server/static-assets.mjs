@@ -1,8 +1,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {Readable} from 'node:stream';
+import {pipeline} from 'node:stream/promises';
+import {createGunzip} from 'node:zlib';
 
-export const ASSET_PATH = /^\/data\/(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography)\//;
+export const ASSET_PATH = /^\/data\/(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry)\//;
 const MAX_FILE = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT_BYTES = 48 * 1024 * 1024;
 const CACHE_BYTES = 16 * 1024 * 1024;
@@ -39,6 +42,8 @@ export class StaticAssets {
           || !Number.isSafeInteger(file.offset) || file.offset < 0
           || !Number.isSafeInteger(file.size) || file.size < 0 || file.size > MAX_FILE
           || file.offset + file.size > pack.size || !/^[a-f0-9]{64}$/.test(file.sha256)) throw new Error('Invalid asset descriptor');
+        if (file.encoding && (file.encoding !== 'gzip' || !Number.isSafeInteger(file.raw_size)
+          || file.raw_size <= 0 || file.raw_size > 128 * 1024 * 1024 || !/^[a-f0-9]{64}$/.test(file.raw_sha256))) throw new Error('Invalid compressed alias');
       }
       return lock;
     })();
@@ -123,17 +128,27 @@ export class StaticAssets {
     try { url = decodeURIComponent(pathname); } catch { throw new AssetError(400, 'invalid_asset_path'); }
     const file = Object.hasOwn(lock.files, url) && lock.files[url];
     if (!file) throw new AssetError(404, 'asset_not_found');
-    const etag = `"${file.sha256}"`;
+    const etag = `${file.encoding ? 'W/' : ''}"${file.sha256}"`;
     response.setHeader('ETag', etag);
     response.setHeader('Cache-Control', 'public, max-age=3600');
     response.setHeader('X-Content-Type-Options', 'nosniff');
     const validators = String(request.headers['if-none-match'] || '').split(',').map(value => value.trim().replace(/^W\//, ''));
-    if (validators.includes(etag) || validators.includes('*')) { response.writeHead(304); response.end(); return; }
+    if (file.encoding) response.setHeader('Vary', 'Accept-Encoding');
+    if (validators.includes(etag.replace(/^W\//, '')) || validators.includes('*')) { response.writeHead(304); response.end(); return; }
     // .gz URLs are downloadable gzip payloads. Do not set Content-Encoding:
     // browser clients explicitly decompress these files themselves.
     const types = {'.json': 'application/json; charset=utf-8', '.gz': 'application/gzip', '.xml': 'text/xml; charset=utf-8', '.csv': 'text/csv; charset=utf-8', '.md': 'text/plain; charset=utf-8'};
+    const accepted = String(request.headers['accept-encoding'] || '').split(',').map(value => {
+      const [name, ...parameters] = value.trim().toLowerCase().split(';');
+      const q = parameters.find(p => p.trim().startsWith('q='));
+      return {name, q: q ? Number(q.trim().slice(2)) : 1};
+    });
+    const gzip = file.encoding && (accepted.find(item => item.name === 'gzip') || accepted.find(item => item.name === '*'))?.q > 0;
     const body = request.method === 'HEAD' ? undefined : await this.body(url, file, lock);
-    response.writeHead(200, {'Content-Type': types[path.extname(url)] || 'application/octet-stream', 'Content-Length': file.size});
+    if (gzip) response.setHeader('Content-Encoding', 'gzip');
+    response.writeHead(200, {'Content-Type': types[path.extname(url)] || 'application/octet-stream', 'Content-Length': file.encoding && !gzip ? file.raw_size : file.size});
+    // Identity clients receive a backpressured stream, never a 90 MB JSON buffer.
+    if (body && file.encoding && !gzip) { await pipeline(Readable.from([body]), createGunzip(), response); return; }
     response.end(body);
   }
 }

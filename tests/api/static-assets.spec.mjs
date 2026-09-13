@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import crypto from 'node:crypto';
+import {Writable} from 'node:stream';
+import {gzipSync} from 'node:zlib';
 import {StaticAssets} from '../../server/static-assets.mjs';
 
 const raw = Buffer.from('{"value":123}\n');
@@ -90,6 +92,29 @@ test('invalid and out-of-bounds manifests cannot be used', async () => {
   for (const change of [m => m.bucket = 'some-other-bucket', m => m.files[asset].offset = -1, m => m.files[asset].size += 10, m => m.packs.isred.generation = '', m => m.packs.isred.file = '../secret']) {
     const value = manifest(); change(value);
     await assert.rejects(new StaticAssets({manifest: value, localRoot: ''}).lock());
+  }
+});
+
+test('JSON aliases negotiate gzip and stream identity without buffering expanded data', async () => {
+  const compressed = gzipSync(raw);
+  for (const accept of ['gzip', 'identity', 'gzip;q=0, *;q=1']) {
+    const value = manifest();
+    value.packs.isred.size = compressed.length + 4;
+    value.files[asset] = {...value.files[asset], size: compressed.length,
+      sha256: crypto.createHash('sha256').update(compressed).digest('hex'), encoding: 'gzip', raw_size: raw.length, raw_sha256: sha};
+    const service = new StaticAssets({manifest: value, localRoot: '', fetchImpl: async () => new Response(compressed, {
+      status: 206, headers: {'content-range': `bytes 4-${compressed.length + 3}/${compressed.length + 4}`},
+    })});
+    service.token = async () => 'synthetic';
+    const chunks = [];
+    const output = new Writable({write(chunk, encoding, next) {chunks.push(chunk); next();}});
+    output.headers = {};
+    output.setHeader = function(k,v) {this.headers[k.toLowerCase()] = v;};
+    output.writeHead = function(s,h) {this.status = s; for (const [k,v] of Object.entries(h)) this.setHeader(k,v);};
+    await service.serve({method: 'GET', headers: {'accept-encoding': accept}}, output, asset);
+    assert.equal(output.headers.vary, 'Accept-Encoding');
+    assert.equal(output.headers['content-encoding'], accept === 'gzip' ? 'gzip' : undefined);
+    assert.deepEqual(Buffer.concat(chunks), accept === 'gzip' ? compressed : raw);
   }
 });
 

@@ -12,7 +12,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-PREFIXES = ('isred', 'industrial-intelligence', 'czech-nku', 'contracts', 'czech-project-geography')
+PREFIXES = ('isred', 'industrial-intelligence', 'czech-nku', 'contracts', 'czech-project-geography', 'industry')
 BUCKET = 'czbudget-janrezab-public-snapshots'
 MAX_FILE = 32 * 1024 * 1024
 
@@ -26,12 +26,21 @@ def pack(root, output):
             raise ValueError('Missing or unsafe data directory: ' + str(folder))
         sha, md5, offset = hashlib.sha256(), hashlib.md5(), 0
         entries = {}
+        # hydrate-industry verifies these gzip files against the raw byte hashes.
+        # Publish one compressed representation and alias the original JSON URL.
+        aliases = {}
+        if group == 'industry':
+            aliases = {row['file']: row for row in json.loads((folder / 'archive-manifest.json').read_text())}
         temporary = output / (group + '.tmp')
         with temporary.open('wb') as destination:
             for source in sorted(folder.rglob('*')):
                 if source.is_symlink():
                     raise ValueError('Symlinks cannot be published: ' + str(source))
                 if not source.is_file():
+                    continue
+                if source.name in aliases:
+                    if source.stat().st_size != aliases[source.name]['bytes']:
+                        raise ValueError('Industry alias size changed after hydration')
                     continue
                 if source.stat().st_size > MAX_FILE:
                     raise ValueError('Asset exceeds bounded response size: ' + str(source))
@@ -53,6 +62,10 @@ def pack(root, output):
                                     'size': offset, 'md5': base64.b64encode(md5.digest()).decode(),
                                     'sha256': sha.hexdigest()}
         manifest['files'].update(entries)
+        for name, row in aliases.items():
+            url = '/data/industry/' + name
+            entry = entries[url + '.gz']
+            manifest['files'][url] = {**entry, 'encoding': 'gzip', 'raw_size': row['bytes'], 'raw_sha256': row['sha256']}
     return manifest
 
 

@@ -5,7 +5,7 @@ import {spawn} from 'node:child_process';
 import {setTimeout as delay} from 'node:timers/promises';
 
 const root = '/usr/share/nginx/html';
-for (const name of ['.asset-release', '.public-serving-build', '.cityvizor-serving', 'scripts', 'pipeline', 'tests', 'data/.municipal-headlines-query.json', 'data/isred', 'data/industrial-intelligence', 'data/czech-nku', 'data/contracts', 'data/czech-project-geography']) {
+for (const name of ['.asset-release', '.public-serving-build', '.cityvizor-serving', 'scripts', 'pipeline', 'tests', 'data/.municipal-headlines-query.json', 'data/isred', 'data/industrial-intelligence', 'data/czech-nku', 'data/contracts', 'data/czech-project-geography', 'data/industry']) {
   await assert.rejects(fs.stat(`${root}/${name}`), {code: 'ENOENT'});
 }
 const lock = JSON.parse(await fs.readFile('/app/server/data-assets-lock.json', 'utf8'));
@@ -22,11 +22,11 @@ try {
     const [url, file] = Object.entries(lock.files).find(([, file]) => file.pack === group && file.size);
     const response = await fetch(`http://127.0.0.1:8080${url}`);
     assert.equal(response.status, 200, url);
-    assert.equal(crypto.createHash('sha256').update(Buffer.from(await response.arrayBuffer())).digest('hex'), file.sha256, url);
+    assert.equal(crypto.createHash('sha256').update(Buffer.from(await response.arrayBuffer())).digest('hex'), file.raw_sha256 || file.sha256, url);
     const head = await fetch(`http://127.0.0.1:8080${url}`, {method: 'HEAD', headers: {'Accept-Encoding': 'identity'}});
     assert.equal(head.status, 200);
-    assert.equal(head.headers.get('content-length'), String(file.size));
-    const conditional = await fetch(`http://127.0.0.1:8080${url}`, {headers: {'If-None-Match': `"${file.sha256}"`}});
+    assert.equal(head.headers.get('content-length'), String(file.raw_size || file.size));
+    const conditional = await fetch(`http://127.0.0.1:8080${url}`, {headers: {'If-None-Match': response.headers.get('etag')}});
     assert.equal(conditional.status, 304);
   }
   const missing = await fetch('http://127.0.0.1:8080/data/isred/not-a-published-file.json');
