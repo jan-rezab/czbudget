@@ -13,7 +13,7 @@ function manifest() {
     files: {[asset]: {pack: 'isred', offset: 4, size: raw.length, sha256: sha}}};
 }
 function store(fetchImpl) {
-  const result = new StaticAssets({manifest: manifest(), fetchImpl});
+  const result = new StaticAssets({manifest: manifest(), localRoot: '', fetchImpl});
   result.token = async () => 'synthetic-token';
   return result;
 }
@@ -66,6 +66,9 @@ test('HEAD, conditional responses and missing paths never download data', async 
   const cached = outgoing();
   await service.serve({method: 'GET', headers: {'if-none-match': `"${sha}"`}}, cached, asset);
   assert.equal(cached.status, 304);
+  const weak = outgoing();
+  await service.serve({method: 'GET', headers: {'if-none-match': `"other", W/"${sha}"`}}, weak, asset);
+  assert.equal(weak.status, 304);
   for (const url of ['/data/isred/absent', '/data/isred/%2e%2e/secret', '/data/isred/%']) {
     await assert.rejects(service.serve({method: 'GET', headers: {}}, outgoing(), url), e => [400,404].includes(e.status));
   }
@@ -86,7 +89,7 @@ test('gzip file URLs preserve raw bytes and never acquire Content-Encoding', asy
 test('invalid and out-of-bounds manifests cannot be used', async () => {
   for (const change of [m => m.bucket = 'some-other-bucket', m => m.files[asset].offset = -1, m => m.files[asset].size += 10, m => m.packs.isred.generation = '', m => m.packs.isred.file = '../secret']) {
     const value = manifest(); change(value);
-    await assert.rejects(new StaticAssets({manifest: value}).lock());
+    await assert.rejects(new StaticAssets({manifest: value, localRoot: ''}).lock());
   }
 });
 

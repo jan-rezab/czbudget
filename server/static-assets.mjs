@@ -127,10 +127,11 @@ export class StaticAssets {
     response.setHeader('ETag', etag);
     response.setHeader('Cache-Control', 'public, max-age=3600');
     response.setHeader('X-Content-Type-Options', 'nosniff');
-    if (request.headers['if-none-match'] === etag) { response.writeHead(304); response.end(); return; }
+    const validators = String(request.headers['if-none-match'] || '').split(',').map(value => value.trim().replace(/^W\//, ''));
+    if (validators.includes(etag) || validators.includes('*')) { response.writeHead(304); response.end(); return; }
     // .gz URLs are downloadable gzip payloads. Do not set Content-Encoding:
     // browser clients explicitly decompress these files themselves.
-    const types = {'.json': 'application/json; charset=utf-8', '.gz': 'application/gzip', '.csv': 'text/csv; charset=utf-8', '.md': 'text/plain; charset=utf-8'};
+    const types = {'.json': 'application/json; charset=utf-8', '.gz': 'application/gzip', '.xml': 'text/xml; charset=utf-8', '.csv': 'text/csv; charset=utf-8', '.md': 'text/plain; charset=utf-8'};
     const body = request.method === 'HEAD' ? undefined : await this.body(url, file, lock);
     response.writeHead(200, {'Content-Type': types[path.extname(url)] || 'application/octet-stream', 'Content-Length': file.size});
     response.end(body);

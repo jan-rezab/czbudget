@@ -23,7 +23,7 @@ try {
     const response = await fetch(`http://127.0.0.1:8080${url}`);
     assert.equal(response.status, 200, url);
     assert.equal(crypto.createHash('sha256').update(Buffer.from(await response.arrayBuffer())).digest('hex'), file.sha256, url);
-    const head = await fetch(`http://127.0.0.1:8080${url}`, {method: 'HEAD'});
+    const head = await fetch(`http://127.0.0.1:8080${url}`, {method: 'HEAD', headers: {'Accept-Encoding': 'identity'}});
     assert.equal(head.status, 200);
     assert.equal(head.headers.get('content-length'), String(file.size));
     const conditional = await fetch(`http://127.0.0.1:8080${url}`, {headers: {'If-None-Match': `"${file.sha256}"`}});
@@ -39,6 +39,9 @@ try {
   }
   console.log('Runtime image contract passed: lean filesystem, cloud-pack routes, pinned snapshots and Nginx.');
 } finally {
-  child.kill('SIGTERM');
-  await new Promise(resolve => child.once('exit', resolve));
+  if (child.exitCode === null && child.signalCode === null) {
+    const stopped = new Promise(resolve => child.once('exit', resolve));
+    child.kill('SIGTERM');
+    await stopped;
+  }
 }
