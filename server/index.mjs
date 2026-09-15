@@ -492,8 +492,8 @@ export async function handler(request, response) {
       return sendHTML(request, response, municipalityPage(snapshot, url.searchParams.get("lang")));
     }
 
-    // The two payload trees the pages fetch by file path — 28,559 expansion profiles and 6,254
-    // Czech entities, 659 MB — answered from the release instead of from the image. The pages
+    // Per-profile JSON payloads — expansion profiles, Czech entities, and their annual
+    // histories — are answered from the release instead of from the image. The pages
     // above already fall back this way; these are the same objects under the names the client
     // asks for. municipal-expanded-profile.js reads the first, municipal-i18n.js the second.
     //
@@ -501,12 +501,18 @@ export async function handler(request, response) {
     // carries, so this is a lookup rather than a second index.
     const expansionFile = /^\/(?:data\/)?municipal-expansion\/([a-z]{3})\/([^/]+)\.json$/.exec(url.pathname);
     const entityFile = /^\/data\/entities\/(\d{8})\.json$/.exec(url.pathname);
+    const historyFile = /^\/data\/municipal-history\/(\d{8})\.json$/.exec(url.pathname);
     const payloadFile = expansionFile
       ? { country: expansionFile[1].toUpperCase(), code: expansionFile[2] }
-      : entityFile ? { country: "CZE", code: entityFile[1] } : null;
+      : entityFile ? { country: "CZE", code: entityFile[1] }
+      : historyFile ? { country: "CZE", code: historyFile[1] } : null;
     if (payloadFile) {
       if (!["GET", "HEAD"].includes(request.method)) throw new DataError(405, "method_not_allowed", "This endpoint only supports GET and HEAD.");
       const snapshot = await publicSnapshotStore.profileForId(`${payloadFile.country}:${decodeURIComponent(payloadFile.code)}`);
+      if (historyFile) {
+        if (snapshot.history === null) throw new DataError(404, "municipality_history_not_found", "Municipality history does not exist.");
+        return sendPublicJSON(request, response, 200, snapshot.history, { ETag: `"${snapshot.route.payload_sha256}-history"` });
+      }
       return sendPublicJSON(request, response, 200, snapshot.profile, { ETag: `"${snapshot.route.payload_sha256}"` });
     }
 
