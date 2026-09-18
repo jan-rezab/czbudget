@@ -2,3 +2,131 @@
 @media(max-width:900px){.defense-kpis{grid-template-columns:1fr 1fr}.defense-method-grid{grid-template-columns:1fr}.defense-method-grid article{min-height:220px}.defense-method-grid h3{margin-top:28px}}
 @media(max-width:700px){.defense-section{padding:64px 5vw}.defense-section-heading{grid-template-columns:1fr;gap:18px}.defense-chart-meta{grid-template-columns:1fr}.defense-chart-meta>div{min-height:auto}.defense-ranking{padding:18px 10px}.defense-rank-row{grid-template-columns:125px minmax(80px,1fr) 58px;gap:8px}.defense-rank-name img{display:none}.defense-rank-name small{display:none}.defense-kpis{grid-template-columns:1fr}.defense-trend-card>header{align-items:start}.defense-trend-card h3{font-size:22px}.defense-line-toolbar{align-items:stretch;flex-direction:column;gap:12px}.defense-line-toolbar label{width:100%}.defense-line-toolbar>div{text-align:left}}
 .defense-target-line{display:none}.defense-rank-track{position:relative}.defense-target-tick{position:absolute;top:-15px;width:0;height:38px;border-left:2px dashed var(--defense-warm);pointer-events:none}
+
+/* --- 2026-09-18: blocks, ranking measures, trajectory and the shared hover layer --- */
+.defense-page{--bloc-nato:#0b6aad;--bloc-china:#b3840d;--bloc-russia:#ad2f2f;--bloc-ukraine:#0f8f74}
+.defense-blocks-section{background:#e9ece7}
+.defense-trajectory-section{background:#eae6dc}
+
+.defense-toolbar{display:flex;flex-wrap:wrap;gap:18px 26px;align-items:center;padding:18px 28px;border-bottom:1px solid var(--line)}
+.defense-year-control{display:flex;gap:12px;align-items:center;flex:1;min-width:260px}
+.defense-year-control>span{color:var(--muted);font:700 10px monospace;text-transform:uppercase;letter-spacing:.07em}
+.defense-year-control input[type=range]{flex:1;min-width:120px;accent-color:var(--bloc-nato)}
+.defense-year-control output{min-width:46px;font:700 17px monospace}
+.defense-play{padding:9px 15px;border:1px solid var(--ink);background:#faf7ef;color:var(--ink);cursor:pointer;font:700 10px monospace;text-transform:uppercase;letter-spacing:.06em}
+.defense-play:hover{background:var(--ink);color:#fff}
+.defense-play[aria-pressed=true]{background:var(--ink);color:var(--acid)}
+.defense-switch{display:flex;gap:9px;align-items:center;color:var(--muted);font:700 10px monospace;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
+.defense-switch input{width:16px;height:16px;accent-color:var(--bloc-nato)}
+
+.defense-year-strip{display:flex;gap:2px;align-items:flex-end;height:54px;padding:0 28px 12px;border-bottom:1px solid var(--line)}
+.defense-year-tick{position:relative;flex:1;height:var(--h,10%);min-width:4px;padding:0;border:0;background:#c3ccc4;cursor:pointer}
+.defense-year-tick:hover{background:#8aa0a8}
+.defense-year-tick[aria-pressed=true]{background:var(--bloc-nato)}
+.defense-year-tick[data-year]::after{content:attr(data-year);position:absolute;top:100%;left:50%;color:var(--muted);font:9px monospace;transform:translateX(-50%)}
+
+.defense-blocks{display:flex;align-items:flex-start;gap:26px;overflow-x:auto;padding:30px 28px 8px}
+.defense-bloc{display:flex;flex:none;flex-direction:column;gap:12px;margin:0}
+.defense-bloc figcaption{display:grid;gap:3px;padding-top:11px;border-top:2px solid var(--ink)}
+.defense-bloc figcaption b{width:12px;height:12px}
+.defense-bloc figcaption strong{font:500 21px/1.05 Georgia,serif;letter-spacing:-.02em}
+.defense-bloc figcaption span{font:700 14px monospace}
+.defense-bloc figcaption small{color:var(--muted);font:700 10px/1.35 monospace;text-transform:uppercase;overflow-wrap:anywhere}
+.defense-bloc-grid{display:block;overflow:visible}
+.defense-bloc-grid path{transition:opacity .12s}
+.defense-bloc-grid path.dimmed{opacity:.22}
+.defense-bloc-label{fill:#faf7ef;font:700 11px monospace;text-anchor:middle;pointer-events:none}
+.defense-bloc-plate{fill:#171918;pointer-events:none}
+
+.defense-legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:2px;padding:20px 28px 24px;border-top:1px solid var(--line)}
+.defense-legend>h3{grid-column:1/-1;margin:0 0 8px;color:var(--muted);font:700 10px monospace;text-transform:uppercase;letter-spacing:.07em}
+.defense-legend button{display:flex;gap:9px;align-items:center;padding:6px 7px;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left}
+.defense-legend button:hover,.defense-legend button:focus-visible{background:#dfe4de}
+.defense-legend button.dimmed{opacity:.35}
+.defense-legend button i{width:11px;height:11px;flex:none}
+.defense-legend button span{flex:1;overflow:hidden;font:700 11px Arial,sans-serif;text-overflow:ellipsis;white-space:nowrap}
+.defense-legend button strong{font:700 11px monospace}
+.defense-legend>small{grid-column:1/-1;padding-top:8px;color:var(--muted);font:11px monospace}
+
+.defense-modes{display:flex;gap:1px;overflow-x:auto;border-bottom:1px solid var(--ink);background:var(--ink)}
+.defense-modes button{flex:none;padding:13px 17px;border:0;background:#eef1eb;cursor:pointer;font:700 11px monospace;text-transform:uppercase}
+.defense-modes button[aria-selected=true]{background:var(--bloc-nato);color:#fff}
+
+.defense-rank-row{grid-template-columns:200px minmax(120px,1fr) 104px}
+.defense-rank-row>strong.flagged::after{content:"·";margin-left:5px;color:var(--defense-warm)}
+.defense-rank-track i.over{background:repeating-linear-gradient(135deg,var(--defense-warm) 0 5px,#e08a6e 5px 10px)}
+.defense-target-tick.floor{border-left-style:dotted;border-left-color:#8d9691}
+
+.defense-trajectory{padding:22px 28px 6px}
+.defense-trajectory-svg{display:block;width:100%;height:auto}
+.defense-trajectory-svg .grid{stroke:#ded9cf;stroke-width:1}
+.defense-trajectory-svg .axis{fill:#656b68;font:11px monospace}
+.defense-trajectory-svg .traj-line{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.defense-trajectory-svg .traj-cursor line{stroke:#171918;stroke-width:1;stroke-dasharray:3 3}
+.defense-trajectory-svg .traj-cursor circle{stroke:#faf7ef;stroke-width:2}
+.defense-trajectory-svg{cursor:crosshair}
+#trajectory-legend{border-top:0;padding-top:4px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.traj-key{display:flex;gap:9px;align-items:center;padding:6px 7px;border:0;background:transparent;color:var(--ink);cursor:pointer;text-align:left}
+.traj-key:hover{background:#e0dbd0}
+.traj-key i{width:20px;height:3px;flex:none}
+.defense-trajectory-svg .traj-cursor.off{display:none}
+.defense-rank-track i.nonzero{min-width:2px}
+.traj-key span{font:700 11px Arial,sans-serif}
+.traj-key.off{opacity:.4}
+.traj-key.off i{background:#9aa09a!important}
+.traj-key i{height:4px}
+
+.trend-dot{fill:transparent;cursor:pointer}
+.trend-dot:hover{fill:#17191826}
+.defense-source-note{display:block;margin-top:14px;color:#b8bdb9;font:11px/1.6 monospace}
+
+.defense-caveats{margin-top:56px}
+.defense-caveats h3{margin:0 0 20px;font:500 30px Georgia,serif}
+.defense-caveat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;border:1px solid #ffffff35;background:#ffffff35}
+.defense-caveat-grid article{padding:22px;background:#242724}
+.defense-caveat-grid strong{display:block;margin-bottom:11px;color:var(--acid);font:700 11px monospace;text-transform:uppercase;letter-spacing:.05em}
+.defense-caveat-grid p{margin:0;color:#b8bdb9;font:12px/1.65 Arial,sans-serif}
+
+.defense-tooltip{position:fixed;z-index:60;top:0;left:0;min-width:200px;max-width:320px;padding:11px 13px;border:1px solid var(--ink);background:#faf7ef;box-shadow:4px 4px 0 #17191833;pointer-events:none}
+.defense-tooltip[hidden]{display:none}
+.defense-tooltip .tip-head{margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--line);font:700 12px Arial,sans-serif}
+.defense-tooltip .tip-row{display:flex;gap:10px;align-items:baseline;padding:2px 0}
+.defense-tooltip .tip-row i{width:13px;height:3px;flex:none;align-self:center}
+.defense-tooltip .tip-row span{flex:1;color:var(--muted);font:10px/1.4 monospace;text-transform:uppercase}
+.defense-tooltip .tip-row strong{font:700 12px monospace}
+
+@media(max-width:900px){.defense-caveat-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){
+  .defense-toolbar{padding:14px 12px;gap:12px}
+  .defense-year-strip{padding:0 12px 12px}
+  .defense-blocks{gap:14px;padding:18px 12px 4px}
+  .defense-bloc figcaption strong{font-size:16px}
+  .defense-legend{padding:16px 12px 20px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .defense-trajectory{padding:16px 10px 4px}
+  .defense-bloc figcaption strong{font-size:21px}
+  .defense-rank-row{grid-template-columns:130px minmax(60px,1fr) 78px;gap:8px}
+  .defense-caveat-grid{grid-template-columns:1fr}
+  .defense-tooltip{max-width:240px}
+}
+.defense-page .defense-chart-meta{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.defense-page .defense-kpis{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+@media(max-width:700px){.defense-page .defense-chart-meta{grid-template-columns:1fr 1fr}.defense-page .defense-kpis{grid-template-columns:1fr 1fr}}
+
+/* The American share of the alliance budget — the closing chart. */
+.defense-share-section{background:#e6eaef}
+.defense-share{padding:22px 28px 6px}
+.defense-share-svg{display:block;width:100%;height:auto;cursor:crosshair}
+.defense-share-svg .grid{stroke:#ffffff8c;stroke-width:1}
+.defense-share-svg .axis{fill:#656b68;font:11px monospace}
+.defense-share-svg .share-area.us{fill:#0a4c78}
+.defense-share-svg .share-area.others{fill:#74a7cf}
+.defense-share-svg .share-line{fill:none;stroke:#faf7ef;stroke-width:2}
+.defense-share-svg .traj-cursor line{stroke:#171918;stroke-width:1;stroke-dasharray:3 3}
+.defense-share-svg .traj-cursor.off{display:none}
+.defense-share-svg .traj-cursor circle{stroke:#faf7ef;stroke-width:2}
+#share-legend{border-top:0;padding-top:4px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.share-key{display:flex;gap:10px;align-items:center;padding:6px 7px}
+.share-key i{width:13px;height:13px;flex:none}
+.share-key span{flex:1;font:700 11px Arial,sans-serif}
+.share-key strong{font:700 12px monospace}
+.defense-definition-note{margin:10px 0 0;color:var(--muted);font:12px/1.65 Arial,sans-serif}

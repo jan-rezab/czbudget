@@ -145,8 +145,8 @@
       en: ["Where did the money go? United States — Public Spending Data", "US money supply, purchasing power and Federal Reserve interventions in one sourced report."],
     },
     "/deep-dives/defense/": {
-      cs: ["Výdaje na obranu — Public Spending Data", "Vojenské výdaje vůči HDP, závazek NATO a nejpodrobnější dostupné rozpočtové řádky pro 17 zemí."],
-      en: ["Defense spending — Public Spending Data", "Military expenditure relative to GDP, the NATO commitment and the most detailed available budget lines for 17 countries."],
+      cs: ["Výdaje na obranu — Public Spending Data", "Vojenské výdaje všech 32 členů NATO vedle Ruska, Číny a Ukrajiny, v dolarech i v podílu na HDP, od roku 1990."],
+      en: ["Defense spending — Public Spending Data", "Military spending of all 32 NATO members next to Russia, China and Ukraine, in dollars and as a share of GDP, from 1990."],
     },
     "/deep-dives/tax-burden/": {
       cs: ["Daňové zatížení — Public Spending Data", "Daňový klín domácností, firemní sazby, cena uhlíku a místní daňová pravomoc podle OECD."],

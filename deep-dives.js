@@ -8,7 +8,13 @@
     ["FIN","Finsko","Finland"],["FRA","Francie","France"],["GBR","Spojené království","United Kingdom"],["POL","Polsko","Poland"],
     ["SWE","Švédsko","Sweden"],["CHE","Švýcarsko","Switzerland"],["UKR","Ukrajina","Ukraine"],
     ["USA","Spojené státy","United States"],["BRA","Brazílie","Brazil"],["ESP","Španělsko","Spain"],
-    ["JPN","Japonsko","Japan"],["NLD","Nizozemsko","Netherlands"],["NOR","Norsko","Norway"],["GRC","Řecko","Greece"]
+    ["JPN","Japonsko","Japan"],["NLD","Nizozemsko","Netherlands"],["NOR","Norsko","Norway"],["GRC","Řecko","Greece"],
+    ["ALB","Albánie","Albania"],["BEL","Belgie","Belgium"],["BGR","Bulharsko","Bulgaria"],["CAN","Kanada","Canada"],
+    ["CHN","Čína","China"],["EST","Estonsko","Estonia"],["HRV","Chorvatsko","Croatia"],["HUN","Maďarsko","Hungary"],
+    ["ISL","Island","Iceland"],["ITA","Itálie","Italy"],["LTU","Litva","Lithuania"],["LUX","Lucembursko","Luxembourg"],
+    ["LVA","Lotyšsko","Latvia"],["MKD","Severní Makedonie","North Macedonia"],["MNE","Černá Hora","Montenegro"],
+    ["PRT","Portugalsko","Portugal"],["ROU","Rumunsko","Romania"],["RUS","Rusko","Russia"],["SVK","Slovensko","Slovakia"],
+    ["SVN","Slovinsko","Slovenia"],["TUR","Turecko","Türkiye"]
   ];
   const copy={
     cs:{
@@ -38,8 +44,8 @@
   Object.assign(copy.en,{migration:"European migration",migrationCopy:"Migration flows and protection decisions across 33 European countries.",indexCoverage:"up to 33 countries"});
   const migrationCoverage = document.querySelector("#migration header b");
   if (migrationCoverage) migrationCoverage.textContent = "33 / 33";
-  Object.assign(copy.cs,{defense:"Výdaje na obranu",defenseCopy:"Výdaje vůči HDP, závazek NATO a nejpodrobnější dostupné řádky národních rozpočtů."});
-  Object.assign(copy.en,{defense:"Defense spending",defenseCopy:"Spending relative to GDP, the NATO commitment and the most detailed available national budget lines."});
+  Object.assign(copy.cs,{defense:"Výdaje na obranu",defenseCopy:"Všech 32 členů NATO vedle Ruska, Číny a Ukrajiny, v dolarech i v podílu na HDP, a rozpočtové řádky tam, kde je máme."});
+  Object.assign(copy.en,{defense:"Defense spending",defenseCopy:"All 32 NATO members next to Russia, China and Ukraine, in dollars and as a share of GDP, with budget lines where we hold them."});
   Object.assign(copy.cs,{pensionToday:"Důchody dnes",pensionBenchmark:"Důchodový benchmark",taxBurden:"Daňové zatížení",taxBurdenCopy:"Zdanění práce, firem a uhlíku a daňová pravomoc obcí podle definic OECD.",redistribution:"Přerozdělení a výsledky",redistributionCopy:"Nerovnost před transfery a po nich, sociální výdaje a důchody."});
   Object.assign(copy.en,{pensionToday:"Pensions today",pensionBenchmark:"Pension benchmark",taxBurden:"Tax burden",taxBurdenCopy:"Taxes on labour, business and carbon, plus municipal taxing power, under OECD definitions.",redistribution:"Redistribution and outcomes",redistributionCopy:"Inequality before and after transfers, social spending and pensions."});
   Object.assign(copy.cs,{money:"Kam šly peníze?",moneyCopy:"Peněžní zásoba, kupní síla a zásahy ČNB a Fedu ve dvou samostatných národních reportech."});
