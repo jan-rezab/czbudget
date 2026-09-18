@@ -25,7 +25,17 @@ POPULATION = ROOT / "data/source_cache/csu_municipal_population_2010_2025.csv"
 CASH_ACCOUNTS = {"068", "231", "236", "241", "244", "261", "262"}
 CONSOLIDATED_REVENUE_ITEMS = {"4133", "4134", "4137", "4138", "4139", "4251"}
 CONSOLIDATED_EXPENSE_ITEMS = {"5342", "5344", "5345", "5347", "5348", "5349", "6363"}
-MUNICIPALITY_CODE_OVERRIDES = {"04498682": 500101, "00640506": 571512, "01265741": 500071}
+# ARES returns the code of the military district each of these municipalities was carved
+# out of in 2016, not the municipality's own code. CZSO indicator 9379W reports 0
+# residents for the military districts (Boletice 545422, Hradiste 555177, Brezina
+# 592935, Libava 503941), so an unmapped IČO silently lands a zero population.
+MUNICIPALITY_CODE_OVERRIDES = {
+    "04498682": 500101,
+    "00640506": 571512,
+    "01265741": 500071,
+    "04498691": 500127,  # Doupovské Hradiště, not the Hradiště military district
+    "04498712": 500151,  # Luboměř pod Strážnou, not the Libavá military district
+}
 
 
 def number(value: str | None) -> float:

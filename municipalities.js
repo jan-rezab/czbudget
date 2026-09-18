@@ -20,6 +20,8 @@
   C.cs.countryHomepage="Stránka země"; C.en.countryHomepage="Country homepage";
   Object.assign(C.cs,{loadingDirectory:"Načítám adresář obcí…",pickCountry:"Vyberte zemi a prohledejte její obce"});
   Object.assign(C.en,{loadingDirectory:"Loading the municipality directory…",pickCountry:"Choose a country to search its municipalities"});
+  Object.assign(C.cs,{resultDiffers:"národní výsledek",resultDiffersHint:"Vykázaný národní výsledek hospodaření se podstatně liší od příjmů minus výdaje uvedených vedle něj — jde o jiný účetní pojem, nikoli o rozpor v datech."});
+  Object.assign(C.en,{resultDiffers:"national result",resultDiffersHint:"The reported national result differs materially from revenue minus expenditure shown alongside it — it is a different accounting concept, not a data error."});
   const $ = (selector) => document.querySelector(selector);
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[character]);
   const t = () => C[state.lang];
@@ -29,6 +31,17 @@
   const slugs={CZE:"czechia",DEU:"germany",POL:"poland",DNK:"denmark",FRA:"france",SWE:"sweden",GBR:"england",UKR:"ukraine",NOR:"norway",NLD:"netherlands",FIN:"finland",BRA:"brazil",ESP:"spain",JPN:"japan",COL:"colombia",GEO:"georgia",ITA:"italy",BOL:"bolivia",SLV:"el-salvador",MEX:"mexico",CRI:"costa-rica",GTM:"guatemala",PER:"peru",KOR:"south-korea",CHL:"chile"};
   const czechRegions={"Hlavní město Praha":"Prague","Středočeský kraj":"Central Bohemian Region","Jihočeský kraj":"South Bohemian Region","Plzeňský kraj":"Plzeň Region","Karlovarský kraj":"Karlovy Vary Region","Ústecký kraj":"Ústí nad Labem Region","Liberecký kraj":"Liberec Region","Královéhradecký kraj":"Hradec Králové Region","Pardubický kraj":"Pardubice Region","Kraj Vysočina":"Vysočina Region","Jihomoravský kraj":"South Moravian Region","Olomoucký kraj":"Olomouc Region","Zlínský kraj":"Zlín Region","Moravskoslezský kraj":"Moravian-Silesian Region"};
   const regionName = (entity) => state.lang === "en" && entity.country === "CZE" ? (czechRegions[entity.region] || entity.region) : entity.region;
+  // Some national sources report an accounting result that is not revenue minus expenditure
+  // (e.g. Norway's KOSTRA result, Japan's formal balance). Flag it as material whenever it
+  // disagrees with the arithmetic difference by more than 1% of revenue, or by sign at all —
+  // otherwise the two figures sit side by side looking contradictory with no explanation.
+  const resultDiffersFromArithmetic = (entity) => {
+    if(!Number.isFinite(entity.revenue)||!Number.isFinite(entity.expenditure)||!Number.isFinite(entity.balance))return false;
+    const arithmetic=entity.revenue-entity.expenditure,diff=entity.balance-arithmetic;
+    if(Math.abs(diff)>Math.max(Math.abs(entity.revenue)*0.01,1))return true;
+    const balanceSign=Math.sign(entity.balance),arithmeticSign=Math.sign(arithmetic);
+    return balanceSign!==0&&arithmeticSign!==0&&balanceSign!==arithmeticSign;
+  };
 
   // The hub paints from the 24 kB country index; municipal entities arrive one country
   // shard at a time and only when a filter actually needs them. A shard omits everything
@@ -121,8 +134,8 @@
     root.innerHTML=`
       <div class="benchmark-kpis">
         <article><span>${cs?"Referenční rok":"Reference year"}</span><strong>${dataset.reference_year}</strong><small>${cs?"nebo nejnovější dostupný":"or latest available"}</small></article>
-        <article><span>${cs?"Evropské země":"European countries"}</span><strong>${fmt(dataset.countries.length)}</strong><small>${cs?"jedna definice OECD":"one OECD definition"}</small></article>
-        <article><span>${cs?"Průměr EU27":"EU27 average"}</span><strong>${fmt(Math.round(dataset.eu27_mean))}</strong><small>${cs?"obyvatel na obec":"people per municipality"}</small></article>
+        <article><span>${cs?"Zemí OECD v grafu":"OECD countries shown"}</span><strong>${fmt(dataset.countries.length)}</strong><small>${cs?"výběr OECD, ne EU27":"OECD selection, not EU27"}</small></article>
+        <article><span>${cs?"Průměr EU27 (samostatný údaj)":"EU27 average (separate figure)"}</span><strong>${fmt(Math.round(dataset.eu27_mean))}</strong><small>${cs?"obyvatel na obec":"people per municipality"}</small></article>
         <article><span>${cs?"Česko · průměr / medián":"Czechia · average / median"}</span><strong>${fmt(Math.round(czech.mean))} / ${fmt(Math.round(czech.median))}</strong><small>${fmt(Math.round(czech.under_2000_pct))} % ${cs?"obcí pod 2 000":"under 2,000"}</small></article>
       </div>
       <div class="benchmark-panel">
@@ -130,7 +143,7 @@
         <div class="benchmark-legend"><span><i></i>${cs?"Rozpočtová data na tomto webu":"Budget data on this site"}</span><small>${cs?`Lineární měřítko končí na ${display(metric.cap)}; vyšší hodnoty označuje ›.`:`Linear scale ends at ${display(metric.cap)}; › marks higher values.`}</small></div>
         <ol class="benchmark-chart" aria-label="${esc(metric.label)}">${rows}</ol>
       </div>
-      <div class="benchmark-method"><p>${cs?"Ukazatele popisují územní uspořádání, nikoli počet úředníků, kvalitu služeb, náklady nebo efektivitu. Kompetence obcí se mezi zeměmi liší; proto zde nespojujeme strukturální žebříček s národními rozpočtovými částkami.":"These indicators describe territorial structure—not staffing, service quality, cost or efficiency. Municipal responsibilities differ between countries, so the structural comparison is kept separate from national budget amounts."}</p><a href="${esc(dataset.source.explorer_url)}" target="_blank" rel="noopener">${cs?"Zdroj: OECD · Obce podle počtu obyvatel":"Source: OECD · Municipal level government by population size"} ↗</a></div>`;
+      <div class="benchmark-method"><p>${cs?"Ukazatele popisují územní uspořádání, nikoli počet úředníků, kvalitu služeb, náklady nebo efektivitu. Kompetence obcí se mezi zeměmi liší; proto zde nespojujeme strukturální žebříček s národními rozpočtovými částkami.":"These indicators describe territorial structure—not staffing, service quality, cost or efficiency. Municipal responsibilities differ between countries, so the structural comparison is kept separate from national budget amounts."}</p>${dataset[cs?"panel_note_cs":"panel_note_en"]?`<p>${esc(dataset[cs?"panel_note_cs":"panel_note_en"])}</p>`:""}<a href="${esc(dataset.source.explorer_url)}" target="_blank" rel="noopener">${cs?"Zdroj: OECD · Obce podle počtu obyvatel":"Source: OECD · Municipal level government by population size"} ↗</a></div>`;
     root.querySelectorAll("[data-benchmark-metric]").forEach((button)=>button.onclick=()=>{state.benchmarkMetric=button.dataset.benchmarkMetric;renderBenchmark();});
   }
   function controls() {
@@ -153,7 +166,8 @@
   }
   function renderMunicipality(entity,countries) {
     const country=countries[entity.country],href=entity.url?`${entity.url}?lang=${state.lang}`:(entity.country==="DEU"?`${assetRoot}municipalities/germany/profile/?code=${encodeURIComponent(entity.code)}&lang=${state.lang}`:(slugs[country.code]?`${assetRoot}municipalities/${slugs[country.code]}/?lang=${state.lang}#directory`:""));
-    const amount=`<dl><div><dt>${t().revenue}</dt><dd>${Number.isFinite(entity.revenue)?currency(entity.revenue,entity.currency):"—"}</dd></div><div><dt>${t().expenditure}</dt><dd>${Number.isFinite(entity.expenditure)?currency(entity.expenditure,entity.currency):"—"}</dd></div><div><dt>${t().result}</dt><dd>${Number.isFinite(entity.balance)?currency(entity.balance,entity.currency):"—"}</dd></div><div><dt>${t().population}</dt><dd>${Number.isFinite(entity.population)?fmt(entity.population):"—"}</dd></div></dl>`;
+    const balanceDiffers=resultDiffersFromArithmetic(entity),balanceLabel=balanceDiffers?t().resultDiffers:t().result,balanceTitle=balanceDiffers?` title="${esc(t().resultDiffersHint)}"`:"";
+    const amount=`<dl><div><dt>${t().revenue}</dt><dd>${Number.isFinite(entity.revenue)?currency(entity.revenue,entity.currency):"—"}</dd></div><div><dt>${t().expenditure}</dt><dd>${Number.isFinite(entity.expenditure)?currency(entity.expenditure,entity.currency):"—"}</dd></div><div><dt${balanceTitle}>${balanceLabel}${balanceDiffers?` <b class="result-differs-flag" aria-hidden="true">†</b>`:""}</dt><dd>${Number.isFinite(entity.balance)?currency(entity.balance,entity.currency):"—"}</dd></div><div><dt>${t().population}</dt><dd>${Number.isFinite(entity.population)?fmt(entity.population):"—"}</dd></div></dl>`;
     return `<article class="municipality-card"${href?` data-href="${esc(href)}"`:""}><header><img src="${assetRoot}assets/flags/${country.alpha2.toLowerCase()}.svg" alt=""><span>${esc(name(country))}</span><small>${esc(entity.code)}</small></header><h3>${esc(entity.name)}</h3><p>${esc(regionName(entity)||country[`coverage_${state.lang}`])}</p>${amount}<footer>${entity.years.map((year)=>`<b>${year}</b>`).join("")}<a class="card-source" href="${esc(country.source)}" target="_blank" rel="noopener">${esc(t().dataSource)}</a>${href?`<a href="${esc(href)}">${t().openProfile||t().detail} →</a>`:`<span>${esc(t().openData)}</span>`}</footer></article>`;
   }
   // Paints what has already arrived, then repaints as each outstanding shard lands, so a

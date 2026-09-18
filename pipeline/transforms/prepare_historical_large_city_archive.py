@@ -15,6 +15,11 @@ from pathlib import Path
 
 import requests
 
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from enrich_large_city_history_from_municipal import enrich as enrich_from_municipal_history  # noqa: E402
+
 
 ROOT = Path(os.environ.get("CZBUDGET_WORKSPACE_ROOT", Path(__file__).resolve().parents[3]))
 HISTORY = ROOT / "website/data/large-city-history.v1.json"
@@ -138,6 +143,10 @@ def main() -> None:
         "Rozpočtový výsledek je v letech 2006–2025 veden po konsolidaci. Hotovost 2006–2011 je konečný stav běžných účtů "
         "z FIN 2-12M; od 2012 jde o širší součet vymezených účtů z rozvahy, proto je v roce 2012 metodický zlom."
     )
+    # Bring in the fuller per-year field set (approved/adjusted budget, revenue
+    # and expense breakdown, population) from data/municipal-history/<ICO>.json,
+    # which every large city also has. See enrich_large_city_history_from_municipal.py.
+    enrich_from_municipal_history(history)
     HISTORY.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"records": len(records), "period": history["period"]}, ensure_ascii=False))
 

@@ -49,13 +49,25 @@ const benchmarkCountries=Object.fromEntries(benchmark.countries.map(item=>[item.
 const gdp=(code,year)=>benchmarkSeries[code].metrics.nominal_gdp_local_bn.values.find(item=>item.year===year)?.value;
 const ratio=(amountMn,code,year)=>Number((amountMn/(gdp(code,year)*1000)*100).toFixed(3));
 
+// Comparability caveats: cases where a country's fiscal SCOPE LABEL matches the rest of
+// the table (e.g. "general_government") but the underlying system BOUNDARY does not, so
+// the COFOG figure is not comparable even though nothing about the `scope` field flags it.
+const COMPARABILITY_NOTES={
+  CHE:{health:{
+    boundary_mismatch:true,
+    cs:"Švýcarské povinné zdravotní pojištění (KVG/LAMal) je ve švýcarských národních účtech vedeno mimo vládní instituce, takže GF07 zachycuje jen malou část švýcarských výdajů na zdravotnictví. Hodnota není srovnatelná s ostatními zeměmi v této tabulce, přestože nese stejný popisek rozsahu „vládní instituce“.",
+    en:"Switzerland's compulsory health insurance (KVG/LAMal) sits outside general government in the Swiss national accounts, so GF07 captures only a small part of Swiss health spending. The figure is not comparable with the other countries in this table even though it carries the same \"general government\" scope label."
+  }}
+};
+
 const oecdRows=parseCsv(await getText(OECD_URL));
 const countries={};
 for(const code of ALL_AREAS) {
   countries[code]={
     name_cs:names[code][0],name_en:names[code][1],currency:benchmarkCountries[code].currency_code,
     scope:code==="UKR"?"consolidated_budget":code==="USA"?"mixed_by_category":"general_government",
-    categories:{health:[],social:[],transport:[]}
+    categories:{health:[],social:[],transport:[]},
+    ...(COMPARABILITY_NOTES[code]?{comparability_notes:COMPARABILITY_NOTES[code]}:{})
   };
 }
 
@@ -109,8 +121,8 @@ const payload={
     transport:{cofog:"GF04.5",label_cs:"Doprava",label_en:"Transport"}
   },
   methodology:{
-    cs:"Patnáct zemí používá výdaje podle funkce COFOG a nominální HDP. Ukrajina používá konsolidovaný státní a místní rozpočet; USA používají pro dopravu federální výdaje OMB. Brazílie má samostatně načtenou oficiální COFOG tabulku za roky 2023–2024 v národní výdajové vrstvě.",
-    en:"Fifteen countries use expenditure by COFOG function and nominal GDP. Ukraine uses the consolidated national and local budget; U.S. transport uses OMB federal outlays. Brazil's official 2023–2024 COFOG table is loaded separately in the national-spending layer."
+    cs:"Patnáct zemí používá výdaje podle funkce COFOG a nominální HDP. Ukrajina používá konsolidovaný státní a místní rozpočet; USA používají pro dopravu federální výdaje OMB. Brazílie má samostatně načtenou oficiální COFOG tabulku za roky 2023–2024 v národní výdajové vrstvě. Švýcarské zdravotnictví neslo stejný popisek rozsahu jako ostatní země, ale jeho povinné pojištění stojí mimo vládní instituce – viz poznámka u zdravotnictví Švýcarska.",
+    en:"Fifteen countries use expenditure by COFOG function and nominal GDP. Ukraine uses the consolidated national and local budget; U.S. transport uses OMB federal outlays. Brazil's official 2023–2024 COFOG table is loaded separately in the national-spending layer. Switzerland's health figure carries the same scope label as the other countries, but its compulsory insurance sits outside general government — see the note on Switzerland's health row."
   },
   countries,
   sources:[

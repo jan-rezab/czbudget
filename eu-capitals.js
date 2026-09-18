@@ -38,7 +38,8 @@ Object.assign(I.cs,{
   sortBudget:"Plánovaných výdajů",sortBalance:"Plánovaného salda",resultNote:"Fiskální hodnoty jsou nominální plány, nikoli skutečné plnění.",thBudget:"Plánované výdaje",thBalance:"Plánované saldo",detailKicker:"Rozpočtový plán",fiscalOverview:"Rozpočtový plán: příjmy, výdaje a financování",spendingStructure:"Struktura plánovaných výdajů",cityContext:"Datovaný městský kontext",methodCopy:"Rozpočtové plány, skutečné výsledky a datovaný městský kontext držíme jako oddělené vrstvy.",methodBudgetTitle:"Rozpočtové plány",methodBudgetCopy:"Nejširší oficiální plán výdajů dostupný k 20. srpnu 2026. Nejde o skutečné plnění; rok, stav a rozsah jsou v detailu města.",footerSource:"Zdroje: rozpočtové plány měst · Eurostat · ECB",
   planBadge:"ROZPOČTOVÝ PLÁN",actualBadge:"SKUTEČNOST",stageTitle:"Plán a skutečnost vedeme odděleně",stagePlanTitle:"Oficiální rozpočtové plány",stagePlanCopy:"Atlas používá plány pro srovnání zamýšlené kapacity. U každého města zobrazuje rok, stav a přesný rozsah.",stageActualTitle:"Skutečné fiskální výsledky",stageActualCopy:"Skutečné příjmy a výdaje zobrazujeme v samostatné historické vrstvě pouze tam, kde je k dispozici kompatibilní řada.",
   plannedRevenueLabel:"Plánované příjmy",plannedExpenditureLabel:"Plánované výdaje",plannedBalanceLabel:"Plánované saldo",plannedGapLabel:"Plánovaný rozdíl před financováním",plannedPerResidentLabel:"Plánované výdaje / obyv.",plannedMarginLabel:"plánované saldo / příjmy",plannedGapMarginLabel:"plánovaný rozdíl před financováním / příjmy",observedContext:"POZOROVANÝ KONTEXT",
-  adoptedPlan:"Schválený plán",interimPlan:"Oficiální průběžný výpočet",initialPlan:"Schválený počáteční plán",latestCompletePlan:"Nejnovější úplný oficiální plán"
+  adoptedPlan:"Schválený plán",interimPlan:"Oficiální průběžný výpočet",initialPlan:"Schválený počáteční plán",latestCompletePlan:"Nejnovější úplný oficiální plán",
+  plannedAltBasisLabel:"Plánovaný výsledek (jiný základ)",plannedAltBasisMarginLabel:"plánovaný výsledek / příjmy (jiný základ)",perResidentBasedOn:"Podle populace",perResidentUnavailableCaption:"Bez populace odpovídající rozpočtovému rozsahu"
 });
 Object.assign(I.en,{
   hero2:"Plans in context.",heroCopy:"The latest official budget plans of European capitals, separated from actual outcomes and paired with dated population and tourist-night observations.",ledgerNote:"The fiscal layer is mostly 2026 plans; a different year or status is shown for the city.",
@@ -46,7 +47,8 @@ Object.assign(I.en,{
   sortBudget:"Planned expenditure",sortBalance:"Planned balance",resultNote:"Fiscal values are nominal plans, not actual outturns.",thBudget:"Plan expenditure",thBalance:"Plan balance",detailKicker:"Budget plan",fiscalOverview:"Budget plan: revenue, expenditure and financing",spendingStructure:"Planned spending structure",cityContext:"Dated city context",methodCopy:"Budget plans, actual outcomes and dated city context remain separate data layers.",methodBudgetTitle:"Budget plans",methodBudgetCopy:"The broadest official expenditure plan available on 20 August 2026. It is not actual execution; each city detail shows year, status and perimeter.",footerSource:"Sources: city budget plans · Eurostat · ECB",
   planBadge:"BUDGET PLAN",actualBadge:"ACTUAL",stageTitle:"Plan and actual are kept separate",stagePlanTitle:"Official budget plans",stagePlanCopy:"The atlas uses plans to compare intended capacity. Every city retains its year, status and exact perimeter.",stageActualTitle:"Actual fiscal outcomes",stageActualCopy:"Actual revenue and expenditure appear in a separate historical layer only where a compatible series is available.",
   plannedRevenueLabel:"Planned revenue",plannedExpenditureLabel:"Planned expenditure",plannedBalanceLabel:"Planned balance",plannedGapLabel:"Planned gap before financing",plannedPerResidentLabel:"Planned expenditure / resident",plannedMarginLabel:"planned balance / revenue",plannedGapMarginLabel:"planned gap before financing / revenue",observedContext:"OBSERVED CONTEXT",
-  adoptedPlan:"Adopted plan",interimPlan:"Official interim calculation",initialPlan:"Adopted initial plan",latestCompletePlan:"Latest complete official plan"
+  adoptedPlan:"Adopted plan",interimPlan:"Official interim calculation",initialPlan:"Adopted initial plan",latestCompletePlan:"Latest complete official plan",
+  plannedAltBasisLabel:"Planned result (different basis)",plannedAltBasisMarginLabel:"planned result / revenue (different basis)",perResidentBasedOn:"Based on population of",perResidentUnavailableCaption:"No perimeter-matched population available"
 });
 
 const CZECH_CITY_NAMES = {
@@ -78,18 +80,35 @@ const moneyPayload = (payload, signed = false) => {
   return moneyValues(amount, currency, signed);
 };
 const money = (city) => moneyPayload(city.budget);
+const residentPopulation = (city) => {
+  const core = city.benchmarks.core_municipality_population;
+  return core && Number.isFinite(core.value) && core.value > 0 ? core : null;
+};
 const moneyPerResident = (city) => {
-  const population = city.benchmarks.population.value;
+  const population = residentPopulation(city);
+  if (!population) return "—";
   const amount = state.currency === "eur" ? city.fiscal_details.expenditure.eur_amount : city.fiscal_details.expenditure.local_amount;
   const currency = state.currency === "eur" ? "EUR" : city.currency_code;
-  return Number.isFinite(population) && population > 0 ? moneyValues(amount / population, currency) : "—";
+  return moneyValues(amount / population.value, currency);
 };
 const componentLabel = (code) => COMPONENT_LABELS[code]?.[state.lang === "en" ? 1 : 0] || code.replaceAll("_", " ");
 const balanceLabel = (classification) => I[state.lang][classification] || I[state.lang].balanceUnavailable;
 const planStatus = (city) => ({adopted:I[state.lang].adoptedPlan,official_interim_calculation:I[state.lang].interimPlan,adopted_initial:I[state.lang].initialPlan,latest_complete_official_budget:I[state.lang].latestCompletePlan})[city.status] || String(city.status).replaceAll("_", " ");
 const isBeforeFinancingBalance = (city) => /before_financing|excluding_financing|revenue_expenditure_gap/.test(city.fiscal_details.balance_basis);
-const plannedBalanceLabel = (city) => I[state.lang][isBeforeFinancingBalance(city) ? "plannedGapLabel" : "plannedBalanceLabel"];
-const plannedMarginLabel = (city) => I[state.lang][isBeforeFinancingBalance(city) ? "plannedGapMarginLabel" : "plannedMarginLabel"];
+// A balance is on a different accounting basis than the displayed revenue/expenditure pair whenever all
+// three are present and the balance materially disagrees with revenue − expenditure (tolerance: the larger
+// of 1e6 local units or 1% of |balance|; a sign disagreement between the two is always material).
+const isAlternateBasisBalance = (city) => {
+  const fiscal = city.fiscal_details;
+  const revenue = fiscal.revenue?.local_amount, expenditure = fiscal.expenditure?.local_amount, balance = fiscal.balance?.local_amount;
+  if (!Number.isFinite(revenue) || !Number.isFinite(expenditure) || !Number.isFinite(balance)) return false;
+  const implied = revenue - expenditure;
+  const tolerance = Math.max(1e6, Math.abs(balance) * 0.01);
+  const signDisagrees = Math.sign(implied) !== Math.sign(balance) && implied !== 0 && balance !== 0;
+  return signDisagrees || Math.abs(balance - implied) > tolerance;
+};
+const plannedBalanceLabel = (city) => I[state.lang][isBeforeFinancingBalance(city) ? "plannedGapLabel" : isAlternateBasisBalance(city) ? "plannedAltBasisLabel" : "plannedBalanceLabel"];
+const plannedMarginLabel = (city) => I[state.lang][isBeforeFinancingBalance(city) ? "plannedGapMarginLabel" : isAlternateBasisBalance(city) ? "plannedAltBasisMarginLabel" : "plannedMarginLabel"];
 const visibleComponents = (city) => {
   const components = city.fiscal_details.components;
   const codes = new Set(components.map((item) => item.component_code));
@@ -230,9 +249,15 @@ function renderDetail(city) {
     return `<article class="capital-mix-panel"><h4>${esc(title)} · ${esc(city.period)}</h4><div class="capital-mix-list">${items.map((item) => { const value = state.currency === "eur" ? item.eur_amount : item.local_amount; return `<div class="capital-mix-row" data-kind="${esc(item.component_kind)}"><div><span>${esc(componentLabel(item.component_code))}</span><strong>${esc(componentMoney(item))}</strong></div><i><b style="width:${Math.max(2, value / max * 100)}%"></b></i><small>${esc(decimal(item.share_of_headline_pct))} % ${esc(t.ofDisplayedTotal)} · ${esc(city.period)}</small></div>`; }).join("")}</div></article>`;
   };
   const margin = Number.isFinite(fiscal.balance_margin_pct) ? `${fiscal.balance_margin_pct > 0 ? "+" : ""}${decimal(fiscal.balance_margin_pct)} % ${plannedMarginLabel(city)}` : balanceLabel(fiscal.balance_classification);
+  const altBasis = !isBeforeFinancingBalance(city) && isAlternateBasisBalance(city);
+  const balanceSmall = altBasis && balanceNote ? `${margin} · ${balanceNote}` : `${margin} · ${city.period}`;
+  const residentPop = residentPopulation(city);
+  const perResidentSmall = residentPop
+    ? `${esc(t.perResidentBasedOn)} ${esc(residentPop.geography_name)}, ${esc(t.referenceYear)} ${esc(residentPop.reference_year)}`
+    : esc(t.perResidentUnavailableCaption);
   $("#city-detail").innerHTML = `<div class="capital-detail-head"><div><span class="kicker">${esc(t.detailKicker)} · ${esc(city.country_code)}</span><h2>${esc(cityName(city))}</h2><p>${esc(countryName(city))} · ${esc(flags.join(" · "))}</p></div><div class="capital-detail-actions"><a href="${esc(city.landing_page_url)}" target="_blank" rel="noopener">${esc(t.officialSource)}</a><a href="${esc(city.download_url)}" target="_blank" rel="noopener">${esc(t.budgetDocument)}</a></div></div>
     <div class="capital-detail-label stage-plan"><span><b class="capital-data-stage plan">${esc(t.planBadge)}</b>${esc(t.fiscalOverview)}</span><small>${esc(city.period)} · ${esc(planStatus(city))}</small></div>
-    <div class="capital-detail-grid fiscal-kpis"><article><span>${esc(t.plannedRevenueLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPayload(fiscal.revenue))}</strong><small>${fiscal.revenue ? esc(t.planBadge + " · " + city.period) : esc(t.unavailable)}</small></article><article><span>${esc(t.plannedExpenditureLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPayload(fiscal.expenditure))}</strong><small>${esc(componentLabel(city.measure))} · ${esc(t.planBadge)}</small></article><article><span>${esc(plannedBalanceLabel(city))} · ${esc(city.period)}</span><strong class="${balanceClass}">${esc(moneyPayload(fiscal.balance, true))}</strong><small>${esc(margin)} · ${esc(city.period)}</small></article><article><span>${esc(t.plannedPerResidentLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPerResident(city))}</strong><small>${esc(t.planBadge)} ${esc(city.period)} / ${esc(t.referenceYear)} ${esc(population.reference_year)}</small></article></div>
+    <div class="capital-detail-grid fiscal-kpis"><article><span>${esc(t.plannedRevenueLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPayload(fiscal.revenue))}</strong><small>${fiscal.revenue ? esc(t.planBadge + " · " + city.period) : esc(t.unavailable)}</small></article><article><span>${esc(t.plannedExpenditureLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPayload(fiscal.expenditure))}</strong><small>${esc(componentLabel(city.measure))} · ${esc(t.planBadge)}</small></article><article><span>${esc(plannedBalanceLabel(city))} · ${esc(city.period)}</span><strong class="${balanceClass}">${esc(moneyPayload(fiscal.balance, true))}</strong><small>${esc(balanceSmall)}</small></article><article><span>${esc(t.plannedPerResidentLabel)} · ${esc(city.period)}</span><strong>${esc(moneyPerResident(city))}</strong><small>${perResidentSmall}</small></article></div>
     <div class="capital-balance-story ${balanceClass || "unavailable"}"><span>${esc(balanceLabel(fiscal.balance_classification))}</span><p>${esc(balanceNote)}</p></div>
     ${renderHistory(city)}
     <div class="capital-detail-label stage-plan"><span><b class="capital-data-stage plan">${esc(t.planBadge)}</b>${esc(t.spendingStructure)}</span><small>${esc(t.sourceCoverage)} · ${esc(completeness)}</small></div>

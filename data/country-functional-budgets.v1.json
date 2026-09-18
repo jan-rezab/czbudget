@@ -24,8 +24,8 @@
     }
   },
   "methodology": {
-    "cs": "Patnáct zemí používá výdaje podle funkce COFOG a nominální HDP. Ukrajina používá konsolidovaný státní a místní rozpočet; USA používají pro dopravu federální výdaje OMB. Brazílie má samostatně načtenou oficiální COFOG tabulku za roky 2023–2024 v národní výdajové vrstvě.",
-    "en": "Fifteen countries use expenditure by COFOG function and nominal GDP. Ukraine uses the consolidated national and local budget; U.S. transport uses OMB federal outlays. Brazil's official 2023–2024 COFOG table is loaded separately in the national-spending layer."
+    "cs": "Patnáct zemí používá výdaje podle funkce COFOG a nominální HDP. Ukrajina používá konsolidovaný státní a místní rozpočet; USA používají pro dopravu federální výdaje OMB. Brazílie má samostatně načtenou oficiální COFOG tabulku za roky 2023–2024 v národní výdajové vrstvě. Švýcarské zdravotnictví neslo stejný popisek rozsahu jako ostatní země, ale jeho povinné pojištění stojí mimo vládní instituce – viz poznámka u zdravotnictví Švýcarska.",
+    "en": "Fifteen countries use expenditure by COFOG function and nominal GDP. Ukraine uses the consolidated national and local budget; U.S. transport uses OMB federal outlays. Brazil's official 2023–2024 COFOG table is loaded separately in the national-spending layer. Switzerland's health figure carries the same scope label as the other countries, but its compulsory insurance sits outside general government — see the note on Switzerland's health row."
   },
   "countries": {
     "CZE": {
@@ -3071,6 +3071,13 @@
       "name_en": "Switzerland",
       "currency": "CHF",
       "scope": "general_government",
+      "comparability_notes": {
+        "health": {
+          "boundary_mismatch": true,
+          "cs": "Švýcarské povinné zdravotní pojištění (KVG/LAMal) je ve švýcarských národních účtech vedeno mimo vládní instituce, takže GF07 zachycuje jen malou část švýcarských výdajů na zdravotnictví. Hodnota není srovnatelná s ostatními zeměmi v této tabulce, přestože nese stejný popisek rozsahu „vládní instituce“.",
+          "en": "Switzerland's compulsory health insurance (KVG/LAMal) sits outside general government in the Swiss national accounts, so GF07 captures only a small part of Swiss health spending. The figure is not comparable with the other countries in this table even though it carries the same \"general government\" scope label."
+        }
+      },
       "categories": {
         "health": [
           {
