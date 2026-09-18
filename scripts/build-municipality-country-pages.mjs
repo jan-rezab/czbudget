@@ -56,7 +56,7 @@ for(const [slug,page] of selectedPages){
   <link rel="stylesheet" href="../../municipalities-navigator.css?v=20260909-country-spending-splits">
   <link rel="stylesheet" href="../../oecd-charts.css?v=20260829-oecd-reports">
   <script src="../../municipality-country-picker.js?v=20260902-searchable-picker" defer></script>
-  <script src="../../municipalities-country.js?v=20260909-country-spending-splits" defer></script>
+  <script src="../../municipalities-country.js?v=20260918-chart-integrity" defer></script>
   <script src="../../oecd-charts.js?v=20260829-oecd-reports" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
