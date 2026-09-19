@@ -130,8 +130,9 @@ for (const shelf of registry.shelves) {
   for (const cluster of shelf.clusters) {
     const items = registry.reports.filter((report) => report.shelf === shelf.id && report.cluster === cluster.id);
     if (!items.length) continue;
-    // A single-cluster shelf (the regional one) is labelled by the shelf itself.
-    const label = cluster.title ?? shelf.title;
+    // A cluster may carry its own menu label when its page heading would be
+    // ambiguous out of context; an unnamed cluster inherits the shelf label.
+    const label = cluster.menu ?? cluster.title ?? shelf.title;
     menuGroups.push({ label, items });
   }
 }

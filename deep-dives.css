@@ -73,3 +73,6 @@
 .deep-card-place{align-self:flex-start;margin-top:26px;padding:4px 9px;background:var(--deep-blue);color:#fff;font:700 10px/1.4 monospace;font-style:normal;letter-spacing:.09em;text-transform:uppercase}
 .deep-card-place+h3{margin-top:18px}
 @media(max-width:700px){.deep-cluster-heading{grid-template-columns:1fr;gap:12px}.deep-shelf .deep-cluster+.deep-cluster{margin-top:42px}}
+/* auto-fill, not auto-fit: a cluster holding one report keeps a column-width
+   card instead of stretching it across the row. */
+.deep-dives-page .deep-cluster .deep-card-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}

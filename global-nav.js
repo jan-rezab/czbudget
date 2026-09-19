@@ -118,11 +118,13 @@
       { path:"deep-dives/state-owned-enterprises/", title:{cs:"Státní podniky",en:"State-owned enterprises"}, note:{cs:"30 podniků, výnosy v EUR",en:"30 enterprises, revenue in EUR"} },
       { path:"deep-dives/capital-cities/?city=prague-cz", title:{cs:"Hlavní města",en:"Capital cities"}, note:{cs:"Rozpočty, obyvatelé a turistický tlak",en:"Budget plans, residents and visitor pressure"} },
     ] },
-    { label:{cs:"Regionální reporty",en:"Regional deep dives"}, items: [
+    { label:{cs:"Regionální · Česko",en:"Regional · Czechia"}, items: [
       { path:"deep-dives/budget-planner/", title:{cs:"Plánovač rozpočtu 2027",en:"2027 budget planner"}, note:{cs:"Změňte návrh a sledujte schodek",en:"Change the proposal and track the deficit"} },
       { path:"deep-dives/public-employment/", title:{cs:"Veřejná zaměstnanost",en:"Public employment"}, note:{cs:"Úřady, školy, nemocnice a veřejné firmy",en:"Government, schools, hospitals and public corporations"} },
       { path:"deep-dives/money/cze/", title:{cs:"Kam šly peníze? Česko",en:"Where did the money go? Czechia"}, note:{cs:"Peníze, kupní síla a ČNB",en:"Money, purchasing power and the CNB"} },
       { path:"deep-dives/plzen-contracts/", title:{cs:"Plzeň: smlouvy a skutečné platby",en:"Plzeň: contracts and actual payments"}, note:{cs:"Od podpisu smlouvy ke skutečné platbě",en:"From contract signature to actual payment"} },
+    ] },
+    { label:{cs:"Regionální · Spojené státy",en:"Regional · United States"}, items: [
       { path:"deep-dives/money/usa/", title:{cs:"Kam šly peníze? Spojené státy",en:"Where did the money go? United States"}, note:{cs:"Peníze, kupní síla a Fed",en:"Money, purchasing power and the Fed"} },
     ] },
   ];
@@ -278,7 +280,7 @@
     styles.dataset.psdSiteHeader = "true";
     document.head.append(styles);
   }
-  const reportsMenuStylesHref = `${assetRoot}reports-menu.css?v=20260919-reports-catalogue`;
+  const reportsMenuStylesHref = `${assetRoot}reports-menu.css?v=20260919-reports-regional`;
   const existingReportsMenuStyles = document.querySelector("link[data-reports-menu]");
   if (existingReportsMenuStyles) existingReportsMenuStyles.href = reportsMenuStylesHref;
   else {
