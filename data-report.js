@@ -2,7 +2,7 @@
   if (window.PSDDataReport) return;
   const root = new URL('.', document.currentScript.src);
   const style = document.createElement('link');
-  style.rel = 'stylesheet'; style.href = new URL('data-report.css?v=20260909', root); document.head.append(style);
+  style.rel = 'stylesheet'; style.href = new URL('data-report.css?v=20260919-footer-dock', root); document.head.append(style);
   const I = {
     en: { button: 'Report data', eyebrow: 'BETTER DATA, TOGETHER', title: 'Help get the details right.', intro: 'Spotted something? A small correction can make a big difference.', page: 'Reporting on', target: 'Data point or section (optional)', targetHint: 'e.g. Total expenditure · 2024 · CZK 12.5bn', reason: 'What needs attention?', reasons: ['Incorrect figure', 'Outdated data', 'Missing or broken source', 'Missing context', 'Something else'], explanation: 'Tell us what you noticed', hint: 'Which figure looks wrong, why, and what should it be? At least 20 characters.', source: 'Supporting source (optional)', email: 'Email (optional)', contact: 'Only for questions about this report. Stored privately and scheduled for deletion after 90 days; no marketing. You can report without it.', privacy: 'Your report starts in a private review queue. Please avoid personal or sensitive information in the explanation.', send: 'Send for review', close: 'Close', pending: 'Sending…', checking: 'Preparing secure reporting…', unavailable: 'Online reporting is not available yet. You can contact info@hlidacstatu.cz.', error: 'We could not confirm your report. Your text is still here; please try again.', success: 'Thank you for making the data better.', received: 'Your report is saved for review. Published data changes only after verification.', ref: 'Report reference', steps: '01 You flag it  →  02 We check the source  →  03 We correct it', protection: 'Protected by reCAPTCHA.', googlePrivacy: 'Privacy', googleTerms: 'Terms' },
     cs: { button: 'Nahlásit data', eyebrow: 'LEPŠÍ DATA SPOLEČNĚ', title: 'Pomozte nám doladit detaily.', intro: 'Něco nesedí? I malá oprava může hodně změnit.', page: 'Nahlášení ke stránce', target: 'Datový bod nebo sekce (nepovinné)', targetHint: 'např. Celkové výdaje · 2024 · 12,5 mld. Kč', reason: 'Co potřebuje pozornost?', reasons: ['Nesprávná hodnota', 'Zastaralá data', 'Chybějící nebo nefunkční zdroj', 'Chybějící kontext', 'Něco jiného'], explanation: 'Popište, čeho jste si všimli', hint: 'Která hodnota nesedí, proč a jaká by měla být? Alespoň 20 znaků.', source: 'Podkladový zdroj (nepovinné)', email: 'E-mail (nepovinné)', contact: 'Pouze pro dotazy k tomuto hlášení. Uchováváme jej neveřejně a po 90 dnech jej zařadíme ke smazání, bez marketingu. Hlášení lze poslat i bez něj.', privacy: 'Hlášení nejprve projde neveřejnou kontrolou. Do popisu neuvádějte osobní ani citlivé údaje.', send: 'Odeslat ke kontrole', close: 'Zavřít', pending: 'Odesílání…', checking: 'Připravujeme zabezpečený formulář…', unavailable: 'Online hlášení zatím není dostupné. Můžete napsat na info@hlidacstatu.cz.', error: 'Přijetí hlášení se nepodařilo potvrdit. Text zůstává vyplněný; zkuste to znovu.', success: 'Děkujeme, že pomáháte zlepšovat data.', received: 'Hlášení je uloženo ke kontrole. Publikovaná data měníme až po ověření.', ref: 'Číslo hlášení', steps: '01 Upozorníte nás  →  02 Ověříme zdroj  →  03 Opravíme data', protection: 'Chráněno službou reCAPTCHA.', googlePrivacy: 'Soukromí', googleTerms: 'Podmínky' }
@@ -58,6 +58,24 @@
     };
   }
   button.onclick = () => open();
+  // Park the launcher above the page footer instead of floating over it.
+  let lifting = false;
+  function lift() {
+    lifting = false;
+    const footer = document.querySelector('body > footer');
+    const room = innerHeight - 140;
+    if (!footer || room <= 0) return button.style.setProperty('--dr-lift', '0px');
+    const top = footer.getBoundingClientRect().top;
+    const overlap = Math.max(0, innerHeight - Math.max(top, 0));
+    button.style.setProperty('--dr-lift', `${Math.min(overlap, room)}px`);
+  }
+  // rAF keeps it smooth while scrolling; the timeout is the backstop for tabs
+  // where rAF is throttled or never fires. lift() is idempotent, so both is fine.
+  const queueLift = () => { if (lifting) return; lifting = true; requestAnimationFrame(lift); setTimeout(lift, 100); };
+  addEventListener('scroll', queueLift, { passive: true });
+  addEventListener('resize', queueLift);
+  document.addEventListener('psd:shared-footer-ready', queueLift);
+  queueLift();
   document.addEventListener('click', event => { const trigger = event.target.closest('[data-report-target]'); if (trigger) { event.preventDefault(); open(trigger.dataset.reportTarget); } });
   window.PSDDataReport = { open };
 })();

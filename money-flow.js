@@ -19,15 +19,30 @@ let language = document.documentElement.lang === 'cs' ? 'cs' : 'en';
 let copy = packs[language];
 let model, controller, tree;
 let level = 'overview';
-let unit = 'hundred', step = 'all', selected = '';
+let unit = 'hundred', step = 'all', selected = '', currency = 'czk';
+// Both extras are loaded only when someone asks for them, so the default view
+// still downloads nothing but the budget itself.
+let euro = null;    // { rate, year } — ECB annual average reference rate
+let salary = null;  // { share, year } — OECD Taxing Wages, CZE, single, AW100
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 let paused = reduced.matches;
 let offscreen = false;
 const escape = text => String(text).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const fmt = (value, digits = 1) => new Intl.NumberFormat(language === 'cs' ? 'cs-CZ' : 'en-GB', { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
+// Until the optional dataset behind a unit has arrived, fall back to the ratio
+// everyone starts on rather than drawing a diagram full of zeroes.
+const shownUnit = () => unit === 'salary' && !salary ? 'hundred' : unit;
+const inEuro = () => currency === 'eur' && Boolean(euro) && shownUnit() === 'annual';
+const scale = value => shownUnit() === 'annual' ? (inEuro() ? value / euro.rate : value)
+  : shownUnit() === 'salary' ? value / model.total * salary.share
+  : value / model.total * 100;
+const unitSymbol = () => shownUnit() === 'annual' ? (inEuro() ? copy.bnEur : copy.bn) : 'Kč';
+const unitCaption = () => shownUnit() === 'annual' ? (inEuro() ? copy.annualUnitEur : copy.annualUnit)
+  : shownUnit() === 'salary' ? copy.salaryUnit : copy.unit100;
+const zoomText = () => `${copy.zoomHead} ${shownUnit() === 'annual' ? copy.baseAnnual : shownUnit() === 'salary' ? copy.baseSalary : copy.baseHundred}`;
 const amount = value => {
-  const scaled = unit === 'annual' ? value : value / model.total * 100;
-  return `${scaled > 0 && scaled < .01 ? `<${fmt(.01,2)}` : fmt(scaled, scaled > 0 && scaled < 0.1 ? 2 : 1)} ${unit === 'annual' ? copy.bn : 'Kč'}`;
+  const scaled = scale(value);
+  return `${scaled > 0 && scaled < .01 ? `<${fmt(.01,2)}` : fmt(scaled, scaled > 0 && scaled < 0.1 ? 2 : 1)} ${unitSymbol()}`;
 };
 const name = item => item[`label_${language}`] || copy.names[item.id];
 const find = key => tree?.get(key);
@@ -68,6 +83,32 @@ Object.assign(packs.en,{intro:'Who pays for schools, roads and help when people 
 Object.assign(packs.cs,{intro:'Kdo platí školy, silnice a pomoc, když ji lidé potřebují? Sledujte peníze a kliknutím do proudu nahlédněte dovnitř.',clickHint:'Zajímá vás některý proud? Klikněte a podívejte se dovnitř.',detailNote:'Začněte celkovým pohledem. Každé kliknutí otevře další vrstvu.',pooled:'Náš společný rozpočet',pooledNote:'PLÁN NA LETOŠNÍ ROK',poolBottom:'CO SPOLEČNĚ PLATÍME',poolExplore:'Klikněte a prozkoumejte →',motionKey:'Značky ukazují směr, nikoli skutečné platby',allStory:'Lidé a firmy přispívají. Rozpočet peníze soustředí a určuje, co za ně zaplatíme. Vyberte proud a zjistěte více.',searchCaption:'Najít konkrétní položku',financing:'Co je třeba dofinancovat'});
 Object.assign(packs.en.names,{taxes:'Taxes',insurance:'Social contributions',other_income:'Other income',deficit:'The financing gap',social:'Benefits & social care',security:'Safety & defence',education:'Education',economy:'Transport & the economy',government:'Government & finance',other:'Other shared purposes'});
 Object.assign(packs.cs.names,{taxes:'Daně',insurance:'Sociální pojistné',other_income:'Další příjmy',deficit:'Financování schodku',social:'Dávky a sociální péče',security:'Bezpečnost a obrana',education:'Vzdělávání',economy:'Doprava a ekonomika',government:'Správa a finance',other:'Další společné účely'});
+Object.assign(packs.en,{
+  billionsEur:'Billion €',
+  zoomHead:'Zoomed view: widths are proportional within this category.',
+  baseAnnual:'Amounts are the annual plan for the whole state budget.',
+  baseHundred:'Amounts per 100 Kč still refer to the whole state budget.',
+  baseSalary:'Amounts still refer to the whole state budget, rescaled to one average salary.',
+  perSalary:'An average salary', salaryUnit:'Kč / 100 Kč of an average gross wage', annualUnitEur:'billion € / year', bnEur:'bn €', currencyLabel:'Currency',
+  salaryNote:'<b>{wedge} Kč of every 100 Kč of gross pay</b> at the average wage reaches the state as income tax and compulsory contributions: {tax} Kč income tax, {employee} Kč employee contributions and {employer} Kč employer contributions, which are paid on top of gross pay (OECD Taxing Wages {year}; single person, no children, 100 % of the average wage). The map splits that amount in the same proportions as all state spending. It illustrates the budget, it does not trace your money: salary taxes cover only part of it — VAT, corporate and excise taxes and borrowing pay for the rest — health-insurance contributions go to the insurers rather than the state budget, and income tax is shared with municipalities and regions.',
+  euroNote:'Converted at the ECB annual average reference rate for {year}: <b>{rate} Kč / €</b>. The budget is set, approved and executed in crowns; the euro figure is a conversion, not a separate source.',
+  ratioNote:'Shares stay the same in any currency, so the euro switch applies to annual amounts.',
+  unitDataError:'That view needs an extra dataset that could not be loaded. Showing crowns per 100 Kč instead.'
+});
+Object.assign(packs.cs,{
+  billionsEur:'Miliardy €',
+  zoomHead:'Přiblížený pohled: šířky jsou poměrné v rámci této kategorie.',
+  baseAnnual:'Částky jsou roční plán celého státního rozpočtu.',
+  baseHundred:'Částky na 100 Kč stále odkazují na celý státní rozpočet.',
+  baseSalary:'Částky stále odkazují na celý státní rozpočet, přepočtený na jednu průměrnou mzdu.',
+  perSalary:'Průměrná mzda', salaryUnit:'Kč ze 100 Kč hrubé průměrné mzdy', annualUnitEur:'miliardy € / rok', bnEur:'mld. €', currencyLabel:'Měna',
+  salaryNote:'<b>Ze 100 Kč hrubé mzdy</b> na úrovni průměrné mzdy jde státu {wedge} Kč na dani z příjmu a povinných odvodech: {tax} Kč daň z příjmu, {employee} Kč odvody zaměstnance a {employer} Kč odvody zaměstnavatele, které se platí nad rámec hrubé mzdy (OECD Taxing Wages {year}; svobodný bez dětí, 100 % průměrné mzdy). Mapa tuto částku rozděluje ve stejném poměru jako všechny výdaje státního rozpočtu. Jde o ilustraci rozpočtu, ne o sledování vašich peněz: daně ze mzdy pokrývají jen jeho část — zbytek platí DPH, daně firem, spotřební daně a půjčky — zdravotní pojistné jde pojišťovnám, nikoli do státního rozpočtu, a výnos daně z příjmu se dělí s obcemi a kraji.',
+  euroNote:'Přepočteno ročním průměrným referenčním kurzem ECB za rok {year}: <b>{rate} Kč / €</b>. Rozpočet se sestavuje, schvaluje i plní v korunách; údaj v eurech je přepočet, nikoli samostatný zdroj.',
+  ratioNote:'Podíly jsou v každé měně stejné, přepnutí na eura se proto týká ročních částek.',
+  unitDataError:'Tento pohled potřebuje doplňková data, která se nepodařilo načíst. Zobrazujeme koruny na 100 Kč.'
+});
+Object.assign(packs.en,{sourceExtras:'The average-salary view rescales the same spending shares with OECD Taxing Wages (Czechia, single person without children at 100 % of the average wage); the euro view converts crowns at the ECB annual average reference rate. Neither adds a new spending source.'});
+Object.assign(packs.cs,{sourceExtras:'Pohled podle průměrné mzdy přepočítává stejné podíly výdajů podle OECD Taxing Wages (Česko, svobodný bez dětí, 100 % průměrné mzdy); pohled v eurech přepočítává koruny ročním průměrným referenčním kurzem ECB. Ani jeden nepřidává nový zdroj výdajů.'});
 packs.en.notes.taxes='People pay taxes on earnings and purchases; companies pay tax on profits. This is the part of those taxes received by the state budget. Open a branch to see the tax types.';
 packs.cs.notes.taxes='Lidé platí daně z příjmů a nákupů, firmy ze zisků. Zde je část těchto daní, kterou dostává státní rozpočet. Otevřete větev a prohlédněte si jednotlivé daně.';
 let lessonIndex=-1, lessonAutoplay=false, lessonElapsed=0, lessonTimer=null, lessonOffscreen=false, quizAnswer=null;
@@ -235,10 +276,10 @@ function drawTree(chart) {
   let paths = left.map((item,i)=>ribbons(item,250,item.y,poolX,item.pooledY,i)).join('');
   paths += right.map((item,i)=> current?.side==='in' ? ribbons(item,nodeX,item.y,poolRight,item.pooledY,i) : ribbons(item,poolRight,item.pooledY,nodeX,item.y,i)).join('');
   const poolTitle = current ? name(current) : copy.pooled;
-  const poolAmount = unit === 'annual' ? total : total/model.total*100;
+  const poolAmount = scale(total);
   const terminal = focused && !children.length;
   chart.setAttribute('viewBox',`0 0 1320 ${height}`);
-  chart.innerHTML = `<title id="diagram-title">${escape(poolTitle)}</title><desc id="diagram-desc">${escape(focused?copy.zoomNote:copy.allStory)}</desc><rect width="1320" height="${height}" fill="#171918"/><text class="flow-section-label" x="27" y="40">${escape(focused?copy.allMoney.toUpperCase():copy.left)}</text><text class="flow-section-label" x="${nodeX+12}" y="40">${escape(focused?(current.side==='in'?copy.incomePart:copy.detailLevel):copy.right)}</text><text class="flow-pool-note" x="27" y="61">${escape(unit==='annual'?copy.annualUnit:copy.unit100)}</text>${paths}<g class="flow-pool"><rect x="${poolX}" y="${poolY}" width="${poolW}" height="320" fill="#242724" stroke="#52564b"/><path d="M ${poolX} ${poolY} H ${poolRight}" stroke="#a8b63f" stroke-width="3"/><text x="${poolX+20}" y="${poolY+53}" class="flow-pool-note">${escape(focused?(current.side==='in'?copy.incomePart:copy.purposeLevel):copy.pooledNote)}</text>${svgLabel(poolTitle,poolX+20,poolY+90,'flow-pool-title',focused?27:19)}<text x="${poolX+20}" y="${poolY+160}" class="flow-pool-number">${poolAmount>0&&poolAmount<.01?escape(`<${fmt(.01,2)}`):fmt(poolAmount,poolAmount>0&&poolAmount<.1?2:1)}</text><text x="${poolX+20}" y="${poolY+182}" class="flow-pool-note">${escape(unit==='annual'?copy.bn:'Kč')}</text><line x1="${poolX+20}" x2="${poolRight-20}" y1="${poolY+216}" y2="${poolY+216}" class="flow-pool-line"/><text x="${poolX+20}" y="${poolY+245}" class="flow-pool-note">${focused ? `${fmt(total/model.total*100)} % ${escape(copy.totalLabel)}` : escape(copy.poolBottom)}</text><text x="${poolX+20}" y="${poolY+277}" class="flow-pool-note">${focused ? `${terminal?escape(copy.sourceItem):`${children.length} ${escape(copy.available)}`}` : escape(copy.poolExplore)}</text></g>${left.map((item,i)=>node(item,27,246,i)).join('')}${right.map((item,i)=>node(item,nodeX+15,nodeX,i)).join('')}${focused ? `<text class="flow-pool-note" x="27" y="140">${escape(copy.spending)}</text><text class="flow-pool-number" x="27" y="175">${escape(amount(model.total))}</text>${svgLabel(copy.zoomNote,27,218,'flow-pool-note',38)}` : ''}${terminal?`${svgLabel(copy.sourceItem,nodeX+15,poolY+90,'node-name',32)}${svgLabel(copy.leafNote,nodeX+15,poolY+130,'node-value',35)}`:''}<text x="27" y="${height-24}" fill="#b9baaf" font-family="monospace" font-size="10">MF ČR · F_01 / 2026 · ${focused?escape(copy.zoomNote.split('.')[0]):escape(copy.widthKey)}</text>`;
+  chart.innerHTML = `<title id="diagram-title">${escape(poolTitle)}</title><desc id="diagram-desc">${escape(focused?zoomText():copy.allStory)}</desc><rect width="1320" height="${height}" fill="#171918"/><text class="flow-section-label" x="27" y="40">${escape(focused?copy.allMoney.toUpperCase():copy.left)}</text><text class="flow-section-label" x="${nodeX+12}" y="40">${escape(focused?(current.side==='in'?copy.incomePart:copy.detailLevel):copy.right)}</text><text class="flow-pool-note" x="27" y="61">${escape(unitCaption())}</text>${paths}<g class="flow-pool"><rect x="${poolX}" y="${poolY}" width="${poolW}" height="320" fill="#242724" stroke="#52564b"/><path d="M ${poolX} ${poolY} H ${poolRight}" stroke="#a8b63f" stroke-width="3"/><text x="${poolX+20}" y="${poolY+53}" class="flow-pool-note">${escape(focused?(current.side==='in'?copy.incomePart:copy.purposeLevel):copy.pooledNote)}</text>${svgLabel(poolTitle,poolX+20,poolY+90,'flow-pool-title',focused?27:19)}<text x="${poolX+20}" y="${poolY+160}" class="flow-pool-number">${poolAmount>0&&poolAmount<.01?escape(`<${fmt(.01,2)}`):fmt(poolAmount,poolAmount>0&&poolAmount<.1?2:1)}</text><text x="${poolX+20}" y="${poolY+182}" class="flow-pool-note">${escape(unitSymbol())}</text><line x1="${poolX+20}" x2="${poolRight-20}" y1="${poolY+216}" y2="${poolY+216}" class="flow-pool-line"/><text x="${poolX+20}" y="${poolY+245}" class="flow-pool-note">${focused ? `${fmt(total/model.total*100)} % ${escape(copy.totalLabel)}` : escape(copy.poolBottom)}</text><text x="${poolX+20}" y="${poolY+277}" class="flow-pool-note">${focused ? `${terminal?escape(copy.sourceItem):`${children.length} ${escape(copy.available)}`}` : escape(copy.poolExplore)}</text></g>${left.map((item,i)=>node(item,27,246,i)).join('')}${right.map((item,i)=>node(item,nodeX+15,nodeX,i)).join('')}${focused ? `<text class="flow-pool-note" x="27" y="140">${escape(copy.spending)}</text><text class="flow-pool-number" x="27" y="175">${escape(amount(model.total))}</text>${svgLabel(zoomText(),27,218,'flow-pool-note',38)}` : ''}${terminal?`${svgLabel(copy.sourceItem,nodeX+15,poolY+90,'node-name',32)}${svgLabel(copy.leafNote,nodeX+15,poolY+130,'node-value',35)}`:''}<text x="27" y="${height-24}" fill="#b9baaf" font-family="monospace" font-size="10">MF ČR · F_01 / 2026 · ${focused?escape(copy.zoomHead):escape(copy.widthKey)}</text>`;
 }
 function renderDepthControls(item) {
   document.querySelectorAll('[data-level]').forEach(button=>{
@@ -252,7 +293,7 @@ function renderDepthControls(item) {
   while(cursor){ancestors.unshift(cursor);cursor=find(cursor.parent);}
   $('#flow-breadcrumb').innerHTML=`<button data-path="">${escape(copy.allMoney)}</button>${ancestors.map((entry,i)=>`<span aria-hidden="true">→</span><button data-path="${entry.key}" ${i===ancestors.length-1?'aria-current="page"':''}>${escape(name(entry))}</button>`).join('')}`;
   $('#flow-depth-note').hidden=!item;
-  $('#flow-depth-note').textContent=item?`${description(item)} ${copy.zoomNote}`:copy.detailNote;
+  $('#flow-depth-note').textContent=item?`${description(item)} ${zoomText()}`:copy.detailNote;
 }
 function searchItems() {
   const normalize = value=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -270,6 +311,7 @@ function localize() {
   $('#budget-link').href = `cesky-rozpocet.html?lang=${language}`;
   $('.flow-skip').textContent = copy.skip;
   $('.flow-unit-switch').setAttribute('aria-label', copy.unitLabel);
+  $('.flow-currency-switch').setAttribute('aria-label', copy.currencyLabel);
   renderLesson();
   $('.flow-scroll').setAttribute('aria-label', copy.diagramLabel);
   $('.flow-equation').setAttribute('aria-label', copy.balanceLabel);
@@ -277,14 +319,59 @@ function localize() {
   updatePause();
 }
 
+async function loadEuro() {
+  if (euro) return euro;
+  const response = await fetch('data/ecb-annual-exchange-rates.v1.json');
+  if (!response.ok) throw new Error(`Exchange rates: ${response.status}`);
+  const data = await response.json();
+  const czk = data.observations.filter(row => row.currency === 'CZK' && Number.isFinite(row.value));
+  const latest = czk.sort((a, b) => a.year - b.year).at(-1);
+  if (!latest) throw new Error('Exchange rates: no CZK observation');
+  euro = { rate: latest.value, year: latest.year };
+  return euro;
+}
+async function loadSalary() {
+  if (salary) return salary;
+  const response = await fetch('data/labour-tax-breakdown-2025.v1.json');
+  if (!response.ok) throw new Error(`Taxing wages: ${response.status}`);
+  const data = await response.json();
+  const record = data.records.find(row => row.country === 'CZE');
+  const split = record?.per_100_gross_wage;
+  if (!split) throw new Error('Taxing wages: no CZE record');
+  const parts = {
+    tax: split.income_tax,
+    employee: split.employee_contributions,
+    employer: split.employer_contributions_and_payroll_taxes,
+  };
+  salary = { ...parts, share: parts.tax + parts.employee + parts.employer, year: data.year };
+  return salary;
+}
+function renderUnitNote() {
+  const note = $('#flow-unit-note');
+  const lines = [];
+  if (shownUnit() === 'salary') lines.push(copy.salaryNote
+    .replace('{wedge}', fmt(salary.share)).replace('{tax}', fmt(salary.tax))
+    .replace('{employee}', fmt(salary.employee)).replace('{employer}', fmt(salary.employer))
+    .replace('{year}', salary.year));
+  if (currency === 'eur' && euro) lines.push(shownUnit() === 'annual'
+    ? copy.euroNote.replace('{year}', euro.year).replace('{rate}', fmt(euro.rate, 3))
+    : copy.ratioNote);
+  note.innerHTML = lines.join(' ');
+  note.hidden = !lines.length;
+}
 function draw() {
   const chart = $('#flow-svg');
   drawTree(chart);
   chart.removeAttribute('hidden');
   $('#flow-loading').hidden = true;
-  $('#total-income').textContent = fmt(model.revenue);
-  $('#total-gap').textContent = fmt(model.deficit);
-  $('#total-out').textContent = fmt(model.total);
+  const billions = value => fmt(inEuro() ? value / euro.rate : value);
+  $('#total-income').textContent = billions(model.revenue);
+  $('#total-gap').textContent = billions(model.deficit);
+  $('#total-out').textContent = billions(model.total);
+  document.querySelectorAll('.flow-equation [data-copy="annualUnit"]').forEach(node => {
+    node.textContent = inEuro() ? copy.annualUnitEur : copy.annualUnit;
+  });
+  renderUnitNote();
   const covered = fmt(model.revenue / model.total * 100), missing = fmt(model.deficit / model.total * 100);
   $('#equation-story').innerHTML = language === 'en' ? `For every <strong>100 Kč</strong> spent, revenue covers ${covered} Kč. The remaining <b>${missing} Kč</b> is the financing gap.` : `Z každých vydaných <strong>100 Kč</strong> pokryjí příjmy ${covered} Kč. Zbývajících <b>${missing} Kč</b> je třeba dofinancovat.`;
   $('#rounding-note').textContent = copy.exactNote;
@@ -307,6 +394,12 @@ function applySelection() {
   });
   document.querySelectorAll('[data-step]').forEach(node => node.setAttribute('aria-pressed', String(node.dataset.step === step)));
   document.querySelectorAll('[data-unit]').forEach(node => node.setAttribute('aria-pressed', String(node.dataset.unit === unit)));
+  $('[data-unit="annual"]').textContent = currency === 'eur' ? copy.billionsEur : copy.billions;
+  document.querySelectorAll('[data-currency]').forEach(node => {
+    node.setAttribute('aria-pressed', String(node.dataset.currency === currency));
+    node.disabled = shownUnit() !== 'annual';
+    node.title = node.disabled ? copy.ratioNote : '';
+  });
   $('#flow-reset').hidden = !selected && step === 'all';
   $('#reading-index').textContent = selected ? '↳' : ({ all: '01—03', income: '01', spending: '02', gap: '03' })[step];
   $('#flow-reading-text').textContent = item ? `${name(item)} · ${amount(item.value)}. ${item.id === 'deficit' ? copy.gapStory : description(item)}` : copy[({ all: 'allStory', income: 'incomeStory', spending: 'spendingStory', gap: 'gapStory' })[step]];
@@ -341,16 +434,23 @@ function registerChart() {
     columns: [{ key: 'side', label: copy.direction }, { key: 'name', label: copy.category }, { key: 'amount', label: copy.amount, numeric: true }, { key: 'share', label: copy.share, numeric: true }],
     rows: () => tableRows().map(item => ({ side: item.side === 'in' ? copy.incoming : copy.outgoing, name: name(item), amount: Number(item.value.toFixed(9)), share: Number((item.value / model.total * 100).toFixed(6)) })),
     exports: ['csv', 'png'], embeddable: false,
-    source: { name: 'MF ČR — Státní rozpočet 2026', url: model.detailSource.url, definition: copy.method, excludes: copy.excludes, caveat: copy.zoomNote + ' ' + copy.exactNote, table: 'F_01: Tab.1 - příjmy; Tab.2 - výdaje odvětvově · 2026 column', edition: '2026 approved budget · 2026-08-31 documentation', extracted: copy.unknownDate, vintage: 'plan' },
-    state: { keys: ['unit', 'step', 'selected', 'level'], apply: state => {
+    source: { name: 'MF ČR — Státní rozpočet 2026', url: model.detailSource.url, definition: copy.method, excludes: copy.excludes, caveat: copy.zoomNote + ' ' + copy.exactNote + ' ' + copy.sourceExtras, table: 'F_01: Tab.1 - příjmy; Tab.2 - výdaje odvětvově · 2026 column', edition: '2026 approved budget · 2026-08-31 documentation', extracted: copy.unknownDate, vintage: 'plan' },
+    state: { keys: ['unit', 'currency', 'step', 'selected', 'level'], apply: state => {
       level = 'overview';
-      unit = state.unit === 'annual' ? 'annual' : 'hundred';
+      unit = ['annual', 'salary'].includes(state.unit) ? state.unit : 'hundred';
+      currency = state.currency === 'eur' ? 'eur' : 'czk';
       step = ['income', 'spending', 'gap'].includes(state.step) ? state.step : 'all';
       selected = state.selected && find(state.selected) ? state.selected : '';
     } },
   });
 }
-function persist() { controller?.writeState({ unit, step, selected, level }); }
+// Drill-downs push a history entry, so Back (keyboard, mouse or trackpad) steps
+// out of a branch instead of leaving the page. Display switches only replace it.
+let lastHash = location.hash;
+function persist(options) {
+  controller?.writeState({ unit, currency, step, selected, level }, options);
+  lastHash = location.hash;
+}
 function updatePause() {
   $('.flow-explorer').classList.toggle('flow-paused', paused || document.hidden || offscreen);
   $('.flow-explorer').classList.toggle('flow-motion-enabled', !paused);
@@ -370,20 +470,43 @@ function select(key) {
   let entry=find(selected);
   while(entry?.children?.length===1){selected += '/' + entry.children[0].id;entry=find(selected);}
   step = 'all';
-  draw(); persist(); revealBranch();
+  draw(); persist({ push: true }); revealBranch();
 }
 document.querySelectorAll('[data-level]').forEach(button=>button.addEventListener('click',()=>{if(!model)return;level=button.dataset.level;selected='';draw();persist();}));
 $('#flow-search').addEventListener('input',()=>{if(tree)searchItems();});
 for(const host of [$('#flow-breadcrumb'),$('#flow-search-results')]) host.addEventListener('click',event=>{
   const button=event.target.closest('[data-path]');if(!button)return;
-  stopLesson();selected=button.dataset.path;step='all';$('#flow-search').value='';$('#flow-search-results').hidden=true;draw();persist();revealBranch();
+  stopLesson();selected=button.dataset.path;step='all';$('#flow-search').value='';$('#flow-search-results').hidden=true;draw();persist({push:true});revealBranch();
 });
 $('#flow-svg').addEventListener('click', event => { const node = event.target.closest('[data-node],[data-flow]'); if (node) select(node.dataset.node || node.dataset.flow); });
 $('#flow-svg').addEventListener('keydown', event => { const node = event.target.closest('[data-node]'); if (node && ['Enter', ' '].includes(event.key)) { event.preventDefault(); select(node.dataset.node); } });
 $('#detail-rows').addEventListener('click', event => { const node = event.target.closest('[data-select]'); if (node) select(node.dataset.select); });
 document.querySelectorAll('[data-step]').forEach(node => node.addEventListener('click', () => { if (!model) return; step = node.dataset.step; selected = ''; draw(); persist(); }));
-document.querySelectorAll('[data-unit]').forEach(node => node.addEventListener('click', () => { if (!model) return; stopLesson(); unit = node.dataset.unit; draw(); persist(); }));
-$('#flow-reset').addEventListener('click', () => { stopLesson(); selected = ''; step = 'all'; draw(); persist(); });
+function unitDataFailed(error) {
+  console.error('Display unit unavailable:', error);
+  const note = $('#flow-unit-note');
+  note.textContent = copy.unitDataError; note.hidden = false;
+}
+async function ensureUnitData() {
+  const jobs = [];
+  if (unit === 'salary') jobs.push(loadSalary());
+  if (currency === 'eur') jobs.push(loadEuro());
+  if (jobs.length) await Promise.all(jobs);
+}
+document.querySelectorAll('[data-unit]').forEach(node => node.addEventListener('click', async () => {
+  if (!model) return;
+  stopLesson();
+  const previous = unit; unit = node.dataset.unit;
+  try { await ensureUnitData(); } catch (error) { unit = previous; unitDataFailed(error); return; }
+  draw(); persist();
+}));
+document.querySelectorAll('[data-currency]').forEach(node => node.addEventListener('click', async () => {
+  if (!model) return;
+  const previous = currency; currency = node.dataset.currency;
+  try { await ensureUnitData(); } catch (error) { currency = previous; unitDataFailed(error); return; }
+  draw(); persist();
+}));
+$('#flow-reset').addEventListener('click', () => { stopLesson(); selected = ''; step = 'all'; draw(); persist({ push: true }); });
 $('#flow-pause').addEventListener('click', () => { paused = !paused; updatePause(); });
 $('#flow-source-link').addEventListener('click', () => {
   const toggle = $('#flow-chart-host [data-action="sources"]');
@@ -409,12 +532,14 @@ addEventListener('psdlanguagechange', () => {
   localize();
   if (model) { registerChart(); draw(); }
 });
-addEventListener('hashchange', () => {
-  if (!controller) return;
-  const state = controller.readState();
-  controller.spec.state.apply(state);
-  draw();
-});
+function syncFromURL() {
+  if (!controller || !model || location.hash === lastHash) return;
+  lastHash = location.hash;
+  controller.spec.state.apply(controller.readState());
+  ensureUnitData().catch(unitDataFailed).finally(() => draw());
+}
+addEventListener('hashchange', syncFromURL);
+addEventListener('popstate', syncFromURL);
 localize();
 try {
   const [budget, spending, detail] = await Promise.all(['data/czech-budget.v1.json', 'data/cz-spending-2026.v1.json', 'data/money-flow-detail-2026.v1.json'].map(async path => {
@@ -426,6 +551,7 @@ try {
   model = learningOverview(model);
   tree = indexFlowTree(model);
   registerChart(); draw(); renderLesson();
+  if (unit === 'salary' || currency === 'eur') ensureUnitData().then(draw).catch(unitDataFailed);
 } catch (error) {
   $('#flow-loading').textContent = copy.error;
   console.error('Money flow unavailable:', error);

@@ -13,10 +13,10 @@
   <link rel="stylesheet" href="styles.css?v=20260911-feedback-tooltips">
   <link rel="stylesheet" href="site-header.css?v=20260824-header-lockup" data-psd-site-header>
   <link rel="stylesheet" href="psd-chart.css">
-  <link rel="stylesheet" href="money-flow.css?v=20260912-lesson">
+  <link rel="stylesheet" href="money-flow.css?v=20260919-salary-unit">
   <script src="global-nav.js?v=20260824-logo-120" defer></script>
-  <script src="psd-chart.js" defer></script>
-  <script src="money-flow.js?v=20260912-lesson" type="module"></script>
+  <script src="psd-chart.js?v=20260919-history-state" defer></script>
+  <script src="money-flow.js?v=20260919-salary-unit" type="module"></script>
 </head>
 <body class="money-flow-page">
   <a class="flow-skip" href="#flow-explorer">Skip to the money flows</a>
@@ -24,7 +24,6 @@
   <main class="flow-main">
     <header class="flow-hero">
       <div>
-        <p class="flow-kicker" data-copy="eyebrow">THE PUBLIC MONEY ATLAS / CZECHIA</p>
         <h1><span data-copy="title">Follow the</span> <em data-copy="money">money.</em></h1>
         <p class="flow-intro" data-copy="intro">From the taxes we pay to the services we share. See an entire state budget moving in one picture.</p>
       </div>
@@ -44,7 +43,8 @@
       <div class="flow-toolbar">
         <div><span class="flow-kicker" data-copy="mapLabel">01 / THE FLOW MAP</span><h2 id="flow-title" data-copy="mapTitle">One budget. Millions of lives.</h2></div>
         <div class="flow-controls">
-          <div class="flow-unit-switch" role="group" aria-label="Display unit"><button data-unit="annual" aria-pressed="false" data-copy="billions">Billion Kč</button><button data-unit="hundred" aria-pressed="true" data-copy="per100">Per 100 Kč spent</button></div>
+          <div class="flow-unit-switch" role="group" aria-label="Display unit"><button data-unit="annual" aria-pressed="false" data-copy="billions">Billion Kč</button><button data-unit="hundred" aria-pressed="true" data-copy="per100">Per 100 Kč spent</button><button data-unit="salary" aria-pressed="false" data-copy="perSalary">An average salary</button></div>
+          <div class="flow-unit-switch flow-currency-switch" role="group" aria-label="Currency"><button data-currency="czk" aria-pressed="true">Kč</button><button data-currency="eur" aria-pressed="false">€</button></div>
           <button id="flow-pause" type="button">Ⅱ Pause</button>
         </div>
       </div>
@@ -55,6 +55,7 @@
         <div id="lesson-quiz" hidden><p id="lesson-question"></p><div id="lesson-answers"></div><p id="lesson-feedback" role="status"></p></div>
         <div class="lesson-timer" aria-hidden="true"><i id="lesson-progress"></i></div>
       </div>
+      <p class="flow-unit-note" id="flow-unit-note" hidden></p>
       <div class="flow-depth-controls">
         <p class="flow-explore-hint" data-copy="clickHint">Curious about a stream? Click it to look inside.</p>
         <details class="flow-search-disclosure"><summary data-copy="searchCaption">Find a budget item</summary><label class="flow-search-label"><span id="flow-search-caption">Find a budget item</span><input id="flow-search" type="search" autocomplete="off" placeholder="Try rail, courts, healthcare…" aria-controls="flow-search-results"></label></details>

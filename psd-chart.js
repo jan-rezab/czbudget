@@ -88,14 +88,18 @@
     return out;
   }
 
-  function writeHash(map) {
+  function writeHash(map, push) {
     var parts = Object.keys(map).sort().filter(function (key) {
       return map[key] !== "" && map[key] != null;
     }).map(function (key) {
       return encodeURIComponent(key) + "=" + encodeURIComponent(map[key]);
     });
     var next = parts.length ? "#" + parts.join("&") : location.pathname + location.search;
-    history.replaceState(null, "", next);
+    var current = location.hash ? location.hash : location.pathname + location.search;
+    if (next === current) return;
+    // A chart can ask for a history entry so the browser's Back button steps
+    // back through drill-downs instead of leaving the page.
+    if (push) history.pushState(null, "", next); else history.replaceState(null, "", next);
   }
 
   function stateFromURL(slug, keys) {
@@ -111,14 +115,14 @@
     return out;
   }
 
-  function stateToURL(slug, keys, values) {
+  function stateToURL(slug, keys, values, options) {
     var hash = readHash();
     keys.forEach(function (key) {
       var namespaced = slug + "." + key;
       if (values[key] == null || values[key] === "") delete hash[namespaced];
       else hash[namespaced] = String(values[key]);
     });
-    writeHash(hash);
+    writeHash(hash, options && options.push);
   }
 
   /* ---------- exports ---------- */
@@ -405,7 +409,7 @@
       slug: spec.slug,
       spec: spec,
       readState: function () { return stateFromURL(spec.slug, stateKeys); },
-      writeState: function (values) { stateToURL(spec.slug, stateKeys, values); },
+      writeState: function (values, options) { stateToURL(spec.slug, stateKeys, values, options); },
       refresh: function () {
         if (showingTable) {
           panel.textContent = "";

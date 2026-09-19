@@ -14,7 +14,7 @@
   }
   if (!document.querySelector('script[data-report-loader]')) {
     const script = document.createElement('script');
-    script.src = `${assetRoot}data-report.js?v=20260909`;
+    script.src = `${assetRoot}data-report.js?v=20260919-footer-dock`;
     script.dataset.reportLoader = 'true';
     document.head.append(script);
   }
