@@ -10,7 +10,7 @@ const billion = value => new Intl.NumberFormat(locale, {minimumFractionDigits: 1
 const labels = {
   category:{Firma:"Company",Nemocnice:"Hospital","Vysoká škola":"University","Zdravotní pojišťovna":"Health insurer"},
   owner:{"Jiný veřejný vlastník":"Other public owner",Obec:"Municipality",Kraj:"Region",Stát:"State",DSO:"Municipal association","Územní veřejná úroveň":"Territorial public tier","Stát / ústřední úroveň":"State / central tier","Veřejné zdravotní pojištění":"Public health insurance"},
-  sector:{Energetika:"Energy","Doprava a infrastruktura":"Transport and infrastructure","Finance a rozvoj":"Finance and development","Reality a cestovní ruch":"Real estate and tourism","Digitální a veřejné služby":"Digital and public services","Obrana a strategický průmysl":"Defence and strategic industry","Přírodní zdroje a sanace":"Natural resources and remediation","Zemědělství a potraviny":"Agriculture and food","Vodní hospodářství":"Water management"},
+  sector:{Energetika:"Energy","Doprava a infrastruktura":"Transport and infrastructure","Finance a rozvoj":"Finance and development","Reality a cestovní ruch":"Real estate and tourism","Digitální a veřejné služby":"Digital and public services","Obrana a strategický průmysl":"Defence and strategic industry","Přírodní zdroje a sanace":"Natural resources and remediation","Zemědělství a potraviny":"Agriculture and food","Vodní hospodářství":"Water management","Zdravotní pojišťovna":"Health insurer"},
   topLine:{obrat:"turnover",výnosy:"revenue",příjmy:"cash receipts"},
   financialSource:{"MF strategické subjekty":"Ministry of Finance strategic entities","ČSÚIS VZZ":"CSUIS income statement","MZ/MF výkazy pojišťoven":"MZ/MF insurer statements"}
 };
@@ -22,8 +22,8 @@ function enterpriseRows(rows, metric, kind) {
     const value = row.metrics[metric];
     const rowKind = value < 0 ? "loss" : kind;
     const secondary = metric === "total_assets"
-      ? `${english ? "Result" : "Výsledek"} ${valueLabel(row.metrics.net_result, true)} · ${number(row.metrics.employees)} ${english ? "employees" : "zaměstnanců"}`
-      : `${english ? "Assets" : "Aktiva"} ${number(row.metrics.total_assets)} ${english ? "CZK m" : "mil. Kč"} · ${english ? "turnover" : "obrat"} ${number(row.metrics.turnover)} ${english ? "CZK m" : "mil. Kč"}`;
+      ? `${row.health_insurance ? (english ? "Cash balance" : "Peněžní saldo") : (english ? "Result" : "Výsledek")} ${valueLabel(row.metrics.net_result, true)} · ${number(row.metrics.employees)} ${english ? "employees" : "zaměstnanců"}`
+      : `${english ? "Assets" : "Aktiva"} ${number(row.metrics.total_assets)} ${english ? "CZK m" : "mil. Kč"} · ${row.health_insurance ? (english ? "cash receipts" : "příjmy") : (english ? "turnover" : "obrat")} ${number(row.metrics.turnover)} ${english ? "CZK m" : "mil. Kč"}`;
     return `<article class="enterprise-row ${rowKind}">
       <span class="enterprise-rank">${String(index + 1).padStart(2, "0")}</span>
       <div class="enterprise-name"><strong>${esc(row.name)}</strong><small>${esc(translated("sector", row.classification?.sector_name))} · ${english ? "ID" : "IČO"} ${esc(row.ico)}</small></div>
@@ -37,6 +37,21 @@ function enterpriseRows(rows, metric, kind) {
 function valueLabel(value, signed = false) {
   if (value < 0) return `−${number(Math.abs(value))}`;
   return `${signed ? "+" : ""}${number(value)}`;
+}
+
+function insurerRankingRows(publicData) {
+  return publicData.entities.filter(row => row.health_insurance).map(row => ({
+    name: row.name,
+    ico: row.ico,
+    classification: {sector_name: row.category},
+    metrics: {
+      net_result: row.health_insurance.cash_balance_mczk,
+      total_assets: row.health_insurance.assets_mczk,
+      turnover: row.health_insurance.receipts_mczk,
+      employees: row.health_insurance.employees_fte
+    },
+    health_insurance: true
+  }));
 }
 
 function returnChart(rows) {
@@ -178,6 +193,9 @@ Promise.all([
     return Promise.all(responses.map(response => response.json()));
   })
   .then(([data, publicData, publicHistory]) => {
+    const insurers = insurerRankingRows(publicData);
+    const rankedEntities = [...data.entities, ...insurers];
+    const lossMakingCount = rankedEntities.filter(row => row.metrics.net_result < 0).length;
     const modes = {
       profit: {
         heading: english ? "Most profitable" : "Nejziskovější",
@@ -189,18 +207,18 @@ Promise.all([
       },
       weakest: {
         heading: english ? "Weakest financial result" : "Nejslabší hospodářský výsledek",
-        count: `BOTTOM 20 · ${data.summary.loss_making_count} ${english ? "losses" : "ztrát"}`,
+        count: `BOTTOM 20 · ${lossMakingCount} ${english ? "negative results" : "záporných výsledků"}`,
         metric: "net_result",
-        rows: [...data.entities].sort((a, b) => a.metrics.net_result - b.metrics.net_result).slice(0, 20),
-        note: english ? `Only ${data.summary.loss_making_count} of 38 entities report a loss. The remaining positions are the lowest positive results, not losses.` : `Záporný výsledek má pouze ${data.summary.loss_making_count} z 38 subjektů. Zbývající pozice jsou nejnižší kladné výsledky, nikoli ztráty.`,
+        rows: rankedEntities.sort((a, b) => a.metrics.net_result - b.metrics.net_result).slice(0, 20),
+        note: english ? `The ranking includes 38 strategic entities and all 7 public health insurers. Companies are ranked by result after tax; insurers by 2024 cash balance, which is not accounting profit.` : `Žebříček zahrnuje 38 strategických subjektů a všech 7 veřejných zdravotních pojišťoven. Firmy řadíme podle výsledku po zdanění, pojišťovny podle peněžního salda za rok 2024, které není účetním ziskem.`,
         kind: "loss"
       },
       largest: {
         heading: english ? "Largest by assets" : "Největší podle aktiv",
         count: "TOP 20",
         metric: "total_assets",
-        rows: [...data.entities].sort((a, b) => b.metrics.total_assets - a.metrics.total_assets).slice(0, 20),
-        note: english ? "Scale is measured by total assets. Turnover would disadvantage infrastructure and financial institutions, while employee count would disadvantage capital-intensive enterprises." : "Velikost měříme aktivy celkem. Obrat by znevýhodnil infrastrukturní a finanční instituce a počet zaměstnanců zase kapitálově náročné podniky.",
+        rows: rankedEntities.sort((a, b) => b.metrics.total_assets - a.metrics.total_assets).slice(0, 20),
+        note: english ? "The ranking includes 38 strategic entities and all 7 public health insurers, measured by total assets. Turnover and employee count are less comparable across these functions." : "Žebříček zahrnuje 38 strategických subjektů a všech 7 veřejných zdravotních pojišťoven, seřazených podle aktiv celkem. Obrat ani počet zaměstnanců nejsou napříč těmito funkcemi stejně srovnatelné.",
         kind: "largest"
       }
     };

@@ -28,6 +28,17 @@ test('all seven insurers reconcile and cash flows stay outside accounting totals
   assert.equal(totals.health_insurance.assets_mczk, 116797.224);
 });
 
+for (const scriptName of ['cz-firmy.js', 'cz-firmy-embed.js']) {
+  test(`${scriptName}: weakest and largest rankings include health insurers`, () => {
+    const script = read(scriptName);
+    assert.match(script, /const rankedEntities = \[\.\.\.data\.entities, \.\.\.insurers\]/);
+    assert.match(script, /rankedEntities\.sort\(\(a, b\) => a\.metrics\.net_result - b\.metrics\.net_result\)/);
+    assert.match(script, /rankedEntities\.sort\(\(a, b\) => b\.metrics\.total_assets - a\.metrics\.total_assets\)/);
+    assert.match(script, /cash_balance_mczk/);
+    assert.match(script, /health_insurance\.assets_mczk/);
+  });
+}
+
 // Exercise the real registry renderer and event handlers without starting a browser.
 for (const embed of [false, true]) for (const lang of ['cs', 'en']) {
   test(`${embed ? 'embedded' : 'standalone'} registry: health tab, sort, search and return (${lang})`, () => {
