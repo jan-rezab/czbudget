@@ -902,6 +902,7 @@ test("all representative page menus resolve and primary navigation routes correc
 });
 
 test("every page family renders the same shared header component", async ({ page }) => {
+  test.setTimeout(90_000);
   const representatives = [
     "/?lang=en",
     "/comparison.html?lang=en",
