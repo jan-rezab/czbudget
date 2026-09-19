@@ -443,19 +443,32 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   // report that was renamed or removed.
   expect(cardTopics.filter((topic) => !deepDiveDirectories.includes(topic))).toEqual([]);
   await expect(page.locator(".deep-card.available")).toHaveCount(cardTopics.length);
-  // Cards are numbered in reading order; the numbering must run 01..N without gaps.
-  const cardNumbers = await page.locator(".deep-card header > span").evaluateAll((spans) => spans.map((span) => Number(span.textContent.split("/")[0])));
-  expect(cardNumbers).toEqual(cardTopics.map((_, index) => index + 1));
+  // Cards carry a source tag rather than a sequence number: the catalogue is
+  // grouped, so a flat 01..N numbering no longer describes it and drifted between
+  // the index and the menu when it did. Every card must still be attributed.
+  const cardSources = await page.locator(".deep-card header > span").evaluateAll((spans) => spans.map((span) => span.textContent.trim()));
+  expect(cardSources).toHaveLength(cardTopics.length);
+  expect(cardSources.filter((source) => !source)).toEqual([]);
+  // Two shelves, in this order: cross-country comparisons first, then the reports
+  // that stay inside one country or city. Their theme clusters are the reading
+  // order the index promises, so a report cannot quietly move between them.
+  await expect(page.locator(".deep-shelf > .deep-section-heading h2")).toHaveText(["Compare countries", "Regional deep dives"]);
+  await expect(page.locator(".deep-cluster-heading h3")).toHaveText([
+    "Where the money goes",
+    "Where the money comes from",
+    "Economy, industry and trade",
+    "Society and the state",
+    "Czechia",
+    "United States",
+  ]);
+  // Education leads the first cluster (validate-site.mjs pins it ahead of transportation).
   await expect(page.locator(".deep-card.available").first()).toContainText("Education");
-  await expect(page.locator(".deep-card.available").nth(1)).toContainText("Transportation");
-  await expect(page.locator(".deep-card.available").nth(2)).toContainText("Health");
-  await expect(page.locator(".deep-card.available").nth(3)).toContainText("State-owned enterprises");
-  await expect(page.locator(".deep-card.available").nth(4)).toContainText("Capital cities");
-  await expect(page.locator(".deep-card.available").nth(5)).toContainText("Where the state gets its money");
-  await expect(page.locator(".deep-card.available").nth(6)).toContainText("Population ageing");
-  await expect(page.locator(".deep-card.available").nth(7)).toContainText("European migration");
-  await expect(page.locator(".deep-card.available").nth(8)).toContainText("Economy in context");
-  await expect(page.locator(".deep-card.available").nth(9)).toContainText("Defense spending");
+  // A regional report is single-jurisdiction and carries no country switch, so it
+  // must never be filed under the comparison shelf.
+  const regionalTopics = await page.locator("#regional .deep-card").evaluateAll(topicOf);
+  expect(regionalTopics).toEqual(["budget-planner", "public-employment", "money", "plzen-contracts", "money"]);
+  const compareTopics = await page.locator("#compare .deep-card").evaluateAll(topicOf);
+  expect(compareTopics.filter((topic) => regionalTopics.includes(topic))).toEqual([]);
   await page.locator(".deep-dive-menu summary").click();
   // Every header-menu entry must be a report the index actually publishes, so the
   // menu can never point at a report that was renamed or withdrawn. The reverse does
