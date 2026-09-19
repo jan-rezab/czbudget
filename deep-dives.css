@@ -62,3 +62,14 @@
   .deep-sticky-filter>span:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
   .deep-sticky-filter select{width:100%;font-size:11px}
 }
+
+/* Catalogue shelves: each shelf carries themed clusters of report cards, and
+   regional reports add the place they cover. Rendered from deep-dives/reports.json. */
+.deep-shelf .deep-cluster+.deep-cluster{margin-top:58px}
+.deep-cluster-heading{display:grid;grid-template-columns:1fr 1fr;gap:8vw;align-items:end;margin:0 0 22px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.deep-cluster-heading h3{margin:0;color:var(--ink);font:500 clamp(27px,2.7vw,40px)/1 Georgia,serif;letter-spacing:-.035em}
+.deep-cluster-heading p{margin:0;color:var(--muted);font:12px/1.65 Arial,sans-serif}
+.deep-dives-page .deep-card>header span{max-width:66%;text-transform:none;letter-spacing:.02em}
+.deep-card-place{align-self:flex-start;margin-top:26px;padding:4px 9px;background:var(--deep-blue);color:#fff;font:700 10px/1.4 monospace;font-style:normal;letter-spacing:.09em;text-transform:uppercase}
+.deep-card-place+h3{margin-top:18px}
+@media(max-width:700px){.deep-cluster-heading{grid-template-columns:1fr;gap:12px}.deep-shelf .deep-cluster+.deep-cluster{margin-top:42px}}

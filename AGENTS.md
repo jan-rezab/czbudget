@@ -16,3 +16,17 @@
 - Brand assets, the palette and the adopted logo rules are in `BRAND.md`; the
   chart grammar is in `CHART_SYSTEM.md`. Preserve the primary mark and wordmark
   rules across hand-written and generated pages.
+
+## Report catalogue
+
+- `deep-dives/reports.json` is the single source of truth for every deep-dive
+  report: its shelf, its theme cluster, both languages of the title and blurb,
+  the source tag and the coverage badge.
+- Run `npm run build:reports-index` after editing it. The generator rewrites the
+  marked blocks in `deep-dives/index.html`, `deep-dives.js` and `global-nav.js`.
+  Never edit those blocks by hand; `npm run validate` fails when they drift.
+- A new report needs a registry entry, not new cards or menu links. The build
+  fails if a published page under `deep-dives/` is missing from the registry, or
+  if a translated key has no Czech or English value.
+- Two shelves only: `compare` for cross-country reports that carry the country
+  switch, and `regional` for reports scoped to one country or city.

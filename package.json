@@ -44,7 +44,6 @@
     "build:sovereign-universe": "node scripts/build-sovereign-country-universe.mjs",
     "build:public-entities-web": "python3 pipeline/transforms/build_public_entity_frontend.py",
     "build:public-entity-history": "python3 pipeline/transforms/build_public_entity_web_dataset.py",
-    "build:public-employment": "python3 pipeline/transforms/build_czech_public_employment.py",
     "build:large-city-history-enrich": "python3 pipeline/transforms/enrich_large_city_history_from_municipal.py",
     "build:public-serving-snapshots": "node scripts/prepare-public-serving-snapshots.mjs",
     "build:cityvizor-explorer": "python3 scripts/build-cityvizor-explorer.py",
@@ -67,7 +66,7 @@
     "build:regional-finance:regofi": "python3 pipeline/transforms/prepare_oecd_regofi.py",
     "validate:accountability": "python3 pipeline/transforms/build_government_accountability.py --check && python3 -m unittest pipeline.tests.test_government_accountability",
     "validate:regional-finance": "python3 -m unittest pipeline.tests.test_international_regional_data",
-    "validate": "npm run validate:european-politics && npm run validate:accountability && npm run validate:regional-finance && npm run validate:invariants && npm run validate:glossary && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
+    "validate": "npm run validate:european-politics && npm run validate:accountability && npm run validate:regional-finance && npm run validate:invariants && npm run validate:glossary && npm run validate:reports-index && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
     "audit:links": "node scripts/check-external-links.mjs --write-report",
     "backfill:social-previews": "node scripts/backfill-social-previews.mjs",
@@ -100,7 +99,9 @@
     "build:source-vintages": "node scripts/build-source-vintages.mjs --write",
     "report:source-vintages": "node scripts/build-source-vintages.mjs",
     "report:economic-observations": "python3 scripts/load-economic-observations.py --report",
-    "build:warehouse-bundles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --slim --bundle --out .warehouse-bundle"
+    "build:warehouse-bundles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --slim --bundle --out .warehouse-bundle",
+    "build:reports-index": "node scripts/build-reports-index.mjs",
+    "validate:reports-index": "node scripts/build-reports-index.mjs --check"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

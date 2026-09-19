@@ -37,3 +37,36 @@
     max-height: calc(100dvh - 124px);
   }
 }
+
+/* Grouped catalogue: theme headings sit on the panel's dark background, and
+   the entries lost their numbering when the registry took over ordering. */
+.site-header .deep-dive-menu-panel {
+  width: 408px;
+}
+
+.site-header .deep-dive-menu-panel > a {
+  grid-template-columns: 1fr;
+}
+
+.site-header .deep-dive-menu-group {
+  margin: 13px 0 3px;
+  padding: 0 4px;
+  color: #a8b63f;
+  font: 700 10px/1.2 monospace;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.site-header .deep-dive-menu-group:first-of-type {
+  margin-top: 5px;
+}
+
+/* The sticky head sits flush with the scrollport, so entries scroll under it
+   instead of showing through the panel's top padding. */
+.site-header .deep-dive-menu-panel {
+  padding-top: 0;
+}
+
+.site-header .deep-dive-menu-panel > .country-menu-head {
+  padding-top: 10px;
+}

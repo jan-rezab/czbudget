@@ -1,0 +1,765 @@
+{
+  "contract": "deep-dive-reports.v1",
+  "note": "Single source of truth for the report catalogue. Run `npm run build:reports-index` after any edit; it regenerates deep-dives/index.html, the report copy in deep-dives.js and the reports menu in global-nav.js. Never edit those generated blocks by hand.",
+  "shelves": [
+    {
+      "id": "compare",
+      "kicker": {
+        "cs": "Napříč zeměmi",
+        "en": "Across countries"
+      },
+      "title": {
+        "cs": "Srovnání zemí",
+        "en": "Compare countries"
+      },
+      "intro": {
+        "cs": "Jedno téma, stejná struktura, přepínač zemí ve všech reportech. Čísla pocházejí z harmonizovaných mezinárodních zdrojů.",
+        "en": "One topic, the same structure, a country switch in every report. The figures come from harmonised international sources."
+      },
+      "clusters": [
+        {
+          "id": "spend",
+          "title": {
+            "cs": "Kam peníze jdou",
+            "en": "Where the money goes"
+          },
+          "intro": {
+            "cs": "Velké výdajové oblasti státu: kolik stojí, co za to je a jak se to mění.",
+            "en": "The state's large spending areas: what they cost, what they buy and how they change."
+          }
+        },
+        {
+          "id": "raise",
+          "title": {
+            "cs": "Odkud peníze jsou",
+            "en": "Where the money comes from"
+          },
+          "intro": {
+            "cs": "Daně, úrovně vlády a peníze, které přitékají z Evropské unie a odtékají do ní.",
+            "en": "Taxes, levels of government, and the money that flows to and from the European Union."
+          }
+        },
+        {
+          "id": "economy",
+          "title": {
+            "cs": "Ekonomika, průmysl a obchod",
+            "en": "Economy, industry and trade"
+          },
+          "intro": {
+            "cs": "Základna, ze které se veřejné rozpočty platí: výkon ekonomiky, výroba a zboží překračující hranice.",
+            "en": "The base that public budgets are paid from: economic performance, production and goods crossing borders."
+          }
+        },
+        {
+          "id": "society",
+          "title": {
+            "cs": "Společnost a stát",
+            "en": "Society and the state"
+          },
+          "intro": {
+            "cs": "Kdo v zemi žije, kdo jí vládne a co stát přímo vlastní nebo spravuje.",
+            "en": "Who lives in a country, who governs it, and what the state directly owns or runs."
+          }
+        }
+      ]
+    },
+    {
+      "id": "regional",
+      "kicker": {
+        "cs": "Jedna země, jedno město",
+        "en": "One country, one city"
+      },
+      "title": {
+        "cs": "Regionální reporty",
+        "en": "Regional deep dives"
+      },
+      "intro": {
+        "cs": "Sondy, které zůstávají uvnitř jednoho rozpočtu. Nemají přepínač zemí, protože jdou do detailu, který jinde neexistuje.",
+        "en": "Deep dives that stay inside a single budget. They carry no country switch, because they go into detail that exists nowhere else."
+      },
+      "clusters": [
+        {
+          "id": "single",
+          "title": null,
+          "intro": null
+        }
+      ]
+    }
+  ],
+  "reports": [
+    {
+      "slug": "education",
+      "key": "education",
+      "shelf": "compare",
+      "cluster": "spend",
+      "href": "education/",
+      "navPath": "deep-dives/education/",
+      "badge": "1 / 48",
+      "title": {
+        "cs": "Školství",
+        "en": "Education"
+      },
+      "card": {
+        "cs": "Celý tok od ministerstva přes kraje a obce až k typům škol, bez dvojího započtení transferů.",
+        "en": "The full flow from ministry through regions and municipalities to school types, without double-counting transfers."
+      },
+      "menu": {
+        "cs": "Od ministerstva k typu školy",
+        "en": "From ministry to school type"
+      },
+      "source": {
+        "cs": "MŠMT · Eurostat · OECD",
+        "en": "MŠMT · Eurostat · OECD"
+      }
+    },
+    {
+      "slug": "health",
+      "key": "health",
+      "shelf": "compare",
+      "cluster": "spend",
+      "href": "health/?code=CZE",
+      "navPath": "deep-dives/health/?code=CZE",
+      "badge": "10 / 10",
+      "title": {
+        "cs": "Zdraví",
+        "en": "Health"
+      },
+      "card": {
+        "cs": "Výdaje, pracovní síla, využití nemocnic a zdravotní výsledky.",
+        "en": "Spending, workforce, hospital use and health outcomes."
+      },
+      "menu": {
+        "cs": "Financování a kapacita systému",
+        "en": "Funding and system capacity"
+      },
+      "source": {
+        "cs": "OECD",
+        "en": "OECD"
+      }
+    },
+    {
+      "slug": "transportation",
+      "key": "transport",
+      "shelf": "compare",
+      "cluster": "spend",
+      "href": "transportation/?code=CZE",
+      "navPath": "deep-dives/transportation/?code=CZE",
+      "badge": "10 / 10",
+      "title": {
+        "cs": "Doprava",
+        "en": "Transportation"
+      },
+      "card": {
+        "cs": "Výdaje, jejich investiční a provozní skladba, úrovně vlády, síť a desetiletý vývoj.",
+        "en": "Spending, its investment and operating mix, government levels, network scale and ten-year history."
+      },
+      "menu": {
+        "cs": "Rozpočty, silnice a tempo výstavby",
+        "en": "Budgets, roads and build pace"
+      },
+      "source": {
+        "cs": "OECD COFOG",
+        "en": "OECD COFOG"
+      }
+    },
+    {
+      "slug": "defense",
+      "key": "defense",
+      "shelf": "compare",
+      "cluster": "spend",
+      "href": "defense/?code=USA",
+      "navPath": "deep-dives/defense/?code=USA",
+      "badge": "17 / 17",
+      "title": {
+        "cs": "Výdaje na obranu",
+        "en": "Defense spending"
+      },
+      "card": {
+        "cs": "Výdaje vůči HDP, závazek NATO a nejpodrobnější dostupné řádky národních rozpočtů.",
+        "en": "Spending against GDP, the NATO commitment and the most detailed national budget lines available."
+      },
+      "menu": {
+        "cs": "17 zemí, % HDP a rozpočtové řádky",
+        "en": "17 countries, % of GDP and budget lines"
+      },
+      "source": {
+        "cs": "NATO · SIPRI",
+        "en": "NATO · SIPRI"
+      }
+    },
+    {
+      "slug": "redistribution",
+      "key": "redistribution",
+      "shelf": "compare",
+      "cluster": "spend",
+      "href": "redistribution/?code=CZE",
+      "navPath": "deep-dives/redistribution/?code=CZE",
+      "badge": "16 / 17",
+      "title": {
+        "cs": "Přerozdělení a výsledky",
+        "en": "Redistribution and outcomes"
+      },
+      "card": {
+        "cs": "Nerovnost před transfery a po nich, sociální výdaje a důchody.",
+        "en": "Inequality before and after transfers, social spending and pensions."
+      },
+      "menu": {
+        "cs": "Nerovnost, sociální výdaje a důchody",
+        "en": "Inequality, social spending and pensions"
+      },
+      "source": {
+        "cs": "OECD",
+        "en": "OECD"
+      }
+    },
+    {
+      "slug": "revenue",
+      "key": "revenue",
+      "shelf": "compare",
+      "cluster": "raise",
+      "href": "revenue/?code=CZE",
+      "navPath": "deep-dives/revenue/?code=CZE",
+      "badge": "10 / 10",
+      "title": {
+        "cs": "Odkud stát bere peníze",
+        "en": "Where the state gets its money"
+      },
+      "card": {
+        "cs": "Daňový mix, úrovně vlády, vývoj v krizích a cesta k obecním transferům.",
+        "en": "The tax mix, government levels, behaviour in downturns and the path to municipal transfers."
+      },
+      "menu": {
+        "cs": "Daně, úrovně vlády a transfery",
+        "en": "Taxes, government levels and transfers"
+      },
+      "source": {
+        "cs": "OECD · Eurostat",
+        "en": "OECD · Eurostat"
+      }
+    },
+    {
+      "slug": "tax-burden",
+      "key": "taxBurden",
+      "shelf": "compare",
+      "cluster": "raise",
+      "href": "tax-burden/?code=CZE",
+      "navPath": "deep-dives/tax-burden/?code=CZE",
+      "badge": "15 / 17",
+      "title": {
+        "cs": "Daňové zatížení",
+        "en": "Tax burden"
+      },
+      "card": {
+        "cs": "Zdanění práce, firem a uhlíku a daňová pravomoc obcí podle definic OECD.",
+        "en": "Taxes on labour, business and carbon, plus municipal taxing power, under OECD definitions."
+      },
+      "menu": {
+        "cs": "Domácnosti, firmy, uhlík a místní pravomoc",
+        "en": "Households, companies, carbon and local authority"
+      },
+      "source": {
+        "cs": "OECD",
+        "en": "OECD"
+      }
+    },
+    {
+      "slug": "eu-budget",
+      "key": "euBudget",
+      "shelf": "compare",
+      "cluster": "raise",
+      "href": "eu-budget/?code=CZE",
+      "navPath": "deep-dives/eu-budget/?code=CZE",
+      "badge": "27 / 27",
+      "title": {
+        "cs": "Peníze mezi zeměmi a EU",
+        "en": "Money between countries and the EU"
+      },
+      "card": {
+        "cs": "Přiřazené výdaje, národní příspěvky a vysvětlení, proč nejde o jeden řádek státního rozpočtu.",
+        "en": "Attributed spending, national contributions and why they are not a single national-budget line."
+      },
+      "menu": {
+        "cs": "27 zemí, příspěvky a přiřazené výdaje",
+        "en": "27 countries, contributions and attributed spending"
+      },
+      "source": {
+        "cs": "Evropská komise",
+        "en": "European Commission"
+      }
+    },
+    {
+      "slug": "economy",
+      "key": "economy",
+      "shelf": "compare",
+      "cluster": "economy",
+      "href": "economy/?code=CZE",
+      "navPath": "deep-dives/economy/?code=CZE",
+      "badge": "217 / 4",
+      "title": {
+        "cs": "Ekonomika v kontextu",
+        "en": "Economy in context"
+      },
+      "card": {
+        "cs": "Globální dlouhé řady, hospodářský cyklus, pokrytí a datový kontrakt pro další ekonometrické reporty.",
+        "en": "Global long-run series, the economic cycle, coverage and a reusable contract for econometric reporting."
+      },
+      "menu": {
+        "cs": "Dlouhé řady, cyklus a fiskální kontext",
+        "en": "Long-run series, the cycle and fiscal context"
+      },
+      "source": {
+        "cs": "World Bank · IMF · OECD",
+        "en": "World Bank · IMF · OECD"
+      }
+    },
+    {
+      "slug": "industry",
+      "key": "industry",
+      "shelf": "compare",
+      "cluster": "economy",
+      "href": "industry/?code=CZE&channel=eurostat",
+      "navPath": "deep-dives/industry/?code=CZE&channel=eurostat",
+      "badge": "2010–2026",
+      "title": {
+        "cs": "Průmysl měsíc po měsíci",
+        "en": "Industry month by month"
+      },
+      "card": {
+        "cs": "Která odvětví rostou a která klesají. Měsíce, roční souhrny a dohledatelné národní i evropské zdroje.",
+        "en": "Which sectors grow and which contract. Monthly trends, annual summaries, and traceable national and European sources."
+      },
+      "menu": {
+        "cs": "Odvětví, měsíční a roční vývoj",
+        "en": "Sectors, monthly and annual trends"
+      },
+      "source": {
+        "cs": "Eurostat · národní statistiky",
+        "en": "Eurostat · national statistics"
+      }
+    },
+    {
+      "slug": "industry-diagnostics",
+      "key": "industrialDiagnostics",
+      "shelf": "compare",
+      "cluster": "economy",
+      "href": "industry/diagnostics/",
+      "navPath": "deep-dives/industry/diagnostics/",
+      "badge": "120 datasets",
+      "title": {
+        "cs": "Uvnitř průmyslu",
+        "en": "Inside industry"
+      },
+      "card": {
+        "cs": "Firemní přebytek a investice, kapacity, výrobní objemy a konkrétní výrobky. Data Eurostatu od roku 2010.",
+        "en": "Business earnings and investment, factory capacity, real output and individual products. Eurostat data since 2010."
+      },
+      "menu": {
+        "cs": "Investice, kapacity, výrobky a řetězce",
+        "en": "Investment, capacity, products and value chains"
+      },
+      "source": {
+        "cs": "Eurostat",
+        "en": "Eurostat"
+      }
+    },
+    {
+      "slug": "trade",
+      "key": "trade",
+      "shelf": "compare",
+      "cluster": "economy",
+      "href": "trade/?code=DEU",
+      "navPath": "deep-dives/trade/?code=DEU",
+      "badge": "UN / BQ",
+      "title": {
+        "cs": "Zahraniční obchod",
+        "en": "Foreign trade"
+      },
+      "card": {
+        "cs": "Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade.",
+        "en": "Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer."
+      },
+      "menu": {
+        "cs": "Dovoz, vývoz, partneři a zboží",
+        "en": "Imports, exports, partners and goods"
+      },
+      "source": {
+        "cs": "UN Comtrade",
+        "en": "UN Comtrade"
+      }
+    },
+    {
+      "slug": "product-markets",
+      "key": "productMarkets",
+      "shelf": "compare",
+      "cluster": "economy",
+      "href": "product-markets/",
+      "navPath": "deep-dives/product-markets/",
+      "badge": "HS6 / BQ",
+      "title": {
+        "cs": "Globální produktové trhy",
+        "en": "Global product markets"
+      },
+      "card": {
+        "cs": "Sledujte chytré telefony, vozidla, léčiva, čipy a baterie od vykázaného původu až po dovozní trh.",
+        "en": "Follow smartphones, vehicles, medicines, chips and batteries from reported origin to importing market."
+      },
+      "menu": {
+        "cs": "HS6 původ, dovozní trhy a bilaterální toky",
+        "en": "HS6 origins, import markets and bilateral flows"
+      },
+      "source": {
+        "cs": "UN Comtrade",
+        "en": "UN Comtrade"
+      }
+    },
+    {
+      "slug": "digital-spillover",
+      "key": "digitalSpillover",
+      "shelf": "compare",
+      "cluster": "economy",
+      "href": "digital-spillover/",
+      "navPath": "deep-dives/digital-spillover/",
+      "badge": "10 / 10",
+      "title": {
+        "cs": "Kdo si ponechá digitální ekonomiku?",
+        "en": "Who keeps the digital economy?"
+      },
+      "card": {
+        "cs": "Deset ekonomik pod stejnými předpoklady: modelovaný únik, domácí reinvestice a citlivost bez falešné přesnosti.",
+        "en": "Ten economies under the same assumptions: modelled leakage, domestic reinvestment and sensitivity without false precision."
+      },
+      "menu": {
+        "cs": "Model: 10 zemí, únik a reinvestice",
+        "en": "Model: 10 countries, leakage and reinvestment"
+      },
+      "source": {
+        "cs": "Scénářový model · World Bank · IMF",
+        "en": "Scenario model · World Bank · IMF"
+      }
+    },
+    {
+      "slug": "ageing",
+      "key": "ageing",
+      "shelf": "compare",
+      "cluster": "society",
+      "href": "ageing/?code=CZE",
+      "navPath": "deep-dives/ageing/?code=CZE",
+      "badge": "10 / 10",
+      "title": {
+        "cs": "Stárnutí populace",
+        "en": "Population ageing"
+      },
+      "card": {
+        "cs": "Oficiální populační projekce, věková struktura a demografická kalkulačka; fiskální předpovědi neděláme.",
+        "en": "Official population projections, age structure and a demographic calculator; we do not forecast fiscal outcomes."
+      },
+      "menu": {
+        "cs": "Projekce a demografická kalkulačka",
+        "en": "Projections and demographic calculator"
+      },
+      "source": {
+        "cs": "ČSÚ · ČSSZ · MF",
+        "en": "ČSÚ · ČSSZ · Czech Ministry of Finance"
+      }
+    },
+    {
+      "slug": "migration",
+      "key": "migration",
+      "shelf": "compare",
+      "cluster": "society",
+      "href": "migration/",
+      "navPath": "deep-dives/migration/",
+      "badge": "33 / 33",
+      "title": {
+        "cs": "Evropská migrace",
+        "en": "European migration"
+      },
+      "card": {
+        "cs": "Migrační toky a rozhodnutí o ochraně ve 33 evropských zemích.",
+        "en": "Migration flows and protection decisions across 33 European countries."
+      },
+      "menu": {
+        "cs": "33 zemí, toky a status ochrany",
+        "en": "33 countries, flows and protection status"
+      },
+      "source": {
+        "cs": "Eurostat",
+        "en": "Eurostat"
+      }
+    },
+    {
+      "slug": "european-politics",
+      "key": "politics",
+      "shelf": "compare",
+      "cluster": "society",
+      "href": "european-politics/?code=CZE",
+      "navPath": "deep-dives/european-politics/?code=CZE",
+      "badge": "10 / 10",
+      "title": {
+        "cs": "Evropská politika",
+        "en": "European politics"
+      },
+      "card": {
+        "cs": "Kdo vládl, co slíbil a jak se vyvíjelo HDP a dluh v původním benchmarku deseti zemí.",
+        "en": "Who governed, what they promised and how GDP and debt evolved across the original ten-country benchmark."
+      },
+      "menu": {
+        "cs": "Vlády, programy a ekonomika",
+        "en": "Governments, programmes and the economy"
+      },
+      "source": {
+        "cs": "Vládní programy · IMF WEO",
+        "en": "Government programmes · IMF WEO"
+      }
+    },
+    {
+      "slug": "state-owned-enterprises",
+      "key": "stateCompanies",
+      "shelf": "compare",
+      "cluster": "society",
+      "href": "state-owned-enterprises/",
+      "navPath": "deep-dives/state-owned-enterprises/",
+      "badge": "30 / 10",
+      "title": {
+        "cs": "Státní podniky",
+        "en": "State-owned enterprises"
+      },
+      "card": {
+        "cs": "Katalog třiceti největších celostátně ovládaných podniků, s výnosy přepočtenými na eura.",
+        "en": "A catalogue of the thirty largest nationally controlled enterprises, with revenue converted to euros."
+      },
+      "menu": {
+        "cs": "30 podniků, výnosy v EUR",
+        "en": "30 enterprises, revenue in EUR"
+      },
+      "source": {
+        "cs": "Výkazy podniků a ministerstev",
+        "en": "Company and ministry filings"
+      }
+    },
+    {
+      "slug": "capital-cities",
+      "key": "capitalCities",
+      "shelf": "compare",
+      "cluster": "society",
+      "href": "capital-cities/?city=prague-cz",
+      "navPath": "deep-dives/capital-cities/?city=prague-cz",
+      "badge": "28 / 28",
+      "title": {
+        "cs": "Hlavní města",
+        "en": "Capital cities"
+      },
+      "card": {
+        "cs": "Rozpočtové plány hlavních měst, návštěvnost a srovnání ve skupinách podobných měst.",
+        "en": "Capital-city budget plans, visitor numbers and comparisons within groups of similar cities."
+      },
+      "menu": {
+        "cs": "Rozpočty, obyvatelé a turistický tlak",
+        "en": "Budget plans, residents and visitor pressure"
+      },
+      "source": {
+        "cs": "Oficiální rozpočty měst · Eurostat",
+        "en": "Official city budgets · Eurostat"
+      }
+    },
+    {
+      "slug": "budget-planner",
+      "key": "budgetPlanner",
+      "shelf": "regional",
+      "cluster": "single",
+      "href": "budget-planner/",
+      "navPath": "deep-dives/budget-planner/",
+      "badge": "2027 / MF",
+      "place": {
+        "cs": "Česko",
+        "en": "Czechia"
+      },
+      "title": {
+        "cs": "Plánovač rozpočtu 2027",
+        "en": "2027 budget planner"
+      },
+      "card": {
+        "cs": "Projděte návrh podle funkcí, změňte výdaje nebo příjmy a sledujte dopad na schodek.",
+        "en": "Explore the proposal by function, change expenditure or revenue and see the effect on the deficit."
+      },
+      "menu": {
+        "cs": "Změňte návrh a sledujte schodek",
+        "en": "Change the proposal and track the deficit"
+      },
+      "source": {
+        "cs": "Ministerstvo financí ČR",
+        "en": "Czech Ministry of Finance"
+      }
+    },
+    {
+      "slug": "public-employment",
+      "key": "publicEmployment",
+      "shelf": "regional",
+      "cluster": "single",
+      "href": "public-employment/",
+      "navPath": "deep-dives/public-employment/",
+      "badge": "2015–2024",
+      "place": {
+        "cs": "Česko",
+        "en": "Czechia"
+      },
+      "title": {
+        "cs": "Veřejná zaměstnanost",
+        "en": "Public employment"
+      },
+      "card": {
+        "cs": "Úplná institucionální hranice, desetiletá řada a oddělené zdrojové vrstvy bez dvojího započtení.",
+        "en": "The complete institutional boundary, a ten-year series and source layers kept separate to prevent double counting."
+      },
+      "menu": {
+        "cs": "Úřady, školy, nemocnice a veřejné firmy",
+        "en": "Government, schools, hospitals and public corporations"
+      },
+      "source": {
+        "cs": "ČSÚ · MŠMT · OECD",
+        "en": "ČSÚ · MŠMT · OECD"
+      }
+    },
+    {
+      "slug": "money-cze",
+      "key": "moneyCze",
+      "shelf": "regional",
+      "cluster": "single",
+      "href": "money/cze/",
+      "navPath": "deep-dives/money/cze/",
+      "badge": "2002–2026",
+      "place": {
+        "cs": "Česko",
+        "en": "Czechia"
+      },
+      "title": {
+        "cs": "Kam šly peníze? Česko",
+        "en": "Where did the money go? Czechia"
+      },
+      "card": {
+        "cs": "Peněžní zásoba, kupní síla a zásahy České národní banky v jednom příběhu.",
+        "en": "Money supply, purchasing power and Czech National Bank interventions in one story."
+      },
+      "menu": {
+        "cs": "Peníze, kupní síla a ČNB",
+        "en": "Money, purchasing power and the CNB"
+      },
+      "source": {
+        "cs": "ČNB ARAD",
+        "en": "Czech National Bank ARAD"
+      }
+    },
+    {
+      "slug": "plzen-contracts",
+      "key": "plzenContracts",
+      "shelf": "regional",
+      "cluster": "single",
+      "href": "plzen-contracts/",
+      "navPath": "deep-dives/plzen-contracts/",
+      "badge": "555 / 48 558",
+      "place": {
+        "cs": "Plzeň",
+        "en": "Plzeň"
+      },
+      "title": {
+        "cs": "Plzeň: smlouvy a skutečné platby",
+        "en": "Plzeň: contracts and actual payments"
+      },
+      "card": {
+        "cs": "Od podpisu a zveřejnění smlouvy až ke skutečně uhrazeným částkám investičních akcí po fiskálních letech.",
+        "en": "From contract signature and publication to actual investment-project cash payments by fiscal year."
+      },
+      "menu": {
+        "cs": "Od podpisu smlouvy ke skutečné platbě",
+        "en": "From contract signature to actual payment"
+      },
+      "source": {
+        "cs": "Hlídač státu · město Plzeň",
+        "en": "Hlídač státu · City of Plzeň"
+      }
+    },
+    {
+      "slug": "money-usa",
+      "key": "moneyUsa",
+      "shelf": "regional",
+      "cluster": "single",
+      "href": "money/usa/",
+      "navPath": "deep-dives/money/usa/",
+      "badge": "FRED",
+      "place": {
+        "cs": "Spojené státy",
+        "en": "United States"
+      },
+      "title": {
+        "cs": "Kam šly peníze? Spojené státy",
+        "en": "Where did the money go? United States"
+      },
+      "card": {
+        "cs": "Peněžní zásoba, kupní síla a zásahy Fedu ve stejné struktuře jako český report.",
+        "en": "Money supply, purchasing power and Federal Reserve interventions, in the same structure as the Czech report."
+      },
+      "menu": {
+        "cs": "Peníze, kupní síla a Fed",
+        "en": "Money, purchasing power and the Fed"
+      },
+      "source": {
+        "cs": "Federal Reserve · FRED",
+        "en": "Federal Reserve · FRED"
+      }
+    }
+  ],
+  "chrome": {
+    "indexEyebrow": {
+      "cs": "Reporty",
+      "en": "Reports"
+    },
+    "indexTitle": {
+      "cs": "Rozpočty podle témat",
+      "en": "Budgets by topic"
+    },
+    "indexIntro": {
+      "cs": "Každý report sleduje jedno téma: kolik se vydává, co za to je a odkud čísla pocházejí. Nahoře srovnání zemí, níže sondy do jedné země nebo jednoho města.",
+      "en": "Each report follows one topic: what is spent, what it buys and where the figures come from. Country comparisons first, single-country and single-city deep dives below."
+    },
+    "open": {
+      "cs": "Otevřít report",
+      "en": "Open report"
+    },
+    "contract": {
+      "cs": "Společná struktura",
+      "en": "Shared structure"
+    },
+    "contractTitle": {
+      "cs": "Co v každém srovnání zemí najdete",
+      "en": "What every country comparison covers"
+    },
+    "contractCopy": {
+      "cs": "Výdaje země, kapacitu a výsledky systému, vývoj v čase a srovnání se stejnou skupinou zemí. Pořadí sekcí je ve všech reportech stejné. Regionální reporty tento kontrakt nesdílejí, protože jdou do detailu jednoho rozpočtu.",
+      "en": "Country spending, system capacity and outcomes, change over time, and a comparison against the same group of countries, in the same order in every report. Regional deep dives do not share this contract, because they go into the detail of a single budget."
+    },
+    "topic": {
+      "cs": "Téma",
+      "en": "Topic"
+    },
+    "country": {
+      "cs": "Vybraná země",
+      "en": "Selected country"
+    },
+    "history": {
+      "cs": "Historie",
+      "en": "History"
+    },
+    "comparison": {
+      "cs": "Srovnání",
+      "en": "Comparison"
+    },
+    "method": {
+      "cs": "Metodika",
+      "en": "Method"
+    },
+    "heroNote": {
+      "cs": "Srovnání zemí sdílejí jednu strukturu. Regionální reporty jdou hlouběji do jednoho rozpočtu.",
+      "en": "Country comparisons share one structure. Regional deep dives go deeper into a single budget."
+    }
+  }
+}
