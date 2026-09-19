@@ -17,6 +17,34 @@
   chart grammar is in `CHART_SYSTEM.md`. Preserve the primary mark and wordmark
   rules across hand-written and generated pages.
 
+## Working agreement
+
+- The Git repository is `~/dev/czbudget/website`. The directory above it is a
+  workspace, not a checkout; `git` fails there by design. See `CLAUDE.md` for the
+  operational detail behind the rules below — it applies to every agent here.
+- Work on `main` and keep this checkout clean. A long-lived dirty branch strands
+  work: on 20 September 2026 this tree was 106 commits behind `main` on a branch
+  last touched on 8 September, carrying a whole unpublished report and the
+  `pipeline/cloud_processing` tooling that existed in no commit anywhere.
+- For a parallel line of work use `git worktree add`, and remove the worktree
+  when the work lands. Do not leave deploy checkouts behind.
+- Codex and Claude both push here. Fetch before starting and expect `main` to
+  move while you build.
+
+## Deployment rules
+
+- `git push origin main` is the only production path: trigger
+  `czbudget-public-main`, region `europe-west1`, 12-15 minutes.
+- A build that passes every gate still skips deployment if `main` moved while it
+  ran (step 27 `assert-current-main`), and it reports SUCCESS anyway. Land one
+  change at a time and check the build log for `Deployed immutable image` versus
+  `Skipping deployment` before believing a release happened.
+- Confirm the change on `https://publicspendingdata.org` with a cache-busting
+  query. Build status is not evidence.
+- A gate-passed image that was skipped can be deployed straight from Artifact
+  Registry with the `gcloud run deploy --image <repo>@<digest>` line in
+  `scripts/deploy-immutable.sh`; rollback is `gcloud run services update-traffic`.
+
 ## Report catalogue
 
 - `deep-dives/reports.json` is the single source of truth for every deep-dive
