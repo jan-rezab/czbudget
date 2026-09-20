@@ -15,6 +15,7 @@ await assertEmpty(destination);
 await mkdir(destination, { recursive: true });
 
 const files = [
+  "tests/browser/stories.spec.mjs",
   "deep-dives/energy-trade/index.html",
   "energy-trade-deep-dive.js",
   "energy-trade-deep-dive.css",
@@ -106,7 +107,7 @@ const files = [
   "data/data-freshness.v1.json",
   "data/registry/run-log.v1.json",
 ];
-const directories = ["assets", "process"];
+const directories = ["assets", "process", "stories"];
 
 for (const relative of files) {
   const target = join(destination, relative);

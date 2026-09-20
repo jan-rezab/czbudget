@@ -6,7 +6,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 const root = '/usr/share/nginx/html';
 for (const name of [
   '.asset-release', '.public-serving-build', '.cityvizor-serving', 'scripts',
-  'pipeline', 'tests', 'data/.municipal-headlines-query.json', 'data/isred',
+  'pipeline', 'tests', 'content', 'data/.municipal-headlines-query.json', 'data/isred',
   'data/industrial-intelligence', 'data/czech-nku', 'data/contracts',
   'data/czech-project-geography', 'data/industry',
 ]) {
@@ -29,7 +29,7 @@ try {
     await delay(100);
   }
   assert.ok(ready, 'Image must start both Nginx and API');
-  for (const url of ['/', '/demo', '/process/log/?lang=en']) {
+  for (const url of ['/', '/demo', '/process/log/?lang=en', '/stories/', '/stories/tariffs-went-up-did-america-win/', '/stories/feed.xml']) {
     const response = await fetch(`http://127.0.0.1:8080${url}`, {
       signal: AbortSignal.timeout(20_000),
     });
