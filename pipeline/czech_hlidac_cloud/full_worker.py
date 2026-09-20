@@ -7,6 +7,10 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from pipeline.transforms.fetch_hlidac_contracts import (
     API_URL,

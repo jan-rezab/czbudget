@@ -30,6 +30,7 @@ class CzechHlidacFullCloudTests(unittest.TestCase):
         self.assertIn("if previous:", self.source)
 
     def test_full_worker_reuses_reviewed_windowed_fetcher(self):
+        self.assertIn("sys.path.insert(0, str(ROOT))", self.source)
         self.assertIn("fetch_full_history(", self.source)
         fetcher = (
             ROOT / "pipeline/transforms/fetch_hlidac_contracts.py"
