@@ -158,6 +158,22 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
+  # Mini Reports remains private, including its assets; never serve it statically.
+  location = /mini-reports {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+  location ^~ /mini-reports/ {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
   location ^~ /auth/ {
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
