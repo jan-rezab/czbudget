@@ -64,6 +64,27 @@ test("energy flow responses preserve direction and physical-data flags", async (
   assert.equal(result.totals.observed_value_usd, 125);
 });
 
+test("global energy history fits the measured warehouse scan without relaxing other query limits", async () => {
+  const requests = [];
+  const store = new TradeStore({
+    tokenProvider: async () => "unused",
+    fetchImpl: async (_url, options) => {
+      const request = JSON.parse(options.body);
+      requests.push(request);
+      if (request.query === ENERGY_PERIODS_SQL && Number(request.maximumBytesBilled) < 23_800_000_000) {
+        return new Response(JSON.stringify({ error: { message: "Query exceeded limit for bytes billed" } }), { status: 400 });
+      }
+      return Response.json({ jobComplete: true, schema: { fields: [] }, rows: [] });
+    },
+  });
+  assert.equal((await store.energyPeriods()).products.length, 3);
+  await store.energyPeriods();
+  assert.equal(requests.length, 1, "repeat metadata reads use the cached result");
+  await store.query("SELECT 1", []);
+  assert.equal(requests[1].maximumBytesBilled, "5000000000");
+  assert.ok(Number(requests[0].maximumBytesBilled) <= 32_000_000_000, "global history remains bounded");
+});
+
 test("product partners expose both directions without filling missing values", async () => {
   const store = new TradeStore({ tokenProvider: async () => "unused" });
   store.query = async () => [

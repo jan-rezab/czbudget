@@ -462,7 +462,11 @@ export class TradeStore {
     const cached = this.cache.get(cacheKey);
     if (cached?.expiresAt > this.now()) return cached.value;
     return shareInFlight(this.pending, cacheKey, async () => {
-      const rows = await this.query(ENERGY_PERIODS_SQL, [parameter("min_date", "DATE", ENERGY_MIN_DATE)]);
+      // Global history spans all markets and seven annual partitions. Its
+      // measured scan is 23 GB; country and single-period queries retain 5 GB.
+      const rows = await this.query(ENERGY_PERIODS_SQL, [parameter("min_date", "DATE", ENERGY_MIN_DATE)], {
+        maximumBytesBilled: "32000000000",
+      });
       const products = Object.entries(ENERGY_PRODUCTS).map(([id, product]) => ({
         id,
         ...product,
@@ -544,7 +548,7 @@ export class TradeStore {
     while (this.cache.size > 256) this.cache.delete(this.cache.keys().next().value);
   }
 
-  async query(sql, queryParameters, { maxResults = "1000" } = {}) {
+  async query(sql, queryParameters, { maxResults = "1000", maximumBytesBilled = "5000000000" } = {}) {
     const token = await this.tokenProvider();
     const endpoint = `https://bigquery.googleapis.com/bigquery/v2/projects/${encodeURIComponent(this.project)}/queries`;
     const body = {
@@ -553,7 +557,7 @@ export class TradeStore {
       location: this.location,
       timeoutMs: 8_000,
       maxResults,
-      maximumBytesBilled: "5000000000",
+      maximumBytesBilled,
       parameterMode: "NAMED",
       queryParameters,
     };
