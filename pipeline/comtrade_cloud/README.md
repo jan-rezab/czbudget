@@ -8,6 +8,11 @@ active credential slots are 02-29 and 32-41. Slots 01, 30 and 31 are excluded.
 The older rollout and Scheduler notes below are historical; the raw Scheduler
 remains paused.
 
+All lanes prioritize the complete monthly window from January 2024 through the
+latest complete month (currently August 2026). This fills January-September
+2025 and all of 2024 before resuming deep annual history. Annual work remains in
+the queue and resumes automatically when no focused monthly task is ready.
+
 The build writes immutable, content-addressed responses below
 `gs://czbudget-janrezab-un-comtrade-raw/raw/`, versioned SQLite checkpoints
 below `checkpoints/<archive-id>/`, and advances only

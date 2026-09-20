@@ -1,5 +1,6 @@
 import base64
 from concurrent.futures import ThreadPoolExecutor
+from datetime import date
 import gzip
 import hashlib
 import json
@@ -15,6 +16,30 @@ import run_un_comtrade_direct as direct
 
 
 class DirectUploadTest(unittest.TestCase):
+    def test_expanded_monthly_focus_precedes_annual_history(self):
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory)/'crawl.sqlite3'
+            db = direct.c.connect(state)
+            created = direct.c.now_iso()
+            fixtures = [
+                ('annual-current','A','2025',100),
+                ('monthly-2024','M','202401',200),
+                ('annual-history','A','2019',100),
+            ]
+            for task_id,frequency,period,priority in fixtures:
+                db.execute("""INSERT INTO tasks (
+                    task_id,parent_task_id,profile_id,product_type,frequency,period,
+                    reporter_code,reporter_iso3,classification_code,flow_code,
+                    partner_codes,product_selector,priority,status,created_at,updated_at
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",(
+                    task_id,None,'test','C',frequency,period,203,'CZE','H6','X',
+                    '[0]','AG6',priority,'queued',created,created))
+            db.commit()
+            task = direct.c.claim_next_task(
+                db,'monthly_focus',today=date(2026,9,20),monthly_prior_months=24)
+            self.assertEqual(task['task_id'],'monthly-2024')
+            db.close()
+
     def test_build_provenance_is_complete_and_hashes_source_config(self):
         environment = {
             'COMTRADE_BUILD_ID':'build-123',

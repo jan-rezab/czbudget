@@ -269,6 +269,7 @@ def claim_next_task(
     connection: sqlite3.Connection,
     queue_mode: str = "balanced",
     today: date | None = None,
+    monthly_prior_months: int = 3,
 ) -> sqlite3.Row | None:
     """Atomically claim the next ready task across concurrent WAL connections."""
     claimed_at = now_iso()
@@ -280,12 +281,12 @@ def claim_next_task(
                  priority, created_at, task_id"""
         order_parameters: tuple[Any, ...] = ()
     else:
-        focus_periods = monthly_focus_periods(3, today)
+        focus_periods = monthly_focus_periods(monthly_prior_months, today)
         oldest_focus, newest_focus = focus_periods[-1], focus_periods[0]
         if queue_mode == "monthly_focus":
             order_sql = """CASE
-                   WHEN frequency='A' AND period='2025' THEN 0
-                   WHEN frequency='M' AND period BETWEEN ? AND ? THEN 1
+                   WHEN frequency='M' AND period BETWEEN ? AND ? THEN 0
+                   WHEN frequency='A' AND period='2025' THEN 1
                    WHEN frequency='A' AND period='2023' THEN 2
                    WHEN frequency='A' THEN 3
                    WHEN frequency='M' THEN 4
@@ -725,7 +726,11 @@ def crawl(connection: sqlite3.Connection, config: dict[str, Any], reference_path
             stop_reason = 'disk_reserve'
             print('Paused: free disk below configured reserve', flush=True)
             break
-        task = claim_next_task(connection, getattr(args, 'queue_mode', 'balanced'))
+        task = claim_next_task(
+            connection,
+            getattr(args, 'queue_mode', 'balanced'),
+            monthly_prior_months=getattr(args, 'monthly_prior_months', 3),
+        )
         if not task:
             stop_reason = 'no_ready_tasks'
             break

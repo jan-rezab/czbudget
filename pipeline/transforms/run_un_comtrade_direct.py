@@ -353,7 +353,7 @@ def checkpoint(state, settings, cloud, receipts, summary):
 
 def crawl_lane(state, config, refs, cloud, credential_id, api_key, remaining, deadline,
                batch_rows, max_tasks, shared_rate_limiter, receipt_journal,
-               stop_event, queue_mode='balanced'):
+               stop_event, queue_mode='balanced', monthly_prior_months=3):
     """Run one credential lane against the shared WAL queue.
 
     Task claiming is atomic in crawl_un_comtrade.crawl; every lane uses its own
@@ -371,7 +371,8 @@ def crawl_lane(state, config, refs, cloud, credential_id, api_key, remaining, de
             max_minutes=max(0.1, (deadline-time.monotonic())/60),
             max_rows=batch_rows, max_tasks=max_tasks, response_sink=sink,
             reclaim_running=False, shared_rate_limiter=shared_rate_limiter,
-            stop_event=stop_event, queue_mode=queue_mode))
+            stop_event=stop_event, queue_mode=queue_mode,
+            monthly_prior_months=monthly_prior_months))
         result['utc_calls_used'] = c.daily_calls(db, credential_id)
         result['started_at'] = started_at
         result['finished_at'] = c.now_iso()
@@ -400,11 +401,11 @@ def main():
             or not 1 <= args.chunk_calls <= 25
             or not 15 <= args.checkpoint_seconds <= 300
             or not 0 <= args.history_periods <= 36
-            or not 0 <= args.monthly_prior_months <= 12
+            or not 0 <= args.monthly_prior_months <= 36
             or not 0 <= args.monthly_focus_share <= 1):
         parser.error('Bounds: 500 calls/account, 1m rows/batch, 120 minutes, '
                      '1-5 lanes/account, 1-25 calls/chunk, 15-300s checkpoints, '
-                     '0-36 annual history periods, 0-12 prior monthly periods, '
+                     '0-36 annual history periods, 0-36 prior monthly periods, '
                      'and 0-1 monthly lane share')
     config = c.read_json(c.CONFIG_PATH)
     settings = config['warehouse_crawl']
@@ -529,7 +530,8 @@ def main():
                 crawl_lane,state,config,refs,cloud,credential_id,
                 credential_keys[credential_id],allowance,deadline,args.batch_rows,
                 allowance,rate_limiters[credential_id],journal,
-                stop_events[credential_id],queue_modes[credential_id])
+                stop_events[credential_id],queue_modes[credential_id],
+                args.monthly_prior_months)
             pending[future] = (credential_id,lane_number,allowance)
 
         # Interleave credentials so a constrained executor always gives every
