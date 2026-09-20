@@ -68,8 +68,9 @@ The production Cloud Scheduler job is `un-comtrade-daily-load` in
 03:30 window and submits `scheduler-build.json` to the regional Cloud Build API
 as `comtrade-scheduler`; execution itself uses the restricted
 `comtrade-builder` identity. The request pins the exact source object and GCS
-generation proven by the June 2026 retry production load. It processes at most two
-pending periods per run and is safe when there is nothing new to load.
+generation proven by the September 2026 zero-pending checkpoint audit. It
+processes at most two pending periods per run and is safe when there is nothing
+new to load.
 
 When loader code changes, first submit it manually and verify its BigQuery
 transaction plus immutable receipt. Then replace both the object and generation
@@ -119,6 +120,17 @@ selected period. This permits newly downloaded responses to extend a period
 without deleting unrelated reporters. `no_data` tasks are recorded in
 `trade_source_responses` with zero normalized rows so they are not confused with
 unprocessed tasks.
+
+Use `submit.py --audit-only --max-periods 20` to compare the pinned checkpoint
+with the BigQuery response ledger without normalizing or writing data. The audit
+prints per-period available, acknowledged and pending task/hash counts plus a
+bounded mismatch sample. Run it after reconciliation to prove zero pending
+responses against the exact checkpoint archive ID and SHA-256.
+
+The loader explicitly raises the `bq query` JSON row limit for ledger reads.
+The CLI defaults to 100 output rows even when the query itself returns more;
+leaving that default in place would make committed task/hash pairs appear
+pending and trigger redundant reprocessing.
 
 ## Concurrency and recovery
 
