@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="/language-bootstrap.js?v=20260920-funding"></script>
+  <title>Jak veřejné peníze dorazí ke službám — Public Spending Data</title>
+  <meta name="description" content="Od daní přes stát, kraje, obce a pojišťovny až ke školám, zdravotní péči, důchodům a sociální podpoře. Pět zemí v názorných schématech.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/funding/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/funding/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/funding/?lang=en">
+  <link rel="icon" href="/assets/favicon.svg">
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/styles.css?v=20260822-section-rail"><link rel="stylesheet" href="/styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="/psd-chart.css?v=20260920">
+  <link rel="stylesheet" href="/chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="/deep-dives.css?v=20260919-reports-catalogue">
+  <link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <link rel="stylesheet" href="/funding-deep-dive.css?v=20260920-ledgers1">
+  <script src="/country-routes.js?v=20260824-readable-country-routes" defer></script>
+  <script src="/global-nav.js?v=20260919-reports-regional" defer></script>
+  <script src="/psd-chart.js?v=20260920-funding" defer></script>
+  <script type="module" src="/funding-deep-dive.js?v=20260920-ledgers1"></script>
+  <script src="/global-footer.js?v=20260824-compact" defer></script>
+</head>
+<body class="deep-dives-page funding-report-page">
+  <a class="fund-skip" href="#funding-content">Přeskočit na obsah / Skip to content</a>
+  <psd-site-header></psd-site-header>
+  <main id="funding-content">
+    <section class="deep-hero deep-topic-hero">
+      <div><span class="kicker" data-fund-copy="eyebrow">Peníze v pohybu / pět zemí</span><h1 data-fund-copy="title">Jak peníze dorazí ke službám</h1><p data-fund-copy="intro">Kdo vybírá. Kdo přerozděluje. Kdo nakonec platí. Sledujte cestu až do školy, nemocnice a domácnosti.</p></div>
+      <div class="deep-hero-aside deep-filter-panel"><label for="fund-country" data-fund-copy="choose">Vyberte zemi</label><select id="fund-country"><option value="CZE">Česko</option><option value="USA">USA</option><option value="FRA">Francie</option><option value="RUS">Rusko</option><option value="UKR">Ukrajina</option></select><div class="deep-country-readout"><b id="fund-code">CZE</b><strong id="fund-name">Česko</strong><span data-fund-copy="coverage">5 institucionálních map · různá dostupnost čísel</span></div></div>
+    </section>
+    <nav class="deep-topic-rail" aria-label="Report sections"><a href="#budgets" data-fund-copy="budgets">Rozpočty</a><a href="#schools" data-fund-copy="schools">Školy</a><a href="#health" data-fund-copy="health">Zdravotnictví</a><a href="#pensions" data-fund-copy="pensions">Důchody</a><a href="#social" data-fund-copy="social">Sociální podpora</a><a href="#compare" data-fund-copy="compare">Srovnání</a><a href="#method" data-fund-copy="method">Zdroje a hranice</a></nav>
+    <p class="fund-selection" id="fund-status" role="status"></p>
+    <section id="budgets" class="fund-section">
+      <span class="kicker" data-fund-copy="stepOne">01 / OD PŘÍJMŮ K ROZPOČTŮM</span><h2 data-fund-copy="budgetTitle">Jedna ekonomika, více veřejných peněženek.</h2>
+
+      <div class="fund-vat"><div><h3 data-fund-copy="vatTitle">Konkrétní příklad: 100 Kč české DPH</h3><p data-fund-copy="vatIntro"></p></div><div id="fund-vat-chart"></div></div>
+      <details class="fund-more-routes"><summary data-fund-copy="revenueRoutes">Prozkoumat cesty daní, pojistného a půjček</summary><p class="fund-lead" data-fund-copy="budgetIntro"></p><div id="fund-budget-map"></div></details><div class="fund-reading"><strong data-fund-copy="transferTitle"></strong><p data-fund-copy="transferNote"></p></div>
+    </section>
+    <section id="schools" class="fund-section"><span class="kicker" data-fund-copy="stepSchool">02 / PENÍZE PRO ŠKOLU</span><div class="fund-heading"><div><h2 data-fund-copy="schoolTitle"></h2><p class="fund-lead" id="fund-school-caption"></p></div><button type="button" id="fund-follow" hidden data-fund-copy="follow">Sledovat tok →</button></div><div id="fund-school-ledger" class="fund-ledger"></div><details class="fund-route-details"><summary data-route-summary>Prozkoumat všechny institucionální cesty + mezičlánky</summary><div id="fund-school-map"></div></details><div id="fund-school-comparison" class="fund-topic-compare"></div><p class="fund-reading" data-fund-copy="schoolScope"></p><a class="fund-related" data-related="/deep-dives/education/" data-fund-copy="educationLink"></a></section>
+    <section id="health" class="fund-section"><span class="kicker" data-fund-copy="stepHealth">03 / PLATBY ZA PÉČI</span><h2 data-fund-copy="healthTitle"></h2><p class="fund-lead" data-fund-copy="healthIntro"></p><div id="fund-health-ledger" class="fund-ledger"></div><details class="fund-route-details"><summary data-route-summary>Prozkoumat všechny institucionální cesty + mezičlánky</summary><div id="fund-health-map"></div></details><div id="fund-health-comparison" class="fund-topic-compare"></div><a class="fund-related" data-related="/deep-dives/health/" data-fund-copy="healthLink"></a></section>
+    <section id="pensions" class="fund-section"><span class="kicker" data-fund-copy="stepPension">04 / DŮCHODY</span><h2 data-fund-copy="pensionTitle"></h2><div id="fund-pension-ledger" class="fund-ledger"></div><details class="fund-route-details"><summary data-route-summary>Prozkoumat všechny institucionální cesty + mezičlánky</summary><div id="fund-pension-map"></div></details><div id="fund-pension-comparison" class="fund-topic-compare"></div></section>
+    <section id="social" class="fund-section"><span class="kicker" data-fund-copy="stepSocial">05 / DALŠÍ SOCIÁLNÍ PODPORA</span><h2 data-fund-copy="socialTitle"></h2><div id="fund-social-ledger" class="fund-ledger"></div><details class="fund-route-details"><summary data-route-summary>Prozkoumat všechny institucionální cesty + mezičlánky</summary><div id="fund-social-map"></div></details><div id="fund-social-comparison" class="fund-topic-compare"></div><a class="fund-related" data-related="/deep-dives/redistribution/" data-fund-copy="socialLink"></a></section>
+    <section id="compare" class="fund-section"><span class="kicker" data-fund-copy="stepCompare">06 / ROZDÍLY MEZI ZEMĚMI</span><h2 data-fund-copy="compareTitle"></h2><p class="fund-lead" data-fund-copy="compareIntro"></p><div class="fund-benchmarks" id="fund-benchmarks"></div></section>
+    <section id="method" class="fund-section"><h2 data-fund-copy="methodTitle"></h2><div class="fund-method" id="fund-method"></div><div class="fund-related-row"><a data-related="/money-flow.html" data-fund-copy="moneyLink"></a><a data-related="/funding-systems.html" data-fund-copy="referenceLink"></a></div></section>
+    <noscript><p>Pro interaktivní mapy zapněte JavaScript. Enable JavaScript for the interactive diagrams. <a href="/lib/funding-deep-dive.mjs">Source observations and institutional references</a></p></noscript>
+  </main><footer data-global-footer></footer>
+</body></html>
