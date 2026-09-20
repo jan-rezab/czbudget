@@ -80,8 +80,10 @@ map $request_uri $index_redirect_path {
 # reason). Every page already loads /language-bootstrap.js as the first child of
 # its own <head>, so it is deliberately not injected here - injecting it added a
 # second copy under a different ?v, i.e. a duplicate download on every page.
+# Analytics must not join the ordered defer queue ahead of every page script.
+# A slow third-party response otherwise stalls navigation, controls and data loads.
 map $host $psd_head_inject {
-  default '<head><script defer src="https://cloud.umami.is/script.js" data-website-id="b80e941b-3a25-40ef-bdf4-3ecb0e91e053" data-domains="publicspendingdata.org,www.publicspendingdata.org" data-do-not-track="true" data-exclude-search="true"></script>';
+  default '<head><script async src="https://cloud.umami.is/script.js" data-website-id="b80e941b-3a25-40ef-bdf4-3ecb0e91e053" data-domains="publicspendingdata.org,www.publicspendingdata.org" data-do-not-track="true" data-exclude-search="true"></script>';
 }
 
 # Studio pages are unlisted snapshots, omitted from navigation and the sitemap.

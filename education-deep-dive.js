@@ -20,6 +20,7 @@
     regionPerLearnerNote:"Orientační přepočet: celý sloupec výdajů kraje dělíme počtem dětí a studentů MŠ, ZŠ, SŠ, konzervatoří a VOŠ v kraji (všichni zřizovatelé a formy studia; bez VŠ). Každá barva má stejný jmenovatel, nikoli počet žáků daného typu školy. Výdaje jsou za kalendářní rok 2025, počty za školní rok 2025/26. U ostatních krajů chybějí vlastní výdaje obcí; Praha zahrnuje i svou obecní roli. Nejde o úplné náklady vzdělávání na žáka ani žebříček efektivity."
   });
   document.querySelectorAll("[data-edu-copy]").forEach(node=>{const value=copy[node.dataset.eduCopy];if(value)node.textContent=value});
+  window.psdLanguageReady?.();
   const $=selector=>document.querySelector(selector);
   const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   const n=(value,digits=1)=>new Intl.NumberFormat(lang==="en"?"en-US":"cs-CZ",{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(value);
@@ -163,6 +164,6 @@
     }
     $("#education-sources").innerHTML=data.sources.map(source=>`<a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.title)} ↗</a>`).join("");
   }
-  const loadJson=url=>fetch(url).then(response=>{if(!response.ok)throw new Error(`${url}: ${response.status}`);return response.json()});
-  Promise.all([loadJson("../../data/education-deep-dive.v1.json?v=20260902-global-controls"),loadJson("../../data/education-capacity-international.v1.json?v=20260902-global-controls"),loadJson("../../data/education-regional-learners.v1.json"),loadJson("../../data/cze-school-funding-2026-summary.v1.json")]).then(([payload,international,regionalLearners,funding])=>{data=payload;data.regionalLearners=regionalLearners;data.schoolFunding2026=funding;setupRegionTabs();data.capacity.international=international;setupControls();renderSystem();renderRouting();renderLevels();renderCapacity();renderRegions();renderCoverage();renderMethod()}).catch(error=>{console.error("education deep dive",error);$("main").insertAdjacentHTML("afterbegin",`<p class="education-load-error">${copy.loadError}</p>`)});
+  const loadJson=url=>PSDData.loadJson(url);
+  Promise.all([loadJson("../../data/education-deep-dive.v1.json?v=20260902-global-controls"),loadJson("../../data/education-capacity-international.v1.json?v=20260902-global-controls"),loadJson("../../data/education-regional-learners.v1.json"),loadJson("../../data/cze-school-funding-2026-summary.v1.json")]).then(([payload,international,regionalLearners,funding])=>{data=payload;data.regionalLearners=regionalLearners;data.schoolFunding2026=funding;setupRegionTabs();data.capacity.international=international;setupControls();renderSystem();renderRouting();renderLevels();renderCapacity();renderRegions();renderCoverage();renderMethod()}).catch(error=>{console.error("education deep dive",error);$("main").insertAdjacentHTML("afterbegin",`<p class="education-load-error">${copy.loadError}</p>`);PSDData.retryButton($(".education-load-error"),lang)});
 })();
