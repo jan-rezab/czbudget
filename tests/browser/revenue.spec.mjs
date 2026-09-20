@@ -1,13 +1,14 @@
 import { test, expect } from "@playwright/test";
 
 test("revenue comparison makes cross-country differences visible", async ({ page }) => {
-  await page.goto("/deep-dives/revenue/?code=CZE&lang=en", { waitUntil: "networkidle" });
+  await page.goto("/deep-dives/revenue/?code=CZE&lang=en", { waitUntil: "domcontentloaded" });
 
   const cells = page.locator("#revenue-comparison-body .revenue-heat");
   const formattedCells = page.locator("#revenue-comparison-body .revenue-heat[data-heat]");
   await expect(page.locator("#revenue-heat-legend")).toContainText("Lower share → Higher share");
-  await expect(cells).toHaveCount(102);
-  expect(await formattedCells.count()).toBeGreaterThan(90);
+  // Assert the rendered data contract, not unrelated background-network silence.
+  await expect(cells).toHaveCount(102, {timeout:20_000});
+  await expect.poll(()=>formattedCells.count()).toBeGreaterThan(90);
   await expect(page.locator('.revenue-heat[data-heat="low"]')).not.toHaveCount(0);
   await expect(page.locator('.revenue-heat[data-heat="mid"]')).not.toHaveCount(0);
   await expect(page.locator('.revenue-heat[data-heat="high"]')).not.toHaveCount(0);
