@@ -7,6 +7,7 @@ def validate(data):
     assert data['schema_version']=='automotive-monthly.v1'
     assert len(data['panel'])==len(set(data['panel'])) and len(data['panel'])>=20
     assert data['periods']==sorted(set(data['periods'])) and len(data['periods'])>=2
+    assert len(data['rows'])==len(data['panel'])*len(data['periods'])*3
     seen=set()
     for row in data['rows']:
         key=(row['period'],row['market'],row['segment'])
@@ -22,8 +23,8 @@ def main():
     prefix='gs://czbudget-janrezab-data-layers/processing-runs/automotive/'
     assert receipt['uri'].startswith(prefix) and receipt['completed_receipt'].startswith(prefix)
     def cat(uri):return subprocess.check_output(['gcloud','storage','cat',uri])
-    completed=cat(receipt['completed_receipt']).decode().splitlines()
-    assert f"{receipt['sha256']}  automotive-monthly.v1.json" in completed
+    completed=json.loads(cat(receipt['completed_receipt']))
+    assert completed['status']=='complete' and completed['files']['automotive-monthly.v1.json']==receipt['sha256']
     raw=cat(receipt['uri']+'#'+receipt['generation'])
     assert len(raw)==receipt['bytes'] and hashlib.sha256(raw).hexdigest()==receipt['sha256']
     data=validate(json.loads(raw))

@@ -14,8 +14,8 @@ unspecified origin; the explicit EU-origin contribution to EU destinations is
 then removed. EU membership is fixed at 27, with the UK outside the bloc.
 
 The latest eligible month must have at least 20 complete reporting markets;
-the intersection across up to 12 months must also have at least 20. Missing
-World product observations remain absent and cause a gap in the chart, not zero.
+the intersection across up to 12 months must also have at least 20. Markets with missing World product observations in any of the three groups are
+excluded from the entire fixed panel, never filled with zero.
 A zero named-origin contribution means no recorded trade in the complete
 requested origin/product scope. Non-reporting countries are never filled.
 
@@ -36,13 +36,15 @@ gcloud builds submit pipeline/automotive_cloud \
 ```
 
 Each successful run preserves its serving JSON, raw-object hash receipts and
-completion checksum under a new `processing-runs/automotive/<build-id>/` prefix.
+completion checksum and `completed.json` marker under a new `processing-runs/automotive/<build-id>/` prefix.
 Review the result and update `data/trade/automotive-release.v1.json` with its
 immutable generation, size and SHA-256. Do not overwrite previous cloud runs.
 The normal website Cloud Build hydrates only that pinned serving JSON with
 `scripts/hydrate-automotive.py`. Local verification uses synthetic fixtures;
 no checkpoint, raw archive or generated serving snapshot is restored to the Mac.
 
-Initial extraction: `90a2e9f4-d0c2-484f-acd9-751754a16bf0`; 1,347 verified
-source objects; October 2025–July 2026; 30 fixed importing markets; 899 published
-market/month/segment observations. The unmatched observation remains a gap.
+Initial audit: `90a2e9f4-d0c2-484f-acd9-751754a16bf0`; 1,347 verified
+source objects; October 2025–July 2026. Macao has no World heavy-truck observation
+in October 2025 and is excluded from all months and groups in the serving
+release. The final panel has 29 markets and 870 complete observations. See the
+release receipt for the current immutable output.

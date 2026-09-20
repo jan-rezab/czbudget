@@ -322,7 +322,7 @@ steps:
   # deployed revision may predate shard support; activation happens only after
   # the compatible image is live.
   - id: upload-public-snapshot
-    waitFor: ["build-public-snapshot", "hydrate-automotive"]
+    waitFor: ["build-public-snapshot"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
@@ -333,7 +333,7 @@ steps:
           "${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$release"
 
   - id: upload-cityvizor-snapshot
-    waitFor: ["build-public-snapshot", "hydrate-automotive"]
+    waitFor: ["build-public-snapshot"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: gcloud
     args:

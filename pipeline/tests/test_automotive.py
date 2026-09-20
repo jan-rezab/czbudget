@@ -18,3 +18,18 @@ class AutomotiveTest(unittest.TestCase):
     def test_geography(self):
         self.assertEqual(len(a.EU),27)
         for iso in ['GBR','HKG','MAC']:self.assertEqual(a.region(iso),'ROW')
+
+class AutomotiveReleaseTest(unittest.TestCase):
+    def test_release_rejects_incomplete_or_duplicate_market_months(self):
+        import copy
+        spec=importlib.util.spec_from_file_location('hydrate_automotive',Path(__file__).parents[2]/'scripts/hydrate-automotive.py')
+        hydrate=importlib.util.module_from_spec(spec);spec.loader.exec_module(hydrate)
+        markets=[f'M{i}' for i in range(20)];periods=['202601','202602']
+        data={'schema_version':'automotive-monthly.v1','panel':markets,'periods':periods,'rows':[{'market':m,'period':p,'segment':s,'values':{'USA':1,'EU27':2,'CHN':3,'ROW':4}} for m in markets for p in periods for s in ['vehicles','trucks','parts']]}
+        hydrate.validate(data)
+        missing=copy.deepcopy(data);missing['rows'].pop()
+        with self.assertRaises(AssertionError):hydrate.validate(missing)
+        duplicate=copy.deepcopy(data);duplicate['rows'][-1]=duplicate['rows'][0]
+        with self.assertRaises(AssertionError):hydrate.validate(duplicate)
+        negative=copy.deepcopy(data);negative['rows'][0]['values']['ROW']=-1
+        with self.assertRaises(AssertionError):hydrate.validate(negative)

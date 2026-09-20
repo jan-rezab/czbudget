@@ -2,7 +2,7 @@
 Run only on Cloud Build. Does not crawl, modify the checkpoint, or load raw data locally.
 """
 from __future__ import annotations
-import collections, concurrent.futures, datetime, decimal, gzip, hashlib, json, os, sqlite3, subprocess, urllib.parse, urllib.request
+import argparse, collections, concurrent.futures, datetime, decimal, gzip, hashlib, json, os, sqlite3, subprocess, urllib.parse, urllib.request
 from pathlib import Path
 EU = set('AUT BEL BGR HRV CYP CZE DNK EST FIN FRA DEU GRC HUN IRL ITA LVA LTU LUX MLT NLD POL PRT ROU SVK SVN ESP SWE'.split())
 REGIONS = ['USA','EU27','CHN','ROW']
@@ -44,7 +44,8 @@ def main():
                 with urllib.request.urlopen(req,timeout=90) as r:return r.read()
             except Exception:
                 if attempt==3:raise
-    manifest=json.loads(get(BUCKET+'/manifests/latest.json'))
+    parser=argparse.ArgumentParser();parser.add_argument('--manifest',default=BUCKET+'/manifests/latest.json');args=parser.parse_args()
+    manifest=json.loads(get(args.manifest))
     checkpoint=manifest['checkpoint'];raw=get(checkpoint['uri'],checkpoint['generation'])
     assert hashlib.sha256(raw).hexdigest()==checkpoint['sha256']
     Path('/tmp/auto-crawl.sqlite3').write_bytes(raw);del raw
@@ -109,8 +110,15 @@ def main():
                 values=assemble(totals[period,market,seg],market)
                 # No published World product row stays missing, not a fabricated zero.
                 if values is not None:output.append({'period':period,'market':market,'segment':seg,'values':values})
+    present={(r['period'],r['market'],r['segment']) for r in output}
+    missing=[(p,m,s) for p in periods for m in panel for s in ['vehicles','trucks','parts'] if (p,m,s) not in present]
+    excluded={m for p,m,s in missing}
+    panel=[m for m in panel if m not in excluded]
+    if len(panel)<20:raise RuntimeError('Fewer than 20 markets with all three product groups in every month')
+    output=[r for r in output if r['market'] in panel]
+    print('Excluded markets with unpublished product groups:',missing,flush=True)
     names={r['reporter_iso3']:r['reporter_name'] for r in c.execute('SELECT reporter_iso3,reporter_name FROM availability')}
-    dataset={'schema_version':'automotive-monthly.v1','generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'periods':periods,'panel':panel,'markets':[{'code':m,'name':names.get(m,m)} for m in panel],'rows':output,'source':{'name':'UN Comtrade','url':'https://comtradeplus.un.org/','table':'UN Comtrade C/M/HS (H6), AG6, M; verified archived responses','archive_id':manifest['archive_id'],'checkpoint_sha256':checkpoint['sha256'],'retrieved_at':max(retrieved),'objects_verified':len(receipts),'method':'Importer-reported origins; fixed market panel; intra-EU27 removed; ROW = World minus USA, EU27 and China, including unspecified origins. Current USD, generally CIF.'},'definitions':{'vehicles':{'hs4':['8703'],'hs6':sorted(LIGHT)},'trucks':{'hs6':sorted(HEAVY)},'parts':{'hs4':['8708']}}}
+    dataset={'schema_version':'automotive-monthly.v1','generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'periods':periods,'panel':panel,'markets':[{'code':m,'name':names.get(m,m)} for m in panel],'rows':output,'source':{'name':'UN Comtrade','url':'https://comtradeplus.un.org/','table':'UN Comtrade C/M/HS (H6), AG6, M; verified archived responses','archive_id':manifest['archive_id'],'checkpoint_sha256':checkpoint['sha256'],'retrieved_at':max(retrieved),'objects_verified':len(receipts),'excluded_markets_missing_products':sorted(excluded),'method':'Importer-reported origins; fixed market panel; intra-EU27 removed; ROW = World minus USA, EU27 and China, including unspecified origins. Current USD, generally CIF.'},'definitions':{'vehicles':{'hs4':['8703'],'hs6':sorted(LIGHT)},'trucks':{'hs6':sorted(HEAVY)},'parts':{'hs4':['8708']}}}
     Path('automotive-monthly.v1.json').write_text(json.dumps(dataset,separators=(',',':'))+'\n')
     Path('receipts.json').write_text(json.dumps({'checkpoint':checkpoint,'raw':receipts},separators=(',',':'))+'\n')
     print('RESULT',len(output),'rows',len(panel),'markets',periods,flush=True)
