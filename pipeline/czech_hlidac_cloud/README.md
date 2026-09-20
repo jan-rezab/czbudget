@@ -24,3 +24,24 @@ and the current inventory is loaded into
 `budget_detail.hlidac_municipality_contract_inventory`.
 
 Required attribution: `Zdroj: Hlídač státu (hlidacstatu.cz)` (CC BY 3.0).
+
+## Complete Top-100 histories
+
+After reviewing the inventory, submit the full, resumable extraction with:
+
+```sh
+python3 pipeline/czech_hlidac_cloud/submit_full.py --account jan@ravineo.com
+```
+
+The full worker uses publication-date windows to stay below the API's 200-page
+query limit and waits at least 0.5 seconds between requests. Each municipality
+is independently deduplicated by contract ID, loaded into BigQuery, and then
+published under the immutable campaign prefix
+`processing-runs/czech-hlidac-municipality-contracts/top100-2025-07-01-v1/`.
+The completion marker is written last. A rerun skips municipalities that already
+have a completed attempt, while an interrupted municipality is safely retried
+under a new build-specific attempt prefix.
+
+The warehouse table is a municipality-to-contract match table, so the same
+contract may appear for more than one municipality. Never add its rows to claim
+a unique national contract count without first deduplicating `contract_id`.
