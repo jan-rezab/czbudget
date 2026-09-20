@@ -8,7 +8,8 @@ const root = '/usr/share/nginx/html';
 for (const name of ['.asset-release', '.public-serving-build', '.cityvizor-serving', 'scripts', 'pipeline', 'tests', 'data/.municipal-headlines-query.json', 'data/isred', 'data/industrial-intelligence', 'data/czech-nku', 'data/contracts', 'data/czech-project-geography', 'data/industry']) {
   await assert.rejects(fs.stat(`${root}/${name}`), {code: 'ENOENT'});
 }
-const lock = JSON.parse(await fs.readFile('/app/server/data-assets-lock.json', 'utf8'));
+const lockPath = process.env.DATA_ASSET_LOCK || '/app/server/data-assets-lock.json';
+const lock = JSON.parse(await fs.readFile(lockPath, 'utf8'));
 const child = spawn('/app/server/start.sh', {stdio: 'inherit'});
 try {
   let ready = false;
