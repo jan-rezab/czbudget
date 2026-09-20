@@ -5,9 +5,9 @@ warehouse definitions that produce the public datasets. Raw publications and
 large generated exports are deliberately not committed. They are addressed by
 path, byte size, and SHA-256 in `source-assets.manifest.json`.
 
-The current local workspace keeps raw inputs one directory above this Git
-repository. Pipeline scripts retain that workspace layout while the migration
-is completed. Set `CZBUDGET_WORKSPACE_ROOT` when running from another checkout.
+Complete raw inputs now live in the private cloud archive. Set
+`CZBUDGET_WORKSPACE_ROOT` only on an explicitly hydrated worker; partial local
+source directories are not treated as a complete input set.
 No pipeline writes to the quarantined legacy `gcp/site` tree.
 
 Inactive BRA, UKR and NLD raw caches support verified local `.tar.gz` bundles
@@ -18,7 +18,9 @@ storage format.
 Reproducibility contract:
 
 1. Install Python dependencies from `requirements.lock` and use Node 22.
-2. Verify raw inputs with `node pipeline/create-source-manifest.mjs --verify`.
+2. On an explicitly hydrated worker, verify raw inputs with
+   `CZBUDGET_WORKSPACE_ROOT=/absolute/hydrated/workspace node pipeline/create-source-manifest.mjs --verify`.
+   A normal source-only checkout uses `--self-check`.
 3. Fetch the filtered 2010–2025 CZSO mid-year municipal population series with
    `python3 pipeline/transforms/fetch_municipal_population.py`, then build the
    per-municipality fiscal and per-capita history with

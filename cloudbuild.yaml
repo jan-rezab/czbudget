@@ -213,10 +213,21 @@ steps:
           --shards 128
         node scripts/validate-public-serving-snapshot.mjs /workspace/.public-serving-build
 
+  # Build the public operational ledger before the release manifest hashes it. Cloud metadata is
+  # supplied directly because the manifest for this exact build does not exist yet.
+  - id: build-process-log
+    waitFor: ["build-public-snapshot", "hydrate-automotive"]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/build-run-log.mjs, --write]
+    env:
+      - COMMIT_SHA=$COMMIT_SHA
+      - BUILD_ID=$BUILD_ID
+
   # Validation writes the quality report: draft -> validate -> final -> verify
   # must finish before the immutable runtime surface is assembled.
   - id: release-manifest-draft
-    waitFor: ["build-public-snapshot", "hydrate-automotive"]
+    waitFor: ["build-process-log"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/create-release-manifest.mjs]
@@ -420,6 +431,18 @@ steps:
       - /workspace/.deploy-current-main
       - ${_PUBLIC_SNAPSHOT_BASE_URL}
       - ${_CITYVIZOR_SNAPSHOT_BASE_URL}
+      - ${_PROCESS_LOG_BASE_URL}
+      - $COMMIT_SHA
+      - $BUILD_ID
+
+  - id: publish-deployment-event
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: gcloud
+    args:
+      - storage
+      - cp
+      - /workspace/.deployment-event.json
+      - ${_PROCESS_LOG_BASE_URL}/deployments/$BUILD_ID.json
 
   # Atomic data activation follows deployment. An obsolete build cannot switch
   # the pointer after assert-current-main has withdrawn its deploy marker.
@@ -459,3 +482,4 @@ options:
 substitutions:
   _PUBLIC_SNAPSHOT_BASE_URL: "gs://czbudget-janrezab-public-snapshots/municipal"
   _CITYVIZOR_SNAPSHOT_BASE_URL: "gs://czbudget-janrezab-public-snapshots/cityvizor"
+  _PROCESS_LOG_BASE_URL: "gs://czbudget-janrezab-public-snapshots/process-log"

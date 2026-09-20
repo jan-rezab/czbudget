@@ -35,8 +35,13 @@
       .coverage-status-not-researched, .coverage-status-not_loaded { background: #f7f7f5; color: #595c58; }
       .freshness-estimate_current, .freshness-estimate_lag { border-left-color: #d89226; background: #f8ead3; }
       .freshness-pill.freshness-estimate_current, .freshness-pill.freshness-estimate_lag { border-color: #d89226; background: #f8ead3; }
+      .release-architecture { margin: 2rem 0; padding: 1.25rem; background: #f7f4eb; border-left: 4px solid #a8b63f; }
+      .release-architecture h2 { margin-top: 0; }
+      .release-architecture ol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; padding: 1px; background: #c8c2b7; list-style: none; }
+      .release-architecture li { padding: 1rem; background: #fff; }
+      .release-architecture li strong { display: block; margin-bottom: .35rem; }
       @media (max-width: 900px) { .data-health-kpis { grid-template-columns: 1fr 1fr; } }
-      @media (max-width: 560px) { .data-health-kpis { grid-template-columns: 1fr; } }
+      @media (max-width: 560px) { .data-health-kpis, .release-architecture ol { grid-template-columns: 1fr; } }
     </style>
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
     <script src="country-routes.js?v=20260824-readable-country-routes" defer></script>
@@ -69,6 +74,7 @@
       </header>
       <nav class="method-toc" aria-label="Sekce stránky pokrytí">
         <a href="#release" data-toc-link="release"><b data-status-copy="tocStartKicker">Přehled</b><span data-status-copy="tocStart">Stav vydání</span></a>
+        <a href="#release-architecture" data-toc-link="release-architecture"><b data-status-copy="tocProcessKicker">Proces</b><span data-status-copy="tocProcess">Architektura a deník</span></a>
         <a href="#published" data-toc-link="published"><b data-status-copy="tocAct1Kicker">Část 1</b><span data-status-copy="tocAct1">Co publikujeme</span></a>
         <a href="#freshness" data-toc-link="freshness"><b data-status-copy="tocAct2Kicker">Část 2</b><span data-status-copy="tocAct2">Jak jsou data aktuální</span></a>
         <a href="#sources" data-toc-link="sources"><b data-status-copy="tocAct3Kicker">Část 3</b><span data-status-copy="tocAct3">Zdroje a mezery</span></a>
@@ -79,6 +85,17 @@
           <span data-status-copy="releaseNote">Souhrn všech obecních dat</span>
         </header>
         <div id="data-health-root" aria-live="polite"><p class="data-health-loading">Načítám…</p></div>
+      </section>
+
+      <section class="release-architecture" id="release-architecture" aria-labelledby="release-architecture-title">
+        <h2 id="release-architecture-title" data-status-copy="processTitle">Jak se data dostanou do vydání</h2>
+        <p data-status-copy="processLead">Pokrytí, zdroje a účetní hranice vysvětlujeme na této stránce. Provozní události vedeme odděleně, aby šlo rozlišit změnu vstupních dat, vytvoření datového vydání a nasazení aplikace.</p>
+        <ol>
+          <li><strong data-status-copy="processIngestion">1 · Příjem dat</strong><span data-status-copy="processIngestionText">Zdroj, datum načtení, země, objem a publikované výstupy.</span></li>
+          <li><strong data-status-copy="processRelease">2 · Datové vydání</strong><span data-status-copy="processReleaseText">Manifest propojí artefakty s Git commitem, Cloud Buildem a ID načtení.</span></li>
+          <li><strong data-status-copy="processDeploy">3 · Nasazení aplikace</strong><span data-status-copy="processDeployText">Neměnný obraz je nasazen, nebo výslovně přeskočen, pokud commit není aktuálním main.</span></li>
+        </ol>
+        <p><a href="/process/log/" data-status-copy="processCta">Otevřít provozní deník →</a></p>
       </section>
 
       <div class="method-act" id="published">
