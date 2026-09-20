@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import catalog from '../../content/stories/catalog.mjs';
+import {selectVerification} from '../../scripts/verification-plan.mjs';
 const read = path => readFile(new URL(`../../${path}`,import.meta.url),'utf8');
 
 test('published articles, index, RSS and sitemap agree; drafts stay private',async()=>{
@@ -29,5 +30,8 @@ test('the full story preserves seven readable chart tables and source caveats',a
 });
 test('editorial output and checks are wired into release verification',async()=>{
   assert.ok((await read('cloudbuild.verify.yaml')).includes('npm run check:stories'));
-  assert.ok((await read('cloudbuild.ui.yaml')).includes('tests/browser/stories.spec.mjs'));
+  assert.ok((await read('cloudbuild.ui.yaml')).includes('scripts/run-component-gate.mjs'));
+  for(const file of ['stories/tariff-charts.js','content/stories/catalog.mjs','lib/chart-renderer.js']) {
+    assert.ok(selectVerification([file]).specs.includes('tests/browser/stories.spec.mjs'),file);
+  }
 });

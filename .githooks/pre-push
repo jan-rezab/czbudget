@@ -43,7 +43,7 @@ echo "pre-push: shared component and source contracts"
 node scripts/build-chart-assets.mjs --check
 node scripts/validate-chart-ownership.mjs
 node scripts/publish-stories.mjs --check
-node --test tests/unit/chart-renderer.spec.mjs tests/unit/verification-plan.spec.mjs
+node --test tests/unit/chart-renderer.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/stories.spec.mjs
 python3 -m unittest tests.test_cloud_verification
 node scripts/validate-build-planes.mjs
 node pipeline/create-source-manifest.mjs --self-check

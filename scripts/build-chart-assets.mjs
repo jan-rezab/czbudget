@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const root=resolve(import.meta.dirname,'..'), directory=resolve(root,'assets/chart-releases');
 const check=process.argv.includes('--check');
@@ -18,7 +19,12 @@ for(const [key,file,extension] of [['script','lib/chart-renderer.js','js'],['sty
 const manifest=JSON.stringify(release,null,2)+'\n';
 if(check) {
   if(await readFile(resolve(directory,'current.json'),'utf8')!==manifest) throw new Error('Run npm run build:chart-assets');
-  for(const name of await readdir(directory)) {
+  const names=new Set(await readdir(directory));
+  // A deleted old hash would strand an already-open page during a release.
+  // Check the tracked inventory too, not just files still present on disk.
+  const tracked=execFileSync('git',['ls-files','--','assets/chart-releases'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  for(const file of tracked) names.add(file.split('/').at(-1));
+  for(const name of names) {
     if(name==='current.json') continue;
     if(!/^[a-f0-9]{64}\.(js|css)$/.test(name)) throw new Error(`Unexpected asset ${name}`);
     const actual=createHash('sha256').update(await readFile(resolve(directory,name))).digest('hex');
