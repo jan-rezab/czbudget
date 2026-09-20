@@ -15,6 +15,10 @@ await assertEmpty(destination);
 await mkdir(destination, { recursive: true });
 
 const files = [
+  "deep-dives/energy-trade/index.html",
+  "energy-trade-deep-dive.js",
+  "energy-trade-deep-dive.css",
+  "tests/browser/energy-trade.spec.mjs",
   "nginx.conf.template",
   "portal-ui.js",
   "portal-ui.css",
@@ -33,16 +37,12 @@ const files = [
   "education-deep-dive.js",
   "education-deep-dive.css",
   "deep-dives/education/index.html",
-  "deep-dives/energy-trade/index.html",
   "deep-dives.css",
   "chart-system.css",
   "psd-chart.js",
   "psd-chart.css",
-  "energy-trade-deep-dive.js",
-  "energy-trade-deep-dive.css",
   "tests/browser/compare-contract.spec.mjs",
   "tests/browser/education-capacity.spec.mjs",
-  "tests/browser/energy-trade.spec.mjs",
   "tests/browser/loading-recovery.spec.mjs",
   "data/compare-metrics.v1.json",
   "data/health-system-assignments.v1.json",

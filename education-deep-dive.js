@@ -20,6 +20,7 @@
     regionPerLearnerNote:"Orientační přepočet: celý sloupec výdajů kraje dělíme počtem dětí a studentů MŠ, ZŠ, SŠ, konzervatoří a VOŠ v kraji (všichni zřizovatelé a formy studia; bez VŠ). Každá barva má stejný jmenovatel, nikoli počet žáků daného typu školy. Výdaje jsou za kalendářní rok 2025, počty za školní rok 2025/26. U ostatních krajů chybějí vlastní výdaje obcí; Praha zahrnuje i svou obecní roli. Nejde o úplné náklady vzdělávání na žáka ani žebříček efektivity."
   });
   document.querySelectorAll("[data-edu-copy]").forEach(node=>{const value=copy[node.dataset.eduCopy];if(value)node.textContent=value});
+  window.psdLanguageReady?.();
   const $=selector=>document.querySelector(selector);
   const esc=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   const n=(value,digits=1)=>new Intl.NumberFormat(lang==="en"?"en-US":"cs-CZ",{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(value);

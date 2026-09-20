@@ -207,7 +207,7 @@ function bind() {
   $("#energy-reset").addEventListener("click", () => { if (!state.flows) return; state.country = "ALL"; syncURL(); renderAll(); });
 }
 
-translateStatic(); bind();
+translateStatic(); window.psdLanguageReady?.(); bind();
 Promise.all([
   PSDData.loadJson("/api/v1/trade/energy/periods", { timeoutMs: 20000 }),
   PSDData.loadJson("/data/world-map.v1.json"),

@@ -11,9 +11,9 @@ steps:
         npm ci
         npx playwright test \
           tests/browser/map-view.spec.mjs \
+          tests/browser/energy-trade.spec.mjs \
           tests/browser/compare-contract.spec.mjs \
           tests/browser/education-capacity.spec.mjs \
-          tests/browser/energy-trade.spec.mjs \
           tests/browser/loading-recovery.spec.mjs \
           tests/browser/process-log.spec.mjs \
           --config=playwright.ui.config.mjs \

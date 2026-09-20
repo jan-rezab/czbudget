@@ -6,7 +6,7 @@ const injectedHead = nginx.match(/map \$host \$psd_head_inject\s*\{\s*default '(
 
 for (const [pageUrl, resource, ready] of [
   ["/comparison.html?lang=en", "**/data/compare-metrics.v1.json", "#compare-result .cmp-row"],
-  ["/map.html?lang=en", "**/data/world-map.v1.json", "[data-map-country]"],
+  ["/map.html?lang=en", "**/data/world-map.v1.json", ".map-canvas svg"],
   ["/deep-dives/education/?lang=en", "**/data/education-deep-dive.v1.json*", "#capacity-body tr"],
 ]) {
   test(`${pageUrl} renders while the production analytics script is stalled`, async ({ page }) => {
@@ -22,6 +22,7 @@ for (const [pageUrl, resource, ready] of [
     });
     try {
       await page.goto(pageUrl, { waitUntil: "commit" });
+      await expect(page.locator("html")).not.toHaveAttribute("data-language-pending", /.+/, { timeout: 2000 });
       await expect(page.locator(ready).first()).toBeVisible({ timeout: 5000 });
     } finally {
       releaseAnalytics();

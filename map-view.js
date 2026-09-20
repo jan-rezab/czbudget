@@ -274,6 +274,7 @@
   }
 
   applyStaticCopy();
+  window.psdLanguageReady?.();
   addEventListener("psdlanguagechange", () => {
     const next = getLang();
     if (next === lang) return;
