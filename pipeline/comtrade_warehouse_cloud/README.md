@@ -68,7 +68,7 @@ The production Cloud Scheduler job is `un-comtrade-daily-load` in
 03:30 window and submits `scheduler-build.json` to the regional Cloud Build API
 as `comtrade-scheduler`; execution itself uses the restricted
 `comtrade-builder` identity. The request pins the exact source object and GCS
-generation proven by the August 2026 production load. It processes at most two
+generation proven by the June 2026 retry production load. It processes at most two
 pending periods per run and is safe when there is nothing new to load.
 
 When loader code changes, first submit it manually and verify its BigQuery
