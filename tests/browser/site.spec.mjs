@@ -916,7 +916,7 @@ test("every page family renders the same shared header component", async ({ page
     "/cz/kraje/praha/?lang=en",
     "/cz/mesta/?lang=en",
   ];
-  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Map", "Reports⌄", "Coverage", "About"];
+  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Map", "Reports⌄", "Stories", "Coverage", "About"];
   for (const route of representatives) {
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator("psd-site-header")).toHaveCount(1);
