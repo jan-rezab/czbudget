@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createLedgers,missingLedger,ledgerRows,ledgerSources} from '../../lib/funding-ledgers.mjs';
+import {createLedgers,missingLedger,ledgerRows,ledgerSources,teachingExample} from '../../lib/funding-ledgers.mjs';
 const read=f=>JSON.parse(readFileSync(new URL('../../data/'+f,import.meta.url)));
 const input={education:read('education-deep-dive.v1.json'),healthInsurers:read('cz-health-insurers-2024.json'),health:read('country-health.v1.json')};
 const graphs=createLedgers(input);
@@ -37,4 +37,8 @@ test('Ukraine plans remain distinct from execution and do not become payroll con
 });
 test('per-100 conversion uses the declared denominator and preserves source data',()=>{
  const g=get('us-school'),rows=ledgerRows(g,'cs',true);near(rows.filter(r=>r.to.includes('systémů')).reduce((s,r)=>s+r.value,0),100);near(g.edges[0].value,115.1);for(const topic of ['school','health','pension','social'])assert.ok(ledgerRows(missingLedger('RUS',topic),'en',true).every(r=>r.value===null));
+});
+
+test('fictional school example balances each budget and cannot be mistaken for observations',()=>{
+ const g=teachingExample;assert.equal(g.stage,'illustrative');assert.ok(g.edges.every(e=>e.status==='illustrative'));near(sum(g.edges,'to','municipal'),.0001);near(sum(g.edges,'from','municipal'),.0001);near(sum(g.edges,'from','state')+sum(g.edges,'from','own'),g.total);near(sum(g.edges,'to','teachers')+sum(g.edges,'to','suppliers')+sum(g.edges,'to','builder'),g.total);
 });

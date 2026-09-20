@@ -8,6 +8,7 @@ let lang=document.documentElement.lang==='en'?'en':'cs',code=countryCode(locatio
 const t=v=>v[lang],say=(en,cs)=>lang==='en'?en:cs;
 const fmt=(v,d=1)=>new Intl.NumberFormat(lang==='en'?'en-GB':'cs-CZ',{minimumFractionDigits:d,maximumFractionDigits:d}).format(v);
 const copy={
+  exampleTitle:tr('Worked example: watch state and local money join in one school budget','Výukový příklad: jak se spojí státní a místní peníze v rozpočtu školy'),
   eyebrow:tr('FOLLOW THE MONEY / FIVE COUNTRIES','SLEDUJTE PENÍZE / PĚT ZEMÍ'),
   title:tr('How public money reaches everyday life','Jak veřejné peníze dorazí ke službám'),
   intro:tr('Who collects it. Who passes it on. Who finally pays. Follow the institutions between a tax payment and a classroom, treatment or a household benefit.','Kdo vybírá. Kdo přerozděluje. Kdo nakonec platí. Sledujte instituce mezi zaplacením daně a třídou, léčbou nebo dávkou pro domácnost.'),
