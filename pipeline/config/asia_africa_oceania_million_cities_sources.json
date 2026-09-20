@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "psd-asia-africa-oceania-million-city-budget-anchors",
+  "un_source": {
+    "title": "UN DESA World Urbanization Prospects 2025, File 21",
+    "url": "https://population.un.org/wup/assets/Download/Cities/WUP2025-F21-DEGURBA-Cities_Pop.xlsx",
+    "sha256": "3a96030d87aec6c1c50f658d5321067d6345e1ab936c5d2854524f972caa75c0",
+    "definition": "Degree of Urbanization city (contiguous built-up area), not a legal municipality",
+    "population_year": 2025,
+    "minimum_population_thousands": 1000
+  },
+  "methodology": {
+    "coverage_claim": "anchor municipality only; never full UN built-up-area coverage",
+    "covered_status": "anchor_only",
+    "blocked_status": "no_published_itemized_anchor",
+    "note": "A city is covered only when the named legal fiscal entity has a served PSD artifact with native line items. Country headline totals and warehouse-only rows do not count."
+  },
+  "anchor_entities": {
+    "334": {"country": "JPN", "entity_code": "011002", "entity_name": "札幌市", "fiscal_boundary": "City of Sapporo"},
+    "884": {"country": "JPN", "entity_code": "401307", "entity_name": "福岡市", "fiscal_boundary": "City of Fukuoka"},
+    "1001": {"country": "JPN", "entity_code": "401005", "entity_name": "北九州市", "fiscal_boundary": "City of Kitakyushu"},
+    "3037": {"country": "JPN", "entity_code": "341002", "entity_name": "広島市", "fiscal_boundary": "City of Hiroshima"},
+    "4490": {"country": "JPN", "entity_code": "271004", "entity_name": "大阪市", "fiscal_boundary": "City of Osaka"},
+    "4601": {"country": "JPN", "entity_code": "472018", "entity_name": "那覇市", "fiscal_boundary": "City of Naha"},
+    "5245": {"country": "JPN", "entity_code": "231002", "entity_name": "名古屋市", "fiscal_boundary": "City of Nagoya"},
+    "5593": {"country": "JPN", "entity_code": "041009", "entity_name": "仙台市", "fiscal_boundary": "City of Sendai"}
+  },
+  "city_blockers": {
+    "6030": "Tokyo's UN built-up area has no single municipality. The current Japan layer covers municipalities and Tokyo's special wards, not a consolidated Tokyo built-up-area government.",
+    "332": "The current KOR layer contains only four headline classifications. Seoul has a separate official project-level budget/expenditure API and needs a dedicated adapter.",
+    "2033": "Nairobi City County is the legal-government anchor, not the full UN built-up area. Official Bajeti Yetu county-id-47 implementation records are document previews; CSV/XLS grid export covers document metadata, while Controller of Budget implementation reports are PDFs. No official machine-readable coded Nairobi County line endpoint was verified in Cloud Builds 2c511353-18ce-4f9d-bfd6-e2c02079ddc6 and 3743cdf4-917e-46ba-bae3-6e362ce123ee."
+  },
+  "priority_official_sources": [
+    {
+      "priority": 1,
+      "un_city_code": 332,
+      "city": "Seoul",
+      "country": "KOR",
+      "boundary": "Seoul Metropolitan Government; autonomous districts and affiliated bodies excluded",
+      "fiscal_year": "live/current",
+      "stage": ["enacted", "actual"],
+      "format": "Open API / JSON / CSV",
+      "source_url": "https://data.seoul.go.kr/dataList/OA-13269/S/1/datasetView.do",
+      "api_documentation_url": "https://openfinance.seoul.go.kr/openapi",
+      "retrieved_at": "2026-09-19T00:00:00Z",
+      "status": "cloud_adapter_ready_credentials_blocked",
+      "adapter": "pipeline/seoul_municipal_cloud",
+      "source_note": "Official dataset exposes project, account, department, budget, expenditure and remaining balance. The cloud-ready adapter is not loaded because the required API key and reviewed case-sensitive service identifier are absent from Secret Manager."
+    },
+    {
+      "priority": 2,
+      "un_city_code": 11566,
+      "city": "Tamar (Hong Kong)",
+      "country": "HKG",
+      "boundary": "Government of the Hong Kong Special Administrative Region",
+      "fiscal_year": "2025-26",
+      "stage": ["actual", "approved", "revised", "enacted"],
+      "format": "CSV",
+      "source_url": "https://www.budget.gov.hk/2025/eng/estimates.html",
+      "retrieved_at": "2026-09-19T00:00:00Z",
+      "status": "warehouse_loaded_anchor_only",
+      "adapter": "pipeline/hong_kong_budget_cloud",
+      "verified_build_id": "2891e289-2714-4eff-a864-ced789296e4c",
+      "source_note": "Official expenditure-by-subhead CSV loaded to the production municipal warehouse as 1,148 stage-specific facts from 331 source rows. This is territory-government anchor coverage, not a municipality or full built-up-area consolidation."
+    },
+    {
+      "priority": 3,
+      "un_city_code": 165,
+      "city": "Singapore",
+      "country": "SGP",
+      "boundary": "Government of Singapore (city-state)",
+      "fiscal_year": "2026",
+      "stage": ["actual", "revised", "enacted"],
+      "format": "CSV / API",
+      "source_url": "https://data.gov.sg/datasets/d_11f25a62a23dd91abf01ef74f558b0d3/view",
+      "retrieved_at": "2026-09-19T00:00:00Z",
+      "status": "review_granularity",
+      "source_note": "Official machine-readable sector series is verified, but its 25 rows may not satisfy PSD's native line-item threshold; detailed MOF estimates should be preferred."
+    },
+    {
+      "priority": 4,
+      "un_city_code": 6030,
+      "city": "Tokyo",
+      "country": "JPN",
+      "boundary": "Tokyo Metropolitan Government, not the full UN built-up area",
+      "fiscal_year": "2025",
+      "stage": ["enacted"],
+      "format": "official budget tables; dedicated review required",
+      "source_url": "https://www.zaimu.metro.tokyo.lg.jp/",
+      "retrieved_at": "2026-09-19T00:00:00Z",
+      "status": "boundary_and_adapter_review",
+      "source_note": "Do not substitute a special ward or claim full agglomeration coverage."
+    },
+    {
+      "priority": 5,
+      "un_city_code": 413,
+      "city": "Cape Town",
+      "country": "ZAF",
+      "boundary": "City of Cape Town metropolitan municipality",
+      "fiscal_year": "2025-26",
+      "stage": ["enacted"],
+      "format": "official budget documents / data portal review",
+      "source_url": "https://www.capetown.gov.za/Family%20and%20home/Meet-the-City/the-city-budget/city-budget-2025-2026",
+      "retrieved_at": "2026-09-19T00:00:00Z",
+      "status": "machine_readable_resource_needed",
+      "source_note": "Strong fiscal-boundary match; only load after locating and hashing the official detailed machine-readable schedule."
+    }
+  ]
+}

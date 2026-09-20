@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "coverage_claim": "Official-source audit only; no warehouse coverage.",
+  "cities": [
+    {
+      "un_city_code": 2033,
+      "un_city_name": "Nairobi",
+      "country": "Kenya",
+      "iso3": "KEN",
+      "population_2025": 6134334,
+      "classification": "hard_blocked",
+      "anchor_only": true,
+      "government_boundary": "Nairobi City County is the defensible legal-government anchor, not the full UN Degree-of-Urbanization built-up area.",
+      "official_source_url": "https://bajetiyetu.treasury.go.ke/document-libraries/list?cat=33&ctid=47&doc=BUDGET%2BIMPLEMENTATION%2BREPORTS",
+      "secondary_official_source_url": "https://cob.go.ke/publications/consolidated-county-budget-implementation-review-reports/",
+      "source_format": "official document-library previews and Controller of Budget consolidated PDF reports; grid exports contain document metadata, not fiscal line items",
+      "blocker": "The National Treasury's official Bajeti Yetu portal identifies Nairobi City County as county id 47 and lists eight FY2021/22-FY2023/24 budget-implementation documents, but exposes them only through document preview links. The page's CSV/XLS export is a grid export of document names, years and types, not coded expenditure rows; the same Nairobi page reports zero County Budget Books and zero County Financial Statements. The Controller of Budget publishes consolidated county implementation reports as PDFs. No official CSV/XLSX/JSON/API containing coded Nairobi County budget or execution lines was verified, so no rows were loaded.",
+      "verified_probe_build_ids": [
+        "2c511353-18ce-4f9d-bfd6-e2c02079ddc6",
+        "3743cdf4-917e-46ba-bae3-6e362ce123ee"
+      ],
+      "probe_result": "Both Cloud Builds succeeded. The targeted county-id-47 probe found eight preview?id document links, only framework grid-export assets, zero public data/API links, and Controller of Budget PDF downloads; Nairobi's own website failed TLS certificate validation in the pinned Python image.",
+      "warehouse_rows_loaded": 0,
+      "date_checked": "2026-09-20"
+    }
+  ]
+}

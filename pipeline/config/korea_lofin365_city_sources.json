@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "source_id": "kr-lofin365-metropolitan-project-execution-2025",
+  "publisher": "Republic of Korea Ministry of the Interior and Safety, Local Finance 365",
+  "portal_url": "https://www.lofin365.go.kr/portal/LF3120202.do",
+  "view_url": "https://www.lofin365.go.kr/lf/lnncGramStst/laf/exeSvi/retvLstDtlsBybsnAneSitu.do",
+  "export_url": "https://www.lofin365.go.kr/lf/lnncGramStst/laf/excExeSvi/retvLstExcDtlsBybsnAneSitu.do",
+  "fiscal_year": 2025,
+  "as_of_date": "20251231",
+  "currency_code": "KRW",
+  "cities": [
+    {"entity_id":"KOR-BUSAN-METROPOLITAN-CITY","entity_name":"Busan Metropolitan City","native_name":"부산광역시","un_city_code":3878,"un_city_name":"Busan","region_code":"26","legal_government_code":"2600000","expected_region_name":"부산","boundary":"Busan Metropolitan City main office only; districts/counties and the wider UN built-up area excluded"},
+    {"entity_id":"KOR-DAEGU-METROPOLITAN-CITY","entity_name":"Daegu Metropolitan City","native_name":"대구광역시","un_city_code":2915,"un_city_name":"Daegu","region_code":"27","legal_government_code":"2700000","expected_region_name":"대구","boundary":"Daegu Metropolitan City main office only; districts/counties and the wider UN built-up area excluded"},
+    {"entity_id":"KOR-DAEJEON-METROPOLITAN-CITY","entity_name":"Daejeon Metropolitan City","native_name":"대전광역시","un_city_code":2214,"un_city_name":"Daejeon","region_code":"30","legal_government_code":"3000000","expected_region_name":"대전","boundary":"Daejeon Metropolitan City main office only; districts and the wider UN built-up area excluded"},
+    {"entity_id":"KOR-GWANGJU-METROPOLITAN-CITY","entity_name":"Gwangju Metropolitan City","native_name":"광주광역시","un_city_code":2656,"un_city_name":"Gwangju","region_code":"13","legal_government_code":"2900000","expected_region_name":"광주","boundary":"Gwangju Metropolitan City main office only; districts and the wider UN built-up area excluded"}
+  ],
+  "source_contract": {
+    "row_scope": "Detailed expenditure projects for the selected metropolitan main office (본청)",
+    "stage_mapping": {"amt1":"current_budget","amt6":"actual","amt7":"unspent_balance"},
+    "excluded_budget_components": ["amt2 national funding", "amt3 city/province funding", "amt4 district funding", "amt5 other funding"],
+    "exclusion_reason": "Funding components sum to current budget and would double count the project measure. They remain preserved in raw JSONL.",
+    "verified_discovery_date": "2026-09-20"
+  }
+}

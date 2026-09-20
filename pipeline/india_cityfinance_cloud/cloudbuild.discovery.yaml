@@ -1,0 +1,14 @@
+steps:
+  - name: python:3.12.11-slim@sha256:27f90d79cc85e9b7b2560063ef44fa0e9eaae7a7c3f5a9f74563065c5477cc24
+    entrypoint: python
+    env: ['BUILD_ID=$BUILD_ID']
+    args: [discover_deeper.py]
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        gcloud storage cp --if-generation-match=0 /workspace/india-cityfinance-depth-audit.json "gs://czbudget-janrezab-data-layers/processing-runs/india-cityfinance-depth-audit/$BUILD_ID/report.json"
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 1200s

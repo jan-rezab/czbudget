@@ -1,0 +1,302 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "psd-pakistan-bangladesh-million-city-source-audit",
+  "date_checked": "2026-09-20",
+  "scope": "All Pakistan and Bangladesh cities with at least 1,000,000 inhabitants in UN DESA World Urbanization Prospects 2025 File 21 (Degree of Urbanization city definition)",
+  "classification_definitions": {
+    "loadable": "An official, anonymous, machine-readable source exposes coded municipal budget or actual lines for a defensible legal-government anchor.",
+    "partial": "Official fiscal material exists, but it is document-only, covers only part of the anchor's finances, or the UN city spans multiple fiscal entities.",
+    "hard_blocked": "No reviewed public source meets both the machine-readable line-item and defensible fiscal-boundary requirements."
+  },
+  "counts": {
+    "cities": 21,
+    "loadable": 0,
+    "partial": 6,
+    "hard_blocked": 15,
+    "pakistan": 13,
+    "bangladesh": 8
+  },
+  "shared_official_sources": {
+    "pakistan_agpr_ddo_service_page": {
+      "url": "https://agpr.gov.pk/Detail/MTljYzUzMjktNTAxNy00ZTNlLTgzZGYtZGUxYTQwYzE5MDEx",
+      "evidence": "The official AGPR page links DDO Budget & Exp Detail to the PIFRA DDOALV endpoint."
+    },
+    "pakistan_pifra_ddo_dashboard": {
+      "url": "http://m.pifra.gov.pk/DDOALV",
+      "evidence": "Potential national multi-city source. AGPR/CGA describes object-wise original, re-appropriated, final, released and spent amounts across all tiers, including local governments. On 2026-09-20 the HTTP endpoint timed out without response; HTTPS refused connection and an HTTPS-upgrading web fetch returned 502."
+    },
+    "pakistan_fabs_citizen_data": {
+      "url": "https://fabs.gov.pk/citizendata.html",
+      "evidence": "Public FABS page publishes federal dashboards, but no anonymous municipal DDO export was discoverable there."
+    },
+    "punjab_lgfmis": {
+      "url": "https://www.pmdfc.org.pk/fms/",
+      "evidence": "Official Local Government Financial Management Information System; the public response is a credential form posting to Console/LogonUser.asp, with no anonymous report or API."
+    },
+    "punjab_lgcd_budget": {
+      "url": "https://lgcd.punjab.gov.pk/index.php/budgets",
+      "evidence": "Publishes department-wide annual allocation and utilization totals, not city-level coded lines."
+    },
+    "kp_cfmis_login": {
+      "url": "https://cfmis.lgkp.gov.pk/accounts/login/",
+      "evidence": "Official e-Baldia municipal-finance workspace is role protected."
+    },
+    "kp_cfmis_public": {
+      "url": "https://cfmis.lgkp.gov.pk/public/auctions/",
+      "evidence": "Anonymous records are auction and revenue-contract events, not municipal budget or execution lines."
+    },
+    "sindh_finance_budget": {
+      "url": "https://www.finance.gos.pk/Budget/VolumeIIIDetail2526",
+      "evidence": "Official coded provincial PDF budget books include Local Government and Transfer to Local Bodies, but do not publish complete municipal ledgers."
+    },
+    "balochistan_budget": {
+      "url": "https://www.finance.gob.pk/service/budget-resources/",
+      "evidence": "Official provincial budget books are PDF documents and do not expose a Quetta municipal ledger/export."
+    },
+    "bangladesh_lgd_city_corporations": {
+      "url": "https://lgd.gov.bd/pages/static-pages/69414021c4774958d7b54bbc",
+      "evidence": "Official list of city corporations; it supports the legal-entity review and excludes Savar, Brahmanbaria, Kishoreganj and Kutubdia."
+    },
+    "bangladesh_open_data_local_government": {
+      "url": "https://data.gov.bd/bn/search/field_resources%253Afield_format/data-26/field_topic/finance-3/field_topic/dataset?format=csv&topics=local-govt",
+      "evidence": "The reviewed Local-Govt plus CSV catalogue returned only the 1996 Upazila Monitoring Survey, not municipal finance."
+    },
+    "bangladesh_sabre": {
+      "url": "https://sabre.finance.gov.bd/about",
+      "evidence": "Structured budget platform covers state-owned enterprises and autonomous bodies, not city corporations."
+    }
+  },
+  "cities": [
+    {
+      "un_city_code": 2578,
+      "un_city_name": "Karachi",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "partial",
+      "fiscal_boundary": "Karachi Metropolitan Corporation only; district municipal corporations, cantonments, development authorities and provincial entities excluded",
+      "official_url": "https://www.kmc.gos.pk/image/budgets/1694025974_pdf_doc.pdf",
+      "evidence": "KMC publishes an official 2023-24 PDF with department budget totals; Sindh publishes coded provincial/local-government PDF schedules.",
+      "blocker": "No anonymous CSV, spreadsheet or API exposes KMC's coded line-item ledger, and KMC is only an anchor within the larger UN built-up area."
+    },
+    {
+      "un_city_code": 8021,
+      "un_city_name": "Lahore",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Metropolitan Corporation Lahore anchor only",
+      "official_url": "https://www.pmdfc.org.pk/fms/",
+      "evidence": "Punjab LGFMIS holds coded local-government budgets and transactions.",
+      "blocker": "Credential-only LGFMIS; the public LGCD budget page contains department totals rather than Lahore lines."
+    },
+    {
+      "un_city_code": 7724,
+      "un_city_name": "Faisalabad",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Metropolitan Corporation Faisalabad anchor only",
+      "official_url": "https://www.pmdfc.org.pk/fms/",
+      "evidence": "Punjab LGFMIS holds coded local-government budgets and transactions.",
+      "blocker": "Credential-only LGFMIS; no anonymous city-level coded export found."
+    },
+    {
+      "un_city_code": 7017,
+      "un_city_name": "Islāmābād",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Metropolitan Corporation Islamabad and Capital Development Authority have overlapping, non-consolidated fiscal responsibilities",
+      "official_url": "https://cda.gov.pk/",
+      "evidence": "CDA and MCI publish civic information, notices and service announcements.",
+      "blocker": "No reviewed consolidated coded municipal budget export; the UN city cannot be represented by one complete local fiscal entity."
+    },
+    {
+      "un_city_code": 4408,
+      "un_city_name": "Peshawar",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Capital Metropolitan Government Peshawar anchor only",
+      "official_url": "https://cfmis.lgkp.gov.pk/accounts/login/",
+      "evidence": "KP CFMS identifies a municipal-finance workspace; the public portal identifies Capital Metropolitan Government Peshawar auction records.",
+      "blocker": "Finance reports require authentication; anonymous auction records are not budget execution."
+    },
+    {
+      "un_city_code": 8042,
+      "un_city_name": "Gujranwala",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Metropolitan Corporation Gujranwala anchor only",
+      "official_url": "https://www.pmdfc.org.pk/fms/",
+      "evidence": "Punjab LGFMIS holds coded local-government budgets and transactions.",
+      "blocker": "Credential-only LGFMIS; no anonymous city-level coded export found."
+    },
+    {
+      "un_city_code": 7167,
+      "un_city_name": "Multan",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Metropolitan Corporation Multan anchor only",
+      "official_url": "https://www.pmdfc.org.pk/fms/",
+      "evidence": "Punjab LGFMIS holds coded local-government budgets and transactions.",
+      "blocker": "Credential-only LGFMIS; no anonymous city-level coded export found."
+    },
+    {
+      "un_city_code": 5822,
+      "un_city_name": "Hyderabad",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "partial",
+      "fiscal_boundary": "Hyderabad Municipal Corporation anchor only",
+      "official_url": "https://www.finance.gos.pk/Budget/VolumeIIIDetail2526",
+      "evidence": "Sindh publishes coded provincial Local Government and Transfer to Local Bodies PDF schedules.",
+      "blocker": "The schedules are provincial/document-only and do not expose Hyderabad Municipal Corporation's complete coded accounts."
+    },
+    {
+      "un_city_code": 8126,
+      "un_city_name": "Sialkot",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Municipal Corporation Sialkot anchor only",
+      "official_url": "https://www.pmdfc.org.pk/fms/",
+      "evidence": "Punjab LGFMIS holds coded local-government budgets and transactions.",
+      "blocker": "Credential-only LGFMIS; no anonymous city-level coded export found."
+    },
+    {
+      "un_city_code": 5483,
+      "un_city_name": "Mardan",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Tehsil Local Government Mardan anchor only",
+      "official_url": "https://cfmis.lgkp.gov.pk/accounts/login/",
+      "evidence": "KP CFMS covers municipal finance and revenue workflows.",
+      "blocker": "Finance reports require authentication; no anonymous coded budget export found."
+    },
+    {
+      "un_city_code": 7349,
+      "un_city_name": "Sargodha",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Metropolitan or municipal corporation Sargodha anchor only, subject to current Punjab local-government constitution",
+      "official_url": "https://www.pmdfc.org.pk/fms/",
+      "evidence": "Punjab LGFMIS holds coded local-government budgets and transactions.",
+      "blocker": "Credential-only LGFMIS; current legal entity and anonymous line export both require verification."
+    },
+    {
+      "un_city_code": 1101,
+      "un_city_name": "Quetta",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Metropolitan Corporation Quetta anchor only",
+      "official_url": "https://www.finance.gob.pk/service/budget-resources/",
+      "evidence": "Balochistan publishes official provincial budget books and development programs.",
+      "blocker": "PDF-only provincial publications do not expose a complete Quetta municipal coded ledger or machine-readable export."
+    },
+    {
+      "un_city_code": 5560,
+      "un_city_name": "Mingora",
+      "country": "Pakistan",
+      "iso3": "PAK",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Tehsil Local Government Babuzai/Mingora anchor only",
+      "official_url": "https://cfmis.lgkp.gov.pk/accounts/login/",
+      "evidence": "KP CFMS public auctions identify TMA Babuzai while its finance workspace is role protected.",
+      "blocker": "Finance reports require authentication, and the Babuzai-to-UN-Mingora anchor boundary must remain explicitly partial."
+    },
+    {
+      "un_city_code": 6249,
+      "un_city_name": "Dhaka",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "partial",
+      "fiscal_boundary": "Dhaka North City Corporation and Dhaka South City Corporation are separate fiscal entities; neither alone covers the UN city",
+      "official_url": "https://dncc.gov.bd/site/page/42105cbe-0455-4909-8c80-e41c52a8a813/Annual-Budget-and-Reports",
+      "evidence": "DNCC publishes annual budgets, annual administrative reports and annual statements of accounts; DSCC separately publishes annual budgets at https://dscc.gov.bd/pages/static-pages/6922df09933eb65569e1f646.",
+      "blocker": "Reviewed attachments are PDFs, not CSV/XLS/API, and a defensible Dhaka anchor requires at least two non-consolidated corporations."
+    },
+    {
+      "un_city_code": 7537,
+      "un_city_name": "Chattogram",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "partial",
+      "fiscal_boundary": "Chattogram City Corporation anchor only",
+      "official_url": "https://ccc.gov.bd/site/page/e3edc313-dfd5-4ac7-9c87-dcbdf8146c04/",
+      "evidence": "Official page publishes annual budgets, BACS budgets, receipts/payments and annual accounts; 20 resolved attachment URLs reviewed were PDFs.",
+      "blocker": "No spreadsheet, CSV or API surfaced; document extraction would not meet the machine-readable-source rule."
+    },
+    {
+      "un_city_code": 6158,
+      "un_city_name": "Savar",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "UN Savar built-up area spans Savar municipality/upazila and surrounding jurisdictions",
+      "official_url": "https://lgd.gov.bd/pages/static-pages/69414021c4774958d7b54bbc",
+      "evidence": "Savar is absent from the official city-corporation list.",
+      "blocker": "No single city-corporation fiscal anchor and no official machine-readable consolidated municipal budget source found."
+    },
+    {
+      "un_city_code": 6721,
+      "un_city_name": "Brahmanbaria",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Brahmanbaria municipality is only a fragment of the UN built-up area",
+      "official_url": "https://lgd.gov.bd/pages/static-pages/69414021c4774958d7b54bbc",
+      "evidence": "Brahmanbaria is absent from the official city-corporation list; government portals expose scattered upazila and municipality documents.",
+      "blocker": "No single matching fiscal entity and no official machine-readable coded municipal budget export found."
+    },
+    {
+      "un_city_code": 6425,
+      "un_city_name": "Kishoreganj",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Kishoreganj municipality is only a fragment of the UN built-up area",
+      "official_url": "https://lgd.gov.bd/pages/static-pages/69414021c4774958d7b54bbc",
+      "evidence": "Kishoreganj is absent from the official city-corporation list; nearby upazila and union portals publish non-consolidated documents/pages.",
+      "blocker": "No single matching fiscal entity and no official machine-readable coded municipal budget export found."
+    },
+    {
+      "un_city_code": 7221,
+      "un_city_name": "Sylhet",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "partial",
+      "fiscal_boundary": "Sylhet City Corporation anchor only",
+      "official_url": "https://scc.gov.bd/pages/common-documents/6922e444dbfbab28ce08a4a1",
+      "evidence": "Official portal publishes annual procurement plans tied to revenue and development budgets and a narrative 2023-24 budget at https://scc.gov.bd/pages/news/6922d8ec933eb65569dfb410.",
+      "blocker": "No coded CSV/XLS/API surfaced; direct retrieval of the attachment page returned HTTP 403 during review."
+    },
+    {
+      "un_city_code": 6006,
+      "un_city_name": "Khulna",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "partial",
+      "fiscal_boundary": "Khulna City Corporation anchor only",
+      "official_url": "https://kcc.gov.bd/",
+      "evidence": "Khulna City Corporation is an official city-corporation fiscal anchor and follows the national portal publication model.",
+      "blocker": "No official machine-readable coded budget or actual export surfaced; available publication evidence is document/page based."
+    },
+    {
+      "un_city_code": 7621,
+      "un_city_name": "Kutubdia",
+      "country": "Bangladesh",
+      "iso3": "BGD",
+      "classification": "hard_blocked",
+      "fiscal_boundary": "Kutubdia upazila/island has no city-corporation fiscal entity matching the UN built-up area",
+      "official_url": "https://lgd.gov.bd/pages/static-pages/69414021c4774958d7b54bbc",
+      "evidence": "Kutubdia is absent from the official city-corporation list.",
+      "blocker": "No defensible single municipal anchor and no official machine-readable consolidated local budget source found."
+    }
+  ]
+}

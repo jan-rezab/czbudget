@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "date_checked": "2026-09-20",
+  "registry_finding": "The project UN WUP 2025 >=1M registry contains Tel Aviv (code 439) only. Jerusalem is not a separate qualifying anchor in this registry.",
+  "cities": [
+    {
+      "un_city_code": 439,
+      "un_city_name": "Tel Aviv",
+      "classification": "partial",
+      "government_boundary": "Tel Aviv-Yafo Municipality legal government only; anchor municipality, not the full UN Tel Aviv built-up area.",
+      "official_catalog": "https://opendatasource.tel-aviv.gov.il/en/Pages/Category.aspx",
+      "official_budget_app": "https://opendata.tel-aviv.gov.il/Pages/MunicipalBudgetOpenData.aspx",
+      "published_datasets": ["Municipality regular budget - current-year performance report", "Municipality unordinary/development budget - current-year performance report"],
+      "machine_readable_claim": "The official developer documentation states datasets are downloadable as Excel/CSV or accessible through an API where available.",
+      "access_evidence": "The municipal budget application returned HTTP 571 to direct retrieval, and its JavaScript application did not expose a stable raw-data URL through searchable/static metadata. Exact source bytes and schema could not be verified.",
+      "production_load": null
+    }
+  ],
+  "jerusalem_review": {
+    "registry_status": "not_in_project_un_million_anchor_set",
+    "official_open_data_catalog": "https://jerusalem.datacity.org.il/dataset",
+    "finding": "No citywide detailed municipal budget dataset was identified in the reviewed Jerusalem open-data catalogue; project-level transport workplan CSV is domain-limited and not a complete municipal budget."
+  },
+  "blocker": "Tel Aviv officially advertises regular and development budget performance datasets, but the raw CSV/XLSX/API resource contract could not be resolved or fetched. No hashes, coded rows, BigQuery load, or immutable receipt is claimed."
+}
