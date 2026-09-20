@@ -1,5 +1,5 @@
 import http from "node:http";
-import { ASSET_PATH, AssetError, staticAssets } from './static-assets.mjs';
+import { ASSET_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
 import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
 import { createMiniReports, requireMiniAuthor } from './mini-reports.mjs';
 const miniReports = createMiniReports();
@@ -608,7 +608,6 @@ export async function handler(request, response) {
 }
 
 if (process.env.NODE_ENV !== "test") {
-  await staticAssets.lock();
   const server = http.createServer(handler);
   server.requestTimeout = 15_000;
   server.headersTimeout = 10_000;
@@ -620,5 +619,12 @@ if (process.env.NODE_ENV !== "test") {
       console.error(JSON.stringify({ severity: "ERROR", message: "API readiness marker failed", error: error?.message }));
       server.close(() => process.exit(1));
     }
+  });
+  void warmStaticAssetLock(staticAssets, (error) => {
+    console.error(JSON.stringify({
+      severity: "WARNING",
+      message: "Static asset lock warm-up failed; asset requests will retry",
+      code: error?.code || "asset_lock_failed",
+    }));
   });
 }

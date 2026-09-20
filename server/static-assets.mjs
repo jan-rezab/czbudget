@@ -59,23 +59,28 @@ export class StaticAssets {
     const now = Date.now();
     if (this.remoteLock && now - this.lockLoadedAt < this.lockTtlMs) return this.remoteLock;
     this.loading ||= (async () => {
-      const token = await this.token();
-      const response = await this.fetch(`https://storage.googleapis.com/storage/v1/b/czbudget-janrezab-public-snapshots/o/${encodeURIComponent(this.lockObject)}?alt=media`, {
-        headers: {Authorization: `Bearer ${token}`, 'Accept-Encoding': 'identity'},
-        signal: AbortSignal.timeout(8000),
-      });
-      if (!response.ok) throw new AssetError(502, 'asset_lock_failed');
-      const raw = await response.text();
-      const lock = this.validateLock(JSON.parse(raw));
-      const fingerprint = crypto.createHash('sha256').update(raw).digest('hex');
-      if (this.lockFingerprint && this.lockFingerprint !== fingerprint) {
-        this.cache.clear();
-        this.cacheBytes = 0;
+      try {
+        const token = await this.token();
+        const response = await this.fetch(`https://storage.googleapis.com/storage/v1/b/czbudget-janrezab-public-snapshots/o/${encodeURIComponent(this.lockObject)}?alt=media`, {
+          headers: {Authorization: `Bearer ${token}`, 'Accept-Encoding': 'identity'},
+          signal: AbortSignal.timeout(8000),
+        });
+        if (!response.ok) throw new AssetError(502, 'asset_lock_failed');
+        const raw = await response.text();
+        const lock = this.validateLock(JSON.parse(raw));
+        const fingerprint = crypto.createHash('sha256').update(raw).digest('hex');
+        if (this.lockFingerprint && this.lockFingerprint !== fingerprint) {
+          this.cache.clear();
+          this.cacheBytes = 0;
+        }
+        this.lockFingerprint = fingerprint;
+        this.remoteLock = lock;
+        this.lockLoadedAt = Date.now();
+        return lock;
+      } catch (error) {
+        if (error instanceof AssetError) throw error;
+        throw new AssetError(502, 'asset_lock_failed');
       }
-      this.lockFingerprint = fingerprint;
-      this.remoteLock = lock;
-      this.lockLoadedAt = Date.now();
-      return lock;
     })().finally(() => { this.loading = null; });
     return this.loading;
   }
@@ -83,14 +88,19 @@ export class StaticAssets {
   async token() {
     if (this.accessToken?.expires > Date.now() + 60000) return this.accessToken.value;
     this.tokenLoading ||= (async () => {
-      const response = await this.fetch('http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token', {
-        headers: {'Metadata-Flavor': 'Google'}, signal: AbortSignal.timeout(8000),
-      });
-      if (!response.ok) throw new AssetError(502, 'asset_auth_failed');
-      const result = await response.json();
-      if (!result.access_token) throw new AssetError(502, 'asset_auth_failed');
-      this.accessToken = {value: result.access_token, expires: Date.now() + Number(result.expires_in || 300) * 1000};
-      return result.access_token;
+      try {
+        const response = await this.fetch('http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token', {
+          headers: {'Metadata-Flavor': 'Google'}, signal: AbortSignal.timeout(8000),
+        });
+        if (!response.ok) throw new AssetError(502, 'asset_auth_failed');
+        const result = await response.json();
+        if (!result.access_token) throw new AssetError(502, 'asset_auth_failed');
+        this.accessToken = {value: result.access_token, expires: Date.now() + Number(result.expires_in || 300) * 1000};
+        return result.access_token;
+      } catch (error) {
+        if (error instanceof AssetError) throw error;
+        throw new AssetError(502, 'asset_auth_failed');
+      }
     })().finally(() => { this.tokenLoading = null; });
     return this.tokenLoading;
   }
@@ -184,3 +194,13 @@ export class StaticAssets {
 }
 
 export const staticAssets = new StaticAssets();
+
+export async function warmStaticAssetLock(assetStore = staticAssets, onError = () => {}) {
+  try {
+    await assetStore.lock();
+    return true;
+  } catch (error) {
+    onError(error);
+    return false;
+  }
+}

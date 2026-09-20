@@ -61,6 +61,7 @@ for (const required of [
   "validate-public-serving-snapshot.mjs",
   "validate-cityvizor-cloud-release.mjs",
   "verify-runtime-assets-cloud.py",
+  "verify-runtime-image-code.mjs",
   "npx playwright test",
 ]) {
   if (!cloudbuildVerify.includes(required)) {

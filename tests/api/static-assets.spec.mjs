@@ -3,7 +3,7 @@ import test from 'node:test';
 import crypto from 'node:crypto';
 import {Writable} from 'node:stream';
 import {gzipSync} from 'node:zlib';
-import {ASSET_PATH, StaticAssets} from '../../server/static-assets.mjs';
+import {ASSET_PATH, AssetError, StaticAssets, warmStaticAssetLock} from '../../server/static-assets.mjs';
 
 const raw = Buffer.from('{"value":123}\n');
 const sha = crypto.createHash('sha256').update(raw).digest('hex');
@@ -128,6 +128,28 @@ test('production lock is refreshed from the published data pointer', async () =>
   assert.equal((await service.lock()).packs.isred.generation, '654321');
   assert.equal(service.cache.size, 0);
   assert.equal(service.cacheBytes, 0);
+});
+
+test('startup warm-up is best effort and a failed lock remains retryable', async () => {
+  let attempts = 0;
+  const errors = [];
+  const service = new StaticAssets({
+    lockPath: null,
+    lockObject: 'static-assets/current.json',
+    fetchImpl: async () => {
+      attempts++;
+      if (attempts === 1) throw new Error('temporary metadata outage');
+      return new Response(JSON.stringify(manifest()));
+    },
+  });
+  service.token = async () => 'synthetic-token';
+  assert.equal(await warmStaticAssetLock(service, error => errors.push(error)), false);
+  assert.equal(errors.length, 1);
+  assert.ok(errors[0] instanceof AssetError);
+  assert.equal(errors[0].status, 502);
+  assert.equal(errors[0].code, 'asset_lock_failed');
+  assert.equal(service.loading, null);
+  assert.equal((await service.lock()).packs.isred.generation, '123456');
 });
 
 test('JSON aliases negotiate gzip and stream identity without buffering expanded data', async () => {
