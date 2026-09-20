@@ -52,11 +52,13 @@ def read_json(path: Path) -> object:
 def query(sql: str) -> list[dict]:
     completed = subprocess.run(
         ["bq", "query", "--project_id=" + PROJECT, "--location=EU", "--use_legacy_sql=false", "--format=json", "--max_rows=1000000", sql],
-        check=True,
+        check=False,
         capture_output=True,
         text=True,
         timeout=3300,
     )
+    if completed.returncode:
+        raise RuntimeError(f"BigQuery command failed ({completed.returncode}): {completed.stderr.strip()}")
     return json.loads(completed.stdout or "[]")
 
 
