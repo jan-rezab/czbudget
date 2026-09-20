@@ -1,0 +1,17 @@
+steps:
+  - id: inventory-top-100-municipalities
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [pipeline/czech_hlidac_cloud/worker.py]
+    env:
+      - BUILD_ID=$BUILD_ID
+    secretEnv:
+      - HLIDACSTATU_API_TOKEN
+    timeout: 1800s
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/hlidacstatu-api-token/versions/latest
+      env: HLIDACSTATU_API_TOKEN
+timeout: 2100s
+options:
+  logging: CLOUD_LOGGING_ONLY

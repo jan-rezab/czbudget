@@ -1,0 +1,13 @@
+steps:
+  - id: load-czech-provider-procedures
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [worker.py]
+    env:
+      - BUILD_ID=$BUILD_ID
+    timeout: 10800s
+timeout: 11100s
+options:
+  diskSizeGb: 100
+  machineType: E2_HIGHCPU_8
+  logging: CLOUD_LOGGING_ONLY
