@@ -44,6 +44,7 @@ if [ "$(git config --bool core.sparseCheckout || true)" = true ] || ! node scrip
   echo "pre-push: cloud-only checkout; running source-safe gates"
   node --test tests/api/static-assets.spec.mjs tests/api/pinned-release.spec.mjs
   node --test tests/api/process-log-store.spec.mjs
+  python3 -m unittest tests.test_deployment_event
   node scripts/build-run-log.mjs
   python3 -m unittest discover -s tests -p test_runtime_assets.py
   node pipeline/create-source-manifest.mjs --self-check

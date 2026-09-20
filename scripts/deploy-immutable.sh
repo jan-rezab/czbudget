@@ -20,7 +20,7 @@ if [ -z "$digest" ]; then
 fi
 
 if [ ! -f "$deploy_marker" ]; then
-  node scripts/write-deployment-event.mjs skipped "$digest" "$git_sha" "$build_id" "$pr_number"
+  python3 scripts/write-deployment-event.py skipped "$digest" "$git_sha" "$build_id" "$pr_number"
   echo "Skipping deployment because this build is no longer the current main commit"
   exit 0
 fi
@@ -58,6 +58,6 @@ if [ -n "$deploy_env_updates" ]; then
 fi
 "$@"
 
-node scripts/write-deployment-event.mjs deployed "$digest" "$git_sha" "$build_id" "$pr_number"
+python3 scripts/write-deployment-event.py deployed "$digest" "$git_sha" "$build_id" "$pr_number"
 
 echo "Deployed immutable image ${repository}@${digest}"
