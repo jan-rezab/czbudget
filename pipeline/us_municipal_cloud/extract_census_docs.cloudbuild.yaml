@@ -1,0 +1,26 @@
+steps:
+  - id: extract-reviewed-documentation
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        gcloud storage cp "gs://czbudget-janrezab-data-layers/processing-runs/us-major-cities/${_RUN_ID}/raw/${_SOURCE_ID}.zip" /workspace/source.zip
+        python3 - <<'PY'
+        from pathlib import Path
+        import zipfile
+
+        source = Path('/workspace/source.zip')
+        output = Path('/workspace/documentation.pdf')
+        with zipfile.ZipFile(source) as archive:
+            names = [name for name in archive.namelist() if name.lower().endswith('technical documentation.pdf')]
+            if len(names) != 1:
+                raise SystemExit(f'expected one technical-documentation PDF, found {names!r}')
+            output.write_bytes(archive.read(names[0]))
+        PY
+        gcloud storage cp /workspace/documentation.pdf "gs://czbudget-janrezab-data-layers/processing-runs/us-major-cities/${_RUN_ID}/documentation/${_SOURCE_ID}.pdf"
+substitutions:
+  _RUN_ID: unused
+  _SOURCE_ID: unused
+options:
+  logging: CLOUD_LOGGING_ONLY

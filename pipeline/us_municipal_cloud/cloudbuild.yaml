@@ -1,0 +1,41 @@
+# The submitted context is assembled by submit.py and contains code plus the
+# reviewed source registry only. Raw and derived datasets never transit the Mac.
+steps:
+  - id: fetch-official-sources
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args:
+      - worker.py
+      - fetch
+      - --registry
+      - us_major_cities_sources.json
+      - --work
+      - /workspace/us-major-cities
+      - --run-id
+      - $BUILD_ID
+  - id: normalize-and-validate
+    name: python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        python -m pip install --disable-pip-version-check --no-cache-dir -r requirements.txt
+        python worker.py process --registry us_major_cities_sources.json --work /workspace/us-major-cities --run-id "$BUILD_ID"
+  - id: publish-completed-run
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args:
+      - worker.py
+      - publish
+      - --registry
+      - us_major_cities_sources.json
+      - --work
+      - /workspace/us-major-cities
+      - --run-id
+      - $BUILD_ID
+timeout: 7200s
+queueTtl: 1800s
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
