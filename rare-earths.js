@@ -218,6 +218,14 @@ document.documentElement.lang=lang;
 document.title=`${copy.pageTitle} — Public Spending Data`;
 $('meta[name="description"]').content=copy.intro;
 document.querySelectorAll('[data-re]').forEach(element=>{if(copy[element.dataset.re])element.textContent=copy[element.dataset.re];});
+window.psdLanguageReady?.();
+document.addEventListener('click', event => {
+  const control = event.target.closest('[data-lang],[data-deep-lang],[data-budget-lang]');
+  const next = control?.dataset.lang || control?.dataset.deepLang || control?.dataset.budgetLang;
+  if (!['cs', 'en'].includes(next) || next === lang) return;
+  try { localStorage.setItem('psd-lang', next); } catch {}
+  const url = new URL(location.href); url.searchParams.set('lang', next); location.href = url.href;
+});
 $('.deep-topic-rail').setAttribute('aria-label',c('Sekce reportu','Report sections'));
 $('#re-product').innerHTML=`<option value="ALL">${esc(copy.allProducts)}</option>`+CODES.map(code=>`<option value="${code}">${esc(names[code])} · HS ${code}</option>`).join('');
 renderCountries();
