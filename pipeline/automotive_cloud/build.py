@@ -20,7 +20,7 @@ def segment(code):
 
 def region(iso):return 'EU27' if iso in EU else iso if iso in {'USA','CHN'} else 'ROW'
 
-def assemble(values, market):
+def assemble(values, market, include_intra_eu=False):
     # World is a separate total, never added to bilateral observations.
     world = values.get('WORLD')
     if world is None:return None
@@ -28,14 +28,14 @@ def assemble(values, market):
     residual = world - sum(named.values())
     if residual < -D('1'):raise ValueError(f'Named origins exceed World for {market}: {residual}')
     named['ROW'] = max(D(0),residual)
-    if market in EU:named['EU27']=D(0)
+    if market in EU and not include_intra_eu:named['EU27']=D(0)
     return {k:float(v) for k,v in named.items()}
 
-def country_routes(values, world, market):
-    """Preserve country origins; keep unallocated trade separate from countries."""
+def country_routes(values, world):
+    """Preserve every country origin; keep unallocated trade separate."""
     residual=world-sum(values.values())
-    if residual < -D('1'):raise ValueError(f'Country origins exceed World for {market}: {residual}')
-    routes={iso:float(value) for iso,value in values.items() if value>0 and not (iso in EU and market in EU)}
+    if residual < -D('1'):raise ValueError(f'Country origins exceed World: {residual}')
+    routes={iso:float(value) for iso,value in values.items() if value>0}
     if residual>0:routes['UNALLOCATED']=float(residual)
     return routes
 
@@ -121,8 +121,9 @@ def main():
         for market in panel:
             for seg in ['vehicles','trucks','parts']:
                 values=assemble(totals[period,market,seg],market)
+                values_all=assemble(totals[period,market,seg],market,include_intra_eu=True)
                 # No published World product row stays missing, not a fabricated zero.
-                if values is not None:output.append({'period':period,'market':market,'segment':seg,'values':values})
+                if values is not None:output.append({'period':period,'market':market,'segment':seg,'values':values,'values_all':values_all})
     present={(r['period'],r['market'],r['segment']) for r in output}
     missing=[(p,m,s) for p in periods for m in panel for s in ['vehicles','trucks','parts'] if (p,m,s) not in present]
     excluded={m for p,m,s in missing}
@@ -132,11 +133,11 @@ def main():
     routes=[]
     for row in output:
         key=row['period'],row['market'],row['segment']
-        for origin,value in country_routes(bilateral[key],totals[key]['WORLD'],row['market']).items():
+        for origin,value in country_routes(bilateral[key],totals[key]['WORLD']).items():
             routes.append({'period':row['period'],'market':row['market'],'segment':row['segment'],'origin':origin,'value':value})
     print('Excluded markets with unpublished product groups:',missing,flush=True)
     names={r['reporter_iso3']:r['reporter_name'] for r in c.execute('SELECT reporter_iso3,reporter_name FROM availability')}
-    dataset={'schema_version':'automotive-monthly.v1','generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'periods':periods,'panel':panel,'markets':[{'code':m,'name':names.get(m,m)} for m in panel],'rows':output,'source':{'name':'UN Comtrade','url':'https://comtradeplus.un.org/','table':'UN Comtrade C/M/HS (H6), AG6, M; verified archived responses','archive_id':manifest['archive_id'],'checkpoint_sha256':checkpoint['sha256'],'retrieved_at':max(retrieved),'objects_verified':len(receipts),'excluded_markets_missing_products':sorted(excluded),'method':'Importer-reported origins; fixed market panel; intra-EU27 removed; ROW = World minus USA, EU27 and China, including unspecified origins. Current USD, generally CIF.'},'definitions':{'vehicles':{'hs4':['8703'],'hs6':sorted(LIGHT)},'trucks':{'hs6':sorted(HEAVY)},'parts':{'hs4':['8708']}}}
+    dataset={'schema_version':'automotive-monthly.v1','generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'periods':periods,'panel':panel,'eu27':sorted(EU),'markets':[{'code':m,'name':names.get(m,m)} for m in panel],'rows':output,'source':{'name':'UN Comtrade','url':'https://comtradeplus.un.org/','table':'UN Comtrade C/M/HS (H6), AG6, M; verified archived responses','archive_id':manifest['archive_id'],'checkpoint_sha256':checkpoint['sha256'],'retrieved_at':max(retrieved),'objects_verified':len(receipts),'excluded_markets_missing_products':sorted(excluded),'method':'Importer-reported origins; fixed market panel; comparable view removes intra-EU27 trade; all-cross-border view retains it. ROW = World minus USA, EU27 and China, including unspecified origins. Current USD, generally CIF.'},'definitions':{'vehicles':{'hs4':['8703'],'hs6':sorted(LIGHT)},'trucks':{'hs6':sorted(HEAVY)},'parts':{'hs4':['8708']}}}
     dataset['routes']=routes
     dataset['origins']=[{'code':iso,'name':origin_names.get(iso,iso) if iso!='UNALLOCATED' else 'Unallocated origin','region':region(iso)} for iso in sorted({r['origin'] for r in routes})]
     Path('automotive-monthly.v1.json').write_text(json.dumps(dataset,separators=(',',':'))+'\n')

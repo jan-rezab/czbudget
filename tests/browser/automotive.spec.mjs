@@ -63,6 +63,19 @@ test('whole-month hover compares four regions and keyboard selection opens that 
   await expect(page.locator('#auto-flowPeriod')).toHaveValue('202601');
   await expect(page).toHaveURL(/flowPeriod=202601/);
 });
+test('trade scope adds intra-EU values and routes while explaining the comparison limit',async({page})=>{
+  await page.goto('/deep-dives/automotive/?lang=en&market=CZE&geography=countries&origin=DEU&flowPeriod=202607');
+  await expect(page.locator('#auto-scope')).toHaveValue('external');
+  await expect(page.locator('#auto-scope-note')).toContainText('domestic US and Chinese sales are absent');
+  await expect(page.locator('#automotive-trade-origin-destination .auto-flow-route')).toHaveCount(0);
+  await page.locator('#auto-scope').selectOption('all');
+  await expect(page).toHaveURL(/scope=all/);
+  await expect(page.locator('#auto-scope-note')).toContainText('Includes cross-border deliveries between EU countries');
+  await expect(page.locator('#automotive-trade-origin-destination .auto-flow-route')).toHaveCount(1);
+  await expect(page.locator('#auto-flow-context')).toContainText('All cross-border trade');
+  await page.reload();
+  await expect(page.locator('#auto-scope')).toHaveValue('all');
+});
 test('country routes, destination filters and copied flow URLs retain direction',async({page})=>{
   await page.goto('/deep-dives/automotive/?lang=en&geography=countries&origin=JPN&segment=parts&flowPeriod=202601');
   await expect(page.locator('#auto-flow-context')).toContainText('Auto parts');

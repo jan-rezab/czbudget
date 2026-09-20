@@ -10,8 +10,9 @@ tasks for every included market/month and coverage of World, USA, China and
 all EU-27 origins, and verifies every selected compressed response against its
 checkpoint SHA-256. World rows and bilateral rows are kept separate. Rest of
 world is the residual after subtracting the three named origins, including
-unspecified origin; the explicit EU-origin contribution to EU destinations is
-then removed. EU membership is fixed at 27, with the UK outside the bloc.
+unspecified origin. The serving data retains both scopes: the comparable view
+removes EU-origin trade into EU destinations, while the all-cross-border view
+retains it. EU membership is fixed at 27, with the UK outside the bloc.
 
 The latest eligible month must have at least 20 complete reporting markets;
 the intersection across up to 18 months must also have at least 20. Markets with missing World product observations in any of the three groups are
@@ -54,14 +55,16 @@ Country routes are extracted from all completed partner tasks for the same fixed
 panel, not just the three named origin groups. Each positive route retains its
 origin country/area, destination market, product group and month. World totals
 are never routes. Non-country or unallocated origins are the explicit remainder
-between World and the country rows; intra-EU routes are removed. Hydration rejects
-duplicate routes and verifies that every regional route sum reconciles with its
-monthly chart observation. The diagram groups smaller nodes visually; its table
-and CSV retain every selected route.
+between World and the country rows. Intra-EU routes are retained so the page can
+switch scopes; hydration reconciles both the complete routes and the comparable
+view after excluding them. It also rejects duplicate routes. The diagram groups
+smaller nodes visually; its table and CSV retain every selected route.
 
 The archive audit `c7fd2567-5ca7-4a4e-adcd-2f2940ae32b1` on 20 September 2026
 confirmed that no monthly tasks precede October 2025. August 2026 has only two
-reporters. The route run `8998c6ce-108f-4eec-acd4-00337ea0e9b4` preserves 25,347
-routes and 229 origin entries across the same 29 markets and 10 months; cloud
-audit `fe6d09a0-273f-47ee-8e2d-aed0e5bc0ad7` passed full reconciliation. Do not
+reporters. The original route run `8998c6ce-108f-4eec-acd4-00337ea0e9b4` and
+cloud audit `fe6d09a0-273f-47ee-8e2d-aed0e5bc0ad7` established full
+external-scope reconciliation. The dual-scope run
+`7882516e-d115-4aa4-9be4-8ab7706bf5a8` replayed the same 2,426 verified source
+objects and retained intra-EU routes for the optional inclusive view. Do not
 substitute annual observations or widen monthly coverage with missing reporters.
