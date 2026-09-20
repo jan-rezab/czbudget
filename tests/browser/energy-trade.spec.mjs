@@ -165,3 +165,20 @@ test("playback waits for a slow frame and ignores its response after a product c
   await expect(page.locator("#energy-play")).toBeDisabled();
   await expect(page.locator("#energy-map svg")).toHaveAttribute("aria-label", "LNG · Jan 2026");
 });
+
+test("play becomes available after the first frame is ready", async ({ page }) => {
+  let releaseFrame;
+  const frameGate = new Promise(resolve => { releaseFrame = resolve; });
+  await page.route("**/api/v1/trade/energy/flows?*", async route => {
+    await frameGate;
+    await route.fulfill({ contentType: "application/json", body: JSON.stringify(flows(new URL(route.request().url()))) });
+  });
+  await page.goto("/deep-dives/energy-trade/?lang=en");
+  await expect(page.locator("#energy-period")).toHaveValue("2025");
+  await expect(page.locator("#energy-map")).toHaveAttribute("aria-busy", "true");
+  await expect(page.locator("#energy-play")).toBeDisabled();
+  releaseFrame();
+  await expect(page.locator("#energy-play")).toBeEnabled();
+  await page.locator("#energy-play").click();
+  await expect(page.locator("#energy-period")).toHaveValue("2024");
+});

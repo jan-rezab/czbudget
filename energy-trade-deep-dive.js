@@ -96,7 +96,7 @@ function renderPlayback() {
   const play = $("#energy-play");
   play.textContent = state.playing ? tr("Ⅱ Pozastavit", "Ⅱ Pause") : tr("▶ Přehrát", "▶ Play");
   play.setAttribute("aria-pressed", String(state.playing));
-  play.disabled = rows.length < 2;
+  play.disabled = rows.length < 2 || (state.loading && !state.playing);
   $("#energy-previous").disabled = state.loading || index <= 0;
   $("#energy-next").disabled = state.loading || index < 0 || index >= rows.length - 1;
   const timeline = $("#energy-timeline");
