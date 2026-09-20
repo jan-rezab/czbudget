@@ -19,6 +19,11 @@ merge, or publish data.
 
 ## Verification plane
 
+`cloudbuild.ui.yaml` is the fast code-only browser gate for interface changes.
+Its source bundle contains only UI code and the small published contracts used
+by the focused tests. It has a ten-minute hard timeout and cannot publish data,
+push an image or deploy.
+
 - Config: `cloudbuild.verify.yaml`.
 - Runs explicitly before merge when a change affects the public application.
 - It may hydrate pinned published fixtures and run the exhaustive browser suite,

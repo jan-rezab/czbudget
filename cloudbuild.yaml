@@ -123,7 +123,7 @@ steps:
           gcloud storage cp /workspace/.deployment-event.json ${_PROCESS_LOG_BASE_URL}/deployments/$BUILD_ID.json
         fi
 
-timeout: 900s
+timeout: 600s
 queueTtl: 600s
 tags: [plane-web, production-deploy]
 

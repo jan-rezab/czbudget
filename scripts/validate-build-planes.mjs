@@ -1,8 +1,9 @@
 import { readFile } from "node:fs/promises";
 
-const [cloudbuild, cloudbuildVerify, buildPlanes] = await Promise.all([
+const [cloudbuild, cloudbuildVerify, cloudbuildUi, buildPlanes] = await Promise.all([
   readFile("cloudbuild.yaml", "utf8"),
   readFile("cloudbuild.verify.yaml", "utf8"),
+  readFile("cloudbuild.ui.yaml", "utf8"),
   readFile("BUILD_PLANES.md", "utf8"),
 ]);
 
@@ -14,6 +15,10 @@ if (
   cloudbuild.includes("czbudget-web")
 ) {
   throw new Error("Cloud Build must be locked to the sole canonical production service");
+}
+
+if (!cloudbuild.includes("timeout: 600s")) {
+  throw new Error("Production code deployment must fail closed at ten minutes");
 }
 
 for (const forbidden of [
@@ -58,6 +63,18 @@ for (const required of [
   if (!cloudbuildVerify.includes(required)) {
     throw new Error(`Full verification is missing its published-release gate: ${required}`);
   }
+}
+
+if (
+  !cloudbuildUi.includes("timeout: 600s") ||
+  !cloudbuildUi.includes("plane-verification") ||
+  !cloudbuildUi.includes("tests/browser/map-view.spec.mjs") ||
+  !cloudbuildUi.includes("tests/browser/process-log.spec.mjs")
+) {
+  throw new Error("Fast UI verification must remain bounded and cover the public hotfix surfaces");
+}
+for (const forbidden of ["deploy-immutable.sh", "bq query", "docker push", "gcloud storage cp"]) {
+  if (cloudbuildUi.includes(forbidden)) throw new Error(`Fast UI verification must remain read-only; found ${forbidden}`);
 }
 
 if (
