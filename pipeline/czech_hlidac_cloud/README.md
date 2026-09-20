@@ -34,13 +34,25 @@ python3 pipeline/czech_hlidac_cloud/submit_full.py --account jan@ravineo.com
 ```
 
 The full worker uses publication-date windows to stay below the API's 200-page
-query limit and waits at least 0.5 seconds between requests. Each municipality
-is independently deduplicated by contract ID, loaded into BigQuery, and then
-published under the immutable campaign prefix
-`processing-runs/czech-hlidac-municipality-contracts/top100-2025-07-01-v1/`.
-The completion marker is written last. A rerun skips municipalities that already
-have a completed attempt, while an interrupted municipality is safely retried
-under a new build-specific attempt prefix.
+query limit and waits at least 0.5 seconds between requests. It retains every
+accepted API page as immutable gzip JSONL, writes a normalized municipality
+snapshot and a warehouse import object, and records SHA-256 hashes plus Cloud
+Storage generations in the receipt. These files live below the immutable
+campaign prefix
+`processing-runs/czech-hlidac-municipality-contracts/top100-2025-07-01-v2/`.
+
+After all 100 municipality attempts complete, the worker loads a build-scoped
+BigQuery staging table, reconciles counts per municipality, rejects null keys or
+duplicate `(municipality_ico, contract_id)` pairs, and creates an immutable
+release table. Only a validated release may replace `current.json`, using a
+Cloud Storage generation precondition. The release completion receipt is
+written last; consumers must require that receipt and otherwise follow the
+previous release embedded in the pointer. This data job does not deploy or
+modify the website.
+
+A rerun reuses only municipality attempts with a valid v2 completion receipt.
+An interrupted attempt remains immutable and is safely retried under a new
+Cloud Build ID.
 
 The warehouse table is a municipality-to-contract match table, so the same
 contract may appear for more than one municipality. Never add its rows to claim

@@ -12,6 +12,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Callable
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -351,7 +352,14 @@ def append_checkpoint(path: Path, start: date, end: date, page: int, contracts: 
         handle.flush()
 
 
-def fetch_full_history(token: str, ico: str, start: date, end: date, checkpoint: Path) -> tuple[list[dict], int, int]:
+def fetch_full_history(
+    token: str,
+    ico: str,
+    start: date,
+    end: date,
+    checkpoint: Path,
+    page_observer: Callable[[date, date, int, dict], None] | None = None,
+) -> tuple[list[dict], int, int]:
     completed, cached_contracts = load_checkpoint(checkpoint)
     requests_made = 0
     windows_completed = 0
@@ -387,6 +395,8 @@ def fetch_full_history(token: str, ico: str, start: date, end: date, checkpoint:
 
         first_key = (window_start.isoformat(), window_end.isoformat(), 1)
         if first_key not in completed:
+            if page_observer:
+                page_observer(window_start, window_end, 1, first_page)
             compacted = [compact_contract(item) for item in results]
             append_checkpoint(checkpoint, window_start, window_end, 1, compacted)
             cached_contracts.extend(compacted)
@@ -398,6 +408,8 @@ def fetch_full_history(token: str, ico: str, start: date, end: date, checkpoint:
             time.sleep(MIN_INTERVAL_SECONDS)
             page = fetch_page(token, query, page_number)
             requests_made += 1
+            if page_observer:
+                page_observer(window_start, window_end, page_number, page)
             compacted = [compact_contract(item) for item in (first(page, "results", "Results") or [])]
             append_checkpoint(checkpoint, window_start, window_end, page_number, compacted)
             cached_contracts.extend(compacted)

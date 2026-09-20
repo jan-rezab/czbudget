@@ -26,6 +26,9 @@ SOURCE_FILES = (
     "pipeline/transforms/fetch_hlidac_contracts.py",
     "pipeline/config/czech-hlidac-municipalities.v1.json",
 )
+VERSIONED_BUNDLE_FILES = SOURCE_FILES + (
+    "pipeline/czech_hlidac_cloud/full_cloudbuild.yaml",
+)
 
 
 def build_bundle(destination: Path) -> None:
@@ -37,11 +40,27 @@ def build_bundle(destination: Path) -> None:
     shutil.copy2(HERE / "full_cloudbuild.yaml", destination / "cloudbuild.yaml")
 
 
+def assert_bundle_matches_head() -> None:
+    clean = subprocess.run(
+        ["git", "diff", "--quiet", "HEAD", "--", *VERSIONED_BUNDLE_FILES],
+        cwd=ROOT,
+    )
+    if clean.returncode != 0:
+        raise RuntimeError(
+            "loader bundle differs from HEAD; commit it before submission so the "
+            "receipt Git SHA identifies the exact code"
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--account", default="jan@ravineo.com")
     args = parser.parse_args()
+    assert_bundle_matches_head()
     assert_data_plane_idle(PROJECT, REGION)
+    loader_git_sha = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
     with tempfile.TemporaryDirectory(prefix="czech-hlidac-full-submit-") as temporary:
         source = Path(temporary)
         build_bundle(source)
@@ -53,6 +72,7 @@ def main() -> None:
             "--service-account=" + SERVICE_ACCOUNT,
             "--gcs-source-staging-dir=gs://czbudget-janrezab-data-layers/processing-build-source",
             "--account=" + args.account,
+            "--substitutions=_LOADER_GIT_SHA=" + loader_git_sha,
             "--async", "--format=json",
         ]
         subprocess.run(command, check=True, timeout=180)

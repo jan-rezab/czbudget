@@ -5,6 +5,7 @@ steps:
     args: [pipeline/czech_hlidac_cloud/full_worker.py]
     env:
       - BUILD_ID=$BUILD_ID
+      - LOADER_GIT_SHA=${_LOADER_GIT_SHA}
     secretEnv:
       - HLIDACSTATU_API_TOKEN
     timeout: 72000s
@@ -14,6 +15,8 @@ availableSecrets:
       env: HLIDACSTATU_API_TOKEN
 timeout: 75600s
 tags: [plane-data, czech-hlidac-full]
+substitutions:
+  _LOADER_GIT_SHA: unknown
 options:
   diskSizeGb: 100
   machineType: E2_HIGHCPU_8
