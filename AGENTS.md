@@ -34,7 +34,13 @@
 ## Deployment rules
 
 - `git push origin main` is the only production path: trigger
-  `czbudget-public-main`, region `europe-west1`, 12-15 minutes.
+  `czbudget-public-main`, region `europe-west1`. It is code-only and must not
+  ingest, query, merge or publish data. See `BUILD_PLANES.md`.
+- All data Cloud Builds run in `europe-west4`, use a dedicated data service
+  account and carry the `plane-data` tag. Never submit a data build in
+  `europe-west1`; that region is reserved for web verification and production.
+- Pausing a local task does not cancel its cloud worker. Explicitly cancel a
+  queued or running data build when the user pauses that loader.
 - A build that passes every gate still skips deployment if `main` moved while it
   ran (step 27 `assert-current-main`), and it reports SUCCESS anyway. Land one
   change at a time and check the build log for `Deployed immutable image` versus

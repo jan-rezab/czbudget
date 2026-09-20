@@ -73,6 +73,7 @@
     "backfill:social-previews": "node scripts/backfill-social-previews.mjs",
     "test:api": "node --test tests/api/*.spec.mjs",
     "test:browser": "playwright test",
+    "test:browser:ui": "playwright test tests/browser/map-view.spec.mjs tests/browser/process-log.spec.mjs --config=playwright.ui.config.mjs --project=desktop-chromium --workers=2 --max-failures=1",
     "test": "npm run test:contracts && npm run validate && npm run test:api && npm run test:browser",
     "validate:invariants": "node scripts/validate-invariants.mjs",
     "data:layers:report": "node scripts/build-layer-manifest.mjs --report",

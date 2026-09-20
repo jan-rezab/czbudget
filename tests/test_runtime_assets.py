@@ -70,7 +70,7 @@ class RuntimeAssetsTest(unittest.TestCase):
                 assets.verify_remote(descriptor, {**valid, **change})
 
     def test_runtime_surface_excludes_build_and_offloaded_files(self):
-        for value in ['data/isred/a.json', 'data/industrial-intelligence/index.json', 'data/.query.json', '.public-serving-build/current.json', 'scripts/tool.js', 'pipeline/raw.csv', 'tests/a.js', 'data/entities/00000001.json', 'cz/municipalities/praha/index.html', 'municipalities/finland/example/index.html', 'data/example 2.json']:
+        for value in ['data/isred/a.json', 'data/industrial-intelligence/index.json', 'data/paq/index.json', 'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json', 'data/.query.json', '.public-serving-build/current.json', 'scripts/tool.js', 'pipeline/raw.csv', 'tests/a.js', 'data/entities/00000001.json', 'cz/municipalities/praha/index.html', 'municipalities/finland/example/index.html', 'data/example 2.json']:
             self.assertFalse(runtime.included(Path(value)), value)
         for value in ['data/registry/countries.v1.json', 'data/municipal-benchmarks/fin.json', 'municipalities/france/profile/index.html', 'cityvizor/index.html', 'lib/money-flow-model.mjs', 'process/log/index.html', 'studio/data-in-one-place/index.html', 'global-nav.js']:
             self.assertTrue(runtime.included(Path(value)), value)
@@ -86,7 +86,9 @@ class RuntimeAssetsTest(unittest.TestCase):
             inventory = runtime.stage(root, root / '.runtime-image', lock)
             self.assertIn('public/data/compact.json', inventory)
             self.assertIn('public/process/log/index.html', inventory)
-            self.assertIn('server/municipal-pointer.json', inventory)
+            self.assertIn('server/data-assets-lock.json', inventory)
+            self.assertNotIn('server/municipal-pointer.json', inventory)
+            self.assertNotIn('server/cityvizor-pointer.json', inventory)
             self.assertNotIn('public/data/isred/large.json', inventory)
             self.assertNotIn('public/.cityvizor-serving/large.json', inventory)
 

@@ -352,7 +352,7 @@ server {
 
   # Immutable cloud packs preserve these public URLs without copying the datasets
   # into every application image. Only files in the revision's lock can resolve.
-  location ~ ^/data/(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry)/ {
+  location ~ ^/data/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq)/|trade/automotive-monthly\.v1\.json$|municipal-budget-codebook\.v1\.json$) {
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
     proxy_set_header Host $host;

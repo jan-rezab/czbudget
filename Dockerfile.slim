@@ -7,8 +7,7 @@ COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 COPY public /usr/share/nginx/html
 COPY server /app/server
 RUN chmod 0555 /app/server/start.sh
-ENV PUBLIC_SNAPSHOT_POINTER_FILE=/app/server/municipal-pointer.json
-ENV CITYVIZOR_POINTER_FILE=/app/server/cityvizor-pointer.json
+ENV DATA_ASSET_LOCK_OBJECT=static-assets/current.json
 
 # Precompress what nginx serves straight from disk (gzip_static in nginx.conf.template).
 # Level 9 output is 15-35 % smaller than the level-1 gzip nginx produced per request, and

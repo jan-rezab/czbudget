@@ -31,7 +31,7 @@ set -- gcloud run deploy "$service" \
   --image="${repository}@${digest}" \
   --region="$region" \
   --platform=managed \
-  --allow-unauthenticated \
+  --service-account=psd-web-runtime@czbudget-janrezab.iam.gserviceaccount.com \
   --min-instances=0 \
   --max-instances=5 \
   --concurrency=80 \

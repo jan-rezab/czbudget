@@ -45,10 +45,10 @@
     </style>
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
     <script src="country-routes.js?v=20260824-readable-country-routes" defer></script>
-    <script src="site-pages.js?v=20260827-country-methodology" defer></script>
+    <script src="site-pages.js?v=20260920-coverage-english" defer></script>
     <script src="municipal-transparency.js?v=20260827-evidence-status" defer></script>
     <script src="data-freshness.js?v=20260827-methodology-levels-acts" defer></script>
-    <script src="coverage-map.js?v=20260827-coverage-acts" defer></script>
+    <script src="coverage-map.js?v=20260920-coverage-map" defer></script>
     <script src="coverage-accounting-boundaries.js?v=20260828-move-from-compare" defer></script>
     <script src="global-footer.js?v=20260827-coverage-menu" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
@@ -65,7 +65,7 @@
         <div>
           <h1 data-status-copy="pageTitle">Pokrytí</h1>
           <p data-status-copy="pageIntro">Co publikujeme podle země, sekce, období a primárního zdroje.</p>
-          <p><a href="/czech-sources.html" data-status-copy="czechSources">Česká zdrojová data a CityVizor</a></p>
+          <p><a href="#sources" data-status-copy="sourceRegistry">Přejít na registr všech zdrojů ↓</a></p>
         </div>
         <a class="status-volume" href="data/data-quality-report.v1.json" target="_blank" rel="noreferrer">
           <span data-status-copy="publishedData">Zpracovaných strukturovaných řádků</span>
@@ -84,7 +84,7 @@
           <h2 id="data-health-title" data-status-copy="releaseTitle">Stav vydání</h2>
           <span data-status-copy="releaseNote">Souhrn všech obecních dat</span>
         </header>
-        <div id="data-health-root" aria-live="polite"><p class="data-health-loading">Načítám…</p></div>
+        <div id="data-health-root" aria-live="polite"><p class="data-health-loading" data-status-copy="loading">Načítám…</p></div>
       </section>
 
       <section class="release-architecture" id="release-architecture" aria-labelledby="release-architecture-title">
@@ -111,7 +111,7 @@
           </div>
           <p data-surface-copy="lead">Vyberte sekci a uvidíte země, pro které má Public Spending Data publikovaný profil nebo datovou vrstvu. Mapa měří obsah na tomto webu, nikoli vše, co může existovat u původních poskytovatelů.</p>
         </header>
-        <div id="surface-coverage-atlas" class="surface-coverage-atlas" aria-live="polite"><p>Načítám mapu publikovaného pokrytí…</p></div>
+        <div id="surface-coverage-atlas" class="surface-coverage-atlas" aria-live="polite"><p data-status-copy="loadingPublishedMap">Načítám mapu publikovaného pokrytí…</p></div>
       </section>
       <section class="coverage-overview" aria-labelledby="coverage-overview-title">
         <header class="section-bar">
@@ -185,7 +185,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody id="fiscal-architecture-body"><tr><td colspan="6">Načítám rozsah pokrytí…</td></tr></tbody>
+            <tbody id="fiscal-architecture-body"><tr><td colspan="6" data-status-copy="loadingAccounting">Načítám rozsah pokrytí…</td></tr></tbody>
           </table>
         </div>
       </section>
@@ -210,7 +210,7 @@
           </div>
           <div class="freshness-subhead"><h3 data-freshness-copy="matrix">Srovnávací matice</h3><p>● actual · △ estimate · ■ plan · ▨ projection</p></div>
           <div class="freshness-matrix-wrap" tabindex="0" aria-label="Country by data-layer freshness matrix"><table id="freshness-matrix" class="freshness-matrix"></table></div>
-          <section id="freshness-selection" class="freshness-selection" aria-live="polite"><p>Vyberte buňku pro detail vrstvy.</p></section>
+          <section id="freshness-selection" class="freshness-selection" aria-live="polite"><p data-status-copy="selectFreshnessCell">Vyberte buňku pro detail vrstvy.</p></section>
           <div class="freshness-subhead"><h3 data-freshness-copy="detailTable">Podrobný registr</h3><p id="freshness-summary"></p></div>
           <div class="freshness-controls freshness-download-bar"><button id="freshness-download" type="button" data-freshness-copy="download">Stáhnout CSV</button></div>
           <div class="freshness-ledger-wrap" tabindex="0"><table class="freshness-ledger"><thead><tr><th data-freshness-copy="country">Země</th><th data-freshness-copy="family">Vrstva</th><th data-freshness-copy="latest">Nejnovější období</th><th data-freshness-copy="type">Typ</th><th data-freshness-copy="coverage">Pokrytí</th><th data-freshness-copy="generated">Artefakt sestaven</th><th>Link</th></tr></thead><tbody id="freshness-table-body"></tbody></table></div>
@@ -228,13 +228,13 @@
         </header>
         <p data-status-copy="acquisitionAuditNote">Audit importů odděluje zdroje, které už mají validovaný produkční balík, od katalogových tipů, dokumentových publikací a technicky blokovaných systémů. Připravený balík se do veřejného pokrytí započítá až po úspěšném načtení do produkčního skladu.</p>
         <div class="method-ledger-controls" aria-label="Methodology table filters">
-          <label><span data-page-copy="ledgerCountry">Země</span><select id="method-country-filter"><option value="">Všechny země</option></select></label>
-          <label><span data-page-copy="ledgerModule">Modul</span><select id="method-module-filter"><option value="">Všechny moduly</option></select></label>
-          <label><span data-page-copy="ledgerStatus">Pokrytí</span><select id="method-status-filter"><option value="">Všechny stavy</option></select></label>
+          <label><span data-page-copy="ledgerCountry">Země</span><select id="method-country-filter"><option value="" data-page-copy="ledgerAllCountries">Všechny země</option></select></label>
+          <label><span data-page-copy="ledgerModule">Modul</span><select id="method-module-filter"><option value="" data-page-copy="ledgerAllModules">Všechny moduly</option></select></label>
+          <label><span data-page-copy="ledgerStatus">Pokrytí</span><select id="method-status-filter"><option value="" data-page-copy="ledgerAllStatuses">Všechny stavy</option></select></label>
           <label class="method-ledger-search"><span data-page-copy="ledgerSearch">Hledat</span><input id="method-source-search" type="search" placeholder="zdroj, tabulka, soubor…" data-page-placeholder="ledgerSearchPlaceholder" /></label>
           <button id="method-download-csv" type="button" data-page-copy="ledgerCsv">Stáhnout CSV ↓</button>
         </div>
-        <p id="method-ledger-summary" class="method-ledger-summary" aria-live="polite">Načítám zdrojovou tabulku…</p>
+        <p id="method-ledger-summary" class="method-ledger-summary" aria-live="polite" data-status-copy="loadingSources">Načítám zdrojovou tabulku…</p>
         <div class="method-table-wrap" tabindex="0">
           <table class="method-table">
             <thead><tr>
@@ -256,7 +256,7 @@
           <h2 id="municipal-transparency-title" data-page-copy="atlasTitle">Kde zdroje existují, ale nejsou načtené</h2>
           <p data-page-copy="atlasLead">Atlas 195 států ukazuje rozpočtovou transparentnost, obecní datové systémy a země, jejichž zdroje jsme ještě nenačetli.</p>
         </header>
-        <div id="transparency-atlas" class="transparency-atlas" aria-live="polite"><p>Načítám atlas…</p></div>
+        <div id="transparency-atlas" class="transparency-atlas" aria-live="polite"><p data-status-copy="loadingAtlas">Načítám atlas…</p></div>
       </section>
     </main>
     <footer data-global-footer></footer>

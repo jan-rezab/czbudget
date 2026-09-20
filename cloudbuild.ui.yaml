@@ -1,0 +1,26 @@
+# Fast, code-only browser gate for interface releases. The submission bundle is
+# intentionally limited to UI code plus the small published contracts exercised
+# by these tests; it never contains raw data layers and cannot deploy.
+steps:
+  - id: focused-ui-contract
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        npm ci
+        npx playwright test \
+          tests/browser/map-view.spec.mjs \
+          tests/browser/process-log.spec.mjs \
+          --config=playwright.ui.config.mjs \
+          --project=desktop-chromium \
+          --workers=2 \
+          --max-failures=1
+
+timeout: 600s
+queueTtl: 600s
+tags: [plane-verification, fast-ui]
+
+options:
+  machineType: E2_MEDIUM
+  logging: CLOUD_LOGGING_ONLY

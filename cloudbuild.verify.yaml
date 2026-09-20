@@ -1,0 +1,173 @@
+# Full application verification against the exact data releases already
+# published to production. This build is read-only: it never queries the
+# warehouse, rebuilds data, uploads artifacts, changes pointers or deploys.
+steps:
+  - id: hydrate-published-releases
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        mkdir -p /workspace/.published/municipal/releases
+        mkdir -p /workspace/.published/cityvizor/releases
+        mkdir -p /workspace/.published/assets
+        gcloud storage cp ${_PUBLIC_SNAPSHOT_BASE_URL}/current.json /workspace/.published/municipal/current.json
+        gcloud storage cp ${_CITYVIZOR_SNAPSHOT_BASE_URL}/current.json /workspace/.published/cityvizor/current.json
+        gcloud storage cp ${_STATIC_ASSET_BASE_URL}/current.json /workspace/.published/assets/lock.json
+        python3 - <<'PY'
+        import json
+        from pathlib import Path
+        root = Path('/workspace/.published')
+        municipal = json.loads((root / 'municipal/current.json').read_text())
+        cityvizor = json.loads((root / 'cityvizor/current.json').read_text())
+        assets = json.loads((root / 'assets/lock.json').read_text())
+        (root / 'municipal-release').write_text(municipal['release_id'])
+        (root / 'cityvizor-release').write_text(cityvizor['release_id'])
+        with (root / 'asset-packs.tsv').open('w') as output:
+            for pack in assets['packs'].values():
+                output.write(pack['key'] + '\t' + pack['file'] + '\n')
+        PY
+        municipal_release="$$(cat /workspace/.published/municipal-release)"
+        cityvizor_release="$$(cat /workspace/.published/cityvizor-release)"
+        gcloud storage rsync -r ${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$municipal_release /workspace/.published/municipal/releases/$$municipal_release
+        gcloud storage rsync -r ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/$$cityvizor_release /workspace/.published/cityvizor/releases/$$cityvizor_release
+        while IFS=$$'\t' read -r key file; do
+          gcloud storage cp "gs://czbudget-janrezab-public-snapshots/$$key" "/workspace/.published/assets/$$file"
+        done < /workspace/.published/asset-packs.tsv
+
+  - id: verify-published-snapshots
+    waitFor: [hydrate-published-releases]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: sh
+    args:
+      - -ceu
+      - |
+        municipal_release="$$(cat /workspace/.published/municipal-release)"
+        cityvizor_release="$$(cat /workspace/.published/cityvizor-release)"
+        node scripts/validate-public-serving-snapshot.mjs /workspace/.published/municipal
+        node scripts/validate-cityvizor-cloud-release.mjs /workspace/.published/cityvizor/releases/$$cityvizor_release
+
+  - id: verify-published-assets
+    waitFor: [hydrate-published-releases]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        python3 scripts/verify-runtime-assets-cloud.py /workspace/.published/assets/lock.json
+
+  - id: build-process-log
+    waitFor: ["-"]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: node
+    args: [scripts/build-run-log.mjs, --write]
+    env: [COMMIT_SHA=$COMMIT_SHA, BUILD_ID=$BUILD_ID]
+
+  - id: validate-source-contract
+    waitFor: [build-process-log]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: sh
+    args:
+      - -ceu
+      - |
+        node scripts/validate-build-planes.mjs
+        node pipeline/create-source-manifest.mjs --self-check
+
+  - id: stage-code-runtime
+    waitFor: [validate-source-contract]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [scripts/stage-runtime.py, --output, /workspace/.runtime-image]
+
+  - id: browser-contrast
+    waitFor: [verify-published-snapshots, verify-published-assets, validate-source-contract]
+    name: node:22-bookworm@sha256:8a34c4ab3ea2c5cd194f07e317b2a8f09461d3c8b05c4e34c8ccd56d56024c4d
+    entrypoint: bash
+    env:
+      - CI=true
+      - DATA_ASSET_LOCK=/workspace/.published/assets/lock.json
+      - DATA_ASSET_PACK_ROOT=/workspace/.published/assets
+      - PUBLIC_SNAPSHOT_RELEASE_ROOT=/workspace/.published/municipal
+      - CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/workspace/.published/cityvizor
+    args:
+      - -ceu
+      - |
+        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
+        exec > >(tee /tmp/browser-gate.log) 2>&1
+        npm ci
+        npx playwright install --with-deps chromium
+        npm run test:api
+        node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs
+        node --test tests/industrial-data.test.cjs
+        npx playwright test --workers=4 --max-failures=5
+
+  - id: nginx-routing
+    waitFor: [validate-source-contract]
+    name: nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+    entrypoint: sh
+    env: [PORT=8080]
+    args:
+      - -ceu
+      - |
+        mkdir -p /etc/nginx/templates
+        cp nginx.conf.template /etc/nginx/templates/default.conf.template
+        /docker-entrypoint.d/20-envsubst-on-templates.sh
+        sed -i 's@root /usr/share/nginx/html;@root /workspace;@' /etc/nginx/conf.d/default.conf
+        nginx -t
+        nginx
+        wget -qO /tmp/process-log.html 'http://127.0.0.1:8080/process/log/?lang=en'
+        grep -q 'run-log.js' /tmp/process-log.html
+        wget -qO /tmp/france.html 'http://127.0.0.1:8080/municipalities/france/profile/?code=31555'
+        grep -q 'data-profile-root=' /tmp/france.html
+
+  - id: build
+    waitFor: [stage-code-runtime]
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
+    env: [DOCKER_BUILDKIT=1]
+    args:
+      - build
+      - --file
+      - /workspace/.runtime-image/Dockerfile
+      - --tag
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID
+      - /workspace/.runtime-image
+
+  - id: image-contract
+    waitFor: [build, verify-published-snapshots, verify-published-assets]
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        docker run --rm --entrypoint node \
+          -v /workspace/scripts/verify-runtime-image.mjs:/tmp/verify-runtime-image.mjs:ro \
+          -v /workspace/.published/assets:/packs:ro \
+          -v /workspace/.published/municipal:/municipal:ro \
+          -v /workspace/.published/cityvizor:/cityvizor:ro \
+          -e PORT=8080 \
+          -e PUBLIC_SNAPSHOT_RELEASE_ROOT=/municipal \
+          -e CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/cityvizor \
+          -e DATA_ASSET_PACK_ROOT=/packs \
+          -e DATA_ASSET_LOCK=/packs/lock.json \
+          europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID \
+          /tmp/verify-runtime-image.mjs
+
+  - id: verification-complete
+    waitFor: [browser-contrast, nginx-routing, image-contract]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    entrypoint: sh
+    args: [-ceu, 'echo "Full verification passed against published immutable data releases."']
+
+timeout: 2400s
+queueTtl: 3600s
+tags: [plane-verification, full-browser]
+
+options:
+  machineType: E2_HIGHCPU_8
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _PUBLIC_SNAPSHOT_BASE_URL: gs://czbudget-janrezab-public-snapshots/municipal
+  _CITYVIZOR_SNAPSHOT_BASE_URL: gs://czbudget-janrezab-public-snapshots/cityvizor
+  _STATIC_ASSET_BASE_URL: gs://czbudget-janrezab-public-snapshots/static-assets

@@ -3,7 +3,7 @@ import test from 'node:test';
 import crypto from 'node:crypto';
 import {Writable} from 'node:stream';
 import {gzipSync} from 'node:zlib';
-import {StaticAssets} from '../../server/static-assets.mjs';
+import {ASSET_PATH, StaticAssets} from '../../server/static-assets.mjs';
 
 const raw = Buffer.from('{"value":123}\n');
 const sha = crypto.createHash('sha256').update(raw).digest('hex');
@@ -43,6 +43,16 @@ test('generation and range are pinned; concurrent requests share one checked rea
   assert.equal(service.pending.size, 0);
   assert.deepEqual(await service.body(asset, lock.files[asset], lock), raw);
   assert.equal(calls, 1);
+});
+
+test('runtime data routes include every independently published serving contract', () => {
+  for (const url of [
+    '/data/paq/catalog.json.gz',
+    '/data/paq/obec-001.json.gz',
+    '/data/trade/automotive-monthly.v1.json',
+    '/data/municipal-budget-codebook.v1.json',
+  ]) assert.match(url, ASSET_PATH);
+  for (const url of ['/data/trade/README.md', '/data/other.json', '/paq/catalog.json.gz']) assert.doesNotMatch(url, ASSET_PATH);
 });
 
 test('corrupt, truncated, oversized and non-range replies fail closed and can retry', async () => {
@@ -93,6 +103,31 @@ test('invalid and out-of-bounds manifests cannot be used', async () => {
     const value = manifest(); change(value);
     await assert.rejects(new StaticAssets({manifest: value, localRoot: ''}).lock());
   }
+});
+
+test('production lock is refreshed from the published data pointer', async () => {
+  const first = manifest();
+  const second = manifest();
+  second.packs.isred.generation = '654321';
+  let calls = 0;
+  const service = new StaticAssets({
+    lockPath: null,
+    lockObject: 'static-assets/current.json',
+    lockTtlMs: 0,
+    fetchImpl: async (url, options) => {
+      calls++;
+      assert.match(url, /static-assets%2Fcurrent\.json\?alt=media$/);
+      assert.equal(options.headers.Authorization, 'Bearer synthetic-token');
+      return new Response(JSON.stringify(calls === 1 ? first : second));
+    },
+  });
+  service.token = async () => 'synthetic-token';
+  service.cache.set(asset, raw);
+  service.cacheBytes = raw.length;
+  assert.equal((await service.lock()).packs.isred.generation, '123456');
+  assert.equal((await service.lock()).packs.isred.generation, '654321');
+  assert.equal(service.cache.size, 0);
+  assert.equal(service.cacheBytes, 0);
 });
 
 test('JSON aliases negotiate gzip and stream identity without buffering expanded data', async () => {

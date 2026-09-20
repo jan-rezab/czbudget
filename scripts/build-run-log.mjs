@@ -235,11 +235,12 @@ for (const [artifact, records] of byArtifact) {
     if (!grouped.has(key)) {
       grouped.set(key, {
         date, dataset, providers: new Set(),
-        artifacts: new Set(), countries: new Set(), objects: 0, checksums: 0,
+        artifacts: new Set(), countries: new Set(), sourceUrls: new Set(), objects: 0, checksums: 0,
       });
     }
     const group = grouped.get(key);
     if (record.provider) group.providers.add(record.provider);
+    if (record.url) group.sourceUrls.add(record.url);
     group.artifacts.add(artifact);
     group.objects += 1;
     if (record.checksum) group.checksums += 1;
@@ -260,6 +261,7 @@ for (const [key, group] of grouped) {
     source_id: group.dataset,
     publisher,
     publisher_count: group.providers.size,
+    source_urls: [...group.sourceUrls].sort().slice(0, 12),
     country_codes: [...group.countries].sort(),
     edition: null,
     covers: null,
@@ -305,6 +307,21 @@ if (release?.git_commit && release?.data_generated_at) {
     cloud_build_id: release.cloud_build_id || null,
     working_tree_dirty: Boolean(release.working_tree_dirty),
   });
+}
+
+// These three states are deliberately independent. A retrieval is received;
+// an artifact or warehouse fact proves processing; only a linked public route
+// proves publication. The former `outcome: published` field is retained for
+// schema compatibility but must not be used to imply that every retrieval is
+// visible on the website.
+for (const run of runs) {
+  const processedVolume = Object.entries(run.volume || {})
+    .some(([key, value]) => key !== "with_checksum" && Number(value) > 0);
+  run.lifecycle = {
+    received: run.event_type === "ingestion" ? true : null,
+    processed: run.event_type === "ingestion" ? processedVolume : true,
+    published: run.sections?.length > 0,
+  };
 }
 
 runs.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.run_id < b.run_id ? -1 : 1));

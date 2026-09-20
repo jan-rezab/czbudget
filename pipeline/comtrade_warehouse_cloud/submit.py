@@ -6,14 +6,18 @@ import argparse
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from pipeline.build_admission import assert_data_plane_idle
 
 
 HERE = Path(__file__).resolve().parent
 WEBSITE = HERE.parents[1]
 PROJECT = "czbudget-janrezab"
-REGION = "europe-west1"
-ALLOWED_REGIONS = ("europe-west1", "europe-west3", "europe-west4", "europe-north1")
+REGION = "europe-west4"
+ALLOWED_REGIONS = ("europe-west4",)
 SERVICE_ACCOUNT = "projects/czbudget-janrezab/serviceAccounts/comtrade-builder@czbudget-janrezab.iam.gserviceaccount.com"
 SOURCE_FILES = (
     "pipeline/transforms/run_un_comtrade_warehouse.py",
@@ -67,6 +71,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    assert_data_plane_idle(PROJECT, args.region)
     substitutions = {
         "_FREQUENCY": args.frequency or "AUTO",
         "_PERIOD": args.period or "AUTO",

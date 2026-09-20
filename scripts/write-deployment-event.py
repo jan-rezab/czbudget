@@ -32,15 +32,19 @@ def main():
     except FileNotFoundError:
         municipal = {}
     try:
-        cityvizor = read_json(Path("data/cityvizor-current.v1.json"))
+        cityvizor = read_json(Path(os.environ.get("CITYVIZOR_SNAPSHOT_POINTER", "data/cityvizor-current.v1.json")))
     except FileNotFoundError:
         cityvizor = {}
+    try:
+        static_assets = read_json(Path(os.environ.get("STATIC_ASSET_POINTER", "/workspace/.active-data/static-assets.json")))
+    except FileNotFoundError:
+        static_assets = {}
     release_ids = []
     for value in (
-        f"{git_sha}-{build_id}",
         release.get("municipal_ingestion_run_id"),
         municipal.get("release_id"),
         cityvizor.get("release_id"),
+        static_assets.get("release_id"),
     ):
         if value and value not in release_ids:
             release_ids.append(value)

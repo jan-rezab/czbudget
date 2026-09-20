@@ -1,0 +1,58 @@
+# One-time or data-release publication only. This build extracts the currently
+# validated serving contracts from an immutable production image and appends
+# them to the generation-pinned static-asset release. It never deploys code.
+steps:
+  - id: extract-serving-contracts
+    waitFor: ["-"]
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        docker pull ${_SOURCE_IMAGE}
+        container="$$(docker create ${_SOURCE_IMAGE})"
+        trap 'docker rm -f "$$container" >/dev/null 2>&1 || true' EXIT
+        mkdir -p /workspace/.serving-source/data/trade
+        docker cp "$$container:/usr/share/nginx/html/data/paq" /workspace/.serving-source/data/paq
+        docker cp "$$container:/usr/share/nginx/html/data/trade/automotive-monthly.v1.json" /workspace/.serving-source/data/trade/automotive-monthly.v1.json
+        docker cp "$$container:/usr/share/nginx/html/data/municipal-budget-codebook.v1.json" /workspace/.serving-source/data/municipal-budget-codebook.v1.json
+
+  - id: read-active-lock
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        mkdir -p /workspace/.serving-base
+        generation="$$(gcloud storage objects describe ${_STATIC_ASSET_BASE_URL}/current.json --format='value(generation)')"
+        test -n "$$generation"
+        printf '%s\n' "$$generation" > /workspace/.serving-base/generation
+        gcloud storage cp "${_STATIC_ASSET_BASE_URL}/current.json#$$generation" /workspace/.serving-base/current.json
+
+  - id: publish-serving-pack
+    waitFor: [extract-serving-contracts, read-active-lock]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    env: [BUILD_ID=$BUILD_ID, PROJECT_ID=$PROJECT_ID]
+    args:
+      - -ceu
+      - |
+        python3 scripts/publish-serving-asset-pack.py \
+          --root /workspace/.serving-source \
+          --base-lock /workspace/.serving-base/current.json \
+          --base-generation "$$(cat /workspace/.serving-base/generation)" \
+          --output /workspace/.serving-output \
+          --publish
+
+timeout: 600s
+queueTtl: 600s
+tags: [plane-data, data-publication, serving-assets]
+
+options:
+  machineType: E2_MEDIUM
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _SOURCE_IMAGE: europe-west1-docker.pkg.dev/czbudget-janrezab/cloud-run-source-deploy/czbudget-public@sha256:779239be05980c6e92c40d13631bf5777a0b879fb412324c25550c684f4e8a65
+  _STATIC_ASSET_BASE_URL: gs://czbudget-janrezab-public-snapshots/static-assets
