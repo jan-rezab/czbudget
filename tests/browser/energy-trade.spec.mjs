@@ -70,12 +70,17 @@ test("an unavailable monthly gas series clears the previous product without a fa
   page.on("request", request => { if (request.url().includes("period=null")) invalidRequests.push(request.url()); });
   await page.goto("/deep-dives/energy-trade/?lang=en");
   await expect(page.locator(".energy-route-group")).toHaveCount(3);
+  await page.locator("#energy-country").selectOption("NOR");
   await page.locator('[data-product="gas"]').click();
   await expect(page.locator("#energy-status")).toContainText("Natural gas");
   await page.locator("#energy-frequency").selectOption("M");
   await expect(page.locator("#energy-status")).toContainText("No data is published yet");
   await expect(page.locator("#energy-routes")).toBeEmpty();
   await expect(page.locator("#energy-kpis")).toBeEmpty();
+  await expect(page.locator("#energy-country")).toHaveValue("NOR");
+  await page.locator("#energy-reset").click();
+  await expect(page.locator("#energy-country")).toHaveValue("ALL");
+  await expect(page).not.toHaveURL(/country=/);
   expect(invalidRequests).toEqual([]);
 });
 
@@ -85,10 +90,12 @@ test("yearly playback restarts at the beginning, keeps the country and stops at 
   await expect(page.locator(".energy-route-group")).toHaveCount(2);
   await page.locator("#energy-play").click();
   await expect(page.locator("#energy-period")).toHaveValue("2024");
+  await expect(page.getByRole("button", { name: "Period", exact: true })).toContainText("2024");
   await expect(page.locator("#energy-map")).toHaveAttribute("aria-busy", "false");
   await expect(page.locator("#energy-play")).toHaveText("Ⅱ Pause");
   await page.clock.runFor(1500);
   await expect(page.locator("#energy-period")).toHaveValue("2025");
+  await expect(page.getByRole("button", { name: "Period", exact: true })).toContainText("2025");
   await expect(page.locator("#energy-play")).toHaveAttribute("aria-pressed", "false");
   await expect(page.locator("#energy-country")).toHaveValue("NOR");
   await expect(page.locator(".energy-route-group")).toHaveCount(2);

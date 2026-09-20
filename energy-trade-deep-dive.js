@@ -128,8 +128,8 @@ function schedulePlayback() {
 function changePeriod(period, autoplay = false) {
   if (!autoplay) pausePlayback();
   state.period = period;
-  $("#energy-period").value = period;
-  syncURL(); renderHistory();
+  // Rebuild the options so the shared custom dropdown reflects playback too.
+  fillPeriods();
   return loadFlows({ retainMap: autoplay });
 }
 
@@ -236,14 +236,15 @@ function renderHistory() {
 }
 
 function selectCountry(code) {
-  if (!state.flows) return;
   pausePlayback();
   state.country = code;
   try {
     if (code === "ALL") localStorage.removeItem(COUNTRY_STORAGE_KEY);
     else localStorage.setItem(COUNTRY_STORAGE_KEY, JSON.stringify(state.knownCountries.get(code) || { code, name: code }));
   } catch { /* URL state still preserves the selection when storage is unavailable. */ }
-  syncURL(); renderAll();
+  syncURL();
+  if (state.flows) renderAll();
+  else { fillCountries(); $("#energy-country").disabled = true; }
 }
 
 function noCountryData() {
