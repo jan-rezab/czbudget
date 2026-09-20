@@ -51,6 +51,30 @@
   Registry with the `gcloud run deploy --image <repo>@<digest>` line in
   `scripts/deploy-immutable.sh`; rollback is `gcloud run services update-traffic`.
 
+## Shared chart and release rules
+
+- Read `COMPONENT_RELEASES.md` before changing charts, page adapters, assets or verification.
+- One chart family has one renderer. Use `window.PSDPlot` via `chart-runtime.js`;
+  do not copy SVG geometry, axes, tooltips or interactions into a page script.
+  Reuse `PSDChart` for the existing table/download/citation/source rail.
+- Pages own layout and adapters own accounting semantics; renderers own drawing.
+  Keep actual/plan, stock/flow, currency, missing values and country boundaries explicit.
+- New charts must support hover, keyboard focus/arrow navigation, Escape dismissal
+  and touch selection, with the same values available in a table. Preserve sources.
+- Do not change page headers, footers or section ordering as part of a component update.
+- Run `npm run build:chart-assets` after renderer/style edits, then
+  `npm run check:chart-assets`. Never edit or delete content-addressed prior releases.
+- Map changed paths to `scripts/verification-plan.mjs`. Unknown paths, shared shell,
+  routing and release machinery require full verification. Never force the fast lane.
+- Cheap shared navigation and component contracts run before exhaustive browser tests.
+  Report failed test names immediately. Do not retry deterministic contract failures.
+- Reuse only successful cloud verification for the exact commit and current test contract;
+  a different commit, fixture version or configuration invalidates that evidence.
+- Routine component verification targets 180 seconds of execution; report measured queue,
+  setup, tests and promotion separately. This target is not permission to skip tests.
+- Build the production image once, smoke-test that image, then promote its immutable digest.
+  Never use build SUCCESS alone as proof of deployment; verify the actual revision/live page.
+
 ## Report catalogue
 
 - `deep-dives/reports.json` is the single source of truth for every deep-dive

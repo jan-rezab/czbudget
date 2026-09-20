@@ -1,5 +1,7 @@
-(() => {
+(async () => {
   const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "../../";
+  await import(new URL("chart-runtime.js", assetRoot).href);
+  await window.PSDPlotReady;
   const pickerReady=window.PSDMunicipalityCountryPicker?Promise.resolve():new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=`${assetRoot}municipality-country-picker.js?v=20260902-searchable-picker`;script.onload=resolve;script.onerror=reject;document.head.append(script);});
   const requestedLanguage = new URLSearchParams(location.search).get("lang");
   const initialLanguage = ["cs", "en"].includes(requestedLanguage) ? requestedLanguage : (document.documentElement.lang === "en" ? "en" : "cs");
@@ -94,29 +96,17 @@
 
   function niceAxis(maximum,target=5){const rough=maximum/target,power=10**Math.floor(Math.log10(rough)),step=([1,2,2.5,5,10].find((candidate)=>candidate>=rough/power)||10)*power,max=Math.ceil(maximum/step)*step;return {max,ticks:Array.from({length:Math.round(max/step)+1},(_,index)=>index*step)};}
 
-  function hideHistoryTooltip(){const tooltip=document.querySelector("#cz-history-tooltip");if(tooltip)tooltip.hidden=true;}
-  function showHistoryTooltip(year,clientX,clientY){
-    const tooltip=document.querySelector("#cz-history-tooltip"),row=state.history?.annual?.find((item)=>item.year===year);if(!tooltip||!row)return;
-    const balance=`${row.budget_balance>0?"+":""}${preciseFormat(row.budget_balance)}`;
-    tooltip.innerHTML=`<strong>${row.year}</strong><div><span>${t().revenue}</span><b>${preciseFormat(row.revenue_actual)}</b></div><div><span>${t().expense}</span><b>${preciseFormat(row.expense_actual)}</b></div><div><span>${t().cash}</span><b>${preciseFormat(row.cash_current)}</b></div><div><span>${t().result}</span><b class="${row.budget_balance>=0?"positive":"negative"}">${balance}</b></div>`;
-    tooltip.hidden=false;const gap=15,pad=12,rect=tooltip.getBoundingClientRect();let left=clientX+gap,top=clientY+gap;if(left+rect.width>innerWidth-pad)left=clientX-rect.width-gap;if(top+rect.height>innerHeight-pad)top=clientY-rect.height-gap;tooltip.style.left=`${Math.max(pad,left)}px`;tooltip.style.top=`${Math.max(pad,top)}px`;
-  }
-
   function renderHistoryChart(){
     const host=document.querySelector("#cz-national-history-chart");if(!host||!state.history)return;
-    const rows=state.history.annual,width=1120,height=430,left=78,right=30,top=30,bottom=58;
-    const values=rows.flatMap((row)=>[row.revenue_actual,row.expense_actual,row.cash_current]).map(converted),axis=niceAxis(Math.max(...values)*1.04);
-    const x=(index)=>left+(index+.5)*((width-left-right)/rows.length),y=(value)=>top+(axis.max-converted(value))/axis.max*(height-top-bottom);
-    const unit=state.currency==="EUR"?(english()?"EUR bn":"mld. EUR"):(english()?"CZK bn":"mld. Kč");
-    const number=new Intl.NumberFormat(english()?"en-GB":"cs-CZ",{maximumFractionDigits:0});
-    const grid=axis.ticks.map((value)=>`<line x1="${left}" x2="${width-right}" y1="${y(state.currency==="EUR"?value*(state.fx?.local_per_eur?.CZK||1):value)}" y2="${y(state.currency==="EUR"?value*(state.fx?.local_per_eur?.CZK||1):value)}"/><text x="${left-12}" y="${y(state.currency==="EUR"?value*(state.fx?.local_per_eur?.CZK||1):value)+4}" text-anchor="end">${number.format(value/1e9)}</text>`).join("");
-    const line=(field)=>rows.map((row,index)=>`${index?"L":"M"}${x(index).toFixed(1)},${y(row[field]).toFixed(1)}`).join(" ");
-    const labels=rows.map((row,index)=>index%2===0||row.year===state.historyYear||index===rows.length-1?`<text x="${x(index)}" y="${height-24}" text-anchor="middle" class="${row.year===state.historyYear?"selected-label":""}">${row.year}</text>`:"").join("");
-    const selectedIndex=rows.findIndex((row)=>row.year===state.historyYear),selected=rows[selectedIndex];
-    const hits=rows.map((row,index)=>`<circle class="year-hit" data-history-year="${row.year}" tabindex="0" role="img" aria-label="${row.year}" cx="${x(index)}" cy="${y(row.revenue_actual)}" r="17"/>`).join("");
-    host.setAttribute("aria-label",english()?"Nationwide municipal revenue, expenditure and cash from 2010 to 2025":"Celostátní vývoj obecních příjmů, výdajů a stavu účtů 2010 až 2025");
-    const chartLabel=english()?"Nationwide municipal revenue, expenditure and cash from 2010 to 2025":"Celostátní vývoj obecních příjmů, výdajů a stavu účtů 2010 až 2025";
-    host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${chartLabel}"><g class="history-grid">${grid}${labels}<text x="18" y="22">${unit}</text></g><line class="selected-year" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height-bottom}"/><path class="history-line revenue-line" d="${line("revenue_actual")}"/><path class="history-line expense-line" d="${line("expense_actual")}"/><path class="history-line cash-line" d="${line("cash_current")}"/>${hits}<circle class="year-dot" cx="${x(selectedIndex)}" cy="${y(selected.revenue_actual)}" r="6"/></svg>`;
+    const rows=state.history.annual;
+    window.PSDPlot.render(host,{type:"line",rows,unit:state.currency,locale:english()?"en-GB":"cs-CZ",
+      title:english()?"Nationwide municipal revenue, expenditure and cash":"Celostátní příjmy, výdaje a stav účtů",
+      onSelect:row=>{state.historyYear=Number(row.year);renderInsights();},
+      fields:[["revenue_actual",t().revenue],["expense_actual",t().expense],["cash_current",t().cash]].map(([key,label])=>({key,label,
+        value:row=>Number.isFinite(row[key])?converted(row[key]):null,
+        format:(_value,row)=>preciseFormat(row[key]),
+      })),
+    });
   }
 
   function rankedRows(title,subtitle,entities,field,tone){
@@ -183,12 +173,6 @@
   document.querySelector("#municipal-inline-search")?.addEventListener("reset",()=>setTimeout(()=>{state.query="";state.shown=24;if(state.data)renderInlineDirectory();}));
   document.querySelector("#municipal-inline-more")?.addEventListener("click",()=>{state.shown+=24;if(state.data)renderInlineDirectory();});
   document.querySelector("#cz-history-year")?.addEventListener("change",(event)=>{state.historyYear=Number(event.target.value);renderInsights();});
-  const historyChart=document.querySelector("#cz-national-history-chart");
-  historyChart?.addEventListener("pointermove",(event)=>{const hit=event.target.closest("[data-history-year]");if(hit)showHistoryTooltip(Number(hit.dataset.historyYear),event.clientX,event.clientY);else hideHistoryTooltip();});
-  historyChart?.addEventListener("pointerleave",hideHistoryTooltip);
-  historyChart?.addEventListener("focusin",(event)=>{const hit=event.target.closest("[data-history-year]");if(!hit)return;const rect=hit.getBoundingClientRect();showHistoryTooltip(Number(hit.dataset.historyYear),rect.right,rect.top);});
-  historyChart?.addEventListener("focusout",hideHistoryTooltip);
-  historyChart?.addEventListener("click",(event)=>{const hit=event.target.closest("[data-history-year]");if(!hit)return;state.historyYear=Number(hit.dataset.historyYear);renderInsights();});
   document.querySelectorAll("[data-currency]").forEach((button)=>button.addEventListener("click",()=>{state.currency=button.dataset.currency;try{localStorage.setItem("psd-municipal-currency",state.currency);}catch{}translate();}));
   Promise.all([fetch(`${assetRoot}data/municipal-snapshot.v1.json`).then((response)=>response.json()),fetch(`${assetRoot}data/municipal-history-directory.v1.json`).then((response)=>response.json()),fetch(`${assetRoot}data/country-spending-comparison.v1.json`).then((response)=>response.json()),fetch(`${assetRoot}data/international-municipalities/index.v1.json`).then((response)=>response.json())]).then(([data,historyData,spending,countryIndex])=>{state.data=data;state.countryIndex=countryIndex;state.history=historyData;state.fx=spending.fx;translate();}).catch((error)=>{console.error(error);document.querySelector("#cz-insight-grid").innerHTML="<p>Data could not be loaded.</p>";});
   fetch(`${assetRoot}data/municipal-size-benchmark.v1.json`).then((response)=>{if(!response.ok)throw new Error(`Municipal size benchmark returned ${response.status}`);return response.json();}).then((data)=>{state.benchmark=data;renderMunicipalSizeBenchmark();}).catch((error)=>{console.error(error);document.querySelector("#municipality-size").innerHTML=`<p class="benchmark-loading">${english()?"European benchmark could not be loaded.":"Evropský benchmark se nepodařilo načíst."}</p>`;});

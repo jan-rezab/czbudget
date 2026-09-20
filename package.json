@@ -6,6 +6,11 @@
     "node": "22.x"
   },
   "scripts": {
+    "build:chart-assets": "node scripts/build-chart-assets.mjs",
+    "check:chart-assets": "node scripts/build-chart-assets.mjs --check",
+    "check:chart-ownership": "node scripts/validate-chart-ownership.mjs",
+    "test:components": "node scripts/run-component-gate.mjs",
+    "test:chart-model": "node --test tests/unit/chart-renderer.spec.mjs tests/unit/verification-plan.spec.mjs",
     "build:stories": "node scripts/publish-stories.mjs",
     "check:stories": "node scripts/publish-stories.mjs --check && node --test tests/unit/stories.spec.mjs",
     "build:france-municipal-profiles": "python3 scripts/build-france-municipal-profiles.py",

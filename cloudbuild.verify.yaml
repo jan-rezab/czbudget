@@ -2,6 +2,32 @@
 # published to production. This build is read-only: it never queries the
 # warehouse, rebuilds data, uploads artifacts, changes pointers or deploys.
 steps:
+  - id: python-contracts
+    waitFor: ["-"]
+    name: python:3.12.11-slim-bookworm
+    entrypoint: bash
+    env: [PYTHONPATH=/workspace/.python-deps]
+    args:
+      - -ceu
+      - |
+        python3 -m pip install --disable-pip-version-check --target=/workspace/.python-deps -r pipeline/requirements.txt
+        python3 -m unittest discover -s pipeline/tests -p 'test_*.py'
+        python3 -m unittest tests.test_cloud_verification tests.test_deployment_event
+        python3 -m unittest discover -s tests -p test_runtime_assets.py
+
+  - id: preflight-components
+    waitFor: ["-"]
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        npm ci
+        node scripts/build-chart-assets.mjs --check
+        node scripts/validate-chart-ownership.mjs
+        npm run check:stories
+        node scripts/run-component-gate.mjs
+
   - id: hydrate-published-releases
     waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
@@ -57,15 +83,8 @@ steps:
       - |
         python3 scripts/verify-runtime-assets-cloud.py /workspace/.published/assets/lock.json
 
-  - id: build-process-log
-    waitFor: ["-"]
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/build-run-log.mjs, --write]
-    env: [COMMIT_SHA=$COMMIT_SHA, BUILD_ID=$BUILD_ID]
-
   - id: validate-source-contract
-    waitFor: [build-process-log]
+    waitFor: ["-"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: sh
     args:
@@ -74,15 +93,33 @@ steps:
         node scripts/validate-build-planes.mjs
         node pipeline/create-source-manifest.mjs --self-check
 
-  - id: stage-code-runtime
-    waitFor: [validate-source-contract]
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
-    entrypoint: python3
-    args: [scripts/stage-runtime.py, --output, /workspace/.runtime-image]
+  - id: browser-contrast-a
+    waitFor: [preflight-components, python-contracts, verify-published-snapshots, verify-published-assets, validate-source-contract]
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+    entrypoint: bash
+    env:
+      - CI=true
+      - PYTHONPATH=/workspace/.python-deps
+      - DATA_ASSET_LOCK=/workspace/.published/assets/lock.json
+      - DATA_ASSET_PACK_ROOT=/workspace/.published/assets
+      - PUBLIC_SNAPSHOT_RELEASE_ROOT=/workspace/.published/municipal
+      - CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/workspace/.published/cityvizor
+    args:
+      - -ceu
+      - |
+        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
+        exec > >(tee /tmp/browser-gate.log) 2>&1
+        npm run test:api
+        # Validate the source checkout, not an in-build warehouse merge. The
+        # independently published runtime releases have their own gates above.
+        PSD_BUILD_MODE=local npm run validate
+        node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs
+        node --test tests/industrial-data.test.cjs
+        npx playwright test --workers=4 --max-failures=1 --retries=0 --reporter=line --shard=1/2 --output=/workspace/test-results/shard-a
 
-  - id: browser-contrast
-    waitFor: [verify-published-snapshots, verify-published-assets, validate-source-contract]
-    name: node:22-bookworm@sha256:8a34c4ab3ea2c5cd194f07e317b2a8f09461d3c8b05c4e34c8ccd56d56024c4d
+  - id: browser-contrast-b
+    waitFor: [preflight-components, verify-published-snapshots, verify-published-assets, validate-source-contract]
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
     env:
       - CI=true
@@ -95,13 +132,7 @@ steps:
       - |
         trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
         exec > >(tee /tmp/browser-gate.log) 2>&1
-        npm ci
-        npm run check:stories
-        npx playwright install --with-deps chromium
-        npm run test:api
-        node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs
-        node --test tests/industrial-data.test.cjs
-        npx playwright test --workers=4 --max-failures=5
+        npx playwright test --workers=4 --max-failures=1 --retries=0 --reporter=line --shard=2/2 --output=/workspace/test-results/shard-b
 
   - id: nginx-routing
     waitFor: [validate-source-contract]
@@ -122,45 +153,8 @@ steps:
         wget -qO /tmp/france.html 'http://127.0.0.1:8080/municipalities/france/profile/?code=31555'
         grep -q 'data-profile-root=' /tmp/france.html
 
-  - id: build
-    waitFor: [stage-code-runtime]
-    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
-    env: [DOCKER_BUILDKIT=1]
-    args:
-      - build
-      - --file
-      - /workspace/.runtime-image/Dockerfile
-      - --tag
-      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID
-      - /workspace/.runtime-image
-
-  - id: image-contract
-    waitFor: [build, verify-published-snapshots, verify-published-assets]
-    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
-    entrypoint: bash
-    args:
-      - -ceu
-      - |
-        docker run --rm --entrypoint node \
-          -v /workspace/scripts/verify-runtime-image.mjs:/tmp/verify-runtime-image.mjs:ro \
-          -v /workspace/.published/assets:/packs:ro \
-          -v /workspace/.published/municipal:/municipal:ro \
-          -v /workspace/.published/cityvizor:/cityvizor:ro \
-          -e PORT=8080 \
-          -e PUBLIC_SNAPSHOT_RELEASE_ROOT=/municipal \
-          -e CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/cityvizor \
-          -e DATA_ASSET_PACK_ROOT=/packs \
-          -e DATA_ASSET_LOCK=/packs/lock.json \
-          europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID \
-          /tmp/verify-runtime-image.mjs
-        docker run --rm --entrypoint node \
-          -v /workspace/scripts/verify-runtime-image-code.mjs:/tmp/verify-runtime-image-code.mjs:ro \
-          -e PORT=8080 \
-          europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID \
-          /tmp/verify-runtime-image-code.mjs
-
   - id: verification-complete
-    waitFor: [browser-contrast, nginx-routing, image-contract]
+    waitFor: [browser-contrast-a, browser-contrast-b, nginx-routing, python-contracts]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: sh
     args: [-ceu, 'echo "Full verification passed against published immutable data releases."']

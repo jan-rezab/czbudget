@@ -61,7 +61,9 @@ for (const required of [
   "validate-public-serving-snapshot.mjs",
   "validate-cityvizor-cloud-release.mjs",
   "verify-runtime-assets-cloud.py",
-  "verify-runtime-image-code.mjs",
+  "preflight-components",
+  "browser-contrast-a",
+  "browser-contrast-b",
   "npx playwright test",
 ]) {
   if (!cloudbuildVerify.includes(required)) {
@@ -75,9 +77,7 @@ if (
   !cloudbuildUi.includes("mcr.microsoft.com/playwright:v1.62.1-noble@sha256:") ||
   cloudbuildUi.includes("playwright install") ||
   !cloudbuildUi.includes("plane-verification") ||
-  !cloudbuildUi.includes("tests/browser/map-view.spec.mjs") ||
-  !cloudbuildUi.includes("tests/browser/process-log.spec.mjs") ||
-  !cloudbuildUi.includes("--config=playwright.ui.config.mjs")
+  !cloudbuildUi.includes("scripts/run-component-gate.mjs")
 ) {
   throw new Error("Fast UI verification must remain bounded and cover the public hotfix surfaces");
 }

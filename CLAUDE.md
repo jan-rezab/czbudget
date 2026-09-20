@@ -57,9 +57,11 @@ Rollback is `gcloud run services update-traffic czbudget-public
 
 ## Before you push
 
-`npm run validate` must pass, and the `.githooks/pre-push` hook runs it again
-along with the API and pipeline tests. The browser suite runs in Cloud Build,
-but run the specs you touched locally first:
+The push hook runs source/component contracts and, for main, requires successful
+cloud verification of the exact candidate. Full integrity/API checks run in the
+cloud broad gate; they are not repeated at each local push. Use the dependency
+plan in `COMPONENT_RELEASES.md`; browser checks run in Cloud Build. Do not launch
+a local external browser from this hook. The equivalent targeted cloud command is:
 
 ```sh
 npx playwright test tests/browser/<spec>.spec.mjs --project=desktop-chromium --reporter=line
@@ -81,10 +83,9 @@ from another checkout is not already holding 4173.
   `czech-sources.html/.js/.css` and the tracked datasets. Editing one — even a
   cache-busting `?v=` — fails `npm run validate` until
   `scripts/create-release-manifest.mjs` regenerates it.
-- **Cache-busting is a query string, not a rename.** Production serves JS/CSS
-  with `expires 1h`, so a version bump is only needed when a stale hour would
-  actually hurt. Bumping a shared file's `?v=` rewrites it in thousands of
-  generated pages — rarely worth it.
+- **Chart assets are centrally versioned.** Follow `COMPONENT_RELEASES.md`.
+  Shared chart JS/CSS is content-addressed with retained old versions. Stable
+  legacy JS/CSS URLs revalidate; do not rewrite thousands of pages to bump a query.
 - `cz/**` and `municipalities/**` generated pages are gitignored; shipping one
   needs `git add -f`.
 

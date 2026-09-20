@@ -1,0 +1,17 @@
+/* Shared chart sections only: never page layout, navigation or footer. */
+.psd-shared-plot{position:relative;min-width:0;background:var(--chart-paper,#faf7ef);color:var(--chart-ink,#171918);border:1px solid var(--chart-grid,#d2ccc1);padding:12px 4px 4px;font:14px Arial,Helvetica,sans-serif;font-variant-numeric:tabular-nums}
+.psd-shared-plot svg{display:block;width:100%;height:auto;overflow:visible}
+.psd-shared-plot svg text{fill:var(--chart-ink,#171918);font:14px Arial,Helvetica,sans-serif}
+.psd-plot-grid line{stroke:var(--chart-grid,#d2ccc1);stroke-width:1;vector-effect:non-scaling-stroke}
+.psd-plot-line{fill:none;stroke-width:2.2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.psd-plot-hit{fill:transparent;cursor:crosshair;outline:none}
+.psd-plot-hit:focus-visible{stroke:var(--chart-ink,#171918);stroke-width:2;stroke-dasharray:3 3}
+.psd-plot-guide{stroke:var(--chart-neutral,#8b8d83);stroke-width:1;stroke-dasharray:4 4;pointer-events:none}
+.psd-plot-guide[hidden],.psd-plot-tooltip[hidden]{display:none!important}
+.psd-plot-tooltip{position:absolute;z-index:5;width:max-content;max-width:calc(100% - 8px);box-sizing:border-box;padding:12px 14px;background:#faf7ef;color:#171918;border:1px solid #8b8d83;box-shadow:0 8px 24px #17191820;border-radius:3px;pointer-events:none;font:12px/1.5 Arial,Helvetica,sans-serif}
+.psd-plot-tooltip>strong{display:block;border-bottom:1px solid #d2ccc1;padding-bottom:5px;margin-bottom:6px;font-size:14px}
+.psd-plot-tooltip>span{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:8px;align-items:center;margin:4px 0}
+.psd-plot-tooltip i{display:block;width:7px;height:7px}
+.psd-plot-tooltip b{text-align:right;max-width:180px;overflow-wrap:anywhere}.psd-plot-tooltip small{display:block;font-weight:400;color:#57594f}
+.psd-chart-empty{padding:12px;font-size:14px}
+@media(max-width:600px){.psd-shared-plot{padding:6px 0}.psd-plot-tooltip{font-size:11px;padding:8px}.psd-shared-plot svg{min-height:190px}.psd-shared-plot svg text{font-size:17px}}

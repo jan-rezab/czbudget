@@ -14,6 +14,25 @@ The charts use one compact editorial grammar across the portal. The system is in
 
 ## Supported charts
 
+### Implementation ownership
+
+`lib/chart-renderer.js` is the shared renderer for line, column, percentage-stack
+and horizontal-bar families. `shared-charts.css` owns their light paper treatment.
+Load through `chart-runtime.js` and await `window.PSDPlotReady`; callers supply
+rows, fields, units and formatters to `PSDPlot.render(element, spec)`.
+Call the returned controller's `destroy()` before discarding its container.
+Do not use the renderer to infer financial meaning or fill missing values.
+The existing `psd-chart.js` remains the sole owner of the affordance rail.
+
+Every interactive mark needs pointer, keyboard and touch access to the same
+tooltip information. Escape dismisses; arrow keys move between periods. Never
+depend on SVG `<title>` alone. Existing accessible data tables and source lines
+must remain available. Empty and incomplete series are not zero-valued series.
+
+Content hashes identify implementation assets, NOT chart slugs or entity IDs.
+The asset manifest is revalidated; immutable earlier JS/CSS versions are retained.
+See `COMPONENT_RELEASES.md` for consumer coverage and migration boundaries.
+
 1. **Line chart** — change over time. Use a maximum of four lines, direct end labels when space permits, four or five horizontal grid lines, and no decorative area fill.
 2. **Column chart** — composition or annual totals. Use consistent column width, square corners, restrained gaps and the shared baseline.
 3. **Horizontal bar chart** — ranking and comparison. Sort deliberately, align values on the right and highlight only the selected or editorially important row.

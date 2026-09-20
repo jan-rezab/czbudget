@@ -97,7 +97,7 @@ function sendHTML(request, response, body) {
   response.writeHead(200, {
     "content-type": "text/html; charset=utf-8",
     "content-length": Buffer.byteLength(body),
-    "cache-control": "public, max-age=300, stale-while-revalidate=3600",
+    "cache-control": "no-cache, must-revalidate",
     "x-content-type-options": "nosniff",
   });
   response.end(request.method === "HEAD" ? undefined : body);

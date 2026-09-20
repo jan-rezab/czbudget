@@ -1,3 +1,6 @@
+ (async () => {
+await import("/chart-runtime.js");
+await window.PSDPlotReady;
 const historyRoot = document.querySelector("#history-explorer");
 if (historyRoot) {
   const source=historyRoot.dataset.source,fixedIco=historyRoot.dataset.fixedIco;
@@ -34,27 +37,19 @@ if (historyRoot) {
   const setLegend=items=>{legend.innerHTML=items.map(item=>`<span><i style="background:${item.color}"></i>${item.label}</span>`).join("");};
 
   function lineChart(series,fields){
-    const width=1120,height=460,left=72,right=26,top=30,bottom=54,values=series.flatMap(row=>fields.map(field=>row[field.key])).filter(Number.isFinite).map(currency().convert),sourceMax=Math.max(...values),axis=niceAxis(sourceMax*1.04),max=axis.max;
-    const divisor=max>=1e9?1e9:max>=1e6?1e6:max>=1e3?1e3:1,suffix=divisor===1e9?(english?"bn":"mld."):divisor===1e6?(english?"m":"mil."):divisor===1e3?(english?"k":"tis."):"",chartUnit=`${currency().current}${suffix?` ${suffix}`:""}`;
-    const x=index=>left+(index+.5)*((width-left-right)/series.length),y=value=>top+(max-currency().convert(value))/max*(height-top-bottom);
-    const grid=axis.ticks.map(value=>`<line x1="${left}" x2="${width-right}" y1="${top+(max-value)/max*(height-top-bottom)}" y2="${top+(max-value)/max*(height-top-bottom)}"/><text x="${left-12}" y="${top+(max-value)/max*(height-top-bottom)+4}" text-anchor="end">${fmt.format(value/divisor)}</text>`).join("");
-    const paths=fields.map(field=>{let drawing=false;const d=series.map((row,index)=>{if(!Number.isFinite(row[field.key])){drawing=false;return "";}const command=drawing?"L":"M";drawing=true;return `${command}${x(index).toFixed(1)},${y(row[field.key]).toFixed(1)}`;}).join(" ");const points=series.map((row,index)=>Number.isFinite(row[field.key])?`<circle cx="${x(index)}" cy="${y(row[field.key])}" r="3"><title>${row.year}: ${field.format(row[field.key])}</title></circle>`:"").join("");return `<g class="history-series" style="--series-color:${field.color}"><path class="history-line" d="${d}"/>${points}</g>`;}).join("");
-    const years=series.map((row,index)=>index%2===0||index===series.length-1?`<text x="${x(index)}" y="${height-24}" text-anchor="middle">${row.year}</text>`:"").join("");
-    const hitWidth=(width-left-right)/series.length,interactions=series.map((row,index)=>{const available=fields.filter(field=>Number.isFinite(row[field.key])),label=`${row.year}. ${available.map(field=>`${field.label}: ${field.format(row[field.key])}`).join(". ")}.`,dots=available.map(field=>`<circle class="history-hover-dot" style="stroke:${field.color}" cx="${x(index)}" cy="${y(row[field.key])}" r="6"/>`).join("");return `<g class="history-year-interaction" data-index="${index}"><rect class="history-year-hit" x="${x(index)-hitWidth/2}" y="${top}" width="${hitWidth}" height="${height-top-bottom}" tabindex="0" role="img" aria-label="${svgEscape(label)}"/><line class="history-year-guide" x1="${x(index)}" x2="${x(index)}" y1="${top}" y2="${height-bottom}"/>${dots}</g>`;}).join("");
-    const chartLabel=fields.map(field=>field.label).join(", ");
-    chart.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${chartLabel}"><g class="history-grid">${grid}${years}<text x="18" y="22">${chartUnit}</text></g>${paths}${interactions}</svg><div class="history-tooltip" role="status" aria-live="polite" hidden></div>`;
-    const tooltip=chart.querySelector(".history-tooltip"),showTooltip=(target,clientX)=>{const row=series[Number(target.closest(".history-year-interaction")?.dataset.index)];if(!row)return;tooltip.innerHTML=`<strong>${row.year}</strong>${fields.filter(field=>Number.isFinite(row[field.key])).map(field=>`<span><i style="background:${field.color}"></i>${field.label}<b>${field.format(row[field.key])}</b></span>`).join("")}`;tooltip.hidden=false;const rect=chart.getBoundingClientRect(),anchor=Number.isFinite(clientX)?clientX-rect.left:x(series.indexOf(row))*rect.width/width;tooltip.style.left=`${Math.max(8,Math.min(rect.width-228,anchor+14))}px`;tooltip.style.top="48px";};
-    chart.onmouseover=event=>{if(event.target.closest(".history-year-hit"))showTooltip(event.target,event.clientX);};
-    chart.onmousemove=event=>{if(event.target.closest(".history-year-interaction"))showTooltip(event.target,event.clientX);};
-    chart.onfocusin=event=>{if(event.target.closest(".history-year-hit"))showTooltip(event.target);};
-    chart.onmouseleave=()=>{tooltip.hidden=true;};chart.onfocusout=event=>{if(!chart.contains(event.relatedTarget))tooltip.hidden=true;};
+    window.PSDPlot.render(chart, { type: "line", rows: series, locale,
+      title: fields.map(field => field.label).join(", "), unit: currency().current,
+      fields: fields.map(field => ({ ...field,
+        value: row => Number.isFinite(row[field.key]) ? currency().convert(row[field.key]) : null,
+        format: (_value, row) => field.format(row[field.key]),
+      })),
+    });
   }
-
   function stackedChart(series,fields){
-    const width=1120,height=450,left=58,right=24,top=28,bottom=58,plotHeight=height-top-bottom,step=(width-left-right)/series.length,bar=Math.min(34,step*.62);
-    const bars=series.map((row,index)=>{const total=fields.reduce((sum,field)=>sum+(Number(row[field.key])||0),0);let offset=0;const pieces=fields.map(field=>{const share=total>0?Math.max(0,Number(row[field.key])||0)/total:0,h=share*plotHeight,y=top+plotHeight-offset-h;offset+=h;return `<rect x="${left+index*step+(step-bar)/2}" y="${y}" width="${bar}" height="${h}" fill="${field.color}"><title>${row.year} · ${field.label}: ${fmt.format(share*100)} % · ${compact(row[field.key])}</title></rect>`;}).join("");return `${pieces}<text x="${left+(index+.5)*step}" y="${height-25}" text-anchor="middle">${index%2===0||index===series.length-1?row.year:""}</text>`;}).join("");
-    const chartLabel=fields.map(field=>field.label).join(", ");
-    chart.innerHTML=`<svg class="history-stack-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${chartLabel}"><g class="history-grid"><line x1="${left}" x2="${width-right}" y1="${top}" y2="${top}"/><line x1="${left}" x2="${width-right}" y1="${top+plotHeight/2}" y2="${top+plotHeight/2}"/><line x1="${left}" x2="${width-right}" y1="${top+plotHeight}" y2="${top+plotHeight}"/><text x="${left-10}" y="${top+4}" text-anchor="end">100 %</text><text x="${left-10}" y="${top+plotHeight/2+4}" text-anchor="end">50 %</text><text x="${left-10}" y="${top+plotHeight+4}" text-anchor="end">0 %</text>${bars}</g></svg>`;
+    window.PSDPlot.render(chart, { type: "stacked", rows: series, locale,
+      title: fields.map(field => field.label).join(", "), unit: "%",
+      fields: fields.map(field => ({ ...field, format: value => compact(value) })),
+    });
   }
 
   function render(city){
@@ -93,3 +88,4 @@ if (historyRoot) {
     render(cities.find(city=>city.national_id===(fixedIco||select?.value))||cities[0]);
   }).catch(error=>{console.error("Municipal history integration failed",error);kpis.innerHTML=`<p>${english?"Historical data could not be loaded.":"Historická data se nepodařilo načíst."}</p>`;});
 }
+})();

@@ -632,7 +632,7 @@ if (!cacheBusted(countryPage, "country-spending.js") || !cacheBusted(countryPage
 if (!countryFunctionsScript.includes("function renderTransport") || !countryFunctionsScript.includes("transport-comparison") || !countryFunctionsScript.includes("stockNotBuild") || !countryFunctionsScript.includes("function transportBudgetDetail") || !countryFunctionsScript.includes("function infrastructurePerformance")) throw new Error("Transportation must expose network, budget and infrastructure-performance deep dives with the net-stock caveat");
 async function htmlFiles(directory = ".") {
   const entries = await readdir(directory, { withFileTypes: true });
-  const nested = await Promise.all(entries.filter((entry) => !/ \d+\.[^/]+$/.test(entry.name) && ![".git", "dist", "node_modules", "playwright-report", "server", "test-results"].includes(entry.name)).map((entry) => {
+  const nested = await Promise.all(entries.filter((entry) => !/ \d+\.[^/]+$/.test(entry.name) && ![".git", "dist", "node_modules", "playwright-report", "server", "test-results", "tests"].includes(entry.name)).map((entry) => {
     const path = directory === "." ? entry.name : `${directory}/${entry.name}`;
     return entry.isDirectory() ? htmlFiles(path) : path.endsWith(".html") ? [path] : [];
   }));

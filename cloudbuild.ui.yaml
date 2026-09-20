@@ -8,19 +8,13 @@ steps:
     args:
       - -ceu
       - |
+        echo "Candidate ${_CANDIDATE_SHA}; base ${_BASE_SHA}"
         npm ci
-        npx playwright test \
-          tests/browser/stories.spec.mjs \
-          tests/browser/map-view.spec.mjs \
-          tests/browser/energy-trade.spec.mjs \
-          tests/browser/compare-contract.spec.mjs \
-          tests/browser/education-capacity.spec.mjs \
-          tests/browser/loading-recovery.spec.mjs \
-          tests/browser/process-log.spec.mjs \
-          --config=playwright.ui.config.mjs \
-          --project=desktop-chromium \
-          --workers=2 \
-          --max-failures=1
+        if [ -f verification-plan.json ]; then
+          node scripts/run-component-gate.mjs verification-plan.json
+        else
+          node scripts/run-component-gate.mjs
+        fi
 
 timeout: 600s
 queueTtl: 600s
@@ -29,3 +23,7 @@ tags: [plane-verification, fast-ui]
 options:
   machineType: E2_MEDIUM
   logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _CANDIDATE_SHA: uncommitted
+  _BASE_SHA: uncommitted

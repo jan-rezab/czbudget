@@ -1,5 +1,6 @@
-(() => {
+(async () => {
   if (!window.PSDChart) return; // The authored tables remain available without JS.
+  const chartsReady = await window.PSDStoryChartsReady;
   document.querySelectorAll('[data-story-table]').forEach(table => {
     const host = table.parentElement;
     const columns = [...table.querySelectorAll('thead th')].map((cell,i)=>({key:String(i),label:cell.textContent}));
@@ -10,6 +11,6 @@
       // The three responsive SVG charts support a real 2x image export.
       exports:host.querySelector('.chart svg')?['csv','png']:['csv'], embeddable:false,
     });
-    table.hidden = true;
+    table.hidden = chartsReady === true;
   });
 })();

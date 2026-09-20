@@ -1,6 +1,19 @@
 # Production promotion is code-only. Data ingestion and data-release publication
 # run independently and expose validated versions through GCS current.json pointers.
 steps:
+  - id: verification-input
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        if ! git rev-parse --verify "$COMMIT_SHA^" >/dev/null 2>&1; then
+          git fetch --depth=2 origin "$COMMIT_SHA"
+        fi
+        git rev-parse "$COMMIT_SHA^" > /workspace/.verification-base
+        git diff --name-only "$COMMIT_SHA^" "$COMMIT_SHA" > /workspace/.verification-files
+
   - id: assert-single-production
     waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
@@ -15,17 +28,27 @@ steps:
     env: [COMMIT_SHA=$COMMIT_SHA, BUILD_ID=$BUILD_ID]
 
   - id: source-contracts
-    waitFor: ["-"]
+    waitFor: [verification-input]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: sh
     args:
       - -ceu
       - |
         node scripts/publish-stories.mjs --check
+        node scripts/build-chart-assets.mjs --check
+        node scripts/validate-chart-ownership.mjs
+        node --test tests/unit/chart-renderer.spec.mjs tests/unit/verification-plan.spec.mjs
         node --test tests/unit/stories.spec.mjs
         node --test tests/api/static-assets.spec.mjs tests/api/pinned-release.spec.mjs
         node --test tests/api/process-log-store.spec.mjs
         node pipeline/create-source-manifest.mjs --self-check
+        node --input-type=module -e 'import {readFileSync,writeFileSync} from "node:fs"; import {selectVerification} from "./scripts/verification-plan.mjs"; const base=readFileSync(".verification-base","utf8").trim(); const files=readFileSync(".verification-files","utf8").trim().split("\n").filter(Boolean); writeFileSync(".verification-plan.json",JSON.stringify({...selectVerification(files),base,commit:"$COMMIT_SHA"}));'
+
+  - id: assert-verified-candidate
+    waitFor: [source-contracts]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [scripts/check-cloud-verification.py, --plan, /workspace/.verification-plan.json]
 
   - id: python-contracts
     waitFor: ["-"]
@@ -38,7 +61,7 @@ steps:
         python3 -m unittest discover -s tests -p test_runtime_assets.py
 
   - id: stage-code-runtime
-    waitFor: [build-process-log, source-contracts, python-contracts]
+    waitFor: [build-process-log, source-contracts, python-contracts, assert-verified-candidate]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: python3
     args: [scripts/stage-runtime.py, --output, /workspace/.runtime-image]
@@ -68,13 +91,28 @@ steps:
           europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID \
           /tmp/verify-runtime-image-code.mjs
 
+  - id: start-image-browser-candidate
+    waitFor: [image-contract]
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
+    args: [run, --detach, --name, psd-release-candidate, --network, cloudbuild, -e, PORT=8080, europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID]
+
+  - id: image-browser-contract
+    waitFor: [start-image-browser-candidate]
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        npm ci
+        npx playwright test --config=playwright.release.config.mjs --max-failures=1
+
   - id: push
     waitFor: [build]
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
     args: [push, europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID]
 
   - id: assert-current-main
-    waitFor: [assert-single-production, image-contract, push]
+    waitFor: [assert-single-production, image-contract, image-browser-contract, push]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/assert-current-main.mjs, $COMMIT_SHA, /workspace/.deploy-current-main]

@@ -439,7 +439,7 @@ const cloudbuild = await readFile("cloudbuild.yaml", "utf8");
 for (const match of cloudbuild.matchAll(/^\s+name:\s+(\S+)/gm)) assert(match[1].includes("@sha256:"), `Cloud Build image is not pinned by digest: ${match[1]}`);
 assert(cloudbuild.includes("scripts/deploy-immutable.sh"), "Cloud Build does not deploy the pushed image by immutable digest");
 const nginxTemplate = await readFile("nginx.conf.template", "utf8");
-assert(!/^\s*(?:location\s+~\s+|~)\S*\{\d+(?:,\d*)?\}/m.test(nginxTemplate), "Unquoted Nginx regular expressions must not contain brace quantifiers");
+assert(!/^\s*(?:location\s+~\*?\s+|~)(?!["'])\S*\{\d+(?:,\d*)?\}/m.test(nginxTemplate), "Unquoted Nginx regular expressions must not contain brace quantifiers");
 
 let htmlCount = 0;
 let localReferenceCount = 0;
@@ -456,7 +456,7 @@ const dynamicMunicipalityPaths = new Set([
   ...benchmarkMunicipalities.map((entity) => entity.url),
 ].filter(Boolean).map((value) => value.endsWith("/") ? value : `${value}/`));
 if (!dataOnly) {
-  const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html"));
+  const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html") && !path.relative(root, file).startsWith(`tests${path.sep}`));
   htmlCount = htmlFiles.length;
   for (const file of htmlFiles) {
     const content = await readFile(file, "utf8");

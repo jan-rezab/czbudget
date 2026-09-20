@@ -39,11 +39,24 @@ repository: the tracked data history makes the checkout a multi-gigabyte build
 source even when the selected YAML is code-only.
 
 - Config: `cloudbuild.verify.yaml`.
-- Runs explicitly before merge when a change affects the public application.
+- Runs explicitly before merge for structural, unknown or broad application changes.
+  Known component-only changes use the dependency-selected fast gate instead;
+  `scripts/verification-plan.mjs` is the fail-closed selector. See `COMPONENT_RELEASES.md`.
 - It may hydrate pinned published fixtures and run the exhaustive browser suite,
   but it is not the production promotion path.
 - Never run it concurrently with another verification of the same commit. Reuse
   the successful build ID.
+
+The exhaustive gate runs named component contracts first, then two browser shards
+against pinned published releases using the prepared Playwright image. No repeated
+browser installation. Runtime image assembly happens once, in production; its
+filesystem/HTTP and desktop/mobile browser contracts must pass before promotion.
+Both the push hook and production build require successful cloud verification
+for the exact candidate. Unknown changed paths cannot use a component-only receipt.
+Local push checks remain source-only and never rescan/restore bulk data.
+The exhaustive source-integrity pass explicitly uses `PSD_BUILD_MODE=local`:
+its input is a checkout, not the obsolete in-web-build BigQuery merge. This
+does not replace the separate mandatory immutable published-snapshot validators.
 
 ## Data plane
 
