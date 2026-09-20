@@ -11,6 +11,8 @@
       // The three responsive SVG charts support a real 2x image export.
       exports:host.querySelector('.chart svg')?['csv','png']:['csv'], embeddable:false,
     });
-    table.hidden = chartsReady === true;
+    // Mini stories have static, already-readable charts and no async renderer.
+    // Keep their existing compact layout; only a failed renderer needs fallback.
+    table.hidden = chartsReady !== false;
   });
 })();

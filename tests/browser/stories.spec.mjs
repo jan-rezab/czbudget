@@ -46,6 +46,10 @@ test('stories are readable on mobile and mini articles have shared navigation',a
     await page.goto(`${path}?lang=en`);
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.locator('psd-site-header [data-global-nav="stories"]')).toBeVisible();
+    if(path.includes('customs-revenue-') || path.includes('reciprocal-tariffs-')) {
+      await expect(page.locator('[data-chart-slug]')).toHaveCount(1);
+      await expect(page.locator('.chart-fallback')).toBeHidden();
+    }
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
   }
 });
