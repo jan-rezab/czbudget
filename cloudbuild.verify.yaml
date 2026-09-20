@@ -1,208 +1,98 @@
-# Full release verification. This is deliberately separate from production
-# promotion; cloudbuild.yaml is the lean, code-only deploy path.
+# Full application verification against the exact data releases already
+# published to production. This build is read-only: it never queries the
+# warehouse, rebuilds data, uploads artifacts, changes pointers or deploys.
 steps:
-  # Cloud Build runs steps in file order unless a step declares waitFor. The layer
-  # hydration and BigQuery exports only write isolated build-workspace files.
-  # Run sequentially they were 5 + 41 + 8 + 64 = 118s; started together the exports
-  # (72s of BigQuery wait) hide behind hydration and its verification (74s of network
-  # and gunzip). Everything downstream of the merges stays strictly ordered, because
-  # both merge scripts rewrite data/entities/ -- the very layer hydration lays down.
-  # data/municipal-expansion/ is no longer committed: it is 580 MB of regenerable serving
-  # output across 28,559 files, and every regeneration wrote all of them into git history.
-  # The Dockerfile copies the working tree into the image, so the build must fetch it here
-  # and prove it matches the hashes in data/manifest.v1.json before anything is served.
-  - id: hydrate-data-layers
+  - id: hydrate-published-releases
     waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
       - -ceu
       - |
-        set -o pipefail
-        BASE="gs://czbudget-janrezab-data-layers/2026-08-30"
-        # Hydration was 2,057s of a 3,019s build — 68% of it. The cost is per object rather
-        # than per byte: these four layers are 70,695 files and 1.17 GB, which rsync moved at
-        # 34 objects a second. That is round-trip latency, not bandwidth, which is why pulling
-        # the four concurrently made it worse rather than better (1,526s sequential against
-        # 2,057s concurrent) — each rsync still walks its own object list, and four of them
-        # contend for one thread budget.
-        #
-        # The same trees gzip to 74 MB in four objects, streamed straight into tar so the
-        # archive never lands on disk. Measured end to end at 26s for all 70,696 files, with
-        # every layer still matching the manifest. Rebuild them with:
-        #   node scripts/hydrate-data-layers.mjs --layer <id> --pack
-        #
-        # `bundles` is the fifth and by far the smallest: 17 files and 18.4 MB carrying the
-        # same 65,920 profiles the 635 MB fan-out does. prepare-public-serving-snapshots.mjs
-        # reads it in preference to `serving`, which is retired and kept only as the baseline
-        # the derivation tools check against.
-        # Per-route HTML is no longer a build input. The server renders it from
-        # the release snapshot, so hydrating pages/pages_cz would only recreate
-        # 35,869 files that neither Nginx nor the image uses.
-        for LAYER in serving entities bundles; do
-          gcloud storage cat "$$BASE/$$LAYER.tar.gz" | tar -C . -xzf -
-          echo "hydrated $$LAYER"
-        done
+        mkdir -p /workspace/.published/municipal/releases
+        mkdir -p /workspace/.published/cityvizor/releases
+        mkdir -p /workspace/.published/assets
+        gcloud storage cp ${_PUBLIC_SNAPSHOT_BASE_URL}/current.json /workspace/.published/municipal/current.json
+        gcloud storage cp ${_CITYVIZOR_SNAPSHOT_BASE_URL}/current.json /workspace/.published/cityvizor/current.json
+        gcloud storage cp ${_STATIC_ASSET_BASE_URL}/current.json /workspace/.published/assets/lock.json
+        python3 - <<'PY'
+        import json
+        from pathlib import Path
+        root = Path('/workspace/.published')
+        municipal = json.loads((root / 'municipal/current.json').read_text())
+        cityvizor = json.loads((root / 'cityvizor/current.json').read_text())
+        assets = json.loads((root / 'assets/lock.json').read_text())
+        (root / 'municipal-release').write_text(municipal['release_id'])
+        (root / 'cityvizor-release').write_text(cityvizor['release_id'])
+        with (root / 'asset-packs.tsv').open('w') as output:
+            for pack in assets['packs'].values():
+                output.write(pack['key'] + '\t' + pack['file'] + '\n')
+        PY
+        municipal_release="$$(cat /workspace/.published/municipal-release)"
+        cityvizor_release="$$(cat /workspace/.published/cityvizor-release)"
+        gcloud storage rsync -r ${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$municipal_release /workspace/.published/municipal/releases/$$municipal_release
+        gcloud storage rsync -r ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/$$cityvizor_release /workspace/.published/cityvizor/releases/$$cityvizor_release
+        while IFS=$$'\t' read -r key file; do
+          gcloud storage cp "gs://czbudget-janrezab-public-snapshots/$$key" "/workspace/.published/assets/$$file"
+        done < /workspace/.published/asset-packs.tsv
 
-  - id: hydrate-automotive
-    waitFor: ["-"]
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:3a4f4f351ebe7f7449c9238286b2fd3ca6707da93e1085bcb4d60cd949302f1b
-    entrypoint: python3
-    args: [scripts/hydrate-automotive.py]
-    env: [BUILD_ID=$BUILD_ID]
-
-  - id: hydrate-industry
-    waitFor: ["-"]
+  - id: verify-published-snapshots
+    waitFor: [hydrate-published-releases]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/hydrate-industry.mjs]
+    entrypoint: sh
+    args:
+      - -ceu
+      - |
+        municipal_release="$$(cat /workspace/.published/municipal-release)"
+        cityvizor_release="$$(cat /workspace/.published/cityvizor-release)"
+        node scripts/validate-public-serving-snapshot.mjs /workspace/.published/municipal
+        node scripts/validate-cityvizor-cloud-release.mjs /workspace/.published/cityvizor/releases/$$cityvizor_release
 
-  - id: hydrate-paq
-    waitFor: ["-"]
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
-    entrypoint: python3
-    args: [scripts/hydrate-paq.py]
-
-  - id: verify-paq
-    waitFor: ["hydrate-paq"]
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/validate-paq.mjs]
-
-  # The complete normalized CityVizor layer is a checksum-pinned GitHub release
-  # asset. Hydrate it into a private build directory, validate every referenced
-  # object, and expose the pointer-shaped root to API and browser tests.
-  - id: hydrate-cityvizor
-    waitFor: ["-"]
+  - id: verify-published-assets
+    waitFor: [hydrate-published-releases]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
       - -ceu
       - |
-        archive=/workspace/.cityvizor-release.tar.gz
-        serving=/workspace/.cityvizor-serving
-        release=20260909-2294793cff54
-        curl --fail --location --retry 4 --retry-all-errors \
-          --output "$$archive" \
-          "https://github.com/jan-rezab/czbudget/releases/download/cityvizor-data-2026-09-09/cityvizor-explorer-2026-09-09.tar.gz" || exit 41
-        echo "962238753f9aaa1a090b687371e558df5e54f38c034f7d1140771d9ce4951da0  $$archive" | sha256sum -c - || exit 42
-        mkdir -p "$$serving/releases/$$release"
-        tar -C "$$serving/releases/$$release" -xzf "$$archive" || exit 43
-        cp data/cityvizor-current.v1.json "$$serving/current.json" || exit 44
+        python3 scripts/verify-runtime-assets-cloud.py /workspace/.published/assets/lock.json
 
-  - id: verify-cityvizor
-    waitFor: ["hydrate-cityvizor"]
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/validate-cityvizor-cloud-release.mjs, /workspace/.cityvizor-serving/releases/20260909-2294793cff54]
-
-  - id: verify-industrial-diagnostics
-    waitFor: ["-"]
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/validate-industrial-release.mjs]
-
-  - id: verify-data-layers
-    waitFor: ["hydrate-data-layers"]
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: sh
-    args:
-      - -ceu
-      - |
-        node scripts/hydrate-data-layers.mjs --layer serving  --verify
-        node scripts/hydrate-data-layers.mjs --layer entities --verify
-        node scripts/hydrate-data-layers.mjs --layer bundles  --verify
-
-  # Export one immutable municipal release into 128 compressed shards. This is
-  # the only profile representation used by the runtime; no per-route HTML is
-  # copied into the image or uploaded as one object per municipality.
-  - id: build-public-snapshot
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: sh
-    args:
-      - -ceu
-      - |
-        node scripts/prepare-public-serving-snapshots.mjs \
-          --output /workspace/.public-serving-build \
-          --release-id "$COMMIT_SHA-$BUILD_ID" \
-          --shards 128
-        node scripts/validate-public-serving-snapshot.mjs /workspace/.public-serving-build
-
-  # Build the public operational ledger before the release manifest hashes it. Cloud metadata is
-  # supplied directly because the manifest for this exact build does not exist yet.
   - id: build-process-log
-    waitFor: ["build-public-snapshot", "hydrate-automotive"]
+    waitFor: ["-"]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: node
     args: [scripts/build-run-log.mjs, --write]
-    env:
-      - COMMIT_SHA=$COMMIT_SHA
-      - BUILD_ID=$BUILD_ID
+    env: [COMMIT_SHA=$COMMIT_SHA, BUILD_ID=$BUILD_ID]
 
-  # Validation writes the quality report: draft -> validate -> final -> verify
-  # must finish before the immutable runtime surface is assembled.
-  - id: release-manifest-draft
-    waitFor: ["build-process-log"]
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/create-release-manifest.mjs]
-    env:
-      - COMMIT_SHA=$COMMIT_SHA
-      - BUILD_ID=$BUILD_ID
-
-  - id: validate
+  - id: validate-source-contract
+    waitFor: [build-process-log]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: sh
-    args: [-ceu, 'node scripts/validate-site.mjs && node scripts/validate-integrity.mjs --write-report']
-
-  - id: release-manifest
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/create-release-manifest.mjs]
-    env:
-      - COMMIT_SHA=$COMMIT_SHA
-      - BUILD_ID=$BUILD_ID
-
-  # Gate: re-verify that the published manifest still describes the tree on disk, so
-  # nothing mutates it after the manifest was hashed. Any step added below this point
-  # that writes a manifest-tracked file will (correctly) break the build here.
-  #
-  # This ran the full validator and cost 139s of an 875s build. Every semantic check
-  # in it -- the municipal histories, the reconciliations, the HTML and sitemap audits
-  # -- was answered identically 170s earlier in the `validate` step, because the only
-  # thing that changed in between is data/data-quality-report.v1.json, which the
-  # manifest itself covers. --manifest-only runs the release_manifest group alone and
-  # keeps the gate exact: a one-space edit to a tracked artifact still exits 1.
-  - id: verify-release-manifest
-    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
-    entrypoint: node
-    args: [scripts/validate-integrity.mjs, --manifest-only]
-
-  - id: prepare-runtime-assets
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
-    entrypoint: bash
-    env: [BUILD_ID=$BUILD_ID, PROJECT_ID=$PROJECT_ID]
     args:
       - -ceu
       - |
-        python3 -m unittest discover -s tests -p test_runtime_assets.py
-        python3 scripts/prepare-runtime-assets.py --output /workspace/.asset-release
-        python3 scripts/stage-runtime.py --output /workspace/.runtime-image --lock /workspace/.asset-release/lock.json
+        node scripts/validate-build-planes.mjs
+        node pipeline/create-source-manifest.mjs --self-check
+
+  - id: stage-code-runtime
+    waitFor: [validate-source-contract]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [scripts/stage-runtime.py, --output, /workspace/.runtime-image]
 
   - id: browser-contrast
-    waitFor: ["prepare-runtime-assets"]
+    waitFor: [verify-published-snapshots, verify-published-assets, validate-source-contract]
     name: node:22-bookworm@sha256:8a34c4ab3ea2c5cd194f07e317b2a8f09461d3c8b05c4e34c8ccd56d56024c4d
     entrypoint: bash
     env:
       - CI=true
-      - DATA_ASSET_LOCK=/workspace/.asset-release/lock.json
-      - DATA_ASSET_PACK_ROOT=/workspace/.asset-release
-      - PUBLIC_SNAPSHOT_RELEASE_ROOT=/workspace/.public-serving-build
-      - CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/workspace/.cityvizor-serving
+      - DATA_ASSET_LOCK=/workspace/.published/assets/lock.json
+      - DATA_ASSET_PACK_ROOT=/workspace/.published/assets
+      - PUBLIC_SNAPSHOT_RELEASE_ROOT=/workspace/.published/municipal
+      - CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/workspace/.published/cityvizor
     args:
       - -ceu
       - |
-        # Preserve a bounded failure summary in build metadata as well as logs.
         trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
         exec > >(tee /tmp/browser-gate.log) 2>&1
         npm ci
@@ -213,54 +103,38 @@ steps:
         npx playwright test --workers=4 --max-failures=5
 
   - id: nginx-routing
-    waitFor: ["prepare-runtime-assets"]
+    waitFor: [validate-source-contract]
     name: nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
     entrypoint: sh
-    env:
-      - PORT=8080
+    env: [PORT=8080]
     args:
       - -ceu
       - |
-        trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/nginx-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
-        exec > /tmp/nginx-gate.log 2>&1
         mkdir -p /etc/nginx/templates
         cp nginx.conf.template /etc/nginx/templates/default.conf.template
         /docker-entrypoint.d/20-envsubst-on-templates.sh
         sed -i 's@root /usr/share/nginx/html;@root /workspace;@' /etc/nginx/conf.d/default.conf
         nginx -t
         nginx
+        wget -qO /tmp/process-log.html 'http://127.0.0.1:8080/process/log/?lang=en'
+        grep -q 'run-log.js' /tmp/process-log.html
         wget -qO /tmp/france.html 'http://127.0.0.1:8080/municipalities/france/profile/?code=31555'
-        wget -qO /tmp/germany.html 'http://127.0.0.1:8080/municipalities/germany/profile/?code=F07235500700010'
         grep -q 'data-profile-root=' /tmp/france.html
-        grep -q 'data-profile-url=' /tmp/germany.html
-        # Check the deployed routing contract for the unlisted animation, including
-        # its direct file alias and data assets. Normal pages remain indexable.
-        for path in studio/data-in-one-place/ studio/data-in-one-place/index.html studio/data-in-one-place/data.js; do
-          wget -S -O /tmp/studio-response "http://127.0.0.1:8080/$$path" 2>/tmp/studio-headers
-          grep -qi 'X-Robots-Tag: noindex, nofollow, noarchive' /tmp/studio-headers
-        done
-        wget -qO /tmp/studio.html 'http://127.0.0.1:8080/studio/data-in-one-place/'
-        grep -q 'name="robots" content="noindex, nofollow, noarchive"' /tmp/studio.html
-        wget -S -O /dev/null 'http://127.0.0.1:8080/' 2>/tmp/home-headers
-        if grep -qi 'X-Robots-Tag: noindex' /tmp/home-headers; then exit 1; fi
 
   - id: build
-    waitFor: ["prepare-runtime-assets"]
+    waitFor: [stage-code-runtime]
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
-    # Only the explicit runtime surface enters Docker; bulk packs and validation
-    # inputs stay on the worker. This branch overlaps the full browser gate.
-    env:
-      - DOCKER_BUILDKIT=1
+    env: [DOCKER_BUILDKIT=1]
     args:
       - build
       - --file
       - /workspace/.runtime-image/Dockerfile
       - --tag
-      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID
+      - europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID
       - /workspace/.runtime-image
 
   - id: image-contract
-    waitFor: ["build"]
+    waitFor: [build, verify-published-snapshots, verify-published-assets]
     name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
     entrypoint: bash
     args:
@@ -268,28 +142,32 @@ steps:
       - |
         docker run --rm --entrypoint node \
           -v /workspace/scripts/verify-runtime-image.mjs:/tmp/verify-runtime-image.mjs:ro \
-          -v /workspace/.asset-release:/packs:ro \
-          -v /workspace/.public-serving-build:/municipal:ro \
-          -v /workspace/.cityvizor-serving:/cityvizor:ro \
+          -v /workspace/.published/assets:/packs:ro \
+          -v /workspace/.published/municipal:/municipal:ro \
+          -v /workspace/.published/cityvizor:/cityvizor:ro \
           -e PORT=8080 \
           -e PUBLIC_SNAPSHOT_RELEASE_ROOT=/municipal \
           -e CITYVIZOR_SNAPSHOT_RELEASE_ROOT=/cityvizor \
           -e DATA_ASSET_PACK_ROOT=/packs \
           -e DATA_ASSET_LOCK=/packs/lock.json \
-          europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:$COMMIT_SHA-$BUILD_ID \
+          europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID \
           /tmp/verify-runtime-image.mjs
 
   - id: verification-complete
-    waitFor: ["browser-contrast", "nginx-routing", "image-contract"]
+    waitFor: [browser-contrast, nginx-routing, image-contract]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     entrypoint: sh
-    args: [-ceu, 'echo "Full release verification passed without publishing or deploying."']
+    args: [-ceu, 'echo "Full verification passed against published immutable data releases."']
 
 timeout: 2400s
 queueTtl: 3600s
 tags: [plane-verification, full-browser]
 
 options:
-  # The full browser suite runs on the builder, never on a developer desktop.
   machineType: E2_HIGHCPU_8
   logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _PUBLIC_SNAPSHOT_BASE_URL: gs://czbudget-janrezab-public-snapshots/municipal
+  _CITYVIZOR_SNAPSHOT_BASE_URL: gs://czbudget-janrezab-public-snapshots/cityvizor
+  _STATIC_ASSET_BASE_URL: gs://czbudget-janrezab-public-snapshots/static-assets

@@ -48,7 +48,8 @@ if [ "$(git config --bool core.sparseCheckout || true)" = true ] || ! node scrip
   node scripts/build-run-log.mjs
   python3 -m unittest discover -s tests -p test_runtime_assets.py
   node pipeline/create-source-manifest.mjs --self-check
-  grep -q 'node scripts/validate-integrity.mjs --write-report' cloudbuild.verify.yaml
+  node scripts/validate-build-planes.mjs
+  grep -q 'hydrate-published-releases' cloudbuild.verify.yaml
   grep -q 'npx playwright test --workers=4 --max-failures=5' cloudbuild.verify.yaml
   if [ "$push_to_main" = 1 ]; then
     verified_build=$(gcloud builds list --project=czbudget-janrezab --region=europe-west1 \
