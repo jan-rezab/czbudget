@@ -2,6 +2,7 @@ import importlib.util
 import json
 import gzip
 import hashlib
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -91,6 +92,25 @@ class RuntimeAssetsTest(unittest.TestCase):
             self.assertNotIn('server/cityvizor-pointer.json', inventory)
             self.assertNotIn('public/data/isred/large.json', inventory)
             self.assertNotIn('public/.cityvizor-serving/large.json', inventory)
+
+    def test_staging_content_versions_registered_adapters_without_mutating_source(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for relative, content in {
+                'chart-components.json': json.dumps({'release': {'content_versioned_adapters': ['example.js']}}),
+                'example.js': 'window.example=true;\n',
+                'index.html': '<script src="/example.js?v=old"></script>',
+            }.items():
+                target = root / relative; target.parent.mkdir(parents=True, exist_ok=True); target.write_text(content)
+            output = root / 'staged'; (output / 'public').mkdir(parents=True)
+            source = root / 'index.html'; os.link(source, output / 'public/index.html')
+            inventory = {'public/index.html': source.stat().st_size}
+            versions = runtime.version_runtime_references(root, output, inventory)
+            digest = hashlib.sha256((root / 'example.js').read_bytes()).hexdigest()
+            self.assertEqual(versions['example.js'], digest)
+            self.assertIn('example.js?v=' + digest, (output / 'public/index.html').read_text())
+            self.assertIn('example.js?v=old', source.read_text())
+            self.assertIn('asset-versions.json', inventory)
 
 
 if __name__ == '__main__':

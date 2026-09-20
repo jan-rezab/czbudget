@@ -12,6 +12,13 @@ geometry, signed axes, gaps, hover/focus/touch tooltips and keyboard movement.
 `shared-charts.css` styles only chart panels. `psd-chart.js` remains the existing
 table/CSV/PNG/citation/source wrapper, not a second plotting implementation.
 
+`chart-components.json` is the single source for shared consumers, chart families,
+consumer tests, release adapters and every classified legacy drawing file. The
+generated `chart-coverage.json` reports the remaining migration queue. A registry
+entry does not magically make a legacy chart shared: only adapters calling
+`PSDPlot` count. The validator rejects undeclared drawing growth and incomplete
+consumer contracts.
+
 ## Migrated consumers
 
 - `municipal-expanded-profile.js`: Czech and international municipality profile
@@ -37,6 +44,13 @@ them by scraping rendered text or guessing the intended denominator.
 5. Prior content-addressed files are retained across releases. Rollback uses the
    previous image/manifest. Stable legacy JS/CSS URLs revalidate, rather than
    remaining fresh for an hour. HTML for runtime municipal profiles revalidates.
+6. Runtime staging adds the full content hash to every registered adapter URL,
+   including server-rendered municipal pages. This handles CDN/browser caches even
+   when an intermediary overrides the origin's revalidation header.
+
+`PSDPlot.render()` exposes one canonical accessor used by its values and available
+to `PSDChart.register({accessor})`. Table and CSV rows therefore come from the same
+normalized observations as the plot; missing values remain empty rather than zero.
 
 One production promotion updates new loads across all routes. Existing open tabs
 keep their loaded version until refresh; no forced mid-interaction replacement.

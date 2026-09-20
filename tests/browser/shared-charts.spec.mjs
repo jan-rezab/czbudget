@@ -6,6 +6,12 @@ for (const type of ['line', 'column', 'stacked', 'bar']) {
     const plot = page.locator('#plot'), hits = plot.locator('[data-point]'), tooltip = plot.locator('.psd-plot-tooltip');
     await expect(plot).toHaveAttribute('data-chart-component', type);
     await hits.first().hover(); await expect(tooltip).toContainText('100 EUR');
+    const figure=page.locator('#chart-object');
+    await figure.locator('[data-action="table"]').click();
+    await expect(figure.locator('.psd-chart-table')).toContainText('2022');
+    await expect(figure.locator('.psd-chart-table')).toContainText('100');
+    expect(await page.evaluate(()=>window.chartObject.csv())).toContain('2022,100,70');
+    await figure.locator('[data-action="table"]').click();
     await hits.first().focus(); await page.keyboard.press('ArrowRight');
     await expect(tooltip).toContainText('2023'); await expect(tooltip).toContainText('—');
     await page.keyboard.press('End'); await expect(tooltip).toContainText('-20 EUR');

@@ -29,8 +29,11 @@ steps:
       - -ceu
       - |
         npm ci
+        node scripts/validate-ui-environment.mjs --runtime
+        node scripts/validate-release-contract.mjs
         node scripts/build-chart-assets.mjs --check
         node scripts/validate-chart-ownership.mjs
+        node scripts/build-chart-coverage.mjs --check
         npm run check:stories
         node --test tests/unit/bounded-command.spec.mjs
         node scripts/run-component-gate.mjs

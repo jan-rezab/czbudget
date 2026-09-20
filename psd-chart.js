@@ -292,7 +292,8 @@
       registry.delete(spec.slug);
     }
 
-    var columns = spec.columns || [];
+    var suppliedAccessor = resolve(spec.accessor || spec.data);
+    var columns = (suppliedAccessor && suppliedAccessor.columns) || spec.columns || [];
     var host = spec.el;
     host.setAttribute("data-chart-slug", spec.slug);
 
@@ -302,7 +303,10 @@
     var showingTable = false;
 
     function rows() {
-      try { return resolve(spec.rows) || []; } catch (error) { return []; }
+      try {
+        var accessor = resolve(spec.accessor || spec.data) || suppliedAccessor;
+        return accessor ? resolve(accessor.rows) || [] : resolve(spec.rows) || [];
+      } catch (error) { return []; }
     }
 
     function filename(extension) {

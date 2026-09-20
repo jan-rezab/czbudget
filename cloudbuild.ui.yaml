@@ -9,6 +9,8 @@ steps:
       - -ceu
       - |
         echo "Candidate ${_CANDIDATE_SHA}; base ${_BASE_SHA}"
+        node scripts/validate-ui-environment.mjs --runtime
+        node scripts/validate-release-contract.mjs
         npm ci
         if [ -f verification-plan.json ]; then
           node scripts/run-component-gate.mjs verification-plan.json

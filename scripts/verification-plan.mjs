@@ -3,22 +3,27 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
+import {consumerTests,registry,sharedPath} from './chart-registry.mjs';
 
 export const groups = {
-  charts: ['tests/browser/shared-charts.spec.mjs', 'tests/browser/stories.spec.mjs'],
+  charts: [...new Set(registry.consumers.flatMap(consumer=>consumer.tests))],
   stories: ['tests/browser/stories.spec.mjs'],
-  navigation: ['tests/browser/shared-navigation.spec.mjs'],
+  navigation: registry.verification.always,
 };
 export function selectVerification(files) {
   const selected = new Set(['navigation']);
   const broad = [];
   for (const file of files) {
-    if (/^(assets\/chart-releases\/(?:current\.json|[a-f0-9]{64}\.(?:js|css))|lib\/chart-renderer\.js|shared-charts\.css|cz-history\.js|municipal-expanded-profile\.js|tests\/(?:unit\/chart-renderer\.spec\.mjs|browser\/shared-charts\.spec\.mjs|fixtures\/charts\/.*))$/.test(file)) selected.add('charts');
-    else if (/^(stories\/|content\/stories\/|stories\.(?:js|css)$|scripts\/publish-stories\.mjs$|tests\/(?:browser|unit)\/stories\.spec\.mjs$)/.test(file)) selected.add('stories');
+    const declared=consumerTests(file);
+    if (sharedPath(file)) selected.add('charts');
+    else if (declared.length && /^(stories\/|content\/stories\/)/.test(file)) selected.add('stories');
+    else if (/^(stories\.(?:js|css)$|scripts\/publish-stories\.mjs$|tests\/(?:browser|unit)\/stories\.spec\.mjs$)/.test(file)) selected.add('stories');
+    else if (declared.length) { /* declaredSpecs below owns the focused consumer coverage */ }
     // Shell changes affect every consuming layout; a smoke is not sufficient.
     else broad.push(file);
   }
-  return { version: 1, lane: broad.length || !files.length ? 'full' : 'component', groups: [...selected].sort(), specs: [...new Set([...selected].flatMap(name => groups[name]))].sort(), broad, files };
+  const declaredSpecs=files.flatMap(consumerTests);
+  return { version: 2, lane: broad.length || !files.length ? 'full' : 'component', groups: [...selected].sort(), specs: [...new Set([...selected].flatMap(name => groups[name]).concat(declaredSpecs))].sort(), broad, files };
 }
 export function contractDigest() {
   const files = execFileSync('git', ['ls-files', 'scripts', 'tests', 'cloudbuild*.yaml', 'playwright*.mjs', 'package*.json', '.githooks/pre-push'], {encoding:'utf8'}).trim().split('\n').filter(Boolean).sort();

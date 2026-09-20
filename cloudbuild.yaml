@@ -37,7 +37,10 @@ steps:
         node scripts/publish-stories.mjs --check
         node scripts/build-chart-assets.mjs --check
         node scripts/validate-chart-ownership.mjs
-        node --test tests/unit/chart-renderer.spec.mjs tests/unit/verification-plan.spec.mjs
+        node scripts/build-chart-coverage.mjs --check
+        node scripts/validate-ui-environment.mjs --runtime
+        node scripts/validate-release-contract.mjs
+        node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs
         node --test tests/unit/stories.spec.mjs
         node --test tests/api/static-assets.spec.mjs tests/api/pinned-release.spec.mjs
         node --test tests/api/process-log-store.spec.mjs

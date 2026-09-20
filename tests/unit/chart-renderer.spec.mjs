@@ -29,3 +29,9 @@ test('empty and single-zero series have usable domains', () => {
     assert.ok(max > min); assert.ok(ticks.length >= 2);
   }
 });
+test('plot, tooltip table and CSV rail share one canonical accessor',()=>{
+  const data=charts.model({rows:[{year:2024,revenue:10,expense:null}],fields:[{key:'revenue',label:'Revenue'},{key:'expense',label:'Expenditure'}]});
+  assert.deepEqual(data.columns.map(column=>column.key),['label','revenue','expense']);
+  assert.deepEqual(data.accessor.rows(),[{label:'2024',revenue:10,expense:null}]);
+  assert.equal(data.rows[0].raw.year,2024);
+});

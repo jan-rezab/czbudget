@@ -8,6 +8,11 @@ test('shared chart changes select their consumers and the shell contract',()=>{
 test('story changes include the navigation contract',()=>{
   assert.deepEqual(selectVerification(['content/stories/a.fragment']).groups,['navigation','stories']);
 });
+test('every registered adapter selects its declared consumer coverage',()=>{
+  const plan=selectVerification(['municipalities-czechia.js']);
+  assert.equal(plan.lane,'component');
+  assert.ok(plan.specs.includes('tests/browser/shared-charts.spec.mjs'));
+});
 test('unknown, empty, global, data and CI changes fail closed to exhaustive verification',()=>{
   for(const file of ['global-nav.js','site-header.css','server/index.mjs','data/a.json','scripts/verification-plan.mjs','new-chart.js','nginx.conf.template']) assert.equal(selectVerification([file]).lane,'full',file);
   assert.equal(selectVerification([]).lane,'full');

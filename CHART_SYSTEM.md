@@ -20,6 +20,8 @@ The charts use one compact editorial grammar across the portal. The system is in
 and horizontal-bar families. `shared-charts.css` owns their light paper treatment.
 Load through `chart-runtime.js` and await `window.PSDPlotReady`; callers supply
 rows, fields, units and formatters to `PSDPlot.render(element, spec)`.
+The returned controller exposes `accessor`, with normalized columns and raw rows;
+pass it to `PSDChart.register({accessor})` instead of rebuilding table/export data.
 Call the returned controller's `destroy()` before discarding its container.
 Do not use the renderer to infer financial meaning or fill missing values.
 The existing `psd-chart.js` remains the sole owner of the affordance rail.

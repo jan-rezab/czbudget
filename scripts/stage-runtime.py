@@ -6,11 +6,43 @@ import os
 from pathlib import Path
 import re
 import shutil
+import hashlib
 
 DIRECTORIES = {'assets', 'cityvizor', 'cz', 'data', 'deep-dives', 'lib', 'municipalities', 'process', 'stories', 'studio'}
 OFFLOADED = {'isred', 'industrial-intelligence', 'czech-nku', 'contracts', 'czech-project-geography', 'industry', 'paq'}
 OFFLOADED_FILES = {'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json'}
 ROOT_EXTENSIONS = {'.html', '.js', '.css', '.svg', '.png', '.ico', '.xml', '.txt'}
+
+
+def version_runtime_references(root, output, inventory):
+    """Version registered adapters in the staged image, never in authored source."""
+    registry_path = root / 'chart-components.json'
+    if not registry_path.exists():
+        return {}
+    registry = json.loads(registry_path.read_text())
+    versions = {}
+    for relative in registry['release']['content_versioned_adapters']:
+        source = root / relative
+        if not source.is_file():
+            raise ValueError('Registered release adapter is missing: ' + relative)
+        versions[relative] = hashlib.sha256(source.read_bytes()).hexdigest()
+    candidates = [path for base in [output / 'public', output / 'server'] if base.exists()
+                  for path in base.rglob('*') if path.is_file() and path.suffix in {'.html', '.js', '.mjs'}]
+    for target in candidates:
+        original = target.read_text()
+        updated = original
+        for relative, digest in versions.items():
+            basename = Path(relative).name
+            updated = re.sub(re.escape(basename) + r'(?:\?v=[A-Za-z0-9._-]+)?', basename + '?v=' + digest, updated)
+        if updated != original:
+            # Targets can be hard-linked to source; unlink before writing so staging
+            # can never mutate the checkout it is assembling.
+            target.unlink()
+            target.write_text(updated)
+            inventory[target.relative_to(output).as_posix()] = target.stat().st_size
+    (output / 'asset-versions.json').write_text(json.dumps(versions, sort_keys=True))
+    inventory['asset-versions.json'] = (output / 'asset-versions.json').stat().st_size
+    return versions
 
 
 def included(relative):
@@ -75,6 +107,7 @@ def stage(root, output, lock=None):
         copy(lock, output / 'server/data-assets-lock.json')
     copy(root / 'nginx.conf.template', output / 'nginx.conf.template')
     copy(root / 'Dockerfile.slim', output / 'Dockerfile')
+    version_runtime_references(root, output, inventory)
     total = sum(inventory.values())
     if total > 768 * 1024 * 1024:
         raise ValueError('Runtime context exceeds 768 MiB budget: ' + str(total))

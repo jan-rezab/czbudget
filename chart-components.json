@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "renderer": {
+    "source": "lib/chart-renderer.js",
+    "style": "shared-charts.css",
+    "runtime": "chart-runtime.js",
+    "manifest": "assets/chart-releases/current.json",
+    "families": ["line", "column", "stacked", "bar"]
+  },
+  "consumers": [
+    {
+      "id": "municipal-profile-history",
+      "adapter": "municipal-expanded-profile.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/municipalities/:country/:municipality/"],
+      "change_paths": ["municipal-expanded-profile.js", "municipal-expanded-profile.css"]
+    },
+    {
+      "id": "czech-city-history",
+      "adapter": "cz-history.js",
+      "families": ["line", "stacked"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/cz/municipalities/:municipality/"],
+      "change_paths": ["cz-history.js"]
+    },
+    {
+      "id": "czech-municipality-history",
+      "adapter": "municipalities-czechia.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/municipalities/czechia/"],
+      "change_paths": ["municipalities-czechia.js"]
+    },
+    {
+      "id": "tariff-story-trends",
+      "adapter": "stories/tariff-charts.js",
+      "families": ["line", "bar"],
+      "tests": ["tests/browser/stories.spec.mjs"],
+      "routes": ["/stories/tariffs-went-up-did-america-win/"],
+      "change_paths": ["stories/tariff-charts.js", "stories/chart-rails.js", "content/stories/**", "stories/**"]
+    }
+  ],
+  "legacy": {
+    "inventory": "chart-legacy-inventory.json",
+    "policy": "No legacy drawing count may increase. Ordinary legacy charts migrate by family; maps, networks, timelines, treemaps and editorial illustrations need a reviewed specialized component.",
+    "classifications": {
+      "ageing-bill.js": "hybrid-line-plus-css-stack",
+      "automotive-deep-dive.js": "hybrid-line-plus-flow",
+      "budget-planner.js": "specialized-treemap",
+      "capital-cities-deep-dive.js": "specialized-bubble",
+      "compare-contract.js": "specialized-comparison",
+      "country-health-performance.js": "hybrid-line-plus-css-bars",
+      "country.js": "specialized-country-summary",
+      "coverage-map.js": "specialized-map",
+      "cz-firmy.js": "specialized-map",
+      "cz-municipal-directory.js": "specialized-map",
+      "cz-obce.js": "specialized-map",
+      "defense-deep-dive.js": "specialized-editorial",
+      "demographic-pressure.js": "hybrid-line-plus-css-rankings",
+      "digital-spillover.js": "specialized-network",
+      "economy-deep-dive.js": "ordinary-line",
+      "energy-trade-deep-dive.js": "ordinary-line",
+      "eu-budget-deep-dive.js": "specialized-flow",
+      "eu-capitals.js": "specialized-map",
+      "european-politics.js": "specialized-editorial",
+      "funding-deep-dive.js": "specialized-flow",
+      "funding-ledgers.js": "specialized-ledger",
+      "funding-systems.js": "specialized-network",
+      "global-footer.js": "decorative-icon",
+      "industrial-diagnostics.js": "specialized-diagnostic",
+      "industry-explorer.js": "specialized-treemap",
+      "map-view.js": "specialized-map",
+      "migration-deep-dive.js": "specialized-editorial",
+      "money-flow.js": "specialized-flow",
+      "money-report.js": "specialized-flow",
+      "municipal-transparency.js": "specialized-map",
+      "municipalities-czechia.js": "specialized-map-plus-shared-line",
+      "oecd-charts.js": "ordinary-comparison",
+      "pensions-today.js": "hybrid-line-plus-css-bars",
+      "plzen-contract-timeline.js": "specialized-timeline",
+      "public-employment.js": "specialized-editorial",
+      "revenue-deep-dive.js": "specialized-flow",
+      "tax-detail-chart.js": "specialized-donut",
+      "trade-deep-dive.js": "specialized-treemap-plus-line"
+    }
+  },
+  "verification": {
+    "always": ["tests/browser/shared-navigation.spec.mjs"],
+    "shared_contracts": ["tests/unit/chart-renderer.spec.mjs", "tests/unit/chart-registry.spec.mjs", "tests/unit/verification-plan.spec.mjs"],
+    "shared_paths": ["lib/chart-renderer.js", "shared-charts.css", "chart-runtime.js", "psd-chart.js", "psd-chart.css", "chart-components.json", "chart-legacy-inventory.json", "assets/chart-releases/**", "tests/fixtures/charts/**"]
+  },
+  "release": {
+    "content_versioned_adapters": ["municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js"]
+  }
+}

@@ -54,6 +54,8 @@
 ## Shared chart and release rules
 
 - Read `COMPONENT_RELEASES.md` before changing charts, page adapters, assets or verification.
+- `chart-components.json` is the single chart ownership/consumer/test/release registry;
+  `chart-coverage.json` is its generated coverage report. Never hand-edit the report.
 - One chart family has one renderer. Use `window.PSDPlot` via `chart-runtime.js`;
   do not copy SVG geometry, axes, tooltips or interactions into a page script.
   Reuse `PSDChart` for the existing table/download/citation/source rail.
@@ -66,6 +68,8 @@
   `npm run check:chart-assets`. Never edit or delete content-addressed prior releases.
 - Map changed paths to `scripts/verification-plan.mjs`. Unknown paths, shared shell,
   routing and release machinery require full verification. Never force the fast lane.
+- Every registered adapter is content-versioned during runtime staging. Validate the
+  actual production trigger against `scripts/validate-release-contract.mjs` before push.
 - Cheap shared navigation and component contracts run before exhaustive browser tests.
   Report failed test names immediately. Do not retry deterministic contract failures.
 - Reuse only successful cloud verification for the exact commit and current test contract;
