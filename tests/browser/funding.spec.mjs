@@ -3,12 +3,12 @@ import {test,expect} from '@playwright/test';
 for(const code of ['CZE','USA','FRA','RUS','UKR'])test(`funding: ${code} routes preserve evidence and fit the viewport`,async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(`/deep-dives/funding/?lang=en&code=${code}`);
- await expect(page.locator('[data-ledger]')).toHaveCount(4);
+ await expect(page.locator('[data-ledger]')).toHaveCount(5);
  await expect(page.locator('#fund-code')).toHaveText(code);
- await expect(page.locator('.ledger-evidence')).toHaveCount(4);
+ await expect(page.locator('.ledger-evidence')).toHaveCount(5);
  await expect(page.locator('#fund-school-comparison')).toContainText('Historical');
- if(code==='RUS'){await expect(page.locator('.ledger-eyebrow').first()).toContainText('Amounts not verified');await expect(page.locator('.ledger-play').first()).toBeDisabled();}
- if(code==='UKR')await expect(page.locator('.ledger-eyebrow').first()).toContainText('Budget plan');
+ if(code==='RUS'){await expect(page.locator('#fund-school-ledger .ledger-eyebrow')).toContainText('Amounts not verified');await expect(page.locator('#fund-school-ledger .ledger-play')).toBeDisabled();}
+ if(code==='UKR')await expect(page.locator('#fund-school-ledger .ledger-eyebrow')).toContainText('Budget plan');
  if(code==='USA')await expect(page.locator('.ledger-balance')).toContainText('$11.2bn');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  expect(errors).toEqual([]);
