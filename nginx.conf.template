@@ -295,13 +295,8 @@ server {
   location = /studio/data-in-one-place { return 301 /demo$is_args$args; }
   location = /studio/data-in-one-place/ { return 301 /demo$is_args$args; }
 
-  # The budget flow uses a native ES module shared with its data checks.
-  location = /lib/automotive.mjs {
-    default_type application/javascript;
-    try_files $uri =404;
-  }
-
-  location = /lib/money-flow-model.mjs {
+  # Browser-shared models are ES modules; the default nginx MIME table omits mjs.
+  location ~ ^/lib/[^/]+\.mjs$ {
     default_type application/javascript;
     try_files $uri =404;
   }

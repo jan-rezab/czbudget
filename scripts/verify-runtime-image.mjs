@@ -18,6 +18,19 @@ try {
     await delay(100);
   }
   assert.ok(ready, 'Image must start both Nginx and API');
+  for (const name of ['automotive', 'money-flow-model', 'funding-deep-dive', 'funding-ledgers', 'funding-systems']) {
+    const response = await fetch(`http://127.0.0.1:8080/lib/${name}.mjs`);
+    assert.equal(response.status, 200, name);
+    assert.match(response.headers.get('content-type') || '', /^(?:application|text)\/javascript\b/, `${name} must load as a browser module`);
+    await response.arrayBuffer();
+  }
+  for (const url of ['/mini-reports', '/mini-reports/app.js', '/mini-reports/style.css', '/api/mini-reports']) {
+    const response = await fetch(`http://127.0.0.1:8080${url}`, {redirect: 'manual'});
+    assert.equal(response.status, url === '/mini-reports' ? 302 : 401, url);
+    assert.equal(response.headers.get('cache-control'), 'no-store', url);
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow', url);
+    await response.arrayBuffer();
+  }
   for (const group of Object.keys(lock.packs)) {
     const [url, file] = Object.entries(lock.files).find(([, file]) => file.pack === group && file.size);
     const response = await fetch(`http://127.0.0.1:8080${url}`);
