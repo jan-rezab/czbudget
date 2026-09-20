@@ -99,6 +99,7 @@
       { path:"deep-dives/redistribution/?code=CZE", title:{cs:"Přerozdělení a výsledky",en:"Redistribution and outcomes"}, note:{cs:"Nerovnost, sociální výdaje a důchody",en:"Inequality, social spending and pensions"} },
     ] },
     { label:{cs:"Odkud peníze jsou",en:"Where the money comes from"}, items: [
+      { path:"deep-dives/funding/", title:{cs:"Jak peníze dorazí ke službám",en:"How money reaches services"}, note:{cs:"Od příjmů přes rozpočty ke službám",en:"From revenue through budgets to services"} },
       { path:"deep-dives/revenue/?code=CZE", title:{cs:"Odkud stát bere peníze",en:"Where the state gets its money"}, note:{cs:"Daně, úrovně vlády a transfery",en:"Taxes, government levels and transfers"} },
       { path:"deep-dives/tax-burden/?code=CZE", title:{cs:"Daňové zatížení",en:"Tax burden"}, note:{cs:"Domácnosti, firmy, uhlík a místní pravomoc",en:"Households, companies, carbon and local authority"} },
       { path:"deep-dives/eu-budget/?code=CZE", title:{cs:"Peníze mezi zeměmi a EU",en:"Money between countries and the EU"}, note:{cs:"27 zemí, příspěvky a přiřazené výdaje",en:"27 countries, contributions and attributed spending"} },
