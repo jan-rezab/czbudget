@@ -74,7 +74,7 @@ async function filesBelow(directory, predicate = () => true) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     // Authenticated templates live in /app inside the container and are not
     // served from Nginx's public document root.
-    if (/ \d+\.[^/]+$/.test(entry.name) || [".git", "dist", "node_modules", "server", "test-results", "playwright-report"].includes(entry.name)) continue;
+    if (/ \d+\.[^/]+$/.test(entry.name) || [".git", ".python-deps", ".published", ".runtime-image", "dist", "node_modules", "server", "test-results", "playwright-report"].includes(entry.name)) continue;
     const target = path.join(directory, entry.name);
     if (entry.isDirectory()) output.push(...await filesBelow(target, predicate));
     else if (predicate(target)) output.push(target);
