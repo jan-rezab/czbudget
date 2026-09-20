@@ -31,11 +31,12 @@ class SubmitTests(unittest.TestCase):
     def test_dedicated_builder_service_account_is_used(self):
         self.assertIn("comtrade-builder@", submit.SERVICE_ACCOUNT)
         self.assertNotIn("jan@ravineo.com", submit.SERVICE_ACCOUNT)
+        self.assertEqual(submit.REGION, "europe-west4")
 
     def test_backfills_are_restricted_to_eu_build_regions(self):
         self.assertEqual(
             submit.ALLOWED_REGIONS,
-            ("europe-west1", "europe-west3", "europe-west4", "europe-north1"),
+            ("europe-west4",),
         )
 
     def test_scheduler_payload_pins_proven_source_generation(self):

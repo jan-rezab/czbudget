@@ -32,7 +32,7 @@ def included(relative):
     return True
 
 
-def stage(root, output, lock):
+def stage(root, output, lock=None):
     if output.exists():
         raise ValueError('Runtime staging must start in a new directory')
     output.mkdir(parents=True)
@@ -68,9 +68,8 @@ def stage(root, output, lock):
             raise ValueError('Server symlink is not allowed')
         if source.is_file():
             copy(source, output / source.relative_to(root))
-    copy(lock, output / 'server/data-assets-lock.json')
-    copy(root / '.public-serving-build/current.json', output / 'server/municipal-pointer.json')
-    copy(root / 'data/cityvizor-current.v1.json', output / 'server/cityvizor-pointer.json')
+    if lock is not None:
+        copy(lock, output / 'server/data-assets-lock.json')
     copy(root / 'nginx.conf.template', output / 'nginx.conf.template')
     copy(root / 'Dockerfile.slim', output / 'Dockerfile')
     total = sum(inventory.values())
@@ -85,6 +84,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path.cwd())
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--lock', type=Path, required=True)
+    parser.add_argument('--lock', type=Path)
     args = parser.parse_args()
-    stage(args.root.resolve(), args.output.resolve(), args.lock.resolve())
+    stage(args.root.resolve(), args.output.resolve(), args.lock.resolve() if args.lock else None)

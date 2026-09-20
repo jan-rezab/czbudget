@@ -15,9 +15,12 @@ export class AssetError extends Error {
 }
 
 export class StaticAssets {
-  constructor({lockPath = process.env.DATA_ASSET_LOCK || new URL('./data-assets-lock.json', import.meta.url),
+  constructor({lockPath = process.env.DATA_ASSET_LOCK || (process.env.DATA_ASSET_LOCK_OBJECT ? null : new URL('./data-assets-lock.json', import.meta.url)),
+    lockObject = process.env.DATA_ASSET_LOCK_OBJECT, lockTtlMs = 60_000,
     localRoot = process.env.DATA_ASSET_PACK_ROOT, fetchImpl = globalThis.fetch, manifest} = {}) {
     this.lockPath = lockPath;
+    this.lockObject = lockObject;
+    this.lockTtlMs = lockTtlMs;
     this.localRoot = localRoot;
     this.fetch = fetchImpl;
     this.manifest = manifest;
@@ -27,9 +30,7 @@ export class StaticAssets {
     this.inFlightBytes = 0;
   }
 
-  async lock() {
-    this.loading ||= (async () => {
-      const lock = this.manifest || JSON.parse(await fs.readFile(this.lockPath, 'utf8'));
+  validateLock(lock) {
       if (lock.version !== 1 || lock.bucket !== 'czbudget-janrezab-public-snapshots') throw new Error('Invalid asset lock');
       for (const pack of Object.values(lock.packs)) {
         if (!/^[a-f0-9]{64}\.pack$/.test(pack.file) || pack.key !== `static-assets/v1/${pack.file}`
@@ -46,7 +47,36 @@ export class StaticAssets {
           || file.raw_size <= 0 || file.raw_size > 128 * 1024 * 1024 || !/^[a-f0-9]{64}$/.test(file.raw_sha256))) throw new Error('Invalid compressed alias');
       }
       return lock;
-    })();
+  }
+
+  async lock() {
+    if (this.manifest) return this.validateLock(this.manifest);
+    if (this.lockPath) {
+      this.loading ||= fs.readFile(this.lockPath, 'utf8').then(raw => this.validateLock(JSON.parse(raw)));
+      return this.loading;
+    }
+    if (!this.lockObject) throw new Error('No static asset lock configured');
+    const now = Date.now();
+    if (this.remoteLock && now - this.lockLoadedAt < this.lockTtlMs) return this.remoteLock;
+    this.loading ||= (async () => {
+      const token = await this.token();
+      const response = await this.fetch(`https://storage.googleapis.com/storage/v1/b/czbudget-janrezab-public-snapshots/o/${encodeURIComponent(this.lockObject)}?alt=media`, {
+        headers: {Authorization: `Bearer ${token}`, 'Accept-Encoding': 'identity'},
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!response.ok) throw new AssetError(502, 'asset_lock_failed');
+      const raw = await response.text();
+      const lock = this.validateLock(JSON.parse(raw));
+      const fingerprint = crypto.createHash('sha256').update(raw).digest('hex');
+      if (this.lockFingerprint && this.lockFingerprint !== fingerprint) {
+        this.cache.clear();
+        this.cacheBytes = 0;
+      }
+      this.lockFingerprint = fingerprint;
+      this.remoteLock = lock;
+      this.lockLoadedAt = Date.now();
+      return lock;
+    })().finally(() => { this.loading = null; });
     return this.loading;
   }
 

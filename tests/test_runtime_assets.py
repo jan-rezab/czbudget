@@ -86,7 +86,9 @@ class RuntimeAssetsTest(unittest.TestCase):
             inventory = runtime.stage(root, root / '.runtime-image', lock)
             self.assertIn('public/data/compact.json', inventory)
             self.assertIn('public/process/log/index.html', inventory)
-            self.assertIn('server/municipal-pointer.json', inventory)
+            self.assertIn('server/data-assets-lock.json', inventory)
+            self.assertNotIn('server/municipal-pointer.json', inventory)
+            self.assertNotIn('server/cityvizor-pointer.json', inventory)
             self.assertNotIn('public/data/isred/large.json', inventory)
             self.assertNotIn('public/.cityvizor-serving/large.json', inventory)
 

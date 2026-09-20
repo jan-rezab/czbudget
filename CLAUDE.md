@@ -21,9 +21,11 @@ you edited an hour ago is still the version on `main`.
 
 ## Deploying
 
-`git push origin main` is the only production path. It starts the Cloud Build
-trigger `czbudget-public-main` in **europe-west1** (a `gcloud builds list` with
-no `--region` shows a different, stale set) and takes 12–15 minutes.
+`git push origin main` is the only production path. It starts the code-only
+Cloud Build trigger `czbudget-public-main` in **europe-west1** (a `gcloud builds
+list` with no `--region` shows a different, stale set). Data processing runs in
+**europe-west4** and must never deploy Cloud Run. Read `BUILD_PLANES.md` before
+changing either path.
 
 **A build can pass every gate and still not deploy.** Step 27
 (`assert-current-main`) compares the build's commit against the live `main`; if
@@ -44,7 +46,8 @@ Registry and can be deployed without rebuilding — this is what
 ```sh
 gcloud run deploy czbudget-public --project=czbudget-janrezab \
   --region=europe-west1 --platform=managed --image "<repo>@<digest>" \
-  --allow-unauthenticated --min-instances=0 --max-instances=5 \
+  --service-account=psd-web-runtime@czbudget-janrezab.iam.gserviceaccount.com \
+  --min-instances=0 --max-instances=5 \
   --concurrency=80 --timeout=30s --labels=app=czbudget-public,source=github --quiet
 ```
 

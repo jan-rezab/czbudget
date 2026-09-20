@@ -1,9 +1,15 @@
 import unittest
 
+from pipeline.us_municipal_cloud import submit
 from pipeline.us_municipal_cloud.submit import filtered_registry
 
 
 class FilteredRegistryTest(unittest.TestCase):
+    def test_uses_isolated_data_plane(self):
+        self.assertEqual(submit.REGION, "europe-west4")
+        self.assertIn("psd-data-builder@", submit.SERVICE_ACCOUNT)
+        self.assertNotIn("compute@developer", submit.SERVICE_ACCOUNT)
+
     def setUp(self):
         self.registry = {
             "sources": [

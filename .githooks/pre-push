@@ -48,11 +48,11 @@ if [ "$(git config --bool core.sparseCheckout || true)" = true ] || ! node scrip
   node scripts/build-run-log.mjs
   python3 -m unittest discover -s tests -p test_runtime_assets.py
   node pipeline/create-source-manifest.mjs --self-check
-  grep -q 'node scripts/validate-integrity.mjs --write-report' cloudbuild.yaml
-  grep -q 'npx playwright test --workers=4 --max-failures=5' cloudbuild.yaml
+  grep -q 'node scripts/validate-integrity.mjs --write-report' cloudbuild.verify.yaml
+  grep -q 'npx playwright test --workers=4 --max-failures=5' cloudbuild.verify.yaml
   if [ "$push_to_main" = 1 ]; then
     verified_build=$(gcloud builds list --project=czbudget-janrezab --region=europe-west1 \
-      --filter="status=SUCCESS AND buildTriggerId=1df78a8f-7665-4b29-b9f7-65b9c8a9dd42 AND substitutions.COMMIT_SHA=$main_oid" \
+      --filter="status=SUCCESS AND buildTriggerId=8fb8b1d5-0e9f-4cd2-a76e-8e2fb18d50d3 AND substitutions.COMMIT_SHA=$main_oid" \
       --limit=1 --format='value(id)')
     if [ -z "$verified_build" ]; then
       echo "Push blocked: run the canonical Cloud Build trigger against this branch commit before promoting it to main." >&2
@@ -60,7 +60,7 @@ if [ "$(git config --bool core.sparseCheckout || true)" = true ] || ! node scrip
     fi
     echo "pre-push: exact commit passed the full cloud gates in $verified_build"
   else
-    echo "pre-push: source-only checks passed; full data/API/browser gates are required in Cloud Build before main"
+    echo "pre-push: source-only checks passed; the isolated full verification build is required before main"
   fi
   exit 0
 fi
@@ -75,7 +75,7 @@ npm run test:api
 # snapshot. Do not launch a desktop browser from a Git hook on the user's Mac.
 # Fail closed if the production configuration stops carrying this release gate.
 if [ "$push_to_main" = 1 ]; then
-  if ! grep -Eq 'npx playwright test --workers=[1-9][0-9]* --max-failures=[1-9][0-9]*' cloudbuild.yaml; then
+  if ! grep -Eq 'npx playwright test --workers=[1-9][0-9]* --max-failures=[1-9][0-9]*' cloudbuild.verify.yaml; then
     echo "Push blocked: the full Cloud Build browser gate is missing." >&2
     exit 1
   fi

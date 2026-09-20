@@ -55,6 +55,7 @@ class SubmitTests(unittest.TestCase):
     def test_manual_submit_uses_dedicated_builder(self):
         self.assertIn("comtrade-builder@", submit.SERVICE_ACCOUNT)
         self.assertNotIn("compute@developer", submit.SERVICE_ACCOUNT)
+        self.assertEqual(submit.REGION, "europe-west4")
 
 
 if __name__ == "__main__":

@@ -6,13 +6,17 @@ import argparse
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from pipeline.build_admission import assert_data_plane_idle
 
 
 HERE = Path(__file__).resolve().parent
 WEBSITE = HERE.parents[1]
 PROJECT = "czbudget-janrezab"
-REGION = "europe-west1"
+REGION = "europe-west4"
 SERVICE_ACCOUNT = "projects/czbudget-janrezab/serviceAccounts/comtrade-builder@czbudget-janrezab.iam.gserviceaccount.com"
 SOURCE_FILES = (
     "pipeline/transforms/run_un_comtrade_direct.py",
@@ -42,6 +46,8 @@ def main() -> None:
     args = parser.parse_args()
     if not 1 <= args.max_calls_per_account <= 500:
         parser.error("--max-calls-per-account must be between 1 and 500")
+
+    assert_data_plane_idle(PROJECT, REGION)
 
     with tempfile.TemporaryDirectory(prefix="comtrade-cloud-source-") as temporary:
         source = Path(temporary)

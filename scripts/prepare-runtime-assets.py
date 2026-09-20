@@ -129,6 +129,7 @@ def main():
         raise RuntimeError('Publication runs only on the canonical cloud build worker.')
     manifest = pack(args.root.resolve(), args.output.resolve())
     if args.publish:
+        manifest['release_id'] = 'static-assets:' + os.environ['BUILD_ID']
         publish(manifest, args.output)
     lock = json.dumps(manifest, separators=(',', ':'), sort_keys=True) + '\n'
     (args.output / 'lock.json').write_text(lock)

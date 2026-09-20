@@ -95,6 +95,31 @@ test('invalid and out-of-bounds manifests cannot be used', async () => {
   }
 });
 
+test('production lock is refreshed from the published data pointer', async () => {
+  const first = manifest();
+  const second = manifest();
+  second.packs.isred.generation = '654321';
+  let calls = 0;
+  const service = new StaticAssets({
+    lockPath: null,
+    lockObject: 'static-assets/current.json',
+    lockTtlMs: 0,
+    fetchImpl: async (url, options) => {
+      calls++;
+      assert.match(url, /static-assets%2Fcurrent\.json\?alt=media$/);
+      assert.equal(options.headers.Authorization, 'Bearer synthetic-token');
+      return new Response(JSON.stringify(calls === 1 ? first : second));
+    },
+  });
+  service.token = async () => 'synthetic-token';
+  service.cache.set(asset, raw);
+  service.cacheBytes = raw.length;
+  assert.equal((await service.lock()).packs.isred.generation, '123456');
+  assert.equal((await service.lock()).packs.isred.generation, '654321');
+  assert.equal(service.cache.size, 0);
+  assert.equal(service.cacheBytes, 0);
+});
+
 test('JSON aliases negotiate gzip and stream identity without buffering expanded data', async () => {
   const compressed = gzipSync(raw);
   for (const accept of ['gzip', 'identity', 'gzip;q=0, *;q=1']) {

@@ -8,17 +8,21 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from pipeline.build_admission import assert_data_plane_idle
 
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_REGISTRY = HERE.parent / "config" / "us_major_cities_sources.json"
 PROJECT = "czbudget-janrezab"
-REGION = "europe-west1"
+REGION = "europe-west4"
 STAGING = "gs://czbudget-janrezab-data-layers/processing-build-source"
 SERVICE_ACCOUNT = (
     "projects/czbudget-janrezab/serviceAccounts/"
-    "258433468858-compute@developer.gserviceaccount.com"
+    "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com"
 )
 SOURCE_FILES = ("worker.py", "cloudbuild.yaml", "requirements.txt")
 
@@ -95,6 +99,9 @@ def main() -> None:
         help="Only acquire this import-ready source ID (repeatable)",
     )
     args = parser.parse_args()
+
+    if not args.dry_run:
+        assert_data_plane_idle(PROJECT, REGION)
 
     registry = args.registry.resolve()
     if not registry.is_file():
