@@ -109,6 +109,7 @@
       { path:"deep-dives/industry/?code=CZE&channel=eurostat", title:{cs:"Průmysl měsíc po měsíci",en:"Industry month by month"}, note:{cs:"Odvětví, měsíční a roční vývoj",en:"Sectors, monthly and annual trends"} },
       { path:"deep-dives/industry/diagnostics/", title:{cs:"Uvnitř průmyslu",en:"Inside industry"}, note:{cs:"Investice, kapacity, výrobky a řetězce",en:"Investment, capacity, products and value chains"} },
       { path:"deep-dives/trade/?code=DEU", title:{cs:"Zahraniční obchod",en:"Foreign trade"}, note:{cs:"Dovoz, vývoz, partneři a zboží",en:"Imports, exports, partners and goods"} },
+      { path:"deep-dives/rare-earths/?code=CHN", title:{cs:"Vzácné zeminy",en:"Rare earth trade"}, note:{cs:"Kovy, sloučeniny a obchodní partneři",en:"Metals, compounds and trading partners"} },
       { path:"deep-dives/energy-trade/", title:{cs:"Světový obchod s ropou a plynem",en:"World oil and gas trade"}, note:{cs:"Surová ropa, LNG a zemní plyn",en:"Crude petroleum, LNG and natural gas"} },
       { path:"deep-dives/automotive/", title:{cs:"Automobilový průmysl",en:"Automotive"}, note:{cs:"Vozidla, nákladní auta a díly měsíčně",en:"Vehicles, heavy trucks and parts, monthly"} },
       { path:"deep-dives/product-markets/", title:{cs:"Globální produktové trhy",en:"Global product markets"}, note:{cs:"HS6 původ, dovozní trhy a bilaterální toky",en:"HS6 origins, import markets and bilateral flows"} },

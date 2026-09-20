@@ -5,7 +5,7 @@
 
   const copy = {
     cs: {
-      pageTitle: "Zahraniční obchod — Public Spending Data", pageDescription: "Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade.",
+      rareEarthLink: "Vzácné zeminy: vývoz a dovoz →", pageTitle: "Zahraniční obchod — Public Spending Data", pageDescription: "Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade.",
       eyebrow: "Report / Zahraniční obchod", titleLead: "Obchodní trh", titleEm: "na jednom plátně",
       intro: "Velikost ukazuje hodnotu obchodu, barva přebytek nebo deficit. Klikněte na sektor a potom na zboží — zobrazí se jeho partneři.", countryLabel: "Země",
       pulseNav: "Bilance", matrixNav: "Mapa trhu", routesNav: "Směry obchodu", trendNav: "Vývoj", compositionNav: "Žebříčky", methodNav: "Metodika",
@@ -24,7 +24,7 @@
       noData: "Pro tuto frekvenci zatím nejsou načtena data.", noRanking: "Pro tento řez zatím nejsou načtena detailní data.", loading: "Načítám UN Comtrade…", loadError: "Obchodní data se teď nepodařilo načíst. Zkuste stránku obnovit.",
     },
     en: {
-      pageTitle: "Foreign trade — Public Spending Data", pageDescription: "Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer.",
+      rareEarthLink: "Rare earths: exports and imports →", pageTitle: "Foreign trade — Public Spending Data", pageDescription: "Imports, exports, the trade balance, partners and goods in an interactive UN Comtrade explorer.",
       eyebrow: "Report / Foreign trade", titleLead: "The trade market", titleEm: "on one screen",
       intro: "Size shows trade value; color shows surplus or deficit. Click a sector, then a product to reveal its partners.", countryLabel: "Country",
       pulseNav: "Balance", matrixNav: "Market map", routesNav: "Trade routes", trendNav: "Trend", compositionNav: "Rankings", methodNav: "Method",

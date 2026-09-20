@@ -1,0 +1,76 @@
+.rare-earth-page { --trade-export: #a8b63f; --trade-import: #8b8d83; --trade-surplus: #a8b63f; --trade-deficit: #c93237; }
+.rare-earth-page .trade-hero { padding-top: 66px; padding-bottom: 62px; }
+.rare-earth-page .trade-hero h1 { max-width: 1050px; font-size: clamp(48px, 5.8vw, 88px); }
+.rare-earth-page .trade-hero h1 em { display: block; }
+.rare-earth-page .re-eyebrow { margin: 0 0 24px; font: 700 11px monospace; letter-spacing: .1em; }
+.re-back { display: inline-block; margin-top: 20px; font: 12px monospace; color: inherit; }
+.re-controls { display: flex; flex-wrap: wrap; gap: 20px; padding: 24px max(5vw, 24px); border-bottom: 1px solid var(--chart-grid); align-items: end; background: var(--paper); }
+.re-controls label { display: grid; gap: 8px; font: 700 10px monospace; text-transform: uppercase; }
+.re-controls select { height: 42px; max-width: 100%; border: 1px solid var(--ink); padding: 0 30px 0 12px; background: var(--white); color: var(--ink); font: 13px Arial, sans-serif; border-radius: 0; }
+.re-product-control { flex: 1; min-width: 230px; }
+.rare-earth-page .trade-segmented button { min-height: 42px; }
+.rare-earth-page .trade-segmented button[aria-pressed="true"] { background: var(--ink); color: var(--white); }
+.rare-earth-page .trade-section { padding-top: 62px; padding-bottom: 62px; }
+.rare-earth-page .trade-heading h2 { font-size: clamp(34px, 4vw, 57px); }
+.rare-earth-page .trade-kpis { box-shadow: none; }
+.rare-earth-page .trade-kpis article { min-height: 163px; }
+.rare-earth-page .trade-kpis strong { font-variant-numeric: tabular-nums; }
+.rare-earth-page .trade-kpis article.balance.deficit { background: var(--white); }
+.rare-earth-page .trade-kpis article.balance.deficit strong { color: var(--coral); }
+.rare-earth-page .trade-kpis article.balance.surplus { background: var(--white); }
+.re-status:empty { display: none; }
+.re-status { padding: 16px 0 0; font: 13px/1.6 monospace; }
+.re-status.is-error { color: var(--coral); }
+.re-coverage { margin: 20px 0 0; font: 12px/1.7 Arial, sans-serif; color: var(--muted); }
+.re-products { background: var(--ink); color: var(--white); }
+.re-products .trade-heading p { color: var(--chart-grid); }
+.re-products svg, .re-trend-card svg, .re-route-card svg { display: block; width: 100%; height: auto; }
+.re-products [role="button"], .re-route-card [role="button"], .re-trend-card [role="button"] { cursor: pointer; }
+.re-products [role="button"]:focus-visible, .re-route-card [role="button"]:focus-visible, .re-trend-card [role="button"]:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+.re-products [role="button"]:hover rect.re-product-bg { stroke: var(--acid); }
+.re-source { font: 11px/1.6 monospace; margin: 14px 0 0; opacity: .75; }
+.re-routes { background: var(--paper); color: var(--ink); }
+.re-routes .trade-heading p { color: var(--muted); }
+.re-route-card { background: var(--ink); color: var(--white); border: 1px solid var(--ink); min-width: 0; }
+.re-route-card > header { padding: 23px 23px 18px; }
+.re-route-card > header > span { font: 700 10px monospace; text-transform: uppercase; letter-spacing: .09em; color: var(--acid); }
+.re-route-card > header h3 { margin: 9px 0 12px; font: 400 32px/1 Georgia, serif; letter-spacing: -.03em; }
+.re-route-card > header p { min-height: 32px; margin: 0; font: 11px/1.5 monospace; color: var(--chart-grid); }
+.re-route-card > div { padding: 0 16px 20px; }
+.re-route-card [role="button"]:hover rect { stroke: var(--white); stroke-width: 3; }
+.re-partner-detail { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; margin-top: 22px; padding: 24px; border: 1px solid var(--ink); background: var(--white); }
+.re-partner-detail[hidden] { display: none; }
+.re-partner-detail h3 { margin: 0; font: 30px Georgia, serif; }
+.re-partner-detail p { margin: 0; font: 12px/1.8 monospace; }
+.re-partner-detail a { margin-left: auto; font: 12px monospace; }
+.re-trend-card { padding: 24px; background: var(--ink); color: var(--white); }
+.re-legend { display: flex; flex-wrap: wrap; gap: 25px; align-items: center; margin-bottom: 20px; font: 11px monospace; }
+.re-legend span { display: flex; align-items: center; gap: 8px; }
+.re-legend span:last-child { margin-left: auto; }
+.re-legend i { width: 22px; height: 3px; }
+.re-export-key { background: var(--acid); }
+.re-import-key { background: var(--mint); }
+.re-empty { min-height: 220px; display: flex; align-items: center; justify-content: center; padding: 30px; text-align: center; font: 14px/1.8 Arial, sans-serif; }
+.rare-earth-page .psd-chart-rail { gap: 8px; }
+.rare-earth-page .psd-chart-action { border-radius: 0; padding: 7px 10px; opacity: .9; }
+.rare-earth-page .psd-chart-drawer { background: transparent; }
+#re-retry { margin-top: 12px; padding: 10px 18px; border: 1px solid var(--ink); background: var(--acid); color: var(--ink); cursor: pointer; }
+.rare-earth-page [aria-busy="true"] { opacity: .6; pointer-events: none; }
+@media (max-width: 760px) {
+  .rare-earth-page .trade-hero { padding-top: 36px; padding-bottom: 36px; }
+  .rare-earth-page .trade-section { padding: 42px 20px; }
+  .rare-earth-page .trade-heading { grid-template-columns: 1fr; gap: 18px; }
+  .re-controls { padding: 20px; gap: 16px; }
+  .re-product-control { order: 3; flex-basis: 100%; }
+  .rare-earth-page .trade-kpis { grid-template-columns: repeat(2, 1fr); }
+  .rare-earth-page .trade-kpis article { padding: 18px; min-height: 145px; }
+  .rare-earth-page .trade-kpis strong { font-size: 31px; margin-top: 23px; }
+  .rare-earth-page .trade-route-grid { grid-template-columns: 1fr; }
+  .re-products svg { min-width: 580px; }
+  #re-products-chart { overflow-x: auto; }
+  .re-trend-card { padding: 18px 12px; }
+  .re-trend-card svg { min-width: 540px; }
+  #re-trend-chart { overflow-x: auto; }
+  .re-partner-detail { align-items: start; gap: 14px; }
+  .re-partner-detail a { margin-left: 0; }
+}

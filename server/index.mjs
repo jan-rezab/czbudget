@@ -22,6 +22,7 @@ import { municipalityPage } from "./municipality-page.mjs";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 import { cityVizorStore, CityVizorError } from "./cityvizor-store.mjs";
 import { TradeError, TradeStore } from "./trade-store.mjs";
+import { RareEarthStore } from "./rare-earth-store.mjs";
 import { ProcessLogError, processLogStore } from "./process-log-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
@@ -41,6 +42,7 @@ const rateLimiter = new FixedWindowRateLimiter({ maxBuckets: RATE_LIMIT_BUCKETS 
 const franceMunicipalLines = new FranceMunicipalLinesStore();
 const municipalLines = new MunicipalLinesStore();
 const trade = new TradeStore();
+const rareEarths = new RareEarthStore();
 let apiRequestsInFlight = 0;
 
 function integerSetting(name, fallback, minimum, maximum) {
@@ -204,6 +206,7 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/trade/countries") return sendJSON(response, 200, { data: await trade.countries() });
   if (pathname === "/api/v1/trade/energy/periods") return sendJSON(response, 200, { data: await trade.energyPeriods() });
   if (pathname === "/api/v1/trade/energy/flows") return sendJSON(response, 200, { data: await trade.energyFlows(url.searchParams.get("product"), url.searchParams.get("frequency"), url.searchParams.get("period")) });
+  if (pathname === "/api/v1/trade/rare-earths") return sendJSON(response, 200, { data: await rareEarths.profile(url.searchParams.get("country"), url.searchParams.get("frequency") || "A", url.searchParams.get("period") || "") });
   if (pathname === "/api/v1/trade/product-partners") return sendJSON(response, 200, { data: await trade.productPartners(url.searchParams.get("country"), url.searchParams.get("product")) });
   if (pathname === "/api/v1/trade") return sendJSON(response, 200, { data: await trade.profile(url.searchParams.get("country")) });
 
