@@ -1,0 +1,28 @@
+steps:
+  - id: fetch-and-normalize-montevideo
+    name: python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        python -m pip install --disable-pip-version-check --no-cache-dir -r requirements.txt
+        python worker.py fetch-transform --registry latam_major_city_budget_sources.json --work /workspace/latam --run-id "$BUILD_ID"
+  - id: publish-validated-bundle
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [worker.py, publish, --registry, latam_major_city_budget_sources.json, --work, /workspace/latam, --run-id, '$BUILD_ID']
+  - id: load-production-warehouse
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        bash pipeline/warehouse/load_international_municipal.sh czbudget-janrezab budget_detail /workspace/latam/output
+        python3 worker.py complete --registry latam_major_city_budget_sources.json --work /workspace/latam --run-id "$BUILD_ID"
+timeout: 1800s
+queueTtl: 1800s
+tags: [plane-data, latam-major-cities]
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 20
+  logging: CLOUD_LOGGING_ONLY
