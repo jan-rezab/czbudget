@@ -4,12 +4,18 @@
 steps:
   - id: python-contracts
     waitFor: ["-"]
-    name: python:3.12.11-slim-bookworm
+    # Pipeline contracts invoke both Python and Node. Match the browser/API
+    # worker's Python ABI so shared compiled dependencies remain compatible.
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
     env: [PYTHONPATH=/workspace/.python-deps]
     args:
       - -ceu
       - |
+        if ! python3 -m pip --version; then
+          apt-get update -qq
+          apt-get install -y --no-install-recommends python3-pip
+        fi
         python3 -m pip install --disable-pip-version-check --target=/workspace/.python-deps -r pipeline/requirements.txt
         python3 -m unittest discover -s pipeline/tests -p 'test_*.py'
         python3 -m unittest tests.test_cloud_verification tests.test_deployment_event
