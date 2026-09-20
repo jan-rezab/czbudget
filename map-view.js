@@ -19,7 +19,10 @@
     }
   };
   let t = copy[lang];
-  const state = { lens: "budget", mode: "duel", metricA: "defence", metricB: "education_research", year: 2024, selected: "CZE", data: null };
+  // Open on the only genuinely global layer. The budget basket currently has
+  // seventeen countries; using it as the default made the 195-state map look
+  // empty even though the geometry and the application had loaded correctly.
+  const state = { lens: "fiscal", mode: "duel", metricA: "expenditure_pct_gdp", metricB: "revenue_pct_gdp", year: 2024, selected: "CZE", data: null };
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
   const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   const locale = () => lang === "cs" ? "cs-CZ" : "en-GB";
