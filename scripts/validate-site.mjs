@@ -1,4 +1,5 @@
 import { readFile, readdir, stat } from "node:fs/promises";
+import { gunzipSync } from "node:zlib";
 import { loadExpectedCounts } from "./lib/expected-counts.mjs";
 
 // Every published-volume total this validator asserts is measured or pinned in
@@ -12,6 +13,7 @@ const pinned = counts.pinned;
 // literal token means every asset edit must also edit this file, which is how
 // these assertions go stale and start failing releases that are actually fine.
 const cacheBusted = (page, asset) => new RegExp(`${asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\?v=\\d{8}-[a-z0-9-]+`).test(page);
+const readGzipJson = async (path) => JSON.parse(gunzipSync(await readFile(path)).toString("utf8"));
 
 const identity = (await readFile(".czbudget-canonical", "utf8")).trim();
 if (identity !== "czbudget-public-canonical-v1") throw new Error("Invalid canonical source identity");
@@ -146,10 +148,13 @@ const benchmarkMunicipalities = await Promise.all(["nor", "nld", "fin"].map((cod
 const norwayBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nor/0301.json", "utf8"));
 const netherlandsBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nld/0363.json", "utf8"));
 const finlandBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/fin/091.json", "utf8"));
-const denmarkExpansionProfile = JSON.parse(await readFile("data/municipal-expansion/dnk/101.json", "utf8"));
-const spainExpansionProfile = JSON.parse(await readFile("data/municipal-expansion/esp/40001AA000.json", "utf8"));
-const japanExpansionProfile = JSON.parse(await readFile("data/municipal-expansion/jpn/011002.json", "utf8"));
-const brazilExpansionProfile = JSON.parse(await readFile("data/municipal-expansion/bra/5200555.json", "utf8"));
+// The full municipal serving fan-out is deliberately cloud-hydrated and ignored by
+// Git. Keep the validator hermetic with four small, compressed representative
+// profiles instead of requiring 635 MB of generated production output locally.
+const denmarkExpansionProfile = await readGzipJson("tests/fixtures/municipal-profiles/DNK-101.json.gz");
+const spainExpansionProfile = await readGzipJson("tests/fixtures/municipal-profiles/ESP-40001AA000.json.gz");
+const japanExpansionProfile = await readGzipJson("tests/fixtures/municipal-profiles/JPN-011002.json.gz");
+const brazilExpansionProfile = await readGzipJson("tests/fixtures/municipal-profiles/BRA-5200555.json.gz");
 const internationalMunicipalPage = await readFile("municipalities/index.html", "utf8");
 const czechMunicipalPage = await readFile("municipalities/czechia/index.html", "utf8");
 const cityvizorPage = await readFile("cityvizor/index.html", "utf8");
@@ -169,7 +174,7 @@ const renderSnapshotPage = (payload, code, name, routePath, history = null) => m
   release_id: "validation", profile: payload, history,
 }, "en");
 const czechProfileSamples = await Promise.all(["44992785", "00254398"].map(async (id) => {
-  const payload = JSON.parse(await readFile(`data/entities/${id}.json`, "utf8"));
+  const payload = await readGzipJson(`tests/fixtures/municipal-profiles/CZE-${id}.json.gz`);
   const history = JSON.parse(await readFile(`data/municipal-history/${id}.json`, "utf8"));
   return renderSnapshotPage(payload, "CZE", payload.entity.short_name, payload.entity.seo.municipality_path || payload.entity.seo.path, history);
 }));
@@ -659,7 +664,7 @@ for (const path of await htmlFiles()) {
   if (headerlessPages.has(path)) continue;
   const page = await readFile(path, "utf8");
   if ((page.match(/<psd-site-header\b/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared site-header component`);
-  if ((page.match(/global-nav\.js\?v=(?:20260822-component|20260824-identity-outlines|20260824-logo-120|20260824-budget-stages|20260825-country-expansion|20260826-migration|20260828-education|20260829-oecd-reports|20260901-trade-menu|20260901-digital-spillover|20260901-public-employment|20260902-eu-budget|20260902-product-markets|20260902-migration-protection|20260905-politics|20260908-industrial-diagnostics-final|20260919-reports-regional)/g) || []).length !== 1) throw new Error(`${path}: expected exactly one shared header script`);
+  if ((page.match(/global-nav\.js\?v=\d{8}-[a-z0-9-]+/g) || []).length !== 1) throw new Error(`${path}: expected exactly one cache-busted shared header script`);
   if ((page.match(/site-header\.css\?v=(?:20260822-component|20260824-header-lockup)/g) || []).length !== 1 || !page.includes("data-psd-site-header")) throw new Error(`${path}: expected exactly one shared header stylesheet`);
   if (page.includes('<header class="site-header')) throw new Error(`${path}: contains a duplicated legacy header`);
 }

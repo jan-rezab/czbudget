@@ -9,7 +9,7 @@
   const state = { mode: "all", selected: null, freshness: null, registry: null, geometry: null };
   const copy = {
     cs: {
-      eyebrow: "Publikované na PSD · 15 sekcí",
+      eyebrow: (count) => `Publikované na PSD · ${count} sekcí`,
       title: "Co je na webu publikované",
       lead: "Vyberte sekci a uvidíte země, pro které má Public Spending Data publikovaný profil nebo datovou vrstvu. Mapa měří obsah na tomto webu, nikoli vše, co může existovat u původních poskytovatelů.",
       choose: "Zobrazená sekce", all: "Všechny publikované sekce", countryData: "Data země", municipal: "Obce a města", deepDive: "Hloubkové profily",
@@ -23,7 +23,7 @@
       loadError: "Mapu publikovaného pokrytí se nepodařilo načíst."
     },
     en: {
-      eyebrow: "Published on PSD · 15 sections",
+      eyebrow: (count) => `Published on PSD · ${count} sections`,
       title: "What is published on this site",
       lead: "Choose a section to see the countries for which Public Spending Data publishes a profile or data layer. This map measures content on this site, not everything that may exist at original providers.",
       choose: "Section shown", all: "All published sections", countryData: "Country data", municipal: "Municipalities and cities", deepDive: "Deep dives",
@@ -180,7 +180,10 @@
     });
   }
 
-  const applyStaticCopy = () => document.querySelectorAll("[data-surface-copy]").forEach((node) => { node.textContent = t[node.dataset.surfaceCopy]; });
+  const applyStaticCopy = () => document.querySelectorAll("[data-surface-copy]").forEach((node) => {
+    const value = t[node.dataset.surfaceCopy];
+    node.textContent = typeof value === "function" ? value(state.freshness?.modules?.length || 16) : value;
+  });
   applyStaticCopy();
   // document.title belongs to the metadata map in language-bootstrap.js; writing
   // it here only started a fight with its MutationObserver.
@@ -197,6 +200,7 @@
   ]));
   Promise.all([freshnessPromise, transparencyPromise]).then(([freshness, [registry, geometry]]) => {
     Object.assign(state, { freshness, registry, geometry });
+    applyStaticCopy();
     render();
   }).catch((error) => {
     console.error(error);

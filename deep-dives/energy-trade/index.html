@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="/data-loader.js?v=20260920-retry" defer></script>
+<script src="/language-bootstrap.js?v=20260920-energy-trade"></script>
+  <title>Světový obchod s ropou a plynem — Public Spending Data</title>
+  <meta name="description" content="Mapa světového obchodu se surovou ropou, LNG a zemním plynem podle vykázaného původu a dovozního trhu.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/energy-trade/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/energy-trade/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/energy-trade/?lang=en">
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional">
+  <link rel="stylesheet" href="../../psd-chart.css"><link rel="stylesheet" href="../../energy-trade-deep-dive.css?v=20260920-energy-trade">
+  <script src="../../global-nav.js?v=20260920-energy-trade" defer></script><script src="../../psd-chart.js" defer></script>
+  <script type="module" src="../../energy-trade-deep-dive.js?v=20260920-energy-trade"></script>
+</head>
+<body class="deep-dives-page energy-trade-page" id="top">
+<psd-site-header></psd-site-header>
+<main>
+  <section class="energy-hero">
+    <div><p class="energy-eyebrow" data-cs="Ekonomika / Energie" data-en="Economy / Energy">Ekonomika / Energie</p><h1 data-cs="Kdo dodává světu ropu a plyn?" data-en="Who supplies the world’s oil and gas?">Kdo dodává světu ropu a plyn?</h1><p data-cs="Surová ropa, LNG a zemní plyn. Od vykázané země původu k dovoznímu trhu, rok po roku i měsíc po měsíci." data-en="Crude petroleum, LNG and natural gas. From reported origin to importing market, year by year and month by month.">Surová ropa, LNG a zemní plyn. Od vykázané země původu k dovoznímu trhu, rok po roku i měsíc po měsíci.</p><a href="#flow-map" data-cs="Otevřít mapu ↓" data-en="Open the map ↓">Otevřít mapu ↓</a></div>
+    <aside><span>UN COMTRADE / HS6</span><strong data-cs="3 energetické toky" data-en="3 energy flows">3 energetické toky</strong><p data-cs="Dovoz hlášený trhem. Původ není tranzitní trasa." data-en="Imports reported by the market. Origin is not the transit route.">Dovoz hlášený trhem. Původ není tranzitní trasa.</p><b id="energy-vintage">—</b></aside>
+  </section>
+  <nav class="deep-topic-rail" aria-label="Energy trade sections"><a href="#flow-map" data-cs="Mapa toků" data-en="Flow map">Mapa toků</a><a href="#rankings" data-cs="Dodavatelé a trhy" data-en="Suppliers & markets">Dodavatelé a trhy</a><a href="#history" data-cs="Vývoj" data-en="History">Vývoj</a><a href="#method" data-cs="Definice" data-en="Definitions">Definice</a><a href="../trade/" data-cs="Celý zahraniční obchod ↗" data-en="All foreign trade ↗">Celý zahraniční obchod ↗</a></nav>
+
+  <section class="energy-report" id="flow-map">
+    <header class="energy-heading"><div><p class="energy-eyebrow" data-cs="Globální obchodní mapa" data-en="Global trade map">Globální obchodní mapa</p><h2 data-cs="Od původu k dovoznímu trhu" data-en="From origin to importing market">Od původu k dovoznímu trhu</h2></div><p data-cs="Tloušťka spoje odpovídá vykázané hodnotě dovozu. Mapa ukazuje největší vazby; tabulka zachovává všechny načtené trasy." data-en="Route width reflects reported import value. The map shows the largest connections; the table retains every loaded route.">Tloušťka spoje odpovídá vykázané hodnotě dovozu. Mapa ukazuje největší vazby; tabulka zachovává všechny načtené trasy.</p></header>
+    <div class="energy-product-filter" id="energy-products" role="group" aria-label="Energy product"></div>
+    <form class="energy-controls" id="energy-controls">
+      <label><span data-cs="Časové rozlišení" data-en="Frequency">Časové rozlišení</span><select id="energy-frequency"><option value="A" data-cs="Roční" data-en="Annual">Roční</option><option value="M" data-cs="Měsíční" data-en="Monthly">Měsíční</option></select></label>
+      <label><span data-cs="Období" data-en="Period">Období</span><select id="energy-period" disabled></select></label>
+      <label><span data-cs="Země v trase" data-en="Country in route">Země v trase</span><select id="energy-country" disabled><option value="ALL" data-cs="Všechny země" data-en="All countries">Všechny země</option></select></label>
+      <button type="button" id="energy-reset" data-cs="Obnovit celou mapu" data-en="Reset full map">Obnovit celou mapu</button>
+    </form>
+    <p class="energy-status" id="energy-status" role="status" data-cs="Načítám obchodní toky…" data-en="Loading trade flows…">Načítám obchodní toky…</p>
+    <div class="energy-kpis" id="energy-kpis"></div>
+    <article class="energy-map-card" id="energy-trade-flow-map"><div id="energy-map" class="energy-map" aria-live="polite"></div><p id="energy-map-detail" class="energy-map-detail"></p></article>
+  </section>
+
+  <section class="energy-rankings" id="rankings"><header class="energy-heading"><div><p class="energy-eyebrow" data-cs="Pozorovaný trh" data-en="Observed market">Pozorovaný trh</p><h2 data-cs="Největší původy a dovozci" data-en="Largest origins and importers">Největší původy a dovozci</h2></div><p id="energy-coverage-copy"></p></header><div class="energy-ranking-grid"><article><h3 data-cs="Vykázaný původ" data-en="Reported origin">Vykázaný původ</h3><div id="energy-origins"></div></article><article><h3 data-cs="Dovozní trh" data-en="Importing market">Dovozní trh</h3><div id="energy-markets"></div></article></div><div class="energy-route-table"><table><thead><tr><th data-cs="Původ" data-en="Origin">Původ</th><th data-cs="Dovozní trh" data-en="Importing market">Dovozní trh</th><th data-cs="Hodnota" data-en="Value">Hodnota</th><th data-cs="Podíl" data-en="Share">Podíl</th></tr></thead><tbody id="energy-routes"></tbody></table></div></section>
+
+  <section class="energy-history" id="history"><header class="energy-heading"><div><p class="energy-eyebrow" data-cs="Ročně i měsíčně" data-en="Annual and monthly">Ročně i měsíčně</p><h2 data-cs="Dostupná období a pokrytí" data-en="Available periods and coverage">Dostupná období a pokrytí</h2></div><p data-cs="Výška sloupce je pozorovaná dovozní hodnota; číslo pod ním ukazuje počet reportujících trhů. Změna pokrytí může změnit součet." data-en="Bar height is observed import value; the number below it is the count of reporting markets. Changing coverage can move the total.">Výška sloupce je pozorovaná dovozní hodnota; číslo pod ním ukazuje počet reportujících trhů. Změna pokrytí může změnit součet.</p></header><div id="energy-history-chart" class="energy-history-chart"></div></section>
+
+  <section class="energy-method" id="method"><p class="energy-eyebrow" data-cs="Jak data číst" data-en="How to read the data">Jak data číst</p><h2 data-cs="Tři oddělené produkty. Jedna konzistentní perspektiva." data-en="Three distinct products. One consistent reporting lens.">Tři oddělené produkty. Jedna konzistentní perspektiva.</h2><div class="energy-definitions"><article><b>01</b><h3 data-cs="Surová ropa" data-en="Crude petroleum">Surová ropa</h3><code>HS 270900</code><p data-cs="Ropa a oleje z živičných nerostů v surovém stavu. Rafinované palivo není zahrnuto." data-en="Petroleum oils and oils from bituminous minerals, crude. Refined fuel is excluded.">Ropa a oleje z živičných nerostů v surovém stavu. Rafinované palivo není zahrnuto.</p></article><article><b>02</b><h3>LNG</h3><code>HS 271111</code><p data-cs="Zemní plyn ve zkapalněném stavu." data-en="Natural gas in a liquefied state.">Zemní plyn ve zkapalněném stavu.</p></article><article><b>03</b><h3 data-cs="Zemní plyn" data-en="Natural gas">Zemní plyn</h3><code>HS 271121</code><p data-cs="Zemní plyn v plynném stavu. Neoznačujeme jej automaticky jako potrubní tok." data-en="Natural gas in a gaseous state. It is not automatically labelled as a pipeline flow.">Zemní plyn v plynném stavu. Neoznačujeme jej automaticky jako potrubní tok.</p></article></div><div class="energy-method-copy"><p data-cs="Používáme pouze dovozní hlášení a původ uvedený dovozním trhem. Tím nevytváříme dvojí součet z dovozního a zrcadlového vývozního hlášení. Hodnoty jsou běžné USD, zpravidla CIF." data-en="We use only import declarations and the origin reported by the importing market. This avoids adding import declarations to their mirror export declarations. Values are current USD, generally CIF.">Používáme pouze dovozní hlášení a původ uvedený dovozním trhem. Tím nevytváříme dvojí součet z dovozního a zrcadlového vývozního hlášení. Hodnoty jsou běžné USD, zpravidla CIF.</p><p data-cs="Spoj na mapě není fyzická lodní ani potrubní trasa, smluvní protistrana ani konečný spotřebitel. Roční a měsíční řady se nesčítají a mohou se po revizích lišit. Chybějící hlášení není nula." data-en="A map connection is not a physical shipping or pipeline route, contractual counterparty or final consumer. Annual and monthly series are not added together and may differ after revisions. Missing reporting is not zero.">Spoj na mapě není fyzická lodní ani potrubní trasa, smluvní protistrana ani konečný spotřebitel. Roční a měsíční řady se nesčítají a mohou se po revizích lišit. Chybějící hlášení není nula.</p></div><p class="energy-source"><a href="https://comtrade.un.org/" target="_blank" rel="noopener">UN Comtrade ↗</a> · <code>budget_detail.trade_observations</code></p></section>
+</main>
+<footer><div><span>Public Spending Data</span><small>Energy trade · UN Comtrade</small></div><a href="#top">↑</a></footer>
+</body></html>

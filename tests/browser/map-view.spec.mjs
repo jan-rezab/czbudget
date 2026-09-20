@@ -10,6 +10,7 @@ test("map view opens on the global expenditure versus revenue fiscal layer", asy
   await expect(page.locator('[data-map-lens="fiscal"]')).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator("#map-metric-a")).toHaveValue("expenditure_pct_gdp");
   await expect(page.locator("#map-metric-b")).toHaveValue("revenue_pct_gdp");
+  await expect(page.locator("#map-year")).toHaveValue("2024");
   await expect(page.locator(".map-detail")).toContainText("Czechia");
   await expect(page.locator(".map-contract")).toContainText("IMF World Economic Outlook");
   expect(await page.locator(".map-canvas .map-no-data").count()).toBeLessThan(40);

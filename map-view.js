@@ -110,7 +110,7 @@
     if (["duel", "single"].includes(query.get("mode"))) state.mode = query.get("mode");
     if (query.get("a")) state.metricA = query.get("a");
     if (query.get("b")) state.metricB = query.get("b");
-    if (Number.isFinite(Number(query.get("year")))) state.year = Number(query.get("year"));
+    if (/^\d{4}$/.test(query.get("year") || "")) state.year = Number(query.get("year"));
     if (query.get("country")) state.selected = query.get("country").toUpperCase();
   }
 
@@ -281,16 +281,17 @@
   });
 
   Promise.all([
-    fetch("data/world-map.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
-    fetch("data/global-budget-transparency.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
-    fetch("data/country-spending-comparison.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
-    fetch("data/country-functional-budgets.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
-    fetch("data/sovereign-benchmark-slim.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); })
+    PSDData.loadJson("data/world-map.v1.json"),
+    PSDData.loadJson("data/global-budget-transparency.v1.json"),
+    PSDData.loadJson("data/country-spending-comparison.v1.json"),
+    PSDData.loadJson("data/country-functional-budgets.v1.json"),
+    PSDData.loadJson("data/sovereign-benchmark-slim.v1.json")
   ]).then(([geometry, registry, budget, functions, fiscal]) => {
     state.data = { geometry, registry, budget, functions, fiscal };
     readUrl(); normalizeMetricState(); render();
   }).catch((error) => {
     console.error(error);
     root.innerHTML = `<p class="map-error">${esc(t.mapError)}</p>`;
+    PSDData.retryButton(root, lang);
   });
 })();

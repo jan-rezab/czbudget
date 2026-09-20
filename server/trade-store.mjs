@@ -7,6 +7,13 @@ const DEFAULT_PROJECT = "czbudget-janrezab";
 const DEFAULT_LOCATION = "EU";
 const CACHE_TTL_MS = 15 * 60 * 1000;
 const MIN_TRADE_DATE = "2000-01-01";
+const ENERGY_MIN_DATE = "2019-01-01";
+
+export const ENERGY_PRODUCTS = Object.freeze({
+  petroleum: { code: "270900", name: "Crude petroleum" },
+  lng: { code: "271111", name: "Liquefied natural gas" },
+  gas: { code: "271121", name: "Natural gas in gaseous state" },
+});
 
 export const TRADE_COUNTRIES_SQL = `
 WITH latest AS (
@@ -193,6 +200,109 @@ QUALIFY DENSE_RANK() OVER (PARTITION BY flow_code ORDER BY value_usd DESC) <= 20
 ORDER BY flow_code, value_usd DESC
 `;
 
+export const ENERGY_PERIODS_SQL = `
+SELECT
+  product_code,
+  frequency,
+  period,
+  MIN(period_start) AS period_start,
+  COUNT(DISTINCT reporter_area_code) AS reporting_markets,
+  COUNT(DISTINCT partner_area_code) AS reported_origins,
+  SUM(primary_value_usd) AS observed_value_usd,
+  SUM(net_weight_kg) AS observed_net_weight_kg,
+  MAX(source_last_released) AS source_last_released,
+  MAX(retrieved_at) AS retrieved_at
+FROM \`czbudget-janrezab.budget_detail.trade_observations\` AS observation
+WHERE period_start BETWEEN @min_date AND CURRENT_DATE()
+  AND product_type = 'C'
+  AND product_code IN ('270900', '271111', '271121')
+  AND flow_code = 'M'
+  AND partner_area_code != 0
+  AND is_original_classification
+  AND reporter_iso3 IS NOT NULL
+  AND partner_iso3 IS NOT NULL
+  AND (customs_code IS NULL OR customs_code = 'C00')
+  AND (mode_of_transport_code IS NULL OR mode_of_transport_code = 0)
+  AND (partner2_area_code IS NULL OR partner2_area_code = 0)
+  AND reporter_area_code IN (
+    SELECT DISTINCT area_code FROM \`czbudget-janrezab.budget_detail.trade_areas\`
+    WHERE is_reporter AND NOT is_group
+  )
+  AND partner_area_code IN (
+    SELECT DISTINCT area_code FROM \`czbudget-janrezab.budget_detail.trade_areas\`
+    WHERE is_partner AND NOT is_group
+  )
+GROUP BY product_code, frequency, period
+ORDER BY product_code, frequency, period
+`;
+
+export const ENERGY_FLOWS_SQL = `
+WITH scoped AS (
+  SELECT
+    observation.period,
+    observation.frequency,
+    observation.partner_area_code,
+    observation.partner_iso3 AS origin_iso3,
+    observation.partner_name AS origin_name,
+    observation.reporter_area_code,
+    observation.reporter_iso3 AS market_iso3,
+    observation.reporter_name AS market_name,
+    observation.primary_value_usd,
+    observation.net_weight_kg,
+    observation.net_weight_is_estimated,
+    observation.source_last_released,
+    observation.retrieved_at
+  FROM \`czbudget-janrezab.budget_detail.trade_observations\` AS observation
+  WHERE observation.period_start = @period_start
+    AND observation.frequency = @frequency
+    AND observation.period = @period
+    AND observation.product_type = 'C'
+    AND observation.product_code = @product_code
+    AND observation.flow_code = 'M'
+    AND observation.partner_area_code != 0
+    AND observation.is_original_classification
+    AND observation.reporter_iso3 IS NOT NULL
+    AND observation.partner_iso3 IS NOT NULL
+    AND (observation.customs_code IS NULL OR observation.customs_code = 'C00')
+    AND (observation.mode_of_transport_code IS NULL OR observation.mode_of_transport_code = 0)
+    AND (observation.partner2_area_code IS NULL OR observation.partner2_area_code = 0)
+    AND observation.reporter_area_code IN (
+      SELECT DISTINCT area_code FROM \`czbudget-janrezab.budget_detail.trade_areas\`
+      WHERE is_reporter AND NOT is_group
+    )
+    AND observation.partner_area_code IN (
+      SELECT DISTINCT area_code FROM \`czbudget-janrezab.budget_detail.trade_areas\`
+      WHERE is_partner AND NOT is_group
+    )
+), areas AS (
+  SELECT area_code,
+    ARRAY_AGG(STRUCT(iso2, name) ORDER BY (effective_to IS NULL) DESC, LENGTH(name), name LIMIT 1)[OFFSET(0)] AS area
+  FROM \`czbudget-janrezab.budget_detail.trade_areas\`
+  WHERE NOT is_group
+  GROUP BY area_code
+)
+SELECT
+  ANY_VALUE(scoped.period) AS period,
+  ANY_VALUE(scoped.frequency) AS frequency,
+  scoped.origin_iso3,
+  ANY_VALUE(origin.area.iso2) AS origin_iso2,
+  ANY_VALUE(scoped.origin_name) AS origin_name,
+  scoped.market_iso3,
+  ANY_VALUE(market.area.iso2) AS market_iso2,
+  ANY_VALUE(scoped.market_name) AS market_name,
+  SUM(scoped.primary_value_usd) AS value_usd,
+  SUM(scoped.net_weight_kg) AS net_weight_kg,
+  LOGICAL_OR(COALESCE(scoped.net_weight_is_estimated, FALSE)) AS net_weight_is_estimated,
+  MAX(scoped.source_last_released) AS source_last_released,
+  MAX(scoped.retrieved_at) AS retrieved_at
+FROM scoped
+LEFT JOIN areas AS origin ON origin.area_code = scoped.partner_area_code
+LEFT JOIN areas AS market ON market.area_code = scoped.reporter_area_code
+GROUP BY scoped.origin_iso3, scoped.market_iso3
+HAVING value_usd > 0
+ORDER BY value_usd DESC, origin_iso3, market_iso3
+`;
+
 export class TradeError extends Error {
   constructor(status, code, message) {
     super(message);
@@ -347,12 +457,94 @@ export class TradeStore {
     return value;
   }
 
+  async energyPeriods() {
+    const cacheKey = "energy-periods";
+    const cached = this.cache.get(cacheKey);
+    if (cached?.expiresAt > this.now()) return cached.value;
+    return shareInFlight(this.pending, cacheKey, async () => {
+      const rows = await this.query(ENERGY_PERIODS_SQL, [parameter("min_date", "DATE", ENERGY_MIN_DATE)]);
+      const products = Object.entries(ENERGY_PRODUCTS).map(([id, product]) => ({
+        id,
+        ...product,
+        periods: rows.filter((row) => row.product_code === product.code).map((row) => ({
+          frequency: row.frequency,
+          period: row.period,
+          period_start: row.period_start,
+          reporting_markets: Number(row.reporting_markets),
+          reported_origins: Number(row.reported_origins),
+          observed_value_usd: Number(row.observed_value_usd),
+          observed_net_weight_kg: row.observed_net_weight_kg === null ? null : Number(row.observed_net_weight_kg),
+          source_last_released: row.source_last_released || null,
+          retrieved_at: row.retrieved_at || null,
+        })),
+      }));
+      const value = {
+        schema_version: "energy-trade-periods.v1",
+        products,
+        source: { title: "United Nations Comtrade Database", url: "https://comtrade.un.org/", table: "budget_detail.trade_observations" },
+        note: "Importer-reported bilateral trade at the original reported HS classification. Groups and World totals are excluded.",
+      };
+      this.put(cacheKey, value);
+      return value;
+    });
+  }
+
+  async energyFlows(productValue, frequencyValue, periodValue) {
+    const { id, code, name } = normalizeEnergyProduct(productValue);
+    const frequency = normalizeEnergyFrequency(frequencyValue);
+    const period = normalizeEnergyPeriod(periodValue, frequency);
+    const periodStart = frequency === "A" ? `${period}-01-01` : `${period.slice(0, 4)}-${period.slice(4)}-01`;
+    const cacheKey = `energy-flows:${id}:${frequency}:${period}`;
+    const cached = this.cache.get(cacheKey);
+    if (cached?.expiresAt > this.now()) return cached.value;
+    return shareInFlight(this.pending, cacheKey, async () => {
+      const rows = await this.query(ENERGY_FLOWS_SQL, [
+        parameter("period_start", "DATE", periodStart),
+        parameter("frequency", "STRING", frequency),
+        parameter("period", "STRING", period),
+        parameter("product_code", "STRING", code),
+      ], { maxResults: "5000" });
+      if (!rows.length) throw new TradeError(404, "energy_trade_not_found", "No loaded importer-reported routes are available for this product and period.");
+      const routes = rows.map((row) => ({
+        origin: { code: row.origin_iso3, iso2: row.origin_iso2, name: row.origin_name || row.origin_iso3 },
+        market: { code: row.market_iso3, iso2: row.market_iso2, name: row.market_name || row.market_iso3 },
+        value_usd: Number(row.value_usd),
+        net_weight_kg: row.net_weight_kg === null ? null : Number(row.net_weight_kg),
+        net_weight_is_estimated: row.net_weight_is_estimated === "true" || row.net_weight_is_estimated === true,
+      }));
+      const value = {
+        schema_version: "energy-trade-flows.v1",
+        product: { id, code, name },
+        frequency,
+        period,
+        reporting_basis: "IMPORTER_REPORTED_ORIGIN",
+        valuation: "Primary trade value; imports are generally CIF",
+        routes,
+        totals: {
+          observed_value_usd: routes.reduce((sum, row) => sum + row.value_usd, 0),
+          reporting_markets: new Set(routes.map((row) => row.market.code)).size,
+          reported_origins: new Set(routes.map((row) => row.origin.code)).size,
+        },
+        source: {
+          title: "United Nations Comtrade Database",
+          url: "https://comtrade.un.org/",
+          table: "budget_detail.trade_observations",
+          retrieved_at: rows.map((row) => row.retrieved_at).filter(Boolean).sort().at(-1) || null,
+          source_last_released: rows.map((row) => row.source_last_released).filter(Boolean).sort().at(-1) || null,
+        },
+        note: "Routes run from the origin reported by the importing market to that market. They are customs trade, not physical pipeline or shipping paths.",
+      };
+      this.put(cacheKey, value);
+      return value;
+    });
+  }
+
   put(key, value) {
     this.cache.set(key, { value, expiresAt: this.now() + CACHE_TTL_MS });
     while (this.cache.size > 256) this.cache.delete(this.cache.keys().next().value);
   }
 
-  async query(sql, queryParameters) {
+  async query(sql, queryParameters, { maxResults = "1000" } = {}) {
     const token = await this.tokenProvider();
     const endpoint = `https://bigquery.googleapis.com/bigquery/v2/projects/${encodeURIComponent(this.project)}/queries`;
     const body = {
@@ -360,7 +552,7 @@ export class TradeStore {
       useLegacySql: false,
       location: this.location,
       timeoutMs: 8_000,
-      maxResults: "1000",
+      maxResults,
       maximumBytesBilled: "5000000000",
       parameterMode: "NAMED",
       queryParameters,
@@ -375,7 +567,7 @@ export class TradeStore {
       if (!payload.jobComplete) {
         const job = payload.jobReference;
         if (!job?.jobId) throw new TradeError(504, "trade_query_timeout", "The trade query did not complete in time.");
-        payload = await requestJSON(this.fetchImpl, `${endpoint}/${encodeURIComponent(job.jobId)}?location=${encodeURIComponent(job.location || this.location)}&timeoutMs=5000&maxResults=1000`, {
+        payload = await requestJSON(this.fetchImpl, `${endpoint}/${encodeURIComponent(job.jobId)}?location=${encodeURIComponent(job.location || this.location)}&timeoutMs=5000&maxResults=${encodeURIComponent(maxResults)}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -399,4 +591,24 @@ export function normalizeProductCode(value) {
   const code = String(value || "").trim();
   if (!/^\d{2}$/.test(code)) throw new TradeError(400, "invalid_trade_product", "Expected a two-digit HS chapter code.");
   return code;
+}
+
+export function normalizeEnergyProduct(value) {
+  const id = String(value || "petroleum").trim().toLowerCase();
+  const product = ENERGY_PRODUCTS[id];
+  if (!product) throw new TradeError(400, "invalid_energy_product", "Expected petroleum, lng or gas.");
+  return { id, ...product };
+}
+
+export function normalizeEnergyFrequency(value) {
+  const frequency = String(value || "A").trim().toUpperCase();
+  if (!["A", "M"].includes(frequency)) throw new TradeError(400, "invalid_energy_frequency", "Expected A for annual or M for monthly.");
+  return frequency;
+}
+
+export function normalizeEnergyPeriod(value, frequency) {
+  const period = String(value || "").trim();
+  const valid = frequency === "A" ? /^20\d{2}$/ : /^20\d{2}(?:0[1-9]|1[0-2])$/;
+  if (!valid.test(period)) throw new TradeError(400, "invalid_energy_period", frequency === "A" ? "Expected an annual YYYY period." : "Expected a monthly YYYYMM period.");
+  return period;
 }

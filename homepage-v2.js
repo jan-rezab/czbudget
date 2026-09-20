@@ -158,4 +158,4 @@ function init(){const year=$("#year-select"),metric=$("#metric-select"),group=$(
 bindLanguage();render();
 // The slim slice carries the ten metrics these pages plot; the full twenty-year, fifteen-metric
 // payload stays with the country profile that actually reads it.
-Promise.all([fetch("data/sovereign-benchmark-slim.v1.json").then(r=>r.json()),fetch("data/fx-eur-annual.v1.json").then(r=>r.json())]).then(([data,fx])=>{state.data=data;state.fx=fx;init()}).catch(error=>{console.error(error);document.body.classList.add("data-error")});
+Promise.all(["data/sovereign-benchmark-slim.v1.json","data/fx-eur-annual.v1.json"].map(url=>window.PSDData?PSDData.loadJson(url):fetch(url).then(r=>r.json()))).then(([data,fx])=>{state.data=data;state.fx=fx;init()}).catch(error=>{console.error(error);document.body.classList.add("data-error")});

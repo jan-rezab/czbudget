@@ -1,12 +1,36 @@
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
+import fs from "node:fs/promises";
 import http from "node:http";
+import os from "node:os";
 import path from "node:path";
 import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
+import { gzipSync } from "node:zlib";
 
 process.env.NODE_ENV = "test";
 process.env.AUTH_DISABLED_FOR_TESTS = "1";
-process.env.SITE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+process.env.SITE_ROOT = siteRoot;
+
+// A clean checkout deliberately omits data/entities; production hydrates that
+// serving layer from the immutable public snapshot. Exercise the same fallback
+// with one real Prague profile assembled from committed source artifacts.
+const snapshotRoot = await fs.mkdtemp(path.join(os.tmpdir(), "czbudget-routes-snapshot-"));
+const releaseId = "routes-test-release";
+const municipalSnapshot = JSON.parse(await fs.readFile(path.join(siteRoot, "data/municipal-snapshot.v1.json"), "utf8"));
+const entity = municipalSnapshot.municipalities.find((item) => item.national_id === "00064581");
+const profile = { schema_version: municipalSnapshot.schema_version, entity };
+const history = JSON.parse(await fs.readFile(path.join(siteRoot, "data/municipal-history/00064581.json"), "utf8"));
+const payloadHash = crypto.createHash("sha256").update(`${JSON.stringify(profile)}\n${JSON.stringify(history)}`).digest("hex");
+const objectKey = `releases/${releaseId}/profiles/cze/00064581.json.gz`;
+const routePath = entity.seo.municipality_path || entity.seo.path;
+const route = { path: routePath, profile_id: "CZE:00064581", country_code: "CZE", entity_code: "00064581", entity_name: entity.short_name, object_key: objectKey, payload_sha256: payloadHash };
+await fs.mkdir(path.join(snapshotRoot, path.dirname(objectKey)), { recursive: true });
+await fs.writeFile(path.join(snapshotRoot, objectKey), gzipSync(JSON.stringify({ schema_version: "1.0.0", release_id: releaseId, profile_id: route.profile_id, canonical_path: routePath, payload_sha256: payloadHash, profile, history })));
+await fs.writeFile(path.join(snapshotRoot, `releases/${releaseId}/routes.v1.json.gz`), gzipSync(JSON.stringify({ schema_version: "2.0.0", release_id: releaseId, routes: [route] })));
+await fs.writeFile(path.join(snapshotRoot, "current.json"), JSON.stringify({ release_id: releaseId, routes: `releases/${releaseId}/routes.v1.json.gz` }));
+process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT = snapshotRoot;
 
 const { handler } = await import("../../server/index.mjs");
 let server;
@@ -20,6 +44,7 @@ before(async () => {
 
 after(async () => {
   await new Promise((resolve) => server.close(resolve));
+  await fs.rm(snapshotRoot, { recursive: true, force: true });
 });
 
 async function get(pathname) {

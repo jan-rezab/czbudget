@@ -614,14 +614,14 @@
   resultRoot.innerHTML = `<p class="cmp-note">${esc(t().loading)}</p>`;
 
   Promise.all([
-    fetch("data/compare-metrics.v1.json").then((r) => r.json()),
-    fetch("data/health-system-assignments.v1.json").then((r) => r.json()),
-    fetch("lib/data/sovereign-benchmark.v1.json").then((r) => r.json()),
-    fetch("data/country-health.v1.json").then((r) => r.json()),
-    fetch("data/country-functional-budgets.v1.json").then((r) => r.json()),
-    fetch("data/hospital-ownership.v1.json").then((r) => r.json()),
-    fetch("data/country-provider-networks.v1.json").then((r) => r.json()),
-    fetch("data/oecd-key-metrics.v1.json").then((r) => r.json()),
+    PSDData.loadJson("data/compare-metrics.v1.json"),
+    PSDData.loadJson("data/health-system-assignments.v1.json"),
+    PSDData.loadJson("data/sovereign-benchmark-slim.v1.json"),
+    PSDData.loadJson("data/country-health.v1.json"),
+    PSDData.loadJson("data/country-functional-budgets.v1.json"),
+    PSDData.loadJson("data/hospital-ownership.v1.json"),
+    PSDData.loadJson("data/country-provider-networks.v1.json"),
+    PSDData.loadJson("data/oecd-key-metrics.v1.json"),
   ]).then(([metricRegistry, systemAssignments, sovereign, health, functional, ownershipData, networkData, oecdData]) => {
     registry = metricRegistry;
     assignments = systemAssignments;
@@ -664,5 +664,6 @@
   }).catch((error) => {
     console.error(error);
     resultRoot.innerHTML = `<p class="cmp-note">${esc(t().failed)}</p>`;
+    PSDData.retryButton(resultRoot, state.lang);
   });
 })();

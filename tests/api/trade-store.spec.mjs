@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { normalizeCountryCode, normalizeProductCode, TRADE_PRODUCT_PARTNERS_SQL, TRADE_PROFILE_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
+import { ENERGY_FLOWS_SQL, ENERGY_PERIODS_SQL, normalizeCountryCode, normalizeEnergyFrequency, normalizeEnergyPeriod, normalizeEnergyProduct, normalizeProductCode, TRADE_PRODUCT_PARTNERS_SQL, TRADE_PROFILE_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
 
 test("trade country codes are strict ISO-3 values", () => {
   assert.equal(normalizeCountryCode(" cze "), "CZE");
@@ -27,6 +27,41 @@ test("product-partner query is partition-pruned and constrained to a chapter", (
   assert.match(TRADE_PRODUCT_PARTNERS_SQL, /STARTS_WITH\(product_code, @product_code\)/);
   assert.match(TRADE_PRODUCT_PARTNERS_SQL, /WHERE is_partner AND NOT is_group/);
   assert.doesNotMatch(TRADE_PRODUCT_PARTNERS_SQL, /SELECT \* FROM `czbudget-janrezab\.budget_detail\.trade_observations`/);
+});
+
+test("energy filters default to petroleum and reject ambiguous inputs", () => {
+  assert.deepEqual(normalizeEnergyProduct(), { id: "petroleum", code: "270900", name: "Crude petroleum" });
+  assert.equal(normalizeEnergyProduct("lng").code, "271111");
+  assert.equal(normalizeEnergyFrequency("m"), "M");
+  assert.equal(normalizeEnergyPeriod("2025", "A"), "2025");
+  assert.equal(normalizeEnergyPeriod("202607", "M"), "202607");
+  assert.throws(() => normalizeEnergyProduct("petroleum-products"), (error) => error instanceof TradeError && error.code === "invalid_energy_product");
+  assert.throws(() => normalizeEnergyPeriod("202613", "M"), (error) => error instanceof TradeError && error.code === "invalid_energy_period");
+});
+
+test("energy queries are partition-pruned, importer-reported and exclude geographic groups", () => {
+  for (const sql of [ENERGY_PERIODS_SQL, ENERGY_FLOWS_SQL]) {
+    assert.match(sql, /period_start/);
+    assert.match(sql, /flow_code = 'M'/);
+    assert.match(sql, /is_original_classification/);
+    assert.match(sql, /NOT is_group/);
+  }
+  assert.match(ENERGY_FLOWS_SQL, /product_code = @product_code/);
+});
+
+test("energy flow responses preserve direction and physical-data flags", async () => {
+  const store = new TradeStore({ tokenProvider: async () => "unused" });
+  store.query = async () => [{
+    period: "2025", frequency: "A", origin_iso3: "NOR", origin_iso2: "NO", origin_name: "Norway",
+    market_iso3: "DEU", market_iso2: "DE", market_name: "Germany", value_usd: "125", net_weight_kg: "50",
+    net_weight_is_estimated: "true", source_last_released: "2026-05-01", retrieved_at: "2026-09-20",
+  }];
+  const result = await store.energyFlows("petroleum", "A", "2025");
+  assert.equal(result.product.code, "270900");
+  assert.equal(result.routes[0].origin.code, "NOR");
+  assert.equal(result.routes[0].market.code, "DEU");
+  assert.equal(result.routes[0].net_weight_is_estimated, true);
+  assert.equal(result.totals.observed_value_usd, 125);
 });
 
 test("product partners expose both directions without filling missing values", async () => {
