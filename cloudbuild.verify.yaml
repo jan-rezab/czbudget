@@ -96,6 +96,7 @@ steps:
         trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
         exec > >(tee /tmp/browser-gate.log) 2>&1
         npm ci
+        npm run check:stories
         npx playwright install --with-deps chromium
         npm run test:api
         node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs

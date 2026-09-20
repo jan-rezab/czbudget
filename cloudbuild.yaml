@@ -21,6 +21,8 @@ steps:
     args:
       - -ceu
       - |
+        node scripts/publish-stories.mjs --check
+        node --test tests/unit/stories.spec.mjs
         node --test tests/api/static-assets.spec.mjs tests/api/pinned-release.spec.mjs
         node --test tests/api/process-log-store.spec.mjs
         node pipeline/create-source-manifest.mjs --self-check

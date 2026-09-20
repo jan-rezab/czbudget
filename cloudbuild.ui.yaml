@@ -10,6 +10,7 @@ steps:
       - |
         npm ci
         npx playwright test \
+          tests/browser/stories.spec.mjs \
           tests/browser/map-view.spec.mjs \
           tests/browser/energy-trade.spec.mjs \
           tests/browser/compare-contract.spec.mjs \

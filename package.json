@@ -6,6 +6,8 @@
     "node": "22.x"
   },
   "scripts": {
+    "build:stories": "node scripts/publish-stories.mjs",
+    "check:stories": "node scripts/publish-stories.mjs --check && node --test tests/unit/stories.spec.mjs",
     "build:france-municipal-profiles": "python3 scripts/build-france-municipal-profiles.py",
     "build:municipality-countries": "node scripts/build-municipality-country-pages.mjs",
     "build:municipal-directory-split": "node scripts/build-municipal-directory-split.mjs",
