@@ -45,7 +45,7 @@ try {
   const missing = await fetch('http://127.0.0.1:8080/data/isred/not-a-published-file.json');
   assert.equal(missing.status, 404);
   assert.equal(missing.headers.get('cache-control'), 'no-store');
-  for (const url of ['/', '/demo', '/cz/municipalities/praha/?lang=en', '/public-data/cityvizor/index']) {
+  for (const url of ['/', '/demo', '/cz/municipalities/praha/?lang=en', '/process/log/?lang=en', '/public-data/cityvizor/index']) {
     const response = await fetch(`http://127.0.0.1:8080${url}`, {signal: AbortSignal.timeout(20000)});
     assert.equal(response.status, 200, url);
     await response.arrayBuffer();
