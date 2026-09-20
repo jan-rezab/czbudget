@@ -1,9 +1,10 @@
 import { readFile } from "node:fs/promises";
 
-const [cloudbuild, cloudbuildVerify, cloudbuildUi, buildPlanes, submitUi] = await Promise.all([
+const [cloudbuild, cloudbuildVerify, cloudbuildUi, cloudbuildServingAssets, buildPlanes, submitUi] = await Promise.all([
   readFile("cloudbuild.yaml", "utf8"),
   readFile("cloudbuild.verify.yaml", "utf8"),
   readFile("cloudbuild.ui.yaml", "utf8"),
+  readFile("cloudbuild.serving-assets.yaml", "utf8"),
   readFile("BUILD_PLANES.md", "utf8"),
   readFile("scripts/submit-ui-verification.sh", "utf8"),
 ]);
@@ -81,6 +82,15 @@ if (
 }
 for (const forbidden of ["deploy-immutable.sh", "bq query", "docker push", "gcloud storage cp"]) {
   if (cloudbuildUi.includes(forbidden)) throw new Error(`Fast UI verification must remain read-only; found ${forbidden}`);
+}
+if (
+  !cloudbuildServingAssets.includes("plane-data") ||
+  !cloudbuildServingAssets.includes("data-publication") ||
+  !cloudbuildServingAssets.includes("publish-serving-asset-pack.py") ||
+  cloudbuildServingAssets.includes("deploy-immutable.sh") ||
+  cloudbuildServingAssets.includes("gcloud run deploy")
+) {
+  throw new Error("Serving contracts must publish only through the data plane");
 }
 if (
   packageJson.scripts["test:browser:ui"]?.includes("playwright.ui.config.mjs") !== true ||

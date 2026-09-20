@@ -3,7 +3,7 @@ import test from 'node:test';
 import crypto from 'node:crypto';
 import {Writable} from 'node:stream';
 import {gzipSync} from 'node:zlib';
-import {StaticAssets} from '../../server/static-assets.mjs';
+import {ASSET_PATH, StaticAssets} from '../../server/static-assets.mjs';
 
 const raw = Buffer.from('{"value":123}\n');
 const sha = crypto.createHash('sha256').update(raw).digest('hex');
@@ -43,6 +43,16 @@ test('generation and range are pinned; concurrent requests share one checked rea
   assert.equal(service.pending.size, 0);
   assert.deepEqual(await service.body(asset, lock.files[asset], lock), raw);
   assert.equal(calls, 1);
+});
+
+test('runtime data routes include every independently published serving contract', () => {
+  for (const url of [
+    '/data/paq/catalog.json.gz',
+    '/data/paq/obec-001.json.gz',
+    '/data/trade/automotive-monthly.v1.json',
+    '/data/municipal-budget-codebook.v1.json',
+  ]) assert.match(url, ASSET_PATH);
+  for (const url of ['/data/trade/README.md', '/data/other.json', '/paq/catalog.json.gz']) assert.doesNotMatch(url, ASSET_PATH);
 });
 
 test('corrupt, truncated, oversized and non-range replies fail closed and can retry', async () => {

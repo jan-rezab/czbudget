@@ -56,6 +56,10 @@ source even when the selected YAML is code-only.
 - Publication changes one small `current.json` pointer only after validation.
   The website keeps reading the previous pointer while staging or failed jobs
   exist.
+- PAQ shards, automotive monthly data and the municipal budget codebook are
+  published as the `serving-contracts` pack by `cloudbuild.serving-assets.yaml`.
+  The web runtime reads that pack through the same generation-pinned
+  `static-assets/current.json` lock as the other independently released assets.
 - Data submitters return a build ID asynchronously. Pausing a local task does
   not cancel a submitted build; use `gcloud builds cancel` when cancellation is
   intended.

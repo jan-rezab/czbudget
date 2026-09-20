@@ -5,7 +5,7 @@ import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
 import {createGunzip} from 'node:zlib';
 
-export const ASSET_PATH = /^\/data\/(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry)\//;
+export const ASSET_PATH = /^\/data\/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq)\/|trade\/automotive-monthly\.v1\.json$|municipal-budget-codebook\.v1\.json$)/;
 const MAX_FILE = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT_BYTES = 48 * 1024 * 1024;
 const CACHE_BYTES = 16 * 1024 * 1024;

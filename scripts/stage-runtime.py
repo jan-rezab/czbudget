@@ -8,7 +8,8 @@ import re
 import shutil
 
 DIRECTORIES = {'assets', 'cityvizor', 'cz', 'data', 'deep-dives', 'lib', 'municipalities', 'process', 'studio'}
-OFFLOADED = {'isred', 'industrial-intelligence', 'czech-nku', 'contracts', 'czech-project-geography', 'industry'}
+OFFLOADED = {'isred', 'industrial-intelligence', 'czech-nku', 'contracts', 'czech-project-geography', 'industry', 'paq'}
+OFFLOADED_FILES = {'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json'}
 ROOT_EXTENSIONS = {'.html', '.js', '.css', '.svg', '.png', '.ico', '.xml', '.txt'}
 
 
@@ -17,6 +18,8 @@ def included(relative):
     if any(p.startswith('.') or re.search(r' \d{1,2}(?:\.|$)', p) for p in parts):
         return False
     name = relative.as_posix()
+    if name in OFFLOADED_FILES:
+        return False
     if len(parts) == 1:
         return relative.suffix in ROOT_EXTENSIONS and name != 'brand-preview.html'
     if parts[0] not in DIRECTORIES:
