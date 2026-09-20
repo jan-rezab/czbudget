@@ -2,9 +2,16 @@
 // Deterministic editorial publishing only. No network, warehouse or data release writes.
 import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
 import catalog from '../content/stories/catalog.mjs';
 
 const root = resolve(import.meta.dirname, '..');
+// CDN browser TTLs can override origin revalidation. Version adapter references
+// from their actual content so returning readers cannot reuse an older adapter.
+const chartScripts = new Map(await Promise.all(['tariff-charts.js', 'chart-rails.js'].map(async name => {
+  const digest = createHash('sha256').update(await readFile(resolve(root, 'stories', name))).digest('hex');
+  return [name, digest];
+})));
 const check = process.argv.includes('--check');
 const origin = 'https://publicspendingdata.org';
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -25,6 +32,8 @@ const url = s => `/stories/${s.slug}/`;
 const bilingual = (en,cs) => `<span data-en="${esc(en)}" data-cs="${esc(cs)}">${esc(en)}</span>`;
 const outputs = new Map();
 function page({title,description,path,body,article=false,schema}) {
+  body = body.replace(/src="\/stories\/(tariff-charts\.js|chart-rails\.js)(?:\?[^"]*)?"/g,
+    (_, name) => `src="/stories/${name}?v=${chartScripts.get(name)}"`);
   return `<!doctype html>
 <html lang="en"><head>
 <script src="/language-bootstrap.js?v=20260920-stories"></script>

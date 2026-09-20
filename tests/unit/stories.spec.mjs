@@ -1,9 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import catalog from '../../content/stories/catalog.mjs';
 import {selectVerification} from '../../scripts/verification-plan.mjs';
 const read = path => readFile(new URL(`../../${path}`,import.meta.url),'utf8');
+
+test('published chart adapters have content-derived cache versions',async()=>{
+  for (const story of catalog.filter(s=>s.status==='published')) {
+    const html=await read(`stories/${story.slug}/index.html`);
+    for (const name of ['tariff-charts.js','chart-rails.js']) {
+      if (!html.includes(`/stories/${name}`)) continue;
+      const digest=createHash('sha256').update(await read(`stories/${name}`)).digest('hex');
+      assert.ok(html.includes(`/stories/${name}?v=${digest}"`), `${story.slug}: ${name}`);
+    }
+  }
+});
 
 test('published articles, index, RSS and sitemap agree; drafts stay private',async()=>{
   const index=await read('stories/index.html'),feed=await read('stories/feed.xml'),map=await read('stories/sitemap.xml');
