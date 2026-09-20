@@ -152,6 +152,11 @@ steps:
           -e DATA_ASSET_LOCK=/packs/lock.json \
           europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID \
           /tmp/verify-runtime-image.mjs
+        docker run --rm --entrypoint node \
+          -v /workspace/scripts/verify-runtime-image-code.mjs:/tmp/verify-runtime-image-code.mjs:ro \
+          -e PORT=8080 \
+          europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/czbudget-public:verify-$COMMIT_SHA-$BUILD_ID \
+          /tmp/verify-runtime-image-code.mjs
 
   - id: verification-complete
     waitFor: [browser-contrast, nginx-routing, image-contract]
