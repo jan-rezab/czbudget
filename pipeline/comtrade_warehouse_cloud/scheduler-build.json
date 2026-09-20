@@ -1,0 +1,30 @@
+{
+  "source": {
+    "storageSource": {
+      "bucket": "czbudget-janrezab-un-comtrade-raw",
+      "object": "build-source-warehouse/1789867825.541138-6ad7fcba75f04ba094e122fca903cc82.tgz",
+      "generation": "1789867825807506"
+    }
+  },
+  "steps": [
+    {
+      "id": "transform-and-load-un-comtrade",
+      "name": "gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec",
+      "entrypoint": "bash",
+      "env": ["PYTHONUNBUFFERED=1", "BUILD_ID=$BUILD_ID"],
+      "args": [
+        "-ceu",
+        "python3 pipeline/transforms/run_un_comtrade_warehouse.py --max-tasks 20000 --max-periods 2 --chunk-rows 1000000"
+      ],
+      "timeout": "14400s"
+    }
+  ],
+  "timeout": "14700s",
+  "queueTtl": "43200s",
+  "options": {
+    "diskSizeGb": "100",
+    "logging": "CLOUD_LOGGING_ONLY",
+    "machineType": "E2_HIGHCPU_8"
+  },
+  "serviceAccount": "projects/czbudget-janrezab/serviceAccounts/comtrade-builder@czbudget-janrezab.iam.gserviceaccount.com"
+}

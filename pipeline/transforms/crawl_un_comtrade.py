@@ -2,9 +2,10 @@
 """Build and execute a freshness-aware, resumable UN Comtrade crawl queue.
 
 Commands:
-  init    refresh availability and queue only released fresh datasets
-  crawl   execute a bounded number of API calls, checkpointing every response
-  status  summarize queue and reporter-period coverage
+  init     refresh availability and queue only released fresh datasets
+  rebatch  compact unfinished root tasks using the current profile batch sizes
+  crawl    execute a bounded number of API calls, checkpointing every response
+  status   summarize queue and reporter-period coverage
 
 Detailed authenticated tasks request HS6 goods and EBOPS services for batches
 of bilateral partners. A response that reaches the endpoint record ceiling is
@@ -15,6 +16,8 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import fcntl
+import shutil
 import gzip
 import hashlib
 import json
@@ -22,6 +25,7 @@ import os
 import sqlite3
 import subprocess
 import tempfile
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -94,16 +98,47 @@ def atomic_json_gz(path: Path, payload: Any) -> None:
 
 
 class RateLimiter:
-    def __init__(self, minimum_interval: float) -> None:
+    def __init__(self, minimum_interval: float, before_request=None) -> None:
         self.minimum_interval = minimum_interval
         self.last_call: float | None = None
+        self.before_request = before_request
+        self.lock = threading.Lock()
 
     def wait(self) -> None:
-        if self.last_call is not None:
-            remaining = self.minimum_interval - (time.monotonic() - self.last_call)
-            if remaining > 0:
-                time.sleep(remaining)
-        self.last_call = time.monotonic()
+        with self.lock:
+            if self.last_call is not None:
+                remaining = self.minimum_interval - (time.monotonic() - self.last_call)
+                if remaining > 0:
+                    time.sleep(remaining)
+            self.last_call = time.monotonic()
+        if self.before_request:
+            self.before_request()
+
+
+class BudgetExhausted(RuntimeError):
+    pass
+
+
+class CloudPersistenceError(RuntimeError):
+    """A raw response was not confirmed durable; stop without completing it."""
+
+
+def reserve_call(connection, daily_limit, credential_id="default"):
+    utc_date = datetime.now(timezone.utc).date().isoformat()
+    timestamp = now_iso()
+    limit = min(daily_limit, 500)
+    row = connection.execute("""
+      INSERT INTO account_call_usage (utc_date, credential_id, call_count, updated_at)
+      VALUES (?, ?, 1, ?)
+      ON CONFLICT(utc_date, credential_id) DO UPDATE SET
+        call_count = call_count + 1, updated_at = excluded.updated_at
+      WHERE account_call_usage.call_count < ?
+      RETURNING call_count
+    """, (utc_date, credential_id, timestamp, limit)).fetchone()
+    connection.commit()
+    if not row:
+        raise BudgetExhausted("Daily API allowance reached")
+    return int(row["call_count"])
 
 
 def request_json(url: str, limiter: RateLimiter, retries: int = 4) -> dict[str, Any]:
@@ -141,6 +176,7 @@ def connect(path: Path) -> sqlite3.Connection:
     connection.executescript("""
         PRAGMA journal_mode=WAL;
         PRAGMA synchronous=FULL;
+        PRAGMA busy_timeout=60000;
         CREATE TABLE IF NOT EXISTS availability (
           availability_id TEXT PRIMARY KEY,
           product_type TEXT NOT NULL,
@@ -194,26 +230,91 @@ def connect(path: Path) -> sqlite3.Connection:
           call_count INTEGER NOT NULL,
           updated_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS account_call_usage (
+          utc_date TEXT NOT NULL,
+          credential_id TEXT NOT NULL,
+          call_count INTEGER NOT NULL,
+          updated_at TEXT NOT NULL,
+          PRIMARY KEY (utc_date, credential_id)
+        );
+        CREATE TABLE IF NOT EXISTS history_discovery (
+          profile_id TEXT NOT NULL, period TEXT NOT NULL, checked_at TEXT NOT NULL,
+          PRIMARY KEY (profile_id, period)
+        );
     """)
     return connection
 
 
-def record_call(connection: sqlite3.Connection) -> int:
+def record_call(connection: sqlite3.Connection, credential_id: str = "default") -> int:
     utc_date = datetime.now(timezone.utc).date().isoformat()
     timestamp = now_iso()
     connection.execute("""
-      INSERT INTO call_usage (utc_date, call_count, updated_at) VALUES (?, 1, ?)
-      ON CONFLICT(utc_date) DO UPDATE SET call_count = call_count + 1, updated_at = excluded.updated_at
-    """, (utc_date, timestamp))
+      INSERT INTO account_call_usage (utc_date, credential_id, call_count, updated_at)
+      VALUES (?, ?, 1, ?)
+      ON CONFLICT(utc_date, credential_id) DO UPDATE SET
+        call_count = call_count + 1, updated_at = excluded.updated_at
+    """, (utc_date, credential_id, timestamp))
     connection.commit()
-    row = connection.execute("SELECT call_count FROM call_usage WHERE utc_date = ?", (utc_date,)).fetchone()
+    row = connection.execute("SELECT call_count FROM account_call_usage WHERE utc_date = ? AND credential_id = ?", (utc_date, credential_id)).fetchone()
     return int(row["call_count"])
 
 
-def daily_calls(connection: sqlite3.Connection) -> int:
+def daily_calls(connection: sqlite3.Connection, credential_id: str = "default") -> int:
     utc_date = datetime.now(timezone.utc).date().isoformat()
-    row = connection.execute("SELECT call_count FROM call_usage WHERE utc_date = ?", (utc_date,)).fetchone()
+    row = connection.execute("SELECT call_count FROM account_call_usage WHERE utc_date = ? AND credential_id = ?", (utc_date, credential_id)).fetchone()
     return int(row["call_count"]) if row else 0
+
+
+def claim_next_task(
+    connection: sqlite3.Connection,
+    queue_mode: str = "balanced",
+    today: date | None = None,
+) -> sqlite3.Row | None:
+    """Atomically claim the next ready task across concurrent WAL connections."""
+    claimed_at = now_iso()
+    if queue_mode not in {"balanced", "monthly_focus", "annual"}:
+        raise ValueError(f"Unsupported queue mode: {queue_mode}")
+    if queue_mode == "balanced":
+        order_sql = """CASE WHEN product_type='C' THEN 0 ELSE 1 END,
+                 CASE WHEN frequency='A' THEN 0 ELSE 1 END,
+                 priority, created_at, task_id"""
+        order_parameters: tuple[Any, ...] = ()
+    else:
+        focus_periods = monthly_focus_periods(3, today)
+        oldest_focus, newest_focus = focus_periods[-1], focus_periods[0]
+        if queue_mode == "monthly_focus":
+            order_sql = """CASE
+                   WHEN frequency='A' AND period='2025' THEN 0
+                   WHEN frequency='M' AND period BETWEEN ? AND ? THEN 1
+                   WHEN frequency='A' AND period='2023' THEN 2
+                   WHEN frequency='A' THEN 3
+                   WHEN frequency='M' THEN 4
+                   ELSE 5 END,
+                 priority, created_at, task_id"""
+        else:
+            order_sql = """CASE
+                   WHEN frequency='A' AND period='2025' THEN 0
+                   WHEN frequency='A' AND period='2023' THEN 1
+                   WHEN frequency='A' THEN 2
+                   WHEN frequency='M' AND period BETWEEN ? AND ? THEN 3
+                   WHEN frequency='M' THEN 4
+                   ELSE 5 END,
+                 priority, created_at, task_id"""
+        order_parameters = (oldest_focus, newest_focus)
+    task = connection.execute("""
+      WITH next_task AS (
+        SELECT task_id FROM tasks
+        WHERE status = 'queued' AND (not_before IS NULL OR not_before <= ?)
+        ORDER BY """ + order_sql + """
+        LIMIT 1
+      )
+      UPDATE tasks
+      SET status = 'running', attempts = attempts + 1, updated_at = ?
+      WHERE task_id = (SELECT task_id FROM next_task)
+      RETURNING *
+    """, (claimed_at, *order_parameters, claimed_at)).fetchone()
+    connection.commit()
+    return task
 
 
 def reference_paths(root: Path) -> dict[str, Path]:
@@ -255,6 +356,12 @@ def recent_complete_months(count: int, today: date | None = None) -> list[str]:
     return periods
 
 
+def monthly_focus_periods(prior_months: int = 3, today: date | None = None) -> list[str]:
+    """Return complete YTD months plus a short pre-year comparison window."""
+    current = today or date.today()
+    return recent_complete_months(max(0, current.month - 1) + prior_months, current)
+
+
 def profile_periods(profile: dict[str, Any], config: dict[str, Any], annual_year: int | None, month_count: int | None) -> list[str]:
     freshness = config["warehouse_crawl"]["freshness"]
     if profile["frequency"] == "A":
@@ -275,15 +382,20 @@ def sync_availability(
     annual_year: int | None,
     month_count: int | None,
     daily_limit: int,
+    period_overrides: dict[str, list[str]] | None = None,
+    credential_id: str = "default",
 ) -> None:
     sovereign = {row["iso3"] for row in read_json(UNIVERSE_PATH)["countries"]}
     for profile in config["warehouse_crawl"]["profiles"]:
-        for period in profile_periods(profile, config, annual_year, month_count):
-            if daily_calls(connection) >= daily_limit:
+        for period in (period_overrides.get(profile['id'], []) if period_overrides is not None else profile_periods(profile, config, annual_year, month_count)):
+            if daily_calls(connection, credential_id) >= daily_limit:
                 raise RuntimeError(f"UTC daily call budget {daily_limit} reached while refreshing availability")
             url = availability_url(config, profile, period)
             payload = request_json(url, limiter)
-            record_call(connection)
+            if not limiter.before_request:
+                record_call(connection, credential_id)
+            if not isinstance(payload.get('data'), list) or len(payload['data']) >= 500:
+                raise RuntimeError("Availability missing data or at record ceiling; refusing incomplete discovery")
             relative = Path(profile["product_type"]) / profile["frequency"] / f"{period}-{profile['classification']}.json.gz"
             path = availability_root / relative
             payload["_psd_request"] = {"url": url, "retrieved_at": now_iso(), "profile_id": profile["id"]}
@@ -291,7 +403,7 @@ def sync_availability(
             discovered_at = now_iso()
             for row in payload.get("data", []):
                 iso3 = str(row.get("reporterISO") or "").strip().upper()
-                if iso3 not in sovereign:
+                if not iso3 or (not config['warehouse_crawl'].get('all_reporting_areas') and iso3 not in sovereign):
                     continue
                 classification = str(row.get("classificationCode") or profile["classification"])
                 availability_id = stable_id(profile["product_type"], profile["frequency"], period, row.get("reporterCode"), classification)
@@ -320,6 +432,9 @@ def sync_availability(
                     str(path.relative_to(WORKSPACE)), discovered_at,
                 ))
             connection.commit()
+            if period_overrides is not None:
+                connection.execute('INSERT OR REPLACE INTO history_discovery VALUES (?, ?, ?)', (profile['id'], period, now_iso()))
+                connection.commit()
             print(f"availability {profile['id']} {period}: {len(payload.get('data', []))} datasets", flush=True)
 
 
@@ -339,12 +454,14 @@ def country_ranks(year: int) -> dict[str, int]:
     return {iso3: index for index, (iso3, _, _) in enumerate(values, start=1)}
 
 
-def active_partner_codes(reference: dict[str, Any], sovereign: set[str]) -> dict[str, int]:
+def active_partner_codes(reference: dict[str, Any], sovereign: set[str]) -> dict[int, str]:
     result = {}
     for row in reference.get("results", []):
         iso3 = str(row.get("PartnerCodeIsoAlpha3") or "").strip().upper()
-        if iso3 in sovereign and not row.get("isGroup") and not row.get("entryExpiredDate"):
-            result[iso3] = int(row["PartnerCode"])
+        if (not sovereign or iso3 in sovereign) and iso3 and not row.get("isGroup"):
+            # Historical revisions may assign several numeric areas the same
+            # ISO label. Numeric Comtrade area codes define partner identity.
+            result[int(row["PartnerCode"])] = iso3
     return result
 
 
@@ -375,10 +492,34 @@ def insert_task(connection: sqlite3.Connection, task: dict[str, Any]) -> bool:
     return cursor.rowcount > 0
 
 
-def schedule_tasks(connection: sqlite3.Connection, config: dict[str, Any], partner_reference: dict[str, Any]) -> int:
+def protected_partner_codes(connection: sqlite3.Connection, available: sqlite3.Row, profile: dict[str, Any], flow_code: str) -> set[int]:
+    """Return partners already covered by work that a rebatch must preserve.
+
+    All existing tasks protect their partners. Rebatching deletes queued roots
+    before calling this function, while discovery preserves them.
+    """
+    rows = connection.execute("""
+      SELECT partner_codes
+      FROM tasks
+      WHERE profile_id = ? AND product_type = ? AND frequency = ? AND period = ?
+        AND reporter_code = ? AND classification_code = ? AND flow_code = ?
+    """, (
+        profile["id"], available["product_type"], available["frequency"], available["period"],
+        available["reporter_code"], available["classification_code"], flow_code,
+    )).fetchall()
+    return {int(code) for row in rows for code in json.loads(row["partner_codes"])}
+
+
+def schedule_tasks(
+    connection: sqlite3.Connection,
+    config: dict[str, Any],
+    partner_reference: dict[str, Any],
+    *,
+    exclude_existing_partners: bool = True,
+) -> int:
     universe = read_json(UNIVERSE_PATH)["countries"]
     sovereign = {row["iso3"] for row in universe}
-    partners = active_partner_codes(partner_reference, sovereign)
+    partners = active_partner_codes(partner_reference, set() if config['warehouse_crawl'].get('all_reporting_areas') else sovereign)
     ranks = country_ranks(date.today().year - 1)
     profiles = {(row["product_type"], row["frequency"]): row for row in config["warehouse_crawl"]["profiles"]}
     inserted = 0
@@ -387,12 +528,17 @@ def schedule_tasks(connection: sqlite3.Connection, config: dict[str, Any], partn
         profile = profiles.get((available["product_type"], available["frequency"]))
         if not profile:
             continue
-        partner_values = [code for iso3, code in sorted(partners.items(), key=lambda item: (ranks.get(item[0], 999), item[0])) if iso3 != available["reporter_iso3"]]
-        partner_batches = [[0], *list(chunks(partner_values, int(profile["partner_batch_size"])))]
+        partner_values = [code for code, iso3 in sorted(partners.items(), key=lambda item: (ranks.get(item[1], 999), item[1], item[0])) if code != available['reporter_code'] and code != 0]
         rank = ranks.get(available["reporter_iso3"], 999)
         for flow_index, flow_code in enumerate(("M", "X")):
+            protected = protected_partner_codes(connection, available, profile, flow_code) if exclude_existing_partners else set()
+            remaining_partners = [code for code in partner_values if code not in protected]
+            partner_batches = ([] if 0 in protected else [[0]]) + list(chunks(remaining_partners, int(profile["partner_batch_size"])))
             for batch_index, partner_batch in enumerate(partner_batches):
-                priority = int(profile["priority"]) * 1_000_000 + rank * 1_000 + flow_index * 400 + batch_index
+                period_age = (date.today().year - int(available['period'][:4])) * 12
+                if profile['frequency'] == 'M':
+                    period_age += 12 - int(available['period'][4:6])
+                priority = int(profile["priority"]) * 1_000_000_000 + period_age * 1_000_000 + rank * 1_000 + flow_index * 400 + batch_index
                 inserted += insert_task(connection, {
                     "profile_id": profile["id"], "product_type": available["product_type"],
                     "frequency": available["frequency"], "period": available["period"],
@@ -403,6 +549,24 @@ def schedule_tasks(connection: sqlite3.Connection, config: dict[str, Any], partn
                 })
     connection.commit()
     return inserted
+
+
+def rebatch_queued_root_tasks(connection: sqlite3.Connection, config: dict[str, Any], partner_reference: dict[str, Any]) -> tuple[int, int]:
+    """Replace only unfinished root tasks; preserve completed and split work."""
+    profile_ids = [str(profile["id"]) for profile in config["warehouse_crawl"]["profiles"]]
+    placeholders = ",".join("?" for _ in profile_ids)
+    deleted = connection.execute(
+        f"DELETE FROM tasks WHERE status = 'queued' AND parent_task_id IS NULL AND profile_id IN ({placeholders})",
+        profile_ids,
+    ).rowcount
+    connection.commit()
+    inserted = schedule_tasks(
+        connection,
+        config,
+        partner_reference,
+        exclude_existing_partners=True,
+    )
+    return deleted, inserted
 
 
 def safe_task_url(config: dict[str, Any], task: sqlite3.Row, api_key: str | None, max_records: int) -> tuple[str, str]:
@@ -446,8 +610,14 @@ def split_task(connection: sqlite3.Connection, task: sqlite3.Row, references: di
             midpoint = (len(codes) + 1) // 2
             children = [(partners, ",".join(codes[:midpoint])), (partners, ",".join(codes[midpoint:]))]
         else:
-            key = task["classification_code"] if task["classification_code"] in references else "EB"
+            if selector and selector not in {"AG6", "AG4"}:
+                raise RuntimeError("Single-product response at ceiling; refusing incomplete coverage")
+            key = task["classification_code"]
+            if key not in references:
+                raise RuntimeError(f"Missing classification reference {key}; refusing unsafe split")
             leaves = classification_leaf_codes(references[key], task["classification_code"])
+            if not leaves:
+                raise RuntimeError(f"No classification leaves for {key}; refusing empty split")
             children = [(partners, ",".join(batch)) for batch in chunks(leaves, chunk_size)]
     inserted = 0
     for index, (partner_batch, selector) in enumerate(children):
@@ -482,9 +652,10 @@ def validate_task_response(task: sqlite3.Row, payload: dict[str, Any]) -> None:
             raise RuntimeError("Response partner falls outside task batch")
 
 
-def crawl(connection: sqlite3.Connection, config: dict[str, Any], reference_paths_map: dict[str, Path], args: argparse.Namespace) -> None:
+def crawl(connection: sqlite3.Connection, config: dict[str, Any], reference_paths_map: dict[str, Path], args: argparse.Namespace) -> dict[str, Any]:
     crawl_config = config["warehouse_crawl"]
-    api_key = resolve_api_key(config)
+    api_key = getattr(args, "api_key", None) or resolve_api_key(config)
+    credential_id = getattr(args, "credential_id", "default")
     if not api_key and not args.allow_preview:
         raise SystemExit("Detailed crawling requires UN_COMTRADE_API_KEY or the configured macOS Keychain item. Use --allow-preview only for slow, automatically split 500-row preview slices.")
     max_records = int(crawl_config["authenticated_max_records"] if api_key else crawl_config["anonymous_max_records"])
@@ -493,76 +664,165 @@ def crawl(connection: sqlite3.Connection, config: dict[str, Any], reference_path
     minimum_interval = float(config["access"]["minimum_seconds_between_calls"])
     if not api_key:
         minimum_interval = max(minimum_interval, 2.2)
-    limiter = RateLimiter(minimum_interval)
+    def budget_request():
+        stop_event = getattr(args, 'stop_event', None)
+        if stop_event and stop_event.is_set():
+            raise BudgetExhausted('Credential lane stopped by coordinator')
+        if budget_request.attempts >= max_calls:
+            raise BudgetExhausted('Run API allowance reached')
+        reserve_call(connection, daily_limit, credential_id)
+        budget_request.attempts += 1
+    budget_request.attempts = 0
+    shared_rate_limiter = getattr(args, 'shared_rate_limiter', None)
+    if shared_rate_limiter:
+        class BudgetedSharedLimiter:
+            def wait(self):
+                shared_rate_limiter.wait()
+                budget_request()
+        limiter = BudgetedSharedLimiter()
+    else:
+        limiter = RateLimiter(minimum_interval, budget_request)
     references = {key: read_json(path) for key, path in reference_paths_map.items() if key in {"H6", "EB", "EB10", "EB10S"}}
     raw_root = WORKSPACE / crawl_config["raw_path"]
-    # The queue is deliberately single-worker. A process interruption can only
-    # leave its current task in `running`, so reclaim it before resuming.
-    reclaimed = connection.execute(
-        "UPDATE tasks SET status = 'queued', updated_at = ? WHERE status = 'running'",
-        (now_iso(),),
-    ).rowcount
-    connection.commit()
-    if reclaimed:
-        print(f"reclaimed {reclaimed} interrupted task(s)", flush=True)
-    calls = 0
-    while calls < max_calls and daily_calls(connection) < daily_limit:
-        task = connection.execute("""
-          SELECT * FROM tasks
-          WHERE status = 'queued' AND (not_before IS NULL OR not_before <= ?)
-          ORDER BY priority, created_at, task_id
-          LIMIT 1
-        """, (now_iso(),)).fetchone()
-        if not task:
-            break
-        connection.execute("UPDATE tasks SET status = 'running', attempts = attempts + 1, updated_at = ? WHERE task_id = ?", (now_iso(), task["task_id"]))
+    # Standalone runs reclaim interrupted work. The direct cloud coordinator
+    # performs this once before starting its concurrent WAL-backed lanes.
+    if getattr(args, 'reclaim_running', True):
+        reclaimed = connection.execute(
+            "UPDATE tasks SET status = 'queued', updated_at = ? WHERE status = 'running'",
+            (now_iso(),),
+        ).rowcount
         connection.commit()
+        if reclaimed:
+            print(f"reclaimed {reclaimed} interrupted task(s)", flush=True)
+    calls = 0
+    added_rows = 0
+    added_tasks = 0
+    outcomes = {
+        'http_success': 0, 'archived_responses': 0, 'split_responses': 0,
+        'rate_limited': 0, 'authentication_errors': 0,
+        'other_http_errors': 0, 'other_errors': 0,
+    }
+    stop_reason = 'call_budget'
+    raw_bytes = sum(path.stat().st_size for path in raw_root.rglob('*.json.gz'))
+    max_spool = getattr(args, 'max_spool_bytes', None)
+    minimum_free = float(crawl_config.get('minimum_free_disk_gib', 20)) * 1024**3
+    deadline = time.monotonic() + getattr(args, 'max_minutes', 45) * 60
+    while calls < max_calls and daily_calls(connection, credential_id) < daily_limit:
+        if getattr(args, 'max_rows', None) and added_rows >= args.max_rows:
+            stop_reason = 'row_batch'
+            break
+        if getattr(args, 'max_tasks', None) and added_tasks >= args.max_tasks:
+            stop_reason = 'task_batch'
+            break
+        if max_spool and raw_bytes >= max_spool:
+            stop_reason = 'spool_batch'
+            break
+        if time.monotonic() >= deadline:
+            stop_reason = 'time_budget'
+            print('Paused: run time budget reached', flush=True)
+            break
+        if shutil.disk_usage(WORKSPACE).free < minimum_free:
+            stop_reason = 'disk_reserve'
+            print('Paused: free disk below configured reserve', flush=True)
+            break
+        task = claim_next_task(connection, getattr(args, 'queue_mode', 'balanced'))
+        if not task:
+            stop_reason = 'no_ready_tasks'
+            break
         url, safe_url = safe_task_url(config, task, api_key, max_records)
         try:
             payload = request_json(url, limiter)
             calls += 1
-            record_call(connection)
+            outcomes['http_success'] += 1
             validate_task_response(task, payload)
             rows = payload.get("data", [])
             if len(rows) >= max_records or int(payload.get("count") or 0) >= max_records:
+                classification = task['classification_code']
+                if len(json.loads(task['partner_codes'])) == 1 and classification not in references:
+                    if classification not in {f'H{i}' for i in range(7)}:
+                        raise RuntimeError('Unsupported historical classification; refusing unsafe split')
+                    ref_path = reference_paths_map['H6'].parent / f'{classification}.json'
+                    reference = read_json(ref_path) if ref_path.exists() else request_json(f"{config['api_base']}/files/v1/app/reference/{classification}.json", limiter)
+                    atomic_bytes(ref_path, json.dumps(reference).encode('utf-8'))
+                    references[classification] = reference
                 child_count = split_task(connection, task, references, int(crawl_config["anonymous_product_chunk_size"]))
+                outcomes['split_responses'] += 1
                 print(f"split {task['task_id'][:10]} {task['reporter_iso3']} {task['period']} rows={len(rows)} children={child_count}", flush=True)
                 continue
             retrieved_at = now_iso()
             relative = Path(task["product_type"]) / task["frequency"] / task["period"] / task["reporter_iso3"] / f"{task['task_id']}.json.gz"
             path = raw_root / relative
             payload["_psd_task"] = {"task_id": task["task_id"], "url": safe_url, "retrieved_at": retrieved_at}
-            atomic_json_gz(path, payload)
-            response_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+            sink = getattr(args, 'response_sink', None)
+            if sink:
+                path, response_hash = sink(task, payload, path)
+            elif max_spool:
+                compressed = gzip.compress(json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf-8') + b'\n', compresslevel=6)
+                if raw_bytes + len(compressed) > max_spool or shutil.disk_usage(WORKSPACE).free - len(compressed) < minimum_free:
+                    connection.execute("UPDATE tasks SET status='queued', updated_at=? WHERE task_id=?", (now_iso(), task['task_id']))
+                    connection.commit()
+                    stop_reason = 'spool_batch' if raw_bytes + len(compressed) > max_spool else 'disk_reserve'
+                    break
+                atomic_bytes(path, compressed)
+            else:
+                atomic_json_gz(path, payload)
+            if not sink:
+                raw_bytes += path.stat().st_size
+                response_hash = hashlib.sha256(path.read_bytes()).hexdigest()
             status = "completed" if rows else "no_data"
             connection.execute("""
               UPDATE tasks SET status = ?, raw_path = ?, record_count = ?, response_sha256 = ?,
                 error = NULL, not_before = NULL, updated_at = ? WHERE task_id = ?
             """, (status, str(path.relative_to(WORKSPACE)), len(rows), response_hash, retrieved_at, task["task_id"]))
             connection.commit()
+            added_rows += len(rows)
+            added_tasks += 1
+            outcomes['archived_responses'] += 1
             print(f"{status} {task['reporter_iso3']} {task['product_type']}{task['frequency']} {task['period']} {task['flow_code']} partners={task['partner_codes']} rows={len(rows)}", flush=True)
+        except CloudPersistenceError:
+            connection.execute("UPDATE tasks SET status='queued', error='Cloud persistence failed', updated_at=? WHERE task_id=?", (now_iso(), task['task_id']))
+            connection.commit()
+            stop_reason = 'cloud_persistence'
+            print('Paused: cloud upload/verification failed; task remains queued', flush=True)
+            break
+        except BudgetExhausted:
+            connection.execute("UPDATE tasks SET status='queued', updated_at=? WHERE task_id=?", (now_iso(), task['task_id']))
+            connection.commit()
+            break
         except urllib.error.HTTPError as exc:
             calls += 1
-            record_call(connection)
             if exc.code == 429:
-                backoff_seconds = 10
+                outcomes['rate_limited'] += 1
+                stop_reason = 'rate_limited'
+                retry_after = (exc.headers or {}).get('Retry-After', '60')
+                backoff_seconds = max(60, int(retry_after) if str(retry_after).isdigit() else 60)
                 not_before = (datetime.now(timezone.utc) + timedelta(seconds=backoff_seconds)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
                 connection.execute("UPDATE tasks SET status = 'queued', not_before = ?, error = ?, updated_at = ? WHERE task_id = ?", (not_before, "HTTP 429", now_iso(), task["task_id"]))
                 connection.commit()
                 print(f"rate-limited; task deferred until {not_before}", flush=True)
                 time.sleep(backoff_seconds)
                 continue
+            if exc.code in (401, 403):
+                outcomes['authentication_errors'] += 1
+                stop_reason = 'authentication'
+                connection.execute("UPDATE tasks SET status='queued', error=?, updated_at=? WHERE task_id=?", (f'HTTP {exc.code}', now_iso(), task['task_id']))
+                connection.commit()
+                print(f'Paused: HTTP {exc.code} authentication failure', flush=True)
+                break
+            outcomes['other_http_errors'] += 1
             connection.execute("UPDATE tasks SET status = 'error', error = ?, updated_at = ? WHERE task_id = ?", (f"HTTP {exc.code}: {exc.reason}", now_iso(), task["task_id"]))
             connection.commit()
         except Exception as exc:
             calls += 1
-            record_call(connection)
+            outcomes['other_errors'] += 1
             status = "queued" if int(task["attempts"]) < 4 else "error"
             not_before = (datetime.now(timezone.utc) + timedelta(seconds=min(2 ** (int(task["attempts"]) + 1), 60))).replace(microsecond=0).isoformat().replace("+00:00", "Z") if status == "queued" else None
             connection.execute("UPDATE tasks SET status = ?, not_before = ?, error = ?, updated_at = ? WHERE task_id = ?", (status, not_before, f"{type(exc).__name__}: {exc}", now_iso(), task["task_id"]))
             connection.commit()
             print(f"{status} {task['task_id'][:10]}: {type(exc).__name__}: {exc}", flush=True)
-    print(f"crawl calls={calls}; UTC daily state usage={daily_calls(connection)}/{daily_limit}", flush=True)
+    print(f"crawl credential={credential_id} HTTP attempts={budget_request.attempts}; UTC daily state usage={daily_calls(connection, credential_id)}/{daily_limit}", flush=True)
+    return {'rows': added_rows, 'tasks': added_tasks, 'http_attempts': budget_request.attempts,
+            'stop_reason': stop_reason, 'credential_id': credential_id, 'outcomes': outcomes}
 
 
 def print_status(connection: sqlite3.Connection) -> None:
@@ -586,7 +846,14 @@ def parse_args() -> argparse.Namespace:
     crawl_parser.add_argument("--max-calls", type=int)
     crawl_parser.add_argument("--daily-limit", type=int)
     crawl_parser.add_argument("--allow-preview", action="store_true")
+    crawl_parser.add_argument('--max-minutes', type=float, default=45)
+    subparsers.add_parser("rebatch", help="Compact unfinished root tasks using current profile batch sizes")
     subparsers.add_parser("status", help="Show availability and queue progress")
+    history = subparsers.add_parser('history', help='Discover released historical goods periods, resumably')
+    history.add_argument('--annual-start', type=int, default=1988)
+    history.add_argument('--monthly-start', type=int, default=2000)
+    history.add_argument('--max-periods', type=int, default=10)
+    history.add_argument('--daily-limit', type=int, default=500)
     return parser.parse_args()
 
 
@@ -595,11 +862,41 @@ def main() -> None:
     config = read_json(CONFIG_PATH)
     crawl_config = config["warehouse_crawl"]
     state_path = WORKSPACE / crawl_config["state_path"]
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    lock = (state_path.parent / 'crawler.lock').open('a')
+    if args.command != 'status':
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise SystemExit('Another crawler owns the checkpoint; no requests issued')
     connection = connect(state_path)
-    limiter = RateLimiter(float(config["access"]["minimum_seconds_between_calls"]))
+    if args.command == 'status':
+        print_status(connection)
+        connection.close()
+        return
+    if args.command == 'crawl' and args.max_minutes <= 0:
+        raise SystemExit('Run time budget must be positive')
+    limiter = RateLimiter(float(config["access"]["minimum_seconds_between_calls"]), lambda: reserve_call(connection, getattr(args, 'daily_limit', None) or 500))
     references_root = WORKSPACE / "data/sources/trade/crawler/reference"
     references = sync_references(config, references_root, limiter)
-    if args.command == "init":
+    if args.command == 'history':
+        if not 1988 <= args.annual_start < date.today().year or not 2000 <= args.monthly_start <= date.today().year or args.max_periods < 1:
+            raise SystemExit('Invalid historical bounds or period budget')
+        selected = 0
+        for profile in crawl_config['profiles']:
+            if profile['product_type'] != 'C':
+                continue
+            periods = ([str(y) for y in range(date.today().year-1, args.annual_start-1, -1)] if profile['frequency'] == 'A' else recent_complete_months((date.today().year-args.monthly_start)*12+date.today().month-1))
+            for period in periods:
+                if selected >= args.max_periods or daily_calls(connection) >= args.daily_limit:
+                    break
+                if connection.execute('SELECT 1 FROM history_discovery WHERE profile_id=? AND period=?', (profile['id'],period)).fetchone():
+                    continue
+                sync_availability(connection, config, WORKSPACE / crawl_config['availability_path'], limiter, None, None, args.daily_limit, {profile['id']:[period]})
+                selected += 1
+        print(f'History discovery: {selected} periods checked; {schedule_tasks(connection, config, read_json(references["partners"]))} new tasks', flush=True)
+        print_status(connection)
+    elif args.command == "init":
         daily_limit = args.daily_limit if args.daily_limit is not None else int(crawl_config["calls_per_utc_day"])
         sync_availability(
             connection, config, WORKSPACE / crawl_config["availability_path"], limiter,
@@ -607,6 +904,10 @@ def main() -> None:
         )
         inserted = schedule_tasks(connection, config, read_json(references["partners"]))
         print(f"queued {inserted} new tasks", flush=True)
+        print_status(connection)
+    elif args.command == "rebatch":
+        deleted, inserted = rebatch_queued_root_tasks(connection, config, read_json(references["partners"]))
+        print(f"rebatched queued root tasks: removed={deleted} inserted={inserted}", flush=True)
         print_status(connection)
     elif args.command == "crawl":
         crawl(connection, config, references, args)

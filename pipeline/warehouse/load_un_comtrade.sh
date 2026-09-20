@@ -11,6 +11,8 @@ if [[ ! -s "$input_dir/manifest.json" ]]; then
   exit 1
 fi
 
+python3 "$warehouse_root/../transforms/prepare_un_comtrade_warehouse.py" --verify-manifest "$input_dir/manifest.json"
+
 bq query --project_id="$project_id" --use_legacy_sql=false < "$warehouse_root/un_comtrade_schema.sql"
 
 load_stage() {
@@ -34,6 +36,8 @@ load_stage trade_dataset_coverage
 load_stage trade_ingestion_runs
 
 bq query --project_id="$project_id" --use_legacy_sql=false < "$warehouse_root/merge_un_comtrade.sql"
+bq query --project_id="$project_id" --use_legacy_sql=false < "$warehouse_root/validate_un_comtrade_load.sql"
+python3 "$warehouse_root/../transforms/prepare_un_comtrade_warehouse.py" --acknowledge "$input_dir/manifest.json"
 
 for table_name in trade_areas trade_products trade_observations trade_dataset_coverage trade_ingestion_runs; do
   bq rm --project_id="$project_id" --force --table "${dataset_id}._un_comtrade_load_${table_name}"

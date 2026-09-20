@@ -107,6 +107,8 @@ def remove_local_raw(raw_root: Path, inventory: list[dict[str, Any]]) -> None:
         path = (raw_root / str(item["key"])).resolve()
         if resolved_root not in path.parents:
             raise RuntimeError(f"Refusing to delete path outside raw root: {path}")
+        if checksums(path)[1] != item["sha256"]:
+            raise RuntimeError(f"Refusing to delete changed raw response: {path.name}")
         path.unlink()
     for directory in sorted((path for path in raw_root.rglob("*") if path.is_dir()), reverse=True):
         try:

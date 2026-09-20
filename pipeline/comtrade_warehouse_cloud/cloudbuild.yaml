@@ -1,0 +1,40 @@
+# Small reviewed source bundle; raw data stays in private Cloud Storage.
+steps:
+  - id: transform-and-load-un-comtrade
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    env:
+      - PYTHONUNBUFFERED=1
+      - BUILD_ID=$BUILD_ID
+    args:
+      - -ceu
+      - |
+        runtime_args=(
+          --max-tasks '${_MAX_TASKS}'
+          --max-periods '${_MAX_PERIODS}'
+          --chunk-rows '${_CHUNK_ROWS}'
+        )
+        if [[ '${_REFERENCES_ONLY}' == 'true' ]]; then
+          runtime_args+=(--references-only)
+        fi
+        if [[ '${_FREQUENCY}' != 'AUTO' ]]; then
+          runtime_args+=(--frequency '${_FREQUENCY}' --period '${_PERIOD}')
+        fi
+        python3 pipeline/transforms/run_un_comtrade_warehouse.py "$${runtime_args[@]}"
+    timeout: 14400s
+timeout: 14700s
+# Historical backfills share a constrained regional worker pool and may queue
+# behind the daily crawler. Keep queued builds alive long enough to drain
+# serially without weakening the per-build execution timeout above.
+queueTtl: 43200s
+substitutions:
+  _FREQUENCY: AUTO
+  _PERIOD: AUTO
+  _MAX_TASKS: '20000'
+  _MAX_PERIODS: '1'
+  _CHUNK_ROWS: '1000000'
+  _REFERENCES_ONLY: 'false'
+options:
+  diskSizeGb: 100
+  machineType: E2_HIGHCPU_8
+  logging: CLOUD_LOGGING_ONLY

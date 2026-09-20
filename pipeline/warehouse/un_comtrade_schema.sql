@@ -150,6 +150,30 @@ OPTIONS(
   require_partition_filter = TRUE
 );
 
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.trade_source_responses` (
+  crawl_task_id STRING NOT NULL,
+  source_response_sha256 STRING NOT NULL,
+  period_start DATE NOT NULL,
+  period STRING NOT NULL,
+  frequency STRING NOT NULL OPTIONS(description = 'A annual or M monthly'),
+  product_type STRING NOT NULL OPTIONS(description = 'C merchandise or S services'),
+  reporter_area_code INT64 NOT NULL,
+  reporter_iso3 STRING,
+  classification_code STRING NOT NULL,
+  source_record_count INT64 NOT NULL,
+  normalized_row_count INT64 NOT NULL,
+  source_status STRING NOT NULL OPTIONS(description = 'completed or no_data'),
+  checkpoint_archive_id STRING NOT NULL,
+  ingestion_run_id STRING NOT NULL,
+  loaded_at TIMESTAMP NOT NULL
+)
+PARTITION BY period_start
+CLUSTER BY frequency, product_type, reporter_iso3, crawl_task_id
+OPTIONS(
+  description = 'Exact task and response-hash ledger for cloud-side UN Comtrade loads. A row is written only after the observation MERGE validates.',
+  require_partition_filter = TRUE
+);
+
 CREATE OR REPLACE VIEW `czbudget-janrezab.budget_detail.latest_trade_dataset_coverage` AS
 SELECT
   coverage_id,
@@ -463,7 +487,6 @@ WITH eu27 AS (
   LEFT JOIN eu27 AS market_eu
     ON market_eu.iso3 = edge.market_iso3
   WHERE edge.period_start >= DATE '1900-01-01'
-    AND edge.frequency = 'A'
     AND (
       edge.product_code = '851713'
       OR STARTS_WITH(edge.product_code, '8703')

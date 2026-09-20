@@ -31,47 +31,38 @@ Set `UN_COMTRADE_API_KEY` to use an authenticated free or premium subscription.
 Without it, the importer uses the anonymous preview endpoint; HS2 × one flow ×
 one reporter stays below its 500-record response ceiling.
 
-## Detailed warehouse crawl
+## Detailed annual and monthly warehouse
 
-The HS2 file is only a seed. The detailed pipeline uses live UN Comtrade data
-availability and queues only released 2025 annual datasets plus the latest six
-complete monthly periods:
+The HS2 file is only a seed. Bulk UN Comtrade work is cloud-only. The first
+ephemeral Cloud Build job discovers released datasets, downloads API responses
+and writes immutable, content-addressed gzip objects plus versioned SQLite
+checkpoints to `gs://czbudget-janrezab-un-comtrade-raw`. The second job pins one
+checkpoint, verifies selected response hashes and task metadata, normalizes one
+or more periods and loads BigQuery. Bulk raw or warehouse data must not be
+recreated on this Mac.
 
-```bash
-npm run trade:crawl:init
-npm run trade:crawl:status
-UN_COMTRADE_API_KEY=... npm run trade:crawl -- --max-calls 25
-npm run trade:prepare-warehouse
-npm run trade:load-bigquery
-```
-
-The queue is SQLite-backed at
-`../data/sources/trade/crawler/crawl.sqlite3`. Every successful response is
-written as a gzip-compressed immutable raw slice. Work is ordered by profile,
-nominal GDP and partner batch. The crawler checkpoints after each request,
-keeps a UTC daily call counter, retries transient failures, and subdivides any
-response that reaches the API record ceiling. A capped response is never marked
-complete.
-
-Raw gzip responses are archived after every successful BigQuery load in the
-private regional bucket `gs://czbudget-janrezab-un-comtrade-raw`. Cloud Storage
-is the durable source of truth; BigQuery holds normalized analytical rows. The
-live SQLite queue remains local and is copied to both a dated checkpoint and a
-`latest` checkpoint in the bucket. Once remote size and MD5 verification pass,
-the local raw files and reproducible warehouse bundle are removed. If a later
-full warehouse build needs responses that are no longer local,
-`prepare_un_comtrade_warehouse.py` temporarily hydrates them from the archive.
-
-To archive manually after a confirmed warehouse load:
+Manual fallbacks submit only small reviewed source bundles:
 
 ```bash
-python3 pipeline/transforms/archive_un_comtrade_raw.py \
-  --delete-local-raw \
-  --delete-warehouse
+python3 pipeline/comtrade_cloud/submit.py --max-calls-per-account 500
+python3 pipeline/comtrade_warehouse_cloud/submit.py --frequency A --period 2024
+python3 pipeline/comtrade_warehouse_cloud/submit.py --frequency M --period 202607
 ```
 
-Set `UN_COMTRADE_ARCHIVE_AFTER_LOAD=0` only when deliberately retaining a local
-debug copy after `load_un_comtrade.sh`.
+The crawler has a SQLite-backed WAL queue in its versioned checkpoint. Work is
+ordered by profile, release period, GDP and partner batch. It maintains an
+atomic UTC call ledger per credential, retries transient failures, and
+subdivides any response that reaches the API record ceiling. A capped response
+is never marked complete. `no_data` is explicit evidence, not a zero value.
+
+The warehouse job writes checksum-bearing staging artifacts and immutable
+`completed.json` receipts below
+`gs://czbudget-janrezab-data-layers/processing-runs/un-comtrade/`. It uses unique
+staging tables and one atomic period transaction. Observations, coverage,
+ingestion metadata and exact task/source-hash acknowledgements therefore move
+together. A failed load is not acknowledged; a retry skips already committed
+responses. Full operating and recovery details are in
+`pipeline/comtrade_warehouse_cloud/README.md`.
 
 Current detailed profiles are:
 
@@ -101,6 +92,8 @@ Tables:
 - `trade_dataset_coverage` — availability and crawl completeness, separate from
   zero-valued trade
 - `trade_ingestion_runs`
+- `trade_source_responses` — task/source-hash load ledger, including explicit
+  `no_data` acknowledgements
 
 Views:
 
@@ -113,6 +106,14 @@ Views:
 - `trade_business_area_positions`
 - `trade_services_bilateral_leaf`
 
+Annual and monthly observations intentionally share these tables and views.
+Queries must filter `frequency = 'A'` or `frequency = 'M'`; the frequencies are
+different grains and must never be added. Monthly trend queries group by
+`period_start`. World-total rows and bilateral partner rows are also separate
+grains, so choose one with `is_world_partner`. Use
+`trade_dataset_coverage` to disclose reporter availability and completeness,
+especially for the most recent month.
+
 ## Public product-intelligence snapshot
 
 `product-intelligence.v1.json` is generated directly from the business-area
@@ -122,8 +123,9 @@ views for every production build:
 npm run build:trade-product-intelligence
 ```
 
-It contains annual product-family totals, country and EU-27 rankings, and a
+It currently contains annual product-family totals, country and EU-27 rankings, and a
 bounded origin-to-import-market flow matrix. EU-27 aggregation retains
 intra-EU trade as an explicit EU-27 → EU-27 flow. Origins are supply proxies
 and reporting import markets are demand proxies; neither is presented as
-factory output or final consumption.
+factory output or final consumption. The monthly BigQuery layer is available
+for a separate trend artifact; it is not silently mixed into this annual file.

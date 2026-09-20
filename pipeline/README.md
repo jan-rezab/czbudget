@@ -36,10 +36,13 @@ fiscal-scope registries, and `docs/` contains methodology notes.
 The UN Comtrade layer is a resumable freshness-aware crawl rather than a static
 one-year download. Its source contract is
 `config/un_comtrade_source.v1.json`, queue worker is
-`transforms/crawl_un_comtrade.py`, bundle exporter is
-`transforms/prepare_un_comtrade_warehouse.py`, and its partitioned BigQuery
-schema and incremental loader are in `warehouse/un_comtrade_schema.sql` and
-`warehouse/load_un_comtrade.sh`. Detailed usage and grains are documented in
+`transforms/crawl_un_comtrade.py`, direct-to-GCS cloud runtime is
+`transforms/run_un_comtrade_direct.py`, and the cloud-only BigQuery runtime is
+`transforms/run_un_comtrade_warehouse.py`. Submission and recovery instructions
+live in `comtrade_cloud/README.md` and `comtrade_warehouse_cloud/README.md`.
+The partitioned schema is in `warehouse/un_comtrade_schema.sql`; the older
+`warehouse/load_un_comtrade.sh` bundle path is retained for recovery, not for
+routine bulk operation on this Mac. Detailed data grains are documented in
 `data/trade/README.md`.
 
 The six-country municipal expansion is documented in

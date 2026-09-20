@@ -1,0 +1,57 @@
+{
+  "source": {
+    "storageSource": {
+      "bucket": "czbudget-janrezab-un-comtrade-raw",
+      "object": "build-source/comtrade-crawler-20260916.tgz",
+      "generation": "1789675551414074"
+    }
+  },
+  "steps": [
+    {
+      "id": "crawl-released-comtrade-data",
+      "name": "gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec",
+      "entrypoint": "python3",
+      "secretEnv": ["UN_COMTRADE_API_KEY_01", "UN_COMTRADE_API_KEY_02", "UN_COMTRADE_API_KEY_03", "UN_COMTRADE_API_KEY_04", "UN_COMTRADE_API_KEY_05", "UN_COMTRADE_API_KEY_06", "UN_COMTRADE_API_KEY_07", "UN_COMTRADE_API_KEY_08", "UN_COMTRADE_API_KEY_09", "UN_COMTRADE_API_KEY_10", "UN_COMTRADE_API_KEY_11", "UN_COMTRADE_API_KEY_12", "UN_COMTRADE_API_KEY_13", "UN_COMTRADE_API_KEY_14", "UN_COMTRADE_API_KEY_15", "UN_COMTRADE_API_KEY_16", "UN_COMTRADE_API_KEY_17", "UN_COMTRADE_API_KEY_18", "UN_COMTRADE_API_KEY_19"],
+      "env": ["CZBUDGET_WORKSPACE_ROOT=/workspace/comtrade-control"],
+      "args": [
+        "pipeline/transforms/run_un_comtrade_direct.py",
+        "--max-calls-per-account", "480",
+        "--batch-rows", "1000000",
+        "--max-batches", "50",
+        "--max-minutes", "120",
+        "--lanes-per-account", "3"
+      ],
+      "timeout": "7200s"
+    }
+  ],
+  "timeout": "7500s",
+  "queueTtl": "1800s",
+  "options": {
+    "diskSizeGb": "100",
+    "logging": "CLOUD_LOGGING_ONLY"
+  },
+  "availableSecrets": {
+    "secretManager": [
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-01/versions/latest", "env": "UN_COMTRADE_API_KEY_01"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-02/versions/latest", "env": "UN_COMTRADE_API_KEY_02"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-03/versions/latest", "env": "UN_COMTRADE_API_KEY_03"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-04/versions/latest", "env": "UN_COMTRADE_API_KEY_04"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-05/versions/latest", "env": "UN_COMTRADE_API_KEY_05"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-06/versions/latest", "env": "UN_COMTRADE_API_KEY_06"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-07/versions/latest", "env": "UN_COMTRADE_API_KEY_07"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-08/versions/latest", "env": "UN_COMTRADE_API_KEY_08"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-09/versions/latest", "env": "UN_COMTRADE_API_KEY_09"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-10/versions/latest", "env": "UN_COMTRADE_API_KEY_10"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-11/versions/latest", "env": "UN_COMTRADE_API_KEY_11"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-12/versions/latest", "env": "UN_COMTRADE_API_KEY_12"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-13/versions/latest", "env": "UN_COMTRADE_API_KEY_13"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-14/versions/latest", "env": "UN_COMTRADE_API_KEY_14"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-15/versions/latest", "env": "UN_COMTRADE_API_KEY_15"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-16/versions/latest", "env": "UN_COMTRADE_API_KEY_16"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-17/versions/latest", "env": "UN_COMTRADE_API_KEY_17"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-18/versions/latest", "env": "UN_COMTRADE_API_KEY_18"},
+      {"versionName": "projects/czbudget-janrezab/secrets/un-comtrade-api-key-19/versions/latest", "env": "UN_COMTRADE_API_KEY_19"}
+    ]
+  },
+  "serviceAccount": "projects/czbudget-janrezab/serviceAccounts/comtrade-builder@czbudget-janrezab.iam.gserviceaccount.com"
+}

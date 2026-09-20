@@ -124,7 +124,7 @@ def area_rows(references: Path, loaded_at: str) -> tuple[list[dict[str, Any]], d
 def product_rows(references: Path, loaded_at: str) -> tuple[list[dict[str, Any]], dict[tuple[str, str], dict[str, Any]]]:
     rows = []
     lookup: dict[tuple[str, str], dict[str, Any]] = {}
-    for classification in ("H6", "EB", "EB10", "EB10S"):
+    for classification in ("H0", "H1", "H2", "H3", "H4", "H5", "H6", "EB", "EB10", "EB10S"):
         path = references / f"{classification}.json"
         if not path.exists():
             continue
@@ -255,11 +255,14 @@ def archived_raw_fallback(config: dict[str, Any], connection: sqlite3.Connection
     with tempfile.TemporaryDirectory(prefix="un-comtrade-raw-") as directory:
         archive_root = Path(directory) / "raw"
         archive_root.mkdir(parents=True)
-        subprocess.run(
-            [gcloud, "storage", "rsync", f"{bucket_uri}/{raw_prefix}", str(archive_root),
-             "--recursive", "--checksums-only", "--do-not-decompress"],
-            check=True,
-        )
+        # Restore only the responses selected for this bounded bundle, never
+        # mirror a multi-billion-row archive onto the workstation.
+        for raw_path in missing:
+            relative = raw_relative_path(raw_path, configured_raw_path)
+            target = archive_root / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            subprocess.run([gcloud, 'storage', 'cp', '--do-not-decompress',
+                            f'{bucket_uri}/{raw_prefix}/{relative.as_posix()}', str(target)], check=True)
         still_missing = [
             raw_path for raw_path in missing
             if not (archive_root / raw_relative_path(raw_path, configured_raw_path)).is_file()
@@ -282,6 +285,8 @@ def raw_payloads(
             path = archive_root / raw_relative_path(str(task["raw_path"]), configured_raw_path)
         if not path.is_file():
             raise FileNotFoundError(f"Missing raw UN Comtrade response: {task['raw_path']}")
+        if task['response_sha256'] and sha256(path) != task['response_sha256']:
+            raise RuntimeError(f"Raw checksum mismatch for task {task['task_id']}")
         payload = read_json_gz(path)
         metadata = {
             "task_id": task["task_id"], "product_type": task["product_type"], "frequency": task["frequency"],
@@ -308,7 +313,7 @@ def raw_payloads(
             yield path, payload, metadata
 
 
-def coverage_rows(connection: sqlite3.Connection, loaded_at: str) -> Iterable[dict[str, Any]]:
+def coverage_rows(connection: sqlite3.Connection, loaded_at: str, incremental: bool = False) -> Iterable[dict[str, Any]]:
     connection.row_factory = sqlite3.Row
     query = """
       SELECT
@@ -330,6 +335,8 @@ def coverage_rows(connection: sqlite3.Connection, loaded_at: str) -> Iterable[di
       GROUP BY a.availability_id
       ORDER BY a.period, a.product_type, a.frequency, a.reporter_code
     """
+    if incremental:
+        query = query.replace('LEFT JOIN tasks AS t', 'LEFT JOIN coverage_tasks AS t')
     for row in connection.execute(query):
         if row["error_count"]:
             status = "error"
@@ -360,7 +367,57 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--include-seed", action="store_true", help="Include the existing annual HS2 World-partner crawl")
+    parser.add_argument('--incremental', action='store_true')
+    parser.add_argument('--max-tasks', type=int, default=50)
+    parser.add_argument('--local-only', action='store_true', help='Select only locally present uncommitted responses')
+    parser.add_argument('--minimum-free-disk-gib', type=float, default=0)
+    parser.add_argument('--verify-manifest', type=Path)
+    parser.add_argument('--acknowledge', type=Path, help='Record a bundle only after its BigQuery MERGE succeeds')
     return parser.parse_args()
+
+
+def ensure_load_ledger(connection):
+    connection.execute('''CREATE TABLE IF NOT EXISTS warehouse_commits (
+        task_id TEXT PRIMARY KEY, response_sha256 TEXT NOT NULL,
+        ingestion_run_id TEXT NOT NULL, loaded_at TEXT NOT NULL)''')
+    connection.commit()
+
+
+def select_incremental_tasks(connection, max_tasks, local_only=False):
+    if not 1 <= max_tasks <= 100:
+        raise ValueError('Bundle size must be between 1 and 100 responses')
+    selected = []
+    for row in connection.execute('''SELECT t.task_id, t.response_sha256, t.raw_path FROM main.tasks t
+        WHERE t.status IN ('completed','no_data') AND t.raw_path IS NOT NULL
+        AND NOT EXISTS (SELECT 1 FROM warehouse_commits c WHERE c.task_id=t.task_id
+                        AND c.response_sha256=t.response_sha256)
+        ORDER BY t.updated_at, t.task_id'''):
+        if local_only and not (WORKSPACE / row['raw_path']).is_file():
+            continue
+        selected.append(dict(row))
+        if len(selected) >= max_tasks:
+            break
+    connection.execute('CREATE TEMP TABLE selected_tasks (task_id TEXT PRIMARY KEY)')
+    connection.executemany('INSERT INTO selected_tasks VALUES (?)', [(r['task_id'],) for r in selected])
+    connection.execute('CREATE TEMP VIEW tasks AS SELECT t.* FROM main.tasks t JOIN selected_tasks s USING(task_id)')
+    # Coverage represents the already committed data plus this bundle, not all
+    # downloaded responses waiting for later loads.
+    connection.execute('''CREATE TEMP VIEW coverage_tasks AS SELECT t.task_id, t.product_type,
+        t.frequency, t.period, t.reporter_code, t.classification_code, t.record_count,
+        CASE WHEN t.status IN ('completed','no_data') AND s.task_id IS NULL AND c.task_id IS NULL
+             THEN 'queued' ELSE t.status END AS status
+        FROM main.tasks t LEFT JOIN selected_tasks s ON s.task_id=t.task_id
+        LEFT JOIN warehouse_commits c ON c.task_id=t.task_id AND c.response_sha256=t.response_sha256''')
+    return selected
+
+
+def verify_manifest(path):
+    manifest = read_json(path)
+    for item in manifest['files']:
+        target = path.parent / item['path']
+        if target.resolve().parent != path.parent.resolve() or sha256(target) != item['sha256']:
+            raise RuntimeError('Warehouse bundle path or checksum verification failed')
+    return manifest
 
 
 def main() -> None:
@@ -373,6 +430,25 @@ def main() -> None:
     state = WORKSPACE / crawl_config["state_path"]
     connection = sqlite3.connect(state)
     connection.row_factory = sqlite3.Row
+    ensure_load_ledger(connection)
+    if args.verify_manifest or args.acknowledge:
+        manifest = verify_manifest(args.verify_manifest or args.acknowledge)
+        if args.acknowledge:
+            with connection:
+                for task in manifest.get('tasks', []):
+                    current = connection.execute('SELECT response_sha256 FROM tasks WHERE task_id=?', (task['task_id'],)).fetchone()
+                    if not current or current[0] != task['response_sha256']:
+                        raise RuntimeError('Checkpoint response changed since bundle generation')
+                    connection.execute('INSERT OR REPLACE INTO warehouse_commits VALUES (?,?,?,?)',
+                        (task['task_id'], task['response_sha256'], manifest['ingestion_run_id'], now_iso()))
+        connection.close()
+        print('Bundle verified' if args.verify_manifest else 'Successful BigQuery load acknowledged')
+        return
+    if args.incremental and args.include_seed:
+        raise SystemExit('Seed replay must be a separate explicit full rebuild')
+    tasks = select_incremental_tasks(connection, args.max_tasks, args.local_only) if args.incremental else [dict(r) for r in connection.execute("SELECT task_id,response_sha256,raw_path FROM tasks WHERE status IN ('completed','no_data') AND raw_path IS NOT NULL")]
+    if args.incremental and not tasks:
+        raise SystemExit('No uncommitted responses selected; no bundle generated')
     references = WORKSPACE / "data/sources/trade/crawler/reference"
     areas, area_lookup = area_rows(references, started_at)
     products, product_lookup = product_rows(references, started_at)
@@ -382,7 +458,7 @@ def main() -> None:
     counts = {
         "trade_areas": write_jsonl_gz(output / "trade_areas.jsonl.gz", areas),
         "trade_products": write_jsonl_gz(output / "trade_products.jsonl.gz", products),
-        "trade_dataset_coverage": write_jsonl_gz(output / "trade_dataset_coverage.jsonl.gz", coverage_rows(connection, started_at)),
+        "trade_dataset_coverage": write_jsonl_gz(output / "trade_dataset_coverage.jsonl.gz", coverage_rows(connection, started_at, args.incremental)),
     }
     raw_response_count = 0
     observation_count = 0
@@ -394,6 +470,8 @@ def main() -> None:
                 raw_response_count += 1
                 response_hash = sha256(path)
                 for source in payload.get("data", []):
+                    if observation_count % 10000 == 0 and shutil.disk_usage(WORKSPACE).free < args.minimum_free_disk_gib * 1024**3:
+                        raise RuntimeError('Warehouse preparation paused at disk reserve; raw responses retained')
                     row = observation(source, metadata, area_lookup, product_lookup, availability, ingestion_run_id, started_at, response_hash)
                     if row is None:
                         continue
@@ -420,6 +498,7 @@ def main() -> None:
         "source": {"id": config["source_id"], "url": SOURCE_URL, "contract": str(CONFIG_PATH.relative_to(REPO))},
         "ingestion_run_id": ingestion_run_id, "include_seed": args.include_seed,
         "raw_response_count": raw_response_count, "files": files,
+        "incremental": args.incremental, "tasks": tasks,
     }
     (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     connection.close()

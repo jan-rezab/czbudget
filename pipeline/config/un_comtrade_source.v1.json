@@ -29,10 +29,12 @@
     "authenticated_endpoint": "/data/v1/get",
     "anonymous_record_limit_per_call": 500,
     "free_account_calls_per_day": 500,
-    "pipeline_call_budget_per_run": 400,
-    "minimum_seconds_between_calls": 1.1
+    "pipeline_call_budget_per_run": 500,
+    "minimum_seconds_between_calls": 0.22
   },
   "warehouse_crawl": {
+    "all_reporting_areas": true,
+    "minimum_free_disk_gib": 20,
     "state_path": "data/sources/trade/crawler/crawl.sqlite3",
     "raw_path": "data/sources/trade/crawler/raw",
     "availability_path": "data/sources/trade/crawler/availability",
@@ -49,7 +51,7 @@
       "annual_year_offset": 1,
       "recent_complete_months": 6,
       "availability_required": true,
-      "note": "Queue only reporter-period datasets returned by UN Comtrade availability; do not backfill older periods merely to manufacture coverage."
+      "note": "Fresh refresh uses recent periods. Explicit history command discovers released annual goods from 1988 and monthly goods from 2000; historical scope authorized 2026-09-10. Never infer coverage for unreleased datasets."
     },
     "profiles": [
       {
@@ -58,7 +60,7 @@
         "frequency": "A",
         "classification": "HS",
         "product_selector": "AG6",
-        "partner_batch_size": 10,
+        "partner_batch_size": 50,
         "priority": 100
       },
       {
@@ -67,7 +69,7 @@
         "frequency": "M",
         "classification": "HS",
         "product_selector": "AG6",
-        "partner_batch_size": 10,
+        "partner_batch_size": 50,
         "priority": 200
       },
       {
@@ -92,8 +94,8 @@
     "authenticated_max_records": 100000,
     "anonymous_max_records": 500,
     "anonymous_product_chunk_size": 20,
-    "calls_per_crawl_run": 25,
-    "calls_per_utc_day": 400
+    "calls_per_crawl_run": 500,
+    "calls_per_utc_day": 500
   },
   "ranking": {
     "definition": "Countries are attempted in descending nominal GDP (USD) for the requested year, using the project's IMF WEO sovereign series.",
