@@ -47,6 +47,14 @@ class CzechHealthCloudTests(unittest.TestCase):
         self.assertIn("provider_ico STRING NOT NULL", schema)
         self.assertIn("require_partition_filter = TRUE", schema)
 
+    def test_submitter_uses_isolated_data_plane(self):
+        submitter = (ROOT / "pipeline/czech_health_cloud/submit.py").read_text()
+        config = (ROOT / "pipeline/czech_health_cloud/cloudbuild.yaml").read_text()
+        self.assertIn('REGION = "europe-west4"', submitter)
+        self.assertIn("psd-data-builder@", submitter)
+        self.assertIn("assert_data_plane_idle(PROJECT, REGION)", submitter)
+        self.assertIn("plane-data", config)
+
 
 if __name__ == "__main__":
     unittest.main()

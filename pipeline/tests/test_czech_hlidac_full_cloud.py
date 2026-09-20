@@ -38,6 +38,19 @@ class CzechHlidacFullCloudTests(unittest.TestCase):
         self.assertIn("if pages > API_MAX_PAGES:", fetcher)
         self.assertIn("time.sleep(MIN_INTERVAL_SECONDS)", fetcher)
 
+    def test_submitter_uses_isolated_data_plane(self):
+        submitter = (
+            ROOT / "pipeline/czech_hlidac_cloud/submit_full.py"
+        ).read_text(encoding="utf-8")
+        config = (
+            ROOT / "pipeline/czech_hlidac_cloud/full_cloudbuild.yaml"
+        ).read_text(encoding="utf-8")
+        self.assertIn('REGION = "europe-west4"', submitter)
+        self.assertIn("psd-data-builder@", submitter)
+        self.assertIn("assert_data_plane_idle(PROJECT, REGION)", submitter)
+        self.assertIn("TemporaryDirectory", submitter)
+        self.assertIn("plane-data", config)
+
 
 if __name__ == "__main__":
     unittest.main()
