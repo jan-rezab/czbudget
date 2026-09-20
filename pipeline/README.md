@@ -18,7 +18,11 @@ storage format.
 Reproducibility contract:
 
 1. Install Python dependencies from `requirements.lock` and use Node 22.
-2. Verify raw inputs with `node pipeline/create-source-manifest.mjs --verify`.
+2. On an explicitly hydrated cloud worker, verify raw inputs with
+   `CZBUDGET_WORKSPACE_ROOT=/absolute/hydrated/workspace node pipeline/create-source-manifest.mjs --verify`.
+   A normal source-only checkout uses `--self-check`; the mere presence of
+   partial `data/source_cache` or `data/sources` directories does not establish
+   that the cloud-archived input set is complete.
 3. Fetch the filtered 2010–2025 CZSO mid-year municipal population series with
    `python3 pipeline/transforms/fetch_municipal_population.py`, then build the
    per-municipality fiscal and per-capita history with
