@@ -6,6 +6,7 @@ import sqlite3
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -105,6 +106,22 @@ class WarehouseCloudTest(unittest.TestCase):
         schema = (ROOT / "pipeline/warehouse/un_comtrade_schema.sql").read_text()
         self.assertIn("trade_source_responses", schema)
         self.assertNotIn("AND edge.frequency = 'A'", schema)
+
+    def test_bigquery_transaction_retries_only_concurrent_update_conflicts(self):
+        with mock.patch.object(
+            WORKER,
+            "bq_query",
+            side_effect=[RuntimeError("Transaction aborted: concurrent update against table"), "ok"],
+        ) as query, mock.patch.object(WORKER.time, "sleep") as sleep:
+            self.assertEqual(WORKER.bq_transaction("SELECT 1"), "ok")
+        self.assertEqual(query.call_count, 2)
+        sleep.assert_called_once_with(15)
+
+        with mock.patch.object(WORKER, "bq_query", side_effect=RuntimeError("permission denied")), \
+             mock.patch.object(WORKER.time, "sleep") as sleep:
+            with self.assertRaisesRegex(RuntimeError, "permission denied"):
+                WORKER.bq_transaction("SELECT 1")
+        sleep.assert_not_called()
 
 
 if __name__ == "__main__":

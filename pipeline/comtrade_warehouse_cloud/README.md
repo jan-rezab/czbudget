@@ -123,8 +123,11 @@ unprocessed tasks.
 ## Concurrency and recovery
 
 - A build pins the checkpoint URI and SHA-256 from the latest manifest at start.
-- Period builds may run in parallel because each uses unique staging tables and
-  touches one `period_start` partition.
+- Period builds may normalize and stage in parallel because each uses unique
+  GCS objects and BigQuery staging tables. BigQuery can still reject concurrent
+  multi-statement writes to the same target table across different partitions;
+  the loader applies bounded exponential backoff and retries the complete
+  idempotent period transaction until commits serialize.
 - Do not run two builds for the same period deliberately. The transaction and
   task/hash ledger make a retry safe, but duplicate work wastes Cloud Build and
   BigQuery resources.

@@ -223,6 +223,32 @@ def bq_query(sql: str, *, json_output: bool = False, timeout: int = 14400) -> An
     return json.loads(output or "[]") if json_output else output
 
 
+def bq_transaction(sql: str, attempts: int = 12) -> str:
+    """Run a mutating script with bounded retries for BigQuery write conflicts.
+
+    BigQuery can abort concurrent multi-statement transactions that update the
+    same table even when their predicates touch different partitions. Staging
+    remains safely parallel; only the short final transaction needs to wait and
+    retry. A fresh script execution is safe because the period transaction
+    deletes and reinserts deterministic IDs and commits atomically.
+    """
+    for attempt in range(attempts):
+        try:
+            return bq_query(sql)
+        except RuntimeError as exc:
+            if "concurrent update against table" not in str(exc).lower() or attempt + 1 >= attempts:
+                raise
+            delay = min(15 * (2**attempt), 120)
+            print(json.dumps({
+                "event": "bigquery_transaction_retry",
+                "attempt": attempt + 1,
+                "next_attempt": attempt + 2,
+                "delay_seconds": delay,
+            }), flush=True)
+            time.sleep(delay)
+    raise AssertionError("unreachable")
+
+
 def bq_load(table: str, uri: str | list[str]) -> None:
     source = ",".join(uri) if isinstance(uri, list) else uri
     run([
@@ -782,7 +808,7 @@ def process_period(
     bq_load(stages["coverage"], coverage_uri)
     bq_load(stages["runs"], run_uri)
     bq_load(stages["responses"], response_uri)
-    bq_query(period_transaction_sql(stages, period_start(period, frequency), start_time[:10]))
+    bq_transaction(period_transaction_sql(stages, period_start(period, frequency), start_time[:10]))
 
     receipt = {
         "schema_version": "1.0.0",
