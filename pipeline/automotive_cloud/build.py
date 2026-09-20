@@ -31,6 +31,14 @@ def assemble(values, market):
     if market in EU:named['EU27']=D(0)
     return {k:float(v) for k,v in named.items()}
 
+def country_routes(values, world, market):
+    """Preserve country origins; keep unallocated trade separate from countries."""
+    residual=world-sum(values.values())
+    if residual < -D('1'):raise ValueError(f'Country origins exceed World for {market}: {residual}')
+    routes={iso:float(value) for iso,value in values.items() if value>0 and not (iso in EU and market in EU)}
+    if residual>0:routes['UNALLOCATED']=float(residual)
+    return routes
+
 def main():
     if not os.environ.get('BUILD_ID'):raise RuntimeError('Cloud Build only: do not restore raw data on a workstation')
     token=subprocess.check_output(['gcloud','auth','print-access-token'],text=True).strip()
@@ -52,6 +60,8 @@ def main():
     c=sqlite3.connect('file:/tmp/auto-crawl.sqlite3?mode=ro',uri=True);c.row_factory=sqlite3.Row
     refs=json.loads(get(BUCKET+'/reference/partnerAreas.json'))['results']
     codes={r['PartnerCodeIsoAlpha3']:int(r['PartnerCode']) for r in refs if not r.get('isGroup') and not r.get('entryExpiredDate')}
+    country_codes={code:iso for iso,code in codes.items() if iso and len(iso)==3 and iso not in {'W00','WLD','EUR','_X_'}}
+    origin_names={r['PartnerCodeIsoAlpha3']:r['PartnerDesc'] for r in refs if r.get('PartnerCodeIsoAlpha3') in codes}
     required={codes[i] for i in EU|{'USA','CHN'}}
     tasks=[dict(r) for r in c.execute("SELECT * FROM tasks WHERE product_type='C' AND frequency='M' AND flow_code='M' AND classification_code='H6' AND status!='split'")]
     groups=collections.defaultdict(list)
@@ -68,11 +78,11 @@ def main():
     print('eligible markets by month',dict(sorted(coverage.items())),flush=True)
     viable=[p for p,n in coverage.items() if n>=20]
     if not viable:raise RuntimeError('No month has at least 20 complete markets with all named origins covered')
-    latest=max(viable);periods=sorted(p for p in coverage if p<=latest)[-12:]
+    latest=max(viable);periods=sorted(p for p in coverage if p<=latest)[-18:]
     panel=sorted(set.intersection(*[{m for p,m in eligible if p==period} for period in periods]))
     if len(panel)<20:raise RuntimeError(f'Fixed panel has only {len(panel)} markets')
     # Extract fixed-panel markets only; equal geographical coverage in every chart month.
-    selected=[t for (p,m),ts in eligible.items() if p in periods and m in panel for t in ts if t['status']=='completed' and (set(json.loads(t['partner_codes'])) & (required|{0}))]
+    selected=[t for (p,m),ts in eligible.items() if p in periods and m in panel for t in ts if t['status']=='completed']
     print('fixed panel',panel,'periods',periods,'objects',len(selected),flush=True)
     def read_task(t):
         key=t['raw_path'].split('/raw/',1)[1]
@@ -80,7 +90,7 @@ def main():
         assert hashlib.sha256(raw).hexdigest()==t['response_sha256'],t['task_id']
         payload=json.loads(gzip.decompress(raw));rows=payload['data']
         assert len(rows)==t['record_count'] and len(rows)<100000
-        result={};seen=set()
+        result={};countries={};seen=set()
         for r in rows:
             code=str(r.get('cmdCode',''));seg=segment(code)
             if seg is None or r.get('aggrLevel')!=6:continue
@@ -89,17 +99,20 @@ def main():
             partner=int(r['partnerCode']);key=(code,partner)
             if key in seen:raise ValueError('Duplicate HS6/partner in archive response')
             seen.add(key)
-            if partner!=0 and partner not in required:continue
-            reg='WORLD' if partner==0 else region(r.get('partnerISO'))
-            if reg=='ROW':raise ValueError('Named origin is missing its ISO code')
             value=D(str(r['primaryValue']))
             if value<0:raise ValueError('Negative source trade value')
-            result[seg,reg]=result.get((seg,reg),D(0))+value
-        return t,result,payload.get('_psd_task',{}).get('retrieved_at')
-    totals=collections.defaultdict(lambda:collections.defaultdict(D));retrieved=[];receipts=[]
+            if partner==0 or partner in required:
+                reg='WORLD' if partner==0 else region(country_codes[partner])
+                result[seg,reg]=result.get((seg,reg),D(0))+value
+            if partner in country_codes and partner!=0:
+                iso=country_codes[partner]
+                countries[seg,iso]=countries.get((seg,iso),D(0))+value
+        return t,result,countries,payload.get('_psd_task',{}).get('retrieved_at')
+    totals=collections.defaultdict(lambda:collections.defaultdict(D));bilateral=collections.defaultdict(lambda:collections.defaultdict(D));retrieved=[];receipts=[]
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-        for i,(task,values,stamp) in enumerate(pool.map(read_task,selected),1):
+        for i,(task,values,countries,stamp) in enumerate(pool.map(read_task,selected),1):
             for (seg,reg),value in values.items():totals[task['period'],task['reporter_iso3'],seg][reg]+=value
+            for (seg,iso),value in countries.items():bilateral[task['period'],task['reporter_iso3'],seg][iso]+=value
             if stamp:retrieved.append(stamp)
             receipts.append({'task':task['task_id'],'sha256':task['response_sha256']})
             if i%100==0:print('verified',i,'/',len(selected),flush=True)
@@ -116,9 +129,16 @@ def main():
     panel=[m for m in panel if m not in excluded]
     if len(panel)<20:raise RuntimeError('Fewer than 20 markets with all three product groups in every month')
     output=[r for r in output if r['market'] in panel]
+    routes=[]
+    for row in output:
+        key=row['period'],row['market'],row['segment']
+        for origin,value in country_routes(bilateral[key],totals[key]['WORLD'],row['market']).items():
+            routes.append({'period':row['period'],'market':row['market'],'segment':row['segment'],'origin':origin,'value':value})
     print('Excluded markets with unpublished product groups:',missing,flush=True)
     names={r['reporter_iso3']:r['reporter_name'] for r in c.execute('SELECT reporter_iso3,reporter_name FROM availability')}
     dataset={'schema_version':'automotive-monthly.v1','generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'periods':periods,'panel':panel,'markets':[{'code':m,'name':names.get(m,m)} for m in panel],'rows':output,'source':{'name':'UN Comtrade','url':'https://comtradeplus.un.org/','table':'UN Comtrade C/M/HS (H6), AG6, M; verified archived responses','archive_id':manifest['archive_id'],'checkpoint_sha256':checkpoint['sha256'],'retrieved_at':max(retrieved),'objects_verified':len(receipts),'excluded_markets_missing_products':sorted(excluded),'method':'Importer-reported origins; fixed market panel; intra-EU27 removed; ROW = World minus USA, EU27 and China, including unspecified origins. Current USD, generally CIF.'},'definitions':{'vehicles':{'hs4':['8703'],'hs6':sorted(LIGHT)},'trucks':{'hs6':sorted(HEAVY)},'parts':{'hs4':['8708']}}}
+    dataset['routes']=routes
+    dataset['origins']=[{'code':iso,'name':origin_names.get(iso,iso) if iso!='UNALLOCATED' else 'Unallocated origin','region':region(iso)} for iso in sorted({r['origin'] for r in routes})]
     Path('automotive-monthly.v1.json').write_text(json.dumps(dataset,separators=(',',':'))+'\n')
     Path('receipts.json').write_text(json.dumps({'checkpoint':checkpoint,'raw':receipts},separators=(',',':'))+'\n')
     print('RESULT',len(output),'rows',len(panel),'markets',periods,flush=True)

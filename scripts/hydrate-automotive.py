@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Load the pinned automotive serving asset on Cloud Build, never raw data locally."""
-import hashlib,json,os,subprocess
+import collections,hashlib,json,os,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 def validate(data):
@@ -15,6 +15,20 @@ def validate(data):
         seen.add(key)
         assert set(row['values'])=={'USA','EU27','CHN','ROW'}
         assert all(isinstance(v,(int,float)) and 0<=v<1e15 for v in row['values'].values())
+    origins={o['code']:o for o in data['origins']}
+    assert len(origins)==len(data['origins']) and all(o['region'] in {'USA','EU27','CHN','ROW'} for o in origins.values())
+    route_keys=set();totals=collections.defaultdict(float)
+    for route in data['routes']:
+        key=(route['period'],route['market'],route['segment'])
+        assert key in seen and route['origin'] in origins
+        route_key=(*key,route['origin'])
+        assert route_key not in route_keys
+        route_keys.add(route_key)
+        assert isinstance(route['value'],(int,float)) and 0<route['value']<1e15
+        totals[(*key,origins[route['origin']]['region'])]+=route['value']
+    for row in data['rows']:
+        for region,value in row['values'].items():
+            assert abs(totals[(row['period'],row['market'],row['segment'],region)]-value)<=max(.05,value*1e-9),'Routes do not reconcile with monthly chart'
     return data
 
 def main():

@@ -1,4 +1,4 @@
-import { REGIONS, monthlySeries, monthLabel } from './lib/automotive.mjs';
+import { REGIONS, monthlySeries, monthLabel, tradeRoutes, diagramRoutes } from './lib/automotive.mjs?v=20260920-flows';
 const $ = id => document.getElementById(id);
 const lang = document.documentElement.lang === 'en' ? 'en' : 'cs';
 const tr = (cs,en) => lang === 'en' ? en : cs;
@@ -11,7 +11,7 @@ const units = {value:tr('mld. běžných USD','Current USD, billions'),share:tr(
 const fmt = (value,digits=1) => value == null ? '—' : new Intl.NumberFormat(lang,{maximumFractionDigits:digits,minimumFractionDigits:digits}).format(value);
 let data;
 const params = new URLSearchParams(location.search);
-let state = {market:params.get('market') || 'ALL',metric:params.get('metric') || 'value',start:params.get('start'),end:params.get('end')};
+let state = {market:params.get('market') || 'ALL',metric:params.get('metric') || 'value',start:params.get('start'),end:params.get('end'),segment:params.get('segment') || 'vehicles',flowPeriod:params.get('flowPeriod'),geography:params.get('geography') || 'regions',origin:params.get('origin') || 'ALL'};
 function translate(){
   document.querySelectorAll('[data-cs][data-en]').forEach(node=>node.textContent=node.dataset[lang]);
   document.title=tr('Automobilový průmysl','Automotive')+' — Public Spending Data';
@@ -32,7 +32,7 @@ function plot(points,segment){
   const magnitude=10**Math.floor(Math.log10(rawMax));
   const max=state.metric==='share'?100:Math.ceil(rawMax/magnitude*2)/2*magnitude;
   const x=i=>L+i*(W-L-R)/Math.max(points.length-1,1),y=v=>T+(H-T-B)*(1-v/max);
-  let svg=`<svg class="auto-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(titles[segment]+' · '+units[state.metric])}"><title>${esc(titles[segment])}</title>`;
+  let svg=`<svg class="auto-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="${esc(titles[segment]+' · '+units[state.metric])}"><title>${esc(titles[segment])}</title>`;
   for(let tick=0;tick<=4;tick++){const v=max*tick/4;svg+=`<line class="auto-grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-12}" y="${y(v)+4}" text-anchor="end">${fmt(v,v<10?1:0)}</text>`;}
   const tickStep=Math.max(1,Math.ceil(points.length/(compact?3:6)));
   points.forEach((p,i)=>{if(i%tickStep===0||i===points.length-1)svg+=`<text x="${x(i)}" y="${H-14}" text-anchor="middle">${esc(monthLabel(p.period,lang))}</text>`;});
@@ -45,14 +45,47 @@ function plot(points,segment){
     });
     svg+=`<path class="auto-line" data-region="${region}" d="${path}" stroke="${color}" stroke-dasharray="${dash}"/>`;
     points.forEach((p,i)=>{const value=p.displayed[region];if(value==null)return;const desc=`${monthLabel(p.period,lang)} · ${names[region]}: ${fmt(value)} · ${units[state.metric]}`;
-      svg+=`<circle class="auto-point" data-region="${region}" data-period="${p.period}" cx="${x(i)}" cy="${y(value)}" r="4" fill="${color}" tabindex="0" role="button" aria-label="${esc(desc)}"><title>${esc(desc)}</title></circle>`;
+      svg+=`<circle class="auto-point" data-region="${region}" data-period="${p.period}" cx="${x(i)}" cy="${y(value)}" r="4" fill="${color}" aria-label="${esc(desc)}"><title>${esc(desc)}</title></circle>`;
     });
     const last=points.at(-1)?.displayed[region];if(last!=null)labels.push({region,value:last,actualY:y(last),labelY:y(last)});
   });
   labels.sort((a,b)=>a.labelY-b.labelY).forEach((l,i)=>{if(i)l.labelY=Math.max(l.labelY,labels[i-1].labelY+19);});
   const overflow=Math.max(0,(labels.at(-1)?.labelY || 0)-(H-B));
   if(!compact)labels.forEach(l=>{l.labelY-=overflow;const color=styles[l.region].color;svg+=`<path d="M${W-R+5},${l.actualY} L${W-R+15},${l.labelY}" stroke="${color}" fill="none"/><text x="${W-R+21}" y="${l.labelY+4}" style="fill:#171918;font-weight:700">${esc(names[l.region])}</text>`;});
-  return svg+'</svg>';
+  points.forEach((p,i)=>{
+    const half=points.length>1?(W-L-R)/(points.length-1)/2:(W-L-R)/2;
+    const left=points.length===1?L:Math.max(L,x(i)-half),right=points.length===1?W-R:Math.min(W-R,x(i)+half);
+    const description=monthLabel(p.period,lang)+' · '+REGIONS.map(r=>names[r]+': '+fmt(p.displayed[r])).join(' · ')+' · '+units[state.metric];
+    svg+=`<rect class="auto-month" data-index="${i}" data-period="${p.period}" data-center="${x(i)}" x="${left}" y="${T}" width="${right-left}" height="${H-T-B}" tabindex="0" role="button" aria-label="${esc(description)}"/>`;
+  });
+  svg+=`<line class="auto-crosshair" y1="${T}" y2="${H-B}" hidden/>`;
+  return `<div class="auto-plot">${svg}</svg><div class="auto-tooltip" role="tooltip" hidden></div></div>`;
+
+}
+function bindMonthHover(card,series){
+  const shell=card.querySelector('.auto-plot');if(!shell)return;
+  const svg=shell.querySelector('svg'),tooltip=shell.querySelector('.auto-tooltip'),line=shell.querySelector('.auto-crosshair');
+  const targets=[...shell.querySelectorAll('.auto-month')];
+  const hide=()=>{tooltip.hidden=true;line.setAttribute('hidden','');targets.forEach(t=>t.classList.remove('is-active'));shell.querySelectorAll('.auto-point').forEach(p=>p.classList.remove('is-active'));};
+  const show=index=>{
+    const p=series.points[index],target=targets[index];
+    targets.forEach(t=>t.classList.toggle('is-active',t===target));
+    shell.querySelectorAll('.auto-point').forEach(dot=>dot.classList.toggle('is-active',dot.dataset.period===p.period));
+    line.setAttribute('x1',target.dataset.center);line.setAttribute('x2',target.dataset.center);line.removeAttribute('hidden');
+    tooltip.innerHTML=`<header>${monthLabel(p.period,lang)}<small>${units[state.metric]}</small></header><dl>${REGIONS.map(r=>`<div><dt><i style="background:${styles[r].color}"></i>${names[r]}</dt><dd>${fmt(p.displayed[r])}${state.metric==='share'&&p.displayed[r]!=null?'%':''}</dd></div>`).join('')}</dl><footer>${tr('Klikněte pro obchodní toky','Click to inspect trade flows')} →</footer>`;
+    tooltip.hidden=false;
+    const x=Number(target.dataset.center)/svg.viewBox.baseVal.width*svg.getBoundingClientRect().width;
+    const width=tooltip.getBoundingClientRect().width;
+    tooltip.style.left=`${Math.max(8,Math.min(shell.clientWidth-width-8,x+18))}px`;
+  };
+  targets.forEach((target,index)=>{
+    target.addEventListener('pointerenter',()=>show(index));target.addEventListener('focus',()=>show(index));
+    const select=()=>{show(index);state.flowPeriod=series.points[index].period;state.segment=series.segment;syncURL();drawFlows();};
+    target.addEventListener('click',select);
+    target.addEventListener('keydown',event=>{if(event.key==='Escape'){hide();return;}if(event.key==='Enter'||event.key===' '){event.preventDefault();select();}if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();targets[Math.max(0,Math.min(targets.length-1,index+(event.key==='ArrowRight'?1:-1)))].focus();}});
+  });
+  shell.addEventListener('pointerleave',()=>{if(!shell.contains(document.activeElement))hide();});
+  shell.addEventListener('focusout',event=>{if(!shell.contains(event.relatedTarget))hide();});
 }
 function tableRows(series){return series.points.flatMap(p=>REGIONS.map(region=>({period:p.period,origin:names[region],market:state.market,trade_usd:p.values[region],value:p.displayed[region],unit:units[state.metric],status:p.values[region]==null?tr('Chybí','Missing'):tr('Vykázáno','Reported')})));}
 function draw(){
@@ -60,31 +93,108 @@ function draw(){
   $('auto-charts').replaceChildren();
   series.forEach((s,i)=>{
     const latest=s.points.at(-1);const card=document.createElement('article');card.className='auto-chart-card';card.id=`automotive-${s.segment}-origins-monthly`;
-    card.innerHTML=`<header class="auto-card-heading"><div><h3><span class="auto-card-number">0${i+1}</span>${titles[s.segment]}</h3><p>${definitions[s.segment]}</p></div><span class="auto-unit">${units[state.metric]}</span></header>${plot(s.points,s.segment)}<p class="auto-selected">${tr('Vyberte bod nebo použijte tabulku pro přesná čísla.','Select a point or use the table for exact figures.')}</p><div class="auto-latest">${REGIONS.map(region=>`<div><span>${names[region]}</span><strong>${fmt(latest?.displayed[region])}${state.metric==='share'?'%':''}</strong><span>${monthLabel(latest.period,lang)} · ${state.metric==='value'?tr('mld. USD','USD bn'):state.metric==='share'?tr('podíl','share'):tr('index','index')}</span></div>`).join('')}</div><p class="auto-source-line">${tr('Zdroj','Source')}: <a href="#method">UN Comtrade · ${tr('dovoz podle původu','imports by origin')}</a> · ${tr('Obchod uvnitř EU vyloučen','Intra-EU trade excluded')} · ${tr('Staženo','Retrieved')} ${esc(data.source.retrieved_at.slice(0,10))}</p>`;
+    card.innerHTML=`<header class="auto-card-heading"><div><h3><span class="auto-card-number">0${i+1}</span>${titles[s.segment]}</h3><p>${definitions[s.segment]}</p></div><span class="auto-unit">${units[state.metric]}</span></header>${plot(s.points,s.segment)}<p class="auto-selected">${tr('Přejeďte přes měsíc pro všechny čtyři regiony. Kliknutím zobrazíte jeho obchodní toky.','Hover a month to compare all four regions. Click to explore its trade flows.')}</p><div class="auto-latest">${REGIONS.map(region=>`<div><span>${names[region]}</span><strong>${fmt(latest?.displayed[region])}${state.metric==='share'?'%':''}</strong><span>${monthLabel(latest.period,lang)} · ${state.metric==='value'?tr('mld. USD','USD bn'):state.metric==='share'?tr('podíl','share'):tr('index','index')}</span></div>`).join('')}</div><p class="auto-source-line">${tr('Zdroj','Source')}: <a href="#method">UN Comtrade · ${tr('dovoz podle původu','imports by origin')}</a> · ${tr('Obchod uvnitř EU vyloučen','Intra-EU trade excluded')} · ${tr('Staženo','Retrieved')} ${esc(data.source.retrieved_at.slice(0,10))}</p>`;
     $('auto-charts').append(card);
-    const showPoint=point=>{const p=s.points.find(p=>p.period===point.dataset.period);card.querySelector('.auto-selected').textContent=`${monthLabel(p.period,lang)} · ${names[point.dataset.region]}: ${fmt(p.displayed[point.dataset.region])} · ${units[state.metric]}`;};
-    card.querySelectorAll('.auto-point').forEach(point=>{point.addEventListener('focus',()=>showPoint(point));point.addEventListener('pointerenter',()=>showPoint(point));point.addEventListener('click',()=>showPoint(point));point.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showPoint(point);}});});
+    bindMonthHover(card,s);
     window.PSDChart.register({el:card,slug:card.id,title:titles[s.segment]+' · '+units[state.metric],rows:()=>tableRows(s),embeddable:false,exports:['csv','png'],columns:[{key:'period',label:tr('Měsíc','Month')},{key:'origin',label:tr('Původ','Origin')},{key:'market',label:tr('Trh','Market')},{key:'trade_usd',label:'USD',numeric:true},{key:'value',label:tr('Zobrazená hodnota','Displayed value'),numeric:true},{key:'unit',label:tr('Jednotka','Unit')},{key:'status',label:tr('Stav','Status')}],source:{name:'UN Comtrade',url:data.source.url,table:data.source.table,extracted:data.source.retrieved_at,vintage:'outturn',edition:data.source.archive_id,definition:definitions[s.segment],excludes:tr('Vnitrounijní obchod; kódy mimo uvedenou definici.','Intra-EU trade; codes outside the stated definition.'),caveat:tr('Stálá skupina dovozních trhů, běžné USD (CIF), bez sezónního očištění. Zbytek světa obsahuje neurčený původ.','Fixed importing-market panel, current USD (CIF), no seasonal adjustment. Rest of world includes unspecified origins.')}});
   });
+  drawFlows();
   const n=state.market==='ALL'?data.panel.length:1;
   $('auto-status').textContent=`${n} ${tr('dovozních trhů','importing market'+(n===1?'':'s'))} · ${monthLabel(state.start,lang)} – ${monthLabel(state.end,lang)} · ${tr('Měsíčně · bez sezónního očištění','Monthly · not seasonally adjusted')}`;
 }
+function originName(code){
+  if(code==='OTHER_ORIGINS')return tr('Ostatní původy','Other origins');
+  if(code==='UNALLOCATED')return tr('Nerozlišený původ','Unallocated origin');
+  return names[code] || data.origins?.find(o=>o.code===code)?.name || code;
+}
+function marketName(code){return code==='OTHER_MARKETS'?tr('Ostatní trhy','Other markets'):data.markets.find(m=>m.code===code)?.name || code;}
+function money(value){return new Intl.NumberFormat(lang,{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:2}).format(value);}
+function initFlows(){
+  if(!Object.hasOwn(titles,state.segment))state.segment='vehicles';
+  if(!['regions','countries'].includes(state.geography))state.geography='regions';
+  if(!data.periods.includes(state.flowPeriod)||state.flowPeriod<state.start||state.flowPeriod>state.end)state.flowPeriod=state.end;
+  $('auto-segment').innerHTML=Object.entries(titles).map(([code,label])=>`<option value="${code}">${label}</option>`).join('');
+  $('auto-flow-controls').addEventListener('submit',event=>event.preventDefault());
+  $('auto-flow-controls').addEventListener('change',event=>{
+    const key=event.target.name;if(!['segment','flowPeriod','geography','origin'].includes(key))return;
+    state[key]=event.target.value;if(key==='geography')state.origin='ALL';syncURL();drawFlows();
+  });
+  $('auto-flow-reset').addEventListener('click',()=>{state.market='ALL';state.origin='ALL';$('auto-market').value='ALL';syncURL();draw();});
+}
+function drawFlows(){
+  const periods=data.periods.filter(p=>p>=state.start&&p<=state.end);
+  $('auto-flowPeriod').innerHTML=periods.map(p=>`<option value="${p}">${monthLabel(p,lang)}</option>`).join('');
+  const originCodes=state.geography==='regions'?REGIONS:(data.origins || []).map(o=>o.code).sort((a,b)=>originName(a).localeCompare(originName(b),lang));
+  if(state.origin!=='ALL'&&!originCodes.includes(state.origin)){state.origin='ALL';syncURL();}
+  $('auto-origin').innerHTML=`<option value="ALL">${tr('Všechny původy','All origins')}</option>`+originCodes.map(code=>`<option value="${esc(code)}">${esc(originName(code))}</option>`).join('');
+  for(const key of ['segment','flowPeriod','geography','origin']){$('auto-'+key).value=state[key];$('auto-'+key).disabled=false;}
+  const routes=tradeRoutes(data,{segment:state.segment,period:state.flowPeriod,market:state.market,geography:state.geography,origin:state.origin});
+  const total=routes.reduce((sum,r)=>sum+r.value,0);
+  const scope=state.market==='ALL'?`${data.panel.length} ${tr('dovozních trhů','importing markets')}`:marketName(state.market);
+  $('auto-flow-context').textContent=`${titles[state.segment]} · ${monthLabel(state.flowPeriod,lang)} · ${scope} · ${money(total)}`;
+  const old=$('automotive-trade-origin-destination'),card=document.createElement('article');card.id=old.id;card.className='auto-chart-card auto-flow-card';old.replaceWith(card);
+  card.innerHTML=`<div class="auto-flow-headings"><span>${tr('Země původu / dodavatel','Country of origin / supplier')}</span><span>${tr('Dovozní trh / odběratel','Import market / buyer')}</span></div><div class="auto-flow-plot"></div><p class="auto-flow-detail" role="status">${tr('Přejeďte přes tok pro hodnotu a podíl. Kliknutím na zemi zúžíte výběr.','Hover a route for its value and share. Click a country to narrow the view.')}</p><p class="auto-source-line">${tr('Zdroj','Source')}: <a href="#method">UN Comtrade · ${tr('dovoz podle původu','imports by origin')}</a> · ${tr('Obchod uvnitř EU vyloučen','Intra-EU trade excluded')} · ${tr('Staženo','Retrieved')} ${esc(data.source.retrieved_at.slice(0,10))}</p>`;
+  if(total>0)drawFlowDiagram(card,diagramRoutes(routes),total);
+  else card.querySelector('.auto-flow-plot').innerHTML=`<p class="auto-empty">${tr('Pro tento výběr nejsou dostupné vykázané toky.','No reported routes are available for this selection.')}</p>`;
+  window.PSDChart.register({el:card,slug:card.id,title:tr('Kdo komu dodává','Who sells to whom')+' · '+titles[state.segment],embeddable:false,exports:['csv','png'],rows:()=>routes.map(r=>({period:state.flowPeriod,origin:originName(r.origin),origin_code:r.origin,market:marketName(r.market),market_code:r.market,value_usd:r.value,share_percent:total?r.value/total*100:null})),columns:[{key:'period',label:tr('Měsíc','Month')},{key:'origin',label:tr('Původ','Origin')},{key:'origin_code',label:tr('Kód původu','Origin code')},{key:'market',label:tr('Cílový trh','Destination market')},{key:'market_code',label:tr('Kód trhu','Market code')},{key:'value_usd',label:'USD',numeric:true},{key:'share_percent',label:'%',numeric:true}],source:{name:'UN Comtrade',url:data.source.url,table:data.source.table,extracted:data.source.retrieved_at,vintage:'outturn',edition:data.source.archive_id,definition:definitions[state.segment],excludes:tr('Vnitrounijní obchod.','Intra-EU trade.'),caveat:tr('Dovoz podle původu, nikoli prodeje automobilek. Diagram slučuje menší původy a trhy; tabulka a CSV zachovávají všechny toky.','Imports by origin, not carmaker sales. The diagram combines smaller origins and markets; the table and CSV retain every route.')}});
+}
+function drawFlowDiagram(card,edges,total){
+  const W=960,H=520,L=182,R=748,T=22,B=22,nodeWidth=12,padding=26;
+  const nodes=dimension=>{
+    const sums=new Map();for(const edge of edges)sums.set(edge[dimension],(sums.get(edge[dimension]) || 0)+edge.value);
+    return [...sums].map(([code,value])=>({code,value,offset:0})).sort((a,b)=>Number(a.code.startsWith('OTHER_'))-Number(b.code.startsWith('OTHER_')) || b.value-a.value);
+  };
+  const origins=nodes('origin'),markets=nodes('market');
+  const scale=(H-T-B-padding*(Math.max(origins.length,markets.length)-1))/total;
+  for(const group of [origins,markets]){let y=T+(H-T-B-group.reduce((s,n)=>s+n.value*scale,0)-padding*(group.length-1))/2;group.forEach((node,index)=>{node.y=y;node.height=node.value*scale;node.index=index;y+=node.height+padding;});}
+  const originMap=new Map(origins.map(n=>[n.code,n])),marketMap=new Map(markets.map(n=>[n.code,n]));
+  edges.sort((a,b)=>originMap.get(a.origin).index-originMap.get(b.origin).index || marketMap.get(a.market).index-marketMap.get(b.market).index);
+  for(const edge of edges){const node=originMap.get(edge.origin);edge.width=edge.value*scale;edge.sy=node.y+node.offset+edge.width/2;node.offset+=edge.width;}
+  edges.sort((a,b)=>marketMap.get(a.market).index-marketMap.get(b.market).index || originMap.get(a.origin).index-originMap.get(b.origin).index);
+  for(const edge of edges){const node=marketMap.get(edge.market);edge.ty=node.y+node.offset+edge.width/2;node.offset+=edge.width;}
+  const color=code=>styles[code]?.color || styles[data.origins?.find(o=>o.code===code)?.region]?.color || '#8b8d83';
+  let svg=`<svg class="auto-flow-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="${esc(tr('Obchodní toky podle původu a cílového trhu','Trade routes by origin and destination market'))}">`;
+  edges.sort((a,b)=>b.value-a.value).forEach((edge,index)=>{
+    const d=`M${L+nodeWidth},${edge.sy} C${(L+R)/2},${edge.sy} ${(L+R)/2},${edge.ty} ${R},${edge.ty}`;
+    const label=`${originName(edge.origin)} → ${marketName(edge.market)}: ${money(edge.value)} · ${fmt(edge.value/total*100)}%`;
+    svg+=`<g class="auto-flow-route" data-route="${index}" tabindex="0" role="button" aria-label="${esc(label)}"><path class="auto-flow-link" d="${d}" stroke="${color(edge.origin)}" stroke-width="${Math.max(.5,edge.width)}"/><path class="auto-flow-hit" d="${d}" stroke-width="${Math.max(8,edge.width)}"/><title>${esc(label)}</title></g>`;
+  });
+  const labelNodes=(list,side)=>list.map(node=>{
+    const origin=side==='origin',x=origin?L:R,name=origin?originName(node.code):marketName(node.code),label=name.length>25?name.slice(0,23)+'…':name;
+    const aggregate=node.code.startsWith('OTHER_');
+    return `<g class="auto-flow-node" data-side="${side}" data-code="${esc(node.code)}" ${aggregate?'':`tabindex="0" role="button"`} aria-label="${esc(name+': '+money(node.value))}"><rect x="${x}" y="${node.y}" width="${nodeWidth}" height="${Math.max(1,node.height)}" fill="${origin?color(node.code):'#171918'}"/><text x="${origin?x-10:x+nodeWidth+10}" y="${node.y+node.height/2-3}" text-anchor="${origin?'end':'start'}">${esc(label)}</text><text class="auto-flow-value" x="${origin?x-10:x+nodeWidth+10}" y="${node.y+node.height/2+13}" text-anchor="${origin?'end':'start'}">${money(node.value)}</text><title>${esc(name)}</title></g>`;
+  }).join('');
+  svg+=labelNodes(origins,'origin')+labelNodes(markets,'market')+'</svg>';
+  card.querySelector('.auto-flow-plot').innerHTML=svg;
+  const detail=card.querySelector('.auto-flow-detail');
+  card.querySelectorAll('.auto-flow-route').forEach(target=>{
+    const edge=edges[Number(target.dataset.route)];
+    const show=()=>{card.querySelectorAll('.auto-flow-route').forEach(r=>r.classList.toggle('is-active',r===target));detail.innerHTML=`<strong>${esc(originName(edge.origin))} → ${esc(marketName(edge.market))}</strong><span>${money(edge.value)} · ${fmt(edge.value/total*100)}% ${tr('z výběru','of selected trade')}</span>`;};
+    target.addEventListener('pointerenter',show);target.addEventListener('focus',show);target.addEventListener('click',show);target.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}});
+  });
+  card.querySelectorAll('.auto-flow-node[role=button]').forEach(target=>{
+    const select=()=>{if(target.dataset.side==='origin')state.origin=target.dataset.code;else{state.market=target.dataset.code;$('auto-market').value=state.market;}syncURL();draw();};
+    target.addEventListener('click',select);target.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();select();}});
+  });
+}
+
 async function init(){
   translate();
-  const response=await fetch('/data/trade/automotive-monthly.v1.json?v=20260920');if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  const response=await fetch('/data/trade/automotive-monthly.v1.json?v=20260920-flows');if(!response.ok)throw new Error(`HTTP ${response.status}`);
   data=await response.json();if(data.schema_version!=='automotive-monthly.v1'||!data.periods.length)throw new Error('Invalid automotive snapshot');
   if(!data.panel.includes(state.market))state.market='ALL';
   if(!Object.keys(units).includes(state.metric))state.metric='value';
   if(!data.periods.includes(state.start))state.start=data.periods[0];if(!data.periods.includes(state.end))state.end=data.periods.at(-1);if(state.start>state.end)state.end=state.start;
   $('auto-market').innerHTML=`<option value="ALL">${tr('Všechny sledované trhy','All reporting markets')} (${data.panel.length})</option>`+data.markets.map(m=>`<option value="${esc(m.code)}">${esc(m.name)} (${esc(m.code)})</option>`).join('');
   for(const id of ['start','end'])$('auto-'+id).innerHTML=data.periods.map(p=>`<option value="${p}">${monthLabel(p,lang)}</option>`).join('');
-  for(const [key,value] of Object.entries(state)){$('auto-'+key).value=value;$('auto-'+key).disabled=false;}
+  for(const key of ['market','metric','start','end']){$('auto-'+key).value=state[key];$('auto-'+key).disabled=false;}
+  initFlows();
   $('auto-legend').innerHTML=REGIONS.map(r=>`<span><svg viewBox="0 0 32 12" aria-hidden="true"><path d="M0 6H32" stroke="${styles[r].color}" stroke-width="3" stroke-dasharray="${styles[r].dash}"/></svg>${names[r]}</span>`).join('');
   $('auto-vintage').textContent=`${monthLabel(data.periods[0],lang)} — ${monthLabel(data.periods.at(-1),lang)}`;
   $('auto-coverage-copy').textContent=tr(`Srovnání zahrnuje ${data.panel.length} dovozních trhů se stejným pokrytím původu v ${data.periods.length} měsících. Všechny zdrojové odpovědi byly ověřeny proti kontrolním součtům archivu.`,`The comparison covers ${data.panel.length} importing markets with consistent origin coverage across ${data.periods.length} months. All source responses were verified against the archive’s checksums.`);
   $('auto-market-list').textContent=data.markets.map(m=>`${m.name} (${m.code})`).join(' · ');
   $('auto-controls').addEventListener('submit',e=>e.preventDefault());
-  $('auto-controls').addEventListener('change',e=>{const key=e.target.name;if(!(key in state))return;state[key]=e.target.value;if(state.start>state.end){if(key==='start')state.end=state.start;else state.start=state.end;}$('auto-start').value=state.start;$('auto-end').value=state.end;syncURL();draw();});
+  $('auto-controls').addEventListener('change',e=>{const key=e.target.name;if(!['market','metric','start','end'].includes(key))return;state[key]=e.target.value;if(state.start>state.end){if(key==='start')state.end=state.start;else state.start=state.end;}$('auto-start').value=state.start;$('auto-end').value=state.end;if(state.flowPeriod<state.start||state.flowPeriod>state.end)state.flowPeriod=state.end;syncURL();draw();});
   syncURL();draw();
 }
 init().catch(error=>{console.error(error);$('auto-status').textContent=tr('Měsíční data se nepodařilo načíst. Zkuste stránku obnovit.','Monthly data could not be loaded. Please reload the page.');});

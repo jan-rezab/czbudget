@@ -7,7 +7,7 @@ test.beforeEach(async({page})=>{
 test('separate automotive report compares three product groups and four origins',async({page})=>{
   await page.goto('/deep-dives/automotive/?lang=en');
   await expect(page).toHaveTitle('Automotive — Public Spending Data');
-  await expect(page.locator('.auto-chart-card')).toHaveCount(3);
+  await expect(page.locator('#auto-charts .auto-chart-card')).toHaveCount(3);
   await expect(page.locator('.auto-line')).toHaveCount(12);
   await expect(page.locator('#auto-status')).toContainText('2 importing markets');
   await page.locator('#auto-metric').selectOption('share');
@@ -15,7 +15,7 @@ test('separate automotive report compares three product groups and four origins'
   await expect(page.locator('.auto-unit').first()).toHaveText('% of observed trade');
   await page.locator('#auto-market').selectOption('CZE');
   await expect(page.locator('#auto-status')).toContainText('1 importing market');
-  const first=page.locator('.auto-chart-card').first();
+  const first=page.locator('#auto-charts .auto-chart-card').first();
   await first.locator('[data-action="table"]').click();
   await expect(first.locator('table')).toContainText('European Union');
   await expect(first.locator('table')).toContainText('202510');
@@ -24,7 +24,7 @@ test('separate automotive report compares three product groups and four origins'
 test('indexed range and Czech language survive a copied URL',async({page})=>{
   await page.goto('/deep-dives/automotive/?lang=cs&market=USA&metric=index&start=202602&end=202607');
   await expect(page.locator('#auto-start')).toHaveValue('202602');
-  await expect(page.locator('.auto-chart-card')).toHaveCount(3);
+  await expect(page.locator('#auto-charts .auto-chart-card')).toHaveCount(3);
   await expect(page.locator('.auto-card-heading h3').first()).toContainText('Osobní a lehká vozidla');
   await page.locator('#auto-end').selectOption('202510');
   await expect(page.locator('#auto-start')).toHaveValue('202510');
@@ -36,7 +36,7 @@ test('failed data request is visible and produces no invented charts',async({pag
   await page.route('**/data/trade/automotive-monthly.v1.json*',route=>route.fulfill({status:503,body:'Unavailable'}));
   await page.goto('/deep-dives/automotive/?lang=en');
   await expect(page.locator('#auto-status')).toContainText('could not be loaded');
-  await expect(page.locator('.auto-chart-card')).toHaveCount(0);
+  await expect(page.locator('#auto-charts .auto-chart-card')).toHaveCount(0);
 });
 
 test('the release serves verified monthly data rather than an empty report',async({page})=>{
@@ -45,5 +45,37 @@ test('the release serves verified monthly data rather than an empty report',asyn
   await page.goto('/deep-dives/automotive/?lang=en');
   await expect(page.locator('#auto-status')).toContainText(`${receipt.market_count} importing markets`);
   await expect(page.locator('.auto-line')).toHaveCount(12);
-  for(const card of await page.locator('.auto-chart-card').all())expect(await card.locator('.auto-point').count()).toBeGreaterThan(20);
+  for(const card of await page.locator('#auto-charts .auto-chart-card').all())expect(await card.locator('.auto-point').count()).toBeGreaterThan(20);
+});
+
+test('whole-month hover compares four regions and keyboard selection opens that month’s routes',async({page})=>{
+  await page.goto('/deep-dives/automotive/?lang=en');
+  const card=page.locator('#auto-charts .auto-chart-card').first();
+  const month=card.locator('.auto-month').nth(2);
+  await month.hover();
+  await expect(card.locator('.auto-tooltip')).toBeVisible();
+  await expect(card.locator('.auto-tooltip dt')).toHaveCount(4);
+  await expect(card.locator('.auto-tooltip')).toContainText('Dec 2025');
+  await expect(card.locator('.auto-point.is-active')).toHaveCount(4);
+  await month.focus();await month.press('ArrowRight');
+  await expect(card.locator('.auto-tooltip')).toContainText('Jan 2026');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#auto-flowPeriod')).toHaveValue('202601');
+  await expect(page).toHaveURL(/flowPeriod=202601/);
+});
+test('country routes, destination filters and copied flow URLs retain direction',async({page})=>{
+  await page.goto('/deep-dives/automotive/?lang=en&geography=countries&origin=JPN&segment=parts&flowPeriod=202601');
+  await expect(page.locator('#auto-flow-context')).toContainText('Auto parts');
+  const flow=page.locator('#automotive-trade-origin-destination');
+  await expect(flow.locator('.auto-flow-route')).toHaveCount(2);
+  await flow.locator('[data-action="table"]').click();
+  await expect(flow.locator('table')).toContainText('Japan');
+  await expect(flow.locator('table')).toContainText('Czechia');
+  await page.locator('#auto-market').selectOption('CZE');
+  await expect(flow.locator('.auto-flow-route')).toHaveCount(1);
+  await expect(page.locator('#auto-flow-context')).toContainText('Czechia');
+  await page.reload();
+  await expect(page.locator('#auto-origin')).toHaveValue('JPN');
+  await expect(page.locator('#auto-market')).toHaveValue('CZE');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);
 });

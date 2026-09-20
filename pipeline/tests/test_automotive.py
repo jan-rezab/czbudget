@@ -15,6 +15,11 @@ class AutomotiveTest(unittest.TestCase):
         self.assertIsNone(a.assemble({'CHN':Decimal(20)},'USA'))
     def test_inconsistent_world_fails(self):
         with self.assertRaises(ValueError):a.assemble({'WORLD':Decimal(10),'CHN':Decimal(20)},'USA')
+    def test_country_routes_keep_unallocated_and_remove_only_intra_eu(self):
+        values={'DEU':Decimal(40),'USA':Decimal(10),'CHN':Decimal(20),'JPN':Decimal(25)}
+        self.assertEqual(a.country_routes(values,Decimal(100),'CZE'),{'USA':10,'CHN':20,'JPN':25,'UNALLOCATED':5})
+        self.assertEqual(sum(a.country_routes(values,Decimal(100),'USA').values()),100)
+        with self.assertRaises(ValueError):a.country_routes(values,Decimal(80),'USA')
     def test_geography(self):
         self.assertEqual(len(a.EU),27)
         for iso in ['GBR','HKG','MAC']:self.assertEqual(a.region(iso),'ROW')
@@ -26,7 +31,13 @@ class AutomotiveReleaseTest(unittest.TestCase):
         hydrate=importlib.util.module_from_spec(spec);spec.loader.exec_module(hydrate)
         markets=[f'M{i}' for i in range(20)];periods=['202601','202602']
         data={'schema_version':'automotive-monthly.v1','panel':markets,'periods':periods,'rows':[{'market':m,'period':p,'segment':s,'values':{'USA':1,'EU27':2,'CHN':3,'ROW':4}} for m in markets for p in periods for s in ['vehicles','trucks','parts']]}
+        data['origins']=[{'code':r,'region':r} for r in ['USA','EU27','CHN','ROW']]
+        data['routes']=[{'period':r['period'],'market':r['market'],'segment':r['segment'],'origin':o,'value':v} for r in data['rows'] for o,v in r['values'].items()]
         hydrate.validate(data)
+        wrong_route=copy.deepcopy(data);wrong_route['routes'][0]['value']+=1
+        with self.assertRaises(AssertionError):hydrate.validate(wrong_route)
+        duplicate_route=copy.deepcopy(data);duplicate_route['routes'].append(duplicate_route['routes'][0])
+        with self.assertRaises(AssertionError):hydrate.validate(duplicate_route)
         missing=copy.deepcopy(data);missing['rows'].pop()
         with self.assertRaises(AssertionError):hydrate.validate(missing)
         duplicate=copy.deepcopy(data);duplicate['rows'][-1]=duplicate['rows'][0]

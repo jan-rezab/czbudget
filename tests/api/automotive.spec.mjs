@@ -27,3 +27,23 @@ test('market and period filters change the denominator and index base', () => {
   assert.equal(points[1].displayed.CHN,100);
   assert.equal(monthLabel('202512'),'Dec 2025');
 });
+
+test('route filters preserve direction and reconcile region and country views', async () => {
+  const {tradeRoutes,diagramRoutes}=await import('../../lib/automotive.mjs');
+  const routesData={origins:[{code:'DEU',region:'EU27'},{code:'FRA',region:'EU27'},{code:'CHN',region:'CHN'}],routes:[
+    {period:'202601',segment:'vehicles',origin:'DEU',market:'USA',value:30},
+    {period:'202601',segment:'vehicles',origin:'FRA',market:'USA',value:20},
+    {period:'202601',segment:'vehicles',origin:'CHN',market:'CAN',value:40},
+    {period:'202602',segment:'vehicles',origin:'CHN',market:'USA',value:900},
+    {period:'202601',segment:'parts',origin:'CHN',market:'USA',value:800},
+  ]};
+  const regions=tradeRoutes(routesData,{period:'202601'});
+  assert.deepEqual(regions,[{origin:'EU27',market:'USA',value:50},{origin:'CHN',market:'CAN',value:40}]);
+  const country=tradeRoutes(routesData,{period:'202601',geography:'countries',origin:'FRA',market:'USA'});
+  assert.deepEqual(country,[{origin:'FRA',market:'USA',value:20}]);
+  const collapsed=diagramRoutes(tradeRoutes(routesData,{period:'202601',geography:'countries'}),1);
+  assert.equal(collapsed.reduce((s,r)=>s+r.value,0),90);
+  assert.ok(collapsed.some(r=>r.origin==='OTHER_ORIGINS'));
+  assert.ok(collapsed.some(r=>r.market==='OTHER_MARKETS'));
+  assert.equal(tradeRoutes(routesData,{period:'202501'}).length,0);
+});
