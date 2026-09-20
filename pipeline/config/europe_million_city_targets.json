@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "dataset_id": "UN_WUP_2025_EUROPE_MILLION_CITY_TARGETS",
+  "un_source": {
+    "title": "UN DESA World Urbanization Prospects 2025, File 21",
+    "url": "https://population.un.org/wup/assets/Download/Cities/WUP2025-F21-DEGURBA-Cities_Pop.xlsx",
+    "reference_year": 2025,
+    "population_unit": "thousands",
+    "geography": "Degree of Urbanization city / contiguous built-up area"
+  },
+  "methodology": {
+    "scope": "European UN WUP cities with 2025 population at least 1,000,000",
+    "fiscal_geography": "Each target identifies an anchor legal government only. It never asserts coverage of the complete UN built-up area.",
+    "status_values": ["published_lines", "warehouse_lines", "configured_source", "headline_only", "no_adapter"],
+    "loadable_statuses": ["published_lines", "warehouse_lines", "configured_source"]
+  },
+  "warehouse_verification": {
+    "checked_at": "2026-09-19",
+    "project_dataset": "czbudget-janrezab.budget_detail",
+    "query_file": "pipeline/warehouse/verify_europe_million_city_targets.sql",
+    "entities": {
+      "FR:69123": {"line_count": 4508, "first_year": 2024, "last_year": 2025, "stages": ["actual"]},
+      "FR:75056": {"line_count": 12, "first_year": 2024, "last_year": 2025, "stages": ["actual"]},
+      "GB:E08000003": {"line_count": 2730, "first_year": 2024, "last_year": 2026, "stages": ["actual", "enacted"]},
+      "GB:E08000012": {"line_count": 2579, "first_year": 2024, "last_year": 2026, "stages": ["actual", "enacted"]},
+      "GB:E08000025": {"line_count": 2554, "first_year": 2024, "last_year": 2026, "stages": ["actual", "enacted"]},
+      "GB:E08000035": {"line_count": 2823, "first_year": 2024, "last_year": 2026, "stages": ["actual", "enacted"]},
+      "GB:E12000007": {"line_count": 993, "first_year": 2024, "last_year": 2025, "stages": ["actual"]},
+      "PL:1465000": {"line_count": 14588, "first_year": 2024, "last_year": 2025, "stages": ["actual", "revised"]},
+      "SE:0180": {"line_count": 170, "first_year": 2024, "last_year": 2025, "stages": ["actual"]},
+      "UA:2055400000": {"line_count": 8225, "first_year": 2024, "last_year": 2025, "stages": ["actual", "enacted", "revised"]},
+      "UA:2600000000": {"line_count": 14343, "first_year": 2024, "last_year": 2025, "stages": ["actual", "enacted", "revised"]}
+    }
+  },
+  "targets": {
+    "542": {"iso3":"CZE","anchor_entity_id":"CZ:00064581","anchor_name":"Praha","status":"published_lines","source_ids":["cz-monitor-finm-2025-12"]},
+    "680": {"iso3":"DNK","anchor_entity_id":"DNK:101","anchor_name":"Copenhagen","status":"published_lines","source_ids":["dk-statbank-budk100","dk-statbank-regk100"]},
+    "555": {"iso3":"FIN","anchor_entity_id":"FIN:091","anchor_name":"Helsinki","status":"published_lines","source_ids":["fi-statfin-kuntien-talous"]},
+    "4068": {"iso3":"FRA","anchor_entity_id":"FR:69123","anchor_name":"Lyon","status":"warehouse_lines","source_ids":["fr-dgfip-commune-balances-2024","fr-dgfip-balances-fonction-2024","fr-dgfip-commune-balances-2025","fr-dgfip-balances-fonction-2025"]},
+    "2994": {"iso3":"FRA","anchor_entity_id":"FR:75056","anchor_name":"Paris","status":"warehouse_lines","source_ids":["fr-dgfip-commune-balances-2024","fr-dgfip-balances-fonction-2024","fr-dgfip-commune-balances-2025","fr-dgfip-balances-fonction-2025"]},
+    "675": {"iso3":"DEU","anchor_entity_id":"DE:F05113000000000","anchor_name":"Essen, kreisfreie Stadt","status":"configured_source","source_ids":["de-essen-budget-2025-2026"]},
+    "3979": {"iso3":"GBR","anchor_entity_id":"GB:E08000025","anchor_name":"Birmingham","status":"warehouse_lines","source_ids":["gb-england-revenue-outturn-timeseries","gb-england-revenue-budget-2026-part-1","gb-england-revenue-budget-2026-part-2"]},
+    "4425": {"iso3":"GBR","anchor_entity_id":"GB:E08000035","anchor_name":"Leeds","status":"warehouse_lines","source_ids":["gb-england-revenue-outturn-timeseries","gb-england-revenue-budget-2026-part-1","gb-england-revenue-budget-2026-part-2"]},
+    "2236": {"iso3":"GBR","anchor_entity_id":"GB:E08000012","anchor_name":"Liverpool","status":"warehouse_lines","source_ids":["gb-england-revenue-outturn-timeseries","gb-england-revenue-budget-2026-part-1","gb-england-revenue-budget-2026-part-2"]},
+    "5938": {"iso3":"GBR","anchor_entity_id":"GB:E12000007","anchor_name":"Greater London Authority","status":"warehouse_lines","source_ids":["gb-england-revenue-outturn-timeseries","gb-england-revenue-budget-2026-part-1","gb-england-revenue-budget-2026-part-2"],"scope_note":"GLA only; excludes the 32 London boroughs and City of London."},
+    "3388": {"iso3":"GBR","anchor_entity_id":"GB:E08000003","anchor_name":"Manchester","status":"warehouse_lines","source_ids":["gb-england-revenue-outturn-timeseries","gb-england-revenue-budget-2026-part-1","gb-england-revenue-budget-2026-part-2"]},
+    "1848": {"iso3":"ITA","anchor_entity_id":"ITA:800000013","anchor_name":"Milano","status":"published_lines","source_ids":["it-siope-municipal"]},
+    "4726": {"iso3":"ITA","anchor_entity_id":"ITA:000708829","anchor_name":"Napoli","status":"published_lines","source_ids":["it-siope-municipal"]},
+    "4156": {"iso3":"ITA","anchor_entity_id":"ITA:800000047","anchor_name":"Roma Capitale","status":"published_lines","source_ids":["it-siope-municipal"]},
+    "61": {"iso3":"ITA","anchor_entity_id":"ITA:000098618","anchor_name":"Torino","status":"published_lines","source_ids":["it-siope-municipal"]},
+    "1754": {"iso3":"NLD","anchor_entity_id":"NLD:0363","anchor_name":"Amsterdam","status":"published_lines","source_ids":["nl-cbs-iv3"]},
+    "387": {"iso3":"NLD","anchor_entity_id":"NLD:0599","anchor_name":"Rotterdam","status":"published_lines","source_ids":["nl-cbs-iv3"]},
+    "3660": {"iso3":"POL","anchor_entity_id":"PL:1465000","anchor_name":"m. st. Warszawa","status":"warehouse_lines","source_ids":["pl-mf-rb27s-2024q4","pl-mf-rb28s-2024q4","pl-mf-rb27s-2025q4","pl-mf-rb28s-2025q4"]},
+    "5068": {"iso3":"ESP","anchor_entity_id":"ESP:08019AA000","anchor_name":"Barcelona","status":"published_lines","source_ids":["es-conprel"]},
+    "3440": {"iso3":"ESP","anchor_entity_id":"ESP:28079AA000","anchor_name":"Madrid","status":"published_lines","source_ids":["es-conprel"]},
+    "4574": {"iso3":"ESP","anchor_entity_id":"ESP:46250AA000","anchor_name":"València","status":"published_lines","source_ids":["es-conprel"]},
+    "1672": {"iso3":"SWE","anchor_entity_id":"SE:0180","anchor_name":"Stockholm","status":"warehouse_lines","source_ids":["se-scb-municipal-costs","se-scb-municipal-income","se-scb-municipal-balance"]},
+    "3991": {"iso3":"UKR","anchor_entity_id":"UA:2055400000","anchor_name":"Бюджет Харківської міської територіальної громади","status":"warehouse_lines","source_ids":["ua-openbudget-expenses-2024","ua-openbudget-incomes-2024","ua-openbudget-expenses-2025","ua-openbudget-incomes-2025"]},
+    "2178": {"iso3":"UKR","anchor_entity_id":"UA:2600000000","anchor_name":"Бюджет міста Києва","status":"warehouse_lines","source_ids":["ua-openbudget-expenses-2024","ua-openbudget-incomes-2024","ua-openbudget-expenses-2025","ua-openbudget-incomes-2025"]}
+  }
+}

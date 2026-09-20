@@ -1,0 +1,8 @@
+steps:
+  - name: python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    entrypoint: bash
+    args: [-ceu, 'python -m pip install --disable-pip-version-check --no-cache-dir -r requirements.txt && python worker.py']
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    args: [gcloud, storage, cp, /workspace/vienna-receipt.json, gs://czbudget-janrezab-data-layers/processing-runs/vienna-city/$BUILD_ID/completed.json]
+timeout: 1200s
+options: {logging: CLOUD_LOGGING_ONLY}

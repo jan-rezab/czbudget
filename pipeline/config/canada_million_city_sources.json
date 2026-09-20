@@ -1,0 +1,53 @@
+{
+  "contract_version": "1.0.0",
+  "retrieved_at": "2026-09-19T22:50:59.404235+00:00",
+  "fiscal_boundary": "calendar_year",
+  "reporting_scope": "standalone_municipality",
+  "scope_note": "Each source covers the named legal municipality, not the UN Degree of Urbanization built-up area.",
+  "sources": [
+    {
+      "city": "Toronto",
+      "entity_id": "CA:3520005",
+      "source_id": "ca-toronto-approved-operating-2025",
+      "official_url": "https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/2c90a5d3-5598-4c02-abf2-169456c8f1f1/resource/f9def3c1-a97f-4d31-bc58-c0494d750b80/download/approved-operating-budget-summary-2025.xlsx",
+      "format": "xlsx",
+      "fiscal_year": 2025,
+      "budget_stage": "enacted",
+      "coverage": "approved_operating_budget",
+      "sha256": "690a43b5b192ff960f378a4fbee5fcc59c8b4dffade42e43253d6fa7088f448f"
+    },
+    {
+      "city": "Montreal",
+      "entity_id": "CA:2466023",
+      "source_id": "ca-montreal-approved-operating-2025",
+      "official_url": "https://donnees.montreal.ca/dataset/2b7dcae7-a3e5-4f5d-81de-ccde2c518e55/resource/1db52976-a013-49ac-a133-27b55585556a/download/budget-fonctionnement-2025.xlsx",
+      "format": "xlsx",
+      "sheet": "SOMM CM",
+      "fiscal_year": 2025,
+      "budget_stage": "enacted",
+      "coverage": "approved_operating_budget_municipal_scope",
+      "sha256": "003a903199f1c6942fdc62fd29478bd04bb27f9a7413cfad3faa18fbcfd0dfec"
+    },
+    {
+      "city": "Vancouver",
+      "entity_id": "CA:5915022",
+      "source_id": "ca-vancouver-approved-capital-2025",
+      "official_url": "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/2025-multi-year-capital-project-budget-requests-and-capital-expenditure-budget/exports/csv?lang=en&timezone=America%2FVancouver&use_labels=true&delimiter=%2C",
+      "format": "csv",
+      "fiscal_year": 2025,
+      "budget_stage": "enacted",
+      "coverage": "approved_capital_expenditure_budget",
+      "sha256": "033e3ec913cf6eb40dfca395271fc9ce9ac82c39f23a68864d5a7d0c63d5ca1e"
+    }
+  ],
+  "blocked_sources": [
+    {
+      "city": "Calgary",
+      "official_dataset_url": "https://data.calgary.ca/dataset/Budget-Overview-2026/d3ez-qhmr",
+      "official_api_url": "https://data.calgary.ca/resource/d3ez-qhmr.json?$limit=5",
+      "status": "temporarily_unavailable",
+      "evidence": "Official Socrata landing page and resource API both returned HTTP 503 during the cloud discovery run.",
+      "checked_at": "2026-09-19T22:47:00+00:00"
+    }
+  ]
+}
