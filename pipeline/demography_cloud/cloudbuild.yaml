@@ -1,0 +1,36 @@
+# Data plane only: immutable raw -> staging -> validation -> atomic pointer.
+steps:
+  - id: fetch-and-preserve-official-sources
+    name: python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    entrypoint: python
+    args: [worker.py, fetch, --work, /workspace/demography, --run-id, $BUILD_ID]
+    env: &data_env
+      - BUILD_ID=$BUILD_ID
+      - PROJECT_ID=$PROJECT_ID
+      - DATA_REGION=europe-west4
+      - DATA_SERVICE_ACCOUNT=psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com
+      - LOADER_GIT_SHA=${_LOADER_GIT_SHA}
+      - BUILD_STARTED_AT=${_BUILD_STARTED_AT}
+
+  - id: normalize-and-validate
+    name: python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    entrypoint: python
+    args: [worker.py, process, --work, /workspace/demography, --run-id, $BUILD_ID]
+    env: *data_env
+
+  - id: atomically-publish
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [worker.py, publish, --work, /workspace/demography, --run-id, $BUILD_ID]
+    env: *data_env
+
+substitutions:
+  _LOADER_GIT_SHA: unknown
+  _BUILD_STARTED_AT: unknown
+timeout: 7200s
+queueTtl: 1800s
+tags: [plane-data, country-demography]
+options:
+  machineType: E2_HIGHCPU_8
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "dataset": "country-demography",
+  "revision": "UN WPP 2024",
+  "estimate_period": {"from": 1950, "to": 2023},
+  "projection_period": {"from": 2024, "to": 2100, "scenario": "medium"},
+  "sources": [
+    {
+      "id": "wpp2024-age5-sex-medium",
+      "publisher": "United Nations, Department of Economic and Social Affairs, Population Division",
+      "dataset": "World Population Prospects 2024 — population by five-year age group and sex",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_PopulationByAge5GroupSex_Medium.csv.gz",
+      "filename": "WPP2024_PopulationByAge5GroupSex_Medium.csv.gz",
+      "grain": "location × year × five-year age group",
+      "unit": "thousands of people"
+    },
+    {
+      "id": "wpp2024-demographic-indicators-medium",
+      "publisher": "United Nations, Department of Economic and Social Affairs, Population Division",
+      "dataset": "World Population Prospects 2024 — demographic indicators, medium scenario",
+      "url": "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_Demographic_Indicators_Medium.csv.gz",
+      "filename": "WPP2024_Demographic_Indicators_Medium.csv.gz",
+      "grain": "location × year",
+      "unit": "indicator-specific"
+    }
+  ],
+  "website_destinations": [
+    "/data/country-demography.v1.json",
+    "/data/demography/index.v2.json",
+    "/data/countries/{iso3_lower}/demography.v2.json",
+    "/api/data/demography?country={ISO3}"
+  ]
+}
