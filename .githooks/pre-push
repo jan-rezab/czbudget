@@ -40,7 +40,7 @@ fi
 # Keep local work source-only. Full data integrity and browser integration run
 # once in the cloud; never restore datasets to this Mac to push a chart edit.
 echo "pre-push: shared component and source contracts"
-node scripts/build-chart-assets.mjs --check
+node scripts/build-chart-assets.mjs --check --tracked
 node scripts/validate-chart-ownership.mjs
 node scripts/publish-stories.mjs --check
 node --test tests/unit/chart-renderer.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/stories.spec.mjs

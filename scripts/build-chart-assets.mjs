@@ -22,7 +22,9 @@ if(check) {
   const names=new Set(await readdir(directory));
   // A deleted old hash would strand an already-open page during a release.
   // Check the tracked inventory too, not just files still present on disk.
-  const tracked=execFileSync('git',['ls-files','--','assets/chart-releases'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  // Git is available in the mandatory push hook, not in the minimal Node
+  // production builder. The latter still verifies every retained file's bytes.
+  const tracked=process.argv.includes('--tracked') ? execFileSync('git',['ls-files','--','assets/chart-releases'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean) : [];
   for(const file of tracked) names.add(file.split('/').at(-1));
   for(const name of names) {
     if(name==='current.json') continue;
