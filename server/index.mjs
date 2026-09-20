@@ -1,6 +1,8 @@
 import http from "node:http";
 import { ASSET_PATH, AssetError, staticAssets } from './static-assets.mjs';
 import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
+import { createMiniReports, requireMiniAuthor } from './mini-reports.mjs';
+const miniReports = createMiniReports();
 const reportAdmin = createReportAdmin();
 import { createReportService, reportConfig } from "./data-reports.mjs";
 const submitDataReport = createReportService();
@@ -317,6 +319,36 @@ export async function handler(request, response) {
   }
   try {
     if (ASSET_PATH.test(url.pathname)) return await staticAssets.serve(request, response, url.pathname);
+    if (url.pathname === '/mini-reports' || url.pathname.startsWith('/mini-reports/') || url.pathname === '/api/mini-reports' || url.pathname.startsWith('/api/mini-reports/')) {
+      response.setHeader('Cache-Control', 'no-store');
+      response.setHeader('X-Robots-Tag', 'noindex, nofollow');
+      response.setHeader('Vary', 'Cookie, Authorization');
+      const page = ['/mini-reports', '/mini-reports/'].includes(url.pathname);
+      let author;
+      try { author = requireMiniAuthor(await verifyIdToken(requestToken(request))); }
+      catch (error) {
+        if (page && error.status === 401) { response.writeHead(302, { Location: '/developers/login?next=/mini-reports' }); return response.end(); }
+        throw error;
+      }
+      if (!enforceRateLimit(response, id, { key: author.sub, limit: 60, windowMs: 60000, group: 'mini-reports-author' })) return;
+      if (request.method === 'GET') {
+        const file = page ? ['mini-reports.html', 'text/html'] : url.pathname === '/mini-reports/app.js' ? ['mini-reports.js', 'application/javascript'] : url.pathname === '/mini-reports/style.css' ? ['mini-reports.css', 'text/css'] : null;
+        if (file) {
+          const body = await fs.readFile(path.join(PAGE_ROOT, file[0]));
+          response.writeHead(200, { 'Content-Type': `${file[1]}; charset=utf-8`, 'X-Content-Type-Options': 'nosniff', 'Content-Length': body.length });
+          return response.end(body);
+        }
+      }
+      if (!acquireAPISlot(response, id)) return;
+      try {
+        if (url.pathname === '/api/mini-reports' && request.method === 'GET') return sendJSON(response, 200, await miniReports.list(author, url.searchParams.get('cursor') || ''));
+        const match = /^\/api\/mini-reports(?:\/([a-z0-9][a-z0-9-]{0,79}))?$/.exec(url.pathname);
+        if (!match) throw new DataError(404, 'not_found', 'Mini Reports route not found.');
+        if (request.method !== 'POST') throw new DataError(405, 'method_not_allowed', 'Method not allowed.');
+        if (request.headers.origin !== (process.env.PUBLIC_ORIGIN || 'https://publicspendingdata.org')) throw new DataError(403, 'invalid_origin', 'Publish from the website.');
+        return sendJSON(response, match[1] ? 200 : 201, await miniReports.save(match[1], await readBody(request), author));
+      } finally { apiRequestsInFlight -= 1; }
+    }
     if (url.pathname === "/admin/reports" || url.pathname.startsWith("/admin/reports/") || url.pathname === "/api/admin/data-reports" || url.pathname.startsWith("/api/admin/data-reports/")) {
       response.setHeader("Cache-Control", "no-store");
       response.setHeader("X-Robots-Tag", "noindex, nofollow");

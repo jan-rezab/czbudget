@@ -108,6 +108,19 @@ export const CZE_MUNICIPAL_LINES_SQL = `
  * to map it to the canonical alpha-3 the artifacts carry.
  */
 export const COUNTRIES = {
+  USA: {
+    prefix: "US",
+    currency: "USD",
+    codePattern: /^\d{12}$/,
+    codeHint: "Expected a twelve-digit Census government identifier.",
+    scopes: ["standalone_accounting_unit"],
+    years: [2023, 2024],
+    nativeLanguage: "en",
+    sourceUrl: "https://www.census.gov/programs-surveys/gov-finances.html",
+    methodology:
+      "U.S. Census Bureau individual-unit State and Local Government Finances records for the 39 reviewed cities above 500,000 residents. " +
+      "Amounts are actual finance observations reported in thousands of dollars and scaled to dollars; Census item and imputation codes are preserved.",
+  },
   CZE: {
     prefix: "CZ",
     currency: "CZK",

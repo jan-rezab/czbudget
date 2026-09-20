@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="language-bootstrap.js?v=20260824-bilingual-metadata"></script>
+  <title>How public money reaches schools and healthcare — Public Spending Data</title>
+  <meta name="description" content="Follow public funding through ministries, local governments and insurers to schools and healthcare. Compare Czechia, the US, France, Russia and Ukraine.">
+  <link rel="canonical" href="https://publicspendingdata.org/funding-systems.html">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/funding-systems.html?lang=en">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/funding-systems.html?lang=cs">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=20260911-feedback-tooltips">
+  <link rel="stylesheet" href="site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <link rel="stylesheet" href="psd-chart.css">
+  <link rel="stylesheet" href="funding-views.css?v=20260919">
+  <link rel="stylesheet" href="funding-systems.css?v=20260919">
+  <script src="global-nav.js?v=20260824-logo-120" defer></script>
+  <script src="psd-chart.js?v=20260919-history-state" defer></script>
+  <script src="funding-views.js?v=20260920-funding-guide" type="module"></script>
+  <script src="funding-systems.js?v=20260919" type="module"></script>
+</head>
+<body class="systems-page">
+  <a class="systems-skip" href="#system-map" data-i18n="skip">Skip to funding routes</a>
+  <psd-site-header></psd-site-header>
+  <main class="systems-main">
+    <nav class="funding-views" data-current="systems" aria-label="Money-flow view"><a href="money-flow.html?lang=en">01 How much money flows</a><a href="/deep-dives/funding/?lang=en">02 How money reaches services</a></nav>
+    <header class="systems-hero">
+      <div><p class="systems-kicker" data-i18n="eyebrow">FOLLOW THE MONEY / FIVE FUNDING SYSTEMS</p><h1 data-i18n="title">How does the money<br>actually arrive?</h1><p class="systems-intro" data-i18n="intro">A tax payment is only the beginning. Follow the institutions between your contribution and a classroom, a doctor or a hospital.</p></div>
+      <aside class="systems-hero-note"><span aria-hidden="true">↳</span><p data-i18n="heroNote">Who collects it.<br>Who passes it on.<br>Who finally pays.</p><a href="#benchmark" data-i18n="jump">Compare all five countries ↓</a></aside>
+    </header>
+    <div id="country-picker" class="systems-country-picker" role="group" aria-label="Country"></div>
+    <section id="system-map" class="systems-map" aria-labelledby="map-title">
+      <div class="systems-map-top"><div><span class="systems-kicker" id="map-country"></span><h2 id="map-title"></h2></div><div id="topic-picker" class="systems-topics" role="group" aria-label="Funding topic"></div></div>
+      <p class="systems-map-summary" id="map-summary"></p>
+      <div class="systems-map-key"><span data-i18n="mapKey">SOURCE → INTERMEDIARIES → DELIVERY</span><span data-i18n="schematic">Institutional routes · widths do not represent amounts</span></div>
+      <div id="routes"></div>
+      <div class="systems-map-bottom"><span data-i18n="mapHint">Open a route for the payment mechanism and sources.</span><button id="expand-routes" type="button" data-i18n="expand">Explain every route +</button></div>
+    </section>
+    <p class="systems-live" id="selection-status" role="status"></p>
+    <aside class="systems-evidence"><strong data-i18n="evidence">What we know, and what is missing</strong><p id="country-gap"></p><span data-i18n="reviewed">Routes reviewed 19 September 2026 · source vintages vary</span></aside>
+    <section class="systems-principles" aria-labelledby="principles-title"><div><p class="systems-kicker" data-i18n="practicalLabel">THE PRACTICAL PART</p><h2 id="principles-title" data-i18n="principlesTitle">One service.<br>More than one payer.</h2></div><div id="principles"></div></section>
+    <section id="benchmark" class="systems-comparison" aria-labelledby="compare-title"><div class="systems-section-heading"><div><span class="systems-kicker" data-i18n="compareLabel">SIDE BY SIDE / INSTITUTIONS</span><h2 id="compare-title" data-i18n="compareTitle">Same need. Different routes.</h2></div><p data-i18n="compareNote">Compare responsibilities and payment mechanisms. More intermediaries do not, by themselves, mean more waste.</p></div><div class="systems-table-scroll" tabindex="0" role="region" aria-label="Country comparison"><table id="comparison-table"></table></div><p class="systems-small" data-i18n="scopeNote">Schools: ordinary public primary and secondary education, excluding universities. Healthcare: main financing routes, including private payments where relevant. These are structural comparisons, not efficiency rankings.</p></section>
+    <section class="systems-fiscal" aria-labelledby="fiscal-title"><div class="systems-section-heading"><div><span class="systems-kicker" data-i18n="fiscalLabel">SIDE BY SIDE / FISCAL SCALE</span><h2 id="fiscal-title" data-i18n="fiscalTitle">How much of the economy passes through government?</h2></div><p data-i18n="fiscalIntro">One year, one definition: consolidated general government in 2024, as a share of GDP.</p></div><div id="fiscal-chart" data-psd-chart="funding-systems-fiscal-scale"><p id="fiscal-loading" role="status" data-i18n="loading">Loading the fiscal benchmark…</p></div><p class="systems-small" data-i18n="fiscalNote">These are all-government totals, not school or health budgets. They consolidate transfers between government units. Revenue includes grants; borrowing is financing. Private insurance premiums and direct household spending are outside this government perimeter. Ukraine’s wartime expenditure and grants make peacetime comparisons difficult. Figures alone do not measure service quality.</p></section>
+    <section class="systems-method" aria-labelledby="method-title"><h2 id="method-title" data-i18n="methodTitle">Read the map with the right boundaries.</h2><div id="method-copy"></div><details><summary data-i18n="sourcesTitle">Sources for this country and topic</summary><ul id="country-sources"></ul></details><a href="data/funding-systems-benchmark.v1.json" data-i18n="download">Download the fiscal benchmark (JSON) ↗</a></section>
+  </main>
+  <noscript><p>JavaScript is needed for the interactive country maps. <a href="money-flow.html?lang=en">Return to the original budget view</a> or <a href="data/funding-systems-benchmark.v1.json">download the benchmark data</a>.</p></noscript>
+</body>
+</html>

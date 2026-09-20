@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><title>Mini Reports · Public Spending Data</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/mini-reports/style.css"><script src="/mini-reports/app.js" defer></script>
+</head>
+<body>
+  <header><a href="/"><img src="/assets/logo-lockup.svg" alt="Public Spending Data" width="190" height="48"></a><span class="private">Private preview</span><button id="new-report" class="primary">+ Write a report</button></header>
+  <main>
+    <div class="heading"><div><p class="eyebrow">PEOPLE. PLACES. PERSPECTIVE.</p><h1>Mini Reports<span>.</span></h1><p class="intro">Small charts. Big conversations.<br>Evidence and perspective, with a person behind every post.</p></div><p class="invitation">An invitation-only space<br>for ideas worth sharing.</p></div>
+    <p id="notice" role="status" aria-live="polite"></p>
+    <div class="layout">
+      <aside aria-label="Filter reports"><p class="eyebrow">EXPLORE</p><div id="topics" class="topics"></div><label>Country<select id="country"><option value="">All countries</option></select></label><label>City<select id="city"><option value="">All cities</option></select></label><button id="clear-filters" class="quiet">Clear filters</button><p class="aside-note">Tax, economy and the public decisions that shape where we live.</p></aside>
+      <section aria-label="Reports"><div class="feed-head"><div class="view-tabs"><button id="feed-tab" aria-pressed="true">Latest reports</button><button id="draft-tab" aria-pressed="false">Your drafts</button></div><span id="count" class="meta"></span></div><div id="feed" aria-live="polite"></div><button id="more" hidden>Load more reports</button></section>
+    </div>
+    <section id="editor" hidden aria-labelledby="editor-title">
+      <div class="editor-head"><div><p class="eyebrow">AUTHOR DESK</p><h2 id="editor-title">Write a Mini Report</h2></div><button id="close-editor" type="button">Close editor</button></div>
+      <form id="report-form">
+        <div class="form-grid"><label>Title<input name="title" maxlength="140" required></label><label>Your public byline<input name="authorName" maxlength="80" required autocomplete="name"></label></div>
+        <label>What does the chart tell us?<textarea name="summary" rows="3" maxlength="800" required></textarea></label>
+        <fieldset><legend>Topics (up to four)</legend><div id="editor-topics" class="checkboxes"></div></fieldset>
+        <div class="form-grid"><label>Countries · comma separated<input name="countries" placeholder="United States, Czechia"></label><label>Cities · comma separated<input name="cities" placeholder="New York, Prague"></label></div>
+        <div class="form-grid three"><label>Chart measure<input name="measure" required maxlength="80" placeholder="Tax / property value"></label><label>Unit<input name="unit" required maxlength="30" value="%"></label><label>Second measure · optional<input name="comparisonLabel" maxlength="80" placeholder="Tax / city revenue"></label></div>
+        <label>Chart data · one row per line<textarea name="rows" class="data-input" rows="7" required aria-describedby="rows-help" placeholder="City | value | second value | note"></textarea></label><p id="rows-help" class="meta">Use: label | value | second value | note. Leave the third field empty for a single measure. Up to 40 rows. Use a decimal point.</p>
+        <label>Method and limitations<textarea name="methodology" rows="4" maxlength="4000" placeholder="Period, definitions, estimates and what is excluded."></textarea></label>
+        <label>Sources · one per line<textarea name="sources" rows="3" placeholder="Source title | https://…"></textarea></label>
+        <label class="check"><input type="checkbox" name="reviewed"> I have reviewed the figures, sources and any estimates in this report.</label>
+        <div class="actions"><button type="button" id="preview">Preview chart</button><button type="submit" value="draft">Save draft</button><button type="submit" value="published" class="primary">Publish to private feed</button></div>
+        <p id="save-notice" role="status" aria-live="polite"></p>
+      </form>
+      <div id="preview-card"></div>
+    </section>
+  </main>
+</body>
+</html>

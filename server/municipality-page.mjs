@@ -3,7 +3,7 @@ import { COUNTRIES as LINE_SERVED } from "./municipal-lines.mjs";
 const countryNames = {
   BOL: "Bolivia", BRA: "Brazil", CHL: "Chile", COL: "Colombia", CRI: "Costa Rica", CZE: "Czechia",
   DNK: "Denmark", ESP: "Spain", FIN: "Finland", GEO: "Georgia", GTM: "Guatemala", ITA: "Italy",
-  JPN: "Japan", KOR: "South Korea", MEX: "Mexico", NLD: "Netherlands", NOR: "Norway", PER: "Peru", SLV: "El Salvador",
+  JPN: "Japan", KOR: "South Korea", MEX: "Mexico", NLD: "Netherlands", NOR: "Norway", PER: "Peru", SLV: "El Salvador", USA: "United States",
 };
 
 export function municipalityPage({ route, release_id, profile: payload, history }, requestedLanguage = "en") {

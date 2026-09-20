@@ -1,0 +1,1589 @@
+{
+  "schema_version": "1.0.0",
+  "registry_id": "us-major-cities-vintage-2025",
+  "selection": {
+    "geography": "United States incorporated places and consolidated-city balance entities",
+    "population_vintage": 2025,
+    "population_as_of": "2025-07-01",
+    "operator": ">",
+    "cutoff": 500000,
+    "entity_count": 39,
+    "first_excluded": {
+      "name": "Colorado Springs",
+      "state": "CO",
+      "population_2025": 494743
+    },
+    "source_id": "census-vintage-2025-incorporated-place-ranking",
+    "source_url": "https://www2.census.gov/programs-surveys/popest/tables/2020-2025/cities/totals/SUB-IP-EST2025-ANNRNK.xlsx"
+  },
+  "source_policy": {
+    "layers_required": [
+      "national_standardized_actual",
+      "native_granular_budget"
+    ],
+    "fetchable_status": "import_ready",
+    "note": "Only sources whose status is exactly import_ready may be fetched. discovery_only is provenance for follow-up, never a load instruction. Preserve native classifications alongside, not in place of, standardized Census actuals."
+  },
+  "cities": [
+    {
+      "city_slug": "new-york-ny",
+      "name": "New York",
+      "state": "NY",
+      "population_2025": 8584629,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "362061194805",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "nyc-expense-budget-object-code",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.cityofnewyork.us/resource/mwzb-yiwb.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "Expense budget at object-code detail"
+        },
+        {
+          "id": "nyc-capital-budget-lines",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.cityofnewyork.us/resource/46m8-77gv.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "Capital projects and budget lines"
+        },
+        {
+          "id": "nyc-expense-budget-uoa-coarse",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.cityofnewyork.us/resource/39g5-gbp3.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "Coarser agency and unit-of-appropriation budget; non-additive companion source"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "los-angeles-ca",
+      "name": "Los Angeles",
+      "state": "CA",
+      "population_2025": 3869089,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "062037161174",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "la-budget-expenditures",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://controllerdata.lacity.org/resource/uyzw-yi8n.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "Controller budget expenditure records"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "chicago-il",
+      "name": "Chicago",
+      "state": "IL",
+      "population_2025": 2731585,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "172031162236",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "chicago-budget-ordinance",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.cityofchicago.org/resource/6694-f78c.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "Budget ordinance appropriation detail"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "houston-tx",
+      "name": "Houston",
+      "state": "TX",
+      "population_2025": 2397315,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "482201176169",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+    "sources": [
+      {
+        "id": "houston-operating-budget-fy2025",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.houstontx.gov/api/3/action/datastore_search?resource_id=ca555c64-5d76-4099-842f-0b31c59358a9&limit=50000",
+        "landing_page_url": "https://data.houstontx.gov/dataset/budget",
+        "format": "json",
+        "records_path": "result.records",
+        "fiscal_year": 2025,
+        "coverage": "Official operating-budget account lines with fund, department, GL account, revenue/expenditure side, current, adopted and actual measures; capital program excluded.",
+        "stages": ["adopted", "revised", "actual"],
+        "dimensions": ["Fund ID", "Fund Name", "Fund Type", "Department ID", "Department Name", "Department Type", "GL Account", "GL Account Description", "GL Account Category"]
+      },
+      {
+        "id": "houston-operating-budget-fy2024",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.houstontx.gov/api/3/action/datastore_search?resource_id=4d2ef99b-b1fa-4779-8b08-2aa4b4f89189&limit=50000",
+        "landing_page_url": "https://data.houstontx.gov/dataset/budget",
+        "format": "json",
+        "records_path": "result.records",
+        "fiscal_year": 2024,
+        "coverage": "Official operating-budget account lines with fund, department, GL account, revenue/expenditure side, current, adopted and actual measures; capital program excluded.",
+        "stages": ["adopted", "revised", "actual"],
+        "dimensions": ["Fund ID", "Fund Name", "Fund Type", "Department ID", "Department Name", "Department Type", "GL Account", "GL Account Description", "GL Account Category"]
+      },
+      {
+        "id": "houston-adopted-budget-fy2027",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://www.houstontx.gov/budget/FY2027_Raw_Data_Adopted.xlsx",
+        "landing_page_url": "https://www.houstontx.gov/budget/",
+        "format": "xlsx",
+        "fiscal_year": 2027,
+        "coverage": "Official adopted operating-budget raw workbook; capital program requires its own source.",
+        "stages": ["adopted"]
+      }
+    ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "phoenix-az",
+      "name": "Phoenix",
+      "state": "AZ",
+      "population_2025": 1665481,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "042013207536",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "phoenix-az-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "philadelphia-pa",
+      "name": "Philadelphia",
+      "state": "PA",
+      "population_2025": 1574281,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "422101133602",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+    "sources": [
+      {
+        "id": "philadelphia-controller-actual-department-spending",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://raw.githubusercontent.com/PhilaController/phl-budget-data/main/src/phl_budget_data/data/processed/spending/actual-department-spending.csv",
+        "landing_page_url": "https://github.com/PhilaController/phl-budget-data",
+        "format": "csv",
+        "fiscal_years": "source_native",
+        "coverage": "Historical actual department spending parsed and maintained by the independently elected Philadelphia City Controller from official city budget documents.",
+        "stages": ["actual"]
+      },
+      {
+        "id": "philadelphia-controller-adopted-department-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://raw.githubusercontent.com/PhilaController/phl-budget-data/main/src/phl_budget_data/data/processed/spending/budgeted-department-spending-adopted.csv",
+        "landing_page_url": "https://github.com/PhilaController/phl-budget-data",
+        "format": "csv",
+        "fiscal_years": "source_native",
+        "coverage": "Adopted department spending maintained by the Philadelphia City Controller from official Budget-in-Brief documents.",
+        "stages": ["adopted"]
+      },
+      {
+        "id": "philadelphia-controller-proposed-department-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://raw.githubusercontent.com/PhilaController/phl-budget-data/main/src/phl_budget_data/data/processed/spending/budgeted-department-spending-proposed.csv",
+        "landing_page_url": "https://github.com/PhilaController/phl-budget-data",
+        "format": "csv",
+        "fiscal_years": "source_native",
+        "coverage": "Proposed department spending maintained by the Philadelphia City Controller from official Budget-in-Brief documents; capital detail remains a documented gap.",
+        "stages": ["proposed"]
+      }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "san-antonio-tx",
+      "name": "San Antonio",
+      "state": "TX",
+      "population_2025": 1548422,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "482029175988",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "san-antonio-tx-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "san-diego-ca",
+      "name": "San Diego",
+      "state": "CA",
+      "population_2025": 1406106,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "062073207598",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "san-diego-operating-budget",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": "https://data.sandiego.gov/datasets/operating-budget/",
+          "format": "landing_page",
+          "fiscal_years": "source_native",
+          "coverage": "Operating budget; direct machine file unresolved"
+        },
+        {
+          "id": "san-diego-operating-actuals",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": "https://data.sandiego.gov/datasets/operating-actuals/",
+          "format": "landing_page",
+          "fiscal_years": "source_native",
+          "coverage": "Operating actuals; direct machine file unresolved"
+        },
+        {
+          "id": "san-diego-cip-budget",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": "https://data.sandiego.gov/datasets/cip-fy-budget/",
+          "format": "landing_page",
+          "fiscal_years": "source_native",
+          "coverage": "Capital improvement budget; direct machine file unresolved"
+        },
+        {
+          "id": "san-diego-cip-actuals",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": "https://data.sandiego.gov/datasets/cip-fy-actuals/",
+          "format": "landing_page",
+          "fiscal_years": "source_native",
+          "coverage": "Capital improvement actuals; direct machine file unresolved"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "dallas-tx",
+      "name": "Dallas",
+      "state": "TX",
+      "population_2025": 1329491,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "482113187649",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "dallas-operating-budget",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://www.dallasopendata.com/resource/e2fs-y4nb.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "Operating budget detail from the official City of Dallas Socrata API."
+        },
+        {
+          "id": "dallas-revenue-budget",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://www.dallasopendata.com/resource/rtn4-pmj9.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "Revenue budget detail from the official City of Dallas Socrata API."
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "fort-worth-tx",
+      "name": "Fort Worth",
+      "state": "TX",
+      "population_2025": 1028117,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "482439176375",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "fort-worth-tx-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "jacksonville-fl",
+      "name": "Jacksonville",
+      "state": "FL",
+      "population_2025": 1017689,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "122031101942",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "jacksonville-fl-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "austin-tx",
+      "name": "Austin",
+      "state": "TX",
+      "population_2025": 1002632,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "482453176394",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+    "sources": [
+      {
+        "id": "austin-operating-expense-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.austintexas.gov/resource/yeeq-kk6v.json",
+        "landing_page_url": "https://data.austintexas.gov/stories/s/Welcome-to-Open-Budget-ATX/gb4y-wf3k/",
+        "format": "json",
+        "fiscal_years": "source_native",
+        "coverage": "Official operating expense lines with department, fund, division, unit and object dimensions and actual, budget and current-year-estimate measures.",
+        "stages": ["adopted", "forecast", "actual"]
+      },
+      {
+        "id": "austin-operating-revenue-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.austintexas.gov/resource/5rhv-xasu.json",
+        "landing_page_url": "https://data.austintexas.gov/stories/s/Welcome-to-Open-Budget-ATX/gb4y-wf3k/",
+        "format": "json",
+        "fiscal_years": "source_native",
+        "coverage": "Official operating revenue lines with agency, fund, revenue type/category/class/unit/object dimensions and actual, budget and current-year-estimate measures.",
+        "stages": ["adopted", "forecast", "actual"]
+      },
+      {
+        "id": "austin-capital-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.austintexas.gov/resource/ad5y-pg42.json",
+        "landing_page_url": "https://data.austintexas.gov/",
+        "format": "json",
+        "fiscal_years": "source_native",
+        "coverage": "Official cumulative capital project/subproject appropriations and expenses by fund and unit; lifetime-to-date measures are not additive with annual operating budgets.",
+        "stages": ["appropriated", "actual"],
+        "non_additive_group": "capital_lifetime_to_date"
+      }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "san-jose-ca",
+      "name": "San Jose",
+      "state": "CA",
+      "population_2025": 989814,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "062085100745",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "san-jose-ca-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "charlotte-nc",
+      "name": "Charlotte",
+      "state": "NC",
+      "population_2025": 964784,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "372119194726",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+    "sources": [
+      {
+        "id": "charlotte-general-ledger-budget-fy2018-2023",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://gis.charlottenc.gov/arcgis/rest/services/ODP/BudgetReport/MapServer/1",
+        "landing_page_url": "https://gis.charlottenc.gov/arcgis/rest/services/ODP/BudgetReport/MapServer/1",
+        "format": "arcgis_json",
+        "fiscal_years": [2018, 2019, 2020, 2021, 2022, 2023],
+        "coverage": "Official historical general-ledger budget lines with GL string, fund, department, object, fiscal year and amount. Source metadata carries an unrelated housing description; retain this quality warning.",
+        "quality_flags": ["source_metadata_description_mismatch"]
+      },
+      {
+        "id": "charlotte-capital-project-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://gis.charlottenc.gov/arcgis/rest/services/CIP/CapitalImprovementProjectsService/MapServer/16",
+        "landing_page_url": "https://gis.charlottenc.gov/arcgis/rest/services/CIP/CapitalImprovementProjectsService/MapServer/16",
+        "format": "arcgis_json",
+        "fiscal_years": "not_applicable",
+        "coverage": "Official capital-project list with lifetime total project budget, controlling entity, phase and schedule. Amount may be TBD and is non-additive with annual operating budgets.",
+        "non_additive_group": "capital_project_lifetime"
+      }
+    ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "columbus-oh",
+      "name": "Columbus",
+      "state": "OH",
+      "population_2025": 938396,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "392049209050",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+    "sources": [
+      {
+        "id": "columbus-expense-ledger-actual-2025",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://dlstpprodeastus001.blob.core.windows.net/exceldatasets-synapse/TransactionData/ExpenseLedgerTransactions/CityOfColumbus_DataSet_LedgerTransactions__2025-01-01-2025-12-31.csv",
+        "landing_page_url": "https://www.columbusauditor.org/data-hub/data-sets-explorer?DataSetCategory=Expense",
+        "format": "csv",
+        "fiscal_year": 2025,
+        "coverage": "Official signed cash expense ledger transactions with department, division, fund, object class, programme, project, planning area and subfund dimensions.",
+        "stages": ["actual"]
+      },
+      {
+        "id": "columbus-revenue-ledger-actual-2025",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://dlstpprodeastus001.blob.core.windows.net/exceldatasets-synapse/TransactionData/RevenueLedgerTransactions/CityOfColumbus_DataSet_LedgerTransactions__2025-01-01-2025-12-31.csv",
+        "landing_page_url": "https://www.columbusauditor.org/data-hub/data-sets-explorer?DataSetCategory=Revenue",
+        "format": "csv",
+        "fiscal_year": 2025,
+        "coverage": "Official signed cash revenue ledger transactions; preserve source signs and native dimensions without inferred sign reversal.",
+        "stages": ["actual"]
+      },
+      {
+        "id": "columbus-adopted-budget-discovery",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "discovery_only",
+        "url": "https://www.columbus.gov/Government/Departments/Finance-and-Management/Financial-Management-Group/Budget-Management",
+        "format": "documents",
+        "fiscal_years": "source_native",
+        "coverage": "Adopted-budget machine-readable source still requires verification; actual ledgers must not be presented as adopted budget lines."
+      }
+    ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "indianapolis-balance-in",
+      "name": "Indianapolis balance",
+      "state": "IN",
+      "population_2025": 901116,
+      "place_kind": "consolidated_city_balance",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "182097207957",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "indianapolis-balance-in-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "san-francisco-ca",
+      "name": "San Francisco",
+      "state": "CA",
+      "population_2025": 826079,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "062075161258",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "sf-budget",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.sfgov.org/resource/xdgd-c79v.json",
+          "format": "json",
+          "fiscal_years": "source_native",
+          "coverage": "City and county budget detail"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "seattle-wa",
+      "name": "Seattle",
+      "state": "WA",
+      "population_2025": 784777,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "532033184255",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+    "sources": [
+      {
+        "id": "seattle-operating-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.seattle.gov/resource/8u2j-imqx.json",
+        "landing_page_url": "https://data.seattle.gov/",
+        "format": "json",
+        "fiscal_years": "source_native",
+        "coverage": "Official approved operating budget by service, department, program, fund, fund type and expense type.",
+        "stages": ["adopted"]
+      },
+      {
+        "id": "seattle-capital-budget",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.seattle.gov/resource/m6va-m4qe.json",
+        "landing_page_url": "https://data.seattle.gov/",
+        "format": "json",
+        "fiscal_years": "source_native",
+        "coverage": "Official capital budget by department, budget-control level, project, project code and fund.",
+        "stages": ["adopted"]
+      }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "denver-co",
+      "name": "Denver",
+      "state": "CO",
+      "population_2025": 740613,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "082031194647",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "denver-co-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "nashville-davidson-balance-tn",
+      "name": "Nashville-Davidson balance",
+      "state": "TN",
+      "population_2025": 721074,
+      "place_kind": "consolidated_city_balance",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "472037175728",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "nashville-budget-to-actual-expenses-fy2010-present",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services2.arcgis.com/HdTo6HJqh92wn4D8/arcgis/rest/services/Metro_Budget_to_Actual_Expenses_(FY2010_-_Present)_/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2010-present",
+          "coverage": "Official Metro Nashville budgeted and actual operating expenses by fund, department, business unit, and object account"
+        },
+        {
+          "id": "nashville-budget-to-actual-revenues-fy2010-present",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services2.arcgis.com/HdTo6HJqh92wn4D8/arcgis/rest/services/Metro_Budget_to_Actual_Revenues_(FY2010_-_Present)_view/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2010-present",
+          "coverage": "Official Metro Nashville budgeted and actual revenues with native account hierarchy",
+          "quality_notes": "Official description limits this view to six tax-supported funds"
+        },
+        {
+          "id": "nashville-approved-cib-projects",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": "https://services2.arcgis.com/HdTo6HJqh92wn4D8/arcgis/rest/services/Approved_CIB_Projects/FeatureServer",
+          "format": "arcgis_json",
+          "fiscal_years": "relative Year1-Year7",
+          "coverage": "Official approved Capital Improvements Budget projects across four geometry layers",
+          "quality_notes": "Requires a multi-layer union adapter and authoritative cycle-to-fiscal-year mapping before import"
+        },
+        {
+          "id": "nashville-davidson-balance-tn-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "oklahoma-city-ok",
+      "name": "Oklahoma City",
+      "state": "OK",
+      "population_2025": 719849,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "402109209170",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "oklahoma-city-ok-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "washington-dc",
+      "name": "Washington",
+      "state": "DC",
+      "population_2025": 693645,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "112001124214",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "washington-dc-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "el-paso-tx",
+      "name": "El Paso",
+      "state": "TX",
+      "population_2025": 683012,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "482141176118",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "el-paso-tx-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "las-vegas-nv",
+      "name": "Las Vegas",
+      "state": "NV",
+      "population_2025": 679817,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "322003169988",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "las-vegas-open-budget",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services1.arcgis.com/F1v0ufATbBQScMtY/arcgis/rest/services/Open_Budget/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2019-present",
+          "coverage": "Official approved revenue and expenditure budget by function, program, department, fund, and category",
+          "quality_notes": "Approved amounts only; no actual or revised-budget measure"
+        },
+        {
+          "id": "las-vegas-nv-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "boston-ma",
+      "name": "Boston",
+      "state": "MA",
+      "population_2025": 672973,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "252025128108",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "boston-adopted-operating-budget-fy2027",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.boston.gov/dataset/c21c1fb9-392b-49d7-b418-f53cea9b76ed/resource/8f2971f0-7a0d-401d-8376-0289e3b810ba/download/fy27-adopted-operating-open-data.csv",
+          "format": "csv",
+          "fiscal_years": "FY2024-FY2027",
+          "coverage": "Official adopted operating budget with actual, appropriation, and budget measures by cabinet, department, program, and expense category"
+        },
+        {
+          "id": "boston-adopted-revenue-budget-fy2027",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.boston.gov/dataset/ff9eeb02-9842-4aff-a725-4fc591fdc6cd/resource/9c58a0c8-02c3-4712-850b-7b06f16e8fd5/download/fy27-adopted-revenue-open-data.csv",
+          "format": "csv",
+          "fiscal_years": "FY2024-FY2027",
+          "coverage": "Official adopted revenue budget with actual and budget measures by category, account, cabinet, and department"
+        },
+        {
+          "id": "boston-adopted-capital-plan-fy2027-2031",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://data.boston.gov/dataset/bb903d90-eacb-4c42-8c03-e25ede06317a/resource/c62d666e-27ea-4c03-9cb1-d3a81a1fb641/download/fy27-31-adopted-capital-plan-open-data-portal.csv",
+          "format": "csv",
+          "fiscal_years": "FY2027-FY2031",
+          "coverage": "Official adopted capital plan by project, department, neighborhood, funding source, authorization, expenditure, and project budget"
+        },
+        {
+          "id": "boston-ma-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "detroit-mi",
+      "name": "Detroit",
+      "state": "MI",
+      "population_2025": 649095,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "262163166817",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "detroit-budget-revenues-fy2024",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Budget_Fiscal_Year_2024_Revenues/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2024-FY2027",
+          "coverage": "Official FY2024 adopted revenues and later forecasts by department, fund, appropriation, cost center, and revenue category",
+          "quality_notes": "FY2024 is adopted; FY2025-FY2027 fields are forecasts, not adopted budgets"
+        },
+        {
+          "id": "detroit-budget-expenditures-fy2024",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services2.arcgis.com/qvkbeam7Wirps6zC/arcgis/rest/services/Budget_Fiscal_Year_2024_Expenditures/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2024-FY2027",
+          "coverage": "Official FY2024 adopted expenditures and later forecasts by department, fund, appropriation, cost center, and category",
+          "quality_notes": "FY2024 is adopted; FY2025-FY2027 fields are forecasts, not adopted budgets"
+        },
+        {
+          "id": "detroit-mi-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "louisville-jefferson-balance-ky",
+      "name": "Louisville/Jefferson balance",
+      "state": "KY",
+      "population_2025": 641962,
+      "place_kind": "consolidated_city_balance",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "212111165866",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "louisville-actual-expenditures-fy2027",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services1.arcgis.com/79kfd2K6fskCAkyg/arcgis/rest/services/expenditures_2027/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2027",
+          "coverage": "Official Louisville Metro line-item vendor expenditures; actual transactions, not adopted budget",
+          "quality_notes": "Keep actual expenditures separate from adopted operating and capital appropriations"
+        },
+        {
+          "id": "louisville-jefferson-balance-ky-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "portland-or",
+      "name": "Portland",
+      "state": "OR",
+      "population_2025": 635109,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "412051211254",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "portland-or-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "memphis-tn",
+      "name": "Memphis",
+      "state": "TN",
+      "population_2025": 609647,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "472157175826",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "memphis-tn-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "baltimore-md",
+      "name": "Baltimore",
+      "state": "MD",
+      "population_2025": 569997,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "242510208246",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "baltimore-budget-fy2023",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/Fiscal_Year_2023_Budget_New/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2023",
+          "coverage": "Official Baltimore operating budget records; historical machine-readable budget layer",
+          "quality_notes": "Historical source; do not present as the current adopted budget"
+        },
+        {
+          "id": "baltimore-open-checkbook-fy2022-present",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "import_ready",
+          "url": "https://services1.arcgis.com/UWYHeuuJISiGmgXx/arcgis/rest/services/OpenCheckbookFY2022_Through_Present/FeatureServer/0",
+          "format": "arcgis_json",
+          "fiscal_years": "FY2022-present",
+          "coverage": "Official Baltimore Open Checkbook transaction-level actual expenditures",
+          "quality_notes": "Actual transactions are a companion measure and must not be added to appropriations"
+        },
+        {
+          "id": "baltimore-md-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "milwaukee-wi",
+      "name": "Milwaukee",
+      "state": "WI",
+      "population_2025": 562407,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "552079136562",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "milwaukee-wi-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "albuquerque-nm",
+      "name": "Albuquerque",
+      "state": "NM",
+      "population_2025": 556588,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "352001170378",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "albuquerque-nm-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "fresno-ca",
+      "name": "Fresno",
+      "state": "CA",
+      "population_2025": 555549,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "062019189636",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "fresno-ca-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "tucson-az",
+      "name": "Tucson",
+      "state": "AZ",
+      "population_2025": 548371,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "042019160840",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "tucson-az-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "sacramento-ca",
+      "name": "Sacramento",
+      "state": "CA",
+      "population_2025": 536449,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "062067161241",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "sacramento-ca-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "atlanta-ga",
+      "name": "Atlanta",
+      "state": "GA",
+      "population_2025": 529110,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "132121194678",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "atlanta-ga-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "kansas-city-mo",
+      "name": "Kansas City",
+      "state": "MO",
+      "population_2025": 521220,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "292095186236",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+    "sources": [
+      {
+        "id": "kansas-city-line-item-budget-fy2023-2024",
+        "layer": "native_granular_budget",
+        "source_kind": "granular",
+        "status": "import_ready",
+        "url": "https://data.kcmo.org/resource/rgpj-fr97.json",
+        "landing_page_url": "https://data.kcmo.org/d/rgpj-fr97",
+        "format": "json",
+        "fiscal_years": [2023, 2024],
+        "coverage": "Official line-item budget with department, programme, activity, division, fund, account, expense category, project and proposed/adopted/actual measures. A newer FY2025/26 dataset remains to be located.",
+        "stages": ["proposed", "adopted", "actual"]
+      }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "mesa-az",
+      "name": "Mesa",
+      "state": "AZ",
+      "population_2025": 513656,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "042013100250",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "mesa-az-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    },
+    {
+      "city_slug": "raleigh-nc",
+      "name": "Raleigh",
+      "state": "NC",
+      "population_2025": 506306,
+      "place_kind": "incorporated_place",
+      "population_provenance": "census-vintage-2025-incorporated-place-ranking",
+      "census_government_id_crosswalk": {
+        "status": "confirmed",
+        "government_id": "372183171305",
+        "evidence": "Official 2022 Census individual-unit government finance shard"
+      },
+      "sources": [
+        {
+          "id": "raleigh-nc-native-budget-discovery",
+          "layer": "native_granular_budget",
+          "source_kind": "granular",
+          "status": "discovery_only",
+          "url": null,
+          "format": "unresolved",
+          "fiscal_years": "source_native",
+          "coverage": "Official native budget source and machine-readable endpoint require verification"
+        }
+      ],
+      "broad_source_ids": [
+        "us-census-finance-2022-individual-unit",
+        "us-census-finance-2023-individual-unit",
+        "us-census-finance-2024-individual-unit"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "us-census-finance-2022-individual-unit",
+      "layer": "national_standardized_actual",
+      "source_kind": "broad",
+      "status": "import_ready",
+      "url": "https://www2.census.gov/programs-surveys/gov-finances/tables/2022/2022_Individual_Unit_File.zip",
+      "format": "zip_fixed_width",
+      "fiscal_year": 2022,
+      "coverage_type": "census",
+      "coverage": "Complete Census of Governments individual-unit finance file; retain Census item codes."
+    },
+    {
+      "id": "us-census-finance-2023-individual-unit",
+      "layer": "national_standardized_actual",
+      "source_kind": "broad",
+      "status": "import_ready",
+      "url": "https://www2.census.gov/programs-surveys/gov-finances/tables/2023/2023_Individual_Unit_Files.zip",
+      "format": "zip_fixed_width",
+      "fiscal_year": 2023,
+      "coverage_type": "survey",
+      "census_finance_layout": {
+        "technical_documentation": "2023 S&L Public Use Files Technical Documentation.pdf",
+        "record_length": 32,
+        "data_member_pattern": "2023FinEstDAT_07152026modp\\.txt$",
+        "pid_member_pattern": "Fin_PID_2023\\.txt$",
+        "encoding": "latin-1",
+        "positions_are": "zero-based_end-exclusive_in_worker",
+        "fields": {
+          "government_id": [0, 12],
+          "item_code": [12, 15],
+          "amount_thousands_usd": [15, 27],
+          "data_year": [27, 31],
+          "imputation_flag": [31, 32]
+        }
+      },
+      "coverage": "Annual survey individual-unit finance files; retain Census government identifiers, item codes, imputation flags and amounts."
+    },
+    {
+      "id": "us-census-finance-2024-individual-unit",
+      "layer": "national_standardized_actual",
+      "source_kind": "broad",
+      "status": "import_ready",
+      "url": "https://www2.census.gov/programs-surveys/gov-finances/tables/2024/2024_Individual_Unit_Files.zip",
+      "format": "zip_fixed_width",
+      "fiscal_year": 2024,
+      "coverage_type": "survey",
+      "census_finance_layout": {
+        "technical_documentation": "2024 S&L Public Use Files Technical Documentation.pdf",
+        "record_length": 33,
+        "data_member_pattern": "2024FinEstDAT_07152026modp\\.txt$",
+        "pid_member_pattern": "Fin_PID_2024\\.txt$",
+        "encoding": "latin-1",
+        "positions_are": "zero-based_end-exclusive_in_worker",
+        "fields": {
+          "government_id": [0, 12],
+          "item_code": [12, 15],
+          "amount_thousands_usd": [15, 27],
+          "data_year": [27, 31],
+          "imputation_flag": [31, 33]
+        }
+      },
+      "coverage": "Annual survey individual-unit finance files; all cities and townships at or above 200,000 are certainty units; retain Census item codes."
+    }
+  ]
+}
