@@ -218,15 +218,33 @@ Both cloud layers are now implemented and deliberately separate:
    private GCS and commits one period at a time in BigQuery.
 
 The BigQuery transaction writes `trade_observations`,
-`trade_dataset_coverage`, `trade_ingestion_runs` and the new
+`trade_dataset_coverage`, `trade_ingestion_runs` and the
 `trade_source_responses` task/hash ledger together. It asserts unique staged
 observation IDs and expected row counts before commit. Only afterward does the
-worker write an immutable `completed.json` processing receipt. The first
-production monthly proof loaded August 2026 (244,087 observations from 30
-data-bearing responses plus two `no_data` acknowledgements); remaining
-downloaded monthly periods and annual 2022-2025 are period-scoped cloud
-backfills. Queue lifetime is twelve hours because this project currently drains
-the regional high-CPU worker pool serially.
+worker write an immutable `completed.json` processing receipt. Queue lifetime
+is twelve hours because this project currently drains the regional high-CPU
+worker pool serially.
+
+The 20 September 2026 reconciliation pins checkpoint archive
+`20260920T060727102072Z-direct` (SHA-256
+`bc948a2ec984665e6491a7e64dbe9f64602f825414524b95d3eb387a0e99daba`).
+All 32,175 downloaded source responses in that checkpoint are acknowledged in
+BigQuery: annual 2019-2025 contains 123,262,668 distinct observations from
+19,294 responses, and monthly October 2025-August 2026 contains 63,583,204
+distinct observations from 12,881 responses. A read-only ledger audit reports
+zero pending task/hash pairs across all 18 periods. This proves processing
+completeness for downloaded responses; it does not claim source acquisition is
+complete. In particular, 2019 coverage still records 73 queued reporter
+datasets and one partial reporter dataset, so those remain an upstream crawl
+backlog rather than unprocessed downloaded data.
+
+Routine continuation runs daily through `un-comtrade-daily-load`. Its request
+pins the exact immutable loader source generation proven by the reconciliation,
+processes at most two new periods per run and safely exits when the latest
+checkpoint has no unacknowledged responses. After each backfill or recovery,
+run `comtrade_warehouse_cloud/submit.py --audit-only --max-periods 20` and retain
+the checkpoint archive ID, SHA-256 and per-period zero-pending result as the
+completion receipt.
 
 BigQuery monthly series must filter `frequency = 'M'`; annual and monthly rows
 must never be added. World totals and bilateral partner rows are also separate

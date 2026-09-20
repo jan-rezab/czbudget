@@ -44,6 +44,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--frequency", choices=["A", "M"])
     parser.add_argument("--period")
     parser.add_argument("--references-only", action="store_true")
+    parser.add_argument("--audit-only", action="store_true")
     parser.add_argument("--max-tasks", type=int, default=20000)
     parser.add_argument("--max-periods", type=int, default=1)
     parser.add_argument("--chunk-rows", type=int, default=1_000_000)
@@ -53,6 +54,8 @@ def parse_args() -> argparse.Namespace:
         parser.error("--frequency and --period must be supplied together")
     if args.references_only and (args.frequency or args.period):
         parser.error("--references-only cannot be combined with a period")
+    if args.references_only and args.audit_only:
+        parser.error("--references-only and --audit-only are mutually exclusive")
     if not 1 <= args.max_tasks <= 50000:
         parser.error("--max-tasks must be between 1 and 50000")
     if not 1 <= args.max_periods <= 20:
@@ -71,6 +74,7 @@ def main() -> None:
         "_MAX_PERIODS": str(args.max_periods),
         "_CHUNK_ROWS": str(args.chunk_rows),
         "_REFERENCES_ONLY": str(args.references_only).lower(),
+        "_AUDIT_ONLY": str(args.audit_only).lower(),
     }
     with tempfile.TemporaryDirectory(prefix="comtrade-warehouse-source-") as temporary:
         source = Path(temporary)

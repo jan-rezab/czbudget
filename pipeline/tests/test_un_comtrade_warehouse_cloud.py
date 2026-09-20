@@ -102,6 +102,25 @@ class WarehouseCloudTest(unittest.TestCase):
         self.assertLess(sql.index("trade_observations`"), sql.index("trade_source_responses`"))
         self.assertLess(sql.index("ASSERT"), sql.index("COMMIT TRANSACTION"))
 
+    def test_audit_period_reports_exact_task_hash_mismatches(self):
+        with tempfile.TemporaryDirectory() as directory:
+            connection = self.connection(directory)
+            first = self.add_task(connection, "202601")
+            with mock.patch.object(
+                WORKER,
+                "loaded_responses",
+                return_value={(first["task_id"], "different-hash"): {
+                    "normalized_row_count": 2,
+                    "source_status": "completed",
+                }},
+            ):
+                audit = WORKER.audit_period(connection, "202601", "M")
+            self.assertEqual(audit["available_responses"], 1)
+            self.assertEqual(audit["acknowledged_responses"], 0)
+            self.assertEqual(audit["pending_responses"], 1)
+            self.assertEqual(audit["pending_by_status"], {"completed": 1})
+            self.assertEqual(audit["pending_sample"][0]["source_response_sha256"], "abc")
+
     def test_schema_exposes_monthly_rows_to_business_views(self):
         schema = (ROOT / "pipeline/warehouse/un_comtrade_schema.sql").read_text()
         self.assertIn("trade_source_responses", schema)
@@ -122,6 +141,13 @@ class WarehouseCloudTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "permission denied"):
                 WORKER.bq_transaction("SELECT 1")
         sleep.assert_not_called()
+
+    def test_json_queries_disable_the_bq_cli_hundred_row_cap(self):
+        with mock.patch.object(WORKER, "run", return_value="[]") as run:
+            self.assertEqual(WORKER.bq_query("SELECT 1", json_output=True), [])
+        command = run.call_args.args[0]
+        self.assertIn("--format=json", command)
+        self.assertIn("--max_rows=1000000", command)
 
 
 if __name__ == "__main__":

@@ -25,6 +25,7 @@ class SubmitTests(unittest.TestCase):
             self.assertIn("run_un_comtrade_warehouse.py", build)
             self.assertIn("E2_HIGHCPU_8", build)
             self.assertIn("BUILD_ID=$BUILD_ID", build)
+            self.assertIn("--audit-only", build)
             self.assertNotIn("UN_COMTRADE_API_KEY", build)
 
     def test_dedicated_builder_service_account_is_used(self):

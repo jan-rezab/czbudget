@@ -218,7 +218,11 @@ def bq_query(sql: str, *, json_output: bool = False, timeout: int = 14400) -> An
         "bq", "query", f"--project_id={PROJECT}", "--use_legacy_sql=false", "--quiet",
     ]
     if json_output:
-        command.append("--format=json")
+        # `bq query --format=json` otherwise truncates output to 100 rows. The
+        # response ledger can contain thousands of task/hash pairs per period;
+        # truncation makes acknowledged responses look pending and causes
+        # expensive, unnecessary reprocessing.
+        command.extend(["--format=json", "--max_rows=1000000"])
     output = run(command, input_text=sql, timeout=timeout)
     return json.loads(output or "[]") if json_output else output
 
@@ -422,6 +426,43 @@ WHERE period_start = DATE '{start}'
             "source_status": row["source_status"],
         }
         for row in rows
+    }
+
+
+def audit_period(
+    connection: sqlite3.Connection,
+    period: str,
+    frequency: str,
+    *,
+    sample_size: int = 3,
+) -> dict[str, Any]:
+    """Compare one pinned checkpoint period with the committed response ledger."""
+    already_loaded = loaded_responses(period, frequency)
+    tasks = source_tasks(connection, period, frequency)
+    pending = [
+        task for task in tasks
+        if (task["task_id"], task["response_sha256"]) not in already_loaded
+    ]
+    pending_by_status: dict[str, int] = {}
+    for task in pending:
+        status = str(task["status"])
+        pending_by_status[status] = pending_by_status.get(status, 0) + 1
+    return {
+        "frequency": frequency,
+        "period": period,
+        "available_responses": len(tasks),
+        "acknowledged_responses": len(tasks) - len(pending),
+        "ledger_rows_for_period": len(already_loaded),
+        "pending_responses": len(pending),
+        "pending_by_status": pending_by_status,
+        "pending_sample": [
+            {
+                "crawl_task_id": task["task_id"],
+                "source_response_sha256": task["response_sha256"],
+                "source_status": task["status"],
+            }
+            for task in pending[:sample_size]
+        ],
     }
 
 
@@ -862,6 +903,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-periods", type=int, default=1)
     parser.add_argument("--chunk-rows", type=int, default=1_000_000)
     parser.add_argument("--references-only", action="store_true")
+    parser.add_argument("--audit-only", action="store_true")
     args = parser.parse_args()
     if bool(args.frequency) != bool(args.period):
         parser.error("--frequency and --period must be supplied together")
@@ -871,6 +913,8 @@ def parse_args() -> argparse.Namespace:
         parser.error("--max-periods must be between 1 and 20")
     if not 1000 <= args.chunk_rows <= 2_000_000:
         parser.error("--chunk-rows must be between 1000 and 2000000")
+    if args.references_only and args.audit_only:
+        parser.error("--references-only and --audit-only are mutually exclusive")
     return args
 
 
@@ -907,6 +951,27 @@ def main() -> None:
         # The one-time reference initialization seeds the ledger from legacy
         # BigQuery rows. This guard is idempotent, so period retries remain safe.
         bootstrap_legacy_response_ledger()
+
+        if args.audit_only:
+            periods = candidate_periods(connection, args.frequency, args.period)[:args.max_periods]
+            audits = [
+                audit_period(connection, period, frequency)
+                for frequency, period in periods
+            ]
+            result = {
+                "schema_version": "1.0.0",
+                "status": "completed",
+                "mode": "audit_only",
+                "run_id": run_id,
+                "checkpoint_archive_id": manifest["archive_id"],
+                "checkpoint_sha256": manifest["checkpoint"]["sha256"],
+                "periods": audits,
+                "pending_responses": sum(item["pending_responses"] for item in audits),
+                "completed_at": now_iso(),
+            }
+            print(json.dumps(result, indent=2), flush=True)
+            connection.close()
+            return
 
         processed: list[dict[str, Any]] = []
         for frequency, period in candidate_periods(connection, args.frequency, args.period):
