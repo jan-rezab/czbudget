@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-28T18:42:16.626Z",
+  "generated_at": "2026-09-20T14:24:08.425Z",
   "country": {
     "country_code": "PRK",
     "name_cs": "Severní Korea",
@@ -29,8 +29,8 @@
     }
   },
   "coverage": {
-    "loaded_modules": 0,
-    "total_modules": 11,
+    "loaded_modules": 2,
+    "total_modules": 15,
     "missing_dimensions": [
       "municipal_entity_finance",
       "provider_register",
@@ -49,11 +49,57 @@
       "period": null,
       "metric_count": 15
     },
+    "baseline_revenue": {
+      "status": "unavailable",
+      "coverage": "General-government revenue as % of GDP; no numeric IMF WEO observation",
+      "missing_dimensions": [
+        "revenue_pct_gdp"
+      ],
+      "metric_code": "revenue_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": null,
+      "observation_count": 0,
+      "scope": "general_government"
+    },
+    "baseline_spending": {
+      "status": "unavailable",
+      "coverage": "General-government expenditure as % of GDP; no numeric IMF WEO observation",
+      "missing_dimensions": [
+        "expenditure_pct_gdp"
+      ],
+      "metric_code": "expenditure_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": null,
+      "observation_count": 0,
+      "scope": "general_government"
+    },
+    "baseline_unemployment": {
+      "status": "loaded",
+      "coverage": "Unemployment rate; World Bank WDI fallback; 1991–2025",
+      "missing_dimensions": [],
+      "metric_code": "unemployment_pct",
+      "source_id": "world_bank_wdi",
+      "fallback_used": true,
+      "period": {
+        "from": 1991,
+        "to": 2025
+      },
+      "observation_count": 35,
+      "latest": {
+        "year": 2025,
+        "value": 3.545,
+        "observation_status": "",
+        "source_vintage": "2026-07-13",
+        "quality_flags": ""
+      },
+      "dataset": "data/global-unemployment.v1.json"
+    },
     "revenue": {
       "status": "unavailable",
-      "coverage": "general-government revenue and balance",
+      "coverage": "native revenue detail not loaded",
       "missing_dimensions": [],
-      "native_layers": []
+      "native_layers": [],
+      "detail_level": "none"
     },
     "administrative_spending": {
       "status": "unavailable",
@@ -84,6 +130,19 @@
       "missing_dimensions": [
         "SHA financing and provider split"
       ]
+    },
+    "health_baseline": {
+      "status": "loaded",
+      "coverage": "7 global health financing, capacity, workforce and outcome metrics",
+      "missing_dimensions": [
+        "health_gdp_pct",
+        "per_capita_ppp",
+        "government_share_pct",
+        "out_of_pocket_pct"
+      ],
+      "metric_count": 7,
+      "source_id": "world-bank-wdi-who-ghed-2026-09-20",
+      "dataset": "data/global-health-baseline.v1.json"
     },
     "providers": {
       "status": "unavailable",
@@ -1737,12 +1796,295 @@
         "post_2021_debt_change_pp": null
       }
     },
+    "unemployment_baseline": {
+      "status": "loaded",
+      "preferred_source": "world_bank_wdi",
+      "fallback_used": true,
+      "latest": {
+        "year": 2025,
+        "value": 3.545,
+        "observation_status": "",
+        "source_vintage": "2026-07-13",
+        "quality_flags": ""
+      },
+      "period": {
+        "from": 1991,
+        "to": 2025
+      },
+      "observation_count": 35,
+      "series": [
+        {
+          "year": 1991,
+          "value": 2.845,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1992,
+          "value": 2.875,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1993,
+          "value": 2.98,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1994,
+          "value": 3.092,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1995,
+          "value": 3.114,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1996,
+          "value": 3.153,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1997,
+          "value": 3.253,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1998,
+          "value": 3.461,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 1999,
+          "value": 3.67,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2000,
+          "value": 3.653,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2001,
+          "value": 3.676,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2002,
+          "value": 3.644,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2003,
+          "value": 3.668,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2004,
+          "value": 3.62,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2005,
+          "value": 3.576,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2006,
+          "value": 3.55,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2007,
+          "value": 3.547,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2008,
+          "value": 3.48,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2009,
+          "value": 3.48,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2010,
+          "value": 3.419,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2011,
+          "value": 3.516,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2012,
+          "value": 3.542,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2013,
+          "value": 3.567,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2014,
+          "value": 3.509,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2015,
+          "value": 3.523,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2016,
+          "value": 3.574,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2017,
+          "value": 3.498,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2018,
+          "value": 3.409,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2019,
+          "value": 3.439,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2020,
+          "value": 3.624,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2021,
+          "value": 3.692,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2022,
+          "value": 3.457,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2023,
+          "value": 3.463,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2024,
+          "value": 3.539,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        },
+        {
+          "year": 2025,
+          "value": 3.545,
+          "observation_status": "",
+          "source_vintage": "2026-07-13",
+          "quality_flags": ""
+        }
+      ]
+    },
     "revenue": null,
     "administrative_spending": null,
     "common_spending": null,
     "functional_spending": null,
     "transport": null,
     "health": null,
+    "health_baseline": {
+      "status": "loaded",
+      "available_metrics": [
+        "beds_per_1000",
+        "physicians_per_1000",
+        "nurses_per_1000",
+        "life_expectancy_years",
+        "premature_ncd_mortality_pct",
+        "suicide_rate_per_100k",
+        "under5_mortality_per_1000"
+      ],
+      "missing_metrics": [
+        "health_gdp_pct",
+        "per_capita_ppp",
+        "government_share_pct",
+        "out_of_pocket_pct"
+      ],
+      "dataset": "data/global-health-baseline.v1.json"
+    },
     "providers": null,
     "municipalities": null,
     "public_entities": null,

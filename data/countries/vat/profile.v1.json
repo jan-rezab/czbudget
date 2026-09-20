@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-28T18:42:16.626Z",
+  "generated_at": "2026-09-20T14:24:08.425Z",
   "country": {
     "country_code": "VAT",
     "name_cs": "Vatikán",
@@ -30,13 +30,15 @@
   },
   "coverage": {
     "loaded_modules": 0,
-    "total_modules": 11,
+    "total_modules": 15,
     "missing_dimensions": [
       "municipal_entity_finance",
       "provider_register",
       "public_entity_accounts",
       "national_demographic_projection",
-      "harmonised_health_financing"
+      "harmonised_health_financing",
+      "global_health_baseline",
+      "harmonised_unemployment"
     ]
   },
   "modules": {
@@ -49,11 +51,50 @@
       "period": null,
       "metric_count": 15
     },
+    "baseline_revenue": {
+      "status": "unavailable",
+      "coverage": "General-government revenue as % of GDP; no numeric IMF WEO observation",
+      "missing_dimensions": [
+        "revenue_pct_gdp"
+      ],
+      "metric_code": "revenue_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": null,
+      "observation_count": 0,
+      "scope": "general_government"
+    },
+    "baseline_spending": {
+      "status": "unavailable",
+      "coverage": "General-government expenditure as % of GDP; no numeric IMF WEO observation",
+      "missing_dimensions": [
+        "expenditure_pct_gdp"
+      ],
+      "metric_code": "expenditure_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": null,
+      "observation_count": 0,
+      "scope": "general_government"
+    },
+    "baseline_unemployment": {
+      "status": "unavailable",
+      "coverage": "No numeric IMF WEO or World Bank WDI unemployment observation",
+      "missing_dimensions": [
+        "unemployment_pct"
+      ],
+      "metric_code": "unemployment_pct",
+      "source_id": null,
+      "fallback_used": false,
+      "period": null,
+      "observation_count": 0,
+      "latest": null,
+      "dataset": "data/global-unemployment.v1.json"
+    },
     "revenue": {
       "status": "unavailable",
-      "coverage": "general-government revenue and balance",
+      "coverage": "native revenue detail not loaded",
       "missing_dimensions": [],
-      "native_layers": []
+      "native_layers": [],
+      "detail_level": "none"
     },
     "administrative_spending": {
       "status": "unavailable",
@@ -84,6 +125,26 @@
       "missing_dimensions": [
         "SHA financing and provider split"
       ]
+    },
+    "health_baseline": {
+      "status": "unavailable",
+      "coverage": "global health baseline not loaded",
+      "missing_dimensions": [
+        "health_gdp_pct",
+        "per_capita_ppp",
+        "government_share_pct",
+        "out_of_pocket_pct",
+        "beds_per_1000",
+        "physicians_per_1000",
+        "nurses_per_1000",
+        "life_expectancy_years",
+        "premature_ncd_mortality_pct",
+        "suicide_rate_per_100k",
+        "under5_mortality_per_1000"
+      ],
+      "metric_count": 0,
+      "source_id": "world-bank-wdi-who-ghed-2026-09-20",
+      "dataset": "data/global-health-baseline.v1.json"
     },
     "providers": {
       "status": "unavailable",
@@ -1737,12 +1798,39 @@
         "post_2021_debt_change_pp": null
       }
     },
+    "unemployment_baseline": {
+      "status": "unavailable",
+      "preferred_source": null,
+      "fallback_used": false,
+      "latest": null,
+      "period": null,
+      "observation_count": 0,
+      "series": []
+    },
     "revenue": null,
     "administrative_spending": null,
     "common_spending": null,
     "functional_spending": null,
     "transport": null,
     "health": null,
+    "health_baseline": {
+      "status": "not_loaded",
+      "available_metrics": [],
+      "missing_metrics": [
+        "health_gdp_pct",
+        "per_capita_ppp",
+        "government_share_pct",
+        "out_of_pocket_pct",
+        "beds_per_1000",
+        "physicians_per_1000",
+        "nurses_per_1000",
+        "life_expectancy_years",
+        "premature_ncd_mortality_pct",
+        "suicide_rate_per_100k",
+        "under5_mortality_per_1000"
+      ],
+      "dataset": "data/global-health-baseline.v1.json"
+    },
     "providers": null,
     "municipalities": null,
     "public_entities": null,

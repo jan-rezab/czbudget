@@ -31,6 +31,7 @@ const countryRevenue = JSON.parse(await readFile("data/country-revenue.v1.json",
 const oecdKeyMetrics = JSON.parse(await readFile("data/oecd-key-metrics.v1.json", "utf8"));
 const countryHealth = JSON.parse(await readFile("data/country-health.v1.json", "utf8"));
 const countryHealthPerformance = JSON.parse(await readFile("data/country-health-performance.v1.json", "utf8"));
+const globalHealthBaseline = JSON.parse(await readFile("data/global-health-baseline.v1.json", "utf8"));
 const dataQuality = JSON.parse(await readFile("data/data-quality-report.v1.json", "utf8"));
 const publicEntityHistory = JSON.parse(await readFile("data/cz-public-entity-history.v1.json", "utf8"));
 const countryParity = JSON.parse(await readFile("data/country-parity.v1.json", "utf8"));
@@ -52,6 +53,9 @@ const municipalTransparencyStyles = await readFile("municipal-transparency.css",
 const aboutPage = await readFile("about.html", "utf8");
 const homepageScript = await readFile("homepage-v2.js", "utf8");
 const countryPage = await readFile("country.html", "utf8");
+const nationalBudgetPage = await readFile("national-budget.html", "utf8");
+const nationalBudgetScript = await readFile("national-budget.js", "utf8");
+const nationalBudgetRoutes = JSON.parse(await readFile("data/national-budget-routes.v1.json", "utf8"));
 const countryHealthPerformanceScript = await readFile("country-health-performance.js", "utf8");
 const czechHistoryScript = await readFile("cz-history.js", "utf8");
 const czechEnterprisePage = await readFile("cesko.html", "utf8");
@@ -346,7 +350,11 @@ const fullCountryCodes = new Set(["CZE","UKR","POL","DEU","GBR","FRA","USA","CHE
 if (countryParity.countries.filter((country) => fullCountryCodes.has(country.country_code)).some((country) => country.modules.sovereign.status !== "loaded" || country.modules.administrative_spending.status !== "loaded" || country.modules.common_spending.status !== "loaded" || country.modules.revenue.status !== "loaded" || country.modules.demography.status !== "loaded")) throw new Error("Every full national dashboard must load its core fiscal and demographic modules");
 const explicitWEOOmissions = new Set(["CUB", "MCO", "PRK", "VAT"]);
 if (countryParity.countries.some((country) => explicitWEOOmissions.has(country.country_code) ? country.modules.sovereign.status !== "unavailable" : country.modules.sovereign.status !== "loaded")) throw new Error("Every sovereign state must contain a loaded WEO series or an explicit WEO-unavailable status");
-if (countryParity.countries.some((country) => country.coverage.total_modules !== 11)) throw new Error("Expected all eleven dashboard module slots for every country");
+const weoCountries = countryParity.countries.filter((country) => !explicitWEOOmissions.has(country.country_code));
+if (weoCountries.some((country) => country.modules.baseline_revenue.status !== "loaded" || country.modules.baseline_spending.status !== "loaded")) throw new Error("Every WEO country must expose loaded general-government revenue and expenditure baselines");
+if (countryParity.countries.filter((country) => country.modules.baseline_unemployment.status === "loaded").length !== 183) throw new Error("Expected 183 countries from the IMF-first unemployment baseline; residual gaps must remain explicit");
+if (countryParity.countries.filter((country) => country.modules.baseline_unemployment.fallback_used).length !== 71) throw new Error("Expected World Bank unemployment fallback for exactly 71 countries without numeric IMF LUR series");
+if (countryParity.countries.some((country) => country.coverage.total_modules !== 15)) throw new Error("Expected all fifteen dashboard module slots for every country");
 if (countryParity.countries.filter((country) => country.modules.municipalities.status === "loaded").length !== 27) throw new Error("Expected twenty-seven loaded municipal country layers");
 if (administrativeSpending.countries.length !== 17 || administrativeSpending.countries.flatMap((country) => country.rows).length !== 448 || administrativeSpending.countries.some((country) => country.rows.some((row) => !row.label_native || !row.label_en))) throw new Error("Every national budget row must retain its native label and an English translation");
 if (Object.keys(countryDemography.countries).length !== 17 || Object.values(countryDemography.countries).reduce((sum, country) => sum + country.detail_row_count, 0) !== 137865) throw new Error("Expected complete seventeen-country annual age-by-sex demographic projections");
@@ -570,6 +578,10 @@ if (!homepageScript.includes("PSDCountryRoutes.href") || homepageScript.includes
 if (/<base\b/i.test(countryPage)) throw new Error("country.html must not declare a <base> tag: it rewrites every relative section-nav link on /countries/<slug> to the site root");
 if (!countryPage.includes("country-routes.js") || !countryScript.includes("PSDCountryRoutes.codeFromLocation") || !countryScript.includes("PSDCountryRoutes.href") || !globalNav.includes("countrySlugs[code] || String(code).toLowerCase()") || !countryRoutes.includes('CHE: "switzerland"') || !countryRoutes.includes('BRA: "brazil"') || !countryRoutes.includes('JPN: "japan"') || !countryRoutes.includes('FIN: "finland"') || !countryRoutes.includes("normalizedCode.toLowerCase()")) throw new Error("Country profiles must use readable routes for the full profiles and ISO3 fallback routes globally");
 if (!nginx.includes("location = /country.html") || !nginx.includes("return 301 $legacy_country_path") || !nginx.includes("/countries/switzerland") || !nginx.includes("try_files /country.html =404")) throw new Error("Nginx must redirect legacy country URLs and serve readable country routes");
+if (nationalBudgetRoutes.country_count !== 17 || nationalBudgetRoutes.countries.some((country) => country.path !== `/national-budgets/${country.slug}`)) throw new Error("Parallel national-budget route manifest must expose all 17 readable routes");
+if (!nationalBudgetPage.includes('id="budget"') || !nationalBudgetPage.includes('id="revenue"') || !nationalBudgetPage.includes('id="spending"') || !nationalBudgetPage.includes('id="economy"') || !nationalBudgetPage.includes('id="health"') || !nationalBudgetPage.includes('id="demography"') || !nationalBudgetPage.includes('id="insights"') || !nationalBudgetPage.includes('name="robots" content="noindex,follow"')) throw new Error("Parallel national-budget shell must preserve the complete staged module structure and remain noindex during verification");
+if (!nationalBudgetScript.includes("national-budget-routes.v1.json") || !nationalBudgetScript.includes("unemployment_pct") || !nationalBudgetScript.includes("global-health-baseline.v1.json") || Object.values(globalHealthBaseline.countries).filter((country) => country.status === "loaded").length !== 194) throw new Error("Parallel national-budget dashboard must use the route manifest, unemployment and the verified 195-country global health baseline");
+if (!nginx.includes("location ~ ^/national-budgets/") || !nginx.includes("try_files /national-budget.html =404")) throw new Error("Nginx must serve the parallel national-budget shell without replacing country routes");
 if (!/global-nav\.js\?v=\d{8}-[a-z0-9-]+/.test(nginx) || nginx.includes("global-nav.js?v=20260827-germany-routes") || nginx.includes("global-nav.js?v=20260827-coverage-menu")) throw new Error("Nginx must publish the country-aware methodology navigation under a fresh cache key");
 if (!nginx.includes("denmark|finland|france") || !nginx.includes("greece|[a-z][a-z][a-z])/$") || !nginx.includes("greece|[a-z][a-z][a-z])$") || nginx.includes("try_files /countries/$1/index.html =404")) throw new Error("All IMF-covered countries must use the shared national dashboard route");
 if (!countryParityStyles.includes("background:#fff;color:#17241f") || !countryParityStyles.includes("color:#4f5a55")) throw new Error("Country data-layer cards must keep readable dark text on white backgrounds");

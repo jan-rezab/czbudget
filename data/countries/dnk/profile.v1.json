@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-28T18:42:16.626Z",
+  "generated_at": "2026-09-20T14:24:08.425Z",
   "country": {
     "country_code": "DNK",
     "name_cs": "Dánsko",
@@ -32,8 +32,8 @@
     }
   },
   "coverage": {
-    "loaded_modules": 11,
-    "total_modules": 11,
+    "loaded_modules": 15,
+    "total_modules": 15,
     "missing_dimensions": []
   },
   "modules": {
@@ -48,11 +48,57 @@
       },
       "metric_count": 15
     },
+    "baseline_revenue": {
+      "status": "loaded",
+      "coverage": "General-government revenue as % of GDP; IMF WEO; 2005–2024",
+      "missing_dimensions": [],
+      "metric_code": "revenue_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "scope": "general_government"
+    },
+    "baseline_spending": {
+      "status": "loaded",
+      "coverage": "General-government expenditure as % of GDP; IMF WEO; 2005–2024",
+      "missing_dimensions": [],
+      "metric_code": "expenditure_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "scope": "general_government"
+    },
+    "baseline_unemployment": {
+      "status": "loaded",
+      "coverage": "Unemployment rate; IMF WEO; 2005–2024",
+      "missing_dimensions": [],
+      "metric_code": "unemployment_pct",
+      "source_id": "imf_weo",
+      "fallback_used": false,
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "latest": {
+        "year": 2024,
+        "value": 2.892,
+        "observation_status": "actual"
+      },
+      "dataset": "data/global-unemployment.v1.json"
+    },
     "revenue": {
       "status": "loaded",
-      "coverage": "general-government revenue and balance",
+      "coverage": "native revenue detail not loaded",
       "missing_dimensions": [],
-      "native_layers": []
+      "native_layers": [],
+      "detail_level": "native_detail"
     },
     "administrative_spending": {
       "status": "loaded",
@@ -81,6 +127,14 @@
       "status": "loaded",
       "coverage": "SHA financing profile; 2024",
       "missing_dimensions": []
+    },
+    "health_baseline": {
+      "status": "loaded",
+      "coverage": "11 global health financing, capacity, workforce and outcome metrics",
+      "missing_dimensions": [],
+      "metric_count": 11,
+      "source_id": "world-bank-wdi-who-ghed-2026-09-20",
+      "dataset": "data/global-health-baseline.v1.json"
     },
     "providers": {
       "status": "loaded",
@@ -1755,6 +1809,123 @@
         "post_2021_debt_change_pp": -9.084
       }
     },
+    "unemployment_baseline": {
+      "status": "loaded",
+      "preferred_source": "imf_weo",
+      "fallback_used": false,
+      "latest": {
+        "year": 2024,
+        "value": 2.892,
+        "observation_status": "actual"
+      },
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "series": [
+        {
+          "year": 2005,
+          "value": 4.8,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2006,
+          "value": 3.9,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2007,
+          "value": 3.617,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2008,
+          "value": 2.65,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2009,
+          "value": 4.833,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2010,
+          "value": 6.058,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2011,
+          "value": 5.95,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2012,
+          "value": 6.075,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2013,
+          "value": 5.758,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2014,
+          "value": 4.992,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2015,
+          "value": 4.542,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2016,
+          "value": 4.125,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2017,
+          "value": 4.2,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2018,
+          "value": 3.85,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2019,
+          "value": 3.658,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2020,
+          "value": 4.658,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2021,
+          "value": 3.592,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2022,
+          "value": 2.508,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2023,
+          "value": 2.767,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2024,
+          "value": 2.892,
+          "observation_status": "actual"
+        }
+      ]
+    },
     "revenue": {
       "name_cs": "Dánsko",
       "name_en": "Denmark",
@@ -2402,60 +2573,140 @@
             "year": 2015,
             "amount_local_mn": 181240.89,
             "pct_gdp": 8.927,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2016,
             "amount_local_mn": 185054.87,
             "pct_gdp": 8.806,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2017,
             "amount_local_mn": 189789.92,
             "pct_gdp": 8.668,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2018,
             "amount_local_mn": 194970.67,
             "pct_gdp": 8.69,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2019,
             "amount_local_mn": 201125.83,
             "pct_gdp": 8.731,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2020,
             "amount_local_mn": 216489.52,
             "pct_gdp": 9.305,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2021,
             "amount_local_mn": 239866.08,
             "pct_gdp": 9.395,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2022,
             "amount_local_mn": 236072.32,
             "pct_gdp": 8.338,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2023,
             "amount_local_mn": 230789.23,
             "pct_gdp": 8.278,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2024,
             "amount_local_mn": 243113.4,
             "pct_gdp": 8.306,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           }
         ],
@@ -2464,60 +2715,140 @@
             "year": 2015,
             "amount_local_mn": 471190.36,
             "pct_gdp": 23.209,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2016,
             "amount_local_mn": 475769.24,
             "pct_gdp": 22.639,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2017,
             "amount_local_mn": 480803.34,
             "pct_gdp": 21.959,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2018,
             "amount_local_mn": 483952.06,
             "pct_gdp": 21.571,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2019,
             "amount_local_mn": 492606.27,
             "pct_gdp": 21.384,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2020,
             "amount_local_mn": 514893.41,
             "pct_gdp": 22.131,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2021,
             "amount_local_mn": 522330.57,
             "pct_gdp": 20.457,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2022,
             "amount_local_mn": 529780.29,
             "pct_gdp": 18.712,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2023,
             "amount_local_mn": 548605.05,
             "pct_gdp": 19.678,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2024,
             "amount_local_mn": 574697.9,
             "pct_gdp": 19.635,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           }
         ],
@@ -2526,60 +2857,140 @@
             "year": 2015,
             "amount_local_mn": 45741.05,
             "pct_gdp": 2.253,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2016,
             "amount_local_mn": 41561.01,
             "pct_gdp": 1.978,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2017,
             "amount_local_mn": 42725.32,
             "pct_gdp": 1.951,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2018,
             "amount_local_mn": 43182.84,
             "pct_gdp": 1.925,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2019,
             "amount_local_mn": 41018.37,
             "pct_gdp": 1.781,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2020,
             "amount_local_mn": 48210.78,
             "pct_gdp": 2.072,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2021,
             "amount_local_mn": 42611.17,
             "pct_gdp": 1.669,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2022,
             "amount_local_mn": 45339.25,
             "pct_gdp": 1.601,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2023,
             "amount_local_mn": 49559.25,
             "pct_gdp": 1.778,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           },
           {
             "year": 2024,
             "amount_local_mn": 53176.65,
             "pct_gdp": 1.817,
+            "pct_gdp_method": "OECD expenditure divided by IMF WEO nominal GDP; source vintages may differ",
+            "gdp_source": {
+              "provider": "International Monetary Fund",
+              "dataset": "World Economic Outlook, April 2026",
+              "url": "https://data.imf.org/-/media/iData/External-Storage/Documents/2F78EE59F79143A7921E5E203D3AAA80/en/WEOApr2026all.xlsx",
+              "download_page": "https://data.imf.org/en/Datasets/WEO",
+              "source_file": "WEOApr2026all.xlsx"
+            },
             "status": "A"
           }
         ]
@@ -2609,7 +3020,8 @@
             "state": null,
             "local": 21198.7,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2016,
@@ -2627,7 +3039,8 @@
             "state": null,
             "local": 20458.7,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2017,
@@ -2645,7 +3058,8 @@
             "state": null,
             "local": 21977.4,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2018,
@@ -2663,7 +3077,8 @@
             "state": null,
             "local": 21227.4,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2019,
@@ -2681,7 +3096,8 @@
             "state": null,
             "local": 19593.3,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2020,
@@ -2699,7 +3115,8 @@
             "state": null,
             "local": 21292.3,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2021,
@@ -2717,7 +3134,8 @@
             "state": null,
             "local": 20806,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2022,
@@ -2735,7 +3153,8 @@
             "state": null,
             "local": 22091.3,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2023,
@@ -2753,7 +3172,8 @@
             "state": null,
             "local": 24583.7,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         },
         {
           "year": 2024,
@@ -2771,7 +3191,8 @@
             "state": null,
             "local": 24069.1,
             "social_security": 0
-          }
+          },
+          "components_complete": true
         }
       ],
       "level_coverage": "available",
@@ -2815,6 +3236,24 @@
       "beds_per_1000": 2.26,
       "bed_year": 2024,
       "bed_status": "not_available"
+    },
+    "health_baseline": {
+      "status": "loaded",
+      "available_metrics": [
+        "health_gdp_pct",
+        "per_capita_ppp",
+        "government_share_pct",
+        "out_of_pocket_pct",
+        "beds_per_1000",
+        "physicians_per_1000",
+        "nurses_per_1000",
+        "life_expectancy_years",
+        "premature_ncd_mortality_pct",
+        "suicide_rate_per_100k",
+        "under5_mortality_per_1000"
+      ],
+      "missing_metrics": [],
+      "dataset": "data/global-health-baseline.v1.json"
     },
     "providers": {
       "coverage": "sor_active_hospitals",

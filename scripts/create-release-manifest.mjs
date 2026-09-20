@@ -4,8 +4,12 @@ import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 const root = process.cwd();
+const preserveMissing = process.argv.includes("--preserve-missing");
+const previousRelease = preserveMissing
+  ? JSON.parse(await readFile(path.join(root, "data", "release-manifest.v1.json"), "utf8"))
+  : null;
 const selected = [
-  "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-parity.v1.json", "data/contracts/country-parity.schema.json", "data/country-health.v1.json", "data/country-health-performance.v1.json", "data/country-provider-networks.v1.json", "data/country-functional-budgets.v1.json", "data/transport-budget-detail.v1.json", "data/transport-performance.v1.json", "data/country-cash-in.v1.json", "data/country-revenue.v1.json", "data/oecd-key-metrics.v1.json",
+  "data/benchmark.v1.json", "data/catalog.v1.json", "data/country-parity.v1.json", "data/country-core-gaps.v1.json", "data/country-dashboard-readiness.v1.json", "data/global-unemployment.v1.json", "data/national-budget-routes.v1.json", "data/contracts/country-parity.schema.json", "data/contracts/universal-country-core.v1.json", "data/contracts/global-unemployment.v1.json", "data/contracts/global-health-baseline.v1.json", "data/global-health-baseline.v1.json", "data/global-health-coverage.v1.json", "data/country-health.v1.json", "data/country-health-performance.v1.json", "data/country-provider-networks.v1.json", "data/country-functional-budgets.v1.json", "data/transport-budget-detail.v1.json", "data/transport-performance.v1.json", "data/country-cash-in.v1.json", "data/country-revenue.v1.json", "data/oecd-key-metrics.v1.json",
   "data/country-spending-2025-2026.v1.json", "data/country-spending-comparison.v1.json", "data/defense-deep-dive.v1.json", "data/defense-comparison.v1.json", "data/data-freshness.v1.json", "data/municipal-fx-rates.v1.json",
   "data/country-demography.v1.json", "data/public-entity-coverage.v1.json", "data/public-entity-aggregates.v1.json", "data/public-entity-directory/manifest.v1.json", "data/methodology-sources.v1.json", "data/coverage-source-research.v1.json", "data/coverage-metrics.v1.json", "data/data-quality-report.v1.json",
   "data/trade/product-intelligence.v1.json",
@@ -39,38 +43,37 @@ for (const relative of selected) {
   const content = await readFile(path.join(root, relative));
   artifacts.push({ path: relative, bytes: content.length, sha256: sha256(content) });
 }
-const entityHash = createHash("sha256");
-let entityBytes = 0;
-const entityFiles = (await readdir(path.join(root, "data", "entities"))).filter((name) => /^\d{8}\.json$/.test(name)).sort();
-for (const name of entityFiles) {
-  const content = await readFile(path.join(root, "data", "entities", name));
-  entityHash.update(name).update("\0").update(content);
-  entityBytes += content.length;
-}
-artifacts.push({ path: "data/entities/*.json", files: entityFiles.length, bytes: entityBytes, sha256: entityHash.digest("hex") });
-const historyHash = createHash("sha256");
-let historyBytes = 0;
-const historyFiles = (await readdir(path.join(root, "data", "municipal-history"))).filter((name) => name === "index.json" || /^\d{8}\.json$/.test(name)).sort();
-for (const name of historyFiles) {
-  const content = await readFile(path.join(root, "data", "municipal-history", name));
-  historyHash.update(name).update("\0").update(content);
-  historyBytes += content.length;
-}
-artifacts.push({ path: "data/municipal-history/*.json", files: historyFiles.length, bytes: historyBytes, sha256: historyHash.digest("hex") });
+const addTreeArtifact = async (directory, filter) => {
+  const artifactPath = `${directory}/*.json`;
+  try {
+    const digest = createHash("sha256");
+    let bytes = 0;
+    const names = (await readdir(path.join(root, directory))).filter(filter).sort();
+    const preserved = previousRelease?.artifacts.find((artifact) => artifact.path === artifactPath);
+    if (preserveMissing && preserved?.files > names.length) {
+      artifacts.push(preserved);
+      return;
+    }
+    for (const name of names) {
+      const content = await readFile(path.join(root, directory, name));
+      digest.update(name).update("\0").update(content);
+      bytes += content.length;
+    }
+    artifacts.push({ path: artifactPath, files: names.length, bytes, sha256: digest.digest("hex") });
+  } catch (error) {
+    const preserved = previousRelease?.artifacts.find((artifact) => artifact.path === artifactPath);
+    if (!preserveMissing || !preserved || error.code !== "ENOENT") throw error;
+    artifacts.push(preserved);
+  }
+};
+await addTreeArtifact("data/entities", (name) => /^\d{8}\.json$/.test(name));
+await addTreeArtifact("data/municipal-history", (name) => name === "index.json" || /^\d{8}\.json$/.test(name));
 for (const directory of [
   "data/municipal-expansion/bol", "data/municipal-expansion/bra", "data/municipal-expansion/chl", "data/municipal-expansion/col", "data/municipal-expansion/cri", "data/municipal-expansion/dnk", "data/municipal-expansion/esp", "data/municipal-expansion/geo", "data/municipal-expansion/gtm", "data/municipal-expansion/ita", "data/municipal-expansion/jpn", "data/municipal-expansion/kor", "data/municipal-expansion/mex", "data/municipal-expansion/per", "data/municipal-expansion/slv",
   "data/municipal-benchmarks/nld", "data/municipal-benchmarks/nor", "data/municipal-benchmarks/fin",
   "data/international-municipalities",
 ]) {
-  const digest = createHash("sha256");
-  let bytes = 0;
-  const names = (await readdir(path.join(root, directory))).filter((name) => name.endsWith(".json")).sort();
-  for (const name of names) {
-    const content = await readFile(path.join(root, directory, name));
-    digest.update(name).update("\0").update(content);
-    bytes += content.length;
-  }
-  artifacts.push({ path: `${directory}/*.json`, files: names.length, bytes, sha256: digest.digest("hex") });
+  await addTreeArtifact(directory, (name) => name.endsWith(".json"));
 }
 let gitCommit = process.env.COMMIT_SHA || null;
 let workingTreeDirty = null;

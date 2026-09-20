@@ -44,11 +44,14 @@ const comparison = read("data/country-spending-comparison.v1.json");
 const functions = read("data/country-functional-budgets.v1.json");
 const transport = read("data/transport-budget-detail.v1.json");
 const health = read("data/country-health.v1.json");
+const globalHealth = read("data/global-health-baseline.v1.json");
+const globalUnemployment = read("data/global-unemployment.v1.json");
 const providers = read("data/country-provider-networks.v1.json");
 const municipalities = read("data/international-municipalities.v1.json");
 const publicEntityCoverage = read("data/public-entity-coverage.v1.json");
 const publicEntityDirectory = read("data/public-entity-directory/manifest.v1.json");
 const demography = read("data/country-demography.v1.json");
+const previousParity = read("data/country-parity.v1.json");
 
 const volumeBundles = [
   ["international core", "outputs/20260822-international-municipal-2024-2025-full/international_municipal_manifest.json"],
@@ -67,10 +70,45 @@ const metricYears = (series) => {
   const years = Object.values(series?.metrics || {}).flatMap((metric) => metric.values?.filter((point) => point.value != null).map((point) => point.year) || []);
   return years.length ? { from: Math.min(...years), to: Math.max(...years), years: new Set(years).size } : null;
 };
+const metricCoverage = (series, metricCode) => {
+  const points = series?.metrics?.[metricCode]?.values?.filter((point) => point.value != null) || [];
+  const years = points.map((point) => point.year);
+  return {
+    loaded: points.length > 0,
+    observation_count: points.length,
+    period: points.length ? { from: Math.min(...years), to: Math.max(...years) } : null,
+  };
+};
+const baselineModule = (series, metricCode, label) => {
+  const metric = metricCoverage(series, metricCode);
+  return {
+    ...status(metric.loaded, metric.loaded ? `${label}; IMF WEO; ${metric.period.from}–${metric.period.to}` : `${label}; no numeric IMF WEO observation`, metric.loaded ? [] : [metricCode]),
+    metric_code: metricCode,
+    source_id: "imf-weo-2026-04",
+    period: metric.period,
+    observation_count: metric.observation_count,
+    scope: "general_government",
+  };
+};
+const unemploymentModule = (profile) => ({
+  ...status(profile?.status === "loaded", profile?.status === "loaded" ? `Unemployment rate; ${profile.preferred_source === "imf_weo" ? "IMF WEO" : "World Bank WDI fallback"}; ${profile.period.from}–${profile.period.to}` : "No numeric IMF WEO or World Bank WDI unemployment observation", profile?.status === "loaded" ? [] : ["unemployment_pct"]),
+  metric_code: "unemployment_pct",
+  source_id: profile?.preferred_source || null,
+  fallback_used: profile?.fallback_used || false,
+  period: profile?.period || null,
+  observation_count: profile?.observation_count || 0,
+  latest: profile?.latest || null,
+  dataset: "data/global-unemployment.v1.json",
+});
 const status = (loaded, coverage, missing = []) => ({ status: loaded ? "loaded" : "unavailable", coverage, missing_dimensions: missing });
 const countrySlug = (code) => code.toLowerCase();
 
 function warehouseVolume(code) {
+  if (!warehouseBundles.length) {
+    const previousCountry = previousParity.countries.find((country) => country.country_code === code);
+    if (!previousCountry?.profile) return [];
+    return read(previousCountry.profile).modules?.municipalities?.warehouse || [];
+  }
   const results = [];
   for (const bundle of warehouseBundles) {
     const country = bundle.manifest.country_results?.[code];
@@ -99,12 +137,14 @@ const manifest = {
   },
   datasets: {
     sovereign: "lib/data/sovereign-benchmark.v1.json",
+    unemployment: "data/global-unemployment.v1.json",
     revenue: "data/country-cash-in.v1.json",
     administrative_spending: "data/country-spending-2025-2026.v1.json",
     common_spending: "data/country-spending-comparison.v1.json",
     functional_spending: "data/country-functional-budgets.v1.json",
     transport: "data/transport-budget-detail.v1.json",
     health: "data/country-health.v1.json",
+    health_baseline: "data/global-health-baseline.v1.json",
     providers: "data/country-provider-networks.v1.json",
     municipalities: "data/international-municipalities.v1.json",
     public_entities: "data/public-entity-coverage.v1.json",
@@ -112,13 +152,13 @@ const manifest = {
     public_entity_aggregates: "data/public-entity-aggregates.v1.json",
     demography: "data/country-demography.v1.json",
   },
-  warehouse_bundles: warehouseBundles.map((bundle) => ({
+  warehouse_bundles: warehouseBundles.length ? warehouseBundles.map((bundle) => ({
     label: bundle.label,
     source_manifest: bundle.path,
     countries: Object.keys(bundle.manifest.country_results || {}),
     output_rows: bundle.manifest.output_rows,
     validation: bundle.manifest.validation,
-  })),
+  })) : previousParity.warehouse_bundles,
   countries: [],
 };
 
@@ -132,6 +172,8 @@ for (const code of countryCodes) {
   const municipal = byCode(municipalities.countries, code);
   const provider = providers.countries[code];
   const healthProfile = health.countries[code];
+  const globalHealthProfile = globalHealth.countries[code];
+  const globalUnemploymentProfile = globalUnemployment.countries[code];
   const functionProfile = functions.countries[code];
   const transportProfile = transport.countries[code];
   const municipalityRows = municipalities.entities.filter((entity) => entity.country === code);
@@ -147,15 +189,21 @@ for (const code of countryCodes) {
   if (!publicEntityProfile) missing.push("public_entity_accounts");
   if (!demographyProfile) missing.push("national_demographic_projection");
   if (!healthProfile || healthProfile.status === "not_loaded") missing.push("harmonised_health_financing");
+  if (globalHealthProfile?.status !== "loaded") missing.push("global_health_baseline");
+  if (globalUnemploymentProfile?.status !== "loaded") missing.push("harmonised_unemployment");
 
   const modules = {
     sovereign: { ...status(meta.data_status !== "not_loaded", periods ? `${periods.from}–${periods.to}; ${Object.keys(series?.metrics || {}).length} metrics` : "WEO profile not available", meta.missing_dimensions || []), period: periods, metric_count: Object.keys(series?.metrics || {}).length },
-    revenue: { ...status(Boolean(cashIn.countries[code]), cashIn.countries[code]?.layers ? "general government plus native institutional layers" : "general-government revenue and balance"), native_layers: Object.keys(cashIn.countries[code]?.layers || {}) },
+    baseline_revenue: baselineModule(series, "revenue_pct_gdp", "General-government revenue as % of GDP"),
+    baseline_spending: baselineModule(series, "expenditure_pct_gdp", "General-government expenditure as % of GDP"),
+    baseline_unemployment: unemploymentModule(globalUnemploymentProfile),
+    revenue: { ...status(Boolean(cashIn.countries[code]), cashIn.countries[code]?.layers ? "general government plus native institutional layers" : "native revenue detail not loaded"), native_layers: Object.keys(cashIn.countries[code]?.layers || {}), detail_level: cashIn.countries[code] ? "native_detail" : "none" },
     administrative_spending: { ...status(Boolean(admin), admin ? `${admin.rows.length} native classification rows; ${admin.periods.previous.label} and ${admin.periods.current.label}` : "not loaded"), row_count: admin?.rows.length || 0 },
     common_spending: { ...status(Boolean(common), common ? `${comparison.categories.length} harmonised categories` : "not loaded"), category_count: common ? comparison.categories.length : 0 },
     functional_spending: { ...status(Boolean(functionProfile), functionProfile ? `${Object.keys(functionProfile.categories).length} functions; ${functions.period.start}–${functions.period.end}` : "not loaded"), function_count: Object.keys(functionProfile?.categories || {}).length },
     transport: { ...status(Boolean(transportProfile), transportProfile ? (transportProfile.coverage === "available" ? `transport function and native detailed budget through ${transportProfile.latest_year}` : "official transport sources registered; harmonised detailed budget not loaded") : "not loaded", transportProfile?.coverage === "unavailable" ? ["harmonised transport budget", "government-level transport breakdown"] : []) },
     health: { ...status(Boolean(healthProfile) && healthProfile.status !== "not_loaded", healthProfile?.status === "not_loaded" ? healthProfile.unavailable_reason_en : healthProfile ? `SHA financing profile; ${healthProfile.year}` : "functional expenditure only", healthProfile?.missing_dimensions || (healthProfile ? [] : ["SHA financing and provider split"])) },
+    health_baseline: { ...status(globalHealthProfile?.status === "loaded", globalHealthProfile?.status === "loaded" ? `${globalHealthProfile.available_metrics.length} global health financing, capacity, workforce and outcome metrics` : "global health baseline not loaded", globalHealthProfile?.missing_metrics || ["global health baseline"]), metric_count: globalHealthProfile?.available_metrics?.length || 0, source_id: "world-bank-wdi-who-ghed-2026-09-20", dataset: "data/global-health-baseline.v1.json" },
     providers: { ...status(providerLoaded, providerLoaded ? `${provider.facility_count ?? "official bulk"} registered provider locations` : provider?.coverage || "not loaded", providerLoaded ? (provider.missing_dimensions || []) : ["facility records"]), facility_count: provider?.facility_count ?? null, coverage_level: provider?.coverage || null },
     municipalities: { ...status(Boolean(municipal), municipal?.coverage_en || "not loaded", municipal?.missing_dimensions || (municipal ? [] : ["entity census", "budget facts"])), entity_count: municipal?.directory_count || 0, fact_count: municipal?.counts?.[municipal?.years?.at(-1)] ?? 0, years: municipal?.years || [], stages: municipal?.stages || [], measures: municipal?.measures || [], coverage_level: municipal?.status || null, directory: municipal ? `data/countries/${countrySlug(code)}/municipalities.v1.json` : null, warehouse: warehouseVolume(code) },
     public_entities: { ...status(Boolean(publicEntityProfile && publicEntityRows), publicEntityProfile ? `${publicEntityRows.record_count} registry rows; ${publicEntityRows.financial_record_count} with economic fields; reference perimeter ${publicEntityProfile.comparison_perimeter}` : "not loaded", publicEntityProfile?.unresolved_layers || (publicEntityProfile ? [] : ["ownership register", "entity accounts"])), entity_count: publicEntityRows?.record_count || 0, represented_entity_count: publicEntityRows?.represented_entity_count || 0, broad_entity_count: publicEntityProfile?.broad_entity_count ?? null, financial_statement_count: publicEntityRows?.financial_record_count || 0, coverage_level: Object.values(publicEntityProfile?.perimeters || {}).some((perimeter) => perimeter.coverage_status === "aggregate_only") ? "aggregate_and_entity_registry" : "entity_registry" },
@@ -194,12 +242,14 @@ for (const code of countryCodes) {
     modules,
     data: {
       sovereign: { series, summary: sovereign.summaries.find((country) => country.country_code === code) },
+      unemployment_baseline: globalUnemploymentProfile || null,
       revenue: cashIn.countries[code] || null,
       administrative_spending: admin || null,
       common_spending: common || null,
       functional_spending: functionProfile || null,
       transport: transportProfile || null,
       health: healthProfile || null,
+      health_baseline: globalHealthProfile ? { status: globalHealthProfile.status, available_metrics: globalHealthProfile.available_metrics, missing_metrics: globalHealthProfile.missing_metrics, dataset: "data/global-health-baseline.v1.json" } : null,
       providers: providerSummary ? { ...providerSummary } : null,
       municipalities: municipal || null,
       public_entities: publicEntityProfile && publicEntityRows ? {coverage:publicEntityProfile,directory:publicEntityRows} : null,

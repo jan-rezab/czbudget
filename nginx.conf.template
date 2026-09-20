@@ -226,6 +226,18 @@ server {
     return 301 $legacy_country_path;
   }
 
+  # Parallel national-budget dashboards. The established /countries routes and
+  # Czech budget page remain independent while this shared shell is verified.
+  location ~ ^/national-budgets/(czechia|ukraine|poland|germany|united-kingdom|france|united-states|switzerland|sweden|denmark|finland|brazil|spain|japan|netherlands|norway|greece)/$ {
+    return 301 /national-budgets/$1$is_args$args;
+  }
+
+  location ~ ^/national-budgets/(czechia|ukraine|poland|germany|united-kingdom|france|united-states|switzerland|sweden|denmark|finland|brazil|spain|japan|netherlands|norway|greece)$ {
+    sub_filter_once off;
+    sub_filter '<head>' $psd_head_inject;
+    try_files /national-budget.html =404;
+  }
+
   location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece|[a-z][a-z][a-z])/$ {
     return 301 /countries/$1$is_args$args;
   }

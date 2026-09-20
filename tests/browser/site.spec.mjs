@@ -154,7 +154,9 @@ test("global macro profiles expose sourced IMF data and explicit module gaps", a
   await page.goto("/countries/afg?lang=en", {waitUntil:"networkidle"});
   await expect(page.locator("#country-name")).toHaveText("Afghanistan");
   await expect(page.locator("#balance-chart")).toBeVisible();
-  await expect(page.locator("#country-parity-root")).toContainText("1 / 11");
+  await expect(page.locator("#country-parity-root")).toContainText("5 / 15");
+  await expect(page.locator("#country-parity-root")).toContainText("Comparable revenue");
+  await expect(page.locator("#country-parity-root")).toContainText("Comparable spending");
   await expect(page.locator("#country-parity-root")).toContainText("Missing");
   await expect(page.locator("#source-cards")).toContainText("International Monetary Fund");
 });

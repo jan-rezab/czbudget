@@ -3,11 +3,14 @@
 
 from __future__ import annotations
 
+import argparse
 import csv
 import gzip
+import hashlib
 import io
 import json
 import re
+import sys
 import urllib.parse
 import urllib.request
 import zipfile
@@ -29,12 +32,27 @@ CZE_FILES = {
     "male": "https://csu.gov.cz/docs/107508/e579b776-3689-aa8e-34a1-19710cf9eb89/1301392302.xlsx?version=1.0",
     "female": "https://csu.gov.cz/docs/107508/ed564e3c-bdfd-2c7d-9b9f-24ceab02da9b/1301392303.xlsx?version=1.0",
 }
+EUROSTAT_PREFERRED = {
+    "POL": "PL", "DEU": "DE", "FRA": "FR", "CHE": "CH", "SWE": "SE", "DNK": "DK",
+    "FIN": "FI", "ESP": "ES", "NLD": "NL", "NOR": "NO", "GRC": "EL",
+}
+NATIONAL_PREFERRED = {"CZE", "GBR", "USA"}
+_download_archive_dir: Path | None = None
+_download_receipts: list[dict] = []
 
 
 def download(url: str) -> bytes:
     request = urllib.request.Request(url, headers={"User-Agent": "PublicSpendingData/1.0"})
     with urllib.request.urlopen(request, timeout=240) as response:
-        return response.read()
+        content = response.read()
+    if _download_archive_dir is not None:
+        digest = hashlib.sha256(content).hexdigest()
+        name = f"{hashlib.sha256(url.encode()).hexdigest()[:16]}-{digest[:16]}.bin"
+        target = _download_archive_dir / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+        _download_receipts.append({"url": url, "file": name, "bytes": len(content), "sha256": digest})
+    return content
 
 
 def rounded(value) -> int:
@@ -203,47 +221,59 @@ def united_states() -> dict:
     }
 
 
-_un_wpp_bytes = None
+def un_wpp_countries(codes: set[str], content: bytes) -> dict[str, dict]:
+    """Parse selected countries in one pass through the WPP file.
 
-
-def un_wpp_country(code: str) -> dict:
-    global _un_wpp_bytes
-    if _un_wpp_bytes is None:
-        _un_wpp_bytes = download(UN_WPP)
-    compressed = io.BytesIO(_un_wpp_bytes)
-    records = csv.DictReader(io.TextIOWrapper(gzip.GzipFile(fileobj=compressed), encoding="utf-8-sig"))
-    values = {}
+    The official artifact is gzip-compressed. Plain CSV is also accepted so
+    tests can use tiny, readable fixtures without creating binary files.
+    """
+    stream = gzip.GzipFile(fileobj=io.BytesIO(content)) if content[:2] == b"\x1f\x8b" else io.BytesIO(content)
+    records = csv.DictReader(io.TextIOWrapper(stream, encoding="utf-8-sig"))
+    values_by_code = {code: {} for code in codes}
     for record in records:
-        if record["ISO3_code"] != code:
+        code = record["ISO3_code"]
+        if code not in values_by_code:
             continue
         year, start = int(record["Time"]), int(record["AgeGrpStart"])
         span = int(record["AgeGrpSpan"])
         end = None if span < 0 or "+" in record["AgeGrp"] else start + span - 1
-        values[(year, start, end)] = {
+        values_by_code[code][(year, start, end)] = {
             "male": float(record["PopMale"]) * 1000,
             "female": float(record["PopFemale"]) * 1000,
             "total": float(record["PopTotal"]) * 1000,
         }
-    return {
-        "coverage": "un_medium_variant_full_age_sex",
-        "projection": "UN World Population Prospects 2024, medium variant",
-        "reference_date": "1 July",
-        "rows": compact_rows(values),
-        "source": {
-            "publisher": "United Nations, Population Division",
-            "dataset": "World Population Prospects 2024",
-            "url": UN_WPP,
-            "download_urls": [UN_WPP],
-            "location": f"WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code={code}; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
-        },
-    }
+    output = {}
+    for code, values in values_by_code.items():
+        if not values:
+            continue
+        output[code] = {
+            "coverage": "un_medium_variant_full_age_sex",
+            "projection": "UN World Population Prospects 2024, medium variant",
+            "reference_date": "1 July",
+            "rows": compact_rows(values),
+            "source": {
+                "publisher": "United Nations, Population Division",
+                "dataset": "World Population Prospects 2024",
+                "url": UN_WPP,
+                "download_urls": [UN_WPP],
+                "location": f"WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz; ISO3_code={code}; annual Time; AgeGrpStart/AgeGrpSpan; PopMale/PopFemale/PopTotal",
+            },
+        }
+    return output
 
 
-def aggregate(rows: list) -> list:
+def un_wpp_country(code: str, content: bytes | None = None) -> dict:
+    details = un_wpp_countries({code}, content if content is not None else download(UN_WPP))
+    if code not in details:
+        raise ValueError(f"UN WPP 2024 has no medium-projection rows for {code}")
+    return details[code]
+
+
+def aggregate(rows: list, common_years=COMMON_YEARS) -> list:
     bands = ("age_0_19", "age_20_64", "age_65_79", "age_80_plus")
     by_year = {}
     for year, start, _end, male, female, total in rows:
-        if year not in COMMON_YEARS:
+        if year not in common_years:
             continue
         band = "age_0_19" if start < 20 else "age_20_64" if start < 65 else "age_65_79" if start < 80 else "age_80_plus"
         target = by_year.setdefault(year, {
@@ -259,7 +289,10 @@ def aggregate(rows: list) -> list:
         target["male_by_age"][band] += male
         target["female_by_age"][band] += female
     output = []
-    for year in COMMON_YEARS:
+    missing_years = [year for year in common_years if year not in by_year]
+    if missing_years:
+        raise ValueError(f"Projection is missing common years: {missing_years}")
+    for year in common_years:
         target = by_year[year]
         if target["total"] != target["male"] + target["female"]:
             raise ValueError(f"Annual sex totals do not reconcile for {year}")
@@ -273,7 +306,7 @@ def aggregate(rows: list) -> list:
     return output
 
 
-def profile_and_store(code: str, detail: dict, generated_at: str) -> dict:
+def profile_and_store(code: str, detail: dict, generated_at: str, output_root: Path = ROOT) -> dict:
     years = sorted({row[0] for row in detail["rows"]})
     age_groups = sorted({(row[1], row[2]) for row in detail["rows"]}, key=lambda value: value[0])
     shard = {
@@ -284,30 +317,160 @@ def profile_and_store(code: str, detail: dict, generated_at: str) -> dict:
         "age_resolution": "single-year ages with a source-native open/grouped oldest-age tail",
         "source": detail["source"], "rows": detail["rows"],
     }
-    directory = ROOT / "data" / "countries" / code.lower()
+    directory = output_root / "data" / "countries" / code.lower()
     directory.mkdir(parents=True, exist_ok=True)
     target = directory / "demography.v1.json"
     target.write_text(json.dumps(shard, ensure_ascii=False, separators=(",", ":")) + "\n")
     return {
         "coverage": detail["coverage"], "projection": detail["projection"], "reference_date": detail["reference_date"],
-        "period": {"from": years[0], "to": years[-1]}, "detail": str(target.relative_to(ROOT)),
+        "period": {"from": years[0], "to": years[-1]}, "detail": str(target.relative_to(output_root)),
         "detail_row_count": len(detail["rows"]), "age_group_count": len(age_groups), "years": aggregate(detail["rows"]),
         "source": {**detail["source"], "period": f"{years[0]}–{years[-1]}"},
     }
 
 
-def main() -> None:
-    generated_at = datetime.now(timezone.utc).isoformat()
-    details = {"CZE": czechia()}
-    for code, geo in {"POL": "PL", "DEU": "DE", "FRA": "FR", "CHE": "CH", "SWE": "SE", "DNK": "DK", "FIN": "FI", "ESP": "ES", "NLD": "NL", "NOR": "NO", "GRC": "EL"}.items():
-        details[code] = eurostat_country(geo)
-    details["GBR"] = united_kingdom()
-    details["USA"] = united_states()
-    for code in ("UKR", "BRA", "JPN"):
-        details[code] = un_wpp_country(code)
-    countries = {code: profile_and_store(code, detail, generated_at) for code, detail in details.items()}
+def load_universe(path: Path) -> list[str]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    codes = [country["country_code"] for country in payload["countries"]]
+    duplicates = sorted({code for code in codes if codes.count(code) > 1})
+    if duplicates:
+        raise ValueError(f"Duplicate country codes in sovereign universe: {duplicates}")
+    return codes
+
+
+def select_countries(value: str, universe: list[str]) -> list[str]:
+    if value.strip().lower() == "all":
+        return universe
+    selected = [code.strip().upper() for code in value.split(",") if code.strip()]
+    unknown = sorted(set(selected) - set(universe))
+    if unknown:
+        raise ValueError(f"Countries are not in the sovereign universe: {', '.join(unknown)}")
+    return list(dict.fromkeys(selected))
+
+
+def preferred_detail(code: str) -> dict:
+    if code == "CZE":
+        return czechia()
+    if code == "GBR":
+        return united_kingdom()
+    if code == "USA":
+        return united_states()
+    if code in EUROSTAT_PREFERRED:
+        return eurostat_country(EUROSTAT_PREFERRED[code])
+    raise KeyError(code)
+
+
+def build_details(
+    codes: list[str],
+    wpp_content: bytes,
+    source_policy: str = "preferred",
+    preferred_loader=preferred_detail,
+) -> tuple[dict[str, dict], list[dict]]:
+    preferred_codes = (NATIONAL_PREFERRED | set(EUROSTAT_PREFERRED)) & set(codes) if source_policy == "preferred" else set()
+    wpp_codes = set(codes) - preferred_codes
+    details = un_wpp_countries(wpp_codes, wpp_content)
+    failures = []
+    for code in codes:
+        if code not in preferred_codes:
+            continue
+        try:
+            details[code] = preferred_loader(code)
+        except Exception as error:  # Report exact preferred-source failures; do not silently downgrade provenance.
+            failures.append({"country_code": code, "source": "preferred", "error": f"{type(error).__name__}: {error}"})
+    return details, failures
+
+
+def write_missing_report(
+    target: Path,
+    requested: list[str],
+    details: dict[str, dict],
+    preferred_failures: list[dict],
+    generated_at: str,
+) -> dict:
+    missing_codes = [code for code in requested if code not in details]
+    reasons = {failure["country_code"]: failure for failure in preferred_failures}
+    payload = {
+        "schema_version": "1.0.0",
+        "generated_at": generated_at,
+        "requested_country_count": len(requested),
+        "loaded_country_count": len(details),
+        "missing_country_count": len(missing_codes),
+        "missing_countries": [
+            reasons.get(code, {"country_code": code, "source": "un_wpp_2024", "error": "no matching projection rows"})
+            for code in missing_codes
+        ],
+        "preferred_source_failures": preferred_failures,
+    }
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return payload
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--countries", default="all", help="Comma-separated ISO3 codes, or 'all' (default)")
+    parser.add_argument(
+        "--source-policy", choices=("preferred", "un-wpp"), default="preferred",
+        help="Use national/Eurostat sources where configured, or UN WPP for every selected country",
+    )
+    parser.add_argument("--universe", type=Path, default=ROOT / "data" / "country-parity.v1.json")
+    parser.add_argument("--un-wpp-file", type=Path, help="Pinned WPP CSV or CSV.GZ supplied by a cloud worker")
+    parser.add_argument("--output-root", type=Path, default=ROOT, help="Root beneath which data/ is written")
+    parser.add_argument("--missing-report", type=Path, help="Explicit missing-country report destination")
+    parser.add_argument("--download-archive-dir", type=Path, help="Cloud-only directory for exact preferred-source responses and receipts")
+    parser.add_argument("--generated-at", help="Deterministic ISO timestamp; defaults to current UTC time")
+    parser.add_argument("--allow-network", action="store_true", help="Permit official-source downloads (cloud workers only)")
+    parser.add_argument("--allow-missing", action="store_true", help="Write partial output instead of failing on missing countries")
+    return parser.parse_args(argv)
+
+
+def main(argv=None) -> None:
+    global _download_archive_dir, _download_receipts
+    args = parse_args(argv)
+    universe = load_universe(args.universe)
+    selected = select_countries(args.countries, universe)
+    generated_at = args.generated_at or datetime.now(timezone.utc).isoformat()
+    output_root = args.output_root.resolve()
+    missing_target = args.missing_report or output_root / "data" / "country-demography-missing.v1.json"
+    _download_archive_dir = args.download_archive_dir.resolve() if args.download_archive_dir else None
+    _download_receipts = []
+
+    if args.un_wpp_file:
+        wpp_content = args.un_wpp_file.read_bytes()
+    elif args.allow_network:
+        wpp_content = download(UN_WPP)
+    else:
+        raise SystemExit("UN WPP input is required: pass --un-wpp-file, or use --allow-network on a cloud worker")
+    if args.source_policy == "preferred" and not args.allow_network:
+        preferred = (NATIONAL_PREFERRED | set(EUROSTAT_PREFERRED)) & set(selected)
+        if preferred:
+            raise SystemExit(
+                "Preferred national/Eurostat sources require --allow-network on a cloud worker; "
+                "use --source-policy un-wpp for an offline fixture run"
+            )
+
+    details, preferred_failures = build_details(selected, wpp_content, args.source_policy)
+    if _download_archive_dir is not None:
+        _download_archive_dir.mkdir(parents=True, exist_ok=True)
+        (_download_archive_dir / "source-downloads.json").write_text(
+            json.dumps({"generated_at": generated_at, "downloads": _download_receipts}, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    report = write_missing_report(missing_target, selected, details, preferred_failures, generated_at)
+    if report["missing_country_count"] and not args.allow_missing:
+        missing = ", ".join(item["country_code"] for item in report["missing_countries"])
+        raise SystemExit(f"Missing demographic projections for {report['missing_country_count']} countries: {missing}")
+
+    countries = {
+        code: profile_and_store(code, details[code], generated_at, output_root)
+        for code in selected if code in details
+    }
     payload = {
         "schema_version": "2.0.0", "generated_at": generated_at, "contract": "country-demography.v1",
+        "coverage": {
+            "requested_country_count": len(selected), "loaded_country_count": len(countries),
+            "missing_country_count": report["missing_country_count"], "source_policy": args.source_policy,
+        },
         "common_period": {"from": COMMON_YEARS[0], "to": COMMON_YEARS[-1], "frequency": "annual"},
         "common_age_bands": [
             {"id": "age_0_19", "from": 0, "to": 19}, {"id": "age_20_64", "from": 20, "to": 64},
@@ -319,8 +482,14 @@ def main() -> None:
         },
         "countries": countries,
     }
-    (ROOT / "data" / "country-demography.v1.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
-    print(f"Stored full demographic projection detail and annual aggregates for {len(countries)} countries")
+    target = output_root / "data" / "country-demography.v1.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(
+        f"Stored full demographic projection detail and annual aggregates for {len(countries)} countries; "
+        f"missing report: {missing_target}",
+        file=sys.stdout,
+    )
 
 
 if __name__ == "__main__":

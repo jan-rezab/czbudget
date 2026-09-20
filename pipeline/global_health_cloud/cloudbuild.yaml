@@ -1,0 +1,37 @@
+steps:
+  - id: fetch-and-transform-global-health
+    name: node:22.20.0-bookworm-slim
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        node scripts/build-global-health-baseline.mjs \
+          --fetch true \
+          --registry pipeline/config/sovereign_country_universe.json \
+          --raw-dir out/raw \
+          --output out/global-health-baseline.v1.json \
+          --coverage-output out/global-health-coverage.v1.json \
+          --start-year '${_START_YEAR}' \
+          --end-year '${_END_YEAR}' \
+          --generated-at "$$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        node -e 'const fs=require("fs"),crypto=require("crypto"); const names=[...fs.readdirSync("out/raw").sort().map(name=>`raw/$${name}`),"global-health-baseline.v1.json","global-health-coverage.v1.json"]; const files=Object.fromEntries(names.map(name=>[name,crypto.createHash("sha256").update(fs.readFileSync(`out/$${name}`)).digest("hex")])); fs.writeFileSync("out/completed.json",JSON.stringify({status:"complete",build_id:process.env.BUILD_ID,files},null,2)+"\n")'
+        sha256sum out/raw/*.json out/global-health-baseline.v1.json out/global-health-coverage.v1.json > out/completed.sha256
+    env:
+      - BUILD_ID=$BUILD_ID
+  - id: preserve-immutable-run
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:3a4f4f351ebe7f7449c9238286b2fd3ca6707da93e1085bcb4d60cd949302f1b
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        prefix='gs://${_BUCKET}/processing-runs/global-health/'"$BUILD_ID"
+        gcloud storage cp --recursive --no-clobber out/raw "$$prefix/"
+        gcloud storage cp --no-clobber out/global-health-baseline.v1.json out/global-health-coverage.v1.json out/completed.sha256 "$$prefix/"
+        gcloud storage cp --no-clobber out/completed.json "$$prefix/"
+substitutions:
+  _BUCKET: czbudget-janrezab-data-layers
+  _START_YEAR: '2000'
+  _END_YEAR: '2026'
+timeout: 1800s
+options:
+  logging: CLOUD_LOGGING_ONLY

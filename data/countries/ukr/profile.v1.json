@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "contract": "country-profile.v1",
-  "generated_at": "2026-08-28T18:42:16.626Z",
+  "generated_at": "2026-09-20T14:24:08.425Z",
   "country": {
     "country_code": "UKR",
     "name_cs": "Ukrajina",
@@ -32,8 +32,8 @@
     }
   },
   "coverage": {
-    "loaded_modules": 10,
-    "total_modules": 11,
+    "loaded_modules": 14,
+    "total_modules": 15,
     "missing_dimensions": [
       "harmonised_health_financing"
     ]
@@ -50,11 +50,57 @@
       },
       "metric_count": 15
     },
+    "baseline_revenue": {
+      "status": "loaded",
+      "coverage": "General-government revenue as % of GDP; IMF WEO; 2005–2024",
+      "missing_dimensions": [],
+      "metric_code": "revenue_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "scope": "general_government"
+    },
+    "baseline_spending": {
+      "status": "loaded",
+      "coverage": "General-government expenditure as % of GDP; IMF WEO; 2005–2024",
+      "missing_dimensions": [],
+      "metric_code": "expenditure_pct_gdp",
+      "source_id": "imf-weo-2026-04",
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "scope": "general_government"
+    },
+    "baseline_unemployment": {
+      "status": "loaded",
+      "coverage": "Unemployment rate; IMF WEO; 2005–2024",
+      "missing_dimensions": [],
+      "metric_code": "unemployment_pct",
+      "source_id": "imf_weo",
+      "fallback_used": false,
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "latest": {
+        "year": 2024,
+        "value": 13.1,
+        "observation_status": "estimate"
+      },
+      "dataset": "data/global-unemployment.v1.json"
+    },
     "revenue": {
       "status": "loaded",
-      "coverage": "general-government revenue and balance",
+      "coverage": "native revenue detail not loaded",
       "missing_dimensions": [],
-      "native_layers": []
+      "native_layers": [],
+      "detail_level": "native_detail"
     },
     "administrative_spending": {
       "status": "loaded",
@@ -88,6 +134,14 @@
       "missing_dimensions": [
         "SHA financing and provider split"
       ]
+    },
+    "health_baseline": {
+      "status": "loaded",
+      "coverage": "11 global health financing, capacity, workforce and outcome metrics",
+      "missing_dimensions": [],
+      "metric_count": 11,
+      "source_id": "world-bank-wdi-who-ghed-2026-09-20",
+      "dataset": "data/global-health-baseline.v1.json"
     },
     "providers": {
       "status": "loaded",
@@ -1764,6 +1818,123 @@
         "post_2021_debt_change_pp": 40.76
       }
     },
+    "unemployment_baseline": {
+      "status": "loaded",
+      "preferred_source": "imf_weo",
+      "fallback_used": false,
+      "latest": {
+        "year": 2024,
+        "value": 13.1,
+        "observation_status": "estimate"
+      },
+      "period": {
+        "from": 2005,
+        "to": 2024
+      },
+      "observation_count": 20,
+      "series": [
+        {
+          "year": 2005,
+          "value": 7.16,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2006,
+          "value": 6.805,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2007,
+          "value": 6.347,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2008,
+          "value": 6.358,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2009,
+          "value": 8.833,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2010,
+          "value": 7.772,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2011,
+          "value": 7.535,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2012,
+          "value": 7.223,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2013,
+          "value": 6.872,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2014,
+          "value": 9.275,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2015,
+          "value": 9.143,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2016,
+          "value": 9.347,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2017,
+          "value": 9.51,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2018,
+          "value": 8.8,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2019,
+          "value": 8.235,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2020,
+          "value": 9.518,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2021,
+          "value": 9.881,
+          "observation_status": "actual"
+        },
+        {
+          "year": 2022,
+          "value": 24.528,
+          "observation_status": "estimate"
+        },
+        {
+          "year": 2023,
+          "value": 19.072,
+          "observation_status": "estimate"
+        },
+        {
+          "year": 2024,
+          "value": 13.1,
+          "observation_status": "estimate"
+        }
+      ]
+    },
     "revenue": {
       "name_cs": "Ukrajina",
       "name_en": "Ukraine",
@@ -2362,6 +2533,24 @@
       }
     },
     "health": null,
+    "health_baseline": {
+      "status": "loaded",
+      "available_metrics": [
+        "health_gdp_pct",
+        "per_capita_ppp",
+        "government_share_pct",
+        "out_of_pocket_pct",
+        "beds_per_1000",
+        "physicians_per_1000",
+        "nurses_per_1000",
+        "life_expectancy_years",
+        "premature_ncd_mortality_pct",
+        "suicide_rate_per_100k",
+        "under5_mortality_per_1000"
+      ],
+      "missing_metrics": [],
+      "dataset": "data/global-health-baseline.v1.json"
+    },
     "providers": {
       "coverage": "nhsu_contracting_provider_open_data",
       "facility_count": null,

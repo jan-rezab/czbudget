@@ -2,7 +2,7 @@
 // a root <base> resolved every in-page anchor against "/" and navigated away. Every
 // module on this page now publishes root-absolute payload and asset paths of its own.
 const P = new URLSearchParams(location.search);
-const state = { code:window.PSDCountryRoutes.codeFromLocation(), lang:window.PSDLanguage?.current()||P.get("lang")||"cs", year:2024, chartView:"ratio", currency:"local", data:null, catalog:null, fx:null, ministries:null };
+const state = { code:window.PSDCountryRoutes.codeFromLocation(), lang:window.PSDLanguage?.current()||P.get("lang")||"cs", year:2024, chartView:"ratio", currency:"local", data:null, catalog:null, fx:null, ministries:null, unemployment:null };
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const T = {
@@ -32,7 +32,7 @@ const meta=()=>state.data?.countries.find(c=>c.country_code===state.code);
 const series=()=>state.data.series.find(c=>c.country_code===state.code);
 const catalog=()=>state.catalog.countries.find(c=>c.country_code===state.code);
 const summary=()=>state.data.summaries.find(c=>c.country_code===state.code);
-const point=(key,year=state.year)=>series()?.metrics[key]?.values.find(v=>v.year===year);
+const point=(key,year=state.year)=>series()?.metrics[key]?.values.find(v=>v.year===year)??(key==="unemployment_pct"?state.unemployment?.countries?.[state.code]?.series?.find(v=>v.year===year):null);
 const value=(key,year=state.year)=>point(key,year)?.value??null;
 // country-names.js carries the same name_cs / name_en the payload does, so the shell
 // can name the country a second before the eight-megabyte dataset can possibly answer.
@@ -267,5 +267,6 @@ Promise.all([
   fetch("/lib/data/sovereign-benchmark.v1.json").then(r=>r.json()),
   fetch("/data/catalog.v1.json").then(r=>r.json()),
   fetch("/data/fx-eur-annual.v1.json").then(r=>r.json()),
-  fetch("/data/ministry-budget-sources.v1.json").then(r=>r.json())
-]).then(([data,catalog,fx,ministries])=>{state.data=data;state.catalog=catalog;state.fx=fx;state.ministries=ministries;init()}).catch(error=>{console.error(error);document.body.classList.add("data-error")});
+  fetch("/data/ministry-budget-sources.v1.json").then(r=>r.json()),
+  fetch("/data/global-unemployment.v1.json").then(r=>r.json())
+]).then(([data,catalog,fx,ministries,unemployment])=>{state.data=data;state.catalog=catalog;state.fx=fx;state.ministries=ministries;state.unemployment=unemployment;init()}).catch(error=>{console.error(error);document.body.classList.add("data-error")});

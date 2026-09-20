@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "universal-country-core.v1",
+  "target_universe": "195 sovereign states: 193 UN members plus the Holy See and State of Palestine",
+  "rules": {
+    "missingness": "A module is loaded only when at least one numeric observation exists; an empty source row is never treated as coverage.",
+    "scope_separation": "Harmonised baselines and native national classifications are separate modules.",
+    "local_storage": "Bulk source snapshots and transforms run in Google Cloud; only compact serving artifacts, contracts and receipts belong in this checkout."
+  },
+  "modules": {
+    "baseline_revenue": {
+      "source": "IMF World Economic Outlook, April 2026",
+      "source_metric": "GGR_NGDP",
+      "output_metric": "revenue_pct_gdp",
+      "unit": "percent_of_gdp",
+      "loader": "scripts/build-country-economy.py",
+      "serving_artifact": "lib/data/sovereign-benchmark.v1.json"
+    },
+    "baseline_spending": {
+      "source": "IMF World Economic Outlook, April 2026",
+      "source_metric": "GGX_NGDP",
+      "output_metric": "expenditure_pct_gdp",
+      "unit": "percent_of_gdp",
+      "loader": "scripts/build-country-economy.py",
+      "serving_artifact": "lib/data/sovereign-benchmark.v1.json"
+    },
+    "baseline_unemployment": {
+      "primary_source": "IMF World Economic Outlook, April 2026",
+      "primary_metric": "LUR",
+      "fallback_source": "World Bank World Development Indicators",
+      "fallback_metric": "SL.UEM.TOTL.ZS",
+      "output_metric": "unemployment_pct",
+      "unit": "percent_of_labour_force",
+      "loader": "scripts/build-country-economy.py",
+      "serving_builder": "scripts/build-global-unemployment.mjs",
+      "serving_artifact": "data/global-unemployment.v1.json",
+      "merge_rule": "Use the complete IMF country series whenever it has a numeric observation; otherwise use the World Bank country series and retain source, year and status lineage. Never interpolate."
+    },
+    "demography": {
+      "global_source": "United Nations World Population Prospects 2024, medium variant",
+      "source_asset": "WPP2024_PopulationBySingleAgeSex_Medium_2024-2100.csv.gz",
+      "keys": ["ISO3_code", "Time", "AgeGrpStart", "AgeGrpSpan"],
+      "measures": ["PopMale", "PopFemale", "PopTotal"],
+      "loader": "scripts/build-country-demography.py",
+      "implementation": "The registry-driven universal builder uses UN WPP 2024 as the fallback and retains reviewed national and Eurostat projections as preferred overlays; bulk execution runs in Cloud Build.",
+      "validation": ["every target code maps to one UN location", "male plus female reconciles to total", "all years 2025-2045 aggregate into the four published age bands"]
+    },
+    "health_baseline": {
+      "source": "World Bank World Development Indicators (harmonised WHO and partner series)",
+      "loader": "scripts/build-global-health-baseline.mjs",
+      "implementation": "The registry-driven 195-country transformer runs in Cloud Build and publishes an immutable verified serving artifact plus exact per-metric gaps.",
+      "series": {
+        "health_gdp_pct": "SH.XPD.CHEX.GD.ZS",
+        "per_capita_ppp": "SH.XPD.CHEX.PP.CD",
+        "government_share_pct": "SH.XPD.GHED.CH.ZS",
+        "out_of_pocket_pct": "SH.XPD.OOPC.CH.ZS",
+        "beds_per_1000": "SH.MED.BEDS.ZS",
+        "physicians_per_1000": "SH.MED.PHYS.ZS",
+        "nurses_per_1000": "SH.MED.NUMW.P3",
+        "life_expectancy_years": "SP.DYN.LE00.IN",
+        "premature_ncd_mortality_pct": "SH.DYN.NCOM.ZS",
+        "suicide_rate_per_100k": "SH.STA.SUIC.P5",
+        "under5_mortality_per_1000": "SH.DYN.MORT"
+      },
+      "validation": ["retain latest observation year per metric", "publish null when no observation exists", "do not require OECD-only utilisation metrics for global baseline completeness"]
+    }
+  }
+}

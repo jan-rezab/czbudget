@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "global-unemployment.v1",
+  "metric": "unemployment_pct",
+  "unit": "percent_of_total_labour_force",
+  "country_key": "ISO 3166-1 alpha-3",
+  "selection_rule": "Use IMF WEO LUR for a country whenever it contains at least one numeric observation. Use World Bank WDI SL.UEM.TOTL.ZS only when the IMF country series contains no numeric observation.",
+  "sources": {
+    "primary": "lib/data/sovereign-benchmark.v1.json",
+    "fallback": "data/economy/economic-observations.v1.csv.gz"
+  },
+  "lineage": ["preferred_source", "fallback_used", "year", "observation_status", "source_vintage", "quality_flags"],
+  "missingness": "Countries absent from both numeric source series remain unavailable; values are never interpolated or replaced with zero.",
+  "builder": "scripts/build-global-unemployment.mjs",
+  "output": "data/global-unemployment.v1.json"
+}

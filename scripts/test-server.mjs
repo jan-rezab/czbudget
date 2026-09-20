@@ -32,6 +32,11 @@ const countrySlugs = new Set([
   "poland", "sweden", "switzerland", "ukraine", "united-states",
   "brazil", "spain", "japan", "netherlands", "norway", "finland", "greece",
 ]);
+const nationalBudgetSlugs = new Set([
+  "czechia", "ukraine", "poland", "germany", "united-kingdom", "france",
+  "united-states", "switzerland", "sweden", "denmark", "finland", "brazil",
+  "spain", "japan", "netherlands", "norway", "greece",
+]);
 const countryCodes = {
   CZE: "czechia", DEU: "germany", DNK: "denmark", FRA: "france",
   GBR: "united-kingdom", POL: "poland", SWE: "sweden", CHE: "switzerland",
@@ -91,8 +96,15 @@ createServer(async (request, response) => {
       return;
     }
     const countryMatch = pathname.match(/^\/countries\/([^/]+)(\/?)$/);
+    const nationalBudgetMatch = pathname.match(/^\/national-budgets\/([^/]+)(\/?)$/);
 
-    if (countryMatch && (countrySlugs.has(countryMatch[1]) || /^[a-z]{3}$/.test(countryMatch[1]))) {
+    if (nationalBudgetMatch && nationalBudgetSlugs.has(nationalBudgetMatch[1])) {
+      if (nationalBudgetMatch[2]) {
+        redirect(response, `/national-budgets/${nationalBudgetMatch[1]}${url.search}`);
+        return;
+      }
+      pathname = "/national-budget.html";
+    } else if (countryMatch && (countrySlugs.has(countryMatch[1]) || /^[a-z]{3}$/.test(countryMatch[1]))) {
       if (countryMatch[2]) {
         redirect(response, `/countries/${countryMatch[1]}${url.search}`);
         return;

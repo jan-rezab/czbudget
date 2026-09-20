@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "global-health-baseline.v1",
+  "country_key": "ISO 3166-1 alpha-3",
+  "target_registry": "pipeline/config/sovereign_country_universe.json",
+  "source": {
+    "publisher": "World Bank",
+    "dataset": "World Development Indicators",
+    "api": "https://api.worldbank.org/v2/country/all/indicator/{series}",
+    "health_financing_custodian": "WHO Global Health Expenditure Database"
+  },
+  "financing_series": {
+    "health_gdp_pct": "SH.XPD.CHEX.GD.ZS",
+    "per_capita_ppp": "SH.XPD.CHEX.PP.CD",
+    "government_share_pct": "SH.XPD.GHED.CH.ZS",
+    "out_of_pocket_pct": "SH.XPD.OOPC.CH.ZS"
+  },
+  "rules": {
+    "observation": "One country, indicator and calendar year.",
+    "latest": "The latest numeric observation is selected independently for each indicator and its year is retained.",
+    "missingness": "Null, absent and non-numeric observations remain unavailable; no interpolation or zero filling is permitted.",
+    "scope": "OECD-only utilisation and avoidable-mortality indicators are enrichments, not requirements for global baseline completeness.",
+    "processing": "Bulk retrieval and production transforms run in Google Cloud. Local runs use small fixtures or already-pinned raw inputs."
+  },
+  "outputs": ["data/global-health-baseline.v1.json", "data/global-health-coverage.v1.json"]
+}

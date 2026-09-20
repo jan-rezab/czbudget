@@ -1,0 +1,1624 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-09-20T14:24:08.425Z",
+  "purpose": "Readiness and precise data-gap audit for parallel Czech-style dashboards for the 17 full-profile countries.",
+  "completeness_policy": {
+    "required_modules": [
+      "revenue",
+      "spending",
+      "demography",
+      "unemployment",
+      "health"
+    ],
+    "optional_deferred_modules": [
+      "municipalities",
+      "public_entities",
+      "providers"
+    ],
+    "dashboard_scaffold_ready_definition": "All five required modules have enough data to render their core section.",
+    "czech_depth_status_definition": "ready means complete core health and health-performance fields; ready_with_gaps means only non-core health-performance fields are absent; blocked means at least one required core module is incomplete.",
+    "note": "Native institutional revenue layers and native budget classifications are reported as depth gaps, but do not block a harmonised dashboard scaffold."
+  },
+  "source_artifacts": [
+    "data/country-parity.v1.json",
+    "data/country-revenue.v1.json",
+    "data/country-cash-in.v1.json",
+    "data/country-spending-2025-2026.v1.json",
+    "data/country-spending-comparison.v1.json",
+    "data/country-functional-budgets.v1.json",
+    "data/country-demography.v1.json",
+    "data/country-health.v1.json",
+    "data/country-health-performance.v1.json",
+    "data/countries/{iso3-lower}/profile.v1.json"
+  ],
+  "country_count": 17,
+  "countries": {
+    "CZE": {
+      "name_en": "Czechia",
+      "name_cs": "Česko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [
+            "state_budget",
+            "municipalities",
+            "regions",
+            "companies"
+          ],
+          "gaps": []
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "administrative",
+          "source_row_count": 47,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2023,
+            "to": 2101
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "UKR": {
+      "name_en": "Ukraine",
+      "name_cs": "Ukrajina",
+      "dashboard_scaffold_ready": false,
+      "czech_depth_status": "blocked",
+      "core_blockers": [
+        "health"
+      ],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 12,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 10,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7777,
+          "projection_period": {
+            "from": 2024,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2021,
+          "gaps": [
+            "latest_actual_pre_2024"
+          ]
+        },
+        "health": {
+          "status": "blocked",
+          "profile_year": null,
+          "profile_gaps": [
+            "health_financing_profile_absent"
+          ],
+          "performance_status": "partial",
+          "performance_metric_count": 15,
+          "performance_gaps": [
+            "utilisation.discharges_per_100k",
+            "outcomes.treatable_mortality_per_100k",
+            "outcomes.preventable_mortality_per_100k"
+          ]
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "POL": {
+      "name_en": "Poland",
+      "name_cs": "Polsko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 31,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "DEU": {
+      "name_en": "Germany",
+      "name_cs": "Německo",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "administrative",
+          "source_row_count": 26,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "GBR": {
+      "name_en": "United Kingdom",
+      "name_cs": "Spojené království",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "administrative",
+          "source_row_count": 24,
+          "common_category_count": 12,
+          "previous_period": "2025–26",
+          "current_period": "2026–27",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 10807,
+          "projection_period": {
+            "from": 2024,
+            "to": 2124
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "FRA": {
+      "name_en": "France",
+      "name_cs": "Francie",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 31,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "USA": {
+      "name_en": "United States",
+      "name_cs": "USA",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready_with_gaps",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "administrative",
+          "source_row_count": 136,
+          "common_category_count": 12,
+          "previous_period": "FY 2025",
+          "current_period": "FY 2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "partial",
+          "performance_metric_count": 15,
+          "performance_gaps": [
+            "utilisation.discharges_per_100k"
+          ]
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "CHE": {
+      "name_en": "Switzerland",
+      "name_cs": "Švýcarsko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 8,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "SWE": {
+      "name_en": "Sweden",
+      "name_cs": "Švédsko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready_with_gaps",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 27,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "partial",
+          "performance_metric_count": 15,
+          "performance_gaps": [
+            "utilisation.curative_bed_occupancy_pct"
+          ]
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "DNK": {
+      "name_en": "Denmark",
+      "name_cs": "Dánsko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready_with_gaps",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "administrative",
+          "source_row_count": 29,
+          "common_category_count": 12,
+          "previous_period": "2025",
+          "current_period": "2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "partial",
+          "performance_metric_count": 15,
+          "performance_gaps": [
+            "utilisation.curative_bed_occupancy_pct"
+          ]
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "FIN": {
+      "name_en": "Finland",
+      "name_cs": "Finsko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready_with_gaps",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 10,
+          "common_category_count": 12,
+          "previous_period": "2023",
+          "current_period": "2024",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": [
+            "native_budget_classification_not_loaded",
+            "budget_pair_ends_in_2024"
+          ]
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "partial",
+          "performance_metric_count": 15,
+          "performance_gaps": [
+            "utilisation.curative_bed_occupancy_pct"
+          ]
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "BRA": {
+      "name_en": "Brazil",
+      "name_cs": "Brazílie",
+      "dashboard_scaffold_ready": false,
+      "czech_depth_status": "blocked",
+      "core_blockers": [
+        "health"
+      ],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 10,
+          "common_category_count": 12,
+          "previous_period": "2023",
+          "current_period": "2024",
+          "functional_history": {
+            "status": "blocked",
+            "functions": [],
+            "period": null
+          },
+          "gaps": [
+            "native_budget_classification_not_loaded",
+            "budget_pair_ends_in_2024",
+            "functional_history_absent"
+          ]
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7777,
+          "projection_period": {
+            "from": 2024,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "partial",
+          "profile_year": 2024,
+          "profile_gaps": [
+            "health_gdp_pct",
+            "per_capita_ppp",
+            "per_capita_local",
+            "beds_per_1000",
+            "financing.public_compulsory",
+            "financing.out_of_pocket",
+            "financing.voluntary_other",
+            "providers.hospitals",
+            "providers.residential_ltc",
+            "providers.ambulatory",
+            "providers.retailers",
+            "providers.other"
+          ],
+          "performance_status": "partial",
+          "performance_metric_count": 15,
+          "performance_gaps": [
+            "utilisation.curative_bed_occupancy_pct"
+          ]
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "ESP": {
+      "name_en": "Spain",
+      "name_cs": "Španělsko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 10,
+          "common_category_count": 12,
+          "previous_period": "2023",
+          "current_period": "2024",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": [
+            "native_budget_classification_not_loaded",
+            "budget_pair_ends_in_2024"
+          ]
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "JPN": {
+      "name_en": "Japan",
+      "name_cs": "Japonsko",
+      "dashboard_scaffold_ready": false,
+      "czech_depth_status": "blocked",
+      "core_blockers": [
+        "health"
+      ],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "administrative",
+          "source_row_count": 19,
+          "common_category_count": 12,
+          "previous_period": "FY 2025",
+          "current_period": "FY 2026",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": []
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7777,
+          "projection_period": {
+            "from": 2024,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "partial",
+          "profile_year": 2024,
+          "profile_gaps": [
+            "providers.hospitals",
+            "providers.residential_ltc",
+            "providers.ambulatory",
+            "providers.retailers",
+            "providers.other"
+          ],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "NLD": {
+      "name_en": "Netherlands",
+      "name_cs": "Nizozemsko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready_with_gaps",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 10,
+          "common_category_count": 12,
+          "previous_period": "2023",
+          "current_period": "2024",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": [
+            "native_budget_classification_not_loaded",
+            "budget_pair_ends_in_2024"
+          ]
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "partial",
+          "performance_metric_count": 15,
+          "performance_gaps": [
+            "utilisation.discharges_per_100k",
+            "utilisation.average_length_of_stay_days"
+          ]
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "NOR": {
+      "name_en": "Norway",
+      "name_cs": "Norsko",
+      "dashboard_scaffold_ready": false,
+      "czech_depth_status": "blocked",
+      "core_blockers": [
+        "health"
+      ],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 10,
+          "common_category_count": 12,
+          "previous_period": "2023",
+          "current_period": "2024",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": [
+            "native_budget_classification_not_loaded",
+            "budget_pair_ends_in_2024"
+          ]
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "partial",
+          "profile_year": 2024,
+          "profile_gaps": [
+            "financing.out_of_pocket",
+            "financing.voluntary_other",
+            "providers.hospitals",
+            "providers.residential_ltc",
+            "providers.ambulatory",
+            "providers.retailers",
+            "providers.other"
+          ],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "loaded"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    },
+    "GRC": {
+      "name_en": "Greece",
+      "name_cs": "Řecko",
+      "dashboard_scaffold_ready": true,
+      "czech_depth_status": "ready",
+      "core_blockers": [],
+      "modules": {
+        "revenue": {
+          "status": "ready",
+          "latest_tax_year": 2023,
+          "tax_timeline_points": 17,
+          "tax_detail_categories": 7,
+          "consolidated_year": 2024,
+          "native_layers": [],
+          "gaps": [
+            "native_revenue_layers_not_loaded"
+          ]
+        },
+        "spending": {
+          "status": "ready",
+          "source_dimension": "functional",
+          "source_row_count": 10,
+          "common_category_count": 12,
+          "previous_period": "2023",
+          "current_period": "2024",
+          "functional_history": {
+            "status": "ready",
+            "functions": [
+              "health",
+              "social",
+              "transport"
+            ],
+            "period": "2015-2024"
+          },
+          "gaps": [
+            "native_budget_classification_not_loaded",
+            "budget_pair_ends_in_2024"
+          ]
+        },
+        "demography": {
+          "status": "ready",
+          "common_year_count": 21,
+          "detail_row_count": 7979,
+          "projection_period": {
+            "from": 2022,
+            "to": 2100
+          },
+          "age_sex_detail": true,
+          "gaps": []
+        },
+        "unemployment": {
+          "status": "ready",
+          "observation_count": 20,
+          "series_period": {
+            "from": 2005,
+            "to": 2024
+          },
+          "latest_actual_year": 2025,
+          "gaps": []
+        },
+        "health": {
+          "status": "ready",
+          "profile_year": 2024,
+          "profile_gaps": [],
+          "performance_status": "ready",
+          "performance_metric_count": 15,
+          "performance_gaps": []
+        }
+      },
+      "optional_deferred": {
+        "municipalities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "public_entities": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        },
+        "providers": {
+          "required_for_readiness": false,
+          "source_status": "unavailable"
+        }
+      },
+      "reusable_insights": [
+        "revenue_mix_and_tax_timeline",
+        "consolidated_revenue_expenditure_balance",
+        "largest_spending_category_top_three_and_share_change",
+        "population_working_age_over_80_and_dependency_change_2025_2045",
+        "unemployment_level_and_twenty_year_trend",
+        "health_spending_capacity_workforce_utilisation_and_outcomes"
+      ]
+    }
+  }
+}
