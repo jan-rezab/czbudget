@@ -38,6 +38,6 @@ test("map view switches all visible interface copy to Czech", async ({ page }) =
   await page.goto("/map.html?lang=cs", { waitUntil: "networkidle" });
   await expect(page.locator(".map-hero h1")).toHaveText("Mapa veřejných výdajů");
   await expect(page.locator('[data-map-mode="duel"]')).toHaveText("Souboj");
-  await expect(page.locator(".map-contract")).toContainText("Nejde o harmonizovanou COFOG statistiku");
+  await expect(page.locator(".map-contract")).toContainText("Globální fiskální řady používají harmonizovaný sektor vládních institucí");
   await expect(page.locator("body")).not.toContainText("The public spending map");
 });

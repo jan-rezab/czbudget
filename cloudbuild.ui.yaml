@@ -3,16 +3,16 @@
 # by these tests; it never contains raw data layers and cannot deploy.
 steps:
   - id: focused-ui-contract
-    name: node:22-bookworm@sha256:8a34c4ab3ea2c5cd194f07e317b2a8f09461d3c8b05c4e34c8ccd56d56024c4d
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
     args:
       - -ceu
       - |
         npm ci
-        npx playwright install --with-deps chromium
         npx playwright test \
           tests/browser/map-view.spec.mjs \
           tests/browser/process-log.spec.mjs \
+          --config=playwright.ui.config.mjs \
           --project=desktop-chromium \
           --workers=2 \
           --max-failures=1
@@ -22,5 +22,5 @@ queueTtl: 600s
 tags: [plane-verification, fast-ui]
 
 options:
-  machineType: E2_HIGHCPU_8
+  machineType: E2_MEDIUM
   logging: CLOUD_LOGGING_ONLY

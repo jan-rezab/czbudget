@@ -1,11 +1,13 @@
 import { readFile } from "node:fs/promises";
 
-const [cloudbuild, cloudbuildVerify, cloudbuildUi, buildPlanes] = await Promise.all([
+const [cloudbuild, cloudbuildVerify, cloudbuildUi, buildPlanes, submitUi] = await Promise.all([
   readFile("cloudbuild.yaml", "utf8"),
   readFile("cloudbuild.verify.yaml", "utf8"),
   readFile("cloudbuild.ui.yaml", "utf8"),
   readFile("BUILD_PLANES.md", "utf8"),
+  readFile("scripts/submit-ui-verification.sh", "utf8"),
 ]);
+const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 
 if (
   !cloudbuild.includes("scripts/assert-single-production.sh") ||
@@ -67,14 +69,28 @@ for (const required of [
 
 if (
   !cloudbuildUi.includes("timeout: 600s") ||
+  !cloudbuildUi.includes("machineType: E2_MEDIUM") ||
+  !cloudbuildUi.includes("mcr.microsoft.com/playwright:v1.62.1-noble@sha256:") ||
+  cloudbuildUi.includes("playwright install") ||
   !cloudbuildUi.includes("plane-verification") ||
   !cloudbuildUi.includes("tests/browser/map-view.spec.mjs") ||
-  !cloudbuildUi.includes("tests/browser/process-log.spec.mjs")
+  !cloudbuildUi.includes("tests/browser/process-log.spec.mjs") ||
+  !cloudbuildUi.includes("--config=playwright.ui.config.mjs")
 ) {
   throw new Error("Fast UI verification must remain bounded and cover the public hotfix surfaces");
 }
 for (const forbidden of ["deploy-immutable.sh", "bq query", "docker push", "gcloud storage cp"]) {
   if (cloudbuildUi.includes(forbidden)) throw new Error(`Fast UI verification must remain read-only; found ${forbidden}`);
+}
+if (
+  packageJson.scripts["test:browser:ui"]?.includes("playwright.ui.config.mjs") !== true ||
+  !buildPlanes.includes("prepare-ui-build-context.mjs") ||
+  !buildPlanes.includes("Never run `gcloud builds submit .`") ||
+  !submitUi.includes("psd-web-verifier@czbudget-janrezab.iam.gserviceaccount.com") ||
+  !submitUi.includes("prepare-ui-build-context.mjs") ||
+  submitUi.includes("builds submit .")
+) {
+  throw new Error("The fast UI gate must use the explicit lean source context");
 }
 
 if (

@@ -22,7 +22,21 @@ merge, or publish data.
 `cloudbuild.ui.yaml` is the fast code-only browser gate for interface changes.
 Its source bundle contains only UI code and the small published contracts used
 by the focused tests. It has a ten-minute hard timeout and cannot publish data,
-push an image or deploy.
+push an image or deploy. It uses `E2_MEDIUM`; the gate is too small to justify
+paying for or waiting on a high-CPU worker.
+
+- Identity: `psd-web-verifier@czbudget-janrezab.iam.gserviceaccount.com`.
+- Permissions: Cloud Build worker plus read-only access to published snapshot
+  objects. It has no BigQuery role and no Cloud Run deployment role.
+
+Submit that gate with `scripts/submit-ui-verification.sh`. The wrapper creates
+the explicit context with `scripts/prepare-ui-build-context.mjs`, selects the
+read-only verifier and removes the temporary bundle afterward. The context
+contains the interface files and small published contracts needed by those
+pages; it excludes ingestion inputs, transforms, warehouses, snapshots, and
+deployment credentials. Never run `gcloud builds submit .` from this
+repository: the tracked data history makes the checkout a multi-gigabyte build
+source even when the selected YAML is code-only.
 
 - Config: `cloudbuild.verify.yaml`.
 - Runs explicitly before merge when a change affects the public application.
