@@ -1,0 +1,119 @@
+steps:
+  - id: crawl-released-comtrade-data
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    secretEnv:
+      - UN_COMTRADE_API_KEY_02
+      - UN_COMTRADE_API_KEY_03
+      - UN_COMTRADE_API_KEY_04
+      - UN_COMTRADE_API_KEY_05
+      - UN_COMTRADE_API_KEY_06
+      - UN_COMTRADE_API_KEY_07
+      - UN_COMTRADE_API_KEY_08
+      - UN_COMTRADE_API_KEY_09
+      - UN_COMTRADE_API_KEY_10
+      - UN_COMTRADE_API_KEY_11
+      - UN_COMTRADE_API_KEY_12
+      - UN_COMTRADE_API_KEY_13
+      - UN_COMTRADE_API_KEY_14
+      - UN_COMTRADE_API_KEY_15
+      - UN_COMTRADE_API_KEY_16
+      - UN_COMTRADE_API_KEY_17
+      - UN_COMTRADE_API_KEY_18
+      - UN_COMTRADE_API_KEY_19
+      - UN_COMTRADE_API_KEY_20
+      - UN_COMTRADE_API_KEY_21
+      - UN_COMTRADE_API_KEY_22
+      - UN_COMTRADE_API_KEY_23
+      - UN_COMTRADE_API_KEY_24
+      - UN_COMTRADE_API_KEY_25
+      - UN_COMTRADE_API_KEY_26
+      - UN_COMTRADE_API_KEY_27
+      - UN_COMTRADE_API_KEY_28
+      - UN_COMTRADE_API_KEY_29
+      - UN_COMTRADE_API_KEY_32
+      - UN_COMTRADE_API_KEY_33
+      - UN_COMTRADE_API_KEY_34
+      - UN_COMTRADE_API_KEY_35
+      - UN_COMTRADE_API_KEY_36
+      - UN_COMTRADE_API_KEY_37
+      - UN_COMTRADE_API_KEY_38
+      - UN_COMTRADE_API_KEY_39
+      - UN_COMTRADE_API_KEY_40
+      - UN_COMTRADE_API_KEY_41
+    env:
+      - CZBUDGET_WORKSPACE_ROOT=/workspace/comtrade-control
+      - COMTRADE_BUILD_ID=$BUILD_ID
+      - COMTRADE_LOADER_GIT_SHA=${_LOADER_GIT_SHA}
+      - COMTRADE_BUILD_REGION=europe-west4
+      - COMTRADE_BUILD_SERVICE_ACCOUNT=psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com
+    args:
+      - pipeline/transforms/run_un_comtrade_direct.py
+      - --max-calls-per-account
+      - '${_MAX_CALLS}'
+      - --batch-rows
+      - '1000000'
+      - --max-minutes
+      - '120'
+      - --lanes-per-account
+      - '1'
+      - --chunk-calls
+      - '10'
+      - --checkpoint-seconds
+      - '60'
+      - --history-periods
+      - '36'
+      - --monthly-prior-months
+      - '3'
+      - --monthly-focus-share
+      - '0.8'
+    timeout: 7200s
+timeout: 7500s
+queueTtl: 1800s
+tags: [plane-data]
+substitutions:
+  _MAX_CALLS: '500'
+  _LOADER_GIT_SHA: 'required-at-submit'
+options:
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
+availableSecrets:
+  secretManager:
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-02/versions/latest, env: UN_COMTRADE_API_KEY_02}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-03/versions/latest, env: UN_COMTRADE_API_KEY_03}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-04/versions/latest, env: UN_COMTRADE_API_KEY_04}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-05/versions/latest, env: UN_COMTRADE_API_KEY_05}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-06/versions/latest, env: UN_COMTRADE_API_KEY_06}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-07/versions/latest, env: UN_COMTRADE_API_KEY_07}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-08/versions/latest, env: UN_COMTRADE_API_KEY_08}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-09/versions/latest, env: UN_COMTRADE_API_KEY_09}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-10/versions/latest, env: UN_COMTRADE_API_KEY_10}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-11/versions/latest, env: UN_COMTRADE_API_KEY_11}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-12/versions/latest, env: UN_COMTRADE_API_KEY_12}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-13/versions/latest, env: UN_COMTRADE_API_KEY_13}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-14/versions/latest, env: UN_COMTRADE_API_KEY_14}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-15/versions/latest, env: UN_COMTRADE_API_KEY_15}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-16/versions/latest, env: UN_COMTRADE_API_KEY_16}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-17/versions/latest, env: UN_COMTRADE_API_KEY_17}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-18/versions/latest, env: UN_COMTRADE_API_KEY_18}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-19/versions/latest, env: UN_COMTRADE_API_KEY_19}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-20/versions/latest, env: UN_COMTRADE_API_KEY_20}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-21/versions/latest, env: UN_COMTRADE_API_KEY_21}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-22/versions/latest, env: UN_COMTRADE_API_KEY_22}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-23/versions/latest, env: UN_COMTRADE_API_KEY_23}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-24/versions/latest, env: UN_COMTRADE_API_KEY_24}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-25/versions/latest, env: UN_COMTRADE_API_KEY_25}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-26/versions/latest, env: UN_COMTRADE_API_KEY_26}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-27/versions/latest, env: UN_COMTRADE_API_KEY_27}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-28/versions/latest, env: UN_COMTRADE_API_KEY_28}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-29/versions/latest, env: UN_COMTRADE_API_KEY_29}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-32/versions/latest, env: UN_COMTRADE_API_KEY_32}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-33/versions/latest, env: UN_COMTRADE_API_KEY_33}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-34/versions/latest, env: UN_COMTRADE_API_KEY_34}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-35/versions/latest, env: UN_COMTRADE_API_KEY_35}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-36/versions/latest, env: UN_COMTRADE_API_KEY_36}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-37/versions/latest, env: UN_COMTRADE_API_KEY_37}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-38/versions/latest, env: UN_COMTRADE_API_KEY_38}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-39/versions/latest, env: UN_COMTRADE_API_KEY_39}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-40/versions/latest, env: UN_COMTRADE_API_KEY_40}
+    - {versionName: projects/$PROJECT_ID/secrets/un-comtrade-api-key-41/versions/latest, env: UN_COMTRADE_API_KEY_41}

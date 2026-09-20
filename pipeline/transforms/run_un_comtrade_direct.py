@@ -31,15 +31,15 @@ def credential_pool():
     # Slot 01 is the retired legacy credential. It returned HTTP 401 during the
     # 2026-09-19 pool migration, so keep it out of subsequent continuation
     # builds instead of spending another request on every rotation.
-    # Slots 27-29 are retained for audit/replacement, but their latest values
-    # returned HTTP 401 in the live 2026-09-19 pool validation.
-    for number in range(2, 27):
+    # Slots 30 and 31 are excluded after failed validation. Slots 32 through 41
+    # passed bounded validation and remain active with the proven 02-29 pool.
+    for number in (*range(2, 30), *range(32, 42)):
         credential_id = f"account-{number:02d}"
         value = os.environ.get(f"UN_COMTRADE_API_KEY_{number:02d}")
         if value:
-            credentials.append((credential_id, value))
+            credentials.append((credential_id, value.strip()))
     if not credentials and os.environ.get("UN_COMTRADE_API_KEY"):
-        credentials.append(("default", os.environ["UN_COMTRADE_API_KEY"]))
+        credentials.append(("default", os.environ["UN_COMTRADE_API_KEY"].strip()))
     if not credentials:
         raise SystemExit("No UN Comtrade API credentials are configured")
     return credentials
@@ -47,6 +47,25 @@ def credential_pool():
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def build_provenance():
+    """Return the immutable execution identity recorded in every checkpoint."""
+    environment = {
+        'cloud_build_id': 'COMTRADE_BUILD_ID',
+        'loader_git_sha': 'COMTRADE_LOADER_GIT_SHA',
+        'region': 'COMTRADE_BUILD_REGION',
+        'service_account': 'COMTRADE_BUILD_SERVICE_ACCOUNT',
+    }
+    provenance = {name: os.environ.get(variable, '').strip()
+                  for name, variable in environment.items()}
+    missing = [name for name, value in provenance.items() if not value]
+    if missing:
+        raise c.CloudPersistenceError(
+            'Missing build provenance: ' + ', '.join(sorted(missing)))
+    provenance['source_config_sha256'] = digest(c.CONFIG_PATH.read_bytes())
+    provenance['source_api'] = c.read_json(c.CONFIG_PATH)['api_base']
+    return provenance
 
 
 def verify_uploaded(data, metadata):
@@ -417,7 +436,8 @@ def main():
     summary = {'downloaded_and_verified_rows':0,'verified_objects':0,'bigquery_rows_loaded':0,
                'http_attempts':0,'configured_accounts':len(credentials),'accounts':{},
                'run_started_at':run_started_at,'architecture':'dynamic-direct-gcs-v2',
-               'monthly_refresh':monthly_refresh,'history_refill':history_refill}
+               'monthly_refresh':monthly_refresh,'history_refill':history_refill,
+               'provenance':build_provenance()}
     # Reclaim tasks left running by an interrupted predecessor exactly once,
     # before parallel lanes begin claiming new work.
     reclaimed = db.execute(

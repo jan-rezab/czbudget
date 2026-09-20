@@ -15,6 +15,29 @@ import run_un_comtrade_direct as direct
 
 
 class DirectUploadTest(unittest.TestCase):
+    def test_build_provenance_is_complete_and_hashes_source_config(self):
+        environment = {
+            'COMTRADE_BUILD_ID':'build-123',
+            'COMTRADE_LOADER_GIT_SHA':'abc123',
+            'COMTRADE_BUILD_REGION':'europe-west4',
+            'COMTRADE_BUILD_SERVICE_ACCOUNT':'crawler@example.test',
+        }
+        with patch.dict(direct.os.environ,environment,clear=True):
+            provenance = direct.build_provenance()
+        self.assertEqual(provenance['cloud_build_id'],'build-123')
+        self.assertEqual(provenance['loader_git_sha'],'abc123')
+        self.assertEqual(provenance['region'],'europe-west4')
+        self.assertEqual(provenance['service_account'],'crawler@example.test')
+        self.assertEqual(
+            provenance['source_config_sha256'],
+            direct.digest(direct.c.CONFIG_PATH.read_bytes()))
+        self.assertEqual(provenance['source_api'],'https://comtradeapi.un.org')
+
+    def test_build_provenance_rejects_an_unidentified_run(self):
+        with patch.dict(direct.os.environ,{},clear=True):
+            with self.assertRaises(direct.c.CloudPersistenceError):
+                direct.build_provenance()
+
     def test_parallel_connections_claim_each_task_once(self):
         with tempfile.TemporaryDirectory() as directory:
             state = Path(directory)/'crawl.sqlite3'

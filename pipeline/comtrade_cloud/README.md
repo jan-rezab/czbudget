@@ -1,5 +1,22 @@
 # Cloud-hosted UN Comtrade crawler
 
+## Current data-plane continuation contract
+
+The current manual continuation uses `cloudbuild-38key.yaml`, runs only in
+`europe-west4` as `psd-data-builder`, and carries the `plane-data` tag. Its 38
+active credential slots are 02-29 and 32-41. Slots 01, 30 and 31 are excluded.
+The older rollout and Scheduler notes below are historical; the raw Scheduler
+remains paused.
+
+The build writes immutable, content-addressed responses below
+`gs://czbudget-janrezab-un-comtrade-raw/raw/`, versioned SQLite checkpoints
+below `checkpoints/<archive-id>/`, and advances only
+`manifests/latest.json` after raw objects and checkpoint state verify. It has no
+website destination and does not load BigQuery. Every checkpoint records the
+Cloud Build ID, loader Git SHA, region, service account, source configuration
+hash, per-task row counts, object hashes and generations. Monthly and annual
+tasks remain separate; consumers must never add World totals to bilateral rows.
+
 This submission moves crawler execution and raw persistence off the Mac. An
 ephemeral Cloud Build worker restores the latest verified SQLite checkpoint and
 reference metadata from `gs://czbudget-janrezab-un-comtrade-raw`, downloads only

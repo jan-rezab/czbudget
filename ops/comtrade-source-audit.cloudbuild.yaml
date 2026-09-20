@@ -1,0 +1,16 @@
+steps:
+  - id: inventory-pinned-source
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -euo
+      - pipefail
+      - -c
+      - |
+        find . -type f -not -path './.git/*' -print0 \
+          | sort -z \
+          | xargs -0 sha256sum
+tags: [plane-data, comtrade-source-audit]
+timeout: 600s
+options:
+  logging: CLOUD_LOGGING_ONLY

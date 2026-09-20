@@ -1,0 +1,20 @@
+steps:
+  - id: export-reviewed-source
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -euo
+      - pipefail
+      - -c
+      - |
+        destination="gs://czbudget-janrezab-data-layers/processing-build-source/reviewed/comtrade-38key-05c3f6fa463e"
+        gcloud storage cp --no-clobber cloudbuild.yaml "${destination}/cloudbuild.yaml"
+        gcloud storage cp --no-clobber pipeline/config/sovereign_country_universe.json "${destination}/pipeline/config/sovereign_country_universe.json"
+        gcloud storage cp --no-clobber pipeline/config/un_comtrade_source.v1.json "${destination}/pipeline/config/un_comtrade_source.v1.json"
+        gcloud storage cp --no-clobber pipeline/transforms/archive_un_comtrade_raw.py "${destination}/pipeline/transforms/archive_un_comtrade_raw.py"
+        gcloud storage cp --no-clobber pipeline/transforms/crawl_un_comtrade.py "${destination}/pipeline/transforms/crawl_un_comtrade.py"
+        gcloud storage cp --no-clobber pipeline/transforms/run_un_comtrade_direct.py "${destination}/pipeline/transforms/run_un_comtrade_direct.py"
+tags: [plane-data, comtrade-source-audit]
+timeout: 600s
+options:
+  logging: CLOUD_LOGGING_ONLY
