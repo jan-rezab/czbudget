@@ -69,10 +69,11 @@ Record actual timing before claiming a speedup. Full structural migrations can
 take longer and must not be disguised as routine component changes. Evidence
 must identify exact SHA, base, test contract and active fixture releases.
 
-The full lane has four two-worker browser shards on the existing 8 GB worker;
-two shards run at a time. Each shard has a 90-second no-output watchdog,
-seven-minute Playwright deadline and eight-minute outer command deadline. Each
-two-shard Cloud Build step is capped at eighteen minutes, the entire full build
+The full lane has four browser batches on the existing 8 GB worker, each with
+four parallel browser workers and one data-server cache. Batches run sequentially
+and release their process trees between runs. Each batch has a 90-second no-output
+watchdog, seven-minute Playwright deadline and eight-minute outer command deadline.
+The browser Cloud Build step is capped at eighteen minutes, the entire full build
 at twenty minutes, and queue time at ten minutes. A stalled run must fail, not
 silently consume forty minutes. These caps do not apply to the independent data
 plane. A larger worker needs a regional quota change and is not assumed available.

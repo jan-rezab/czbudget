@@ -63,7 +63,7 @@ for (const required of [
   "verify-runtime-assets-cloud.py",
   "preflight-components",
   "browser-contrast-a",
-  "browser-contrast-b",
+  "for shard in 1 2 3 4",
   "npx playwright test",
   "scripts/run-bounded.mjs",
   "--global-timeout=420000",
