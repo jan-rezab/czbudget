@@ -40,8 +40,11 @@ fi
 # A source-only checkout must not restore multi-gigabyte data to the Mac just
 # to push code. Main requires a successful run of this exact commit through
 # the canonical trigger; branch builds execute every gate and skip promotion.
-if [ "$(git config --bool core.sparseCheckout || true)" = true ] && [ ! -f data/manifest.v1.json ]; then
+if [ "$(git config --bool core.sparseCheckout || true)" = true ] || ! node scripts/check-local-data-layers.mjs; then
+  echo "pre-push: cloud-only checkout; running source-safe gates"
   node --test tests/api/static-assets.spec.mjs tests/api/pinned-release.spec.mjs
+  node --test tests/api/process-log-store.spec.mjs
+  node scripts/build-run-log.mjs
   python3 -m unittest discover -s tests -p test_runtime_assets.py
   node pipeline/create-source-manifest.mjs --self-check
   grep -q 'node scripts/validate-integrity.mjs --write-report' cloudbuild.yaml
@@ -78,17 +81,16 @@ if [ "$push_to_main" = 1 ]; then
   echo "pre-push: full browser suite is required in Cloud Build before deployment"
 fi
 
-# The ~16k source files behind pipeline/source-assets.manifest.json are not in
-# git and never exist on a CI runner, so this is the only place the manifest can
-# be checked against real bytes. Skip loudly when the workspace has no raw
-# inputs (fresh clone) rather than silently passing.
-WORKSPACE_ROOT="${CZBUDGET_WORKSPACE_ROOT:-$(cd .. && pwd)}"
-if [ -d "$WORKSPACE_ROOT/data/source_cache" ] && [ -d "$WORKSPACE_ROOT/data/sources" ]; then
+# The ~61k source files behind pipeline/source-assets.manifest.json are not in
+# git. Since the cloud migration, partial directories on the Mac do not prove
+# that the immutable input set is complete. Byte-level verification therefore
+# requires an explicitly identified hydrated workspace.
+if [ -n "${CZBUDGET_WORKSPACE_ROOT:-}" ]; then
   echo "pre-push: source asset manifest"
   node pipeline/create-source-manifest.mjs --verify
 else
-  echo "pre-push: SKIPPING source asset verification - no raw inputs under $WORKSPACE_ROOT" >&2
-  echo "pre-push: set CZBUDGET_WORKSPACE_ROOT if they live elsewhere; CI only checks manifest structure." >&2
+  echo "pre-push: source asset manifest self-check (raw inputs are cloud-only)"
+  echo "pre-push: set CZBUDGET_WORKSPACE_ROOT to an explicitly hydrated workspace for byte-level verification." >&2
   node pipeline/create-source-manifest.mjs --self-check
 fi
 
