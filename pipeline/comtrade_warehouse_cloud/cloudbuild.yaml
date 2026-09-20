@@ -17,6 +17,9 @@ steps:
         if [[ '${_REFERENCES_ONLY}' == 'true' ]]; then
           runtime_args+=(--references-only)
         fi
+        if [[ '${_AUDIT_ONLY}' == 'true' ]]; then
+          runtime_args+=(--audit-only)
+        fi
         if [[ '${_FREQUENCY}' != 'AUTO' ]]; then
           runtime_args+=(--frequency '${_FREQUENCY}' --period '${_PERIOD}')
         fi
@@ -34,6 +37,7 @@ substitutions:
   _MAX_PERIODS: '1'
   _CHUNK_ROWS: '1000000'
   _REFERENCES_ONLY: 'false'
+  _AUDIT_ONLY: 'false'
 options:
   diskSizeGb: 100
   machineType: E2_HIGHCPU_8
