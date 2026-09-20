@@ -65,6 +65,9 @@ for (const required of [
   "browser-contrast-a",
   "browser-contrast-b",
   "npx playwright test",
+  "scripts/run-bounded.mjs",
+  "--global-timeout=420000",
+  "timeout: 1200s",
 ]) {
   if (!cloudbuildVerify.includes(required)) {
     throw new Error(`Full verification is missing its published-release gate: ${required}`);

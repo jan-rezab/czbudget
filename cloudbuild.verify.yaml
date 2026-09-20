@@ -32,6 +32,7 @@ steps:
         node scripts/build-chart-assets.mjs --check
         node scripts/validate-chart-ownership.mjs
         npm run check:stories
+        node --test tests/unit/bounded-command.spec.mjs
         node scripts/run-component-gate.mjs
 
   - id: hydrate-published-releases
@@ -100,6 +101,7 @@ steps:
         node pipeline/create-source-manifest.mjs --self-check
 
   - id: browser-contrast-a
+    timeout: 600s
     waitFor: [preflight-components, python-contracts, verify-published-snapshots, verify-published-assets, validate-source-contract]
     name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
@@ -121,9 +123,10 @@ steps:
         PSD_BUILD_MODE=local npm run validate
         node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs
         node --test tests/industrial-data.test.cjs
-        npx playwright test --workers=4 --max-failures=1 --retries=0 --reporter=line --shard=1/2 --output=/workspace/test-results/shard-a
+        node scripts/run-bounded.mjs -- npx playwright test --workers=4 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --shard=1/2 --output=/workspace/test-results/shard-a
 
   - id: browser-contrast-b
+    timeout: 600s
     waitFor: [preflight-components, verify-published-snapshots, verify-published-assets, validate-source-contract]
     name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
@@ -138,7 +141,7 @@ steps:
       - |
         trap 'status=$$?; if [ "$$status" -ne 0 ]; then tail -c 48000 /tmp/browser-gate.log > "$$BUILDER_OUTPUT/output"; fi; exit $$status' EXIT
         exec > >(tee /tmp/browser-gate.log) 2>&1
-        npx playwright test --workers=4 --max-failures=1 --retries=0 --reporter=line --shard=2/2 --output=/workspace/test-results/shard-b
+        node scripts/run-bounded.mjs -- npx playwright test --workers=4 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --shard=2/2 --output=/workspace/test-results/shard-b
 
   - id: nginx-routing
     waitFor: [validate-source-contract]
@@ -165,12 +168,14 @@ steps:
     entrypoint: sh
     args: [-ceu, 'echo "Full verification passed against published immutable data releases."']
 
-timeout: 2400s
+timeout: 1200s
 queueTtl: 3600s
 tags: [plane-verification, full-browser]
 
 options:
-  machineType: E2_HIGHCPU_8
+  # Eight browser workers plus two data-serving processes need memory headroom.
+  # The normal component gate stays on E2_MEDIUM; this is the broad-change lane.
+  machineType: E2_HIGHCPU_32
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:

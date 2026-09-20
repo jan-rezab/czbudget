@@ -69,6 +69,12 @@ Record actual timing before claiming a speedup. Full structural migrations can
 take longer and must not be disguised as routine component changes. Evidence
 must identify exact SHA, base, test contract and active fixture releases.
 
+The full lane has two four-worker browser shards on a 32 GB worker. Each shard
+has a 90-second no-output watchdog, seven-minute Playwright deadline, eight-minute
+outer command deadline and ten-minute Cloud Build step cap. The entire full build
+is capped at twenty minutes. A stalled run must fail, not silently consume forty
+minutes. These caps do not apply to the independent data-ingestion plane.
+
 Do not start duplicate builds for the same candidate. A failed candidate needs a
 new commit and new verification. The production image is tested before immutable
 promotion; no data processing or alternate hosting is introduced.
