@@ -13,9 +13,9 @@
   <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
   <link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
   <link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional">
-  <link rel="stylesheet" href="../../psd-chart.css"><link rel="stylesheet" href="../../energy-trade-deep-dive.css?v=20260920-energy-trade">
+  <link rel="stylesheet" href="../../psd-chart.css"><link rel="stylesheet" href="../../energy-trade-deep-dive.css?v=20260920-playback">
   <script src="../../global-nav.js?v=20260920-energy-trade" defer></script><script src="../../psd-chart.js" defer></script>
-  <script type="module" src="../../energy-trade-deep-dive.js?v=20260920-energy-trade"></script>
+  <script type="module" src="../../energy-trade-deep-dive.js?v=20260920-playback"></script>
 </head>
 <body class="deep-dives-page energy-trade-page" id="top">
 <psd-site-header></psd-site-header>
@@ -27,7 +27,7 @@
   <nav class="deep-topic-rail" aria-label="Energy trade sections"><a href="#flow-map" data-cs="Mapa toků" data-en="Flow map">Mapa toků</a><a href="#rankings" data-cs="Dodavatelé a trhy" data-en="Suppliers & markets">Dodavatelé a trhy</a><a href="#history" data-cs="Vývoj" data-en="History">Vývoj</a><a href="#method" data-cs="Definice" data-en="Definitions">Definice</a><a href="../trade/" data-cs="Celý zahraniční obchod ↗" data-en="All foreign trade ↗">Celý zahraniční obchod ↗</a></nav>
 
   <section class="energy-report" id="flow-map">
-    <header class="energy-heading"><div><p class="energy-eyebrow" data-cs="Globální obchodní mapa" data-en="Global trade map">Globální obchodní mapa</p><h2 data-cs="Od původu k dovoznímu trhu" data-en="From origin to importing market">Od původu k dovoznímu trhu</h2></div><p data-cs="Tloušťka spoje odpovídá vykázané hodnotě dovozu. Mapa ukazuje největší vazby; tabulka zachovává všechny načtené trasy." data-en="Route width reflects reported import value. The map shows the largest connections; the table retains every loaded route.">Tloušťka spoje odpovídá vykázané hodnotě dovozu. Mapa ukazuje největší vazby; tabulka zachovává všechny načtené trasy.</p></header>
+    <header class="energy-heading"><div><p class="energy-eyebrow" data-cs="Globální obchodní mapa" data-en="Global trade map">Globální obchodní mapa</p><h2 data-cs="Od původu k dovoznímu trhu" data-en="From origin to importing market">Od původu k dovoznímu trhu</h2></div><p data-cs="Tloušťka spoje odpovídá vykázané hodnotě dovozu. Mapa ukazuje největší vazby; tabulka ukazuje 40 největších tras." data-en="Route width reflects reported import value. The map shows the largest connections; the table shows the 40 largest routes.">Tloušťka spoje odpovídá vykázané hodnotě dovozu. Mapa ukazuje největší vazby; tabulka ukazuje 40 největších tras.</p></header>
     <div class="energy-product-filter" id="energy-products" role="group" aria-label="Energy product"></div>
     <form class="energy-controls" id="energy-controls">
       <label><span data-cs="Časové rozlišení" data-en="Frequency">Časové rozlišení</span><select id="energy-frequency"><option value="A" data-cs="Roční" data-en="Annual">Roční</option><option value="M" data-cs="Měsíční" data-en="Monthly">Měsíční</option></select></label>
@@ -37,7 +37,15 @@
     </form>
     <p class="energy-status" id="energy-status" role="status" data-cs="Načítám obchodní toky…" data-en="Loading trade flows…">Načítám obchodní toky…</p>
     <div class="energy-kpis" id="energy-kpis"></div>
-    <article class="energy-map-card" id="energy-trade-flow-map"><div id="energy-map" class="energy-map" aria-live="polite"></div><p id="energy-map-detail" class="energy-map-detail"></p></article>
+    <article class="energy-map-card" id="energy-trade-flow-map"><div id="energy-map" class="energy-map" aria-live="polite"></div><p id="energy-map-detail" class="energy-map-detail"></p>
+      <div class="energy-playback" role="group" aria-label="Map playback">
+        <button type="button" id="energy-previous" disabled aria-label="Previous period" title="Previous period">←</button>
+        <button type="button" id="energy-play" disabled aria-pressed="false" data-cs="▶ Přehrát" data-en="▶ Play">▶ Přehrát</button>
+        <label class="energy-timeline-label"><span id="energy-playback-label" data-cs="Rok po roku" data-en="Year by year">Rok po roku</span><input type="range" id="energy-timeline" min="0" max="0" value="0" step="1" disabled></label>
+        <output id="energy-playback-period" for="energy-timeline">—</output>
+        <button type="button" id="energy-next" disabled aria-label="Next period" title="Next period">→</button>
+      </div>
+    </article>
   </section>
 
   <section class="energy-rankings" id="rankings"><header class="energy-heading"><div><p class="energy-eyebrow" data-cs="Pozorovaný trh" data-en="Observed market">Pozorovaný trh</p><h2 data-cs="Největší původy a dovozci" data-en="Largest origins and importers">Největší původy a dovozci</h2></div><p id="energy-coverage-copy"></p></header><div class="energy-ranking-grid"><article><h3 data-cs="Vykázaný původ" data-en="Reported origin">Vykázaný původ</h3><div id="energy-origins"></div></article><article><h3 data-cs="Dovozní trh" data-en="Importing market">Dovozní trh</h3><div id="energy-markets"></div></article></div><div class="energy-route-table"><table><thead><tr><th data-cs="Původ" data-en="Origin">Původ</th><th data-cs="Dovozní trh" data-en="Importing market">Dovozní trh</th><th data-cs="Hodnota" data-en="Value">Hodnota</th><th data-cs="Podíl" data-en="Share">Podíl</th></tr></thead><tbody id="energy-routes"></tbody></table></div></section>

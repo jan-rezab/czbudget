@@ -9,6 +9,7 @@ const periods = {
         { frequency: "A", period: "2025", period_start: "2025-01-01", reporting_markets: 2, reported_origins: 3, observed_value_usd: 180, retrieved_at: "2026-09-20" },
         { frequency: "M", period: "202601", period_start: "2026-01-01", reporting_markets: 3, reported_origins: 3, observed_value_usd: 24, retrieved_at: "2026-09-20" },
         { frequency: "M", period: "202602", period_start: "2026-02-01", reporting_markets: 1, reported_origins: 1, observed_value_usd: 4, retrieved_at: "2026-09-20" },
+        { frequency: "M", period: "202603", period_start: "2026-03-01", reporting_markets: 1, reported_origins: 1, observed_value_usd: 5, retrieved_at: "2026-09-20" },
       ] },
       { id: "lng", code: "271111", name: "Liquefied natural gas", periods: [
         { frequency: "A", period: "2025", period_start: "2025-01-01", reporting_markets: 2, reported_origins: 2, observed_value_usd: 90, retrieved_at: "2026-09-20" },
@@ -27,7 +28,7 @@ function flows(url) {
     { origin: { code: "USA", iso2: "US", name: "United States" }, market: { code: "DEU", iso2: "DE", name: "Germany" }, value_usd: 50, net_weight_kg: 20e9, net_weight_is_estimated: true },
     { origin: { code: "NOR", iso2: "NO", name: "Norway" }, market: { code: "CZE", iso2: "CZ", name: "Czechia" }, value_usd: 30, net_weight_kg: 10e9, net_weight_is_estimated: false },
   ];
-  return { data: { schema_version: "energy-trade-flows.v1", product: { id: product, code, name: product }, frequency, period, routes, totals: { observed_value_usd: 180, reporting_markets: 2, reported_origins: 2 }, source: { retrieved_at: "2026-09-20" } } };
+  return { data: { schema_version: "energy-trade-flows.v1", product: { id: product, code, name: product }, frequency, period, routes, totals: { observed_value_usd: 180, reporting_markets: 2, reported_origins: 2 }, source: { retrieved_at: "1.7898624E9" } } };
 }
 
 test.beforeEach(async ({ page }) => {
@@ -46,9 +47,21 @@ test("energy map defaults to petroleum and filters annual, monthly and country r
   await page.locator('[data-product="lng"]').click();
   await expect(page).toHaveURL(/product=lng/);
   await expect(page.locator('[data-product="lng"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#energy-country")).toHaveValue("NOR");
   await page.locator("#energy-frequency").selectOption("M");
   await expect(page.locator("#energy-period")).toHaveValue("202601");
   await expect(page).toHaveURL(/frequency=M/);
+  await expect(page.locator("#energy-country")).toHaveValue("NOR");
+  await expect(page.locator("#energy-vintage")).toHaveText("Retrieved 2026-09-20");
+  await page.reload();
+  await expect(page.locator("#energy-country")).toHaveValue("NOR");
+  await page.goto("/deep-dives/energy-trade/?lang=en");
+  await expect(page.locator("#energy-country")).toHaveValue("NOR");
+  await page.goto("/deep-dives/energy-trade/?lang=en&country=USA");
+  await expect(page.locator("#energy-country")).toHaveValue("USA");
+  await page.locator("#energy-reset").click();
+  await page.goto("/deep-dives/energy-trade/?lang=en");
+  await expect(page.locator("#energy-country")).toHaveValue("ALL");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
@@ -64,4 +77,84 @@ test("an unavailable monthly gas series clears the previous product without a fa
   await expect(page.locator("#energy-routes")).toBeEmpty();
   await expect(page.locator("#energy-kpis")).toBeEmpty();
   expect(invalidRequests).toEqual([]);
+});
+
+test("yearly playback restarts at the beginning, keeps the country and stops at the end", async ({ page }) => {
+  await page.clock.install();
+  await page.goto("/deep-dives/energy-trade/?lang=en&country=NOR");
+  await expect(page.locator(".energy-route-group")).toHaveCount(2);
+  await page.locator("#energy-play").click();
+  await expect(page.locator("#energy-period")).toHaveValue("2024");
+  await expect(page.locator("#energy-map")).toHaveAttribute("aria-busy", "false");
+  await expect(page.locator("#energy-play")).toHaveText("Ⅱ Pause");
+  await page.clock.runFor(1500);
+  await expect(page.locator("#energy-period")).toHaveValue("2025");
+  await expect(page.locator("#energy-play")).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("#energy-country")).toHaveValue("NOR");
+  await expect(page.locator(".energy-route-group")).toHaveCount(2);
+  await page.getByRole("button", { name: "Previous period", exact: true }).click();
+  await expect(page.locator("#energy-period")).toHaveValue("2024");
+  await expect(page.locator("#energy-map")).toHaveAttribute("aria-busy", "false");
+  await page.getByRole("button", { name: "Next period", exact: true }).click();
+  await expect(page.locator("#energy-period")).toHaveValue("2025");
+});
+
+test("monthly playback can pause and scrub without discarding a country missing from a frame", async ({ page }) => {
+  await page.clock.install();
+  await page.route("**/api/v1/trade/energy/flows?*", route => {
+    const url = new URL(route.request().url());
+    const response = flows(url);
+    if (url.searchParams.get("period") === "202602") response.data.routes = response.data.routes.filter(row => row.market.code !== "CZE");
+    return route.fulfill({ contentType: "application/json", body: JSON.stringify(response) });
+  });
+  await page.goto("/deep-dives/energy-trade/?lang=en&frequency=M&period=202601&country=CZE");
+  await expect(page.locator(".energy-route-group")).toHaveCount(1);
+  await page.locator("#energy-play").click();
+  await page.clock.runFor(1500);
+  await expect(page.locator("#energy-status")).toContainText("no reported routes");
+  await expect(page.locator("#energy-country")).toHaveValue("CZE");
+  await expect(page.locator("#energy-kpis strong")).toHaveText(["—", "—", "—", "—"]);
+  await page.locator("#energy-play").click();
+  await page.clock.runFor(5000);
+  await expect(page.locator("#energy-period")).toHaveValue("202602");
+  await page.locator("#energy-play").click();
+  await page.clock.runFor(1500);
+  await expect(page.locator("#energy-period")).toHaveValue("202603");
+  await expect(page.locator(".energy-route-group")).toHaveCount(1);
+  await expect(page.locator("#energy-play")).toHaveAttribute("aria-pressed", "false");
+  await page.locator("#energy-timeline").focus();
+  await page.keyboard.press("Home");
+  await expect(page.locator("#energy-period")).toHaveValue("202601");
+  await expect(page).toHaveURL(/country=CZE/);
+  await expect(page.locator("#energy-map")).toHaveAttribute("aria-busy", "false");
+  await page.locator("#energy-frequency").selectOption("A");
+  await expect(page.locator("#energy-country")).toHaveValue("CZE");
+  await expect(page.locator("#energy-playback-label")).toHaveText("Year by year");
+});
+
+test("playback waits for a slow frame and ignores its response after a product change", async ({ page }) => {
+  await page.clock.install();
+  const requested = [];
+  let releaseFrame;
+  const frameGate = new Promise(resolve => { releaseFrame = resolve; });
+  await page.route("**/api/v1/trade/energy/flows?*", async route => {
+    const url = new URL(route.request().url());
+    requested.push(url.searchParams.get("period"));
+    if (url.searchParams.get("product") === "petroleum" && url.searchParams.get("period") === "202602") await frameGate;
+    await route.fulfill({ contentType: "application/json", body: JSON.stringify(flows(url)) });
+  });
+  await page.goto("/deep-dives/energy-trade/?lang=en&frequency=M&period=202601&country=NOR");
+  await expect(page.locator(".energy-route-group")).toHaveCount(2);
+  await page.locator("#energy-play").click();
+  await page.clock.runFor(1500);
+  await expect(page.locator("#energy-map")).toHaveAttribute("aria-busy", "true");
+  await page.clock.runFor(5000);
+  expect(requested).not.toContain("202603");
+  await expect(page.locator(".energy-route-group")).toHaveCount(2);
+  await page.locator('[data-product="lng"]').click();
+  await expect(page.locator("#energy-status")).toContainText("LNG");
+  releaseFrame();
+  await expect(page.locator("#energy-country")).toHaveValue("NOR");
+  await expect(page.locator("#energy-play")).toBeDisabled();
+  await expect(page.locator("#energy-map svg")).toHaveAttribute("aria-label", "LNG · Jan 2026");
 });
