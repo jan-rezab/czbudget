@@ -47,7 +47,7 @@ source even when the selected YAML is code-only.
 - Never run it concurrently with another verification of the same commit. Reuse
   the successful build ID.
 
-The exhaustive gate runs named component contracts first, then two browser shards
+The exhaustive gate runs named component contracts first, then four browser shards
 against pinned published releases using the prepared Playwright image. No repeated
 browser installation. Runtime image assembly happens once, in production; its
 filesystem/HTTP and desktop/mobile browser contracts must pass before promotion.
