@@ -14,7 +14,7 @@ const COPY = {
     limits: [
       'Historical ingestion rows are reconstructed from warehouse load records and declared retrievals. They prove an event was recorded, not that a checker or person approved it.',
       'Deployment receipts begin with this log. Older deployments are not reconstructed, and absent PR metadata is displayed as not recorded.',
-      'A skipped deployment means Cloud Build produced an immutable image, but a newer main commit had already superseded it.',
+      'A skipped deployment means Cloud Build produced an immutable image, but that commit was not the current main commit at deployment time.',
     ],
   },
   cs: {
@@ -30,7 +30,7 @@ const COPY = {
     limits: [
       'Historické příjmy jsou zpětně odvozené ze záznamů skladu a deklarovaných stažení. Dokládají záznam události, ne schválení kontrolorem nebo člověkem.',
       'Potvrzení o nasazení začínají tímto deníkem. Starší nasazení nerekonstruujeme a chybějící PR uvádíme jako nezaznamenané.',
-      'Přeskočené nasazení znamená, že Cloud Build vytvořil neměnný obraz, ale mezitím jej nahradil novější commit větve main.',
+      'Přeskočené nasazení znamená, že Cloud Build vytvořil neměnný obraz, ale daný commit nebyl v okamžiku nasazení aktuálním commitem větve main.',
     ],
   },
 };
