@@ -22,6 +22,7 @@ import { municipalityPage } from "./municipality-page.mjs";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 import { cityVizorStore, CityVizorError } from "./cityvizor-store.mjs";
 import { TradeError, TradeStore } from "./trade-store.mjs";
+import { ProcessLogError, processLogStore } from "./process-log-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
@@ -196,6 +197,7 @@ async function routeAPI(request, response, url) {
 
   if (pathname === "/api/v1") return sendJSON(response, 200, { data: await apiIndex() });
   if (pathname === "/api/v1/datasets") return sendJSON(response, 200, { data: await listDatasets() });
+  if (pathname === "/api/v1/process-log/deployments") return sendJSON(response, 200, { data: await processLogStore.deployments() }, { "cache-control": "public, max-age=60" });
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
   if ((match = pathname.match(/^\/api\/v1\/countries\/([^/]+)$/))) return sendJSON(response, 200, { data: await countryProfile(match[1]) });
@@ -599,7 +601,7 @@ export async function handler(request, response) {
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);
     }
-    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

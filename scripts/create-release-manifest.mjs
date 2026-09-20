@@ -20,7 +20,7 @@ const selected = [
   "cityvizor/index.html", "cityvizor.js", "cityvizor.css",
   "data/cityvizor-catalogue.v1.json", "data/cityvizor-explorer-release.v1.json", "data/cityvizor-current.v1.json", "data/contracts/official-registry/manifest.v1.json", "data/contracts/official-registry/lineage.v1.json",
   "data/contracts/00075370.plzen-projects.v1.json", "data/money-reports/cze-arad-native.v1.json", "data/money-reports/cze.v1.json",
-  "data/industry/CZE.json.gz", "data/registry/source-provenance.v1.json",
+  "data/industry/CZE.json.gz", "data/registry/source-provenance.v1.json", "data/registry/run-log.v1.json",
 ];
 for (const name of (await readdir(path.join(root, "data"))).sort()) {
   if (/^(?:cze-|czech-|cez-issuer-|mv-administration-grants).*\.json$/.test(name) && !selected.includes(`data/${name}`)) selected.push(`data/${name}`);

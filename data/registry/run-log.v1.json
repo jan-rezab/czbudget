@@ -1,0 +1,2863 @@
+{
+ "schema_version": "2.0.0",
+ "registry": "run-log",
+ "generated_at": "2026-09-20T13:03:14.196Z",
+ "note": "Ingestion and data-release events reconstructed from committed evidence. Deployment events are append-only Cloud Build receipts returned by the live API. Missing checker, approver, PR or build metadata is shown as not recorded and is never inferred.",
+ "coverage": {
+  "events": 99,
+  "ingestion_events": 98,
+  "data_release_events": 1,
+  "deployment_events": 0,
+  "spine_runs": 0,
+  "backfilled_runs": 99,
+  "with_country": 72,
+  "with_sections": 68,
+  "with_checker_verdict": 0,
+  "with_challenger_verdict": 0,
+  "with_human_approver": 0,
+  "earliest": "2026-08-20",
+  "latest": "2026-09-09"
+ },
+ "facets": {
+  "countries": [
+   {
+    "value": "DEU",
+    "runs": 11
+   },
+   {
+    "value": "FRA",
+    "runs": 11
+   },
+   {
+    "value": "CZE",
+    "runs": 10
+   },
+   {
+    "value": "GBR",
+    "runs": 6
+   },
+   {
+    "value": "POL",
+    "runs": 4
+   },
+   {
+    "value": "UKR",
+    "runs": 4
+   },
+   {
+    "value": "USA",
+    "runs": 4
+   },
+   {
+    "value": "BRA",
+    "runs": 2
+   },
+   {
+    "value": "CHE",
+    "runs": 2
+   },
+   {
+    "value": "DNK",
+    "runs": 2
+   },
+   {
+    "value": "SWE",
+    "runs": 2
+   },
+   {
+    "value": "BOL",
+    "runs": 1
+   },
+   {
+    "value": "CHL",
+    "runs": 1
+   },
+   {
+    "value": "COL",
+    "runs": 1
+   },
+   {
+    "value": "CRI",
+    "runs": 1
+   },
+   {
+    "value": "ESP",
+    "runs": 1
+   },
+   {
+    "value": "GEO",
+    "runs": 1
+   },
+   {
+    "value": "GTM",
+    "runs": 1
+   },
+   {
+    "value": "ITA",
+    "runs": 1
+   },
+   {
+    "value": "JPN",
+    "runs": 1
+   },
+   {
+    "value": "KOR",
+    "runs": 1
+   },
+   {
+    "value": "MEX",
+    "runs": 1
+   },
+   {
+    "value": "PER",
+    "runs": 1
+   },
+   {
+    "value": "PRY",
+    "runs": 1
+   },
+   {
+    "value": "SLV",
+    "runs": 1
+   }
+  ],
+  "sources": [
+   {
+    "value": "pensions-today",
+    "runs": 2
+   },
+   {
+    "value": "bol-municipal-expansion",
+    "runs": 1
+   },
+   {
+    "value": "br-siconfi-dca-2024",
+    "runs": 1
+   },
+   {
+    "value": "br-siconfi-rreo-2025",
+    "runs": 1
+   },
+   {
+    "value": "cez-issuer-2025",
+    "runs": 1
+   },
+   {
+    "value": "ch-lustat-lucerne-municipal-budgets",
+    "runs": 1
+   },
+   {
+    "value": "ch-zurich-city-finance-api-2026",
+    "runs": 1
+   },
+   {
+    "value": "chl-municipal-expansion",
+    "runs": 1
+   },
+   {
+    "value": "cityvizor-catalogue",
+    "runs": 1
+   },
+   {
+    "value": "col-municipal-expansion",
+    "runs": 1
+   },
+   {
+    "value": "countries",
+    "runs": 1
+   },
+   {
+    "value": "country-cash-in",
+    "runs": 1
+   },
+   {
+    "value": "country-provider-networks",
+    "runs": 1
+   },
+   {
+    "value": "cri-municipal-expansion",
+    "runs": 1
+   },
+   {
+    "value": "cz-monitor-finm-2025-12",
+    "runs": 1
+   },
+   {
+    "value": "cze-pension-tables-2025",
+    "runs": 1
+   },
+   {
+    "value": "czech-defense-definitions",
+    "runs": 1
+   },
+   {
+    "value": "czech-isred-grants",
+    "runs": 1
+   },
+   {
+    "value": "czech-mf-perimeter-history",
+    "runs": 1
+   },
+   {
+    "value": "czech-municipal-reconciliation",
+    "runs": 1
+   },
+   {
+    "value": "czech-nku",
+    "runs": 1
+   },
+   {
+    "value": "czech-project-geography",
+    "runs": 1
+   },
+   {
+    "value": "czech-sfdi-budget-tables",
+    "runs": 1
+   },
+   {
+    "value": "czech-sfdi-financing",
+    "runs": 1
+   },
+   {
+    "value": "czech-sfdi-tables",
+    "runs": 1
+   },
+   {
+    "value": "czech-sipri-military-expenditure",
+    "runs": 1
+   },
+   {
+    "value": "data-freshness",
+    "runs": 1
+   },
+   {
+    "value": "de-aachen-budget-2026",
+    "runs": 1
+   },
+   {
+    "value": "de-bonn-budget-archive-2024",
+    "runs": 1
+   },
+   {
+    "value": "de-bremen-city-budget-2026-2027",
+    "runs": 1
+   },
+   {
+    "value": "de-dortmund-budget-2020-2021",
+    "runs": 1
+   },
+   {
+    "value": "de-essen-budget-2025-2026",
+    "runs": 1
+   },
+   {
+    "value": "de-frankfurt-budget-2024-2025",
+    "runs": 1
+   },
+   {
+    "value": "de-glueckstadt-budget-2022",
+    "runs": 1
+   },
+   {
+    "value": "de-karlsruhe-budget-2024",
+    "runs": 1
+   },
+   {
+    "value": "de-koeln-budget-2016",
+    "runs": 1
+   },
+   {
+    "value": "de-moers-budget-2023",
+    "runs": 1
+   },
+   {
+    "value": "de-oldenburg-budget-2025",
+    "runs": 1
+   },
+   {
+    "value": "defense-deep-dive",
+    "runs": 1
+   },
+   {
+    "value": "digital-spillover",
+    "runs": 1
+   },
+   {
+    "value": "dk-statbank-budk32",
+    "runs": 1
+   },
+   {
+    "value": "dk-statbank-regk100",
+    "runs": 1
+   },
+   {
+    "value": "ecb-annual-exchange-rates",
+    "runs": 1
+   },
+   {
+    "value": "economy",
+    "runs": 1
+   },
+   {
+    "value": "education-deep-dive",
+    "runs": 1
+   },
+   {
+    "value": "education-regional-learners",
+    "runs": 1
+   },
+   {
+    "value": "esp-municipal-expansion",
+    "runs": 1
+   },
+   {
+    "value": "european-politics",
+    "runs": 1
+   },
+   {
+    "value": "fr-blagnac-budget-2025",
+    "runs": 1
+   },
+   {
+    "value": "fr-brest-budget-2026",
+    "runs": 1
+   },
+   {
+    "value": "fr-dgfip-balances-fonction-2024",
+    "runs": 1
+   },
+   {
+    "value": "fr-dgfip-balances-fonction-2025",
+    "runs": 1
+   },
+   {
+    "value": "fr-dgfip-commune-balances-2024",
+    "runs": 1
+   },
+   {
+    "value": "fr-dgfip-commune-balances-2025",
+    "runs": 1
+   },
+   {
+    "value": "fr-la-possession-budget-2025",
+    "runs": 1
+   },
+   {
+    "value": "fr-nantes-budget-2026",
+    "runs": 1
+   },
+   {
+    "value": "fr-ofgl-base-communes",
+    "runs": 1
+   },
+   {
+    "value": "fr-sailly-budget-2025",
+    "runs": 1
+   },
+   {
+    "value": "fr-toulouse-budget-2026",
+    "runs": 1
+   },
+   {
+    "value": "gb-england-revenue-budget-2026-part-1",
+    "runs": 1
+   }
+  ]
+ },
+ "runs": [
+  {
+   "run_id": "cez-issuer-2025@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "cez-issuer-2025",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 2,
+    "with_checksum": 2,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/cez-issuer-2025.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "cityvizor-catalogue@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "cityvizor-catalogue",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1688,
+    "with_checksum": 1688,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/cityvizor-catalogue.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/czech-sources.html"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "countries@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "countries",
+   "publisher": "ÚZIS NRPZS · Místa poskytování zdravotních služeb",
+   "publisher_count": 1,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 2,
+    "with_checksum": 2,
+    "artifacts": 2
+   },
+   "artifacts": [
+    "data/countries/cze/profile.v1.json",
+    "data/countries/cze/providers.v1.json"
+   ],
+   "artifact_count": 2,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "country-cash-in@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "country-cash-in",
+   "publisher": "FIN 2-12M",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/country-cash-in.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/country.html"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "country-provider-networks@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "country-provider-networks",
+   "publisher": "ÚZIS NRPZS · Místa poskytování zdravotních služeb",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/country-provider-networks.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/comparison.html",
+    "/country.html"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-defense-definitions@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-defense-definitions",
+   "publisher": null,
+   "publisher_count": 2,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 2,
+    "with_checksum": 2,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/czech-defense-definitions.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-isred-grants@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-isred-grants",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 5,
+    "with_checksum": 5,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/czech-isred-grants.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-mf-perimeter-history@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-mf-perimeter-history",
+   "publisher": null,
+   "publisher_count": 15,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 16,
+    "with_checksum": 16,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/czech-mf-perimeter-history.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-municipal-reconciliation@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-municipal-reconciliation",
+   "publisher": "FIN 2-12M",
+   "publisher_count": 1,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/czech-municipal-reconciliation.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-nku@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-nku",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 116,
+    "with_checksum": 116,
+    "artifacts": 59
+   },
+   "artifacts": [
+    "data/czech-nku.v1.json",
+    "data/czech-nku/013b37ba9615.json",
+    "data/czech-nku/0423ce637fa2.json",
+    "data/czech-nku/081641260417.json",
+    "data/czech-nku/11b6ce983520.json",
+    "data/czech-nku/15eecf92dbc9.json",
+    "data/czech-nku/2d126c19f001.json",
+    "data/czech-nku/2d57d09d38c5.json",
+    "data/czech-nku/352e594e453c.json",
+    "data/czech-nku/36f881f4517e.json",
+    "data/czech-nku/394b7aba50a4.json",
+    "data/czech-nku/395cb379a72c.json"
+   ],
+   "artifact_count": 59,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-project-geography@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-project-geography",
+   "publisher": null,
+   "publisher_count": 2,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1318,
+    "with_checksum": 1318,
+    "artifacts": 18
+   },
+   "artifacts": [
+    "data/czech-project-geography.v1.json",
+    "data/czech-project-geography/plzen-investments/manifest.json",
+    "data/czech-project-geography/rsd-motorway-history/manifest.json",
+    "data/czech-project-geography/rsd-network-1/manifest.json",
+    "data/czech-project-geography/rsd-network-10/manifest.json",
+    "data/czech-project-geography/rsd-network-12/manifest.json",
+    "data/czech-project-geography/rsd-network-14/manifest.json",
+    "data/czech-project-geography/rsd-network-16/manifest.json",
+    "data/czech-project-geography/rsd-network-18/manifest.json",
+    "data/czech-project-geography/rsd-network-20/manifest.json",
+    "data/czech-project-geography/rsd-network-22/manifest.json",
+    "data/czech-project-geography/rsd-network-24/manifest.json"
+   ],
+   "artifact_count": 18,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-sfdi-budget-tables@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-sfdi-budget-tables",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 12,
+    "with_checksum": 12,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/czech-sfdi-budget-tables.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-sfdi-financing@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-sfdi-financing",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/czech-sfdi-financing.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/country.html"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-sfdi-tables@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-sfdi-tables",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 12,
+    "with_checksum": 12,
+    "artifacts": 12
+   },
+   "artifacts": [
+    "data/czech-sfdi-tables/4774ca359c7e.json",
+    "data/czech-sfdi-tables/56cb0dead4d5.json",
+    "data/czech-sfdi-tables/5dd03bc358cb.json",
+    "data/czech-sfdi-tables/708de1312915.json",
+    "data/czech-sfdi-tables/80828002f48c.json",
+    "data/czech-sfdi-tables/95f1d96dc0b0.json",
+    "data/czech-sfdi-tables/972755074ca0.json",
+    "data/czech-sfdi-tables/bd1f9af345f1.json",
+    "data/czech-sfdi-tables/d09738fd854a.json",
+    "data/czech-sfdi-tables/e4d0c289c3fa.json",
+    "data/czech-sfdi-tables/f26de5fff423.json",
+    "data/czech-sfdi-tables/f8ecbdd131f7.json"
+   ],
+   "artifact_count": 12,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "czech-sipri-military-expenditure@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "czech-sipri-military-expenditure",
+   "publisher": "SIPRI",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/czech-sipri-military-expenditure.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "data-freshness@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "data-freshness",
+   "publisher": "ÚZIS NRPZS · Místa poskytování zdravotních služeb",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/data-freshness.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/methodology.html"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "data-release:manifest-f8c01db7006c-2026-09-09",
+   "event_type": "data_release",
+   "record_kind": "backfilled",
+   "evidence": "release manifest",
+   "date": "2026-09-09",
+   "timestamp": "2026-09-09T13:43:54.670189+00:00",
+   "source_id": "site-data-release",
+   "publisher": "Public Spending Data",
+   "country_codes": [],
+   "edition": "manifest-f8c01db7006c-2026-09-09",
+   "covers": null,
+   "volume": {
+    "artifacts": 368
+   },
+   "artifacts": [
+    "data/release-manifest.v1.json"
+   ],
+   "artifact_count": 368,
+   "sections": [
+    "/methodology.html",
+    "/process/log/"
+   ],
+   "outcome": "published",
+   "approver": null,
+   "data_release_ids": [
+    "manifest-f8c01db7006c-2026-09-09",
+    "cz-finm-2025-all-municipalities-v1"
+   ],
+   "git_sha": "f8c01db7006c26901d6078b40ec1fa27cbb5eb82",
+   "cloud_build_id": null,
+   "working_tree_dirty": true
+  },
+  {
+   "run_id": "defense-deep-dive@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "defense-deep-dive",
+   "publisher": null,
+   "publisher_count": 3,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 3,
+    "with_checksum": 3,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/defense-deep-dive.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ecb-annual-exchange-rates@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "ecb-annual-exchange-rates",
+   "publisher": "ECB",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/ecb-annual-exchange-rates.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/money-flow.html"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "education-deep-dive@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "education-deep-dive",
+   "publisher": "CZSO / MŠMT — Schools and school facilities 2025/26",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 0,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/education-deep-dive.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/deep-dives/funding/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "education-regional-learners@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "education-regional-learners",
+   "publisher": "CZSO / MŠMT — Schools and school facilities 2025/26",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 0,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/education-regional-learners.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "methodology-sources@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "methodology-sources",
+   "publisher": null,
+   "publisher_count": 2,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 2,
+    "with_checksum": 2,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/methodology-sources.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/about.html",
+    "/methodology.html"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "money-reports@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "money-reports",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 3,
+    "with_checksum": 3,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/money-reports/cze-arad-native.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "municipal-fx-rates@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "municipal-fx-rates",
+   "publisher": "ECB",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/municipal-fx-rates.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "municipal-snapshot@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "municipal-snapshot",
+   "publisher": "FIN 2-12M",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/municipal-snapshot.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/cz/municipalities/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "mv-administration-grants@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "mv-administration-grants",
+   "publisher": "Ministerstvo vnitra ČR",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/mv-administration-grants.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "pensions-today@2026-09-09",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-09",
+   "source_id": "pensions-today",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 2,
+    "with_checksum": 2,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/pensions-today.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "cze-pension-tables-2025@2026-09-08",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-08",
+   "source_id": "cze-pension-tables-2025",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 1,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/cze-pension-tables-2025.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "pensions-today@2026-09-08",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-08",
+   "source_id": "pensions-today",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 7,
+    "with_checksum": 7,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/pensions-today.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "industrial-intelligence@2026-09-07",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-07",
+   "source_id": "industrial-intelligence",
+   "publisher": null,
+   "publisher_count": 120,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 240,
+    "with_checksum": 0,
+    "artifacts": 121
+   },
+   "artifacts": [
+    "data/industrial-intelligence/DS-059358/index.json",
+    "data/industrial-intelligence/DS-059359/index.json",
+    "data/industrial-intelligence/bd_hg/index.json",
+    "data/industrial-intelligence/bd_l_form/index.json",
+    "data/industrial-intelligence/bd_size/index.json",
+    "data/industrial-intelligence/ei_bsin_m_r2/index.json",
+    "data/industrial-intelligence/ei_bsin_q_r2/index.json",
+    "data/industrial-intelligence/env_ac_pefa04/index.json",
+    "data/industrial-intelligence/env_ac_pefasu/index.json",
+    "data/industrial-intelligence/ext_stec01/index.json",
+    "data/industrial-intelligence/ext_stec02/index.json",
+    "data/industrial-intelligence/ext_stec03/index.json"
+   ],
+   "artifact_count": 121,
+   "sections": [
+    "/deep-dives/industry/diagnostics/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "european-politics@2026-09-05",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-05",
+   "source_id": "european-politics",
+   "publisher": null,
+   "publisher_count": 58,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 68,
+    "with_checksum": 58,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/european-politics.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [
+    "/deep-dives/european-politics/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "politics-source-crawl@2026-09-05",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-05",
+   "source_id": "politics-source-crawl",
+   "publisher": null,
+   "publisher_count": 58,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 68,
+    "with_checksum": 58,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/politics-source-crawl.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-ofgl-base-communes@2026-09-01",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-09-01",
+   "source_id": "fr-ofgl-base-communes",
+   "publisher": "ofgl",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": null,
+   "covers": "2024–2025",
+   "volume": {
+    "facts": 418260,
+    "entities": 34875
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "state-budget-cze-2027-proposal@2026-09-01",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-09-01",
+   "source_id": "state-budget-cze-2027-proposal",
+   "publisher": "Ministerstvo financí České republiky",
+   "publisher_count": 1,
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 0,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/state-budget-cze-2027-proposal.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "br-siconfi-dca-2024@2026-08-31",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-31",
+   "source_id": "br-siconfi-dca-2024",
+   "publisher": "siconfi",
+   "country_codes": [
+    "BRA"
+   ],
+   "edition": "2024",
+   "covers": "2024",
+   "volume": {
+    "facts": 12046,
+    "entities": 44
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/brazil/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "br-siconfi-rreo-2025@2026-08-31",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-31",
+   "source_id": "br-siconfi-rreo-2025",
+   "publisher": "siconfi",
+   "country_codes": [
+    "BRA"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 1224228,
+    "entities": 5513
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/brazil/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "dk-statbank-regk100@2026-08-31",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-31",
+   "source_id": "dk-statbank-regk100",
+   "publisher": "statbank",
+   "country_codes": [
+    "DNK"
+   ],
+   "edition": null,
+   "covers": "2024–2025",
+   "volume": {
+    "facts": 70145,
+    "entities": 98
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/denmark/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "jpn-estat-municipal-settlement-2024@2026-08-31",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-31",
+   "source_id": "jpn-estat-municipal-settlement-2024",
+   "publisher": "estat",
+   "country_codes": [
+    "JPN"
+   ],
+   "edition": "2024",
+   "covers": "2024",
+   "volume": {
+    "facts": 114637,
+    "entities": 2982
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/japan/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "bol-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "bol-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "BOL"
+   ],
+   "edition": null,
+   "covers": "2025",
+   "volume": {
+    "facts": 20756,
+    "entities": 343
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/bolivia/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "chl-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "chl-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "CHL"
+   ],
+   "edition": null,
+   "covers": "2025",
+   "volume": {
+    "facts": 17940,
+    "entities": 345
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/chile/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "col-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "col-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "COL"
+   ],
+   "edition": null,
+   "covers": "2025",
+   "volume": {
+    "facts": 6612,
+    "entities": 1102
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/colombia/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "cri-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "cri-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "CRI"
+   ],
+   "edition": null,
+   "covers": "2025",
+   "volume": {
+    "facts": 168,
+    "entities": 84
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/costa-rica/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "esp-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "esp-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "ESP"
+   ],
+   "edition": null,
+   "covers": "2025–2026",
+   "volume": {
+    "facts": 1362728,
+    "entities": 6198
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/spain/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "geo-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "geo-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "GEO"
+   ],
+   "edition": null,
+   "covers": "2025–2026",
+   "volume": {
+    "facts": 2760,
+    "entities": 69
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/georgia/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "gtm-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "gtm-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "GTM"
+   ],
+   "edition": null,
+   "covers": "2025",
+   "volume": {
+    "facts": 19844,
+    "entities": 340
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/guatemala/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ita-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "ita-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "ITA"
+   ],
+   "edition": null,
+   "covers": "2025",
+   "volume": {
+    "facts": 92384,
+    "entities": 7896
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/italy/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "kor-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "kor-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "KOR"
+   ],
+   "edition": null,
+   "covers": "2024",
+   "volume": {
+    "facts": 1944,
+    "entities": 243
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/south-korea/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "mex-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "mex-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "MEX"
+   ],
+   "edition": null,
+   "covers": "2024",
+   "volume": {
+    "facts": 31454,
+    "entities": 2380
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/mexico/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "per-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "per-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "PER"
+   ],
+   "edition": null,
+   "covers": "2024",
+   "volume": {
+    "facts": 122894,
+    "entities": 1891
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/peru/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "slv-municipal-expansion@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-30",
+   "source_id": "slv-municipal-expansion",
+   "publisher": "municipal",
+   "country_codes": [
+    "SLV"
+   ],
+   "edition": null,
+   "covers": "2023",
+   "volume": {
+    "facts": 9546,
+    "entities": 259
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/el-salvador/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "trade@2026-08-30",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-08-30",
+   "source_id": "trade",
+   "publisher": "United Nations Statistics Division",
+   "publisher_count": 1,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 0,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/trade/annual-hs2-2024.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ch-lustat-lucerne-municipal-budgets@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "ch-lustat-lucerne-municipal-budgets",
+   "publisher": "lustat",
+   "country_codes": [
+    "CHE"
+   ],
+   "edition": null,
+   "covers": "2026",
+   "volume": {
+    "facts": 59978,
+    "entities": 79
+   },
+   "artifacts": [],
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ch-zurich-city-finance-api-2026@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "ch-zurich-city-finance-api-2026",
+   "publisher": "zurich",
+   "country_codes": [
+    "CHE"
+   ],
+   "edition": "2026",
+   "covers": "2026",
+   "volume": {
+    "facts": 4207,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-aachen-budget-2026@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-aachen-budget-2026",
+   "publisher": "aachen",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2026",
+   "covers": "2026–2029",
+   "volume": {
+    "facts": 13337,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-bonn-budget-archive-2024@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-bonn-budget-archive-2024",
+   "publisher": "bonn",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2024",
+   "covers": "2024",
+   "volume": {
+    "facts": 906355,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-bremen-city-budget-2026-2027@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-bremen-city-budget-2026-2027",
+   "publisher": "bremen",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2026",
+   "covers": "2026–2027",
+   "volume": {
+    "facts": 4861,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-dortmund-budget-2020-2021@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-dortmund-budget-2020-2021",
+   "publisher": "dortmund",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2020",
+   "covers": "2019–2024",
+   "volume": {
+    "facts": 10352,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-essen-budget-2025-2026@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-essen-budget-2025-2026",
+   "publisher": "essen",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2025",
+   "covers": "2024–2029",
+   "volume": {
+    "facts": 3706,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-frankfurt-budget-2024-2025@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-frankfurt-budget-2024-2025",
+   "publisher": "frankfurt",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2024",
+   "covers": "2022–2027",
+   "volume": {
+    "facts": 47728,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-glueckstadt-budget-2022@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-glueckstadt-budget-2022",
+   "publisher": "glueckstadt",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2022",
+   "covers": "2022–2025",
+   "volume": {
+    "facts": 4973,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-karlsruhe-budget-2024@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-karlsruhe-budget-2024",
+   "publisher": "karlsruhe",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2024",
+   "covers": "2024–2028",
+   "volume": {
+    "facts": 106767,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-koeln-budget-2016@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-koeln-budget-2016",
+   "publisher": "koeln",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2016",
+   "covers": "2016–2022",
+   "volume": {
+    "facts": 47613,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-moers-budget-2023@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-moers-budget-2023",
+   "publisher": "moers",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2023",
+   "covers": "2022–2023",
+   "volume": {
+    "facts": 6263,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "de-oldenburg-budget-2025@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "de-oldenburg-budget-2025",
+   "publisher": "oldenburg",
+   "country_codes": [
+    "DEU"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 54,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/germany/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-blagnac-budget-2025@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-blagnac-budget-2025",
+   "publisher": "blagnac",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 1203,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-brest-budget-2026@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-brest-budget-2026",
+   "publisher": "brest",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2026",
+   "covers": "2026",
+   "volume": {
+    "facts": 782,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-dgfip-balances-fonction-2025@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-dgfip-balances-fonction-2025",
+   "publisher": "dgfip",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 2459267,
+    "entities": 3493
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-dgfip-commune-balances-2025@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-dgfip-commune-balances-2025",
+   "publisher": "dgfip",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 2713606,
+    "entities": 31384
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-la-possession-budget-2025@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-la-possession-budget-2025",
+   "publisher": "la",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 1737,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-nantes-budget-2026@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-nantes-budget-2026",
+   "publisher": "nantes",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2026",
+   "covers": "2026",
+   "volume": {
+    "facts": 1291,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-sailly-budget-2025@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-sailly-budget-2025",
+   "publisher": "sailly",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 124,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-toulouse-budget-2026@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "fr-toulouse-budget-2026",
+   "publisher": "toulouse",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2026",
+   "covers": "2026",
+   "volume": {
+    "facts": 1692,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "gb-england-revenue-budget-2026-part-1@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "gb-england-revenue-budget-2026-part-1",
+   "publisher": "england",
+   "country_codes": [
+    "GBR"
+   ],
+   "edition": "2026",
+   "covers": "2026",
+   "volume": {
+    "facts": 30449,
+    "entities": 308
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/england/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "gb-england-revenue-budget-2026-part-2@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "gb-england-revenue-budget-2026-part-2",
+   "publisher": "england",
+   "country_codes": [
+    "GBR"
+   ],
+   "edition": "2026",
+   "covers": "2026",
+   "volume": {
+    "facts": 10987,
+    "entities": 308
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/england/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "gb-scotland-pobe-2026-capital@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "gb-scotland-pobe-2026-capital",
+   "publisher": "scotland",
+   "country_codes": [
+    "GBR"
+   ],
+   "edition": "2026",
+   "covers": "2025–2028",
+   "volume": {
+    "facts": 4984,
+    "entities": 32
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/england/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "gb-scotland-pobe-2026-revenue@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "gb-scotland-pobe-2026-revenue",
+   "publisher": "scotland",
+   "country_codes": [
+    "GBR"
+   ],
+   "edition": "2026",
+   "covers": "2025–2026",
+   "volume": {
+    "facts": 6606,
+    "entities": 32
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/england/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "gb-wales-statswales-revenue-budget-2025-2026@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "gb-wales-statswales-revenue-budget-2025-2026",
+   "publisher": "wales",
+   "country_codes": [
+    "GBR"
+   ],
+   "edition": "2025",
+   "covers": "2025–2026",
+   "volume": {
+    "facts": 4409,
+    "entities": 22
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/england/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "py-boost-municipal-2006-2022@2026-08-27",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-27",
+   "source_id": "py-boost-municipal-2006-2022",
+   "publisher": "boost",
+   "country_codes": [
+    "PRY"
+   ],
+   "edition": "2006",
+   "covers": "2006–2022",
+   "volume": {
+    "facts": 281957,
+    "entities": 263
+   },
+   "artifacts": [],
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "digital-spillover@2026-08-26",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-08-26",
+   "source_id": "digital-spillover",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 3,
+    "with_checksum": 0,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/digital-spillover.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "economy@2026-08-26",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "declared source retrieval",
+   "date": "2026-08-26",
+   "source_id": "economy",
+   "publisher": null,
+   "publisher_count": 0,
+   "country_codes": [],
+   "edition": null,
+   "covers": null,
+   "volume": {
+    "objects": 1,
+    "with_checksum": 0,
+    "artifacts": 1
+   },
+   "artifacts": [
+    "data/economy/economy-deep-dive.v1.json"
+   ],
+   "artifact_count": 1,
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "us-chicago-budget-ordinance@2026-08-25",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-25",
+   "source_id": "us-chicago-budget-ordinance",
+   "publisher": "chicago",
+   "country_codes": [
+    "USA"
+   ],
+   "edition": null,
+   "covers": "2026",
+   "volume": {
+    "facts": 3268,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "us-la-budget-expenditures@2026-08-25",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-25",
+   "source_id": "us-la-budget-expenditures",
+   "publisher": "la",
+   "country_codes": [
+    "USA"
+   ],
+   "edition": null,
+   "covers": "2026–2027",
+   "volume": {
+    "facts": 10991,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "us-nyc-expense-budget@2026-08-25",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-25",
+   "source_id": "us-nyc-expense-budget",
+   "publisher": "nyc",
+   "country_codes": [
+    "USA"
+   ],
+   "edition": null,
+   "covers": "2026–2027",
+   "volume": {
+    "facts": 4154,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "us-sf-budget@2026-08-25",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-25",
+   "source_id": "us-sf-budget",
+   "publisher": "sf",
+   "country_codes": [
+    "USA"
+   ],
+   "edition": null,
+   "covers": "2026–2028",
+   "volume": {
+    "facts": 28729,
+    "entities": 1
+   },
+   "artifacts": [],
+   "sections": [],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "dk-statbank-budk32@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "dk-statbank-budk32",
+   "publisher": "statbank",
+   "country_codes": [
+    "DNK"
+   ],
+   "edition": null,
+   "covers": "2024–2025",
+   "volume": {
+    "facts": 94608,
+    "entities": 98
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/denmark/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-dgfip-balances-fonction-2024@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "fr-dgfip-balances-fonction-2024",
+   "publisher": "dgfip",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2024",
+   "covers": "2024",
+   "volume": {
+    "facts": 2516204,
+    "entities": 3484
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "fr-dgfip-commune-balances-2024@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "fr-dgfip-commune-balances-2024",
+   "publisher": "dgfip",
+   "country_codes": [
+    "FRA"
+   ],
+   "edition": "2024",
+   "covers": "2024",
+   "volume": {
+    "facts": 2749622,
+    "entities": 31547
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/france/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "gb-england-revenue-outturn-timeseries@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "gb-england-revenue-outturn-timeseries",
+   "publisher": "england",
+   "country_codes": [
+    "GBR"
+   ],
+   "edition": null,
+   "covers": "2024–2025",
+   "volume": {
+    "facts": 494568,
+    "entities": 318
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/england/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "pl-mf-rb27s-2024q4@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "pl-mf-rb27s-2024q4",
+   "publisher": "mf",
+   "country_codes": [
+    "POL"
+   ],
+   "edition": "2024q4",
+   "covers": "2024",
+   "volume": {
+    "facts": 720273,
+    "entities": 2477
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/poland/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "pl-mf-rb27s-2025q4@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "pl-mf-rb27s-2025q4",
+   "publisher": "mf",
+   "country_codes": [
+    "POL"
+   ],
+   "edition": "2025q4",
+   "covers": "2025",
+   "volume": {
+    "facts": 709506,
+    "entities": 2479
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/poland/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "pl-mf-rb28s-2024q4@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "pl-mf-rb28s-2024q4",
+   "publisher": "mf",
+   "country_codes": [
+    "POL"
+   ],
+   "edition": "2024q4",
+   "covers": "2024",
+   "volume": {
+    "facts": 2274650,
+    "entities": 2477
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/poland/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "pl-mf-rb28s-2025q4@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "pl-mf-rb28s-2025q4",
+   "publisher": "mf",
+   "country_codes": [
+    "POL"
+   ],
+   "edition": "2025q4",
+   "covers": "2025",
+   "volume": {
+    "facts": 2329545,
+    "entities": 2479
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/poland/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "se-scb-municipal-costs@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "se-scb-municipal-costs",
+   "publisher": "scb",
+   "country_codes": [
+    "SWE"
+   ],
+   "edition": null,
+   "covers": "2024–2025",
+   "volume": {
+    "facts": 27386,
+    "entities": 290
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/sweden/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "se-scb-municipal-income@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "se-scb-municipal-income",
+   "publisher": "scb",
+   "country_codes": [
+    "SWE"
+   ],
+   "edition": null,
+   "covers": "2024–2025",
+   "volume": {
+    "facts": 16506,
+    "entities": 290
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/sweden/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ua-openbudget-expenses-2024@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "ua-openbudget-expenses-2024",
+   "publisher": "openbudget",
+   "country_codes": [
+    "UKR"
+   ],
+   "edition": "2024",
+   "covers": "2024",
+   "volume": {
+    "facts": 1727482,
+    "entities": 1434
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/ukraine/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ua-openbudget-expenses-2025@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "ua-openbudget-expenses-2025",
+   "publisher": "openbudget",
+   "country_codes": [
+    "UKR"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 1826075,
+    "entities": 1438
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/ukraine/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ua-openbudget-incomes-2024@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "ua-openbudget-incomes-2024",
+   "publisher": "openbudget",
+   "country_codes": [
+    "UKR"
+   ],
+   "edition": "2024",
+   "covers": "2024",
+   "volume": {
+    "facts": 280472,
+    "entities": 1467
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/ukraine/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "ua-openbudget-incomes-2025@2026-08-22",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-22",
+   "source_id": "ua-openbudget-incomes-2025",
+   "publisher": "openbudget",
+   "country_codes": [
+    "UKR"
+   ],
+   "edition": "2025",
+   "covers": "2025",
+   "volume": {
+    "facts": 286290,
+    "entities": 1467
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/ukraine/"
+   ],
+   "outcome": "published",
+   "approver": null
+  },
+  {
+   "run_id": "cz-monitor-finm-2025-12@2026-08-20",
+   "event_type": "ingestion",
+   "record_kind": "backfilled",
+   "evidence": "warehouse load record",
+   "date": "2026-08-20",
+   "source_id": "cz-monitor-finm-2025-12",
+   "publisher": "monitor",
+   "country_codes": [
+    "CZE"
+   ],
+   "edition": "2025-12",
+   "covers": "2025",
+   "volume": {
+    "facts": 3429830,
+    "entities": 6254
+   },
+   "artifacts": [],
+   "sections": [
+    "/municipalities/czechia/"
+   ],
+   "outcome": "published",
+   "approver": null
+  }
+ ],
+ "content_hash": "67cccf76b7564b7da055bd7ec8f46ff83aa944b154425fcac9b72a1480d767f1"
+}

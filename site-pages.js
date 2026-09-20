@@ -51,6 +51,7 @@
   Object.assign(statusCopy.en,{warehouse_only:"Loaded in warehouse",loaded_not_published:"not published on site",legendWarehouseOnly:"Loaded in warehouse · not published",warehouseShort:"in warehouse",profiles:"profiles",warehouseNote:"The data is verified in the production warehouse, but no profiles are published on the site yet."});
   Object.assign(statusCopy.cs,{
     tocStartKicker:"Přehled",tocStart:"Stav vydání",
+    tocProcessKicker:"Proces",tocProcess:"Architektura a deník",processTitle:"Jak se data dostanou do vydání",processLead:"Pokrytí, zdroje a účetní hranice vysvětlujeme na této stránce. Provozní události vedeme odděleně, aby šlo rozlišit změnu vstupních dat, vytvoření datového vydání a nasazení aplikace.",processIngestion:"1 · Příjem dat",processIngestionText:"Zdroj, datum načtení, země, objem a publikované výstupy.",processRelease:"2 · Datové vydání",processReleaseText:"Manifest propojí artefakty s Git commitem, Cloud Buildem a ID načtení.",processDeploy:"3 · Nasazení aplikace",processDeployText:"Neměnný obraz je nasazen, nebo výslovně přeskočen, pokud jej nahradil novější main.",processCta:"Otevřít provozní deník →",
     tocAct1Kicker:"Část 1",tocAct1:"Co publikujeme",
     tocAct2Kicker:"Část 2",tocAct2:"Jak jsou data aktuální",
     tocAct3Kicker:"Část 3",tocAct3:"Zdroje a mezery",
@@ -61,6 +62,7 @@
   });
   Object.assign(statusCopy.en,{
     tocStartKicker:"Overview",tocStart:"Release status",
+    tocProcessKicker:"Process",tocProcess:"Architecture and log",processTitle:"How data reaches a release",processLead:"This page explains coverage, sources and accounting boundaries. Operational events are logged separately so a source ingestion, a data release and an application deployment remain distinct.",processIngestion:"1 · Data ingestion",processIngestionText:"Source, load date, countries, volume and published outputs.",processRelease:"2 · Data release",processReleaseText:"A manifest links artifacts to the Git commit, Cloud Build and ingestion IDs.",processDeploy:"3 · Application deployment",processDeployText:"The immutable image is deployed, or explicitly skipped when a newer main commit supersedes it.",processCta:"Open the process log →",
     tocAct1Kicker:"Part 1",tocAct1:"What we publish",
     tocAct2Kicker:"Part 2",tocAct2:"How current it is",
     tocAct3Kicker:"Part 3",tocAct3:"Sources and gaps",

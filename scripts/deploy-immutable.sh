@@ -8,16 +8,21 @@ tag="${4:?image tag is required}"
 deploy_marker="${5:?current-main deployment marker is required}"
 snapshot_base="${6:-}"
 cityvizor_snapshot_base="${7:-}"
-
-if [ ! -f "$deploy_marker" ]; then
-  echo "Skipping deployment because this build is no longer the current main commit"
-  exit 0
-fi
+process_log_base="${8:-}"
+git_sha="${9:-}"
+build_id="${10:-}"
+pr_number="${11:-}"
 
 digest="$(gcloud artifacts docker images describe "$tag" --project="$project" --format='value(image_summary.digest)')"
 if [ -z "$digest" ]; then
   echo "Deployment blocked: registry did not return an image digest for $tag" >&2
   exit 1
+fi
+
+if [ ! -f "$deploy_marker" ]; then
+  node scripts/write-deployment-event.mjs skipped "$digest" "$git_sha" "$build_id" "$pr_number"
+  echo "Skipping deployment because this build is no longer the current main commit"
+  exit 0
 fi
 
 repository="${tag%:*}"
@@ -40,6 +45,9 @@ fi
 if [ -n "$cityvizor_snapshot_base" ]; then
   deploy_env_updates="${deploy_env_updates:+${deploy_env_updates}|}CITYVIZOR_SNAPSHOT_BASE_URL=${cityvizor_snapshot_base}"
 fi
+if [ -n "$process_log_base" ]; then
+  deploy_env_updates="${deploy_env_updates:+${deploy_env_updates}|}PROCESS_LOG_BASE_URL=${process_log_base}"
+fi
 if [ -f /workspace/.reporting-env ]; then
   reporting_env_updates="$(cat /workspace/.reporting-env)"
   reporting_env_updates="${reporting_env_updates#^|^}"
@@ -49,5 +57,7 @@ if [ -n "$deploy_env_updates" ]; then
   set -- "$@" --update-env-vars="^|^${deploy_env_updates}"
 fi
 "$@"
+
+node scripts/write-deployment-event.mjs deployed "$digest" "$git_sha" "$build_id" "$pr_number"
 
 echo "Deployed immutable image ${repository}@${digest}"
