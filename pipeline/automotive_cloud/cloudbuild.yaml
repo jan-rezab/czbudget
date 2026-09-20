@@ -1,0 +1,19 @@
+steps:
+- id: extract-automotive
+  name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:3a4f4f351ebe7f7449c9238286b2fd3ca6707da93e1085bcb4d60cd949302f1b
+  entrypoint: python3
+  args: [build.py]
+  env: ['BUILD_ID=$BUILD_ID']
+- id: preserve-results
+  name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:3a4f4f351ebe7f7449c9238286b2fd3ca6707da93e1085bcb4d60cd949302f1b
+  entrypoint: bash
+  args:
+  - -ceu
+  - |
+    PREFIX="gs://czbudget-janrezab-data-layers/processing-runs/automotive/$BUILD_ID"
+    gcloud storage cp --no-clobber automotive-monthly.v1.json receipts.json "$$PREFIX/"
+    sha256sum automotive-monthly.v1.json receipts.json > completed.sha256
+    gcloud storage cp --no-clobber completed.sha256 "$$PREFIX/"
+timeout: 1800s
+options:
+  logging: CLOUD_LOGGING_ONLY
