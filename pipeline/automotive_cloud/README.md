@@ -14,7 +14,7 @@ unspecified origin; the explicit EU-origin contribution to EU destinations is
 then removed. EU membership is fixed at 27, with the UK outside the bloc.
 
 The latest eligible month must have at least 20 complete reporting markets;
-the intersection across up to 12 months must also have at least 20. Markets with missing World product observations in any of the three groups are
+the intersection across up to 18 months must also have at least 20. Markets with missing World product observations in any of the three groups are
 excluded from the entire fixed panel, never filled with zero.
 A zero named-origin contribution means no recorded trade in the complete
 requested origin/product scope. Non-reporting countries are never filled.
@@ -48,3 +48,20 @@ source objects; October 2025–July 2026. Macao has no World heavy-truck observa
 in October 2025 and is excluded from all months and groups in the serving
 release. The final panel has 29 markets and 870 complete observations. See the
 release receipt for the current immutable output.
+
+
+Country routes are extracted from all completed partner tasks for the same fixed
+panel, not just the three named origin groups. Each positive route retains its
+origin country/area, destination market, product group and month. World totals
+are never routes. Non-country or unallocated origins are the explicit remainder
+between World and the country rows; intra-EU routes are removed. Hydration rejects
+duplicate routes and verifies that every regional route sum reconciles with its
+monthly chart observation. The diagram groups smaller nodes visually; its table
+and CSV retain every selected route.
+
+The archive audit `c7fd2567-5ca7-4a4e-adcd-2f2940ae32b1` on 20 September 2026
+confirmed that no monthly tasks precede October 2025. August 2026 has only two
+reporters. The route run `8998c6ce-108f-4eec-acd4-00337ea0e9b4` preserves 25,347
+routes and 229 origin entries across the same 29 markets and 10 months; cloud
+audit `fe6d09a0-273f-47ee-8e2d-aed0e5bc0ad7` passed full reconciliation. Do not
+substitute annual observations or widen monthly coverage with missing reporters.
