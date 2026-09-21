@@ -721,7 +721,8 @@ test("all countries use the Czech-style dashboard chapters and loaded-data secti
       page.on("pageerror", error => failures.push(error.message));
       page.on("console", message => { if (message.type() === "error") failures.push(message.text()); });
       await page.goto(`/country.html?code=${code}&lang=${lang}`, {waitUntil:"networkidle"});
-      await expect(page.locator("#country-dashboard-index a")).toHaveCount(8);
+      await expect(page.locator("#country-dashboard-index > div > a")).toHaveCount(8);
+      await expect(page.locator("#country-dashboard-index .country-national-budget-link")).toHaveCount(["CZE", "UKR"].includes(code) ? 0 : 1);
       await expect(page.locator(".country-context-rail a")).toHaveCount(9);
       await expect(page.locator("#budget-map .budget-map-row").first()).toBeVisible();
       // The register is fetched when its section approaches the viewport.
