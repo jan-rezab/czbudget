@@ -96,7 +96,7 @@
       { path:"deep-dives/health/?code=CZE", title:{cs:"Zdraví",en:"Health"}, note:{cs:"Financování a kapacita systému",en:"Funding and system capacity"} },
       { path:"deep-dives/transportation/?code=CZE", title:{cs:"Doprava",en:"Transportation"}, note:{cs:"Rozpočty, silnice a tempo výstavby",en:"Budgets, roads and build pace"} },
       { path:"deep-dives/defense/?code=USA", title:{cs:"Výdaje na obranu",en:"Defense spending"}, note:{cs:"17 zemí, % HDP a rozpočtové řádky",en:"17 countries, % of GDP and budget lines"} },
-      { path:"deep-dives/redistribution/?code=CZE", title:{cs:"Přerozdělení a výsledky",en:"Redistribution and outcomes"}, note:{cs:"Nerovnost, sociální výdaje a důchody",en:"Inequality, social spending and pensions"} },
+      { path:"deep-dives/redistribution/?code=CZE", title:{cs:"Daně, transfery a příjmová nerovnost",en:"Taxes, transfers and income inequality"}, note:{cs:"Nerovnost před daněmi a po nich",en:"Inequality before and after taxes"} },
     ] },
     { label:{cs:"Odkud peníze jsou",en:"Where the money comes from"}, items: [
       { path:"deep-dives/funding/", title:{cs:"Jak peníze dorazí ke službám",en:"How money reaches services"}, note:{cs:"Od příjmů přes rozpočty ke službám",en:"From revenue through budgets to services"} },
