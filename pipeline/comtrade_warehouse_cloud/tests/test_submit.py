@@ -45,6 +45,7 @@ class SubmitTests(unittest.TestCase):
         self.assertTrue(source["object"].startswith("build-source-warehouse/"))
         self.assertTrue(source["generation"].isdigit())
         self.assertEqual(payload["queueTtl"], "43200s")
+        self.assertIn("plane-data", payload["tags"])
         self.assertEqual(
             payload["serviceAccount"],
             "projects/czbudget-janrezab/serviceAccounts/"

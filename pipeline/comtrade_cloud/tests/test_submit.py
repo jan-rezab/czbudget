@@ -50,6 +50,7 @@ class SubmitTests(unittest.TestCase):
         self.assertEqual(request["availableSecrets"]["secretManager"][0]["env"], "UN_COMTRADE_API_KEY_01")
         self.assertEqual(request["availableSecrets"]["secretManager"][-1]["env"], "UN_COMTRADE_API_KEY_19")
         self.assertIn("comtrade-builder@", request["serviceAccount"])
+        self.assertIn("plane-data", request["tags"])
         self.assertNotIn("jan@ravineo.com", json.dumps(request))
 
     def test_manual_submit_uses_dedicated_builder(self):
