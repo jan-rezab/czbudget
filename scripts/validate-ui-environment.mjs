@@ -11,6 +11,6 @@ for(const file of ['cloudbuild.ui.yaml','cloudbuild.verify.yaml','cloudbuild.yam
 }
 if(pkg.devDependencies['@playwright/test']!==contract.playwright) throw new Error('package.json Playwright differs from UI environment contract');
 if(lock.packages['node_modules/@playwright/test']?.version!==contract.playwright) throw new Error('package-lock Playwright differs from UI environment contract');
-if(Number(pkg.engines.node.replace(/\D/g,''))!==contract.node_major) throw new Error('Node engine differs from UI environment contract');
-if(process.argv.includes('--runtime') && Number(process.versions.node.split('.')[0])!==contract.node_major) throw new Error(`Verifier runtime needs Node ${contract.node_major}, found ${process.versions.node}`);
-console.log(`UI environment contract passed: Node ${contract.node_major}, Playwright ${contract.playwright}, pinned image digest.`);
+if(Number(pkg.engines.node.replace(/\D/g,''))!==contract.package_node_major) throw new Error('Package Node engine differs from UI environment contract');
+if(process.argv.includes('--runtime') && Number(process.versions.node.split('.')[0])!==contract.verifier_node_major) throw new Error(`Verifier runtime needs Node ${contract.verifier_node_major}, found ${process.versions.node}`);
+console.log(`UI environment contract passed: package Node ${contract.package_node_major}, verifier Node ${contract.verifier_node_major}, Playwright ${contract.playwright}, pinned image digest.`);
