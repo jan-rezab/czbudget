@@ -16,7 +16,7 @@ test("redistribution report leads with the measured gap and keeps context separa
   await expect(page.locator("#pensions, #relationship, #outcomes")).toHaveCount(0);
 
   await page.locator("#deep-dive-country").selectOption("DEU");
-  await expect(page.locator('[data-oecd-chart="redistribution_summary"] .summary-eyebrow')).toContainText("Germany");
+  await expect(page.locator('[data-oecd-chart="redistribution_summary"] .redistribution-summary > div:first-child .summary-eyebrow')).toContainText("Germany");
   await expect(page.locator('[data-oecd-chart="redistribution_comparison"] tbody tr.is-selected th')).toHaveText("Germany");
 });
 
