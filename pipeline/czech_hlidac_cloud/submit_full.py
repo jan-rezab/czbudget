@@ -57,7 +57,7 @@ def main() -> None:
     parser.add_argument("--account", default="jan@ravineo.com")
     args = parser.parse_args()
     assert_bundle_matches_head()
-    assert_data_plane_idle(PROJECT, REGION)
+    assert_data_plane_idle(PROJECT, REGION, account=args.account)
     loader_git_sha = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()

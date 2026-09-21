@@ -46,9 +46,10 @@ BigQuery staging table, reconciles counts per municipality, rejects null keys or
 duplicate `(municipality_ico, contract_id)` pairs, and creates an immutable
 release table. Only a validated release may replace `current.json`, using a
 Cloud Storage generation precondition. The release completion receipt is
-written last; consumers must require that receipt and otherwise follow the
-previous release embedded in the pointer. This data job does not deploy or
-modify the website.
+uploaded before the pointer changes; consumers must require that receipt and
+verify its hash against the pointer. A receipt alone means validated, while a
+matching `current.json` pointer proves publication. No cloud writes follow the
+pointer change. This data job does not deploy or modify the website.
 
 A rerun reuses only municipality attempts with a valid v2 completion receipt.
 An interrupted attempt remains immutable and is safely retried under a new

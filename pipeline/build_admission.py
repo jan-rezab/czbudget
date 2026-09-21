@@ -1,34 +1,41 @@
-"""Fail closed before submitting overlapping PSD data builds."""
+"""Fail closed before submitting overlapping builds to the reserved data region."""
 from __future__ import annotations
 
 import json
 import subprocess
 
 
-def assert_data_plane_idle(project: str, region: str, *, run=subprocess.run) -> None:
+ACTIVE_LIMIT = 1000
+
+
+def assert_data_plane_idle(
+    project: str, region: str, *, account: str | None = None, run=subprocess.run
+) -> None:
+    if region != "europe-west4":
+        raise ValueError("PSD data builds may only run in europe-west4")
+    command = [
+        "gcloud", "builds", "list", "--project=" + project,
+        "--region=" + region, "--ongoing",
+        "--limit=" + str(ACTIVE_LIMIT), "--format=json", "--verbosity=error",
+    ]
+    if account:
+        command.append("--account=" + account)
     result = run(
-        [
-            "gcloud", "builds", "list", "--project=" + project,
-            "--region=" + region,
-            "--filter=status=WORKING OR status=QUEUED",
-            "--limit=100", "--format=json", "--verbosity=error",
-        ],
+        command,
         check=True,
         capture_output=True,
         text=True,
         timeout=60,
     )
     builds = json.loads(result.stdout or "[]")
-    active = [
-        build for build in builds
-        if "plane-data" in build.get("tags", [])
-        and build.get("status") in {"WORKING", "QUEUED"}
-    ]
-    if active:
+    if not isinstance(builds, list) or len(builds) >= ACTIVE_LIMIT:
+        raise RuntimeError("Data-plane build listing is incomplete or malformed")
+    # --ongoing is the active-state filter; untagged scheduled builds count too.
+    if builds:
         summary = ", ".join(
             f"{build.get('id', 'unknown')} ({build.get('status', 'unknown')})"
-            for build in active
+            for build in builds
         )
         raise RuntimeError(
-            "Data build submission blocked: the isolated data plane already has " + summary
+            "Data build submission blocked: europe-west4 already has " + summary
         )

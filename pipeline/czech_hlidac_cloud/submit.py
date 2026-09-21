@@ -40,7 +40,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--account", default="jan@ravineo.com")
     args = parser.parse_args()
-    assert_data_plane_idle(PROJECT, REGION)
+    assert_data_plane_idle(PROJECT, REGION, account=args.account)
     with tempfile.TemporaryDirectory(prefix="czech-hlidac-inventory-submit-") as temporary:
         source = Path(temporary)
         build_bundle(source)

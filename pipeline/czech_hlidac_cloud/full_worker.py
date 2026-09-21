@@ -438,6 +438,40 @@ def read_pointer(pointer_uri: str) -> tuple[dict | None, str]:
     return json.loads(run(["gcloud", "storage", "cat", pointer_uri])), generation
 
 
+def commit_validated_release(
+    work: Path,
+    pointer: dict,
+    receipt: dict,
+    validated_object: dict,
+    previous_generation: str,
+    completion_uri: str,
+    pointer_uri: str,
+) -> dict:
+    """Put the required immutable receipt in place before the pointer CAS."""
+    receipt["completed_at"] = datetime.now(timezone.utc).isoformat()
+    receipt["validated_object"] = validated_object
+    receipt["previous_pointer_generation"] = previous_generation
+    completed_path = work / "completed.json"
+    completed_path.write_text(
+        json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    completed_object = upload_immutable(completed_path, completion_uri)
+    pointer["required_completion_sha256"] = completed_object["sha256"]
+    pointer["required_completion_generation"] = completed_object["generation"]
+    pointer["publication_status"] = "published_data_plane"
+    pointer_path = work / "current.json"
+    pointer_path.write_text(
+        json.dumps(pointer, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    run(
+        [
+            "gcloud", "storage", "cp", str(pointer_path), pointer_uri,
+            "--if-generation-match=" + previous_generation,
+        ]
+    )
+    return completed_object
+
+
 def main() -> None:
     build_id = os.environ.get("BUILD_ID", "").strip()
     loader_git_sha = os.environ.get("LOADER_GIT_SHA", "").strip()
@@ -600,32 +634,10 @@ def main() -> None:
         validated_path, f"{release_prefix}/validated.json"
     )
     pointer["validated_receipt_generation"] = validated_object["generation"]
-    pointer_path = work / "current.json"
-    pointer_path.write_text(
-        json.dumps(pointer, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    completed_object = commit_validated_release(
+        work, pointer, receipt, validated_object, previous_generation,
+        completion_uri, pointer_uri,
     )
-    run(
-        [
-            "gcloud", "storage", "cp", str(pointer_path), pointer_uri,
-            "--if-generation-match=" + previous_generation,
-        ]
-    )
-    pointer_generation = run(
-        [
-            "gcloud", "storage", "objects", "describe", pointer_uri,
-            "--format=value(generation)",
-        ]
-    ).strip()
-    receipt["publication_status"] = "published"
-    receipt["completed_at"] = datetime.now(timezone.utc).isoformat()
-    receipt["publication_pointer_generation"] = pointer_generation
-    receipt["validated_object"] = validated_object
-    receipt["previous_pointer_generation"] = previous_generation
-    completed_path = work / "completed.json"
-    completed_path.write_text(
-        json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-    completed_object = upload_immutable(completed_path, completion_uri)
     print(
         json.dumps(
             {
