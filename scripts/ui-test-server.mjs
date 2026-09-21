@@ -7,6 +7,10 @@ import { extname, join, normalize, resolve } from "node:path";
 
 const root = resolve(process.cwd());
 const port = Number(process.env.PORT || 4173);
+const nationalBudgetSlugs = new Set([
+  "poland", "germany", "united-kingdom", "france", "united-states", "switzerland",
+  "sweden", "denmark", "finland", "spain", "netherlands", "greece",
+]);
 const mimeTypes = {
   ".mjs": "application/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -25,7 +29,9 @@ const mimeTypes = {
 createServer(async (request, response) => {
   try {
     const url = new URL(request.url || "/", `http://127.0.0.1:${port}`);
-    const relative = normalize(decodeURIComponent(url.pathname)).replace(/^[/\\]+/, "");
+    const nationalBudget = url.pathname.match(/^\/national-budgets\/([^/]+)\/?$/);
+    const pathname = nationalBudget && nationalBudgetSlugs.has(nationalBudget[1]) ? "/national-budget.html" : url.pathname;
+    const relative = normalize(decodeURIComponent(pathname)).replace(/^[/\\]+/, "");
     let filePath = join(root, relative || "index.html");
     if (!filePath.startsWith(root)) throw new Error("Invalid path");
 

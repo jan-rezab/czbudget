@@ -38,6 +38,7 @@
     {anchor:"transportation", ids:["transportation", "specifics"]},
     {anchor:"data-parity", ids:["data-parity", "sources"]},
   ];
+  const nationalBudgets = {POL:"poland",DEU:"germany",GBR:"united-kingdom",FRA:"france",USA:"united-states",CHE:"switzerland",SWE:"sweden",DNK:"denmark",FIN:"finland",ESP:"spain",NLD:"netherlands",GRC:"greece"};
 
   let index = document.querySelector("#country-dashboard-index");
   if (!index) {
@@ -58,10 +59,11 @@
     });
   }
 
-  function renderChrome(lang = document.documentElement.lang === "en" ? "en" : "cs") {
+  function renderChrome(lang = document.documentElement.lang === "en" ? "en" : "cs", code = window.PSDCountryRoutes.codeFromLocation()) {
     const t = copy[lang];
     if (document.body.classList.contains("country-not-found")) { index.hidden = true; rail.innerHTML = ""; rail.style.display = "none"; return; }
-    index.innerHTML = `<header><span>${t.label}</span><p>${t.intro}</p></header><div>${chapters.map((chapter, i) => `<a href="#${chapter.anchor}"><b>${String(i + 1).padStart(2, "0")}</b><span><strong>${t.chapters[i][0]}</strong><small>${t.chapters[i][1]}</small></span></a>`).join("")}</div>`;
+    const budgetLink = nationalBudgets[code] ? `<a class="country-national-budget-link" href="/national-budgets/${nationalBudgets[code]}?lang=${lang}">${lang === "en" ? "Open national budget dashboard" : "Otevřít národní rozpočtový dashboard"} →</a>` : "";
+    index.innerHTML = `<header><span>${t.label}</span><p>${t.intro}</p>${budgetLink}</header><div>${chapters.map((chapter, i) => `<a href="#${chapter.anchor}"><b>${String(i + 1).padStart(2, "0")}</b><span><strong>${t.chapters[i][0]}</strong><small>${t.chapters[i][1]}</small></span></a>`).join("")}</div>`;
     rail.innerHTML = `<a href="#top">${t.top}</a>${chapters.map((chapter, i) => `<a href="#${chapter.anchor}">${String(i + 1).padStart(2, "0")} · ${t.chapters[i][0]}</a>`).join("")}`;
     chapters.forEach((chapter, i) => {
       const first = document.getElementById(chapter.anchor);
@@ -70,6 +72,6 @@
   }
 
   renderChrome();
-  addEventListener("countryprofilechange", event => renderChrome(event.detail.lang === "en" ? "en" : "cs"));
+  addEventListener("countryprofilechange", event => renderChrome(event.detail.lang === "en" ? "en" : "cs", event.detail.code));
   new MutationObserver(() => renderChrome()).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
 })();

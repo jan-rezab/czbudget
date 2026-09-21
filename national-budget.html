@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="cs" data-shell-pending>
+<head>
+  <script src="/language-bootstrap.js?v=20260829-shell-hold"></script>
+  <link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="/global-nav.js?v=20260824-logo-120" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>National budget — Public Spending Data</title>
+  <meta name="description" content="Revenue, expenditure, macroeconomics, health and demographic pressure in one national budget dashboard.">
+  <meta name="robots" content="index,follow">
+  <link id="canonical-url" rel="canonical" href="https://publicspendingdata.org/national-budgets/poland">
+  <link id="alternate-cs" rel="alternate" hreflang="cs" href="https://publicspendingdata.org/national-budgets/poland?lang=cs">
+  <link id="alternate-en" rel="alternate" hreflang="en" href="https://publicspendingdata.org/national-budgets/poland?lang=en">
+  <link id="alternate-default" rel="alternate" hreflang="x-default" href="https://publicspendingdata.org/national-budgets/poland">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css?v=20260822-section-rail">
+  <link rel="stylesheet" href="/styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="/national-budget.css?v=20260921-twelve-countries">
+  <script src="/chart-runtime.js" defer></script>
+  <script src="/national-budget.js?v=20260921-twelve-countries" defer></script>
+</head>
+<body class="national-budget-page">
+  <psd-site-header></psd-site-header>
+  <nav class="national-budget-rail" aria-label="National budget sections">
+    <a href="#overview">00 <span data-copy="overview">Overview</span></a>
+    <a href="#budget">01 <span data-copy="budget">Budget</span></a>
+    <a href="#revenue">02 <span data-copy="revenue">Revenue</span></a>
+    <a href="#spending">03 <span data-copy="spending">Spending</span></a>
+    <a href="#economy">04 <span data-copy="economy">Economy</span></a>
+    <a href="#health">05 <span data-copy="health">Health</span></a>
+    <a href="#demography">06 <span data-copy="demography">Demography</span></a>
+    <a href="#insights">07 <span data-copy="insights">Insights</span></a>
+    <a href="#methodology">08 <span data-copy="methodology">Methodology</span></a>
+  </nav>
+  <main>
+    <section class="nb-hero" id="overview">
+      <div class="nb-hero-copy">
+        <span class="nb-eyebrow" data-copy="eyebrow">National dashboard</span>
+        <h1 id="country-name">—</h1>
+        <p data-copy="intro">Revenue, spending, the economy, health and demographic pressure in one auditable country view.</p>
+        <label class="nb-country-switch"><span data-copy="switchCountry">Change country</span><select id="country-switch"></select></label>
+      </div>
+      <aside class="nb-snapshot" id="headline-snapshot" aria-live="polite"></aside>
+    </section>
+
+    <section class="nb-section" id="budget"><div class="nb-section-heading"><span>01</span><div><p data-copy="budgetKicker">The whole fiscal picture</p><h2 data-copy="budgetTitle">Revenue, expenditure and balance</h2></div></div><div class="nb-kpis" id="budget-kpis"></div><div class="nb-chart" id="budget-trend"></div></section>
+    <section class="nb-section" id="revenue"><div class="nb-section-heading"><span>02</span><div><p data-copy="revenueKicker">Where money comes from</p><h2 data-copy="revenueTitle">Revenue structure</h2></div></div><div class="nb-bars" id="revenue-bars"></div></section>
+    <section class="nb-section" id="spending"><div class="nb-section-heading"><span>03</span><div><p data-copy="spendingKicker">Where money goes</p><h2 data-copy="spendingTitle">National spending classification</h2></div></div><p class="nb-scope" id="spending-scope"></p><div class="nb-bars" id="spending-bars"></div></section>
+    <section class="nb-section" id="economy"><div class="nb-section-heading"><span>04</span><div><p data-copy="economyKicker">Economic context</p><h2 data-copy="economyTitle">Growth, prices and work</h2></div></div><div class="nb-kpis" id="economy-kpis"></div></section>
+    <section class="nb-section" id="health"><div class="nb-section-heading"><span>05</span><div><p data-copy="healthKicker">Health system</p><h2 data-copy="healthTitle">Funding, capacity and outcomes</h2></div></div><div class="nb-kpis" id="health-kpis"></div><div class="nb-note" id="health-note"></div></section>
+    <section class="nb-section" id="demography"><div class="nb-section-heading"><span>06</span><div><p data-copy="demographyKicker">Population outlook</p><h2 data-copy="demographyTitle">The pressure behind future budgets</h2></div></div><div class="nb-kpis" id="demography-kpis"></div><div class="nb-chart" id="demography-chart"></div></section>
+    <section class="nb-section" id="insights"><div class="nb-section-heading"><span>07</span><div><p data-copy="insightsKicker">What the numbers say</p><h2 data-copy="insightsTitle">Five signals to take away</h2></div></div><div class="nb-insights" id="insight-cards"></div></section>
+    <section class="nb-section nb-methodology" id="methodology"><div class="nb-section-heading"><span>08</span><div><p data-copy="methodKicker">Data and definitions</p><h2 data-copy="methodTitle">Comparable where possible, national where necessary</h2></div></div><div id="methodology-copy"></div><div class="nb-sources" id="methodology-sources"></div><a id="existing-profile-link" class="nb-profile-link"></a></section>
+  </main>
+  <footer data-global-footer></footer>
+</body>
+</html>

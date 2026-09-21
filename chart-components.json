@@ -65,6 +65,14 @@
       "change_paths": ["country-health-performance.js", "country.html"]
     },
     {
+      "id": "national-budget-core",
+      "adapter": "national-budget.js",
+      "families": ["line", "bar"],
+      "tests": ["tests/browser/national-budget.spec.mjs"],
+      "routes": ["/national-budgets/:country"],
+      "change_paths": ["national-budget.js", "national-budget.css", "national-budget.html"]
+    },
+    {
       "id": "demographic-fertility-trend",
       "adapter": "demographic-pressure.js",
       "families": ["line"],
