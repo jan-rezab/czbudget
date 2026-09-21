@@ -91,6 +91,8 @@ const files = [
   "cloudbuild.ui.yaml",
   "cloudbuild.verify.yaml",
   "cloudbuild.yaml",
+  "Dockerfile",
+  "Dockerfile.slim",
   "playwright.ui.config.mjs",
   "map.html",
   "methodology.html",

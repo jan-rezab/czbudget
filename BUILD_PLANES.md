@@ -37,6 +37,9 @@ pages; it excludes ingestion inputs, transforms, warehouses, snapshots, and
 deployment credentials. Never run `gcloud builds submit .` from this
 repository: the tracked data history makes the checkout a multi-gigabyte build
 source even when the selected YAML is code-only.
+Before submitting, the wrapper runs the UI environment and release contracts
+from inside that exact temporary bundle. Missing bundle files fail locally,
+before a Cloud Build worker is queued.
 
 - Config: `cloudbuild.verify.yaml`.
 - Runs explicitly before merge for structural, unknown or broad application changes.
@@ -47,9 +50,12 @@ source even when the selected YAML is code-only.
 - Never run it concurrently with another verification of the same commit. Reuse
   the successful build ID.
 
-The exhaustive gate runs named component contracts first, then four browser shards
-against pinned published releases using the prepared Playwright image. No repeated
-browser installation. Runtime image assembly happens once, in production; its
+The exhaustive gate runs named component contracts first. After published
+fixtures are verified, it runs the country chapter contract once before four
+browser shards, excluding that test from the shards so a navigation regression
+fails before the broader suite without duplicating the test. The four browser
+shards run against pinned published releases using the prepared Playwright image.
+No repeated browser installation. Runtime image assembly happens once, in production; its
 filesystem/HTTP and desktop/mobile browser contracts must pass before promotion.
 Both the push hook and production build require successful cloud verification
 for the exact candidate. Unknown changed paths cannot use a component-only receipt.

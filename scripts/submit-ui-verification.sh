@@ -7,6 +7,8 @@ cleanup() { rm -rf -- "$CONTEXT"; }
 trap cleanup EXIT INT TERM
 
 node "$ROOT/scripts/prepare-ui-build-context.mjs" "$CONTEXT"
+# Check the exact packaged files before paying for a queued cloud worker.
+(cd "$CONTEXT" && node scripts/validate-ui-environment.mjs && node scripts/validate-release-contract.mjs)
 candidate=uncommitted
 base="${1:-$(git -C "$ROOT" rev-parse origin/main)}"
 if [ -z "$(git -C "$ROOT" status --porcelain)" ]; then
