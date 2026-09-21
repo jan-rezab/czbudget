@@ -49,25 +49,14 @@
   const rowFor = (country, year) => country?.years.find(row => row.year === year);
   const older = row => row.age_65_79 + row.age_80_plus;
 
-  function lineChart(country) {
-    const rows = country.years, width = 900, height = 300, pad = {l:54,r:24,t:20,b:38};
-    const base = rows[0];
-    const series = [
-      ["total", row => row.total / base.total * 100],
-      ["working", row => row.age_20_64 / base.age_20_64 * 100],
-      ["older", row => older(row) / older(base) * 100],
-      ["oldest", row => row.age_80_plus / base.age_80_plus * 100],
-    ];
-    const values = series.flatMap(([,fn]) => rows.map(fn));
-    const min = Math.floor(Math.min(...values) / 10) * 10, max = Math.ceil(Math.max(...values) / 10) * 10;
-    const x = year => pad.l + (year - 2025) / 20 * (width - pad.l - pad.r);
-    const y = value => pad.t + (max - value) / Math.max(1, max - min) * (height - pad.t - pad.b);
-    const gridValues = Array.from({length:(max-min)/10+1}, (_,index) => min + index * 10);
-    const grid = gridValues.map(value => `<line x1="${pad.l}" y1="${y(value)}" x2="${width-pad.r}" y2="${y(value)}"/><text class="axis" x="${pad.l-9}" y="${y(value)+4}" text-anchor="end">${value}</text>`).join("");
-    const paths = series.map(([key,fn]) => `<path class="${key}" d="${rows.map((row,index) => `${index ? "L" : "M"}${x(row.year).toFixed(1)},${y(fn(row)).toFixed(1)}`).join(" ")}"/>`).join("");
-    const selected = rowFor(country, state.year);
-    const dots = series.map(([key,fn]) => `<circle class="${key}" cx="${x(state.year)}" cy="${y(fn(selected))}" r="5"><title>${key}: ${decimal(fn(selected))}</title></circle>`).join("");
-    return `<svg class="aging-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(t().indexTitle)}"><g class="grid">${grid}</g><line class="marker" x1="${x(state.year)}" y1="${pad.t}" x2="${x(state.year)}" y2="${height-pad.b}"/>${paths}${dots}<text class="axis" x="${pad.l}" y="${height-10}">2025</text><text class="axis" x="${width-pad.r}" y="${height-10}" text-anchor="end">2045</text><text class="axis" x="${x(state.year)}" y="${pad.t+12}" text-anchor="middle">${state.year}</text></svg>`;
+  function lineChart() { return '<div data-aging-index></div>'; }
+  function drawIndex(country){
+    const host=root.querySelector('[data-aging-index]'),base=country.years[0],selectedYear=state.year;
+    if(!host)return;
+    window.PSDPlotReady.then(renderer=>{
+      if(!host.isConnected)return;
+      renderer.render(host,{type:'line',rows:country.years.map(row=>({label:row.year,total:row.total/base.total*100,working:row.age_20_64/base.age_20_64*100,older:older(row)/older(base)*100,oldest:row.age_80_plus/base.age_80_plus*100})),fields:[{key:'total',label:t().total,format:value=>decimal(value)},{key:'working',label:t().age20,color:'#58717c',format:value=>decimal(value)},{key:'older',label:t().age65,color:'#c93237',format:value=>decimal(value)},{key:'oldest',label:t().age80,color:'#8b8d83',format:value=>decimal(value)}],title:t().indexTitle,unit:'2025 = 100',locale:locale(),height:300,includeZero:false,selectedLabel:selectedYear});
+    }).catch(error=>{if(host.isConnected)host.textContent=`Chart error: ${error.message}`;});
   }
 
   function composition(country) {
@@ -124,6 +113,7 @@
       <section class="aging-section" id="calculator"><div class="aging-heading"><div><span class="kicker">${t().calculatorKicker}</span><h2>${t().calculatorTitle}</h2></div><p>${t().calculatorCopy}</p></div><div class="aging-calculator"><div class="aging-controls"><div class="aging-control"><label for="aging-year"><span>${t().year}</span><output id="aging-year-output">${state.year}</output></label><input id="aging-year" type="range" min="2025" max="2045" step="1" value="${state.year}"></div><div class="aging-control"><label for="aging-boundary"><span>${t().boundary}</span><output id="aging-boundary-output">${state.threshold}+</output></label><input id="aging-boundary" type="range" min="60" max="75" step="1" value="${state.threshold}"><small>${t().boundaryHint}</small></div><div class="aging-control"><label for="aging-sex"><span>${t().group}</span></label><select id="aging-sex"><option value="total" ${state.sex === "total" ? "selected" : ""}>${t().all}</option><option value="male" ${state.sex === "male" ? "selected" : ""}>${t().men}</option><option value="female" ${state.sex === "female" ? "selected" : ""}>${t().women}</option></select></div></div><div class="aging-calculator-results" id="aging-calculator-results"><p class="aging-disclaimer">${t().loading}</p></div></div></section>
       <section class="aging-section" id="comparison"><div class="aging-heading"><div><span class="kicker">${t().comparisonKicker}</span><h2>${t().comparisonTitle}</h2></div><p>${t().comparisonCopy}</p></div>${comparison()}</section>
       <section class="aging-section" id="method"><div class="aging-heading"><div><span class="kicker">${t().methodKicker}</span><h2>${t().methodTitle}</h2></div><p>${t().methodCopy}</p></div><div class="aging-method-grid"><article class="aging-source-card"><span>${t().projectionVariant}</span><h3>${esc(country.projection)}</h3><p>${esc(country.source.location || country.coverage)} · ${t().referenceDate}: ${esc(country.reference_date)} · ${esc(country.source.period)}</p><div><a href="${esc(country.source.url)}" target="_blank" rel="noreferrer">${t().openSource} ↗</a><a href="../../${esc(country.detail)}">${t().download} ↗</a></div></article><article class="aging-source-card"><span>${t().commonMethod}</span><h3>2025–2045</h3><p>${t().methodBody}</p><div><strong>${integer(country.detail_row_count)} ${t().rows}</strong></div></article></div><p class="aging-method-note">${esc(state.data.methodology[state.lang])}</p></section>`;
+    drawIndex(country);
     bind();
     updateCalculator();
   }

@@ -1,5 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+test('shared references, selected period and row colors preserve page semantics',async({page})=>{
+  await page.goto('/tests/fixtures/charts/?type=line');
+  await page.evaluate(()=>window.PSDPlot.render(document.querySelector('#plot'),{type:'line',rows:[{label:'2024',value:1.9},{label:'2025',value:2.3}],fields:[{key:'value',label:'Fertility'}],referenceLines:[{value:2.1,label:'Replacement'}],selectedLabel:'2025'}));
+  await expect(page.locator('#plot .psd-plot-reference-label')).toHaveText('Replacement');
+  await expect(page.locator('#plot .psd-plot-selected-label')).toHaveText('2025');
+  await page.evaluate(()=>window.PSDPlot.render(document.querySelector('#plot'),{type:'bar',rows:[{label:'A',value:10,selected:true},{label:'B',value:20}],fields:[{key:'value',label:'Value'}],rowColor:row=>row.selected?'#c93237':undefined}));
+  await expect(page.locator('#plot rect[fill="#c93237"]')).toHaveCount(1);
+});
+
 for (const type of ['line', 'column', 'stacked', 'bar']) {
   test(`${type}: hover, keyboard, dismissal, missing values and safe rerender`, async ({ page }) => {
     await page.goto(`/tests/fixtures/charts/?type=${type}`);

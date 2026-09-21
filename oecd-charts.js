@@ -25,24 +25,21 @@
   const header=(kicker,title,copy)=>`<header><div><span>${esc(kicker)}</span><h3>${esc(title)}</h3></div><p>${esc(copy)}</p></header>`;
   const canvas=(label,klass="")=>`<div class="oecd-chart-canvas${klass?` ${klass}`:""}" tabindex="0" role="region" aria-label="${esc(label)}">`;
   const empty=root=>{root.innerHTML=`<p class="oecd-chart-empty">${esc(t().missing)}</p>`;};
+  function drawSharedLine(host,spec){
+    window.PSDPlotReady.then(renderer=>{
+      if(host.isConnected)renderer.render(host,{type:'line',locale:locale(),height:330,...spec});
+    }).catch(error=>{if(host.isConnected)host.textContent=`Chart error: ${error.message}`;});
+  }
 
   function renderTaxWedge(root){
     const scenarios=country()?.tax?.labour?.scenarios||[];
-    const singles=scenarios.filter(s=>s.household_type==="S_C0"&&s.spouse_income==="_Z"&&Number.isFinite(s.metrics.av_tw)).sort((a,b)=>Number(a.principal_income.slice(2))-Number(b.principal_income.slice(2)));
+    const singles=scenarios.filter(s=>s.household_type==='S_C0'&&s.spouse_income==='_Z'&&Number.isFinite(s.metrics.av_tw)).sort((a,b)=>Number(a.principal_income.slice(2))-Number(b.principal_income.slice(2)));
     if(!singles.length){empty(root);return;}
-    const W=820,H=330,L=62,R=28,T=25,B=56,maxY=Math.max(55,...singles.map(s=>s.metrics.mr_tw_pe||0));
-    const xs={AW67:L,AW100:L+(W-L-R)/2,AW167:W-R};
-    const y=v=>T+(maxY-v)/(maxY)*(H-T-B);
-    const line=singles.map(s=>`${xs[s.principal_income]},${y(s.metrics.av_tw)}`).join(" ");
-    const marginal=singles.map(s=>`${xs[s.principal_income]},${y(s.metrics.mr_tw_pe)}`).join(" ");
-    const grids=[0,10,20,30,40,50].map(v=>`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${L-10}" y="${y(v)+3}" text-anchor="end">${v}%</text>`).join("");
-    const labels=singles.map(s=>`<text class="axis" x="${xs[s.principal_income]}" y="${H-22}" text-anchor="middle">${s.principal_income.slice(2)}%</text>`).join("");
-    const points=(metric,klass)=>singles.map(s=>`<circle class="${klass}" cx="${xs[s.principal_income]}" cy="${y(s.metrics[metric])}" r="6"><title>${fmt(s.metrics[metric])}%</title></circle><text class="value-label" x="${xs[s.principal_income]}" y="${y(s.metrics[metric])-12}" text-anchor="middle">${fmt(s.metrics[metric])}%</text>`).join("");
-    const family=scenarios.find(s=>s.household_type==="C_C2"&&s.principal_income==="AW100"&&s.spouse_income==="NOEARN_UNEMP");
-    const parent=scenarios.find(s=>s.household_type==="S_C2"&&s.principal_income==="AW67");
-    const title=lang==="en"?"The labour tax wedge at different earnings levels":"Daňový klín podle výše výdělku";
-    const label=`${title}. ${t().income} / ${t().wedge}: ${singles.map(s=>`${s.principal_income.slice(2)} % / ${fmt(s.metrics.av_tw)} %`).join("; ")}`;
-    root.innerHTML=`<section class="oecd-chart-block">${header("OECD Taxing Wages",title,lang==="en"?"Average and marginal wedges for a single worker without children. Household examples below use the OECD model, not an individual tax calculation.":"Průměrný a mezní klín jednotlivce bez dětí. Příklady domácností níže používají model OECD, nikoli individuální daňový výpočet.")}${canvas(title)}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">${grids}<polyline class="series" points="${line}"/><polyline class="series-alt" points="${marginal}"/>${points("av_tw","point")}${points("mr_tw_pe","point-alt")}${labels}<text class="axis-title" x="${W/2}" y="${H-2}" text-anchor="middle">${esc(t().income)}</text></svg><div class="oecd-chart-callouts"><article><span>${esc(t().single)} · 100%</span><strong>${fmt(singles.find(s=>s.principal_income==="AW100")?.metrics.av_tw)} %</strong><small>${esc(t().wedge)}</small></article><article><span>${esc(t().family)} · 100%</span><strong>${fmt(family?.metrics.av_tw)} %</strong><small>${esc(t().wedge)}</small></article><article><span>${esc(t().parent)} · 67%</span><strong>${fmt(parent?.metrics.av_tw)} %</strong><small>${esc(t().wedge)}</small></article></div></div><p class="oecd-chart-note">${esc(t().year)} ${singles[0].year} · ${esc(data.metrics.labour_tax_wedge_single[`boundary_${lang}`])}</p></section>`;
+    const family=scenarios.find(s=>s.household_type==='C_C2'&&s.principal_income==='AW100'&&s.spouse_income==='NOEARN_UNEMP');
+    const parent=scenarios.find(s=>s.household_type==='S_C2'&&s.principal_income==='AW67');
+    const title=lang==='en'?'The labour tax wedge at different earnings levels':'Daňový klín podle výše výdělku';
+    root.innerHTML=`<section class="oecd-chart-block">${header('OECD Taxing Wages',title,lang==='en'?'Average and marginal wedges for a single worker without children. Household examples below use the OECD model, not an individual tax calculation.':'Průměrný a mezní klín jednotlivce bez dětí. Příklady domácností níže používají model OECD, nikoli individuální výpočet.')}${canvas(title)}<div data-oecd-shared-line></div><div class="oecd-chart-callouts"><article><span>${esc(t().single)} · 100%</span><strong>${fmt(singles.find(s=>s.principal_income==='AW100')?.metrics.av_tw)} %</strong><small>${esc(t().wedge)}</small></article><article><span>${esc(t().family)} · 100%</span><strong>${fmt(family?.metrics.av_tw)} %</strong><small>${esc(t().wedge)}</small></article><article><span>${esc(t().parent)} · 67%</span><strong>${fmt(parent?.metrics.av_tw)} %</strong><small>${esc(t().wedge)}</small></article></div></div><p class="oecd-chart-note">${esc(t().year)} ${singles[0].year} · ${esc(data.metrics.labour_tax_wedge_single[`boundary_${lang}`])}</p></section>`;
+    drawSharedLine(root.querySelector('[data-oecd-shared-line]'),{title,rows:singles.map(s=>({label:s.principal_income.slice(2)+'%',average:s.metrics.av_tw,marginal:s.metrics.mr_tw_pe})),fields:[{key:'average',label:lang==='en'?'Average wedge':'Průměrný klín',format:value=>fmt(value)+'%'},{key:'marginal',label:lang==='en'?'Marginal wedge':'Mezní klín',color:'#c93237',format:value=>fmt(value)+'%'}],unit:'%'});
   }
 
   function renderBridge(root){
@@ -62,13 +59,11 @@
   }
 
   function renderPension(root){
-    const p=country()?.pensions;const points=[[50,p?.net_replacement_aw50],[100,p?.net_replacement_aw100],[200,p?.net_replacement_aw200]].filter(([,o])=>o);
+    const p=country()?.pensions,points=[[50,p?.net_replacement_aw50],[100,p?.net_replacement_aw100],[200,p?.net_replacement_aw200]].filter(([,o])=>o);
     if(points.length<2){empty(root);return;}
-    const W=820,H=300,L=62,R=30,T=25,B=55,maxY=Math.max(100,...points.map(([,o])=>o.value));const x=v=>L+(v-50)/150*(W-L-R),y=v=>T+(maxY-v)/maxY*(H-T-B);
-    const grids=[0,20,40,60,80,100].map(v=>`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="axis" x="${L-10}" y="${y(v)+3}" text-anchor="end">${v}%</text>`).join("");
-    const title=lang==="en"?"Pension replacement rates by earnings level":"Náhradové míry důchodu podle výše výdělku";
-    const label=`${title}. ${t().pensionIncome} / ${t().replacement}: ${points.map(([v,o])=>`${v} % / ${fmt(o.value)} %`).join("; ")}`;
-    root.innerHTML=`<section class="oecd-chart-block">${header("OECD Pensions at a Glance",title,lang==="en"?"Net mandatory pension replacement rates for a modelled male worker. This is a policy-model result, not the average pension actually paid.":"Čisté náhradové míry povinného důchodu pro modelového pracovníka. Jde o výsledek modelu pravidel, nikoli průměrně vyplacený důchod.")}${canvas(title)}<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">${grids}<polyline class="series" points="${points.map(([v,o])=>`${x(v)},${y(o.value)}`).join(" ")}"/>${points.map(([v,o])=>`<circle class="point" cx="${x(v)}" cy="${y(o.value)}" r="7"/><text class="value-label" x="${x(v)}" y="${y(o.value)-13}" text-anchor="middle">${fmt(o.value)}%</text><text class="axis" x="${x(v)}" y="${H-22}" text-anchor="middle">${v}%</text>`).join("")}<text class="axis-title" x="${W/2}" y="${H-2}" text-anchor="middle">${esc(t().pensionIncome)}</text></svg></div><p class="oecd-chart-note">${esc(data.metrics.pension_replacement_aw100[`boundary_${lang}`])} · ${points[0][1].year}</p></section>`;
+    const title=lang==='en'?'Pension replacement rates by earnings level':'Náhradové míry důchodu podle výše výdělku';
+    root.innerHTML=`<section class="oecd-chart-block">${header('OECD Pensions at a Glance',title,lang==='en'?'Net mandatory pension replacement rates for a modelled male worker. This is a policy-model result, not the average pension actually paid.':'Čisté náhradové míry povinného důchodu pro modelového pracovníka. Jde o výsledek modelu pravidel, nikoli průměrně vyplacený důchod.')}${canvas(title)}<div data-oecd-shared-line></div></div><p class="oecd-chart-note">${esc(data.metrics.pension_replacement_aw100[`boundary_${lang}`])} · ${points[0][1].year}</p></section>`;
+    drawSharedLine(root.querySelector('[data-oecd-shared-line]'),{title,rows:points.map(([earnings,observation])=>({label:earnings+'%',rate:observation.value})),fields:[{key:'rate',label:t().replacement,format:value=>fmt(value)+'%'}],unit:'%'});
   }
 
   function autonomyRows(){return Object.entries(data.countries).map(([c,p])=>({code:c,row:p.tax?.autonomy?.local})).filter(x=>x.row&&Number.isFinite(x.row.autonomous_share_pct)).sort((a,b)=>b.row.autonomous_share_pct-a.row.autonomous_share_pct);}

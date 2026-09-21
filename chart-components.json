@@ -39,28 +39,88 @@
       "tests": ["tests/browser/stories.spec.mjs"],
       "routes": ["/stories/tariffs-went-up-did-america-win/"],
       "change_paths": ["stories/tariff-charts.js", "stories/chart-rails.js", "content/stories/**", "stories/**"]
+    },
+    {
+      "id": "ageing-index",
+      "adapter": "ageing-bill.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/deep-dives/ageing/"],
+      "change_paths": ["ageing-bill.js", "deep-dives/ageing/index.html"]
+    },
+    {
+      "id": "automotive-trends",
+      "adapter": "automotive-deep-dive.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/deep-dives/automotive/"],
+      "change_paths": ["automotive-deep-dive.js", "deep-dives/automotive/index.html"]
+    },
+    {
+      "id": "health-performance-trend",
+      "adapter": "country-health-performance.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/countries/:country"],
+      "change_paths": ["country-health-performance.js", "country.html"]
+    },
+    {
+      "id": "demographic-fertility-trend",
+      "adapter": "demographic-pressure.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/comparison.html", "/countries/:country"],
+      "change_paths": ["demographic-pressure.js", "comparison.html", "country.html"]
+    },
+    {
+      "id": "economy-trends",
+      "adapter": "economy-deep-dive.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/deep-dives/economy/"],
+      "change_paths": ["economy-deep-dive.js", "deep-dives/economy/index.html"]
+    },
+    {
+      "id": "energy-trade-history",
+      "adapter": "energy-trade-deep-dive.js",
+      "families": ["column"],
+      "tests": ["tests/browser/energy-trade.spec.mjs"],
+      "routes": ["/deep-dives/energy-trade/"],
+      "change_paths": ["energy-trade-deep-dive.js", "energy-trade-deep-dive.css", "deep-dives/energy-trade/index.html"]
+    },
+    {
+      "id": "oecd-report-trends",
+      "adapter": "oecd-charts.js",
+      "families": ["line"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/countries/:country", "/deep-dives/redistribution/", "/deep-dives/tax-burden/"],
+      "change_paths": ["oecd-charts.js", "deep-dives/redistribution/index.html", "deep-dives/tax-burden/index.html", "deep-dives/revenue/index.html", "country.html"]
+    },
+    {
+      "id": "pension-payment-charts",
+      "adapter": "pensions-today.js",
+      "families": ["line", "bar"],
+      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "routes": ["/deep-dives/ageing/"],
+      "change_paths": ["pensions-today.js", "deep-dives/ageing/index.html"]
     }
   ],
   "legacy": {
     "inventory": "chart-legacy-inventory.json",
     "policy": "No legacy drawing count may increase. Ordinary legacy charts migrate by family; maps, networks, timelines, treemaps and editorial illustrations need a reviewed specialized component.",
     "classifications": {
-      "ageing-bill.js": "hybrid-line-plus-css-stack",
-      "automotive-deep-dive.js": "hybrid-line-plus-flow",
+      "automotive-deep-dive.js": "specialized-flow-plus-shared-line",
       "budget-planner.js": "specialized-treemap",
       "capital-cities-deep-dive.js": "specialized-bubble",
       "compare-contract.js": "specialized-comparison",
-      "country-health-performance.js": "hybrid-line-plus-css-bars",
       "country.js": "specialized-country-summary",
       "coverage-map.js": "specialized-map",
       "cz-firmy.js": "specialized-map",
       "cz-municipal-directory.js": "specialized-map",
       "cz-obce.js": "specialized-map",
       "defense-deep-dive.js": "specialized-editorial",
-      "demographic-pressure.js": "hybrid-line-plus-css-rankings",
       "digital-spillover.js": "specialized-network",
-      "economy-deep-dive.js": "ordinary-line",
-      "energy-trade-deep-dive.js": "ordinary-line",
+      "energy-trade-deep-dive.js": "specialized-map-plus-shared-column",
       "eu-budget-deep-dive.js": "specialized-flow",
       "eu-capitals.js": "specialized-map",
       "european-politics.js": "specialized-editorial",
@@ -76,8 +136,7 @@
       "money-report.js": "specialized-flow",
       "municipal-transparency.js": "specialized-map",
       "municipalities-czechia.js": "specialized-map-plus-shared-line",
-      "oecd-charts.js": "ordinary-comparison",
-      "pensions-today.js": "hybrid-line-plus-css-bars",
+      "oecd-charts.js": "specialized-scatter-plus-shared-line",
       "plzen-contract-timeline.js": "specialized-timeline",
       "public-employment.js": "specialized-editorial",
       "revenue-deep-dive.js": "specialized-flow",

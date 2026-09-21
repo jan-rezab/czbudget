@@ -230,9 +230,19 @@ function renderMap() {
 
 function renderHistory() {
   if (!state.metadata) return;
-  const rows = periods(), max = Math.max(1, ...rows.map((item) => item.observed_value_usd));
-  $("#energy-history-chart").innerHTML = rows.map((item) => `<button type="button" class="energy-history-bar ${item.period === state.period ? "selected" : ""}" data-period="${item.period}" style="--height:${Math.max(1.5, item.observed_value_usd / max * 100)}%" aria-label="${esc(`${periodLabel(item.period)} · ${money(item.observed_value_usd)} · ${item.reporting_markets} ${tr("trhů", "markets")}`)}"><i></i><span>${esc(periodLabel(item.period))}</span><small>${item.reporting_markets} ${tr("trhů", "markets")}</small></button>`).join("");
-  $("#energy-history-chart").querySelectorAll("button").forEach((button) => button.addEventListener("click", () => changePeriod(button.dataset.period)));
+  const host = $("#energy-history-chart"), rows = periods();
+  const renderToken = Symbol("energy-history");
+  host.__energyHistoryToken = renderToken;
+  host.textContent = "";
+  window.PSDPlotReady.then((plot) => {
+    if (!host.isConnected || host.__energyHistoryToken !== renderToken) return;
+    plot.render(host, {
+      type: "column", rows: rows.map((item) => ({ label: periodLabel(item.period), period: item.period, value: item.observed_value_usd, markets: item.reporting_markets })),
+      fields: [{ key: "value", label: tr("Pozorovaná hodnota", "Observed value"), color: product().color, format: (value, row) => `${money(value)} · ${row.markets} ${tr("trhů", "markets")}` }],
+      title: productName(), unit: "USD", locale: lang === "cs" ? "cs-CZ" : "en-GB", height: 320,
+      onSelect: (row) => changePeriod(row.period),
+    });
+  }).catch((error) => { if (host.isConnected) host.textContent = `Chart error: ${error.message}`; });
 }
 
 function selectCountry(code) {

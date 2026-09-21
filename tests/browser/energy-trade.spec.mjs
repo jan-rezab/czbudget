@@ -65,6 +65,17 @@ test("energy map defaults to petroleum and filters annual, monthly and country r
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
 
+test("shared history columns show coverage on hover and select a period", async ({ page }) => {
+  await page.goto("/deep-dives/energy-trade/?lang=en");
+  const chart=page.locator("#energy-history-chart");
+  await expect(chart).toHaveAttribute("data-chart-component","column");
+  await chart.locator("[data-point]").first().hover();
+  await expect(chart.locator(".psd-plot-tooltip")).toContainText("3 markets");
+  await chart.locator("[data-point]").first().click();
+  await expect(page.locator("#energy-period")).toHaveValue("2024");
+  await expect(page.locator("#energy-map svg")).toHaveAttribute("aria-label",/2024/);
+});
+
 test("an unavailable monthly gas series clears the previous product without a failing query", async ({ page }) => {
   const invalidRequests = [];
   page.on("request", request => { if (request.url().includes("period=null")) invalidRequests.push(request.url()); });

@@ -27,6 +27,16 @@ consumer contracts.
 - `municipalities-czechia.js`: nationwide Czech municipal history.
 - `stories/tariff-charts.js`: trade lines, monthly customs bars and tariff
   comparisons. Tooltips show reported observations, never interpolated actuals.
+- `ageing-bill.js`, `demographic-pressure.js`, and `pensions-today.js`:
+  population indices, fertility history/projection, and pension payment bars
+  and cohorts. The selected year, replacement reference, source tables, and
+  reported-only boundaries remain page-owned semantics.
+- `economy-deep-dive.js`, `country-health-performance.js`, and `oecd-charts.js`:
+  ordinary economic, health, and OECD line trends. OECD scatter and editorial
+  comparisons remain specialized.
+- `automotive-deep-dive.js` and `energy-trade-deep-dive.js`: monthly trade
+  trends and observed import columns. Selecting a period still drives their
+  specialized flow/map views; those views are not rebuilt by the plotter.
 
 Country-specific normalization, currency conversion, methodological warnings,
 source links and tables stay in adapters. Migration must not turn cash into debt,

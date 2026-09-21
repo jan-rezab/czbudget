@@ -44,20 +44,13 @@
   const median = values => { const sorted=values.filter(Number.isFinite).sort((a,b)=>a-b), mid=Math.floor(sorted.length/2); return sorted.length%2 ? sorted[mid] : (sorted[mid-1]+sorted[mid])/2; };
   const latestMetric = row => row ? `${fmt(row.per_1000_population)}<small>${row.year} · ${copy[lang()].perThousand}</small>` : `—<small>${copy[lang()].noData}</small>`;
 
-  function lineChart(profile) {
-    const years = profile.wpp.filter(row => row.year >= 1950 && row.year <= 2100);
-    const width=760, height=190, left=42, right=16, top=14, bottom=28;
-    const x = year => left + (year-1950)/150*(width-left-right);
-    const min = Math.min(0.8, ...years.map(row => row.total_fertility_rate));
-    const max = Math.max(3, ...years.map(row => row.total_fertility_rate));
-    const y = value => top + (max-value)/(max-min)*(height-top-bottom);
-    const historical = years.filter(row=>row.year<=2023).map((row,index)=>`${index?"L":"M"}${x(row.year).toFixed(1)},${y(row.total_fertility_rate).toFixed(1)}`).join(" ");
-    const projected = years.filter(row=>row.year>=2023).map((row,index)=>`${index?"L":"M"}${x(row.year).toFixed(1)},${y(row.total_fertility_rate).toFixed(1)}`).join(" ");
-    return `<svg class="fertility-line" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(copy[lang()].fertilityTitle)}">
-      <line x1="${left}" x2="${width-right}" y1="${y(2.1)}" y2="${y(2.1)}" class="replacement-line"/><text x="${left+4}" y="${y(2.1)-6}" class="line-label">2.1</text>
-      <path d="${historical}" class="fertility-history"/><path d="${projected}" class="fertility-projection"/>
-      ${[1950,1990,2023,2050,2100].map(year=>`<text x="${x(year)}" y="${height-7}" text-anchor="middle" class="line-label">${year}</text>`).join("")}
-    </svg>`;
+  function lineChart() { return '<div data-fertility-history></div>'; }
+  function drawFertility(profile){
+    const host=countryRoot.querySelector('[data-fertility-history]');if(!host)return;
+    window.PSDPlotReady.then(renderer=>{
+      if(!host.isConnected)return;
+      renderer.render(host,{type:'line',rows:profile.wpp.filter(row=>row.year>=1950&&row.year<=2100).map(row=>({label:row.year,history:row.year<=2023?row.total_fertility_rate:null,projection:row.year>=2023?row.total_fertility_rate:null})),fields:[{key:'history',label:lang()==='en'?'Observed':'Pozorováno',format:value=>fmt(value,2)},{key:'projection',label:copy[lang()].projection,color:'#8b8d83',format:value=>fmt(value,2)}],title:copy[lang()].fertilityTitle,unit:copy[lang()].birthsWoman,locale:locale(),height:250,includeZero:false,referenceLines:[{value:2.1,label:copy[lang()].replacement}]});
+    }).catch(error=>{if(host.isConnected)host.textContent=`Chart error: ${error.message}`;});
   }
 
   function comparison() {
@@ -86,6 +79,7 @@
       <article class="country-fertility-history"><header><div><h4>${t.fertilityTitle}</h4><p>${t.fertilityCopy}</p></div><span><i></i>${t.replacement}</span></header>${lineChart(profile)}</article>
       <div class="country-migration-cards"><article><span>${t.recorded}</span><strong>${latestMetric(migration.recorded_immigration_2024)}</strong></article><article><span>${t.permits}</span><strong>${latestMetric(migration.first_residence_permits_2024)}</strong></article><article><span>${t.irregular}</span><strong>${latestMetric(migration.irregular_presence_enforcement_2024)}</strong></article></div>
       <div class="pressure-method"><p>${esc(data.methodology[lang()])}</p><p><b>${t.irregular}:</b> ${esc(data.methodology[`irregular_migration_warning_${lang()}`])}</p><a href="/comparison.html?lang=${lang()}#demographic-pressure">${t.source} →</a></div>`;
+    drawFertility(profile);
   }
 
   function render(){ comparison(); country(); }

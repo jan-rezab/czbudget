@@ -23,20 +23,12 @@
   const labelFor = definition => definition?.[lang==="en"?"label_en":"label_cs"] || definition?.indicator_code || "—";
   const frequencyLabel = value => value==="M"?copy.monthly:value==="Q"?copy.quarterly:copy.annual;
 
-  function lineChart(values,{warning=false,height=220,label=""}={}){
-    const clean=values.filter(item=>Number.isFinite(item[1]));
-    if(clean.length<2)return `<div class="economy-empty">${copy.noData}</div>`;
-    const width=760,pad={l:48,r:18,t:18,b:28};
-    let min=Math.min(...clean.map(item=>item[1])),max=Math.max(...clean.map(item=>item[1]));
-    if(min===max){min-=1;max+=1}else{const extra=(max-min)*.08;min-=extra;max+=extra}
-    const x=i=>pad.l+i*(width-pad.l-pad.r)/Math.max(1,clean.length-1);
-    const y=v=>pad.t+(max-v)*(height-pad.t-pad.b)/(max-min);
-    const ticks=[0,.25,.5,.75,1].map(t=>max-(max-min)*t);
-    const grid=ticks.map(v=>`<line class="grid" x1="${pad.l}" x2="${width-pad.r}" y1="${y(v)}" y2="${y(v)}"/><text x="${pad.l-7}" y="${y(v)+4}" text-anchor="end">${number(v)}</text>`).join("");
-    const zero=min<0&&max>0?`<line class="zero" x1="${pad.l}" x2="${width-pad.r}" y1="${y(0)}" y2="${y(0)}"/>`:"";
-    const path=clean.map((item,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(item[1]).toFixed(1)}`).join(" ");
-    const years=[0,Math.floor((clean.length-1)/2),clean.length-1].map(i=>`<text x="${x(i)}" y="${height-6}" text-anchor="middle">${clean[i][0]}</text>`).join("");
-    return `<svg class="economy-chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}">${grid}${zero}<path class="line${warning?" warning":""}" d="${path}"/>${years}</svg>`;
+  function lineChart(host,values,{warning=false,height=220,label="",unit=""}={}){
+    if(values.filter(item=>Number.isFinite(item[1])).length<2){host.innerHTML=`<div class="economy-empty">${copy.noData}</div>`;return;}
+    window.PSDPlotReady.then(plot=>{
+      if(!host.isConnected)return;
+      plot.render(host,{type:"line",rows:values.map(([period,value])=>({label:period,value})),fields:[{key:"value",label,color:warning?"#c93237":"#a8b63f",format:number}],title:label,unit,locale:lang==="en"?"en-GB":"cs-CZ",height});
+    }).catch(error=>{if(host.isConnected)host.textContent=`Chart error: ${error.message}`;});
   }
 
   function seriesFor(country,indicator){return data.series.filter(row=>row.country_code===country&&row.indicator_code===indicator)}
@@ -47,8 +39,12 @@
     grid.innerHTML=cycleDefs.map(([code,cs,en,unit,warning])=>{
       const series=seriesFor(country,code).find(row=>row.frequency==="A");
       const values=series?.values||[]; const latest=values.at(-1);
-      return `<article class="cycle-card"><header><div><h3>${lang==="en"?en:cs}</h3><span>IMF WEO · ${unit}</span></div><strong>${latest?`${number(latest[1])} ${unit}`:"—"}</strong></header>${lineChart(values,{warning,height:code==="real_gdp_growth_pct"?250:210,label:lang==="en"?en:cs})}</article>`;
+      return `<article class="cycle-card"><header><div><h3>${lang==="en"?en:cs}</h3><span>IMF WEO · ${unit}</span></div><strong>${latest?`${number(latest[1])} ${unit}`:"—"}</strong></header><div data-cycle-chart="${code}"></div></article>`;
     }).join("");
+    cycleDefs.forEach(([code,cs,en,unit,warning])=>{
+      const series=seriesFor(country,code).find(row=>row.frequency==="A");
+      lineChart(grid.querySelector(`[data-cycle-chart="${code}"]`),series?.values||[],{warning,height:code==="real_gdp_growth_pct"?250:210,label:lang==="en"?en:cs,unit});
+    });
   }
 
   function renderExplorer(country){
@@ -68,7 +64,7 @@
         document.querySelector("#explorer-title").textContent=labelFor(d);
         document.querySelector("#explorer-unit").textContent=`${sourceNames[row.source_id]} · ${frequencyLabel(row.frequency)} · ${row.unit}`;
         document.querySelector("#explorer-latest").textContent=latest?`${number(latest[1])} · ${latest[0]}`:"—";
-        document.querySelector("#explorer-chart").innerHTML=lineChart(row.values,{height:300,label:labelFor(d)});
+        lineChart(document.querySelector("#explorer-chart"),row.values,{height:300,label:labelFor(d),unit:row.unit});
         document.querySelector("#series-meta").innerHTML=[
           `<span>${row.frequency}</span>`,`<span>${row.unit}</span>`,
           row.seasonal_adjustment?`<span>SA: ${row.seasonal_adjustment}</span>`:"",

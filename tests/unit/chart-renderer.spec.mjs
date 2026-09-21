@@ -29,6 +29,11 @@ test('empty and single-zero series have usable domains', () => {
     assert.ok(max > min); assert.ok(ticks.length >= 2);
   }
 });
+test('indexed trends can omit zero without collapsing a constant series',()=>{
+  const axis=charts.domain([100,100],false);
+  assert.ok(axis.min<100 && axis.max>100);
+  assert.ok(charts.model({rows:[{year:2025,index:100},{year:2026,index:110}],fields:[{key:'index'}],includeZero:false}).axis.min>0);
+});
 test('plot, tooltip table and CSV rail share one canonical accessor',()=>{
   const data=charts.model({rows:[{year:2024,revenue:10,expense:null}],fields:[{key:'revenue',label:'Revenue'},{key:'expense',label:'Expenditure'}]});
   assert.deepEqual(data.columns.map(column=>column.key),['label','revenue','expense']);

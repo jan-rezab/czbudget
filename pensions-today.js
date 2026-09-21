@@ -19,12 +19,24 @@
   const select = (id, label, options, value) => `<label for="${id}">${label}<select id="${id}" aria-label="${esc(label)}">${Object.entries(options).map(([v, text]) => `<option value="${v}" ${v === value ? "selected" : ""}>${text}</option>`).join("")}</select></label>`;
   const sourceLine = id => {const s = state.data.sources[id]; return `<p class="pension-source">${tr("Source", "Zdroj")}: <a href="${esc(s.url)}" target="_blank" rel="noreferrer">${esc(s.table)}</a> · ${tr("Extracted", "Staženo")} ${s.extracted_at}</p>`;};
   const kpi = (label, value, note) => `<article><span>${label}</span><strong>${value}</strong><small>${note}</small></article>`;
-  function chart(title, rows, unit, max = null) {
-    const W = 860, left = 150, right = 135, top = 42, rowH = 42, H = top + rows.length * rowH + 36;
-    const ceiling = max || Math.ceil(Math.max(...rows.map(r => r.value), 1) / 10) * 10;
-    const scale = v => v / ceiling * (W - left - right);
-    const grid = [0, .25, .5, .75, 1].map(f => `<line x1="${left + scale(ceiling*f)}" x2="${left + scale(ceiling*f)}" y1="${top-8}" y2="${H-30}" stroke="#d2ccc1"/><text x="${left + scale(ceiling*f)}" y="${H-10}" text-anchor="middle" font-size="12">${fmt(ceiling*f, Number.isInteger(ceiling*f) ? 0 : 1)}</text>`).join("");
-    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}" style="font-family:Arial,Helvetica,sans-serif;fill:#171918"><title>${esc(title)} · ${esc(unit)}</title><text x="${left}" y="18" font-size="12">${esc(unit)}</text>${grid}${rows.map((r,i) => `<g><text x="${left-12}" y="${top+i*rowH+18}" text-anchor="end" font-size="14">${esc(r.label)}</text><rect x="${left}" y="${top+i*rowH}" width="${scale(r.value)}" height="25" fill="${r.selected ? '#c93237' : '#a8b63f'}"/><text x="${W-right+12}" y="${top+i*rowH+18}" font-size="14">${esc(r.display || fmt(r.value,1))}</text><title>${esc(r.label)}: ${esc(r.display || fmt(r.value,1))}</title></g>`).join("")}</svg>`;
+  let pendingCharts=[];
+  function chart(title, rows, unit) {
+    const id=pendingCharts.length;
+    pendingCharts.push({title,rows,unit});
+    return `<div data-pension-plot="${id}"></div>`;
+  }
+  function drawPendingCharts(){
+    const charts=pendingCharts;
+    const generation=Symbol('pension-charts');root.__pensionChartGeneration=generation;
+    window.PSDPlotReady.then(renderer=>{
+      if(root.__pensionChartGeneration!==generation)return;
+      charts.forEach(({title,rows,unit},index)=>{
+        const host=root.querySelector(`[data-pension-plot="${index}"]`);
+        if(!host)return;
+        const cohort=charts[index].type==='line';
+        renderer.render(host,{type:cohort?'line':'bar',rows,fields:cohort?[{key:'mean',label:tr('All careers','Všechny kariéry'),format:value=>fmt(value)},{key:'full_career_mean',label:tr('Full careers only','Pouze úplné kariéry'),color:'#8b8d83',format:value=>fmt(value)}]:[{key:'value',label:title,format:(value,row)=>row.display||fmt(value,1)}],title,unit,locale:lang()==='en'?'en-GB':'cs-CZ',rowColor:row=>row.selected?'#c93237':undefined});
+      });
+    }).catch(error=>root.querySelectorAll('[data-pension-plot]').forEach(host=>{host.textContent=`Chart error: ${error.message}`;}));
   }
   function register(el, slug, title, rows, columns, sourceId, definition, caveat, excludes) {
     const s = state.data.sources[sourceId];
@@ -78,9 +90,9 @@
   const ukDefinition = () => tr("Mean weekly State Pension paid under the pre-2016 and new systems, August 2025. DWP coverage: Great Britain and overseas recipients, excluding separately administered Northern Ireland cases. New-system amounts include protected payments.", "Průměrný týdenní státní důchod podle systému před rokem 2016 a nového systému, srpen 2025. Pokrytí DWP: Velká Británie a příjemci v zahraničí, bez samostatně spravovaných případů v Severním Irsku. Nový systém zahrnuje chráněné doplatky.");
   const frDefinition = () => tr("Gross monthly direct pension, including the supplement for three or more children, for recipients resident in France. Birth cohorts 1930–1953 from DREES EIR 2020, at 31 December 2020. Full-career recipients are a separate subset. Birth year is not retirement year.", "Hrubý měsíční přímý důchod včetně příplatku za tři a více dětí, příjemci žijící ve Francii. Ročníky narození 1930–1953 ze šetření DREES EIR 2020, stav k 31. prosinci 2020. Příjemci s úplnou kariérou jsou samostatnou podskupinou. Rok narození není rok přiznání důchodu.");
   function cohortChart(rows) {
-    const W=860,H=330,L=65,R=30,T=32,B=44,max=2500;
-    const x=y=>L+(y-1930)/23*(W-L-R), y=v=>T+(max-v)/max*(H-T-B);
-    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(tr("Pension by birth year, 2020", "Důchod podle roku narození, 2020"))}" style="font-family:Arial,Helvetica,sans-serif;fill:#171918"><title>${esc(frDefinition())}</title>${[0,500,1000,1500,2000,2500].map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#d2ccc1"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end" font-size="12">${fmt(v)}</text>`).join("")}${[["mean","#a8b63f"],["full_career_mean","#8b8d83"]].map(([key,color])=>`<polyline points="${rows.map(r=>`${x(r.birth_year)},${y(r[key])}`).join(" ")}" fill="none" stroke="${color}" stroke-width="3"/>`).join("")}${[1930,1935,1940,1945,1950,1953].map(v=>`<text x="${x(v)}" y="${H-20}" font-size="12" text-anchor="middle">${v}</text>`).join("")}<text x="${L}" y="17" font-size="12">EUR / ${tr("month · 2020", "měsíc · 2020")}</text></svg>`;
+    const id=pendingCharts.length;
+    pendingCharts.push({type:'line',title:tr('Pension by birth year, 2020','Důchod podle roku narození, 2020'),rows:rows.map(row=>({label:row.birth_year,mean:row.mean,full_career_mean:row.full_career_mean})),unit:tr('EUR/month · 2020','EUR/měsíc · 2020')});
+    return `<div data-pension-plot="${id}"></div>`;
   }
   function franceBands(p) {
     return [[0,500],[500,1000],[1000,1500],[1500,2000],[2000,2500],[2500,3000],[3000,4500],[4500,null]].map(([lo,hi])=>({
@@ -131,7 +143,9 @@
   }
   function render() {
     if (!state.data) return;
+    pendingCharts=[];
     root.innerHTML = `<section class="aging-section pension-section" id="pensions-today"><div class="aging-heading"><div><span class="kicker">${tr("Observed pensions", "Vyplácené důchody")} · ${esc(name(state.code))}</span><h2>${tr("Pensions today", "Důchody dnes")}</h2></div><p>${tr("What people actually receive, how payments are distributed, and what the data can tell us about older and newer retirees. Latest loaded observations, with their dates shown.", "Kolik lidé skutečně dostávají, jak jsou částky rozdělené a co data říkají o dřívějších a novějších důchodcích. Nejnovější načtené údaje s uvedeným obdobím.")}</p></div>${national()}</section>${benchmark()}`;
+    drawPendingCharts();
     [ ["pension-population","population","pensionPopulation"], ["pension-year","awardYear","pensionYear"], ["pension-detail","detail","pensionDetail"], ["pension-sex","sex","pensionSex"], ["pension-type","kind","pensionType"], ["pension-metric","metric","pensionMetric"], ["pension-scope","scope","pensionScope"] ].forEach(([id,key,param]) => document.getElementById(id)?.addEventListener("change", event => {
       state[key] = event.target.value;
       const url = new URL(location.href); url.searchParams.set(param,state[key]); history.replaceState({},"",url); render(); document.getElementById(id)?.focus();

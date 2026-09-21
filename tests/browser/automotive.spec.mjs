@@ -8,7 +8,7 @@ test('separate automotive report compares three product groups and four origins'
   await page.goto('/deep-dives/automotive/?lang=en');
   await expect(page).toHaveTitle('Automotive — Public Spending Data');
   await expect(page.locator('#auto-charts .auto-chart-card')).toHaveCount(3);
-  await expect(page.locator('.auto-line')).toHaveCount(12);
+  await expect(page.locator('#auto-charts .psd-plot-line')).toHaveCount(12);
   await expect(page.locator('#auto-status')).toContainText('2 importing markets');
   await page.locator('#auto-metric').selectOption('share');
   await expect(page).toHaveURL(/metric=share/);
@@ -44,21 +44,20 @@ test('the release serves verified monthly data rather than an empty report',asyn
   const receipt=JSON.parse(await readFile(new URL('../../data/trade/automotive-release.v1.json',import.meta.url),'utf8'));
   await page.goto('/deep-dives/automotive/?lang=en');
   await expect(page.locator('#auto-status')).toContainText(`${receipt.market_count} importing markets`);
-  await expect(page.locator('.auto-line')).toHaveCount(12);
-  for(const card of await page.locator('#auto-charts .auto-chart-card').all())expect(await card.locator('.auto-point').count()).toBeGreaterThan(20);
+  await expect(page.locator('#auto-charts .psd-plot-line')).toHaveCount(12);
+  for(const card of await page.locator('#auto-charts .auto-chart-card').all())expect(await card.locator('[data-point]').count()).toBeGreaterThan(5);
 });
 
 test('whole-month hover compares four regions and keyboard selection opens that month’s routes',async({page})=>{
   await page.goto('/deep-dives/automotive/?lang=en');
   const card=page.locator('#auto-charts .auto-chart-card').first();
-  const month=card.locator('.auto-month').nth(2);
+  const month=card.locator('[data-point]').nth(2);
   await month.hover();
-  await expect(card.locator('.auto-tooltip')).toBeVisible();
-  await expect(card.locator('.auto-tooltip dt')).toHaveCount(4);
-  await expect(card.locator('.auto-tooltip')).toContainText('Dec 2025');
-  await expect(card.locator('.auto-point.is-active')).toHaveCount(4);
+  await expect(card.locator('.psd-plot-tooltip')).toBeVisible();
+  await expect(card.locator('.psd-plot-tooltip > span')).toHaveCount(4);
+  await expect(card.locator('.psd-plot-tooltip')).toContainText('Dec 2025');
   await month.focus();await month.press('ArrowRight');
-  await expect(card.locator('.auto-tooltip')).toContainText('Jan 2026');
+  await expect(card.locator('.psd-plot-tooltip')).toContainText('Jan 2026');
   await page.keyboard.press('Enter');
   await expect(page.locator('#auto-flowPeriod')).toHaveValue('202601');
   await expect(page).toHaveURL(/flowPeriod=202601/);

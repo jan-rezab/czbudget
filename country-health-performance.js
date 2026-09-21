@@ -33,17 +33,13 @@
   const notes={per_capita_ppp:{cs:"Světová banka · HDP PPP",en:"World Bank · GDP PPP"}};
   const note=key=>notes[key]?.[state.lang]||"";
 
-  function lineChart(series,meta){
-    if(!series?.length)return `<p class="health-performance-empty">${text[state.lang].noData}</p>`;
-    const width=760,height=250,pad={l:54,r:20,t:24,b:34};
-    const values=series.map(item=>Number(item.value)).filter(Number.isFinite),years=series.map(item=>Number(item.year));
-    let min=Math.min(...values),max=Math.max(...values);if(min===max){min-=1;max+=1}else{const extra=(max-min)*.14;min-=extra;max+=extra;}
-    const x=year=>pad.l+(year-Math.min(...years))/(Math.max(...years)-Math.min(...years)||1)*(width-pad.l-pad.r);
-    const y=value=>pad.t+(max-value)/(max-min)*(height-pad.t-pad.b);
-    const path=series.map((item,index)=>`${index?"L":"M"}${x(item.year).toFixed(1)},${y(item.value).toFixed(1)}`).join(" ");
-    const grid=[0,.5,1].map(f=>{const value=max-(max-min)*f,cy=pad.t+(height-pad.t-pad.b)*f;return `<g><line x1="${pad.l}" x2="${width-pad.r}" y1="${cy}" y2="${cy}"/><text x="${pad.l-9}" y="${cy+4}" text-anchor="end">${fmt(value,meta.digits)}</text></g>`}).join("");
-    const dots=series.map(item=>`<circle cx="${x(item.year)}" cy="${y(item.value)}" r="4"><title>${item.year}: ${fmt(item.value,meta.digits)} ${esc(unit(state.metric))}</title></circle>`).join("");
-    return `<svg class="health-performance-line" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label(state.metric))}"><g class="grid">${grid}</g><path d="${path}"/>${dots}<text class="axis-year" x="${pad.l}" y="${height-8}">${Math.min(...years)}</text><text class="axis-year" x="${width-pad.r}" y="${height-8}" text-anchor="end">${Math.max(...years)}</text></svg>`;
+  function lineChart(host,series,meta){
+    if(!series?.length){host.innerHTML=`<p class="health-performance-empty">${text[state.lang].noData}</p>`;return;}
+    const metric=state.metric,language=state.lang;
+    window.PSDPlotReady.then(plot=>{
+      if(!host.isConnected)return;
+      plot.render(host,{type:"line",rows:series.map(item=>({label:item.year,value:Number(item.value)})),fields:[{key:"value",label:metrics[metric][language],format:value=>fmt(value,meta.digits)}],title:metrics[metric][language],unit:unit(metric),locale:language==="en"?"en-GB":"cs-CZ",height:250});
+    }).catch(error=>{if(host.isConnected)host.textContent=`Chart error: ${error.message}`;});
   }
 
   function peerBars(key){
@@ -65,10 +61,11 @@
     root.innerHTML=`<header class="health-performance-head"><div><span class="kicker">${t.kicker}</span><h2 id="health-performance-title">${t.title}</h2></div><p>${t.lead}</p></header>
       <div class="health-performance-tabs" role="tablist">${Object.keys(t.groups).map(group=>`<button type="button" role="tab" data-health-performance-group="${group}" aria-selected="${group===state.group}">${t.groups[group]}</button>`).join("")}</div>
       <div class="health-performance-cards">${groupMetrics.map(key=>{const value=entry(country,key),item=metrics[key];return `<button type="button" data-health-performance-metric="${key}" class="${key===state.metric?"selected":""}"><span>${esc(label(key))}</span><strong>${fmt(value.value,item.digits)} <small>${esc(unit(key))}</small></strong><b>${value.year}</b></button>`}).join("")}</div>
-      <div class="health-performance-detail"><article><header><span>${t.trend}</span><h3>${esc(label(state.metric))}</h3><small>${state.code} · ${esc(names[state.code]||state.code)}${note(state.metric)?` · ${esc(note(state.metric))}`:""}</small></header>${lineChart(selected.series,meta)}</article><article><header><span>${t.peers}</span><h3>${esc(label(state.metric))}</h3><small>${t.latest}${note(state.metric)?` · ${esc(note(state.metric))}`:""}</small></header>${peerBars(state.metric)}</article></div>
+      <div class="health-performance-detail"><article><header><span>${t.trend}</span><h3>${esc(label(state.metric))}</h3><small>${state.code} · ${esc(names[state.code]||state.code)}${note(state.metric)?` · ${esc(note(state.metric))}`:""}</small></header><div data-health-trend></div></article><article><header><span>${t.peers}</span><h3>${esc(label(state.metric))}</h3><small>${t.latest}${note(state.metric)?` · ${esc(note(state.metric))}`:""}</small></header>${peerBars(state.metric)}</article></div>
       <footer class="health-performance-method"><p>${esc(state.data.methodology?.[state.lang]||t.method)}</p><div><b>${t.sources}</b>${(state.data.sources||[]).map(source=>`<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.title)} ↗</a>`).join("")}</div></footer>`;
     root.querySelectorAll("[data-health-performance-group]").forEach(button=>button.addEventListener("click",()=>{state.group=button.dataset.healthPerformanceGroup;state.metric=available.find(key=>metrics[key].group===state.group);render();}));
     root.querySelectorAll("[data-health-performance-metric]").forEach(button=>button.addEventListener("click",()=>{state.metric=button.dataset.healthPerformanceMetric;render();}));
+    lineChart(root.querySelector("[data-health-trend]"),selected.series,meta);
   }
 
   addEventListener("countryprofilechange",event=>{state.code=event.detail.code;state.lang=event.detail.lang==="en"?"en":"cs";render();});
