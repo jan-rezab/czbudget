@@ -86,5 +86,44 @@ class DemographyCloudTest(unittest.TestCase):
         self.assertIn("/data/demography/index.v2.json", registry["website_destinations"])
         self.assertEqual(worker.POINTER, "gs://czbudget-janrezab-data-layers/published/country-demography/current.json")
 
+    def test_completion_exists_before_atomic_pointer_change(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            work = Path(temporary)
+            (work / "staging").mkdir()
+            (work / "receipts").mkdir()
+            (work / "staging" / "output.json").write_text("{}", encoding="utf-8")
+            (work / "receipts" / "raw-sources.json").write_text(
+                json.dumps({"sources": []}), encoding="utf-8"
+            )
+            (work / "receipts" / "processed.json").write_text(json.dumps({
+                "files": {"output.json": {"bytes": 2, "sha256": worker.sha256(work / "staging" / "output.json")}},
+                "coverage": {
+                    "source_rows": {"age": {"received": 1, "accepted": 1, "rejected": 0, "deduplicated": 0}},
+                    "source_totals": {}, "normalized": {}, "country_count": 195,
+                    "period": {"start": 1950, "end": 2100}, "validation": {"status": "passed"},
+                },
+            }), encoding="utf-8")
+            sources = work / "sources.json"
+            sources.write_text(json.dumps({
+                "dataset": "country-demography", "revision": "test", "website_destinations": [],
+            }), encoding="utf-8")
+            events = []
+            def upload(path, uri):
+                events.append(("upload", uri))
+            def command(*args, **kwargs):
+                self.assertTrue((work / "completed.json").is_file())
+                events.append(("pointer", args[-4]))
+            with mock.patch.dict(os.environ, {"LOADER_GIT_SHA": "a" * 40}, clear=True), \
+                 mock.patch.object(worker, "require_cloud"), \
+                 mock.patch.object(worker, "upload_create_only", side_effect=upload), \
+                 mock.patch.object(worker, "pointer_generation", return_value="0"), \
+                 mock.patch.object(worker, "command", side_effect=command):
+                worker.publish(work, "run-1", sources)
+            self.assertEqual(events[-2], ("upload", f"{worker.RUNS}/run-1/completed.json"))
+            self.assertEqual(events[-1][0], "pointer")
+            pointer = json.loads((work / "current.json").read_text(encoding="utf-8"))
+            self.assertEqual(pointer["completed_receipt_sha256"], worker.sha256(work / "completed.json"))
+            self.assertEqual(pointer["publication_status"], "published_data_plane")
+
 if __name__ == "__main__":
     unittest.main()

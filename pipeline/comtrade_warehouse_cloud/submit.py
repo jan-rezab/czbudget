@@ -71,7 +71,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    assert_data_plane_idle(PROJECT, args.region)
+    assert_data_plane_idle(PROJECT, args.region, account=args.account)
     substitutions = {
         "_FREQUENCY": args.frequency or "AUTO",
         "_PERIOD": args.period or "AUTO",

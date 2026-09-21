@@ -56,7 +56,7 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     if not args.dry_run:
-        assert_data_plane_idle(PROJECT, REGION)
+        assert_data_plane_idle(PROJECT, REGION, account=args.account)
     loader_sha = git_sha()
     started_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     sources = {

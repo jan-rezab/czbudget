@@ -74,7 +74,7 @@ def upload_create_only(source: Path, target: str) -> None:
         raise RuntimeError(f"Upload failed for {target}: {result.stderr}")
     metadata = json.loads(remote.stdout)
     remote_md5 = metadata.get("md5_hash") or metadata.get("md5Hash")
-    if int(metadata.get("size", -1)) != source.stat().st_size or (remote_md5 and remote_md5 != md5_b64(source)):
+    if int(metadata.get("size", -1)) != source.stat().st_size or remote_md5 != md5_b64(source):
         raise RuntimeError(f"Existing immutable object has different bytes: {target}")
 
 
@@ -180,15 +180,15 @@ def publish(work: Path, run_id: str, sources_path: Path) -> None:
     file_digest = hashlib.sha256(
         json.dumps(processed["files"], sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
-    release_id = f"wpp2024-{file_digest[:20]}"
+    release_id = f"wpp2024-{file_digest[:20]}-{run_id}"
     release_prefix = f"{RELEASES}/{release_id}"
     staged_files = sorted(path for path in output.rglob("*") if path.is_file())
     for path in staged_files:
         upload_create_only(path, f"{release_prefix}/{path.relative_to(output).as_posix()}")
     receipt = {
-        "status": "published",
+        "status": "validated",
         "processing_status": "complete",
-        "publication_status": "published_data_plane",
+        "publication_status": "validated_not_yet_current",
         "website_consumption_status": "pending_web_adapter",
         "dataset": registry["dataset"],
         "source_revision": registry["revision"],
@@ -198,7 +198,7 @@ def publish(work: Path, run_id: str, sources_path: Path) -> None:
         "service_account": SERVICE_ACCOUNT,
         "region": REGION,
         "started_at": os.environ.get("BUILD_STARTED_AT"),
-        "published_at": now(),
+        "validated_at": now(),
         "rows": {
             "received": sum(item["received"] for item in processed["coverage"]["source_rows"].values()),
             "accepted": sum(item["accepted"] for item in processed["coverage"]["source_rows"].values()),
@@ -221,13 +221,20 @@ def publish(work: Path, run_id: str, sources_path: Path) -> None:
     release_receipt = work / "receipts/release.json"
     release_receipt.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
     upload_create_only(release_receipt, f"{release_prefix}/release.json")
+    completed = work / "completed.json"
+    completed.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+    completed_uri = f"{RUNS}/{run_id}/completed.json"
+    upload_create_only(completed, completed_uri)
     pointer = {
         "schema_version": "1.0.0",
         "dataset": registry["dataset"],
         "release_id": release_id,
         "release_prefix": release_prefix,
         "receipt": f"{release_prefix}/release.json",
-        "published_at": receipt["published_at"],
+        "completed_receipt": completed_uri,
+        "completed_receipt_sha256": sha256(completed),
+        "publication_status": "published_data_plane",
+        "published_at": now(),
         "loader_git_sha": receipt["loader_git_sha"],
         "cloud_build_id": run_id,
     }
@@ -238,9 +245,6 @@ def publish(work: Path, run_id: str, sources_path: Path) -> None:
         "gcloud", "storage", "cp", str(pointer_path), POINTER,
         f"--if-generation-match={generation}", "--content-type=application/json", "--quiet",
     )
-    completed = work / "completed.json"
-    completed.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-    upload_create_only(completed, f"{RUNS}/{run_id}/completed.json")
 
 
 def main() -> None:

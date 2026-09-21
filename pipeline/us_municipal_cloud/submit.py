@@ -101,7 +101,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.dry_run:
-        assert_data_plane_idle(PROJECT, REGION)
+        assert_data_plane_idle(PROJECT, REGION, account=args.account)
 
     registry = args.registry.resolve()
     if not registry.is_file():

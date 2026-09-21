@@ -47,7 +47,7 @@ def main() -> None:
     if not 1 <= args.max_calls_per_account <= 500:
         parser.error("--max-calls-per-account must be between 1 and 500")
 
-    assert_data_plane_idle(PROJECT, REGION)
+    assert_data_plane_idle(PROJECT, REGION, account=args.account)
 
     with tempfile.TemporaryDirectory(prefix="comtrade-cloud-source-") as temporary:
         source = Path(temporary)

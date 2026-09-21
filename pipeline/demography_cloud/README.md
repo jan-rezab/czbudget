@@ -60,7 +60,10 @@ The build requires exactly 195 countries, annual continuity from 1950 through
 between age totals and headline WPP population within 0.1%. Raw responses are
 content-addressed and create-only. Staging and release objects are immutable.
 Only the final `current.json` pointer changes, using a generation-match compare
-and swap.
+and swap. The immutable `completed.json` receipt is uploaded and verified before
+that pointer changes. A completed receipt alone means the release passed
+validation; publication is proven only when `current.json` names its release and
+receipt hash. No cloud writes follow the pointer update.
 
 The immutable release receipt distinguishes `processing_status` from
 `publication_status` and records source hashes, loader Git SHA, Cloud Build ID,
