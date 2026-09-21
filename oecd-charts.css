@@ -32,3 +32,12 @@ html[lang="en"] [data-lang-copy="cs"],html:not([lang="en"]) [data-lang-copy="en"
 .tax-burden-page .custom-select-no-results{display:none;padding:12px;background:#fff;color:#171918;font:14px Arial,sans-serif}
 .tax-burden-page .custom-select.open .custom-select-no-results:not([hidden]){display:block}
 .oecd-spectrum-row{cursor:crosshair}.oecd-spectrum-row:hover,.oecd-spectrum-row:focus,.oecd-spectrum-row.is-hovered{background:#eef0d4;outline:none}.oecd-hover-tooltip{position:fixed;z-index:1000;min-width:250px;max-width:min(340px,calc(100vw - 24px));padding:14px 16px;border:1px solid #192e2a;background:#171918;color:#fff;box-shadow:8px 8px 0 #a8b63f;pointer-events:none}.oecd-hover-tooltip[hidden]{display:none}.oecd-hover-tooltip>strong{display:block;font:600 20px/1 Georgia,serif}.oecd-hover-tooltip>small{display:block;margin:5px 0 10px;color:#aaa9a1;font:10px/1.4 monospace}.oecd-hover-tooltip>div{display:flex;justify-content:space-between;gap:22px;padding:5px 0;border-top:1px solid #ffffff25;font-size:11px}.oecd-hover-tooltip span{color:#c7c5bd}.oecd-hover-tooltip b{white-space:nowrap}
+.oecd-bridge{align-items:stretch;min-height:0}
+.oecd-bridge-column{justify-content:center;min-height:0;gap:10px}
+.oecd-bridge-column span{margin:0}
+.oecd-bridge-track{height:16px;background:#d5d0c7}
+.oecd-bridge-track i{display:block;width:var(--width);height:100%;min-height:0;background:#192e2a}
+.oecd-bridge-column:last-child .oecd-bridge-track i{background:#a8b63f}
+.oecd-bridge-column strong{font-variant-numeric:tabular-nums}
+.oecd-bridge-change{min-width:90px}
+@media(max-width:620px){.oecd-bridge{grid-template-columns:1fr}.oecd-bridge-change{padding:12px}.oecd-bridge-column{min-height:0}}

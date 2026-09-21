@@ -153,8 +153,8 @@
       en: ["Tax burden — Public Spending Data", "OECD household tax wedges, corporate rates, carbon pricing and local tax authority."],
     },
     "/deep-dives/redistribution/": {
-      cs: ["Přerozdělení a výsledky — Public Spending Data", "Nerovnost před a po transferech, sociální výdaje, důchody a výsledky podle OECD."],
-      en: ["Redistribution and outcomes — Public Spending Data", "OECD inequality before and after transfers, social spending, pensions and outcomes."],
+      cs: ["Daně, transfery a příjmová nerovnost — Public Spending Data", "Srovnání příjmové nerovnosti před daněmi a transfery a po nich; chudoba a sociální výdaje jako oddělený kontext."],
+      en: ["Taxes, transfers and income inequality — Public Spending Data", "Income inequality before and after taxes and transfers, with poverty and social spending shown as separate context."],
     },
     "/deep-dives/trade/": {
       cs: ["Zahraniční obchod — Public Spending Data", "Dovoz, vývoz, obchodní bilance, partneři a zboží v interaktivním průzkumníku UN Comtrade."],
