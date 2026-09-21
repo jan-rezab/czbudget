@@ -45,6 +45,14 @@ node scripts/validate-chart-ownership.mjs
 node scripts/build-chart-coverage.mjs --check
 node scripts/validate-ui-environment.mjs
 node scripts/validate-release-contract.mjs
+(
+  ui_context=$(mktemp -d "${TMPDIR:-/tmp}/psd-ui-prepush.XXXXXX")
+  trap 'rm -rf -- "$ui_context"' EXIT
+  node scripts/prepare-ui-build-context.mjs "$ui_context"
+  cd "$ui_context"
+  node scripts/validate-ui-environment.mjs
+  node scripts/validate-release-contract.mjs
+)
 node scripts/publish-stories.mjs --check
 node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/stories.spec.mjs tests/unit/bounded-command.spec.mjs
 python3 -m unittest tests.test_cloud_verification

@@ -2,19 +2,26 @@
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+if [ -n "$(git -C "$ROOT" status --porcelain)" ]; then
+  echo "Commit the candidate before submitting cloud UI verification." >&2
+  exit 2
+fi
+candidate=$(git -C "$ROOT" rev-parse HEAD)
+base="${1:-$(git -C "$ROOT" rev-parse origin/main)}"
+plan=$(cd "$ROOT" && node scripts/verification-plan.mjs "$base" "$candidate")
+lane=$(node -e 'process.stdout.write(JSON.parse(process.argv[1]).lane)' "$plan")
+if [ "$lane" != component ]; then
+  echo "The candidate selects the full verification lane; skip the duplicate fast UI build." >&2
+  exit 2
+fi
+
 CONTEXT=$(mktemp -d "${TMPDIR:-/tmp}/psd-ui-context.XXXXXX")
 cleanup() { rm -rf -- "$CONTEXT"; }
 trap cleanup EXIT INT TERM
-
 node "$ROOT/scripts/prepare-ui-build-context.mjs" "$CONTEXT"
+printf '%s\n' "$plan" > "$CONTEXT/verification-plan.json"
 # Check the exact packaged files before paying for a queued cloud worker.
 (cd "$CONTEXT" && node scripts/validate-ui-environment.mjs && node scripts/validate-release-contract.mjs)
-candidate=uncommitted
-base="${1:-$(git -C "$ROOT" rev-parse origin/main)}"
-if [ -z "$(git -C "$ROOT" status --porcelain)" ]; then
-  candidate=$(git -C "$ROOT" rev-parse HEAD)
-  (cd "$ROOT" && node scripts/verification-plan.mjs "$base" "$candidate") > "$CONTEXT/verification-plan.json"
-fi
 gcloud builds submit "$CONTEXT" \
   --account="${PSD_GCLOUD_ACCOUNT:-jan@ravineo.com}" \
   --config="$CONTEXT/cloudbuild.ui.yaml" \

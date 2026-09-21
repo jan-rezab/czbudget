@@ -40,6 +40,9 @@ source even when the selected YAML is code-only.
 Before submitting, the wrapper runs the UI environment and release contracts
 from inside that exact temporary bundle. Missing bundle files fail locally,
 before a Cloud Build worker is queued.
+The pre-push hook checks the same bundle. The wrapper accepts only a clean,
+committed component-lane candidate; structural changes go directly to the full
+verifier instead of paying for both cloud gates.
 
 - Config: `cloudbuild.verify.yaml`.
 - Runs explicitly before merge for structural, unknown or broad application changes.
