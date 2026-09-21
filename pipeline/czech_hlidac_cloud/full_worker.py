@@ -30,6 +30,8 @@ BUCKET = "gs://czbudget-janrezab-data-layers"
 CAMPAIGN = "top100-2025-07-01-v2"
 SCOPE_PATH = Path("pipeline/config/czech-hlidac-municipalities.v1.json")
 HISTORY_START = date(2016, 7, 1)
+HISTORY_END = date(2026, 9, 20)  # Pin the campaign snapshot across bounded builds.
+LEGACY_SNAPSHOT_BUILD_ID = "628f5121-6622-4dab-a99b-47fb1f3f8dd5"
 REGION = "europe-west4"
 SERVICE_ACCOUNT = "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com"
 WAREHOUSE_SCHEMA = (
@@ -96,7 +98,7 @@ def upload_immutable(path: Path, uri: str) -> dict:
     return {"uri": uri, "generation": generation, "sha256": digest, "bytes": size}
 
 
-def existing_completion(prefix: str) -> dict | None:
+def existing_completion(prefix: str, end_date: date) -> dict | None:
     completed = subprocess.run(
         ["gcloud", "storage", "ls", f"{prefix}/attempts/*/completed.json"],
         text=True,
@@ -105,26 +107,31 @@ def existing_completion(prefix: str) -> dict | None:
     )
     if completed.returncode != 0 or not completed.stdout.strip():
         return None
-    uri = sorted(completed.stdout.splitlines())[-1]
-    receipt = json.loads(run(["gcloud", "storage", "cat", uri]))
-    if (
-        receipt.get("schema_version") != "2.0.0"
-        or receipt.get("campaign") != CAMPAIGN
-        or receipt.get("processing_status") != "complete"
-        or any(
-            key not in receipt
-            for key in (
-                "municipality_ico",
-                "normalized_total",
-                "raw_object",
-                "normalized_object",
-                "warehouse_object",
-                "validation",
+    for uri in sorted(completed.stdout.splitlines(), reverse=True):
+        receipt = json.loads(run(["gcloud", "storage", "cat", uri]))
+        if (
+            receipt.get("schema_version") != "2.0.0"
+            or receipt.get("campaign") != CAMPAIGN
+            or receipt.get("processing_status") != "complete"
+            or any(
+                key not in receipt
+                for key in (
+                    "municipality_ico",
+                    "normalized_total",
+                    "raw_object",
+                    "normalized_object",
+                    "warehouse_object",
+                    "validation",
+                )
             )
-        )
-    ):
-        raise ValueError(f"invalid prior municipality receipt: {uri}")
-    return receipt
+        ):
+            raise ValueError(f"invalid prior municipality receipt: {uri}")
+        if receipt.get("history_end") == end_date.isoformat() or (
+            end_date == HISTORY_END
+            and receipt.get("ingestion_run_id") == LEGACY_SNAPSHOT_BUILD_ID
+        ):
+            return receipt
+    return None
 
 
 def write_warehouse_rows(
@@ -177,7 +184,7 @@ def acquire_municipality(
 ) -> dict:
     ico = municipality["ico"]
     municipality_prefix = f"{campaign_prefix}/municipalities/{ico}"
-    previous = existing_completion(municipality_prefix)
+    previous = existing_completion(municipality_prefix, end_date)
     if previous:
         print(
             f"[{municipality['rank']:03d}/100] {municipality['name']}: "
@@ -307,6 +314,7 @@ def acquire_municipality(
         "normalized_total": normalized_total,
         "requests_this_run": requests_made,
         "date_windows": windows_completed,
+        "history_end": end_date.isoformat(),
         "started_at": started_at,
         "completed_at": datetime.now(timezone.utc).isoformat(),
         "raw_object": raw_object,
@@ -472,6 +480,35 @@ def commit_validated_release(
     return completed_object
 
 
+def acquire_bounded_batch(
+    municipalities: list[dict],
+    token: str,
+    build_id: str,
+    end_date: date,
+    work: Path,
+    campaign_prefix: str,
+    max_new: int,
+) -> tuple[list[dict], list[str], int]:
+    completions: list[dict] = []
+    remaining: list[str] = []
+    newly_processed = 0
+    for municipality in municipalities:
+        prefix = f"{campaign_prefix}/municipalities/{municipality['ico']}"
+        previous = existing_completion(prefix, end_date)
+        if previous:
+            completions.append(previous)
+        elif newly_processed < max_new:
+            completions.append(
+                acquire_municipality(
+                    municipality, token, build_id, end_date, work, campaign_prefix
+                )
+            )
+            newly_processed += 1
+        else:
+            remaining.append(municipality["ico"])
+    return completions, remaining, newly_processed
+
+
 def main() -> None:
     build_id = os.environ.get("BUILD_ID", "").strip()
     loader_git_sha = os.environ.get("LOADER_GIT_SHA", "").strip()
@@ -482,6 +519,9 @@ def main() -> None:
         raise RuntimeError("LOADER_GIT_SHA is required")
     if not token:
         raise RuntimeError("HLIDACSTATU_API_TOKEN was not injected")
+    max_new = int(os.environ.get("MAX_MUNICIPALITIES", "1"))
+    if not 1 <= max_new <= 3:
+        raise ValueError("MAX_MUNICIPALITIES must be between 1 and 3")
 
     started_at = datetime.now(timezone.utc).isoformat()
     scope = json.loads(SCOPE_PATH.read_text(encoding="utf-8"))
@@ -495,13 +535,36 @@ def main() -> None:
     pointer_uri = f"{campaign_prefix}/current.json"
     work = Path("/workspace/hlidac-top100")
     work.mkdir(parents=True, exist_ok=True)
-    end_date = date.today()
-    completions = [
-        acquire_municipality(
-            municipality, token, build_id, end_date, work, campaign_prefix
+    end_date = HISTORY_END
+    completions, remaining, newly_processed = acquire_bounded_batch(
+        municipalities, token, build_id, end_date, work, campaign_prefix, max_new
+    )
+    if remaining:
+        progress = {
+            "schema_version": "1.0.0",
+            "dataset": "czech-hlidac-top100-contracts",
+            "campaign": CAMPAIGN,
+            "processing_status": "partial",
+            "publication_status": "not_published",
+            "cloud_build_id": build_id,
+            "loader_git_sha": loader_git_sha,
+            "service_account": SERVICE_ACCOUNT,
+            "region": REGION,
+            "history_end": end_date.isoformat(),
+            "completed_municipalities": len(completions),
+            "newly_processed_municipalities": newly_processed,
+            "remaining_municipality_icos": remaining,
+            "completed_at": datetime.now(timezone.utc).isoformat(),
+        }
+        progress_path = work / "partial.json"
+        progress_path.write_text(
+            json.dumps(progress, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
         )
-        for municipality in municipalities
-    ]
+        upload_immutable(
+            progress_path, f"{campaign_prefix}/runs/{build_id}/partial.json"
+        )
+        print(json.dumps(progress, ensure_ascii=False), flush=True)
+        return
 
     stage_ref, staging_validation = load_release_stage(completions, build_id)
     totals = {

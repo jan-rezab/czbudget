@@ -55,7 +55,10 @@ def assert_bundle_matches_head() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--account", default="jan@ravineo.com")
+    parser.add_argument("--max-municipalities", type=int, default=1)
     args = parser.parse_args()
+    if not 1 <= args.max_municipalities <= 3:
+        parser.error("--max-municipalities must be between 1 and 3")
     assert_bundle_matches_head()
     assert_data_plane_idle(PROJECT, REGION, account=args.account)
     loader_git_sha = subprocess.check_output(
@@ -72,7 +75,8 @@ def main() -> None:
             "--service-account=" + SERVICE_ACCOUNT,
             "--gcs-source-staging-dir=gs://czbudget-janrezab-data-layers/processing-build-source",
             "--account=" + args.account,
-            "--substitutions=_LOADER_GIT_SHA=" + loader_git_sha,
+            "--substitutions=_LOADER_GIT_SHA=" + loader_git_sha
+            + ",_MAX_MUNICIPALITIES=" + str(args.max_municipalities),
             "--async", "--format=json",
         ]
         subprocess.run(command, check=True, timeout=180)

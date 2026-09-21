@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 import tempfile
 import unittest
@@ -10,6 +11,30 @@ from pipeline.czech_hlidac_cloud import full_worker
 
 
 class FullPublicationOrderTest(unittest.TestCase):
+    def test_bounded_batch_yields_before_release_when_work_remains(self):
+        municipalities = [
+            {"ico": "001", "name": "First"},
+            {"ico": "002", "name": "Second"},
+            {"ico": "003", "name": "Third"},
+        ]
+        previous = {"municipality_ico": "001", "normalized_total": 5}
+        acquired = {"municipality_ico": "002", "normalized_total": 6}
+
+        def existing(prefix, end_date):
+            self.assertEqual(end_date, full_worker.HISTORY_END)
+            return previous if prefix.endswith("/001") else None
+
+        with mock.patch.object(full_worker, "existing_completion", side_effect=existing), \
+             mock.patch.object(full_worker, "acquire_municipality", return_value=acquired) as acquire:
+            completions, remaining, newly_processed = full_worker.acquire_bounded_batch(
+                municipalities, "token", "run-1", date(2026, 9, 20),
+                Path("/tmp/not-used"), "gs://bucket/campaign", 1,
+            )
+        self.assertEqual(completions, [previous, acquired])
+        self.assertEqual(remaining, ["003"])
+        self.assertEqual(newly_processed, 1)
+        acquire.assert_called_once()
+
     def test_completion_is_immutable_before_pointer_changes(self):
         with tempfile.TemporaryDirectory() as temporary:
             work = Path(temporary)

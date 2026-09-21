@@ -41,6 +41,14 @@ Storage generations in the receipt. These files live below the immutable
 campaign prefix
 `processing-runs/czech-hlidac-municipality-contracts/top100-2025-07-01-v2/`.
 
+The campaign is pinned to a 20 September 2026 history cutoff. Each build
+processes at most one new municipality by default, writes an immutable
+`runs/<build-id>/partial.json` progress receipt, then yields the data plane.
+Repeat the submission after other queued data work clears; already completed
+municipalities are reused. Use `--max-municipalities 2` or `3` only when the
+selected cities can finish within the eight-hour step limit. The final build
+publishes only after all 100 pinned-snapshot receipts exist.
+
 After all 100 municipality attempts complete, the worker loads a build-scoped
 BigQuery staging table, reconciles counts per municipality, rejects null keys or
 duplicate `(municipality_ico, contract_id)` pairs, and creates an immutable
