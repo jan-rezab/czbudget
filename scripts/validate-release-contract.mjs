@@ -6,6 +6,7 @@ const root=resolve(import.meta.dirname,'..');
 const required=[
   ...registry.release.content_versioned_adapters,
   'chart-components.json','chart-legacy-inventory.json','chart-coverage.json','ui-environment.json',
+  'Dockerfile.slim','package.json','package-lock.json','cloudbuild.yaml',
   'scripts/chart-registry.mjs','scripts/build-chart-coverage.mjs','scripts/validate-chart-ownership.mjs',
   'scripts/validate-ui-environment.mjs','scripts/validate-release-contract.mjs',
   'tests/unit/chart-registry.spec.mjs','tests/unit/release-contract.spec.mjs','tests/browser/shared-charts.spec.mjs'
