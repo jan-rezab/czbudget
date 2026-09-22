@@ -49,7 +49,7 @@ class CloudVerificationTest(unittest.TestCase):
         self.assertFalse(gate.valid_candidate_config_build({**build, 'source': {'connectedRepository': {'repository': 'other', 'revision': commit}}}, commit, base, config_sha))
         self.assertFalse(gate.valid_candidate_config_build({**build, 'steps': build['steps'][:-1]}, commit, base, config_sha))
 
-    def test_verifier_config_change_needs_both_cloud_receipts(self):
+    def test_verifier_config_change_uses_one_exact_candidate_config_receipt(self):
         commit, base = 'a'*40, 'b'*40
         config_sha = hashlib.sha256(Path('cloudbuild.verify.yaml').read_bytes()).hexdigest()
         trigger = {
@@ -74,5 +74,5 @@ class CloudVerificationTest(unittest.TestCase):
                 with patch.object(gate.subprocess, 'check_output', return_value=json.dumps([trigger])):
                     with self.assertRaisesRegex(SystemExit, 'candidate-config build'):
                         gate.main()
-                with patch.object(gate.subprocess, 'check_output', return_value=json.dumps([trigger, direct])):
+                with patch.object(gate.subprocess, 'check_output', return_value=json.dumps([direct])):
                     gate.main()

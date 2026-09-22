@@ -45,6 +45,9 @@
   ran (step 27 `assert-current-main`), and it reports SUCCESS anyway. Land one
   change at a time and check the build log for `Deployed immutable image` versus
   `Skipping deployment` before believing a release happened.
+- Promote the exact verified commit with `scripts/promote-verified-main.sh`; it
+  runs the delivery guard first. A GitHub PR merge creates a different SHA and its
+  production build will not have the candidate's verification receipt.
 - Confirm the change on `https://publicspendingdata.org` with a cache-busting
   query. Build status is not evidence.
 - A gate-passed image that was skipped can be deployed straight from Artifact
@@ -76,7 +79,8 @@
   a different commit, fixture version or configuration invalidates that evidence.
 - When `cloudbuild.verify.yaml` changes, the normal trigger still reads the old
   config from `main`. Run the candidate-config build described in `BUILD_PLANES.md`
-  and the normal full trigger before promoting that exact commit.
+  as the one full gate before promoting that exact commit. Do not rerun the
+  exhaustive browser suite through the old-config trigger.
 - Routine component verification targets 180 seconds of execution; report measured queue,
   setup, tests and promotion separately. This target is not permission to skip tests.
 - Build the production image once, smoke-test that image, then promote its immutable digest.

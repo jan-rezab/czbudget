@@ -60,16 +60,25 @@ The full trigger reads `cloudbuild.verify.yaml` from `main`, even when its
 `--sha` selects a candidate commit as source. When that YAML changes, run
 `scripts/submit-full-config-verification.sh <base-sha>` on the clean committed
 candidate first. It submits the candidate's YAML with source pinned to the
-same Git SHA. Then run the normal full trigger for that exact SHA. The
-production gate requires both successful receipts for a verifier-config
-change; ordinary full-lane changes require only the trigger receipt. Record
-both build IDs and the unchanged base SHA. Run the delivery guard before each
-submission. Do not run this extra gate for ordinary dashboard changes.
+same Git SHA. This is the single full gate for a verifier-config change: the
+production gate requires its successful receipt, exact source SHA, base SHA,
+config hash, read-only identity, and completed full-gate steps. Ordinary
+full-lane changes use the normal trigger receipt instead. Record the build ID
+and unchanged base SHA. Run the delivery guard before submission. Do not run
+the candidate-config gate for ordinary dashboard changes.
 
 The exhaustive gate runs a small country chapter/link browser contract in its
 component preflight, in parallel with published fixture hydration. It checks
 chapter anchors separately from national budget links. The full country/data
 contract still runs in the browser shards against pinned published releases.
+
+For promotion, run `scripts/promote-verified-main.sh` from the clean candidate
+checkout with the original start timestamp, time budget and failed gate count.
+It checks the delivery budget,
+current remote base, exact cloud receipt and fast-forward ancestry before pushing
+that same SHA to `main`. A GitHub PR merge generates a new SHA and must not be
+used as the production promotion step.
+
 The four browser shards use the prepared Playwright image.
 No repeated browser installation. Runtime image assembly happens once, in production; its
 filesystem/HTTP and desktop/mobile browser contracts must pass before promotion.
