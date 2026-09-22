@@ -36,6 +36,9 @@ steps:
         node scripts/build-chart-coverage.mjs --check
         npm run check:stories
         node --test tests/unit/bounded-command.spec.mjs
+        node --test tests/unit/ui-build-context.spec.mjs
+        # Catch chapter/link regressions before published fixture hydration finishes.
+        node scripts/run-bounded.mjs --max-ms=120000 -- npx playwright test tests/browser/country-chapters.spec.mjs --config=playwright.ui.config.mjs --project=desktop-chromium --workers=1 --max-failures=1 --retries=0 --reporter=line --global-timeout=90000 --output=/workspace/test-results/country-preflight
         node scripts/run-component-gate.mjs
 
   - id: hydrate-published-releases
@@ -100,6 +103,7 @@ steps:
     args:
       - -ceu
       - |
+        echo "Candidate ${_CANDIDATE_SHA}; base ${_BASE_SHA}; config ${_VERIFY_CONFIG_SHA}"
         node scripts/validate-build-planes.mjs
         node pipeline/create-source-manifest.mjs --self-check
 
@@ -126,13 +130,10 @@ steps:
         PSD_BUILD_MODE=local npm run validate
         node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs
         node --test tests/industrial-data.test.cjs
-        # This country navigation contract is sensitive to new page links.
-        # Run it once before the exhaustive batches so a regression fails early.
-        node scripts/run-bounded.mjs --max-ms=240000 -- npx playwright test tests/browser/site.spec.mjs --grep='all countries use the Czech-style dashboard chapters and loaded-data sections' --project=desktop-chromium --workers=1 --max-failures=1 --retries=0 --reporter=line --global-timeout=180000 --output=/workspace/test-results/country-preflight
         # One data-server cache at a time, four parallel browsers per batch.
         # Release the entire browser/server process tree between batches.
         for shard in 1 2 3 4; do
-          node scripts/run-bounded.mjs -- npx playwright test --grep-invert='all countries use the Czech-style dashboard chapters and loaded-data sections' --workers=4 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --shard=$$shard/4 --output=/workspace/test-results/shard-$$shard
+          node scripts/run-bounded.mjs -- npx playwright test --workers=4 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --shard=$$shard/4 --output=/workspace/test-results/shard-$$shard
         done
 
   - id: nginx-routing
@@ -171,6 +172,9 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:
+  _CANDIDATE_SHA: uncommitted
+  _BASE_SHA: uncommitted
+  _VERIFY_CONFIG_SHA: uncommitted
   _PUBLIC_SNAPSHOT_BASE_URL: gs://czbudget-janrezab-public-snapshots/municipal
   _CITYVIZOR_SNAPSHOT_BASE_URL: gs://czbudget-janrezab-public-snapshots/cityvizor
   _STATIC_ASSET_BASE_URL: gs://czbudget-janrezab-public-snapshots/static-assets

@@ -25,10 +25,19 @@ export function selectVerification(files) {
   const declaredSpecs=files.flatMap(consumerTests);
   return { version: 2, lane: broad.length || !files.length ? 'full' : 'component', groups: [...selected].sort(), specs: [...new Set([...selected].flatMap(name => groups[name]).concat(declaredSpecs))].sort(), broad, files };
 }
-export function contractDigest() {
+export function contractDigest(commit = 'HEAD') {
   const files = execFileSync('git', ['ls-files', 'scripts', 'tests', 'cloudbuild*.yaml', 'playwright*.mjs', 'package*.json', '.githooks/pre-push'], {encoding:'utf8'}).trim().split('\n').filter(Boolean).sort();
   const hash=createHash('sha256');
-  for(const file of files) { hash.update(file+'\0'); hash.update(readFileSync(file)); }
+  for(const file of files) {
+    hash.update(file+'\0');
+    try { hash.update(readFileSync(file)); }
+    catch(error) {
+      if(error?.code !== 'ENOENT') throw error;
+      // Sparse worktrees can omit a newly tracked test. Hash its exact Git blob
+      // rather than failing or silently leaving it out of the release contract.
+      hash.update(execFileSync('git',['show',`${commit}:${file}`]));
+    }
+  }
   return hash.digest('hex');
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -37,5 +46,5 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const commit = execFileSync('git',['rev-parse',head],{encoding:'utf8'}).trim();
   execFileSync('git',['merge-base','--is-ancestor',base,commit]);
   const files=execFileSync('git',['diff','--name-only',base,commit],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
-  console.log(JSON.stringify({...selectVerification(files),base,commit,contract:contractDigest()},null,2));
+  console.log(JSON.stringify({...selectVerification(files),base,commit,contract:contractDigest(commit)},null,2));
 }

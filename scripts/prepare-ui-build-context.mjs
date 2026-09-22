@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { cp, mkdir, readdir, rm, stat, writeFile } from "node:fs/promises";
-import { basename, dirname, join, resolve } from "node:path";
+import { mkdir, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { basename, join, resolve } from "node:path";
 import process from "node:process";
+import { copyTrackedContext } from "./lib/copy-tracked-context.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const destination = resolve(process.argv[2] || "");
@@ -147,14 +148,7 @@ const files = [
 ];
 const directories = ["assets", "process", "stories", "tests/fixtures/charts"];
 
-for (const relative of files) {
-  const target = join(destination, relative);
-  await mkdir(dirname(target), { recursive: true });
-  await cp(join(root, relative), target);
-}
-for (const relative of directories) {
-  await cp(join(root, relative), join(destination, relative), { recursive: true });
-}
+await copyTrackedContext({ root, destination, files, directories });
 
 const inventory = [];
 await walk(destination, inventory);

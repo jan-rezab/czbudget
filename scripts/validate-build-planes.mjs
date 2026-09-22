@@ -1,12 +1,13 @@
 import { readFile } from "node:fs/promises";
 
-const [cloudbuild, cloudbuildVerify, cloudbuildUi, cloudbuildServingAssets, buildPlanes, submitUi] = await Promise.all([
+const [cloudbuild, cloudbuildVerify, cloudbuildUi, cloudbuildServingAssets, buildPlanes, submitUi, submitFullConfig] = await Promise.all([
   readFile("cloudbuild.yaml", "utf8"),
   readFile("cloudbuild.verify.yaml", "utf8"),
   readFile("cloudbuild.ui.yaml", "utf8"),
   readFile("cloudbuild.serving-assets.yaml", "utf8"),
   readFile("BUILD_PLANES.md", "utf8"),
   readFile("scripts/submit-ui-verification.sh", "utf8"),
+  readFile("scripts/submit-full-config-verification.sh", "utf8"),
 ]);
 const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 
@@ -73,6 +74,13 @@ for (const required of [
     throw new Error(`Full verification is missing its published-release gate: ${required}`);
   }
 }
+const earlyBrowserPreflight = cloudbuildVerify.split("  - id: preflight-components\n")[1]?.split("  - id: hydrate-published-releases\n")[0];
+if (
+  !earlyBrowserPreflight?.includes("tests/browser/country-chapters.spec.mjs") ||
+  !earlyBrowserPreflight.includes("--config=playwright.ui.config.mjs")
+) {
+  throw new Error("Country chapter/link checks must run in the independent component preflight");
+}
 
 if (
   !cloudbuildUi.includes("timeout: 600s") ||
@@ -105,6 +113,15 @@ if (
   submitUi.includes("builds submit .")
 ) {
   throw new Error("The fast UI gate must use the explicit lean source context");
+}
+if (
+  !buildPlanes.includes("submit-full-config-verification.sh") ||
+  !submitFullConfig.includes("--revision=\"$candidate\"") ||
+  !submitFullConfig.includes("_VERIFY_CONFIG_SHA=$config_sha") ||
+  !submitFullConfig.includes("psd-web-verifier@czbudget-janrezab.iam.gserviceaccount.com") ||
+  !cloudbuildVerify.includes("_VERIFY_CONFIG_SHA: uncommitted")
+) {
+  throw new Error("Verifier YAML changes must run the candidate config with the read-only identity");
 }
 
 if (

@@ -54,7 +54,7 @@ node scripts/validate-release-contract.mjs
   node scripts/validate-release-contract.mjs
 )
 node scripts/publish-stories.mjs --check
-node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/stories.spec.mjs tests/unit/bounded-command.spec.mjs
+node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/ui-build-context.spec.mjs tests/unit/stories.spec.mjs tests/unit/bounded-command.spec.mjs
 python3 -m unittest tests.test_cloud_verification
 node scripts/validate-build-planes.mjs
 node pipeline/create-source-manifest.mjs --self-check
