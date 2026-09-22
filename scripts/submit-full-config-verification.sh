@@ -2,7 +2,7 @@
 set -eu
 
 # The regular full trigger reads cloudbuild.verify.yaml from main. A change to
-# that file needs its own connected-repository run before the usual trigger run.
+# that file uses one connected-repository full run with the candidate's YAML.
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 if [ -n "$(git -C "$ROOT" status --porcelain)" ]; then
   echo "Commit the candidate before submitting verifier-config validation." >&2

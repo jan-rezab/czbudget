@@ -82,9 +82,6 @@ def main():
         if not os.environ.get('BUILD_ID') and not os.environ.get('K_SERVICE') and not os.path.isdir('/workspace'):
             command.append('--account='+os.environ.get('PSD_GCLOUD_ACCOUNT','jan@ravineo.com'))
         builds.extend(json.loads(subprocess.check_output(command, text=True)))
-    verified = next((build for build in builds if valid_build(build, commit, base, lane)), None)
-    if not verified:
-        raise SystemExit('No successful '+lane+' verification for this exact candidate/base. Submit verification before promoting main.')
     if config_changed:
         with open('cloudbuild.verify.yaml', 'rb') as config_file:
             config_sha = hashlib.sha256(config_file.read()).hexdigest()
@@ -92,6 +89,10 @@ def main():
         if not candidate_config:
             raise SystemExit('Verifier config changed: submit and pass the candidate-config build for this exact commit/base before promoting main.')
         print('Verified candidate verifier config in cloud build ' + candidate_config['id'])
+        return
+    verified = next((build for build in builds if valid_build(build, commit, base, lane)), None)
+    if not verified:
+        raise SystemExit('No successful '+lane+' verification for this exact candidate/base. Submit verification before promoting main.')
     print('Verified exact candidate in cloud build ' + verified['id'])
 
 
