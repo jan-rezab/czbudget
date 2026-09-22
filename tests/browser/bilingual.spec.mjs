@@ -106,7 +106,7 @@ test("high-risk static and generated templates switch their visible copy", async
   const pairs = [
     ["/cesky-rozpocet.html", ".budget-hero", "Český státní rozpočet", "Czech state budget"],
     ["/deep-dives/", ".deep-hero", "Rozpočty podle témat", "Budgets by topic"],
-    ["/deep-dives/transportation/?code=CZE", ".deep-hero", "Výdaje na dopravu", "Transport spending"],
+    ["/deep-dives/transportation/?code=CZE", ".deep-hero", "Co veřejné peníze", "What public transport money"],
     ["/municipalities/", ".municipal-hero", "Rozpočty obcí ve 27 zemích", "Municipal budgets in 27 countries"],
     ["/municipalities/czechia/", ".municipal-hero", "Rozpočty českých obcí", "Budgets of Czech municipalities"],
     ["/countries/japan/", ".country-hero", "Detail země", "Country detail"],

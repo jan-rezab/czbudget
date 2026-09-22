@@ -495,7 +495,11 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   await expect(page.locator(".transport-coverage-matrix tbody tr")).toHaveCount(16);
   await expect(page.locator(".transport-coverage-audit")).toContainText("Public data and gaps");
   await expect(page.locator(".transport-comparison tr.scope-exception")).toHaveCount(2);
-  await expect(page.locator(".transport-performance-audit")).toContainText("Infrastructure performance");
+  await expect(page.locator(".transport-money-answers")).toContainText("What the money supports");
+  await expect(page.locator(".transport-money-answers")).toContainText("€6,800");
+  await expect(page.locator(".transport-money-answers")).toContainText("€56,700");
+  await expect(page.locator(".transport-money-answers")).toContainText("Not published with a usable common definition");
+  await expect(page.locator(".transport-performance-audit")).toContainText("Network, upkeep and use");
   await expect(page.locator(".transport-infra-kpis")).toContainText("9,514 km");
   await expect(page.locator(".transport-infra-money")).toHaveCount(4);
   await expect(page.locator(".transport-infra-comparison tbody tr")).toHaveCount(17);
