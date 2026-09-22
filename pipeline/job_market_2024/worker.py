@@ -21,7 +21,8 @@ SOURCE_ID = "world_bank_ilo_modelled"
 def run(*args: str) -> str:
     result = subprocess.run(args, capture_output=True, text=True, timeout=180)
     if result.returncode:
-        raise RuntimeError(f"Command failed ({result.returncode}): {args[0]} {args[1]}; {result.stderr.strip()}")
+        details = (result.stderr + "\n" + result.stdout).strip()
+        raise RuntimeError(f"Command failed ({result.returncode}): {args[0]} {args[1]}; {details}")
     return result.stdout.strip()
 
 
@@ -100,8 +101,7 @@ def publish_to_bigquery(rows_uri: str, release_id: str, row_count: int) -> None:
     pointer = f"{DATASET}.job_market_release_pointer"
     bq_query(f"TRUNCATE TABLE `{stage}`")
     run("bq", "--project_id=" + PROJECT, "--location=EU", "load",
-        "--source_format=NEWLINE_DELIMITED_JSON", stage_cli, rows_uri,
-        "country_code:STRING,period:INTEGER,sector:STRING,share_pct:FLOAT,source_id:STRING,source_url:STRING")
+        "--source_format=NEWLINE_DELIMITED_JSON", stage_cli, rows_uri)
     check = bq_query(f"SELECT COUNT(*) AS n, COUNT(DISTINCT country_code) AS c, "
                      f"COUNT(DISTINCT CONCAT(country_code, ':', sector)) AS keys "
                      f"FROM `{stage}`")
