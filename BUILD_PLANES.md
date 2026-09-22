@@ -19,7 +19,16 @@ merge, or publish data.
 
 ## Verification plane
 
-`cloudbuild.ui.yaml` is the fast code-only browser gate for interface changes.
+Routine component releases use **one production build** after a main push. The
+production build selects affected tests from the diff against the live revision's
+`git-sha` label. It runs the same focused desktop/mobile component and navigation
+checks alongside image creation. Both those tests and the image browser checks
+must pass before deployment. A failed gate preserves the current live revision.
+Unknown deployment provenance or broad accumulated changes require a successful
+exhaustive receipt for the exact candidate. There is no separate fast UI build
+or manual verification-to-promotion handoff for routine component changes.
+
+`cloudbuild.ui.yaml` remains an optional read-only browser gate for interface previews.
 Its source bundle contains only UI code and the small published contracts used
 by the focused tests. It has a ten-minute hard timeout and cannot publish data,
 push an image or deploy. It uses `E2_MEDIUM`; the gate is too small to justify
@@ -73,8 +82,11 @@ contract still runs in the browser shards against pinned published releases.
 The four browser shards use the prepared Playwright image.
 No repeated browser installation. Runtime image assembly happens once, in production; its
 filesystem/HTTP and desktop/mobile browser contracts must pass before promotion.
-Both the push hook and production build require successful cloud verification
-for the exact candidate. Unknown changed paths cannot use a component-only receipt.
+The push hook requires an exhaustive cloud receipt before broad changes reach
+main. Component changes pass local source contracts, then the canonical production
+build performs their focused verification before it may deploy. Unknown changed
+paths cannot use component verification. Never submit the optional fast UI gate
+and then repeat the same component checks in production for a routine release.
 Local push checks remain source-only and never rescan/restore bulk data.
 The exhaustive source-integrity pass explicitly uses `PSD_BUILD_MODE=local`:
 its input is a checkout, not the obsolete in-web-build BigQuery merge. This

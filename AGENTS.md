@@ -77,6 +77,12 @@
 - When `cloudbuild.verify.yaml` changes, the normal trigger still reads the old
   config from `main`. Run the candidate-config build described in `BUILD_PLANES.md`
   and the normal full trigger before promoting that exact commit.
+- Routine component changes push once after local source checks. The canonical
+  production build runs their focused checks and image smoke before deployment;
+  do not submit a separate UI verification build first. Broad changes still need
+  a successful exhaustive receipt for the exact commit before main.
+- Production selects tests from the live revision's `git-sha`, including changes
+  left by failed or skipped releases. Missing provenance requires the full gate.
 - Routine component verification targets 180 seconds of execution; report measured queue,
   setup, tests and promotion separately. This target is not permission to skip tests.
 - Build the production image once, smoke-test that image, then promote its immutable digest.

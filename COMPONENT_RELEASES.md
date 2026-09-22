@@ -70,7 +70,12 @@ The first release cannot revoke responses already cached under an older policy.
 
 `node scripts/verification-plan.mjs <base-sha> <head-sha>` computes the affected
 families from an explicit ancestor base. Chart-only and story-only edits use the
-component lane. Navigation smoke is always included. Unknown files, global styles,
+component lane. Navigation smoke is always included. For routine releases, push
+the committed component change after local checks: production runs this lane
+alongside image creation and blocks rollout on any failure. A separate
+`submit-ui-verification.sh` run is optional preview work, not a release prerequisite.
+Production computes the diff against the live revision, so pending failed changes
+are included. Missing deployment provenance requires full verification. Unknown files, global styles,
 server/routing, country directories and CI changes select the full lane.
 
 `node scripts/run-component-gate.mjs [plan.json]` runs model contracts followed

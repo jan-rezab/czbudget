@@ -36,7 +36,7 @@ set -- gcloud run deploy "$service" \
   --max-instances=5 \
   --concurrency=80 \
   --timeout=30s \
-  --labels=app=czbudget-public,source=github \
+  --labels="app=czbudget-public,source=github,git-sha=$git_sha" \
   --quiet
 deploy_env_updates=""
 if [ -n "$snapshot_base" ]; then

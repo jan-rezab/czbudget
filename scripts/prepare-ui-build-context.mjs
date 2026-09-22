@@ -17,6 +17,8 @@ await mkdir(destination, { recursive: true });
 
 const files = [
   "scripts/verification-plan.mjs",
+  "scripts/release-verification.mjs",
+  "scripts/prepare-production-verification.mjs",
   "scripts/chart-registry.mjs",
   "scripts/validate-ui-environment.mjs",
   "scripts/validate-release-contract.mjs",

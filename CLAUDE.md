@@ -57,8 +57,9 @@ Rollback is `gcloud run services update-traffic czbudget-public
 
 ## Before you push
 
-The push hook runs source/component contracts and, for main, requires successful
-cloud verification of the exact candidate. Full integrity/API checks run in the
+The push hook runs source/component contracts. Broad changes require successful
+full cloud verification of the exact candidate before main; component changes
+run focused verification inside the one production build after the main push. Full integrity/API checks run in the
 cloud broad gate; they are not repeated at each local push. Use the dependency
 plan in `COMPONENT_RELEASES.md`; browser checks run in Cloud Build. Do not launch
 a local external browser from this hook. The equivalent targeted cloud command is:

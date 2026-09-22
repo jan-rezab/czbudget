@@ -63,7 +63,11 @@ if [ "$push_to_main" = 1 ]; then
   plan=$(mktemp "${TMPDIR:-/tmp}/psd-verification-plan.XXXXXX")
   trap 'rm -f -- "$plan"' EXIT INT TERM
   node scripts/verification-plan.mjs "$main_base" "$main_oid" > "$plan"
-  python3 scripts/check-cloud-verification.py --plan "$plan"
+  if [ "$(node scripts/release-verification.mjs "$plan")" = full ]; then
+    python3 scripts/check-cloud-verification.py --plan "$plan"
+  else
+    echo "pre-push: component tests will run inside the production build and block deployment on failure"
+  fi
 else
   echo "pre-push: source contracts passed; verify this exact candidate in cloud before main"
 fi
