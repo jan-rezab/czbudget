@@ -74,6 +74,9 @@
   Report failed test names immediately. Do not retry deterministic contract failures.
 - Reuse only successful cloud verification for the exact commit and current test contract;
   a different commit, fixture version or configuration invalidates that evidence.
+- When `cloudbuild.verify.yaml` changes, the normal trigger still reads the old
+  config from `main`. Run the candidate-config build described in `BUILD_PLANES.md`
+  and the normal full trigger before promoting that exact commit.
 - Routine component verification targets 180 seconds of execution; report measured queue,
   setup, tests and promotion separately. This target is not permission to skip tests.
 - Build the production image once, smoke-test that image, then promote its immutable digest.

@@ -40,6 +40,9 @@ source even when the selected YAML is code-only.
 Before submitting, the wrapper runs the UI environment and release contracts
 from inside that exact temporary bundle. Missing bundle files fail locally,
 before a Cloud Build worker is queued.
+The packager includes only tracked inputs. In a clean sparse worktree it reads
+an omitted input from the candidate Git commit, including the tracked files
+inside its small asset/fixture directories. It never restores bulk data.
 The pre-push hook checks the same bundle. The wrapper accepts only a clean,
 committed component-lane candidate; structural changes go directly to the full
 verifier instead of paying for both cloud gates.
@@ -53,11 +56,21 @@ verifier instead of paying for both cloud gates.
 - Never run it concurrently with another verification of the same commit. Reuse
   the successful build ID.
 
-The exhaustive gate runs named component contracts first. After published
-fixtures are verified, it runs the country chapter contract once before four
-browser shards, excluding that test from the shards so a navigation regression
-fails before the broader suite without duplicating the test. The four browser
-shards run against pinned published releases using the prepared Playwright image.
+The full trigger reads `cloudbuild.verify.yaml` from `main`, even when its
+`--sha` selects a candidate commit as source. When that YAML changes, run
+`scripts/submit-full-config-verification.sh <base-sha>` on the clean committed
+candidate first. It submits the candidate's YAML with source pinned to the
+same Git SHA. Then run the normal full trigger for that exact SHA. The
+production gate requires both successful receipts for a verifier-config
+change; ordinary full-lane changes require only the trigger receipt. Record
+both build IDs and the unchanged base SHA. Run the delivery guard before each
+submission. Do not run this extra gate for ordinary dashboard changes.
+
+The exhaustive gate runs a small country chapter/link browser contract in its
+component preflight, in parallel with published fixture hydration. It checks
+chapter anchors separately from national budget links. The full country/data
+contract still runs in the browser shards against pinned published releases.
+The four browser shards use the prepared Playwright image.
 No repeated browser installation. Runtime image assembly happens once, in production; its
 filesystem/HTTP and desktop/mobile browser contracts must pass before promotion.
 Both the push hook and production build require successful cloud verification
