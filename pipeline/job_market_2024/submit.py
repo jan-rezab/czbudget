@@ -18,7 +18,7 @@ PROJECT = "czbudget-janrezab"
 REGION = "europe-west4"
 SERVICE_ACCOUNT = (
     "projects/czbudget-janrezab/serviceAccounts/"
-    "psd-job-market-builder@czbudget-janrezab.iam.gserviceaccount.com"
+    "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com"
 )
 STAGING = "gs://czbudget-janrezab-data-layers/processing-build-source"
 

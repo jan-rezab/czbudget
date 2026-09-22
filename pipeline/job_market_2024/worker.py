@@ -92,20 +92,11 @@ def bq_query(sql: str) -> str:
 
 
 def publish_to_bigquery(rows_uri: str, release_id: str, row_count: int) -> None:
-    stage = f"{DATASET}.job_market_stage_{release_id.replace('-', '_')}"
+    stage = f"{DATASET}.job_market_2024_stage"
     target = f"{DATASET}.job_market_employment_shares"
     pointer = f"{DATASET}.job_market_release_pointer"
-    bq_query(f"""
-      CREATE TABLE IF NOT EXISTS `{target}` (
-        release_id STRING NOT NULL, country_code STRING NOT NULL, period INT64 NOT NULL,
-        sector STRING NOT NULL, share_pct FLOAT64 NOT NULL, source_id STRING NOT NULL,
-        source_url STRING NOT NULL, published_at TIMESTAMP NOT NULL)
-      CLUSTER BY release_id, country_code;
-      CREATE TABLE IF NOT EXISTS `{pointer}` (
-        dataset_id STRING NOT NULL, release_id STRING NOT NULL, period INT64 NOT NULL,
-        published_at TIMESTAMP NOT NULL);
-    """)
-    run("bq", "--project_id=" + PROJECT, "--location=EU", "load", "--replace",
+    bq_query(f"TRUNCATE TABLE `{stage}`")
+    run("bq", "--project_id=" + PROJECT, "--location=EU", "load",
         "--source_format=NEWLINE_DELIMITED_JSON", stage, rows_uri,
         "country_code:STRING,period:INTEGER,sector:STRING,share_pct:FLOAT,source_id:STRING,source_url:STRING")
     check = bq_query(f"SELECT COUNT(*) AS n, COUNT(DISTINCT country_code) AS c, "
@@ -166,7 +157,7 @@ def main() -> None:
                "publication_status": "succeeded", "build_id": args.build_id,
                "started_at": started_at, "completed_at": datetime.now(timezone.utc).isoformat(),
                "loader_git_sha": args.loader_sha, "service_account":
-               "psd-job-market-builder@czbudget-janrezab.iam.gserviceaccount.com",
+               "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
                "region": "europe-west4", "sources": source_receipts,
                "raw_destination": prefix + "/raw/", "staging_destination": rows_uri,
                "normalized_sha256": hashlib.sha256(staged.read_bytes()).hexdigest(),

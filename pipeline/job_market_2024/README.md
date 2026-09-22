@@ -14,11 +14,13 @@ python3 pipeline/job_market_2024/submit.py --dry-run
 python3 pipeline/job_market_2024/submit.py
 ```
 
-The Cloud Build runs in `europe-west4` as
-`psd-job-market-builder@czbudget-janrezab.iam.gserviceaccount.com` with the
+The Cloud Build runs in `europe-west4` as the existing
+`psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com` with the
 `plane-data` tag. Each source JSON is preserved without modification under
 `gs://czbudget-janrezab-data-layers/processing-runs/job-market-2024/<build-id>/raw/`.
-The normalized JSONL is staged under the same run's `staging/`. The build
+The normalized JSONL is staged under the same run's `staging/`. The three
+job-market BigQuery tables are created ahead of the run and only those tables
+grant the builder write access. The build
 validates a complete 6 × 3 grid and 100% sector sums before loading staging
 into BigQuery. It atomically writes the release rows and changes
 `budget_detail.job_market_release_pointer` in one transaction. A completed
