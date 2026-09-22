@@ -40,6 +40,7 @@ steps:
         node scripts/build-chart-coverage.mjs --check
         node scripts/validate-ui-environment.mjs --runtime
         node scripts/validate-release-contract.mjs
+        # Git-backed sparse fixture runs in the verifier; this runtime image has no Git.
         node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs
         node --test tests/unit/stories.spec.mjs
         node --test tests/api/static-assets.spec.mjs tests/api/pinned-release.spec.mjs

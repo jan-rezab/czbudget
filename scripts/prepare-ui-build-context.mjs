@@ -30,6 +30,7 @@ const files = [
   "scripts/run-component-gate.mjs",
   "tests/unit/chart-renderer.spec.mjs",
   "tests/unit/verification-plan.spec.mjs",
+  "tests/unit/verification-plan-sparse.spec.mjs",
   "tests/unit/chart-registry.spec.mjs",
   "tests/unit/release-contract.spec.mjs",
   "tests/release/image.spec.mjs",
