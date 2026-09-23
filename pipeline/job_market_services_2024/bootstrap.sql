@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.job_market_service_stage` (
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.job_market.job_market_service_stage` (
   country_code STRING NOT NULL,
   period INT64 NOT NULL,
   isic_section STRING NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.job_market_service_s
   source_url STRING NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.job_market_service_observations` (
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.job_market.job_market_service_observations` (
   release_id STRING NOT NULL,
   country_code STRING NOT NULL,
   period INT64 NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.job_market_service_o
 )
 CLUSTER BY release_id, country_code, isic_section;
 
-CREATE TABLE IF NOT EXISTS `czbudget-janrezab.budget_detail.job_market_service_release_pointer` (
+CREATE TABLE IF NOT EXISTS `czbudget-janrezab.job_market.job_market_service_release_pointer` (
   dataset_id STRING NOT NULL,
   release_id STRING NOT NULL,
   period INT64 NOT NULL,

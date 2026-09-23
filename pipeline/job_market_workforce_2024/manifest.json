@@ -1,0 +1,22 @@
+{
+  "dataset_id": "job_market_workforce_2024",
+  "year": 2024,
+  "countries": ["USA", "CZE", "DEU", "FRA", "GBR", "POL"],
+  "ownership_countries": ["USA", "FRA", "GBR", "POL"],
+  "service_sections": ["G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S"],
+  "source_base": "https://rplumber.ilo.org/data/indicator/",
+  "source_indicators": {
+    "ownership": "EMP_TEMP_SEX_ECO_INS_NB",
+    "employed": "EMP_TEMP_SEX_AGE_NB",
+    "labour_force": "EAP_TEAP_SEX_AGE_NB",
+    "unemployed": "UNE_TUNE_SEX_AGE_NB",
+    "outside_labour_force": "EIP_TEIP_SEX_AGE_NB",
+    "unemployment_rate": "UNE_DEAP_SEX_AGE_RT"
+  },
+  "release_prefix": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024",
+  "ownership_stage": "czbudget-janrezab.job_market.job_market_ownership_stage",
+  "ownership_observations": "czbudget-janrezab.job_market.job_market_ownership_observations",
+  "labour_stage": "czbudget-janrezab.job_market.job_market_labour_status_stage",
+  "labour_observations": "czbudget-janrezab.job_market.job_market_labour_status_observations",
+  "publication_pointer": "czbudget-janrezab.job_market.job_market_workforce_release_pointer"
+}

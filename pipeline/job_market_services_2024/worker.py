@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 
 PROJECT = "czbudget-janrezab"
-DATASET = f"{PROJECT}.budget_detail"
+DATASET = f"{PROJECT}.job_market"
 
 
 def run(*args: str) -> str:
@@ -128,7 +128,7 @@ def publish(rows_uri: str, release_id: str, row_count: int, countries: int) -> N
     bq_query(f"TRUNCATE TABLE `{stage}`")
     run("bq", "--project_id=" + PROJECT, "--location=EU", "load",
         "--source_format=NEWLINE_DELIMITED_JSON",
-        f"{PROJECT}:budget_detail.job_market_service_stage", rows_uri)
+        f"{PROJECT}:job_market.job_market_service_stage", rows_uri)
     check = bq_query(f"SELECT COUNT(*) AS n, COUNT(DISTINCT country_code) AS c, "
                      f"COUNT(DISTINCT CONCAT(country_code, ':', isic_division)) AS keys "
                      f"FROM `{stage}`")

@@ -23,9 +23,9 @@ Data contract:
   `plane-data`.
 - Immutable raw CSV: `gs://czbudget-janrezab-data-layers/processing-runs/job-market-services-2024/<build-id>/raw/`.
 - Normalized staging JSONL: same run under `staging/`, then
-  `budget_detail.job_market_service_stage`.
-- Atomic publication: `budget_detail.job_market_service_observations` and
-  `budget_detail.job_market_service_release_pointer` in one BigQuery
+  `job_market.job_market_service_stage`.
+- Atomic publication: `job_market.job_market_service_observations` and
+  `job_market.job_market_service_release_pointer` in one BigQuery
   transaction. The website does not consume this release yet.
 
 Submit from the dedicated worktree after bootstrap and table-scoped IAM:
@@ -39,8 +39,8 @@ Published query:
 
 ```sql
 SELECT o.country_code, o.isic_section, o.isic_division, o.persons_thousands
-FROM `czbudget-janrezab.budget_detail.job_market_service_observations` o
-JOIN `czbudget-janrezab.budget_detail.job_market_service_release_pointer` p
+FROM `czbudget-janrezab.job_market.job_market_service_observations` o
+JOIN `czbudget-janrezab.job_market.job_market_service_release_pointer` p
   ON o.release_id = p.release_id
 WHERE p.dataset_id = 'job_market_services';
 ```
