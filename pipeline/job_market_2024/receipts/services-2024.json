@@ -1,0 +1,92 @@
+{
+  "accepted_rows": 270,
+  "build_id": "051963cd-9d28-4c22-b9f1-fae58ba9e645",
+  "completed_at": "2026-09-23T12:39:45.410548+00:00",
+  "country_coverage": {
+    "CZE": {
+      "divisions": 45,
+      "sections": 13,
+      "source_notes": [
+        "Repository: ILO-STATISTICS - Micro data processing"
+      ],
+      "unreliable_divisions": [
+        "H50",
+        "H51",
+        "N77",
+        "N78"
+      ]
+    },
+    "DEU": {
+      "divisions": 45,
+      "sections": 13,
+      "source_notes": [
+        "Repository: Eurostat special tabulation"
+      ],
+      "unreliable_divisions": []
+    },
+    "FRA": {
+      "divisions": 45,
+      "sections": 13,
+      "source_notes": [
+        "Repository: ILO-STATISTICS - Micro data processing"
+      ],
+      "unreliable_divisions": []
+    },
+    "GBR": {
+      "divisions": 45,
+      "sections": 13,
+      "source_notes": [
+        "Repository: ILO-STATISTICS - Micro data processing"
+      ],
+      "unreliable_divisions": []
+    },
+    "POL": {
+      "divisions": 45,
+      "sections": 13,
+      "source_notes": [
+        "Repository: Eurostat special tabulation"
+      ],
+      "unreliable_divisions": [
+        "H51",
+        "J63",
+        "R92"
+      ]
+    },
+    "USA": {
+      "divisions": 45,
+      "sections": 13,
+      "source_notes": [
+        "Repository: ILO-STATISTICS - Micro data processing | Age coverage - minimum age: 16 years old"
+      ],
+      "unreliable_divisions": []
+    }
+  },
+  "dataset_id": "job_market_services_2024",
+  "deduplicated_rows": 0,
+  "excluded_rows": 1333,
+  "loader_git_sha": "f7aedf1dc80f90d748ecd2824759d243f763e99e",
+  "normalized_sha256": "14d8662e2bfbacad07b44aad0516581502c756e1af8f70739a805939712aa83c",
+  "period": 2024,
+  "processing_status": "succeeded",
+  "publication_pointer": "czbudget-janrezab.job_market.job_market_service_release_pointer",
+  "publication_status": "succeeded",
+  "published_release_id": "051963cd-9d28-4c22-b9f1-fae58ba9e645",
+  "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-services-2024/051963cd-9d28-4c22-b9f1-fae58ba9e645/raw/ilostat-2024.csv",
+  "received_rows": 1603,
+  "region": "europe-west4",
+  "rejected_rows": 0,
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "source_id": "ilostat_emp_temp_sex_ec2_nb",
+  "source_sha256": "ae7019126937f2010e7c4b4e9de41136d84e85c2d9025d602e057babb3086b2a",
+  "source_url": "https://sdmx.ilo.org/rest/v1/data/ILO,DF_EMP_TEMP_SEX_EC2_NB/USA+CZE+DEU+FRA+GBR+POL.A...?startPeriod=2024&endPeriod=2024&dimensionAtObservation=AllDimensions",
+  "staging_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-services-2024/051963cd-9d28-4c22-b9f1-fae58ba9e645/staging/normalized.jsonl",
+  "started_at": "2026-09-23T12:39:15.603182+00:00",
+  "status": "published",
+  "validation": {
+    "bigquery_staging_rows": 270,
+    "common_isic_rev4_divisions": true,
+    "complete_service_sections": true
+  },
+  "warehouse_destination": "czbudget-janrezab.job_market.job_market_service_observations",
+  "website_destinations": []
+}

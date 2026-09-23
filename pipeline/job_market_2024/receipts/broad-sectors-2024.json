@@ -1,0 +1,96 @@
+{
+  "accepted_rows": 18,
+  "build_id": "f32cc45c-2aa4-4839-b869-c15bc5280ac7",
+  "completed_at": "2026-09-23T12:48:02.987457+00:00",
+  "country_count": 6,
+  "dataset_id": "job_market_employment_shares_2024",
+  "deduplicated_rows": 0,
+  "loader_git_sha": "a349d8963f652e9b4afe2d8b5c0f1fa132b2e90b",
+  "normalized_sha256": "e017f391e47cd2327f39fb30faa6236f4e736b1aee372203de90dc3cf7879034",
+  "period": 2024,
+  "processing_status": "succeeded",
+  "publication_pointer": "czbudget-janrezab.job_market.job_market_release_pointer",
+  "publication_status": "succeeded",
+  "published_release_id": "f32cc45c-2aa4-4839-b869-c15bc5280ac7",
+  "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-2024/f32cc45c-2aa4-4839-b869-c15bc5280ac7/raw/",
+  "received_rows": 18,
+  "region": "europe-west4",
+  "rejected_rows": 0,
+  "sectors": [
+    "agriculture",
+    "industry",
+    "services"
+  ],
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "source_totals": {
+    "CZE": {
+      "agriculture": "2.81581103871465",
+      "industry": "35.3325197665952",
+      "services": "61.8516691946901"
+    },
+    "DEU": {
+      "agriculture": "1.09309527721912",
+      "industry": "26.2904809714931",
+      "services": "72.6164237512878"
+    },
+    "FRA": {
+      "agriculture": "2.39137797232537",
+      "industry": "19.5436001329131",
+      "services": "78.0650150968351"
+    },
+    "GBR": {
+      "agriculture": "0.872993243912147",
+      "industry": "16.1242015614121",
+      "services": "83.0027962946641"
+    },
+    "POL": {
+      "agriculture": "6.50230719636268",
+      "industry": "30.1998893468924",
+      "services": "63.2978087992086"
+    },
+    "USA": {
+      "agriculture": "1.5689918084039",
+      "industry": "19.0437070998445",
+      "services": "79.3873005029237"
+    }
+  },
+  "sources": [
+    {
+      "accepted_rows": 6,
+      "deduplicated_rows": 0,
+      "raw_uri": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-2024/f32cc45c-2aa4-4839-b869-c15bc5280ac7/raw/SL.AGR.EMPL.ZS.json",
+      "received_rows": 6,
+      "rejected_rows": 0,
+      "sha256": "ca28cb274a0a589bc5904550dacf2f500323704766051360592824f5e30ff0c9",
+      "url": "https://api.worldbank.org/v2/country/CZE;DEU;FRA;GBR;POL;USA/indicator/SL.AGR.EMPL.ZS?date=2024&format=json&per_page=100"
+    },
+    {
+      "accepted_rows": 6,
+      "deduplicated_rows": 0,
+      "raw_uri": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-2024/f32cc45c-2aa4-4839-b869-c15bc5280ac7/raw/SL.IND.EMPL.ZS.json",
+      "received_rows": 6,
+      "rejected_rows": 0,
+      "sha256": "010d1fb11456e2bad6082fe83a9be9f536c6c3e7127744ae9348ecf756bbc622",
+      "url": "https://api.worldbank.org/v2/country/CZE;DEU;FRA;GBR;POL;USA/indicator/SL.IND.EMPL.ZS?date=2024&format=json&per_page=100"
+    },
+    {
+      "accepted_rows": 6,
+      "deduplicated_rows": 0,
+      "raw_uri": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-2024/f32cc45c-2aa4-4839-b869-c15bc5280ac7/raw/SL.SRV.EMPL.ZS.json",
+      "received_rows": 6,
+      "rejected_rows": 0,
+      "sha256": "9a46d684f8766b5404bdfbd050cf11d3a0c1cbb6b4c1a384e6b128b5c620c9a9",
+      "url": "https://api.worldbank.org/v2/country/CZE;DEU;FRA;GBR;POL;USA/indicator/SL.SRV.EMPL.ZS?date=2024&format=json&per_page=100"
+    }
+  ],
+  "staging_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-2024/f32cc45c-2aa4-4839-b869-c15bc5280ac7/staging/normalized.jsonl",
+  "started_at": "2026-09-23T12:47:25.741010+00:00",
+  "status": "published",
+  "validation": {
+    "bigquery_staging_row_count": 18,
+    "complete_country_sector_grid": true,
+    "sector_shares_sum_to_100": true
+  },
+  "warehouse_destination": "czbudget-janrezab.job_market.job_market_employment_shares",
+  "website_destinations": []
+}

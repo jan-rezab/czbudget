@@ -1,0 +1,154 @@
+{
+  "accepted_rows": 197,
+  "build_id": "d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c",
+  "completed_at": "2026-09-23T12:42:58.747257+00:00",
+  "coverage": {
+    "labour_countries": [
+      "USA",
+      "CZE",
+      "DEU",
+      "FRA",
+      "GBR",
+      "POL"
+    ],
+    "labour_rows": 30,
+    "missing_ownership": [
+      "CZE",
+      "DEU"
+    ],
+    "missing_poland_O_private": true,
+    "ownership_countries": [
+      "USA",
+      "FRA",
+      "GBR",
+      "POL"
+    ],
+    "ownership_rows": 167
+  },
+  "dataset_id": "job_market_workforce_2024",
+  "deduplicated_rows": 0,
+  "excluded_rows": 3616,
+  "loader_git_sha": "f7aedf1dc80f90d748ecd2824759d243f763e99e",
+  "period": 2024,
+  "processing_status": "succeeded",
+  "publication_pointer": "czbudget-janrezab.job_market.job_market_workforce_release_pointer",
+  "publication_status": "succeeded",
+  "published_release_id": "d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c",
+  "received_rows": 3813,
+  "region": "europe-west4",
+  "rejected_rows": 0,
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "source_totals": {
+    "CZE": {
+      "employed": "5192.417",
+      "labour_force": "5331.195",
+      "outside_labour_force": "3470.551",
+      "unemployed": "138.778",
+      "unemployment_rate": "2.603"
+    },
+    "DEU": {
+      "employed": "42824.198",
+      "labour_force": "44314.803",
+      "outside_labour_force": "27336.473",
+      "unemployed": "1490.605",
+      "unemployment_rate": "3.364"
+    },
+    "FRA": {
+      "employed": "29021.954",
+      "labour_force": "31353.386",
+      "outside_labour_force": "24082.612",
+      "unemployed": "2331.432",
+      "unemployment_rate": "7.436"
+    },
+    "GBR": {
+      "employed": "33388.077",
+      "labour_force": "34910.571",
+      "outside_labour_force": "21357.042",
+      "unemployed": "1522.494",
+      "unemployment_rate": "4.361"
+    },
+    "POL": {
+      "employed": "17332.958",
+      "labour_force": "17833.621",
+      "outside_labour_force": "12516.301",
+      "unemployed": "500.663",
+      "unemployment_rate": "2.807"
+    },
+    "USA": {
+      "employed": "161345.53",
+      "labour_force": "168106.211",
+      "outside_labour_force": "100465.222",
+      "unemployed": "6760.681",
+      "unemployment_rate": "4.022"
+    }
+  },
+  "sources": {
+    "employed": {
+      "indicator": "EMP_TEMP_SEX_AGE_NB",
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/raw/employed.csv",
+      "received_rows": 504,
+      "sha256": "31883f535edff2708549ac97097a9801ef9d7a39c6f567f711522f07d8b366d6",
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_TEMP_SEX_AGE_NB&ref_area=USA+CZE+DEU+FRA+GBR+POL&timefrom=2024&timeto=2024"
+    },
+    "labour_force": {
+      "indicator": "EAP_TEAP_SEX_AGE_NB",
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/raw/labour_force.csv",
+      "received_rows": 504,
+      "sha256": "191a0d7d7647ad28e6101687ca5d61e7d6ecdd7fa8d86bc60a214ee7920a27ed",
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EAP_TEAP_SEX_AGE_NB&ref_area=USA+CZE+DEU+FRA+GBR+POL&timefrom=2024&timeto=2024"
+    },
+    "outside_labour_force": {
+      "indicator": "EIP_TEIP_SEX_AGE_NB",
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/raw/outside_labour_force.csv",
+      "received_rows": 504,
+      "sha256": "0bb92f7019e8dcb8397ef5bcad178aaa01565c2d80a355d8fe747de5d81bbb7e",
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EIP_TEIP_SEX_AGE_NB&ref_area=USA+CZE+DEU+FRA+GBR+POL&timefrom=2024&timeto=2024"
+    },
+    "ownership": {
+      "indicator": "EMP_TEMP_SEX_ECO_INS_NB",
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/raw/ownership.csv",
+      "received_rows": 1293,
+      "sha256": "66fb20818f22d68c438ffb52263042f244e41dfc808226d2c03921b50029ea6e",
+      "url": "https://rplumber.ilo.org/data/indicator/?id=EMP_TEMP_SEX_ECO_INS_NB&ref_area=USA+CZE+DEU+FRA+GBR+POL&timefrom=2024&timeto=2024"
+    },
+    "unemployed": {
+      "indicator": "UNE_TUNE_SEX_AGE_NB",
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/raw/unemployed.csv",
+      "received_rows": 504,
+      "sha256": "2a202c7d6b1d9f5095219d923535f261bfc246ca8179a6295060a159435869f0",
+      "url": "https://rplumber.ilo.org/data/indicator/?id=UNE_TUNE_SEX_AGE_NB&ref_area=USA+CZE+DEU+FRA+GBR+POL&timefrom=2024&timeto=2024"
+    },
+    "unemployment_rate": {
+      "indicator": "UNE_DEAP_SEX_AGE_RT",
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/raw/unemployment_rate.csv",
+      "received_rows": 504,
+      "sha256": "abb0bc88d187aab68951a51e8511d20e21ce32024d9ffa1bb8808735107acaa4",
+      "url": "https://rplumber.ilo.org/data/indicator/?id=UNE_DEAP_SEX_AGE_RT&ref_area=USA+CZE+DEU+FRA+GBR+POL&timefrom=2024&timeto=2024"
+    }
+  },
+  "staging": {
+    "labour": {
+      "accepted_rows": 30,
+      "sha256": "bb910bf4a482bc08d58be1674684a5cb814a7c89424938daf2b3988c3d16e97b",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/staging/labour.jsonl"
+    },
+    "ownership": {
+      "accepted_rows": 167,
+      "sha256": "c38a7203ee1c8cc8609f55dadf9238a74a5e11447b4dd55c9fe2b3809c3d1514",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c/staging/ownership.jsonl"
+    }
+  },
+  "started_at": "2026-09-23T12:41:49.460965+00:00",
+  "status": "published",
+  "validation": {
+    "bigquery_staging_validated": true,
+    "labour_force_totals_reconcile": true,
+    "ownership_totals_reconcile": true,
+    "unemployment_rates_reconcile": true
+  },
+  "warehouse_destinations": [
+    "czbudget-janrezab.job_market.job_market_ownership_observations",
+    "czbudget-janrezab.job_market.job_market_labour_status_observations"
+  ],
+  "website_destinations": []
+}

@@ -1,6 +1,14 @@
 # Public employer and labour-status coverage, 2024
 
-Research checked 2026-09-23. These are source observations for the proposed job-market data layer, **not a published warehouse release**. The active `jan@ravineo.com` Cloud CLI credential had expired when the service loader was prepared, so no public/private or labour-status data has been loaded to BigQuery.
+Research checked 2026-09-23. The observed service divisions, industry-by-ownership
+figures and labour-status figures are now published in the EU `job_market`
+BigQuery dataset through separate verified release pointers. Service release:
+`051963cd-9d28-4c22-b9f1-fae58ba9e645` (270 rows). Ownership and labour-status
+release: `d6a77bbc-afa2-4ddd-a88e-5ba64e7a672c` (167 + 30 rows). The broader
+World Bank/ILO modelled three-sector series is a separate release
+`f32cc45c-2aa4-4839-b869-c15bc5280ac7` (18 rows). Reporting views live in
+`pipeline/job_market_workforce_2024/reporting_views.sql`; query those views to
+select only pointed releases and retain exact source values and URLs.
 
 ## Meaning of public employment
 
