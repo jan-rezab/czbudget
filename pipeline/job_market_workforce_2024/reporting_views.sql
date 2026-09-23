@@ -24,6 +24,12 @@ FROM `czbudget-janrezab.job_market.job_market_labour_status_observations` AS o
 JOIN `czbudget-janrezab.job_market.job_market_workforce_release_pointer` AS p
   ON p.dataset_id = 'job_market_workforce' AND o.release_id = p.release_id;
 
+CREATE OR REPLACE VIEW `czbudget-janrezab.job_market.current_national_public_employment` AS
+SELECT o.* EXCEPT(published_at), o.published_at
+FROM `czbudget-janrezab.job_market.national_public_employment_observations` AS o
+JOIN `czbudget-janrezab.job_market.national_public_employment_release_pointer` AS p
+  ON p.dataset_id = 'job_market_national_public' AND o.release_id = p.release_id;
+
 CREATE OR REPLACE VIEW `czbudget-janrezab.job_market.public_employer_share` AS
 SELECT
   t.country_code, t.period, t.isic_section,
