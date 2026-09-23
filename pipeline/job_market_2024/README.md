@@ -19,20 +19,24 @@ The Cloud Build runs in `europe-west4` as the existing
 `plane-data` tag. Each source JSON is preserved without modification under
 `gs://czbudget-janrezab-data-layers/processing-runs/job-market-2024/<build-id>/raw/`.
 The normalized JSONL is staged under the same run's `staging/`. The three
-job-market BigQuery tables are created ahead of the run and only those tables
-grant the builder write access. The build
+job-market BigQuery tables are created ahead of the run in the dedicated
+`job_market` dataset, to which the builder has dataset-scoped write access.
+The build
 validates a complete 6 × 3 grid and 100% sector sums before loading staging
 into BigQuery. It atomically writes the release rows and changes
-`budget_detail.job_market_release_pointer` in one transaction. A completed
+`job_market.job_market_release_pointer` in one transaction. A completed
 receipt is written only after that transaction succeeds. The website does not
 read this dataset yet and no website release is part of this job.
+`source_value` preserves each original WDI numeric text beside the queryable
+percentage and exact indicator URL. These ILO-modelled broad shares have a
+different basis from the observed ILOSTAT service and ownership series.
 
 Published query:
 
 ```sql
 SELECT s.country_code, s.sector, s.share_pct
-FROM `czbudget-janrezab.budget_detail.job_market_employment_shares` s
-JOIN `czbudget-janrezab.budget_detail.job_market_release_pointer` p
+FROM `czbudget-janrezab.job_market.job_market_employment_shares` s
+JOIN `czbudget-janrezab.job_market.job_market_release_pointer` p
   ON s.release_id = p.release_id
 WHERE p.dataset_id = 'job_market_employment_shares'
 ORDER BY s.country_code, s.sector;

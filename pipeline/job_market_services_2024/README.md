@@ -28,7 +28,8 @@ Data contract:
   `job_market.job_market_service_release_pointer` in one BigQuery
   transaction. The website does not consume this release yet.
 
-Submit from the dedicated worktree after bootstrap and table-scoped IAM:
+Submit from the dedicated worktree after bootstrap in the EU `job_market`
+dataset and granting `psd-data-builder` WRITER access to that dataset:
 
 ```sh
 python3 pipeline/job_market_services_2024/submit.py --dry-run

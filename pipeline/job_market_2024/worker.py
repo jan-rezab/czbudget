@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+from decimal import Decimal
 import hashlib
 import json
 from pathlib import Path
@@ -14,7 +15,7 @@ import urllib.error
 import urllib.request
 
 PROJECT = "czbudget-janrezab"
-DATASET = f"{PROJECT}.budget_detail"
+DATASET = f"{PROJECT}.job_market"
 SOURCE_ID = "world_bank_ilo_modelled"
 
 
@@ -48,7 +49,7 @@ def fetch(url: str) -> bytes:
 
 
 def parse_rows(payload: bytes, indicator: str, sector: str, countries: list[str], period: int, url: str) -> list[dict]:
-    document = json.loads(payload)
+    document = json.loads(payload, parse_float=Decimal)
     if not isinstance(document, list) or len(document) != 2 or not isinstance(document[1], list):
         raise ValueError(f"Unexpected World Bank response for {indicator}")
     rows = []
@@ -57,10 +58,11 @@ def parse_rows(payload: bytes, indicator: str, sector: str, countries: list[str]
         if country not in countries or item.get("date") != str(period) or item.get("indicator", {}).get("id") != indicator:
             raise ValueError(f"Unexpected source row: {item}")
         value = item.get("value")
-        if not isinstance(value, (int, float)) or not 0 <= value <= 100:
+        if not isinstance(value, (int, Decimal)) or not 0 <= value <= 100:
             raise ValueError(f"Missing or invalid {sector} share for {country}")
         rows.append({"country_code": country, "period": period, "sector": sector,
-                     "share_pct": value, "source_id": SOURCE_ID, "source_url": url})
+                     "share_pct": float(value), "source_value": str(value),
+                     "source_id": SOURCE_ID, "source_url": url})
     if len(rows) != len(countries) or {row["country_code"] for row in rows} != set(countries):
         raise ValueError(f"Incomplete {sector} coverage")
     return rows
@@ -96,7 +98,7 @@ def bq_query(sql: str) -> str:
 
 def publish_to_bigquery(rows_uri: str, release_id: str, row_count: int) -> None:
     stage = f"{DATASET}.job_market_2024_stage"
-    stage_cli = f"{PROJECT}:budget_detail.job_market_2024_stage"
+    stage_cli = f"{PROJECT}:job_market.job_market_2024_stage"
     target = f"{DATASET}.job_market_employment_shares"
     pointer = f"{DATASET}.job_market_release_pointer"
     bq_query(f"TRUNCATE TABLE `{stage}`")
@@ -112,7 +114,7 @@ def publish_to_bigquery(rows_uri: str, release_id: str, row_count: int) -> None:
       BEGIN TRANSACTION;
       DELETE FROM `{target}` WHERE release_id = '{release_id}';
       INSERT INTO `{target}`
-      SELECT '{release_id}', country_code, period, sector, share_pct, source_id,
+      SELECT '{release_id}', country_code, period, sector, share_pct, source_value, source_id,
              source_url, CURRENT_TIMESTAMP() FROM `{stage}`;
       DELETE FROM `{pointer}` WHERE dataset_id = 'job_market_employment_shares';
       INSERT INTO `{pointer}` VALUES
@@ -167,6 +169,9 @@ def main() -> None:
                "received_rows": len(rows), "accepted_rows": len(rows),
                "rejected_rows": 0, "deduplicated_rows": 0,
                "country_count": len(countries), "sectors": list(manifest["indicators"].values()),
+               "source_totals": {country: {row["sector"]: row["source_value"]
+                                          for row in rows if row["country_code"] == country}
+                                 for country in countries},
                "validation": {"complete_country_sector_grid": True, "sector_shares_sum_to_100": True,
                               "bigquery_staging_row_count": len(rows)},
                "published_release_id": args.build_id,

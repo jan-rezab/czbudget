@@ -4,13 +4,11 @@ Dataset: ILOSTAT 2024 employer ownership by ISIC Rev. 4 section and annual labou
 
 Execution: dedicated `codex/job-market-2024` worktree; `cloudbuild.yaml` in `europe-west4`, `plane-data` tag, `psd-data-builder`; immutable raw CSV and normalized JSONL under `gs://czbudget-janrezab-data-layers/processing-runs/job-market-workforce-2024/<build-id>/`; two BigQuery staging tables; validated atomic write to observations and `job_market_workforce_release_pointer`. No website destination or deployment.
 
-Bootstrap and grant only table-scoped permissions with `jan@ravineo.com`:
+Bootstrap after creating the dedicated EU `job_market` dataset and granting
+`psd-data-builder` WRITER access to that dataset with `jan@ravineo.com`:
 
 ```sh
 CLOUDSDK_CORE_ACCOUNT=jan@ravineo.com bq --project_id=czbudget-janrezab --location=EU query --use_legacy_sql=false < pipeline/job_market_workforce_2024/bootstrap.sql
-for table_name in job_market_ownership_stage job_market_ownership_observations job_market_labour_status_stage job_market_labour_status_observations job_market_workforce_release_pointer; do
-  CLOUDSDK_CORE_ACCOUNT=jan@ravineo.com bq add-iam-policy-binding --member=serviceAccount:psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com --role=roles/bigquery.dataEditor czbudget-janrezab:job_market.$table_name
-done
 ```
 
 Source-only validation and submit from this worktree:
@@ -21,3 +19,7 @@ CLOUDSDK_CORE_ACCOUNT=jan@ravineo.com python3 pipeline/job_market_workforce_2024
 ```
 
 The receipt exists only after publication; consumers select the pointed release. Country-specific survey age and source notes remain in each row. The Czech FTE and German administrative totals in `../job_market_services_2024/PUBLIC_EMPLOYMENT_RESEARCH.md` use different measurement bases and are not filled into absent ILO ownership cells.
+
+Run `reporting_views.sql` as the dataset owner after the service and workforce
+releases are published. The views select only pointed releases and expose source
+values, URLs and the arithmetic used for report percentages.
