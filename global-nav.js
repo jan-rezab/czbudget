@@ -105,6 +105,7 @@
       { path:"deep-dives/eu-budget/?code=CZE", title:{cs:"Peníze mezi zeměmi a EU",en:"Money between countries and the EU"}, note:{cs:"27 zemí, příspěvky a přiřazené výdaje",en:"27 countries, contributions and attributed spending"} },
     ] },
     { label:{cs:"Ekonomika, průmysl a obchod",en:"Economy, industry and trade"}, items: [
+      { path:"deep-dives/job-market/?country=USA", title:{cs:"Kde lidé pracují a kdo je zaměstnává",en:"Where people work and who employs them"}, note:{cs:"Práce, služby a veřejní zaměstnavatelé",en:"Jobs, services and public employers"} },
       { path:"deep-dives/economy/?code=CZE", title:{cs:"Ekonomika v kontextu",en:"Economy in context"}, note:{cs:"Dlouhé řady, cyklus a fiskální kontext",en:"Long-run series, the cycle and fiscal context"} },
       { path:"deep-dives/industry/?code=CZE&channel=eurostat", title:{cs:"Průmysl měsíc po měsíci",en:"Industry month by month"}, note:{cs:"Odvětví, měsíční a roční vývoj",en:"Sectors, monthly and annual trends"} },
       { path:"deep-dives/industry/diagnostics/", title:{cs:"Uvnitř průmyslu",en:"Inside industry"}, note:{cs:"Investice, kapacity, výrobky a řetězce",en:"Investment, capacity, products and value chains"} },

@@ -128,6 +128,10 @@
       cs: ["Průmysl měsíc po měsíci — Public Spending Data", "Odvětvový vývoj průmyslu v jednotlivých zemích. Měsíční a roční statistiky z národních úřadů i Eurostatu."],
       en: ["Industry month by month — Public Spending Data", "Industrial production by country and sector. Monthly and annual statistics from national sources and Eurostat."],
     },
+    "/deep-dives/job-market/": {
+      cs: ["Struktura práce v roce 2024 — Public Spending Data", "Šest zemí, všech 45 druhů služeb, veřejní zaměstnavatelé a postavení lidí na trhu práce."],
+      en: ["The 2024 job market — Public Spending Data", "Six countries, all 45 service divisions, public employers and labour-force status."],
+    },
     "/deep-dives/economy/": {
       cs: ["Ekonomika v kontextu — Public Spending Data", "Dlouhé ekonomické řady, hospodářský cyklus a fiskální kontext v globální datové vrstvě."],
       en: ["Economy in context — Public Spending Data", "Long-run economic series, the business cycle and fiscal context in a global data layer."],

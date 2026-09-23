@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="/language-bootstrap.js"></script>
+  <title>Struktura práce v roce 2024 — Public Spending Data</title>
+  <meta name="description" content="Práce podle odvětví, 45 druhů služeb, veřejní zaměstnavatelé a nezaměstnanost v šesti zemích v roce 2024.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/job-market/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/job-market/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/job-market/?lang=en">
+  <link rel="icon" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <link rel="stylesheet" href="/job-market.css?v=20260923-1">
+  <script src="/global-nav.js?v=20260919-reports-regional" defer></script>
+  <script src="/job-market.js?v=20260923-1" defer></script>
+</head>
+<body class="job-market-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <header class="jm-hero">
+      <div class="jm-eyebrow"><span data-copy="eyebrow">Trh práce / 2024</span><span>01—06</span></div>
+      <h1 data-copy="title">Kde lidé pracují.<br><em>Kdo je zaměstnává.</em></h1>
+      <p data-copy="intro">Šest zemí, tři velká odvětví a úplný rozpad 45 druhů služeb. Veřejné zaměstnavatele a lidi mimo pracovní sílu měříme odděleně.</p>
+      <div class="jm-controls"><label><span data-copy="market">Země</span><select id="jm-country" aria-label="Country"></select></label><span class="jm-year">2024</span><a href="#method" data-copy="how">Jak číst čísla ↓</a></div>
+    </header>
+    <div class="jm-status" id="jm-status" role="status" aria-live="polite"></div>
+    <section class="jm-section" id="comparison"><div class="jm-heading"><span>00</span><div><h2 data-copy="compareTitle">Šest trhů vedle sebe</h2><p data-copy="compareNote">Podíl služeb mezi zaměstnanými, podíl veřejných zaměstnavatelů mezi všemi zaměstnanými a míra nezaměstnanosti používají tři různé řady. Chybějící veřejný podíl není nula.</p></div></div><div id="jm-comparison"></div></section>
+    <section class="jm-section" id="structure"><div class="jm-heading"><span>01</span><div><h2 data-copy="structureTitle">Tři velká odvětví</h2><p data-copy="structureNote">Podíl všech zaměstnaných. Modelované odhady ILO přes World Bank WDI.</p></div></div><div class="jm-broad" id="jm-broad"></div></section>
+    <section class="jm-section" id="services"><div class="jm-heading"><span>02</span><div><h2 data-copy="servicesTitle">Všech 45 druhů služeb</h2><p data-copy="servicesNote">Pozorovaná šetření ILOSTAT, sekce G–S klasifikace ISIC Rev. 4. Procenta v kruhu jsou podíly pouze mezi těmito vykázanými druhy služeb.</p></div></div><div class="jm-service-layout"><div id="jm-pie" class="jm-pie-panel"></div><div id="jm-service-sections" class="jm-section-list"></div></div><div class="jm-table-wrap"><table><thead><tr><th data-copy="division">Oddíl</th><th data-copy="people">Zaměstnaní, tisíce</th><th data-copy="ofListed">Podíl vykázaných služeb</th><th data-copy="quality">Kvalita</th></tr></thead><tbody id="jm-divisions"></tbody></table></div><p class="jm-footnote" data-copy="serviceCaveat">Součet 45 oddílů není totožný s modelovaným podílem služeb výše. Jde o jiný zdroj a metodu; řady nesčítáme dohromady.</p></section>
+    <section class="jm-section" id="ownership"><div class="jm-heading"><span>03</span><div><h2 data-copy="ownershipTitle">Kdo zaměstnává: veřejný, nebo soukromý sektor?</h2><p data-copy="ownershipNote">Podíl veřejných zaměstnavatelů mezi zaměstnanými v daném odvětví. Veřejný sektor ILO zahrnuje vládní jednotky i podniky s nejméně 50% státním vlastnictvím; tyto dvě skupiny zdroj nerozděluje.</p></div></div><div id="jm-ownership"></div></section>
+    <section class="jm-section" id="status"><div class="jm-heading"><span>04</span><div><h2 data-copy="statusTitle">Zaměstnaní, nezaměstnaní a ostatní</h2><p data-copy="statusNote">Tři podíly používají jako základ populaci v produktivním věku podle národního šetření. Míra nezaměstnanosti má jiný základ: pouze pracovní sílu.</p></div></div><div id="jm-labour"></div></section>
+    <section class="jm-section jm-method" id="method"><div class="jm-heading"><span>05</span><div><h2 data-copy="methodTitle">Zdroje a hranice srovnání</h2><p data-copy="methodIntro">Přesné hodnoty, jejich jednotky a odkazy jsou zachované v publikovaném datovém vydání.</p></div></div><div id="jm-sources"></div></section>
+  </main>
+  <footer class="jm-footer"><a href="/deep-dives/" data-copy="allReports">Všechny reporty</a><a href="#top">↑</a></footer>
+</body>
+</html>
