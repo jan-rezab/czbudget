@@ -1,0 +1,12 @@
+steps:
+  - id: fetch-validate-publish
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    args: [worker.py, --build-id, '$BUILD_ID', --loader-sha, '${_LOADER_SHA}']
+timeout: 1200s
+queueTtl: 1800s
+tags: [plane-data, job-market-services-2024]
+substitutions:
+  _LOADER_SHA: unknown
+options:
+  logging: CLOUD_LOGGING_ONLY
