@@ -1,0 +1,60 @@
+{
+  "accepted_rows": 8,
+  "build_id": "9fc333ba-6a62-4aeb-bbc5-b640ba2d0149",
+  "completed_at": "2026-09-23T12:59:41.942438+00:00",
+  "dataset_id": "job_market_national_public_2024",
+  "deduplicated_rows": 0,
+  "excluded_rows": 0,
+  "loader_git_sha": "bbcf30595d3f9fbdfb5ce412eb1ed46cdcafc3df",
+  "normalized_sha256": "6b4a9f9c90e052448c86da5613646286506146463c3b199bf368ad522bc02081",
+  "period": 2024,
+  "processing_status": "succeeded",
+  "publication_pointer": "czbudget-janrezab.job_market.national_public_employment_release_pointer",
+  "publication_status": "succeeded",
+  "published_release_id": "9fc333ba-6a62-4aeb-bbc5-b640ba2d0149",
+  "received_rows": 8,
+  "region": "europe-west4",
+  "rejected_rows": 0,
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "source_values": {
+    "CZE:general_government_fte": "947,878",
+    "CZE:public_sector_fte": "1,112,290",
+    "CZE:reported_public_sector_share": "24.2",
+    "CZE:total_economy_fte": "4,588,564",
+    "DEU:majority_public_private_law_entities_persons": "1,558.1",
+    "DEU:public_employers_total_persons": "6,938.1",
+    "DEU:public_service_persons": "5,380.0",
+    "DEU:total_employed_persons": "45,960"
+  },
+  "sources": {
+    "czech_public_account": {
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-national-public-2024/9fc333ba-6a62-4aeb-bbc5-b640ba2d0149/raw/czech_public_account.html",
+      "received_bytes": 95974,
+      "sha256": "a9762b469c26655b1200cf5258cd5bd5346ebaef283c562db7fc3d662f25d0f6",
+      "url": "https://csu.gov.cz/public-sector-satellite-account"
+    },
+    "german_public_employers": {
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-national-public-2024/9fc333ba-6a62-4aeb-bbc5-b640ba2d0149/raw/german_public_employers.html",
+      "received_bytes": 49927,
+      "sha256": "f6a176f2e2ad22b9c06bc422ed3ad6de1c55c8c52883b1a73e3c3b1e0016a217",
+      "url": "https://www.destatis.de/EN/Themes/Government/Public-Service/Tables/public-service-personnel-public-employers.html"
+    },
+    "german_total_employment": {
+      "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-national-public-2024/9fc333ba-6a62-4aeb-bbc5-b640ba2d0149/raw/german_total_employment.html",
+      "received_bytes": 54649,
+      "sha256": "06e5ab8953b3306111fedf21a9c66f57c892b29d3ec187cb3e449145832fd73f",
+      "url": "https://www.destatis.de/EN/Themes/Labour/Labour-Market/Employment/Tables/persons-employment-sectors-economic.html"
+    }
+  },
+  "staging_destination": "gs://czbudget-janrezab-data-layers/processing-runs/job-market-national-public-2024/9fc333ba-6a62-4aeb-bbc5-b640ba2d0149/staging/normalized.jsonl",
+  "started_at": "2026-09-23T12:59:00.150167+00:00",
+  "status": "published",
+  "validation": {
+    "bigquery_staging_rows": 8,
+    "czech_share_reconciles": true,
+    "german_components_reconcile": true,
+    "source_table_headers": true
+  },
+  "warehouse_destination": "czbudget-janrezab.job_market.national_public_employment_observations",
+  "website_destinations": []
+}

@@ -9,6 +9,10 @@ World Bank/ILO modelled three-sector series is a separate release
 `f32cc45c-2aa4-4839-b869-c15bc5280ac7` (18 rows). Reporting views live in
 `pipeline/job_market_workforce_2024/reporting_views.sql`; query those views to
 select only pointed releases and retain exact source values and URLs.
+The source-specific Czech and German national totals are published separately as
+release `9fc333ba-6a62-4aeb-bbc5-b640ba2d0149` (eight rows) in
+`current_national_public_employment`. Their exact official HTML inputs and
+hashes are in that release's immutable completion receipt.
 
 ## Meaning of public employment
 
@@ -35,8 +39,8 @@ For example, the US O+P+Q total is 44,090.0 thousand employed persons and the pu
 
 ## National sources for the two missing markets
 
-- **Czechia:** The [CZSO Public Sector Satellite Account](https://csu.gov.cz/public-sector-satellite-account) reports 1,112,290 public-sector FTE jobs in 2024, 24.2% of 4,588,564 total-economy FTE jobs. General government is 947,878 FTE; the residual 164,412 FTE is public corporations (derived). The account does not provide the ILO-style O/P/Q ownership cross-tab in this table. These observations already exist in `pipeline/source_data/cze_public_employment_observations.csv` and the Czech public-employment builder.
-- **Germany:** [Destatis public employers](https://www.destatis.de/EN/Themes/Government/Public-Service/Tables/public-service-personnel-public-employers.html) reports 5.380 million public-service staff and another 1.558 million staff in majority-public institutions/enterprises with private legal status on 30 June 2024 (6.938 million total). Its [2024 annual employment denominator](https://www.destatis.de/EN/Themes/Labour/Labour-Market/Employment/Tables/persons-employment-sectors-economic.html) is 45.987 million persons, yielding an *indicative* 15.1% with mixed snapshot/annual bases. This is not directly interchangeable with an ILO annual household-survey share. Detailed German administrative publication: <https://www.destatis.de/DE/Themen/Staat/Oeffentlicher-Dienst/Publikationen/Downloads-Oeffentlicher-Dienst/statistischer-bericht-personalstand-oeffentlicher-dienst-2140600247005.html>.
+- **Czechia:** The [CZSO Public Sector Satellite Account](https://csu.gov.cz/public-sector-satellite-account) reports 1,112,290 public-sector FTE jobs in 2024, 24.2% of 4,588,564 total-economy FTE jobs. General government is 947,878 FTE; the residual 164,412 FTE is public corporations (derived). The account does not provide the ILO-style O/P/Q ownership cross-tab in this table. These national observations are published in `job_market.current_national_public_employment`; separate Czech source observations also exist in `pipeline/source_data/cze_public_employment_observations.csv`.
+- **Germany:** [Destatis public employers](https://www.destatis.de/EN/Themes/Government/Public-Service/Tables/public-service-personnel-public-employers.html) reports 5.380 million public-service staff and another 1.558 million staff in majority-public institutions/enterprises with private legal status on 30 June 2024 (6.938 million total). Its [2024 annual employment denominator](https://www.destatis.de/EN/Themes/Labour/Labour-Market/Employment/Tables/persons-employment-sectors-economic.html) currently reports 45.960 million persons, yielding an *indicative* 15.1% with mixed snapshot/annual bases. The annual denominator was revised from 45.987 million on the source page after the earlier research check. This is not directly interchangeable with an ILO annual household-survey share. Detailed German administrative publication: <https://www.destatis.de/DE/Themen/Staat/Oeffentlicher-Dienst/Publikationen/Downloads-Oeffentlicher-Dienst/statistischer-bericht-personalstand-oeffentlicher-dienst-2140600247005.html>.
 
 ## Labour-force status: ILOSTAT
 
