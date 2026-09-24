@@ -16,6 +16,12 @@ await assertEmpty(destination);
 await mkdir(destination, { recursive: true });
 
 const files = [
+  "chart-explorer.html",
+  "chart-explorer.js",
+  "chart-explorer.css",
+  "lib/chart-explorer-model.js",
+  "tests/unit/chart-explorer.spec.mjs",
+  "tests/browser/chart-explorer.spec.mjs",
   "scripts/verification-plan.mjs",
   "scripts/release-verification.mjs",
   "scripts/prepare-production-verification.mjs",

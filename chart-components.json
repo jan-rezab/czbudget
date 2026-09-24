@@ -9,6 +9,14 @@
   },
   "consumers": [
     {
+      "id": "government-finance-explorer",
+      "adapter": "chart-explorer.js",
+      "families": ["line", "bar"],
+      "tests": ["tests/browser/chart-explorer.spec.mjs"],
+      "routes": ["/chart-explorer.html"],
+      "change_paths": ["chart-explorer.js", "chart-explorer.css", "lib/chart-explorer-model.js", "chart-explorer.html"]
+    },
+    {
       "id": "municipal-profile-history",
       "adapter": "municipal-expanded-profile.js",
       "families": ["line"],
@@ -154,10 +162,10 @@
   },
   "verification": {
     "always": ["tests/browser/shared-navigation.spec.mjs"],
-    "shared_contracts": ["tests/unit/chart-renderer.spec.mjs", "tests/unit/chart-registry.spec.mjs", "tests/unit/verification-plan.spec.mjs"],
+    "shared_contracts": ["tests/unit/chart-explorer.spec.mjs", "tests/unit/chart-renderer.spec.mjs", "tests/unit/chart-registry.spec.mjs", "tests/unit/verification-plan.spec.mjs"],
     "shared_paths": ["lib/chart-renderer.js", "shared-charts.css", "chart-runtime.js", "psd-chart.js", "psd-chart.css", "chart-components.json", "chart-legacy-inventory.json", "assets/chart-releases/**", "tests/fixtures/charts/**"]
   },
   "release": {
-    "content_versioned_adapters": ["municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js"]
+    "content_versioned_adapters": ["chart-explorer.css", "chart-explorer.js", "lib/chart-explorer-model.js", "municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js"]
   }
 }

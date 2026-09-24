@@ -103,8 +103,7 @@
         const last = rows.at(-1);
         return last.values[f] === null ? [] : [{ field, value: last.values[f], y: y(last.values[f]) }];
       }), top + 12, height - bottom - 16, 38);
-      marks += `<text class="psd-plot-end-label" x="${width - right + 18}" y="${top - 12}">${escape(rows.at(-1).label)}</text>`;
-      marks += labels.map(({ field, value, y: pointY, labelY }) => `<g opacity="${spec.activeField && spec.activeField !== field.key ? .18 : 1}"><path d="M${x(rows.length - 1)},${pointY} L${width - right + 5},${labelY} L${width - right + 12},${labelY}" fill="none" stroke="${escape(field.color)}"/><text class="psd-plot-end-label" x="${width - right + 18}" y="${labelY - 3}">${escape(String(field.label).length > 20 ? String(field.label).slice(0, 19) + '…' : field.label)}<tspan x="${width - right + 18}" dy="15">${escape(format(value, field, rows.at(-1)))}</tspan></text></g>`).join('');
+      marks += labels.map(({ field, value, y: pointY, labelY }) => `<g opacity="${spec.activeField && spec.activeField !== field.key ? .18 : 1}"><path d="M${x(rows.length - 1)},${pointY} L${width - right + 5},${labelY} L${width - right + 12},${labelY}" fill="none" stroke="${escape(field.color)}"/><text class="psd-plot-end-label" x="${width - right + 18}" y="${labelY - 3}">${escape(field.label)}<tspan x="${width - right + 18}" dy="15">${escape(format(value, field, rows.at(-1)))}</tspan></text></g>`).join('');
     }
     const describe = row => `${row.label}. ${fields.map((field, f) => `${field.label}: ${format(row.values[f], field, row)}${spec.type === 'stacked' && row.shares[f] !== null ? ` (${number.format(row.shares[f])}%)` : ''}`).join('. ')}`;
     let hits = rows.map((row, i) => `<rect class="psd-plot-hit" data-point="${i}" x="${left + i * plotWidth / rows.length}" y="${top}" width="${plotWidth / rows.length}" height="${plotHeight}" tabindex="${i ? -1 : 0}" role="button" aria-label="${escape(describe(row))}"/>`).join('');

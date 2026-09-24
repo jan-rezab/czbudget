@@ -21,7 +21,7 @@
   var COPY = {
     cs: {
       table: "Tabulka", chart: "Graf", download: "Stáhnout", csv: "Data (CSV)",
-      png: "Obrázek (PNG)", cite: "Citovat", link: "Odkaz", copied: "Zkopírováno",
+      png: "Obrázek (PNG)", png_failed: "Export selhal", cite: "Citovat", link: "Odkaz", copied: "Zkopírováno",
       embed: "Vložit", embed_failed: "Nelze načíst",
       sources: "Zdroje", definition: "Definice", excludes: "Neobsahuje",
       caveat: "Srovnatelnost", table_id: "Zdrojová tabulka", extracted: "Staženo",
@@ -32,7 +32,7 @@
     },
     en: {
       table: "Table", chart: "Chart", download: "Download", csv: "Data (CSV)",
-      png: "Image (PNG)", cite: "Cite", link: "Link", copied: "Copied",
+      png: "Image (PNG)", png_failed: "Export failed", cite: "Cite", link: "Link", copied: "Copied",
       embed: "Embed", embed_failed: "Unavailable",
       sources: "Sources", definition: "Definition", excludes: "Excludes",
       caveat: "Comparability", table_id: "Source table", extracted: "Extracted",
@@ -167,7 +167,7 @@
     }
   }
 
-  function exportPNG(container, filename, scale) {
+  function exportPNG(container, filename, scale, caption) {
     var svg = container.querySelector("svg");
     if (!svg) return Promise.reject(new Error("no_svg"));
     var box = svg.getBoundingClientRect();
@@ -182,18 +182,35 @@
     var xml = new XMLSerializer().serializeToString(clone);
     var svgURL = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
     var ratio = scale || 2;
+    // An opt-in caption keeps the measure, countries and source with a shared image.
+    var measure = document.createElement('canvas').getContext('2d');
+    measure.font = '13px Arial';
+    var captionLines = [];
+    String(caption || '').split('\n').filter(Boolean).forEach(function (paragraph) {
+      var line = '';
+      paragraph.split(' ').forEach(function (word) {
+        if (line && measure.measureText(line + ' ' + word).width > width - 32) {
+          captionLines.push(line); line = word;
+        } else line += (line ? ' ' : '') + word;
+      });
+      if (line) captionLines.push(line);
+    });
+    var captionHeight = captionLines.length ? 28 + captionLines.length * 20 : 0;
 
     return new Promise(function (resolve, reject) {
       var image = new Image();
       image.onload = function () {
         var canvas = el("canvas");
         canvas.width = width * ratio;
-        canvas.height = height * ratio;
+        canvas.height = (height + captionHeight) * ratio;
         var context = canvas.getContext("2d");
         context.fillStyle = getComputedStyle(document.body).backgroundColor || "#faf7ef";
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        context.drawImage(image, 0, 0);
+        context.drawImage(image, 0, captionHeight);
+        context.fillStyle = '#171918';
+        context.font = '13px Arial';
+        captionLines.forEach(function (line, index) { context.fillText(line, 16, 24 + index * 20); });
         canvas.toBlob(function (blob) {
           if (!blob) return reject(new Error("encode_failed"));
           saveBlob(blob, filename);
@@ -343,9 +360,14 @@
       type: "button", class: "psd-chart-action", "data-action": "png", text: t("png"),
       onclick: function () {
         pngButton.disabled = true;
-        exportPNG(host, filename("png"), 2).catch(function () {}).then(function () {
-          pngButton.disabled = false;
-        });
+        pngButton.dataset.exportStatus = 'working';
+        exportPNG(host, filename("png"), 2, resolve(spec.exportCaption)).then(function () {
+          pngButton.dataset.exportStatus = 'complete';
+          pngButton.textContent = t('png');
+        }).catch(function () {
+          pngButton.dataset.exportStatus = 'failed';
+          pngButton.textContent = t('png_failed');
+        }).finally(function () { pngButton.disabled = false; });
       },
     }) : null;
 
