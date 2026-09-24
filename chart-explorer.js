@@ -36,22 +36,24 @@
   function rangeCommit(range, previous) {
     cancelAnimationFrame(frame);
     state = M.normalize({ ...state, ...range }, dataset);
-    rememberRange(previous); paint({ animate: false }); writeURL();
-    $('.explorer-status').textContent = `Showing ${state.start} to ${state.end}.`;
+    rememberRange(previous); paint({ animate: true }); writeURL();
+    $('.explorer-status').textContent = '';
   }
   function resetRange() { update({ start: dataset.period.start_year, end: dataset.period.end_year, year: dataset.period.end_year }); }
   function mount() {
     const years = Array.from({ length: dataset.period.end_year - dataset.period.start_year + 1 }, (_, i) => dataset.period.start_year + i);
     const options = years.map(year => `<option>${year}</option>`).join('');
     root.innerHTML = `
-      <div class="explorer-chart-head"><div><span class="explorer-eyebrow">GOVERNMENT FINANCES / EXPLORE</span><h1 id="explorer-title"></h1><p id="explorer-description"></p></div><label class="explorer-metric" for="explorer-metric"><span>Measure</span><select data-custom-select="true" id="explorer-metric" aria-label="Fiscal measure">${Object.entries(M.metrics).map(([key, item]) => `<option value="${key}">${item.title}</option>`).join('')}</select></label></div>
-      <div class="explorer-toolbar"><div class="explorer-segment" role="group" aria-label="Chart view"><button id="view-line" data-view="line">Trend</button><button id="view-bar" data-view="bar">Ranking</button><button id="view-table" data-view="table">Table</button></div><div class="explorer-segment explorer-measure-toggle" role="group" aria-label="Comparison measure"><button id="mode-level" data-mode="level">Share of GDP</button><button id="mode-change" data-mode="change">Change</button></div><button class="explorer-scale" id="explorer-scale" title="Fit the vertical axis to the visible values. Bars always start at zero.">↕ Fit y-axis</button><button class="explorer-compare" id="explorer-compare">+ Countries</button></div>
-      <div class="explorer-readout"><div class="explorer-chips"></div><div class="explorer-inspect-year"><span>Compare in</span><select data-custom-select="true" id="explorer-year" aria-label="Comparison year">${options}</select><span id="explorer-hover-year" hidden></span></div></div>
+      <div class="explorer-chart-head"><div><h1 id="explorer-title"></h1><p id="explorer-description"></p></div><label class="explorer-metric" for="explorer-metric"><span>Measure</span><select data-custom-select="true" id="explorer-metric" aria-label="Fiscal measure">${Object.entries(M.metrics).map(([key, item]) => `<option value="${key}">${item.title}</option>`).join('')}</select></label></div>
+      <div class="explorer-toolbar"><div class="explorer-segment" role="group" aria-label="Chart view"><button id="view-line" data-view="line">Trend</button><button id="view-bar" data-view="bar">Bars</button><button id="view-table" data-view="table">Table</button></div><div class="explorer-segment explorer-measure-toggle" role="group" aria-label="Comparison measure"><button id="mode-level" data-mode="level">Share of GDP</button><button id="mode-change" data-mode="change">Change</button></div><button class="explorer-scale" id="explorer-scale" title="Fit the vertical axis to the visible values. Bars always start at zero.">↕ Fit y-axis</button><button class="explorer-compare" id="explorer-compare">+ Countries</button></div>
+      <div class="explorer-readout"><div class="explorer-chips"></div><div class="explorer-inspect-year"><span>Year</span><select data-custom-select="true" id="explorer-year" aria-label="Comparison year">${options}</select><span id="explorer-hover-year" hidden></span></div></div>
       <div class="explorer-object"><div class="explorer-body"><div class="explorer-plot-wrap"><div id="explorer-plot" class="explorer-plot"></div><div class="explorer-table" hidden></div></div></div>
-      <div class="explorer-zoom-bar"><span id="explorer-gesture-hint">↔ Drag across the chart to zoom</span><span id="explorer-scale-note"></span><button id="explorer-undo" title="Undo the last zoom">↶ Undo</button><button id="explorer-reset">↺ Reset zoom</button></div>
-      <div class="explorer-time"><div class="explorer-range-fields"><label for="explorer-start">From</label><select data-custom-select="true" id="explorer-start">${options}</select><span aria-hidden="true">—</span><label class="explorer-sr-only" for="explorer-end">To year</label><select data-custom-select="true" id="explorer-end">${options}</select><span class="explorer-range-count"></span></div><div class="explorer-presets" role="group" aria-label="Time range"><button id="range-all" data-years="all">All years</button><button id="range-10" data-years="10">10 years</button><button id="range-5" data-years="5">5 years</button><button id="range-3" data-years="3">3 years</button></div></div>
+      <div class="explorer-zoom-bar"><span id="explorer-gesture-hint">↔ Drag across the chart to zoom</span><span id="explorer-scale-note"></span><button id="explorer-undo" title="Undo the last zoom">↶ Undo</button><button id="explorer-reset" aria-label="Reset zoom" title="Show all years">↺ Reset</button></div>
+      <div class="explorer-time"><div class="explorer-range-fields"><label for="explorer-start">From</label><select data-custom-select="true" id="explorer-start">${options}</select><span aria-hidden="true">—</span><label class="explorer-sr-only" for="explorer-end">To year</label><select data-custom-select="true" id="explorer-end">${options}</select><span class="explorer-range-count"></span></div><div class="explorer-presets" role="group" aria-label="Time range"><button id="range-all" data-years="all">All</button><button id="range-10" data-years="10">10Y</button><button id="range-5" data-years="5">5Y</button><button id="range-3" data-years="3">3Y</button></div></div>
       <div id="explorer-navigator" aria-label="Zoom and move the visible year range"></div>
       <div class="explorer-source"><span>Source: <a href="${esc(dataset.source.url)}" target="_blank" rel="noreferrer">IMF · ${esc(dataset.source.dataset)} ↗</a><span id="explorer-source-unit"></span></span><span class="explorer-source-coverage">${dataset.period.start_year}–${dataset.period.end_year} · Reported years only</span></div><div class="explorer-rail"><p class="explorer-status" role="status"></p></div></div>`;
+    $('.explorer-toolbar').append($('.explorer-inspect-year'));
+    $('.explorer-time').append($('#explorer-undo'), $('#explorer-reset'));
     root.setAttribute('aria-busy', 'false');
     root.addEventListener('click', event => {
       const button = event.target.closest('button'); if (!button) return;
@@ -61,12 +63,19 @@
         const end = dataset.period.end_year;
         update({ start: button.dataset.years === 'all' ? dataset.period.start_year : Math.max(dataset.period.start_year, end - Number(button.dataset.years) + 1), end, year: end });
       } else if (button.dataset.focus) {
-        focus = focus === button.dataset.focus ? null : button.dataset.focus; paint({ animate: false });
+        focus = focus === button.dataset.focus ? null : button.dataset.focus;
+        root.querySelectorAll('[data-focus]').forEach(item => item.setAttribute('aria-pressed', String(focus === item.dataset.focus)));
+        chart.emphasize(focus, true);
       } else if (button.id === 'explorer-reset') resetRange();
       else if (button.id === 'explorer-undo') { const range = zoomHistory.pop(); if (range) update(range, { remember: false }); }
       else if (button.id === 'explorer-scale') update({ scale: state.scale === 'fit' ? 'zero' : 'fit' });
       else if (button.id === 'explorer-compare') chooseCountries();
     });
+    root.addEventListener('click', event => { if (event.target.closest('[data-action=png]')) chart.finish(); }, true);
+    root.addEventListener('pointerover', event => { const chip = event.target.closest('[data-focus]'); if (chip) chart.emphasize(chip.dataset.focus); });
+    root.addEventListener('pointerout', event => { if (event.target.closest('[data-focus]') && !event.relatedTarget?.closest?.('[data-focus]')) chart.emphasize(focus); });
+    root.addEventListener('focusin', event => { const chip = event.target.closest('[data-focus]'); if (chip) chart.emphasize(chip.dataset.focus); });
+    root.addEventListener('focusout', event => { if (event.target.closest('[data-focus]')) chart.emphasize(focus); });
     $('#explorer-metric').addEventListener('change', event => update({ metric: event.target.value }));
     $('#explorer-start').addEventListener('change', event => update({ start: +event.target.value }));
     $('#explorer-end').addEventListener('change', event => update({ end: +event.target.value, start: Math.min(state.start, +event.target.value), year: +event.target.value }));
@@ -117,9 +126,9 @@
     root.querySelectorAll('[data-years]').forEach(button => button.setAttribute('aria-pressed', String(state.end === dataset.period.end_year && state.start === (button.dataset.years === 'all' ? dataset.period.start_year : dataset.period.end_year - Number(button.dataset.years) + 1))));
     $('#explorer-reset').disabled = state.start === dataset.period.start_year && state.end === dataset.period.end_year;
     $('#explorer-undo').disabled = !zoomHistory.length;
-    $('#explorer-gesture-hint').textContent = state.view === 'line' ? '↔ Drag across the chart to zoom · Double-click to reset' : state.view === 'bar' ? 'Compare the selected year · Use the year selector above' : 'Exact values · Empty cells mean no reported or comparable value';
+    $('#explorer-gesture-hint').textContent = state.view === 'line' ? 'Drag to zoom · Double-click to reset' : state.view === 'bar' ? 'Compare the selected year · Use the year selector above' : 'Exact values · Empty cells mean no reported or comparable value';
     $('#explorer-source-unit').textContent = ` · ${metric.indicator} · ${data.unit}`;
-    const plotHost = $('#explorer-plot');
+    const plotHost = $('#explorer-plot'), wasHidden = plotHost.hidden;
     plotHost.hidden = state.view === 'table'; $('.explorer-table').hidden = state.view !== 'table';
     const fields = data.fields.map(field => ({ ...field, tableLabel: `${field.label} · ${metric.title} · ${data.unit}${state.mode === 'change' ? ` since ${state.start}` : ''}`, format: value => `${state.mode === 'change' ? signed(value) : number(value)}${state.mode === 'change' ? ' pp' : '%'}` }));
     chart = window.PSDPlot.render(plotHost, {
@@ -128,7 +137,9 @@
       fields: bar ? [{ key: 'value', label: `${metric.title} · ${state.year} · ${data.unit}`, format: value => `${number(value)}${state.mode === 'change' ? ' pp' : '%'}` }] : fields,
       rowColor: row => row.color, endLabels: true, showPoints: false, valueLabels: true, activeField: focus,
       selectedLabel: state.year, axisFormat: value => `${number(value)}${state.mode === 'change' ? '' : '%'}`,
-      height: plotHost.clientWidth < 600 ? 300 : 350, includeZero: bar || state.scale === 'zero', animate: animate && !live ? 190 : false,
+      height: plotHost.clientWidth < 600 ? 250 : 300, compact: true,
+      contextRows: bar ? undefined : data.contextRows,
+      includeZero: bar || state.scale === 'zero', animate: animate && !live && !wasHidden && state.view !== 'table' ? 280 : false,
       onSelect: row => { if (row.year) selectYear(row.year); },
       onInspect: row => readout(row?.year ?? state.year),
       onRangeSelect: bar ? undefined : range => update({ start: +range.start, end: +range.end, year: +range.end }),
@@ -140,7 +151,11 @@
       const overview = M.build(dataset, { ...state, start: dataset.period.start_year, end: dataset.period.end_year, mode: 'level' });
       navigator = window.PSDPlot.renderRange($('#explorer-navigator'), {
         rows: overview.rows, fields: overview.fields, start: state.start, end: state.end,
-        onChange: range => update(range, { live: true, animate: false }),
+        onChange: (range, viewport) => {
+          $('#explorer-start').value = range.start; $('#explorer-end').value = range.end;
+          $('.explorer-range-count').textContent = `${range.end - range.start + 1} years`;
+          chart.viewport(viewport.start, viewport.end);
+        },
         onCommit: rangeCommit,
         onCancel: () => { cancelAnimationFrame(frame); paint({ animate: false }); writeURL(); },
       });

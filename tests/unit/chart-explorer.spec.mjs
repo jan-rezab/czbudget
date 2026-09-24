@@ -52,6 +52,8 @@ test('drag zoom snaps to actual annual cells, in either drag direction', () => {
   assert.deepEqual(chart.rangeFromPixels(160, 450, 100, 400, 20), [3, 17]);
   assert.deepEqual(chart.rangeFromPixels(450, 160, 100, 400, 20), [3, 17]);
   assert.deepEqual(chart.rangeFromPixels(-100, 900, 100, 400, 20), [0, 19]);
+  assert.deepEqual(chart.rangeFromPixels(100, 500, 100, 400, 20, true), [0, 19]);
+  assert.deepEqual(chart.rangeFromPixels(300, 300, 100, 400, 1, true), [0, 0]);
 });
 test('panning clamps at both data boundaries without changing window length', () => {
   assert.deepEqual(chart.moveRange(2015, 2020, 10, 2005, 2024), [2019, 2024]);
@@ -62,4 +64,21 @@ test('a zoomed range rebases change on its exact first year and preserves gaps',
   const data = explorer.build(fixture, { countries: ['AAA'], start: 2021, end: 2023, mode: 'change' });
   assert.deepEqual(data.rows.map(row => row.AAA), [null, null, null]);
   assert.equal(explorer.normalize({ scale: 'zero' }, fixture).scale, 'zero');
+});
+
+
+test('fractional viewport positions are continuous without manufacturing observations', () => {
+  const p = { left: 50, plotWidth: 800, top: 24, plotHeight: 250, first: 2005, last: 2024, axis: { min: 30, max: 55 } };
+  assert.equal(chart.timeX(2024, { ...p, first: 2024, last: 2024 }), 450);
+  assert.ok(Math.abs(chart.timeX(2024, { ...p, first: 2023.999, last: 2024 }) - 450) < 1);
+  const half = { ...p, first: 2010.25 };
+  assert.ok(chart.timeX(2015, half) < chart.timeX(2015, p));
+  assert.ok(Math.abs(chart.timeX(2015, half) - chart.timeX(2015, { ...half, first: 2010.251 })) < 1);
+  const to = { ...p, first: 2020, axis: { min: 35, max: 55 } };
+  assert.deepEqual(chart.mixProjection(p, to, 0), p);
+  assert.deepEqual(chart.mixProjection(p, to, 1), to);
+  assert.equal(chart.mixProjection(p, to, .5).first, 2012.5);
+  const data = explorer.build(fixture, { countries: ['AAA'], start: 2022, end: 2023, mode: 'change' });
+  assert.deepEqual(data.contextRows.map(row => row.AAA), [40.125, null, 0, 45.235, null]);
+  assert.deepEqual(data.rows.map(row => row.year), [2022, 2023]);
 });

@@ -36,8 +36,8 @@
   }
   // Fractional years are viewport coordinates, never interpolated observations.
   function timeX(year, projection) {
-    const span = Math.max(1, projection.last - projection.first), center = (projection.first + projection.last) / 2;
-    return projection.left + (.5 + (Number(year) - center) / span) * projection.plotWidth;
+    const span = projection.last - projection.first;
+    return projection.left + (span === 0 ? .5 + Number(year) - projection.first : (Number(year) - projection.first) / span) * projection.plotWidth;
   }
   function valueY(value, projection) {
     return projection.top + (projection.axis.max - value) / (projection.axis.max - projection.axis.min) * projection.plotHeight;
@@ -160,8 +160,7 @@
     const selectedIndex = rows.findIndex(row => row.label === String(spec.selectedLabel));
     const marker = spec.type === 'bar' || selectedIndex < 0 ? '' : `<line class="psd-plot-selected" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height - bottom}"/><text class="psd-plot-selected-label" x="${x(selectedIndex)}" y="${top - 8}" text-anchor="middle">${escape(rows[selectedIndex].label)}</text>`;
     host.innerHTML = `${empty ? `<p class="psd-chart-empty">${escape(spec.emptyLabel || 'No reported values')}</p>` : ''}<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || fields.map(f => f.label).join(', '))}"><defs><clipPath id="${clipID}"><rect x="${left - 4}" y="${top - 4}" width="${plotWidth + 8}" height="${plotHeight + 8}"/></clipPath></defs>${axes}${references}${marker}${marks}${endLabels}<rect class="psd-plot-brush" y="${top}" height="${plotHeight}" hidden/><line class="psd-plot-guide" y1="${top}" y2="${height - bottom}" hidden/>${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
-    function emphasize(key = spec.activeField, persist = false) {
-      if (persist) spec.activeField = key;
+    function emphasize(key = spec.activeField) {
       for (const group of host.querySelectorAll('[data-mark-series],[data-end-series]')) {
         const own = group.dataset.markSeries || group.dataset.endSeries;
         group.style.opacity = key && own !== key ? '.14' : '1';
@@ -337,7 +336,6 @@
     // pair, or when an already-focused chart changes width on orientation.
     if (focusedPoint !== undefined) host.querySelectorAll('[data-point]')[Number(focusedPoint)]?.focus();
     return { data, accessor:data.accessor, emphasize, destroy: host.__psdChartCleanup,
-      finish() { cancelAnimationFrame(animationFrame); drawGeometry(geometry.projection); host.dataset.motionProgress = '1.000'; },
       viewport(start, end) {
         if (!timeSeries) return;
         cancelAnimationFrame(animationFrame);
@@ -384,12 +382,12 @@
       for (const [key, value] of [['start', start], ['end', end]]) {
         const handle = handles[key], percent = (value - min) / (max - min) * 100;
         handle.style.left = start === end ? `calc(${percent}% + ${key === 'start' ? -14 : 14}px)` : `${percent}%`;
-        handle.setAttribute('aria-valuemin', key === 'start' ? min : Math.round(start));
-        handle.setAttribute('aria-valuemax', key === 'start' ? Math.round(end) : max);
+        handle.setAttribute('aria-valuemin', key === 'start' ? min : start);
+        handle.setAttribute('aria-valuemax', key === 'start' ? end : max);
         handle.setAttribute('aria-valuenow', Math.round(value)); handle.setAttribute('aria-valuetext', String(Math.round(value)));
       }
-      selection.setAttribute('aria-valuemin', min); selection.setAttribute('aria-valuemax', Math.round(max - (end - start)));
-      selection.setAttribute('aria-valuenow', Math.round(start)); selection.setAttribute('aria-valuetext', `${Math.round(start)} to ${Math.round(end)}`);
+      selection.setAttribute('aria-valuemin', min); selection.setAttribute('aria-valuemax', max - (end - start));
+      selection.setAttribute('aria-valuenow', start); selection.setAttribute('aria-valuetext', `${start} to ${end}`);
       host.dataset.start = start; host.dataset.end = end;
     }
     function set(a, b, emit = false) {

@@ -9,7 +9,7 @@ production navigation entry.
   missing. Stock debt and annual flow measures have separate definitions.
 - `chart-explorer.js` owns the compact controls, inline country readout and source
   context. It mounts controls once, keeps the timeline attached during pointer
-  capture, and coalesces live range changes into animation frames. Trend and
+  capture, and updates SVG coordinates in place for fractional timeline movement. Trend and
   ranking use `PSDPlot`; the shared `PSDChart` rail supplies
   the exact table, CSV, attributed PNG and citation.
 - `lib/chart-renderer.js` adds opt-in end labels with collision handling,
@@ -17,7 +17,11 @@ production navigation entry.
   reusable range navigator supports dragging either edge, panning the selected
   window, clicking outside to recenter, and keyboard control. The main plot can
   brush-select a year range in either direction; double-click resets it. Line
-  geometry transitions in 190 ms, with live dragging applied immediately and
+  geometry, axes and direct labels transition together in 280 ms. Interrupted
+  transitions continue from the current projection. The full series remains clipped
+  behind the viewport so dragging can reveal years continuously; exact integer
+  years, tables and URL state commit on release. Single-year views show a point.
+  Live dragging is applied immediately and
   reduced-motion preferences respected. These interactions are opt-in.
   Existing consumers retain their defaults.
 - Country, metric, range, comparison year, view, axis scale and level/change mode survive
@@ -46,3 +50,10 @@ plot brushing, keyboard movement, reset/undo, reduced motion and exports in the
 existing cloud browser lane. Follow the machine-wide resource guard rules for
 local checks/previews. Structural release requires full exact-commit cloud
 verification; local browser verification is not a production release receipt.
+
+The compact direct labels align country names with exact values; long names wrap.
+Hovering a country label or focusing its legend button emphasizes its series.
+Image export finishes an in-flight transition before capturing the chart, keeping
+its geometry consistent with the exact published values. Timeline projection
+coordinates can be fractional; no fractional observations enter the accessor,
+table, CSV, tooltip or source data.

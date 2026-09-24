@@ -26,8 +26,8 @@
     return labels;
   }
   let chartID = 0;
-  function rangeFromPixels(a, b, left, width, count, endpointAligned = false) {
-    const at = value => Math.max(0, Math.min(count - 1, endpointAligned ? Math.round((value - left) / width * (count - 1)) : Math.floor((value - left) / width * count)));
+  function rangeFromPixels(a, b, left, width, count) {
+    const at = value => Math.max(0, Math.min(count - 1, Math.floor((value - left) / width * count)));
     return [Math.min(at(a), at(b)), Math.max(at(a), at(b))];
   }
   function moveRange(start, end, delta, min, max) {
@@ -36,8 +36,7 @@
   }
   // Fractional years are viewport coordinates, never interpolated observations.
   function timeX(year, projection) {
-    const span = Math.max(1, projection.last - projection.first), center = (projection.first + projection.last) / 2;
-    return projection.left + (.5 + (Number(year) - center) / span) * projection.plotWidth;
+    return projection.left + (Number(year) - projection.first + .5) / (projection.last - projection.first + 1) * projection.plotWidth;
   }
   function valueY(value, projection) {
     return projection.top + (projection.axis.max - value) / (projection.axis.max - projection.axis.min) * projection.plotHeight;
@@ -81,22 +80,20 @@
     host.__psdChartAccessor = data.accessor;
     host.classList.add('psd-shared-plot'); host.dataset.chartComponent = spec.type || 'line';
     const width = Math.max(300, Math.min(1120, host.clientWidth - 8));
-    const height = spec.compact && width < 600 ? Math.min(spec.height || 250, 250) : spec.height || (spec.type === 'bar' ? Math.max(260, rows.length * 48 + 90) : width < 600 ? 300 : 430);
+    const height = spec.height || (spec.type === 'bar' ? Math.max(260, rows.length * 48 + 90) : width < 600 ? 300 : 430);
     const directLabels = spec.endLabels && (!spec.type || spec.type === 'line') && width >= 680;
     const timeSeries = spec.contextRows && (!spec.type || spec.type === 'line');
     const context = timeSeries ? model({ ...spec, rows: spec.contextRows }) : data;
     const left = spec.type === 'bar' ? (width < 600 ? 100 : 170) : (spec.compact ? (width < 600 ? 42 : 48) : width < 600 ? 58 : 82), right = directLabels ? (spec.compact ? 185 : 155) : spec.type === 'bar' && spec.valueLabels ? 75 : 22, top = spec.compact ? 24 : 38, bottom = spec.compact ? 30 : 52;
     const plotWidth = width - left - right, plotHeight = height - top - bottom;
-    const x = i => timeSeries ? (rows.length === 1 ? left + plotWidth / 2 : left + i * plotWidth / (rows.length - 1)) : left + (i + .5) * plotWidth / Math.max(rows.length, 1);
+    const x = i => left + (i + .5) * plotWidth / Math.max(rows.length, 1);
     const y = value => top + (axis.max - value) / (axis.max - axis.min) * plotHeight;
     const format = (value, field, row) => value === null ? '—' : String(field.format ? field.format(value, row.raw) : spec.format ? spec.format(value, row.raw) : value);
     const number = new Intl.NumberFormat(spec.locale || 'en-GB', { maximumFractionDigits: 1, notation: 'compact' });
     const axisFormat = value => escape(spec.axisFormat ? spec.axisFormat(value) : number.format(value));
-    const displayTicks = timeSeries && spec.animate && previous ? [...new Set([...axis.ticks, ...previous.projection.axis.ticks])].sort((a, b) => a - b) : axis.ticks;
-    const grid = displayTicks.map(value => `<g data-y-tick="${value}"><line x1="${left}" x2="${width - right}" y1="${y(value)}" y2="${y(value)}"/><text x="${left - 10}" y="${y(value) + 4}" text-anchor="end">${axisFormat(value)}${spec.type === 'stacked' ? '%' : ''}</text></g>`).join('');
+    const grid = axis.ticks.map(value => `<g data-y-tick="${value}"><line x1="${left}" x2="${width - right}" y1="${y(value)}" y2="${y(value)}"/><text x="${left - 10}" y="${y(value) + 4}" text-anchor="end">${axisFormat(value)}${spec.type === 'stacked' ? '%' : ''}</text></g>`).join('');
     const tickEvery = Math.max(1, Math.ceil(rows.length / Math.max(2, Math.floor(plotWidth / 85))));
-    const yearRows = timeSeries ? context.rows : rows;
-    const years = yearRows.map((row, i) => timeSeries || i % tickEvery === 0 && (i < rows.length - Math.ceil(tickEvery / 2) || i === rows.length - 1) || i === rows.length - 1 ? `<text data-x-tick="${escape(row.label)}" x="${x(i)}" y="${height - (spec.compact ? 8 : 20)}" text-anchor="middle">${escape(row.label)}</text>` : '').join('');
+    const years = rows.map((row, i) => i % tickEvery === 0 && (i < rows.length - Math.ceil(tickEvery / 2) || i === rows.length - 1) || i === rows.length - 1 ? `<text data-x-tick="${escape(row.label)}" x="${x(i)}" y="${height - (spec.compact ? 8 : 20)}" text-anchor="middle">${escape(row.label)}</text>` : '').join('');
     const clipID = `psd-plot-clip-${++chartID}`;
     const geometry = { type: spec.type || 'line', series: {}, projection: { left, plotWidth, top, plotHeight, axis, first: Number(rows[0]?.label), last: Number(rows.at(-1)?.label), count: rows.length } };
     let marks = '', endLabels = '';
@@ -113,7 +110,7 @@
         }).join(' ');
         geometry.series[field.key || f] = points;
         const opacity = spec.activeField && spec.activeField !== field.key ? .18 : 1;
-        return `<g data-mark-series="${escape(field.key || f)}" opacity="${opacity}" clip-path="url(#${clipID})"><path data-series="${escape(field.key || f)}" class="psd-plot-line" stroke="${escape(field.color)}" stroke-dasharray="${escape(field.dash || '')}" d="${d}"/>` + (rows.map((row, i) => row.values[f] === null || (spec.showPoints === false && i !== rows.length - 1 && (rows[i - 1]?.values[f] != null || rows[i + 1]?.values[f] != null)) ? '' : `<circle data-series-point="${escape(field.key || f)}" data-label="${escape(row.label)}" fill="${escape(field.color)}" cx="${x(i)}" cy="${y(row.values[f])}" r="3.5"/>`).join('')) + '</g>';
+        return `<g opacity="${opacity}" clip-path="url(#${clipID})"><path data-series="${escape(field.key || f)}" class="psd-plot-line" stroke="${escape(field.color)}" stroke-dasharray="${escape(field.dash || '')}" d="${d}"/>` + (rows.map((row, i) => row.values[f] === null || (spec.showPoints === false && i !== rows.length - 1 && (rows[i - 1]?.values[f] != null || rows[i + 1]?.values[f] != null)) ? '' : `<circle data-series-point="${escape(field.key || f)}" data-label="${escape(row.label)}" fill="${escape(field.color)}" cx="${x(i)}" cy="${y(row.values[f])}" r="3.5"/>`).join('')) + '</g>';
       }).join('');
     } else if (spec.type !== 'bar') {
       const step = plotWidth / Math.max(rows.length, 1), barWidth = Math.min(42, step * .7);
@@ -135,17 +132,10 @@
         const last = rows.at(-1);
         return last.values[f] === null ? [] : [{ field, value: last.values[f], y: y(last.values[f]) }];
       }), top + 12, height - bottom - 10, spec.compact ? 25 : 38);
-      endLabels += labels.map(({ field, value, y: pointY, labelY }) => {
-        const name = String(field.label), wrap = spec.compact && name.length > 18;
-        const split = wrap ? Math.max(1, name.lastIndexOf(' ', 18)) : 0;
-        const first = wrap ? name.slice(0, split) : name;
-        const rest = name.slice(split + 1), second = rest.length > 20 ? rest.slice(0, 19) + '…' : rest;
-        const lx = width - right + 19;
-        return `<g data-end-series="${escape(field.key)}" data-label-wrap="${wrap}" opacity="${spec.activeField && spec.activeField !== field.key ? .18 : 1}" aria-label="${escape(name)}"><title>${escape(name)}</title><path d="M${x(rows.length - 1)},${pointY} L${width - right + 6},${labelY} L${width - right + 13},${labelY}" fill="none" stroke="${escape(field.color)}"/><text class="psd-plot-end-label" x="${lx}" y="${labelY + (spec.compact && !wrap ? 4 : -3)}">${escape(first)}${wrap ? `<tspan x="${lx}" dy="13">${escape(second)}</tspan>` : ''}<tspan class="psd-plot-end-value" x="${spec.compact ? width - 3 : lx}" ${spec.compact ? `y="${labelY + 4}" text-anchor="end"` : 'dy="15"'}>${escape(format(value, field, rows.at(-1)))}</tspan></text></g>`;
-      }).join('');
+      endLabels += labels.map(({ field, value, y: pointY, labelY }) => `<g data-end-series="${escape(field.key)}" opacity="${spec.activeField && spec.activeField !== field.key ? .18 : 1}"><path d="M${x(rows.length - 1)},${pointY} L${width - right + 6},${labelY} L${width - right + 13},${labelY}" fill="none" stroke="${escape(field.color)}"/><text class="psd-plot-end-label" x="${width - right + 19}" y="${labelY + (spec.compact ? 4 : -3)}">${escape(field.label)}<tspan class="psd-plot-end-value" x="${spec.compact ? width - 3 : width - right + 19}" ${spec.compact ? 'text-anchor="end"' : 'dy="15"'}>${escape(format(value, field, rows.at(-1)))}</tspan></text></g>`).join('');
     }
     const describe = row => `${row.label}. ${fields.map((field, f) => `${field.label}: ${format(row.values[f], field, row)}${spec.type === 'stacked' && row.shares[f] !== null ? ` (${number.format(row.shares[f])}%)` : ''}`).join('. ')}`;
-    let hits = rows.map((row, i) => `<rect class="psd-plot-hit" data-point="${i}" x="${timeSeries ? (i ? (x(i - 1) + x(i)) / 2 : left) : left + i * plotWidth / rows.length}" y="${top}" width="${timeSeries ? (i === rows.length - 1 ? width - right : (x(i) + x(i + 1)) / 2) - (i ? (x(i - 1) + x(i)) / 2 : left) : plotWidth / rows.length}" height="${plotHeight}" tabindex="${i ? -1 : 0}" role="button" aria-label="${escape(describe(row))}"/>`).join('');
+    let hits = rows.map((row, i) => `<rect class="psd-plot-hit" data-point="${i}" x="${left + i * plotWidth / rows.length}" y="${top}" width="${plotWidth / rows.length}" height="${plotHeight}" tabindex="${i ? -1 : 0}" role="button" aria-label="${escape(describe(row))}"/>`).join('');
     let axes = `<g class="psd-plot-grid">${grid}${years}<text x="${left}" y="20">${escape(spec.unit || '')}</text></g>`;
     if (spec.type === 'bar') {
       const rowHeight = plotHeight / Math.max(1, rows.length);
@@ -160,17 +150,6 @@
     const selectedIndex = rows.findIndex(row => row.label === String(spec.selectedLabel));
     const marker = spec.type === 'bar' || selectedIndex < 0 ? '' : `<line class="psd-plot-selected" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height - bottom}"/><text class="psd-plot-selected-label" x="${x(selectedIndex)}" y="${top - 8}" text-anchor="middle">${escape(rows[selectedIndex].label)}</text>`;
     host.innerHTML = `${empty ? `<p class="psd-chart-empty">${escape(spec.emptyLabel || 'No reported values')}</p>` : ''}<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || fields.map(f => f.label).join(', '))}"><defs><clipPath id="${clipID}"><rect x="${left - 4}" y="${top - 4}" width="${plotWidth + 8}" height="${plotHeight + 8}"/></clipPath></defs>${axes}${references}${marker}${marks}${endLabels}<rect class="psd-plot-brush" y="${top}" height="${plotHeight}" hidden/><line class="psd-plot-guide" y1="${top}" y2="${height - bottom}" hidden/>${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
-    function emphasize(key = spec.activeField, persist = false) {
-      if (persist) spec.activeField = key;
-      for (const group of host.querySelectorAll('[data-mark-series],[data-end-series]')) {
-        const own = group.dataset.markSeries || group.dataset.endSeries;
-        group.style.opacity = key && own !== key ? '.14' : '1';
-        const line = group.querySelector('.psd-plot-line');
-        if (line) line.style.strokeWidth = key === own ? '3' : '';
-      }
-    }
-    on(host, 'pointerover', event => { const label = event.target.closest('[data-end-series]'); if (label) emphasize(label.dataset.endSeries); });
-    on(host, 'pointerout', event => { if (event.target.closest('[data-end-series]') && !event.relatedTarget?.closest?.('[data-end-series]')) emphasize(); });
     const tooltip = host.querySelector('.psd-plot-tooltip'), guide = host.querySelector('.psd-plot-guide');
     let pinned = false, dragging = null;
     const brush = host.querySelector('.psd-plot-brush');
@@ -201,7 +180,7 @@
       });
       on(host, 'pointerup', e => {
         if (!dragging || e.pointerId !== dragging.id) return;
-        const drag = dragging, range = rangeFromPixels(drag.start, localX(e.clientX), left, plotWidth, rows.length, !!timeSeries);
+        const drag = dragging, range = rangeFromPixels(drag.start, localX(e.clientX), left, plotWidth, rows.length);
         host.__psdIgnoreClickUntil = performance.now() + 350;
         cancelDrag();
         if (drag.moved && range[0] !== range[1]) spec.onRangeSelect({ start: rows[range[0]].label, end: rows[range[1]].label });
@@ -264,10 +243,7 @@
           return { ...point, value, x: timeSeries ? timeX(point.label, projection) : point.x, y: valueY(value, projection) };
         });
       }
-      for (const path of paths) {
-        path.setAttribute('d', current.series[path.dataset.series].map(point => `${point.command}${point.x.toFixed(3)},${point.y.toFixed(3)}`).join(' '));
-        path.style.visibility = timeSeries && Math.abs(projection.last - projection.first) < .001 ? 'hidden' : '';
-      }
+      for (const path of paths) path.setAttribute('d', current.series[path.dataset.series].map(point => `${point.command}${point.x.toFixed(3)},${point.y.toFixed(3)}`).join(' '));
       for (const dot of dots) {
         const point = current.series[dot.dataset.seriesPoint]?.find(point => point.label === dot.dataset.label);
         if (point) { dot.setAttribute('cx', point.x); dot.setAttribute('cy', point.y); }
@@ -276,28 +252,16 @@
         const py = valueY(Number(tick.dataset.yTick), projection);
         tick.querySelector('line').setAttribute('y1', py); tick.querySelector('line').setAttribute('y2', py);
         tick.querySelector('text').setAttribute('y', py + 4);
-        const value = Number(tick.dataset.yTick), target = axis.ticks.includes(value) ? 1 : 0;
-        const origin = previous?.projection.axis.ticks.includes(value) ? 1 : 0;
-        tick.style.opacity = py < top - 1 || py > height - bottom + 1 ? '0' : String(origin + (target - origin) * progress);
+        tick.style.opacity = py < top - 1 || py > height - bottom + 1 ? '0' : '1';
       }
       if (timeSeries) for (const tick of xTicks) {
         const px = timeX(tick.dataset.xTick, projection); tick.setAttribute('x', px);
-        const year = Number(tick.dataset.xTick), every = Math.max(1, Math.ceil((projection.last - projection.first + 1) / Math.max(2, Math.floor(plotWidth / 85))));
-        const show = year === Math.round(projection.first) || year === Math.round(projection.last) || year % every === 0;
-        const nearEnd = year !== Math.round(projection.last) && Math.abs(year - projection.last) < every * .65;
-        const nearStart = year !== Math.round(projection.first) && Math.abs(year - projection.first) < every * .65;
-        tick.style.opacity = px < left || px > width - right || !show || nearEnd || nearStart ? '0' : '1';
+        tick.style.opacity = px < left || px > width - right ? '0' : '1';
       }
-      const endYear = timeSeries ? projection.last : Number(rows.at(-1)?.label);
+      const endYear = preview ? Math.round(projection.last) : Number(rows.at(-1)?.label);
       const labels = labelPositions(fields.flatMap(field => {
         const points = current.series[field.key];
-        let point = points?.find(item => Number(item.label) === endYear);
-        if (!point && timeSeries) {
-          const a = points?.find(item => Number(item.label) === Math.floor(endYear));
-          const b = points?.find(item => Number(item.label) === Math.ceil(endYear));
-          // Interpolate the leader's position along the drawn segment only. Gaps stay gaps.
-          if (a && b && b.command !== 'M') { const t = endYear - Math.floor(endYear); point = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
-        }
+        const point = points?.find(item => Number(item.label) === endYear);
         return point ? [{ field, point, y: point.y }] : [];
       }), top + 9, height - bottom - 10, spec.compact ? 25 : 38);
       for (const node of labelNodes) {
@@ -306,11 +270,9 @@
         const { point, labelY } = label;
         const anchorX = Math.max(left, Math.min(width - right, point.x));
         node.querySelector('path').setAttribute('d', `M${anchorX},${point.y} L${width - right + 6},${labelY} L${width - right + 13},${labelY}`);
-        node.querySelector('text').setAttribute('y', labelY + (spec.compact && node.dataset.labelWrap !== 'true' ? 4 : -3));
-        if (spec.compact) node.querySelector('.psd-plot-end-value').setAttribute('y', labelY + 4);
+        node.querySelector('text').setAttribute('y', labelY + (spec.compact ? 4 : -3));
         // Keep exact published values in the DOM; never print interpolated animation values.
-        node.querySelector('.psd-plot-end-value').style.visibility = preview ? 'hidden' : '';
-        node.querySelector('.psd-plot-end-value').style.opacity = String(progress);
+        node.querySelector('tspan').style.visibility = preview ? 'hidden' : '';
       }
       if (selectedLine && selectedText && timeSeries) {
         const px = timeX(spec.selectedLabel, projection);
@@ -336,8 +298,7 @@
     // Responsive redraw must not drop keyboard focus between a focus/Enter
     // pair, or when an already-focused chart changes width on orientation.
     if (focusedPoint !== undefined) host.querySelectorAll('[data-point]')[Number(focusedPoint)]?.focus();
-    return { data, accessor:data.accessor, emphasize, destroy: host.__psdChartCleanup,
-      finish() { cancelAnimationFrame(animationFrame); drawGeometry(geometry.projection); host.dataset.motionProgress = '1.000'; },
+    return { data, accessor:data.accessor, destroy: host.__psdChartCleanup,
       viewport(start, end) {
         if (!timeSeries) return;
         cancelAnimationFrame(animationFrame);
@@ -384,12 +345,12 @@
       for (const [key, value] of [['start', start], ['end', end]]) {
         const handle = handles[key], percent = (value - min) / (max - min) * 100;
         handle.style.left = start === end ? `calc(${percent}% + ${key === 'start' ? -14 : 14}px)` : `${percent}%`;
-        handle.setAttribute('aria-valuemin', key === 'start' ? min : Math.round(start));
-        handle.setAttribute('aria-valuemax', key === 'start' ? Math.round(end) : max);
+        handle.setAttribute('aria-valuemin', key === 'start' ? min : start);
+        handle.setAttribute('aria-valuemax', key === 'start' ? end : max);
         handle.setAttribute('aria-valuenow', Math.round(value)); handle.setAttribute('aria-valuetext', String(Math.round(value)));
       }
-      selection.setAttribute('aria-valuemin', min); selection.setAttribute('aria-valuemax', Math.round(max - (end - start)));
-      selection.setAttribute('aria-valuenow', Math.round(start)); selection.setAttribute('aria-valuetext', `${Math.round(start)} to ${Math.round(end)}`);
+      selection.setAttribute('aria-valuemin', min); selection.setAttribute('aria-valuemax', max - (end - start));
+      selection.setAttribute('aria-valuenow', start); selection.setAttribute('aria-valuetext', `${start} to ${end}`);
       host.dataset.start = start; host.dataset.end = end;
     }
     function set(a, b, emit = false) {

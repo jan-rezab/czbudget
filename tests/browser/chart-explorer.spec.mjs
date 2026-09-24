@@ -44,23 +44,32 @@ test('country picker preserves a readable maximum and restores focus', async ({ 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });
 
-test('timeline changes the plot during drag, preserves controls, and commits URL state on release', async ({ page }) => {
+test('timeline moves existing geometry continuously and commits exact years only on release', async ({ page }) => {
   await ready(page);
   await page.locator('#range-5').click();
   expect(await range(page)).toEqual([2020, 2024]);
+  const clip = await page.locator('#explorer-plot clipPath').getAttribute('id');
+  const before = await page.locator('#explorer-plot [data-series=CZE]').getAttribute('d');
   const start = page.locator('.psd-range-handle[data-drag=start]');
   await start.scrollIntoViewIfNeeded();
   const box = await start.boundingBox();
   const track = await page.locator('.psd-range-track').boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + 25);
   await page.mouse.down();
-  await page.mouse.move(track.x + track.width * 10 / 19, box.y + 25, { steps: 12 });
+  await page.mouse.move(track.x + track.width * 10.2 / 19, box.y + 25, { steps: 12 });
   await expect(page.locator('#explorer-start')).toHaveValue('2015');
-  await expect(page.locator('#explorer-plot [data-point]')).toHaveCount(10);
+  await expect(page.locator('#explorer-plot clipPath')).toHaveAttribute('id', clip);
+  expect(await page.locator('#explorer-plot [data-series=CZE]').getAttribute('d')).not.toEqual(before);
+  const continuousStart = Number(await page.locator('#explorer-plot').getAttribute('data-preview-start'));
+  expect(continuousStart).toBeGreaterThan(2015);
+  expect(continuousStart).toBeLessThan(2015.5);
+  // The exact table/accessor and hit targets are replaced only after release.
+  await expect(page.locator('#explorer-plot [data-point]')).toHaveCount(5);
   // The handle remains connected and captured while the main plot updates.
   await expect(page.locator('#explorer-navigator')).toHaveAttribute('data-dragging', '');
   await page.mouse.up();
   await expect(page).toHaveURL(/start=2015/);
+  await expect(page.locator('#explorer-plot [data-point]')).toHaveCount(10);
   await expect(page.locator('#explorer-navigator')).not.toHaveAttribute('data-dragging', '');
   await page.locator('#explorer-undo').click();
   expect(await range(page)).toEqual([2020, 2024]);
@@ -96,4 +105,23 @@ test('keyboard range movement keeps window width, table rows and reduced-motion 
   await page.locator('#view-table').click();
   await expect(page.locator('.psd-chart-table tbody tr')).toHaveCount(4);
   await expect(page.locator('.psd-chart-table tbody tr').first()).toContainText('2020');
+});
+
+
+test('line motion keeps complete context and animates axes and direct labels with the viewport', async ({ page }) => {
+  await ready(page);
+  const oldAxis = await page.locator('[data-y-tick="40"] line').getAttribute('y1');
+  const oldLabel = await page.locator('[data-end-series=CZE] text').getAttribute('y');
+  await page.locator('#range-5').click();
+  await expect(page.locator('#explorer-plot')).toHaveAttribute('data-motion-progress', '1.000');
+  expect(await page.locator('[data-y-tick="40"] line').getAttribute('y1')).not.toEqual(oldAxis);
+  expect(await page.locator('[data-end-series=CZE] text').getAttribute('y')).not.toEqual(oldLabel);
+  // Earlier points remain in the clipped path so zooming out reveals continuous geometry.
+  const path = await page.locator('[data-series=CZE]').getAttribute('d');
+  expect(path.match(/[ML]/g)).toHaveLength(20);
+  await page.locator('#explorer-reset').click();
+  await expect(page.locator('#explorer-plot')).toHaveAttribute('data-motion-progress', '1.000');
+  await page.locator('#explorer-start').selectOption('2024');
+  await expect(page.locator('#explorer-plot [data-point]')).toHaveCount(1);
+  expect(await page.locator('[data-series=CZE]').getAttribute('d')).not.toMatch(/NaN|Infinity/);
 });
