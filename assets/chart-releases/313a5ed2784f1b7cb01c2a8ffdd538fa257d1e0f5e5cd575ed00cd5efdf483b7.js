@@ -301,18 +301,17 @@
       const previous = drag; drag = null;
       if (host.hasPointerCapture?.(previous.id)) host.releasePointerCapture(previous.id);
       host.removeAttribute('data-dragging');
-      if (cancel) { set(previous.original.start, previous.original.end, true); spec.onCancel?.(); }
-      else spec.onCommit?.({ start, end }, previous.original);
+      if (cancel) { set(previous.start, previous.end, true); spec.onCancel?.(); }
+      else spec.onCommit?.({ start, end }, { start: previous.start, end: previous.end });
     }
     on(host, 'pointerdown', event => {
       if (event.button !== 0 || !event.isPrimary || !event.target.closest('.psd-range-track')) return;
       const mode = event.target.closest('[data-drag]')?.dataset.drag || 'jump';
-      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start, end, original: { start, end }, mode, moved: false };
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start, end, mode, moved: false };
       host.setPointerCapture(event.pointerId); host.setAttribute('data-dragging', '');
       if (mode === 'jump') {
         const box = track.getBoundingClientRect(), year = min + (event.clientX - box.left) / box.width * (max - min);
         set(...moveRange(start, end, Math.round(year - (start + end) / 2), min, max), true);
-        drag.start = start; drag.end = end;
       }
     });
     on(host, 'pointermove', event => {

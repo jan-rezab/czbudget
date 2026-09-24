@@ -118,6 +118,7 @@
         const last = rows.at(-1);
         return last.values[f] === null ? [] : [{ field, value: last.values[f], y: y(last.values[f]) }];
       }), top + 12, height - bottom - 16, 38);
+      endLabels += `<text class="psd-plot-end-label" x="${width - right + 18}" y="${top - 12}">${escape(rows.at(-1).label)}</text>`;
       endLabels += labels.map(({ field, value, y: pointY, labelY }) => `<g opacity="${spec.activeField && spec.activeField !== field.key ? .18 : 1}"><path d="M${x(rows.length - 1)},${pointY} L${width - right + 5},${labelY} L${width - right + 12},${labelY}" fill="none" stroke="${escape(field.color)}"/><text class="psd-plot-end-label" x="${width - right + 18}" y="${labelY - 3}">${escape(String(field.label).length > 20 ? String(field.label).slice(0, 19) + '…' : field.label)}<tspan x="${width - right + 18}" dy="15">${escape(format(value, field, rows.at(-1)))}</tspan></text></g>`).join('');
     }
     const describe = row => `${row.label}. ${fields.map((field, f) => `${field.label}: ${format(row.values[f], field, row)}${spec.type === 'stacked' && row.shares[f] !== null ? ` (${number.format(row.shares[f])}%)` : ''}`).join('. ')}`;
@@ -278,12 +279,11 @@
     const handles = { start: host.querySelector('[data-drag=start]'), end: host.querySelector('[data-drag=end]') };
     function draw() {
       const a = (start - min) / (max - min) * 100, b = (end - min) / (max - min) * 100;
-      selection.style.left = start === end ? `calc(${a}% - 14px)` : `${a}%`; selection.style.width = start === end ? '28px' : `${b - a}%`;
+      selection.style.left = `${a}%`; selection.style.width = `${b - a}%`;
       host.querySelector('.psd-range-before').style.width = `${a}%`;
       host.querySelector('.psd-range-after').style.width = `${100 - b}%`;
       for (const [key, value] of [['start', start], ['end', end]]) {
-        const handle = handles[key], percent = (value - min) / (max - min) * 100;
-        handle.style.left = start === end ? `calc(${percent}% + ${key === 'start' ? -14 : 14}px)` : `${percent}%`;
+        const handle = handles[key]; handle.style.left = `${(value - min) / (max - min) * 100}%`;
         handle.setAttribute('aria-valuemin', key === 'start' ? min : start);
         handle.setAttribute('aria-valuemax', key === 'start' ? end : max);
         handle.setAttribute('aria-valuenow', value); handle.setAttribute('aria-valuetext', String(value));
@@ -301,18 +301,17 @@
       const previous = drag; drag = null;
       if (host.hasPointerCapture?.(previous.id)) host.releasePointerCapture(previous.id);
       host.removeAttribute('data-dragging');
-      if (cancel) { set(previous.original.start, previous.original.end, true); spec.onCancel?.(); }
-      else spec.onCommit?.({ start, end }, previous.original);
+      if (cancel) { set(previous.start, previous.end, true); spec.onCancel?.(); }
+      else spec.onCommit?.({ start, end }, { start: previous.start, end: previous.end });
     }
     on(host, 'pointerdown', event => {
       if (event.button !== 0 || !event.isPrimary || !event.target.closest('.psd-range-track')) return;
       const mode = event.target.closest('[data-drag]')?.dataset.drag || 'jump';
-      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start, end, original: { start, end }, mode, moved: false };
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, start, end, mode, moved: false };
       host.setPointerCapture(event.pointerId); host.setAttribute('data-dragging', '');
       if (mode === 'jump') {
         const box = track.getBoundingClientRect(), year = min + (event.clientX - box.left) / box.width * (max - min);
         set(...moveRange(start, end, Math.round(year - (start + end) / 2), min, max), true);
-        drag.start = start; drag.end = end;
       }
     });
     on(host, 'pointermove', event => {

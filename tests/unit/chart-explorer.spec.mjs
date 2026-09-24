@@ -13,7 +13,7 @@ const fixture = {
 };
 test('unknown URL state is bounded, deduplicated and restricted to known metrics', () => {
   const state = explorer.normalize({ start: 1990, end: 2099, year: 3000, countries: 'AAA,AAA,NOTREAL,BBB', metric: '__proto__', view: 'bad', mode: 'bad' }, fixture);
-  assert.deepEqual(state, { start: 2020, end: 2024, year: 2024, countries: ['AAA', 'BBB'], metric: 'expenditure_pct_gdp', mode: 'level', view: 'line' });
+  assert.deepEqual(state, { start: 2020, end: 2024, year: 2024, countries: ['AAA', 'BBB'], metric: 'expenditure_pct_gdp', mode: 'level', view: 'line', scale: 'fit' });
 });
 test('estimates, missing years and numeric strings never become actual observations', () => {
   assert.equal(explorer.observation(fixture, 'AAA', 'expenditure_pct_gdp', 2024), null);
@@ -47,4 +47,19 @@ test('direct labels remain separated when endpoints coincide near a plot edge', 
   assert.ok(labels[0].labelY >= 40);
   assert.ok(labels.at(-1).labelY <= 320);
   for (let i = 1; i < labels.length; i++) assert.ok(labels[i].labelY - labels[i - 1].labelY >= 38);
+});
+test('drag zoom snaps to actual annual cells, in either drag direction', () => {
+  assert.deepEqual(chart.rangeFromPixels(160, 450, 100, 400, 20), [3, 17]);
+  assert.deepEqual(chart.rangeFromPixels(450, 160, 100, 400, 20), [3, 17]);
+  assert.deepEqual(chart.rangeFromPixels(-100, 900, 100, 400, 20), [0, 19]);
+});
+test('panning clamps at both data boundaries without changing window length', () => {
+  assert.deepEqual(chart.moveRange(2015, 2020, 10, 2005, 2024), [2019, 2024]);
+  assert.deepEqual(chart.moveRange(2010, 2015, -10, 2005, 2024), [2005, 2010]);
+  assert.deepEqual(chart.moveRange(2010, 2015, 2, 2005, 2024), [2012, 2017]);
+});
+test('a zoomed range rebases change on its exact first year and preserves gaps', () => {
+  const data = explorer.build(fixture, { countries: ['AAA'], start: 2021, end: 2023, mode: 'change' });
+  assert.deepEqual(data.rows.map(row => row.AAA), [null, null, null]);
+  assert.equal(explorer.normalize({ scale: 'zero' }, fixture).scale, 'zero');
 });
