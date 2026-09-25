@@ -40,3 +40,25 @@ test('plot, tooltip table and CSV rail share one canonical accessor',()=>{
   assert.deepEqual(data.accessor.rows(),[{label:'2024',revenue:10,expense:null}]);
   assert.equal(data.rows[0].raw.year,2024);
 });
+
+test('compact plots preserve accessible country names without a crowded end-label gutter', () => {
+  const originalDocument = globalThis.document;
+  globalThis.document = { activeElement: null, querySelector: () => ({}) };
+  const stopAfterMarkup = Symbol('capture rendered markup');
+  function markup(clientWidth) {
+    let html;
+    const host = { clientWidth, contains: () => false, classList: { add() {} }, dataset: {}, set innerHTML(value) { html = value; throw stopAfterMarkup; } };
+    try {
+      charts.render(host, { type: 'line', compact: true, endLabels: true, rows: [{ year: 2020, CZE: 40 }, { year: 2024, CZE: 42.858 }], fields: [{ key: 'CZE', label: 'Czechia' }] });
+    } catch (error) { if (error !== stopAfterMarkup) throw error; }
+    return html;
+  }
+  try {
+    const mobile = markup(393), desktop = markup(1120);
+    assert.doesNotMatch(mobile, /data-end-series=/);
+    assert.match(mobile, /aria-label="2024\. Czechia: 42\.858"/);
+    assert.match(mobile, /data-series="CZE"/);
+    assert.match(desktop, /data-end-series="CZE"/);
+    assert.match(desktop, /Czechia/);
+  } finally { globalThis.document = originalDocument; }
+});

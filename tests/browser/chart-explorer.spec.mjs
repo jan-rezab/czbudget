@@ -109,14 +109,20 @@ test('keyboard range movement keeps window width, table rows and reduced-motion 
 });
 
 
-test('line motion keeps complete context and animates axes and direct labels with the viewport', async ({ page }) => {
+test('line motion keeps complete context and animates axes and direct labels with the viewport', async ({ page, isMobile }) => {
   await ready(page);
   const oldAxis = await page.locator('[data-y-tick="40"] line').getAttribute('y1');
-  const oldLabel = await page.locator('[data-end-series=CZE] text').getAttribute('y');
+  // Compact screens use the full country names in the readout instead of end labels.
+  if (isMobile) {
+    await expect(page.locator('[data-end-series]')).toHaveCount(0);
+    await expect(page.locator('.explorer-chip-name')).toHaveText(['Czechia', 'Germany', 'United Kingdom', 'United States']);
+  }
+  const oldLabel = isMobile ? null : await page.locator('[data-end-series=CZE] text').getAttribute('y');
   await page.locator('#range-5').click();
   await expect(page.locator('#explorer-plot')).toHaveAttribute('data-motion-progress', '1.000');
   expect(await page.locator('[data-y-tick="40"] line').getAttribute('y1')).not.toEqual(oldAxis);
-  expect(await page.locator('[data-end-series=CZE] text').getAttribute('y')).not.toEqual(oldLabel);
+  if (isMobile) await expect(page.locator('#focus-CZE .explorer-chip-value')).toHaveText('42.858%');
+  else expect(await page.locator('[data-end-series=CZE] text').getAttribute('y')).not.toEqual(oldLabel);
   // Earlier points remain in the clipped path so zooming out reveals continuous geometry.
   const path = await page.locator('[data-series=CZE]').getAttribute('d');
   expect(path.match(/[ML]/g)).toHaveLength(20);
