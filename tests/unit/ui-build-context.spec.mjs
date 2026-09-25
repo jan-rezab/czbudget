@@ -17,7 +17,8 @@ test("UI packaging restores only tracked inputs omitted by a sparse checkout", a
     mkdirSync(join(root, "data"));
     writeFileSync(join(root, "Dockerfile"), "FROM node:24\n");
     writeFileSync(join(root, "assets", "chart.js"), "export const value = 1;\n");
-    writeFileSync(join(root, "data", "country.json"), '{"country":"DEU"}\n');
+    const countryJSON = JSON.stringify({ country: 'DEU', synthetic: 'x'.repeat(2 * 1024 * 1024) });
+    writeFileSync(join(root, "data", "country.json"), countryJSON);
     writeFileSync(join(root, "assets", "ignored.js"), "should not be packaged\n");
     execFileSync("git", ["-C", root, "add", "Dockerfile", "assets/chart.js", "data/country.json"]);
     execFileSync("git", ["-C", root, "-c", "user.name=Contract Test", "-c", "user.email=contract@example.com", "commit", "-qm", "fixture"]);
@@ -30,7 +31,7 @@ test("UI packaging restores only tracked inputs omitted by a sparse checkout", a
     }), 3);
     assert.equal(readFileSync(join(destination, "Dockerfile"), "utf8"), "FROM node:24\n");
     assert.equal(readFileSync(join(destination, "assets", "chart.js"), "utf8"), "export const value = 1;\n");
-    assert.equal(readFileSync(join(destination, "data", "country.json"), "utf8"), '{"country":"DEU"}\n');
+    assert.equal(readFileSync(join(destination, "data", "country.json"), "utf8"), countryJSON);
     assert.throws(() => readFileSync(join(destination, "assets", "ignored.js")), { code: "ENOENT" });
     await assert.rejects(copyTrackedContext({
       root, destination: join(root, "invalid"), files: ["data/not-tracked.json"], directories: [],

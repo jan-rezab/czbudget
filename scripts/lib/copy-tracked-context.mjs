@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { cp, mkdir, writeFile } from "node:fs/promises";
+import { cp, mkdir, open } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 export async function copyTrackedContext({ root, destination, files, directories, revision = "HEAD" }) {
@@ -20,7 +20,12 @@ export async function copyTrackedContext({ root, destination, files, directories
       if (error?.code !== "ENOENT") throw error;
       // A clean sparse checkout can omit a tracked input. Read the exact Git
       // blob instead of submitting a partial UI context or downloading data.
-      await writeFile(target, execFileSync("git", ["show", `${revision}:${path}`], { cwd: root }));
+      const output = await open(target, 'w');
+      try {
+        execFileSync("git", ["show", `${revision}:${path}`], { cwd: root, stdio: ['ignore', output.fd, 'pipe'] });
+      } finally {
+        await output.close();
+      }
     }
   }
   return tracked.size;
