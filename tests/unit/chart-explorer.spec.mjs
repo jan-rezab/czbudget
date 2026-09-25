@@ -42,6 +42,34 @@ test('ranking stays descending with missing values last, without a stale value f
   const data = explorer.build(fixture, { countries: ['AAA', 'BBB'], year: 2024 });
   assert.deepEqual(data.snapshot.map(row => [row.key, row.plotted]), [['BBB', 32], ['AAA', null]]);
 });
+test('the initial range follows expanded coverage instead of old fiscal dates', () => {
+  const expanded = { ...fixture, period: { start_year: 1980, end_year: 2025 } };
+  const state = explorer.normalize(explorer.defaults, expanded);
+  assert.equal(state.start, 1980);
+  assert.equal(state.end, 2025);
+  assert.equal(state.year, 2025);
+  assert.equal(explorer.normalize({ ...explorer.defaults, start: 2010, end: 2015 }, expanded).end, 2015);
+});
+test('trade uses USD and loaded observations, with gaps preserved in comparison and exports', () => {
+  const trade = {
+    kind: 'trade', period: { start_year: 2013, end_year: 2025 },
+    metrics: { exports_usd: { title: 'Goods exports' } }, countries: fixture.countries,
+    series: [{ country_code: 'AAA', metrics: { exports_usd: { values: [
+      { year: 2013, value: 1000000000.125, status: 'loaded' },
+      { year: 2024, value: 999, status: 'queued' },
+      { year: 2025, value: 1600000000.25, status: 'loaded' },
+    ] } } }],
+  };
+  const data = explorer.build(trade, { ...explorer.defaults, countries: ['AAA'] });
+  assert.equal(data.state.metric, 'exports_usd');
+  assert.equal(data.rows.length, 13);
+  assert.equal(data.unit, 'Current USD');
+  assert.equal(data.rows[0].AAA, 1000000000.125);
+  assert.equal(data.rows.at(-2).AAA, null);
+  assert.equal(data.snapshot[0].change, 600000000.125);
+  const exported = chart.model({ rows: data.rows, fields: data.fields }).accessor.rows();
+  assert.equal(exported.at(-1).AAA, 1600000000.25);
+});
 test('direct labels remain separated when endpoints coincide near a plot edge', () => {
   const labels = chart.labelPositions([{ y: 300 }, { y: 300 }, { y: 301 }, { y: 302 }], 40, 320, 38);
   assert.ok(labels[0].labelY >= 40);
