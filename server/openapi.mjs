@@ -77,6 +77,7 @@ export const openapi = {
     "/api/v1": { get: operation("API index", "Returns API version, release, and documentation links.", ["Discovery"]) },
     "/api/v1/datasets": { get: operation("List datasets", "Lists every dataset represented in API v1 with its schema version and generation time.", ["Discovery"]) },
     "/api/v1/process-log/deployments": { get: operation("List deployment receipts", "Returns append-only deployed and skipped Cloud Build events, including Git SHA, PR when recorded, build ID, immutable image digest and linked data-release IDs.", ["Discovery"]) },
+    "/api/v1/process-log/data-runs": { get: operation("List data-run receipts", "Returns verified data-plane run events with separate processing and publication states; a successful build alone does not imply publication.", ["Discovery"]) },
     "/api/v1/datasets/{dataset}": { get: operation("Get dataset metadata", "Returns provenance and methodology metadata without returning the full bulk artifact.", ["Discovery"], [{ name: "dataset", in: "path", required: true, schema: { type: "string" } }]) },
     "/api/v1/countries": { get: operation("List countries", "Lists all published country profiles and module coverage.", ["Countries"]) },
     "/api/v1/countries/{country}": { get: operation("Get country profile", "Returns profile metadata, module coverage, and official sources.", ["Countries"], [country]) },
