@@ -110,3 +110,12 @@ test('fractional viewport positions are continuous without manufacturing observa
   assert.deepEqual(data.contextRows.map(row => row.AAA), [40.125, null, 0, 45.235, null]);
   assert.deepEqual(data.rows.map(row => row.year), [2022, 2023]);
 });
+
+test('fiscal metadata arrays do not replace the supported percentage-of-GDP measures', () => {
+  const fiscal = { ...fixture, metrics: [{ metric_code: 'revenue_pct_gdp', unit: 'pct_gdp' }, { metric_code: 'nominal_gdp_usd_bn', unit: 'usd_bn' }] };
+  const data = explorer.build(fiscal, { ...explorer.defaults, countries: ['AAA'], year: 2023 });
+  assert.equal(data.state.metric, 'expenditure_pct_gdp');
+  assert.equal(data.snapshot[0].value, 45.235);
+  assert.equal(explorer.metricsFor(fiscal).expenditure_pct_gdp.title, 'Government spending');
+  assert.equal(explorer.metricsFor(fiscal).nominal_gdp_usd_bn, undefined);
+});
