@@ -71,11 +71,11 @@ test('timeline moves existing geometry continuously and commits exact years only
   await expect(page).toHaveURL(/start=2015/);
   await expect(page.locator('#explorer-plot [data-point]')).toHaveCount(10);
   await expect(page.locator('#explorer-navigator')).not.toHaveAttribute('data-dragging', '');
-  await page.locator('#explorer-undo').click();
+  await page.locator('#range-5').click();
   expect(await range(page)).toEqual([2020, 2024]);
 });
 
-test('plot brush zooms without triggering a point click; undo and double-click restore ranges', async ({ page }) => {
+test('plot brush zooms without triggering a point click; All and double-click restore ranges', async ({ page }) => {
   await ready(page);
   await page.locator('#explorer-plot').scrollIntoViewIfNeeded();
   const a = await page.locator('#explorer-plot [data-point="5"]').boundingBox();
@@ -87,7 +87,7 @@ test('plot brush zooms without triggering a point click; undo and double-click r
   await page.mouse.up();
   expect(await range(page)).toEqual([2010, 2017]);
   await expect(page.locator('#explorer-year')).toHaveValue('2017');
-  await page.locator('#explorer-undo').click();
+  await page.locator('#range-all').click();
   expect(await range(page)).toEqual([2005, 2024]);
   await page.locator('#range-3').click();
   await page.locator('#explorer-plot [data-point="1"]').dblclick();
@@ -119,7 +119,7 @@ test('line motion keeps complete context and animates axes and direct labels wit
   // Earlier points remain in the clipped path so zooming out reveals continuous geometry.
   const path = await page.locator('[data-series=CZE]').getAttribute('d');
   expect(path.match(/[ML]/g)).toHaveLength(20);
-  await page.locator('#explorer-reset').click();
+  await page.locator('#range-all').click();
   await expect(page.locator('#explorer-plot')).toHaveAttribute('data-motion-progress', '1.000');
   await page.locator('#explorer-start').selectOption('2024');
   await expect(page.locator('#explorer-plot [data-point]')).toHaveCount(1);

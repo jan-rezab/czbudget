@@ -11,7 +11,6 @@
   const swatch = field => `<i class="explorer-swatch ${field.dash ? 'dashed' : ''}" style="--series-color:${field.color}" aria-hidden="true"></i>`;
   const $ = selector => root.querySelector(selector);
   let dataset, state, controller, chart, navigator, currentData, focus = null, frame = 0, navigatorKey = '', legendKey = '';
-  const zoomHistory = [];
   const trade = () => dataset.kind === 'trade';
   const compactUSD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 2 });
   const valueLabel = (value, change = false) => value === null ? '—' : trade()
@@ -24,25 +23,17 @@
     return Object.fromEntries(keys.map(key => [key, hash.get(`${slug}.${key}`) ?? query.get(key)]).filter(([, value]) => value !== null));
   }
   function writeURL() { controller?.writeState({ ...state, countries: state.countries.join(',') }); }
-  function rememberRange(range) {
-    if (range.start !== state.start || range.end !== state.end) {
-      zoomHistory.push({ start: range.start, end: range.end });
-      if (zoomHistory.length > 30) zoomHistory.shift();
-    }
-  }
   function update(patch, options = {}) {
-    const previous = state;
     state = M.normalize({ ...state, ...patch }, dataset);
-    if (options.remember !== false && !options.live) rememberRange(previous);
     cancelAnimationFrame(frame);
     if (options.live && !document.hidden) frame = requestAnimationFrame(() => paint({ live: true, animate: false }));
     else paint({ live: !!options.live, animate: options.animate !== false });
     if (!options.live) writeURL();
   }
-  function rangeCommit(range, previous) {
+  function rangeCommit(range) {
     cancelAnimationFrame(frame);
     state = M.normalize({ ...state, ...range }, dataset);
-    rememberRange(previous); paint({ animate: true }); writeURL();
+    paint({ animate: true }); writeURL();
     $('.explorer-status').textContent = '';
   }
   function resetRange() { update({ start: dataset.period.start_year, end: dataset.period.end_year, year: dataset.period.end_year }); }
@@ -54,12 +45,10 @@
       <div class="explorer-toolbar"><div class="explorer-segment" role="group" aria-label="Chart view"><button id="view-line" data-view="line">Trend</button><button id="view-bar" data-view="bar">Bars</button><button id="view-table" data-view="table">Table</button></div><div class="explorer-segment explorer-measure-toggle" role="group" aria-label="Comparison measure"><button id="mode-level" data-mode="level">${trade() ? 'Trade value' : 'Share of GDP'}</button><button id="mode-change" data-mode="change">Change</button></div><button class="explorer-scale" id="explorer-scale" title="Fit the vertical axis to the visible values. Bars always start at zero.">↕ Fit y-axis</button><button class="explorer-compare" id="explorer-compare">+ Countries</button></div>
       <div class="explorer-readout"><div class="explorer-chips"></div><div class="explorer-inspect-year"><span>Year</span><select data-custom-select="true" id="explorer-year" aria-label="Comparison year">${options}</select><span id="explorer-hover-year" hidden></span></div></div>
       <div class="explorer-object"><div class="explorer-body"><div class="explorer-plot-wrap"><div id="explorer-plot" class="explorer-plot"></div><div class="explorer-table" hidden></div></div></div>
-      <div class="explorer-zoom-bar"><span id="explorer-gesture-hint">↔ Drag across the chart to zoom</span><span id="explorer-scale-note"></span><button id="explorer-undo" title="Undo the last zoom">↶ Undo</button><button id="explorer-reset" aria-label="Reset zoom" title="Show all years">↺ Reset</button></div>
       <div class="explorer-time"><div class="explorer-range-fields"><label for="explorer-start">From</label><select data-custom-select="true" id="explorer-start">${options}</select><span aria-hidden="true">—</span><label class="explorer-sr-only" for="explorer-end">To year</label><select data-custom-select="true" id="explorer-end">${options}</select><span class="explorer-range-count"></span></div><div class="explorer-presets" role="group" aria-label="Time range"><button id="range-all" data-years="all">All</button><button id="range-10" data-years="10">10Y</button><button id="range-5" data-years="5">5Y</button><button id="range-3" data-years="3">3Y</button></div></div>
       <div id="explorer-navigator" aria-label="Zoom and move the visible year range"></div>
       <div class="explorer-source"><span>Source: <a href="${esc(dataset.source.url)}" target="_blank" rel="noreferrer">${esc(dataset.source.short_name || 'IMF')} · ${esc(dataset.source.dataset)} ↗</a><span id="explorer-source-unit"></span></span><span class="explorer-source-coverage">${dataset.period.start_year}–${dataset.period.end_year} · Reported years only</span></div><div class="explorer-rail"><p class="explorer-status" role="status"></p></div></div>`;
     $('.explorer-toolbar').append($('.explorer-inspect-year'));
-    $('.explorer-time').append($('#explorer-undo'), $('#explorer-reset'));
     root.setAttribute('aria-busy', 'false');
     root.addEventListener('click', event => {
       const button = event.target.closest('button'); if (!button) return;
@@ -72,9 +61,7 @@
         focus = focus === button.dataset.focus ? null : button.dataset.focus;
         root.querySelectorAll('[data-focus]').forEach(item => item.setAttribute('aria-pressed', String(focus === item.dataset.focus)));
         chart.emphasize(focus, true);
-      } else if (button.id === 'explorer-reset') resetRange();
-      else if (button.id === 'explorer-undo') { const range = zoomHistory.pop(); if (range) update(range, { remember: false }); }
-      else if (button.id === 'explorer-scale') update({ scale: state.scale === 'fit' ? 'zero' : 'fit' });
+      } else if (button.id === 'explorer-scale') update({ scale: state.scale === 'fit' ? 'zero' : 'fit' });
       else if (button.id === 'explorer-compare') chooseCountries();
     });
     root.addEventListener('click', event => { if (event.target.closest('[data-action=png]')) chart.finish(); }, true);
@@ -117,7 +104,6 @@
     root.querySelectorAll('[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === state.view)));
     root.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mode === state.mode)));
     $('#explorer-scale').setAttribute('aria-pressed', String(state.scale === 'fit' && !bar)); $('#explorer-scale').disabled = state.view !== 'line';
-    $('#explorer-scale-note').textContent = state.view === 'line' && state.scale === 'fit' ? 'Y-axis fitted to visible values' : 'Zero baseline';
     $('#explorer-compare').textContent = `+ Countries (${state.countries.length})`;
     const nextLegend = state.countries.join(',');
     if (nextLegend !== legendKey) {
@@ -130,9 +116,6 @@
     [...$('#explorer-year').options].forEach(option => { option.disabled = +option.value < state.start || +option.value > state.end; });
     $('.explorer-range-count').textContent = `${state.end - state.start + 1} years`;
     root.querySelectorAll('[data-years]').forEach(button => button.setAttribute('aria-pressed', String(state.end === dataset.period.end_year && state.start === (button.dataset.years === 'all' ? dataset.period.start_year : dataset.period.end_year - Number(button.dataset.years) + 1))));
-    $('#explorer-reset').disabled = state.start === dataset.period.start_year && state.end === dataset.period.end_year;
-    $('#explorer-undo').disabled = !zoomHistory.length;
-    $('#explorer-gesture-hint').textContent = state.view === 'line' ? 'Drag to zoom · Double-click to reset' : state.view === 'bar' ? 'Compare the selected year · Use the year selector above' : 'Exact values · Empty cells mean no reported or comparable value';
     $('#explorer-source-unit').textContent = ` · ${metric.indicator} · ${data.unit}`;
     const plotHost = $('#explorer-plot'), wasHidden = plotHost.hidden;
     plotHost.hidden = state.view === 'table'; $('.explorer-table').hidden = state.view !== 'table';
@@ -238,7 +221,7 @@
       await window.PSDPlotReady;
       state = M.normalize({ ...M.defaults, ...fromURL() }, dataset);
       mount(); paint({ animate: false });
-      const restore = () => { state = M.normalize({ ...M.defaults, ...fromURL() }, dataset); zoomHistory.length = 0; paint(); };
+      const restore = () => { state = M.normalize({ ...M.defaults, ...fromURL() }, dataset); paint(); };
       window.addEventListener('popstate', restore); window.addEventListener('hashchange', restore);
     } catch (error) {
       root.setAttribute('aria-busy', 'false');

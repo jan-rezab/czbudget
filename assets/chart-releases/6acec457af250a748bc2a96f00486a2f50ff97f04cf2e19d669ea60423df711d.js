@@ -441,7 +441,7 @@
       else set(...moveRange(start, end, event.key === 'Home' ? min - start : event.key === 'End' ? max - end : delta, min, max), true);
       spec.onCommit?.({ start, end }, old);
     });
-    draw(); host.__psdRangeCleanup = () => { abort.abort(); if (drag && host.hasPointerCapture?.(drag.id)) host.releasePointerCapture(drag.id); drag = null; host.removeAttribute('data-dragging'); host.removeAttribute('data-drag-mode'); };
+    draw(); host.__psdRangeCleanup = () => { abort.abort(); if (drag && host.hasPointerCapture?.(drag.id)) host.releasePointerCapture(drag.id); drag = null; };
     return { set, destroy: host.__psdRangeCleanup };
   }
   const api = Object.freeze({ render, model, domain, palette, labelPositions, rangeFromPixels, moveRange, timeX, mixProjection, renderRange });
