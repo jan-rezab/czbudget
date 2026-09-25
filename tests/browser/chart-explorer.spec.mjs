@@ -1,3 +1,4 @@
+import { tradeExplorer } from '../fixtures/trade-explorer.mjs';
 import { test, expect } from '@playwright/test';
 
 const range = page => page.evaluate(() => [Number(document.querySelector('#explorer-start').value), Number(document.querySelector('#explorer-end').value)]);
@@ -124,4 +125,21 @@ test('line motion keeps complete context and animates axes and direct labels wit
   await page.locator('#explorer-start').selectOption('2024');
   await expect(page.locator('#explorer-plot [data-point]')).toHaveCount(1);
   expect(await page.locator('[data-series=CZE]').getAttribute('d')).not.toMatch(/NaN|Infinity/);
+});
+
+ test('public explorer routes load the right source and preserve long-range state', async ({ page }) => {
+  await page.route('**/api/v1/trade/explorer?*', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ data: tradeExplorer }) }));
+  await page.goto('/explore/');
+  await page.getByRole('link', { name: /International trade/ }).click();
+  await expect(page.locator('#explorer-start')).toHaveValue('1997');
+  await expect(page.locator('#explorer-title')).toContainText('Goods exports');
+  await page.locator('#explorer-end').selectOption('2001');
+  await page.locator('#view-table').click();
+  await expect(page.locator('.psd-chart-table tbody tr')).toHaveCount(5);
+  await page.reload();
+  await expect(page.locator('#explorer-start')).toHaveValue('1997');
+  await expect(page.locator('#explorer-end')).toHaveValue('2001');
+  await page.goto('/explore/government-finances/');
+  await expect(page.locator('#explorer-title')).toContainText('Government spending');
+  await expect(page.locator('#explorer-start')).toHaveValue('2005');
 });

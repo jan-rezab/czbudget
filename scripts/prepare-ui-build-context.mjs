@@ -17,6 +17,15 @@ await mkdir(destination, { recursive: true });
 
 const files = [
   "chart-explorer.html",
+  "tests/browser/trade.spec.mjs",
+  "tests/fixtures/trade-explorer.mjs",
+  "deep-dives/trade/index.html",
+  "trade-deep-dive.js",
+  "trade-deep-dive.css",
+  "deep-dives/product-markets/index.html",
+  "trade-product-intelligence.js",
+  "trade-product-intelligence.css",
+  "data/trade/product-intelligence.v1.json",
   "chart-explorer.js",
   "chart-explorer.css",
   "lib/chart-explorer-model.js",
@@ -155,7 +164,7 @@ const files = [
   "data/data-freshness.v1.json",
   "data/registry/run-log.v1.json",
 ];
-const directories = ["assets", "process", "stories", "tests/fixtures/charts"];
+const directories = ["explore", "assets", "process", "stories", "tests/fixtures/charts"];
 
 await copyTrackedContext({ root, destination, files, directories });
 

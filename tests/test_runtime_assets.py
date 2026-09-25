@@ -73,7 +73,7 @@ class RuntimeAssetsTest(unittest.TestCase):
     def test_runtime_surface_excludes_build_and_offloaded_files(self):
         for value in ['data/isred/a.json', 'data/industrial-intelligence/index.json', 'data/paq/index.json', 'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json', 'data/.query.json', '.public-serving-build/current.json', 'scripts/tool.js', 'content/stories/draft.html', 'content/stories/catalog.mjs', 'pipeline/raw.csv', 'tests/a.js', 'data/entities/00000001.json', 'cz/municipalities/praha/index.html', 'municipalities/finland/example/index.html', 'data/example 2.json']:
             self.assertFalse(runtime.included(Path(value)), value)
-        for value in ['data/registry/countries.v1.json', 'data/municipal-benchmarks/fin.json', 'municipalities/france/profile/index.html', 'cityvizor/index.html', 'lib/money-flow-model.mjs', 'process/log/index.html', 'stories/index.html', 'stories/example/index.html', 'stories/feed.xml', 'stories/vendor/d3-7.9.0.min.js', 'studio/data-in-one-place/index.html', 'global-nav.js']:
+        for value in ['data/registry/countries.v1.json', 'data/municipal-benchmarks/fin.json', 'municipalities/france/profile/index.html', 'cityvizor/index.html', 'lib/money-flow-model.mjs', 'process/log/index.html', 'stories/index.html', 'stories/example/index.html', 'stories/feed.xml', 'stories/vendor/d3-7.9.0.min.js', 'studio/data-in-one-place/index.html', 'global-nav.js', 'explore/index.html', 'explore/trade/index.html', 'explore/government-finances/index.html']:
             self.assertTrue(runtime.included(Path(value)), value)
 
     def test_staged_image_has_only_runtime_files_and_pinned_locks(self):

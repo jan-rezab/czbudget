@@ -1,8 +1,10 @@
 (function () {
   'use strict';
-  let slug = 'explorer-government-finances';
+  let slug = document.querySelector('.explorer-workspace')?.dataset.dataset === 'trade' ? 'explorer-un-trade' : 'explorer-government-finances';
   const keys = ['metric', 'countries', 'start', 'end', 'year', 'mode', 'view', 'scale'];
   const root = document.querySelector('.explorer-workspace');
+  if (!root) return;
+  const embeddedReport = root.dataset.embedded === 'true';
   const M = window.PSDExplorerModel;
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const formatter = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 6 });
@@ -105,7 +107,7 @@
     root.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mode === state.mode)));
     $('#explorer-scale').setAttribute('aria-pressed', String(state.scale === 'fit' && !bar)); $('#explorer-scale').disabled = state.view !== 'line';
     $('#explorer-compare').textContent = `+ Countries (${state.countries.length})`;
-    const nextLegend = state.countries.join(',');
+    const nextLegend = `${state.metric}:${state.countries.join(',')}`;
     if (nextLegend !== legendKey) {
       $('.explorer-chips').innerHTML = data.fields.map(field => `<button id="focus-${field.key}" class="explorer-chip" data-focus="${field.key}" aria-label="Emphasize ${esc(field.label)}" aria-pressed="false"><span class="explorer-chip-name">${swatch(field)}${esc(field.label)}</span><span class="explorer-chip-numbers"><strong class="explorer-chip-value"></strong><small class="explorer-chip-change" title="Calculated ${trade() ? 'USD' : 'percentage-point'} change from the first visible year"></small></span></button>`).join('');
       legendKey = nextLegend;
@@ -209,23 +211,45 @@
       const embedded = document.getElementById('explorer-dataset');
       if (embedded) dataset = JSON.parse(embedded.textContent);
       else {
-        const response = await fetch('/data/sovereign-benchmark-slim.v1.json');
+        const requested = fromURL().countries || (embeddedReport ? new URLSearchParams(location.search).get('code') || 'DEU' : 'CZE,DEU,GBR,USA');
+        const endpoint = root.dataset.dataset === 'trade' ? `/api/v1/trade/explorer?countries=${encodeURIComponent(requested)}` : '/data/sovereign-benchmark-slim.v1.json';
+        const response = await fetch(endpoint);
         if (!response.ok) throw new Error(`Data request failed (${response.status})`);
-        dataset = await response.json();
+        const payload = await response.json(); dataset = payload.data || payload;
       }
       if (trade()) {
         slug = 'explorer-un-trade';
-        document.title = 'UN trade history — Public Spending Data';
-        document.querySelector('.explorer-footnote').textContent = dataset.source.caveat;
+        if (!embeddedReport) document.title = 'UN trade history — Public Spending Data';
+        (root.parentElement.querySelector('.explorer-footnote') || document.querySelector('.explorer-footnote')).textContent = dataset.source.caveat;
       }
       await window.PSDPlotReady;
       state = M.normalize({ ...M.defaults, ...fromURL() }, dataset);
       mount(); paint({ animate: false });
+      if (embeddedReport) {
+        let countryRequest = 0;
+        const loadCountry = async event => {
+          const code = event.detail?.country;
+          if (!/^[A-Z]{3}$/.test(code || '') || (dataset.countries.length === 1 && dataset.countries[0].country_code === code)) return;
+          const request = ++countryRequest;
+          root.setAttribute('aria-busy', 'true');
+          try {
+            const response = await fetch(`/api/v1/trade/explorer?countries=${code}`);
+            if (!response.ok) throw new Error('Country history unavailable');
+            const next = (await response.json()).data;
+            if (request !== countryRequest) return;
+            dataset = next; state = M.normalize({ ...state, countries: [code] }, dataset);
+            navigatorKey = ''; legendKey = ''; paint({ animate: false });
+          } catch { if (request === countryRequest) $('.explorer-status').textContent = 'This country’s annual history could not load. Reload to try again.'; }
+          finally { if (request === countryRequest) root.setAttribute('aria-busy', 'false'); }
+        };
+        root.addEventListener('psd:explorer-country', loadCountry);
+        if (root.dataset.country) loadCountry({ detail: { country: root.dataset.country } });
+      }
       const restore = () => { state = M.normalize({ ...M.defaults, ...fromURL() }, dataset); paint(); };
       window.addEventListener('popstate', restore); window.addEventListener('hashchange', restore);
     } catch (error) {
       root.setAttribute('aria-busy', 'false');
-      root.innerHTML = '<div class="explorer-loading"><h2>The chart could not load</h2><p>Please reload to try again.</p><a href="/data/sovereign-benchmark-slim.v1.json">Open published data</a></div>';
+      root.innerHTML = '<div class="explorer-loading"><h2>The chart could not load</h2><p>Please reload to try again.</p></div>';
       console.error('Chart explorer:', error);
     }
   }

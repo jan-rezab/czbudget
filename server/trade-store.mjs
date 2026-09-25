@@ -1,3 +1,4 @@
+import { TRADE_EXPLORER_SQL, tradeExplorerDataset } from './trade-explorer.mjs';
 import fs from "node:fs/promises";
 import path from "node:path";
 import { shareInFlight } from "./in-flight.mjs";
@@ -328,6 +329,25 @@ export class TradeStore {
     this.seedPath = seedPath;
     this.cache = new Map();
     this.pending = new Map();
+  }
+
+  async explorer(value) {
+    const countries = [...new Set(String(value || 'CZE,DEU,GBR,USA').split(',').map(normalizeCountryCode))];
+    if (!countries.length || countries.length > 4) throw new TradeError(400, 'invalid_trade_countries', 'Select one to four countries.');
+    const endYear = new Date(this.now()).getUTCFullYear() - 1;
+    const cacheKey = `explorer:${countries.join(',')}:${endYear}`;
+    const cached = this.cache.get(cacheKey);
+    if (cached?.expiresAt > this.now()) return cached.value;
+    return shareInFlight(this.pending, cacheKey, async () => {
+      const params = countries.map((code, index) => parameter(`country${index}`, 'STRING', code));
+      while (params.length < 4) params.push(parameter(`country${params.length}`, 'STRING', countries[0]));
+      params.push(parameter('end_date', 'DATE', `${endYear}-12-31`));
+      const rows = await this.query(TRADE_EXPLORER_SQL, params);
+      if (!rows.length) throw new TradeError(404, 'trade_history_not_found', 'No loaded annual history is available for this comparison.');
+      const result = tradeExplorerDataset(rows, countries, endYear);
+      this.put(cacheKey, result);
+      return result;
+    });
   }
 
   async countries() {

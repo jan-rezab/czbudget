@@ -5,120 +5,274 @@
     "style": "shared-charts.css",
     "runtime": "chart-runtime.js",
     "manifest": "assets/chart-releases/current.json",
-    "families": ["line", "column", "stacked", "bar"]
+    "families": [
+      "line",
+      "column",
+      "stacked",
+      "bar"
+    ]
   },
   "consumers": [
     {
-      "id": "government-finance-explorer",
+      "id": "data-explorer",
       "adapter": "chart-explorer.js",
-      "families": ["line", "bar"],
-      "tests": ["tests/browser/chart-explorer.spec.mjs"],
-      "routes": ["/chart-explorer.html"],
-      "change_paths": ["chart-explorer.js", "chart-explorer.css", "lib/chart-explorer-model.js", "chart-explorer.html"]
+      "families": [
+        "line",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/chart-explorer.spec.mjs",
+        "tests/browser/trade.spec.mjs"
+      ],
+      "routes": [
+        "/chart-explorer.html",
+        "/explore/trade/",
+        "/explore/government-finances/",
+        "/deep-dives/trade/"
+      ],
+      "change_paths": [
+        "chart-explorer.js",
+        "chart-explorer.css",
+        "lib/chart-explorer-model.js",
+        "chart-explorer.html",
+        "explore/**",
+        "deep-dives/trade/index.html",
+        "trade-deep-dive.js"
+      ]
     },
     {
       "id": "municipal-profile-history",
       "adapter": "municipal-expanded-profile.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/municipalities/:country/:municipality/"],
-      "change_paths": ["municipal-expanded-profile.js", "municipal-expanded-profile.css"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/municipalities/:country/:municipality/"
+      ],
+      "change_paths": [
+        "municipal-expanded-profile.js",
+        "municipal-expanded-profile.css"
+      ]
     },
     {
       "id": "czech-city-history",
       "adapter": "cz-history.js",
-      "families": ["line", "stacked"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/cz/municipalities/:municipality/"],
-      "change_paths": ["cz-history.js"]
+      "families": [
+        "line",
+        "stacked"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/cz/municipalities/:municipality/"
+      ],
+      "change_paths": [
+        "cz-history.js"
+      ]
     },
     {
       "id": "czech-municipality-history",
       "adapter": "municipalities-czechia.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/municipalities/czechia/"],
-      "change_paths": ["municipalities-czechia.js"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/municipalities/czechia/"
+      ],
+      "change_paths": [
+        "municipalities-czechia.js"
+      ]
     },
     {
       "id": "tariff-story-trends",
       "adapter": "stories/tariff-charts.js",
-      "families": ["line", "bar"],
-      "tests": ["tests/browser/stories.spec.mjs"],
-      "routes": ["/stories/tariffs-went-up-did-america-win/"],
-      "change_paths": ["stories/tariff-charts.js", "stories/chart-rails.js", "content/stories/**", "stories/**"]
+      "families": [
+        "line",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/stories.spec.mjs"
+      ],
+      "routes": [
+        "/stories/tariffs-went-up-did-america-win/"
+      ],
+      "change_paths": [
+        "stories/tariff-charts.js",
+        "stories/chart-rails.js",
+        "content/stories/**",
+        "stories/**"
+      ]
     },
     {
       "id": "ageing-index",
       "adapter": "ageing-bill.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/deep-dives/ageing/"],
-      "change_paths": ["ageing-bill.js", "deep-dives/ageing/index.html"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/ageing/"
+      ],
+      "change_paths": [
+        "ageing-bill.js",
+        "deep-dives/ageing/index.html"
+      ]
     },
     {
       "id": "automotive-trends",
       "adapter": "automotive-deep-dive.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/deep-dives/automotive/"],
-      "change_paths": ["automotive-deep-dive.js", "deep-dives/automotive/index.html"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/automotive/"
+      ],
+      "change_paths": [
+        "automotive-deep-dive.js",
+        "deep-dives/automotive/index.html"
+      ]
     },
     {
       "id": "health-performance-trend",
       "adapter": "country-health-performance.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/countries/:country"],
-      "change_paths": ["country-health-performance.js", "country.html"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/countries/:country"
+      ],
+      "change_paths": [
+        "country-health-performance.js",
+        "country.html"
+      ]
     },
     {
       "id": "national-budget-core",
       "adapter": "national-budget.js",
-      "families": ["line", "bar"],
-      "tests": ["tests/browser/national-budget.spec.mjs"],
-      "routes": ["/national-budgets/:country"],
-      "change_paths": ["national-budget.js", "national-budget.css", "national-budget.html"]
+      "families": [
+        "line",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/national-budget.spec.mjs"
+      ],
+      "routes": [
+        "/national-budgets/:country"
+      ],
+      "change_paths": [
+        "national-budget.js",
+        "national-budget.css",
+        "national-budget.html"
+      ]
     },
     {
       "id": "demographic-fertility-trend",
       "adapter": "demographic-pressure.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/comparison.html", "/countries/:country"],
-      "change_paths": ["demographic-pressure.js", "comparison.html", "country.html"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/comparison.html",
+        "/countries/:country"
+      ],
+      "change_paths": [
+        "demographic-pressure.js",
+        "comparison.html",
+        "country.html"
+      ]
     },
     {
       "id": "economy-trends",
       "adapter": "economy-deep-dive.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/deep-dives/economy/"],
-      "change_paths": ["economy-deep-dive.js", "deep-dives/economy/index.html"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/economy/"
+      ],
+      "change_paths": [
+        "economy-deep-dive.js",
+        "deep-dives/economy/index.html"
+      ]
     },
     {
       "id": "energy-trade-history",
       "adapter": "energy-trade-deep-dive.js",
-      "families": ["column"],
-      "tests": ["tests/browser/energy-trade.spec.mjs"],
-      "routes": ["/deep-dives/energy-trade/"],
-      "change_paths": ["energy-trade-deep-dive.js", "energy-trade-deep-dive.css", "deep-dives/energy-trade/index.html"]
+      "families": [
+        "column"
+      ],
+      "tests": [
+        "tests/browser/energy-trade.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/energy-trade/"
+      ],
+      "change_paths": [
+        "energy-trade-deep-dive.js",
+        "energy-trade-deep-dive.css",
+        "deep-dives/energy-trade/index.html"
+      ]
     },
     {
       "id": "oecd-report-trends",
       "adapter": "oecd-charts.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/countries/:country", "/deep-dives/redistribution/", "/deep-dives/tax-burden/"],
-      "change_paths": ["oecd-charts.js", "deep-dives/redistribution/index.html", "deep-dives/tax-burden/index.html", "deep-dives/revenue/index.html", "country.html"]
+      "families": [
+        "line"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/countries/:country",
+        "/deep-dives/redistribution/",
+        "/deep-dives/tax-burden/"
+      ],
+      "change_paths": [
+        "oecd-charts.js",
+        "deep-dives/redistribution/index.html",
+        "deep-dives/tax-burden/index.html",
+        "deep-dives/revenue/index.html",
+        "country.html"
+      ]
     },
     {
       "id": "pension-payment-charts",
       "adapter": "pensions-today.js",
-      "families": ["line", "bar"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/deep-dives/ageing/"],
-      "change_paths": ["pensions-today.js", "deep-dives/ageing/index.html"]
+      "families": [
+        "line",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/ageing/"
+      ],
+      "change_paths": [
+        "pensions-today.js",
+        "deep-dives/ageing/index.html"
+      ]
     }
   ],
   "legacy": {
@@ -161,11 +315,38 @@
     }
   },
   "verification": {
-    "always": ["tests/browser/shared-navigation.spec.mjs"],
-    "shared_contracts": ["tests/unit/chart-explorer.spec.mjs", "tests/unit/chart-renderer.spec.mjs", "tests/unit/chart-registry.spec.mjs", "tests/unit/verification-plan.spec.mjs"],
-    "shared_paths": ["lib/chart-renderer.js", "shared-charts.css", "chart-runtime.js", "psd-chart.js", "psd-chart.css", "chart-components.json", "chart-legacy-inventory.json", "assets/chart-releases/**", "tests/fixtures/charts/**"]
+    "always": [
+      "tests/browser/shared-navigation.spec.mjs"
+    ],
+    "shared_contracts": [
+      "tests/unit/chart-explorer.spec.mjs",
+      "tests/unit/chart-renderer.spec.mjs",
+      "tests/unit/chart-registry.spec.mjs",
+      "tests/unit/verification-plan.spec.mjs"
+    ],
+    "shared_paths": [
+      "lib/chart-renderer.js",
+      "shared-charts.css",
+      "chart-runtime.js",
+      "psd-chart.js",
+      "psd-chart.css",
+      "chart-components.json",
+      "chart-legacy-inventory.json",
+      "assets/chart-releases/**",
+      "tests/fixtures/charts/**"
+    ]
   },
   "release": {
-    "content_versioned_adapters": ["chart-explorer.css", "chart-explorer.js", "lib/chart-explorer-model.js", "municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js"]
+    "content_versioned_adapters": [
+      "chart-explorer.css",
+      "chart-explorer.js",
+      "lib/chart-explorer-model.js",
+      "municipal-expanded-profile.js",
+      "cz-history.js",
+      "municipalities-czechia.js",
+      "stories/tariff-charts.js",
+      "stories/chart-rails.js",
+      "trade-deep-dive.js"
+    ]
   }
 }
