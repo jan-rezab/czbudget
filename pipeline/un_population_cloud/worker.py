@@ -156,6 +156,7 @@ def main():
         if not counts['age_rows'] or any(n != 101 for key,n in counts.items() if isinstance(key,tuple)):
             raise RuntimeError('Each location/year must contain exactly 101 single-age groups')
         payload=json.loads(extract.read_text(),parse_float=Decimal)
+        counts['serving_source_records']=sum(len(c['wpp']) for c in payload['countries'].values())
         metricfile=temp/'metrics.jsonl.gz'
         with gzip.open(metricfile,'wt',encoding='utf-8',compresslevel=1) as out:
             for row in indicator_rows(payload,release):
@@ -175,7 +176,10 @@ def main():
                     source_archive=dict(uri=ARCHIVE_URI,generation=ARCHIVE_GENERATION,sha256=ARCHIVE_SHA),
                     source_member=dict(path=MEMBER,sha256=MEMBER_SHA,url=SOURCE_URL),
                     serving_extract=dict(path=extract.name,sha256=args.extract_sha,origin='existing_serving_extract'),
-                    started_at=started,received_rows=counts['age_rows']+counts['metric_rows'],
+                    started_at=started,received_rows=counts['age_rows']+counts['serving_source_records'],
+                    received_source_csv_rows=counts['age_rows'],
+                    received_serving_country_year_records=counts['serving_source_records'],
+                    normalized_observation_rows=counts['age_rows']+counts['metric_rows'],
                     accepted_rows=counts['age_rows']+counts['metric_rows'],rejected_rows=0,deduplicated_rows=0,
                     population_age_sex_rows=counts['age_rows'],demographic_indicator_rows=counts['metric_rows'],
                     population_control_sum_persons=str(total_control),
