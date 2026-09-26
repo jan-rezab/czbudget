@@ -60,3 +60,24 @@ test('oil editorial evidence keeps grains separate and excludes unsupported peri
   assert.match(html,/EU-27 is the sum of available/);
   assert.doesNotMatch(await read('stories/oil-pivot.js'),/window\.openai|new Tweak|append\('(?:svg|path)'/);
 });
+test('a story release with a regenerated chart coverage report stays in the single-build lane',()=>{
+  // chart-coverage.json is derived from the registry; alone it once forced a 16-minute exhaustive gate.
+  assert.equal(selectVerification(['chart-coverage.json']).lane,'component');
+  const oilPivotRelease=['assets/chart-releases/current.json','chart-components.json','chart-coverage.json','content/stories/catalog.mjs','content/stories/the-great-oil-pivot.fragment','deep-dives/energy-trade/index.html','lib/chart-renderer.js','scripts/publish-stories.mjs','stories/feed.xml','stories/index.html','stories/oil-pivot.css','stories/oil-pivot.js','stories/sitemap.xml','stories/stories.css','stories/stories.js','stories/the-great-oil-pivot/index.html','stories/vendor/topojson-client-3.1.0.min.js','tests/browser/stories.spec.mjs','tests/unit/stories.spec.mjs'];
+  const plan=selectVerification(oilPivotRelease);
+  assert.deepEqual([plan.lane,plan.broad],['component',[]]);
+  assert.ok(plan.specs.includes('tests/browser/stories.spec.mjs'));
+});
+test('published story pages link only to files that ship with the site',async()=>{
+  // The release integrity gate rejects root-relative links without a static file; catch them before a cloud build.
+  const {stat}=await import('node:fs/promises');
+  const exists=async path=>{for(const candidate of [path,`${path}.html`,`${path.replace(/\/?$/,'/')}index.html`]){try{if((await stat(new URL(`../../${candidate}`,import.meta.url))).isFile())return true;}catch{}}return false;};
+  for(const page of ['stories/index.html',...catalog.filter(s=>s.status==='published').map(s=>`stories/${s.slug}/index.html`)]){
+    const html=await read(page);
+    for(const [,reference] of html.matchAll(/<(?:a|link|script|img)\b[^>]*(?:href|src)=["']([^"']+)["']/gi)){
+      if(/^(?:https?:|mailto:|tel:|data:|javascript:|#|\/\/)/.test(reference))continue;
+      const path=decodeURIComponent(reference.split(/[?#]/)[0]).replace(/^\//,'');
+      if(path&&reference.startsWith('/'))assert.ok(await exists(path),`${page} -> ${reference}`);
+    }
+  }
+});
