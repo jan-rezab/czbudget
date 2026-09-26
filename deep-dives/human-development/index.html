@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="/language-bootstrap.js"></script>
+  <title>Lidský rozvoj a umělá inteligence — Public Spending Data</title>
+  <meta name="description" content="Aktualizované grafy lidského rozvoje a umělé inteligence z původních zdrojů, s přesnými obdobími a viditelným pokrytím.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/human-development/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/human-development/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/human-development/?lang=en">
+  <link rel="icon" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/site-header.css" data-psd-site-header>
+  <link rel="stylesheet" href="/human-development.css?v=20260927-report">
+  <link rel="stylesheet" href="/psd-chart.css">
+  <script src="/global-nav.js" defer></script>
+  <script src="/chart-runtime.js" defer></script>
+  <script src="/psd-chart.js" defer></script>
+  <script src="/human-development.js?v=20260927-report" defer></script>
+</head>
+<body class="hd-page">
+  <psd-site-header></psd-site-header>
+  <main id="human-development-root">
+    <header class="hd-hero">
+      <p class="hd-kicker" data-hd-copy="kicker">Lidský rozvoj / původní zdroje</p>
+      <h1 data-hd-copy="title">Lidský rozvoj<br>a umělá inteligence</h1>
+      <p class="hd-intro" data-hd-copy="intro">Grafy ze zprávy Human Development Report 2025 znovu sestavené z původních zdrojů. Novější údaje jsou rozlišené od původního vydání a u každého grafu je uvedené skutečné období.</p>
+      <div class="hd-controls"><label for="hd-country"><span data-hd-copy="country">Země</span><select id="hd-country" disabled></select></label><button id="hd-print" type="button" disabled data-hd-copy="print">Uložit report jako PDF</button><a href="#hd-coverage" data-hd-copy="coverageLink">Pokrytí a chybějící údaje ↓</a></div>
+      <p id="hd-release" class="hd-release"></p>
+    </header>
+    <p id="hd-status" role="status" aria-live="polite" data-hd-copy="loading">Načítání ověřeného datového vydání…</p>
+    <nav id="hd-chapter-nav" class="hd-chapter-nav" aria-label="Kapitoly"></nav>
+    <div id="hd-chapters"></div>
+    <section id="hd-coverage" class="hd-section hd-coverage"><h2 data-hd-copy="coverageTitle">Pokrytí a chybějící údaje</h2><p data-hd-copy="coverageIntro">Chybějící řada není nula. Historická zjištění, stažené studie a grafy vyžadující přesnější definici zůstávají uvedené samostatně.</p><div id="hd-coverage-content"></div></section>
+  </main>
+  <footer class="hd-footer"><a href="/deep-dives/" data-hd-copy="allReports">Všechny reporty</a><a href="#human-development-root">↑</a></footer>
+</body>
+</html>
