@@ -141,7 +141,7 @@ def build_pdf(payload,output):
         add(cid+' | '+str(status)+' | '+title,'Heading3');add(scope+' | '+method,'SmallSource')
     def footer(canvas,doc):
         canvas.saveState();canvas.setFont('Helvetica',8);canvas.drawString(45,25,'Verified release '+payload['release_id']);canvas.drawRightString(A4[0]-45,25,str(doc.page));canvas.restoreState()
-    SimpleDocTemplate(str(output),pagesize=A4,leftMargin=45,rightMargin=45,topMargin=40,bottomMargin=42,title='Human development verified data report',author='Public Spending Data').build(body,onFirstPage=footer,onLaterPages=footer,canvasmaker=partial(Canvas,invariant=1))
+    SimpleDocTemplate(str(output),invariant=1,pagesize=A4,leftMargin=45,rightMargin=45,topMargin=40,bottomMargin=42,title='Human development verified data report',author='Public Spending Data').build(body,onFirstPage=footer,onLaterPages=footer,canvasmaker=partial(Canvas,invariant=1))
     if output.stat().st_size>MAX_PDF:raise ValueError('PDF exceeds10MB; no observations truncated')
     reader=PdfReader(str(output));texts=[p.extract_text() or '' for p in reader.pages]
     if not texts or payload['release_id'] not in texts[0] or 'Original report coverage and gaps' not in '\n'.join(texts):raise ValueError('PDF text/page verification failed')
