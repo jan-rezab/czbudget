@@ -21,6 +21,7 @@ import urllib.request
 import urllib.error
 
 from publish_ch5_6_panels import provider_panels
+from publish_ch3_4_panels import provider_panels as care_provider_panels
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
 
 PROJECT = 'czbudget-janrezab'
@@ -213,14 +214,15 @@ def main():
         m=by_source[sid]
         for row in query(f'SELECT * FROM `{D}.report_source_records` WHERE release_id=@release AND source_id=@sid',m['release_id'],[bigquery.ScalarQueryParameter('sid','STRING',sid)]):
             r=dict(row);r.update(source_vintage=m.get('vintage'),relation=m.get('relation'));yield r
-    iso2_codes={'CZ':'CZE'}
+    iso2_codes={}
     country_names.update({'Czech Republic':'CZE','Türkiye':'TUR','Korea, Rep.':'KOR','Russian Federation':'RUS'})
     if 'wdi_country_metadata' in by_source and by_source['wdi_country_metadata'].get('accepted_records'):
         for raw in source_rows('wdi_country_metadata'):
             r=json.loads(raw['record_json'])
             if isinstance(r,dict) and r.get('id'):
-                iso2_codes[r.get('iso2Code')]=r['id']
                 country_names[r.get('name')]=r['id']
+                if r.get('region',{}).get('id')!='NA' and re.fullmatch('[A-Z]{2}',r.get('iso2Code','')) and re.fullmatch('[A-Z]{3}',r['id']):
+                    iso2_codes[r['iso2Code']]=r['id']
     def admit_observations(sid,observations,name,unit=None):
         groups=defaultdict(list)
         for r in observations:
@@ -257,9 +259,11 @@ def main():
             admit_observations(sid,gcp_territorial(source_rows(sid),contract),'Territorial fossil CO2 / Teritoriální emise fosilního CO2')
     added_charts,added_gaps=provider_panels(source_rows,by_source)
     charts+=added_charts
+    care_charts,care_gaps=care_provider_panels(source_rows,by_source)
+    charts+=care_charts
     ledger=audit_ledger(Path('pipeline/undp_cloud/audit'))
     gaps=[dict(source_id=sid,name=sid,reason=m.get('error') or 'Source records have no verified chart binding; raw loading is not figure reproduction.') for sid,m in by_source.items() if not m.get('accepted_records')]
-    gaps+=added_gaps
+    gaps+=added_gaps+care_gaps
     if not provider_releases:gaps.append(dict(source_id='provider-bundle',reason='No provider-group publication pointer available at report build start.'))
     for entry in ledger:
         object_id=entry['id'].replace('Figure ','').replace('Table ','')

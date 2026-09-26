@@ -4,7 +4,7 @@ steps:
     entrypoint: bash
     env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1']
     args:
-      - -ceu
+      - -euceu
       - |
         pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt
         python pipeline/undp_cloud/publish_reports.py --loader-sha '${_LOADER_SHA}' --undp-release '${_UNDP_RELEASE}'
