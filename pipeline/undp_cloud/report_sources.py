@@ -22,6 +22,19 @@ def stamp():return time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
 def decode(data):
  try:return data.decode('utf-8-sig')
  except UnicodeDecodeError:return data.decode('cp1252')
+def claim_source_text(path,fmt):
+ if path.stat().st_size>50_000_000:raise ValueError('Claim document exceeds 50MB bound')
+ with open(path,'rb') as f:magic=f.read(5)
+ if magic==b'%PDF-':
+  from pypdf import PdfReader
+  reader=PdfReader(str(path),strict=True)
+  if reader.is_encrypted:raise ValueError('Encrypted claim PDF')
+  if len(reader.pages)>500:raise ValueError('Claim PDF exceeds 500-page bound')
+  text=' '.join(page.extract_text() or '' for page in reader.pages)
+  if not text.strip():raise ValueError('Claim PDF has no extractable text; manual review required')
+ elif fmt=='verified_claim_pdf':raise ValueError('Expected PDF source magic absent')
+ else:text=re.sub(r'<[^>]*>',' ',decode(path.read_bytes()))
+ return re.sub(r'\s+',' ',text)
 def members(path,fmt):
  if fmt=='tar.gz':
   with tarfile.open(path,'r:gz') as t:
@@ -115,14 +128,13 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
    df=df.astype(object).where(df.notna(),None)
    for row in df.to_dict('records'):
     n+=1;yield path.name,n,row
- elif fmt=='verified_claim_html':
+ elif fmt in {'verified_claim_html','verified_claim_pdf'}:
   claims=json.loads(Path('pipeline/undp_cloud/audit/ch3_4_verified_claims.json').read_text(),parse_float=Decimal)
   # Source association is resolved by the caller; each curated observation retains
   # its exact source URL, denominator, period and correction rationale.
   sid=path.stem
   selected=[x for x in claims if 'verified_'+x['source_id']==sid]
-  source_text=re.sub(r'<[^>]*>',' ',decode(path.read_bytes()))
-  source_text=re.sub(r'\s+',' ',source_text)
+  source_text=claim_source_text(path,fmt)
   if not selected:raise ValueError('No reviewed claims for source page')
   for n,row in enumerate(selected,1):
    for field in ['metric','source_value','unit','period','geography','denominator','exact_source_url']:
