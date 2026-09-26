@@ -469,16 +469,10 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   expect(regionalTopics).toEqual(["budget-planner", "public-employment", "money", "plzen-contracts", "money"]);
   const compareTopics = await page.locator("#compare .deep-card").evaluateAll(topicOf);
   expect(compareTopics.filter((topic) => regionalTopics.includes(topic))).toEqual([]);
-  await page.locator(".deep-dive-menu summary").click();
-  // Every header-menu entry must be a report the index actually publishes, so the
-  // menu can never point at a report that was renamed or withdrawn. The reverse does
-  // not hold and must not be asserted: a municipal special is carded on the index
-  // without being a menu entry (validate-integrity.mjs counts those separately as
-  // municipalSpecialPages), so requiring equality would assert a rule the site does
-  // not keep.
-  const menuTopics = await page.locator(".deep-dive-menu-panel > a").evaluateAll(topicOf);
-  expect(menuTopics.length).toBeGreaterThan(0);
-  expect(menuTopics.filter((topic) => !cardTopics.includes(topic))).toEqual([]);
+  // The header opens this index directly; there is no second report list to drift.
+  const reportsLink = page.locator('psd-site-header [data-global-nav="deep-dives"]');
+  await expect(reportsLink).toHaveAttribute("href", /deep-dives\/\?lang=en$/);
+  await expect(reportsLink).toHaveClass(/active/);
   await page.goto("/deep-dives/capital-cities/?city=prague-cz&lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("h1")).toContainText("Capital-city budgets and visitor load");
   await expect(page.locator("#capital-pressure-city")).toHaveValue("prague-cz");
@@ -921,7 +915,7 @@ test("every page family renders the same shared header component", async ({ page
     "/cz/kraje/praha/?lang=en",
     "/cz/mesta/?lang=en",
   ];
-  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Map", "Reports⌄", "Stories", "Coverage", "About"];
+  const expectedItems = ["Country⌄", "Municipalities⌄", "Compare", "Map", "Reports", "Stories", "Coverage", "About"];
   for (const route of representatives) {
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator("psd-site-header")).toHaveCount(1);

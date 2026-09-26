@@ -8,7 +8,7 @@ test('shared navigation exposes the same primary destinations on narrow and wide
     const nav=page.locator('.global-nav');
     await expect(nav).toContainText('Stories');
     const items=await nav.locator(':scope > a, :scope > details > summary').allTextContents();
-    expect(items.map(item=>item.replace(/\s+/g,''))).toEqual(['Country⌄','Municipalities⌄','Compare','Map','Reports⌄','Stories','Coverage','About']);
+    expect(items.map(item=>item.replace(/\s+/g,''))).toEqual(['Country⌄','Municipalities⌄','Compare','Map','Reports','Stories','Coverage','About']);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   }
 });

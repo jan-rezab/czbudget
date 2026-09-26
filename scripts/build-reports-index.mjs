@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Renders the report catalogue from deep-dives/reports.json into the three
+// Renders the report catalogue from deep-dives/reports.json into the two
 // places that used to be maintained by hand and had already drifted apart:
-// the cards on deep-dives/index.html, the bilingual card copy in
-// deep-dives.js, and the reports menu in global-nav.js.
+// the cards on deep-dives/index.html and the bilingual card copy in
+// deep-dives.js. The header links straight to /deep-dives/.
 //
 //   node scripts/build-reports-index.mjs           rewrite the generated blocks
 //   node scripts/build-reports-index.mjs --check   fail if a block is stale
@@ -124,28 +124,10 @@ const copyBlock = LANGS.map((lang) => {
   return `  Object.assign(copy.${lang},{${entries}});`;
 }).join("\n");
 
-// ---------------------------------------------------------------- global-nav.js
-const menuGroups = [];
-for (const shelf of registry.shelves) {
-  for (const cluster of shelf.clusters) {
-    const items = registry.reports.filter((report) => report.shelf === shelf.id && report.cluster === cluster.id);
-    if (!items.length) continue;
-    // A cluster may carry its own menu label when its page heading would be
-    // ambiguous out of context; an unnamed cluster inherits the shelf label.
-    const label = cluster.menu ?? cluster.title ?? shelf.title;
-    menuGroups.push({ label, items });
-  }
-}
-const navBlock = "  const REPORT_MENU_GROUPS = [\n" + menuGroups.map((group) => {
-  const items = group.items.map((report) => `      { path:${escapeJs(report.navPath)}, title:{cs:${escapeJs(report.title.cs)},en:${escapeJs(report.title.en)}}, note:{cs:${escapeJs(report.menu.cs)},en:${escapeJs(report.menu.en)}} },`).join("\n");
-  return `    { label:{cs:${escapeJs(group.label.cs)},en:${escapeJs(group.label.en)}}, items: [\n${items}\n    ] },`;
-}).join("\n") + "\n  ];";
-
 // ------------------------------------------------------------------- rewriting
 const targets = [
   { file: "deep-dives/index.html", begin: "<!-- BEGIN GENERATED REPORTS -->", end: "<!-- END GENERATED REPORTS -->", body: indexBlock },
   { file: "deep-dives.js", begin: "/* BEGIN GENERATED REPORT COPY */", end: "/* END GENERATED REPORT COPY */", body: copyBlock },
-  { file: "global-nav.js", begin: "/* BEGIN GENERATED REPORT MENU */", end: "/* END GENERATED REPORT MENU */", body: navBlock },
 ];
 
 let stale = 0;

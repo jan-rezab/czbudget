@@ -120,8 +120,7 @@ test("trade is registered in reports and the language switch translates the whol
   await page.goto("/deep-dives/trade/?code=CZE&lang=cs");
   await expect(page).toHaveTitle("Zahraniční obchod — Public Spending Data");
   await expect(page.locator("#overview h1")).toContainText("Obchodní trh");
-  const menuLink = page.locator('psd-site-header .deep-dive-menu-panel a[href*="/deep-dives/trade/"]');
-  await expect(menuLink).toContainText("Zahraniční obchod");
+  await expect(page.locator('psd-site-header [data-global-nav="deep-dives"]')).toHaveClass(/active/);
   await page.locator('psd-site-header [data-lang="en"]').click();
   await expect(page).toHaveURL(/lang=en/);
   await expect(page).toHaveTitle("Foreign trade — Public Spending Data");
@@ -134,8 +133,6 @@ test("trade is registered in reports and the language switch translates the whol
   await page.goto("/deep-dives/?lang=en");
   await expect(page.locator("#trade")).toContainText("Foreign trade");
   await expect(page.locator("#product-markets")).toContainText("Global product markets");
-  await expect(page.locator('psd-site-header .deep-dive-menu-panel a[href*="/deep-dives/trade/"]')).toContainText("Foreign trade");
-  await expect(page.locator('psd-site-header .deep-dive-menu-panel a[href*="/deep-dives/product-markets/"]')).toContainText("Global product markets");
 });
 
 test("product markets translate independently from the country trade report", async ({ page }) => {

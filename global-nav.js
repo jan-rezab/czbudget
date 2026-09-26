@@ -89,64 +89,6 @@
   const countryHref = (code, lang = language()) => window.PSDCountryRoutes?.href
     ? window.PSDCountryRoutes.href(code, lang)
     : `/countries/${countrySlugs[code] || String(code).toLowerCase()}?lang=${lang}`;
-/* BEGIN GENERATED REPORT MENU */
-  const REPORT_MENU_GROUPS = [
-    { label:{cs:"Kam peníze jdou",en:"Where the money goes"}, items: [
-      { path:"deep-dives/education/", title:{cs:"Školství",en:"Education"}, note:{cs:"Od ministerstva k typu školy",en:"From ministry to school type"} },
-      { path:"deep-dives/health/?code=CZE", title:{cs:"Zdraví",en:"Health"}, note:{cs:"Financování a kapacita systému",en:"Funding and system capacity"} },
-      { path:"deep-dives/transportation/?code=CZE", title:{cs:"Doprava",en:"Transportation"}, note:{cs:"Rozpočty, silnice a tempo výstavby",en:"Budgets, roads and build pace"} },
-      { path:"deep-dives/defense/?code=USA", title:{cs:"Výdaje na obranu",en:"Defense spending"}, note:{cs:"17 zemí, % HDP a rozpočtové řádky",en:"17 countries, % of GDP and budget lines"} },
-      { path:"deep-dives/redistribution/?code=CZE", title:{cs:"Daně, transfery a příjmová nerovnost",en:"Taxes, transfers and income inequality"}, note:{cs:"Nerovnost před daněmi a po nich",en:"Inequality before and after taxes"} },
-    ] },
-    { label:{cs:"Odkud peníze jsou",en:"Where the money comes from"}, items: [
-      { path:"deep-dives/funding/", title:{cs:"Jak peníze dorazí ke službám",en:"How money reaches services"}, note:{cs:"Od příjmů přes rozpočty ke službám",en:"From revenue through budgets to services"} },
-      { path:"deep-dives/revenue/?code=CZE", title:{cs:"Odkud stát bere peníze",en:"Where the state gets its money"}, note:{cs:"Daně, úrovně vlády a transfery",en:"Taxes, government levels and transfers"} },
-      { path:"deep-dives/tax-burden/?code=CZE", title:{cs:"Daňové zatížení",en:"Tax burden"}, note:{cs:"Domácnosti, firmy, uhlík a místní pravomoc",en:"Households, companies, carbon and local authority"} },
-      { path:"deep-dives/eu-budget/?code=CZE", title:{cs:"Peníze mezi zeměmi a EU",en:"Money between countries and the EU"}, note:{cs:"27 zemí, příspěvky a přiřazené výdaje",en:"27 countries, contributions and attributed spending"} },
-    ] },
-    { label:{cs:"Ekonomika, průmysl a obchod",en:"Economy, industry and trade"}, items: [
-      { path:"deep-dives/job-market/?country=USA", title:{cs:"Kde lidé pracují a kdo je zaměstnává",en:"Where people work and who employs them"}, note:{cs:"Práce, služby a veřejní zaměstnavatelé",en:"Jobs, services and public employers"} },
-      { path:"deep-dives/economy/?code=CZE", title:{cs:"Ekonomika v kontextu",en:"Economy in context"}, note:{cs:"Dlouhé řady, cyklus a fiskální kontext",en:"Long-run series, the cycle and fiscal context"} },
-      { path:"deep-dives/industry/?code=CZE&channel=eurostat", title:{cs:"Průmysl měsíc po měsíci",en:"Industry month by month"}, note:{cs:"Odvětví, měsíční a roční vývoj",en:"Sectors, monthly and annual trends"} },
-      { path:"deep-dives/industry/diagnostics/", title:{cs:"Uvnitř průmyslu",en:"Inside industry"}, note:{cs:"Investice, kapacity, výrobky a řetězce",en:"Investment, capacity, products and value chains"} },
-      { path:"deep-dives/trade/?code=DEU", title:{cs:"Zahraniční obchod",en:"Foreign trade"}, note:{cs:"Dovoz, vývoz, partneři a zboží",en:"Imports, exports, partners and goods"} },
-      { path:"deep-dives/energy-trade/", title:{cs:"Světový obchod s ropou a plynem",en:"World oil and gas trade"}, note:{cs:"Surová ropa, LNG a zemní plyn",en:"Crude petroleum, LNG and natural gas"} },
-      { path:"deep-dives/russia-trade/", title:{cs:"Obchod kolem Ruska",en:"Trade around Russia"}, note:{cs:"Obchod kolem Ruska",en:"Trade around Russia"} },
-      { path:"deep-dives/automotive/", title:{cs:"Automobilový průmysl",en:"Automotive"}, note:{cs:"Vozidla, nákladní auta a díly měsíčně",en:"Vehicles, heavy trucks and parts, monthly"} },
-      { path:"deep-dives/product-markets/", title:{cs:"Globální produktové trhy",en:"Global product markets"}, note:{cs:"HS6 původ, dovozní trhy a bilaterální toky",en:"HS6 origins, import markets and bilateral flows"} },
-      { path:"deep-dives/digital-spillover/", title:{cs:"Kdo si ponechá digitální ekonomiku?",en:"Who keeps the digital economy?"}, note:{cs:"Model: 10 zemí, únik a reinvestice",en:"Model: 10 countries, leakage and reinvestment"} },
-    ] },
-    { label:{cs:"Společnost a stát",en:"Society and the state"}, items: [
-      { path:"deep-dives/ageing/?code=CZE", title:{cs:"Stárnutí populace",en:"Population ageing"}, note:{cs:"Projekce a demografická kalkulačka",en:"Projections and demographic calculator"} },
-      { path:"deep-dives/migration/", title:{cs:"Evropská migrace",en:"European migration"}, note:{cs:"33 zemí, toky a status ochrany",en:"33 countries, flows and protection status"} },
-      { path:"deep-dives/european-politics/?code=CZE", title:{cs:"Evropská politika",en:"European politics"}, note:{cs:"Vlády, programy a ekonomika",en:"Governments, programmes and the economy"} },
-      { path:"deep-dives/state-owned-enterprises/", title:{cs:"Státní podniky",en:"State-owned enterprises"}, note:{cs:"30 podniků, výnosy v EUR",en:"30 enterprises, revenue in EUR"} },
-      { path:"deep-dives/capital-cities/?city=prague-cz", title:{cs:"Hlavní města",en:"Capital cities"}, note:{cs:"Rozpočty, obyvatelé a turistický tlak",en:"Budget plans, residents and visitor pressure"} },
-    ] },
-    { label:{cs:"Regionální · Česko",en:"Regional · Czechia"}, items: [
-      { path:"deep-dives/budget-planner/", title:{cs:"Plánovač rozpočtu 2027",en:"2027 budget planner"}, note:{cs:"Změňte návrh a sledujte schodek",en:"Change the proposal and track the deficit"} },
-      { path:"deep-dives/public-employment/", title:{cs:"Veřejná zaměstnanost",en:"Public employment"}, note:{cs:"Úřady, školy, nemocnice a veřejné firmy",en:"Government, schools, hospitals and public corporations"} },
-      { path:"deep-dives/money/cze/", title:{cs:"Kam šly peníze? Česko",en:"Where did the money go? Czechia"}, note:{cs:"Peníze, kupní síla a ČNB",en:"Money, purchasing power and the CNB"} },
-      { path:"deep-dives/plzen-contracts/", title:{cs:"Plzeň: smlouvy a skutečné platby",en:"Plzeň: contracts and actual payments"}, note:{cs:"Od podpisu smlouvy ke skutečné platbě",en:"From contract signature to actual payment"} },
-    ] },
-    { label:{cs:"Regionální · Spojené státy",en:"Regional · United States"}, items: [
-      { path:"deep-dives/money/usa/", title:{cs:"Kam šly peníze? Spojené státy",en:"Where did the money go? United States"}, note:{cs:"Peníze, kupní síla a Fed",en:"Money, purchasing power and the Fed"} },
-    ] },
-  ];
-/* END GENERATED REPORT MENU */
-  // The reports menu mirrors /deep-dives/: cross-country comparisons grouped
-  // by theme first, single-country and single-city deep dives last. Entries
-  // come from deep-dives/reports.json; never add one here by hand.
-  const reportsMenuMarkup = (lang, t) => {
-    const item = (report) => {
-      const url = `${assetRoot}${report.path}${report.path.includes("?") ? "&" : "?"}lang=${lang}`;
-      return `<a href="${url}"><span><strong>${report.title[lang]}</strong><small>${report.note[lang]}</small></span></a>`;
-    };
-    const groups = REPORT_MENU_GROUPS
-      .map((group) => `<h3 class="deep-dive-menu-group">${group.label[lang]}</h3>${group.items.map(item).join("")}`)
-      .join("");
-    return `<details class="deep-dive-menu"><summary><span class="menu-label">${t.deepDives}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="deep-dive-menu-panel"><div class="country-menu-head"><span>${t.deepDives}</span><a href="${href("deep-dives/", lang)}">${t.allDeepDives} →</a></div>${groups}</div></details>`;
-  };
   const flagEmoji = (iso2) => String(iso2 || "").toUpperCase().replace(/[A-Z]/g, (letter) => String.fromCodePoint(127397 + letter.charCodeAt(0)));
   // These levels mirror the published municipal contracts: a searchable directory,
   // municipality-level headline finance, and native itemized budget lines.
@@ -238,12 +180,11 @@
         ? `${href("methodology.html", lang)}&country=${encodeURIComponent(contextCountry)}#sources`
         : href("methodology.html", lang);
       nav.setAttribute("aria-label", t.navigation);
-      nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><label class="country-menu-search"><span>${t.searchCountry}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${countries.length} ${t.countryMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a><a class="capital-menu-feature" href="${href("money-flow.html", lang)}"><b>↗</b><span>${lang === "cs" ? "Sledujte tok peněz" : "Follow the money"}</span></a>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div><label class="country-menu-search"><span>${t.searchMunicipality}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${municipalityCountries.length} ${t.municipalityMatches}</output></label>${municipalityLegend}<p class="country-menu-empty" hidden>${t.noCountryMatches}</p>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("map.html", lang)}" data-global-nav="map">${t.map}</a>${reportsMenuMarkup(lang, t)}<a href="${href("stories/", lang)}" data-global-nav="stories">${t.stories}</a><a href="${methodologyHref}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
+      nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><label class="country-menu-search"><span>${t.searchCountry}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${countries.length} ${t.countryMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a><a class="capital-menu-feature" href="${href("money-flow.html", lang)}"><b>↗</b><span>${lang === "cs" ? "Sledujte tok peněz" : "Follow the money"}</span></a>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div><label class="country-menu-search"><span>${t.searchMunicipality}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${municipalityCountries.length} ${t.municipalityMatches}</output></label>${municipalityLegend}<p class="country-menu-empty" hidden>${t.noCountryMatches}</p>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("map.html", lang)}" data-global-nav="map">${t.map}</a><a href="${href("deep-dives/", lang)}" data-global-nav="deep-dives">${t.deepDives}</a><a href="${href("stories/", lang)}" data-global-nav="stories">${t.stories}</a><a href="${methodologyHref}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
       const active = activeSection(this);
       nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
       if (active === "cities") nav.querySelector(".municipality-menu")?.classList.add("active");
-      if (active === "deep-dives") nav.querySelector(".deep-dive-menu")?.classList.add("active");
       const fold=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase(lang==="cs"?"cs":"en");
       nav.querySelectorAll(".country-menu").forEach(menu=>{
         const search=menu.querySelector(".country-menu-search input"),output=menu.querySelector(".country-menu-search output"),empty=menu.querySelector(".country-menu-empty"),links=[...menu.querySelectorAll("a[data-country-code]")],label=menu.classList.contains("municipality-menu")?t.municipalityMatches:t.countryMatches;
@@ -284,16 +225,6 @@
     styles.rel = "stylesheet";
     styles.href = headerStylesHref;
     styles.dataset.psdSiteHeader = "true";
-    document.head.append(styles);
-  }
-  const reportsMenuStylesHref = `${assetRoot}reports-menu.css?v=20260919-reports-regional`;
-  const existingReportsMenuStyles = document.querySelector("link[data-reports-menu]");
-  if (existingReportsMenuStyles) existingReportsMenuStyles.href = reportsMenuStylesHref;
-  else {
-    const styles = document.createElement("link");
-    styles.rel = "stylesheet";
-    styles.href = reportsMenuStylesHref;
-    styles.dataset.reportsMenu = "true";
     document.head.append(styles);
   }
   if (!customElements.get(HEADER_TAG)) customElements.define(HEADER_TAG, PsdSiteHeader);
