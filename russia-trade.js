@@ -5,7 +5,7 @@ const tr=(cs,en)=>lang==='cs'?cs:en;
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const locale=lang==='cs'?'cs-CZ':'en-GB';
 const money=value=>value==null?'—':new Intl.NumberFormat(locale,{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:2}).format(value);
-const exact=value=>value==null?'—':new Intl.NumberFormat(locale,{maximumFractionDigits:3}).format(value);
+const exact=value=>value==null?'—':new Intl.NumberFormat(locale,{maximumFractionDigits:9}).format(value);
 const label=period=>new Intl.DateTimeFormat(locale,{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(`${period.slice(0,4)}-${period.slice(4)}-01T00:00:00Z`));
 const countries={DEU:['de','Německo','Germany'],CZE:['cz','Česko','Czechia'],POL:['pl','Polsko','Poland'],FRA:['fr','Francie','France'],ITA:['it','Itálie','Italy'],NLD:['nl','Nizozemsko','Netherlands'],GBR:['gb','Spojené království','United Kingdom'],USA:['us','Spojené státy','United States'],JPN:['jp','Japonsko','Japan'],KOR:['kr','Jižní Korea','South Korea'],CHN:['cn','Čína','China'],KAZ:['kz','Kazachstán','Kazakhstan'],KGZ:['kg','Kyrgyzstán','Kyrgyzstan'],ARM:['am','Arménie','Armenia'],GEO:['ge','Gruzie','Georgia'],TUR:['tr','Turecko','Türkiye'],UZB:['uz','Uzbekistán','Uzbekistan'],ARE:['ae','Spojené arabské emiráty','United Arab Emirates'],BLR:['by','Bělorusko','Belarus'],RUS:['ru','Rusko','Russia']};
 const exporters=['DEU','CZE','POL','FRA','ITA','NLD','GBR','USA','JPN','KOR','CHN','TUR'];
