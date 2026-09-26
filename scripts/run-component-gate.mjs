@@ -20,5 +20,5 @@ for(const [command,args] of [
 console.log(JSON.stringify({event:'component-gate-complete',seconds:(Date.now()-started)/1000,specs,unit,target_seconds:180}));
 
 function registryContracts() {
-  return ['tests/unit/chart-renderer.spec.mjs','tests/unit/chart-registry.spec.mjs','tests/unit/release-contract.spec.mjs','tests/unit/verification-plan.spec.mjs','tests/unit/verification-plan-sparse.spec.mjs'];
+  return ['tests/unit/rosling-model.spec.mjs','tests/unit/chart-renderer.spec.mjs','tests/unit/chart-registry.spec.mjs','tests/unit/release-contract.spec.mjs','tests/unit/verification-plan.spec.mjs','tests/unit/verification-plan-sparse.spec.mjs'];
 }

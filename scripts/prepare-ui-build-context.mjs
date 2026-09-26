@@ -16,6 +16,12 @@ await assertEmpty(destination);
 await mkdir(destination, { recursive: true });
 
 const files = [
+  "deep-dives/rosling/index.html",
+  "rosling-tribute.js",
+  "rosling-tribute.css",
+  "lib/rosling-model.js",
+  "tests/browser/rosling-tribute.spec.mjs",
+  "tests/unit/rosling-model.spec.mjs",
   "scripts/verification-plan.mjs",
   "scripts/release-verification.mjs",
   "scripts/prepare-production-verification.mjs",

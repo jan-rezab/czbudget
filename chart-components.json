@@ -5,7 +5,7 @@
     "style": "shared-charts.css",
     "runtime": "chart-runtime.js",
     "manifest": "assets/chart-releases/current.json",
-    "families": ["line", "column", "stacked", "bar", "globe", "route-map"]
+    "families": ["line", "column", "stacked", "bar", "globe", "route-map", "scatter", "pyramid"]
   },
   "consumers": [
     {"id": "russia-trade-routes", "adapter": "russia-trade.js", "families": ["line", "route-map"], "tests": ["tests/browser/russia-trade.spec.mjs"], "routes": ["/deep-dives/russia-trade/"], "change_paths": ["russia-trade.js", "russia-trade.css", "deep-dives/russia-trade/index.html", "lib/russia-trade-model.mjs"]},
@@ -132,6 +132,31 @@
         "content/stories/the-great-oil-pivot.fragment",
         "stories/the-great-oil-pivot/**"
       ]
+    },
+    {
+      "id": "rosling-tribute",
+      "adapter": "rosling-tribute.js",
+      "families": [
+        "scatter",
+        "pyramid",
+        "line",
+        "column",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/rosling-tribute.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/rosling/"
+      ],
+      "change_paths": [
+        "rosling-tribute.js",
+        "rosling-tribute.css",
+        "lib/rosling-model.js",
+        "deep-dives/rosling/index.html",
+        "tests/browser/rosling-tribute.spec.mjs",
+        "tests/unit/rosling-model.spec.mjs"
+      ]
     }
   ],
   "legacy": {
@@ -179,6 +204,6 @@
     "shared_paths": ["lib/chart-renderer.js", "shared-charts.css", "chart-runtime.js", "psd-chart.js", "psd-chart.css", "chart-components.json", "chart-legacy-inventory.json", "chart-coverage.json", "assets/chart-releases/**", "tests/fixtures/charts/**"]
   },
   "release": {
-    "content_versioned_adapters": ["russia-trade.js", "russia-trade.css", "lib/russia-trade-model.mjs", "municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js", "stories/oil-pivot.js"]
+    "content_versioned_adapters": ["russia-trade.js", "russia-trade.css", "lib/russia-trade-model.mjs", "municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js", "stories/oil-pivot.js", "lib/rosling-model.js"]
   }
 }
