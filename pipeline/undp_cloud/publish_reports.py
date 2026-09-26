@@ -270,14 +270,17 @@ def main():
     # raw source units. Stream to cloud temporary disk, never a dataset-wide list.
     core_meta={r['variable']:dict(r) for r in query(f"SELECT * FROM `{D}.variable_metadata` WHERE release_id=@release AND source_id='hdr25_timeseries'",core)}
     temporary=tempfile.NamedTemporaryFile(mode='w',encoding='utf-8',newline='',suffix='.csv',delete=False)
-    received=accepted=missing=0;metric_counts=defaultdict(int)
+    received=accepted=missing=0;metric_counts=defaultdict(int);source_totals=defaultdict(Decimal);normalized_totals=defaultdict(Decimal)
     with temporary as out:
         export=csv.writer(out);export.writerow(['release_id','source_id','source_vintage','country_code','country_name','geography_kind','year','metric','metric_label','sex','source_value','normalized_value','source_unit','unit_definition_status','source_column','source_url','source_sha256'])
         for item in query(f'SELECT * FROM `{D}.metric_observations` WHERE release_id=@release',core):
             r=dict(item);received+=1;metric_counts[r['metric']]+=1
             if not r['source_url'].startswith('https://') or not re.fullmatch('[a-f0-9]{64}',r['source_sha256']):raise ValueError('Core CSV source provenance invalid')
             if r['value'] is None:missing+=1
-            else:accepted+=1
+            else:
+                accepted+=1
+                if numeric(r['source_value'])!=numeric(r['value']):raise ValueError('Core export source/normalized numeric mismatch')
+                source_totals[r['metric']]+=numeric(r['source_value']);normalized_totals[r['metric']]+=numeric(r['value'])
             export.writerow([r['release_id'],r['source_id'],r['source_vintage'],r['country_code'],r['country_name'],r['geography_kind'],r['year'],r['metric'],core_meta.get(r['metric'],{}).get('label'),r['sex'],r['source_value'],r['value'],r['unit'],'definition_reviewed_for_chart' if r['metric'] in INDEX or r['metric'] in DIMENSIONS else 'reported_source_unit_definition_not_reviewed_for_chart',r['source_column'],r['source_url'],r['source_sha256']])
     payload['coverage']['core_export']=dict(received_cells=received,nonmissing_cells=accepted,missing_cells=missing,metric_cells=dict(metric_counts),coverage='All pinned HDRO time-series metric cells, including nulls and aggregate geographies; 9 metrics charted. Workbook-only annex cells remain in the pinned warehouse and are not claimed exported here.')
     payload['downloads']=dict(json='https://storage.googleapis.com/'+PUBLIC+'/'+name,core_csv='https://storage.googleapis.com/'+PUBLIC+'/'+core_download,chart_csv='https://storage.googleapis.com/'+PUBLIC+f'/static-assets/human-development/releases/{args.release_id}/observations.csv')
@@ -312,7 +315,7 @@ def main():
         while chunk:=f.read(1024*1024):verified.update(chunk)
     if verified.hexdigest()!=core_sha:raise ValueError('Core CSV roundtrip mismatch')
     os.unlink(temporary.name)
-    core_object=dict(uri='gs://'+PUBLIC+'/'+core_download,generation=str(core_blob.generation),sha256=core_sha,bytes=core_bytes,received_rows=received,accepted_nonmissing_rows=accepted,missing_rows=missing,rejected_rows=0)
+    core_object=dict(uri='gs://'+PUBLIC+'/'+core_download,generation=str(core_blob.generation),sha256=core_sha,bytes=core_bytes,received_rows=received,accepted_nonmissing_rows=accepted,missing_rows=missing,rejected_rows=0,deduplicated_rows=0,source_totals_by_metric={k:str(v) for k,v in source_totals.items()},normalized_totals_by_metric={k:str(v) for k,v in normalized_totals.items()},numeric_totals_status='Exact source and normalized decimal values checked per cell; sums preserved per metric, never combined across units.')
     def anonymous_head(key):
         try:
             with urllib.request.urlopen(urllib.request.Request('https://storage.googleapis.com/'+PUBLIC+'/'+key,method='HEAD'),timeout=20) as r:
