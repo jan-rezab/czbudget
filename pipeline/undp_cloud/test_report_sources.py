@@ -5,7 +5,7 @@ from decimal import Decimal
 import openpyxl
 source=Path(__file__).with_name('report_sources.py').read_text()
 tree=ast.parse(source)
-selected=ast.Module(body=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in {'members','records','archive_metadata_member','claim_source_text','decode'}],type_ignores=[])
+selected=ast.Module(body=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in {'members','records','archive_metadata_member','claim_source_text','decode','csv_encoding'}],type_ignores=[])
 ns=dict(re=re,codecs=codecs,csv=csv,io=io,json=json,Path=Path,Decimal=Decimal,openpyxl=openpyxl,tarfile=tarfile,zipfile=zipfile)
 exec(compile(selected,'source_adapters','exec'),ns)
 records=ns['records']
@@ -35,6 +35,16 @@ class SourceFidelity(unittest.TestCase):
    self.assertEqual(len(rows),2)
    self.assertEqual(rows[0][2]['columns'],['iso_alpha_3_code','year','value'])
    self.assertFalse(any('__MACOSX' in r[0] for r in rows))
+ def test_csv_cp1252_quote_after_clean_64k_prefix(self):
+  with tempfile.TemporaryDirectory() as d:
+   p=Path(d)/'late.csv';p.write_bytes(b'year,value\n'+b'2023,ascii\n'*7000+b'2024,source\x92s quote\n')
+   rows=list(records(p,'csv',Path(d)))
+   self.assertEqual(rows[0][2]['encoding'],'cp1252')
+   self.assertEqual(rows[-1][2]['values'],['2024','source’s quote'])
+ def test_csv_truncated_utf8_sequence_is_not_silently_dropped(self):
+  with tempfile.TemporaryDirectory() as d:
+   p=Path(d)/'bad.csv';p.write_bytes(b'year,value\n2023,\xe2\x81')
+   with self.assertRaises(UnicodeDecodeError):list(records(p,'csv',Path(d)))
  def test_real_csv_invalid_encoding_still_fails(self):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'bad.csv';p.write_bytes(b'year,value\n2023,\x81\n')

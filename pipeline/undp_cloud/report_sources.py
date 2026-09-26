@@ -22,6 +22,21 @@ def stamp():return time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
 def decode(data):
  try:return data.decode('utf-8-sig')
  except UnicodeDecodeError:return data.decode('cp1252')
+def csv_encoding(path):
+ # Validate the whole source, not just a clean prefix: a legacy quote can occur
+ # much later than the delimiter/header sample. Neither decoder replaces bytes.
+ decoder=codecs.getincrementaldecoder('utf-8-sig')()
+ try:
+  with open(path,'rb') as stream:
+   for chunk in iter(lambda:stream.read(65536),b''):decoder.decode(chunk,final=False)
+  decoder.decode(b'',final=True)
+  return 'utf-8-sig'
+ except UnicodeDecodeError:
+  decoder=codecs.getincrementaldecoder('cp1252')()
+  with open(path,'rb') as stream:
+   for chunk in iter(lambda:stream.read(65536),b''):decoder.decode(chunk,final=False)
+  decoder.decode(b'',final=True)
+  return 'cp1252'
 def claim_source_text(path,fmt):
  if path.stat().st_size>50_000_000:raise ValueError('Claim document exceeds 50MB bound')
  with open(path,'rb') as f:magic=f.read(5)
@@ -90,10 +105,7 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
     dest.unlink()
  elif fmt in {'csv','tsv'}:
   # Strict decode, never discard invalid characters. Preserve duplicates via arrays.
-  with open(path,'rb') as f:
-   sample=f.read(65536)
-  try:codecs.getincrementaldecoder('utf-8-sig')().decode(sample,final=False);encoding='utf-8-sig'
-  except UnicodeDecodeError:encoding='cp1252'
+  encoding=csv_encoding(path)
   with open(path,encoding=encoding,newline='') as f:
    delim='\t' if fmt=='tsv' else ','
    sample=f.read(8192);f.seek(0)
