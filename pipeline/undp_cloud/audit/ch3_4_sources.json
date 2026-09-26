@@ -1,0 +1,844 @@
+{
+  "audit_date": "2026-09-27",
+  "scope": "All chapter3\u20134 figures/quantitative boxes and conceptual figure separation; OverviewO.5sharedsource. Narrative quantitative snippets are completeness candidates, not verified source observations.",
+  "pdf_path": "/Users/johnwick/Library/Mobile Documents/com~apple~CloudDocs/John Wick and Jan/hdr2025reporten.pdf",
+  "sources": {
+    "undp_ai": {
+      "publisher": "UNDP AI and Human Development Survey",
+      "original_urls": [
+        "https://hdr.undp.org/explore-and-download-survey-data"
+      ],
+      "report_vintage": "HDR2025 survey",
+      "newest_verified_vintage": "HDR2025 survey",
+      "update_cadence": "One-off survey; no live replacement verified",
+      "coverage": "21 countries; country weights and occupation/age/sex groups",
+      "cloud_fetch": "Already loaded respondent data; reproduce report weighting and category definitions.",
+      "restrictions": "Verify publisher terms before serving raw data; preserve attribution."
+    },
+    "hutton": {
+      "publisher": "Hutton et al. JAMA Pediatrics",
+      "original_urls": [
+        "https://doi.org/10.1001/jamapediatrics.2019.3869"
+      ],
+      "report_vintage": "2020 article",
+      "newest_verified_vintage": "2020 article",
+      "update_cadence": "One-off study",
+      "coverage": "Preschool MRI study, not a national health series",
+      "cloud_fetch": "Original article/supplement; no public raw MRI endpoint verified. Request author data if needed.",
+      "restrictions": "Verify publisher terms before serving raw data; preserve attribution."
+    },
+    "childlight": {
+      "publisher": "Childlight Into the Light Index",
+      "original_urls": [
+        "https://www.childlight.org/into-the-light-2024/indicator-1.html",
+        "https://www.childlight.org/into-the-light-2024/js/masterMapData.js",
+        "https://www.childlight.org/uploads/publications/technical-note-1.pdf",
+        "https://research.childlight.org/ITL2025/executive-summary.php"
+      ],
+      "report_vintage": "2024 regional index",
+      "newest_verified_vintage": "2025 index verified; 2026 release not yet verified",
+      "update_cadence": "Annual releases; pooled studies with varying observation periods",
+      "coverage": "Under18 past-year/lifetime victimisation; regional pooled estimates and confidence intervals",
+      "cloud_fetch": "Fetch original JS; strip var mapData assignment then JSON parse properties. py_dpos/py_dpib past-year solicitation/image prevalence; CIs and source counts. Current2025 country release separate.",
+      "restrictions": "Published aggregate index; no abuse imagery required or requested. Source terms must be preserved."
+    },
+    "nces": {
+      "publisher": "US NCES / NAEP Long-term Trend",
+      "original_urls": [
+        "https://nces.ed.gov/nationsreportcard/subject/publications/main2012/pdf/2013456.pdf",
+        "https://nces.ed.gov/nationsreportcard/ltt/",
+        "https://nces.ed.gov/use-work/dataset/naep-1971-2023-national-mathematics-and-reading-long-term-trend-restricted-use-data-files"
+      ],
+      "report_vintage": "1973\u20132012 mathematics scores published2013",
+      "newest_verified_vintage": "Official landing announces2025 ages9/13 results; exact data export not verified",
+      "update_cadence": "Periodic assessments",
+      "coverage": "US ages9,13,17; assessment format break and significance retained",
+      "cloud_fetch": "Fetch original source report numeric tables; current public NAEP result export. Raw student files require restricted-use license.",
+      "restrictions": "Public aggregate results; restricted respondent data requires NCES application."
+    },
+    "corrigan": {
+      "publisher": "Corrigan/Rokem/Kuhl author deposit",
+      "original_urls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11420155/",
+        "https://zenodo.org/api/records/13227189",
+        "https://zenodo.org/api/records/13227189/files/Adol_CortThick_data.csv/content",
+        "https://github.com/nevacorr/Adolescent_Normative_Modeling_CT_2024"
+      ],
+      "report_vintage": "2024 article/deposit",
+      "newest_verified_vintage": "2024 article/deposit",
+      "update_cadence": "Fixed study",
+      "coverage": "US adolescent cortical-thickness/demographic longitudinal cohort",
+      "cloud_fetch": "Cloud fetch CSV128411 bytes; published MD5 83ddd7acb8a2913a9f9299c1f65ded2f; preserve region/sex/visit. Companion euler QC CSVs and code deposited.",
+      "restrictions": "CC-BY4.0 verified Zenodo metadata; do not infer MRI brain images from CSV."
+    },
+    "mpi_microdata": {
+      "publisher": "Original national DHS and UNICEF MICS surveys behind UNDP MPI",
+      "original_urls": [
+        "https://hdr.undp.org/content/2024-global-multidimensional-poverty-index-mpi",
+        "https://dhsprogram.com/data/",
+        "https://mics.unicef.org/surveys"
+      ],
+      "report_vintage": "MPI2024; survey vintages vary",
+      "newest_verified_vintage": "MPI2024; survey vintages vary",
+      "update_cadence": "Country survey rounds; not real-time",
+      "coverage": "94 countries; nearly8.1million individuals ages19\u201364 in figure3.6",
+      "cloud_fetch": "MPI aggregate workbook already loaded does NOT reproduce education\u00d7internet\u00d7poverty cross-tab; obtain survey-specific approved microdata, code and survey selection list.",
+      "restrictions": "DHS project registration/approval; MICS national ownership and access terms; exact pooled estimator/code missing."
+    },
+    "itu": {
+      "publisher": "International Telecommunication Union",
+      "original_urls": [
+        "https://datahub.itu.int/data/?i=11624&v=chart&d=Age&g=9224",
+        "https://www.itu.int/en/ITU-D/Statistics/pages/stat/default.aspx",
+        "https://www.itu.int/en/ITU-D/Statistics/Documents/facts/ITU_regional_global_Key_ICT_indicator_aggregates_Nov_2025.xlsx"
+      ],
+      "report_vintage": "2024 source downloaded March2025",
+      "newest_verified_vintage": "2025 estimates and country2024 observations verified",
+      "update_cadence": "Annual and rolling country updates; not a real-time internet census",
+      "coverage": "Internet use within last3months by age; national survey populations; regional/income aggregates",
+      "cloud_fetch": "Cloud fetch official2025 XLSX; obtain country-age series through DataHub download. API endpoint not verified.",
+      "restrictions": "ITU publisher terms; country age bands differ/missing. Figure3.9 label25\u201375 is inconsistent with ITU25\u201374; retain source age code."
+    },
+    "wdi_internet": {
+      "publisher": "World Bank WDI, upstream ITU",
+      "original_urls": [
+        "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&per_page=20000"
+      ],
+      "report_vintage": "WDI2024 extract",
+      "newest_verified_vintage": "Fetch current API; latest per country varies",
+      "update_cadence": "Rolling API revisions; annual years",
+      "coverage": "Country/region internet users percent population",
+      "cloud_fetch": "Cloud fetch API with pagination; retain World Bank aggregates separately from countries.",
+      "restrictions": "WDI open data terms/attribution; annual series not equivalent to real-time activity."
+    },
+    "ujet": {
+      "publisher": "UJET original consumer study",
+      "original_urls": [
+        "https://ujet.cx/press-releases/ujet-research-reveals-chatbots-increase-frustration",
+        "https://ujet.cx/blog/report-why-service-automation-is-falling-short",
+        "https://assets.ujet.cx/resource-center-pdfs/UJET-Agent_Survey_Report.pdf"
+      ],
+      "report_vintage": "2022 consumer study",
+      "newest_verified_vintage": "2026 agent survey PDF available, different measure",
+      "update_cadence": "Ad hoc studies",
+      "coverage": "Nearly1700 consumers; primary release has80% frustrated,78%forced human,63%no resolution,72%waste time",
+      "cloud_fetch": "Ingest published original HTML aggregates with exact question denominators; raw response file not published. HDR20%/22%are complements, derived not observed.",
+      "restrictions": "Publisher copyright; newer2026 agent sample has different denominator and cannot replace consumer series."
+    },
+    "sapien": {
+      "publisher": "Sapien Labs Global Mind Project",
+      "original_urls": [
+        "https://sapienlabs.org/global-mind-project/researcher-hub/",
+        "https://sapienlabs.org/global-mind-project-data-access-and-usage-policy/",
+        "https://sapienlabs.org/whats_new/",
+        "https://sapienlabs.org/wp-content/uploads/2025/02/MSW-2024-Data-Tables.xlsx",
+        "https://sapienlabs.org/wp-content/uploads/2026/04/GMP2025-Data-Tables.zip",
+        "https://sapienlabs.org/wp-content/uploads/2025/01/Youth-Report-Data-Tables.xlsx"
+      ],
+      "report_vintage": "2020\u20132024 data; unpublished2025 HDR background paper",
+      "newest_verified_vintage": "2025 annual report publishedFeb2026; liveBrainbase verified",
+      "update_cadence": "Brainbase continuously updated1000\u20132000responses/day; annual public tables",
+      "coverage": "Internet-enabled voluntary online respondents; country/region/age/sex MHQ, NOT whole-population representative estimates",
+      "cloud_fetch": "Cloud fetch public annual aggregate tables; exact HDR pooled smartphone cross-tab may require background paper/Brainbase microdata. Restricted live CSV access requires successful application.",
+      "restrictions": "Non-commercial eligibility/application; authorized users only; respondent data redistribution prohibited. Do not publish raw respondent layer with website access."
+    },
+    "brfss": {
+      "publisher": "US CDC BRFSS",
+      "original_urls": [
+        "https://www.cdc.gov/brfss/annual_data/annual_data.htm",
+        "https://www.cdc.gov/brfss/annual_data/annual_2025.html",
+        "https://www.cdc.gov/brfss/annual_data/2025/files/LLCP2025XPT.zip",
+        "https://www.cdc.gov/brfss/annual_data/2025/zip/codebook25_llcp-v2-508.zip"
+      ],
+      "report_vintage": "1993\u20132024 underlying figure ranges",
+      "newest_verified_vintage": "2025 releasedAugust2026;356158records/284variables",
+      "update_cadence": "Annual releases; interviews monthly but no monthly public real-time feed verified",
+      "coverage": "US adult landline/cellphone complex survey; age,sex,MENTHLTH,LIFESAT where fielded; 2011 redesign",
+      "cloud_fetch": "Cloud fetch report-era year files and latest2025XPT; preserve weights/strata/PSU, nonresponse and variable availability; reproduce researcher estimator separately.",
+      "restrictions": "Public-use CDC data;2025excludesCA/MS/NV/USVI;2024excludesTN; 2011design break.2025variable counts differ."
+    },
+    "social_trap": {
+      "publisher": "Bursztyn/Handel/Jimenez-Duran/Roth original experiment",
+      "original_urls": [
+        "https://www.nber.org/papers/w31771.pdf",
+        "https://bfi.uchicago.edu/wp-content/uploads/2023/10/BFI_WP_2023-131.pdf",
+        "https://www.openicpsr.org/openicpsr/project/220221/version/V1/view",
+        "https://doi.org/10.3886/E220221V1"
+      ],
+      "report_vintage": "2023working paper revisedJuly2024",
+      "newest_verified_vintage": "2025AER public replication packageV1 released2025-10-28",
+      "update_cadence": "Fixed experiments; publication versions",
+      "coverage": "US college student Instagram/TikTok incentivized experiments; welfare dollars/fraction negative",
+      "cloud_fetch": "Cloud acquire author replication package via openICPSR; authenticate/agree repository terms if required; working-paper and2025AER package separate.",
+      "restrictions": "Repository terms/license not yet inspected; no proxy platform usage data."
+    },
+    "disability": {
+      "publisher": "UN DESA Disability and Development Report",
+      "original_urls": [
+        "https://desapublications.un.org/publications/un-flagship-report-disability-and-development-2024",
+        "https://social.desa.un.org/issues/disability/un-disability-and-development-report-ddr"
+      ],
+      "report_vintage": "2024report;2021or latest surveys",
+      "newest_verified_vintage": "2024report;2021or latest surveys",
+      "update_cadence": "Irregular flagship reports; survey releases",
+      "coverage": "46countries/areas, disabled/non-disabled; WashingtonGroup or ModelDisabilitySurvey definitions",
+      "cloud_fetch": "Original report numeric tables then underlying national microdata/WHO/ECLAC/DHS/SINTEF. No exact universal original API verified.",
+      "restrictions": "Different disability instruments; no ordinary internet-rate proxy for missing disability split."
+    },
+    "wipo": {
+      "publisher": "WIPO Assistive Technology patent landscape",
+      "original_urls": [
+        "https://www.wipo.int/publications/en/details.jsp?id=4541",
+        "https://www.wipo.int/edocs/pubdocs/en/wipo_pub_1055_2021-tech1.xlsx",
+        "https://www.wipo.int/edocs/pubdocs/en/wipo_pub_1055_2021-tech2.xlsx"
+      ],
+      "report_vintage": "2021landscape;HDRfigureslabel2000\u20132010",
+      "newest_verified_vintage": "No refreshed same-definition assistive landscape found",
+      "update_cadence": "Fixed patent search landscape; livePATENTSCOPEdifferent query",
+      "coverage": "Patent country/office counts; conventional vs emerging seven domains",
+      "cloud_fetch": "Cloud fetch both ORIGINAL XLSX datasets; inspect year range before normalizing: HDRfigure2000\u20132010 may be transcription discrepancy versus landscape2000\u20132018. Recompute exact report range only if evidence.",
+      "restrictions": "Office WIPO/EPO regional offices are not countries; preserve patent-family/applications distinction; workbook license needs verification."
+    },
+    "uis_stem": {
+      "publisher": "UNESCO GEM Technology on Her Terms, upstream UIS",
+      "original_urls": [
+        "https://www.unesco.org/gem-report/en/2024-gender-report",
+        "https://databrowser.uis.unesco.org/resources/bulk",
+        "https://apiportal.uis.unesco.org/bdds"
+      ],
+      "report_vintage": "2024GEM;2010/2020STEMfemale graduate shares",
+      "newest_verified_vintage": "UISFeb2026releaseverified",
+      "update_cadence": "UISperiodic annual releases",
+      "coverage": "Tertiary STEMgraduate sex shares; countryregional groups; no imputation",
+      "cloud_fetch": "Root handlesUISBDDScurrent and source release; exactSTEMfield/ISCEDindicator mapping required.",
+      "restrictions": "UNESCO attribution/license; missingcountryyearsvisible."
+    },
+    "mics_care": {
+      "publisher": "UNICEF MICS round6",
+      "original_urls": [
+        "https://mics.unicef.org/surveys",
+        "https://data.unicef.org/sdmx-api-documentation/"
+      ],
+      "report_vintage": "MICS6multi-country pooled microdata",
+      "newest_verified_vintage": "MICS6multi-country pooled microdata",
+      "update_cadence": "Country rounds; MICS7newer where available",
+      "coverage": "Women/men ICTSkillsIndex by householdnumberchildren; smaller male sample",
+      "cloud_fetch": "Exact cross-tab requires selectedMICS6microdata/code; generalUNICEFSDMXICTaggregate not same statistic. Countryselection/indexdefinition/weighting must be resolved.",
+      "restrictions": "Microdata nationalownership/accessconditions; no reportchart-derived proxy."
+    },
+    "gender_violence": {
+      "publisher": "Original study publishers EIU,Plan,SecurityHero,UNESCO,IPU",
+      "original_urls": [
+        "https://plan-international.org/publications/free-to-be-online/",
+        "https://www.securityhero.io/state-of-deepfakes/assets/pdf/state-of-deepfake-infographic-2023.pdf",
+        "https://unesdoc.unesco.org/",
+        "https://www.ipu.org/",
+        "https://www.unesco.org/en/articles/unescos-global-survey-online-violence-against-women-journalists",
+        "https://www.unesco.org/en/articles/global-survey-reveals-rising-violence-against-women-journalists?hub=67972",
+        "https://www.ipu.org/news/press-releases/2021-11/widespread-sexism-and-violence-against-women-in-african-parliaments-according-new-ipu-report",
+        "https://plan-international.org/publications/free-to-be-online/"
+      ],
+      "report_vintage": "EIU2021/Plan2020/SecurityHero2023/UNESCO2020/IPU2021",
+      "newest_verified_vintage": "UNESCO2025 journalist survey; other publisher series unverified",
+      "update_cadence": "Ad hoc studies; not live harmonized series",
+      "coverage": "Different samples ofwomen,girls,journalists,parliamentarians,online videos",
+      "cloud_fetch": "Originalpublisherreportaggregate extraction possible; exactEIU/UNESCO/IPUpages need resolving; rawsurveydata not verified.",
+      "restrictions": "Do not merge denominators. HDRPlan31-countrycaption differs primaryquantitative22/qualitative16countrycoverage; verify fullreport."
+    }
+  },
+  "figures": [
+    {
+      "label": "3.1",
+      "pdf_page": 82,
+      "printed_page": 68,
+      "title": "AI use by occupation",
+      "kind": "numeric",
+      "source_id": "undp_ai",
+      "notes": ""
+    },
+    {
+      "label": "3.2",
+      "pdf_page": 83,
+      "printed_page": 69,
+      "title": "Invest inform include",
+      "kind": "conceptual",
+      "source_id": null,
+      "notes": ""
+    },
+    {
+      "label": "3.3",
+      "pdf_page": 84,
+      "printed_page": 70,
+      "title": "MRI white matter and screen time",
+      "kind": "scientific_image",
+      "source_id": "hutton",
+      "notes": ""
+    },
+    {
+      "label": "Box3.1/F1",
+      "pdf_page": 85,
+      "printed_page": 71,
+      "title": "Online child sexual abuse regional prevalence",
+      "kind": "numeric",
+      "source_id": "childlight",
+      "notes": ""
+    },
+    {
+      "label": "Box3.2/F1",
+      "pdf_page": 87,
+      "printed_page": 73,
+      "title": "AI tailors lessons without internet",
+      "kind": "conceptual",
+      "source_id": null,
+      "notes": ""
+    },
+    {
+      "label": "3.4",
+      "pdf_page": 88,
+      "printed_page": 74,
+      "title": "US mathematics assessment historical scores",
+      "kind": "numeric",
+      "source_id": "nces",
+      "notes": ""
+    },
+    {
+      "label": "3.5",
+      "pdf_page": 90,
+      "printed_page": 76,
+      "title": "Covid accelerated cortical thinning",
+      "kind": "scientific_image",
+      "source_id": "corrigan",
+      "notes": ""
+    },
+    {
+      "label": "Box3.3/F1",
+      "pdf_page": 92,
+      "printed_page": 78,
+      "title": "Young internet use by income group",
+      "kind": "numeric",
+      "source_id": "itu",
+      "notes": ""
+    },
+    {
+      "label": "Box3.3/F2",
+      "pdf_page": 92,
+      "printed_page": 78,
+      "title": "Internet use regional1990onward",
+      "kind": "numeric",
+      "source_id": "wdi_internet",
+      "notes": ""
+    },
+    {
+      "label": "3.6",
+      "pdf_page": 93,
+      "printed_page": 79,
+      "title": "Internet access by poverty and education",
+      "kind": "numeric",
+      "source_id": "mpi_microdata",
+      "notes": ""
+    },
+    {
+      "label": "3.7",
+      "pdf_page": 95,
+      "printed_page": 81,
+      "title": "Authenticity autonomy agency",
+      "kind": "conceptual",
+      "source_id": null,
+      "notes": ""
+    },
+    {
+      "label": "3.8",
+      "pdf_page": 96,
+      "printed_page": 82,
+      "title": "Chatbot frustration",
+      "kind": "numeric",
+      "source_id": "ujet",
+      "notes": ""
+    },
+    {
+      "label": "3.9",
+      "pdf_page": 98,
+      "printed_page": 84,
+      "title": "Internet users by age/country",
+      "kind": "numeric",
+      "source_id": "itu",
+      "notes": "Stacked percentages not total population share; under15missingcountriesretained."
+    },
+    {
+      "label": "3.10",
+      "pdf_page": 99,
+      "printed_page": 85,
+      "title": "Internet users75+bycountryHDI",
+      "kind": "numeric",
+      "source_id": "itu",
+      "notes": ""
+    },
+    {
+      "label": "3.11",
+      "pdf_page": 100,
+      "printed_page": 86,
+      "title": "MHQ distress byageandregion",
+      "kind": "numeric",
+      "source_id": "sapien",
+      "notes": ""
+    },
+    {
+      "label": "3.12",
+      "pdf_page": 101,
+      "printed_page": 87,
+      "title": "Healthcare bias framework",
+      "kind": "conceptual",
+      "source_id": null,
+      "notes": ""
+    },
+    {
+      "label": "3.13",
+      "pdf_page": 101,
+      "printed_page": 87,
+      "title": "AI human development framework",
+      "kind": "conceptual",
+      "source_id": null,
+      "notes": ""
+    },
+    {
+      "label": "S3.1.1",
+      "pdf_page": 103,
+      "printed_page": 89,
+      "title": "US life satisfaction/despair byage",
+      "kind": "numeric",
+      "source_id": "brfss",
+      "notes": ""
+    },
+    {
+      "label": "S3.1.2",
+      "pdf_page": 104,
+      "printed_page": 90,
+      "title": "US despair time series1993\u20132023",
+      "kind": "numeric",
+      "source_id": "brfss",
+      "notes": ""
+    },
+    {
+      "label": "S3.1.3",
+      "pdf_page": 105,
+      "printed_page": 91,
+      "title": "MHQ score byageandregion",
+      "kind": "numeric",
+      "source_id": "sapien",
+      "notes": ""
+    },
+    {
+      "label": "S3.1.4",
+      "pdf_page": 106,
+      "printed_page": 92,
+      "title": "First smartphone age/MHQ",
+      "kind": "numeric",
+      "source_id": "sapien",
+      "notes": ""
+    },
+    {
+      "label": "S3.2.1",
+      "pdf_page": 108,
+      "printed_page": 94,
+      "title": "PreferworldwithoutInstagram/TikTok",
+      "kind": "numeric",
+      "source_id": "social_trap",
+      "notes": ""
+    },
+    {
+      "label": "S3.2.2",
+      "pdf_page": 109,
+      "printed_page": 95,
+      "title": "Socialmediawelfaremeasures",
+      "kind": "numeric",
+      "source_id": "social_trap",
+      "notes": ""
+    },
+    {
+      "label": "TableS3.2.1",
+      "pdf_page": 113,
+      "printed_page": 99,
+      "title": "CAREframework",
+      "kind": "conceptual",
+      "source_id": null,
+      "notes": "PrintedlabelS3.2.1appearsinsideSpotlight3.3; preserve source label."
+    },
+    {
+      "label": "4.1",
+      "pdf_page": 120,
+      "printed_page": 106,
+      "title": "Disability internet gaps",
+      "kind": "numeric",
+      "source_id": "disability",
+      "notes": ""
+    },
+    {
+      "label": "4.2",
+      "pdf_page": 121,
+      "printed_page": 107,
+      "title": "Conventionalassistivepatents",
+      "kind": "numeric",
+      "source_id": "wipo",
+      "notes": ""
+    },
+    {
+      "label": "4.3",
+      "pdf_page": 122,
+      "printed_page": 108,
+      "title": "Emergingassistivepatents",
+      "kind": "numeric",
+      "source_id": "wipo",
+      "notes": ""
+    },
+    {
+      "label": "4.4",
+      "pdf_page": 125,
+      "printed_page": 111,
+      "title": "ExpectedAIagencybyage/HDI",
+      "kind": "numeric",
+      "source_id": "undp_ai",
+      "notes": ""
+    },
+    {
+      "label": "4.5",
+      "pdf_page": 128,
+      "printed_page": 114,
+      "title": "FemaleSTEMgraduatecrosssection",
+      "kind": "numeric",
+      "source_id": "uis_stem",
+      "notes": ""
+    },
+    {
+      "label": "4.6",
+      "pdf_page": 129,
+      "printed_page": 115,
+      "title": "FemaleSTEMgraduate2010/2020",
+      "kind": "numeric",
+      "source_id": "uis_stem",
+      "notes": ""
+    },
+    {
+      "label": "Box4.1/F1",
+      "pdf_page": 130,
+      "printed_page": 116,
+      "title": "ICTskillsbysexandhouseholdchildren",
+      "kind": "numeric",
+      "source_id": "mics_care",
+      "notes": ""
+    },
+    {
+      "label": "Box4.2",
+      "pdf_page": 132,
+      "printed_page": 118,
+      "title": "Onlinegender-basedviolencestudypercentages",
+      "kind": "numeric_box",
+      "source_id": "gender_violence",
+      "notes": ""
+    },
+    {
+      "label": "O.5",
+      "pdf_page": 22,
+      "printed_page": 8,
+      "title": "YounginternetusersMHQ",
+      "kind": "numeric",
+      "source_id": "sapien",
+      "notes": ""
+    }
+  ],
+  "narrative_quantitative_candidates": [
+    {
+      "pdf_page": 81,
+      "printed_page": 67,
+      "excerpt": "stage. Almost half of students and a quarter of working people use AI-powered appli - cations more than once a week\u2014mostly for educa - tion and work\u2014while only 15 percent of nonworking adults and 9 percent of retired people do so, mostly for entertainment and health (figure 3.1). This is part - ly because people are surrounded by institutions that vary in the ability ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 85,
+      "printed_page": 71,
+      "excerpt": "ogies (box figure 1) \u2014 and sharply on the rise in many African countries.2 While solicitation is more common among adolescents, most image- based abuse (around 85 percent) affects prepubescent children, including infants and toddlers.3 The younger the child, the more severe the abuse. 4 The majority of images show female children. 5 Abusive images are refined and repr",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 85,
+      "printed_page": 71,
+      "excerpt": "tes 1. Childlight 2024. 2. ChildFund International and African Child Policy Forum 2024. 3. INHOPE 2023. 4. ECPAT and INTERPOL 2018. 5. In one sample as much as 99 percent of images were of girls (IWF 2024). See also ECPAT and INTERPOL (2018). 6. IWF 2024. 7. IWF 2024. 8. Amlani 2024; Anglia Ruskin University 2024; Child Rescue Coalition 2024; Grzegorczyk 2023; IWF 202",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 91,
+      "printed_page": 77,
+      "excerpt": "ts and low life satisfaction in 15- year-olds across 37 coun- tries. With excessive social media use, the odds of having psychosomatic complaints rise by about 39 percent, and life satisfaction falls by 33 percent.2 Even so, some aspects of social media \u2014 such as searching for peer support, using platforms as creative outlets and improving connectedness to friends \u2014 h",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 91,
+      "printed_page": 77,
+      "excerpt": "to overcome flagging from social media platforms. In just 36 minutes, a bot that interacted with videos centred around depression was shown a TikTok feed where 93 percent of content was sad or depressive. 12 Although most social media firms are making efforts to hide or delete potentially harmful posts, more work is needed to make them more effective. On average, only",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 91,
+      "printed_page": 77,
+      "excerpt": " 15 percent of reported posts with suicidal or self- harm content are deleted, revealing widespread noncompliance with the EU Digital Services Act, which aims to protect young people from harmful content on soci",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 93,
+      "printed_page": 79,
+      "excerpt": " at least six years of schooling. The data are from household surveys (Demographic and Health Surveys and Multiple Indicator Cluster Surveys) that cover nearly 8.1 million individuals in 94 countries. Source: Human Development Report Office using data from UNDP (2024a). ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 95,
+      "printed_page": 81,
+      "excerpt": "ability to manage complex re- quests and the obligation to interact with a virtual agent when undesired to be substantial drawbacks.81 Survey data suggest that 80 percent of customers have been frustrated after interacting with a chatbot instead of a human agent and that chatbots resolved only 22 per - cent of customers\u2019 issues (figure 3.8). All others had to connect ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 95,
+      "printed_page": 81,
+      "excerpt": "f the company. So, while at first sight, AI reduces costs, it can ul - timately damage a company\u2019s reputation. The out - look does not seem promising: in 2024, 85 percent of call centre managers in the United Kingdom and the United States that did not already have an auto - mated system planned to implement one. 84 This will also have profound consequences for many mi",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 95,
+      "printed_page": 81,
+      "excerpt": "olation and poor mental wellbeing.4 AI- powered characters are used not only as friends but also as romantic partners in video games (some downloaded more than 10 million times and others with more than 660 million users). 5 These games can produce unrealistic ex - pectations about relationships with a flawless partner and may lead to the rejection of imperfect human ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 95,
+      "printed_page": 81,
+      "excerpt": "me and energy into their seemingly perfect relationships with AI- powered charac- ters, imperfect human relationships can be neglected or even rejected. 7 Some 25 percent of people who regularly interact with these characters report less interest in forming human relationships. 8 This not only erodes people\u2019s ability to nurture relationships but also leads to feelings",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 95,
+      "printed_page": 81,
+      "excerpt": " of detachment and alienation from the human community 9 \u2014 with 18 percent of frequent users of these features reporting increased loneliness and isolation, even though they perceive a sense of companionship.10 Since apps with AI- powered characters tend to come and go from",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 95,
+      "printed_page": 81,
+      "excerpt": "is alarming that users report that their mental wellbeing would suffer if certain apps were to disappear.11 Experts also see potential for addiction;12 indeed, 32 percent of frequent users show symptoms consistent with behavioural addiction.13 The biggest contributor to addiction is the experience of conversational flow and attach- ment, which is generated by AI\u2019s per",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 96,
+      "printed_page": 82,
+      "excerpt": " recognition technology), mothers or fathers with small children, and people who lack digital skills. For instance, despite advances in online booking systems, 53 percent of travellers from the European Union, India and the United States reported needing assistance with some or all parts of the booking pro - cess.86 Moreover, people living with disabilities may face d",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 97,
+      "printed_page": 83,
+      "excerpt": " technology, in part because they have not had access to it or because digital technologies, particu - larly AI, are changing rapidly. In six African countries 40 percent of children have never received any ad - vice or guidance from caregivers on how to safely use the internet. That is partly because their caregivers do not use the internet, as in Ethiopia, where usa",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 97,
+      "printed_page": 83,
+      "excerpt": "ge among caregivers is as low as 18 percent. 89 In other regions of the world, children must com - pete with technology for their parents\u2019 or caregivers\u2019 attention. Parents who are using their phone are five times less likely than those who ar",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 97,
+      "printed_page": 83,
+      "excerpt": " autonomy and authenticity can they exercise their agency. Older age \u2014 trained, empowered and healthier? The global population is rapidly age - ing, with about 1.4 billion people ages 60 and older expected by 2030. 91 As medical care im- proves and life expectancies increase, more people than ever before are elderly. At the same time digi - tal technology is rapidly ad",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 97,
+      "printed_page": 83,
+      "excerpt": "mini or Microsoft Copilot.92 The proportion of older people who are internet users is lower than the proportion of all other age groups (figure 3.9). In Canada 99 percent of people ages 15\u201324 are internet users, compared with 72 percent of people ages 75 and older. In C\u00f4te d\u2019Ivo - ire, France, Japan and Mexico over 95 percent of young people use the internet, compared",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 97,
+      "printed_page": 83,
+      "excerpt": "than older people. 96 Fewer than half of older people think that AI- powered products and ser- vices have more benefits than drawbacks, compared with more than 60 percent of younger people. 97 And more than 80 percent of older people are concerned ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 98,
+      "printed_page": 84,
+      "excerpt": "nd spoofing is included, older people are the most affected, with more than double the total financial loss of other age groups.105 Reported fraud increased by 14 percent from 2023 to 2024, possibly due to new generative AI- powered tools that use voice cloning in scam calls.106 Figure 3.9 Very little internet use among older people 0 50 100 150 200 250 300 350 400 Ag",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 98,
+      "printed_page": 84,
+      "excerpt": "raph. Each bar includes four segments reflecting the percentage values for four age categories in each country. Because each age group contributes a maximum of 100 percent, the total for any given country cannot exceed 400. Source: Human Development Report Office using data from ITU (2024a). ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 99,
+      "printed_page": 85,
+      "excerpt": " - fected by them (figure 3.11). Adults in the older age group tend to have high pur- chasing power. Older people in the United States could spend an estimated $26.8 trillion on digital technolo - gy by 2050. 107 But many apps and devices overlook the physical and cognitive challenges older people face. Product development should ensure options tailored to their ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 99,
+      "printed_page": 85,
+      "excerpt": "ovid- 19 pandemic, telehealth services surged in many parts of the world, and were especially attractive for older people in the United States, where more than 40 percent engaged in video consultations with healthcare providers.110 The trend has lasted, still generating political debate about insurance coverage several years later111 and the promise of expanding acces",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 100,
+      "printed_page": 86,
+      "excerpt": "odules in lung cancer patients in countries as diverse as India, Japan and the United States. 115 AI- powered systems have increased breast cancer detection by 29 percent (with a false- positive rate similar to standard double reading), reducing the screen- reading workload by 44 percent. 116 AI is also used for early stroke prediction and for analysing patients\u2019 acou",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 100,
+      "printed_page": 86,
+      "excerpt": "use the healthcare system more frequently than people in younger age groups 119 but are often underrepresented in the datasets that train AI models. Only about 26 percent of AI mod - els include age- specific data, and even those that do contain little information on individuals ages 85 and older.120 Biases \u2014 particularly in representation and evaluation \u2014 are introdu",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 105,
+      "printed_page": 91,
+      "excerpt": "at - ed, across all regions, mental wellbeing is lowest for young adults and increases with age (figure S3.1.3). Among the global internet- enabled population, 45 percent of young people ages 18\u201324 struggle with mental wellbeing at a level that has functional conse- quences and with symptomatic distress that would be considered of clinical concern.23 The age at which ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 105,
+      "printed_page": 91,
+      "excerpt": "igure S3.1.4). The effects are most pronounced among women and young people who first owned a smartphone at age 5 or 6. Nearly 70 per - cent of young women and 50 percent of young men responding to the survey now report distress and struggling. By contrast, among those who first owned a smartphone at age 13, the values drop to 51 percent for women and 38 percent for m",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 108,
+      "printed_page": 94,
+      "excerpt": "ram and TikTok users if they would pre - fer to live in a world with or without these platforms. Among a sample of just over 1,000 US college stu - dents, over 55 percent of Instagram users and 33 per - cent of TikTok users would prefer to live in a world where the platform did not exist (figure S3.2.1). Moving beyond just asking survey questions, an experiment with t",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 108,
+      "printed_page": 94,
+      "excerpt": " to live in a world without the platform 0 20 40 60 80 100 TikTokInstagram Share of respondents (%) UsersAll respondents 57 33 58 57 Note: Error bars represent 95 percent confidence intervals. Source: Bursztyn and others 2023. ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 109,
+      "printed_page": 95,
+      "excerpt": "CHAPTER 3 \u2014 ARTIFICIAL INTELLIGENCE ACROSS LIFE STAGES: INSIGHTS FROM A PEOPLE- CENTRED PERSPECTIVE 95 Students need to be paid around $50 to deacti - vate Instagram or TikTok for four weeks, if they ex - pect to do it alone (figure S3.2.2). At the same time, 46 percent of active Instagram users and 60 per - cent of active TikTok users ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 109,
+      "printed_page": 95,
+      "excerpt": " ($) /uni00B5 = \u20136 /uni00B5 = 37 /uni00B5 = 47 /uni00B5 = \u20139 p < 0.01 p < 0.01 p < 0.01 p < 0.01 p < 0.01 p < 0.01 p < 0.01 p < 0.01 Note: Error bars represent 95 percent confidence intervals. Source: Bursztyn and others 2023. ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 120,
+      "printed_page": 106,
+      "excerpt": "is uneven, the opportunities brought about by advances in digital technologies remain unrealized for many and may further exacerbate inequalities. 31 More than 2.5 billion people need access to assistive technologies. 32 But access remains highly unequal around the world. 33 Similar inequalities can be ob - served in the case of information and communication technologi",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 120,
+      "printed_page": 106,
+      "excerpt": "(MDS) Maldives* India* (MDS) Tajikistan (MDS) Lao PDR (MDS) * The difference between people with disabilities and people without disabilities is significant at 5 percent. Note: MDS indicates data produced with the Model Disability Survey. WG indicates data produced with the Washington Group Short Set of Questions. Data are for 2021 or the most recent year available. ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 123,
+      "printed_page": 109,
+      "excerpt": "ion and the concomitant shortage of care workers have motivated investment in care technol - ogies in many countries. For instance, the European Union invested $103 million in a research and devel - opment program called Robotics for Ageing Well in 2015\u20132020, and in 2019 the UK government invested $48 million in robots for adult social care. 63 Some nar- ratives",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 124,
+      "printed_page": 110,
+      "excerpt": " trol over their lives as AI technologies become further integrated into daily life (figure 4.4). Trust in AI tech- nologies is lowest among older people. Only 48 percent of older people \u2014 as opposed to 68 percent of younger people \u2014 express confidence that AI technologies are currently designed to act in the best interest of society.78 This expected loss of agency co",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 124,
+      "printed_page": 110,
+      "excerpt": "of robotic care assistants, particularly in relation to efficiency. 80 However, worries about the loss of human interaction were also widely prevalent. Indeed, 78 percent of people were concerned that care recipients would lose out on interaction with human caregivers. This finding indicates people\u2019s openness ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 125,
+      "printed_page": 111,
+      "excerpt": "GENCE TO ADVANCE HUMAN DEVELOPMENT 111 to using AI to support the care process without under- mining the social, emotional and ethical dimensions of care. Some 48 percent of people agreed that as - signing responsibility would be difficult if things went wrong. There is a momentous risk of manipulation and deception, disrespecting the agency and digni - ty of older pe",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 127,
+      "printed_page": 113,
+      "excerpt": "owers claim to trans- form domestic work by freeing up women\u2019s time from unpaid domestic labour. A recent estimate found that domestic automation could free up 9.3 percent of women\u2019s time in Japan and 5.8 percent in the Unit - ed Kingdom to undertake full- or part- time employ - ment. 114 Historically, household appliances have helped women save time on domestic work a",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 128,
+      "printed_page": 114,
+      "excerpt": "chnology\u2013related occupations.126 Girls perform equally well or better than boys when STEM subjects are not considered exclusively male oriented.127 On average, 35 percent of STEM gradu - ates are women \u2014 a share that has changed little over the past decade (figures 4.5 and 4.6). But women\u2019s representation among STEM graduates is higher in some countries than in others",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 128,
+      "printed_page": 114,
+      "excerpt": ". The reason? In many Figure 4.5 On average, only 35 percent of graduates in science, technology, engineering and mathematics are women 0 10 20 30 40 50 60 70 Female (%) Sub-Saharan Af ri c a Europe and Norther n America Central and Southern A si a E astern an",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 129,
+      "printed_page": 115,
+      "excerpt": " many cases, these inequalities widen when focusing on AI rather than STEM broadly. 129 While about a third of global researchers in science are women,130 only 12 percent of AI researchers are. 131 And women constitute only 30 percent of AI talent globally.132 While it remains important to enhance women\u2019s participation in AI production, the terms of their inclusion ma",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 130,
+      "printed_page": 116,
+      "excerpt": "ience higher turnover and attrition and report lower self- confidence in their skills.133 Women are also underrepresented among AI users. Our survey finds that 37 percent of women are AI users, compared with 41 percent of men. But men report greater use of AI for work across all lev - els of education (chapter 6). Global internet traffic data also reveal that only 33 ",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 131,
+      "printed_page": 117,
+      "excerpt": "orms. Media stereotyping can influ - ence audiences\u2019 attitudes, opinions and behaviours. Women are less likely to appear in portrayals of AI. For example, only 8 percent of AI engineers portrayed in the most influential AI- related films are women.146 This finding is crucial, as media representation of professions has a strong impact on people\u2019s career choices and pr",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 132,
+      "printed_page": 118,
+      "excerpt": "is differentiated because women and girls are attacked simply for being online and for being women or girls. These forms of violence are widespread.2 Globally, 38 percent of women have experienced gender- based violence online, and 85 percent of women have witnessed it. 3 Y oung women are particularly affected: 58 percent of young women across 31 countries experienced",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 132,
+      "printed_page": 118,
+      "excerpt": "ly altered images created using AI and constitutes an emerging and growing form of nonconsensual synthetic intimate imagery.7 Deepfake pornography accounts for 98 percent of deepfake videos online, and 99 percent of individuals targeted in this content are women.8 But awareness of AI- generated image- based abuse remains low across countries.9 Generative AI can create",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 132,
+      "printed_page": 118,
+      "excerpt": "tailing their agency. Indeed, women who engage in public spaces, including journalists, politicians and activists, are subjected to more virulent abuse.13 Some 73 percent of female journalists have experienced online gender- based violence.14 And 46 percent of female parliamentarians in Africa and 58 percent in Europe have been the target of sexist attacks online.15 A",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 134,
+      "printed_page": 120,
+      "excerpt": "real world. For example, large lan - guage models often depict female characters more frequently than male ones in stories about various occupations, showing a 37 percent deviation from US Bureau of Labor Statistics data. 184 And women are substantially overrepresented in crime scenarios when compared with data from the US Federal Bu - reau of Investigation.185 So, th",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    },
+    {
+      "pdf_page": 144,
+      "printed_page": 130,
+      "excerpt": "arian efforts have been driven predominantly by Western responses to conflicts and disasters, often sidelining local actors who historically received less than 0.3 percent of formal system funding. 3 As part of the 2016 Grand Bargain, this political agenda seeks to empower local communities and local humani - tarian organizations by increasing funding, capacity buildin",
+      "status": "Requires individual endnote and original source verification; text number not auto-attributed"
+    }
+  ],
+  "completion_limits": [
+    "Allfigureandboxtargetsmapped; notallnarrativecitationsresolved.",
+    "Source auditdoesnotclaimingestionorwarehousepublication.",
+    "No original bulkdata downloadedtoMac.",
+    "Exactreportvintage must stay distinctfromnewerreleases."
+  ]
+}
