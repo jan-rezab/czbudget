@@ -68,14 +68,16 @@
     "source_id": "park_disruption_1",
     "url": "https://zenodo.org/records/7258379/files/nature_disruption_open_access.tar.gz?download=1",
     "format": "tar.gz",
-    "vintage": "Papers 1945\u20132010; patents 1976\u20132010; CD5 requires five-year forward citation window",
+    "vintage": "Papers 1945–2010; patents 1976–2010; CD5 requires five-year forward citation window",
     "relation": "original_source",
     "report_refs": [
       "Figure 6.6"
     ],
     "cadence": "Static replication package; not live. Modern OpenAlex would be a separately defined method/source, not exact replacement.",
-    "license": "Zenodo 1.5GB package md5 41c0a5a9f32913a45041c26834f5fea7. MAG/PatentsView/PubMed analyses complete; WoS/APS/JSTOR only limited public versions, full require publisher permission.",
-    "notes": "Field/year mean CD5, study based on 45M papers and 3.9M patents across six source databases. Cloud fetch exact Zenodo package, hash/check archive safely, retain source components/license restrictions. Prefer public source-data aggregate tables; do not claim all licensed microdata loaded."
+    "license": "Zenodo 1.5GB package md5 41c0a5a9f32913a45041c26834f5fea7. MAG/PatentsView/PubMed analyses complete; WoS/APS/JSTOR only limited public versions, full require publisher permission. Zenodo license ID not exposed by inspected page; private retention, review component terms before public republication.",
+    "notes": "Field/year mean CD5, study based on 45M papers and 3.9M patents across six source databases. Cloud fetch exact Zenodo package, hash/check archive safely, retain source components/license restrictions. Prefer public source-data aggregate tables; do not claim all licensed microdata loaded. First load holds full public replication package in cloud raw; original-table adapter/license review still pending, not queryable warehouse data.",
+    "parse_mode": "raw_only",
+    "expected_md5": "41c0a5a9f32913a45041c26834f5fea7"
   },
   {
     "source_id": "oecd_pisa2022_1",
@@ -89,7 +91,7 @@
     ],
     "cadence": "PISA periodic surveys, not live. Index currently displays 2025 placeholders/links; actual usable 2025 data must be HTTP/content/schema/date verified before claiming release.",
     "license": "Public-use data; OECD terms, anonymised respondent identifiers. Low response-rate adjudication warnings retained for 2022.",
-    "notes": "Fig6.9 52 countries; 15-year-old enrolled students, plausible values/weights, trust question; Fig6.10 equal country weights, proficiency level \u22654 in any subject proxy, not validated direct critical-thinking score. Cloud download official ZIP; retain codebooks, questionnaire, replicate weights, plausible values, missing codes and country coverage; exact HDR filtering/proxy derivation and equal-country weights are separate outputs."
+    "notes": "Fig6.9 52 countries; 15-year-old enrolled students, plausible values/weights, trust question; Fig6.10 equal country weights, proficiency level ≥4 in any subject proxy, not validated direct critical-thinking score. Cloud download official ZIP; retain codebooks, questionnaire, replicate weights, plausible values, missing codes and country coverage; exact HDR filtering/proxy derivation and equal-country weights are separate outputs."
   },
   {
     "source_id": "hadcrut5_1",
@@ -102,7 +104,7 @@
     ],
     "cadence": "Version5.2.0.0 released 2026-09-18; download page updated2026-09-21. Monthly series available; no real-time daily same-source series. Annual file URLs resolve from official download links, fetch not verified here.",
     "license": "Crown copyright; original data-use conditions must be retained.",
-    "notes": "Global monthly/annual temperature anomalies and uncertainty since 1850, default reference 1961\u20131990. Cloud snapshot versioned monthly/annual CSV; preserve native baseline and uncertainty; calculate 1850\u20131900 rebasing explicitly, retain original values."
+    "notes": "Global monthly/annual temperature anomalies and uncertainty since 1850, default reference 1961–1990. Cloud snapshot versioned monthly/annual CSV; preserve native baseline and uncertainty; calculate 1850–1900 rebasing explicitly, retain original values."
   },
   {
     "source_id": "hadcrut5_2",
@@ -115,7 +117,7 @@
     ],
     "cadence": "Version5.2.0.0 released 2026-09-18; download page updated2026-09-21. Monthly series available; no real-time daily same-source series. Annual file URLs resolve from official download links, fetch not verified here.",
     "license": "Crown copyright; original data-use conditions must be retained.",
-    "notes": "Global monthly/annual temperature anomalies and uncertainty since 1850, default reference 1961\u20131990. Cloud snapshot versioned monthly/annual CSV; preserve native baseline and uncertainty; calculate 1850\u20131900 rebasing explicitly, retain original values."
+    "notes": "Global monthly/annual temperature anomalies and uncertainty since 1850, default reference 1961–1990. Cloud snapshot versioned monthly/annual CSV; preserve native baseline and uncertainty; calculate 1850–1900 rebasing explicitly, retain original values."
   },
   {
     "source_id": "rupp_transistors_1",
@@ -181,5 +183,18 @@
     "cadence": "2025 refined study",
     "license": "Public author repository; explicit dataset license not verified; private retention",
     "notes": "Task-level occupational exposure scores, original author file; keep tasks and occupations distinct."
+  },
+  {
+    "source_id": "park_disruption_figure2",
+    "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-022-05543-x/MediaObjects/41586_2022_5543_MOESM4_ESM.xlsx",
+    "format": "xlsx",
+    "vintage": "Papers 1945–2010; patents 1976–2010; CD5 requires five-year forward citation window",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 6.6"
+    ],
+    "cadence": "Static original Nature Source Data Fig.2; no live update.",
+    "license": "Publisher-linked source-data workbook; explicit workbook reuse license not verified. Preserve privately with attribution; do not infer CC-BY from free access.",
+    "notes": "Direct XLSX linked from original Nature source-data section (Source Data Fig.2). Prefer this original figure aggregate to replicate HDRFig6.6; exact field series, year coverage and transformations must be validated in cloud. Related 1.5GB Zenodo package remains a separate replication input, includes limited licensed-source extracts. Nature flags Matters Arising dated12Aug2026; applicability unresolved."
   }
 ]

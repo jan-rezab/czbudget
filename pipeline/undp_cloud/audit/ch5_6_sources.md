@@ -411,3 +411,5 @@ Chapter6 PDF190/printed176 cites Toner-Rodgers2024 (note116) for +44% materials,
 The same page cites Merchant2023 GNoME for2.2million predictions. Its downloadable stable-material subset has a different denominator and CC-BY-NC4.0 data licence. Preserve restrictions and do not treat the stable subset as all predicted crystals. [Original repository](https://github.com/google-deepmind/materials_discovery).
 
 Author-original ILO2023 taxonomy JSON (CC0) and refined2025 occupation/task XLSX links are now in the fetch manifest. These are exposure scores, not the HDR country employment-weighted custom calculation.
+
+Additional verified Park original source: [Nature Source Data Fig.2 XLSX](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-022-05543-x/MediaObjects/41586_2022_5543_MOESM4_ESM.xlsx). The public replication archive is 1.5GB (advertised MD541c0a5a9f32913a45041c26834f5fea7); no blanket reuse license was confirmed, and WoS/APS/JSTOR components contain only limited public extracts. Preserve privately pending component terms. PISA ZIP contains SPSS .SAV; extraction must retain user-defined missing codes and their metadata.
