@@ -33,6 +33,12 @@ def members(path,fmt):
     if not m.is_dir():yield m.filename,m.file_size
  else:yield path.name,path.stat().st_size
 
+def archive_metadata_member(name):
+ # Publisher ZIPs can contain binary AppleDouble sidecars named like datasets.
+ # Preserve them in the immutable raw archive and receipt, never parse as CSV.
+ parts=Path(name).parts
+ return '__MACOSX' in parts or Path(name).name.startswith('._') or Path(name).name=='.DS_Store'
+
 def records(path,fmt,root,max_member_bytes=2_000_000_000):
  """Yield (member, original row ordinal, source JSON). Raw always retained."""
  if fmt=='wid_csv':
@@ -51,7 +57,7 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
   with tarfile.open(path,'r:gz') as t:
    for i,m in enumerate(t):
     ext=Path(m.name).suffix.lower().lstrip('.')
-    if not m.isfile() or ext not in {'csv','tsv','xlsx','parquet','xpt','dta','json','sav'}:continue
+    if not m.isfile() or archive_metadata_member(m.name) or ext not in {'csv','tsv','xlsx','parquet','xpt','dta','json','sav'}:continue
     if m.size>max_member_bytes:raise ValueError('Archive member exceeds 2GB bound')
     dest=root/f'tar_member_{i}.{ext}'
     with t.extractfile(m) as src,open(dest,'wb') as out:
@@ -62,7 +68,7 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
   with zipfile.ZipFile(path) as z:
    for i,m in enumerate(z.infolist()):
     ext=Path(m.filename).suffix.lower().lstrip('.')
-    if m.is_dir() or ext not in {'csv','tsv','xlsx','parquet','xpt','dta','json','sav'}:continue
+    if m.is_dir() or archive_metadata_member(m.filename) or ext not in {'csv','tsv','xlsx','parquet','xpt','dta','json','sav'}:continue
     if m.file_size>max_member_bytes:raise ValueError('Archive member exceeds 2GB bound')
     dest=root/f'member_{i}.{ext}'
     with z.open(m) as src,open(dest,'wb') as out:
@@ -315,7 +321,8 @@ def main():
     names=[m['name'] for m in e['members']]
     if len(names)!=len(set(names)):raise ValueError('Duplicate archive member names')
     supported={'csv','tsv','xlsx','parquet','xpt','dta','json','sav'}
-    e['unparsed_members']=[m for m in e['members'] if Path(m['name']).suffix.lower().lstrip('.') not in supported] if e['format'] in {'zip','tar.gz'} else []
+    e['archive_metadata_members']=[dict(m,reason='archive_filesystem_metadata') for m in e['members'] if archive_metadata_member(m['name'])] if e['format'] in {'zip','tar.gz'} else []
+    e['unparsed_members']=[m for m in e['members'] if archive_metadata_member(m['name']) or Path(m['name']).suffix.lower().lstrip('.') not in supported] if e['format'] in {'zip','tar.gz'} else []
     with gzip.open(out,'wt',encoding='utf-8',compresslevel=1) as f:
      for member,n,row in ([] if e.get('parse_mode')=='raw_only' else records(path,e['format'],root,e.get('max_member_bytes',2_000_000_000))):
       if count==0 and e.get('expected_header') and row.get('columns')!=e['expected_header']:raise ValueError('Declared provider CSV header changed')

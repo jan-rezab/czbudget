@@ -5,7 +5,7 @@ from decimal import Decimal
 import openpyxl
 source=Path(__file__).with_name('report_sources.py').read_text()
 tree=ast.parse(source)
-selected=ast.Module(body=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in {'members','records'}],type_ignores=[])
+selected=ast.Module(body=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in {'members','records','archive_metadata_member'}],type_ignores=[])
 ns=dict(codecs=codecs,csv=csv,io=io,json=json,Path=Path,Decimal=Decimal,openpyxl=openpyxl,tarfile=tarfile,zipfile=zipfile)
 exec(compile(selected,'source_adapters','exec'),ns)
 records=ns['records']
@@ -23,6 +23,22 @@ class SourceFidelity(unittest.TestCase):
    rows=list(records(p,'zip',Path(d)))
    self.assertEqual(len(rows),2);self.assertTrue(rows[1][0].startswith('../../outside.csv::'))
    self.assertFalse((Path(d).parent/'outside.csv').exists())
+ def test_zip_preserves_but_does_not_parse_appledouble_metadata(self):
+  with tempfile.TemporaryDirectory() as d:
+   p=Path(d)/'who.zip'
+   with zipfile.ZipFile(p,'w') as z:
+    z.writestr('Estimates/estimates.csv','iso_alpha_3_code,year,value\nCZE,2023,1\n')
+    z.writestr('__MACOSX/Estimates/._estimates.csv',b'\x00\x05\x16\x07\x81')
+    z.writestr('__MACOSX/._inputs.xlsx',b'\x00\x05\x16\x07\x81')
+   self.assertEqual(len(list(ns['members'](p,'zip'))),3)
+   rows=list(records(p,'zip',Path(d)))
+   self.assertEqual(len(rows),2)
+   self.assertEqual(rows[0][2]['columns'],['iso_alpha_3_code','year','value'])
+   self.assertFalse(any('__MACOSX' in r[0] for r in rows))
+ def test_real_csv_invalid_encoding_still_fails(self):
+  with tempfile.TemporaryDirectory() as d:
+   p=Path(d)/'bad.csv';p.write_bytes(b'year,value\n2023,\x81\n')
+   with self.assertRaises(UnicodeDecodeError):list(records(p,'csv',Path(d)))
  def test_xlsx_keeps_formula_and_cached_representations_separate(self):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'x.xlsx';w=openpyxl.Workbook();w.active.append(['year','share']);w.active.append([2023,'=1/3']);w.save(p)

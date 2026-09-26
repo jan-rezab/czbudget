@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-09-27",
+  "prior_run_id": "ca58e7ba-3bf4-436b-965f-25128f55ed15",
+  "worldbank": {
+    "exact_url": "https://api.worldbank.org/v2/country/all/indicator/IT.NET.USER.ZS?format=json&per_page=20000",
+    "inspection": "First 512 response bytes only; metadata rather than full dataset download",
+    "http_status": 200,
+    "metadata": {
+      "page": 1,
+      "pages": 1,
+      "per_page": 20000,
+      "total": 17490,
+      "sourceid": "2",
+      "lastupdated": "2026-07-13"
+    }
+  },
+  "who": {
+    "raw_uri": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-sources/ca58e7ba-3bf4-436b-965f-25128f55ed15/raw/who_mmeig2025.zip",
+    "generation": "1790465569273982",
+    "sha256": "c8b60a75cbcb64f7bc7c05d2dea725d885d3915b052307cd588c3fbf766b9227",
+    "raw_bytes": 12411704,
+    "inspection": "Generation-pinned remote ZIP directory and first up to 512 decompressed bytes per CSV; total network bytes 175230; no local bulk restore",
+    "actual_csv_prefix": "ASCII/UTF-8 header text; no inspected CSV has a UTF-16 BOM",
+    "archive_metadata_prefix_hex": "00051607000200004d6163204f532058",
+    "diagnosis": "AppleDouble resource forks under __MACOSX include .csv and .xlsx suffixes. Binary resource forks were incorrectly offered to dataset parsers.",
+    "correction": "Exclude known filesystem metadata from parsing, preserve all raw archive bytes, inventory excluded names and sizes with reason archive_filesystem_metadata. Strict data decoding unchanged.",
+    "status": "Focused synthetic verification passed; actual WHO cloud reparse pending"
+  }
+}
