@@ -36,7 +36,8 @@ test('production cannot promote before focused or exhaustive verification and ca
   assert.match(block('image-browser-contract'),/waitFor: \[start-image-browser-candidate, component-verification\]/);
   // The exhaustive suite uses the pinned published releases and never shares the worker
   // with the candidate-image browser pool.
-  assert.match(block('full-verification'),/waitFor: \[verify-published-releases, image-browser-contract\]/);
+  assert.match(block('full-verification'),/waitFor: \[verify-published-releases, image-browser-contract, full-python-contracts\]/);
+  assert.match(block('full-python-contracts'),/pipeline\/tests/);
   assert.match(block('full-verification'),/for shard in 1 2 3 4/);
   assert.match(block('verify-published-releases'),/validate-cityvizor-cloud-release\.mjs/);
   assert.match(block('hydrate-published-releases'),/verify-runtime-assets-cloud\.py/);

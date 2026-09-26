@@ -128,10 +128,25 @@ steps:
         node scripts/validate-public-serving-snapshot.mjs /workspace/.published/municipal
         node scripts/validate-cityvizor-cloud-release.mjs /workspace/.published/cityvizor/releases/$$(cat /workspace/.published/cityvizor-release)
 
+  # Pipeline contracts need neither the image nor published data; run them beside the image build.
+  - id: full-python-contracts
+    waitFor: [source-contracts]
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+    entrypoint: bash
+    env: [PYTHONPATH=/workspace/.python-deps]
+    args:
+      - -ceu
+      - |
+        if [ "$$(python3 -c 'import json; print(json.load(open("/workspace/.verification-plan.json"))["lane"])')" != full ]; then echo "Component lane."; exit 0; fi
+        if ! python3 -m pip --version; then apt-get update -qq; apt-get install -y --no-install-recommends python3-pip; fi
+        python3 -m pip install --disable-pip-version-check --target=/workspace/.python-deps -r pipeline/requirements.txt
+        python3 -m unittest discover -s pipeline/tests -p 'test_*.py'
+        python3 -m unittest tests.test_cloud_verification
+
   - id: full-verification
     timeout: 1320s
     # After the candidate-image browser contract, so two browser pools never share the worker.
-    waitFor: [verify-published-releases, image-browser-contract]
+    waitFor: [verify-published-releases, image-browser-contract, full-python-contracts]
     name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
     env:
@@ -146,10 +161,6 @@ steps:
       - |
         if [ "$$(node scripts/release-verification.mjs .verification-plan.json)" != full ]; then echo "Component lane verified in component-verification."; exit 0; fi
         test -d node_modules/@playwright/test || npm ci
-        if ! python3 -m pip --version; then apt-get update -qq; apt-get install -y --no-install-recommends python3-pip; fi
-        python3 -m pip install --disable-pip-version-check --target=/workspace/.python-deps -r pipeline/requirements.txt
-        python3 -m unittest discover -s pipeline/tests -p 'test_*.py'
-        python3 -m unittest tests.test_cloud_verification
         node scripts/validate-build-planes.mjs
         npm run test:api
         PSD_BUILD_MODE=local npm run validate
