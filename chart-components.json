@@ -99,10 +99,10 @@
     {
       "id": "oecd-report-trends",
       "adapter": "oecd-charts.js",
-      "families": ["line"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
+      "families": ["line", "bar"],
+      "tests": ["tests/browser/shared-charts.spec.mjs", "tests/browser/redistribution.spec.mjs"],
       "routes": ["/countries/:country", "/deep-dives/redistribution/", "/deep-dives/tax-burden/"],
-      "change_paths": ["oecd-charts.js", "deep-dives/redistribution/index.html", "deep-dives/tax-burden/index.html", "deep-dives/revenue/index.html", "country.html"]
+      "change_paths": ["oecd-charts.js", "deep-dives/redistribution/index.html", "deep-dives/tax-burden/index.html", "deep-dives/revenue/index.html", "country.html", "tests/browser/redistribution.spec.mjs"]
     },
     {
       "id": "pension-payment-charts",
