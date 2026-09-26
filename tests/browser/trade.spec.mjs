@@ -1,3 +1,4 @@
+import { tradeExplorer } from '../fixtures/trade-explorer.mjs';
 import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 
@@ -45,6 +46,7 @@ const productPartners = { data: { country:"CZE", product_code:"87", year:2025, p
 ] } };
 
 test.beforeEach(async ({ page }) => {
+  await page.route('**/api/v1/trade/explorer?*', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ data: tradeExplorer }) }));
   await page.route("**/api/v1/trade/countries", (route) => route.fulfill({ contentType:"application/json", body:JSON.stringify(catalog) }));
   await page.route("**/api/v1/trade?country=*", (route) => route.fulfill({ contentType:"application/json", body:JSON.stringify(profile) }));
   await page.route("**/api/v1/trade/product-partners?country=*&product=*", (route) => route.fulfill({ contentType:"application/json", body:JSON.stringify(productPartners) }));
@@ -53,10 +55,13 @@ test.beforeEach(async ({ page }) => {
 test("trade deep dive exposes balance, chart state, and linked rankings", async ({ page }) => {
   await page.goto("/deep-dives/trade/?code=CZE&lang=en");
   await expect(page.locator("#trade-kpis")).toContainText("Deficit");
-  await expect(page.locator('#trade-chart svg[aria-label="Imports, Exports"]')).toHaveCount(1);
-  await expect(page.locator("#trade-chart path.series")).toHaveCount(2);
+  await expect(page.locator('#explorer-plot svg')).toBeVisible();
+  await expect(page.locator('#explorer-start')).toHaveValue('1997');
+  await expect(page.locator('#trade-explore-link')).toHaveAttribute('href', '/explore/trade/?countries=CZE');
   await page.getByRole("button", { name:"Monthly" }).click();
   await expect(page).toHaveURL(/freq=M/);
+  await expect(page.locator('#trade-annual-explorer')).toBeHidden();
+  await expect(page.locator('#trade-chart path.series')).toHaveCount(2);
   await expect(page.locator("#trade-selected-period")).toContainText("2025–06");
   await page.locator("#trade-partners button").first().click();
   await expect(page.locator("#trade-detail")).toContainText("Germany");

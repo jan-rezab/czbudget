@@ -13,12 +13,12 @@
       matrixKicker: "Struktura posledního roku", matrixTitle: "Trh zboží jako portfolio", matrixIntro: "Každá dlaždice je kapitola HS. Plocha ukazuje hodnotu, barva obchodní bilanci. Kliknutím otevřete sektor a partnery.",
       routesKicker: "Obchodní geografie", routesTitle: "Kam vývoz míří. Odkud dovoz přichází.", routesIntro: "Dva trhy zemí vedle sebe. Plocha ukazuje hodnotu toku a barva bilaterální přebytek nebo deficit. Klikněte na zemi pro přesná čísla.",
       exportRouteKicker: "Trh vývozu", exportRouteTitle: "Kam směřuje vývoz", importRouteKicker: "Trh dovozu", importRouteTitle: "Odkud přichází dovoz", routeArea: "Plocha = hodnota toku", topPartners: "největších partnerů", bilateralBalance: "Bilaterální bilance", exportShare: "Podíl na vývozu", importShare: "Podíl na dovozu", countryDetail: "Detail obchodní země",
-      trendKicker: "Vývoj v čase", trendTitle: "Dovoz a vývoz v čase", trendIntro: "Přejeďte po grafu nebo klikněte na bod. Vybrané období se propíše do horních metrik i detailu pod grafem.",
+      trendKicker: "Vývoj v čase", trendTitle: "Dovoz a vývoz v čase", trendIntro: "Roční srovnání a měsíční vývoj obchodu v běžných amerických dolarech.",
       annual: "Ročně", monthly: "Měsíčně", exports: "Vývoz", imports: "Dovoz", chartNote: "Hodnoty jsou v běžných USD. Mezery v řadě jsou chybějící data, nikoli nuly.",
       compositionKicker: "Žebříčky posledního roku", compositionTitle: "Největší partneři a kapitoly", compositionIntro: "Přepněte dovoz nebo vývoz. Kliknutí na kapitolu otevře stejný detail partnerů jako mapa trhu.",
       partnersTitle: "Největší obchodní partneři", productsTitle: "Největší kapitoly zboží",
       methodKicker: "Jak číst data", methodTitle: "Jedna bilance, dvě oceňovací báze", methodIntro: "UN Comtrade obvykle oceňuje dovoz včetně pojištění a dopravy (CIF), zatímco vývoz na hranici vývozce (FOB). Bilance je proto orientační analytický rozdíl, ne národní účet.",
-      sourceCopy: "Zdrojové hlášení země, bez zrcadlového doplňování chybějících hodnot.", grainTitle: "Zachované dimenze", grainCopy: "Období, reportér, tok, partner a šestimístný HS kód. Grafy sčítají pouze jednu nejjemnější dostupnou úroveň.", coverageTitle: "Pokrytí není nula", coverageCopy: "Nezveřejněný měsíc nebo partner se nezobrazuje jako nulový obchod. Dostupnost se vede odděleně od faktů.", sourceLabel: "Zdroj",
+      sourceCopy: "Zdrojové hlášení země, bez zrcadlového doplňování chybějících hodnot.", grainTitle: "Zachované dimenze", grainCopy: "Období, reportér, tok, partner a šestimístný HS kód. Grafy sčítají pouze jednu nejjemnější dostupnou úroveň.", coverageTitle: "Pokrytí není nula", coverageCopy: "Nezveřejněný měsíc nebo partner se nezobrazuje jako nulový obchod. Dostupnost se vede odděleně od faktů.", sourceLabel: "Zdroj", exploreChart: "Prozkoumat graf ↗",
       balance: "Bilance", surplus: "Přebytek", deficit: "Deficit", turnover: "Obrat", ratio: "Krytí dovozu vývozem", period: "Období", share: "Podíl na vybraném toku", opposite: "Protisměrný tok", value: "Hodnota", currentUsd: "běžné USD",
       sizeBy: "Velikost podle", deepDeficit: "Silný deficit", balanced: "Vyrovnané", deepSurplus: "Silný přebytek", allSectors: "Všechny sektory", chapters: "kapitol HS", backAll: "Zpět na všechny sektory", openSector: "Otevřít sektor", openProduct: "Otevřít partnery kapitoly", productPartners: "Obchodní partneři kapitoly", leadingPartners: "Největší partneři", close: "Zavřít", noPartners: "Pro tuto kapitolu nejsou partnerští data dostupná.", partnerError: "Partnery kapitoly se nepodařilo načíst.",
       noData: "Pro tuto frekvenci zatím nejsou načtena data.", noRanking: "Pro tento řez zatím nejsou načtena detailní data.", loading: "Načítám UN Comtrade…", loadError: "Obchodní data se teď nepodařilo načíst. Zkuste stránku obnovit.",
@@ -32,12 +32,12 @@
       matrixKicker: "Latest annual structure", matrixTitle: "The goods market as a portfolio", matrixIntro: "Every tile is an HS chapter. Area shows value and color shows trade balance. Click through to sectors and partners.",
       routesKicker: "Trade geography", routesTitle: "Where exports go. Where imports come from.", routesIntro: "Two country markets side by side. Area shows flow value and color shows the bilateral surplus or deficit. Click a country for exact figures.",
       exportRouteKicker: "Export market", exportRouteTitle: "Where exports go", importRouteKicker: "Import market", importRouteTitle: "Where imports come from", routeArea: "Area = flow value", topPartners: "largest partners", bilateralBalance: "Bilateral balance", exportShare: "Share of exports", importShare: "Share of imports", countryDetail: "Trade country detail",
-      trendKicker: "Change over time", trendTitle: "Imports and exports over time", trendIntro: "Hover over the chart or click a point. The selected period updates the headline metrics and detail below the chart.",
+      trendKicker: "Change over time", trendTitle: "Imports and exports over time", trendIntro: "Annual comparisons and monthly trade trends in current US dollars.",
       annual: "Annual", monthly: "Monthly", exports: "Exports", imports: "Imports", chartNote: "Values are current USD. Gaps are missing data, not zeroes.",
       compositionKicker: "Latest annual rankings", compositionTitle: "Largest partners and chapters", compositionIntro: "Switch imports or exports. Clicking a chapter opens the same partner detail as the market map.",
       partnersTitle: "Largest trade partners", productsTitle: "Largest goods chapters",
       methodKicker: "How to read the data", methodTitle: "One balance, two valuation bases", methodIntro: "UN Comtrade generally values imports including insurance and freight (CIF), while exports are valued at the exporter’s border (FOB). The balance is therefore an analytical difference, not a national account.",
-      sourceCopy: "The reporter country’s own submission, without mirror-filling missing values.", grainTitle: "Dimensions retained", grainCopy: "Period, reporter, flow, partner and six-digit HS code. Charts sum one finest available level only.", coverageTitle: "Coverage is not zero", coverageCopy: "An unpublished month or partner is not shown as zero trade. Availability is tracked separately from facts.", sourceLabel: "Source",
+      sourceCopy: "The reporter country’s own submission, without mirror-filling missing values.", grainTitle: "Dimensions retained", grainCopy: "Period, reporter, flow, partner and six-digit HS code. Charts sum one finest available level only.", coverageTitle: "Coverage is not zero", coverageCopy: "An unpublished month or partner is not shown as zero trade. Availability is tracked separately from facts.", sourceLabel: "Source", exploreChart: "Explore chart ↗",
       balance: "Balance", surplus: "Surplus", deficit: "Deficit", turnover: "Turnover", ratio: "Exports/imports cover", period: "Period", share: "Share of selected flow", opposite: "Opposite flow", value: "Value", currentUsd: "current USD",
       sizeBy: "Size by", deepDeficit: "Deep deficit", balanced: "Balanced", deepSurplus: "Strong surplus", allSectors: "All sectors", chapters: "HS chapters", backAll: "Back to all sectors", openSector: "Open sector", openProduct: "Open chapter partners", productPartners: "Chapter trade partners", leadingPartners: "Leading partners", close: "Close", noPartners: "No partner data are available for this chapter.", partnerError: "Chapter partners could not be loaded.",
       noData: "No loaded data are available for this frequency yet.", noRanking: "No detailed data are loaded for this cut yet.", loading: "Loading UN Comtrade…", loadError: "Trade data could not be loaded. Please refresh the page.",
@@ -216,6 +216,9 @@
   }
 
   async function loadProfile() {
+    document.querySelector('#trade-explore-link').href = `/explore/trade/?countries=${encodeURIComponent(state.country)}`;
+    document.querySelector('.explorer-workspace').dataset.country = state.country;
+    document.querySelector('.explorer-workspace').dispatchEvent(new CustomEvent('psd:explorer-country', { detail: { country: state.country } }));
     $("#trade-status").hidden = true; $("#trade-chart").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`; $("#trade-matrix").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
     $("#trade-export-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`; $("#trade-import-routes").innerHTML = `<div class="trade-loading">${escapeHTML(copy.loading)}</div>`;
     try {
@@ -238,6 +241,9 @@
   }
 
   function render() {
+    document.querySelector('#trade-annual-explorer').hidden = state.frequency !== 'A';
+    document.querySelector('#trade-chart').hidden = state.frequency === 'A';
+    document.querySelector('.trade-legend').hidden = state.frequency === 'A';
     document.querySelectorAll("#trade-frequency button").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.frequency === state.frequency)));
     const periods = pairRows(state.profile.totals.filter((row) => row.frequency === state.frequency));
     if (!periods.length) {
@@ -247,7 +253,7 @@
     }
     if (!state.period || !periods.some((row) => row.period === state.period)) state.period = periods.at(-1).period;
     const selected = periods.find((row) => row.period === state.period) || periods.at(-1);
-    renderKPIs(selected); renderMatrix(); renderPartnerMarkets(); renderChart(periods); renderSelected(selected); renderComposition(); updateURL();
+    renderKPIs(selected); renderMatrix(); renderPartnerMarkets(); if (state.frequency === 'M') renderChart(periods); renderSelected(selected); renderComposition(); updateURL();
   }
 
   function renderKPIs(row) {

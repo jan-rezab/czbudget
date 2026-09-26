@@ -8,7 +8,7 @@ import re
 import shutil
 import hashlib
 
-DIRECTORIES = {'assets', 'cityvizor', 'cz', 'data', 'deep-dives', 'lib', 'municipalities', 'process', 'stories', 'studio'}
+DIRECTORIES = {'assets', 'cityvizor', 'cz', 'data', 'deep-dives', 'explore', 'lib', 'municipalities', 'process', 'stories', 'studio'}
 OFFLOADED = {'isred', 'industrial-intelligence', 'czech-nku', 'contracts', 'czech-project-geography', 'industry', 'paq'}
 OFFLOADED_FILES = {'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json'}
 ROOT_EXTENSIONS = {'.html', '.js', '.css', '.svg', '.png', '.ico', '.xml', '.txt'}

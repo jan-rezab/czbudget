@@ -10,7 +10,7 @@
   <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-country-markets">
   <script src="../../trade-deep-dive.js?v=20260901-trade-i18n" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
-</head>
+<link rel="stylesheet" href="/psd-chart.css"><link rel="stylesheet" href="/chart-explorer.css"><script src="/chart-runtime.js" defer></script><script src="/psd-chart.js" defer></script><script src="/lib/chart-explorer-model.js" defer></script><script src="/chart-explorer.js" defer></script></head>
   <body class="deep-dives-page trade-page">
   <psd-site-header></psd-site-header>
   <main id="top">
@@ -55,9 +55,10 @@
     </section>
 
     <section class="trade-section trade-trend-section" id="trend">
-      <header class="trade-heading"><div><span data-trade-copy="trendKicker">Vývoj v čase</span><h2 data-trade-copy="trendTitle">Dovoz a vývoz jako burzovní graf</h2></div><p data-trade-copy="trendIntro">Přejeďte po grafu nebo klikněte na bod. Vybrané období se propíše do horních metrik i detailu pod grafem.</p></header>
+      <header class="trade-heading"><div><span data-trade-copy="trendKicker">Vývoj v čase</span><h2 data-trade-copy="trendTitle">Dovoz a vývoz jako burzovní graf</h2></div><p data-trade-copy="trendIntro">Roční srovnání a měsíční vývoj obchodu v běžných amerických dolarech.</p></header>
       <div class="trade-chart-card">
         <div class="trade-chart-toolbar"><div class="trade-segmented" id="trade-frequency"><button type="button" data-frequency="A" aria-pressed="true" data-trade-copy="annual">Ročně</button><button type="button" data-frequency="M" aria-pressed="false" data-trade-copy="monthly">Měsíčně</button></div><div class="trade-legend"><span class="export"><i></i><b data-trade-copy="exports">Vývoz</b></span><span class="import"><i></i><b data-trade-copy="imports">Dovoz</b></span></div></div>
+        <a id="trade-explore-link" href="/explore/trade/?countries=DEU" data-trade-copy="exploreChart">Explore chart ↗</a><div id="trade-annual-explorer" class="explorer-page explorer-embedded"><section class="explorer-workspace" data-dataset="trade" data-embedded="true" aria-label="Annual trade explorer" aria-busy="true"><div class="explorer-loading">Loading annual history…</div></section><p class="explorer-footnote"></p></div>
         <div id="trade-chart" class="trade-stock-chart" aria-live="polite"></div>
         <div class="trade-selected-period" id="trade-selected-period"></div>
         <p class="trade-chart-note" data-trade-copy="chartNote">Hodnoty jsou v běžných USD. Mezery v řadě jsou chybějící data, nikoli nuly.</p>

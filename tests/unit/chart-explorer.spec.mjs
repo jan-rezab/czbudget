@@ -1,0 +1,121 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import explorer from '../../lib/chart-explorer-model.js';
+import chart from '../../lib/chart-renderer.js';
+
+const fixture = {
+  period: { start_year: 2020, end_year: 2024 },
+  countries: [{ country_code: 'AAA', name_en: 'Alpha' }, { country_code: 'BBB', name_en: 'Beta' }],
+  series: [
+    { country_code: 'AAA', metrics: { expenditure_pct_gdp: { latest_actual_year: 2023, values: [{ year: 2020, value: 40.125 }, { year: 2021, value: null }, { year: 2022, value: 0 }, { year: 2023, value: 45.235 }, { year: 2024, value: 99 }] } } },
+    { country_code: 'BBB', metrics: { expenditure_pct_gdp: { latest_actual_year: 2024, values: [{ year: 2021, value: 30 }, { year: 2023, value: '31' }, { year: 2024, value: 32 }] } } },
+  ],
+};
+test('unknown URL state is bounded, deduplicated and restricted to known metrics', () => {
+  const state = explorer.normalize({ start: 1990, end: 2099, year: 3000, countries: 'AAA,AAA,NOTREAL,BBB', metric: '__proto__', view: 'bad', mode: 'bad' }, fixture);
+  assert.deepEqual(state, { start: 2020, end: 2024, year: 2024, countries: ['AAA', 'BBB'], metric: 'expenditure_pct_gdp', mode: 'level', view: 'line', scale: 'fit' });
+});
+test('estimates, missing years and numeric strings never become actual observations', () => {
+  assert.equal(explorer.observation(fixture, 'AAA', 'expenditure_pct_gdp', 2024), null);
+  assert.equal(explorer.observation(fixture, 'AAA', 'expenditure_pct_gdp', 2021), null);
+  assert.equal(explorer.observation(fixture, 'AAA', 'expenditure_pct_gdp', 2022), 0);
+  assert.equal(explorer.observation(fixture, 'BBB', 'expenditure_pct_gdp', 2023), null);
+});
+test('percentage-point changes use the exact start year and never substitute a later baseline', () => {
+  const data = explorer.build(fixture, { countries: ['AAA', 'BBB'], start: 2020, end: 2023, mode: 'change' });
+  assert.deepEqual(data.rows.map(row => row.AAA), [0, null, -40.125, 5.11]);
+  assert.deepEqual(data.rows.map(row => row.BBB), [null, null, null, null]);
+  assert.equal(data.snapshot[0].change, 5.11);
+  assert.equal(data.snapshot[1].change, null);
+});
+test('table and CSV values use the same normalization as the trend', () => {
+  const data = explorer.build(fixture, { countries: ['AAA'], start: 2020, end: 2024 });
+  const plotted = chart.model({ rows: data.rows, fields: data.fields });
+  assert.deepEqual(plotted.accessor.rows().map(row => row.AAA), [40.125, null, 0, 45.235, null]);
+});
+test('exports retain the measure and unit without changing the short plot labels', () => {
+  const model = chart.model({ rows: [{ year: 2024, amount: 12.345 }], fields: [{ key: 'amount', label: 'Alpha', tableLabel: 'Alpha · Government spending · % of GDP' }] });
+  assert.equal(model.fields[0].label, 'Alpha');
+  assert.equal(model.accessor.columns[1].label, 'Alpha · Government spending · % of GDP');
+});
+test('ranking stays descending with missing values last, without a stale value fallback', () => {
+  const data = explorer.build(fixture, { countries: ['AAA', 'BBB'], year: 2024 });
+  assert.deepEqual(data.snapshot.map(row => [row.key, row.plotted]), [['BBB', 32], ['AAA', null]]);
+});
+test('the initial range follows expanded coverage instead of old fiscal dates', () => {
+  const expanded = { ...fixture, period: { start_year: 1980, end_year: 2025 } };
+  const state = explorer.normalize(explorer.defaults, expanded);
+  assert.equal(state.start, 1980);
+  assert.equal(state.end, 2025);
+  assert.equal(state.year, 2025);
+  assert.equal(explorer.normalize({ ...explorer.defaults, start: 2010, end: 2015 }, expanded).end, 2015);
+});
+test('trade uses USD and loaded observations, with gaps preserved in comparison and exports', () => {
+  const trade = {
+    kind: 'trade', period: { start_year: 2013, end_year: 2025 },
+    metrics: { exports_usd: { title: 'Goods exports' } }, countries: fixture.countries,
+    series: [{ country_code: 'AAA', metrics: { exports_usd: { values: [
+      { year: 2013, value: 1000000000.125, status: 'loaded' },
+      { year: 2024, value: 999, status: 'queued' },
+      { year: 2025, value: 1600000000.25, status: 'loaded' },
+    ] } } }],
+  };
+  const data = explorer.build(trade, { ...explorer.defaults, countries: ['AAA'] });
+  assert.equal(data.state.metric, 'exports_usd');
+  assert.equal(data.rows.length, 13);
+  assert.equal(data.unit, 'Current USD');
+  assert.equal(data.rows[0].AAA, 1000000000.125);
+  assert.equal(data.rows.at(-2).AAA, null);
+  assert.equal(data.snapshot[0].change, 600000000.125);
+  const exported = chart.model({ rows: data.rows, fields: data.fields }).accessor.rows();
+  assert.equal(exported.at(-1).AAA, 1600000000.25);
+});
+test('direct labels remain separated when endpoints coincide near a plot edge', () => {
+  const labels = chart.labelPositions([{ y: 300 }, { y: 300 }, { y: 301 }, { y: 302 }], 40, 320, 38);
+  assert.ok(labels[0].labelY >= 40);
+  assert.ok(labels.at(-1).labelY <= 320);
+  for (let i = 1; i < labels.length; i++) assert.ok(labels[i].labelY - labels[i - 1].labelY >= 38);
+});
+test('drag zoom snaps to actual annual cells, in either drag direction', () => {
+  assert.deepEqual(chart.rangeFromPixels(160, 450, 100, 400, 20), [3, 17]);
+  assert.deepEqual(chart.rangeFromPixels(450, 160, 100, 400, 20), [3, 17]);
+  assert.deepEqual(chart.rangeFromPixels(-100, 900, 100, 400, 20), [0, 19]);
+  assert.deepEqual(chart.rangeFromPixels(100, 500, 100, 400, 20, true), [0, 19]);
+  assert.deepEqual(chart.rangeFromPixels(300, 300, 100, 400, 1, true), [0, 0]);
+});
+test('panning clamps at both data boundaries without changing window length', () => {
+  assert.deepEqual(chart.moveRange(2015, 2020, 10, 2005, 2024), [2019, 2024]);
+  assert.deepEqual(chart.moveRange(2010, 2015, -10, 2005, 2024), [2005, 2010]);
+  assert.deepEqual(chart.moveRange(2010, 2015, 2, 2005, 2024), [2012, 2017]);
+});
+test('a zoomed range rebases change on its exact first year and preserves gaps', () => {
+  const data = explorer.build(fixture, { countries: ['AAA'], start: 2021, end: 2023, mode: 'change' });
+  assert.deepEqual(data.rows.map(row => row.AAA), [null, null, null]);
+  assert.equal(explorer.normalize({ scale: 'zero' }, fixture).scale, 'zero');
+});
+
+
+test('fractional viewport positions are continuous without manufacturing observations', () => {
+  const p = { left: 50, plotWidth: 800, top: 24, plotHeight: 250, first: 2005, last: 2024, axis: { min: 30, max: 55 } };
+  assert.equal(chart.timeX(2024, { ...p, first: 2024, last: 2024 }), 450);
+  assert.ok(Math.abs(chart.timeX(2024, { ...p, first: 2023.999, last: 2024 }) - 450) < 1);
+  const half = { ...p, first: 2010.25 };
+  assert.ok(chart.timeX(2015, half) < chart.timeX(2015, p));
+  assert.ok(Math.abs(chart.timeX(2015, half) - chart.timeX(2015, { ...half, first: 2010.251 })) < 1);
+  const to = { ...p, first: 2020, axis: { min: 35, max: 55 } };
+  assert.deepEqual(chart.mixProjection(p, to, 0), p);
+  assert.deepEqual(chart.mixProjection(p, to, 1), to);
+  assert.equal(chart.mixProjection(p, to, .5).first, 2012.5);
+  const data = explorer.build(fixture, { countries: ['AAA'], start: 2022, end: 2023, mode: 'change' });
+  assert.deepEqual(data.contextRows.map(row => row.AAA), [40.125, null, 0, 45.235, null]);
+  assert.deepEqual(data.rows.map(row => row.year), [2022, 2023]);
+});
+
+test('fiscal metadata arrays do not replace the supported percentage-of-GDP measures', () => {
+  const fiscal = { ...fixture, metrics: [{ metric_code: 'revenue_pct_gdp', unit: 'pct_gdp' }, { metric_code: 'nominal_gdp_usd_bn', unit: 'usd_bn' }] };
+  const data = explorer.build(fiscal, { ...explorer.defaults, countries: ['AAA'], year: 2023 });
+  assert.equal(data.state.metric, 'expenditure_pct_gdp');
+  assert.equal(data.snapshot[0].value, 45.235);
+  assert.equal(explorer.metricsFor(fiscal).expenditure_pct_gdp.title, 'Government spending');
+  assert.equal(explorer.metricsFor(fiscal).nominal_gdp_usd_bn, undefined);
+});

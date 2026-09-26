@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { fileURLToPath } from "node:url";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { ENERGY_FLOWS_SQL, ENERGY_PERIODS_SQL, normalizeCountryCode, normalizeEnergyFrequency, normalizeEnergyPeriod, normalizeEnergyProduct, normalizeProductCode, TRADE_PRODUCT_PARTNERS_SQL, TRADE_PROFILE_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
 
 test("trade country codes are strict ISO-3 values", () => {
@@ -114,8 +116,11 @@ test("trade profile separates totals, partners, and products without inventing z
   assert.ok(!profile.totals.some((row) => row.value_usd === 0));
 });
 
-test("the 2024 public seed reads its structured period as a year", async () => {
-  const seedPath = fileURLToPath(new URL("../../data/trade/annual-hs2-2024.v1.json", import.meta.url));
+test("the 2024 public seed reads its structured period as a year", async (t) => {
+  const directory = await mkdtemp(join(tmpdir(), 'trade-seed-test-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const seedPath = join(directory, 'seed.json');
+  await writeFile(seedPath, JSON.stringify({ period: { year: 2024 }, countries: [{ country_code: 'DEU', status: 'loaded', flows: { imports: { total_value_usd: 80 }, exports: { total_value_usd: 90 } } }] }));
   const store = new TradeStore({ tokenProvider: async () => "unused", seedPath });
   store.query = async () => [
     { row_kind: "total", period: "2025", period_start: "2025-01-01", ref_year: "2025", ref_month: "52", frequency: "A", flow_code: "M", value_usd: "100" },
@@ -124,4 +129,29 @@ test("the 2024 public seed reads its structured period as a year", async () => {
   const profile = await store.profile("DEU");
   assert.deepEqual([...new Set(profile.totals.map((row) => row.period))], ["2024", "2025"]);
   assert.ok(profile.totals.filter((row) => row.year === 2024).every((row) => row.period_start === "2024-01-01"));
+});
+
+test('explorer validates countries, preserves missing points and caches a bounded annual view', async () => {
+  const { TRADE_EXPLORER_SQL } = await import('../../server/trade-explorer.mjs');
+  const store = new TradeStore({ tokenProvider: async () => 'unused', now: () => Date.UTC(2026, 8, 25) });
+  const calls = [];
+  store.query = async (sql, params) => {
+    calls.push({ sql, params });
+    return [{ year: '1998', reporter_iso3: 'CZE', reporter_name: 'Czechia', flow_code: 'X', value_usd: '123.456', source_rows: '4', classifications: [{ v: 'H1' }], latest_load: '1790300000' }];
+  };
+  const result = await store.explorer('CZE');
+  assert.deepEqual(result.period, { start_year: 1997, end_year: 2025, year_count: 29 });
+  assert.equal(result.series[0].metrics.exports_usd.values.length, 1);
+  assert.equal(result.series[0].metrics.exports_usd.values[0].source_value_usd, '123.456');
+  assert.deepEqual(result.series[0].metrics.exports_usd.values[0].classifications, ['H1']);
+  assert.equal(result.series[0].metrics.imports_usd.values.length, 0);
+  assert.equal(result.view_id.length, 64);
+  assert.equal(await store.explorer('CZE'), result);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].sql, TRADE_EXPLORER_SQL);
+  assert.match(calls[0].sql, /o\.frequency = 'A'/);
+  assert.match(calls[0].sql, /o\.partner_area_code = 0/);
+  assert.match(calls[0].sql, /c\.crawl_status = 'loaded'/);
+  await assert.rejects(() => store.explorer('CZE,DEU,GBR,USA,FRA'), /one to four/);
+  await assert.rejects(() => store.explorer("CZE');DROP"), /ISO-3/);
 });
