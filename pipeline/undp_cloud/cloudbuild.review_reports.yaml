@@ -1,0 +1,30 @@
+steps:
+  - id: validate-private-human-development-review
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: bash
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1', 'DATA_SERVICE_ACCOUNT=${_DATA_SERVICE_ACCOUNT}']
+    args:
+      - -euc
+      - |
+        pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt
+        python pipeline/undp_cloud/publish_reports.py --private-only --loader-sha '${_LOADER_SHA}' --undp-release '${_UNDP_RELEASE}'
+  - id: render-private-validated-human-development-review
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: bash
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1', 'DATA_SERVICE_ACCOUNT=${_DATA_SERVICE_ACCOUNT}']
+    args:
+      - -euc
+      - |
+        apt-get update -qq
+        apt-get install -y --no-install-recommends poppler-utils
+        pip install --quiet --disable-pip-version-check google-cloud-storage==3.4.1 reportlab==4.4.9 pypdf==6.10.0
+        python pipeline/undp_cloud/render_report_pdf.py --loader-sha '${_LOADER_SHA}' --report-manifest 'gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/$BUILD_ID/validated-report-manifest.json'
+timeout: 1800s
+queueTtl: 1800s
+tags: [plane-data, human-development-reports, private-review-only]
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _LOADER_SHA: required
+  _UNDP_RELEASE: required
+  _DATA_SERVICE_ACCOUNT: psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com

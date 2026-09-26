@@ -161,28 +161,46 @@ def validate(payload):
 
 def main():
     if not os.environ.get('BUILD_ID'):raise RuntimeError('Cloud Build only; no local bulk export')
-    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--release-id',default=os.environ['BUILD_ID']);parser.add_argument('--undp-release');parser.add_argument('--gcp-contracts');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--release-id',default=os.environ['BUILD_ID']);parser.add_argument('--undp-release');parser.add_argument('--gcp-contracts');parser.add_argument('--private-only',action='store_true');args=parser.parse_args()
     from google.cloud import bigquery,storage
     bq=bigquery.Client(project=PROJECT,location='EU');gcs=storage.Client(project=PROJECT);started=stamp()
-    pub=gcs.bucket(PUBLIC);private=gcs.bucket(PRIVATE);pointer=pub.blob(POINTER)
-    pointer.reload() if pointer.exists() else None;expected_generation=int(pointer.generation or 0)
-    prefix='processing-runs/undp-human-development-reports/'+args.release_id
-    previous=private.blob(prefix+'/prepared-receipt.json')
-    if previous.exists():
-        prepared=json.loads(previous.download_as_bytes(checksum='auto'))
-        current=json.loads(pointer.download_as_bytes()) if expected_generation else {}
-        report=prepared['downloads'][0];report_name=report['uri'].split('/',3)[3]
-        saved=pub.blob(report_name).download_as_bytes(checksum='auto')
-        if hashlib.sha256(saved).hexdigest()!=report['sha256']:raise ValueError('Retry artifact hash mismatch')
-        validate(json.loads(saved))
-        value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=report_name,sha256=report['sha256'],bytes=report['bytes'],generated_at=json.loads(saved)['generated_at'])
-        if current.get('release_id')!=args.release_id:
-            if expected_generation!=int(prepared['previous_pointer_generation']):raise ValueError('Pointer changed since preparation; retry publication held')
-            pointer.upload_from_string(dump(value),content_type='application/json',if_generation_match=expected_generation,checksum='auto')
-        elif current.get('sha256')!=report['sha256']:raise ValueError('Retry pointer hash mismatch')
-        completed=private.blob(prefix+'/completed-receipt.json')
-        if not completed.exists():completed.upload_from_string(dump(dict(prepared,publication_status='published',published_at=prepared['validated_at'])),content_type='application/json',if_generation_match=0)
-        print(dump(dict(event='human_development_reports_retry_confirmed',release_id=args.release_id)).decode(),flush=True);return
+    private=gcs.bucket(PRIVATE)
+    if args.private_only:
+        pub=private;pointer=None;expected_generation=0
+        prefix='processing-runs/hdr-report-review/'+args.release_id
+        previous=private.blob(prefix+'/review-receipt.json')
+        if previous.exists():
+            receipt=json.loads(previous.download_as_bytes(checksum='auto'))
+            for artifact in receipt['downloads']:
+                key=artifact['uri'].split('/',3)[3]
+                digest=hashlib.sha256()
+                with private.blob(key,generation=int(artifact['generation'])).open('rb') as f:
+                    while chunk:=f.read(1024*1024):digest.update(chunk)
+                if digest.hexdigest()!=artifact['sha256']:raise ValueError('Private review retry hash mismatch')
+            print(dump(dict(event='human_development_private_review_retry_confirmed',release_id=args.release_id,publication_status='not_published')).decode(),flush=True);return
+    else:
+        pub=gcs.bucket(PUBLIC);pointer=pub.blob(POINTER)
+        pointer.reload() if pointer.exists() else None;expected_generation=int(pointer.generation or 0)
+        prefix='processing-runs/undp-human-development-reports/'+args.release_id
+        previous=private.blob(prefix+'/prepared-receipt.json')
+        if previous.exists():
+            prepared=json.loads(previous.download_as_bytes(checksum='auto'))
+            current=json.loads(pointer.download_as_bytes()) if expected_generation else {}
+            report=prepared['downloads'][0];report_name=report['uri'].split('/',3)[3]
+            saved=pub.blob(report_name).download_as_bytes(checksum='auto')
+            if hashlib.sha256(saved).hexdigest()!=report['sha256']:raise ValueError('Retry artifact hash mismatch')
+            validate(json.loads(saved))
+            value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=report_name,sha256=report['sha256'],bytes=report['bytes'],generated_at=json.loads(saved)['generated_at'])
+            if current.get('release_id')!=args.release_id:
+                if expected_generation!=int(prepared['previous_pointer_generation']):raise ValueError('Pointer changed since preparation; retry publication held')
+                pointer.upload_from_string(dump(value),content_type='application/json',if_generation_match=expected_generation,checksum='auto')
+            elif current.get('sha256')!=report['sha256']:raise ValueError('Retry pointer hash mismatch')
+            completed=private.blob(prefix+'/completed-receipt.json')
+            if not completed.exists():completed.upload_from_string(dump(dict(prepared,publication_status='published',published_at=prepared['validated_at'])),content_type='application/json',if_generation_match=0)
+            print(dump(dict(event='human_development_reports_retry_confirmed',release_id=args.release_id)).decode(),flush=True);return
+    output_prefix=prefix if args.private_only else 'static-assets/human-development/releases/'+args.release_id
+    def download_ref(key):
+        return 'gs://'+PRIVATE+'/'+key if args.private_only else 'https://storage.googleapis.com/'+PUBLIC+'/'+key
     # All provider-group pointers are read together once. Every later query uses physical tables and exact release parameters.
     pointers=[dict(r) for r in bq.query(f'SELECT dataset_id,release_id FROM `{D}.release_pointer`',location='EU').result()]
     pinned={r['dataset_id']:r['release_id'] for r in pointers}
@@ -273,8 +291,8 @@ def main():
     geographies=[dict(code='WLD',name=bi('World / global source series','Svět / globální zdrojové řady')),dict(code='SURVEY21',name=bi('21-country survey sample (not world)','Vzorek průzkumu v 21 zemích (není svět)'))]+[dict(code=c,name=bi(n,'Česko' if c=='CZE' else n)) for c,n in sorted(countries.items()) if c not in {'WLD','SURVEY21'}]
     chapters=[dict(id='annex',title=bi('Human development and statistical annex','Lidský rozvoj a statistická příloha')),dict(id='survey',title=bi('AI and human development survey','Průzkum AI a lidského rozvoje')),dict(id='overview',title=bi('Original report overview: coverage','Původní přehled zprávy: pokrytí'))]+[dict(id='chapter'+str(i),title=bi('Original chapter '+str(i)+': coverage','Původní kapitola '+str(i)+': pokrytí')) for i in range(1,7)]
     payload=dict(schema_version='1.0.0',release_id=args.release_id,generated_at=stamp(),source_releases=dict(undp_bundle_2025=core,**{k:v for k,v in pinned.items() if k.startswith('hdr_report_sources_2025')}),geographies=geographies,chapters=chapters,charts=charts,coverage=dict(source_count=11+sum(bool(m.get('accepted_records')) or m.get('processing_status')=='raw_document_preserved' for m in by_source.values()),attempted_source_count=11+len(by_source),unavailable_sources=gaps,original_figures=ledger,survey_countries=sorted(SURVEY_CODES.values()),czechia_survey_available=False,scope=bi('All audited named objects are listed. Numerical narrative citations remain candidate evidence, not loaded observations. Ready charts are source series; exact original figures are not claimed recreated.','Všechny auditované pojmenované objekty jsou uvedeny. Číselné citace v textu zůstávají kandidáty důkazů, ne načtenými pozorováními. Dostupné grafy jsou zdrojové řady; přesná reprodukce původních grafů se netvrdí.')))
-    name=f'static-assets/human-development/releases/{args.release_id}/reports.json'
-    core_download=f'static-assets/human-development/releases/{args.release_id}/core-observations.csv'
+    name=output_prefix+'/reports.json'
+    core_download=output_prefix+'/core-observations.csv'
     # Complete pinned core metric cells, including missing values, aggregates and
     # raw source units. Stream to cloud temporary disk, never a dataset-wide list.
     core_meta={r['variable']:dict(r) for r in query(f"SELECT * FROM `{D}.variable_metadata` WHERE release_id=@release AND source_id='hdr25_timeseries'",core)}
@@ -292,7 +310,7 @@ def main():
                 source_totals[r['metric']]+=numeric(r['source_value']);normalized_totals[r['metric']]+=numeric(r['value'])
             export.writerow([r['release_id'],r['source_id'],r['source_vintage'],r['country_code'],r['country_name'],r['geography_kind'],r['year'],r['metric'],core_meta.get(r['metric'],{}).get('label'),r['sex'],r['source_value'],r['value'],r['unit'],'definition_reviewed_for_chart' if r['metric'] in INDEX or r['metric'] in DIMENSIONS else 'reported_source_unit_definition_not_reviewed_for_chart',r['source_column'],r['source_url'],r['source_sha256']])
     payload['coverage']['core_export']=dict(received_cells=received,nonmissing_cells=accepted,missing_cells=missing,metric_cells=dict(metric_counts),coverage='All pinned HDRO time-series metric cells, including nulls and aggregate geographies; 9 metrics charted. Workbook-only annex cells remain in the pinned warehouse and are not claimed exported here.')
-    annex_download=f'static-assets/human-development/releases/{args.release_id}/annex-observations.csv'
+    annex_download=output_prefix+'/annex-observations.csv'
     annex_file=tempfile.NamedTemporaryFile(mode='w',encoding='utf-8',newline='',suffix='.csv',delete=False)
     annex_columns=['release_id','source_id','source_vintage','sheet','row_number','column_number','country_code','country_name','geography_kind','metric','period','sex','unit','source_value','value','source_notes','source_url','source_sha256']
     annex_n=0;annex_totals=defaultdict(lambda:dict(count=0,source=Decimal(0),normalized=Decimal(0)));annex_vintages=set()
@@ -309,14 +327,14 @@ def main():
             export.writerow([r.get(c) for c in annex_columns]+['source_header_unit_preserved; definition_not_reviewed_for_chart'])
     if not annex_n:raise ValueError('Pinned numeric annex cells absent')
     payload['coverage']['annex_export']=dict(numeric_cells=annex_n,source_vintages=sorted(annex_vintages),scope='All pinned table_observations numeric cells. Source column headers, units, notes and exact cell coordinates preserved; unit interpretation remains unresolved where source headers are ambiguous. Original HDR all-tables workbook omits Table6; original MPI2024 and newer MPI2025 workbooks remain separate source vintages.')
-    payload['downloads']=dict(annex_csv='https://storage.googleapis.com/'+PUBLIC+'/'+annex_download,json='https://storage.googleapis.com/'+PUBLIC+'/'+name,core_csv='https://storage.googleapis.com/'+PUBLIC+'/'+core_download,chart_csv='https://storage.googleapis.com/'+PUBLIC+f'/static-assets/human-development/releases/{args.release_id}/observations.csv')
+    payload['downloads']=dict(annex_csv=download_ref(annex_download),json=download_ref(name),core_csv=download_ref(core_download),chart_csv=download_ref(output_prefix+'/observations.csv'))
     body=validate(payload);sha=hashlib.sha256(body).hexdigest()
     # Full row export stays a separate download; report response must remain <=2MB.
     stream=io.StringIO();writer=csv.writer(stream);writer.writerow(['chart_id','country','period','label','field','value','unit','source_release','source_url'])
     for c in charts:
         for r in c['rows']:
             for f in c['fields']:writer.writerow([c['id'],r.get('country'),r.get('year',r.get('period')),r.get('label'),f['key'],r.get(f['key']),c['unit'],';'.join(s['release_id'] for s in c['source_refs']),';'.join(s['url'] for s in c['source_refs'])])
-    csv_body=stream.getvalue().encode();downloads=f'static-assets/human-development/releases/{args.release_id}/observations.csv'
+    csv_body=stream.getvalue().encode();downloads=output_prefix+'/observations.csv'
     def immutable(bucket,key,data,ctype):
         blob=bucket.blob(key)
         if blob.exists():
@@ -341,7 +359,7 @@ def main():
         while chunk:=f.read(1024*1024):verified.update(chunk)
     if verified.hexdigest()!=core_sha:raise ValueError('Core CSV roundtrip mismatch')
     os.unlink(temporary.name)
-    core_object=dict(uri='gs://'+PUBLIC+'/'+core_download,generation=str(core_blob.generation),sha256=core_sha,bytes=core_bytes,received_rows=received,accepted_nonmissing_rows=accepted,missing_rows=missing,rejected_rows=0,deduplicated_rows=0,source_totals_by_metric={k:str(v) for k,v in source_totals.items()},normalized_totals_by_metric={k:str(v) for k,v in normalized_totals.items()},numeric_totals_status='Exact source and normalized decimal values checked per cell; sums preserved per metric, never combined across units.')
+    core_object=dict(uri='gs://'+pub.name+'/'+core_download,generation=str(core_blob.generation),sha256=core_sha,bytes=core_bytes,received_rows=received,accepted_nonmissing_rows=accepted,missing_rows=missing,rejected_rows=0,deduplicated_rows=0,source_totals_by_metric={k:str(v) for k,v in source_totals.items()},normalized_totals_by_metric={k:str(v) for k,v in normalized_totals.items()},numeric_totals_status='Exact source and normalized decimal values checked per cell; sums preserved per metric, never combined across units.')
     annex_blob=pub.blob(annex_download);annex_digest=hashlib.sha256()
     with open(annex_file.name,'rb') as f:
         while chunk:=f.read(1024*1024):annex_digest.update(chunk)
@@ -357,21 +375,32 @@ def main():
         while chunk:=f.read(1024*1024):check.update(chunk)
     if check.hexdigest()!=annex_sha:raise ValueError('Annex CSV roundtrip mismatch')
     os.unlink(annex_file.name)
-    annex_object=dict(uri='gs://'+PUBLIC+'/'+annex_download,generation=str(annex_blob.generation),sha256=annex_sha,bytes=annex_bytes,received_rows=annex_n,accepted_rows=annex_n,rejected_rows=0,deduplicated_rows=0,totals_by_source_metric_unit=[dict(source_id=k[0],metric=k[1],unit=k[2],count=v['count'],source_total=str(v['source']),normalized_total=str(v['normalized'])) for k,v in annex_totals.items()],unit_status='No sums combine different source/metric/unit groups; unresolved source units retained literally.')
+    annex_object=dict(uri='gs://'+pub.name+'/'+annex_download,generation=str(annex_blob.generation),sha256=annex_sha,bytes=annex_bytes,received_rows=annex_n,accepted_rows=annex_n,rejected_rows=0,deduplicated_rows=0,totals_by_source_metric_unit=[dict(source_id=k[0],metric=k[1],unit=k[2],count=v['count'],source_total=str(v['source']),normalized_total=str(v['normalized'])) for k,v in annex_totals.items()],unit_status='No sums combine different source/metric/unit groups; unresolved source units retained literally.')
     def anonymous_head(key):
         try:
             with urllib.request.urlopen(urllib.request.Request('https://storage.googleapis.com/'+PUBLIC+'/'+key,method='HEAD'),timeout=20) as r:
                 return 'verified_anonymous_head_200' if r.status==200 else 'not_available_http_'+str(r.status)
         except urllib.error.HTTPError as e:return 'not_available_http_'+str(e.code)
         except (urllib.error.URLError,TimeoutError):return 'not_verified_network_error'
-    accesses=dict(annex_csv=anonymous_head(annex_download),core_csv=anonymous_head(core_download),chart_csv=anonymous_head(downloads),json='not_yet_verified_direct_access; authenticated_report_store_contract')
-    payload['download_access']=accesses
-    for key in ['core_csv','chart_csv','annex_csv']:
-        if accesses[key]!='verified_anonymous_head_200':payload['downloads'][key]=None
+    if args.private_only:
+        accesses={k:'private_authenticated_gs_reference; not_public' for k in ['annex_csv','core_csv','chart_csv','json']}
+        payload['download_access']=accesses
+        payload['processing_status']='validated_review_bundle'
+        payload['publication_status']='not_published'
+    else:
+        accesses=dict(annex_csv=anonymous_head(annex_download),core_csv=anonymous_head(core_download),chart_csv=anonymous_head(downloads),json='not_yet_verified_direct_access; authenticated_report_store_contract')
+        payload['download_access']=accesses
+        for key in ['core_csv','chart_csv','annex_csv']:
+            if accesses[key]!='verified_anonymous_head_200':payload['downloads'][key]=None
     body=validate(payload);sha=hashlib.sha256(body).hexdigest()
     report_object=immutable(pub,name,body,'application/json; charset=utf-8')
-    accesses=dict(accesses,json=anonymous_head(name))
-    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer='gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object,annex_object],download_access=accesses,unavailable_sources=gaps)
+    if not args.private_only:accesses=dict(accesses,json=anonymous_head(name))
+    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer=None if args.private_only else 'gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='not_published' if args.private_only else 'prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object,annex_object],download_access=accesses,unavailable_sources=gaps)
+    if args.private_only:
+        manifest=dict(schema_version='1.0.0',release_id=args.release_id,bucket=PRIVATE,object=name,sha256=sha,bytes=len(body),generation=report_object['generation'],publication_status='not_published',processing_status='validated',source_releases=payload['source_releases'])
+        immutable(private,prefix+'/validated-report-manifest.json',dump(manifest),'application/json')
+        immutable(private,prefix+'/review-receipt.json',dump(prepared),'application/json')
+        print(dump(dict(event='human_development_private_review_validated',release_id=args.release_id,bytes=len(body),publication_status='not_published',receipt='gs://'+PRIVATE+'/'+prefix+'/review-receipt.json',manifest='gs://'+PRIVATE+'/'+prefix+'/validated-report-manifest.json')).decode(),flush=True);return
     immutable(private,prefix+'/prepared-receipt.json',dump(prepared),'application/json')
     pointer_value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=name,sha256=sha,bytes=len(body),generated_at=payload['generated_at'],downloads=dict(json=name,csv=downloads,core_csv=core_download,annex_csv=annex_download))
     pointer.upload_from_string(dump(pointer_value),content_type='application/json',if_generation_match=expected_generation,checksum='auto')
