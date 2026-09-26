@@ -37,7 +37,6 @@
   }
   function render(host, spec) {
     if (!host) return;
-    if (spec.type === 'route-map') return renderRoutes(host, spec);
     const focusedPoint = host.contains(document.activeElement) ? document.activeElement.dataset?.point : undefined;
     host.__psdChartCleanup?.();
     const abort = new AbortController();
@@ -152,10 +151,8 @@
     host.__psdChartCleanup?.();
     const abort = new AbortController();
     const geometry = spec.geometry;
-    const focusedEdge=host.contains(document.activeElement)?document.activeElement.dataset?.edge:undefined;
-    const markerId='psd-route-arrow-'+Math.random().toString(36).slice(2);
     const highlighted = new Set(spec.nodes.map(node => node.iso2.toLowerCase()));
-    host.innerHTML = `<svg viewBox="${escape(geometry.viewBox)}" role="group" aria-label="${escape(spec.title)}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><g class="psd-route-land">${geometry.locations.map(location => `<path d="${escape(location.path)}" class="${highlighted.has(location.id) ? 'is-involved' : ''}"/>`).join('')}</g><g class="psd-route-edges"></g><g class="psd-route-nodes"></g></svg><p class="psd-route-detail" aria-live="polite"></p>`;
+    host.innerHTML = `<svg viewBox="${escape(geometry.viewBox)}" role="group" aria-label="${escape(spec.title)}"><g class="psd-route-land">${geometry.locations.map(location => `<path d="${escape(location.path)}" class="${highlighted.has(location.id) ? 'is-involved' : ''}"/>`).join('')}</g><g class="psd-route-edges"></g><g class="psd-route-nodes"></g></svg><p class="psd-route-detail" aria-live="polite"></p>`;
     const svg=host.querySelector('svg'), points=new Map();
     // Anchor coordinates use the same map projection as the published geometry.
     for(const node of spec.nodes) {
@@ -170,7 +167,7 @@
       const known=finite(edge.value), width=known && edge.value>0 ? .5+7*Math.sqrt(edge.value/max) : 1;
       const bend=Math.min(100,Math.hypot(b.x-a.x,b.y-a.y)*.25)*(i%2 ? -1 : 1);
       const d=`M${a.x},${a.y} Q${(a.x+b.x)/2},${(a.y+b.y)/2-bend} ${b.x},${b.y}`;
-      return `<g tabindex="${i===0?0:-1}" role="button" data-edge="${i}" aria-label="${escape(edge.label)}"><path class="psd-route-hit" d="${d}"/><path class="psd-route-line ${known?'':'is-missing'} ${edge.value>0?'has-value':''}" d="${d}" style="stroke:${escape(edge.color||palette[0])};stroke-width:${width}" ${known && edge.value>0?`marker-end="url(#${markerId})"`:""}/></g>`;
+      return `<g tabindex="${i===0?0:-1}" role="button" data-edge="${i}" aria-label="${escape(edge.label)}"><path class="psd-route-hit" d="${d}"/><path class="psd-route-line ${known?'':'is-missing'} ${edge.value>0?'has-value':''}" d="${d}" style="stroke:${escape(edge.color||palette[0])};stroke-width:${width}"/></g>`;
     }).join('');
     svg.querySelector('.psd-route-nodes').innerHTML=spec.nodes.map(node=>{
       const p=points.get(node.id);return p?`<g><circle cx="${p.x}" cy="${p.y}" r="4"/><text x="${p.x}" y="${p.y-12}" text-anchor="middle">${escape(node.label)}</text></g>`:'';
@@ -189,7 +186,6 @@
       }
     },{signal:abort.signal});
     host.__psdChartCleanup=()=>abort.abort();
-    if(focusedEdge!==undefined){const mark=host.querySelector(`[data-edge="${focusedEdge}"]`);if(mark){host.querySelector('[data-edge="0"]')?.setAttribute('tabindex','-1');mark.tabIndex=0;mark.focus();}}
     return {destroy:host.__psdChartCleanup};
   }
   const api = Object.freeze({ render, renderRoutes, model, domain, palette });
