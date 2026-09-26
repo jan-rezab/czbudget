@@ -50,7 +50,14 @@
     "sha256": "5c33111d2228c9b723e54027444f58eb6a67e249ddb3409c7adf9611f0664a34",
     "bytes": 961527,
     "doi": "10.18160/GCP-2024",
-    "notes": "Direct endpoint explicitly verified as accessUrl in officialJSON. Anonymous licence_accept GET looped to licence page with stateless web tool. Cloud fetch must use session cookie licence acceptance or cpauthToken and reject HTML. Original report cites Global Carbon Atlas2024 accessed7January2025; workbook is underlying same publisher release, exact Atlas-to-workbook snapshot equality must be validated. Territorial CO2 matches annex conceptual scope; consumption emissions do not. Keep workbook units and population denominator.2025 file published17May2026 with annual emissions through2024; preserve projections separately."
+    "notes": "Direct endpoint explicitly verified as accessUrl in officialJSON. CookieJar GET licence_accept flow verified successful; statelesswebloop was toollimitation. Cloud fetch must retain CpLicenseAcceptedFor session cookies and reject HTML. Original report cites Global Carbon Atlas2024 accessed7January2025; workbook is underlying same publisher release, exact Atlas-to-workbook snapshot equality must be validated. Territorial CO2 matches annex conceptual scope; consumption emissions do not. Keep workbook units and population denominator.2025 file published17May2026 with annual emissions through2024; preserve projections separately.",
+    "expected_sha256": "5c33111d2228c9b723e54027444f58eb6a67e249ddb3409c7adf9611f0664a34",
+    "session_fetch": {
+      "licence_accept_url": "https://data.icos-cp.eu/licence_accept?fileName=National_Fossil_Carbon_Emissions_2024v1.01&ids=%5B%22XDMRHSIoybcj5UAnRE9Y62pn%22%5D",
+      "cookie_name": "CpLicenseAcceptedFor",
+      "procedure": "Use same urllib opener with CookieJar. GET licence_accept then close redirected ZIP without readingbody; subsequentGET sourceurl returns XLSX. HEAD returns404 and is not valid availability test.",
+      "header_verified": "2026-09-27 GET200 correct XLSX Content-Type, filename, Content-Length matching bytes; responsebody never read locally."
+    }
   },
   {
     "source_id": "gcp_national_fossil_2025v1.0",
@@ -69,7 +76,14 @@
     "sha256": "968097cacb1a6a5bfa0cf74ee90763f74a90ef10499e060ab43d1a74c671d46b",
     "bytes": 755198,
     "doi": "10.18160/GCP-2025",
-    "notes": "Direct endpoint explicitly verified as accessUrl in officialJSON. Anonymous licence_accept GET looped to licence page with stateless web tool. Cloud fetch must use session cookie licence acceptance or cpauthToken and reject HTML. Original report cites Global Carbon Atlas2024 accessed7January2025; workbook is underlying same publisher release, exact Atlas-to-workbook snapshot equality must be validated. Territorial CO2 matches annex conceptual scope; consumption emissions do not. Keep workbook units and population denominator.2025 file published17May2026 with annual emissions through2024; preserve projections separately."
+    "notes": "Direct endpoint explicitly verified as accessUrl in officialJSON. CookieJar GET licence_accept flow verified successful; statelesswebloop was toollimitation. Cloud fetch must retain CpLicenseAcceptedFor session cookies and reject HTML. Original report cites Global Carbon Atlas2024 accessed7January2025; workbook is underlying same publisher release, exact Atlas-to-workbook snapshot equality must be validated. Territorial CO2 matches annex conceptual scope; consumption emissions do not. Keep workbook units and population denominator.2025 file published17May2026 with annual emissions through2024; preserve projections separately.",
+    "expected_sha256": "968097cacb1a6a5bfa0cf74ee90763f74a90ef10499e060ab43d1a74c671d46b",
+    "session_fetch": {
+      "licence_accept_url": "https://data.icos-cp.eu/licence_accept?fileName=National_Fossil_Carbon_Emissions_2025_v1.0&ids=%5B%22loCXyssaalv6DPdO6Qdj90qQ%22%5D",
+      "cookie_name": "CpLicenseAcceptedFor",
+      "procedure": "Use same urllib opener with CookieJar. GET licence_accept then close redirected ZIP without readingbody; subsequentGET sourceurl returns XLSX. HEAD returns404 and is not valid availability test.",
+      "header_verified": "2026-09-27 GET200 correct XLSX Content-Type, filename, Content-Length matching bytes; responsebody never read locally."
+    }
   },
   {
     "source_id": "wid_country_current_CZ",
@@ -91,12 +105,13 @@
       "variable": "sptinc992j",
       "percentile": "p99p100"
     },
-    "notes": "Exact publisher URL construction verified in official April2026 R loader. This CZ entry is a fetch smoke test, not complete country coverage. Root should enumerate all official country/region codes and preserve data plus available per-country methodology/source metadata. WID API officially exists but requires x-api-key (official wid-r-tool); public CSV route needs no verified credential. Original2Jan2025 WID snapshot not identified. Adult equal-split denominator (992j), pretax national income. Shares stored as proportions; normalized percent=sourcevalue*100 with explicit calculation. Never erase age/pop metadata or interpolation flags."
+    "notes": "Exact publisher URL construction verified in official April2026 R loader. This CZ entry is a fetch smoke test, not complete country coverage. Root should enumerate all official country/region codes and preserve data plus available per-country methodology/source metadata. WID API officially exists but requires x-api-key (official wid-r-tool); public CSV route needs no verified credential. Original2Jan2025 WID snapshot not identified. Adult equal-split denominator (992j), pretax national income. Shares stored as proportions; normalized percent=sourcevalue*100 with explicit calculation. Never erase age/pop metadata or interpolation flags.",
+    "expand_catalog_url": "https://raw.githubusercontent.com/world-inequality-database/wid-bulk-downloader/main/World%20Inequality%20Database/Working%20Folder/Setup%20Scripts/country_code_vectors.R"
   },
   {
     "source_id": "worldbank_lowest20_current",
     "url": "https://api.worldbank.org/v2/en/indicator/SI.DST.FRST.20?downloadformat=csv",
-    "format": "zip_csv",
+    "format": "zip",
     "vintage": "current WDI/PIP retrieval snapshot",
     "relation": "newer_same_source",
     "report_refs": [
@@ -111,7 +126,7 @@
   {
     "source_id": "worldbank_second20_current",
     "url": "https://api.worldbank.org/v2/en/indicator/SI.DST.02ND.20?downloadformat=csv",
-    "format": "zip_csv",
+    "format": "zip",
     "vintage": "current WDI/PIP retrieval snapshot",
     "relation": "newer_same_source",
     "report_refs": [
