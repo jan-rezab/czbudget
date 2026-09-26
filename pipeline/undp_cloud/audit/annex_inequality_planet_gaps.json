@@ -1,0 +1,88 @@
+{
+  "audited_at": "2026-09-27",
+  "coverage": "Supplementary annex inequality and planetary sources only",
+  "report_source_evidence": {
+    "table3": "PDF301 printed287: col10 WIID2023; cols12,13,15 WorldBank2024a; col14 WID2023. ReferencesPDF321printed307 callsWID2024access2Jan2025.",
+    "table7": "PDF319printed305: col6 GlobalCarbonProject2024; col8 UNEP2024. ReferencesPDF321printed307 both accessed7Jan2025."
+  },
+  "source_contract": {
+    "stable_key": [
+      "publisher",
+      "dataset",
+      "source_vintage",
+      "source_file_sha256",
+      "sheet_or_row",
+      "metric",
+      "geography",
+      "period",
+      "unit",
+      "population_or_welfare_denominator"
+    ],
+    "retain": [
+      "immutable originals",
+      "verbatim citation and licence",
+      "source decimal value",
+      "source notes",
+      "observed vs modeled/interpolated/extrapolated flag"
+    ],
+    "newer_snapshot_policy": "Store separately from report original. Current version never establishes exact original coverage. Missing originals remain explicit gaps."
+  },
+  "gaps": [
+    {
+      "source_id": "wiid_companion_country_20231128",
+      "status": "endpoint_verified_binary_pending",
+      "reason": "Official archive links verified. Web403 prevents embedded workbook verification. Need originalAtkinson metric/formula column inspection; current WIID must not replace report observation."
+    },
+    {
+      "source_id": "wid_2024_snapshot_accessed20250102",
+      "status": "original_vintage_unresolved",
+      "reason": "ReportTable3source2023 vs statisticalreferences2024 inconsistency. Current bulk CSV is mutable; exact historicaldownload/archivedsnapshot not verified. Need all countries currentfiles and original snapshot.",
+      "related_bottom40": "sptinc992j,p0p40 may be available but differs from annex WB income-or-consumption share; never proxy fill."
+    },
+    {
+      "source_id": "unep_irp_2024_material_footprint",
+      "status": "original_endpoint_unresolved",
+      "landing_url": "https://www.resourcepanel.org/global-material-flows-database",
+      "portal_url": "https://unep-irp-resourcepanel.resource-use.global/",
+      "original_access_date": "2025-01-07",
+      "reason": "Official page iframe is JavaScript app; webtool provides no data/indexlinks. Exact original2024 country materialfootprint bulk/API not verified. Do not use old2019 CSV mirror as2024source.",
+      "next_action": "Cloud-only fetch bounded homepage HTML and linkedJS metadata, identify officialexportendpoint/config, then retain exactvintage archive or request publisher index if noarchive."
+    },
+    {
+      "source_id": "unep_irp_2025_material_footprint",
+      "status": "newer_same_source_index_verified_endpoint_unresolved",
+      "evidence_url": "https://resource-use.global/data-and-models",
+      "coverage": "1970\u20132024 around200countries/regions",
+      "vintage": "Maintainer citationUNEPIRP2025",
+      "reason": "Maintainer officialindex identifies newerrelease but no publicexportURL. Related2024method article https://doi.org/10.1111/jiec.13593 states most2022\u20132024 categories forecast usingCSIROGTEM, distinguish modeled from measured.",
+      "license": "Exact currentexportlicence unresolved. Older2019mirrorCCBY4 doesnot establish2025licence."
+    },
+    {
+      "source_id": "gcp2024_2025",
+      "status": "endpoint_and_sha_verified_session_fetch_pending",
+      "reason": "OfficialJSON accessUrl andSHA verified. Need licencecookies/session; HTMLresponse must be rejected. Exact reportAtlas snapshot comparison pending.",
+      "latest_date": "2026-05-17",
+      "realtime": "No verified realtime same-definition country series; GCBannual estimates. HourlyICOS station observations have different metric/geography and cannot substitute."
+    },
+    {
+      "source_id": "worldbank_wdi_2024_income_distribution",
+      "status": "current_endpoint_verified_original_archive_pending",
+      "reason": "CurrentWDI CSV verified; original2Jan2025snapshot unresolved. Lowest40requiresmatchingquintileinputs; WIDnotidentical. Microdata mostlygovernmenthouseholdsurveys/highincomeLIS, accessvaries."
+    }
+  ],
+  "cloud_normalization_plan": [
+    "Fetch verified raw in immutable EUobjects and hash; store original andlatest releases separately.",
+    "Validate sourcebytes against expectedSHA when publisher supplies one; rejectHTML/errorpayloads.",
+    "Normalize WIID sourcefields without turning Companioninterpolations into rawsurveyobservations; inspectexactAtkinson columns before mapping annexincomeinequality.",
+    "Normalize GCP sheets with per-sheet sourceunits, year,country and metric; convertMtCtoMtCO2 onlyif workbookunitrequires it using44/12 and labelcalculation; noWorldplusbilateral aggregation.",
+    "Normalize WID sharevariable+percentile+age+pop keys; countrymetadata/source citations required.",
+    "Compute WBbottom40onlyfrom alignedsurvey quintiles, keep calculation andinputs; no crosssource reconstruction.",
+    "UNEP originalandlatestexport remain gaps until officialendpoint,vintage andlicence confirmed.",
+    "Runcoverage/uniqueness/unit/sourcevalue validation; onlyrootatomicpublish after complete receipt."
+  ],
+  "wid_country_catalogue_metadata": {
+    "official_code_url": "https://github.com/world-inequality-database/wid-bulk-downloader/blob/main/World%20Inequality%20Database/Working%20Folder/Setup%20Scripts/country_code_vectors.R",
+    "official_raw_link": "https://github.com/world-inequality-database/wid-bulk-downloader/raw/refs/heads/main/World%20Inequality%20Database/Working%20Folder/Setup%20Scripts/country_code_vectors.R",
+    "status": "Official file and raw link verified; contents not retrieved (web cache miss). Could parse bounded cloud metadata read; do not execute unreviewed R. HDI195 ISO2country list is fallbackcoverage target, not provencompleteWIDcatalogue."
+  }
+}
