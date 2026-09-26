@@ -38,10 +38,13 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
  if fmt=='wid_csv':
   with open(path,encoding='utf-8-sig',newline='') as f:
    reader=csv.DictReader(f,delimiter=';');seen=0;accepted=0
+   required={'country','variable','percentile','year','value'}
+   if not required.issubset(set(reader.fieldnames or [])):raise ValueError('Unexpected WID source schema')
    for n,row in enumerate(reader,1):
     seen+=1
     if row.get('variable')=='sptinc992j' and row.get('percentile')=='p99p100':
      accepted+=1;yield path.name,n,row
+   if accepted==0:raise ValueError('No requested WIDtop1income observations; raw retained, no countryseries published')
    yield path.name+'::coverage',1,{'received_csv_rows':seen,'accepted_top1_income_rows':accepted,'filtered_out_rows':seen-accepted,'filter':{'variable':'sptinc992j','percentile':'p99p100'},'denominator':'adult equal-split pretax national income; source share is proportion'}
  elif fmt=='tar.gz':
   with tarfile.open(path,'r:gz') as t:
@@ -111,10 +114,17 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
   # its exact source URL, denominator, period and correction rationale.
   sid=path.stem
   selected=[x for x in claims if 'verified_'+x['source_id']==sid]
+  source_text=re.sub(r'<[^>]*>',' ',decode(path.read_bytes()))
+  source_text=re.sub(r'\s+',' ',source_text)
   if not selected:raise ValueError('No reviewed claims for source page')
   for n,row in enumerate(selected,1):
    for field in ['metric','source_value','unit','period','geography','denominator','exact_source_url']:
     if field not in row or row[field] is None:raise ValueError('Missing original observation metadata')
+   # Numeric anchor binds manual review to the fetched page; does not replace
+   # review of units, denominator, period or sample. No live-validation claim.
+   value=str(row['source_value']);integer=str(int(Decimal(value))) if Decimal(value)==int(Decimal(value)) else value
+   if value not in source_text and integer not in source_text:raise ValueError('Reviewed numerical anchor absent from source snapshot')
+   row=dict(row,verification_method='manual_original_source_review_with_numeric_snapshot_anchor',reviewed_at='2026-09-26',not_live_measurement=True)
    yield 'reviewed_original_aggregate',n,row
  elif fmt=='dat':
   with open(path,encoding='utf-8-sig') as f:
@@ -185,7 +195,7 @@ def main():
       accept='https://data.icos-cp.eu/licence_accept?'+urllib.parse.urlencode({'fileName':file_name,'ids':dump([object_id])})
       with opener.open(accept,timeout=60) as license_response:pass
      with opener.open(req,timeout=120) as r,open(path,'wb') as f:
-      e['final_url']=r.url;e['content_type']=r.headers.get('Content-Type')
+      e['final_url']=r.url;e['content_type']=r.headers.get('Content-Type');e['etag']=r.headers.get('ETag');e['last_modified']=r.headers.get('Last-Modified');e['retrieved_at']=stamp();e['source_vintage_verification']='publisher-labelled release and immutable fetched hash; exact report snapshot equality not assumed'
       while data:=r.read(1024*1024):
        received+=len(data)
        if time.monotonic()-start>600:raise ValueError('Source download exceeded 10minute bound')
@@ -217,7 +227,10 @@ def main():
     e['unparsed_members']=[m for m in e['members'] if Path(m['name']).suffix.lower().lstrip('.') not in supported] if e['format'] in {'zip','tar.gz'} else []
     with gzip.open(out,'wt',encoding='utf-8',compresslevel=1) as f:
      for member,n,row in ([] if e.get('parse_mode')=='raw_only' else records(path,e['format'],root,e.get('max_member_bytes',2_000_000_000))):
+      if count==0 and e.get('expected_header') and row.get('columns')!=e['expected_header']:raise ValueError('Declared provider CSV header changed')
       f.write(dump(dict(release_id=rid,source_id=sid,member=member,row_number=n,record_json=dump(row),source_url=e['url'],source_sha256=e['sha256']))+'\n');count+=1
+    if e['format'] in {'csv','worldbank_json','xlsx','parquet','zip','js','wid_csv'} and not count and not e.get('parse_mode'):
+     if e['format']!='zip':raise ValueError('Dataset produced no source records')
     e['accepted_records']=count;e['rejected_records']=0;e['deduplicated_records']=0
     e['processing_status']='source_records_validated' if count else 'raw_dataset_held_pending_adapter' if e.get('parse_mode')=='raw_only' else 'raw_document_preserved'
     if count:
@@ -248,7 +261,7 @@ def main():
   for e in catalog:
    if e['accepted_records']:e['publication_status']='published_source_records'
    elif e['processing_status']=='raw_document_preserved':e['publication_status']='published_source_catalog_only'
-  receipt=dict(release_id=rid,loader_git_sha=a.loader_sha,build_id=rid,region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,completed_at=stamp(),received_sources=len(catalog),accepted_source_records=total,accepted_sources=sum(x['accepted_records']>0 for x in catalog),unavailable_sources=sum(x['processing_status']=='unavailable_or_failed' for x in catalog),publication_status='published',processing_status='validated_available_source_bundle',sources=catalog,validation={'raw_sha256':'passed','raw_generation_pinned_roundtrip':'passed','unique_source_member_row_keys':'passed','warehouse_row_count':'passed','max_bad_records':0,'semantic_metric_normalization':'not_claimed; original provider records and metadata only','numeric_totals':'not_applicable to heterogeneous unnormalized records'},publication_pointer=f'{D}.release_pointer[hdr_report_sources_2025]',destinations=[f'{D}.current_report_source_records',f'{D}.current_report_source_catalog'],website_destinations=[],coverage='Only catalogued successful provider files; not complete report coverage. Original, newer and related sources remain separate.')
+  receipt=dict(release_id=rid,loader_git_sha=a.loader_sha,build_id=rid,region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,completed_at=stamp(),received_sources=len(catalog),accepted_source_records=total,accepted_sources=sum(x['accepted_records']>0 for x in catalog),unavailable_sources=sum(x['processing_status']=='unavailable_or_failed' for x in catalog),publication_status='published',processing_status='validated_available_source_bundle',sources=catalog,validation={'raw_sha256':'passed for accepted records and preserved raw documents only; unavailable sources excluded','raw_generation_pinned_roundtrip':'passed for accepted records and preserved raw documents only; unavailable sources excluded','unique_source_member_row_keys':'passed','warehouse_row_count':'passed','max_bad_records':0,'semantic_metric_normalization':'not_claimed; original provider records and metadata only','numeric_totals':'not_applicable to heterogeneous unnormalized records'},publication_pointer=f'{D}.release_pointer[hdr_report_sources_2025]',destinations=[f'{D}.current_report_source_records',f'{D}.current_report_source_catalog'],website_destinations=[],coverage='Only catalogued successful provider files; not complete report coverage. Original, newer and related sources remain separate.')
   receipt_bytes=(dump(receipt)+'\n').encode();receipt_uri=f'gs://{BUCKET}/{prefix}/completed.json';receipt_sha=hashlib.sha256(receipt_bytes).hexdigest()
   prepared=bucket.blob(f'{prefix}/prepared-receipt.json')
   if prepared.exists():
@@ -262,6 +275,34 @@ def main():
   query(f'CREATE TABLE IF NOT EXISTS `{D}.report_source_catalog` AS SELECT * FROM `{ct}` WHERE FALSE')
   for name in ['records','catalog']:query(f"CREATE OR REPLACE VIEW `{D}.current_report_source_{name}` AS SELECT r.* FROM `{D}.report_source_{name}` r JOIN `{D}.release_pointer` p ON r.release_id=p.release_id WHERE p.dataset_id='hdr_report_sources_2025'")
   query(f"CREATE OR REPLACE VIEW `{D}.current_verified_report_claims` AS SELECT release_id,JSON_VALUE(record_json,'$.source_id') source_id,JSON_VALUE(record_json,'$.metric') metric,JSON_VALUE(record_json,'$.source_value') source_value,SAFE_CAST(JSON_VALUE(record_json,'$.source_value') AS BIGNUMERIC) value,JSON_VALUE(record_json,'$.unit') unit,JSON_VALUE(record_json,'$.period') period,JSON_VALUE(record_json,'$.geography') geography,JSON_VALUE(record_json,'$.denominator') denominator,JSON_VALUE(record_json,'$.coverage') coverage,JSON_VALUE(record_json,'$.report_locator') report_locator,JSON_VALUE(record_json,'$.correction_reason') correction_reason,source_url,source_sha256 FROM `{D}.current_report_source_records` WHERE member='reviewed_original_aggregate'")
+  query(f"""CREATE OR REPLACE VIEW `{D}.current_wdi_source_observations` AS
+  WITH country_meta AS (SELECT JSON_VALUE(record_json,'$.id') iso3,
+   JSON_VALUE(record_json,'$.region.id') region_id FROM `{D}.current_report_source_records`
+   WHERE source_id='wdi_country_metadata' AND NOT ENDS_WITH(member,'::metadata')),
+  indicator_meta AS (SELECT JSON_VALUE(record_json,'$.id') metric,JSON_VALUE(record_json,'$.sourceNote') source_definition,JSON_VALUE(record_json,'$.sourceOrganization') source_organizations
+   FROM `{D}.current_report_source_records` WHERE STARTS_WITH(source_id,'wdi_meta_') AND NOT ENDS_WITH(member,'::metadata'))
+  SELECT r.release_id,r.source_id,JSON_VALUE(r.record_json,'$.indicator.id') metric,
+   JSON_VALUE(r.record_json,'$.indicator.value') metric_label,
+   JSON_VALUE(r.record_json,'$.countryiso3code') country_code,
+   JSON_VALUE(r.record_json,'$.country.value') country_name,
+   CASE WHEN c.region_id='NA' THEN 'aggregate' WHEN c.region_id IS NOT NULL THEN 'country_or_area' ELSE 'unresolved' END geography_kind,
+   JSON_VALUE(r.record_json,'$.date') period,JSON_VALUE(r.record_json,'$.value') source_value,
+   SAFE_CAST(JSON_VALUE(r.record_json,'$.value') AS BIGNUMERIC) value,
+   JSON_VALUE(r.record_json,'$.unit') provider_unit_field,
+   JSON_VALUE(r.record_json,'$.obs_status') provider_observation_status,
+   d.source_definition,d.source_organizations,r.source_url,r.source_sha256 FROM `{D}.current_report_source_records` r
+   LEFT JOIN country_meta c ON JSON_VALUE(r.record_json,'$.countryiso3code')=c.iso3
+   LEFT JOIN indicator_meta d ON JSON_VALUE(r.record_json,'$.indicator.id')=d.metric
+   WHERE STARTS_WITH(r.source_id,'wdi_') AND r.source_id!='wdi_country_metadata' AND NOT STARTS_WITH(r.source_id,'wdi_meta_')
+   AND NOT ENDS_WITH(r.member,'::metadata')""")
+  query(f"""CREATE OR REPLACE VIEW `{D}.current_wid_top1_income_source_observations` AS
+   SELECT release_id,source_id,JSON_VALUE(record_json,'$.country') country_or_region_source_code,
+   JSON_VALUE(record_json,'$.variable') metric,JSON_VALUE(record_json,'$.percentile') percentile,
+   JSON_VALUE(record_json,'$.year') period,JSON_VALUE(record_json,'$.value') source_value,
+   SAFE_CAST(JSON_VALUE(record_json,'$.value') AS BIGNUMERIC) value,'proportion' unit,
+   'adult equal-split pretax national income' denominator,record_json,source_url,source_sha256
+   FROM `{D}.current_report_source_records` WHERE STARTS_WITH(source_id,'wid_current_')
+   AND NOT ENDS_WITH(member,'::coverage')""")
   # Catalog staged metadata is authoritative for process status; receipt adds publication status.
   q=dump
   query(f"""BEGIN TRANSACTION;

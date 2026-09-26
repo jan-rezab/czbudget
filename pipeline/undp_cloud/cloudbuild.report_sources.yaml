@@ -8,6 +8,7 @@ steps:
       - |
         pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt
         pip install --quiet --disable-pip-version-check pyarrow==21.0.0
+        python pipeline/undp_cloud/cloud_fixture_contract.py
         python pipeline/undp_cloud/report_sources.py --loader-sha '${_LOADER_SHA}'
 timeout: 2400s
 queueTtl: 1800s
