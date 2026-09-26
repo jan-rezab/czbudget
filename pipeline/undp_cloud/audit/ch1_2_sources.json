@@ -401,27 +401,33 @@
       "printed_page": 22,
       "report_reference": "chapter1_note81",
       "reported_value_context": "36% exposed;8% economic case US private-sector jobs",
-      "source_citation": "Source-note resolution pending",
+      "source_citation": "Svanberg et al2024 Beyond AI Exposure",
       "type": "computer-vision study estimates",
-      "status": "source_audit_pending"
+      "status": "source_identified_dataset_not_loaded",
+      "source_url": "https://digitaleconomy.stanford.edu/wp-content/uploads/2024/02/2024-01-18Beyond_AI_Exposure.pdf",
+      "dependency_blocked_reason": "Model combines O*NET task classifications with firm/wage/cost assumptions; source paper public, exact analysis input file endpoint unresolved. New same study SSRN2026 abstract6691902 identified, no numeric-series API."
     },
     {
       "pdf_page": 36,
       "printed_page": 22,
       "report_reference": "chapter1_note82",
       "reported_value_context": "18% district guidance;60% principals;40% teachers2023/24 US",
-      "source_citation": "Source-note resolution pending",
+      "source_citation": "Kaufman et al2025 RAND RR-A134-25",
       "type": "education survey",
-      "status": "source_audit_pending"
+      "status": "source_identified_dataset_not_loaded",
+      "source_url": "https://www.rand.org/pubs/research_reports/RRA134-25.html",
+      "dependency_blocked_reason": "Original primary source overall teacher figure25%, ~40%only ELA/science subgroup, ~60%principals; HDR40%teachers generalization cannot overwrite actual source denominator. Public report CC BY4; microdata endpoint unresolved."
     },
     {
       "pdf_page": 36,
       "printed_page": 22,
       "report_reference": "chapter1_note83",
       "reported_value_context": "almost half workers27 countries useAI daily2024 vs30%2023",
-      "source_citation": "Source-note resolution pending",
+      "source_citation": "Conboye2025 referring to Adecco Global Workforce of Future2024",
       "type": "worker survey",
-      "status": "source_audit_pending"
+      "status": "source_identified_dataset_not_loaded",
+      "source_url": "https://www.adeccogroup.com/global-workforce-of-the-future-research-2024",
+      "dependency_blocked_reason": "Corporate survey of workers, no public respondent bulk endpoint verified."
     },
     {
       "pdf_page": 39,
@@ -446,18 +452,22 @@
       "printed_page": 27,
       "report_reference": "Box1.1_note22",
       "reported_value_context": "GPT4.5 hallucination37%;GPT4o60%",
-      "source_citation": "OpenAI GPT4.5 benchmark",
+      "source_citation": "Criddle2025 referring to OpenAI GPT4.5 evaluation",
       "type": "model-specific evaluation",
-      "status": "source_identified_dataset_not_loaded"
+      "status": "source_identified_dataset_not_loaded",
+      "source_url": "https://openai.com/index/introducing-gpt-4-5/",
+      "dependency_blocked_reason": "Original model-specific SimpleQA hallucination rates should preserve precise primary figure rather than rounded report/media figures."
     },
     {
       "pdf_page": 44,
       "printed_page": 30,
       "report_reference": "Box1.2_note10",
       "reported_value_context": "100billion words/day2024",
-      "source_citation": "Source-note resolution pending",
+      "source_citation": "Griffin2024 platform statement; denominator comparison Villalobos et al2024",
       "type": "platform statement",
-      "status": "source_audit_pending"
+      "status": "source_identified_dataset_not_loaded",
+      "source_url": "https://hdr.undp.org/content/human-development-report-2025",
+      "dependency_blocked_reason": "Underlying platform total not independently published raw observations; paper source-note identified, API unavailable."
     },
     {
       "pdf_page": 46,
@@ -573,5 +583,31 @@
     "Original report measurements, newer same-source release, and related new source must remain distinct.",
     "Actual ingestion/publication receipts are coordinated by root; this manifest is source audit, not a completion receipt."
   ],
-  "cloud_plan": "Cloud-only immutable fetch of ready listed sources; parse result CSV/JSON/XLSX retaining filename,row,exactdecimal,unit,period,geography,denominator,sourceSHA,sourcevintage; stage and validate before atomic pointer. Restricted originals remain explicit gaps."
+  "cloud_plan": "Cloud-only immutable fetch of ready listed sources; parse result CSV/JSON/XLSX retaining filename,row,exactdecimal,unit,period,geography,denominator,sourceSHA,sourcevintage; stage and validate before atomic pointer. Restricted originals remain explicit gaps.",
+  "source_fidelity_contract": {
+    "source_key": "Stable publisher/dataset/vintage/file/row/metric/period/geography/denominator identity; preserve report reference separately",
+    "originals": "Immutable original publisher object, SHA256/generation, exact numeric text and complete labels/units/footnotes",
+    "separation": "Report-source vintage, newer same-source release and related new source remain distinct datasets; modelled/imputed/observed survey/administrative and projection origins explicitly labeled",
+    "gaps": "Publish coverage/status ledger, never fill unavailable Semrush/firm microdata or model experiments with generic indicators",
+    "derived": "Ratios, weights, country group sums, forecasts, cultural distances and experimental effects retain method/input references; are not raw source observations"
+  },
+  "newer_source_notes": [
+    {
+      "source": "RAND educator follow-up2025",
+      "url": "https://www.rand.org/pubs/research_reports/RRA4180-1.html",
+      "period": "school year2024\u20132025",
+      "availability": "public report, rawmicrodata endpoint unresolved",
+      "cadence": "survey waves; not live",
+      "license": "page says noncommercial reproduction; distinct from original2025RR-A134-25CCBY4"
+    },
+    {
+      "source": "RAND AmericanYouthPanel2026",
+      "url": "https://www.rand.org/pubs/research_reports/RRA4742-1.html",
+      "period": "December2025 survey",
+      "publication": "2026-03-17",
+      "sample": "1214youth ages12\u201329",
+      "availability": "public report, rawmicrodata endpoint unresolved",
+      "relation": "related_new_source_not_same_adultteacher_denominator"
+    }
+  ]
 }

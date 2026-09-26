@@ -27,3 +27,7 @@ Report HDI2024 projections/extrapolations are not observed2024 metric cells. Exa
 The narrative-evidence ledger retains21 additional numerical source contexts, including fixed historical studies, valuation calculations, school/worker/startup surveys, road-safety effects and skills estimates. Some source-note resolutions and original dataset endpoints remain pending; therefore all-report completeness must not be claimed.
 
 Source evidence: [World Bank reproducibility catalog](https://reproducibility.worldbank.org/catalog/332), [OpenAI Signals dictionary](https://cdn.openai.com/signals/data-dictionary.pdf), [QJE data-availability statement](https://doi.org/10.1093/qje/qjae044), [author-hosted Which Humans manuscript](https://henrich.fas.harvard.edu/sites/g/files/omnuum5811/files/henrich/files/which_humans_09222023.pdf), [climate study author repository](https://github.com/josephbb/ManyLabsClimate).
+
+Source fidelity contract: stable source key, immutable original and hash, exact numeric string, period/geography/denominator/footnotes; separate observations from calculations and report vintage from newer releases. Missing licensed, firm-specific or experimental data stays a coverage gap; proxies cannot silently fill it.
+
+Original RAND source exposes a report mismatch:25%overall surveyed ELA/math/science teachers use AI versus near40%ELA/science subgroup. The HDR sentence generalizes40%to teachers. Preserve the exact original denominator. Newer RAND school survey2025 and youth2026 reports exist, but bulk respondent endpoints remain unresolved.
