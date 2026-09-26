@@ -17,6 +17,8 @@ from pathlib import Path
 import re
 import tempfile
 import uuid
+import urllib.request
+import urllib.error
 
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
 
@@ -294,7 +296,7 @@ def main():
         blob.reload();received=blob.download_as_bytes(checksum='auto')
         if hashlib.sha256(received).digest()!=hashlib.sha256(data).digest():raise ValueError('Roundtrip hash mismatch')
         return dict(uri='gs://'+bucket.name+'/'+key,generation=str(blob.generation),sha256=hashlib.sha256(data).hexdigest(),bytes=len(data))
-    report_object=immutable(pub,name,body,'application/json; charset=utf-8');csv_object=immutable(pub,downloads,csv_body,'text/csv; charset=utf-8')
+    csv_object=immutable(pub,downloads,csv_body,'text/csv; charset=utf-8')
     core_blob=pub.blob(core_download);core_digest=hashlib.sha256()
     with open(temporary.name,'rb') as f:
         while chunk:=f.read(1024*1024):core_digest.update(chunk)
@@ -311,7 +313,20 @@ def main():
     if verified.hexdigest()!=core_sha:raise ValueError('Core CSV roundtrip mismatch')
     os.unlink(temporary.name)
     core_object=dict(uri='gs://'+PUBLIC+'/'+core_download,generation=str(core_blob.generation),sha256=core_sha,bytes=core_bytes,received_rows=received,accepted_nonmissing_rows=accepted,missing_rows=missing,rejected_rows=0)
-    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer='gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object],unavailable_sources=gaps)
+    def anonymous_head(key):
+        try:
+            with urllib.request.urlopen(urllib.request.Request('https://storage.googleapis.com/'+PUBLIC+'/'+key,method='HEAD'),timeout=20) as r:
+                return 'verified_anonymous_head_200' if r.status==200 else 'not_available_http_'+str(r.status)
+        except urllib.error.HTTPError as e:return 'not_available_http_'+str(e.code)
+        except (urllib.error.URLError,TimeoutError):return 'not_verified_network_error'
+    accesses=dict(core_csv=anonymous_head(core_download),chart_csv=anonymous_head(downloads),json='not_yet_verified_direct_access; authenticated_report_store_contract')
+    payload['download_access']=accesses
+    for key in ['core_csv','chart_csv']:
+        if accesses[key]!='verified_anonymous_head_200':payload['downloads'][key]=None
+    body=validate(payload);sha=hashlib.sha256(body).hexdigest()
+    report_object=immutable(pub,name,body,'application/json; charset=utf-8')
+    accesses=dict(accesses,json=anonymous_head(name))
+    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer='gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object],download_access=accesses,unavailable_sources=gaps)
     immutable(private,prefix+'/prepared-receipt.json',dump(prepared),'application/json')
     pointer_value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=name,sha256=sha,bytes=len(body),generated_at=payload['generated_at'],downloads=dict(json=name,csv=downloads,core_csv=core_download))
     pointer.upload_from_string(dump(pointer_value),content_type='application/json',if_generation_match=expected_generation,checksum='auto')
