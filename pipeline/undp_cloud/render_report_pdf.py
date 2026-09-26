@@ -146,7 +146,7 @@ def build_pdf(payload,output):
             add(item.get('reason',''),'SmallSource')
             for url in item.get('source_urls',[]):add(url,'SmallSource')
     for item in coverage.get('unavailable_sources',[]):
-        add('Source gap '+str(item.get('source_id'))+': '+str(item.get('reason')),'SmallSource')
+        add('Source gap '+(str(item.get('source_id'))+': '+str(item.get('reason')) if isinstance(item,dict) else str(item)),'SmallSource')
     add('Original object and missing-country ledger','Heading2')
     for cid,title,status,scope,method in gaps:
         add(cid+' | '+str(status)+' | '+title,'Heading3');add(scope+' | '+method,'SmallSource')
