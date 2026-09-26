@@ -20,6 +20,7 @@ import uuid
 import urllib.request
 import urllib.error
 
+from publish_ch5_6_panels import provider_panels
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
 
 PROJECT = 'czbudget-janrezab'
@@ -254,8 +255,11 @@ def main():
             sid=contract['source_id']
             if sid not in by_source:raise ValueError('GCP contract source not published')
             admit_observations(sid,gcp_territorial(source_rows(sid),contract),'Territorial fossil CO2 / Teritoriální emise fosilního CO2')
+    added_charts,added_gaps=provider_panels(source_rows,by_source)
+    charts+=added_charts
     ledger=audit_ledger(Path('pipeline/undp_cloud/audit'))
     gaps=[dict(source_id=sid,name=sid,reason=m.get('error') or 'Source records have no verified chart binding; raw loading is not figure reproduction.') for sid,m in by_source.items() if not m.get('accepted_records')]
+    gaps+=added_gaps
     if not provider_releases:gaps.append(dict(source_id='provider-bundle',reason='No provider-group publication pointer available at report build start.'))
     for entry in ledger:
         object_id=entry['id'].replace('Figure ','').replace('Table ','')
@@ -284,7 +288,24 @@ def main():
                 source_totals[r['metric']]+=numeric(r['source_value']);normalized_totals[r['metric']]+=numeric(r['value'])
             export.writerow([r['release_id'],r['source_id'],r['source_vintage'],r['country_code'],r['country_name'],r['geography_kind'],r['year'],r['metric'],core_meta.get(r['metric'],{}).get('label'),r['sex'],r['source_value'],r['value'],r['unit'],'definition_reviewed_for_chart' if r['metric'] in INDEX or r['metric'] in DIMENSIONS else 'reported_source_unit_definition_not_reviewed_for_chart',r['source_column'],r['source_url'],r['source_sha256']])
     payload['coverage']['core_export']=dict(received_cells=received,nonmissing_cells=accepted,missing_cells=missing,metric_cells=dict(metric_counts),coverage='All pinned HDRO time-series metric cells, including nulls and aggregate geographies; 9 metrics charted. Workbook-only annex cells remain in the pinned warehouse and are not claimed exported here.')
-    payload['downloads']=dict(json='https://storage.googleapis.com/'+PUBLIC+'/'+name,core_csv='https://storage.googleapis.com/'+PUBLIC+'/'+core_download,chart_csv='https://storage.googleapis.com/'+PUBLIC+f'/static-assets/human-development/releases/{args.release_id}/observations.csv')
+    annex_download=f'static-assets/human-development/releases/{args.release_id}/annex-observations.csv'
+    annex_file=tempfile.NamedTemporaryFile(mode='w',encoding='utf-8',newline='',suffix='.csv',delete=False)
+    annex_columns=['release_id','source_id','source_vintage','sheet','row_number','column_number','country_code','country_name','geography_kind','metric','period','sex','unit','source_value','value','source_notes','source_url','source_sha256']
+    annex_n=0;annex_totals=defaultdict(lambda:dict(count=0,source=Decimal(0),normalized=Decimal(0)));annex_vintages=set()
+    with annex_file as out:
+        export=csv.writer(out);export.writerow(annex_columns+['unit_definition_status'])
+        for item in query(f'SELECT * FROM `{D}.table_observations` WHERE release_id=@release',core):
+            r=dict(item);annex_n+=1
+            if not r['source_url'].startswith('https://') or not re.fullmatch('[a-f0-9]{64}',r['source_sha256']):raise ValueError('Annex source provenance invalid')
+            if numeric(r['source_value'])!=numeric(r['value']):raise ValueError('Annex source/normalized decimal mismatch')
+            key=(r['source_id'],r['metric'],r['unit']);annex_totals[key]['count']+=1
+            if r['value'] is not None:
+                annex_totals[key]['source']+=numeric(r['source_value']);annex_totals[key]['normalized']+=numeric(r['value'])
+            annex_vintages.add((r['source_id'],r['source_vintage']))
+            export.writerow([r.get(c) for c in annex_columns]+['source_header_unit_preserved; definition_not_reviewed_for_chart'])
+    if not annex_n:raise ValueError('Pinned numeric annex cells absent')
+    payload['coverage']['annex_export']=dict(numeric_cells=annex_n,source_vintages=sorted(annex_vintages),scope='All pinned table_observations numeric cells. Source column headers, units, notes and exact cell coordinates preserved; unit interpretation remains unresolved where source headers are ambiguous. Original HDR all-tables workbook omits Table6; original MPI2024 and newer MPI2025 workbooks remain separate source vintages.')
+    payload['downloads']=dict(annex_csv='https://storage.googleapis.com/'+PUBLIC+'/'+annex_download,json='https://storage.googleapis.com/'+PUBLIC+'/'+name,core_csv='https://storage.googleapis.com/'+PUBLIC+'/'+core_download,chart_csv='https://storage.googleapis.com/'+PUBLIC+f'/static-assets/human-development/releases/{args.release_id}/observations.csv')
     body=validate(payload);sha=hashlib.sha256(body).hexdigest()
     # Full row export stays a separate download; report response must remain <=2MB.
     stream=io.StringIO();writer=csv.writer(stream);writer.writerow(['chart_id','country','period','label','field','value','unit','source_release','source_url'])
@@ -317,22 +338,38 @@ def main():
     if verified.hexdigest()!=core_sha:raise ValueError('Core CSV roundtrip mismatch')
     os.unlink(temporary.name)
     core_object=dict(uri='gs://'+PUBLIC+'/'+core_download,generation=str(core_blob.generation),sha256=core_sha,bytes=core_bytes,received_rows=received,accepted_nonmissing_rows=accepted,missing_rows=missing,rejected_rows=0,deduplicated_rows=0,source_totals_by_metric={k:str(v) for k,v in source_totals.items()},normalized_totals_by_metric={k:str(v) for k,v in normalized_totals.items()},numeric_totals_status='Exact source and normalized decimal values checked per cell; sums preserved per metric, never combined across units.')
+    annex_blob=pub.blob(annex_download);annex_digest=hashlib.sha256()
+    with open(annex_file.name,'rb') as f:
+        while chunk:=f.read(1024*1024):annex_digest.update(chunk)
+    annex_sha=annex_digest.hexdigest();annex_bytes=os.path.getsize(annex_file.name)
+    if annex_blob.exists():
+        check=hashlib.sha256()
+        with annex_blob.open('rb') as f:
+            while chunk:=f.read(1024*1024):check.update(chunk)
+        if check.hexdigest()!=annex_sha:raise ValueError('Immutable annex CSV differs')
+    else:annex_blob.upload_from_filename(annex_file.name,content_type='text/csv; charset=utf-8',if_generation_match=0,checksum='auto')
+    annex_blob.reload();check=hashlib.sha256()
+    with annex_blob.open('rb') as f:
+        while chunk:=f.read(1024*1024):check.update(chunk)
+    if check.hexdigest()!=annex_sha:raise ValueError('Annex CSV roundtrip mismatch')
+    os.unlink(annex_file.name)
+    annex_object=dict(uri='gs://'+PUBLIC+'/'+annex_download,generation=str(annex_blob.generation),sha256=annex_sha,bytes=annex_bytes,received_rows=annex_n,accepted_rows=annex_n,rejected_rows=0,deduplicated_rows=0,totals_by_source_metric_unit=[dict(source_id=k[0],metric=k[1],unit=k[2],count=v['count'],source_total=str(v['source']),normalized_total=str(v['normalized'])) for k,v in annex_totals.items()],unit_status='No sums combine different source/metric/unit groups; unresolved source units retained literally.')
     def anonymous_head(key):
         try:
             with urllib.request.urlopen(urllib.request.Request('https://storage.googleapis.com/'+PUBLIC+'/'+key,method='HEAD'),timeout=20) as r:
                 return 'verified_anonymous_head_200' if r.status==200 else 'not_available_http_'+str(r.status)
         except urllib.error.HTTPError as e:return 'not_available_http_'+str(e.code)
         except (urllib.error.URLError,TimeoutError):return 'not_verified_network_error'
-    accesses=dict(core_csv=anonymous_head(core_download),chart_csv=anonymous_head(downloads),json='not_yet_verified_direct_access; authenticated_report_store_contract')
+    accesses=dict(annex_csv=anonymous_head(annex_download),core_csv=anonymous_head(core_download),chart_csv=anonymous_head(downloads),json='not_yet_verified_direct_access; authenticated_report_store_contract')
     payload['download_access']=accesses
-    for key in ['core_csv','chart_csv']:
+    for key in ['core_csv','chart_csv','annex_csv']:
         if accesses[key]!='verified_anonymous_head_200':payload['downloads'][key]=None
     body=validate(payload);sha=hashlib.sha256(body).hexdigest()
     report_object=immutable(pub,name,body,'application/json; charset=utf-8')
     accesses=dict(accesses,json=anonymous_head(name))
-    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer='gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object],download_access=accesses,unavailable_sources=gaps)
+    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer='gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object,annex_object],download_access=accesses,unavailable_sources=gaps)
     immutable(private,prefix+'/prepared-receipt.json',dump(prepared),'application/json')
-    pointer_value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=name,sha256=sha,bytes=len(body),generated_at=payload['generated_at'],downloads=dict(json=name,csv=downloads,core_csv=core_download))
+    pointer_value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=name,sha256=sha,bytes=len(body),generated_at=payload['generated_at'],downloads=dict(json=name,csv=downloads,core_csv=core_download,annex_csv=annex_download))
     pointer.upload_from_string(dump(pointer_value),content_type='application/json',if_generation_match=expected_generation,checksum='auto')
     completed=dict(prepared,publication_status='published',published_at=stamp(),previous_pointer_generation=str(expected_generation))
     immutable(private,prefix+'/completed-receipt.json',dump(completed),'application/json')
