@@ -3,6 +3,7 @@ import argparse
 import csv
 import hashlib
 import json
+import io
 import os
 from pathlib import Path
 import time
@@ -44,8 +45,14 @@ def main():
         if entry['kind']=='pdf' and not data.startswith(b'%PDF'):raise ValueError('Not a PDF')
         source=dict(entry,content_type=content_type,final_url=final_url,**upload(bucket,f'{prefix}/raw/{path.name}',data));sources.append(source)
         if entry['kind']=='csv':
-            with path.open(encoding='utf-8-sig',newline='') as f:
-                rows=list(csv.DictReader(f));previews[entry['id']]={'rows':len(rows),'columns':list(rows[0]),'sample':rows[:2]}
+            try:
+                text=data.decode('utf-8-sig');encoding='utf-8-sig'
+            except UnicodeDecodeError:
+                text=data.decode('cp1252');encoding='cp1252'
+            source['encoding']=encoding
+            rows=list(csv.DictReader(io.StringIO(text,newline='')))
+            if not rows or 'iso3' not in rows[0]:raise ValueError('Unexpected HDR CSV header')
+            previews[entry['id']]={'encoding':encoding,'rows':len(rows),'columns':list(rows[0]),'sample':rows[:2]}
         elif entry['kind']=='xlsx':
             wb=openpyxl.load_workbook(path,read_only=True,data_only=True)
             preview={}
