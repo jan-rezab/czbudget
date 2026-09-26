@@ -23,9 +23,18 @@ const fail = (rule, detail) => failures.push({ rule, detail });
 
 async function handAuthoredFiles() {
   const entries = await readdir(ROOT, { withFileTypes: true });
-  return entries
+  const rootFiles = entries
     .filter((entry) => entry.isFile() && /\.(?:js|html)$/.test(entry.name))
     .map((entry) => entry.name);
+  // Report pages live one level down; a root adapter's chart markup is often there.
+  const reports = await readdir(path.join(ROOT, "deep-dives"), { withFileTypes: true });
+  const reportPages = [];
+  for (const entry of reports) {
+    if (!entry.isDirectory()) continue;
+    const page = `deep-dives/${entry.name}/index.html`;
+    try { await readFile(path.join(ROOT, page), "utf8"); reportPages.push(page); } catch { /* no index page */ }
+  }
+  return [...rootFiles, ...reportPages];
 }
 
 /**
