@@ -18,19 +18,23 @@ test("UI packaging restores only tracked inputs omitted by a sparse checkout", a
     writeFileSync(join(root, "Dockerfile"), "FROM node:24\n");
     writeFileSync(join(root, "assets", "chart.js"), "export const value = 1;\n");
     writeFileSync(join(root, "data", "country.json"), '{"country":"DEU"}\n');
+    const largeFixture = JSON.stringify({ synthetic: "x".repeat(2 * 1024 * 1024) });
+    writeFileSync(join(root, "data", "large.json"), largeFixture);
     writeFileSync(join(root, "assets", "ignored.js"), "should not be packaged\n");
-    execFileSync("git", ["-C", root, "add", "Dockerfile", "assets/chart.js", "data/country.json"]);
+    execFileSync("git", ["-C", root, "add", "Dockerfile", "assets/chart.js", "data/country.json", "data/large.json"]);
     execFileSync("git", ["-C", root, "-c", "user.name=Contract Test", "-c", "user.email=contract@example.com", "commit", "-qm", "fixture"]);
     rmSync(join(root, "Dockerfile"));
     rmSync(join(root, "assets", "chart.js"));
     rmSync(join(root, "data", "country.json"));
+    rmSync(join(root, "data", "large.json"));
     const destination = join(root, "bundle");
     assert.equal(await copyTrackedContext({
-      root, destination, files: ["Dockerfile", "data/country.json"], directories: ["assets"],
-    }), 3);
+      root, destination, files: ["Dockerfile", "data/country.json", "data/large.json"], directories: ["assets"],
+    }), 4);
     assert.equal(readFileSync(join(destination, "Dockerfile"), "utf8"), "FROM node:24\n");
     assert.equal(readFileSync(join(destination, "assets", "chart.js"), "utf8"), "export const value = 1;\n");
     assert.equal(readFileSync(join(destination, "data", "country.json"), "utf8"), '{"country":"DEU"}\n');
+    assert.equal(readFileSync(join(destination, "data", "large.json"), "utf8"), largeFixture);
     assert.throws(() => readFileSync(join(destination, "assets", "ignored.js")), { code: "ENOENT" });
     await assert.rejects(copyTrackedContext({
       root, destination: join(root, "invalid"), files: ["data/not-tracked.json"], directories: [],
