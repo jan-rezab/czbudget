@@ -1,0 +1,14 @@
+steps:
+  - id: restore-validate-and-publish-held-un-population
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    env: [PYTHONUNBUFFERED=1, 'BUILD_ID=$BUILD_ID']
+    args: [pipeline/un_population_cloud/worker.py, --loader-sha, '${_LOADER_SHA}', --extract-sha, '${_EXTRACT_SHA}']
+timeout: 3600s
+queueTtl: 1800s
+tags: [plane-data, un-population-warehouse]
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _LOADER_SHA: required
+  _EXTRACT_SHA: required

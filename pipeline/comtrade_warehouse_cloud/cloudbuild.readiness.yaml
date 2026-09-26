@@ -10,11 +10,14 @@ steps:
       - '${_CHECKPOINT_SHA}'
       - --loader-sha
       - '${_LOADER_SHA}'
-timeout: 7200s
+      - --period-workers
+      - '3'
+timeout: 14400s
 queueTtl: 1800s
 tags: [plane-data, comtrade-warehouse-readiness]
 options:
   diskSizeGb: 100
+  machineType: E2_HIGHCPU_8
   logging: CLOUD_LOGGING_ONLY
 substitutions:
   _CHECKPOINT_SHA: required

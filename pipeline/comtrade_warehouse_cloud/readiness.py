@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Reconcile every available response in one pinned checkpoint, on a cloud worker."""
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import hashlib
 import json
 import os
@@ -56,11 +57,26 @@ GROUP BY frequency, product_type, status ORDER BY frequency, product_type, statu
                 source_count_mismatches=sum(r['source_count_mismatches'] for r in periods))
 
 
+def reconcile_one(config, manifest, state, references, period, run_id):
+    # Each process owns a connection and scratch directory. Targets and immutable
+    # object paths are period-specific; the proven transaction serializes writes.
+    connection = sqlite3.connect(state)
+    connection.row_factory = sqlite3.Row
+    try:
+        with tempfile.TemporaryDirectory() as directory:
+            return loader.process_period(
+                loader.Cloud(), config, manifest, connection, Path(references), Path(directory),
+                period['frequency'], period['period'], 50000, 1000000, run_id)
+    finally:
+        connection.close()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--reconcile', action='store_true')
     parser.add_argument('--checkpoint-sha', required=True)
     parser.add_argument('--loader-sha', required=True)
+    parser.add_argument('--period-workers', type=int, choices=[1, 2, 3], default=1)
     args = parser.parse_args()
     cloud = loader.Cloud()
     started = loader.now_iso()
@@ -82,14 +98,18 @@ def main():
         cloud.put(f'{prefix}/audit-before.json', (json.dumps(before, indent=2)+'\n').encode())
         loads = []
         if args.reconcile:
-            for period in before['periods']:
-                if period['pending_responses']:
-                    if period['pending_responses'] > 50000:
-                        raise RuntimeError('Period exceeds the safe atomic load limit')
-                    print(json.dumps(dict(event='reconcile_period', **period)), flush=True)
-                    loads.append(loader.process_period(
-                        cloud, config, manifest, connection, references, temporary,
-                        period['frequency'], period['period'], 50000, 1000000, run_id))
+            pending = [p for p in before['periods'] if p['pending_responses']]
+            if any(p['pending_responses'] > 50000 for p in pending):
+                raise RuntimeError('Period exceeds the safe atomic load limit')
+            with ProcessPoolExecutor(max_workers=args.period_workers) as pool:
+                futures = {pool.submit(reconcile_one, config, manifest, str(state),
+                                       str(references), period, run_id): period for period in pending}
+                for future in as_completed(futures):
+                    result = future.result()
+                    loads.append(result)
+                    print(json.dumps(dict(event='reconcile_period_completed',
+                                          frequency=result['frequency'], period=result['period'],
+                                          normalized_rows=result.get('normalized_rows', 0))), flush=True)
         after = audit(connection) if loads else before
         connection.close()
     ready = after['pending_responses'] == 0 and after['source_count_mismatches'] == 0
