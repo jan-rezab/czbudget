@@ -4,15 +4,18 @@
 
 The JSON contract matches `server/human-development-store.mjs`: bilingual metadata, registered geographies, finite numeric chart fields, exact source release/URL/hash, edition, period, units, method, denominator and original reference ledger. HDRO trends and common-year calculated ranks are distinguished from official annex ranks. GDI has no welfare ranking. Components show the latest common period. Czechia has core indicators but is explicitly absent from the 21-country AI survey; `SURVEY21` is distinct from `WLD`.
 
-The full PDF caption census is retained. Ready source topic charts do not assert the original forecasts, grouped estimates or figure recodes have been recreated. Raw provider records are not a verified chart binding. Additional providers require a published source pointer and reviewed native schema. GCP requires explicit workbook SHA/header/unit contracts. Ambiguous core units remain in the complete CSV with definition status and are excluded from charts.
+The full PDF caption census is retained. Ready source topic charts do not assert the original forecasts, grouped estimates or figure recodes have been recreated. Raw provider records are not a verified chart binding. Additional providers require a published source pointer and reviewed native schema. The chapter5/6 helper adds reviewed complete HadCRUT annual/monthly native-baseline series, historical Rupp observations, an explicitly defined newer Epoch model scenario, and occupational taxonomy counts. These are source panels, not claims that the original figures or labour shares were recreated. GCP requires explicit workbook SHA/header/unit contracts. Ambiguous core units remain in the complete CSV with definition status and are excluded from charts.
 
 Public immutable objects:
 
 - `gs://czbudget-janrezab-public-snapshots/static-assets/human-development/releases/RELEASE/reports.json` (strict <=2MB)
 - `.../observations.csv` (displayed chart rows)
-- `.../core-observations.csv` (all pinned time-series metric cells, nulls, source values, aggregates and original units; workbook-only annex cells are not claimed exported)
+- `.../core-observations.csv` (all pinned time-series metric cells, nulls, source values, aggregates and original units)
+- `.../annex-observations.csv` (all pinned numeric table cells, original headers/units/notes, coordinates and source precision; original MPI2024 and newer MPI2025 remain separate vintages)
 
-Both successful roundtrip hashes and semantic/schema validation precede a generation-CAS update to `static-assets/human-development/current.json`. Private prepared/completed receipts live under `processing-runs/undp-human-development-reports/RELEASE/`. Interrupted runs reuse the prepared immutable object and original generation precondition; a changed pointer holds publication. No website deployment is invoked.
+Anonymous HEAD access is checked separately for every download; failed CSV access is recorded and its public link suppressed, without changing IAM. Actual JSON access status is in the private receipt.
+
+Successful roundtrip hashes and semantic/schema validation precede a generation-CAS update to `static-assets/human-development/current.json`. Private prepared/completed receipts live under `processing-runs/undp-human-development-reports/RELEASE/`. Interrupted runs reuse the prepared immutable object and original generation precondition; a changed pointer holds publication. No website deployment is invoked.
 
 Root submits `cloudbuild.publish_reports.yaml` in `europe-west4` with `psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com`, `plane-data`, exact `_UNDP_RELEASE` and loader SHA. This module does not submit builds. Source groups still processing remain absent from this release and are explicit gaps. Oversized JSON fails validation and leaves the prior pointer unchanged; observations are never silently truncated.
 
