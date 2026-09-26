@@ -8,7 +8,7 @@ import catalog from '../content/stories/catalog.mjs';
 const root = resolve(import.meta.dirname, '..');
 // CDN browser TTLs can override origin revalidation. Version adapter references
 // from their actual content so returning readers cannot reuse an older adapter.
-const chartScripts = new Map(await Promise.all(['tariff-charts.js', 'chart-rails.js', 'oil-pivot.js', 'oil-pivot.css'].map(async name => {
+const chartScripts = new Map(await Promise.all(['tariff-charts.js', 'chart-rails.js', 'oil-pivot.js', 'oil-pivot.css', 'stories.js', 'stories.css'].map(async name => {
   const digest = createHash('sha256').update(await readFile(resolve(root, 'stories', name))).digest('hex');
   return [name, digest];
 })));
@@ -43,9 +43,9 @@ function page({title,description,path,body,article=false,schema}) {
 <link rel="canonical" href="${origin}${path}"><link rel="icon" href="/assets/favicon.svg">
 <meta property="og:type" content="${article?'article':'website'}"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${origin}${path}"><meta property="og:image" content="${origin}/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="alternate" type="application/rss+xml" title="PSD Data Stories" href="/stories/feed.xml">
-<link rel="stylesheet" href="/styles.css?v=20260920-stories"><link rel="stylesheet" href="/styles-v2.css?v=20260920-stories"><link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header><link rel="stylesheet" href="/global-footer.css?v=20260920-stories"><link rel="stylesheet" href="/stories/stories.css?v=20260920-stories">
+<link rel="stylesheet" href="/styles.css?v=20260920-stories"><link rel="stylesheet" href="/styles-v2.css?v=20260920-stories"><link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header><link rel="stylesheet" href="/global-footer.css?v=20260920-stories"><link rel="stylesheet" href="/stories/stories.css?v=${chartScripts.get('stories.css')}">
 ${article?'<link rel="stylesheet" href="/stories/article.css?v=20260920-stories"><link rel="stylesheet" href="/psd-chart.css?v=20260920-stories"><script src="/psd-chart.js?v=20260920-stories" defer></script>':''}
-<script src="/global-nav.js?v=20260920-stories" defer></script><script src="/stories/stories.js?v=20260920-stories" defer></script>
+<script src="/global-nav.js?v=20260920-stories" defer></script><script src="/stories/stories.js?v=${chartScripts.get('stories.js')}" defer></script>
 ${schema?`<script type="application/ld+json">${JSON.stringify(schema).replace(/</g,'\\u003c')}</script>`:''}
 </head><body class="stories-page ${article?'story-page':''}"><a class="stories-skip" href="#main">Skip to content</a><psd-site-header data-section="stories"></psd-site-header>${body}<footer data-global-footer></footer></body></html>\n`;
 }

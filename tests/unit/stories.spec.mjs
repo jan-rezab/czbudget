@@ -9,7 +9,7 @@ const read = path => readFile(new URL(`../../${path}`,import.meta.url),'utf8');
 test('published chart adapters have content-derived cache versions',async()=>{
   for (const story of catalog.filter(s=>s.status==='published')) {
     const html=await read(`stories/${story.slug}/index.html`);
-    for (const name of ['tariff-charts.js','chart-rails.js','oil-pivot.js']) {
+    for (const name of ['tariff-charts.js','chart-rails.js','oil-pivot.js','stories.js','stories.css','oil-pivot.css']) {
       if (!html.includes(`/stories/${name}`)) continue;
       const digest=createHash('sha256').update(await read(`stories/${name}`)).digest('hex');
       assert.ok(html.includes(`/stories/${name}?v=${digest}"`), `${story.slug}: ${name}`);
