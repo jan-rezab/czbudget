@@ -61,7 +61,7 @@ def plot(rows,fields,kind,cid):
         chart.data=[[float(r.get(f['key']) or 0) for r in rows] for f in fields]
         chart.categoryAxis.categoryNames=[en(r.get('label') or r.get('year') or r.get('period')) for r in rows]
         chart.categoryAxis.labels.fontSize=6;chart.categoryAxis.labels.maxWidth=155
-        chart.valueAxis.labels.fontSize=7
+        chart.valueAxis.labels.fontSize=7;chart.valueAxis.valueMin=0
         for i in range(len(fields)):chart.bars[i].fillColor=PALETTE[i%len(PALETTE)]
     else:
         chart=LinePlot();chart.x=48;chart.y=30;chart.width=410;chart.height=175
@@ -112,7 +112,7 @@ def build_pdf(payload,output):
         add('Original report references: '+json.dumps(c.get('original_refs',[]),ensure_ascii=False),'SmallSource')
         for start in range(0,len(fields),6):
             fieldgroup=fields[start:start+6]
-            add('Legend: '+'; '.join(en(f['label']) for f in fieldgroup),'SmallSource')
+            body.append(Paragraph('Legend: '+'; '.join('<font color="'+PALETTE[i%len(PALETTE)].hexval().replace('0x','#')+'">'+escape(en(f['label']))+'</font>' for i,f in enumerate(fieldgroup)),styles['SmallSource']))
             # Bar groups bound label density, retaining every row in successive plots.
             parts=[rows[i:i+12] for i in range(0,len(rows),12)] if c['chart_type'] in {'bar','column','stacked','stacked_bar'} else [rows]
             for part in parts:
