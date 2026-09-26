@@ -403,3 +403,11 @@ Status: **not_loaded**.
 - Study narrative claims in boxes/chapter text beyond labelled figures require claim-by-claim original-study audit
 - Spotlight5.1 subjective agency research citations are qualitative theories; no quantitative figure dataset
 - Spotlight6.3 social-dialogue case studies are qualitative case records; numerical dates/counts need original ILO case-study appendix, not country metrics
+
+## Material source-integrity correction
+
+Chapter6 PDF190/printed176 cites Toner-Rodgers2024 (note116) for +44% materials, +39% patents and +17% innovation. The original paper was withdrawn by arXiv administrators20May2025. MIT16May2025 reported concerns about provenance, reliability and validity; these claims must be kept only as historical withdrawn citations and excluded from verified-current metrics. [MIT original statement](https://economics.mit.edu/news/assuring-accurate-research-record), [arXiv withdrawal](https://arxiv.org/abs/2412.17866).
+
+The same page cites Merchant2023 GNoME for2.2million predictions. Its downloadable stable-material subset has a different denominator and CC-BY-NC4.0 data licence. Preserve restrictions and do not treat the stable subset as all predicted crystals. [Original repository](https://github.com/google-deepmind/materials_discovery).
+
+Author-original ILO2023 taxonomy JSON (CC0) and refined2025 occupation/task XLSX links are now in the fetch manifest. These are exposure scores, not the HDR country employment-weighted custom calculation.

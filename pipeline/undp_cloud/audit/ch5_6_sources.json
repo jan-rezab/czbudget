@@ -453,11 +453,14 @@
       ],
       "source_urls": [
         "https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure",
-        "https://ilostat.ilo.org/data/"
+        "https://ilostat.ilo.org/data/",
+        "https://raw.githubusercontent.com/pgmyrek/GenAI_Exposure_Radial_Plot/main/output_data.json",
+        "https://raw.githubusercontent.com/pgmyrek/2025_GenAI_scores_ISCO08/main/Final_Scores_ISCO08_Gmyrek_et_al_2025.xlsx",
+        "https://raw.githubusercontent.com/pgmyrek/2025_GenAI_scores_ISCO08/main/4digits_with_tasks.xlsx"
       ],
       "coverage": "Share of employment by augmentation/automation/big unknown, grouped by 2022 HDI. HDR custom calculation requires exact country sample and weights.",
       "newer_or_live": "ILO 2025 refined occupational exposure index released 20 May 2025 (4 gradients) is newer but method differs; not interchangeable with 2023 categories. ILOSTAT current employment downloadable/API series.",
-      "license_access": "Country labour microdata access varies; harmonized repository not necessarily public for all records. Occupational task scores and public aggregate exports can be acquired; exact HDR microdata panel not yet verified.",
+      "license_access": "Country labour microdata access varies; harmonized repository not necessarily public for all records. Occupational task scores and public aggregate exports can be acquired; exact HDR microdata panel not yet verified. Author2023 taxonomy repository CC0-1.0 verified. 2025 scores/tasks public in author repo, license unresolved.",
       "cloud_ingestion": "Acquire 2023 score mapping and public occupation employment; publish derived estimates labelled separately. Exact HDR chart needs sample/weights before claiming reproduction.",
       "warehouse_status": "exact_hdr_calculation_unresolved",
       "verified_at": "2026-09-27"
@@ -667,6 +670,44 @@
       "cloud_ingestion": "Cloud fetch exact2024 and2025 source workbooks and historical1990 series; preserve geography aggregates and category denominators; country estimates separate from aggregates.",
       "warehouse_status": "not_loaded",
       "verified_at": "2026-09-27"
+    },
+    {
+      "id": "toner_rodgers_withdrawn",
+      "original_source": "Toner-Rodgers2024 Artificial Intelligence, Scientific Discovery, and Product Innovation; report chapter6 note116",
+      "report_vintage": "2024 preprint",
+      "report_uses": [
+        "Chapter6 prose PDF190/printed176"
+      ],
+      "source_urls": [
+        "https://arxiv.org/abs/2412.17866",
+        "https://economics.mit.edu/news/assuring-accurate-research-record"
+      ],
+      "coverage": "Claimed 1,018 scientists in unnamed US firm: +44% materials, +39% patent filings, +17% downstream innovation.",
+      "newer_or_live": "Withdrawn by arXiv administrators20May2025; MIT16May2025 reported no confidence in data reliability/validity and findings should not be relied upon.",
+      "license_access": "Current arXiv version withdrawn, no licence; do not present as validated findings.",
+      "cloud_ingestion": "Store historical citation/withdrawal status only, excluded from verified-current observations. No substitute data.",
+      "warehouse_status": "excluded_withdrawn",
+      "verified_at": "2026-09-27"
+    },
+    {
+      "id": "gnome_materials",
+      "original_source": "Merchant et al.2023 Scaling deep learning for materials discovery; chapter6 note115",
+      "report_vintage": "2023 paper",
+      "report_uses": [
+        "Chapter6 prose PDF190/printed176"
+      ],
+      "source_urls": [
+        "https://github.com/google-deepmind/materials_discovery",
+        "https://raw.githubusercontent.com/google-deepmind/materials_discovery/main/DATASET.md",
+        "gs://gdm_materials_discovery/gnome_data/stable_materials_summary.csv",
+        "gs://gdm_materials_discovery/gnome_data/stable_materials_r2scan.csv"
+      ],
+      "coverage": "Report2.2million predicted new crystals; public stable-materials subset381k initially, expanded>520k in2024. Counts refer different sets. Theoretical DFT predictions, not all experimentally synthesised.",
+      "newer_or_live": "Static scientific release, last descriptor change21Nov2024; sporadic updates, no live feed.",
+      "license_access": "Data CC-BY-NC4.0; code Apache2.0; noncommercial restriction explicit.",
+      "cloud_ingestion": "Separate private restricted source layer if used. Do not derive count2.2million from stable-subset rows. Exact full predicted-model population not verified downloadable.",
+      "warehouse_status": "restricted_not_loaded",
+      "verified_at": "2026-09-27"
     }
   ],
   "unresolved": [
@@ -675,6 +716,7 @@
     "HDR custom computation country samples/weights for exposure, PISA and basic skills joins",
     "Study narrative claims in boxes/chapter text beyond labelled figures require claim-by-claim original-study audit",
     "Spotlight5.1 subjective agency research citations are qualitative theories; no quantitative figure dataset",
-    "Spotlight6.3 social-dialogue case studies are qualitative case records; numerical dates/counts need original ILO case-study appendix, not country metrics"
+    "Spotlight6.3 social-dialogue case studies are qualitative case records; numerical dates/counts need original ILO case-study appendix, not country metrics",
+    "Toner-Rodgers2024 quantitative claims in chapter6 are withdrawn and must be excluded from verified evidence."
   ]
 }

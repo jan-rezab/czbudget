@@ -122,13 +122,13 @@
     "url": "https://raw.githubusercontent.com/karlrupp/microprocessor-trend-data/master/50yrs/transistors.dat",
     "format": "dat",
     "vintage": "2022",
-    "relation": "original_source",
+    "relation": "newer_same_source",
     "report_refs": [
       "Figure S6.1.1"
     ],
     "cadence": "Repository offers 50yrs data, original endpoint and exact report processed vintage unresolved; sporadic updates, not live.",
     "license": "CC-BY4.0 as verified LICENSE.txt.",
-    "notes": "Transistor count for historical microprocessors. Report specifically cites OWID-processed Rupp2022; original vs OWID transformations must be mapped. Cloud pin Git commit and raw .dat; preserve counts and provenance; retain OWID2022 original snapshot separately if available."
+    "notes": "Current50yrs original repository data; HDR cites2022 OWID-processed vintage. Not exact report snapshot. Transistor count for historical microprocessors. Report specifically cites OWID-processed Rupp2022; original vs OWID transformations must be mapped. Cloud pin Git commit and raw .dat; preserve counts and provenance; retain OWID2022 original snapshot separately if available."
   },
   {
     "source_id": "itu_connectivity_1",
@@ -142,5 +142,44 @@
     "cadence": "Annual2025 estimates official workbook Nov2025; countries via DataHub, not real-time.",
     "license": "Official public Excel download verified as link; actual workbook content not downloaded. No stable public DataHub API verified.",
     "notes": "World/region/income/sex/urban-rural internet use, network coverage, subscriptions, affordability, traffic. 1990 mobile subscription count separate historical vintage. Cloud fetch exact2024 and2025 source workbooks and historical1990 series; preserve geography aggregates and category denominators; country estimates separate from aggregates."
+  },
+  {
+    "source_id": "ilo_genai_2023_occupations",
+    "url": "https://raw.githubusercontent.com/pgmyrek/GenAI_Exposure_Radial_Plot/main/output_data.json",
+    "format": "json",
+    "vintage": "ILO_WP96_2023",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 6.1"
+    ],
+    "cadence": "Static study; newer2025 changes classification",
+    "license": "CC0-1.0 repository; retain ILO attribution",
+    "notes": "Author original four-digit ISCO08 occupation exposure taxonomy. Hierarchical JSON, leaf risk label; not country employment shares and does not reproduce HDR weighted country-group result alone."
+  },
+  {
+    "source_id": "ilo_genai_2025_scores",
+    "url": "https://raw.githubusercontent.com/pgmyrek/2025_GenAI_scores_ISCO08/main/Final_Scores_ISCO08_Gmyrek_et_al_2025.xlsx",
+    "format": "xlsx",
+    "vintage": "ILO_WP140_2025",
+    "relation": "newer_same_source",
+    "report_refs": [
+      "Figure 6.1"
+    ],
+    "cadence": "2025 refined study, no real-time refresh",
+    "license": "Public author repository, explicit dataset license not verified; retain privately with provenance",
+    "notes": "Occupational exposure scores revised four-gradient framework; compare only as separate vintage/method from2023. Primary repository https://github.com/pgmyrek/2025_GenAI_scores_ISCO08"
+  },
+  {
+    "source_id": "ilo_genai_2025_tasks",
+    "url": "https://raw.githubusercontent.com/pgmyrek/2025_GenAI_scores_ISCO08/main/4digits_with_tasks.xlsx",
+    "format": "xlsx",
+    "vintage": "ILO_WP140_2025",
+    "relation": "newer_same_source",
+    "report_refs": [
+      "Figure 6.1"
+    ],
+    "cadence": "2025 refined study",
+    "license": "Public author repository; explicit dataset license not verified; private retention",
+    "notes": "Task-level occupational exposure scores, original author file; keep tasks and occupations distinct."
   }
 ]
