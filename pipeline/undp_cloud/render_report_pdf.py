@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import uuid
 from xml.sax.saxutils import escape
 
 from pypdf import PdfReader
@@ -135,7 +136,17 @@ def build_pdf(payload,output):
         body.append(PageBreak())
     add('Original report coverage and gaps','Heading1')
     coverage=payload.get('coverage',{})
-    add('Full verified public coverage: '+json.dumps(coverage,ensure_ascii=False,default=str),'SmallSource')
+    add('Verified report coverage summary: '+json.dumps({k:v for k,v in coverage.items() if k not in {'original_figures','unavailable_sources'}},ensure_ascii=False,default=str),'SmallSource')
+    originals=coverage.get('original_figures',[])
+    if isinstance(originals,list):
+        add('Original report object ledger: '+str(len(originals))+' objects','Heading2')
+        for item in originals:
+            add(str(item.get('id'))+' | '+en(item.get('title')),'Heading3')
+            add('PDF page '+str(item.get('pdf_page'))+' | status '+str(item.get('status'))+' | '+str(item.get('classification'))+' | sources '+', '.join(str(v) for v in item.get('source_ids',[])),'SmallSource')
+            add(item.get('reason',''),'SmallSource')
+            for url in item.get('source_urls',[]):add(url,'SmallSource')
+    for item in coverage.get('unavailable_sources',[]):
+        add('Source gap '+str(item.get('source_id'))+': '+str(item.get('reason')),'SmallSource')
     add('Original object and missing-country ledger','Heading2')
     for cid,title,status,scope,method in gaps:
         add(cid+' | '+str(status)+' | '+title,'Heading3');add(scope+' | '+method,'SmallSource')
@@ -148,27 +159,70 @@ def build_pdf(payload,output):
     return dict(page_count=len(reader.pages),selected_panels=ready,selected_numeric_cells=selected_cells,unavailable_or_missing_geography_panels=len(gaps),text_verified=True,pdf_bytes=output.stat().st_size)
 
 
+def load_verified_report(gcs, manifest_uri=None):
+    """Load one validated snapshot; private mode never opens the public bucket."""
+    if manifest_uri:
+        match=re.fullmatch(r'gs://'+PRIVATE+r'/processing-runs/hdr-report-review/([0-9a-f-]{36})/validated-report-manifest.json',manifest_uri)
+        if not match:raise ValueError('Invalid private manifest URI')
+        rid=match.group(1);uuid.UUID(rid)
+        bucket=gcs.bucket(PRIVATE)
+        manifest_name=manifest_uri.split('/',3)[3]
+        manifest_data=bucket.blob(manifest_name).download_as_bytes(checksum='auto')
+        if len(manifest_data)>128*1024:raise ValueError('Manifest size exceeds limit')
+        pointer=json.loads(manifest_data)
+        expected='processing-runs/hdr-report-review/'+rid+'/reports.json'
+        if (pointer.get('schema_version')!='1.0.0' or pointer.get('bucket')!=PRIVATE or
+            pointer.get('release_id')!=rid or pointer.get('object')!=expected or
+            pointer.get('publication_status')!='not_published' or pointer.get('processing_status')!='validated'):
+            raise ValueError('Private report manifest is not validated/unpublished or has wrong destination')
+        generation=str(pointer.get('generation',''))
+        if not generation.isdigit() or int(generation)<=0:raise ValueError('Missing exact report generation')
+        blob=bucket.blob(expected,generation=int(generation))
+        data=blob.download_as_bytes(checksum='auto',if_generation_match=int(generation))
+        mode='private_validated_manifest'
+    else:
+        bucket=gcs.bucket(PUBLIC)
+        pointer=json.loads(bucket.blob(POINTER).download_as_bytes(checksum='auto'))
+        rid=pointer['release_id'];uuid.UUID(rid);expected=pointer['object']
+        if pointer.get('bucket')!=PUBLIC or expected!='static-assets/human-development/releases/'+rid+'/reports.json':
+            raise ValueError('Invalid verified public pointer destination')
+        blob=bucket.blob(expected);blob.reload()
+        generation=str(blob.generation)
+        data=blob.download_as_bytes(checksum='auto',if_generation_match=int(generation))
+        mode='public_verified_pointer'
+    if (not re.fullmatch('[a-f0-9]{64}',str(pointer.get('sha256',''))) or
+        len(data)>MAX_JSON or len(data)!=pointer.get('bytes') or hashlib.sha256(data).hexdigest()!=pointer['sha256']):
+        raise ValueError('Report JSON hash/size mismatch')
+    ordinary=json.loads(data)
+    # Reuse the source publisher's complete public-report schema validation;
+    # the validated data is parsed as decimals only after JSON numeric checks.
+    from publish_reports import validate
+    validate(ordinary)
+    if ordinary['release_id']!=rid:raise ValueError('Report release mismatch')
+    if not isinstance(ordinary.get('source_releases'),dict) or not ordinary['source_releases'] or not all(isinstance(k,str) and isinstance(v,str) and v for k,v in ordinary['source_releases'].items()):raise ValueError('Missing source release registry')
+    if manifest_uri and ordinary.get('source_releases')!=pointer.get('source_releases'):
+        raise ValueError('Manifest source releases differ from validated report')
+    payload=json.loads(data,parse_float=Decimal)
+    return payload,dict(pointer,mode=mode,generation=generation,manifest_uri=manifest_uri)
+
+
 def main():
     if not os.environ.get('BUILD_ID'):raise RuntimeError('Cloud Build only; no local source data rendering')
-    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--report-manifest');args=parser.parse_args()
     from google.cloud import storage
-    gcs=storage.Client(project='czbudget-janrezab');public=gcs.bucket(PUBLIC);private=gcs.bucket(PRIVATE)
+    gcs=storage.Client(project='czbudget-janrezab');private=gcs.bucket(PRIVATE)
     prefix='processing-runs/hdr-report-pdf/'+os.environ['BUILD_ID']
     receipt_blob=private.blob(prefix+'/receipt.json')
     if receipt_blob.exists():
         receipt=json.loads(receipt_blob.download_as_bytes(checksum='auto'))
+        if receipt.get('source_report_manifest')!=args.report_manifest:raise ValueError('Retry source manifest differs')
         for artifact in receipt['objects']:
             key=artifact['uri'].split('/',3)[3]
             saved=private.blob(key).download_as_bytes(checksum='auto')
             if len(saved)!=artifact['bytes'] or hashlib.sha256(saved).hexdigest()!=artifact['sha256']:raise ValueError('Retry artifact hash mismatch')
         print(dump(dict(event='immutable_pdf_retry_verified',receipt=receipt)).decode(),flush=True);return
-    pointer=json.loads(public.blob(POINTER).download_as_bytes(checksum='auto'))
+    payload,pointer=load_verified_report(gcs,args.report_manifest)
     rid=pointer['release_id'];name=pointer['object']
-    if pointer.get('bucket')!=PUBLIC or not re.fullmatch(r'static-assets/human-development/releases/[0-9a-f-]{36}/reports.json',name) or name.split('/')[-2]!=rid:raise ValueError('Invalid verified pointer destination')
-    data=public.blob(name).download_as_bytes(checksum='auto')
-    if len(data)>MAX_JSON or len(data)!=pointer['bytes'] or hashlib.sha256(data).hexdigest()!=pointer['sha256']:raise ValueError('Public JSON hash/size mismatch')
-    payload=json.loads(data,parse_float=Decimal)
-    if payload['release_id']!=rid:raise ValueError('Release mismatch')
     directory=Path('/tmp/hdr-report-pdf');directory.mkdir(exist_ok=True);output=directory/'report.pdf'
     qa=build_pdf(payload,output)
     pages=sorted({1,max(1,qa['page_count']//2),qa['page_count']});proof=[]
@@ -185,7 +239,7 @@ def main():
         blob.reload()
         if hashlib.sha256(blob.download_as_bytes(checksum='auto')).hexdigest()!=sha:raise ValueError('Artifact roundtrip hash mismatch')
         objects.append(dict(uri='gs://'+PRIVATE+'/'+blob.name,generation=str(blob.generation),bytes=len(body),sha256=sha))
-    receipt=dict(schema_version='1.0.0',created_at=datetime.now(timezone.utc).isoformat(),build_id=os.environ['BUILD_ID'],loader_git_sha=args.loader_sha,source_report_release_id=rid,source_report_object=name,source_report_sha256=pointer['sha256'],source_releases=payload.get('source_releases'),source_ids=sorted({s.get('source_id','') for c in payload['charts'] for s in c.get('source_refs',[])}),objects=objects,qa=qa,rendered_proof_pages=pages,visual_review_status='PNG proof created; human/agent inspection pending before user delivery',publication_status='private_immutable_artifact_only; website pointer untouched',region='europe-west4',service_account=os.environ.get('DATA_SERVICE_ACCOUNT','not_provided'))
+    receipt=dict(schema_version='1.0.0',created_at=datetime.now(timezone.utc).isoformat(),build_id=os.environ['BUILD_ID'],loader_git_sha=args.loader_sha,source_report_release_id=rid,source_report_object=name,source_report_sha256=pointer['sha256'],source_report_generation=pointer['generation'],source_report_mode=pointer['mode'],source_report_manifest=args.report_manifest,source_releases=payload.get('source_releases'),source_ids=sorted({s.get('source_id','') for c in payload['charts'] for s in c.get('source_refs',[])}),objects=objects,qa=qa,rendered_proof_pages=pages,visual_review_status='PNG proof created; human/agent inspection pending before user delivery',publication_status='private_immutable_artifact_only; website pointer untouched',region='europe-west4',service_account=os.environ.get('DATA_SERVICE_ACCOUNT','not_provided'))
     private.blob(prefix+'/receipt.json').upload_from_string(dump(receipt),content_type='application/json',if_generation_match=0,checksum='auto')
     print(dump(receipt).decode(),flush=True)
 
