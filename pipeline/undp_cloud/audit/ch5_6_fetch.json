@@ -1,0 +1,146 @@
+[
+  {
+    "source_id": "deepmind_habermas_1",
+    "url": "https://storage.googleapis.com/habermas_machine/datasets/hm_all_candidate_comparisons.parquet",
+    "format": "parquet",
+    "vintage": "2024 study",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 5.4"
+    ],
+    "cadence": "Static study; no real-time country metric. Repository includes prompted model which differs from study fine-tuned model.",
+    "license": "CC-BY 4.0 data/materials; Apache-2.0 software. README confirms downloads total ~450MB.",
+    "notes": "UK experimental deliberation participants; unit is statement rating/comparison, not population estimate. Fetch all four Parquets on cloud worker; retain all columns and study flags; reproduce endorsement histogram only after validating cohort/model/human-mediator filters."
+  },
+  {
+    "source_id": "deepmind_habermas_2",
+    "url": "https://storage.googleapis.com/habermas_machine/datasets/hm_all_final_preference_rankings.parquet",
+    "format": "parquet",
+    "vintage": "2024 study",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 5.4"
+    ],
+    "cadence": "Static study; no real-time country metric. Repository includes prompted model which differs from study fine-tuned model.",
+    "license": "CC-BY 4.0 data/materials; Apache-2.0 software. README confirms downloads total ~450MB.",
+    "notes": "UK experimental deliberation participants; unit is statement rating/comparison, not population estimate. Fetch all four Parquets on cloud worker; retain all columns and study flags; reproduce endorsement histogram only after validating cohort/model/human-mediator filters."
+  },
+  {
+    "source_id": "deepmind_habermas_3",
+    "url": "https://storage.googleapis.com/habermas_machine/datasets/hm_all_position_statement_ratings.parquet",
+    "format": "parquet",
+    "vintage": "2024 study",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 5.4"
+    ],
+    "cadence": "Static study; no real-time country metric. Repository includes prompted model which differs from study fine-tuned model.",
+    "license": "CC-BY 4.0 data/materials; Apache-2.0 software. README confirms downloads total ~450MB.",
+    "notes": "UK experimental deliberation participants; unit is statement rating/comparison, not population estimate. Fetch all four Parquets on cloud worker; retain all columns and study flags; reproduce endorsement histogram only after validating cohort/model/human-mediator filters."
+  },
+  {
+    "source_id": "deepmind_habermas_4",
+    "url": "https://storage.googleapis.com/habermas_machine/datasets/hm_all_round_survey_responses.parquet",
+    "format": "parquet",
+    "vintage": "2024 study",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 5.4"
+    ],
+    "cadence": "Static study; no real-time country metric. Repository includes prompted model which differs from study fine-tuned model.",
+    "license": "CC-BY 4.0 data/materials; Apache-2.0 software. README confirms downloads total ~450MB.",
+    "notes": "UK experimental deliberation participants; unit is statement rating/comparison, not population estimate. Fetch all four Parquets on cloud worker; retain all columns and study flags; reproduce endorsement histogram only after validating cohort/model/human-mediator filters."
+  },
+  {
+    "source_id": "epoch_models_1",
+    "url": "https://epoch.ai/data/all_ai_models.csv",
+    "format": "csv",
+    "vintage": "2026-09-27_snapshot",
+    "relation": "newer_same_source",
+    "report_refs": [
+      "Figure 5.5"
+    ],
+    "cadence": "Source model database updated 2026-09-25; weekly automated discovery; major models normally added within two weeks. Chart export last updated 2025-11-24. CSV all_ai_models.csv explicitly documented. Large-scale CSV exact URL needs cloud-side discovery.",
+    "license": "CC-BY with attribution. Nonexhaustive curated database; uncertainty and speculative estimates remain explicit.",
+    "notes": "Model/developer country of HQ. Large scale: known/estimated training compute >1e23 FLOP. Multinational developer rule differs from simple HQ counts. Acquire documented all_ai_models CSV; preserve original fields and flags. Derive >1e23 sample separately, model date, country and multinational logic; retain report snapshot separate from latest."
+  },
+  {
+    "source_id": "park_disruption_1",
+    "url": "https://zenodo.org/records/7258379/files/nature_disruption_open_access.tar.gz?download=1",
+    "format": "tar.gz",
+    "vintage": "Papers 1945\u20132010; patents 1976\u20132010; CD5 requires five-year forward citation window",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 6.6"
+    ],
+    "cadence": "Static replication package; not live. Modern OpenAlex would be a separately defined method/source, not exact replacement.",
+    "license": "Zenodo 1.5GB package md5 41c0a5a9f32913a45041c26834f5fea7. MAG/PatentsView/PubMed analyses complete; WoS/APS/JSTOR only limited public versions, full require publisher permission.",
+    "notes": "Field/year mean CD5, study based on 45M papers and 3.9M patents across six source databases. Cloud fetch exact Zenodo package, hash/check archive safely, retain source components/license restrictions. Prefer public source-data aggregate tables; do not claim all licensed microdata loaded."
+  },
+  {
+    "source_id": "oecd_pisa2022_1",
+    "url": "https://webfs.oecd.org/pisa2022/STU_QQQ_SPSS.zip",
+    "format": "zip",
+    "vintage": "2022",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure 6.9",
+      "Figure 6.10"
+    ],
+    "cadence": "PISA periodic surveys, not live. Index currently displays 2025 placeholders/links; actual usable 2025 data must be HTTP/content/schema/date verified before claiming release.",
+    "license": "Public-use data; OECD terms, anonymised respondent identifiers. Low response-rate adjudication warnings retained for 2022.",
+    "notes": "Fig6.9 52 countries; 15-year-old enrolled students, plausible values/weights, trust question; Fig6.10 equal country weights, proficiency level \u22654 in any subject proxy, not validated direct critical-thinking score. Cloud download official ZIP; retain codebooks, questionnaire, replicate weights, plausible values, missing codes and country coverage; exact HDR filtering/proxy derivation and equal-country weights are separate outputs."
+  },
+  {
+    "source_id": "hadcrut5_1",
+    "url": "https://www.metoffice.gov.uk/hadobs/hadcrut5/data/HadCRUT.5.2.0.0/analysis/diagnostics/HadCRUT.5.2.0.0.analysis.summary_series.global.annual.csv",
+    "format": "csv",
+    "vintage": "HadCRUT5.2.0.0",
+    "relation": "newer_same_source",
+    "report_refs": [
+      "Figure S6.1.1"
+    ],
+    "cadence": "Version5.2.0.0 released 2026-09-18; download page updated2026-09-21. Monthly series available; no real-time daily same-source series. Annual file URLs resolve from official download links, fetch not verified here.",
+    "license": "Crown copyright; original data-use conditions must be retained.",
+    "notes": "Global monthly/annual temperature anomalies and uncertainty since 1850, default reference 1961\u20131990. Cloud snapshot versioned monthly/annual CSV; preserve native baseline and uncertainty; calculate 1850\u20131900 rebasing explicitly, retain original values."
+  },
+  {
+    "source_id": "hadcrut5_2",
+    "url": "https://www.metoffice.gov.uk/hadobs/hadcrut5/data/HadCRUT.5.2.0.0/analysis/diagnostics/HadCRUT.5.2.0.0.analysis.summary_series.global.monthly.csv",
+    "format": "csv",
+    "vintage": "HadCRUT5.2.0.0",
+    "relation": "newer_same_source",
+    "report_refs": [
+      "Figure S6.1.1"
+    ],
+    "cadence": "Version5.2.0.0 released 2026-09-18; download page updated2026-09-21. Monthly series available; no real-time daily same-source series. Annual file URLs resolve from official download links, fetch not verified here.",
+    "license": "Crown copyright; original data-use conditions must be retained.",
+    "notes": "Global monthly/annual temperature anomalies and uncertainty since 1850, default reference 1961\u20131990. Cloud snapshot versioned monthly/annual CSV; preserve native baseline and uncertainty; calculate 1850\u20131900 rebasing explicitly, retain original values."
+  },
+  {
+    "source_id": "rupp_transistors_1",
+    "url": "https://raw.githubusercontent.com/karlrupp/microprocessor-trend-data/master/50yrs/transistors.dat",
+    "format": "dat",
+    "vintage": "2022",
+    "relation": "original_source",
+    "report_refs": [
+      "Figure S6.1.1"
+    ],
+    "cadence": "Repository offers 50yrs data, original endpoint and exact report processed vintage unresolved; sporadic updates, not live.",
+    "license": "CC-BY4.0 as verified LICENSE.txt.",
+    "notes": "Transistor count for historical microprocessors. Report specifically cites OWID-processed Rupp2022; original vs OWID transformations must be mapped. Cloud pin Git commit and raw .dat; preserve counts and provenance; retain OWID2022 original snapshot separately if available."
+  },
+  {
+    "source_id": "itu_connectivity_1",
+    "url": "https://www.itu.int/en/ITU-D/Statistics/Documents/facts/ITU_regional_global_Key_ICT_indicator_aggregates_Nov_2025.xlsx",
+    "format": "xlsx",
+    "vintage": "2025_estimates_Nov2025",
+    "relation": "newer_same_source",
+    "report_refs": [
+      "Spotlight 6.2"
+    ],
+    "cadence": "Annual2025 estimates official workbook Nov2025; countries via DataHub, not real-time.",
+    "license": "Official public Excel download verified as link; actual workbook content not downloaded. No stable public DataHub API verified.",
+    "notes": "World/region/income/sex/urban-rural internet use, network coverage, subscriptions, affordability, traffic. 1990 mobile subscription count separate historical vintage. Cloud fetch exact2024 and2025 source workbooks and historical1990 series; preserve geography aggregates and category denominators; country estimates separate from aggregates."
+  }
+]
