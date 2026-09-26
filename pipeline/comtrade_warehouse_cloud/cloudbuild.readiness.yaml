@@ -1,0 +1,21 @@
+steps:
+  - id: reconcile-and-validate-all-held-responses
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    env: [PYTHONUNBUFFERED=1, 'BUILD_ID=$BUILD_ID']
+    args:
+      - pipeline/comtrade_warehouse_cloud/readiness.py
+      - --reconcile
+      - --checkpoint-sha
+      - '${_CHECKPOINT_SHA}'
+      - --loader-sha
+      - '${_LOADER_SHA}'
+timeout: 7200s
+queueTtl: 1800s
+tags: [plane-data, comtrade-warehouse-readiness]
+options:
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _CHECKPOINT_SHA: required
+  _LOADER_SHA: required
