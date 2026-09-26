@@ -49,7 +49,7 @@ def chart(cid, chapter, title, unit, rows, fields, refs, method, denominator, or
     return dict(id=slug(cid),chapter=chapter,title=title,unit=unit,chart_type=kind,rows=rows,fields=fields,source_refs=refs,method=method,denominator=denominator,original_refs=list(original),status=status,latest_period=max(periods,default=None))
 
 def core_charts(metrics):
-    groups=defaultdict(list); countries={}; result=[]
+    groups=defaultdict(list); countries={}; result=[]; index_panels=defaultdict(lambda:dict(rows={},fields=[],refs=[],coverage={}))
     for r in metrics:
         if r['geography_kind']!='country_or_area':continue
         countries[r['country_code']]=r['country_name']
@@ -66,7 +66,15 @@ def core_charts(metrics):
         if not periods:continue
         source=ref(values[0],metric,vintage);unit=values[0]['unit'] or 'source unit unresolved'
         original=['Statistical annex Table '+({'hdi':'1','ihdi':'3','gdi':'4','gii':'5','phdi':'7'}.get(metric,'1'))]
-        result.append(chart('hdro-'+metric+'-'+vintage,'annex',bi(en+(' — latest comparable year' if metric in DIMENSIONS else ' over time'),cs+(' — poslední společný rok' if metric in DIMENSIONS else ' v čase')),unit,rows,[dict(key='value',label=bi(en,cs))],[source],bi('Same HDRO edition throughout; missing country-years omitted, never zero. Updated source series; exact original figure reproduction is not claimed.','Celá řada pochází ze stejného vydání HDRO. Chybějící roky jsou vynechány, nikdy nejsou nulou. Zdrojová řada; přesná reprodukce původního grafu se netvrdí.'),bi('Countries and areas covered by this source; sparse rows omit missing observations, which are never zero. Component comparisons use one common latest year.','Země a území pokrytá zdrojem; chybějící pozorování se vynechávají, nejsou nulou. Srovnání složek používá jeden společný poslední rok.'),original))
+        if metric in INDEX:
+            panel=index_panels[(sid,vintage)]
+            panel['fields'].append(dict(key=metric,label=bi(en,cs)))
+            panel['refs'].append(source);panel['coverage'][metric]=len(rows)
+            for r in rows:
+                cell=panel['rows'].setdefault((r['country'],r['year']),dict(country=r['country'],year=r['year']))
+                cell[metric]=r['value']
+        else:
+            result.append(chart('hdro-'+metric+'-'+vintage,'annex',bi(en+(' — latest comparable year' if metric in DIMENSIONS else ' over time'),cs+(' — poslední společný rok' if metric in DIMENSIONS else ' v čase')),unit,rows,[dict(key='value',label=bi(en,cs))],[source],bi('Same HDRO edition throughout; missing country-years omitted, never zero. Updated source series; exact original figure reproduction is not claimed.','Celá řada pochází ze stejného vydání HDRO. Chybějící roky jsou vynechány, nikdy nejsou nulou. Zdrojová řada; přesná reprodukce původního grafu se netvrdí.'),bi('Countries and areas covered by this source; sparse rows omit missing observations, which are never zero. Component comparisons use one common latest year.','Země a území pokrytá zdrojem; chybějící pozorování se vynechávají, nejsou nulou. Srovnání složek používá jeden společný poslední rok.'),original))
         if metric not in INDEX:continue
         latest=max(periods);current=[r for r in rows if r['year']==latest and r['value'] is not None]
         # GDI is parity, never a descending welfare ranking.
@@ -76,6 +84,9 @@ def core_charts(metrics):
             if r['value']!=prev:rank=i;prev=r['value']
             ranking.append(dict(r,rank=rank))
         result.append(chart('hdro-'+metric+'-rank-'+vintage,'annex',bi(en+' — comparable year rank',cs+' — pořadí ve stejném roce'), 'calculated rank',ranking,[dict(key='rank',label=bi('Rank','Pořadí'))],[source],bi('Calculated competition ranks at one common year; ties share rank. GII ranks lower values first, other indices higher values first. These may differ from official annex ranks.','Vypočtené pořadí pro jeden společný rok; shodné hodnoty mají stejné pořadí. U GII je nižší hodnota lepší, u ostatních vyšší. Pořadí se může lišit od oficiální přílohy.'),bi(f'{len(current)} countries/areas with a nonmissing value in {latest}.',f'{len(current)} zemí/území s hodnotou v roce {latest}.'),original,kind='bar'))
+    for (sid,vintage),panel in index_panels.items():
+        result.append(chart('hdro-indices-'+sid+'-'+vintage,'annex',bi('Human development indices over time','Indexy lidského rozvoje v čase'),'dimensionless source indices',list(panel['rows'].values()),panel['fields'],panel['refs'],bi('Five distinct HDRO measures from one edition. Higher HDI/IHDI/PHDI indicates higher development; lower GII indicates less gender inequality; GDI measures parity around 1. Values are not interchangeable or combined into a score. Missing years are omitted, never zero.','Pět odlišných ukazatelů z jednoho vydání HDRO. Vyšší HDI/IHDI/PHDI znamená vyšší rozvoj; nižší GII menší genderovou nerovnost; GDI měří paritu kolem 1. Hodnoty se nezaměňují ani neslučují do skóre. Chybějící roky nejsou nulou.'),bi('Countries/areas and source observation years; each field retains its own definition and missing coverage.','Země/území a roky zdroje; každé pole zachovává vlastní definici a chybějící pokrytí.'),['Statistical annex Tables 1,3,4,5,7']))
+        result[-1]['nonmissing_by_metric']=panel['coverage']
     return result,countries
 
 def survey_charts(bins, metadata):
