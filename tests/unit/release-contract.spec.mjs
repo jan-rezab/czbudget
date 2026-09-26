@@ -28,13 +28,19 @@ test('a forged component lane cannot hide unknown files, missing provenance or i
     assert.throws(()=>releaseMode({...productionPlan(['stories/index.html'],base,commit,base),...change}));
   }
 });
-test('production cannot promote before focused verification and candidate-image browser checks',()=>{
+test('production cannot promote before focused or exhaustive verification and candidate-image browser checks',()=>{
   const yaml=readFileSync(new URL('../../cloudbuild.yaml',import.meta.url),'utf8');
   const block=id=>yaml.split(`  - id: ${id}\n`)[1]?.split('\n  - id: ')[0];
   assert.match(block('component-verification'),/scripts\/run-component-gate\.mjs \.verification-plan\.json/);
   assert.match(block('component-verification'),/waitFor: \[source-contracts\]/);
   assert.match(block('image-browser-contract'),/waitFor: \[start-image-browser-candidate, component-verification\]/);
-  assert.match(block('assert-current-main'),/waitFor: \[assert-single-production, component-verification, image-contract, image-browser-contract, push\]/);
-  assert.match(block('assert-verified-candidate'),/scripts\/check-cloud-verification\.py --plan \.verification-plan\.json/);
+  // The exhaustive suite uses the pinned published releases and never shares the worker
+  // with the candidate-image browser pool.
+  assert.match(block('full-verification'),/waitFor: \[verify-published-releases, image-browser-contract\]/);
+  assert.match(block('full-verification'),/for shard in 1 2 3 4/);
+  assert.match(block('verify-published-releases'),/validate-cityvizor-cloud-release\.mjs/);
+  assert.match(block('hydrate-published-releases'),/verify-runtime-assets-cloud\.py/);
+  assert.match(block('assert-current-main'),/waitFor: \[assert-single-production, component-verification, full-verification, image-contract, image-browser-contract, push\]/);
   assert.match(block('verification-input'),/git diff --name-only "\$\$base" "\$COMMIT_SHA"/);
+  assert.match(yaml,/\ntimeout: 1800s\n/);
 });

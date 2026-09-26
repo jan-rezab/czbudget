@@ -13,10 +13,29 @@ test('every registered adapter selects its declared consumer coverage',()=>{
   assert.equal(plan.lane,'component');
   assert.ok(plan.specs.includes('tests/browser/shared-charts.spec.mjs'));
 });
-test('unknown, empty, global, data and CI changes fail closed to exhaustive verification',()=>{
-  for(const file of ['global-nav.js','site-header.css','server/index.mjs','data/a.json','scripts/verification-plan.mjs','new-chart.js','nginx.conf.template']) assert.equal(selectVerification([file]).lane,'full',file);
+test('unknown, empty, server, data and CI changes fail closed to exhaustive verification',()=>{
+  for(const file of ['server/index.mjs','data/a.json','data/NOTES.md','process/x.md','scripts/verification-plan.mjs','new-chart.js','nginx.conf.template','tests/browser/site.spec.mjs','tests/fixtures/x.json']) assert.equal(selectVerification([file]).lane,'full',file);
   assert.equal(selectVerification([]).lane,'full');
 });
 test('a mixed change cannot hide broad impact behind a component edit',()=>{
-  assert.equal(selectVerification(['shared-charts.css','global-nav.js']).lane,'full');
+  assert.equal(selectVerification(['shared-charts.css','server/index.mjs']).lane,'full');
+  assert.equal(selectVerification(['global-nav.js','README.md','data/a.json']).lane,'full');
+});
+test('header changes run the shell pages; the reports index runs its own view',()=>{
+  for(const file of ['global-nav.js','site-header.css','global-footer.js']) {
+    const plan=selectVerification([file]);
+    assert.equal(plan.lane,'component',file);
+    for(const spec of ['shared-navigation','reports-menu','stories']) assert.ok(plan.specs.includes(`tests/browser/${spec}.spec.mjs`),file+spec);
+  }
+  const reports=selectVerification(['deep-dives/index.html','deep-dives/reports.json']);
+  assert.equal(reports.lane,'component');
+  assert.ok(reports.specs.includes('tests/browser/reports-menu.spec.mjs'));
+});
+test('notes and component-proven tests do not force the exhaustive gate',()=>{
+  const notes=selectVerification(['README.md','AGENTS.md','scripts/NOTES.md']);
+  assert.deepEqual([notes.lane,notes.specs],['component',['tests/browser/shared-navigation.spec.mjs']]);
+  const spec=selectVerification(['tests/browser/reports-menu.spec.mjs']);
+  assert.equal(spec.lane,'component');
+  const unit=selectVerification(['tests/api/russia-trade.spec.mjs','tests/unit/chart-registry.spec.mjs']);
+  assert.deepEqual([unit.lane,unit.unit],['component',['tests/api/russia-trade.spec.mjs','tests/unit/chart-registry.spec.mjs']]);
 });

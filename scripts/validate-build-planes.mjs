@@ -21,8 +21,22 @@ if (
   throw new Error("Cloud Build must be locked to the sole canonical production service");
 }
 
-if (!cloudbuild.includes("timeout: 600s")) {
-  throw new Error("Production code deployment must fail closed at ten minutes");
+// Full-lane releases run the exhaustive suite inside the production build, so the
+// deployment fails closed at thirty minutes instead of ten.
+if (!cloudbuild.includes("timeout: 1800s")) {
+  throw new Error("Production code deployment must fail closed at thirty minutes");
+}
+for (const required of [
+  "hydrate-published-releases",
+  "validate-public-serving-snapshot.mjs",
+  "validate-cityvizor-cloud-release.mjs",
+  "verify-runtime-assets-cloud.py",
+  "id: full-verification",
+  "for shard in 1 2 3 4",
+  "--global-timeout=420000",
+  "waitFor: [assert-single-production, component-verification, full-verification,",
+]) {
+  if (!cloudbuild.includes(required)) throw new Error(`Production must run the exhaustive gate before deploy: ${required}`);
 }
 
 for (const forbidden of [

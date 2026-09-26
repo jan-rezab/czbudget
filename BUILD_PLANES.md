@@ -19,14 +19,16 @@ merge, or publish data.
 
 ## Verification plane
 
-Routine component releases use **one production build** after a main push. The
-production build selects affected tests from the diff against the live revision's
-`git-sha` label. It runs the same focused desktop/mobile component and navigation
-checks alongside image creation. Both those tests and the image browser checks
-must pass before deployment. A failed gate preserves the current live revision.
-Unknown deployment provenance or broad accumulated changes require a successful
-exhaustive receipt for the exact candidate. There is no separate fast UI build
-or manual verification-to-promotion handoff for routine component changes.
+Every release uses **one production build** after a main push. The production
+build selects tests from the diff against the live revision's `git-sha` label.
+Component changes run their focused desktop/mobile checks alongside image
+creation. Broad changes (server, data, routing, build machinery, unregistered
+pages) and unknown deployment provenance run the exhaustive suite in the same
+build: it hydrates the pinned published releases, validates them and runs the
+four browser shards after the candidate-image browser contract. Deployment waits
+for whichever lane applies; a failed gate preserves the current live revision.
+There is no separate verification build and no manual verification-to-promotion
+handoff. The build fails closed at thirty minutes.
 
 `cloudbuild.ui.yaml` remains an optional read-only browser gate for interface previews.
 Its source bundle contains only UI code and the small published contracts used
@@ -57,8 +59,9 @@ committed component-lane candidate; structural changes go directly to the full
 verifier instead of paying for both cloud gates.
 
 - Config: `cloudbuild.verify.yaml`.
-- Runs explicitly before merge for structural, unknown or broad application changes.
-  Known component-only changes use the dependency-selected fast gate instead;
+- Optional preview of a branch before it reaches main; production no longer requires
+  its receipt because the production build runs the same exhaustive suite. Known
+  component-only changes use the dependency-selected fast gate instead;
   `scripts/verification-plan.mjs` is the fail-closed selector. See `COMPONENT_RELEASES.md`.
 - It may hydrate pinned published fixtures and run the exhaustive browser suite,
   but it is not the production promotion path.
@@ -82,9 +85,9 @@ contract still runs in the browser shards against pinned published releases.
 The four browser shards use the prepared Playwright image.
 No repeated browser installation. Runtime image assembly happens once, in production; its
 filesystem/HTTP and desktop/mobile browser contracts must pass before promotion.
-The push hook requires an exhaustive cloud receipt before broad changes reach
-main. Component changes pass local source contracts, then the canonical production
-build performs their focused verification before it may deploy. Unknown changed
+The push hook runs the source validators the exhaustive gate starts with (about
+ten seconds). The canonical production build then performs focused or exhaustive
+verification before it may deploy. Unknown changed
 paths cannot use component verification. Never submit the optional fast UI gate
 and then repeat the same component checks in production for a routine release.
 Local push checks remain source-only and never rescan/restore bulk data.

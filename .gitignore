@@ -81,3 +81,31 @@ data/cityvizor-explorer/v1/
 
 # Pinned automotive serving data is hydrated on Cloud Build; local tests use fixtures.
 /data/trade/automotive-monthly.v1.json
+
+# OS, editor and backup files
+._*
+*~
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*.tmp
+.idea/
+.vscode/
+Thumbs.db
+.env
+# Test and Cloud Build workspace outputs when scripts run locally
+blob-report/
+.python-deps/
+/.runtime-image/
+/.verification-*
+/.live-service.json
+/.published/
+/.active-data/
+/.deploy-current-main
+/.deployment-event.json
+
+# Local task notes
+/BACKFILL_REPORT_*.md
+/CODEX_TASK_*.md
