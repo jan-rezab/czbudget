@@ -50,12 +50,16 @@
     },
     {
       "source_id": "unep_irp_2025_material_footprint",
-      "status": "newer_same_source_index_verified_endpoint_unresolved",
+      "status": "public_export_routes_and_headers_verified_vintage_pending",
       "evidence_url": "https://resource-use.global/data-and-models",
       "coverage": "1970\u20132024 around200countries/regions",
       "vintage": "Maintainer citationUNEPIRP2025",
-      "reason": "Maintainer officialindex identifies newerrelease but no publicexportURL. Related2024method article https://doi.org/10.1111/jiec.13593 states most2022\u20132024 categories forecast usingCSIROGTEM, distinguish modeled from measured.",
-      "license": "Exact currentexportlicence unresolved. Older2019mirrorCCBY4 doesnot establish2025licence."
+      "reason": "OfficialHTMLZiggyroutes and JS ExportFullDatasetUrl verify /mfa4/export and /mfa-totals-ratios/export. GET200 CSV headers verified; latestexactvintage remainsunknown andstaticportalmethodnotice conflictswithofficialmaintainercoverageclaim. Needcloudheader/rowinspection, nooriginalsubstitution.",
+      "license": "Exact currentexportlicence unresolved. Older2019mirrorCCBY4 doesnot establish2025licence.",
+      "export_urls": [
+        "https://unep-irp-resourcepanel.resource-use.global/mfa4/export",
+        "https://unep-irp-resourcepanel.resource-use.global/mfa-totals-ratios/export"
+      ]
     },
     {
       "source_id": "gcp2024_2025",
@@ -84,5 +88,52 @@
     "official_code_url": "https://github.com/world-inequality-database/wid-bulk-downloader/blob/main/World%20Inequality%20Database/Working%20Folder/Setup%20Scripts/country_code_vectors.R",
     "official_raw_link": "https://github.com/world-inequality-database/wid-bulk-downloader/raw/refs/heads/main/World%20Inequality%20Database/Working%20Folder/Setup%20Scripts/country_code_vectors.R",
     "status": "Official file and raw link verified; contents not retrieved (web cache miss). Could parse bounded cloud metadata read; do not execute unreviewed R. HDI195 ISO2country list is fallbackcoverage target, not provencompleteWIDcatalogue."
+  },
+  "wid_api_metadata_contract": {
+    "evidence_url": "https://github.com/world-inequality-database/wid-r-tool/blob/master/R/get-requests.R",
+    "base_url": "https://rfap9nitz6.execute-api.eu-west-1.amazonaws.com/prod/",
+    "metadata_route": "countries-variables-metadata?countries={ISO2comma}&variables=sptinc_p99p100_992_j",
+    "availability_route": "countries-available-variables?countries={ISO2comma}&variables=sptinc",
+    "access": "Official package uses x-api-key from its packagedapi_key object encodedbase64; credentialprovision notverified. Do not guess key. PublicCSV routeverified separately.",
+    "returned_metadata_fields": [
+      "variable",
+      "unit",
+      "unitname",
+      "shortname",
+      "shortdes",
+      "technicaldes",
+      "shorttype",
+      "longtype",
+      "shortpop",
+      "pop",
+      "shortage",
+      "age",
+      "country",
+      "countryname",
+      "method",
+      "source",
+      "quality",
+      "imputation"
+    ],
+    "imputation_codes": {
+      "region": "regional imputation",
+      "survey": "adjusted surveys",
+      "tax": "surveys and tax data",
+      "full": "surveys and tax microdata",
+      "rescaling": "rescaled fiscal income"
+    },
+    "data_response_metadata": [
+      "extrapolation",
+      "data_points"
+    ],
+    "warning": "Request syntax officialsixletter+percentile+age+pop. No exactliveAPI response verified because x-api-keyprovision remainsunresolved. Missingmetadata staysgap."
+  },
+  "wiid_schema_contract": {
+    "original_user_guide_url": "https://www.wider.unu.edu/sites/default/files/Data/WIID-Companion_User_Guide28Nov2023.pdf",
+    "current_user_guide_url": "https://www.wider.unu.edu/sites/default/files/WIID/PDF/WIID-Companion-User-Guide-08September2026.pdf",
+    "current_revision_note_url": "https://www.wider.unu.edu/sites/default/files/WIID/PDF/WIID%20Companion-Version-Note-08September2026.pdf",
+    "verification": "Exactlinksverified from officialarchive/latest HTML. Both guidePDFsHTTP403 withescalatedboundedread; no workbook locally fetched. Sheetnames/headerfieldsexactunverified, mustcloudinspect andfailclosed onunknownschema.",
+    "version_validation": "DOI+archiveindexversion plus immutablecontentSHA essential. Publisher saysminorcorrections mayoccurwithoutversionchange. Date-labelled URL andindex alone cannotprovebytesoriginal. StoreHTTPETag/LastModified+receivedSHA. Original2023rawWIID reaching2022 doesnotestablish allCompanionlatestyear becauseextrapolation/globalforecast differs.",
+    "income_inequality_mapping": "ReportTable3col10 uses Atkinson methodTechnicalNote2. Do not map GiniorAtkinson(.5) asa1. Need exacta1field/documentformula beforeannexcomparison."
   }
 }
