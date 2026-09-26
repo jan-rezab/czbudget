@@ -25,6 +25,7 @@ import { RussiaTradeStore } from './russia-trade-store.mjs';
 import { TradeError, TradeStore } from "./trade-store.mjs";
 import { ProcessLogError, processLogStore } from "./process-log-store.mjs";
 import { JobMarketError, jobMarketStore } from "./job-market-store.mjs";
+import { HumanDevelopmentError, humanDevelopmentStore } from "./human-development-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
@@ -202,6 +203,7 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/datasets") return sendJSON(response, 200, { data: await listDatasets() });
   if (pathname === "/api/v1/process-log/deployments") return sendJSON(response, 200, { data: await processLogStore.deployments() }, { "cache-control": "public, max-age=60" });
   if (pathname === "/api/v1/process-log/data-runs") return sendJSON(response, 200, { data: await processLogStore.dataRuns() }, { "cache-control": "public, max-age=60" });
+  if (pathname === "/api/v1/human-development/reports") return sendJSON(response, 200, await humanDevelopmentStore.current(), {"cache-control": "public, max-age=60"});
   if (pathname === "/api/v1/job-market/2024") return sendJSON(response, 200, await jobMarketStore.current());
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
@@ -610,7 +612,7 @@ export async function handler(request, response) {
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);
     }
-    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof HumanDevelopmentError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }
