@@ -59,6 +59,24 @@ python3 -m unittest tests.test_cloud_verification
 node scripts/validate-build-planes.mjs
 node pipeline/create-source-manifest.mjs --self-check
 
+# The exhaustive cloud gate runs these source validators before its browser shards.
+# Locally they take about ten seconds; discovered in the cloud, each costs a
+# five-minute round trip and counts as a failed gate.
+echo "pre-push: site, invariant, API and integrity contracts"
+PSD_BUILD_MODE=local npm run -s validate:european-politics >/dev/null
+PSD_BUILD_MODE=local npm run -s validate:accountability >/dev/null
+npm run -s validate:invariants
+npm run -s validate:glossary
+npm run -s validate:reports-index
+node scripts/validate-site.mjs
+node --test --test-reporter=dot tests/api/*.spec.mjs
+if [ -f data/municipal-snapshot.v1.json ]; then
+  integrity=$(PSD_BUILD_MODE=local node scripts/validate-integrity.mjs)
+  printf '%s\n' "$integrity" | tail -1
+else
+  echo "pre-push: integrity check skipped; published data inputs are not in this checkout (the cloud gate still runs it)"
+fi
+
 if [ "$push_to_main" = 1 ]; then
   plan=$(mktemp "${TMPDIR:-/tmp}/psd-verification-plan.XXXXXX")
   trap 'rm -f -- "$plan"' EXIT INT TERM
