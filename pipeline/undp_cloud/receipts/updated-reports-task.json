@@ -6,7 +6,7 @@
   "checkpoint_minutes_from_original_source_expansion": 83,
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
-  "failed_cloud_verification_attempts": 0,
+  "failed_cloud_verification_attempts": 1,
   "superseded_builds": [
     {
       "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
@@ -18,6 +18,11 @@
       "id": "9518e4ca-2142-4239-831c-b0fc65b47f1d",
       "status": "CANCELLED",
       "reason": "Correct abbreviated loader SHA substitution to full 40-character SHA before intake publication"
+    },
+    {
+      "id": "8e29faad-f7e7-4254-80de-a7efd6d900a6",
+      "status": "CANCELLED",
+      "reason": "Correct invalid manually transcribed loader SHA before publication; later submissions derive exact SHA programmatically"
     }
   ],
   "submission_errors_without_created_build": 2,
@@ -33,24 +38,72 @@
   "comtrade": "Unrelated job untouched; user approved distinct concurrent HDR intake",
   "active_source_builds": [
     {
-      "group": "education",
-      "id": "69f17852-16ce-4ed1-a88e-aa4d52313378",
-      "loader_git_sha": "feea720a79a9fa1ed3991100b3d9a02300a16f1e"
-    },
-    {
-      "group": "remaining",
-      "id": "b68d148c-7358-4086-a5b1-b721191d0085",
-      "loader_git_sha": "feea720a79a9fa1ed3991100b3d9a02300a16f1e"
+      "id": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
+      "group": "pisa",
+      "status": "WORKING"
     }
   ],
   "published_source_builds": [
     {
+      "group": "education",
+      "id": "69f17852-16ce-4ed1-a88e-aa4d52313378",
+      "accepted_source_records": 13856663
+    },
+    {
       "group": "annex",
-      "id": "ca58e7ba-3bf4-436b-965f-25128f55ed15",
-      "accepted_source_records": 21576,
-      "receipt_sha256": "c1f77a486a99be5bc4ef05d80d51d05b90687f97d41cbb4a5cb8d3f0955b8409",
-      "status": "validated_available_source_bundle; WDI page size and WHO encoding corrections pending"
+      "id": "1612d231-2e7c-4363-9b6a-0c12b4ba6e72",
+      "accepted_source_records": 486575
+    },
+    {
+      "group": "remaining",
+      "id": "b68d148c-7358-4086-a5b1-b721191d0085",
+      "accepted_source_records": 3254
+    },
+    {
+      "group": "care",
+      "id": "6c9dfbee-78b0-4081-8d95-99b80ff2f29d",
+      "accepted_source_records": 296690
+    },
+    {
+      "group": "ai",
+      "id": "fa0e0af3-297b-4c5d-b5d3-c0a77bddeac9",
+      "accepted_source_records": 549975
     }
   ],
-  "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously."
+  "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously.",
+  "checkpoint_status": "STOP_NEW_BUILDS at83-minute elapsed source-expansion checkpoint; 60-minute extension requested and pending",
+  "failed_source_builds": [
+    {
+      "id": "a20f0ab0-dd8b-4b05-af8a-92f0c1266327",
+      "group": "brfss",
+      "reason": "All four CDC requests returned403; no records or warehouse publication",
+      "finished_at": "2026-09-26T23:47:41.809235Z"
+    }
+  ],
+  "provider_source_record_rows_current_groups": 15193157,
+  "count_scope": "Heterogeneous provider records including metadata; not people or additive economic observations",
+  "public_report_build": "No build created: automatic approval review rejected public GCS report bundle/pointer publication because exact destination/payload not explicitly authorized",
+  "approval_requests_pending": [
+    "narrow existing-cloud release hook correction",
+    "public aggregate report bundle publication +60minuteextension OR private review only +60minuteextension"
+  ],
+  "unsubmitted_source_groups": [
+    "inequality/WID four shards",
+    "BRFSS historical32additionalarchive plan"
+  ],
+  "source_corrections_pending": [
+    "schooling API complete30000-page request pinned incode but latestannexrelease excludes this incomplete source",
+    "Ada wave2 lateCP1252 encoding",
+    "WHO corrected andpublished",
+    "manual verifiedclaim PDF correction code ready but originalclaimbatchnotrerun"
+  ],
+  "report_artifacts_status": "Publisher, PDF renderer and UI code/tested fixtures ready; actual reportJSON/PDF not generated or published",
+  "report_source_census": {
+    "numbered_figures": 67,
+    "box_figures": 6,
+    "tables": 6,
+    "annex_tables": 7,
+    "total": 86,
+    "exact_original_figures_recreated": 0
+  }
 }
