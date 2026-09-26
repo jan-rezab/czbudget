@@ -1,0 +1,471 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "73678b6d-0ece-423f-8fb5-24158c75cd34",
+  "build_id": "73678b6d-0ece-423f-8fb5-24158c75cd34",
+  "loader_git_sha": "59322ad154a20605e9f782e6cdb779999f4f64c9",
+  "region": "europe-west4",
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "raw_manifest": {
+    "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw-manifest.json",
+    "generation": "1790455042776782",
+    "sha256": "285fd35eac37c92784fa2c34860439f25873fe68aa14f9a3b9788178cc6f915d"
+  },
+  "raw_acquisition_git_sha": "bd6cdd02486f0bcad507c8d3d463dae4ff696718",
+  "raw_acquisition_recorded_ref": "codex/undp-human-development-20260926",
+  "raw_sources": [
+    {
+      "id": "hdr25_timeseries",
+      "kind": "csv",
+      "vintage": "HDR2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_complete_time_series.csv",
+      "content_type": "text/csv",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_complete_time_series.csv",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/hdr25_timeseries.csv",
+      "generation": "1790455037687119",
+      "sha256": "61ed82e5b66c88dfca8ff9fac775c63981ecab6a254862af97acacc41c143117",
+      "bytes": 2001263,
+      "encoding": "cp1252"
+    },
+    {
+      "id": "hdr25_metadata",
+      "kind": "xlsx",
+      "vintage": "HDR2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_metadata.xlsx",
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Composite_indices_metadata.xlsx",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/hdr25_metadata.xlsx",
+      "generation": "1790455038077303",
+      "sha256": "b4128881e81d208aa75920114e1189ca01dcea41c7d8e977732e9342f6de0a8d",
+      "bytes": 13731
+    },
+    {
+      "id": "hdr25_tables",
+      "kind": "xlsx",
+      "vintage": "HDR2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Statistical_Annex_Tables_1-7.xlsx",
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_Statistical_Annex_Tables_1-7.xlsx",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/hdr25_tables.xlsx",
+      "generation": "1790455038381396",
+      "sha256": "02c7875ec8761b11b61bb0534942e5db2a837195699c08da49467fb1ae3e9e56",
+      "bytes": 217358
+    },
+    {
+      "id": "mpi2025_tables",
+      "kind": "xlsx",
+      "vintage": "MPI2025_October",
+      "url": "https://hdr.undp.org/sites/default/files/publications/additional-files/2025-10/2025_gMPI_Table1and2.xlsx",
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "final_url": "https://hdr.undp.org/sites/default/files/publications/additional-files/2025-10/2025_gMPI_Table1and2.xlsx",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/mpi2025_tables.xlsx",
+      "generation": "1790455038828525",
+      "sha256": "0f8080a749ce23f991c5185466fbf0428d452c7673ee0e46a86ebbc93e5a4653",
+      "bytes": 139761
+    },
+    {
+      "id": "ai2025_survey",
+      "kind": "dta",
+      "vintage": "AIHDS2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/2025_AI_Survey_Data.dta",
+      "content_type": "text/plain",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/2025_AI_Survey_Data.dta",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/ai2025_survey.dta",
+      "generation": "1790455040355048",
+      "sha256": "b423695f4ec54db2e76e3591dc611b1579b15cba0331a8fabb95da57326550b3",
+      "bytes": 21163838
+    },
+    {
+      "id": "ai2025_metadata",
+      "kind": "xlsx",
+      "vintage": "AIHDS2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/aihdr25_metadata.xlsx",
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/aihdr25_metadata.xlsx",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/ai2025_metadata.xlsx",
+      "generation": "1790455041005677",
+      "sha256": "1973bf99b98a10a96ee240cdcf6c73051d605ca9f076d55892bd75595a39dc0b",
+      "bytes": 19753
+    },
+    {
+      "id": "ai2025_questionnaire",
+      "kind": "pdf",
+      "vintage": "AIHDS2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/2025_AI_Survey_Questionnaire.pdf",
+      "content_type": "application/pdf",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/2025_AI_Survey_Questionnaire.pdf",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/ai2025_questionnaire.pdf",
+      "generation": "1790455041295731",
+      "sha256": "901dd4c665c6f3338e28d87e7d6225d0e96f941f95b5f92e1b6c5ae4987dfc19",
+      "bytes": 233103
+    },
+    {
+      "id": "ai2025_methodology",
+      "kind": "pdf",
+      "vintage": "AIHDS2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/2025_AI_Survey_Methodology.pdf",
+      "content_type": "application/pdf",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025/AIHDS/2025_AI_Survey_Methodology.pdf",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/ai2025_methodology.pdf",
+      "generation": "1790455041556039",
+      "sha256": "8db31984a6a8c75d4c4cc754ab45be54ba0a85094c8ce6ac91cbd8fcc3706ee9",
+      "bytes": 157162
+    },
+    {
+      "id": "hdr25_technical_notes",
+      "kind": "pdf",
+      "vintage": "HDR2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025_HDR/hdr2025_technical_notes.pdf",
+      "content_type": "application/pdf",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025_HDR/hdr2025_technical_notes.pdf",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/hdr25_technical_notes.pdf",
+      "generation": "1790455042111648",
+      "sha256": "2a6bb5d222eab4fd9cf4ff6063b351dcd222122c775e3150f515695758a01116",
+      "bytes": 393826
+    },
+    {
+      "id": "hdr25_statistical_references",
+      "kind": "pdf",
+      "vintage": "HDR2025",
+      "url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_statistical_references.pdf",
+      "content_type": "application/pdf",
+      "final_url": "https://hdr.undp.org/sites/default/files/2025_HDR/HDR25_statistical_references.pdf",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/5eef57a2-abef-4e78-8e10-b07f7da5b887/raw/hdr25_statistical_references.pdf",
+      "generation": "1790455042371348",
+      "sha256": "592a5824b62e1a78b938c8fa5bcedd88603531439fb6ec8cd36bf07f30960897",
+      "bytes": 151110
+    },
+    {
+      "id": "mpi2024_tables",
+      "kind": "xlsx",
+      "vintage": "MPI2024_report_source_edition",
+      "url": "https://hdr.undp.org/sites/default/files/publications/additional-files/2024-10/2024_gMPI_Table1and2.xlsx",
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/raw/mpi2024_tables.xlsx",
+      "generation": "1790455603056192",
+      "sha256": "a7d0a6520bf90432a10b5eb1c6046a20091390ecdd19d6b695ec0ee60bbde570",
+      "bytes": 140719
+    }
+  ],
+  "started_at": "2026-09-26T20:46:41Z",
+  "completed_at": "2026-09-26T20:48:33Z",
+  "received_source_rows": {
+    "hdr_csv": 206,
+    "ai_survey": 21214,
+    "workbooks": {
+      "hdr25_metadata": {
+        "codebook": {
+          "source_rows": 51,
+          "source_columns": 3,
+          "data_rows": 0
+        },
+        "recommended_citation": {
+          "source_rows": 2,
+          "source_columns": 1,
+          "data_rows": 0
+        }
+      },
+      "hdr25_tables": {
+        "Table 1. HDI": {
+          "source_rows": 279,
+          "source_columns": 16,
+          "data_rows": 214
+        },
+        "Table 2. HDI trends": {
+          "source_rows": 242,
+          "source_columns": 28,
+          "data_rows": 214
+        },
+        "Table 3. IHDI": {
+          "source_rows": 267,
+          "source_columns": 32,
+          "data_rows": 214
+        },
+        "Table 4. GDI": {
+          "source_rows": 279,
+          "source_columns": 26,
+          "data_rows": 214
+        },
+        "Table 5. GII": {
+          "source_rows": 268,
+          "source_columns": 20,
+          "data_rows": 214
+        },
+        "Table 7. PHDI": {
+          "source_rows": 254,
+          "source_columns": 29,
+          "data_rows": 214
+        }
+      },
+      "mpi2025_tables": {
+        "gMPI_Table1": {
+          "source_rows": 173,
+          "source_columns": 29,
+          "data_rows": 117
+        },
+        "gMPI_Table2": {
+          "source_rows": 343,
+          "source_columns": 44,
+          "data_rows": 244
+        }
+      },
+      "ai2025_metadata": {
+        "aihdr25_metadata": {
+          "source_rows": 38,
+          "source_columns": 4,
+          "data_rows": 0
+        }
+      },
+      "mpi2024_tables": {
+        "gMPI_Table1": {
+          "source_rows": 171,
+          "source_columns": 71,
+          "data_rows": 119
+        },
+        "Table2": {
+          "source_rows": 332,
+          "source_columns": 47,
+          "data_rows": 233
+        }
+      }
+    }
+  },
+  "accepted_rows": {
+    "variable_metadata": 105,
+    "source_records": 206,
+    "metric_observations": 228248,
+    "workbook_cells": 31191,
+    "table_observations": 22107,
+    "survey_respondents": 21214,
+    "survey_answers": 1294054
+  },
+  "rejected_rows": 0,
+  "deduplicated_rows": 0,
+  "normalized_checksum_totals": {
+    "metric_observations": "379393375.763133735",
+    "workbook_cells": "35937176.31976765725126638034",
+    "table_observations": "35697725.31976765725126638034",
+    "survey_answers": "360184357.5024221590959727633"
+  },
+  "checksum_note": "Checksums across heterogeneous metrics are validation controls, not economic observations.",
+  "coverage": {
+    "hdr25": {
+      "source_geographies": 206,
+      "country_or_area_rows": 195,
+      "first_year": 1990,
+      "last_year": 2023,
+      "metric_cells": 228248,
+      "nonmissing_by_metric": {
+        "hdi_rank": 193,
+        "hdi": 6314,
+        "le": 7004,
+        "eys": 6684,
+        "mys": 6455,
+        "gnipc": 6852,
+        "gdi_group": 184,
+        "gdi": 5243,
+        "hdi_f": 5243,
+        "le_f": 7004,
+        "eys_f": 6369,
+        "mys_f": 6373,
+        "gni_pc_f": 5566,
+        "hdi_m": 5243,
+        "le_m": 7004,
+        "eys_m": 6369,
+        "mys_m": 6373,
+        "gni_pc_m": 5566,
+        "ihdi": 2297,
+        "coef_ineq": 2304,
+        "loss": 2297,
+        "ineq_le": 2884,
+        "ineq_edu": 2543,
+        "ineq_inc": 2489,
+        "gii_rank": 172,
+        "gii": 4913,
+        "mmr": 6630,
+        "abr": 7004,
+        "se_f": 5993,
+        "se_m": 5993,
+        "pr_f": 6475,
+        "pr_m": 6475,
+        "lfpr_f": 5581,
+        "lfpr_m": 5581,
+        "rankdiff_hdi_phdi": 156,
+        "phdi": 5327,
+        "diff_hdi_phdi": 5327,
+        "co2_prod": 6917,
+        "mf": 5603,
+        "pop_total": 7004
+      }
+    },
+    "hdr25_metadata": {
+      "codebook": {
+        "source_rows": 51,
+        "source_columns": 3,
+        "data_rows": 0
+      },
+      "recommended_citation": {
+        "source_rows": 2,
+        "source_columns": 1,
+        "data_rows": 0
+      }
+    },
+    "hdr25_tables": {
+      "Table 1. HDI": {
+        "source_rows": 279,
+        "source_columns": 16,
+        "data_rows": 214
+      },
+      "Table 2. HDI trends": {
+        "source_rows": 242,
+        "source_columns": 28,
+        "data_rows": 214
+      },
+      "Table 3. IHDI": {
+        "source_rows": 267,
+        "source_columns": 32,
+        "data_rows": 214
+      },
+      "Table 4. GDI": {
+        "source_rows": 279,
+        "source_columns": 26,
+        "data_rows": 214
+      },
+      "Table 5. GII": {
+        "source_rows": 268,
+        "source_columns": 20,
+        "data_rows": 214
+      },
+      "Table 7. PHDI": {
+        "source_rows": 254,
+        "source_columns": 29,
+        "data_rows": 214
+      }
+    },
+    "mpi2025_tables": {
+      "gMPI_Table1": {
+        "source_rows": 173,
+        "source_columns": 29,
+        "data_rows": 117
+      },
+      "gMPI_Table2": {
+        "source_rows": 343,
+        "source_columns": 44,
+        "data_rows": 244
+      }
+    },
+    "ai2025_metadata": {
+      "aihdr25_metadata": {
+        "source_rows": 38,
+        "source_columns": 4,
+        "data_rows": 0
+      }
+    },
+    "mpi2024_tables": {
+      "gMPI_Table1": {
+        "source_rows": 171,
+        "source_columns": 71,
+        "data_rows": 119
+      },
+      "Table2": {
+        "source_rows": 332,
+        "source_columns": 47,
+        "data_rows": 233
+      }
+    },
+    "ai2025": {
+      "respondents": 21214,
+      "variables": 61,
+      "countries": {
+        "Republic of Korea": 1008,
+        "Egypt": 1020,
+        "Germany": 1000,
+        "Russia": 1002,
+        "United States": 1005,
+        "Kyrgyzstan": 1003,
+        "Fiji": 1003,
+        "Brazil": 1001,
+        "Turkey": 1002,
+        "Australia": 1001,
+        "Indonesia": 1030,
+        "Pakistan": 1006,
+        "Japan": 1029,
+        "India": 1030,
+        "Bangladesh": 1004,
+        "Comoros": 1002,
+        "Tunisia": 1026,
+        "South Africa": 1034,
+        "Nigeria": 1000,
+        "Greece": 1000,
+        "China": 1008
+      },
+      "survey_weight_total": "21094.001586997019284018",
+      "czechia_in_sample": false
+    }
+  },
+  "validation": [
+    "generation_and_sha256",
+    "source_counts",
+    "all_metric_and_survey_cells",
+    "unique_natural_keys",
+    "index_bounds",
+    "exact_numeric_control_sums",
+    "positive_survey_weights",
+    "all_21_survey_countries"
+  ],
+  "processing_status": "validated",
+  "publication_status": "published",
+  "publication_pointer": "czbudget-janrezab.undp_human_development.release_pointer",
+  "website_destinations": [
+    "Future country comparisons and human-development reports; no current website consumer"
+  ],
+  "files": [
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/staging/metric_observations.jsonl.gz",
+      "generation": "1790455646409919",
+      "sha256": "09ed7e7c352ec2909ad66874529293bef71398978fe20fd3fe97f9f02e767a80",
+      "bytes": 4890115,
+      "rows": 228248
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/staging/source_records.jsonl.gz",
+      "generation": "1790455654741587",
+      "sha256": "6f1ec5433418fedf0f42264be69b3fb4c11238e7f45c42755f4b5073c6c564de",
+      "bytes": 1935203,
+      "rows": 206
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/staging/workbook_cells.jsonl.gz",
+      "generation": "1790455660529619",
+      "sha256": "e037ecba09695d282af67929f98e03fb6856becf27b8f2afb59b52e07ab3ea2b",
+      "bytes": 967596,
+      "rows": 31191
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/staging/table_observations.jsonl.gz",
+      "generation": "1790455664814643",
+      "sha256": "d66931d955d866e059356da8aed4feb747e92d7d904b3944a1b1162984895fe6",
+      "bytes": 910755,
+      "rows": 22107
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/staging/survey_respondents.jsonl.gz",
+      "generation": "1790455671123081",
+      "sha256": "5c8d9d3f3214016cdf3050527cb93e44750719e1cee53c5f63de01d7697970d4",
+      "bytes": 3908355,
+      "rows": 21214
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/staging/survey_answers.jsonl.gz",
+      "generation": "1790455677658678",
+      "sha256": "61fe4bfe1a488f57f7504e1e6e363c1da083db2e95b8824c890222035392fd12",
+      "bytes": 15482594,
+      "rows": 1294054
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/undp/73678b6d-0ece-423f-8fb5-24158c75cd34/staging/variable_metadata.jsonl.gz",
+      "generation": "1790455699526551",
+      "sha256": "fb468fd360e7ee2bf4644a2e18f68cefa90e7707e499d84faac4a3a1fb4c4444",
+      "bytes": 12662,
+      "rows": 105
+    }
+  ]
+}
