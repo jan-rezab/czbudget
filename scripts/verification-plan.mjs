@@ -44,7 +44,7 @@ export function selectVerification(files) {
   return { version: 3, lane: broad.length || !files.length ? 'full' : 'component', groups: [...selected].sort(), specs: [...new Set([...selected].flatMap(name => groups[name]).concat(declaredSpecs, changedSpecs))].sort(), unit: [...new Set(unit)].sort(), broad, files };
 }
 export function contractDigest(commit = 'HEAD') {
-  const files = execFileSync('git', ['ls-files', 'scripts', 'tests', 'cloudbuild*.yaml', 'playwright*.mjs', 'package*.json', '.githooks/pre-push'], {encoding:'utf8'}).trim().split('\n').filter(Boolean).sort();
+  const files = execFileSync('git', ['ls-files', 'scripts', 'tests', 'cloudbuild*.yaml', 'playwright*.mjs', 'package*.json', '.githooks/pre-push'], {encoding:'utf8', maxBuffer:64*1024*1024}).trim().split('\n').filter(Boolean).sort();
   const hash=createHash('sha256');
   for(const file of files) {
     hash.update(file+'\0');
@@ -63,6 +63,8 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   if (!base || !/^[a-f0-9]{40}$/.test(base)) throw new Error('An explicit 40-character verified base commit is required');
   const commit = execFileSync('git',['rev-parse',head],{encoding:'utf8'}).trim();
   execFileSync('git',['merge-base','--is-ancestor',base,commit]);
-  const files=execFileSync('git',['diff','--name-only',base,commit],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+  // A release that stops tracking a data directory lists tens of thousands of paths;
+  // the default 1 MiB output buffer is far too small for that diff.
+  const files=execFileSync('git',['diff','--name-only',base,commit],{encoding:'utf8',maxBuffer:256*1024*1024}).trim().split('\n').filter(Boolean);
   console.log(JSON.stringify({...selectVerification(files),base,commit,contract:contractDigest(commit)},null,2));
 }
