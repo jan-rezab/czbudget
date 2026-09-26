@@ -9,6 +9,7 @@ from collections import Counter, defaultdict
 from datetime import date
 from decimal import Decimal, InvalidOperation
 import json
+import re
 
 
 def number(value):
@@ -80,16 +81,17 @@ def rupp(lines, metadata, value_column=None):
         fields = line.split()
         if len(fields) <= value_column:
             raise ValueError('Missing source transistor column')
-        year = fields[0]
-        if len(year) != 4 or not year.isdigit():
-            raise ValueError('Invalid source year')
+        year = number(fields[0])
+        if year is None or not Decimal('1900') <= year < Decimal('2200'):
+            raise ValueError('Invalid fractional source year')
         value = number(fields[value_column])
         if value is None:
             missing += 1; continue
         if value <= 0:
             raise ValueError('Transistor count must be positive')
         out.append(observation({'source_line': raw}, metadata, metric='microprocessor_transistors',
-             period=year, unit='transistors', value=value, geography=None,
+             period=str(year), calendar_year=int(year), unit='thousand transistors', value=value, geography=None,
+             fractional_year=year, period_definition='source decimal year; no month/date interpolation',
              denominator='individual source microprocessor observation; no annual aggregation'))
     return out, {'accepted_observations': len(out), 'missing_rows': missing,
                  'source_comments': comments, 'figure_status': 'source_observations; no HDR match claimed'}
@@ -99,7 +101,8 @@ def epoch(rows, columns, metadata, threshold='1e23', multi_hq_rule=None):
     """Explicit scenario count, retaining uncertain/missing/excluded model records.
 
     Multi-HQ policy is caller-verified, not guessed from separators in country names.
-    country must be a verified list of developer-HQ countries, never training locale.
+    country is an explicitly supplied scenario list, never training locale.
+    Native Epoch categorical countries are handled separately by epoch_source.
     """
     expected = {'id', 'date', 'compute', 'compute_lower', 'compute_upper', 'countries', 'estimated'}
     if set(columns) != expected or multi_hq_rule != 'multinational_if_multiple_distinct_hq_countries':
@@ -152,6 +155,95 @@ def epoch(rows, columns, metadata, threshold='1e23', multi_hq_rule=None):
         'coverage': 'Epoch curated database, not all AI models; estimates and unknown dates/HQ visible'}
 
 
+HADCRUT_COLUMNS = {'period':'Time', 'anomaly':'Anomaly (deg C)',
+    'lower':'Lower confidence limit (2.5%)', 'upper':'Upper confidence limit (97.5%)'}
+
+
+def hadcrut_source(rows, metadata, grain):
+    """Exact reviewed HadCRUT5 diagnostics CSV headers, native baseline."""
+    return hadcrut(rows, HADCRUT_COLUMNS, metadata, grain)
+
+
+def epoch_source(rows, metadata, threshold='1e23'):
+    """Native country categorical strings retained without guessed multi-select splitting.
+
+    This is a central-estimate scenario, not a recreation of HDR country grouping.
+    Epoch country means organization association; it does not uniquely identify HQ.
+    """
+    required = {'Model','Publication date','Training compute (FLOP)',
+        'Training compute lower bound','Training compute upper bound',
+        'Country (of organization)','Confidence','Training compute estimation method'}
+    limit = number(threshold)
+    if limit is None or limit <= 0:
+        raise ValueError('Invalid threshold')
+    details = []; seen = set(); counts = defaultdict(Counter)
+    for raw in rows:
+        if required - raw.keys():
+            raise ValueError('Reviewed Epoch columns missing')
+        model = raw['Model']
+        if not model or model in seen:
+            raise ValueError('Missing or duplicate Epoch primary Model key')
+        seen.add(model)
+        central = number(raw['Training compute (FLOP)'])
+        lower = number(raw['Training compute lower bound']); upper = number(raw['Training compute upper bound'])
+        if any(v is not None and v <= 0 for v in (central,lower,upper)):
+            raise ValueError('Invalid compute')
+        if lower is not None and upper is not None and lower > upper:
+            raise ValueError('Reversed compute bounds')
+        if central is not None and ((lower is not None and central < lower) or (upper is not None and central > upper)):
+            raise ValueError('Central compute outside bounds')
+        country = str(raw['Country (of organization)'] or '').strip()
+        period = str(raw['Publication date'] or '').strip()
+        year = date.fromisoformat(period).year if period else None
+        status = ('excluded_source_wrong' if raw['Confidence'] == 'Wrong' else
+            'missing_compute' if central is None else 'missing_country_category' if not country else
+            'missing_publication_date' if year is None else
+            'included_central_estimate' if central > limit else 'excluded_central_estimate')
+        if status == 'included_central_estimate':
+            counts[year][country] += 1
+        details.append(observation(raw,metadata,model_id=model,year=year,country_category=country or None,
+            compute_flop=central,compute_lower=lower,compute_upper=upper,confidence=raw['Confidence'],
+            estimation_method=raw['Training compute estimation method'],selection_status=status,
+            threshold_flop=limit,threshold_operator='strictly greater than',
+            uncertainty_crosses_threshold=(lower is not None and upper is not None and lower <= limit < upper)))
+    series = []; cumulative = Counter(); categories = sorted({k for v in counts.values() for k in v})
+    for year in range(min(counts),max(counts)+1) if counts else []:
+        cumulative.update(counts[year])
+        for country in categories:
+            series.append(dict(year=year,country_category=country,annual_models=counts[year][country],
+                cumulative_models=cumulative[country],unit='curated models',threshold_flop=limit,
+                method='central compute > threshold; literal source country categorical string; Wrong excluded'))
+    return {'model_selection':details,'series':series}, {'status':'derived_scenario',
+        'selection_statuses':dict(Counter(d['selection_status'] for d in details)),
+        'figure_status':'HDR5.5 grouping and original snapshot unverified',
+        'country_rule':'source category string preserved; multiple select syntax not guessed',
+        'coverage':'Curated models; organizations association is not uniquely HQ; source documentation differs on > versus >=1e23'}
+
+
+def ilo_tree(tree, metadata):
+    """Reviewed 2023 author JSON tree: ISCO-08 nested children, name/risk leaves."""
+    if tree.get('name') != 'ISCO-08':
+        raise ValueError('Unexpected original tree root')
+    rows = []
+    def walk(node,path):
+        name = node.get('name')
+        if not isinstance(name,str):
+            raise ValueError('Missing tree name')
+        path = path + [name]
+        if 'children' in node:
+            if not isinstance(node['children'],list) or 'risk' in node:
+                raise ValueError('Unexpected branch schema')
+            for child in node['children']:
+                walk(child,path)
+        else:
+            match = re.fullmatch(r'(\d{4}) - (.+)',name)
+            if not match or not node.get('risk'):
+                raise ValueError('Unexpected original leaf schema')
+            rows.append(dict(isco=match.group(1),risk=node['risk'],name=name,source_tree_path=path))
+    walk(tree,[])
+    return ilo_risks(rows,dict(isco='isco',risk='risk'),metadata,'author_2023_leaf_schema_reviewed')
+
+
 def park(rows, columns, metadata, verification=None):
     """Original source workbook cells; requires checked field/year/CD5 layout."""
     if verification != 'source_fig2_header_and_units_reviewed' or set(columns) != {'year', 'field', 'cd5'}:
@@ -199,8 +291,8 @@ def self_test():
     rows, coverage = hadcrut([{'p':'2020','a':'1.2','l':'1.1','u':'1.3'}],
         dict(period='p',anomaly='a',lower='l',upper='u'), m, 'annual')
     assert rows[0]['baseline'] == '1961–1990' and rows[0]['value'] == Decimal('1.2')
-    rows, _ = rupp(['# synthetic header','2020 100000'], m, 1)
-    assert rows[0]['value'] == Decimal('100000')
+    rows, _ = rupp(['# synthetic header','2020.25 100000'], m, 1)
+    assert rows[0]['value'] == Decimal('100000') and rows[0]['unit'] == 'thousand transistors' and rows[0]['fractional_year'] == Decimal('2020.25')
     columns = {k:k for k in ['id','date','compute','compute_lower','compute_upper','countries','estimated']}
     rows, c = epoch([dict(id='m',date='2024-01-01',compute='2e23',compute_lower='9e22',compute_upper='3e23',countries=['A','B'],estimated=True),
                      dict(id='n',date='2024-02-01',compute='1e23',compute_lower=None,compute_upper=None,countries=['A'],estimated=False)],columns,m,
@@ -210,6 +302,14 @@ def self_test():
     assert c['selection_statuses']['excluded_central_estimate'] == 1
     assert park([],{},m)[1]['status'] == 'blocked'
     assert ilo_risks([],{},m)[1]['status'] == 'blocked'
+    tree = {'name':'ISCO-08','children':[{'name':'0','children':[{'name':'0110 - Example','risk':'Not Affected'}]}]}
+    rows,c = ilo_tree(tree,m)
+    assert rows[0]['isco08'] == '0110' and c['employment_shares_status'].startswith('blocked')
+    native = {'Model':'fixture','Publication date':'2024-01-01','Training compute (FLOP)':'2e23',
+        'Training compute lower bound':'9e22','Training compute upper bound':'3e23',
+        'Country (of organization)':'Multinational','Confidence':'Likely','Training compute estimation method':'Estimated'}
+    rows,c = epoch_source([native,dict(native,Model='wrong',Confidence='Wrong')],m)
+    assert rows['series'][0]['cumulative_models'] == 1 and c['selection_statuses']['excluded_source_wrong'] == 1
     print('chapter5–6 synthetic fidelity checks passed')
 
 

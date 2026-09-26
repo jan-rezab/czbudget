@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0.0",
+  "reviewed_at": "2026-09-27",
+  "scope": "Only source-native bindings verified against primary source metadata or bounded header reads. No receipt/publication inferred. Original and newer snapshots remain separate.",
+  "bindings": [
+    {
+      "source_id": "hadcrut5",
+      "adapter": "chart_ch5_6.hadcrut_source",
+      "status": "native_source_columns_reviewed",
+      "source_kind": "monthly_and_annual",
+      "columns": {
+        "period": "Time",
+        "anomaly": "Anomaly (deg C)",
+        "lower": "Lower confidence limit (2.5%)",
+        "upper": "Upper confidence limit (97.5%)"
+      },
+      "source_url_template": "https://www.metoffice.gov.uk/hadobs/hadcrut5/data/HadCRUT.5.2.0.0/analysis/diagnostics/HadCRUT.5.2.0.0.analysis.summary_series.global.{grain}.csv",
+      "evidence_url": "https://www.metoffice.gov.uk/hadobs/hadcrut5/data/HadCRUT.5.2.0.0/download.html",
+      "method": "Native global anomaly baseline1961–1990, source uncertainty; HDR1850–1900 rebasing NOT reproduced",
+      "original_refs": [
+        "S6.1.1"
+      ],
+      "publication_status": "cloud_source_receipt_and_row_validation_required"
+    },
+    {
+      "source_id": "rupp_transistors",
+      "adapter": "chart_ch5_6.rupp",
+      "status": "native_source_columns_and_unit_reviewed",
+      "source_kind": "fixed_observation_series",
+      "source_url": "https://raw.githubusercontent.com/karlrupp/microprocessor-trend-data/master/50yrs/transistors.dat",
+      "evidence_url": "https://raw.githubusercontent.com/karlrupp/microprocessor-trend-data/master/50yrs/plot.gnuplot",
+      "columns": {
+        "fractional_year": 0,
+        "value": 1
+      },
+      "adapter_arguments": {
+        "value_column": 1
+      },
+      "unit": "thousand transistors",
+      "method": "Retain decimal year and individual observation; integer calendar_year explicitly derived; no interpolation or annual aggregation",
+      "latest_verified_period": "2021.9",
+      "original_refs": [
+        "S6.1.1"
+      ],
+      "publication_status": "cloud_receipt_and_validation_required; original2022snapshot_match_unverified"
+    },
+    {
+      "source_id": "epoch_models",
+      "adapter": "chart_ch5_6.epoch_source",
+      "status": "native_headers_reviewed_derived_scenario",
+      "source_kind": "periodic_curated_daily_export",
+      "source_url": "https://epoch.ai/data/all_ai_models.csv",
+      "evidence_url": "https://epoch.ai/data/ai-models-documentation/records",
+      "required_columns": [
+        "Model",
+        "Publication date",
+        "Training compute (FLOP)",
+        "Training compute lower bound",
+        "Training compute upper bound",
+        "Country (of organization)",
+        "Confidence",
+        "Training compute estimation method"
+      ],
+      "primary_key": "Model",
+      "method": "Explicit compute central estimate >1e23FLOP; retain bounds/confidence; exclude source Confidence=Wrong; source country categorical literal preserved, no guessed delimiters or HQ interpretation",
+      "original_refs": [
+        "5.5"
+      ],
+      "publication_status": "updated_scenario_only; original grouping and cutoff snapshot unresolved",
+      "live_assessment": "Daily downloadable export; curated discovery/revision, not real-time exhaustive model census. Documentation differs on > versus >= large-scale definition."
+    },
+    {
+      "source_id": "ilo_exposure",
+      "adapter": "chart_ch5_6.ilo_tree",
+      "status": "native_2023_tree_schema_reviewed",
+      "source_kind": "fixed_2023_occupational_taxonomy",
+      "source_url": "https://raw.githubusercontent.com/pgmyrek/GenAI_Exposure_Radial_Plot/main/output_data.json",
+      "evidence_url": "https://github.com/pgmyrek/GenAI_Exposure_Radial_Plot",
+      "schema": {
+        "root_name": "ISCO-08",
+        "branches": [
+          "name",
+          "children"
+        ],
+        "leaf": [
+          "name",
+          "risk"
+        ],
+        "leaf_name_pattern": "four digit ISCO08 code - label"
+      },
+      "method": "Preserve source risk labels and leading-zero ISCO4 codes; category counts only, no people/jobs/FTE shares",
+      "original_refs": [
+        "6.1"
+      ],
+      "publication_status": "taxonomy_only; exact HDR employment shares require original harmonized labour microdata and HDI2022 group definitions",
+      "live_assessment": "2025 four-gradient taxonomy is a different vintage/definition; no same-series real-time release."
+    },
+    {
+      "source_id": "park_disruption",
+      "adapter": "chart_ch5_6.park",
+      "status": "blocked_sheet_headers_units_not_reviewed",
+      "source_kind": "fixed_published_aggregate",
+      "source_url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-022-05543-x/MediaObjects/41586_2022_5543_MOESM4_ESM.xlsx",
+      "evidence_url": "https://www.nature.com/articles/s41586-022-05543-x",
+      "original_refs": [
+        "6.6"
+      ],
+      "method": "Original compact SourceDataFig2 workbook requires cloud schema preview. No OpenAlex substitute; full licensed inputs remain separate.",
+      "publication_status": "blocked",
+      "live_assessment": "No comparable updated original CD5 series verified; methodological correspondence2026 requires review."
+    }
+  ]
+}
