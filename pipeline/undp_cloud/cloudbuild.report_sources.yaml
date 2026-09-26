@@ -4,7 +4,7 @@ steps:
     entrypoint: bash
     env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1', 'SOURCE_GROUP=${_SOURCE_GROUP}', 'RESUME_RUN=${_RESUME_RUN}', 'LOADER_SHA=${_LOADER_SHA}', 'WID_SHARD_INDEX=${_WID_SHARD_INDEX}', 'WID_SHARD_COUNT=${_WID_SHARD_COUNT}']
     args:
-      - -c
+      - -ceu
       - |
         pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt
         pip install --quiet --disable-pip-version-check pyarrow==21.0.0
