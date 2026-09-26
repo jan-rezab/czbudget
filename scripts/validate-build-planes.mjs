@@ -146,4 +146,18 @@ if (
   throw new Error("Code deployment must consume, but never publish, the active CityVizor snapshot");
 }
 
+// Cloud Build rejects a step that waits for one declared later in the file, and it
+// does so only after the push, when the production trigger fires.
+for (const [name, yaml] of [["cloudbuild.yaml", cloudbuild], ["cloudbuild.verify.yaml", cloudbuildVerify], ["cloudbuild.ui.yaml", cloudbuildUi]]) {
+  const declared = new Set();
+  for (const step of yaml.split(/\n  - id: /).slice(1)) {
+    const id = step.split("\n")[0].trim();
+    const waits = step.match(/\n    waitFor: \[([^\]]*)\]/)?.[1].split(",").map((value) => value.trim().replace(/^["']|["']$/g, "")).filter(Boolean) || [];
+    for (const wait of waits) {
+      if (wait !== "-" && !declared.has(wait)) throw new Error(`${name}: step ${id} waits for ${wait}, which is not declared before it`);
+    }
+    declared.add(id);
+  }
+}
+
 console.log("Build-plane boundary OK: code deploy, read-only verification, and data publication are isolated.");
