@@ -5,9 +5,10 @@
     "style": "shared-charts.css",
     "runtime": "chart-runtime.js",
     "manifest": "assets/chart-releases/current.json",
-    "families": ["line", "column", "stacked", "bar", "globe"]
+    "families": ["line", "column", "stacked", "bar", "globe", "route-map"]
   },
   "consumers": [
+    {"id": "russia-trade-routes", "adapter": "russia-trade.js", "families": ["line", "route-map"], "tests": ["tests/browser/russia-trade.spec.mjs"], "routes": ["/deep-dives/russia-trade/"], "change_paths": ["russia-trade.js", "russia-trade.css", "deep-dives/russia-trade/index.html", "lib/russia-trade-model.mjs"]},
     {
       "id": "municipal-profile-history",
       "adapter": "municipal-expanded-profile.js",
@@ -178,6 +179,6 @@
     "shared_paths": ["lib/chart-renderer.js", "shared-charts.css", "chart-runtime.js", "psd-chart.js", "psd-chart.css", "chart-components.json", "chart-legacy-inventory.json", "chart-coverage.json", "assets/chart-releases/**", "tests/fixtures/charts/**"]
   },
   "release": {
-    "content_versioned_adapters": ["municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js", "stories/oil-pivot.js"]
+    "content_versioned_adapters": ["russia-trade.js", "russia-trade.css", "lib/russia-trade-model.mjs", "municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js", "stories/oil-pivot.js"]
   }
 }

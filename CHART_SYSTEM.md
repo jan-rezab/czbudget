@@ -86,3 +86,11 @@ exact source table identifier as text, the extraction date, the vintage type
 Until row-level provenance lands, the drawer is populated at **series level** from
 `data/catalog.v1.json` and is labelled as series-level in the UI. Honest and shippable beats
 precise and blocked.
+
+## Geographic relationships
+
+`PSDPlot.render(host, {type: "route-map", geometry, nodes, edges, maxValue})`
+uses the shared renderer for independent reported trade edges. Each edge carries
+its own value and accessible label. Keep `maxValue` fixed across a timeline.
+Dotted missing edges are topology only; they are never zero observations or
+shipment-level evidence. Adapters retain the same values in the shared table rail.

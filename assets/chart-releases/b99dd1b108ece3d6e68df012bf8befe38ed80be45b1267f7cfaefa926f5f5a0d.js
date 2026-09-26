@@ -33,11 +33,10 @@
     const keys=fields.map((field,index)=>field.key || `series_${index + 1}`);
     const columns=[{key:'label',label:spec.labelTitle || 'Period'},...fields.map((field,index)=>({key:keys[index],label:field.label || keys[index],numeric:true}))];
     const tableRows=rows.map(row=>Object.fromEntries([['label',row.label],...keys.map((key,index)=>[key,row.values[index]])]));
-    return { fields, rows, columns, tableRows, accessor:Object.freeze({columns,rows:()=>tableRows}), axis: spec.yDomain || (spec.type === 'stacked' ? { min: 0, max: 100, ticks: [0, 25, 50, 75, 100] } : domain(rows.flatMap(row => row.values), spec.includeZero !== false)) };
+    return { fields, rows, columns, tableRows, accessor:Object.freeze({columns,rows:()=>tableRows}), axis: spec.type === 'stacked' ? { min: 0, max: 100, ticks: [0, 25, 50, 75, 100] } : domain(rows.flatMap(row => row.values), spec.includeZero !== false) };
   }
   function render(host, spec) {
     if (!host) return;
-    if (spec.type === 'route-map') return renderRoutes(host, spec);
     const focusedPoint = host.contains(document.activeElement) ? document.activeElement.dataset?.point : undefined;
     host.__psdChartCleanup?.();
     const abort = new AbortController();
@@ -101,7 +100,7 @@
     const references = spec.type === 'bar' ? '' : (spec.referenceLines || []).filter(line => finite(line.value)).map(line => `<line class="psd-plot-reference" x1="${left}" x2="${width - right}" y1="${y(line.value)}" y2="${y(line.value)}"/><text class="psd-plot-reference-label" x="${left + 4}" y="${y(line.value) - 5}">${escape(line.label || String(line.value))}</text>`).join('');
     const selectedIndex = rows.findIndex(row => row.label === String(spec.selectedLabel));
     const marker = spec.type === 'bar' || selectedIndex < 0 ? '' : `<line class="psd-plot-selected" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height - bottom}"/><text class="psd-plot-selected-label" x="${x(selectedIndex)}" y="${top - 8}" text-anchor="middle">${escape(rows[selectedIndex].label)}</text>`;
-    host.innerHTML = `${empty ? `<p class="psd-chart-empty">${escape(spec.emptyLabel || 'No reported values')}</p>` : ''}<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || fields.map(f => f.label).join(', '))}">${axes}${references}${marker}${marks}<line class="psd-plot-playhead" y1="${top}" y2="${height-bottom}" stroke="currentColor" stroke-opacity=".5" hidden/><line class="psd-plot-guide" y1="${top}" y2="${height - bottom}" hidden/>${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
+    host.innerHTML = `${empty ? `<p class="psd-chart-empty">${escape(spec.emptyLabel || 'No reported values')}</p>` : ''}<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || fields.map(f => f.label).join(', '))}">${axes}${references}${marker}${marks}<line class="psd-plot-guide" y1="${top}" y2="${height - bottom}" hidden/>${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
     const tooltip = host.querySelector('.psd-plot-tooltip'), guide = host.querySelector('.psd-plot-guide');
     let pinned = false;
     function hide() { tooltip.hidden = true; guide.setAttribute('hidden', ''); }
@@ -144,55 +143,16 @@
     // Responsive redraw must not drop keyboard focus between a focus/Enter
     // pair, or when an already-focused chart changes width on orientation.
     if (focusedPoint !== undefined) host.querySelectorAll('[data-point]')[Number(focusedPoint)]?.focus();
-    const setPlayhead=position=>{spec.playhead=position;const line=host.querySelector('.psd-plot-playhead');if(!line)return;if(!finite(position)){line.setAttribute('hidden','');return;}line.removeAttribute('hidden');const px=x(Math.max(0,Math.min(rows.length-1,position)));line.setAttribute('x1',px);line.setAttribute('x2',px);};
-    host.__psdSetPlayhead=setPlayhead;
-    setPlayhead(spec.playhead);
-    return { data, accessor:data.accessor, setPlayhead:position=>host.__psdSetPlayhead?.(position), destroy: () => host.__psdChartCleanup?.() };
+    return { data, accessor:data.accessor, destroy: host.__psdChartCleanup };
   }
-  // Reusable geographic flow renderer. The adapter owns periods, units and narrative.
-  // D3 is supplied by the consumer; no dataset or country identity is hardcoded here.
-  function globe(element, spec) {
-    const d3=root.d3, svg=d3.select(element), frame=element.parentElement;
-    let w=0,h=0,projection,geo,land,grid,lines=[],backs=[],labels=[],leaders=[],dots=[],particles=[],state=null;
-    const curve=(c,t)=>{const u=1-t;return [u*u*c[0][0]+2*u*t*c[1][0]+t*t*c[2][0],u*u*c[0][1]+2*u*t*c[1][1]+t*t*c[2][1]];};
-    function resize(){
-      const nextW=frame.clientWidth,nextH=frame.clientHeight;if(w===nextW&&h===nextH)return;
-      w=nextW;h=nextH;svg.attr('viewBox',`0 0 ${w} ${h}`);svg.selectAll('g,defs,ellipse').remove();
-      projection=d3.geoOrthographic().scale(Math.min(w,h)*.43).translate([w*.5,h*.48]).clipAngle(90).precision(.8);geo=d3.geoPath(projection);
-      const defs=svg.append('defs'),shade=defs.append('radialGradient').attr('id',element.id+'-shade').attr('cx','30%').attr('cy','25%').attr('r','75%');
-      shade.append('stop').attr('offset','40%').attr('stop-color','var(--oa-ink)').attr('stop-opacity',0);shade.append('stop').attr('offset','100%').attr('stop-color','var(--oa-ink)').attr('stop-opacity',.24);
-      const shadow=defs.append('radialGradient').attr('id',element.id+'-shadow');shadow.append('stop').attr('stop-color','var(--oa-ink)').attr('stop-opacity',.2);shadow.append('stop').attr('offset','100%').attr('stop-color','var(--oa-ink)').attr('stop-opacity',0);
-      svg.append('ellipse').attr('cx',w*.5).attr('cy',h*.48+projection.scale()+12).attr('rx',projection.scale()*.8).attr('ry',13).attr('fill',`url(#${element.id}-shadow)`);
-      const map=svg.append('g');map.append('circle').attr('cx',w*.5).attr('cy',h*.48).attr('r',projection.scale()).attr('fill','var(--oa-ocean)').attr('stroke','var(--oa-line)');
-      grid=map.append('path').datum(d3.geoGraticule().step([15,15])()).attr('class','oa-graticule');
-      land=map.append('g').selectAll('path').data(spec.features).join('path').attr('class',f=>'oa-country'+(spec.groupFor(f)?' oa-country-'+spec.groupFor(f):''));
-      map.append('circle').attr('cx',w*.5).attr('cy',h*.48).attr('r',projection.scale()).attr('fill',`url(#${element.id}-shade)`).attr('pointer-events','none');
-      lines=[];backs=[];labels=[];leaders=[];dots=[];particles=[];
-      spec.routes.forEach((r,i)=>{backs.push(map.append('path').attr('class','oa-flow-underlay'));lines.push(map.append('path').attr('class','oa-flow').attr('stroke',r.color));const hit=map.append('path').attr('class','oa-route-hit').attr('data-route',i);hit.on('click',()=>spec.onSelect?.(r.key));for(let j=0;j<7;j++)particles.push({route:i,offset:j/7,node:map.append('circle').attr('r',1.6).attr('fill','var(--oa-paper)').attr('pointer-events','none')});});
-      [spec.origin,...spec.routes.map(r=>r.coord)].forEach((_,i)=>{dots.push(map.append('circle').attr('class','oa-node').attr('r',i?3:4));leaders.push(svg.append('g').append('path').attr('class','oa-leader'));const group=svg.append('g');group.append('text').attr('class','oa-map-label').text(i?spec.routes[i-1].name.toUpperCase():(spec.originLabel||'ORIGIN'));if(i)group.append('text').attr('class','oa-map-value').attr('y',22);labels.push(group);});
-      if(state)update(state);
-    }
-    function update(next){
-      state=next;if(!projection)return;projection.rotate([next.pose.lon,next.pose.lat]);land.attr('d',geo);grid.attr('d',geo);
-      const points=[projection(spec.origin),...spec.routes.map(r=>projection(r.coord))];
-      const curves=spec.routes.map((r,i)=>{const a=points[0],b=points[i+1],dx=b[0]-a[0],dy=b[1]-a[1],bend=i===1?-.19:.18,c=[a,[(a[0]+b[0])/2-dy*bend,(a[1]+b[1])/2+dx*bend],b];const path=`M${a} Q${c[1]} ${b}`,v=next.values[r.key],width=28*(v||0)/spec.maximum,opacity=next.selected&&next.selected!==r.key?.2:.86;
-        lines[i].attr('d',path).attr('stroke-width',width).attr('opacity',opacity).attr('visibility',v==null||v===0?'hidden':'visible');backs[i].attr('d',path).attr('stroke-width',width+2).attr('visibility',v==null||v===0?'hidden':'visible');svg.select(`[data-route="${i}"]`).attr('d',path);return c;});
-      points.forEach((p,i)=>{dots[i].attr('cx',p[0]).attr('cy',p[1]);const anchor=i===2?'start':i?'end':'middle',lw=i===1?116:96;let x=p[0]+(i===2?16:i?-17:0),y=p[1]+(i===0?-34:i===2?-14:34);x=anchor==='start'?Math.min(w-lw-5,x):anchor==='end'?Math.max(lw+5,x):Math.max(lw/2+5,Math.min(w-lw/2-5,x));y=Math.max(22,Math.min(h-(i?46:26),y));labels[i].attr('transform',`translate(${x},${y})`).attr('text-anchor',anchor);if(i)labels[i].select('.oa-map-value').text(next.labels[i-1]);leaders[i].attr('d',`M${p} L${x},${y+(i===0?15:-5)}`);});
-      particles.forEach(p=>{const t=(next.motionTime/4800+p.offset)%1,q=curve(curves[p.route],t),v=next.values[spec.routes[p.route].key];p.node.attr('cx',q[0]).attr('cy',q[1]).attr('opacity',next.animate&&v>0?Math.min(1,t*9,(1-t)*9)*.8:0);});
-    }
-    resize();return {resize,update,destroy:()=>svg.selectAll('g,defs,ellipse').remove()};
-  }
-
   // A geographic relationship view. Values are independent reported edges;
   // drawing never infers transit or conserves amounts between them.
   function renderRoutes(host, spec) {
     host.__psdChartCleanup?.();
     const abort = new AbortController();
     const geometry = spec.geometry;
-    const focusedEdge=host.contains(document.activeElement)?document.activeElement.dataset?.edge:undefined;
-    const markerId='psd-route-arrow-'+Math.random().toString(36).slice(2);
     const highlighted = new Set(spec.nodes.map(node => node.iso2.toLowerCase()));
-    host.innerHTML = `<svg viewBox="${escape(geometry.viewBox)}" role="group" aria-label="${escape(spec.title)}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><g class="psd-route-land">${geometry.locations.map(location => `<path d="${escape(location.path)}" class="${highlighted.has(location.id) ? 'is-involved' : ''}"/>`).join('')}</g><g class="psd-route-edges"></g><g class="psd-route-nodes"></g></svg><p class="psd-route-detail" aria-live="polite"></p>`;
+    host.innerHTML = `<svg viewBox="${escape(geometry.viewBox)}" role="group" aria-label="${escape(spec.title)}"><g class="psd-route-land">${geometry.locations.map(location => `<path d="${escape(location.path)}" class="${highlighted.has(location.id) ? 'is-involved' : ''}"/>`).join('')}</g><g class="psd-route-edges"></g><g class="psd-route-nodes"></g></svg><p class="psd-route-detail" aria-live="polite"></p>`;
     const svg=host.querySelector('svg'), points=new Map();
     // Anchor coordinates use the same map projection as the published geometry.
     for(const node of spec.nodes) {
@@ -207,7 +167,7 @@
       const known=finite(edge.value), width=known && edge.value>0 ? .5+7*Math.sqrt(edge.value/max) : 1;
       const bend=Math.min(100,Math.hypot(b.x-a.x,b.y-a.y)*.25)*(i%2 ? -1 : 1);
       const d=`M${a.x},${a.y} Q${(a.x+b.x)/2},${(a.y+b.y)/2-bend} ${b.x},${b.y}`;
-      return `<g tabindex="${i===0?0:-1}" role="button" data-edge="${i}" aria-label="${escape(edge.label)}"><path class="psd-route-hit" d="${d}"/><path class="psd-route-line ${known?'':'is-missing'} ${edge.value>0?'has-value':''}" d="${d}" style="stroke:${escape(edge.color||palette[0])};stroke-width:${width}" ${known && edge.value>0?`marker-end="url(#${markerId})"`:""}/></g>`;
+      return `<g tabindex="${i===0?0:-1}" role="button" data-edge="${i}" aria-label="${escape(edge.label)}"><path class="psd-route-hit" d="${d}"/><path class="psd-route-line ${known?'':'is-missing'} ${edge.value>0?'has-value':''}" d="${d}" style="stroke:${escape(edge.color||palette[0])};stroke-width:${width}"/></g>`;
     }).join('');
     svg.querySelector('.psd-route-nodes').innerHTML=spec.nodes.map(node=>{
       const p=points.get(node.id);return p?`<g><circle cx="${p.x}" cy="${p.y}" r="4"/><text x="${p.x}" y="${p.y-12}" text-anchor="middle">${escape(node.label)}</text></g>`:'';
@@ -226,10 +186,9 @@
       }
     },{signal:abort.signal});
     host.__psdChartCleanup=()=>abort.abort();
-    if(focusedEdge!==undefined){const mark=host.querySelector(`[data-edge="${focusedEdge}"]`);if(mark){host.querySelector('[data-edge="0"]')?.setAttribute('tabindex','-1');mark.tabIndex=0;mark.focus();}}
     return {destroy:host.__psdChartCleanup};
   }
-  const api = Object.freeze({ render, renderRoutes, model, domain, palette, globe });
+  const api = Object.freeze({ render, renderRoutes, model, domain, palette });
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PSDPlot = api;
 })(typeof window === 'undefined' ? globalThis : window);
