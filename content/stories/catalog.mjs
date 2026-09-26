@@ -2,7 +2,7 @@
 export default [
   {
     slug:'the-great-oil-pivot',status:'published',format:'interactive',
-    title:'The great oil pivot.',description:'Watch Russian crude imports shift from Europe towards China and India. A rotating globe, continuous playback and the observations behind every movement.',
+    title:'The great oil pivot.',description:'Russian crude imports shifted from Europe to China and India. Five years of reported trade on one globe.',
     date:'2026-09-26',updated:'2026-09-26',minutes:4,topic:'Energy & trade',author:'Public Spending Data',language:'en',featured:true,
     takeaway:'Europe’s reported subtotal falls. China and India become the major buyers in this comparison.',
     edition:'Editorial snapshot · Annual: 2020–2024 · Monthly India: October 2025–July 2026 · Evidence checked 21 September 2026. Not a live tracker.',

@@ -1,100 +1,147 @@
+/* The great oil pivot. One stage, one timeline, one evidence table.
+   The globe is sized by its frame (radius = 0.43 × the shorter side), so the
+   frame height is what makes it large. */
+#oil-atlas{--oa-paper:#f1ede3;--oa-ink:#171918;--oa-muted:#62645c;--oa-line:#d2ccc1;--oa-land:#dcd9cf;--oa-ocean:#faf7ef;--oa-russia:#b8bbaa;--oa-china:#809027;--oa-india:#c93237;--oa-germany:#74776d;--oa-panel:#e7e3d8;--oa-gutter:32px;color-scheme:light;position:relative;isolation:isolate;background:var(--oa-paper);color:var(--oa-ink);font:400 14px/1.5 Arial,Helvetica,sans-serif;border-radius:3px;overflow:hidden}
+#oil-atlas *{box-sizing:border-box}
+#oil-atlas button,#oil-atlas input{font:inherit;color:inherit;touch-action:manipulation}
+#oil-atlas button{cursor:pointer}
+#oil-atlas :is(button,a,input,summary):focus-visible{outline:2px solid var(--oa-india);outline-offset:3px}
+#oil-atlas .oa-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+body:has(#oil-atlas) .story-main{max-width:1360px}
+body:has(#oil-atlas) .story-heading{max-width:920px}
 
-#oil-atlas{--oa-paper:light-dark(#f3f0e6,#10221f);--oa-ink:light-dark(#263d34,#eeeadd);--oa-muted:light-dark(#617066,#b0b9a6);--oa-line:light-dark(#cccdbd,#3c5042);--oa-land:light-dark(#dcdcc9,#304339);--oa-ocean:light-dark(#eeebdf,#152823);--oa-russia:light-dark(#abb99e,#697b5c);--oa-china:light-dark(#af7620,#efbf62);--oa-india:light-dark(#b3442c,#f1a086);--oa-germany:light-dark(#58747d,#a7c2c6);--oa-panel:light-dark(#e7e6d9,#203229);--oa-flow-scale:12;position:relative;isolation:isolate;background:var(--oa-paper);color:var(--oa-ink);font:400 14px/1.5 Arial,Helvetica,sans-serif;overflow:hidden;border-radius:3px;}
-#oil-atlas *{box-sizing:border-box}#oil-atlas button,#oil-atlas input{font:inherit}#oil-atlas button{color:inherit}#oil-atlas button:focus-visible,#oil-atlas a:focus-visible,#oil-atlas input:focus-visible{outline:2px solid var(--oa-india);outline-offset:4px}#oil-atlas button{touch-action:manipulation}#oil-atlas .oa-header{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:21px 32px;border-bottom:1px solid var(--oa-line)}#oil-atlas .oa-brand{font-size:16px;font-weight:600;letter-spacing:-.6px;text-decoration:none;color:var(--oa-ink);line-height:1.25}#oil-atlas .oa-brand span{display:block;font-size:8px;font-weight:500;letter-spacing:1.15px;margin-top:5px}#oil-atlas .oa-header-right{display:flex;align-items:center;gap:24px}#oil-atlas .oa-edition{font-size:9px;letter-spacing:1.4px;color:var(--oa-muted)}#oil-atlas .oa-source-button{display:flex;align-items:center;gap:6px;border:0;background:transparent;font-size:11px;padding:6px 0}#oil-atlas .oa-source-button svg{width:13px;height:13px}#oil-atlas .oa-story{display:grid;grid-template-columns:32% 68%;padding:34px 32px 18px;position:relative}#oil-atlas .oa-intro{padding-right:20px;position:relative;z-index:2}#oil-atlas .oa-eyebrow{display:flex;align-items:center;gap:8px;font-size:8px;letter-spacing:1.4px;font-weight:600;white-space:nowrap}#oil-atlas .oa-kicker-line{display:block;width:22px;height:2px;background:var(--oa-india)}#oil-atlas .oa-title{font:400 clamp(52px,7vw,86px)/.88 Georgia,serif;letter-spacing:-2.6px;margin:26px 0 20px}#oil-atlas .oa-title em{font-weight:400;color:var(--oa-india)}#oil-atlas .oa-deck{font-size:14px;line-height:1.55;color:var(--oa-muted);margin:0 0 37px}#oil-atlas .oa-chapter-number{font-size:8px;font-weight:600;letter-spacing:1px;color:var(--oa-muted)}#oil-atlas .oa-chapter h2{font:400 25px/1.1 Georgia,serif;margin:10px 0 10px;letter-spacing:-.25px}#oil-atlas .oa-chapter p{font-size:11px;line-height:1.65;color:var(--oa-muted);max-width:235px;margin:0;min-height:55px}#oil-atlas .oa-featured{border-top:1px solid var(--oa-line);margin-top:23px;padding-top:12px;display:flex;gap:12px;align-items:center}#oil-atlas .oa-featured-value{font:400 61px/1 Georgia,serif;letter-spacing:-2px;white-space:nowrap}#oil-atlas .oa-featured-value>span+span{font-size:32px;letter-spacing:-1px}#oil-atlas #oa-featured-label{font-size:10px;color:var(--oa-muted);line-height:1.5;max-width:110px}#oil-atlas .oa-map-area{position:relative;min-width:0;align-self:stretch;display:flex;flex-direction:column}#oil-atlas .oa-map-heading{display:flex;justify-content:space-between;gap:10px;font-size:8px;letter-spacing:.7px;color:var(--oa-muted);margin:0 0 4px;padding-left:14px;flex-wrap:wrap}#oil-atlas .oa-map-frame{position:relative;flex:1;min-height:415px}#oil-atlas .oa-map{display:block;width:100%;height:100%;position:absolute;inset:0;overflow:visible}#oil-atlas .oa-map-number{position:absolute;bottom:12px;right:0;font:400 66px/1 Georgia,serif;letter-spacing:-2px;opacity:.13;pointer-events:none}#oil-atlas .oa-map-legend{display:flex;justify-content:space-between;gap:10px;padding:8px 0 14px 14px;font-size:9px;color:var(--oa-muted);flex-wrap:wrap}#oil-atlas .oa-map-legend>span{display:flex;align-items:center;gap:6px}#oil-atlas .oa-width-key{height:5px;width:20px;display:inline-block;background:var(--oa-ink);border-radius:6px;opacity:.55}#oil-atlas .oa-destinations{display:grid;grid-template-columns:repeat(3,1fr);margin-left:14px;border-top:1px solid var(--oa-line);padding-top:11px;gap:12px}#oil-atlas .oa-destination{border:0;background:none;text-align:left;padding:4px 6px 6px;border-radius:2px;transition:background .2s;min-width:0}#oil-atlas .oa-destination:hover,#oil-atlas .oa-destination[aria-pressed=true]{background:var(--oa-panel)}#oil-atlas .oa-destination-name{display:flex;gap:6px;align-items:center;font-size:10px;color:var(--oa-muted)}#oil-atlas .oa-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex:none}#oil-atlas .oa-germany{background:var(--oa-germany)}#oil-atlas .oa-china{background:var(--oa-china)}#oil-atlas .oa-india{background:var(--oa-india)}#oil-atlas .oa-destination-value{display:block;font:400 30px/1.25 Georgia,serif;font-variant-numeric:tabular-nums;margin-top:2px}#oil-atlas .oa-player{margin:16px 32px 0;border-top:1px solid var(--oa-line);padding:18px 0 20px}#oil-atlas .oa-player-top{display:flex;align-items:center;gap:16px}#oil-atlas .oa-play{display:flex;align-items:center;gap:10px;background:transparent;border:0;padding:0;font-size:12px;font-weight:500}#oil-atlas .oa-play-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--oa-ink);color:var(--oa-paper)}#oil-atlas .oa-play-icon svg{width:13px;height:13px}#oil-atlas .oa-player-duration{font-size:9px;color:var(--oa-muted)}#oil-atlas .oa-compare{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:10px;color:var(--oa-muted)}#oil-atlas .oa-compare input{accent-color:var(--oa-ink);width:13px;height:13px;margin:0}#oil-atlas .oa-timeline{margin-top:12px}#oil-atlas #oa-time{display:block;width:100%;height:20px;margin:0;background:transparent;appearance:none;-webkit-appearance:none;cursor:ew-resize}#oil-atlas #oa-time::-webkit-slider-runnable-track{height:2px;background:linear-gradient(to right,var(--oa-india) 0%,var(--oa-india) var(--oa-progress,0%),var(--oa-line) var(--oa-progress,0%),var(--oa-line) 100%)}#oil-atlas #oa-time::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--oa-india);margin-top:-4px;box-shadow:0 0 0 4px var(--oa-paper)}#oil-atlas #oa-time::-moz-range-track{height:2px;background:var(--oa-line)}#oil-atlas #oa-time::-moz-range-thumb{height:10px;width:10px;border:0;border-radius:50%;background:var(--oa-india)}#oil-atlas .oa-years{display:flex;justify-content:space-between;gap:4px}#oil-atlas .oa-years button{background:transparent;border:0;padding:5px 0;font-size:10px;color:var(--oa-muted);min-width:32px;font-variant-numeric:tabular-nums}#oil-atlas .oa-years button[aria-pressed=true]{color:var(--oa-india);font-weight:700}#oil-atlas .oa-footer{padding:14px 32px 17px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--oa-panel);font-size:8px;letter-spacing:.9px;color:var(--oa-muted);flex-wrap:wrap}#oil-atlas .oa-footer button{display:flex;gap:7px;align-items:center;background:none;border:0;padding:0;font-size:9px;color:var(--oa-ink);letter-spacing:0}#oil-atlas .oa-footer button svg{width:12px;height:12px}#oil-atlas .oa-footer-separator{margin:0 6px;opacity:.6}#oil-atlas .oa-inspection{margin:0 32px 8px;padding:12px 16px;background:var(--oa-panel);display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:11px}#oil-atlas .oa-inspection>div{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}#oil-atlas .oa-inspection strong{font-weight:600}#oil-atlas .oa-inspection[hidden],#oil-atlas .oa-evidence[hidden]{display:none}#oil-atlas .oa-close{display:grid;place-items:center;background:none;border:0;padding:6px;flex:none}#oil-atlas .oa-close svg{width:16px;height:16px}#oil-atlas .oa-evidence{padding:22px 32px 28px;border-top:1px solid var(--oa-line);background:var(--oa-paper)}#oil-atlas .oa-evidence-top{display:flex;justify-content:space-between;gap:16px;align-items:center}#oil-atlas .oa-evidence h2{font:400 28px/1.15 Georgia,serif;margin:0}#oil-atlas .oa-evidence p{font-size:11px;color:var(--oa-muted);max-width:800px}#oil-atlas .oa-evidence a{color:var(--oa-ink);text-underline-offset:3px}#oil-atlas .oa-table-wrap{overflow-x:auto}#oil-atlas table{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}#oil-atlas th,#oil-atlas td{padding:9px 10px 9px 0;border-bottom:1px solid var(--oa-line);text-align:right;font-weight:400}#oil-atlas th:first-child,#oil-atlas td:first-child{text-align:left}#oil-atlas th{color:var(--oa-muted)}#oil-atlas .oa-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-#oil-atlas .oa-graticule{fill:none;stroke:var(--oa-line);stroke-width:.6;opacity:.5}#oil-atlas .oa-country{fill:var(--oa-land);stroke:var(--oa-paper);stroke-width:.6;stroke-linejoin:round}#oil-atlas .oa-country-russia{fill:var(--oa-russia)}#oil-atlas .oa-country-china{fill:color-mix(in srgb,var(--oa-china) 23%,var(--oa-land))}#oil-atlas .oa-country-india{fill:color-mix(in srgb,var(--oa-india) 28%,var(--oa-land))}#oil-atlas .oa-country-germany{fill:color-mix(in srgb,var(--oa-germany) 45%,var(--oa-land))}#oil-atlas .oa-flow{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.8;transition:opacity .25s}#oil-atlas .oa-flow-underlay{fill:none;stroke:var(--oa-paper);opacity:.65}#oil-atlas .oa-flow-ghost{fill:none;stroke:var(--oa-ink);opacity:.13;stroke-linecap:round}#oil-atlas .oa-node{fill:var(--oa-paper);stroke:var(--oa-ink);stroke-width:1.5}#oil-atlas .oa-map-label{font:500 10px Arial,Helvetica,sans-serif;letter-spacing:1.3px;fill:var(--oa-ink);paint-order:stroke;stroke:var(--oa-ocean);stroke-width:3px;stroke-linejoin:round}#oil-atlas .oa-map-value{font:400 20px Georgia,serif;letter-spacing:-.3px;fill:var(--oa-ink);paint-order:stroke;stroke:var(--oa-ocean);stroke-width:3px}#oil-atlas .oa-map-sub{font:400 9px Arial,Helvetica,sans-serif;letter-spacing:0;fill:var(--oa-muted);paint-order:stroke;stroke:var(--oa-ocean);stroke-width:3px}#oil-atlas .oa-leader{fill:none;stroke:var(--oa-muted);stroke-width:.65;opacity:.6}#oil-atlas .oa-route-hit{fill:none;stroke:transparent;stroke-width:24px;cursor:inherit}#oil-atlas .oa-arrow{fill:var(--oa-paper)}#oil-atlas .oa-ocean-label{font:italic 13px Georgia,serif;letter-spacing:2px;fill:var(--oa-muted);opacity:.5}#oil-atlas .oa-halo{fill:none;stroke:var(--oa-paper);stroke-width:1;opacity:.7}
-@media(min-width:1100px){#oil-atlas .oa-story{grid-template-columns:31% 69%}#oil-atlas .oa-map-frame{min-height:450px}}
-@media(max-width:700px){#oil-atlas .oa-header{padding:18px 22px}#oil-atlas .oa-brand{font-size:14px}#oil-atlas .oa-edition{display:none}#oil-atlas .oa-story{padding:25px 22px 14px;grid-template-columns:34% 66%}#oil-atlas .oa-intro{padding-right:12px}#oil-atlas .oa-eyebrow{font-size:7px;letter-spacing:.7px}#oil-atlas .oa-kicker-line{width:12px}#oil-atlas .oa-title{font-size:59px;letter-spacing:-2px}#oil-atlas .oa-deck{font-size:12px;margin-bottom:28px}#oil-atlas .oa-chapter h2{font-size:23px}#oil-atlas .oa-map-frame{min-height:380px}#oil-atlas .oa-featured{gap:8px}#oil-atlas .oa-featured-value{font-size:48px}#oil-atlas #oa-featured-label{font-size:9px}#oil-atlas .oa-map-heading{padding-left:0}#oil-atlas .oa-map-legend{padding-left:0}#oil-atlas .oa-destinations{margin-left:0;gap:2px}#oil-atlas .oa-flow-note{max-width:160px}#oil-atlas .oa-player{margin-left:22px;margin-right:22px}#oil-atlas .oa-footer{padding-left:22px;padding-right:22px}#oil-atlas .oa-player-duration{display:none}}
-@media(max-width:520px){#oil-atlas .oa-header{padding:15px 18px}#oil-atlas .oa-brand span{font-size:7px;letter-spacing:.7px}#oil-atlas .oa-story{padding:24px 18px 10px;display:block}#oil-atlas .oa-intro{padding-right:0;display:grid;grid-template-columns:1.1fr 1fr;column-gap:20px}#oil-atlas .oa-eyebrow{grid-column:1/-1;font-size:8px}#oil-atlas .oa-title{font-size:67px;margin:18px 0 13px;grid-column:1;grid-row:2;letter-spacing:-2.5px}#oil-atlas .oa-deck{display:none}#oil-atlas .oa-chapter{grid-column:2;grid-row:2;padding-top:18px}#oil-atlas .oa-chapter-number{font-size:7px;letter-spacing:.4px}#oil-atlas .oa-chapter h2{font-size:23px;margin-top:9px}#oil-atlas .oa-chapter p{font-size:10px;line-height:1.55;min-height:0}#oil-atlas .oa-featured{grid-column:1/-1;margin-top:6px;padding-top:10px;margin-bottom:22px;gap:15px}#oil-atlas .oa-featured-value{font-size:42px}#oil-atlas .oa-featured-value>span+span{font-size:24px}#oil-atlas #oa-featured-label{font-size:10px;max-width:none}#oil-atlas #oa-featured-label br{display:none}#oil-atlas .oa-map-frame{height:350px;min-height:350px}#oil-atlas .oa-map-heading{font-size:7px;letter-spacing:.25px}#oil-atlas .oa-map-legend{font-size:8px;padding-bottom:11px;gap:7px}#oil-atlas .oa-flow-note{max-width:none}#oil-atlas .oa-map-number{font-size:53px;bottom:6px}#oil-atlas .oa-destination-name{font-size:10px}#oil-atlas .oa-destination-value{font-size:29px}#oil-atlas .oa-player{margin:16px 18px 0;padding:16px 0}#oil-atlas .oa-play{font-size:11px}#oil-atlas .oa-compare{font-size:9px;gap:5px}#oil-atlas .oa-player-top{gap:8px}#oil-atlas .oa-years button{font-size:9px}#oil-atlas .oa-footer{padding:14px 18px;gap:12px;font-size:7px}#oil-atlas .oa-footer>span:nth-child(2){order:3;flex-basis:100%}#oil-atlas .oa-evidence{padding:20px 18px}#oil-atlas .oa-inspection{margin:4px 18px 0;padding:12px}#oil-atlas .oa-inspection>div{gap:5px 12px}#oil-atlas .oa-evidence h2{font-size:25px}}
-@media(pointer:coarse){#oil-atlas .oa-years button,#oil-atlas .oa-source-button,#oil-atlas .oa-footer button,#oil-atlas .oa-play,#oil-atlas .oa-compare,#oil-atlas .oa-close{min-height:44px}#oil-atlas #oa-time{height:36px}}
-@media(prefers-reduced-motion:reduce){#oil-atlas *{transition:none!important;animation:none!important}}
-#oil-atlas .oa-map-frame{overflow:hidden}
-#oil-atlas .oa-edition,#oil-atlas .oa-eyebrow,#oil-atlas .oa-chapter-number,#oil-atlas #oa-featured-label,#oil-atlas .oa-map-heading,#oil-atlas .oa-map-legend,#oil-atlas .oa-destination-name,#oil-atlas .oa-player-duration,#oil-atlas .oa-compare,#oil-atlas .oa-years button,#oil-atlas .oa-footer,#oil-atlas .oa-footer button{font-size:11px}
-#oil-atlas .oa-eyebrow{letter-spacing:.7px;white-space:normal}
-#oil-atlas .oa-map-heading{letter-spacing:.2px}
-#oil-atlas .oa-map-sub,#oil-atlas .oa-map-label{font-size:11px}
-#oil-atlas .oa-map-sub{letter-spacing:-.3px}
-#oil-atlas .oa-footer{letter-spacing:.25px}
-@media(max-width:700px){#oil-atlas .oa-edition{display:none}#oil-atlas .oa-player-duration{display:none}}
-@media(max-width:520px){#oil-atlas .oa-brand span{display:none}#oil-atlas .oa-intro{column-gap:15px}#oil-atlas .oa-chapter p{font-size:11px}#oil-atlas .oa-chapter-number{font-size:9px}#oil-atlas .oa-eyebrow{font-size:10px}#oil-atlas .oa-map-heading{font-size:10px}#oil-atlas .oa-player-top{flex-wrap:wrap}#oil-atlas .oa-map-sub{font-size:11px}#oil-atlas .oa-map-legend{font-size:10px}}
-@media(max-width:520px){#oil-atlas .oa-intro{grid-template-columns:62% 38%;column-gap:0;margin-bottom:24px}#oil-atlas .oa-title{grid-column:1/-1;grid-row:2;font-size:67px;margin:18px 0 24px}#oil-atlas .oa-chapter{grid-column:1;grid-row:3;padding:0 15px 0 0}#oil-atlas .oa-featured{grid-column:2;grid-row:3;margin:0;padding:6px 0 0 15px;border-top:0;border-left:1px solid var(--oa-line);display:block;align-self:start}#oil-atlas .oa-featured-value{font-size:57px;margin-bottom:9px}#oil-atlas #oa-featured-label{font-size:11px}#oil-atlas #oa-featured-label br{display:initial}#oil-atlas .oa-chapter-number{font-size:10px}#oil-atlas .oa-map-frame{height:325px;min-height:325px}}
+/* Stage: chapter text top-left, the year watermark bottom-left, the globe centred. */
+#oil-atlas .oa-stage{position:relative;padding:0 var(--oa-gutter)}
+#oil-atlas .oa-chapter{position:absolute;z-index:2;top:32px;left:var(--oa-gutter);max-width:290px;pointer-events:none}
+#oil-atlas .oa-chapter-number{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--oa-muted)}
+#oil-atlas .oa-chapter h2{font:400 34px/1.05 Georgia,serif;letter-spacing:-.4px;margin:10px 0 12px}
+#oil-atlas .oa-chapter p{font-size:14px;line-height:1.55;color:var(--oa-muted);margin:0}
+#oil-atlas .oa-expand{position:absolute;z-index:3;top:24px;right:var(--oa-gutter);border:1px solid var(--oa-line);background:var(--oa-paper);border-radius:3px;padding:8px 12px;font-size:12px}
+#oil-atlas .oa-map-frame{position:relative;height:clamp(540px,76vh,820px);contain:layout paint}
+#oil-atlas .oa-map{position:absolute;inset:0;display:block;width:100%;height:100%;overflow:visible}
+#oil-atlas .oa-map-number{position:absolute;left:0;bottom:4px;z-index:0;font:400 clamp(96px,13vw,190px)/.8 Georgia,serif;letter-spacing:-.04em;font-variant-numeric:tabular-nums;opacity:.1;pointer-events:none;transition:opacity .4s}
+#oil-atlas[data-view="monthly"] .oa-map-number{font-size:clamp(64px,8vw,120px)}
+#oil-atlas[data-motion-phase="transition"] .oa-map-number{opacity:.16}
+#oil-atlas .oa-observation{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0;padding:10px 0 12px;font-size:11px;letter-spacing:.04em;color:var(--oa-muted);text-transform:uppercase}
 
-#oil-atlas .oa-years{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin-top:12px}
-#oil-atlas .oa-years button{min-height:34px;padding:5px 2px;white-space:normal;border-bottom:2px solid transparent}
-#oil-atlas .oa-years button[aria-pressed="true"]{border-bottom-color:var(--oa-ink)}
-#oil-atlas .oa-grain-band{display:grid;grid-template-columns:5fr 11fr;gap:12px;margin-top:18px;font-size:11px;letter-spacing:.5px;color:var(--oa-muted)}
-#oil-atlas .oa-grain-band span{border-top:3px solid var(--oa-line);padding-top:7px}
-#oil-atlas .oa-grain-band span+span{border-top-color:var(--oa-ink)}
-#oil-atlas .oa-timing-note{font-size:11px;color:var(--oa-muted);margin:12px 0 0}
-#oil-atlas .oa-map-heading{flex-wrap:wrap;gap:5px}
-#oil-atlas .oa-map-number{font-size:clamp(35px,6vw,67px)}
-#oil-atlas .oa-map-legend{flex-wrap:wrap}
-#oil-atlas .oa-flow-note{max-width:none}
-#oil-atlas .oa-featured-value{font-size:57px}
-#oil-atlas .oa-chapter p{min-height:100px}
-@media(max-width:520px){#oil-atlas .oa-years{grid-template-columns:repeat(4,minmax(0,1fr))}#oil-atlas .oa-years button{min-height:44px}#oil-atlas .oa-grain-band{grid-template-columns:1fr 1fr}#oil-atlas .oa-featured-value{font-size:43px}#oil-atlas .oa-chapter p{min-height:0}}
+/* Globe marks (drawn by the shared renderer, styled here). */
+#oil-atlas .oa-graticule{fill:none;stroke:var(--oa-line);stroke-width:.6;opacity:.65}
+#oil-atlas .oa-country{fill:var(--oa-land);stroke:var(--oa-paper);stroke-width:.45;stroke-linejoin:round}
+#oil-atlas .oa-country-russia{fill:var(--oa-russia)}
+#oil-atlas .oa-country-china{fill:color-mix(in srgb,var(--oa-china) 23%,var(--oa-land))}
+#oil-atlas .oa-country-india{fill:color-mix(in srgb,var(--oa-india) 28%,var(--oa-land))}
+#oil-atlas .oa-country-germany{fill:color-mix(in srgb,var(--oa-germany) 45%,var(--oa-land))}
+#oil-atlas .oa-flow{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:.8;transition:opacity .25s}
+#oil-atlas .oa-flow-underlay{fill:none;stroke:var(--oa-paper);opacity:.65}
+#oil-atlas .oa-node{fill:var(--oa-paper);stroke:var(--oa-ink);stroke-width:1.5}
+#oil-atlas .oa-map-label{font:600 12px Arial,Helvetica,sans-serif;letter-spacing:.1em;fill:var(--oa-ink);paint-order:stroke;stroke:var(--oa-ocean);stroke-width:3px;stroke-linejoin:round}
+#oil-atlas .oa-map-value{font:400 26px Georgia,serif;letter-spacing:-.3px;fill:var(--oa-ink);paint-order:stroke;stroke:var(--oa-ocean);stroke-width:3px}
+#oil-atlas .oa-map-sub{font:400 11px Arial,Helvetica,sans-serif;fill:var(--oa-muted);paint-order:stroke;stroke:var(--oa-ocean);stroke-width:3px}
+#oil-atlas .oa-leader{fill:none;stroke:var(--oa-muted);stroke-width:.65;opacity:.6}
+#oil-atlas .oa-route-hit{fill:none;stroke:transparent;stroke-width:24px}
 
-#oil-atlas .oa-years{grid-template-columns:repeat(5,minmax(0,1fr))}
-#oil-atlas .oa-grain-band{grid-template-columns:1fr 1fr}
-#oil-atlas .oa-eu-breakdown{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding-top:16px;width:100%;font-size:12px}
-#oil-atlas .oa-eu-breakdown span{display:block}#oil-atlas .oa-eu-breakdown strong{display:block;font-size:21px;font-weight:400;margin-top:4px}
+/* Destinations double as the legend and the EU breakdown control. */
+#oil-atlas .oa-destinations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 var(--oa-gutter);border-top:1px solid var(--oa-line);padding-top:10px}
+#oil-atlas .oa-destination{border:0;background:none;text-align:left;padding:6px 8px;border-radius:3px;min-width:0;transition:background .2s}
+#oil-atlas .oa-destination:hover,#oil-atlas .oa-destination[aria-pressed="true"]{background:var(--oa-panel)}
+#oil-atlas .oa-destination:disabled{opacity:.5;cursor:default}
+#oil-atlas .oa-destination-name{display:flex;gap:7px;align-items:center;font-size:12px;color:var(--oa-muted)}
+#oil-atlas .oa-dot{width:8px;height:8px;border-radius:50%;flex:none}
+#oil-atlas .oa-germany{background:var(--oa-germany)}
+#oil-atlas .oa-china{background:var(--oa-china)}
+#oil-atlas .oa-india{background:var(--oa-india)}
+#oil-atlas .oa-destination-value{display:block;font:400 26px/1.2 Georgia,serif;font-variant-numeric:tabular-nums}
+#oil-atlas .oa-inspection{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin:10px var(--oa-gutter) 0;padding:12px 16px;background:var(--oa-panel);font-size:13px}
+#oil-atlas .oa-inspection[hidden],#oil-atlas [data-eu-detail][hidden]{display:none!important}
+#oil-atlas .oa-inspection>div{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+#oil-atlas .oa-inspection strong{font-weight:600}
+#oil-atlas .oa-inspection>[data-eu-detail]{flex-basis:100%}
+#oil-atlas .oa-eu-breakdown{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding-top:12px;width:100%;font-size:12px}
+#oil-atlas .oa-eu-breakdown span{display:block}
+#oil-atlas .oa-eu-breakdown strong{display:block;font:400 21px Georgia,serif;margin-top:4px}
 #oil-atlas .oa-eu-note{grid-column:1/-1;font-size:11px;color:var(--oa-muted)}
-#oil-atlas .oa-inspection{flex-wrap:wrap}#oil-atlas .oa-inspection>[data-eu-detail]{flex-basis:100%}
-#oil-atlas [data-eu-detail][hidden]{display:none!important}
-@media(max-width:520px){#oil-atlas .oa-eu-breakdown{grid-template-columns:repeat(2,minmax(0,1fr))}#oil-atlas .oa-map-sub{font-size:11px}}
+#oil-atlas .oa-close{display:grid;place-items:center;background:none;border:0;padding:6px 10px;font-size:18px;line-height:1}
 
-#oil-atlas .oa-map-frame{contain:layout paint}
-#oil-atlas .oa-map-number{transition:opacity .4s;pointer-events:none}
-#oil-atlas[data-motion-phase="transition"] .oa-map-number{opacity:.07}
-#oil-atlas .oa-chapter{min-height:210px}
-#oil-atlas .oa-chapter h2{min-height:62px}
-#oil-atlas .oa-destination-value,#oil-atlas #oa-featured-value{font-variant-numeric:tabular-nums}
-@media(max-width:520px){#oil-atlas .oa-chapter{min-height:190px}#oil-atlas .oa-chapter h2{min-height:56px}}
+/* One timeline: play, a single track with its periods beneath, the monthly switch. */
+#oil-atlas .oa-player{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:28px;padding:22px var(--oa-gutter) 26px}
+#oil-atlas .oa-play{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;font-size:13px;font-weight:600;white-space:nowrap}
+#oil-atlas .oa-play-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--oa-ink);color:var(--oa-paper);font-size:12px}
+#oil-atlas .oa-timeline{position:relative;padding-top:9px}
+#oil-atlas #oa-time{display:block;width:100%;height:20px;margin:0;background:transparent;appearance:none;-webkit-appearance:none;cursor:ew-resize}
+#oil-atlas #oa-time::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:linear-gradient(to right,var(--oa-ink) var(--oa-progress,0%),var(--oa-line) var(--oa-progress,0%))}
+#oil-atlas #oa-time::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--oa-india);margin-top:-5.5px;box-shadow:0 0 0 4px var(--oa-paper)}
+#oil-atlas #oa-time::-moz-range-track{height:3px;background:var(--oa-line)}
+#oil-atlas #oa-time::-moz-range-progress{height:3px;background:var(--oa-ink)}
+#oil-atlas #oa-time::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:var(--oa-india)}
+#oil-atlas .oa-years{position:relative;height:30px;margin-top:4px}
+#oil-atlas .oa-years button{position:absolute;top:0;left:calc(7px + var(--oa-tick,0) * (100% - 14px));transform:translateX(-50%);background:none;border:0;padding:4px 2px;font-size:12px;color:var(--oa-muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+#oil-atlas .oa-years button:first-child{transform:translateX(-7px)}
+#oil-atlas .oa-years button:last-child{transform:translateX(calc(-100% + 7px))}
+#oil-atlas .oa-years button[aria-pressed="true"]{color:var(--oa-ink);font-weight:700}
+#oil-atlas .oa-monthly-check{display:flex;align-items:center;gap:8px;font-size:13px;white-space:nowrap;padding-top:8px}
+#oil-atlas .oa-monthly-check input{width:16px;height:16px;margin:0;accent-color:var(--oa-ink)}
+#oil-atlas .oa-monthly-check small{font-size:12px;color:var(--oa-muted)}
 
-#oil-atlas .oa-mode-picker{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px}
-#oil-atlas .oa-mode-picker button{border:1px solid var(--oa-line);background:transparent;color:var(--oa-ink);padding:9px 15px;border-radius:3px;font-size:12px;min-height:42px}
-#oil-atlas .oa-mode-picker button[aria-pressed="true"]{background:var(--oa-ink);color:var(--oa-paper);border-color:var(--oa-ink)}
-#oil-atlas[data-view="monthly"] .oa-years{grid-template-columns:repeat(5,minmax(0,1fr))}
-#oil-atlas .oa-destination:disabled{opacity:.6;cursor:default}
-#oil-atlas[data-view="monthly"] .oa-map-number{font-size:clamp(34px,6vw,64px)}
-@media(max-width:520px){#oil-atlas .oa-mode-picker button{flex:1;min-height:44px;padding:8px}#oil-atlas[data-view="monthly"] .oa-years{grid-template-columns:repeat(3,minmax(0,1fr))}}
-
-#oil-atlas .oa-monthly-check{display:flex;align-items:center;gap:8px;font-size:12px;min-height:44px}
-#oil-atlas .oa-monthly-check input{width:16px;height:16px;accent-color:var(--oa-ink)}
-#oil-atlas .oa-monthly-check small{font-size:11px;color:var(--oa-muted);margin-left:5px}
-#oil-atlas[data-motion-phase="transition"] .oa-map-number{opacity:.15}
-
-#oil-atlas .oa-story{grid-template-columns:28% 72%;gap:0;padding-top:30px}
-#oil-atlas .oa-title{font-size:clamp(52px,7vw,78px)}
-#oil-atlas .oa-map-frame{min-height:510px}
-#oil-atlas .oa-map-number{bottom:0;right:8px}
-#oil-atlas .oa-next{margin:0 32px 24px;padding:23px 25px;background:var(--oa-panel);display:flex;align-items:center;justify-content:space-between;gap:24px}
+#oil-atlas .oa-next{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 var(--oa-gutter) 24px;padding:20px 24px;background:var(--oa-panel)}
 #oil-atlas .oa-next[hidden]{display:none}
-#oil-atlas .oa-next-kicker{font-size:11px;letter-spacing:1px;color:var(--oa-muted)}
-#oil-atlas .oa-next h2{font:400 32px/1.1 Georgia,serif;margin:8px 0}
-#oil-atlas .oa-next p{font-size:12px;color:var(--oa-muted);margin:0}
-#oil-atlas .oa-next button{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;background:var(--oa-ink);color:var(--oa-paper);border:0;border-radius:3px;font-size:12px;min-height:46px}
-#oil-atlas .oa-next button svg{width:16px;height:16px;flex:none}
-#oil-atlas .oa-country{stroke-width:.45}
-#oil-atlas .oa-graticule{opacity:.65}
-@media(max-width:800px){#oil-atlas .oa-story{grid-template-columns:30% 70%}#oil-atlas .oa-map-frame{min-height:440px}#oil-atlas .oa-featured{display:block}#oil-atlas #oa-featured-label{max-width:none;margin-top:8px}}
-@media(max-width:600px){#oil-atlas .oa-story{display:block}#oil-atlas .oa-map-frame{height:370px;min-height:370px}#oil-atlas .oa-intro{margin-bottom:22px}#oil-atlas .oa-next{margin:0 18px 20px;flex-direction:column;align-items:stretch;gap:18px}#oil-atlas .oa-next h2{font-size:28px}}
+#oil-atlas .oa-next h2{font:400 28px/1.1 Georgia,serif;margin:0 0 6px}
+#oil-atlas .oa-next p{font-size:13px;color:var(--oa-muted);margin:0}
+#oil-atlas .oa-next button{display:flex;align-items:center;gap:10px;padding:13px 18px;background:var(--oa-ink);color:var(--oa-paper);border:0;border-radius:3px;font-size:13px;min-height:46px;white-space:nowrap}
 
-#oil-atlas .oa-trends{padding:27px 32px 26px;border-top:1px solid var(--oa-line)}
-#oil-atlas .oa-trends-heading{display:flex;justify-content:space-between;align-items:center;gap:15px}
-#oil-atlas .oa-trends h2{font:400 32px/1.15 Georgia,serif;letter-spacing:-.4px;margin:7px 0 0}
-#oil-atlas .oa-chart-play{font-size:12px;background:transparent;border:1px solid var(--oa-line);border-radius:3px;padding:9px 14px;min-height:42px;white-space:nowrap}
-#oil-atlas .oa-trends-meta{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--oa-muted);font-size:11px;margin:17px 0 22px}
-#oil-atlas #oa-trend-date{color:var(--oa-ink);font-variant-numeric:tabular-nums}
-#oil-atlas .oa-trend-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}
-#oil-atlas[data-view="monthly"] .oa-trend-grid{grid-template-columns:1fr}
-#oil-atlas .oa-trend-panel{min-width:0}
-#oil-atlas .oa-trend-panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;min-height:38px}
-#oil-atlas .oa-trend-panel h3{font:500 12px/1.35 Arial,Helvetica,sans-serif;margin:0;color:var(--oa-ink)}
-#oil-atlas .oa-trend-value{font:400 25px/1 Georgia,serif;white-space:nowrap;color:var(--oa-ink);font-variant-numeric:tabular-nums}
-#oil-atlas .oa-trend-chart{display:block;width:100%;height:190px;overflow:visible}
-#oil-atlas .oa-trend-axis{font:400 11px Arial,Helvetica,sans-serif;fill:var(--oa-muted)}
-#oil-atlas .oa-trends-note{font-size:11px;color:var(--oa-muted);margin:4px 0 0;line-height:1.6}
-@media(max-width:700px){#oil-atlas .oa-trend-grid{grid-template-columns:1fr;gap:22px}#oil-atlas .oa-trends{padding:24px 22px}}
-@media(max-width:520px){#oil-atlas .oa-trends{padding:24px 18px}#oil-atlas .oa-trends h2{font-size:29px}#oil-atlas .oa-trends-heading .oa-next-kicker{font-size:10px}}
+/* Small multiples share one scale and one export rail. */
+#oil-atlas .oa-trends{padding:28px var(--oa-gutter);border-top:1px solid var(--oa-line)}
+#oil-atlas .oa-trends-heading{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:14px}
+#oil-atlas .oa-trends h2,#oil-atlas .oa-evidence h2{font:400 28px/1.15 Georgia,serif;letter-spacing:-.3px;margin:0}
+#oil-atlas #oa-trend-date{font-size:13px;color:var(--oa-muted);font-variant-numeric:tabular-nums}
+#oil-atlas .oa-trend-set{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+#oil-atlas[data-view="monthly"] .oa-trend-set{grid-template-columns:1fr}
+#oil-atlas .oa-trend-panel,#oil-atlas .psd-shared-plot{min-width:0}
+#oil-atlas .oa-trend-panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+#oil-atlas .oa-trend-panel h3{font:600 13px/1.35 Arial,Helvetica,sans-serif;margin:0}
+#oil-atlas .oa-trend-value{font:400 24px/1 Georgia,serif;white-space:nowrap;font-variant-numeric:tabular-nums}
+#oil-atlas .oa-trend-plot{min-height:230px}
+#oil-atlas .psd-chart-rail{gap:4px 16px;border-top:0;margin-top:6px;padding-top:0}
+#oil-atlas .psd-chart-action{border:0;padding:4px 0;font-weight:500;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--oa-line)}
+#oil-atlas .oa-trends-note{font-size:12px;color:var(--oa-muted);margin:10px 0 0}
 
-#oil-atlas{--oa-paper:#f1ede3;--oa-ink:#171918;--oa-muted:#62645c;--oa-line:#d2ccc1;--oa-land:#dcd9cf;--oa-ocean:#faf7ef;--oa-russia:#b8bbaa;--oa-china:#809027;--oa-india:#c93237;--oa-germany:#74776d;--oa-panel:#e7e3d8;color-scheme:light}body:has(#oil-atlas) .story-main{max-width:1360px}body:has(#oil-atlas) .story-heading{max-width:920px}#oil-atlas .oa-title{font-weight:400}#oil-atlas .oa-header button{border:1px solid var(--oa-line);padding:10px 14px;background:transparent;cursor:pointer}#oil-atlas .oa-trend-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#oil-atlas .oa-trend-panel{min-width:0}#oil-atlas .psd-shared-plot{min-width:0}#oil-atlas .psd-chart-rail{flex-wrap:wrap}#oil-atlas.is-expanded{position:fixed;inset:0;z-index:10000;overflow:auto;border-radius:0}#oil-atlas:fullscreen{overflow:auto;width:100%;height:100%}body.oil-expanded{overflow:hidden}#oil-atlas .oa-map-frame{min-height:510px}#oil-atlas .oa-header{position:sticky;top:0;z-index:5;background:var(--oa-paper)}#oil-atlas .oa-trends-note a{color:inherit}#oil-atlas .oa-static-table{margin:24px 32px}#oil-atlas button{cursor:pointer}#oil-atlas .oa-trend-plot{min-height:230px}@media(max-width:800px){#oil-atlas .oa-trend-grid{grid-template-columns:1fr}#oil-atlas .oa-map-frame{min-height:380px}#oil-atlas .oa-header{padding:14px}#oil-atlas .oa-edition{font-size:10px}#oil-atlas .oa-story{grid-template-columns:1fr}#oil-atlas .oa-intro{padding-right:0}#oil-atlas .oa-title{font-size:58px}#oil-atlas .oa-chapter{min-height:0}#oil-atlas .oa-chapter p{max-width:none;min-height:0}#oil-atlas .oa-featured{margin-bottom:20px}}
+#oil-atlas .oa-evidence{padding:28px var(--oa-gutter) 30px;border-top:1px solid var(--oa-line)}
+#oil-atlas .oa-evidence p,#oil-atlas .oa-evidence summary{font-size:12px;color:var(--oa-muted);max-width:820px}
+#oil-atlas .oa-evidence a{color:var(--oa-ink);text-underline-offset:3px}
+#oil-atlas .oa-method-details summary{cursor:pointer;color:var(--oa-ink);font-size:13px;margin-top:6px}
+#oil-atlas .oa-table-wrap{overflow-x:auto;margin:14px 0 4px}
+#oil-atlas table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+#oil-atlas th,#oil-atlas td{padding:9px 12px 9px 0;border-bottom:1px solid var(--oa-line);text-align:right;font-weight:400}
+#oil-atlas th:first-child,#oil-atlas td:first-child{text-align:left}
+#oil-atlas th{color:var(--oa-muted)}
+
+#oil-atlas.is-expanded{position:fixed;inset:0;z-index:10000;overflow:auto;border-radius:0}
+#oil-atlas.is-expanded .oa-map-frame{height:calc(100vh - 150px)}
+body.oil-expanded{overflow:hidden}
+
+@media(max-width:800px){
+  #oil-atlas{--oa-gutter:18px}
+  #oil-atlas .oa-chapter{position:static;max-width:none;padding:22px 72px 0 0}
+  #oil-atlas .oa-chapter h2{font-size:27px;margin:8px 0}
+  #oil-atlas .oa-expand{top:18px}
+  #oil-atlas .oa-map-frame{height:min(96vw,460px)}
+  #oil-atlas .oa-map-number{font-size:72px}
+  #oil-atlas .oa-destination-value{font-size:22px}
+  #oil-atlas .oa-player{grid-template-columns:auto 1fr;gap:14px 18px}
+  #oil-atlas .oa-timeline{grid-column:1/-1;grid-row:2}
+  #oil-atlas .oa-monthly-check{justify-self:end;padding-top:0}
+  #oil-atlas .oa-trend-set{grid-template-columns:1fr;gap:22px}
+  #oil-atlas .oa-next{flex-direction:column;align-items:stretch}
+  /* Ten monthly labels do not fit a phone: keep the ends and the current month. */
+  #oil-atlas[data-view="monthly"] .oa-years button:not(:first-child):not(:last-child):not([aria-pressed="true"]){font-size:0;width:12px;height:22px}
+  #oil-atlas[data-view="monthly"] .oa-years button:not(:first-child):not(:last-child):not([aria-pressed="true"])::before{content:"";display:block;width:4px;height:4px;margin:0 auto;border-radius:50%;background:var(--oa-line)}
+}
+@media(max-width:520px){
+  #oil-atlas .oa-destination-name{font-size:11px}
+  #oil-atlas .oa-eu-breakdown{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #oil-atlas .oa-observation{font-size:10px}
+}
+@media(pointer:coarse){
+  #oil-atlas .oa-years button,#oil-atlas .oa-play,#oil-atlas .oa-monthly-check,#oil-atlas .oa-close,#oil-atlas .oa-expand{min-height:44px}
+  #oil-atlas #oa-time{height:36px}
+}
+@media(prefers-reduced-motion:reduce){#oil-atlas *{transition:none!important;animation:none!important}}

@@ -33,12 +33,9 @@
  function modeControls(){
   root.setAttribute('data-view',mode);$('oa-monthly').checked=mode==='monthly';
   $('oa-time').max=data.length-1;
-  root.querySelector('.oa-years').innerHTML=data.map((d,i)=>`<button type="button" class="cursor-interaction" data-year="${i}" aria-label="${d.year}, ${d.frequency==='A'?'annual':'monthly'} observation" aria-pressed="${i===index}">${d.year}</button>`).join('');
+  root.querySelector('.oa-years').innerHTML=data.map((d,i)=>`<button type="button" class="cursor-interaction" data-year="${i}" style="--oa-tick:${data.length>1?i/(data.length-1):0}" aria-label="${d.year}, ${d.frequency==='A'?'annual':'monthly'} observation" aria-pressed="${i===index}">${d.year}</button>`).join('');
   root.querySelectorAll('[data-year]').forEach(b=>b.addEventListener('click',()=>choose(+b.dataset.year)));
   $('oa-source-rows').innerHTML=data.map((d,i)=>`<tr><td><a href="https://publicspendingdata.org/api/v1/trade/energy/flows?product=petroleum&amp;frequency=${d.frequency}&amp;period=${d.period}" target="_blank" rel="noopener">${period(i)}</a></td>${routeDefs.map(r=>`<td>${d[r.key]==null?'—':d[r.key].toFixed(3)+(d.estimated.includes(r.key)?'*':'')}</td>`).join('')}<td>${d.markets}</td></tr>`).join('');
-  root.querySelector('.oa-grain-band').innerHTML=mode==='annual'?'<span>ANNUAL · 2020–24</span><span>EU-27 / CHINA / INDIA</span>':'<span>MONTHLY · OCT 2025–JUL 2026</span><span>RUSSIA → INDIA</span>';
-  root.querySelector('.oa-timing-note').textContent=mode==='annual'?'Annual comparison · check Monthly for the separate India series':'India route only · August excluded · EU/China monthly comparison unavailable';
-  root.querySelector('.oa-deck').innerHTML=mode==='annual'?'Europe, China, India.<br>One changing oil market.':'A closer look at India.<br>Month by month.';
   buildTrends();
  }
  function setMode(next,save=true){
@@ -58,12 +55,9 @@
   $('oa-chapter-number').textContent=String(index+1).padStart(2,'0')+' / '+String(data.length).padStart(2,'0')+' — '+(monthly?'MONTHLY INDIA':'ANNUAL HISTORY');
   $('oa-chapter-title').innerHTML=monthly?'The monthly<br>pulse.':heads[index];
   $('oa-chapter-copy').textContent=monthly?'Russian-origin crude reported by India, month by month. China and EU figures are unavailable for this monthly comparison.':copies[index];
-  $('oa-featured-value').textContent=fmt(d.india);$('oa-featured-unit').textContent='';$('oa-featured-label').innerHTML='thousand tonnes / day<br>Russia → India';
   $('oa-map-year').textContent=period(index);$('oa-observation').textContent=statusLabel(index);$('oa-time').value=index;$('oa-time').setAttribute('aria-valuetext',period(index)+' '+modeLabel(index).toLowerCase());
   root.style.setProperty('--oa-progress',(index/(data.length-1)*100)+'%');root.querySelectorAll('[data-year]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.year===index)));
   routeDefs.forEach(r=>{$('oa-'+r.key+'-value').textContent=valueLabel(d,r.key);const b=root.querySelector('[data-country="'+r.key+'"]');b.disabled=d[r.key]==null;});
-  root.querySelector('.oa-flow-note').textContent=monthly?'India only · EU / China not available':'EU-27 = sum of published route weights';
-  $('oa-coverage').textContent=monthly?'Reported India route · '+d.markets+' markets in the wider dataset · not a complete global month':'EU coverage: '+d.euReporting+'/27 markets report crude imports · '+d.euRoutes+' published Russian-origin route weights';
   updateDetail();
  }
  function updateDetail(){
@@ -99,14 +93,17 @@
  function buildTrends(){
   const host=$('oa-trend-grid');if(!host)return;
   trendPanels.forEach(c=>c.plot.destroy());host.replaceChildren();trendPanels=[];
-  (mode==='monthly'?routeDefs.filter(r=>r.key==='india'):routeDefs).forEach(r=>{
+  // One export rail covers the three small multiples; each panel stays a focused chart.
+  const set=document.createElement('div');set.className='oa-trend-set';host.append(set);
+  const series=mode==='monthly'?routeDefs.filter(r=>r.key==='india'):routeDefs;
+  series.forEach(r=>{
    const panel=document.createElement('section');panel.className='oa-trend-panel';panel.dataset.series=r.key;
    const heading=document.createElement('div');heading.className='oa-trend-panel-head';const label=document.createElement('h3');label.textContent=r.name+(r.key==='eu'?' · reported subtotal':'');const value=document.createElement('span');value.className='oa-trend-value';heading.append(label,value);panel.append(heading);
-   const chart=document.createElement('div');chart.className='oa-trend-plot';panel.append(chart);host.append(panel);
+   const chart=document.createElement('div');chart.className='oa-trend-plot';panel.append(chart);set.append(panel);
    const plot=window.PSDPlot.render(chart,{type:'line',height:230,title:r.name+' · Russian-origin crude imports',unit:'Thousand tonnes / day',yDomain:{min:0,max:400,ticks:[0,100,200,300,400]},rows:data.map(d=>({...d,label:d.year})),fields:[{key:r.key,label:r.name,color:r.color,format:(v,row)=>v.toFixed(3)+(row.estimated.includes(r.key)?'*':'')}],playhead:0,onSelect:row=>choose(data.findIndex(d=>d.period===row.period))});
-   window.PSDChart.register({slug:'oil-pivot-'+mode+'-'+r.key,el:panel,title:r.name+' · Russian crude imports',accessor:plot.accessor,source:{name:'Published UN Comtrade observations',url:'https://publicspendingdata.org/api/v1/trade/energy/flows?product=petroleum&frequency='+data[0].frequency+'&period='+data[0].period,table:'HS 270900 · importer-reported Russian origin',extracted:'2026-09-21',edition:mode==='annual'?'2020–2024':'October 2025–July 2026',definition:'Net weight kg / calendar days / 1,000,000; thousand tonnes per day.',caveat:'EU-27 is an available-route subtotal. Missing is not zero. * denotes source-estimated weight. Monthly is India only; August is excluded.',vintage:'outturn'},exports:['csv','png'],embeddable:false});
-   trendPanels.push({r,value,plot,panel});
+    trendPanels.push({r,value,plot,panel});
   });
+  window.PSDChart.register({slug:'oil-pivot-'+mode,el:host,title:'Russian-origin crude imports',accessor:window.PSDPlot.model({type:'line',rows:data.map(d=>({...d,label:d.year})),fields:series.map(r=>({key:r.key,label:r.name}))}).accessor,source:{name:'Published UN Comtrade observations',url:'https://publicspendingdata.org/api/v1/trade/energy/flows?product=petroleum&frequency='+data[0].frequency+'&period='+data[0].period,table:'HS 270900 · importer-reported Russian origin',extracted:'2026-09-21',edition:mode==='annual'?'2020–2024':'October 2025–July 2026',definition:'Net weight kg / calendar days / 1,000,000; thousand tonnes per day.',caveat:'EU-27 is an available-route subtotal. Missing is not zero. * denotes source-estimated weight. Monthly is India only; August is excluded.',vintage:'outturn'},exports:['csv','png'],embeddable:false});
   $('oa-trend-scope').textContent=mode==='annual'?'Three destinations · one scale':'India only · monthly observations';paintTrends();
  }
  function paintTrends(){
@@ -119,12 +116,11 @@
  function playerLabel(){
   $('oa-play-label').textContent=playing?'Pause':phase||playhead>index?'Resume':index===data.length-1?'Replay':'Play entire story';
   $('oa-play-status').textContent=(mode==='annual'?'2020–2024 · 20 seconds':'Oct 2025–Jul 2026 · 27 seconds')+(reduced.matches?' · reduced camera motion':'');
-  setIcon(playing);root.toggleAttribute('data-playing',playing);$('oa-chart-play').textContent=$('oa-play-label').textContent;$('oa-next').hidden=mode!=='annual'||index!==data.length-1||playing||!!phase;
+  setIcon(playing);root.toggleAttribute('data-playing',playing);$('oa-next').hidden=mode!=='annual'||index!==data.length-1||playing||!!phase;
  }
  function stop(){playing=false;running=false;cancelAnimationFrame(raf);playerLabel();drawGeometry();}
  function liveReadouts(approximate){
   const value=k=>(approximate&&current[k]!=null?'≈ ':'')+fmt(current[k]);
-  $('oa-featured-value').textContent=value('india');
   routeDefs.forEach((r,i)=>{
 
    $('oa-'+r.key+'-value').textContent=approximate?value(r.key):valueLabel(data[index],r.key);
@@ -143,7 +139,6 @@
   for(const k of ['x','y','z','lon','lat'])pose[k]=reduced.matches?shots[0][k]:atEnd?shots[index][k]:through(shots.map(s=>s[k]),index,t);
   root.style.setProperty('--oa-progress',(playhead/(data.length-1)*100)+'%');
   $('oa-observation').textContent=moving?period(index)+' → '+period(index+1)+' · TRANSITION':statusLabel(index);
-  root.querySelector('.oa-flow-note').textContent=moving?'≈ interpolated flow · exact observations at each date':mode==='monthly'?'India only · EU / China not available':'EU-27 = sum of published route weights';
   motionTime=playhead*segmentDuration();paintScene(moving);
  }
  function renderSeek(elapsed){
@@ -158,7 +153,6 @@
   moving=t<1;
   root.style.setProperty('--oa-progress',(playhead/(data.length-1)*100)+'%');
   $('oa-observation').textContent=phase.fromLabel+' → '+period(phase.to)+' · TRANSITION';
-  root.querySelector('.oa-flow-note').textContent=phase.modeChange?'Switching series · no data inferred between annual and monthly':'≈ interpolated flow · exact values at the selected date';
   motionTime=phase.motionStart+phase.elapsed;paintScene(true);
   if(phase.modeChange)routeDefs.forEach(r=>{if(target[r.key]==null||phase.values[r.key]==null)$('oa-'+r.key+'-value').textContent='—';});
   return t===1;
@@ -203,15 +197,12 @@
   else if(playhead>=data.length-1)go(0,true);
   playing=true;anchorPosition=playhead;startedAt=Date.now();playerLabel();run();persist();
  }
- $('oa-play').addEventListener('click',play);$('oa-chart-play').addEventListener('click',play);
+ $('oa-play').addEventListener('click',play);
 
- const coverage=document.createElement('span');coverage.id='oa-coverage';coverage.style.cssText='display:block;font-size:11px;color:var(--oa-muted);margin-top:8px';root.querySelector('.oa-map-legend').after(coverage);
  $('oa-time').addEventListener('input',e=>choose(+e.target.value));
  root.querySelectorAll('[data-country]').forEach(b=>b.addEventListener('click',()=>{selected=selected===b.dataset.country?null:b.dataset.country;updateDetail();persist();}));
  root.querySelector('.oa-inspection .oa-close').addEventListener('click',()=>{selected=null;updateDetail();persist();});
- function evidence(show){$('oa-evidence').hidden=!show;root.querySelectorAll('[data-evidence]').forEach(n=>n.setAttribute('aria-expanded',String(show)));}
- root.addEventListener('keydown',e=>{if(e.key==='Escape'){selected=null;updateDetail();evidence(false);persist();}});
- root.querySelectorAll('[data-evidence]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('oa-close')){evidence(false);return;}evidence(true);$('oa-evidence').scrollIntoView({behavior:reduced.matches?'instant':'smooth'});}));
+ root.addEventListener('keydown',e=>{if(e.key==='Escape'){selected=null;updateDetail();persist();}});
 
  // The browser may suspend frames in a hidden iframe; elapsed time keeps advancing.
  document.addEventListener('visibilitychange',()=>{if(running&&!document.hidden){cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);}});
@@ -222,7 +213,7 @@
  new ResizeObserver(()=>render()).observe(root.querySelector('.oa-map-frame'));render();syncText();paintReadouts();playerLabel();
 
  const expand=$('oa-expand');
- function expanded(value){root.classList.toggle('is-expanded',value);document.body.classList.toggle('oil-expanded',value);expand.setAttribute('aria-expanded',String(value));expand.textContent=value?'Close expanded view ×':'Expand story ↗';if(!value)expand.focus();}
+ function expanded(value){root.classList.toggle('is-expanded',value);document.body.classList.toggle('oil-expanded',value);expand.setAttribute('aria-expanded',String(value));expand.textContent=value?'Close ×':'Expand ↗';if(!value)expand.focus();}
  expand.addEventListener('click',()=>expanded(!root.classList.contains('is-expanded')));
  root.addEventListener('keydown',e=>{if(!root.classList.contains('is-expanded'))return;if(e.key==='Escape'){expanded(false);return;}if(e.key==='Tab'){const nodes=[...root.querySelectorAll('button:not(:disabled),input,a[href]')].filter(n=>n.getClientRects().length);const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
  root.dataset.ready='true';
