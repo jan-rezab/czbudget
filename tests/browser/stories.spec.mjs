@@ -3,7 +3,7 @@ import {test,expect} from '@playwright/test';
 test('story catalogue supports formats, search, URL state and Czech UI',async({page})=>{
   await page.goto('/stories/?lang=en');
   await expect(page.locator('h1')).toHaveText('Data stories.');
-  await expect(page.locator('.story-card:visible')).toHaveCount(3);
+  await expect(page.locator('.story-card:visible')).toHaveCount(4);
   await page.locator('[data-filter="mini"]').click();
   await expect(page.locator('.story-card:visible')).toHaveCount(2);
   await page.locator('#story-search').fill('customs');
@@ -42,7 +42,7 @@ test('stories are readable on mobile and mini articles have shared navigation',a
   await page.goto('/stories/?lang=en');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
   await page.setViewportSize({width:390,height:844});
-  for(const path of ['/stories/','/stories/tariffs-went-up-did-america-win/','/stories/customs-revenue-gross-is-not-net/','/stories/reciprocal-tariffs-are-not-equal/']){
+  for(const path of ['/stories/','/stories/the-great-oil-pivot/','/stories/tariffs-went-up-did-america-win/','/stories/customs-revenue-gross-is-not-net/','/stories/reciprocal-tariffs-are-not-equal/']){
     await page.goto(`${path}?lang=en`);
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.locator('psd-site-header [data-global-nav="stories"]')).toBeVisible();
@@ -63,4 +63,41 @@ test('article narrative and chart tables survive without JavaScript',async({brow
   await page.locator('#tariff-story-monthly-customs summary').click();
   await expect(page.locator('#tariff-story-monthly-customs table')).toBeVisible();
   await context.close();
+});
+
+
+test('oil story plays through, keeps its clock when expanded and separates monthly coverage',async({page})=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.clock.install();
+  await page.goto('/stories/the-great-oil-pivot/?lang=en');
+  const atlas=page.locator('#oil-atlas');await expect(atlas).toHaveAttribute('data-ready','true');
+  await expect(page.locator('.oa-trend-panel')).toHaveCount(3);
+  await page.locator('#oa-play').click();await page.clock.runFor(1100);
+  const before=Number(await atlas.getAttribute('data-globe-longitude'));
+  await page.locator('#oa-expand').click();await expect(atlas).toHaveClass(/is-expanded/);
+  await page.clock.runFor(1200);expect(Number(await atlas.getAttribute('data-globe-longitude'))).toBeLessThan(before);
+  await page.locator('#oa-expand').click();await expect(atlas).not.toHaveClass(/is-expanded/);
+  await page.locator('#oa-play').click();const frozen=await page.locator('.oa-trend-panel').first().getAttribute('data-playhead');
+  await page.clock.runFor(1000);expect(await page.locator('.oa-trend-panel').first().getAttribute('data-playhead')).toBe(frozen);
+  await page.locator('#oa-play').click();await page.clock.fastForward(22000);
+  await expect(page.locator('#oa-continue-monthly')).toBeVisible();await expect(page.locator('#oa-map-year')).toHaveText('2024');
+  await page.locator('#oa-continue-monthly').click();await page.clock.runFor(2000);
+  await expect(atlas).toHaveAttribute('data-view','monthly');await expect(page.locator('.oa-trend-panel')).toHaveCount(1);
+  await expect(page.locator('[data-year]')).toHaveCount(10);await expect(page.locator('[data-year]').last()).toHaveText('Jul 2026');
+  await expect(page.locator('[data-country="china"]')).toBeDisabled();
+  await page.clock.fastForward(29000);await expect(page.locator('#oa-map-year')).toHaveText('Jul 2026');
+  await page.locator('[data-action="table"]').click();await expect(page.locator('.psd-chart-panel')).toContainText('369.');
+  expect(errors).toEqual([]);
+});
+
+test('oil story supports keyboard chart selection, reduced motion and mobile expansion',async({page})=>{
+  await page.setViewportSize({width:390,height:844});await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/stories/the-great-oil-pivot/?lang=en');await expect(page.locator('#oil-atlas')).toHaveAttribute('data-ready','true');
+  const mark=page.locator('.oa-trend-plot [data-point="0"]').first();await mark.focus();await page.keyboard.press('ArrowRight');
+  await expect(page.locator('.psd-plot-tooltip').first()).toContainText('2021');await page.keyboard.press('Escape');await expect(page.locator('.psd-plot-tooltip').first()).toBeHidden();
+  await page.locator('#oa-expand').click();await expect(page.locator('#oa-expand')).toHaveAttribute('aria-expanded','true');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
+  await page.keyboard.press('Escape');await expect(page.locator('#oa-expand')).toHaveAttribute('aria-expanded','false');
+  await page.locator('#oa-monthly').check();await expect(page.locator('.oa-trend-panel')).toHaveCount(1);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
 });

@@ -3,7 +3,7 @@
   const cards = [...document.querySelectorAll('.story-card')];
   const search = document.querySelector('#story-search');
   const query = new URLSearchParams(location.search);
-  let format = ['story','mini'].includes(query.get('format')) ? query.get('format') : 'all';
+  let format = ['story','mini','interactive'].includes(query.get('format')) ? query.get('format') : 'all';
   if(search) search.value = query.get('q') || '';
   const fold = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
   function filter(persist = false) {

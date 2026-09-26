@@ -9,7 +9,7 @@ const read = path => readFile(new URL(`../../${path}`,import.meta.url),'utf8');
 test('published chart adapters have content-derived cache versions',async()=>{
   for (const story of catalog.filter(s=>s.status==='published')) {
     const html=await read(`stories/${story.slug}/index.html`);
-    for (const name of ['tariff-charts.js','chart-rails.js']) {
+    for (const name of ['tariff-charts.js','chart-rails.js','oil-pivot.js']) {
       if (!html.includes(`/stories/${name}`)) continue;
       const digest=createHash('sha256').update(await read(`stories/${name}`)).digest('hex');
       assert.ok(html.includes(`/stories/${name}?v=${digest}"`), `${story.slug}: ${name}`);
@@ -46,4 +46,17 @@ test('editorial output and checks are wired into release verification',async()=>
   for(const file of ['stories/tariff-charts.js','content/stories/catalog.mjs','lib/chart-renderer.js']) {
     assert.ok(selectVerification([file]).specs.includes('tests/browser/stories.spec.mjs'),file);
   }
+});
+
+
+test('oil editorial evidence keeps grains separate and excludes unsupported periods',async()=>{
+  const html=await read('content/stories/the-great-oil-pivot.fragment');
+  const values=id=>JSON.parse(html.match(new RegExp('<script id="'+id+'" type="application/json">([\\s\\S]*?)</script>'))[1]);
+  const annual=values('oa-data'),monthly=values('oa-months');
+  assert.deepEqual(annual.map(d=>d.period),['2020','2021','2022','2023','2024']);
+  assert.equal(monthly.length,10);assert.equal(monthly.at(-1).period,'202607');
+  assert.ok(monthly.every(d=>d.frequency==='M'&&d.china===null&&d.eu===null));
+  assert.ok(annual.every(d=>d.frequency==='A'&&d.euReporting<=27));
+  assert.match(html,/EU-27 is the sum of available/);
+  assert.doesNotMatch(await read('stories/oil-pivot.js'),/window\.openai|new Tweak|append\('(?:svg|path)'/);
 });

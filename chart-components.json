@@ -5,7 +5,7 @@
     "style": "shared-charts.css",
     "runtime": "chart-runtime.js",
     "manifest": "assets/chart-releases/current.json",
-    "families": ["line", "column", "stacked", "bar"]
+    "families": ["line", "column", "stacked", "bar", "globe"]
   },
   "consumers": [
     {
@@ -111,6 +111,26 @@
       "tests": ["tests/browser/shared-charts.spec.mjs"],
       "routes": ["/deep-dives/ageing/"],
       "change_paths": ["pensions-today.js", "deep-dives/ageing/index.html"]
+    },
+    {
+      "id": "oil-pivot-story",
+      "adapter": "stories/oil-pivot.js",
+      "families": [
+        "line",
+        "globe"
+      ],
+      "tests": [
+        "tests/browser/stories.spec.mjs"
+      ],
+      "routes": [
+        "/stories/the-great-oil-pivot/"
+      ],
+      "change_paths": [
+        "stories/oil-pivot.js",
+        "stories/oil-pivot.css",
+        "content/stories/the-great-oil-pivot.fragment",
+        "stories/the-great-oil-pivot/**"
+      ]
     }
   ],
   "legacy": {
@@ -158,6 +178,6 @@
     "shared_paths": ["lib/chart-renderer.js", "shared-charts.css", "chart-runtime.js", "psd-chart.js", "psd-chart.css", "chart-components.json", "chart-legacy-inventory.json", "assets/chart-releases/**", "tests/fixtures/charts/**"]
   },
   "release": {
-    "content_versioned_adapters": ["municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js"]
+    "content_versioned_adapters": ["municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js", "stories/oil-pivot.js"]
   }
 }
