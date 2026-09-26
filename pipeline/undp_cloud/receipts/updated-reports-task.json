@@ -7,11 +7,50 @@
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
   "failed_cloud_verification_attempts": 0,
-  "superseded_builds": [{"id":"5dc392de-1b7f-48d2-913f-99ca35774c51","status":"CANCELLED","reason":"Split oversized sequential source intake into bounded non-overlapping batches; preserve completed immutable UIS raw and staging","source_records_staged":13716923}],
-  "submission_errors_without_created_build": 1,
-  "website_candidate": "f6f6b031d4",
-  "website_source_checks": {"focused_tests_passed":12,"chart_ownership":"passed","reports_index":"30 reports in sync","prepush":"blocked by missing pre-existing published fixture files in sparse checkout; no bulk restoration or gate bypass"},
-  "website_publication_status":"not_published",
-  "data_plane":"europe-west4 / psd-data-builder / plane-data",
-  "comtrade":"Unrelated job untouched; user approved distinct concurrent HDR intake"
+  "superseded_builds": [
+    {
+      "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
+      "status": "CANCELLED",
+      "reason": "Split oversized sequential source intake into bounded non-overlapping batches; preserve completed immutable UIS raw and staging",
+      "source_records_staged": 13716923
+    },
+    {
+      "id": "9518e4ca-2142-4239-831c-b0fc65b47f1d",
+      "status": "CANCELLED",
+      "reason": "Correct abbreviated loader SHA substitution to full 40-character SHA before intake publication"
+    }
+  ],
+  "submission_errors_without_created_build": 2,
+  "website_candidate": "97252bf248",
+  "website_source_checks": {
+    "focused_tests_passed": 12,
+    "chart_ownership": "passed",
+    "reports_index": "30 reports in sync",
+    "prepush": "blocked by missing pre-existing published fixture files in sparse checkout; no bulk restoration or gate bypass"
+  },
+  "website_publication_status": "not_published",
+  "data_plane": "europe-west4 / psd-data-builder / plane-data",
+  "comtrade": "Unrelated job untouched; user approved distinct concurrent HDR intake",
+  "active_source_builds": [
+    {
+      "group": "education",
+      "id": "69f17852-16ce-4ed1-a88e-aa4d52313378",
+      "loader_git_sha": "feea720a79a9fa1ed3991100b3d9a02300a16f1e"
+    },
+    {
+      "group": "remaining",
+      "id": "b68d148c-7358-4086-a5b1-b721191d0085",
+      "loader_git_sha": "feea720a79a9fa1ed3991100b3d9a02300a16f1e"
+    }
+  ],
+  "published_source_builds": [
+    {
+      "group": "annex",
+      "id": "ca58e7ba-3bf4-436b-965f-25128f55ed15",
+      "accepted_source_records": 21576,
+      "receipt_sha256": "c1f77a486a99be5bc4ef05d80d51d05b90687f97d41cbb4a5cb8d3f0955b8409",
+      "status": "validated_available_source_bundle; WDI page size and WHO encoding corrections pending"
+    }
+  ],
+  "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously."
 }
