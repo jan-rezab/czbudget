@@ -97,6 +97,14 @@ does not replace the separate mandatory immutable published-snapshot validators.
 
 ## Data plane
 
+The static-data pack directories (`data/isred`, `data/industrial-intelligence`,
+`data/czech-nku`, `data/contracts`, `data/czech-project-geography`, `data/industry`)
+are no longer tracked in Git. They are published as immutable packs under
+`gs://czbudget-janrezab-public-snapshots/static-assets/` and the server streams them
+from there; the image never contained them. A future repack must restore its inputs
+on a data-plane worker from the published packs or the raw snapshots, never from the
+website checkout. Five small files the release manifest checks stay tracked.
+
 - Region: `europe-west4`.
 - Identity: a dedicated data builder (`psd-data-builder` or the narrower
   `comtrade-builder`). Neither identity has Cloud Run deployment permission.

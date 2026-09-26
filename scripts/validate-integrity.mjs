@@ -455,6 +455,13 @@ const dynamicMunicipalityPaths = new Set([
   ...internationalMunicipalities.entities.map((entity) => entity.url),
   ...benchmarkMunicipalities.map((entity) => entity.url),
 ].filter(Boolean).map((value) => value.endsWith("/") ? value : `${value}/`));
+// Offloaded directories are not in the repository or the image; the server streams
+// them from the published static-asset packs. With the release lock hydrated (Cloud
+// Build sets DATA_ASSET_LOCK) a link must name a file in it; a bare checkout can only
+// check the prefix.
+const ASSET_PACK_PREFIX = /^\/data\/(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq)\//;
+const assetLock = process.env.DATA_ASSET_LOCK && existsSync(process.env.DATA_ASSET_LOCK) ? await json(process.env.DATA_ASSET_LOCK) : null;
+const servedFromAssetPacks = (resolved) => ASSET_PACK_PREFIX.test(resolved) && (assetLock ? Object.hasOwn(assetLock.files, resolved) : true);
 if (!dataOnly) {
   const htmlFiles = await filesBelow(root, (file) => file.endsWith(".html") && !path.relative(root, file).startsWith(`tests${path.sep}`));
   htmlCount = htmlFiles.length;
@@ -479,7 +486,7 @@ if (!dataOnly) {
       const resolvedPath = `/${path.relative(root, target).split(path.sep).join("/")}`;
       const dynamicPath = resolvedPath.endsWith("/") ? resolvedPath : `${resolvedPath}/`;
       const cloudHydratedReference = resolvedPath.startsWith("/data/entities/") || resolvedPath.startsWith("/data/municipal-expansion/");
-      let exists = countryPaths.includes(clean) || dynamicMunicipalityPaths.has(dynamicPath) || cloudHydratedReference;
+      let exists = countryPaths.includes(clean) || dynamicMunicipalityPaths.has(dynamicPath) || cloudHydratedReference || servedFromAssetPacks(resolvedPath);
       for (const candidate of candidates) { try { if ((await stat(candidate)).isFile()) { exists = true; break; } } catch {} }
       assert(exists, `Broken local reference ${relative} -> ${reference}`);
     }

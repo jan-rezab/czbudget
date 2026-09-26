@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Publish immutable static-data packs on a cloud worker; never restore archives."""
+"""Publish immutable static-data packs on a cloud worker; never restore archives.
+
+The input directories are not tracked in Git: restore them on a data-plane worker
+from the published packs or raw snapshots before repacking (see BUILD_PLANES.md).
+"""
 import argparse
 import base64
 from concurrent.futures import ThreadPoolExecutor

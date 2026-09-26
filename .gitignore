@@ -109,3 +109,20 @@ blob-report/
 # Local task notes
 /BACKFILL_REPORT_*.md
 /CODEX_TASK_*.md
+
+# Static data packs: published to gs://czbudget-janrezab-public-snapshots/static-assets
+# by the data plane and served from there; never part of the image or a web build.
+# The release manifest still checks the five small files re-included below.
+/data/isred/
+/data/industrial-intelligence/
+/data/czech-nku/
+/data/czech-project-geography/
+/data/contracts/*
+!/data/contracts/country-parity.schema.json
+!/data/contracts/00075370.plzen-projects.v1.json
+!/data/contracts/official-registry/
+/data/contracts/official-registry/*
+!/data/contracts/official-registry/manifest.v1.json
+!/data/contracts/official-registry/lineage.v1.json
+/data/industry/*
+!/data/industry/CZE.json.gz
