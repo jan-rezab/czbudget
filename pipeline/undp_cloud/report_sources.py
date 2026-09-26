@@ -40,6 +40,7 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
    reader=csv.DictReader(f,delimiter=';');seen=0;accepted=0
    required={'country','variable','percentile','year','value'}
    if not required.issubset(set(reader.fieldnames or [])):raise ValueError('Unexpected WID source schema')
+   yield path.name+'::metadata',1,{'kind':'header','columns':reader.fieldnames,'delimiter':';'}
    for n,row in enumerate(reader,1):
     seen+=1
     if row.get('variable')=='sptinc992j' and row.get('percentile')=='p99p100':
@@ -140,8 +141,73 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
   obj=json.loads(s[start:end+1])
   for n,row in enumerate(obj['features'],1):yield path.name,n,row
 
+def select_sources(entries, group, manifest):
+ ids=[e['source_id'] for e in entries]
+ flat=[sid for members in manifest['groups'].values() for sid in members]
+ if len(ids)!=len(set(ids)) or len(flat)!=len(set(flat)) or set(ids)!=set(flat):
+  raise ValueError('Source groups must partition every audit entry exactly once')
+ if group=='all':return entries
+ if group not in manifest['groups']:raise ValueError('Unknown source group')
+ selected=set(manifest['groups'][group])
+ return [e for e in entries if e['source_id'] in selected]
+
+def uuid_run(value):
+ if not re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',value):
+  raise argparse.ArgumentTypeError('Resume run must be an exact UUID')
+ return value
+
+def preview_record(preview, member, row):
+ # No individual respondent values. Retain headers/types and workbook structure.
+ if isinstance(row,dict) and row.get('kind')=='header':preview.setdefault('headers',{})[member]=row
+ elif member.endswith('::metadata'):preview.setdefault('metadata',{})[member]=row
+ elif isinstance(row,dict) and 'sheet' in row:
+  sheets=preview.setdefault('sheets',{});sheet=sheets.setdefault(row['sheet'],{'rows':0,'max_columns':0,'cell_types':{}})
+  if row.get('representation')=='cached_values':
+   if sheet['rows']<10:sheet.setdefault('first_10_source_aggregate_rows',[]).append(row['values'])
+   sheet['rows']+=1;sheet['max_columns']=max(sheet['max_columns'],len(row['values']))
+   for value in row['values']:
+    kind=type(value).__name__;sheet['cell_types'][kind]=sheet['cell_types'].get(kind,0)+1
+ elif isinstance(row,dict):
+  types=preview.setdefault('column_types',{})
+  for key,value in row.items():
+   kind=type(value).__name__;types.setdefault(key,[])
+   if kind not in types[key]:types[key].append(kind)
+
+def verify_stage(bucket, saved, entry, path, preview):
+ uri=saved['stage_uri'];name=uri.split('/',3)[3]
+ if not uri.startswith('gs://'+BUCKET+'/processing-runs/hdr-report-sources/'):raise ValueError('Untrusted stage destination')
+ current=bucket.blob(name);current.reload()
+ if str(current.generation)!=str(saved['stage_generation']):raise ValueError('Stage latest generation differs from pinned version')
+ blob=bucket.blob(name,generation=int(saved['stage_generation']));blob.reload()
+ if saved.get('stage_md5') and blob.md5_hash!=saved['stage_md5']:raise ValueError('Stage metadata MD5 changed')
+ blob.download_to_filename(str(path),checksum='auto')
+ digest=sha(path)
+ if saved.get('stage_sha256') and digest!=saved['stage_sha256']:raise ValueError('Stage SHA256 changed')
+ count=0
+ with gzip.open(path,'rt',encoding='utf-8') as stream:
+  for line in stream:
+   row=json.loads(line)
+   if row['source_id']!=entry['source_id'] or row['source_sha256']!=entry['sha256'] or row['source_url']!=entry['url']:raise ValueError('Reused stage source identity mismatch')
+   preview_record(preview,row['member'],json.loads(row['record_json']));count+=1
+ if count!=saved['accepted_records']:raise ValueError('Reused stage row count mismatch')
+ return dict(saved,stage_sha256=digest,accepted_records=count)
+
+def transaction_with_retry(run, confirmed_committed, sleep=time.sleep):
+ for attempt in range(3):
+  try:return run()
+  except Exception as exc:
+   if confirmed_committed():return None
+   message=str(exc).lower()
+   aborted=type(exc).__name__=='Aborted' or 'transaction is aborted due to concurrent update' in message
+   if not aborted or attempt==2:raise
+   sleep(2**attempt)
+
 def main():
- p=argparse.ArgumentParser();p.add_argument('--loader-sha',required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--loader-sha',required=True);p.add_argument('--source-group',default='all');p.add_argument('--wid-shard-index',type=int,default=0);p.add_argument('--wid-shard-count',type=int,default=1);p.add_argument('--resume-run',type=lambda v: uuid_run(v) if v else None);a=p.parse_args()
+ if not 1<=a.wid_shard_count<=32 or not 0<=a.wid_shard_index<a.wid_shard_count:raise ValueError('Invalid WID shard bounds')
+ if a.wid_shard_count>1 and a.source_group!='inequality':raise ValueError('WID sharding requires inequality source group')
+ pointer='hdr_report_sources_2025' if a.source_group=='all' else 'hdr_report_sources_2025:'+a.source_group
+ if a.wid_shard_count>1:pointer+=f'-wid-{a.wid_shard_index}-of-{a.wid_shard_count}'
  rid=os.environ['BUILD_ID'];prefix=f'processing-runs/hdr-report-sources/{rid}';token=rid.replace('-','_')
  bucket=storage.Client(project=PROJECT).bucket(BUCKET);bq=bigquery.Client(project=PROJECT,location='EU');started=stamp()
  def query(s):return list(bq.query(s,location='EU').result(timeout=600))
@@ -159,10 +225,14 @@ def main():
   for e in json.loads(f.read_text()):
    if e['source_id'] in allids:raise ValueError('Duplicate source id')
    allids.add(e['source_id']);sources.append(e)
+ sources=select_sources(sources,a.source_group,json.loads(Path('pipeline/undp_cloud/source_groups.json').read_text()))
+ resume_manifest=json.loads(Path('pipeline/undp_cloud/education_resume.json').read_text())
  # Enumerate WID with its own published catalogue, retaining it as immutable raw.
- expanded=[]
+ expanded=[];wid_catalogue_count=0;wid_selected_codes=[]
  for e in sources:
-  if not e.get('expand_catalog_url'):expanded.append(e);continue
+  if not e.get('expand_catalog_url'):
+   if a.wid_shard_index==0:expanded.append(e)
+   continue
   cu=e['expand_catalog_url'];cp=bucket.blob(f'{prefix}/raw/wid-country-catalogue.R')
   if cp.exists():cd=cp.download_as_bytes()
   else:
@@ -172,7 +242,8 @@ def main():
   found=re.findall(r'^([A-Z]{2})\s*<-\s*c\(([^\n]*)',cd.decode('utf-8-sig'),re.M)
   codes=sorted({code for code,variables in found if '"sptinc"' in variables})
   if len(codes)<100:raise ValueError('Incomplete WID official country catalogue')
-  for code in codes:
+  wid_catalogue_count=len(codes);selected_codes=[code for i,code in enumerate(codes) if i%a.wid_shard_count==a.wid_shard_index];wid_selected_codes=selected_codes
+  for code in selected_codes:
    child=dict(e,source_id='wid_current_'+code,url=e['url_template'].replace('{COUNTRY}',code),format='wid_csv',country_or_region_source_code=code,catalogue_sha256=hashlib.sha256(cd).hexdigest(),catalogue_raw_uri=f'gs://{BUCKET}/{cp.name}',enumerated_source_codes=len(codes))
    child.pop('expand_catalog_url',None);expanded.append(child)
  sources=expanded
@@ -180,11 +251,16 @@ def main():
  with tempfile.TemporaryDirectory() as td:
   root=Path(td);stages=[]
   for entry in sources:
-   e=dict(entry);sid=e['source_id'];start=time.monotonic();count=0;path=root/(sid+'.'+e['format']);out=root/(sid+'.jsonl.gz')
+   e=dict(entry);sid=e['source_id'];start=time.monotonic();count=0;preview={};path=root/(sid+'.'+e['format']);out=root/(sid+'.jsonl.gz')
    try:
     checkpoint=bucket.blob(f'{prefix}/raw/{sid}.metadata.json')
-    if checkpoint.exists():
-     saved=json.loads(checkpoint.download_as_bytes());e.update(saved)
+    prior_checkpoint=bucket.blob(f'processing-runs/hdr-report-sources/{a.resume_run}/raw/{sid}.metadata.json') if a.resume_run else None
+    if checkpoint.exists() or (prior_checkpoint is not None and prior_checkpoint.exists()):
+     saved=json.loads((checkpoint if checkpoint.exists() else prior_checkpoint).download_as_bytes())
+     if saved['source_id']!=sid or saved['url']!=entry['url'] or saved['format']!=entry['format']:raise ValueError('Resume raw identity mismatch')
+     e.update(saved)
+     if not e['raw_uri'].startswith('gs://'+BUCKET+'/processing-runs/hdr-report-sources/'):raise ValueError('Untrusted resume raw destination')
+     if not checkpoint.exists():e['resumed_raw_from_run']=a.resume_run;upload(bucket,checkpoint.name,(dump(e)+'\n').encode())
      blob=bucket.blob(e['raw_uri'].split('/',3)[3],generation=int(e['generation']))
     else:
      req=urllib.request.Request(e['url'],headers={'User-Agent':'Mozilla/5.0 (compatible; PublicSpendingData source ingestion)'})
@@ -220,6 +296,21 @@ def main():
     # Generation-pinned round trip before parsing. This verifies the stored input.
     blob.download_to_filename(str(path),checksum='auto')
     if sha(path)!=e['sha256']:raise ValueError('Raw cloud object checksum mismatch')
+    processed=bucket.blob(f'{prefix}/processed/{sid}.json')
+    prior_processed=bucket.blob(f'processing-runs/hdr-report-sources/{a.resume_run}/processed/{sid}.json') if a.resume_run else None
+    saved_stage=None
+    if processed.exists():saved_stage=json.loads(processed.download_as_bytes())
+    elif prior_processed is not None and prior_processed.exists():saved_stage=json.loads(prior_processed.download_as_bytes())
+    elif a.resume_run==resume_manifest['run_id'] and sid in resume_manifest['sources']:
+     saved_stage=dict(resume_manifest['sources'][sid],parser_git_sha=resume_manifest['parser_git_sha'],resumed_from_run=a.resume_run)
+    if saved_stage is not None:
+     saved_stage=verify_stage(bucket,saved_stage,e,out,preview);e.update(saved_stage)
+     count=e['accepted_records'];e['processing_status']='source_records_validated';e['rejected_records']=0;e['deduplicated_records']=0
+     stages.append(e['stage_uri']);total+=count
+     upload(bucket,f'{prefix}/schema-previews/{sid}.json',(dump(dict(source_id=sid,source_sha256=e['sha256'],preview=preview))+'\n').encode())
+     if not processed.exists():upload(bucket,processed.name,(dump(e)+'\n').encode())
+     print(dump({'event':'source_resumed','source_id':sid,'rows':count,'parser_git_sha':e.get('parser_git_sha')}),flush=True)
+     continue
     e['members']=[{'name':n,'bytes':b} for n,b in members(path,e['format'])] if e.get('parse_mode')!='raw_only' else [{'name':path.name,'bytes':path.stat().st_size,'archive_scan':'pending_adapter'}]
     names=[m['name'] for m in e['members']]
     if len(names)!=len(set(names)):raise ValueError('Duplicate archive member names')
@@ -228,6 +319,7 @@ def main():
     with gzip.open(out,'wt',encoding='utf-8',compresslevel=1) as f:
      for member,n,row in ([] if e.get('parse_mode')=='raw_only' else records(path,e['format'],root,e.get('max_member_bytes',2_000_000_000))):
       if count==0 and e.get('expected_header') and row.get('columns')!=e['expected_header']:raise ValueError('Declared provider CSV header changed')
+      preview_record(preview,member,row)
       f.write(dump(dict(release_id=rid,source_id=sid,member=member,row_number=n,record_json=dump(row),source_url=e['url'],source_sha256=e['sha256']))+'\n');count+=1
     if e['format'] in {'csv','worldbank_json','xlsx','parquet','zip','js','wid_csv'} and not count and not e.get('parse_mode'):
      if e['format']!='zip':raise ValueError('Dataset produced no source records')
@@ -237,6 +329,9 @@ def main():
      attempt=str(time.time_ns());st=bucket.blob(f'{prefix}/staging/{attempt}/{sid}.jsonl.gz');st.upload_from_filename(str(out),if_generation_match=0,checksum='auto');st.reload()
      e['stage_uri']=f'gs://{BUCKET}/{st.name}';e['stage_sha256']=sha(out);e['stage_generation']=str(st.generation)
      stages.append(e['stage_uri']);total+=count
+     e['parser_git_sha']=a.loader_sha
+     upload(bucket,f'{prefix}/processed/{sid}.json',(dump(e)+'\n').encode())
+    upload(bucket,f'{prefix}/schema-previews/{sid}.json',(dump(dict(source_id=sid,source_sha256=e['sha256'],preview=preview))+'\n').encode())
    except Exception as ex:
     e['processing_status']='unavailable_or_failed';e['error']=str(ex)[:1200];e['accepted_records']=0
     e['rejected_records']=count;e['publication_status']='not_published'
@@ -261,7 +356,7 @@ def main():
   for e in catalog:
    if e['accepted_records']:e['publication_status']='published_source_records'
    elif e['processing_status']=='raw_document_preserved':e['publication_status']='published_source_catalog_only'
-  receipt=dict(release_id=rid,loader_git_sha=a.loader_sha,build_id=rid,region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,completed_at=stamp(),received_sources=len(catalog),accepted_source_records=total,accepted_sources=sum(x['accepted_records']>0 for x in catalog),unavailable_sources=sum(x['processing_status']=='unavailable_or_failed' for x in catalog),publication_status='published',processing_status='validated_available_source_bundle',sources=catalog,validation={'raw_sha256':'passed for accepted records and preserved raw documents only; unavailable sources excluded','raw_generation_pinned_roundtrip':'passed for accepted records and preserved raw documents only; unavailable sources excluded','unique_source_member_row_keys':'passed','warehouse_row_count':'passed','max_bad_records':0,'semantic_metric_normalization':'not_claimed; original provider records and metadata only','numeric_totals':'not_applicable to heterogeneous unnormalized records'},publication_pointer=f'{D}.release_pointer[hdr_report_sources_2025]',destinations=[f'{D}.current_report_source_records',f'{D}.current_report_source_catalog'],website_destinations=[],coverage='Only catalogued successful provider files; not complete report coverage. Original, newer and related sources remain separate.')
+  receipt=dict(release_id=rid,loader_git_sha=a.loader_sha,build_id=rid,region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,completed_at=stamp(),received_sources=len(catalog),accepted_source_records=total,accepted_sources=sum(x['accepted_records']>0 for x in catalog),unavailable_sources=sum(x['processing_status']=='unavailable_or_failed' for x in catalog),publication_status='published',processing_status='validated_available_source_bundle',sources=catalog,validation={'raw_sha256':'passed for accepted records and preserved raw documents only; unavailable sources excluded','raw_generation_pinned_roundtrip':'passed for accepted records and preserved raw documents only; unavailable sources excluded','unique_source_member_row_keys':'passed','warehouse_row_count':'passed','max_bad_records':0,'semantic_metric_normalization':'not_claimed; original provider records and metadata only','numeric_totals':'not_applicable to heterogeneous unnormalized records'},source_group=a.source_group,resume_run=a.resume_run,wid_shard_index=a.wid_shard_index,wid_shard_count=a.wid_shard_count,wid_catalogue_count=wid_catalogue_count,wid_selected_codes=wid_selected_codes,publication_pointer=f'{D}.release_pointer[{pointer}]',destinations=[f'{D}.current_report_source_records',f'{D}.current_report_source_catalog'],website_destinations=[],coverage='Only catalogued successful provider files; not complete report coverage. Original, newer and related sources remain separate.')
   receipt_bytes=(dump(receipt)+'\n').encode();receipt_uri=f'gs://{BUCKET}/{prefix}/completed.json';receipt_sha=hashlib.sha256(receipt_bytes).hexdigest()
   prepared=bucket.blob(f'{prefix}/prepared-receipt.json')
   if prepared.exists():
@@ -273,7 +368,13 @@ def main():
   else:upload(bucket,prepared.name,receipt_bytes)
   query(f'CREATE TABLE IF NOT EXISTS `{D}.report_source_records` AS SELECT * FROM `{rt}` WHERE FALSE')
   query(f'CREATE TABLE IF NOT EXISTS `{D}.report_source_catalog` AS SELECT * FROM `{ct}` WHERE FALSE')
-  for name in ['records','catalog']:query(f"CREATE OR REPLACE VIEW `{D}.current_report_source_{name}` AS SELECT r.* FROM `{D}.report_source_{name}` r JOIN `{D}.release_pointer` p ON r.release_id=p.release_id WHERE p.dataset_id='hdr_report_sources_2025'")
+  for name in ['records','catalog']:
+   query(f"""CREATE OR REPLACE VIEW `{D}.current_report_source_{name}` AS
+   WITH owners AS (SELECT c.source_id,c.release_id FROM `{D}.report_source_catalog` c
+    JOIN `{D}.release_pointer` p ON c.release_id=p.release_id
+    WHERE p.dataset_id='hdr_report_sources_2025' OR STARTS_WITH(p.dataset_id,'hdr_report_sources_2025:')
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY c.source_id ORDER BY p.published_at DESC,p.dataset_id,c.release_id)=1)
+   SELECT r.* FROM `{D}.report_source_{name}` r JOIN owners o USING(source_id,release_id)""")
   query(f"CREATE OR REPLACE VIEW `{D}.current_verified_report_claims` AS SELECT release_id,JSON_VALUE(record_json,'$.source_id') source_id,JSON_VALUE(record_json,'$.metric') metric,JSON_VALUE(record_json,'$.source_value') source_value,SAFE_CAST(JSON_VALUE(record_json,'$.source_value') AS BIGNUMERIC) value,JSON_VALUE(record_json,'$.unit') unit,JSON_VALUE(record_json,'$.period') period,JSON_VALUE(record_json,'$.geography') geography,JSON_VALUE(record_json,'$.denominator') denominator,JSON_VALUE(record_json,'$.coverage') coverage,JSON_VALUE(record_json,'$.report_locator') report_locator,JSON_VALUE(record_json,'$.correction_reason') correction_reason,source_url,source_sha256 FROM `{D}.current_report_source_records` WHERE member='reviewed_original_aggregate'")
   query(f"""CREATE OR REPLACE VIEW `{D}.current_wdi_source_observations` AS
   WITH country_meta AS (SELECT JSON_VALUE(record_json,'$.id') iso3,
@@ -302,17 +403,22 @@ def main():
    SAFE_CAST(JSON_VALUE(record_json,'$.value') AS BIGNUMERIC) value,'proportion' unit,
    'adult equal-split pretax national income' denominator,record_json,source_url,source_sha256
    FROM `{D}.current_report_source_records` WHERE STARTS_WITH(source_id,'wid_current_')
-   AND NOT ENDS_WITH(member,'::coverage')""")
+   AND NOT ENDS_WITH(member,'::coverage') AND NOT ENDS_WITH(member,'::metadata')""")
   # Catalog staged metadata is authoritative for process status; receipt adds publication status.
   q=dump
-  query(f"""BEGIN TRANSACTION;
+  transaction_sql=f"""BEGIN TRANSACTION;
   ASSERT (SELECT COUNT(*) FROM `{D}.report_source_records` WHERE release_id={q(rid)})=0 AS 'release already committed';
-  INSERT INTO `{D}.report_source_records` SELECT * FROM `{rt}`;
+  INSERT INTO `{D}.report_source_records` SELECT * REPLACE({q(rid)} AS release_id) FROM `{rt}`;
   INSERT INTO `{D}.report_source_catalog` SELECT * FROM `{ct}`;
-  DELETE FROM `{D}.release_pointer` WHERE dataset_id='hdr_report_sources_2025';
-  INSERT INTO `{D}.release_pointer` VALUES ('hdr_report_sources_2025',{q(rid)},CURRENT_TIMESTAMP());
+  DELETE FROM `{D}.release_pointer` WHERE dataset_id={q(pointer)};
+  INSERT INTO `{D}.release_pointer` VALUES ({q(pointer)},{q(rid)},CURRENT_TIMESTAMP());
   INSERT INTO `{D}.ingestion_runs` VALUES ({q(rid)},{q(a.loader_sha)},CURRENT_TIMESTAMP(),{q(receipt_uri)},{q(receipt_sha)},{q(dump({'source_records':total,'sources':len(catalog)}))});
-  COMMIT TRANSACTION;""")
+  COMMIT TRANSACTION;"""
+  def committed():
+   rows=query(f"SELECT loader_git_sha,receipt_sha256 FROM `{D}.ingestion_runs` WHERE release_id={q(rid)}")
+   if rows and (len(rows)!=1 or rows[0].loader_git_sha!=a.loader_sha or rows[0].receipt_sha256!=receipt_sha):raise ValueError("Conflicting committed receipt")
+   return bool(rows)
+  transaction_with_retry(lambda:query(transaction_sql),committed)
   upload(bucket,f'{prefix}/completed.json',receipt_bytes)
   for table in [rt,ct]:bq.delete_table(table)
   print(dump({'event':'published','receipt_uri':receipt_uri,'sha256':receipt_sha,'source_records':total}),flush=True)
