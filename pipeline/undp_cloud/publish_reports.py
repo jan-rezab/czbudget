@@ -103,7 +103,7 @@ def survey_charts(bins, metadata):
             country='SURVEY21' if r['geography']=='__pooled_survey_countries__' else SURVEY_CODES.get(r['geography'])
             if not country:raise ValueError('Unmapped survey geography '+r['geography'])
             for c in r['categories']:
-                rows.append(dict(country=country,period='2025',label=str(c['source_label'] or c['source_code'] or 'System missing'),source_code=c['source_code'],missing_kind=c['missing_kind'],value=number(c['share_all_weighted_percent']),valid_share=number(c['share_valid_weighted_percent']),unweighted_n=c['unweighted_n']))
+                rows.append(dict(country=country,period='2025',label=str(c['source_label'] or c['source_code'] or 'System missing'),source_code=c['source_code'],missing_kind=c['missing_kind'],value=number(c['share_all_weighted_percent']),valid_share=number(c['share_valid_weighted_percent']),unweighted_n=c['unweighted_n'],weighted_n=c['weighted_n']))
             denominators.append(dict(country=country,received_n=r['respondents_received'],usable_weight_n=r['unweighted_n_with_usable_weight'],excluded_weight_n=r['excluded_invalid_weight_n'],weighted_all=r['weighted_denominator_all'],weighted_valid=r['weighted_denominator_valid']))
             for p in r['source_provenance']:sources[(p['source_url'],p['source_sha256'])]=ref(p,variable,'AIHDS2025; fieldwork November2024–January2025')
         title=values[0]['metadata']['label'] or variable

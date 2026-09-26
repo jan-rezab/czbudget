@@ -17,7 +17,7 @@ class PublicReportTests(unittest.TestCase):
   common=dict(release_id='r',source_id='ai',variable='Q8',geography='Germany',source_url='https://example.org/ai',source_sha256=SHA,countries=['Germany'],received_n=1,usable_weight_n=1,invalid_weight_n=0)
   bins=[dict(common,source_value='1',value_label='Some',missing_kind=None,weighted_n='2'),dict(common,source_value='99',value_label="Don't know",missing_kind='explicit_nonresponse',weighted_n='1')]
   charts=survey_charts(bins,[dict(source_id='ai',variable='Q8',label='AI knowledge',metadata_json='{}')])
-  self.assertEqual(charts[0]['rows'][0]['country'],'DEU');self.assertFalse(any(r['country']=='CZE' for r in charts[0]['rows']))
+  self.assertEqual(charts[0]['rows'][0]['weighted_n'],'2');self.assertEqual(charts[0]['rows'][0]['country'],'DEU');self.assertFalse(any(r['country']=='CZE' for r in charts[0]['rows']))
   self.assertEqual(charts[0]['denominators'][0]['weighted_all'],'3');self.assertEqual(charts[0]['denominators'][0]['weighted_valid'],'2')
  def payload(self):
   charts,_=core_charts(self.core())
