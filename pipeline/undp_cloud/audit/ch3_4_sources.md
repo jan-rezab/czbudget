@@ -25,7 +25,7 @@ Audited 27 September 2026. This is a source inventory, not an ingestion receipt.
 | Box3.3/F1 Young internet use by income group | 92 / 78 | itu | numeric |
 | Box3.3/F2 Internet use regional1990onward | 92 / 78 | wdi_internet | numeric |
 | 3.6 Internet access by poverty and education | 93 / 79 | mpi_microdata | numeric |
-| 3.7 Authenticity autonomy agency | 95 / 81 | Authors conceptual framework | conceptual |
+| 3.7 Authenticity autonomy agency | 94 / 80 | Authors conceptual framework | conceptual |
 | 3.8 Chatbot frustration | 96 / 82 | ujet | numeric |
 | 3.9 Internet users by age/country | 98 / 84 | itu | numeric |
 | 3.10 Internet users75+bycountryHDI | 99 / 85 | itu | numeric |
