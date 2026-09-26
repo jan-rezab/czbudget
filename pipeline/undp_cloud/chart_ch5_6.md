@@ -1,0 +1,15 @@
+# Chapter 5–6 chart transformations
+
+These adapters operate on cloud original records and return observations plus coverage. They do not fetch, publish, or claim complete report recreation. Metadata requires immutable source URL/hash, vintage and original-versus-newer relation. Caller must validate source columns; unknown layouts remain blocked. Tiny fixtures run with `python pipeline/undp_cloud/chart_ch5_6.py --self-test`.
+
+| Source | Transformation | Current coverage |
+|---|---|---|
+| HadCRUT5 annual/monthly | Native 1961–1990 anomaly and source lower/upper uncertainty, separate grains | Ready after original CSV headers mapped. HDR Figure S6.1.1 uses 1850–1900; that rebase remains a separate calculation and is not applied here. |
+| Rupp transistor `.dat` | Individual year/transistor observation and retained source comments | Ready after column position verified. No averaging, interpolation, or unit multiplier inferred. Current 50-year file is newer than the cited 2022 snapshot. |
+| Epoch | Per-model selection ledger plus annual/cumulative counts for explicit strict training compute >1e23 FLOP scenario | Requires verified model ID/date/compute/uncertainty/country fields and developer HQ list. Explicit multiple-HQ scenario labels multiple distinct countries Multinational. Matching HDR rule remains unverified. Curated coverage and uncertain threshold decisions remain visible. |
+| Park Nature source Fig.2 XLSX | Original field/year/CD5 aggregates | Blocked until cloud workbook headers, sheet, units and denominator reviewed. No recomputation from proprietary paper records. No comparable newer source verified; 2026 methodological correspondence is unresolved. |
+| ILO author 2023 risk JSON | Original ISCO4 risk labels | Blocked until source leaf schema reviewed. Cannot reconstruct HDR Figure6.1 employment percentages from taxonomy; original ILO harmonised employment microdata and 2022 HDI join still required. |
+
+Epoch counts use a central compute estimate, not a claim that every uncertain model exceeds the threshold. Each model retains original lower/upper bounds, estimate flag, selection reason and whether its interval crosses the threshold. A central value exactly equal to the threshold is excluded. Missing training compute, developer HQ or release date remains visible in the selection ledger. No training country is substituted for developer HQ. These counts are an explicitly derived updated scenario until the report's original grouping/filter rules and original snapshot are verified.
+
+Original and newer releases must be separate dataset vintages. Charts should identify their period, unit, country/field coverage and uncertainty. Scientific comparison needs method consistency: no OpenAlex proxy for original Park CD5, no modern ILO four-gradient taxonomy treated as 2023 automation/augmentation, no direct critical-thinking label for PISA proficiency proxies. Publication belongs to the existing atomic cloud data release after source/adapter validation; these files do not alter the website.
