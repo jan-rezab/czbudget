@@ -35,3 +35,11 @@ test('does not cache failures: a missing publication returns a retryable status'
   for(let i=0;i<2;i++)await assert.rejects(instance.current(),error=>error.status===503);
   assert.equal(requests,2);
 });
+test('rejects unknown geography, overlapping and unbounded declared missing ranges',()=>{
+  for(const ranges of [{unlisted:[{start:2020,end:2021}]},{CZE:[{start:2020,end:2022},{start:2022,end:2023}]},{CZE:[{start:1,end:10000}]}]){
+    const p=fixture();p.charts[0].missing_periods_by_country=ranges;
+    assert.throws(()=>validateHumanDevelopment(p,release),HumanDevelopmentError);
+  }
+  const p=fixture();p.charts[0].missing_periods_by_country={CZE:[{start:2020,end:2021}]};
+  assert.equal(validateHumanDevelopment(p,release),p);
+});
