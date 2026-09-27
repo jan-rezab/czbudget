@@ -20,6 +20,7 @@ import uuid
 import urllib.request
 import urllib.error
 
+from publish_observed_hdro_panels import observed_panels
 from publish_ch5_6_panels import provider_panels
 from publish_ch3_4_panels import provider_panels as care_provider_panels
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
@@ -211,6 +212,7 @@ def main():
         return bq.query(sql,job_config=cfg,location='EU').result()
     metrics=query(f"SELECT * FROM `{D}.metric_observations` WHERE release_id=@release AND geography_kind='country_or_area' AND metric IN ('hdi','ihdi','gdi','gii','phdi','le','eys','mys','gnipc')",core)
     charts,countries=core_charts(metrics)
+    charts+=observed_panels(query(f"SELECT * FROM `{D}.metric_observations` WHERE release_id=@release AND geography_kind='aggregate' AND metric='hdi'",core))
     if not charts or 'CZE' not in countries:raise ValueError('Core country/index observations absent')
     metadata=[dict(r) for r in query(f"SELECT * FROM `{D}.variable_metadata` WHERE release_id=@release AND source_id='ai2025_survey'",core)]
     variables=[r['variable'] for r in metadata if r['variable'].split('_',1)[0] in SURVEY_TOPICS and json.loads(r['metadata_json']).get('value_labels')]
@@ -255,7 +257,7 @@ def main():
             source=ref(dict(source_url=m['url'],source_sha256=m['sha256'],release_id=m['release_id'],source_id=sid),metric,m.get('vintage'))
             charts.append(chart('provider-'+sid+'-'+metric,'annex',bi(name+' — '+metric,name+' — '+metric),unit,rows,[dict(key='value',label=bi(metric,metric))],[source],bi('Source-native annual values, separate original/newer source editions. Source aggregates and historical entities remain explicitly named; no proxy values.','Roční hodnoty v původních jednotkách; původní a novější vydání zůstávají oddělená. Agregáty i historická území jsou pojmenovány; bez náhradních hodnot.'),bi('Provider geography and population/welfare definitions; consult linked source.','Geografie a definice populace či příjmu podle poskytovatele; viz zdroj.'),m.get('report_refs',[])))
             if sid.startswith('wid_current_'):
-                charts[-1]['denominator']=bi('Top 1% share of pretax national income among equal-split adults (sptinc992j/p99p100), native proportion; distinct from World Bank household income or consumption.','Podíl horního 1% na národním příjmu před zdaněním mezi dospělými s rovným rozdělením (sptinc992j/p99p100), původní podíl; odlišný od příjmu či spotřeby domácností Světové banky.')
+                charts[-1]['denominator']=bi('Top 1% share of pretax national income among equal-split adults (age 992, population j, percentile p99p100; native variable retained), native proportion; distinct from World Bank household income or consumption.','Podíl horního 1% na národním příjmu před zdaněním mezi dospělými s rovným rozdělením (věk 992, populace j, percentil p99p100; původní proměnná zachována), původní podíl; odlišný od příjmu či spotřeby domácností Světové banky.')
             elif sid.startswith('wdi_'):
                 charts[-1]['denominator']=bi('Household income or consumption; welfare concept and survey year vary by country. WDI source observations, not WID pretax national income.','Příjem nebo spotřeba domácností; pojetí a rok šetření se liší mezi zeměmi. Pozorování WDI, ne národní příjem WID před zdaněním.')
     for sid,m in by_source.items():
@@ -284,6 +286,9 @@ def main():
     gaps+=added_gaps+care_gaps
     if not provider_releases:gaps.append(dict(source_id='provider-bundle',reason='No provider-group publication pointer available at report build start.'))
     for entry in ledger:
+        if entry['id'] in {'O.2','O.3','1.2'}:
+            entry['partial_recreation']='Observed official aggregate series available; forecast/extrapolated-trend components not reproduced.'
+            entry['reason']=entry['partial_recreation']
         object_id=entry['id'].replace('Figure ','').replace('Table ','')
         chapter='overview' if object_id.startswith('O.') else 'annex' if 'annex' in object_id.lower() else 'chapter'+object_id[0] if object_id[0] in '123456' else 'overview'
         charts.append(chart('original-'+entry['id'],chapter,bi('Original report '+entry['id']+': '+entry['title'],'Původní zpráva '+entry['id']+': '+entry['title']), 'not applicable',[],[],[],bi(entry['reason'],'Přesná reprodukce původního grafu není ověřena; dostupnost zdrojových dat se sleduje samostatně.'),bi('Original report population, period and categories require figure-specific source binding.','Populace, období a kategorie původního grafu vyžadují ověřené přiřazení ke zdroji.'),[dict(id=entry['id'],page=entry['pdf_page'])],status=entry['status']))
