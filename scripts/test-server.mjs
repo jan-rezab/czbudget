@@ -90,7 +90,7 @@ createServer(async (request, response) => {
       || (process.env.DATA_ASSET_LOCK && ASSET_PATH.test(pathname) && !existsSync(join(root, pathname.slice(1))))
       || /^\/(?:public-data|api|auth|docs|developers)(?:\/|$)/.test(pathname)
       || /^\/(?:data\/)?municipal-expansion\/[a-z]{3}\/[^/]+\.json$/.test(pathname)
-      || /^\/data\/entities\/\d{8}\.json$/.test(pathname)
+      || /^\/data\/(?:entities|municipal-history)\/\d{8}\.json$/.test(pathname)
       || pathname === "/healthz") {
       await handler(request, response);
       return;

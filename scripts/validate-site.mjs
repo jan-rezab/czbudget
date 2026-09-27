@@ -146,9 +146,11 @@ const globalBudgetTransparency = JSON.parse(await readFile("data/global-budget-t
 const hospitalOwnership = JSON.parse(await readFile("data/hospital-ownership.v1.json", "utf8"));
 const careEnvelope = JSON.parse(await readFile("data/care-envelope.v1.json", "utf8"));
 const benchmarkMunicipalities = await Promise.all(["nor", "nld", "fin"].map((code) => readFile(`data/municipal-benchmarks/${code}.json`, "utf8").then(JSON.parse)));
-const norwayBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nor/0301.json", "utf8"));
-const netherlandsBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/nld/0363.json", "utf8"));
-const finlandBenchmarkProfile = JSON.parse(await readFile("data/municipal-benchmarks/fin/091.json", "utf8"));
+// The per-entity benchmark and history fan-out is not tracked in Git (it is pinned in
+// pipeline/config/municipal-serving-inputs.v1.json); these are unchanged copies of it.
+const norwayBenchmarkProfile = await readGzipJson("tests/fixtures/municipal-profiles/NOR-0301.json.gz");
+const netherlandsBenchmarkProfile = await readGzipJson("tests/fixtures/municipal-profiles/NLD-0363.json.gz");
+const finlandBenchmarkProfile = await readGzipJson("tests/fixtures/municipal-profiles/FIN-091.json.gz");
 // The full municipal serving fan-out is deliberately cloud-hydrated and ignored by
 // Git. Keep the validator hermetic with four small, compressed representative
 // profiles instead of requiring 635 MB of generated production output locally.
@@ -176,7 +178,7 @@ const renderSnapshotPage = (payload, code, name, routePath, history = null) => m
 }, "en");
 const czechProfileSamples = await Promise.all(["44992785", "00254398"].map(async (id) => {
   const payload = await readGzipJson(`tests/fixtures/municipal-profiles/CZE-${id}.json.gz`);
-  const history = JSON.parse(await readFile(`data/municipal-history/${id}.json`, "utf8"));
+  const history = await readGzipJson(`tests/fixtures/municipal-history/${id}.json.gz`);
   return renderSnapshotPage(payload, "CZE", payload.entity.short_name, payload.entity.seo.municipality_path || payload.entity.seo.path, history);
 }));
 const internationalProfileSamples = [denmarkExpansionProfile, brazilExpansionProfile, spainExpansionProfile, japanExpansionProfile,
