@@ -57,3 +57,15 @@ test('research supplier chart preserves annual reporting side and country shortc
  await expect(page.locator('#rt-lead-status')).toContainText('Annual exporter declarations');
  await expect(page.locator('#rt-lead-chart')).toHaveAttribute('data-chart-slug','russia-research-suppliers');
 });
+
+test('supplier inspection stays below the plot and does not move it during keyboard navigation',async({page})=>{
+ await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const data=sample();data.suppliers=['2019','2025'].flatMap((period,i)=>['KOR','GEO','DEU','TUR','ITA'].map(reporter_iso3=>({period,reporter_iso3,partner_iso3:'KGZ',value_usd:100*(i+1)})));return route.fulfill({json:{data}});});
+ await page.goto('/deep-dives/russia-trade/?lang=en');
+ const host=page.locator('#rt-lead-chart'),plot=host.locator('svg'),tip=host.locator('.psd-plot-tooltip');
+ await host.locator('[data-point]').first().focus();await expect(tip).toBeVisible();
+ const before=await plot.boundingBox();
+ const box=await tip.boundingBox();expect(box.y).toBeGreaterThanOrEqual(before.y+before.height);
+ await page.keyboard.press('ArrowRight');await expect(tip).toContainText('2025');
+ expect(await plot.boundingBox()).toEqual(before);
+ await page.keyboard.press('Escape');await expect(tip).toBeHidden();expect(await plot.boundingBox()).toEqual(before);
+});
