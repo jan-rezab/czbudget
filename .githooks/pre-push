@@ -1,9 +1,9 @@
 #!/bin/sh
 set -eu
 
-# Local checks are source-only. Dataset/API integrity stays in the existing
-# exhaustive cloud verifier; full-lane main pushes require its exact-commit
-# SUCCESS receipt before production can be triggered.
+# Pushes to main trigger a production deploy, so this hook runs the gates that
+# are cheap locally plus the one gate CI cannot run at all (source-asset
+# verification, whose raw inputs live outside the repo). About 15 seconds.
 
 cd "$(git rev-parse --show-toplevel)"
 
@@ -54,18 +54,28 @@ node scripts/validate-release-contract.mjs
   node scripts/validate-release-contract.mjs
 )
 node scripts/publish-stories.mjs --check
-node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/verification-plan-sparse.spec.mjs tests/unit/ui-build-context.spec.mjs tests/unit/stories.spec.mjs tests/unit/bounded-command.spec.mjs tests/unit/pre-push-boundary.spec.mjs
+node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/verification-plan-sparse.spec.mjs tests/unit/ui-build-context.spec.mjs tests/unit/stories.spec.mjs tests/unit/bounded-command.spec.mjs
 python3 -m unittest tests.test_cloud_verification
 node scripts/validate-build-planes.mjs
 node pipeline/create-source-manifest.mjs --self-check
 
-# The report catalogue uses committed source metadata and markup only.
+# The exhaustive cloud gate runs these source validators before its browser shards.
+# Locally they take about ten seconds; discovered in the cloud, each costs a
+# five-minute round trip and counts as a failed gate.
+echo "pre-push: site, invariant, API and integrity contracts"
+PSD_BUILD_MODE=local npm run -s validate:european-politics >/dev/null
+PSD_BUILD_MODE=local npm run -s validate:accountability >/dev/null
+npm run -s validate:invariants
+npm run -s validate:glossary
 npm run -s validate:reports-index
-
-# Dataset-dependent registry/build/check, full site, API and integrity contracts are NOT
-# optional: cloudbuild.verify.yaml runs npm test:api and PSD_BUILD_MODE=local
-# npm validate after published-release hydration. Never duplicate them here or
-# restore bulk fixtures to this Mac merely to push source code.
+node scripts/validate-site.mjs
+node --test --test-reporter=dot tests/api/*.spec.mjs
+if [ -f data/municipal-snapshot.v1.json ]; then
+  integrity=$(PSD_BUILD_MODE=local node scripts/validate-integrity.mjs)
+  printf '%s\n' "$integrity" | tail -1
+else
+  echo "pre-push: integrity check skipped; published data inputs are not in this checkout (the cloud gate still runs it)"
+fi
 
 if [ "$push_to_main" = 1 ]; then
   plan=$(mktemp "${TMPDIR:-/tmp}/psd-verification-plan.XXXXXX")
@@ -73,7 +83,7 @@ if [ "$push_to_main" = 1 ]; then
   node scripts/verification-plan.mjs "$main_base" "$main_oid" > "$plan"
   node scripts/local-browser-gate.mjs "$plan"
   if [ "$(node scripts/release-verification.mjs "$plan")" = full ]; then
-    python3 scripts/check-cloud-verification.py --plan "$plan"
+    echo "pre-push: full lane; the production build runs the exhaustive suite (about 18 minutes) and blocks deployment on failure"
   else
     echo "pre-push: component lane; focused tests run inside the production build (about 4 minutes) and block deployment on failure"
   fi
