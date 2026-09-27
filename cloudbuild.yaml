@@ -173,12 +173,12 @@ steps:
         PY
         municipal_release="$$(cat /workspace/.published/municipal-release)"
         cityvizor_release="$$(cat /workspace/.published/cityvizor-release)"
-        # macOS "._" resource forks in the CityVizor release are never read; skip them.
-        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$municipal_release /workspace/.published/municipal/releases/$$municipal_release
-        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/$$cityvizor_release /workspace/.published/cityvizor/releases/$$cityvizor_release
-        while IFS=$$'\t' read -r key file; do
-          gcloud storage cp "gs://czbudget-janrezab-public-snapshots/$$key" "/workspace/.published/assets/$$file"
-        done < /workspace/.published/asset-packs.tsv
+        # The three downloads run at once; macOS "._" resource forks in the CityVizor release
+        # are never read, so skip them. Pack objects are named by their lock file name.
+        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$municipal_release /workspace/.published/municipal/releases/$$municipal_release & municipal_pid=$$!
+        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/$$cityvizor_release /workspace/.published/cityvizor/releases/$$cityvizor_release & cityvizor_pid=$$!
+        cut -f1 /workspace/.published/asset-packs.tsv | sed 's#^#gs://czbudget-janrezab-public-snapshots/#' | gcloud storage cp -I /workspace/.published/assets/ & packs_pid=$$!
+        wait $$municipal_pid; wait $$cityvizor_pid; wait $$packs_pid
         python3 scripts/verify-runtime-assets-cloud.py /workspace/.published/assets/lock.json
 
   - id: verify-published-releases
