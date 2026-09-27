@@ -51,3 +51,11 @@ test('validates restored defaults and rejects invalid coordinate defaults',()=>{
     assert.throws(()=>validateHumanDevelopment(p,release),HumanDevelopmentError);
   }
 });
+test('validates declared tuple rows and rejects malformed columns or values',()=>{
+  const p=fixture();p.charts[0].row_columns=['country','year','value'];p.charts[0].rows=[['CZE',2023,0],['CZE',2024,null]];
+  assert.equal(validateHumanDevelopment(p,release),p);
+  for(const [columns,rows] of [[['country','year','value'],[['CZE',2023]]],[['country','value','value'],[['CZE',0,0]]],[['country','year','value'],[['CZE',2023,'0']]],[['country','year','value'],[['unlisted',2023,0]]],[['country','year','extra'],[['CZE',2023,0]]]]){
+    p.charts[0].row_columns=columns;p.charts[0].rows=rows;
+    assert.throws(()=>validateHumanDevelopment(p,release),HumanDevelopmentError);
+  }
+});

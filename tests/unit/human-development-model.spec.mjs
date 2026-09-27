@@ -25,3 +25,8 @@ test('omitted compact null cells remain missing while measured zero remains exac
   assert.deepEqual(rowsFor(chart,'CZE'),[{country:'CZE',year:2023,value:0,other:null}]);
   assert.deepEqual(chart.rows,[{year:2023,value:0}]);
 });
+test('declared column tuples restore exact country, year, measured values and nulls',()=>{
+  const chart={fields:[{key:'hdi'},{key:'gdi'}],row_columns:['country','year','hdi','gdi'],rows:[['CZE',2023,0.915,null],['DEU',2023,0,1]]};
+  assert.deepEqual(rowsFor(chart,'CZE'),[{country:'CZE',year:2023,hdi:0.915,gdi:null}]);
+  assert.deepEqual(chart.rows[0],['CZE',2023,0.915,null]);
+});

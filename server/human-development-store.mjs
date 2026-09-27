@@ -51,9 +51,16 @@ export function validateHumanDevelopment(payload, releaseId) {
         (defaults.country != null && !codes.has(defaults.country)) ||
         (defaults.year != null && !Number.isSafeInteger(defaults.year)) ||
         (defaults.period != null && (typeof defaults.period !== 'string' || defaults.period.length > 100))) fail();
+    const columns = chart.row_columns;
+    if (columns != null && (!Array.isArray(columns) || !columns.length ||
+        new Set(columns).size !== columns.length ||
+        columns.some(key => !['country', 'year', 'period'].includes(key) && !keys.has(key)))) fail();
+    const restoredRows = [];
     for (const nativeRow of chart.rows) {
-      if (!nativeRow || typeof nativeRow !== 'object' || Array.isArray(nativeRow)) fail();
-      const row = {...defaults, ...nativeRow};
+      if (!nativeRow || typeof nativeRow !== 'object' ||
+          (columns ? !Array.isArray(nativeRow) || nativeRow.length !== columns.length : Array.isArray(nativeRow))) fail();
+      const row = {...defaults, ...(columns ? Object.fromEntries(columns.map((key,index) => [key,nativeRow[index]])) : nativeRow)};
+      restoredRows.push(row);
       if (
           (row.country != null && !codes.has(row.country)) ||
           (row.year == null && row.period == null && row.label == null)) fail();
@@ -74,7 +81,7 @@ export function validateHumanDevelopment(payload, releaseId) {
     }
     if (chart.status === 'ready' || chart.status === 'historical') {
       if (!TYPES.has(chart.chart_type) || !chart.fields.length || !chart.source_refs.length ||
-          !chart.rows.some(row => [...keys].some(key => Number.isFinite(row[key])))) fail();
+          !restoredRows.some(row => [...keys].some(key => Number.isFinite(row[key])))) fail();
     }
   }
   return payload;
