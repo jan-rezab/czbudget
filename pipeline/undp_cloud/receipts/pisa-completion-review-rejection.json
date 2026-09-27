@@ -1,0 +1,25 @@
+{
+  "action": "Submit reviewed private PISA completion",
+  "submission_status": "rejected_before_execution",
+  "cloud_build_id": null,
+  "loader_git_sha": "9fed262b03f4d6dfac3baa1394f4a0d43cc46d20",
+  "code_archive": "/private/tmp/hdr-pisa-completion-9fed262b03",
+  "region": "europe-west4",
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "config": "pipeline/undp_cloud/cloudbuild.complete_pisa.yaml",
+  "guard": {
+    "started_at": 1790461758,
+    "elapsed_seconds": 28344.96,
+    "budget_minutes": 512,
+    "failed_gates": 8,
+    "decision": "STOP_NEW_BUILDS"
+  },
+  "automatic_review_reason": "The build is narrowly scoped and private but submits a new cloud mutation after the mandatory guard reported STOP_NEW_BUILDS; the transcript lacks trusted user approval for extending that gate.",
+  "required_next_action": "Explicit trusted user approval for the gate extension and named private PISA completion; no workaround or indirect execution.",
+  "failed_build_count_cumulative": 8,
+  "private_pisa_publication_status": "pending",
+  "respondent_reloaded": false,
+  "public_bucket_writes": 0,
+  "existing_successful_load_job": "e04e63ee-493d-48e3-9010-2381875af683",
+  "passing_focused_tests": 6
+}

@@ -299,3 +299,7 @@ DHS/MICS pooled derived figures need selected survey vintages, estimator code an
 - [unesco_journalist_violence2025](https://www.unesco.org/en/articles/global-survey-reveals-rising-violence-against-women-journalists?hub=67972): 2025 75% among354 women journalist respondents versus reported2020 73% among625 responding to question. Same construct, different sample; metadata essential.
 - [ipu_parliament_violence2021](https://www.ipu.org/news/press-releases/2021-11/widespread-sexism-and-violence-against-women-in-african-parliaments-according-new-ipu-report): Original46%Africaand58%Europe sexist-online attacks; Africa137womenMPs plus separate87staff interview sample,50countries; not population representative universal administrative counts.
 - [plan_online_harassment2020](https://plan-international.org/publications/free-to-be-online/): Original publisher landing with report; full PDF needed for58% and exact country coverage. Different national Plan summaries use31/32countrycounts; quantitative22countryvsqualitative16countrycoverage must be resolved.
+
+## Verified HDR2025 WIPO period correction
+
+The [official HDR2025 erratum](https://hdr.undp.org/errata-and-corrigenda-hdr-2025) corrects Figures4.2/4.3, printedpages107/108, from the erroneous earlier label2000–2010 to2000–2020. Corrected downloadable digital versions date from23May2025. This official correction controls the period binding; the earlier attached PDF label remains recorded as an error. It does not settle patent-family/application or office/country definitions.
