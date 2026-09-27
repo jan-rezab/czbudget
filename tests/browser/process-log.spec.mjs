@@ -13,6 +13,12 @@ test("process log separates source, PSD dataset and lifecycle states", async ({ 
       }],
     }}),
   }));
+  // The live deployment log grows with every release; keep it out of this layout check so
+  // committed runs are not pushed off the first page.
+  await page.route("**/api/v1/process-log/deployments", async route => route.fulfill({
+    status: 200, contentType: "application/json",
+    body: JSON.stringify({data: {schema_version: "1.0.0", status: "available", events: []}}),
+  }));
   await page.goto("/process/log/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("h1")).toHaveText("Data processing and release log");
   await expect(page.locator(".run-log__column-heads")).toContainText("Upstream source");
