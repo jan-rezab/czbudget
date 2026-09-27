@@ -15,12 +15,12 @@
       choose: "Zobrazená sekce", all: "Všechny publikované sekce", countryData: "Data země", municipal: "Obce a města", deepDive: "Hloubkové profily",
       countries: "zemí s publikovaným obsahem", sections: "sekcí webu", records: "kombinací země × sekce", deep: "zemí s 10+ sekcemi",
       share: "z 195 států", currentCount: "zemí s aktuálním / živým obdobím", latest: "nejnovější období", publishedRecords: "publikovaných záznamů",
-      depth12: "12–15 sekcí", depth10: "10–11 sekcí", depth2: "2–4 sekce", depth1: "1 sekce", none: "Bez publikované sekce",
-      current: "Aktuální, živé nebo plánované", recent: "Statistická řada do 2024", older: "Řada do 2023 nebo starší", other: "Publikováno · projekce / bez roku", notPublished: "V této sekci nepublikováno",
+      depth12: "12+ sekcí", depth5: "5–9 sekcí", depth10: "10–11 sekcí", depth2: "2–4 sekce", depth1: "1 sekce", none: "Bez publikované sekce",
+      current: "Aktuální, živé nebo plánované", recent: "Statistická řada s obvyklým zpožděním", older: "Starší řada", other: "Publikováno · projekce / bez roku", notPublished: "V této sekci nepublikováno",
       selectCountry: "Vyberte zemi na mapě", selectCopy: "Po výběru ukážeme přesně ty sekce, které jsou pro zemi na PSD publikované, jejich období a odkazy na profil.",
       publishedFor: "Publikované sekce", noPublished: "Pro tuto zemi není ve vybrané sekci publikovaný artefakt.", open: "Otevřít sekci", source: "Primární zdroj",
       mapLabel: "Mapa publikovaného pokrytí Public Spending Data", scopeNote: "Měřeno na obsahu tohoto webu, ne na dostupnosti u poskytovatelů.", searchCountry: "Najít zemi", searchPlaceholder: "Název nebo kód země",
-      loadError: "Mapu publikovaného pokrytí se nepodařilo načíst."
+      catalogue: "Všechny publikované reporty", catalogueNote: "Katalog reportů je nezávislý na počtech zemí v datových vrstvách.", unavailable: "Některé živé vrstvy se nepodařilo ověřit. Jejich pokrytí zde chybí; nejde o nulová data.", release: "Datové vydání", loadError: "Mapu publikovaného pokrytí se nepodařilo načíst."
     },
     en: {
       eyebrow: (count) => `Published on PSD · ${count} sections`,
@@ -29,12 +29,12 @@
       choose: "Section shown", all: "All published sections", countryData: "Country data", municipal: "Municipalities and cities", deepDive: "Deep dives",
       countries: "countries with published content", sections: "site sections", records: "country × section records", deep: "countries with 10+ sections",
       share: "of 195 states", currentCount: "countries with a current / live period", latest: "latest period", publishedRecords: "published records",
-      depth12: "12–15 sections", depth10: "10–11 sections", depth2: "2–4 sections", depth1: "1 section", none: "No published section",
-      current: "Current, live or planned", recent: "Statistical series through 2024", older: "Series through 2023 or older", other: "Published · projection / undated", notPublished: "Not published in this section",
+      depth12: "12+ sections", depth5: "5–9 sections", depth10: "10–11 sections", depth2: "2–4 sections", depth1: "1 section", none: "No published section",
+      current: "Current, live or planned", recent: "Statistical series with reporting lag", older: "Older series", other: "Published · projection / undated", notPublished: "Not published in this section",
       selectCountry: "Select a country on the map", selectCopy: "The detail will show exactly which sections PSD publishes for that country, their periods and links to the profile.",
       publishedFor: "Published sections", noPublished: "No artifact is published for this country in the selected section.", open: "Open section", source: "Primary source",
       mapLabel: "Map of published Public Spending Data coverage", scopeNote: "Measured on content published on this site, not on availability at providers.", searchCountry: "Find a country", searchPlaceholder: "Country name or code",
-      loadError: "The published coverage map could not be loaded."
+      catalogue: "All published reports", catalogueNote: "The report catalogue is separate from country counts in the data layers.", unavailable: "Some live layers could not be checked. Their coverage is missing here; this does not mean zero data.", release: "Data release", loadError: "The published coverage map could not be loaded."
     }
   };
   let t = copy[lang];
@@ -55,6 +55,7 @@
       const count = new Set(records.map((record) => record.module)).size;
       if (count >= 12) return "depth12";
       if (count >= 10) return "depth10";
+      if (count >= 5) return "depth5";
       if (count >= 2) return "depth2";
       if (count === 1) return "depth1";
       return "none";
@@ -68,7 +69,7 @@
   }
 
   function bandLabel(band) {
-    return ({ depth12: t.depth12, depth10: t.depth10, depth2: t.depth2, depth1: t.depth1, none: state.mode === "all" ? t.none : t.notPublished, current: t.current, recent: t.recent, older: t.older, other: t.other })[band];
+    return ({ depth12: t.depth12, depth10: t.depth10, depth5: t.depth5, depth2: t.depth2, depth1: t.depth1, none: state.mode === "all" ? t.none : t.notPublished, current: t.current, recent: t.recent, older: t.older, other: t.other })[band];
   }
 
   function modeOptions() {
@@ -77,7 +78,7 @@
   }
 
   function legend(countries) {
-    const bands = state.mode === "all" ? ["depth12", "depth10", "depth2", "depth1", "none"] : ["current", "recent", "older", "other", "none"];
+    const bands = state.mode === "all" ? ["depth12", "depth10", "depth5", "depth2", "depth1", "none"] : ["current", "recent", "older", "other", "none"];
     return bands.map((band) => `<li><i class="surface-swatch surface-${band}"></i><span>${esc(bandLabel(band))}</span><b>${countries.filter((country) => coverageBand(country) === band).length}</b></li>`).join("");
   }
 
@@ -110,7 +111,7 @@
       const module = modules.get(record.module);
       const href = viewHref(record);
       const period = record.period_label || record.latest_year || "—";
-      return `<article><div><small>${esc(familyName(module?.family))}</small><h4>${esc(moduleName(module))}</h4></div><p>${esc(record[`coverage_${lang}`] || record.coverage_en || record.coverage_cs)}</p><div><b>${esc(period)}</b>${href ? `<a href="${esc(href)}">${esc(t.open)} →</a>` : ""}${record.source_url ? `<a href="${esc(record.source_url)}" target="_blank" rel="noreferrer">${esc(t.source)} ↗</a>` : ""}</div></article>`;
+      return `<article><div><small>${esc(familyName(module?.family))}</small><h4>${esc(moduleName(module))}</h4></div><p>${esc(record[`coverage_${lang}`] || record.coverage_en || record.coverage_cs)}</p>${record.release_id ? `<small>${esc(t.release)}: ${esc(record.release_id)}</small>` : ""}<div><b>${esc(period)}</b>${href ? `<a href="${esc(href)}">${esc(t.open)} →</a>` : ""}${record.source_url ? `<a href="${esc(record.source_url)}" target="_blank" rel="noreferrer">${esc(t.source)} ↗</a>` : ""}</div></article>`;
     }).join("")}</div>`;
   }
 
@@ -137,7 +138,7 @@
       return `<path class="surface-country surface-${band}${state.selected === country.iso3 ? " is-selected" : ""}" d="${location.path}" tabindex="0" data-surface-country="${esc(country.iso3)}" aria-label="${esc(label)}"><title>${esc(label)}</title></path>`;
     }).join("");
     const selectedCountry = countries.find((country) => country.iso3 === state.selected);
-    root.innerHTML = `<div class="surface-controls"><label for="surface-mode">${esc(t.choose)}</label><select id="surface-mode">${modeOptions()}</select><label for="surface-country-search">${esc(t.searchCountry)}</label><input id="surface-country-search" type="search" list="surface-country-options" placeholder="${esc(t.searchPlaceholder)}" value="${esc(selectedCountry ? countryName(selectedCountry) : "")}"><datalist id="surface-country-options">${prioritisedCountries.map(country=>`<option value="${esc(countryName(country))}" data-code="${esc(country.iso3)}">${esc(country.iso3)} · ${allRecordsFor(country.iso3).length} ${esc(t.sections)}</option>`).join("")}</datalist><p>${esc(t.scopeNote)}</p></div><div class="surface-kpis">${kpis(countries).map(([value, label]) => `<article><strong>${esc(typeof value === "number" ? number(value) : value)}</strong><span>${esc(label)}</span></article>`).join("")}</div><div class="surface-map-panel"><div class="surface-map-wrap"><svg class="surface-map" viewBox="${state.geometry.viewBox}" role="img" aria-label="${esc(t.mapLabel)}">${paths}</svg></div><ol class="surface-legend">${legend(countries)}</ol><div class="surface-tooltip" role="tooltip" aria-hidden="true"></div></div><section class="surface-detail" aria-live="polite">${detail(selectedCountry)}</section>`;
+    root.innerHTML = `${state.freshness.unavailable?.length ? `<p class="surface-warning" role="status">${esc(t.unavailable)}</p>` : ""}<div class="surface-controls"><label for="surface-mode">${esc(t.choose)}</label><select id="surface-mode">${modeOptions()}</select><label for="surface-country-search">${esc(t.searchCountry)}</label><input id="surface-country-search" type="search" list="surface-country-options" placeholder="${esc(t.searchPlaceholder)}" value="${esc(selectedCountry ? countryName(selectedCountry) : "")}"><datalist id="surface-country-options">${prioritisedCountries.map(country=>`<option value="${esc(countryName(country))}" data-code="${esc(country.iso3)}">${esc(country.iso3)} · ${allRecordsFor(country.iso3).length} ${esc(t.sections)}</option>`).join("")}</datalist><p>${esc(t.scopeNote)}</p></div><div class="surface-kpis">${kpis(countries).map(([value, label]) => `<article><strong>${esc(typeof value === "number" ? number(value) : value)}</strong><span>${esc(label)}</span></article>`).join("")}</div><div class="surface-map-panel"><div class="surface-map-wrap"><svg class="surface-map" viewBox="${state.geometry.viewBox}" role="img" aria-label="${esc(t.mapLabel)}">${paths}</svg></div><ol class="surface-legend">${legend(countries)}</ol><div class="surface-tooltip" role="tooltip" aria-hidden="true"></div></div><section class="surface-detail" aria-live="polite">${detail(selectedCountry)}</section><section class="surface-catalogue"><h3>${esc(t.catalogue)}</h3><p>${esc(t.catalogueNote)}</p><div>${(state.freshness.reports || []).map(report => `<a href="/${esc(report.navPath)}${report.navPath.includes("?") ? "&" : "?"}lang=${lang}"><strong>${esc(report.title?.[lang])}</strong><small>${esc(report.source?.[lang])}</small></a>`).join("")}</div></section>`;
     const select = root.querySelector("#surface-mode");
     select.value = state.mode;
     select.addEventListener("change", () => { state.mode = select.value; state.selected = null; render(); });
@@ -193,13 +194,16 @@
     applyStaticCopy();
     if (state.registry) render();
   });
-  const freshnessPromise = window.psdDataFreshnessPromise || (window.psdDataFreshnessPromise = fetch("data/data-freshness.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }));
+  const freshnessPromise = PSDCoverage.load();
   const transparencyPromise = window.psdTransparencyDataPromise || (window.psdTransparencyDataPromise = Promise.all([
     fetch("data/global-budget-transparency.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
     fetch("data/world-map.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); })
   ]));
   Promise.all([freshnessPromise, transparencyPromise]).then(([freshness, [registry, geometry]]) => {
     Object.assign(state, { freshness, registry, geometry });
+    const query = new URLSearchParams(location.search);
+    if (freshness.modules.some(module => module.id === query.get("section"))) state.mode = query.get("section");
+    if (registry.countries.some(country => country.iso3 === query.get("country"))) state.selected = query.get("country");
     applyStaticCopy();
     render();
   }).catch((error) => {

@@ -71,6 +71,8 @@
     act3Title:"Sources and gaps",act3Lead:"The registry traces every row back to its primary publication and transformation. The atlas at the end shows the other side: where sources exist or have been researched, even when PSD has not loaded them yet.",
     downloads:"Dataset downloads"
   });
+  Object.assign(statusCopy.cs,{releaseTitle:"Referenční datový snapshot",releaseNote:"Obecní a starší referenční vrstvy",snapshot:"Sestavení referenčních souborů",act1Lead:"Mapa a tabulka aktuálnosti zahrnují i živě publikované vrstvy obchodu a trhu práce. Přehled pod mapou podrobně rozepisuje starší obecní a sektorové zdroje; neobsahuje všechny novější reporty."});
+  Object.assign(statusCopy.en,{releaseTitle:"Reference data snapshot",releaseNote:"Municipal and earlier reference layers",snapshot:"Reference files assembled",act1Lead:"The map and freshness table also include live published trade and job-market layers. The overview below the map details earlier municipal and sector sources; it does not cover every newer report."});
   const coverageCategories=[
     {id:"fiscal",cs:"Fiskální historie země",en:"Country fiscal history",modules:["sovereign"]},
     {id:"health",cs:"Zdravotnictví",en:"Health",modules:["health"]},

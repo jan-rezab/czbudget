@@ -4,6 +4,8 @@
 
   const getLang = () => (window.PSDLanguage?.current() || document.documentElement.lang) === "en" ? "en" : "cs";
   let lang = getLang();
+  const initialQuery = new URLSearchParams(location.search);
+  let pendingJobLayer = initialQuery.get("lens") === "jobs";
   const copy = {
     cs: {
       heroKicker: "Mapa · celý svět", heroTitle: "Mapa veřejných výdajů", heroLead: "Postavte proti sobě školství a obranu, zdravotnictví a sociální ochranu nebo dvě fiskální veličiny. Mapa zobrazuje hodnotu i směr rozdílu.", heroAsideLabel: "Tři datové pohledy", heroCountries: "států na mapě", heroCategories: "rozpočtových a funkčních kategorií", heroYears: "let globálního fiskálního kontextu", workbenchKicker: "Interaktivní srovnání", workbenchTitle: "Porovnejte dvě kategorie výdajů", workbenchLead: "V režimu Souboj barva vyjadřuje rozdíl mezi dvěma ukazateli v téže účetní vrstvě. Režim Jedna vrstva ukazuje rozložení jediné hodnoty.", loading: "Načítám mapu a datové vrstvy…",
@@ -19,6 +21,8 @@
     }
   };
   let t = copy[lang];
+  Object.assign(copy.cs, {spendingView:"Srovnání hodnot",publishedView:"Publikované sekce",jobs:"Trh práce · 2024",agriculture:"Zemědělství",industry:"Průmysl a stavebnictví",services:"Služby",pctEmployed:"% všech zaměstnaných",jobContract:"Podíly všech zaměstnaných podle odvětví · modelované odhady ILO přes World Bank WDI. Šest publikovaných trhů, rok 2024; nejde o počty veřejných zaměstnanců.",heroAsideLabel:"Publikované vrstvy a srovnání",heroLead:"Porovnejte veřejné výdaje a zaměstnanost, nebo zobrazte publikované sekce podle zemí. Období, zdroje a chybějící pokrytí zůstávají viditelné."});
+  Object.assign(copy.en, {spendingView:"Compare values",publishedView:"Published sections",jobs:"Job market · 2024",agriculture:"Agriculture",industry:"Industry and construction",services:"Services",pctEmployed:"% of all employed",jobContract:"Sector shares of all employed people · ILO modelled estimates via World Bank WDI. Six published markets, 2024; these are not counts of public employees.",heroAsideLabel:"Published layers and comparisons",heroLead:"Compare public spending and employment, or explore published sections by country. Periods, sources and missing coverage remain visible."});
   // Open on the only genuinely global layer. The budget basket currently has
   // seventeen countries; using it as the default made the 195-state map look
   // empty even though the geometry and the application had loaded correctly.
@@ -40,6 +44,7 @@
   };
 
   function metrics() {
+    if (state.lens === "jobs") return ["agriculture", "industry", "services"].map(id => ({id, label_cs: copy.cs[id], label_en: copy.en[id], unit: "share_employed"}));
     if (state.lens === "budget") return state.data.budget.categories.map((metric) => ({ ...metric, unit: "share_budget" }));
     if (state.lens === "functions") return Object.entries(state.data.functions.categories).map(([id, metric]) => ({ id, ...metric, unit: "pct_gdp" }));
     const allowed = new Set(Object.keys(fiscalLabels));
@@ -47,16 +52,22 @@
   }
 
   function metric(id) { return metrics().find((item) => item.id === id); }
-  function unitLabel(item = metric(state.metricA)) { return item?.unit === "share_budget" ? t.pctBudget : item?.unit === "pct_gdp" ? t.pctGdp : t.percent; }
+  function unitLabel(item = metric(state.metricA)) { return item?.unit === "share_employed" ? t.pctEmployed : item?.unit === "share_budget" ? t.pctBudget : item?.unit === "pct_gdp" ? t.pctGdp : t.percent; }
   function formatValue(value, item = metric(state.metricA), signed = false) {
     if (!Number.isFinite(value)) return "—";
     const prefix = signed && value > 0 ? "+" : "";
-    return `${prefix}${format(value, Math.abs(value) >= 100 ? 0 : 1)}${item?.unit === "pct_gdp" || item?.unit === "share_budget" || item?.unit === "percent" ? "%" : ""}`;
+    return `${prefix}${format(value, Math.abs(value) >= 100 ? 0 : 1)}${item?.unit === "pct_gdp" || item?.unit === "share_budget" || item?.unit === "percent" || item?.unit === "share_employed" ? "%" : ""}`;
   }
 
   function budgetCountry(code) { return state.data.budget.countries.find((country) => country.code === code); }
   function fiscalCountry(code) { return state.data.fiscal.series.find((country) => country.country_code === code); }
+  function jobObservation(code, id) { return state.data.jobs?.series?.employment_shares?.find(row => row.country_code === code && row.sector === id); }
   function valueFor(code, id) {
+    if (state.lens === "jobs") {
+      const row = jobObservation(code, id);
+      const value = row?.source_value == null || row.source_value === "" ? null : Number(row.source_value);
+      return Number.isFinite(value) ? value : null;
+    }
     if (state.lens === "budget") {
       const group = budgetCountry(code)?.groups.find((item) => item.category_id === id);
       if (!group || (!group.source_rows?.length && group.shares_pct.current === 0)) return null;
@@ -80,9 +91,12 @@
   }
 
   function yearRange() {
-    if (state.lens === "budget") return [2024, 2024];
-    if (state.lens === "functions") return [2015, 2024];
-    return [2005, 2024];
+    if (state.lens === "budget" || state.lens === "jobs") return [2024, 2024];
+    const years = state.lens === "functions"
+      ? Object.values(state.data.functions.countries).flatMap(country => Object.values(country.categories || {}).flat().map(point => point.year))
+      : state.data.fiscal.series.flatMap(country => Object.values(country.metrics).flatMap(metric => metric.values.filter(point => point.year <= metric.latest_actual_year).map(point => point.year)));
+    const observed = years.filter(Number.isFinite);
+    return observed.length ? [Math.min(...observed), Math.max(...observed)] : [2024, 2024];
   }
 
   function normalizeMetricState() {
@@ -106,7 +120,7 @@
 
   function readUrl() {
     const query = new URLSearchParams(location.search);
-    if (["budget", "functions", "fiscal"].includes(query.get("lens"))) state.lens = query.get("lens");
+    if (["budget", "functions", "fiscal", ...(state.data?.jobs ? ["jobs"] : [])].includes(query.get("lens"))) state.lens = query.get("lens");
     if (["duel", "single"].includes(query.get("mode"))) state.mode = query.get("mode");
     if (query.get("a")) state.metricA = query.get("a");
     if (query.get("b")) state.metricB = query.get("b");
@@ -138,10 +152,10 @@
     if (state.mode === "single") {
       const sorted = activeRows.map((item) => item.a).sort((a, b) => a - b);
       const cuts = [0, .2, .4, .6, .8, 1].map((q) => quantile(sorted, q));
-      return [1, 2, 3, 4, 5].map((level, index) => `<li><i class="legend-q${level}"></i><span>${esc(formatValue(cuts[index]))}–${esc(formatValue(cuts[index + 1]))}</span><b>${activeRows.filter((row) => classifyMap(row, activeRows) === `map-q${level}`).length}</b></li>`).join("") + `<li><i class="legend-none"></i><span>${esc(t.noData)}</span><b>${195 - activeRows.length}</b></li>`;
+      return [1, 2, 3, 4, 5].map((level, index) => `<li><i class="legend-q${level}"></i><span>${esc(formatValue(cuts[index]))}–${esc(formatValue(cuts[index + 1]))}</span><b>${activeRows.filter((row) => classifyMap(row, activeRows) === `map-q${level}`).length}</b></li>`).join("") + `<li><i class="legend-none"></i><span>${esc(t.noData)}</span><b>${state.data.registry.countries.length - activeRows.length}</b></li>`;
     }
     const bands = [["map-a-strong", "legend-a-strong", t.muchStrongerA], ["map-a", "legend-a", t.strongerA], ["map-even", "legend-even", t.close], ["map-b", "legend-b", t.strongerB], ["map-b-strong", "legend-b-strong", t.muchStrongerB]];
-    return bands.map(([className, swatch, label]) => `<li><i class="${swatch}"></i><span>${esc(label)}</span><b>${activeRows.filter((row) => classifyMap(row, activeRows) === className).length}</b></li>`).join("") + `<li><i class="legend-none"></i><span>${esc(t.noData)}</span><b>${195 - activeRows.length}</b></li>`;
+    return bands.map(([className, swatch, label]) => `<li><i class="${swatch}"></i><span>${esc(label)}</span><b>${activeRows.filter((row) => classifyMap(row, activeRows) === className).length}</b></li>`).join("") + `<li><i class="legend-none"></i><span>${esc(t.noData)}</span><b>${state.data.registry.countries.length - activeRows.length}</b></li>`;
   }
 
   function story(activeRows) {
@@ -162,11 +176,13 @@
   }
 
   function profileHref(code) {
+    if (state.lens === "jobs") return `/deep-dives/job-market/?country=${code}&lang=${lang}`;
     if (window.PSDCountryRoutes?.href) return window.PSDCountryRoutes.href(code, lang);
     return `/country.html?code=${encodeURIComponent(code)}&lang=${lang}`;
   }
 
   function scopeFor(code) {
+    if (state.lens === "jobs") return t.jobContract;
     if (state.lens === "budget") return budgetCountry(code)?.[`scope_${lang}`] || "—";
     if (state.lens === "functions") return state.data.functions.countries[code]?.scope === "general_government" ? (lang === "cs" ? "Sektor vládních institucí · funkční členění" : "General government · functional classification") : state.data.functions.countries[code]?.scope?.replaceAll("_", " ") || "—";
     return lang === "cs" ? "Sektor vládních institucí · IMF WEO" : "General government · IMF WEO";
@@ -178,6 +194,7 @@
   }
 
   function historySeries(code, id) {
+    if (state.lens === "jobs") return [];
     if (state.lens === "budget") {
       const country = budgetCountry(code), group = country?.groups.find((item) => item.category_id === id);
       return group ? [[country.periods.previous.label, group.shares_pct.previous], [country.periods.current.label, group.shares_pct.current]].filter(([, value]) => Number.isFinite(value)) : [];
@@ -204,7 +221,12 @@
     if (!row) return `<div class="map-detail-empty">${esc(t.noCountryData)}</div>`;
     const valid = Number.isFinite(row.a) && (state.mode === "single" || Number.isFinite(row.b));
     const valueCards = valid ? `<div class="map-value-pair"><article class="map-value-card"><span>${esc(metricLabel(metric(state.metricA)))}</span><strong>${esc(formatValue(row.a))}</strong><small>${esc(periodFor(row.country.iso3))} · ${esc(unitLabel(metric(state.metricA)))}</small></article>${state.mode === "duel" ? `<article class="map-value-card"><span>${esc(metricLabel(metric(state.metricB)))}</span><strong>${esc(formatValue(row.b, metric(state.metricB)))}</strong><small>${esc(periodFor(row.country.iso3))} · ${esc(unitLabel(metric(state.metricB)))}</small></article>` : ""}</div>` : `<p class="map-detail-note">${esc(t.noCountryData)}</p>`;
-    return `<div class="map-detail-head"><div class="map-detail-flag"><img src="assets/flags/${esc(row.country.iso2)}.svg" alt=""><b>${esc(row.country.iso3)}</b></div><div><span>${esc(t.selectedCountry)}</span><h3>${esc(countryName(row.country))}</h3></div><a href="${esc(profileHref(row.country.iso3))}">${esc(t.openProfile)}</a></div>${valueCards}<p class="map-detail-note"><strong>${esc(t.scope)}:</strong> ${esc(scopeFor(row.country.iso3))}</p>${valid ? miniHistory(row.country.iso3) : ""}`;
+    return `<div class="map-detail-head"><div class="map-detail-flag"><img src="assets/flags/${esc(row.country.iso2)}.svg" alt=""><b>${esc(row.country.iso3)}</b></div><div><span>${esc(t.selectedCountry)}</span><h3>${esc(countryName(row.country))}</h3></div><a href="${esc(profileHref(row.country.iso3))}">${esc(t.openProfile)}</a></div>${valueCards}<p class="map-detail-note"><strong>${esc(t.scope)}:</strong> ${esc(scopeFor(row.country.iso3))}</p>${valid ? (state.lens === "jobs" ? jobSources(row.country.iso3) : miniHistory(row.country.iso3)) : ""}`;
+  }
+
+  function jobSources(code) {
+    const observations = [state.metricA, ...(state.mode === "duel" ? [state.metricB] : [])].map(id => jobObservation(code, id)).filter(Boolean);
+    return `<p class="map-detail-note">${lang === "cs" ? "Datové vydání" : "Data release"}: ${esc(state.data.jobs.release_id)}</p>${observations.map(row => `<p class="map-detail-note">${esc(metricLabel(metric(row.sector)))}: ${esc(row.source_value)}% · 2024 · ${esc(t.pctEmployed)} <a href="${esc(row.source_url)}" target="_blank" rel="noreferrer">${esc(t.source)} ↗</a></p>`).join("")}`;
   }
 
   function ranking(activeRows) {
@@ -222,19 +244,27 @@
       return `<path class="spending-country ${className}${state.selected === country.iso3 ? " is-selected" : ""}" d="${location.path}" tabindex="0" data-map-country="${esc(country.iso3)}" aria-label="${esc(countryName(country))}"><title>${esc(countryName(country))}</title></path>`;
     }).join("");
     const [minYear, maxYear] = yearRange();
-    const contract = state.lens === "budget" ? t.budgetContract : state.lens === "functions" ? t.functionsContract : t.fiscalContract;
+    const contract = state.lens === "jobs" ? t.jobContract : state.lens === "budget" ? t.budgetContract : state.lens === "functions" ? t.functionsContract : t.fiscalContract.replace("2024", String(maxYear));
     const periodLabel = state.lens === "budget" ? t.fixedPeriod : state.year;
-    root.innerHTML = `<div class="map-lens-bar"><span>${esc(t.lens)}</span><div class="map-lenses" role="group" aria-label="${esc(t.lens)}">${[["budget", t.budget], ["functions", t.functions], ["fiscal", t.fiscal]].map(([id, label]) => `<button type="button" data-map-lens="${id}" aria-pressed="${state.lens === id}">${esc(label)}</button>`).join("")}</div><div class="map-modes" role="group"><button type="button" data-map-mode="duel" aria-pressed="${state.mode === "duel"}">${esc(t.duel)}</button><button type="button" data-map-mode="single" aria-pressed="${state.mode === "single"}">${esc(t.single)}</button></div></div><div class="map-control-deck ${state.mode === "single" ? "is-single" : ""}"><label class="map-metric-control"><span>${esc(t.metricA)}</span><select id="map-metric-a">${metricOptions(state.metricA, state.mode === "duel" ? state.metricB : null)}</select></label><div class="map-vs">${esc(t.vs)}</div><label class="map-metric-control map-metric-b"><span>${esc(t.metricB)}</span><select id="map-metric-b">${metricOptions(state.metricB, state.metricA)}</select></label><label class="map-year-control ${state.lens === "budget" ? "is-fixed" : ""}"><span>${esc(state.lens === "budget" ? t.period : t.year)}</span><input id="map-year" type="range" min="${minYear}" max="${maxYear}" value="${state.year}" step="1" ${state.lens === "budget" ? "disabled" : ""}><output>${esc(periodLabel)}</output></label><label class="map-search-control"><span>${esc(t.country)}</span><input id="map-country-search" type="search" list="map-country-list" placeholder="${esc(t.countryPlaceholder)}"><datalist id="map-country-list">${state.data.registry.countries.map((country) => `<option value="${esc(countryName(country))}">${esc(country.iso3)}</option>`).join("")}</datalist></label></div><div class="map-contract"><strong>${esc(state.lens === "budget" ? t.budget : state.lens === "functions" ? t.functions : t.fiscal)}</strong><span>${esc(contract)}</span><a href="methodology.html?lang=${lang}#sources">${esc(t.source)} →</a></div><div class="map-stage"><div class="map-canvas"><svg viewBox="${state.data.geometry.viewBox}" role="img" aria-label="${esc(t.mapLabel)}">${mapPaths}</svg></div><aside class="map-side"><header><span>${esc(t.legend)}</span><strong>${esc(state.mode === "duel" ? `${metricLabel(metric(state.metricA))} / ${metricLabel(metric(state.metricB))}` : metricLabel(metric(state.metricA)))}</strong></header><ol class="map-legend">${legend(activeRows)}</ol><div class="map-story"><span>${esc(t.story)}</span><p>${esc(story(activeRows))}</p></div></aside><div class="map-tooltip" role="tooltip" aria-hidden="true"></div></div><div class="map-lower"><section class="map-detail" aria-live="polite">${detail(activeRows)}</section><aside class="map-ranking"><header><span>${esc(t.ranking)}</span><strong>${esc(activeRows.length)} ${esc(t.countries)} · ${esc(periodLabel)}</strong></header><ol class="map-rank-list">${ranking(activeRows)}</ol></aside></div>`;
+    root.innerHTML = `<div class="map-lens-bar"><span>${esc(t.lens)}</span><div class="map-lenses" role="group" aria-label="${esc(t.lens)}">${[["budget", t.budget], ["functions", t.functions], ["fiscal", t.fiscal], ...(state.data.jobs ? [["jobs", t.jobs]] : [])].map(([id, label]) => `<button type="button" data-map-lens="${id}" aria-pressed="${state.lens === id}">${esc(label)}</button>`).join("")}</div><div class="map-modes" role="group"><button type="button" data-map-mode="duel" aria-pressed="${state.mode === "duel"}">${esc(t.duel)}</button><button type="button" data-map-mode="single" aria-pressed="${state.mode === "single"}">${esc(t.single)}</button></div></div><div class="map-control-deck ${state.mode === "single" ? "is-single" : ""}"><label class="map-metric-control"><span>${esc(t.metricA)}</span><select id="map-metric-a">${metricOptions(state.metricA, state.mode === "duel" ? state.metricB : null)}</select></label><div class="map-vs">${esc(t.vs)}</div><label class="map-metric-control map-metric-b"><span>${esc(t.metricB)}</span><select id="map-metric-b">${metricOptions(state.metricB, state.metricA)}</select></label><label class="map-year-control ${state.lens === "budget" ? "is-fixed" : ""}"><span>${esc(state.lens === "budget" ? t.period : t.year)}</span><input id="map-year" type="range" min="${minYear}" max="${maxYear}" value="${state.year}" step="1" ${state.lens === "budget" ? "disabled" : ""}><output>${esc(periodLabel)}</output></label><label class="map-search-control"><span>${esc(t.country)}</span><input id="map-country-search" type="search" list="map-country-list" placeholder="${esc(t.countryPlaceholder)}"><datalist id="map-country-list">${state.data.registry.countries.map((country) => `<option value="${esc(countryName(country))}">${esc(country.iso3)}</option>`).join("")}</datalist></label></div><div class="map-contract"><strong>${esc(state.lens === "budget" ? t.budget : state.lens === "functions" ? t.functions : state.lens === "jobs" ? t.jobs : t.fiscal)}</strong><span>${esc(contract)}</span><a href="methodology.html?lang=${lang}#sources">${esc(t.source)} →</a></div><div class="map-stage"><div class="map-canvas"><svg viewBox="${state.data.geometry.viewBox}" role="img" aria-label="${esc(t.mapLabel)}">${mapPaths}</svg></div><aside class="map-side"><header><span>${esc(t.legend)}</span><strong>${esc(state.mode === "duel" ? `${metricLabel(metric(state.metricA))} / ${metricLabel(metric(state.metricB))}` : metricLabel(metric(state.metricA)))}</strong></header><ol class="map-legend">${legend(activeRows)}</ol><div class="map-story"><span>${esc(t.story)}</span><p>${esc(story(activeRows))}</p></div></aside><div class="map-tooltip" role="tooltip" aria-hidden="true"></div></div><div class="map-lower"><section class="map-detail" aria-live="polite">${detail(activeRows)}</section><aside class="map-ranking"><header><span>${esc(t.ranking)}</span><strong>${esc(activeRows.length)} ${esc(t.countries)} · ${esc(periodLabel)}</strong></header><ol class="map-rank-list">${ranking(activeRows)}</ol></aside></div>`;
+    const summaries = document.querySelectorAll(".map-hero aside strong");
+    if (summaries.length === 3) {
+      summaries[0].textContent = state.data.registry.countries.length;
+      summaries[1].textContent = `${state.data.budget.categories.length} + ${Object.keys(state.data.functions.categories).length}`;
+      summaries[2].textContent = state.data.fiscal.period?.year_count || "—";
+    }
     bind(activeRows, byCode);
     updateUrl();
   }
 
   function bind(activeRows, byCode) {
     root.querySelectorAll("[data-map-lens]").forEach((button) => button.addEventListener("click", () => {
+      pendingJobLayer = false;
       state.lens = button.dataset.mapLens;
-      state.year = 2024;
+      state.year = yearRange()[1];
       if (state.lens === "budget") { state.metricA = "defence"; state.metricB = "education_research"; }
       if (state.lens === "functions") { state.metricA = "social"; state.metricB = "health"; }
+      if (state.lens === "jobs") { state.metricA = "services"; state.metricB = "industry"; state.mode = "single"; }
       if (state.lens === "fiscal") { state.metricA = "expenditure_pct_gdp"; state.metricB = "revenue_pct_gdp"; }
       render();
     }));
@@ -281,6 +311,15 @@
     lang = next; t = copy[lang]; applyStaticCopy(); if (state.data) render();
   });
 
+  function switchView(view) {
+    document.querySelector(".map-workbench").hidden = view === "published";
+    document.querySelector(".map-published-view").hidden = view !== "published";
+    document.querySelectorAll("[data-map-view]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.mapView === view)));
+    const url = new URL(location.href); url.searchParams.set("view", view); history.replaceState(null, "", url);
+  }
+  document.querySelectorAll("[data-map-view]").forEach(button => button.addEventListener("click", () => switchView(button.dataset.mapView)));
+  if (new URLSearchParams(location.search).get("view") === "published") switchView("published");
+
   Promise.all([
     PSDData.loadJson("data/world-map.v1.json"),
     PSDData.loadJson("data/global-budget-transparency.v1.json"),
@@ -289,7 +328,14 @@
     PSDData.loadJson("data/sovereign-benchmark-slim.v1.json")
   ]).then(([geometry, registry, budget, functions, fiscal]) => {
     state.data = { geometry, registry, budget, functions, fiscal };
+    state.data.jobs = null;
     readUrl(); normalizeMetricState(); render();
+    PSDData.loadJson("/api/v1/job-market/2024").then(jobs => {
+      if (!jobs.release_id || Number(jobs.period) !== 2024 || !Array.isArray(jobs.series?.employment_shares)) throw new Error("Invalid published job-market contract");
+      state.data.jobs = jobs;
+      if (pendingJobLayer) { state.lens = "jobs"; state.metricA = initialQuery.get("a") || "services"; state.metricB = initialQuery.get("b") || "industry"; state.mode = initialQuery.get("mode") === "duel" ? "duel" : "single"; pendingJobLayer = false; normalizeMetricState(); }
+      render();
+    }).catch(error => console.warn("Job-market map layer unavailable", error));
   }).catch((error) => {
     console.error(error);
     root.innerHTML = `<p class="map-error">${esc(t.mapError)}</p>`;

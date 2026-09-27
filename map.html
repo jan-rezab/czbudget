@@ -18,7 +18,10 @@
     <link rel="stylesheet" href="styles-v2.css?v=20260828-map-view" />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <link rel="stylesheet" href="map-view.css?v=20260920-global-default" />
-    <script src="map-view.js?v=20260920-loading-recovery" defer></script>
+    <link rel="stylesheet" href="coverage-map.css?v=20260927-live-coverage" />
+    <script src="published-coverage.js?v=20260927-live-coverage" defer></script>
+    <script src="coverage-map.js?v=20260927-live-coverage" defer></script>
+    <script src="map-view.js?v=20260927-published-layers" defer></script>
     <script src="global-footer.js?v=20260824-compact" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png" />
     <meta property="og:image:width" content="1200" />
@@ -41,6 +44,14 @@
           <div><strong>12 + 3</strong><small data-map-copy="heroCategories">rozpočtových a funkčních kategorií</small></div>
           <div><strong>20</strong><small data-map-copy="heroYears">let globálního fiskálního kontextu</small></div>
         </aside>
+      </section>
+      <div class="map-view-switch" role="group" aria-label="Map views">
+        <button type="button" data-map-view="spending" aria-pressed="true" data-map-copy="spendingView">Srovnání hodnot</button>
+        <button type="button" data-map-view="published" aria-pressed="false" data-map-copy="publishedView">Publikované sekce</button>
+      </div>
+      <section class="map-published-view" hidden aria-labelledby="published-coverage-title">
+        <header class="published-coverage-head"><div><span class="kicker" data-surface-copy="eyebrow">Publikované na PSD</span><h2 id="published-coverage-title" data-surface-copy="title">Co je na webu publikované</h2></div><p data-surface-copy="lead"></p></header>
+        <div id="surface-coverage-atlas" class="surface-coverage-atlas" aria-live="polite"></div>
       </section>
       <section class="map-workbench" aria-labelledby="map-workbench-title">
         <header class="map-workbench-head">

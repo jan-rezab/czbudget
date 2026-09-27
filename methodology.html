@@ -24,7 +24,7 @@
     />
     <link rel="stylesheet" href="municipal-transparency.css?v=20260827-evidence-status" />
     <link rel="stylesheet" href="data-freshness.css?v=20260827-cross-layer" />
-    <link rel="stylesheet" href="coverage-map.css?v=20260827-surfaced-sections" />
+    <link rel="stylesheet" href="coverage-map.css?v=20260927-live-coverage" />
     <link rel="stylesheet" href="global-footer.css?v=20260824-dark" />
     <style>
       .data-health-kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -45,10 +45,12 @@
     </style>
     <script src="global-nav.js?v=20260824-logo-120" defer></script>
     <script src="country-routes.js?v=20260824-readable-country-routes" defer></script>
-    <script src="site-pages.js?v=20260920-coverage-english" defer></script>
+    <script src="/data-loader.js?v=20260920-retry" defer></script>
+    <script src="published-coverage.js?v=20260927-live-coverage" defer></script>
+    <script src="site-pages.js?v=20260927-reference-snapshot" defer></script>
     <script src="municipal-transparency.js?v=20260827-evidence-status" defer></script>
-    <script src="data-freshness.js?v=20260827-methodology-levels-acts" defer></script>
-    <script src="coverage-map.js?v=20260920-coverage-map" defer></script>
+    <script src="data-freshness.js?v=20260927-live-coverage" defer></script>
+    <script src="coverage-map.js?v=20260927-live-coverage" defer></script>
     <script src="coverage-accounting-boundaries.js?v=20260828-move-from-compare" defer></script>
     <script src="global-footer.js?v=20260827-coverage-menu" defer></script>
     <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
@@ -106,7 +108,7 @@
       <section id="published-coverage" class="published-coverage" aria-labelledby="published-coverage-title">
         <header class="published-coverage-head">
           <div>
-            <span class="kicker" data-surface-copy="eyebrow">Publikované na PSD · 15 sekcí</span>
+            <span class="kicker" data-surface-copy="eyebrow">Publikované na PSD</span>
             <h2 id="published-coverage-title" data-surface-copy="title">Co je na webu publikované</h2>
           </div>
           <p data-surface-copy="lead">Vyberte sekci a uvidíte země, pro které má Public Spending Data publikovaný profil nebo datovou vrstvu. Mapa měří obsah na tomto webu, nikoli vše, co může existovat u původních poskytovatelů.</p>
@@ -200,6 +202,7 @@
           <div><span class="kicker" data-freshness-copy="eyebrow">Data · 191 zemí · 15 vrstev</span><h2 id="data-freshness-title" data-freshness-copy="title">Aktuálnost dat podle vrstev</h2></div>
           <p data-freshness-copy="method">Rok v buňce je nejnovější fiskální, vykazované nebo pozorované období. Datum sestavení souboru je samostatné; plán, skutečnost a projekce nejsou zaměnitelné.</p>
         </header>
+        <p id="freshness-warning" class="surface-warning" role="status" hidden></p>
         <div id="freshness-root">
           <div class="freshness-controls" aria-label="Data freshness filters">
             <label><span data-freshness-copy="country">Země</span><select id="freshness-country"></select></label>

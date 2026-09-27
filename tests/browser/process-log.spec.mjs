@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { mockPublishedCoverage } from '../fixtures/published-coverage.mjs';
 
 test("process log separates source, PSD dataset and lifecycle states", async ({ page }) => {
   await page.route("**/api/v1/process-log/data-runs", async route => route.fulfill({
@@ -34,8 +35,26 @@ test("process log separates source, PSD dataset and lifecycle states", async ({ 
 });
 
 test("methodology English entry point presents the full registry, not CityVizor", async ({ page }) => {
+  await mockPublishedCoverage(page);
   await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator(".status-header")).toContainText("Browse the complete source registry");
   await expect(page.locator(".status-header")).not.toContainText("CityVizor");
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
+  await expect(page.locator('[data-status-copy="releaseTitle"]')).toHaveText('Reference data snapshot');
+  await page.locator('#surface-mode').selectOption('job_market');
+  await page.locator('#surface-country-search').fill('CZE');
+  await page.locator('#surface-country-search').press('Enter');
+  await expect(page.locator('.surface-detail')).toContainText('fixture-published-job-release');
+  await expect(page.locator('#freshness-matrix thead')).toContainText('Foreign trade · annual');
+  await expect(page.locator('#freshness-matrix thead')).toContainText('Foreign trade · monthly');
+  await expect(page.locator('#freshness-matrix thead')).toContainText('Job market');
+});
+
+test('coverage keeps a failed live layer visible as unknown, rather than zero coverage', async ({page}) => {
+  await mockPublishedCoverage(page);
+  await page.route('**/api/v1/trade/countries',route => route.fulfill({status:403,body:'unavailable'}));
+  await page.goto('/methodology.html?lang=en', {waitUntil:'networkidle'});
+  await expect(page.locator('.surface-warning').first()).toContainText('Some live layers could not be checked');
+  await expect(page.locator('#freshness-warning')).toBeVisible();
+  await expect(page.locator('.surface-catalogue')).toContainText('Foreign trade');
 });
