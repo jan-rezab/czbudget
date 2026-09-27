@@ -5,12 +5,15 @@ import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { columnsOf, findRows, toCSV, exportDataset } from "../../server/bulk-export.mjs";
+import { localAssetOptions } from "../../scripts/lib/static-asset-source.mjs";
 
 process.env.NODE_ENV = "test";
 process.env.AUTH_DISABLED_FOR_TESTS = "1";
 process.env.SITE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 const { handler } = await import("../../server/index.mjs");
+// Datasets that left the checkout are read by the API from the static-asset packs.
+(await import("../../server/static-assets.mjs")).staticAssets.configure(localAssetOptions());
 let server;
 let baseURL;
 
