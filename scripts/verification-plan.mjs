@@ -65,6 +65,6 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   execFileSync('git',['merge-base','--is-ancestor',base,commit]);
   // A release that stops tracking a data directory lists tens of thousands of paths;
   // the default 1 MiB output buffer is far too small for that diff.
-  const files=execFileSync('git',['diff','--name-only',base,commit],{encoding:'utf8',maxBuffer:256*1024*1024}).trim().split('\n').filter(Boolean);
+  const files=execFileSync('git',['diff','--no-renames','--name-only',base,commit],{encoding:'utf8',maxBuffer:256*1024*1024}).trim().split('\n').filter(Boolean);
   console.log(JSON.stringify({...selectVerification(files),base,commit,contract:contractDigest(commit)},null,2));
 }

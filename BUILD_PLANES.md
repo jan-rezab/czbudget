@@ -30,6 +30,14 @@ for whichever lane applies; a failed gate preserves the current live revision.
 There is no separate verification build and no manual verification-to-promotion
 handoff. The build fails closed at thirty minutes.
 
+Fixed costs are kept off the critical path: `warm-browser-worker` pulls the
+Playwright image and installs packages at second zero, while the diff is computed
+from blobless fetches (`--filter=blob:none`, `--no-renames`). The push hook runs the
+component-proven browser specs locally when Playwright is installed (about twenty
+seconds; `PSD_SKIP_LOCAL_BROWSER=1` skips it). The exhaustive shards are CPU-bound
+on `E2_HIGHCPU_8`; the project's default-pool quota is ten build CPUs per region,
+so a larger worker needs a quota increase first.
+
 `cloudbuild.ui.yaml` remains an optional read-only browser gate for interface previews.
 Its source bundle contains only UI code and the small published contracts used
 by the focused tests. It has a ten-minute hard timeout and cannot publish data,

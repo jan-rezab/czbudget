@@ -32,16 +32,17 @@ test('production cannot promote before focused or exhaustive verification and ca
   const yaml=readFileSync(new URL('../../cloudbuild.yaml',import.meta.url),'utf8');
   const block=id=>yaml.split(`  - id: ${id}\n`)[1]?.split('\n  - id: ')[0];
   assert.match(block('component-verification'),/scripts\/run-component-gate\.mjs \.verification-plan\.json/);
-  assert.match(block('component-verification'),/waitFor: \[source-contracts\]/);
+  assert.match(block('component-verification'),/waitFor: \[source-contracts, warm-browser-worker\]/);
+  assert.match(block('warm-browser-worker'),/waitFor: \["-"\]/);
   assert.match(block('image-browser-contract'),/waitFor: \[start-image-browser-candidate, component-verification\]/);
   // The exhaustive suite uses the pinned published releases and never shares the worker
   // with the candidate-image browser pool.
-  assert.match(block('full-verification'),/waitFor: \[verify-published-releases, image-browser-contract, full-python-contracts\]/);
+  assert.match(block('full-verification'),/waitFor: \[verify-published-releases, image-browser-contract, full-python-contracts, warm-browser-worker\]/);
   assert.match(block('full-python-contracts'),/pipeline\/tests/);
   assert.match(block('full-verification'),/for shard in 1 2 3 4/);
   assert.match(block('verify-published-releases'),/validate-cityvizor-cloud-release\.mjs/);
   assert.match(block('hydrate-published-releases'),/verify-runtime-assets-cloud\.py/);
   assert.match(block('assert-current-main'),/waitFor: \[assert-single-production, component-verification, full-verification, image-contract, image-browser-contract, push\]/);
-  assert.match(block('verification-input'),/git diff --name-only "\$\$base" "\$COMMIT_SHA"/);
+  assert.match(block('verification-input'),/git diff --no-renames --name-only "\$\$base" "\$COMMIT_SHA"/);
   assert.match(yaml,/\ntimeout: 1800s\n/);
 });

@@ -1,6 +1,14 @@
 # Production promotion is code-only. Data ingestion and data-release publication
 # run independently and expose validated versions through GCS current.json pointers.
 steps:
+  # Pull the browser image and install packages while the diff is being computed;
+  # component-verification and full-verification reuse both instead of waiting.
+  - id: warm-browser-worker
+    waitFor: ["-"]
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+    entrypoint: bash
+    args: [-ceu, 'npm ci --no-audit --no-fund']
+
   - id: verification-input
     waitFor: ["-"]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
@@ -9,7 +17,7 @@ steps:
       - -ceu
       - |
         if ! git rev-parse --verify "$COMMIT_SHA^" >/dev/null 2>&1; then
-          git fetch --depth=2 origin "$COMMIT_SHA"
+          git fetch --depth=2 --filter=blob:none origin "$COMMIT_SHA" || git fetch --depth=2 origin "$COMMIT_SHA"
         fi
         gcloud run services describe czbudget-public --project="$PROJECT_ID" --region=europe-west1 --format=json > /workspace/.live-service.json
         revision=$$(python3 -c 'import json; t=json.load(open(".live-service.json"))["status"].get("traffic",[]); active=[r for r in t if r.get("percent",0)>0]; print(active[0].get("revisionName","") if len(active)==1 and active[0].get("percent")==100 else "")')
@@ -20,10 +28,10 @@ steps:
         printf '%s\n' "$$deployed" > /workspace/.verification-deployed
         base=$${deployed:-$$(git rev-parse "$COMMIT_SHA^")}
         if ! git cat-file -e "$$base^{tree}" 2>/dev/null; then
-          git fetch --depth=1 origin "$$base"
+          git fetch --depth=1 --filter=blob:none origin "$$base" || git fetch --depth=1 origin "$$base"
         fi
         printf '%s\n' "$$base" > /workspace/.verification-base
-        git diff --name-only "$$base" "$COMMIT_SHA" > /workspace/.verification-files
+        git diff --no-renames --name-only "$$base" "$COMMIT_SHA" > /workspace/.verification-files
 
   - id: assert-single-production
     waitFor: ["-"]
@@ -70,14 +78,14 @@ steps:
         echo "Release lane: $$(python3 -c 'import json; print(json.load(open(".verification-plan.json"))["lane"])')"
 
   - id: component-verification
-    waitFor: [source-contracts]
+    waitFor: [source-contracts, warm-browser-worker]
     name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
     args:
       - -ceu
       - |
         if [ "$$(node scripts/release-verification.mjs .verification-plan.json)" = component ]; then
-          npm ci
+          test -d node_modules/@playwright/test || npm ci
           node scripts/run-component-gate.mjs .verification-plan.json
         else
           echo "Full candidate: exhaustive verification runs in full-verification."
@@ -202,7 +210,7 @@ steps:
   - id: full-verification
     timeout: 1320s
     # After the candidate-image browser contract, so two browser pools never share the worker.
-    waitFor: [verify-published-releases, image-browser-contract, full-python-contracts]
+    waitFor: [verify-published-releases, image-browser-contract, full-python-contracts, warm-browser-worker]
     name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: bash
     env:

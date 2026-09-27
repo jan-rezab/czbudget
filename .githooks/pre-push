@@ -81,11 +81,13 @@ if [ "$push_to_main" = 1 ]; then
   plan=$(mktemp "${TMPDIR:-/tmp}/psd-verification-plan.XXXXXX")
   trap 'rm -f -- "$plan"' EXIT INT TERM
   node scripts/verification-plan.mjs "$main_base" "$main_oid" > "$plan"
+  node scripts/local-browser-gate.mjs "$plan"
   if [ "$(node scripts/release-verification.mjs "$plan")" = full ]; then
     echo "pre-push: full lane; the production build runs the exhaustive suite (about 18 minutes) and blocks deployment on failure"
   else
     echo "pre-push: component lane; focused tests run inside the production build (about 4 minutes) and block deployment on failure"
   fi
 else
+  node scripts/local-browser-gate.mjs
   echo "pre-push: source contracts passed"
 fi
