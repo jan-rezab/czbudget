@@ -106,3 +106,13 @@ test('district summary rejects profile identity and release drift', async () => 
     await assert.rejects(()=>client.loadITSummary(profile.key,2025),/identity|Publication changed/);
   }
 });
+
+test('magistrate statements pin fiscal year and publication without fetching raw shards',async()=>{
+  const calls=[];
+  const client=data.createClient({fetch:async url=>{calls.push(url);return {ok:true,json:async()=>({release_id:'r1',profile:{key:'cityvizor.praha.eu/4',ico:'00064581'},years:[{year:2025,accounting:{rows:0}}]})};}});
+  const result=await client.loadMagistrateYear(2025,'r1');
+  assert.equal(result.summary.year,2025);assert.equal(calls.length,1);assert.ok(calls[0].includes('year=2025'));
+  await assert.rejects(()=>client.loadMagistrateYear(2025,'r2'),/Publication changed/);
+  await assert.rejects(()=>client.loadMagistrateYear(2024,'r1'),/year|Year/);
+  assert.equal(calls.some(url=>url.includes('/shard?')),false);
+});

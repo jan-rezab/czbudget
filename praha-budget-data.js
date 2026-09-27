@@ -185,6 +185,11 @@
       const [payments, events] = await Promise.all([layer(year, "payments", summary), layer(year, "events", summary)]);
       return { year, rows: normalizePayments(payments, year, codebook, events), summary: summary.selected.payments, sourceValidity: summary.selected.source_validity, coverage: { status: "available", rows: payments.length, scope: "Magistrate published invoice allocations, not all municipal payments", canReconcileToBudget: false }, evidence: { provider: "CityVizor", releaseId: summary.payload.release_id, profileKey: CITY.cityvizorKey, sourceUrl: "https://cityvizor.praha.eu/magistrat", sourceSha256: summary.selected.source_bulk_export?.sha256, receivedAt: summary.selected.source_bulk_export?.retrieved_at } };
     }
+    async function loadMagistrateYear(year, expectedRelease) {
+      const result = await yearSummary(year);
+      if (expectedRelease && result.payload.release_id !== expectedRelease) throw new Error('Publication changed; reload before comparing annual statements');
+      return {year:Number(year),summary:result.selected,releaseId:result.payload.release_id,profile:result.payload.profile};
+    }
     async function loadContext() {
       const [index, catalog] = await Promise.all([json(PATHS.paqIndex), json(PATHS.paqCatalog, true)]);
       const region = index.regions?.["obec:554782"];
@@ -214,8 +219,8 @@
       const rows = normalizePayments(raw, year, codebook, events).map((row, index) => ({ ...row, expenditureCents: number(raw[index].expenditure_cents), invoiceNumber: null, profileKey, scope: result.profile.name + ' · published invoice allocations' })).filter(row => ['5042','5168','5172','6111','6125','5162'].includes(row.itemCode));
       return { ...result, rows, totalPublishedRows: raw.length };
     }
-    return { loadOverview, loadYearDetail, loadPayments, loadContext, loadITProfiles, loadITSummary, loadITPayments, clearCache: () => cache.clear() };
+    return { loadOverview, loadYearDetail, loadPayments, loadMagistrateYear, loadContext, loadITProfiles, loadITSummary, loadITPayments, clearCache: () => cache.clear() };
   }
   let defaultClient;
-  return { CITY, PATHS, createClient, normalizeHistory, normalizeBreakdown, normalizeAccounting, normalizePayments, normalizeContext, number, loadOverview: (...args) => (defaultClient ||= createClient()).loadOverview(...args), loadYearDetail: (...args) => (defaultClient ||= createClient()).loadYearDetail(...args), loadPayments: (...args) => (defaultClient ||= createClient()).loadPayments(...args), loadContext: (...args) => (defaultClient ||= createClient()).loadContext(...args), loadITProfiles: (...args) => (defaultClient ||= createClient()).loadITProfiles(...args), loadITSummary: (...args) => (defaultClient ||= createClient()).loadITSummary(...args), loadITPayments: (...args) => (defaultClient ||= createClient()).loadITPayments(...args) };
+  return { CITY, PATHS, createClient, normalizeHistory, normalizeBreakdown, normalizeAccounting, normalizePayments, normalizeContext, number, loadOverview: (...args) => (defaultClient ||= createClient()).loadOverview(...args), loadYearDetail: (...args) => (defaultClient ||= createClient()).loadYearDetail(...args), loadPayments: (...args) => (defaultClient ||= createClient()).loadPayments(...args), loadMagistrateYear: (...args) => (defaultClient ||= createClient()).loadMagistrateYear(...args), loadContext: (...args) => (defaultClient ||= createClient()).loadContext(...args), loadITProfiles: (...args) => (defaultClient ||= createClient()).loadITProfiles(...args), loadITSummary: (...args) => (defaultClient ||= createClient()).loadITSummary(...args), loadITPayments: (...args) => (defaultClient ||= createClient()).loadITPayments(...args) };
 }));

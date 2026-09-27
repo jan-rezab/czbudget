@@ -286,3 +286,22 @@ test('capital navigation flags inconsistent categories and keeps absent years mi
   await expect(page.locator('.pb-flow-heading')).toContainText('— CZK');
   await expectNoRawDownloads(page);
 });
+
+test('magistrate overview separates financing, reconciles statements and keeps its year independent', async ({page}) => {
+  await openPraha(page);
+  const magistrate=page.locator('#magistrate');
+  await expect(magistrate.locator('.pb-mag-metrics')).toBeVisible();
+  await expect(magistrate.locator('.pb-mag-statement').first()).toContainText('Financing · class 8 (not revenue)');
+  await expect(magistrate.locator('.pb-mag-statement').last()).toContainText('4,922,951,114.87 CZK');
+  await expect(magistrate.locator('.pb-mag-evidence summary')).toContainText('all four controls agree');
+  await magistrate.locator('[data-mag-code="6125"]').click();
+  await expect(page.locator('#record-dialog')).toContainText('5,769,650.26 CZK');
+  await page.locator('#record-dialog').press('Escape');
+  await magistrate.locator('#magistrate-year').selectOption('2007');
+  await expect(magistrate.locator('.pb-mag-metrics')).toBeVisible();
+  await expect(page).toHaveURL(/magyear=2007/);
+  await expect(magistrate.locator('.pb-empty').first()).toContainText('No accounting rows');
+  await expect(magistrate.locator('.pb-mag-metrics')).toContainText('— CZK');
+  await expect(page.locator('#hero-amount')).toContainText('123.97');
+  await expectNoRawDownloads(page);
+});
