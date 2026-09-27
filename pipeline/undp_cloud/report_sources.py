@@ -116,6 +116,11 @@ def acquire_layout(bucket,prefix,entry,root,resume_run=None):
   blob=bucket.blob(saved['raw_uri'].split('/',3)[3],generation=int(saved['generation']))
   data=blob.download_as_bytes(checksum='auto')
   if len(data)>2_000_000 or hashlib.sha256(data).hexdigest()!=saved['sha256']:raise ValueError('SAS layout immutable checksum mismatch')
+ # Verify the exact stored generation before any layout parsing, including a
+ # fresh upload; the source and stored bytes must both match the pinned hash.
+ pinned=bucket.blob(saved['raw_uri'].split('/',3)[3],generation=int(saved['generation']))
+ data=pinned.download_as_bytes(checksum='auto')
+ if len(data)>2_000_000 or hashlib.sha256(data).hexdigest()!=saved['sha256']:raise ValueError('SAS layout stored generation checksum mismatch')
  if entry.get('layout_expected_sha256') and saved['sha256']!=entry['layout_expected_sha256']:raise ValueError('Reviewed SAS layout checkpoint hash differs')
  if not checkpoint.exists():upload(bucket,name,(dump(saved)+'\n').encode())
  return extract_layout(data,entry,saved),saved
