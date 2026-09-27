@@ -1,0 +1,20 @@
+steps:
+  - id: fetch-validate-publish-health-gap-sources
+    name: python:3.12-slim-bookworm
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        pip install --no-cache-dir -r pipeline/health_four_cloud/requirements.txt
+        python -m unittest pipeline.health_four_cloud.test_worker
+        python pipeline/health_four_cloud/worker.py
+    env:
+      - BUILD_ID=$BUILD_ID
+      - LOADER_SHA=${_LOADER_SHA}
+      - GOOGLE_CLOUD_PROJECT=czbudget-janrezab
+substitutions:
+  _LOADER_SHA: unknown
+timeout: 1800s
+options:
+  logging: CLOUD_LOGGING_ONLY
+tags: [plane-data, health-four-source-coverage]
