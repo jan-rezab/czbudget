@@ -1,10 +1,10 @@
 {
   "request_started_at_unix": 1790461758,
-  "recorded_at": "2026-09-27T01:09:21Z",
+  "recorded_at": "2026-09-27T01:12:39Z",
   "data_recovery_authorized_at": "2026-09-27T00:42:33Z",
   "user_instruction": "fix the cloud run fails on the data bit ... crawling server to server right?",
   "budget_minutes": 179,
-  "failed_verification_submissions": 5,
+  "failed_verification_submissions": 7,
   "guard_result": "STOP_NEW_BUILDS due cumulativefailed4; preserved, not reset",
   "override": "Explicit current user instruction authorizes only diagnosed, tested data retries within the new45minute recovery checkpoint. Every guard result and job remains recorded. No website release authorization inferred.",
   "focused_tests": {
@@ -377,7 +377,7 @@
     {
       "id": "15b9c7ea-7c11-45ac-94f6-abe3e959a2a4",
       "group": "brfss_ascii",
-      "status": "WORKING",
+      "status": "FAILURE",
       "guard_elapsed_seconds": 9393.716,
       "loader_git_sha": "a1593258c940438c22b856de9b38e752e50808a8",
       "guard_result": "STOP_NEW_BUILDS withfailed5;explicitoverride plus necessary original-source data recovery continuation authorized",
@@ -388,7 +388,15 @@
       },
       "publication_pointer": "hdr_report_sources_2025:brfss_ascii",
       "raw_retention": "Whole original ASCII archive and original SAS layoutZIP retainedprivate; exactlayoutmemberhash/generation+fullcasecount+widthvalidationrequired",
-      "public_bucket_writes": 0
+      "public_bucket_writes": 0,
+      "source_errors": {
+        "cdc_brfss2023_ascii": "HTTP403Forbidden",
+        "cdc_brfss2024_ascii": "HTTP403Forbidden",
+        "cdc_brfss2025_ascii": "HTTP403Forbidden"
+      },
+      "failure": "No original-provider records available for publication after all fullGETs denied",
+      "raw_status": "No raw objects/checkpoints stored; ASCII/SASparser not reached",
+      "retry_status": "Stopped retries for this cause pending supportedofficialsource diagnosis; range assembly to bypass fullGETdenial prohibited"
     }
   ],
   "plan": [
@@ -462,5 +470,6 @@
       "pop": "j"
     },
     "full_report_original_snapshot_match": "Not asserted; currentmutableproviderraw pinnedbySHAandgeneration"
-  }
+  },
+  "failure_count_basis": "PriorCDCXPT,reportEpoch,WIDold,PISAold,reportcap3.968MB,reportcap2.22MB,CDCASCII; originalclock/fivefailureoverride retained, currenttotal7."
 }
