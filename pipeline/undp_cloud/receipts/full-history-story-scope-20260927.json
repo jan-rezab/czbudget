@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "request": "Find all historical source data and build the charts as a story",
+  "new_scope_started_at": "2026-09-27T06:15:32Z",
+  "original_started_at_epoch": 1790461758,
+  "cumulative_failed_cloud_verifications": 8,
+  "proposed_cumulative_budget_minutes": 512,
+  "checkpoint_at": "2026-09-27T07:01:18Z",
+  "gate_status": "STOP_NEW_BUILDS; explicit 45-minute private extension awaiting user approval",
+  "automatic_review": "Rejected private PISA completion before execution because trusted explicit stopped-gate extension approval was absent; no new cloud build created",
+  "data_worktree": "/Users/johnwick/dev/czbudget/work-undp-human-development",
+  "data_branch": "codex/undp-human-development-20260926",
+  "website_worktree": "/Users/johnwick/dev/czbudget/work-human-development-reports",
+  "website_branch": "codex/human-development-reports-20260926",
+  "prepared_private_jobs": [
+    "Complete exact successful PISA LOAD with source/hash/count checks and atomic private warehouse pointer",
+    "Load four official Sapien historical aggregate files through care_history source group",
+    "Load two official NAEP age 9/13 historical workbooks through education_history source group, preserving the 2004 format bridge",
+    "Load official PISA 2025 Volume I trend workbook through pisa_history source group; verify changing comparability/cohort denominators before chart admission",
+    "Build a pinned private report with complete WID/WDI/material-footprint/HDRO component histories, WIPO native family history panels and explicitly calculated original-survey panels"
+  ],
+  "region": "europe-west4",
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "tag": "plane-data",
+  "public_promotion": "Not authorized by this private extension; previous rejection remains",
+  "website_deployment": "Not authorized by this private extension; previous rejection remains",
+  "source_research_findings": "86 original objects audited; 19 conceptual and 67 statistical; source receipt binding is distinct from exact original figure recreation",
+  "prepared_report_contract": {
+    "build_config": "pipeline/undp_cloud/cloudbuild.review_histories.yaml",
+    "raw_destination": "Exact immutable raw source objects in each already published source receipt; additional seven official history files are identified, not ingested",
+    "staging_destination": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/<BUILD_ID>/",
+    "publication_pointer": null,
+    "publication_status": "not_published; private review only"
+  },
+  "offline_history_check": {
+    "input": "Existing bounded private review 369c3550-0253-40c7-9cf8-8b1acf944b17 presentation index; no new raw download",
+    "charts": 3,
+    "shards": 704,
+    "retained_native_rows": 44550,
+    "index_bytes_saved": 419019,
+    "largest_shard_bytes": 8177,
+    "native_historical_geographies": "Preserved exactly, including SRC-SERBIA-AND-MONTENEGRO",
+    "status": "pure in-memory check passed; new cloud bundle not executed"
+  },
+  "original_object_audit": {
+    "objects": 86,
+    "conceptual": 19,
+    "statistical": 67,
+    "statistical_with_published_source_receipt_binding": 43,
+    "statistical_without_admitted_original_numeric_binding": 24,
+    "exact_original_figures_recreated": 0
+  },
+  "focused_tests": "18 Python publisher/history/PDF tests and 12 Node API tests passed after native historical-geography correction; prior broader focused checks passed; full cloud/website gate not executed"
+}

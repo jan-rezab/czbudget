@@ -52,6 +52,20 @@ class GCS:
 
 
 class PrivatePDFTests(unittest.TestCase):
+    def test_private_render_loads_complete_pinned_country_history_and_rejects_wrong_country(self):
+        payload,_,manifest=fixture()
+        source=dict(source_id='synthetic',release_id='fixture',sha256='a'*64,url='https://example.org/source',table='Native series',vintage='Synthetic')
+        chart=dict(id='native-history',chapter='annex',title=bilingual('Native history'),method=bilingual('Synthetic only'),denominator=bilingual('Synthetic country'),unit='index',chart_type='line',status='ready',fields=[dict(key='value',label=bilingual('Value'))],source_refs=[source],rows=[dict(country='CZE',year=2024,value=.2)],original_refs=[])
+        full=dict(chart,rows=[dict(country='CZE',year=1900,value=0),dict(country='CZE',year=1901,value=None),dict(country='CZE',year=2024,value=.123456789)])
+        history_body=json.dumps(full).encode();name=PREFIX+'history/native-history/CZE.json'
+        chart['history_by_country']={'CZE':dict(object=f'static-assets/human-development/releases/{RID}/history/native-history/CZE.json',bytes=len(history_body),sha256=hashlib.sha256(history_body).hexdigest(),rows=3,first_period='1900',last_period='2024')}
+        payload['charts']=[chart];body=json.dumps(payload).encode();manifest.update(bytes=len(body),sha256=hashlib.sha256(body).hexdigest())
+        g=GCS(body,manifest);g.objects[name]=history_body
+        result,receipt=pdf.load_verified_report(g,URI)
+        self.assertEqual([row['value'] for row in result['charts'][0]['rows']],[0,None,pdf.Decimal('0.123456789')]);self.assertEqual(receipt['history_reads'][0]['rows'],3)
+        full['rows'][0]['country']='WLD';history_body=json.dumps(full).encode();chart['history_by_country']['CZE'].update(bytes=len(history_body),sha256=hashlib.sha256(history_body).hexdigest())
+        body=json.dumps(payload).encode();manifest.update(bytes=len(body),sha256=hashlib.sha256(body).hexdigest());g=GCS(body,manifest);g.objects[name]=history_body
+        with self.assertRaisesRegex(ValueError,'definition/country/count'):pdf.load_verified_report(g,URI)
     def test_private_snapshot_uses_exact_generation_without_public_bucket(self):
         payload,body,m=fixture();g=GCS(body,m)
         result,source=pdf.load_verified_report(g,URI)

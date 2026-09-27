@@ -1,0 +1,19 @@
+steps:
+  - id: private-pinned-full-history-review
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: bash
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1']
+    args:
+      - -ceu
+      - |
+        pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt
+        cd pipeline/undp_cloud
+        python -m unittest test_export_history_bundle.py
+        python export_history_bundle.py --loader-sha '${_LOADER_SHA}'
+timeout: 1200s
+queueTtl: 1800s
+tags: [plane-data, human-development-full-history, private-review-only]
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _LOADER_SHA: required

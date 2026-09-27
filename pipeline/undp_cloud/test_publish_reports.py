@@ -13,6 +13,14 @@ class PublicReportTests(unittest.TestCase):
   self.assertEqual([r['rank'] for r in rank['rows']],[1,1])
   self.assertFalse(any('gdi-rank' in c['id'] for c in charts))
   life=next(c for c in charts if c['id'].startswith('hdro-le-'));self.assertEqual([r['year'] for r in life['rows']],[2023])
+ def test_official_world_is_kept_but_never_ranked_as_a_country_and_component_history_is_complete(self):
+  values=self.core();world=dict(values[0],geography_kind='aggregate',country_code='ZZK.WORLD',country_name='World',value='.7')
+  values.append(world);histories={};charts,_=core_charts(values,histories)
+  rank=next(c for c in charts if 'hdi-rank' in c['id'])
+  self.assertFalse(any(r['country']=='WLD' for r in rank['rows']))
+  indices=next(c for c in charts if 'indices' in c['id']);self.assertTrue(any(r['country']=='WLD' and r['hdi']==.7 for r in indices['rows']))
+  self.assertEqual([r['year'] for r in histories['hdro-le-hdr2025']],[2023,2022])
+  self.assertTrue(next(c for c in charts if c['id']=='hdro-le-hdr2025')['native_history_complete'])
  def test_survey_exact_bins_czech_gap(self):
   common=dict(release_id='r',source_id='ai',variable='Q8',geography='Germany',source_url='https://example.org/ai',source_sha256=SHA,countries=['Germany'],received_n=1,usable_weight_n=1,invalid_weight_n=0)
   bins=[dict(common,source_value='1',value_label='Some',missing_kind=None,weighted_n='2'),dict(common,source_value='99',value_label="Don't know",missing_kind='explicit_nonresponse',weighted_n='1')]

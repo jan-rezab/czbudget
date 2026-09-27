@@ -61,6 +61,21 @@ def main():
     pointer=public.blob(POINTER);expected=0
     if pointer.exists():pointer.reload();expected=int(pointer.generation)
     promoted=[];access={'json':'not_yet_verified_direct_access; authenticated_report_store_contract'}
+    histories={item['uri']:item for item in review.get('history_objects',[])}
+    for chart in payload['charts']:
+        for country,descriptor in chart.get('history_by_country',{}).items():
+            expected=f'static-assets/human-development/releases/{rid}/history/{chart["id"]}/{country}.json'
+            if descriptor['object']!=expected:raise ValueError('History is outside reviewed release')
+            private_name=f'processing-runs/hdr-report-review/{rid}/history/{chart["id"]}/{country}.json'
+            artifact=histories.get(f'gs://{PRIVATE}/{private_name}')
+            if not artifact or artifact['sha256']!=descriptor['sha256'] or artifact['bytes']!=descriptor['bytes']:raise ValueError('History lacks exact validated receipt')
+            body=checked_read(private,private_name,artifact['generation'],artifact['sha256'],2*1024*1024)
+            full=json.loads(body)
+            if full['id']!=chart['id'] or len(full['rows'])!=descriptor['rows'] or any(row.get('country')!=country for row in full['rows']):raise ValueError('History coverage mismatch')
+            target=public.blob(expected)
+            if not target.exists():private.copy_blob(private.blob(private_name,generation=int(artifact['generation'])),public,expected,source_generation=int(artifact['generation']),if_source_generation_match=int(artifact['generation']),if_generation_match=0)
+            target.reload();checked_read(public,expected,target.generation,descriptor['sha256'],2*1024*1024)
+            promoted.append(dict(artifact,uri=f'gs://{PUBLIC}/{expected}',generation=str(target.generation)))
     for key,filename in KEYS.items():
         if key=='json':continue
         uri=f'gs://{PRIVATE}/processing-runs/hdr-report-review/{rid}/{filename}';r=artifacts[uri];src=private.blob(uri.split('/',3)[3],generation=int(r['generation']));dest=f'static-assets/human-development/releases/{rid}/{filename}';blob=public.blob(dest)

@@ -23,9 +23,11 @@ import urllib.error
 from publish_observed_hdro_panels import observed_panels
 from report_compaction import compact_chart,expanded_rows
 from publish_wid_snapshot import merge_wid_snapshots
+from history_shards import history_bundle
 from publish_ch5_6_panels import provider_panels
 from publish_ch3_4_panels import provider_panels as care_provider_panels
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
+from original_survey_figures import hdi_mapping_from_observations,grouped_query,derive_panels
 
 PROJECT = 'czbudget-janrezab'
 D = PROJECT+'.undp_human_development'
@@ -56,10 +58,14 @@ def chart(cid, chapter, title, unit, rows, fields, refs, method, denominator, or
     periods=[str(r.get('year',r.get('period'))) for r in rows if any(r.get(f['key']) is not None for f in fields)]
     return dict(id=slug(cid),chapter=chapter,title=title,unit=unit,chart_type=kind,rows=rows,fields=fields,source_refs=refs,method=method,denominator=denominator,original_refs=list(original),status=status,latest_period=max(periods,default=None))
 
-def core_charts(metrics):
+def core_charts(metrics, history_exports=None):
     groups=defaultdict(list); countries={}; result=[]; index_panels=defaultdict(lambda:dict(rows={},fields=[],refs=[],coverage={}))
     for r in metrics:
-        if r['geography_kind']!='country_or_area':continue
+        r=dict(r)
+        if r['geography_kind']=='aggregate' and r['country_code']=='ZZK.WORLD':
+            if r['country_name']!='World':raise ValueError('Official World aggregate name changed')
+            r['country_code']='WLD'
+        elif r['geography_kind']!='country_or_area':continue
         countries[r['country_code']]=r['country_name']
         if r['metric'] in INDEX or r['metric'] in DIMENSIONS:
             groups[(r['source_id'],r['source_vintage'],r['metric'])].append(r)
@@ -67,6 +73,8 @@ def core_charts(metrics):
         en,cs=(INDEX|DIMENSIONS)[metric]
         rows=[dict(country=r['country_code'],year=r['year'],value=number(r['value'])) for r in values if r['value'] is not None]
         if metric in DIMENSIONS:
+            if history_exports is not None:
+                history_exports[slug('hdro-'+metric+'-'+vintage)]=[dict(country=r['country_code'],year=r['year'],value=number(r['value']),source_value=r.get('source_value',r['value']),source_id=sid) for r in values]
             common=max(r['year'] for r in rows) if rows else None
             rows=[r for r in rows if r['year']==common]
         rows.sort(key=lambda r:(r['country'],r['year']))
@@ -83,8 +91,9 @@ def core_charts(metrics):
                 cell[metric]=r['value']
         else:
             result.append(chart('hdro-'+metric+'-'+vintage,'annex',bi(en+(' — latest comparable year' if metric in DIMENSIONS else ' over time'),cs+(' — poslední společný rok' if metric in DIMENSIONS else ' v čase')),unit,rows,[dict(key='value',label=bi(en,cs))],[source],bi('Same HDRO edition throughout; missing country-years omitted, never zero. Updated source series; exact original figure reproduction is not claimed.','Celá řada pochází ze stejného vydání HDRO. Chybějící roky jsou vynechány, nikdy nejsou nulou. Zdrojová řada; přesná reprodukce původního grafu se netvrdí.'),bi('Countries and areas covered by this source; sparse rows omit missing observations, which are never zero. Component comparisons use one common latest year.','Země a území pokrytá zdrojem; chybějící pozorování se vynechávají, nejsou nulou. Srovnání složek používá jeden společný poslední rok.'),original))
+            if history_exports is not None:result[-1]['native_history_complete']=True
         if metric not in INDEX:continue
-        latest=max(periods);current=[r for r in rows if r['year']==latest and r['value'] is not None]
+        latest=max(periods);current=[r for r in rows if r['year']==latest and r['value'] is not None and r['country']!='WLD']
         # GDI is parity, never a descending welfare ranking.
         if metric=='gdi':continue
         ordered=sorted(current,key=lambda r:r['value'],reverse=metric!='gii');prev=None;rank=0;ranking=[]
@@ -126,7 +135,21 @@ def audit_ledger(root):
     inventory=root/'report_chart_inventory.json'
     if inventory.exists():
         data=json.loads(inventory.read_text())
-        return [dict(id=e['id'],title=e.get('caption_first_line') or e.get('topic') or e['id'],source_ids=e.get('source_ids',[]),kind=e.get('kind'),pdf_page=(e.get('pdf_pages') or [None])[0],classification=e.get('classification'),source_note=e.get('source_note'),source_urls=e.get('source_urls',[]),status='unavailable' if e.get('source_kind')=='conceptual' or e.get('classification')=='conceptual' else 'needs_definition',reason='Conceptual diagram; no measured observation series.' if e.get('classification')=='conceptual' else 'Full-PDF caption census; exact source-specific figure transformations remain unverified. Source loading and available topic series do not imply recreation.',recreation=e.get('recreation',{})) for e in data.get('entries',[])]
+        entries=[dict(id=e['id'],title=e.get('caption_first_line') or e.get('topic') or e['id'],source_ids=e.get('source_ids',[]),kind=e.get('kind'),pdf_page=(e.get('pdf_pages') or [None])[0],classification=e.get('classification'),source_note=e.get('source_note'),source_urls=e.get('source_urls',[]),status='unavailable' if e.get('source_kind')=='conceptual' or e.get('classification')=='conceptual' else 'needs_definition',reason='Conceptual diagram; no measured observation series.' if e.get('classification')=='conceptual' else 'Full-PDF caption census; exact source-specific figure transformations remain unverified. Source loading and available topic series do not imply recreation.',recreation=e.get('recreation',{})) for e in data.get('entries',[])]
+        history_file=root/'story_history_coverage.json'
+        if history_file.exists():
+            history=json.loads(history_file.read_text())
+            indexed={entry['id']:entry for entry in history['entries']}
+            if len(indexed)!=len(entries) or set(indexed)!={entry['id'] for entry in entries}:raise ValueError('Original history ledger does not match caption census')
+            for entry in entries:
+                item=indexed[entry['id']]
+                entry['history_status']=item['classification']
+                entry['figure_method']=item.get('figure_method')
+                entry['history_periods']=[contract['original_period'] for contract in item['source_contracts'] if contract.get('original_period')]
+                entry['remaining_limitations']=[contract['remaining_gap'] for contract in item['source_contracts'] if contract.get('remaining_gap')]
+                entry['original_recreation_status']=item['exact_original_recreation_status']
+                entry['source_urls']=sorted(set(entry['source_urls']+[url for contract in item['source_contracts'] for url in contract.get('primary_method_urls',[])]))
+        return entries
     records={}
     def add(label,title,sources,kind,page=None):
         key=str(label).replace('Figure ','').replace('Table ','Table')
@@ -171,7 +194,7 @@ def validate(payload):
 
 def main():
     if not os.environ.get('BUILD_ID'):raise RuntimeError('Cloud Build only; no local bulk export')
-    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--release-id',default=os.environ['BUILD_ID']);parser.add_argument('--undp-release');parser.add_argument('--gcp-contracts');parser.add_argument('--private-only',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--release-id',default=os.environ['BUILD_ID']);parser.add_argument('--undp-release');parser.add_argument('--gcp-contracts');parser.add_argument('--private-only',action='store_true');parser.add_argument('--original-survey-panels',action='store_true');args=parser.parse_args()
     from google.cloud import bigquery,storage
     bq=bigquery.Client(project=PROJECT,location='EU');gcs=storage.Client(project=PROJECT);started=stamp()
     private=gcs.bucket(PRIVATE)
@@ -220,14 +243,22 @@ def main():
     def query(sql,release,parameters=()):
         cfg=bigquery.QueryJobConfig(query_parameters=[bigquery.ScalarQueryParameter('release','STRING',release),*parameters])
         return bq.query(sql,job_config=cfg,location='EU').result()
-    metrics=query(f"SELECT * FROM `{D}.metric_observations` WHERE release_id=@release AND geography_kind='country_or_area' AND metric IN ('hdi','ihdi','gdi','gii','phdi','le','eys','mys','gnipc')",core)
-    charts,countries=core_charts(metrics)
+    metrics=query(f"SELECT * FROM `{D}.metric_observations` WHERE release_id=@release AND (geography_kind='country_or_area' OR (geography_kind='aggregate' AND country_code='ZZK.WORLD')) AND metric IN ('hdi','ihdi','gdi','gii','phdi','le','eys','mys','gnipc')",core)
+    core_history_exports={}
+    charts,countries=core_charts(metrics,core_history_exports)
     charts+=observed_panels(query(f"SELECT * FROM `{D}.metric_observations` WHERE release_id=@release AND geography_kind='aggregate' AND metric='hdi'",core))
     if not charts or 'CZE' not in countries:raise ValueError('Core country/index observations absent')
     metadata=[dict(r) for r in query(f"SELECT * FROM `{D}.variable_metadata` WHERE release_id=@release AND source_id='ai2025_survey'",core)]
     variables=[r['variable'] for r in metadata if r['variable'].split('_',1)[0] in SURVEY_TOPICS and json.loads(r['metadata_json']).get('value_labels')]
     sql=f"""WITH base AS (SELECT a.*,r.source_url,r.source_sha256,\n       COALESCE(a.missing_kind,IF(a.source_value IS NULL,'system_missing',NULL)) chart_missing\n       FROM `{D}.survey_answers` a JOIN `{D}.survey_respondents` r USING(release_id,source_id,respondent_id)\n       WHERE a.release_id=@release AND a.variable IN UNNEST(@variables)),\n       geo AS (SELECT *,country geography FROM base UNION ALL SELECT *,'__pooled_survey_countries__' geography FROM base)\n       SELECT release_id,source_id,variable,geography,source_value,value_label,chart_missing missing_kind,source_url,source_sha256,\n       COUNT(*) received_n,COUNTIF(survey_weight IS NOT NULL AND survey_weight>=0) usable_weight_n,\n       COUNTIF(survey_weight IS NULL OR survey_weight<0) invalid_weight_n,\n       SUM(IF(survey_weight IS NOT NULL AND survey_weight>=0,survey_weight,0)) weighted_n,ARRAY_AGG(DISTINCT country IGNORE NULLS) countries\n       FROM geo GROUP BY release_id,source_id,variable,geography,source_value,value_label,chart_missing,source_url,source_sha256"""
     charts+=survey_charts(query(sql,core,[bigquery.ArrayQueryParameter('variables','STRING',variables)]),metadata)
+    survey_method_gaps=[]
+    if args.original_survey_panels:
+        hdi_rows=query(f"SELECT * FROM `{D}.metric_observations` WHERE release_id=@release AND geography_kind='country_or_area' AND metric='hdi' AND year=2023",core)
+        mapping,group_ref=hdi_mapping_from_observations(hdi_rows,SURVEY_CODES)
+        calculated,dimension_gaps=derive_panels(query(grouped_query(D,mapping,pooling_mode='equal_country_total_weight'),core),group_ref,denominator='valid_answers')
+        charts+=calculated
+        survey_method_gaps=[dict(source_id='ai2025_survey',reason=str(gap)) for gap in dimension_gaps]
     country_names={v:k for k,v in countries.items()};country_names.update(SURVEY_CODES)
     catalog=[]
     provider_releases=sorted({v for k,v in pinned.items() if k.startswith('hdr_report_sources_2025')})
@@ -296,7 +327,7 @@ def main():
     charts,wid_history_exports=merge_wid_snapshots(charts)
     ledger=audit_ledger(Path('pipeline/undp_cloud/audit'))
     gaps=[dict(source_id=sid,name=sid,reason=m.get('error') or 'Source records have no verified chart binding; raw loading is not figure reproduction.') for sid,m in by_source.items() if not m.get('accepted_records')]
-    gaps+=added_gaps+care_gaps
+    gaps+=added_gaps+care_gaps+survey_method_gaps
     if not provider_releases:gaps.append(dict(source_id='provider-bundle',reason='No provider-group publication pointer available at report build start.'))
     for entry in ledger:
         if entry['id'] in {'O.2','O.3','1.2'}:
@@ -349,7 +380,13 @@ def main():
     detailed_rows=[]
     for c in charts:
         original=compact_chart(c)
-        detailed_rows.append(dict(chart_id=c['id'],rows=wid_history_exports.get(c['id'],original),denominators=c.get('denominators'),source_refs=c['source_refs'],unit=c['unit'],method=c['method'],denominator=c['denominator']))
+        detailed_rows.append(dict(chart_id=c['id'],rows=core_history_exports.get(c['id'],wid_history_exports.get(c['id'],original)),denominators=c.get('denominators'),source_refs=c['source_refs'],unit=c['unit'],method=c['method'],denominator=c['denominator']))
+    # Complete WID histories remain small, country-specific immutable objects.
+    # The main index retains bounded snapshots and descriptors, never drops native history.
+    history_objects={}
+    if wid_history_exports:
+        payload,history_objects=history_bundle(payload,dict(release_id=args.release_id,charts=detailed_rows),args.release_id)
+        charts=payload['charts']
     details_body=dump(dict(schema_version='1.0.0',release_id=args.release_id,source_releases=payload['source_releases'],charts=detailed_rows,scope='Complete original chart row dictionaries, including exact survey weighted numerators, nonresponse codes, valid percentages and all native null provider observations; presentation JSON uses sparse known-null ranges.'))
     payload['coverage']['presentation_compaction']=dict(mode='lossless sparse known-null ranges, exact coordinate defaults, declared core tuple columns; detailed original rows downloadable',detailed_rows=sum(len(c['rows']) for c in detailed_rows),retained_rows=sum(len(c['rows']) for c in charts),details_sha256=hashlib.sha256(details_body).hexdigest(),details_bytes=len(details_body))
     payload['downloads']=dict(chart_details=download_ref(details_name),annex_csv=download_ref(annex_download),json=download_ref(name),core_csv=download_ref(core_download),chart_csv=download_ref(output_prefix+'/observations.csv'))
@@ -370,6 +407,11 @@ def main():
         blob.reload();received=blob.download_as_bytes(checksum='auto')
         if hashlib.sha256(received).digest()!=hashlib.sha256(data).digest():raise ValueError('Roundtrip hash mismatch')
         return dict(uri='gs://'+bucket.name+'/'+key,generation=str(blob.generation),sha256=hashlib.sha256(data).hexdigest(),bytes=len(data))
+    history_receipts=[]
+    for public_key,history_body in history_objects.items():
+        relative=public_key.split('/history/',1)[1]
+        history_key=output_prefix+'/history/'+relative
+        history_receipts.append(immutable(pub,history_key,history_body,'application/json; charset=utf-8'))
     csv_object=immutable(pub,downloads,csv_body,'text/csv; charset=utf-8')
     details_object=immutable(pub,details_name,details_body,'application/json; charset=utf-8')
     core_blob=pub.blob(core_download);core_digest=hashlib.sha256()
@@ -425,6 +467,7 @@ def main():
     if not args.private_only:accesses=dict(accesses,json=anonymous_head(name))
     prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer=None if args.private_only else 'gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='not_published' if args.private_only else 'prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object,annex_object,details_object],download_access=accesses,unavailable_sources=gaps)
     if args.private_only:
+        prepared['history_objects']=history_receipts
         manifest=dict(schema_version='1.0.0',release_id=args.release_id,bucket=PRIVATE,object=name,sha256=sha,bytes=len(body),generation=report_object['generation'],publication_status='not_published',processing_status='validated',source_releases=payload['source_releases'])
         immutable(private,prefix+'/validated-report-manifest.json',dump(manifest),'application/json')
         immutable(private,prefix+'/review-receipt.json',dump(prepared),'application/json')

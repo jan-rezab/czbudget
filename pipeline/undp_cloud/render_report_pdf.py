@@ -244,6 +244,25 @@ def load_verified_report(gcs, manifest_uri=None):
     if manifest_uri and ordinary.get('source_releases')!=pointer.get('source_releases'):
         raise ValueError('Manifest source releases differ from validated report')
     payload=json.loads(data,parse_float=Decimal)
+    history_reads=[]
+    for index,chart in enumerate(ordinary['charts']):
+        descriptors=chart.get('history_by_country',{})
+        code='CZE' if 'CZE' in descriptors else 'WLD' if 'WLD' in descriptors else None
+        if not code:continue
+        descriptor=descriptors[code]
+        expected_history=f'static-assets/human-development/releases/{rid}/history/{chart["id"]}/{code}.json'
+        if descriptor['object']!=expected_history:raise ValueError('History object outside exact report release')
+        history_name=f'processing-runs/hdr-report-review/{rid}/history/{chart["id"]}/{code}.json' if manifest_uri else expected_history
+        history_blob=bucket.blob(history_name);history_blob.reload();history_generation=int(history_blob.generation)
+        history_data=bucket.blob(history_name,generation=history_generation).download_as_bytes(if_generation_match=history_generation,checksum='auto')
+        if len(history_data)>MAX_JSON or len(history_data)!=descriptor['bytes'] or hashlib.sha256(history_data).hexdigest()!=descriptor['sha256']:raise ValueError('History checksum/size mismatch')
+        full=json.loads(history_data)
+        validate(dict(ordinary,charts=[full]))
+        parent_refs={json.dumps(ref,sort_keys=True) for ref in chart['source_refs']}
+        if full['id']!=chart['id'] or full['unit']!=chart['unit'] or full['fields']!=chart['fields'] or len(full['rows'])!=descriptor['rows'] or any(row.get('country')!=code for row in full['rows']) or any(json.dumps(ref,sort_keys=True) not in parent_refs for ref in full['source_refs']):raise ValueError('History definition/country/count mismatch')
+        payload['charts'][index]=json.loads(history_data,parse_float=Decimal)
+        history_reads.append(dict(object=history_name,generation=str(history_generation),sha256=descriptor['sha256'],bytes=len(history_data),rows=descriptor['rows'],country=code))
+    pointer['history_reads']=history_reads
     return payload,dict(pointer,mode=mode,generation=generation,manifest_uri=manifest_uri)
 
 
@@ -281,7 +300,7 @@ def main():
         blob.reload()
         if hashlib.sha256(blob.download_as_bytes(checksum='auto')).hexdigest()!=sha:raise ValueError('Artifact roundtrip hash mismatch')
         objects.append(dict(uri='gs://'+PRIVATE+'/'+blob.name,generation=str(blob.generation),bytes=len(body),sha256=sha))
-    receipt=dict(schema_version='1.0.0',created_at=datetime.now(timezone.utc).isoformat(),build_id=os.environ['BUILD_ID'],loader_git_sha=args.loader_sha,source_report_release_id=rid,source_report_object=name,source_report_sha256=pointer['sha256'],source_report_generation=pointer['generation'],source_report_mode=pointer['mode'],source_report_manifest=args.report_manifest,source_releases=payload.get('source_releases'),source_ids=sorted({s.get('source_id','') for c in payload['charts'] for s in c.get('source_refs',[])}),objects=objects,qa=qa,rendered_proof_pages=pages,visual_review_status='PNG proof created; human/agent inspection pending before user delivery',publication_status='private_immutable_artifact_only; website pointer untouched',region='europe-west4',service_account=os.environ.get('DATA_SERVICE_ACCOUNT','not_provided'))
+    receipt=dict(schema_version='1.0.0',created_at=datetime.now(timezone.utc).isoformat(),build_id=os.environ['BUILD_ID'],loader_git_sha=args.loader_sha,source_report_release_id=rid,source_report_object=name,source_report_sha256=pointer['sha256'],source_report_generation=pointer['generation'],source_report_mode=pointer['mode'],source_report_manifest=args.report_manifest,verified_history_objects=pointer.get('history_reads',[]),source_releases=payload.get('source_releases'),source_ids=sorted({s.get('source_id','') for c in payload['charts'] for s in c.get('source_refs',[])}),objects=objects,qa=qa,rendered_proof_pages=pages,visual_review_status='PNG proof created; human/agent inspection pending before user delivery',publication_status='private_immutable_artifact_only; website pointer untouched',region='europe-west4',service_account=os.environ.get('DATA_SERVICE_ACCOUNT','not_provided'))
     private.blob(prefix+'/receipt.json').upload_from_string(dump(receipt),content_type='application/json',if_generation_match=0,checksum='auto')
     print(dump(receipt).decode(),flush=True)
 
