@@ -43,12 +43,14 @@
       "progress_at": "2026-09-27T01:17:35.757238660Z",
       "timeout_seconds": 2400,
       "started_at": "2026-09-27T00:55:54.606123061Z",
-      "processing_status": "source_records_validated; warehouse load pending; unpublished",
+      "processing_status": "source_records_validated and private warehouse stage loaded; unpublished",
       "accepted_source_records": 613745,
       "finish_time": "2026-09-27T01:36:15.624390Z",
       "warehouse_load_job_id": "e04e63ee-493d-48e3-9010-2381875af683",
       "publication_status": "unpublished",
-      "failure_receipt": "pipeline/undp_cloud/receipts/pisa-corrected-timeout.json"
+      "failure_receipt": "pipeline/undp_cloud/receipts/pisa-corrected-timeout.json",
+      "warehouse_load_status": "DONE",
+      "warehouse_loaded_records": 613745
     },
     {
       "id": "1b85e601-6eae-4489-9eef-bb147672a602",
@@ -435,7 +437,7 @@
     }
   ],
   "capacity": "At most3sourceworkers initially (6CPU), reserve2CPUprivateexport and2CPUCDCprobe; WID2/3 waitverifiedfree slots.",
-  "submission_status": "All four WID shards published; PISA fullsource stage validated but worker timed out awaiting BQ load and remains unpublished; CDC full GET403 unavailable.",
+  "submission_status": "All four WID shards published; PISA fullsource source/stage and warehouse load validated but atomic publication absent after worker timeout; CDC full GET403 unavailable.",
   "cloud_jobs_created": 6,
   "prepared_package": {
     "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",

@@ -1,0 +1,79 @@
+{
+  "jobReference": {
+    "jobId": "e04e63ee-493d-48e3-9010-2381875af683",
+    "location": "EU",
+    "projectId": "czbudget-janrezab"
+  },
+  "configuration": {
+    "jobType": "LOAD",
+    "load": {
+      "destinationTable": {
+        "datasetId": "undp_human_development",
+        "projectId": "czbudget-janrezab",
+        "tableId": "stage_report_records_83c540f4_1b3a_408b_9f72_a2dc14054d02"
+      },
+      "maxBadRecords": 0,
+      "schema": {
+        "fields": [
+          {
+            "mode": "NULLABLE",
+            "name": "release_id",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "source_id",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "member",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "row_number",
+            "type": "INTEGER"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "record_json",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "source_url",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "source_sha256",
+            "type": "STRING"
+          }
+        ]
+      },
+      "sourceFormat": "NEWLINE_DELIMITED_JSON",
+      "sourceUris": [
+        "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-sources/83c540f4-1b3a-408b-9f72-a2dc14054d02/staging/1790472465967860737/oecd_pisa2022_1.jsonl.gz"
+      ],
+      "writeDisposition": "WRITE_TRUNCATE"
+    }
+  },
+  "status": {
+    "state": "DONE"
+  },
+  "statistics": {
+    "load": {
+      "badRecords": "0",
+      "inputFileBytes": "15647027956",
+      "inputFiles": "1",
+      "outputBytes": "13996695447",
+      "outputRows": "613745"
+    },
+    "startTime": "1790472501964",
+    "endTime": "1790473340259"
+  },
+  "publication_status": "unpublished; original worker ended before atomic transaction",
+  "build_status": "TIMEOUT",
+  "failed_build_count_cumulative": 8
+}

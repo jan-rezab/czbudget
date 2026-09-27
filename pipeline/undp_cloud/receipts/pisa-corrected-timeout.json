@@ -29,5 +29,12 @@
   "retry_submitted": false,
   "private_stage_preserved": true,
   "public_microdata_writes": 0,
-  "diagnosis": "Native case parsing and gzip stage upload completed; the worker timed out while awaiting the 3.15 GB compressed BigQuery load. The warehouse job can continue independently, but no atomic publication transaction executed."
+  "diagnosis": "Fullsource parse and gzip stage succeeded. The worker timed out awaiting BQ load; that existing remote job subsequently completed successfully with613745 records. Atomic publication is still absent; prepared continuation reuses the existing successful load without reloading respondent records.",
+  "warehouse_load_status_after_worker_timeout": "DONE",
+  "warehouse_load_terminal_count": 613745,
+  "warehouse_load_bad_records": 0,
+  "warehouse_load_input_files": 1,
+  "warehouse_load_input_expanded_bytes": 15647027956,
+  "warehouse_load_end_unix_millis": 1790473340259,
+  "warehouse_load_metadata_receipt": "pipeline/undp_cloud/receipts/pisa-load-terminal-metadata.json"
 }

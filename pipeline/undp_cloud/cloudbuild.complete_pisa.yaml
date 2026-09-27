@@ -1,0 +1,19 @@
+steps:
+  - id: validate-existing-pisa-load-and-atomic-private-publication
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: bash
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1', 'VALIDATOR_SHA=${_VALIDATOR_SHA}']
+    args:
+      - -ceu
+      - |
+        pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt
+        cd pipeline/undp_cloud
+        python -m unittest test_pisa_completion_contract.py
+        python complete_pisa_load.py --validator-sha "$${VALIDATOR_SHA}"
+timeout: 1200s
+queueTtl: 1800s
+tags: [plane-data, hdr-pisa-existing-load-completion]
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _VALIDATOR_SHA: required
