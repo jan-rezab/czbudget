@@ -1,9 +1,21 @@
 import copy
 import unittest
-from publish import payload_from_rows, PRODUCTS, dump
+from publish import payload_from_rows, PRODUCTS, dump, warehouse_snapshot
+from datetime import datetime, timezone
 
 RELEASE='00000000-0000-4000-8000-000000000001'
 class EnergyExportTests(unittest.TestCase):
+    def test_snapshot_uses_warehouse_time_despite_future_worker_clock(self):
+        from unittest.mock import patch
+        import publish
+        class FutureClock(datetime):
+            @classmethod
+            def now(cls,tz=None):return cls(2099,1,1,tzinfo=timezone.utc)
+        server=FutureClock(2026,9,27,8,0,tzinfo=timezone.utc)
+        class Queries:
+            def query(self,sql):return [dict(snapshot_at=server)]
+        with patch.object(publish,'datetime',FutureClock):
+            self.assertEqual(warehouse_snapshot(Queries()),server)
     def rows(self):
         return [dict(product_code=code,frequency=f,period=p,period_start=d,reporting_markets=2,reported_origins=3,source_record_count=5,observed_value_usd='1234567890.123456789',observed_net_weight_kg=None,source_last_released=None,retrieved_at='2026-09-26T00:00:00Z') for code,_ in PRODUCTS.values() for f,p,d in [('A','2025','2025-01-01'),('M','202501','2025-01-01')]]
     def test_exact_source_precision_and_grains(self):

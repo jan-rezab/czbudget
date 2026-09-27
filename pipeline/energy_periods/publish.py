@@ -18,6 +18,13 @@ PUBLIC = PROJECT + '-public-snapshots'
 POINTER = 'static-assets/energy-trade-periods/current.json'
 PRODUCTS = {'petroleum':('270900','Crude petroleum'), 'lng':('271111','Liquefied natural gas'), 'gas':('271121','Natural gas in gaseous state')}
 
+def warehouse_snapshot(queries):
+    # Warehouse replicas can reject a worker-clock timestamp as future time.
+    # Obtain the pin from BigQuery and leave a minute for replica clock skew.
+    snapshot=next(iter(queries.query('SELECT TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS snapshot_at')))['snapshot_at']
+    if not isinstance(snapshot,datetime) or snapshot.tzinfo is None: raise ValueError('Invalid warehouse UTC snapshot pin')
+    return snapshot
+
 
 def dump(value):
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False,
@@ -102,10 +109,10 @@ def main():
         envelope=json.loads(raw_blob.download_as_bytes(checksum='auto'))
         if envelope['loader_git_sha']!=args.loader_sha or envelope['query_sha256']!=sql_sha: raise ValueError('Retry source pin differs')
     else:
-        snapshot=datetime.now(timezone.utc)
         client=bigquery.Client(project=PROJECT,location='EU')
         queries=BudgetedQueries(client,bigquery,run_id=release,loader_sha=args.loader_sha,max_query_bytes=64*GIB,max_run_bytes=64*GIB)
         queries.labels.update(dataset='comtrade',purpose='energy-periods')
+        snapshot=warehouse_snapshot(queries)
         rows=[dict(r) for r in queries.query(sql,[bigquery.ScalarQueryParameter('snapshot_at','TIMESTAMP',snapshot),bigquery.ScalarQueryParameter('min_date','DATE','2019-01-01'),bigquery.ScalarQueryParameter('max_date','DATE',snapshot.date())])]
         envelope=dict(schema_version='1.0.0',loader_git_sha=args.loader_sha,query_sha256=sql_sha,snapshot_as_of=snapshot.isoformat(),rows=rows,query_usage=queries.receipt())
     raw_body=dump(envelope)
