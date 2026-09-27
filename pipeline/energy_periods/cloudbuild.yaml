@@ -1,0 +1,18 @@
+steps:
+  - id: bounded-energy-periods-serving-publication
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: bash
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1']
+    args:
+      - -ceu
+      - |
+        pip install --quiet --disable-pip-version-check google-cloud-bigquery==3.38.0 google-cloud-storage==3.4.1
+        PYTHONPATH=pipeline/energy_periods python -m unittest test_publish
+        python pipeline/energy_periods/publish.py --loader-sha '${_LOADER_SHA}'
+timeout: 600s
+queueTtl: 300s
+tags: [plane-data, energy-periods-serving, bounded-bigquery]
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _LOADER_SHA: required
