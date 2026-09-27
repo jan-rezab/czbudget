@@ -33,13 +33,13 @@
 .psd-shared-plot[data-chart-component="treemap"]{padding:12px;isolation:isolate}
 .psd-treemap-caption{display:flex;justify-content:space-between;gap:16px;margin:0 0 10px;font-size:11px;line-height:1.4;color:var(--chart-neutral,#626359)}
 .psd-treemap-caption>span:last-child{text-align:right}
-.psd-treemap-frame{position:relative;width:100%;overflow:hidden;background:var(--chart-paper,#faf7ef);border-radius:0}
-.psd-treemap-tile{position:absolute;box-sizing:border-box;margin:0;min-width:0;min-height:0;padding:13px;text-align:left;border:1.5px solid var(--chart-paper,#faf7ef);border-radius:0;background:var(--treemap-color,#a8b63f);color:var(--treemap-ink,#171918);font:inherit;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;touch-action:manipulation;transition:filter 120ms ease;line-height:1.15}
+.psd-treemap-frame{position:relative;width:100%;overflow:hidden;background:var(--chart-paper,#faf7ef);border-radius:3px}
+.psd-treemap-tile{position:absolute;box-sizing:border-box;margin:0;min-width:0;min-height:0;padding:13px;text-align:left;border:1.5px solid var(--chart-paper,#faf7ef);border-radius:3px;background:var(--treemap-color,#a8b63f);color:var(--treemap-ink,#171918);font:inherit;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;touch-action:manipulation;transition:filter 120ms ease;line-height:1.15}
 .psd-treemap-tile:hover{filter:brightness(1.07)}
 .psd-treemap-tile:focus-visible,.psd-treemap-tile[aria-pressed="true"]{outline:3px solid var(--chart-ink,#171918);outline-offset:-5px;z-index:2}
 .psd-treemap-tile:focus-visible{outline-style:dashed}
 .psd-treemap-label{font-size:clamp(12px,1.5vw,17px);font-weight:600;line-height:1.18;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;flex-shrink:1}
-.psd-treemap-value{font-size:var(--treemap-value-size,clamp(14px,2vw,26px));letter-spacing:-.04em;font-weight:750;line-height:1.2;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.psd-treemap-value{font-size:clamp(14px,2vw,26px);letter-spacing:-.04em;font-weight:750;line-height:1.2;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
 .psd-treemap-detail{font-size:11px;line-height:1.3;max-width:100%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;opacity:.9;flex-shrink:2}
 .psd-treemap-share{font-size:11px;line-height:1.1;opacity:.8;margin-top:auto;flex-shrink:0}
 .psd-treemap-tile.is-compact{padding:6px;gap:3px}.psd-treemap-tile.is-compact .psd-treemap-label{font-size:11px;-webkit-line-clamp:2}.psd-treemap-tile.is-compact .psd-treemap-value{font-size:12px}.psd-treemap-tile.is-compact .psd-treemap-share{display:none}

@@ -94,3 +94,14 @@ uses the shared renderer for independent reported trade edges. Each edge carries
 its own value and accessible label. Keep `maxValue` fixed across a timeline.
 Dotted missing edges are topology only; they are never zero observations or
 shipment-level evidence. Adapters retain the same values in the shared table rail.
+
+## Treemap navigation
+
+`PSDPlot.render(host, {type: 'treemap', rows, fields: [{key: 'value', label}],
+valueFormat, format, onSelect})` uses a balanced rectangular partition for one
+nonnegative composition at a time. Positive values determine rectangle area;
+zero, negative and missing values remain in the accessor and an explicit
+unsized-value list. `valueFormat` controls compact tile labels; `format` preserves
+exact tooltip and accessible values. Arrow keys, Enter/Space and touch select the
+same source row. The adapter owns navigation and accounting-scope boundaries;
+the renderer never implies conservation between different datasets or layers.

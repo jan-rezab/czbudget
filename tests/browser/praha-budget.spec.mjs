@@ -247,3 +247,42 @@ test('the overview starts with all spending and traces only the selected project
   await expect(page.locator('#inspector-content')).toContainText('not this project’s contract count');
   await expectNoRawDownloads(page);
 });
+
+test('the visual map preserves financial boundaries down to signed invoice allocations',async({page})=>{
+  await fixturePraha(page);await openPraha(page);
+  await expect(page.locator('[data-flow-class="opex"]')).toContainText('2.5 m CZK');
+  await expect(page.locator('[data-flow-class="capex"]')).toContainText('500,000 CZK');
+  await expect(page.locator('#praha-money-map-chart .psd-treemap-tile')).toHaveCount(2);
+  await page.locator('#ledger-load').click();
+  await page.locator('#praha-money-map-chart').getByRole('button',{name:/^Transport\. /}).press('Enter');
+  await page.locator('#praha-money-map-chart').getByRole('button',{name:/^Roads\. /}).click();
+  await expect(page.locator('.pb-flow-boundary')).toContainText('reporting scope differs');
+  await expect(page.locator('.pb-flow-boundary')).toContainText('Whole-city code: 2 m CZK');
+  await page.locator('#praha-money-map-chart .psd-treemap-unsized button').click();
+  await expect(page.locator('.pb-flow-boundary')).toContainText('Invoice and accounting totals remain separate');
+  await page.locator('#praha-money-map-chart').getByRole('button',{name:/^Pražská stavební společnost\. /}).click();
+  await expect(page.locator('#praha-money-map-chart .psd-treemap-tile')).toHaveCount(1);
+  await expect(page.locator('#praha-money-map-chart .psd-treemap-unsized')).toContainText('-50.00 CZK');
+  await page.locator('#praha-money-map-chart .psd-treemap-tile').press('Enter');
+  await expect(page.locator('#record-dialog')).toContainText('invoice-with-description');
+  await expect(page.locator('#record-dialog')).toContainText('Not captured');
+  await expect(page.locator('#record-dialog')).not.toContainText('invoice-without-description');
+  await expectNoRawDownloads(page);
+});
+
+test('capital navigation flags inconsistent categories and keeps absent years missing',async({page})=>{
+  await fixturePraha(page);await openPraha(page);
+  await page.locator('[data-flow-class="opex"]').click();
+  await expect(page.locator('.pb-flow-boundary')).toContainText('RECONCILIATION GAP');
+  await page.locator('.pb-capital-history summary').click();
+  await expect(page.locator('#praha-capital-history-chart [data-chart-component]')).toHaveAttribute('data-chart-component','line');
+  await page.locator('#budget-unit').selectOption('per-capita');
+  await expect(page.locator('.pb-capital-history')).toHaveAttribute('open','');
+  await expect(page.locator('[data-flow-class="capex"]')).toContainText('500 CZK');
+  await page.locator('#budget-year').selectOption('2024');
+  await expect(page.locator('.pb-flow-view')).toContainText('No published detail is available');
+  await page.locator('[data-flow-mode="it"]').click();
+  await expect(page.locator('#praha-money-map-chart .psd-treemap-unsized li')).toHaveCount(5);
+  await expect(page.locator('.pb-flow-heading')).toContainText('— CZK');
+  await expectNoRawDownloads(page);
+});

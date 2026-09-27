@@ -5,10 +5,10 @@
     "style": "shared-charts.css",
     "runtime": "chart-runtime.js",
     "manifest": "assets/chart-releases/current.json",
-    "families": ["line", "column", "stacked", "bar", "globe", "route-map", "scatter", "pyramid"]
+    "families": ["line", "column", "stacked", "bar", "globe", "route-map", "scatter", "pyramid", "treemap"]
   },
   "consumers": [
-    {"id": "praha-budget", "adapter": "praha-budget.js", "families": ["line", "bar"], "tests": ["tests/browser/praha-budget.spec.mjs"], "routes": ["/praha-budget.html"], "change_paths": ["praha-budget.html", "praha-budget.css", "praha-budget.js", "praha-budget-data.js", "lib/praha-budget-model.js", "lib/praha-spending-model.js", "tests/unit/praha-spending-model.spec.mjs", "tests/unit/praha-budget-data.spec.mjs", "tests/unit/praha-budget-model.spec.mjs"]},
+    {"id": "praha-budget", "adapter": "praha-budget.js", "families": ["line", "bar", "treemap"], "tests": ["tests/browser/praha-budget.spec.mjs"], "routes": ["/praha-budget.html"], "change_paths": ["praha-money-map.js", "praha-budget.html", "praha-budget.css", "praha-budget.js", "praha-budget-data.js", "lib/praha-budget-model.js", "lib/praha-spending-model.js", "tests/unit/praha-spending-model.spec.mjs", "tests/unit/praha-budget-data.spec.mjs", "tests/unit/praha-budget-model.spec.mjs"]},
     {"id": "russia-trade-routes", "adapter": "russia-trade.js", "families": ["line", "stacked", "route-map"], "tests": ["tests/browser/russia-trade.spec.mjs"], "routes": ["/deep-dives/russia-trade/"], "change_paths": ["russia-trade.js", "russia-trade.css", "deep-dives/russia-trade/index.html", "lib/russia-trade-model.mjs"]},
     {
       "id": "data-explorer",
