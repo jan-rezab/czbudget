@@ -69,3 +69,12 @@ test('supplier inspection stays below the plot and does not move it during keybo
  expect(await plot.boundingBox()).toEqual(before);
  await page.keyboard.press('Escape');await expect(tip).toBeHidden();expect(await plot.boundingBox()).toEqual(before);
 });
+
+test('map defaults to major suppliers and can reveal all without changing the evidence table',async({page})=>{
+ const countries=Array.from({length:15},(_,i)=>({iso3:'AA'+String.fromCharCode(65+i),iso2:'a'+i,name:'Supplier '+i}));
+ await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const data=sample();data.countries=countries;data.observations=data.observations.filter(o=>Number(o.partner_area_code)===0||o.flow_code==='X');data.observations.push(...countries.flatMap((c,i)=>['KAZ','KGZ'].map(h=>obs('2019',h,'M',c.iso3,'TOTAL',i+1))));return route.fulfill({json:{data}});});
+ await page.route('**/data/world-map.v1.json',route=>route.fulfill({json:{viewBox:'0 0 1000 600',locations:[...countries.map((c,i)=>({id:c.iso2,path:`M${50+i*20} 100h10v10h-10z`})),{id:'kz',path:'M450 300h80v60h-80z'},{id:'kg',path:'M520 350h20v20h-20z'},{id:'ru',path:'M700 100h150v100h-150z'}]}}));
+ await page.goto('/deep-dives/russia-trade/?lang=en&frequency=A&product=TOTAL&period=2019');
+ await expect(page.locator('#rt-map-detail')).toHaveValue('major');await expect(page.locator('[data-edge]')).toHaveCount(18);await expect(page.locator('#rt-suppliers tbody tr')).toHaveCount(15);await expect(page.locator('#rt-map-coverage')).toContainText('16 of 30');
+ await page.locator('#rt-map-detail').selectOption('all');await expect(page.locator('[data-edge]')).toHaveCount(32);await expect(page.locator('#rt-suppliers tbody tr')).toHaveCount(15);await expect(page).toHaveURL(/map=all/);
+});

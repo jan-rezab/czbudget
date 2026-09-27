@@ -83,3 +83,11 @@ test('paged consumer assembles the full comparison and rejects changing or incom
  calls=0;pages[1].view_id='changed';await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/changed/);
  calls=0;pages[1].view_id='v';pages[1].pagination.supplier_count=2;await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/Incomplete/);
 });
+
+test('map selects major suppliers independently for each hub without discarding underlying rows',async()=>{
+ const {largestMapSuppliers}=await import('../../lib/russia-trade-model.mjs');
+ const rows=['KAZ','KGZ'].flatMap((reporter_iso3,h)=>Array.from({length:15},(_,i)=>({reporter_iso3,partner_iso3:String(i),value_usd:(i+1)*(h?1:1000)})));
+ rows.push({reporter_iso3:'KGZ',partner_iso3:'missing',value_usd:null},{reporter_iso3:'KAZ',partner_iso3:'zero',value_usd:0});
+ const selected=largestMapSuppliers(rows);assert.equal(selected.length,16);assert.equal(rows.length,32);
+ for(const hub of ['KAZ','KGZ']){const values=selected.filter(r=>r.reporter_iso3===hub);assert.equal(values.length,8);assert.deepEqual(values.map(r=>r.partner_iso3),['14','13','12','11','10','9','8','7']);}
+});
