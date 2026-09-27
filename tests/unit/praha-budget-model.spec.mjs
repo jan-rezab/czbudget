@@ -1,0 +1,84 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const { associateAnnualChanges } = require('../../lib/praha-budget-model.js');
+
+function fixtures(budgetChanges = [10,20,-5,30,5], outcomeChanges = budgetChanges) {
+  let budget = 1000, outcome = 100;
+  const history = [{year:2010, expense_actual:budget, population_mid_year:10}];
+  const points = [{year:2010, value:outcome}];
+  budgetChanges.forEach((change,index)=>{budget *= 1 + change / 100;history.push({year:2011+index,expense_actual:budget,population_mid_year:10});});
+  outcomeChanges.forEach((change,index)=>{outcome *= 1 + change / 100;points.push({year:2011+index,value:outcome});});
+  return {history,points};
+}
+const near = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-10, `${actual} should equal ${expected}`);
+
+test('known annual changes yield positive and negative correlation, not correlation of levels', () => {
+  const positive = fixtures();
+  const result = associateAnnualChanges(positive.history, positive.points, {endYear:2015});
+  assert.equal(result.pairs.length,5); near(result.r,1); assert.equal(result.reason,null);
+  near(result.pairs[2].budgetChange,-5);
+  const negative = fixtures([10,20,-5,30,5],[-10,-20,5,-30,-5]);
+  near(associateAnnualChanges(negative.history,negative.points,{endYear:2015}).r,-1);
+});
+
+test('one-year lag matches outcome year t+1 and excludes an outcome beyond the selected year', () => {
+  const {history,points} = fixtures();
+  const delayed = points.map(row=>({...row,year:row.year+1}));
+  const bounded = associateAnnualChanges(history,delayed,{lag:1,endYear:2015});
+  assert.deepEqual(bounded.pairs.map(row=>[row.year,row.outcomeYear]),[[2011,2012],[2012,2013],[2013,2014],[2014,2015]]);
+  assert.equal(bounded.r,null); assert.equal(bounded.reason,'sample');
+  const complete = associateAnnualChanges(history,delayed,{lag:1,endYear:2016});
+  near(complete.r,1); assert.equal(complete.pairs.at(-1).outcomeYear,2016);
+});
+
+test('missing calendar years are never bridged in either budget or outcome changes', () => {
+  const {history,points} = fixtures([1,2,3,4,5,6,7,8]);
+  const result = associateAnnualChanges(history.filter(row=>row.year!==2012),points.filter(row=>row.year!==2015),{endYear:2018});
+  assert.deepEqual(result.pairs.map(row=>row.year),[2011,2014,2017,2018]);
+  assert.equal(result.reason,'sample');
+});
+
+test('missing is not zero; a reported current zero is retained, while non-positive priors are excluded', () => {
+  const history = [100,0,100,null,120,-50,100].map((value,index)=>({year:2010+index,expense_actual:value}));
+  const points = [100,110,120,130,140,150,160].map((value,index)=>({year:2010+index,value}));
+  const result=associateAnnualChanges(history,points,{endYear:2016,minPairs:2});
+  assert.deepEqual(result.pairs.map(row=>row.year),[2011,2015]);
+  near(result.pairs[0].budgetChange,-100);
+  const outcomeMissing=points.map(row=>row.year===2011?{...row,value:null}:row);
+  assert.deepEqual(associateAnnualChanges(history,outcomeMissing,{endYear:2016}).pairs.map(row=>row.year),[2015]);
+});
+
+test('per-resident changes require the population of both calendar years and preserve the denominator', () => {
+  const history = [
+    {year:2010,expense_actual:1000,population_mid_year:100},
+    {year:2011,expense_actual:1200,population_mid_year:150},
+    {year:2012,expense_actual:1400,population_mid_year:null},
+    {year:2013,expense_actual:1600,population_mid_year:100},
+    {year:2014,expense_actual:1800,population_mid_year:0},
+  ];
+  const points=history.map((row,index)=>({year:row.year,value:100+index*10}));
+  const result=associateAnnualChanges(history,points,{perCapita:true,endYear:2014});
+  assert.deepEqual(result.pairs.map(row=>row.year),[2011]);
+  near(result.pairs[0].budgetChange,-20);
+  near(associateAnnualChanges(history,points,{endYear:2014}).pairs[0].budgetChange,20);
+});
+
+test('five pairs are required by default and constant series has no Pearson coefficient', () => {
+  const short=fixtures([1,2,3,4]);
+  assert.equal(associateAnnualChanges(short.history,short.points,{endYear:2014}).reason,'sample');
+  const constant=fixtures([10,10,10,10,10]);
+  const result=associateAnnualChanges(constant.history,constant.points,{endYear:2015});
+  assert.equal(result.pairs.length,5);assert.equal(result.r,null);assert.equal(result.reason,'variation');
+  const stableOutcome=fixtures([1,2,3,4,5],[0,0,0,0,0]);
+  assert.equal(associateAnnualChanges(stableOutcome.history,stableOutcome.points).reason,'variation');
+});
+
+test('ambiguous duplicate years are excluded and an alternate budget measure is honored', () => {
+  const {history,points}=fixtures();
+  const alternate=history.map(row=>({...row,capital_expense:row.expense_actual*2,expense_actual:0}));
+  near(associateAnnualChanges(alternate,points,{budgetKey:'capital_expense'}).r,1);
+  const duplicate=[...history,{...history[2],expense_actual:999999}];
+  assert.deepEqual(associateAnnualChanges(duplicate,points).pairs.map(row=>row.year),[2011,2014,2015]);
+});
