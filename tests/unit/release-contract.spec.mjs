@@ -39,7 +39,8 @@ test('production cannot promote before focused or exhaustive verification and ca
   // with the candidate-image browser pool.
   assert.match(block('full-verification'),/waitFor: \[verify-published-releases, image-browser-contract, full-python-contracts, warm-browser-worker\]/);
   assert.match(block('full-python-contracts'),/pipeline\/tests/);
-  assert.match(block('full-verification'),/for shard in 1 2 3 4/);
+  assert.match(block('full-verification'),/for shard in 1 2; do/);
+  assert.match(yaml,/machineType: E2_HIGHCPU_32/);
   assert.match(block('verify-published-releases'),/validate-cityvizor-cloud-release\.mjs/);
   assert.match(block('hydrate-published-releases'),/verify-runtime-assets-cloud\.py/);
   assert.match(block('assert-current-main'),/waitFor: \[assert-single-production, component-verification, full-verification, image-contract, image-browser-contract, push\]/);
