@@ -76,6 +76,7 @@ class PrivateOnlyExecutionTests(unittest.TestCase):
   self.assertEqual(manifest['bucket'],module.PRIVATE);self.assertEqual(manifest['generation'],'1')
   payload=json.loads(objects[prefix+'/reports.json'])
   self.assertTrue(all(url.startswith('gs://'+module.PRIVATE+'/') for url in payload['downloads'].values()))
-  self.assertEqual(len(receipt['downloads']),4)
+  self.assertEqual(len(receipt['downloads']),5)
+  self.assertTrue(any(x['uri'].endswith('/chart-details.json') for x in receipt['downloads']))
 
 if __name__=='__main__':unittest.main()

@@ -21,6 +21,7 @@ import urllib.request
 import urllib.error
 
 from publish_observed_hdro_panels import observed_panels
+from report_compaction import compact_chart,expanded_rows
 from publish_ch5_6_panels import provider_panels
 from publish_ch3_4_panels import provider_panels as care_provider_panels
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
@@ -109,7 +110,7 @@ def survey_charts(bins, metadata):
             denominators.append(dict(country=country,received_n=r['respondents_received'],usable_weight_n=r['unweighted_n_with_usable_weight'],excluded_weight_n=r['excluded_invalid_weight_n'],weighted_all=r['weighted_denominator_all'],weighted_valid=r['weighted_denominator_valid']))
             for p in r['source_provenance']:sources[(p['source_url'],p['source_sha256'])]=ref(p,variable,'AIHDS2025; fieldwork November2024–January2025')
         title=values[0]['metadata']['label'] or variable
-        c=chart('ai-survey-'+variable,'survey',bi(title,CS_TOPICS[variable.split('_',1)[0]]+' — '+variable),'percent',rows,[dict(key='value',label=bi('Share of all usable respondent weights','Podíl všech použitelných vah respondentů'))],list(sources.values()),bi('Exact source question codes and response labels. Original respondent weights; explicit nonresponse/system missing included in displayed denominator. Valid-only percentages and exact denominators remain in downloadable JSON. These question distributions do not claim the report’s figure-specific recodes.','Původní kódy otázek, odpovědi a váhy respondentů. Zobrazený základ zahrnuje neodpovědi i chybějící odpovědi. Podíly platných odpovědí a přesné základy jsou v JSON. Rozdělení otázek netvrdí reprodukci překódování původních grafů.'),bi('21 surveyed countries; pooled sample uses original weights and is not world population. Czechia was not surveyed.','21 zemí průzkumu; společný vzorek používá původní váhy a nepředstavuje světovou populaci. Česko v průzkumu nebylo.'),['UNDP AI and Human Development Survey 2025'],kind='bar')
+        c=chart('ai-survey-'+variable,'survey',bi(title,CS_TOPICS[variable.split('_',1)[0]]+' — '+variable),'percent',rows,[dict(key='value',label=bi('Share of all usable respondent weights','Podíl všech použitelných vah respondentů'))],list(sources.values()),bi('Exact source question codes and response labels. Original respondent weights; explicit nonresponse/system missing included in displayed denominator. Exact weighted numerators, valid-only percentages and original response codes remain in the chart-details JSON/CSV download; country denominators remain in the report JSON. These question distributions do not claim the report’s figure-specific recodes.','Původní kódy otázek, odpovědi a váhy respondentů. Zobrazený základ zahrnuje neodpovědi i chybějící odpovědi. Přesné vážené čitatele, platné podíly a původní kódy odpovědí jsou v podrobném JSON/CSV ke stažení; základy za země zůstávají v JSON zprávy. Rozdělení otázek netvrdí reprodukci překódování původních grafů.'),bi('21 surveyed countries; pooled sample uses original weights and is not world population. Czechia was not surveyed.','21 zemí průzkumu; společný vzorek používá původní váhy a nepředstavuje světovou populaci. Česko v průzkumu nebylo.'),['UNDP AI and Human Development Survey 2025'],kind='bar')
         c['question_variable']=variable;c['source_question_label']=title;c['denominators']=denominators;c['question_metadata']=values[0]['metadata']['metadata_json'];out.append(c)
     return out
 
@@ -332,13 +333,18 @@ def main():
             export.writerow([r.get(c) for c in annex_columns]+['source_header_unit_preserved; definition_not_reviewed_for_chart'])
     if not annex_n:raise ValueError('Pinned numeric annex cells absent')
     payload['coverage']['annex_export']=dict(numeric_cells=annex_n,source_vintages=sorted(annex_vintages),scope='All pinned table_observations numeric cells. Source column headers, units, notes and exact cell coordinates preserved; unit interpretation remains unresolved where source headers are ambiguous. Original HDR all-tables workbook omits Table6; original MPI2024 and newer MPI2025 workbooks remain separate source vintages.')
-    payload['downloads']=dict(annex_csv=download_ref(annex_download),json=download_ref(name),core_csv=download_ref(core_download),chart_csv=download_ref(output_prefix+'/observations.csv'))
+    details_name=output_prefix+'/chart-details.json'
+    detailed_rows=[dict(chart_id=c['id'],rows=compact_chart(c),denominators=c.get('denominators'),source_refs=c['source_refs'],unit=c['unit'],method=c['method'],denominator=c['denominator']) for c in charts]
+    details_body=dump(dict(schema_version='1.0.0',release_id=args.release_id,source_releases=payload['source_releases'],charts=detailed_rows,scope='Complete original chart row dictionaries, including exact survey weighted numerators, nonresponse codes, valid percentages and all native null provider observations; presentation JSON uses sparse known-null ranges.'))
+    payload['coverage']['presentation_compaction']=dict(mode='lossless sparse known-null ranges; detailed original rows downloadable',detailed_rows=sum(len(c['rows']) for c in detailed_rows),retained_rows=sum(len(c['rows']) for c in charts),details_sha256=hashlib.sha256(details_body).hexdigest(),details_bytes=len(details_body))
+    payload['downloads']=dict(chart_details=download_ref(details_name),annex_csv=download_ref(annex_download),json=download_ref(name),core_csv=download_ref(core_download),chart_csv=download_ref(output_prefix+'/observations.csv'))
+    print(dump(dict(event='report_serialized_size_diagnostic',bytes=len(dump(payload)),charts=[dict(id=c['id'],rows=len(c['rows']),bytes=len(dump(c))) for c in charts if c['rows']])).decode(),flush=True)
     body=validate(payload);sha=hashlib.sha256(body).hexdigest()
     # Full row export stays a separate download; report response must remain <=2MB.
-    stream=io.StringIO();writer=csv.writer(stream);writer.writerow(['chart_id','country','period','label','field','value','unit','source_release','source_url'])
-    for c in charts:
-        for r in c['rows']:
-            for f in c['fields']:writer.writerow([c['id'],r.get('country'),r.get('year',r.get('period')),r.get('label'),f['key'],r.get(f['key']),c['unit'],';'.join(s['release_id'] for s in c['source_refs']),';'.join(s['url'] for s in c['source_refs'])])
+    stream=io.StringIO();writer=csv.writer(stream);writer.writerow(['chart_id','country','period','label','field','value','unit','source_release','source_url','original_row_json'])
+    for c,detail in zip(charts,detailed_rows):
+        for r in detail['rows']:
+            for f in c['fields']:writer.writerow([c['id'],r.get('country'),r.get('year',r.get('period')),r.get('label'),f['key'],r.get(f['key']),c['unit'],';'.join(s['release_id'] for s in c['source_refs']),';'.join(s['url'] for s in c['source_refs']),dump(r).decode()])
     csv_body=stream.getvalue().encode();downloads=output_prefix+'/observations.csv'
     def immutable(bucket,key,data,ctype):
         blob=bucket.blob(key)
@@ -349,6 +355,7 @@ def main():
         if hashlib.sha256(received).digest()!=hashlib.sha256(data).digest():raise ValueError('Roundtrip hash mismatch')
         return dict(uri='gs://'+bucket.name+'/'+key,generation=str(blob.generation),sha256=hashlib.sha256(data).hexdigest(),bytes=len(data))
     csv_object=immutable(pub,downloads,csv_body,'text/csv; charset=utf-8')
+    details_object=immutable(pub,details_name,details_body,'application/json; charset=utf-8')
     core_blob=pub.blob(core_download);core_digest=hashlib.sha256()
     with open(temporary.name,'rb') as f:
         while chunk:=f.read(1024*1024):core_digest.update(chunk)
@@ -388,26 +395,26 @@ def main():
         except urllib.error.HTTPError as e:return 'not_available_http_'+str(e.code)
         except (urllib.error.URLError,TimeoutError):return 'not_verified_network_error'
     if args.private_only:
-        accesses={k:'private_authenticated_gs_reference; not_public' for k in ['annex_csv','core_csv','chart_csv','json']}
+        accesses={k:'private_authenticated_gs_reference; not_public' for k in ['annex_csv','core_csv','chart_csv','chart_details','json']}
         payload['download_access']=accesses
         payload['processing_status']='validated_review_bundle'
         payload['publication_status']='not_published'
     else:
-        accesses=dict(annex_csv=anonymous_head(annex_download),core_csv=anonymous_head(core_download),chart_csv=anonymous_head(downloads),json='not_yet_verified_direct_access; authenticated_report_store_contract')
+        accesses=dict(chart_details=anonymous_head(details_name),annex_csv=anonymous_head(annex_download),core_csv=anonymous_head(core_download),chart_csv=anonymous_head(downloads),json='not_yet_verified_direct_access; authenticated_report_store_contract')
         payload['download_access']=accesses
-        for key in ['core_csv','chart_csv','annex_csv']:
+        for key in ['core_csv','chart_csv','annex_csv','chart_details']:
             if accesses[key]!='verified_anonymous_head_200':payload['downloads'][key]=None
     body=validate(payload);sha=hashlib.sha256(body).hexdigest()
     report_object=immutable(pub,name,body,'application/json; charset=utf-8')
     if not args.private_only:accesses=dict(accesses,json=anonymous_head(name))
-    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer=None if args.private_only else 'gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='not_published' if args.private_only else 'prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object,annex_object],download_access=accesses,unavailable_sources=gaps)
+    prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer=None if args.private_only else 'gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='not_published' if args.private_only else 'prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object,annex_object,details_object],download_access=accesses,unavailable_sources=gaps)
     if args.private_only:
         manifest=dict(schema_version='1.0.0',release_id=args.release_id,bucket=PRIVATE,object=name,sha256=sha,bytes=len(body),generation=report_object['generation'],publication_status='not_published',processing_status='validated',source_releases=payload['source_releases'])
         immutable(private,prefix+'/validated-report-manifest.json',dump(manifest),'application/json')
         immutable(private,prefix+'/review-receipt.json',dump(prepared),'application/json')
         print(dump(dict(event='human_development_private_review_validated',release_id=args.release_id,bytes=len(body),publication_status='not_published',receipt='gs://'+PRIVATE+'/'+prefix+'/review-receipt.json',manifest='gs://'+PRIVATE+'/'+prefix+'/validated-report-manifest.json')).decode(),flush=True);return
     immutable(private,prefix+'/prepared-receipt.json',dump(prepared),'application/json')
-    pointer_value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=name,sha256=sha,bytes=len(body),generated_at=payload['generated_at'],downloads=dict(json=name,csv=downloads,core_csv=core_download,annex_csv=annex_download))
+    pointer_value=dict(schema_version='1.0.0',bucket=PUBLIC,release_id=args.release_id,object=name,sha256=sha,bytes=len(body),generated_at=payload['generated_at'],downloads=dict(json=name,csv=downloads,core_csv=core_download,annex_csv=annex_download,chart_details=details_name))
     pointer.upload_from_string(dump(pointer_value),content_type='application/json',if_generation_match=expected_generation,checksum='auto')
     completed=dict(prepared,publication_status='published',published_at=stamp(),previous_pointer_generation=str(expected_generation))
     immutable(private,prefix+'/completed-receipt.json',dump(completed),'application/json')

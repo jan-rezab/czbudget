@@ -6,7 +6,7 @@
   "checkpoint_minutes_from_original_source_expansion": 83,
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
-  "failed_cloud_verification_attempts": 4,
+  "failed_cloud_verification_attempts": 5,
   "superseded_builds": [
     {
       "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
@@ -71,7 +71,7 @@
     }
   ],
   "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously.",
-  "checkpoint_status": "EXPLICIT_CORRECTED_PRIVATE_RETRY_AUTHORIZED; original clock and cumulative failures preserved",
+  "checkpoint_status": "STOP_NEW_BUILDS_AFTER_FIFTH_TERMINAL_FAILURE; focused lossless size correction underway",
   "failed_source_builds": [
     {
       "id": "a20f0ab0-dd8b-4b05-af8a-92f0c1266327",
@@ -108,7 +108,7 @@
     "WHO corrected andpublished",
     "manual verifiedclaim PDF correction code ready but originalclaimbatchnotrerun"
   ],
-  "report_artifacts_status": "Corrected private-only retry queued; no public objects/pointers changed",
+  "report_artifacts_status": "Corrected private-only retry failed size validation before immutable JSON/PDF output; no public objects/pointers changed",
   "report_source_census": {
     "numbered_figures": 67,
     "box_figures": 6,
@@ -130,7 +130,7 @@
   },
   "active_report_review_build": {
     "id": "c1e8940e-b91f-4b81-b47a-315e078299b2",
-    "status": "QUEUED",
+    "status": "FAILURE",
     "created_at": "2026-09-27T00:44:06.100503897Z",
     "region": "europe-west4",
     "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
@@ -144,7 +144,10 @@
     },
     "private_staging_prefix": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/c1e8940e-b91f-4b81-b47a-315e078299b2/",
     "publication_status": "not_published",
-    "public_pointer_updated": false
+    "public_pointer_updated": false,
+    "finished_at": "2026-09-27T00:46:10.825538Z",
+    "failure": "Report payload3968370bytes exceeds2MiB cap; held before immutable output/pointer writes",
+    "processing_status": "not_generated"
   },
   "failed_report_builds": [
     {
@@ -153,6 +156,13 @@
       "reason": "chart_ch5_6.epoch_source: Central compute outside bounds",
       "finished_at": "2026-09-27T00:14:27.346467Z",
       "cumulative_failed_verifications": 2
+    },
+    {
+      "id": "c1e8940e-b91f-4b81-b47a-315e078299b2",
+      "loader_git_sha": "09765f2545ef5fc686d8b6ce2d27ead8ab62b1cd",
+      "reason": "Report payload3968370bytes exceeds2MiB cap; held before immutable output/pointer writes",
+      "finished_at": "2026-09-27T00:46:10.825538Z",
+      "cumulative_failed_verifications": 5
     }
   ],
   "report_focused_corrections": {
