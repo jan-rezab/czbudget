@@ -35,12 +35,12 @@
     return row.shares[key] || 0;
   }
   function renderFlow(profile){
-    const sources=detailMeta.map(([key,label,color])=>({key,label:t(label),color,value:profile.tax_detail?.[key]||0}));
+    const sources=detailMeta.map(([key,label,color])=>({key,label:t(label),color,value:profile.tax_detail?.[key]??null}));
     const levels=levelMeta.map(([key,label,color])=>({key,label:t(label),color,value:profile.government_levels[key]})).filter(item=>item.value!=null&&item.value>.01);
     const env=profile.environmental_taxes;
-    const rows = items => items.map(item=>`<div class="flow-row" style="--share:${Math.max(2,item.value)}%;--row-color:${item.color}"><span>${esc(item.label)}</span><strong>${fmt(item.value)}</strong></div>`).join("");
+    const rows = items => items.map(item=>`<div class="flow-row" style="--share:${item.value==null?0:Math.max(2,item.value)}%;--row-color:${item.color}"><span>${esc(item.label)}</span><strong>${item.value==null?"—":fmt(item.value)}</strong></div>`).join("");
     document.querySelector("#hundred-flow").innerHTML=`<div class="flow-side"><header><span>${t("from")}</span><b>100</b></header>${rows(sources)}<div class="flow-memo"><span>${t("environment")}</span><strong>${env?pct(env.share_of_tax_and_social_contributions_pct):"—"}</strong><small>${t("environmentNote")}${env?` · ${env.year}`:""}</small></div></div><div class="flow-pool"><div><span>${t("pool")}</span><strong>100</strong><small>${t("poolNote")}</small></div></div><div class="flow-side"><header><span>${t("to")}</span><b>100</b></header>${rows(levels)}</div>`;
-    const largest=[...sources].sort((a,b)=>b.value-a.value)[0];
+    const largest=sources.filter(item=>Number.isFinite(item.value)).sort((a,b)=>b.value-a.value)[0];
     const local=profile.government_levels.local;
     const transfer=profile.municipal_transfers?.local_revenue_from_transfers_pct;
     document.querySelector("#revenue-kpis").innerHTML=`<article><span>${t("largestSource")}</span><strong>${esc(largest?.label||"—")}</strong><small>${largest?pct(largest.value):"—"}</small></article><article><span>${t("initialLocal")}</span><strong>${local==null?"—":pct(local)}</strong><small>${t("to")}</small></article><article><span>${t("transferDependence")}</span><strong>${transfer==null?"—":pct(transfer)}</strong><small>${transfer==null?t("notAvailable"):t("ofLocalRevenue")}</small></article>`;
@@ -85,7 +85,7 @@
   function renderComparison(){
     const body=document.querySelector("#revenue-comparison-body");
     const keys=["personal_income","corporate_income","vat","excise","social_security","property"];
-    const entries=Object.entries(state.data.countries);
+    const entries=Object.entries(state.data.countries).filter(([code,p])=>window.PSDRevenueCoverage.assess(p,state.data.availability?.countries?.[code]).eligible);
     const ranges=Object.fromEntries(keys.map(key=>{
       const values=entries.map(([,profile])=>profile.tax_detail?.[key]).filter(Number.isFinite);
       return [key,{min:Math.min(...values),max:Math.max(...values)}];
@@ -103,13 +103,35 @@
   function renderSources(){
     document.querySelector("#revenue-source-list").innerHTML=state.data.sources.map((source,index)=>`<a href="${esc(source.url)}" target="_blank" rel="noreferrer"><span>0${index+1} / ${t("source")}</span><strong>${esc(source.title)}</strong><small>${t("openSource")}</small></a>`).join("");
   }
+  function coverageFor(code){return window.PSDRevenueCoverage.assess(state.data.countries[code],state.data.availability?.countries?.[code])}
+  function applyCoverage(){
+    const selector=document.querySelector("#deep-dive-country");
+    const eligible=Object.keys(state.data.countries).filter(code=>coverageFor(code).eligible);
+    if(!eligible.length)throw new Error("No country meets the revenue coverage policy");
+    if(selector){
+      [...selector.options].forEach(option=>{if(!eligible.includes(option.value))option.remove()});
+      selector.dataset.countryCodes=eligible.join(",");
+    }
+    if(!eligible.includes(state.code)){state.excludedCode=state.code;state.code=eligible.includes("CZE")?"CZE":eligible[0]}
+    if(selector){selector.value=state.code;selector.dispatchEvent(new Event("change",{bubbles:true}))}
+  }
+  function renderCoverage(profile){
+    const coverage=coverageFor(state.code),en=state.lang==="en";
+    const notes=[en?"OECD attributes tax revenue to government levels; this does not establish cash routes for each tax.":"OECD přiřazuje daňové příjmy úrovním vlády; nejde o peněžní tok jednotlivých daní.",
+      en?"Transfer share uses total local-government revenue as its denominator. It cannot be applied to VAT or another individual tax.":"Podíl transferů má ve jmenovateli celkové příjmy místní vlády. Nelze jej použít na DPH ani jinou jednotlivou daň."];
+    if(coverage.missingRecipients?.length)notes.push((en?"Recipient levels not separately reported: ":"Samostatně nevykázané úrovně příjemců: ")+coverage.missingRecipients.map(key=>t(key==="social_security"?"socialFunds":key)).join(", ")+(en?". Missing is not zero.":". Chybějící údaj není nula."));
+    notes.push(...coverage.notes);
+    const notice=state.excludedCode?(en?`${countryName(state.excludedCode)} is unavailable because its coverage is insufficient. Showing ${countryName(state.code)}.`:`${countryName(state.excludedCode)} není k dispozici kvůli nedostatečnému pokrytí. Zobrazuje se ${countryName(state.code)}.`):"";
+    document.querySelector("#revenue-coverage").innerHTML=`<strong>${en?"Partial coverage — read before comparing":"Částečné pokrytí — před srovnáním"}</strong><p>${en?"Tax data":"Daňová data"}: ${esc(coverage.taxYear)} · ${en?"Transfer data":"Transferová data"}: ${esc(coverage.transferYear??"—")}. ${esc(notice)}</p><ul>${notes.map(note=>`<li>${esc(note)}</li>`).join("")}</ul>`;
+    document.querySelector('[data-revenue-copy="comparisonTitle"]').textContent=en?"Tax mix across available countries":"Daňový mix dostupných zemí";
+  }
   function render(){
     translateStatic();if(!state.data)return;
     const profile=state.data.countries[state.code]||state.data.countries.CZE;state.code=state.data.countries[state.code]?state.code:"CZE";
     document.querySelector("#revenue-country-label").textContent=countryName(state.code);document.querySelector("#revenue-year").textContent=profile.latest_year;
-    renderFlow(profile);renderTaxPie(profile);renderBase(profile);renderStability(profile);renderTransfers(profile);renderComparison();renderSources();
+    renderCoverage(profile);renderFlow(profile);renderTaxPie(profile);renderBase(profile);renderStability(profile);renderTransfers(profile);renderComparison();renderSources();
   }
   addEventListener("countryprofilechange",event=>{state.code=event.detail.code;state.lang=event.detail.lang;render()});
   new MutationObserver(()=>{const next=document.documentElement.lang === "en" ? "en" : "cs";if(next!==state.lang){state.lang=next;render()}}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
-  document.addEventListener("DOMContentLoaded",()=>{translateStatic();fetch(`${assetRoot}data/country-revenue.v1.json`).then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(data=>{state.data=data;render()}).catch(error=>{console.error("revenue deep dive",error);document.querySelector("#hundred-flow").innerHTML=`<p class="transfer-unavailable">${t("loadError")}</p>`})});
+  document.addEventListener("DOMContentLoaded",()=>{translateStatic();fetch(`${assetRoot}data/country-revenue.v1.json`).then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(data=>{state.data=data;applyCoverage();render()}).catch(error=>{console.error("revenue deep dive",error);document.querySelector("#hundred-flow").innerHTML=`<p class="transfer-unavailable">${t("loadError")}</p>`})});
 })();
