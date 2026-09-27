@@ -50,3 +50,13 @@ test('washing-machine scenario measures active time, never negative savings',()=
   assert.equal(model.timeFreed(10,60,4),0);
   assert.equal(model.timeFreed(60,10,0),0);
 });
+
+test('population totals use all source rows beyond the manifest window and do not split age boundaries',()=>{
+  assert.deepEqual(model.populationSummary({rows:[[2100,20,64,20,30,50],[2100,65,null,10,5,15]]},2100),{total:65,old_age_dependency_per_100_working_age:30});
+  assert.equal(model.populationSummary({rows:[[2100,60,69,20,30,50]]},2100).old_age_dependency_per_100_working_age,null);
+  assert.equal(model.populationSummary({rows:[]},2100),null);
+});
+test('published ranges ignore null values and retain earlier dates',()=>{
+  assert.deepEqual(model.years([{year:1980,value:2},{year:1980,value:3},{year:1970,value:null},{year:2024,value:4}]),[1980,2024]);
+  assert.deepEqual(model.spendingYears({countries:{CZE:{spending:{per_capita_ppp:{series:[{year:2000,value:2}]}}}}}),[2000]);
+});

@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 
-async function fixtures(page,{delay=0}={}){
+async function fixtures(page,{delay=0,longHistory=false}={}){
   const years=Array.from({length:10},(_,i)=>2015+i),series=(from,step)=>years.map((year,i)=>({year,value:from+i*step}));
   const health={schema_version:'fixture',generated_at:'2026-09-08',countries:Object.fromEntries(['CZE','USA'].map((code,i)=>[code,{spending:{per_capita_ppp:{value:5000+i*6000,year:2024,series:series(3000+i*6000,100)},out_of_pocket_pct:{value:15,year:2024,series:series(16,-.1)}},outcomes:{life_expectancy_years:{value:80-i*3,year:2024,series:series(78-i*3,.2)},under5_mortality_per_1000:{value:3+i*2,year:2024,series:series(4+i*2,-.1)},premature_ncd_mortality_pct:{series:series(12,-.1)},suicide_rate_per_100k:{series:series(10,-.1)}},workforce:{physicians_per_1000:{value:4,year:2022,series:series(3,.1)},nurses_per_1000:{value:9,year:2023,series:series(8,.1)}}}]))};
   const sovereign={dataset_id:'fixture-sovereign',generated_at:'2026-09-08',source:{url:'https://example.org/imf-ppppc'},countries:['CZE','USA'].map(country_code=>({country_code})),series:['CZE','USA'].map((country_code,i)=>({country_code,metrics:{gdp_per_capita_ppp:{values:series(30000+i*20000,1000).map(r=>({...r,status:'estimate'}))}}}))};
@@ -10,9 +10,14 @@ async function fixtures(page,{delay=0}={}){
   const pensions={extracted_at:'2026-09-08',sources:{cssz:{url:'https://example.org/cssz',table:'07.03'}},countries:{CZE:{national:{date:'2025-12-31',distribution}}}};
   const source={dataset:'Official national projection',url:'https://example.org/projection'};
   const demography={contract:'fixture-demography',generated_at:'2026-09-08',countries:Object.fromEntries(['CZE','USA'].map(code=>[code,{projection:'Middle variant',reference_date:'1 January',detail:`data/countries/${code.toLowerCase()}/demography.v1.json`,years:Array.from({length:21},(_,i)=>({year:2025+i,total:1000000+i*1000,old_age_dependency_per_100_working_age:30+i}))}]))};
-  const detail={contract:'fixture-detail',generated_at:'2026-09-08',source,rows:Array.from({length:21},(_,i)=>[[2025+i,0,0,10000,11000,21000],[2025+i,1,1,10000,11000,21000],[2025+i,100,null,100+i,200+i,300+2*i]]).flat()};
+  const detail={contract:'fixture-detail',generated_at:'2026-09-08',source,rows:Array.from({length:76},(_,i)=>[[2025+i,0,0,10000,11000,21000],[2025+i,1,1,10000,11000,21000],[2025+i,100,null,100+i,200+i,300+2*i]]).flat()};
   const systems={countries:Object.fromEntries(['CZE','USA'].map(code=>[code,{architecture_en:'Documented health insurance system.',architecture_cs:'Doložený systém zdravotního pojištění.',official_url:'https://example.org/health',official_title:'Official health system'}]))};
   const data={'/lib/data/sovereign-benchmark.v1.json':sovereign,'/data/country-health-performance.v1.json':health,'/data/europe-demographic-pressure.v1.json':pressure,'/data/oecd-key-metrics.v1.json':oecd,'/data/pensions-today.v1.json':pensions,'/data/country-demography.v1.json':demography,'/data/country-health.v1.json':systems,'/data/countries/cze/demography.v1.json':detail,'/data/countries/usa/demography.v1.json':detail};
+  if(longHistory){
+    for(const c of Object.values(health.countries))for(const g of Object.values(c))for(const m of Object.values(g))if(m?.series)m.series=[{year:1980,value:m.series[0].value},...m.series];
+    for(const c of sovereign.series)c.metrics.gdp_per_capita_ppp.values.unshift({year:1980,value:10000,status:'actual'});
+  }
+  await page.route('**/data/contracts/rosling-history.v1.json',route=>longHistory?route.fulfill({json:{contract:'rosling-history.v1',sovereign,health,pressure}}):route.fulfill({status:404,body:'No release'}));
   for(const [path,payload] of Object.entries(data))await page.route(`**${path}`,async route=>{if(delay)await new Promise(r=>setTimeout(r,delay));await route.fulfill({json:payload});});
 }
 const ready=page=>expect(page.locator('#rosling-stage')).toHaveAttribute('aria-busy','false');
@@ -73,4 +78,15 @@ test('guided stories, population blocks, time reveal and equal-mean lesson work'
   await page.locator('[data-view=distribution]').click();await ready(page);await page.locator('#rosling-share-switch').click();await expect(page.locator('#rosling-share-summary')).toContainText('Mean: 2');
   await page.locator('#rosling-same-average [data-action=table]').click();await expect(page.locator('#rosling-same-average .psd-chart-table')).toContainText('0.5');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+});
+
+test('full published histories drive sliders and survive a direct year URL',async({page})=>{
+  await fixtures(page,{longHistory:true});await page.goto('/deep-dives/rosling/?lang=en&year=1980');await ready(page);
+  await expect(page.locator('#rosling-year')).toHaveAttribute('min','1980');await expect(page.locator('#rosling-year-value')).toHaveText('1980');
+  await expect(page.locator('#rosling-health-wealth')).toContainText('WDI · SP.POP.TOTL');
+  await page.locator('[data-view=population]').click();await ready(page);await expect(page.locator('#rosling-year')).toHaveAttribute('max','2100');
+  await page.locator('#rosling-year').evaluate(el=>{el.value='2100';el.dispatchEvent(new Event('input',{bubbles:true}));});
+  await expect(page.locator('#rosling-population-summary')).toContainText('2100');await expect(page.locator('#rosling-population-summary')).toContainText('42,450');
+  await page.reload();await ready(page);await expect(page.locator('#rosling-year-value')).toHaveText('2100');
+  await page.locator('[data-view=spending]').click();await ready(page);await expect(page.locator('#rosling-year')).toHaveAttribute('min','1980');
 });
