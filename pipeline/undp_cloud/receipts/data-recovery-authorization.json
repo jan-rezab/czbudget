@@ -1,11 +1,11 @@
 {
   "request_started_at_unix": 1790461758,
-  "recorded_at": "2026-09-27T01:18:00Z",
+  "recorded_at": "2026-09-27T01:36:35Z",
   "data_recovery_authorized_at": "2026-09-27T00:42:33Z",
   "user_instruction": "fix the cloud run fails on the data bit ... crawling server to server right?",
   "budget_minutes": 179,
-  "failed_verification_submissions": 7,
-  "guard_result": "STOP_NEW_BUILDS; cumulative seven failures preserved. No additional submissions authorized by this receipt.",
+  "failed_verification_submissions": 8,
+  "guard_result": "STOP_NEW_BUILDS; cumulative eight failures and original checkpoint preserved.",
   "override": "The explicit user reply at 00:54:38 UTC authorized the listed corrected data recovery jobs. The original clock, 179-minute budget, and cumulative failures remain recorded. Subsequent failures require focused diagnosis before any retry; automatic approval review remains binding.",
   "focused_tests": {
     "source_and_recovery": 28,
@@ -33,17 +33,22 @@
       "id": "83c540f4-1b3a-408b-9f72-a2dc14054d02",
       "group": "pisa",
       "resume_run": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
-      "status": "WORKING",
+      "status": "TIMEOUT",
       "guard_elapsed_seconds": 8794.949,
       "expected_source_cases": 613744,
-      "observed_count_only_progress": 420000,
+      "observed_count_only_progress": 613744,
       "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
       "guard_result": "STOP_NEW_BUILDS withfailed5;explicituseroverrideapproved",
       "publication_pointer": "hdr_report_sources_2025:pisa",
       "progress_at": "2026-09-27T01:17:35.757238660Z",
       "timeout_seconds": 2400,
       "started_at": "2026-09-27T00:55:54.606123061Z",
-      "processing_status": "complete-source validation pending; parsing count progress only"
+      "processing_status": "source_records_validated; warehouse load pending; unpublished",
+      "accepted_source_records": 613745,
+      "finish_time": "2026-09-27T01:36:15.624390Z",
+      "warehouse_load_job_id": "e04e63ee-493d-48e3-9010-2381875af683",
+      "publication_status": "unpublished",
+      "failure_receipt": "pipeline/undp_cloud/receipts/pisa-corrected-timeout.json"
     },
     {
       "id": "1b85e601-6eae-4489-9eef-bb147672a602",
@@ -430,7 +435,7 @@
     }
   ],
   "capacity": "At most3sourceworkers initially (6CPU), reserve2CPUprivateexport and2CPUCDCprobe; WID2/3 waitverifiedfree slots.",
-  "submission_status": "All four WID shards published; PISA still processing; CDC ASCII full download failed HTTP 403 and remains unavailable.",
+  "submission_status": "All four WID shards published; PISA fullsource stage validated but worker timed out awaiting BQ load and remains unpublished; CDC full GET403 unavailable.",
   "cloud_jobs_created": 6,
   "prepared_package": {
     "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
@@ -471,5 +476,5 @@
     },
     "full_report_original_snapshot_match": "Not asserted; currentmutableproviderraw pinnedbySHAandgeneration"
   },
-  "failure_count_basis": "CDC XPT, report Epoch, old WID shard, old PISA timeout, report 3.968 MB cap, report 2.22 MB cap, CDC ASCII full-download denial. The original clock and explicit five-failure override are retained; the current cumulative total is seven."
+  "failure_count_basis": "CDC XPT, report Epoch, old WID shard, old PISA timeout, report 3.968 MB cap, report 2.22 MB cap, CDC ASCII full-download denial. The original clock and explicit five-failure override are retained; the current cumulative total is seven. Corrected PISA timeout while awaiting BQ load raises the cumulative total to eight."
 }
