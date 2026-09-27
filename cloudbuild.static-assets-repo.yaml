@@ -1,4 +1,5 @@
-# Data-release publication only (plane-data). Packs tracked data directories from one
+# Data-release publication only (plane-data). Packs tracked data directories and named
+# file sets (_FILE_PACKS="name=a.json,b.json;other=c.json") from one
 # pinned commit of the public repository into write-once static-asset packs and swaps
 # static-assets/current.json by generation. It never builds images or deploys code.
 # Submit in europe-west4 as psd-data-builder with --no-source; see
@@ -46,6 +47,7 @@ steps:
           --root /workspace/src \
           --source-sha "${_SOURCE_SHA}" \
           --directories "${_DIRECTORIES}" \
+          --file-packs "${_FILE_PACKS}" \
           --base-lock /workspace/.base/current.json \
           --base-generation "$$(cat /workspace/.base/generation)" \
           --output /workspace/.out \
@@ -62,4 +64,5 @@ options:
 substitutions:
   _SOURCE_SHA: ""
   _DIRECTORIES: ""
+  _FILE_PACKS: ""
   _STATIC_ASSET_BASE_URL: gs://czbudget-janrezab-public-snapshots/static-assets
