@@ -90,3 +90,28 @@ test('full published histories drive sliders and survive a direct year URL',asyn
   await page.reload();await ready(page);await expect(page.locator('#rosling-year-value')).toHaveText('2100');
   await page.locator('[data-view=spending]').click();await ready(page);await expect(page.locator('#rosling-year')).toHaveAttribute('min','1980');
 });
+
+test('years glide slowly with their labels and preserve position when interrupted',async({page})=>{
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await fixtures(page);await page.goto('/deep-dives/rosling/?lang=en&year=2018');await ready(page);
+  const bubble=page.locator('#rosling-health-wealth circle[data-bubble-id="CZE"]');
+  const position=()=>bubble.evaluate(el=>{
+    const m=new DOMMatrixReadOnly(getComputedStyle(el).transform);
+    return {x:Number(el.getAttribute('cx'))+m.m41,y:Number(el.getAttribute('cy'))+m.m42};
+  });
+  await page.locator('[data-play]').click();
+  await expect(page.locator('#rosling-year-value')).toHaveText('2019');
+  await expect.poll(()=>bubble.evaluate(el=>el.getAnimations().filter(a=>a.playState==='running').length)).toBe(1);
+  const start=await position();await page.waitForTimeout(350);const middle=await position();
+  expect(Math.hypot(middle.x-start.x,middle.y-start.y)).toBeGreaterThan(.01);
+  expect(await bubble.evaluate(el=>el.getAnimations()[0].effect.getComputedTiming().progress)).toBeLessThan(.75);
+  const transforms=await page.locator('#rosling-health-wealth [data-bubble-id="CZE"], #rosling-health-wealth [data-bubble-follow="CZE"]').evaluateAll(els=>els.map(el=>getComputedStyle(el).transform));
+  expect(transforms).toHaveLength(3);expect(new Set(transforms).size).toBe(1);
+  await page.locator('[data-play]').click();
+  const before=await position();
+  await page.locator('#rosling-year').evaluate(el=>{el.value='2022';el.dispatchEvent(new Event('input',{bubbles:true}));});
+  const after=await position();expect(Math.hypot(after.x-before.x,after.y-before.y)).toBeLessThan(1);
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.locator('#rosling-year').evaluate(el=>{el.value='2021';el.dispatchEvent(new Event('input',{bubbles:true}));});
+  expect(await bubble.evaluate(el=>el.getAnimations().length)).toBe(0);
+});
