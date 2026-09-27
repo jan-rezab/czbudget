@@ -102,8 +102,10 @@
     "enumeration_url": "https://wid.world/codes-dictionary/",
     "delimiter": ";",
     "filters": {
-      "variable": "sptinc992j",
-      "percentile": "p99p100"
+      "variable": "sptincj992",
+      "percentile": "p99p100",
+      "age": "992",
+      "pop": "j"
     },
     "notes": "Exact publisher URL construction verified in official April2026 R loader. This CZ entry is a fetch smoke test, not complete country coverage. Root should enumerate all official country/region codes and preserve data plus available per-country methodology/source metadata. WID API officially exists but requires x-api-key (official wid-r-tool); public CSV route needs no verified credential. Original2Jan2025 WID snapshot not identified. Adult equal-split denominator (992j), pretax national income. Shares stored as proportions; normalized percent=sourcevalue*100 with explicit calculation. Never erase age/pop metadata or interpolation flags.",
     "expand_catalog_url": "https://raw.githubusercontent.com/world-inequality-database/wid-bulk-downloader/main/World%20Inequality%20Database/Working%20Folder/Setup%20Scripts/country_code_vectors.R",
@@ -117,7 +119,8 @@
       "pop",
       "data_quality"
     ],
-    "schema_verified_at": "2026-09-27 header-only networkread; no observationrows"
+    "schema_verified_at": "2026-09-27 header-only networkread; no observationrows",
+    "code_verification": "2026-09-27: generation-pinned current WID_data_DE.csv code metadata verifies sptincj992, age992, popj; population-before-age code ordering. Earlier assumed sptinc992j does not match current bulk CSV. Raw source variable remains unchanged."
   },
   {
     "source_id": "worldbank_lowest20_current",
@@ -164,7 +167,7 @@
     "evidence_url": "https://unep-irp-resourcepanel.resource-use.global/",
     "evidence_js_url": "https://unep-irp-resourcepanel.resource-use.global/build/assets/app-DRRXXLri.js",
     "bytes_header_verified": 7703387,
-    "notes": "OfficialZiggyroute and JS ExportFullDatasetUrl verified; GET200 text/csv attachment verified responseheaders only. No login/visitorform needed. Countries catalogue in InertiaHTMLprops; codes include ISO3+numeric suffix e.g.CZE203 and regions/historicalcountries. MF/cap t/cap in totalsratios matches annexconcept; preserve MF totaltonnes andPopulation. Actual original2024snapshot identity unresolved. Staticportalmethod notice says2019estimated/earlierrealdata while currentmaintainercitation2025claims1970\u20132024; retain conflicting metadata andinspect actual yearheaders/vintage beforecoverageclaim.",
+    "notes": "OfficialZiggyroute and JS ExportFullDatasetUrl verified; GET200 text/csv attachment verified responseheaders only. No login/visitorform needed. Countries catalogue in InertiaHTMLprops; codes include ISO3+numeric suffix e.g.CZE203 and regions/historicalcountries. MF/cap t/cap in totalsratios matches annexconcept; preserve MF totaltonnes andPopulation. Actual original2024snapshot identity unresolved. Staticportalmethod notice says2019estimated/earlierrealdata while currentmaintainercitation2025claims1970–2024; retain conflicting metadata andinspect actual yearheaders/vintage beforecoverageclaim.",
     "expected_header": [
       "Country",
       "Category",
@@ -244,7 +247,7 @@
     "evidence_url": "https://unep-irp-resourcepanel.resource-use.global/",
     "evidence_js_url": "https://unep-irp-resourcepanel.resource-use.global/build/assets/app-DRRXXLri.js",
     "bytes_header_verified": 4223700,
-    "notes": "OfficialZiggyroute and JS ExportFullDatasetUrl verified; GET200 text/csv attachment verified responseheaders only. No login/visitorform needed. Countries catalogue in InertiaHTMLprops; codes include ISO3+numeric suffix e.g.CZE203 and regions/historicalcountries. MF/cap t/cap in totalsratios matches annexconcept; preserve MF totaltonnes andPopulation. Actual original2024snapshot identity unresolved. Staticportalmethod notice says2019estimated/earlierrealdata while currentmaintainercitation2025claims1970\u20132024; retain conflicting metadata andinspect actual yearheaders/vintage beforecoverageclaim.",
+    "notes": "OfficialZiggyroute and JS ExportFullDatasetUrl verified; GET200 text/csv attachment verified responseheaders only. No login/visitorform needed. Countries catalogue in InertiaHTMLprops; codes include ISO3+numeric suffix e.g.CZE203 and regions/historicalcountries. MF/cap t/cap in totalsratios matches annexconcept; preserve MF totaltonnes andPopulation. Actual original2024snapshot identity unresolved. Staticportalmethod notice says2019estimated/earlierrealdata while currentmaintainercitation2025claims1970–2024; retain conflicting metadata andinspect actual yearheaders/vintage beforecoverageclaim.",
     "expected_header": [
       "Country",
       "Flow name",
