@@ -1,0 +1,22 @@
+steps:
+  - id: rerender-exact-validated-private-report
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: bash
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1', 'DATA_SERVICE_ACCOUNT=${_DATA_SERVICE_ACCOUNT}']
+    args:
+      - -ceu
+      - |
+        apt-get update -qq
+        apt-get install -y --no-install-recommends poppler-utils
+        pip install --quiet --disable-pip-version-check google-cloud-storage==3.4.1 reportlab==4.4.9 pypdf==6.10.0
+        python -m unittest discover -s pipeline/undp_cloud -p 'test*pdf*.py'
+        python pipeline/undp_cloud/render_report_pdf.py --loader-sha '${_LOADER_SHA}' --private-only --report-manifest '${_REPORT_MANIFEST}'
+timeout: 600s
+queueTtl: 300s
+tags: [plane-data, human-development-report-pdf, private-report-artifact]
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _LOADER_SHA: required
+  _DATA_SERVICE_ACCOUNT: required
+  _REPORT_MANIFEST: gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/369c3550-0253-40c7-9cf8-8b1acf944b17/validated-report-manifest.json

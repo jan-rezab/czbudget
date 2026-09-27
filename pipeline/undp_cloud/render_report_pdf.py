@@ -17,7 +17,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
-from reportlab.graphics.shapes import Drawing
+from reportlab.graphics.shapes import Drawing, String
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.graphics.charts.lineplots import LinePlot
 from reportlab.graphics.charts.barcharts import HorizontalBarChart
@@ -97,8 +97,16 @@ def plot(rows,fields,kind,cid):
                 chart.lines[i].symbol=makeMarker('FilledCircle');chart.lines[i].symbol.size=2
                 chart.lines[i].symbol.fillColor=PALETTE[field_index%len(PALETTE)]
                 chart.lines[i].symbol.strokeColor=PALETTE[field_index%len(PALETTE)]
+        extent=sorted({x for _,values in segments for x,_ in values})
+        if len(extent)==1:
+            chart.xValueAxis.valueMin=extent[0]-.5;chart.xValueAxis.valueMax=extent[0]+.5
+            chart.xValueAxis.valueSteps=[extent[0]]
+        else:
+            chart.xValueAxis.valueMin=extent[0];chart.xValueAxis.valueMax=extent[-1]
         chart.xValueAxis.labels.fontSize=7;chart.yValueAxis.labels.fontSize=7
-    d.add(chart);return d
+    d.add(chart)
+    d.add(String(48,218,'Verified source observations',fontName='Helvetica',fontSize=7))
+    return d
 
 
 def build_pdf(payload,output):
@@ -114,10 +122,8 @@ def build_pdf(payload,output):
     add('Czechia, global source context and separately identified survey evidence','Heading2')
     add('Report dataset release: '+payload['release_id'])
     add('Generated verified snapshot: '+payload['generated_at'])
-    add('Source releases and source identifiers','Heading2')
-    add(json.dumps(payload.get('source_releases',{}),ensure_ascii=False),'SmallSource')
     source_ids=sorted({s.get('source_id','unknown') for c in payload['charts'] for s in c.get('source_refs',[])})
-    add(', '.join(source_ids),'SmallSource')
+    add('Source editions and observation dates are stated with each panel. Complete source-release identifiers and provenance are retained in the final appendix.')
     add('Values in the tables preserve the decimal tokens serialized in the verified report JSON; no additional rounding is applied. These report numbers may have been normalized from source decimals. Full original source precision, metadata and source rows remain in the referenced source releases and available CSV exports. Plot tick labels are visual scales, not replacement observations.')
     add('Only explicitly recorded null periods are restored from lossless missing-period ranges. Missing values remain in the exact tables and break plotted lines; unknown gaps are never filled or inferred. Original row dictionaries, survey weights, valid shares and row-level source metadata are retained in the separate chart_details download and original-row CSV audit. These details are not replaced by chart percentages.')
     add('Czechia panels use only CZE observations. Global/source-category context is labelled separately. The 21-country survey pool is never a Czechia or world-population estimate. Missing source definitions and original figure recreations remain in the coverage ledger.')
@@ -177,13 +183,21 @@ def build_pdf(payload,output):
     add('Original object and missing-country ledger','Heading2')
     for cid,title,status,scope,method in gaps:
         add(cid+' | '+str(status)+' | '+title,'Heading3');add(scope+' | '+method,'SmallSource')
+    body.append(PageBreak())
+    add('Source provenance appendix','Heading1')
+    add('Source releases and source identifiers','Heading2')
+    for source,release in sorted(payload.get('source_releases',{}).items()):
+        add(source+' | '+str(release),'SmallSource')
+    add('All referenced source identifiers','Heading2')
+    for source in source_ids:add(source,'SmallSource')
     def footer(canvas,doc):
         canvas.saveState();canvas.setFont('Helvetica',8);canvas.drawString(45,25,'Verified release '+payload['release_id']);canvas.drawRightString(A4[0]-45,25,str(doc.page));canvas.restoreState()
     SimpleDocTemplate(str(output),invariant=1,pagesize=A4,leftMargin=45,rightMargin=45,topMargin=40,bottomMargin=42,title='Human development verified data report',author='Public Spending Data').build(body,onFirstPage=footer,onLaterPages=footer,canvasmaker=partial(Canvas,invariant=1))
     if output.stat().st_size>MAX_PDF:raise ValueError('PDF exceeds10MB; no observations truncated')
     reader=PdfReader(str(output));texts=[p.extract_text() or '' for p in reader.pages]
     if not texts or payload['release_id'] not in texts[0] or 'Original report coverage and gaps' not in '\n'.join(texts):raise ValueError('PDF text/page verification failed')
-    return dict(page_count=len(reader.pages),selected_panels=ready,selected_numeric_cells=selected_cells,unavailable_or_missing_geography_panels=len(gaps),text_verified=True,pdf_bytes=output.stat().st_size)
+    first_chart_page=next((i+1 for i,t in enumerate(texts) if 'Verified source observations' in t),None)
+    return dict(first_chart_page=first_chart_page,page_count=len(reader.pages),selected_panels=ready,selected_numeric_cells=selected_cells,unavailable_or_missing_geography_panels=len(gaps),text_verified=True,pdf_bytes=output.stat().st_size)
 
 
 def load_verified_report(gcs, manifest_uri=None):
@@ -235,7 +249,8 @@ def load_verified_report(gcs, manifest_uri=None):
 
 def main():
     if not os.environ.get('BUILD_ID'):raise RuntimeError('Cloud Build only; no local source data rendering')
-    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--report-manifest');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--report-manifest');parser.add_argument('--private-only',action='store_true');args=parser.parse_args()
+    if args.private_only and not args.report_manifest:raise ValueError('Private PDF rerender requires an exact validated manifest')
     from google.cloud import storage
     gcs=storage.Client(project='czbudget-janrezab');private=gcs.bucket(PRIVATE)
     prefix='processing-runs/hdr-report-pdf/'+os.environ['BUILD_ID']
@@ -252,7 +267,7 @@ def main():
     rid=pointer['release_id'];name=pointer['object']
     directory=Path('/tmp/hdr-report-pdf');directory.mkdir(exist_ok=True);output=directory/'report.pdf'
     qa=build_pdf(payload,output)
-    pages=sorted({1,max(1,qa['page_count']//2),qa['page_count']});proof=[]
+    pages=sorted({1,max(1,qa['page_count']//2),qa['page_count']} | ({qa['first_chart_page']} if qa.get('first_chart_page') else set()));proof=[]
     for page in pages:
         prefix=directory/('proof-'+str(page))
         subprocess.run(['pdftoppm','-f',str(page),'-l',str(page),'-scale-to','1000','-singlefile','-png',str(output),str(prefix)],check=True,timeout=45)
