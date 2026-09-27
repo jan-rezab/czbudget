@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import sys
 import types
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -68,6 +69,20 @@ class PrivatePDFTests(unittest.TestCase):
         with self.assertRaises(ValueError):pdf.load_verified_report(GCS(body,m),URI)
         _,body,m=fixture();m['source_releases']={'changed':'fixture'}
         with self.assertRaisesRegex(ValueError,'source releases'):pdf.load_verified_report(GCS(body,m),URI)
+    def test_real_pdf_keeps_all_86_original_objects_and_source_locators(self):
+        payload,_,_=fixture()
+        payload['coverage']={'original_figures':[dict(id='object-'+str(i),title='Synthetic original object',pdf_page=i+15,status='needs_definition',classification='historical',source_ids=['synthetic'],source_urls=['https://example.org/table/'+str(i)],reason='Original transformation unresolved') for i in range(86)],'unavailable_sources':[dict(source_id='synthetic',reason='Synthetic gap')]}
+        with tempfile.TemporaryDirectory(prefix='hdr-pdf-test-') as folder:
+            output=Path(folder)/'report.pdf'
+            qa=pdf.build_pdf(payload,output)
+            text='\n'.join(p.extract_text() or '' for p in pdf.PdfReader(str(output)).pages)
+            for i in range(86):
+                self.assertIn('object-'+str(i),text)
+                self.assertIn('https://example.org/table/'+str(i),text)
+            self.assertGreater(qa['page_count'],1)
+            first=output.read_bytes();pdf.build_pdf(payload,output)
+            self.assertEqual(first,output.read_bytes())
+
     def test_full_private_main_only_private_reads_and_immutable_private_outputs(self):
         _,body,m=fixture();g=GCS(body,m)
         storage=types.ModuleType('google.cloud.storage');storage.Client=lambda **kwargs:g
