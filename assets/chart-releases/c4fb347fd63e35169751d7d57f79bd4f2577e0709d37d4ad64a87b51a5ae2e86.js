@@ -542,7 +542,6 @@
 
   // Nonnegative part-to-whole compositions. Adapters define the denominator.
   function renderDonut(host,spec){
-    const focused=host.contains(document.activeElement)?document.activeElement.dataset?.point:undefined;
     host.__psdChartCleanup?.();const abort=new AbortController(),on=(node,event,fn)=>node.addEventListener(event,fn,{signal:abort.signal});
     const data=model(spec),{rows,fields}=data,width=Math.max(300,Math.min(1120,host.clientWidth-8)),height=spec.height||310;
     host.classList.add('psd-shared-plot');host.dataset.chartComponent='donut';host.__psdChartAccessor=data.accessor;
@@ -559,7 +558,7 @@
     const activate=hit=>{pinned=!pinned;if(pinned)show(hit);else hide();spec.onSelect?.(rows[Number(hit.dataset.row)].raw);};
     on(host,'click',e=>{const hit=e.target.closest('[data-point]');if(hit)activate(hit);});on(document,'pointerdown',e=>{if(!host.contains(e.target)){pinned=false;hide();}});
     on(host,'keydown',e=>{if(e.key==='Escape'){pinned=false;hide();return;}const hit=e.target.closest('[data-point]');if(!hit)return;if(['Enter',' '].includes(e.key)){e.preventDefault();activate(hit);return;}if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();const all=[...host.querySelectorAll('[data-point]')],i=all.indexOf(hit),next=e.key==='Home'?0:e.key==='End'?all.length-1:Math.max(0,Math.min(all.length-1,i+(['ArrowLeft','ArrowUp'].includes(e.key)?-1:1)));hit.tabIndex=-1;all[next].tabIndex=0;all[next].focus();});
-    const resize=new ResizeObserver(()=>{if(Math.abs(Math.max(300,Math.min(1120,host.clientWidth-8))-width)>1)render(host,spec);});resize.observe(host);host.__psdChartCleanup=()=>{abort.abort();resize.disconnect();};if(focused!==undefined){const selected=host.querySelector(`[data-point="${focused}"]`);if(selected){host.querySelector('[data-point="0"]')?.setAttribute('tabindex','-1');selected.tabIndex=0;selected.focus();}}return {data,accessor:data.accessor,destroy:host.__psdChartCleanup};
+    const resize=new ResizeObserver(()=>{if(Math.abs(Math.max(300,Math.min(1120,host.clientWidth-8))-width)>1)render(host,spec);});resize.observe(host);host.__psdChartCleanup=()=>{abort.abort();resize.disconnect();};return {data,accessor:data.accessor,destroy:host.__psdChartCleanup};
   }
 
   // Spatial charts share the same normalized values, interaction and export contract.

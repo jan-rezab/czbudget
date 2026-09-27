@@ -144,3 +144,23 @@ Category ranking is calculated as endpoint minus baseline in current USD. The fi
 The exact source is the warehouse table and executable query above, audited 27 September 2026, with the same 2019/2024 ingestion loads. These are available HS6 subtotals, not official TOTAL observations, shipment tracking or evidence of end use. Broad chapters do not designate sanctioned or dual-use products.
 
 North Korean military support has separate documented evidence: the [Multilateral Sanctions Monitoring Team’s 29 May 2025 report](https://msmt.info/view/save/2025/05/29/1085cade-a4b1-4405-94c0-7c980c24fd21-Unlawful_Military_Cooperation_including_Arms_Transfers_between_North_Korea_and_Russia_%28MSMT_2025_1%29.pdf), executive summary on PDF p.3. MSMT is a government monitoring team, not the UN Panel of Experts. Its report documents arms transfers to Russia; it is not used to fill missing Comtrade observations. No numerical arms-transfer estimate is inserted into these commercial charts.
+
+
+## Delta story accounting — 27 September 2026
+
+The new story layer fixes the baseline at 2019 and uses one selected annual endpoint for every panel. Its default is the latest year shared by the selected country's bilateral TOTAL directions, direct supplier declaration and both hub routes; the audited China view resolves to 2024. An explicit later year remains selected and exposes missing endpoints. Monthly explorer filters do not change these annual comparisons.
+
+All calculations below use the same warehouse query, coverage, current-USD units and 2019/2024 ingestion IDs documented above. The existing bounded aggregate audit was reused; this UI task did not query, ingest or publish data. Decimal source strings are added/subtracted at nine-place precision, preserving the warehouse NUMERIC scale. Shares are calculated from positive delta / sum of positive deltas and displayed to at most nine decimal places. Plot coordinates and compact labels are not accounting inputs.
+
+| China-reported direction, 2019 → 2024 | Sum of positive changes, USD | Sum of declines, USD | Matched-category net change, USD | Full observed-basket net change, USD |
+|---|---:|---:|---:|---:|
+| Exports to Russia | 69,173,997,371 | −3,646,622,396 | 65,527,374,975 | 65,527,374,975 |
+| Imports from Russia | 70,552,877,155 | −1,850,041,653 | 68,702,835,502 | 68,690,725,890 |
+
+Exports pair all 97 historically observed chapters. Imports pair 89 of 97 chapters: 14, 24, 46, 50 and 66 lack one endpoint; 06, 36 and 45 lack both endpoints but appear elsewhere in the historical view. The calculated bridge between full-basket and paired-category import net change is −12,109,612 USD. Missing observations are never interpreted as zero. This difference is disclosed beside the donut and does not enter its positive-change denominator.
+
+Each donut shows the five largest positive category changes plus the exact sum of all remaining positive changes. The canonical CSV records original endpoint decimal strings, calculated delta, positive-change denominator, share, included HS chapter codes, reporter, flow, years and ingestion IDs. Full category tables retain declines, observed zeros and missing comparisons. The supplier story also retains every historically observed reporter; rankings show ten increases and ten declines on equal dollar scales, with matched-panel coverage disclosed. Kazakhstan and Kyrgyzstan World imports and exports to Russia are shown independently, never added together or treated as the same shipment.
+
+The complete-comparison CSV also retains every supplier and category comparison, full observed-basket totals and both independent hub routes. Missing-both, missing-baseline and missing-endpoint states are explicit; source hashes and ingestion identifiers accompany the exact values. Hub routes have no combined net or denominator.
+
+The same supplier-query coverage yields 115 paired suppliers out of 160 historically observed reporters for 2019 → 2024: calculated positive changes 82,341,920,258.023 current USD, declines −89,131,669,964.379 current USD and matched-panel net −6,789,749,706.356 current USD. This is not a complete global estimate. The complete comparison contains 360 audit rows (160 suppliers, 194 directional categories, two directional full baskets and four independent hub routes), including 53 comparisons with missing endpoints.

@@ -117,3 +117,26 @@ test('direct supplier growth ranking keeps declines and uses country buttons to 
  await expect(page.locator('#rt-bilateral-title')).toContainText('South Korea');
  await expect(page).toHaveURL(/bilateral=KOR/);
 });
+
+test('delta story separates gross positive composition, declines and the net using one year',async({page})=>{
+ await page.goto('/deep-dives/russia-trade/?lang=en&story_year=2024');
+ await expect(page.locator('#rt-story-status')).toContainText('2019 → 2024');
+ await expect(page.locator('#rt-story-X-donut [data-chart-component="donut"]')).toBeVisible();
+ await expect(page.locator('#rt-story-X-copy')).toContainText('Donut share = category increase');
+ await expect(page.locator('#rt-story-X-balance')).toContainText('Net change in observed basket');
+ await page.locator('#rt-story-X-donut [data-point="0"]').focus();await expect(page.locator('#rt-story-X-donut .psd-plot-tooltip')).toContainText('100%');
+ await page.keyboard.press('Escape');await expect(page.locator('#rt-story-X-donut .psd-plot-tooltip')).toBeHidden();
+ await page.locator('#rt-story-X-donut [data-action="table"]').click();await expect(page.locator('#rt-story-X-donut .psd-chart-panel')).toContainText('240');
+ await page.locator('[data-frequency=M]').click();await expect(page.locator('#rt-month')).toHaveText('Mar 2024');await expect(page.locator('#rt-story-status')).toContainText('2019 → 2024');
+ await page.locator('#rt-story-country').selectOption('PRK');await expect(page.locator('#rt-story-country-title')).toContainText('North Korea');await expect(page.locator('#rt-story-X-donut svg')).toHaveCount(0);await expect(page.locator('#rt-story-X-balance')).toContainText('— USD');
+});
+test('story keeps the selected common year and exposes missing latest country endpoints',async({page})=>{
+ await page.goto('/deep-dives/russia-trade/?lang=en&story_year=2025');
+ await expect(page.locator('#rt-story-year')).toHaveValue('2025');await expect(page.locator('#rt-story-X-copy')).toContainText('missing: 87');
+ await expect(page.locator('#rt-story-X-donut svg')).toHaveCount(0);
+ await page.locator('#rt-story-year').selectOption('2024');await expect(page.locator('#rt-story-X-donut svg')).toHaveCount(1);await expect(page).toHaveURL(/story_year=2024/);
+});
+
+test('complete delta CSV keeps all categories and missing coverage with exact endpoints',async({page})=>{
+ await page.goto('/deep-dives/russia-trade/?lang=en&story_year=2024');await expect(page.locator('#rt-story-download')).toBeEnabled();const downloading=page.waitForEvent('download');await page.locator('#rt-story-download').click();const file=await (await downloading).path();const csv=await (await import('node:fs/promises')).readFile(file,'utf8');expect(csv).toContain('comparison_status');expect(csv).toContain('category,87,CHN,X,2019,2024,current USD,80,320,240,paired');expect(csv).toContain('observed_basket,TOTAL,CHN,M');expect(csv).toContain('hub_route,WORLD_IMPORTS,KAZ,M');
+});

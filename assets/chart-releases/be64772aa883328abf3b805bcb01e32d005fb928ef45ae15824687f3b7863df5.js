@@ -160,7 +160,7 @@
       const rowHeight = plotHeight / Math.max(1, rows.length);
       const bx = value => left + (value - axis.min) / (axis.max - axis.min) * plotWidth;
       const maxLabel = Math.floor((left - 16) / 8);
-      marks = rows.map((row, i) => `<text x="${left - 12}" y="${top + i * rowHeight + 22}" text-anchor="end">${escape(row.label.length > maxLabel ? row.label.slice(0, maxLabel - 1) + '…' : row.label)}</text>` + fields.map((field, f) => row.values[f] === null ? '' : `<rect x="${Math.min(bx(0), bx(row.values[f]))}" y="${top + i * rowHeight + f * 28 / fields.length}" width="${Math.abs(bx(row.values[f]) - bx(0))}" height="${26 / fields.length}" fill="${escape(spec.rowColor?.(row.raw, field) || (row.values[f] < 0 ? '#c93237' : field.color))}"/>${spec.valueLabels ? `<text class="psd-plot-bar-value" x="${width - 5}" y="${top + i * rowHeight + f * 28 / fields.length + 18}" text-anchor="end">${escape(spec.valueLabelFormat?spec.valueLabelFormat(row.values[f],row.raw):format(row.values[f], field, row))}</text>` : ''}`).join('')).join('');
+      marks = rows.map((row, i) => `<text x="${left - 12}" y="${top + i * rowHeight + 22}" text-anchor="end">${escape(row.label.length > maxLabel ? row.label.slice(0, maxLabel - 1) + '…' : row.label)}</text>` + fields.map((field, f) => row.values[f] === null ? '' : `<rect x="${Math.min(bx(0), bx(row.values[f]))}" y="${top + i * rowHeight + f * 28 / fields.length}" width="${Math.abs(bx(row.values[f]) - bx(0))}" height="${26 / fields.length}" fill="${escape(spec.rowColor?.(row.raw, field) || (row.values[f] < 0 ? '#c93237' : field.color))}"/>${spec.valueLabels ? `<text class="psd-plot-bar-value" x="${width - 5}" y="${top + i * rowHeight + f * 28 / fields.length + 18}" text-anchor="end">${escape(format(row.values[f], field, row))}</text>` : ''}`).join('')).join('');
       axes = `<g class="psd-plot-grid">${axis.ticks.filter((_,i)=>i%Math.ceil(axis.ticks.length/(width<500?3:5))===0).map(value=>`<line x1="${bx(value)}" x2="${bx(value)}" y1="${top}" y2="${height-bottom}"/><text x="${bx(value)}" y="${height-20}" text-anchor="middle">${axisFormat(value)}</text>`).join('')}<text x="${left}" y="20">${escape(spec.unit || '')}</text></g>`;
       hits = rows.map((row, i) => `<rect class="psd-plot-hit" data-point="${i}" x="0" y="${top + i * rowHeight}" width="${width}" height="${rowHeight}" tabindex="${i ? -1 : 0}" role="button" aria-label="${escape(describe(row))}"/>`).join('');
     }
@@ -542,12 +542,11 @@
 
   // Nonnegative part-to-whole compositions. Adapters define the denominator.
   function renderDonut(host,spec){
-    const focused=host.contains(document.activeElement)?document.activeElement.dataset?.point:undefined;
     host.__psdChartCleanup?.();const abort=new AbortController(),on=(node,event,fn)=>node.addEventListener(event,fn,{signal:abort.signal});
     const data=model(spec),{rows,fields}=data,width=Math.max(300,Math.min(1120,host.clientWidth-8)),height=spec.height||310;
     host.classList.add('psd-shared-plot');host.dataset.chartComponent='donut';host.__psdChartAccessor=data.accessor;
     const cx=width/2,cy=height/2,outer=Math.min(height*.42,width*.4),inner=outer*.66,number=new Intl.NumberFormat(spec.locale||'en-GB',{maximumFractionDigits:1});
-    const valid=rows.length&&rows.every(r=>r.shares[0]!==null),describe=row=>`${row.label}: ${fields[0].format?fields[0].format(row.values[0],row.raw):row.values[0]} (${spec.shareFormat?spec.shareFormat(row.shares[0],row.raw):number.format(row.shares[0])+'%'})`;
+    const valid=rows.length&&rows.every(r=>r.shares[0]!==null),describe=row=>`${row.label}: ${fields[0].format?fields[0].format(row.values[0],row.raw):row.values[0]} (${number.format(row.shares[0])}%)`;
     let angle=-Math.PI/2,marks='',point=0;
     if(valid)for(const row of rows){if(row.values[0]<=0)continue;const end=angle+row.shares[0]/100*Math.PI*2,finish=Math.min(end,angle+Math.PI*2-.000001),xy=(a,r)=>[cx+Math.cos(a)*r,cy+Math.sin(a)*r],a=xy(angle,outer),b=xy(finish,outer),c=xy(finish,inner),d=xy(angle,inner),large=finish-angle>Math.PI?1:0;
       marks+=`<path class="psd-donut-slice" data-point="${point}" data-row="${rows.indexOf(row)}" d="M${a} A${outer},${outer} 0 ${large} 1 ${b} L${c} A${inner},${inner} 0 ${large} 0 ${d} Z" fill="${escape(spec.rowColor?.(row.raw)||palette[point%palette.length])}" tabindex="${point?-1:0}" role="button" aria-label="${escape(describe(row))}"/>`;angle=end;point++;}
@@ -559,7 +558,7 @@
     const activate=hit=>{pinned=!pinned;if(pinned)show(hit);else hide();spec.onSelect?.(rows[Number(hit.dataset.row)].raw);};
     on(host,'click',e=>{const hit=e.target.closest('[data-point]');if(hit)activate(hit);});on(document,'pointerdown',e=>{if(!host.contains(e.target)){pinned=false;hide();}});
     on(host,'keydown',e=>{if(e.key==='Escape'){pinned=false;hide();return;}const hit=e.target.closest('[data-point]');if(!hit)return;if(['Enter',' '].includes(e.key)){e.preventDefault();activate(hit);return;}if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();const all=[...host.querySelectorAll('[data-point]')],i=all.indexOf(hit),next=e.key==='Home'?0:e.key==='End'?all.length-1:Math.max(0,Math.min(all.length-1,i+(['ArrowLeft','ArrowUp'].includes(e.key)?-1:1)));hit.tabIndex=-1;all[next].tabIndex=0;all[next].focus();});
-    const resize=new ResizeObserver(()=>{if(Math.abs(Math.max(300,Math.min(1120,host.clientWidth-8))-width)>1)render(host,spec);});resize.observe(host);host.__psdChartCleanup=()=>{abort.abort();resize.disconnect();};if(focused!==undefined){const selected=host.querySelector(`[data-point="${focused}"]`);if(selected){host.querySelector('[data-point="0"]')?.setAttribute('tabindex','-1');selected.tabIndex=0;selected.focus();}}return {data,accessor:data.accessor,destroy:host.__psdChartCleanup};
+    const resize=new ResizeObserver(()=>{if(Math.abs(Math.max(300,Math.min(1120,host.clientWidth-8))-width)>1)render(host,spec);});resize.observe(host);host.__psdChartCleanup=()=>{abort.abort();resize.disconnect();};return {data,accessor:data.accessor,destroy:host.__psdChartCleanup};
   }
 
   // Spatial charts share the same normalized values, interaction and export contract.

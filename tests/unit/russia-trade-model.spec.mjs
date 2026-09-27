@@ -101,3 +101,26 @@ test('bilateral categories and history keep Russia imports distinct from World a
  const data={frequency:'A',observations},history=bilateralHistory(data);assert.equal(history[1].period,'2020');assert.equal(history[1].M,null);assert.equal(history[2].X,5);
  const model=categoryGrowth(data,{hub:'CHN',flow:'M',partner:'RUS',baseYear:'2019',endYear:'2021',continuousYears:true});assert.equal(model.categories[0].code,'27');assert.equal(model.categories[0].delta,17);assert.equal(model.rows[0].other,2);assert.equal(model.rows[1].period,'2020');assert.equal(model.rows[1]['27'],null);assert.equal(model.rows[1].other,null);
 });
+
+test('delta story uses exact decimal source arithmetic and distinguishes gross growth from net',async()=>{
+ const {deltaBasket,deltaSlices}=await import('../../lib/russia-trade-model.mjs');
+ const obs=[['84','2019','100.000000001'],['84','2024','150.000000002'],['27','2019','30.1'],['27','2024','20.2'],['85','2019','0'],['85','2024','0'],['26','2024','99'],['06','2020','1']].map(([product_code,period,reported_value_usd])=>({product_code,period,reported_value_usd,value_usd:999}));
+ const b=deltaBasket(obs);assert.equal(b.positiveExact,'50.000000001');assert.equal(b.negativeExact,'-9.9');assert.equal(b.netExact,'40.100000001');assert.deepEqual(b.missing.map(r=>r.code),['06','26']);assert.equal(b.rows.find(r=>r.code==='85').deltaExact,'0');assert.equal(deltaSlices(b)[0].sharePositiveExact,'100');
+ assert.equal(deltaBasket(obs,{endYear:'2025'}).netExact,null);assert.throws(()=>deltaBasket([...obs,obs[0]]),/Duplicate/);
+});
+test('donut slices retain every positive change and exact grouped inputs, without including declines',async()=>{
+ const {deltaBasket,deltaSlices}=await import('../../lib/russia-trade-model.mjs'),observations=Array.from({length:8},(_,i)=>String(i+10)).flatMap((product_code,i)=>[{period:'2019',product_code,reported_value_usd:'0.01'},{period:'2024',product_code,reported_value_usd:String(i+1)+'.01'}]);
+ const b=deltaBasket(observations),slices=deltaSlices(b,2);assert.equal(slices.length,3);assert.equal(slices[2].code,'OTHER');assert.equal(slices[2].deltaExact,'21');assert.equal(slices[2].baseExact,'0.06');assert.equal(slices[2].valueExact,'21.06');assert.equal(slices.reduce((s,r)=>s+r.delta,0),Number(b.positiveExact));assert.equal(slices[2].members.length,6);
+});
+test('bilateral delta exposes the missing-category bridge to the full basket and does not invent a North Korean zero',async()=>{
+ const {bilateralDelta,chooseStoryYear}=await import('../../lib/russia-trade-model.mjs');
+ const observations=[['2019','TOTAL','100'],['2024','TOTAL','150'],['2019','84','70'],['2024','84','130'],['2019','27','30']].map(([period,product_code,reported_value_usd])=>({period,product_code,reported_value_usd,reporter_iso3:'CHN',partner_iso3:'RUS',flow_code:'M'}));
+ const b=bilateralDelta({country:'CHN',observations},{flow:'M'});assert.equal(b.netExact,'60');assert.equal(b.total.deltaExact,'50');assert.equal(b.coverageDifferenceExact,'-10');assert.equal(b.missing[0].code,'27');
+ assert.equal(bilateralDelta({country:'PRK',observations:[]}).netExact,null);
+ const data={country:'CHN',observations:[...observations,{period:'2024',product_code:'TOTAL',flow_code:'X'}]};assert.equal(chooseStoryYear({suppliers:[{reporter_iso3:'CHN',partner_iso3:'RUS',period:'2024'},{reporter_iso3:'KOR',partner_iso3:'RUS',period:'2025'}]},data), '2024');assert.equal(chooseStoryYear({suppliers:[]},data,'2025'),'2025');
+});
+
+test('audit export retains each missing endpoint, exact decimal and ingestion provenance',async()=>{
+ const {deltaBasket,deltaAuditRows}=await import('../../lib/russia-trade-model.mjs');const basket=deltaBasket([{period:'2019',product_code:'75',reported_value_usd:'0.2',release_ids:'base'},{period:'2024',product_code:'75',reported_value_usd:'0.1',release_ids:['end']},{period:'2020',product_code:'06',reported_value_usd:'1'},{period:'2019',product_code:'14',reported_value_usd:'0'}]);const rows=deltaAuditRows(basket,{reporter:'CHN',flow:'M'});
+ assert.equal(rows.length,3);assert.equal(rows.find(r=>r.code==='75').delta_usd,'-0.1');assert.equal(rows.find(r=>r.code==='75').endpoint_load_ids,'end');assert.equal(rows.find(r=>r.code==='75').base_load_ids,'base');assert.equal(rows.find(r=>r.code==='14').baseline_usd,'0');assert.equal(rows.find(r=>r.code==='14').comparison_status,'missing_endpoint');assert.equal(rows.find(r=>r.code==='06').comparison_status,'missing_both');assert.equal(rows[0].reporter_iso3,'CHN');
+});
