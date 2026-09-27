@@ -13,7 +13,12 @@ const port = Number(process.env.PORT || 4173);
 // Exercise the same immutable snapshots and renderer as production. A caller may
 // reuse a prepared release; otherwise build one from the local serving inputs.
 let temporaryRelease;
-if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT) {
+// The per-entity serving inputs left the checkout (they live in the published release).
+// Without them, read the live published release from the bucket, in memory only.
+const remoteRelease = !process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT && !process.env.PUBLIC_SNAPSHOT_BASE_URL
+  && !existsSync(join(root, "data/municipal-history/00064581.json"));
+if (remoteRelease) process.env.PUBLIC_SNAPSHOT_BASE_URL = "gs://czbudget-janrezab-public-snapshots/municipal";
+if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT && !process.env.PUBLIC_SNAPSHOT_BASE_URL) {
   temporaryRelease = await mkdtemp(join(tmpdir(), "czbudget-browser-release-"));
   execFileSync(process.execPath, ["scripts/prepare-public-serving-snapshots.mjs", "--output", temporaryRelease, "--release-id", "browser-test"], { cwd: root, stdio: "inherit" });
   process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT = temporaryRelease;
@@ -21,6 +26,7 @@ if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT) {
 process.env.NODE_ENV = "test";
 process.env.SITE_ROOT = root;
 const { handler } = await import("../server/index.mjs");
+if (remoteRelease) (await import("../server/snapshot-store.mjs")).publicSnapshotStore.tokenProvider = serverAccessToken;
 // Datasets that are not in the checkout are served from the published packs: a hydrated
 // DATA_ASSET_LOCK/DATA_ASSET_PACK_ROOT in Cloud Build, else the live lock read with the
 // developer's gcloud credentials. Bytes stay in memory; nothing is written to disk.
