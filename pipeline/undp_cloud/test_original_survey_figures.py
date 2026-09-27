@@ -45,6 +45,23 @@ class OriginalFigureTests(unittest.TestCase):
         with self.assertRaises(ValueError):stats(c,'Q14')
         c=cells('Q14');c[0]['invalid_weight_n']=1
         with self.assertRaises(ValueError):stats(c,'Q14')
+    def test_equal_country_normalization_keeps_original_weights(self):
+        row=dict(received_n=1,usable_weight_n=1,invalid_weight_n=0,missing_kind=None)
+        native=[dict(row,source_value='8',weighted_n='100'),dict(row,source_value='1',weighted_n='1')]
+        normalized=[dict(row,source_value='8',weighted_n='1',original_weighted_n='100'),dict(row,source_value='1',weighted_n='1',original_weighted_n='1')]
+        self.assertAlmostEqual(stats(native,'Q14',denominator='valid_answers')['value'],10000/101)
+        x=stats(normalized,'Q14',denominator='valid_answers');self.assertEqual(x['value'],50)
+        self.assertEqual(x['original_all_weight'],'101');self.assertEqual(x['original_numerator_weight'],'100')
+        query=grouped_query('project.dataset',{c:'High' for c in COUNTRIES},pooling_mode='equal_country_total_weight')
+        self.assertIn('survey_weight / country_total_weight',query)
+        self.assertIn('original_weighted_n',query);self.assertIn("'equal_country_total_weight' pooling_mode",query)
+        rows=all_cells()
+        for r in rows:r['pooling_mode']='equal_country_total_weight';r['original_weighted_n']=r['weighted_n']
+        charts,_=derive_panels(rows,REF,denominator='valid_answers')
+        self.assertEqual(charts[0]['pooling_mode'],'equal_country_total_weight')
+        self.assertIn('inferred',charts[0]['method']['en'])
+        rows[0]['pooling_mode']='native_weights'
+        with self.assertRaises(ValueError):derive_panels(rows,REF,denominator='valid_answers')
     def test_query_exact_scoped_release_and_grouping(self):
         mapping={c:'High' for c in COUNTRIES};q=grouped_query('project.dataset',mapping)
         self.assertIn('r.release_id=@release',q);self.assertIn("a.variable='Q1'",q);self.assertIn('BETWEEN 15 AND 24',q)

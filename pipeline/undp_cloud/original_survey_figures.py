@@ -33,7 +33,7 @@ BENCHMARKS = {
 }
 
 
-def grouped_query(dataset, country_to_hdi):
+def grouped_query(dataset, country_to_hdi, pooling_mode='native_weights'):
     """BigQuery SQL for original figure marginals, including age × HDI cells.
 
     Caller supplies a country-name → report-era HDI group map, verified against
@@ -47,6 +47,9 @@ def grouped_query(dataset, country_to_hdi):
         raise ValueError('HDI grouping must cover exactly the 21 source countries')
     if not set(country_to_hdi.values()).issubset(HDI_GROUPS):
         raise ValueError('HDI groups must use the three explicit report labels')
+    if pooling_mode not in ('native_weights','equal_country_total_weight'):
+        raise ValueError('Unknown explicit country pooling mode')
+    weight_expression = 'survey_weight / country_total_weight' if pooling_mode=='equal_country_total_weight' else 'survey_weight'
     cases=' '.join('WHEN '+json.dumps(k)+' THEN '+json.dumps(v) for k,v in sorted(country_to_hdi.items()))
     variables=','.join(json.dumps(v) for v in VARIABLES)
     return f'''WITH dimensions AS (
@@ -61,6 +64,10 @@ def grouped_query(dataset, country_to_hdi):
       WHERE r.release_id=@release AND r.source_id='ai2025_survey'
       GROUP BY r.release_id,r.source_id,r.respondent_id,r.country,r.survey_weight,
         r.source_url,r.source_sha256
+    ), weighted_dimensions AS (
+      SELECT *,SUM(IF(survey_weight IS NOT NULL AND survey_weight>=0,survey_weight,0))
+        OVER(PARTITION BY release_id,source_id,country) country_total_weight
+      FROM dimensions
     ), base AS (
       SELECT d.*,a.variable,a.source_value,a.value_label,
         COALESCE(a.missing_kind,IF(a.source_value IS NULL,'system_missing',NULL)) missing_kind,
@@ -70,7 +77,7 @@ def grouped_query(dataset, country_to_hdi):
              WHEN age BETWEEN 45 AND 59 THEN '45–59'
              WHEN age BETWEEN 60 AND 120 THEN '60 and older'
              ELSE '__unmapped_age__' END age_group
-      FROM dimensions d JOIN `{dataset}.survey_answers` a
+      FROM weighted_dimensions d JOIN `{dataset}.survey_answers` a
         USING(release_id,source_id,respondent_id)
       WHERE a.variable IN ({variables})
     ), scopes AS (
@@ -84,7 +91,9 @@ def grouped_query(dataset, country_to_hdi):
       COUNT(*) received_n,
       COUNTIF(survey_weight IS NOT NULL AND survey_weight>=0) usable_weight_n,
       COUNTIF(survey_weight IS NULL OR survey_weight<0) invalid_weight_n,
-      SUM(IF(survey_weight IS NOT NULL AND survey_weight>=0,survey_weight,0)) weighted_n,
+      SUM(IF(survey_weight IS NOT NULL AND survey_weight>=0 AND country_total_weight>0,{weight_expression},0)) weighted_n,
+      SUM(IF(survey_weight IS NOT NULL AND survey_weight>=0,survey_weight,0)) original_weighted_n,
+      '{pooling_mode}' pooling_mode,
       ARRAY_AGG(DISTINCT country IGNORE NULLS) countries
     FROM scopes GROUP BY release_id,source_id,scope,group_label,variable,
       source_value,value_label,missing_kind,source_url,source_sha256'''
@@ -129,6 +138,7 @@ def stats(cells,variable,half_neutral=False,denominator='all_usable_weights'):
     if denominator not in ('all_usable_weights','valid_answers'):
         raise ValueError('Explicit denominator required')
     all_weight=valid_weight=numerator=Decimal(0)
+    original_all=original_valid=original_numerator=Decimal(0)
     received=usable=invalid=0
     missing=[]
     seen=set()
@@ -142,14 +152,20 @@ def stats(cells,variable,half_neutral=False,denominator='all_usable_weights'):
         if min(n,u,bad)<0 or u+bad!=n:raise ValueError('Inconsistent weight counts')
         if u==0 and w!=0:raise ValueError('Weight on no eligible respondent')
         score=None if r.get('missing_kind') else response_score(variable,r.get('source_value'),half_neutral)
+        original=dec(r.get('original_weighted_n',r['weighted_n']))
+        if original<0:raise ValueError('Negative original weight')
+        original_all+=original
         all_weight+=w;received+=n;usable+=u;invalid+=bad
-        if score is None:missing.append({'source_code':r.get('source_value'),'missing_kind':r.get('missing_kind') or 'explicit_nonresponse','n':n,'weight':str(w)})
-        else:valid_weight+=w;numerator+=w*score
+        if score is None:missing.append({'source_code':r.get('source_value'),'missing_kind':r.get('missing_kind') or 'explicit_nonresponse','n':n,'weight':str(w),'original_weight':str(original)})
+        else:
+            valid_weight+=w;numerator+=w*score
+            original_valid+=original;original_numerator+=original*score
     total=all_weight if denominator=='all_usable_weights' else valid_weight
     return {'value':float(100*numerator/total) if total>0 else None,
       'valid_percent':float(100*numerator/valid_weight) if valid_weight>0 else None,
       'numerator_weight':str(numerator),'all_weight':str(all_weight),
-      'valid_weight':str(valid_weight),'received_n':received,'usable_weight_n':usable,
+      'valid_weight':str(valid_weight),'original_all_weight':str(original_all),
+      'original_valid_weight':str(original_valid),'original_numerator_weight':str(original_numerator),'received_n':received,'usable_weight_n':usable,
       'invalid_weight_n':invalid,'missing_categories':missing,'denominator_rule':denominator}
 
 
@@ -175,17 +191,21 @@ def derive_panels(grouped_cells, hdi_source_ref, denominator='all_usable_weights
     """
     if not all(hdi_source_ref.get(k) for k in ('source_id','release_id','sha256','url')):
         raise ValueError('Pinned HDI country-group source reference required')
-    groups=defaultdict(list); refs={};gaps=[]
+    groups=defaultdict(list); refs={};gaps=[];pooling_modes=set()
     for cell in grouped_cells:
         r=dict(cell)
         if r['variable'] not in VARIABLES:raise ValueError('Unexpected query variable')
         if not all(r.get(k) for k in ('release_id','source_id','source_url','source_sha256')):
             raise ValueError('Aggregate source provenance missing')
+        pooling_modes.add(r.get('pooling_mode','native_weights'))
         key=(r['release_id'],r['source_id'],r['source_sha256'],r['source_url'])
         refs[key]={'source_id':r['source_id'],'release_id':r['release_id'],'sha256':r['source_sha256'],'url':r['source_url'],'vintage':'Nov2024–Jan2025 fieldwork','relation':'original_report_source','table':'UNDP AI survey original figure question marginals'}
         if '__unmapped_' in r['group_label']:
             gaps.append({'reason':'unmapped source dimension retained','scope':r['scope'],'group':r['group_label'],'received_n':r['received_n']});continue
         groups[(r['scope'],r['group_label'],r['variable'])].append(r)
+    if len(pooling_modes)!=1:raise ValueError('Mixed or empty country pooling modes')
+    pooling_mode=next(iter(pooling_modes))
+    if pooling_mode not in ('native_weights','equal_country_total_weight'):raise ValueError('Unknown country pooling')
     if len(refs)!=1:raise ValueError('Mixed or empty physical survey source releases')
     source_refs=[*refs.values(),dict(hdi_source_ref,table=hdi_source_ref.get('table','Official2023HDI country classification'))]
     def group(scope,label,variable,half=False):
@@ -195,12 +215,14 @@ def derive_panels(grouped_cells, hdi_source_ref, denominator='all_usable_weights
     def chart(id,ref,title_en,title_cs,rows,fields,method_en,method_cs,unit='percent',kind='bar'):
         return {'id':id,'chapter':'chapter'+ref.split('.')[0] if not ref.startswith('O.') else 'overview',
          'title':{'en':title_en,'cs':title_cs},'unit':unit,'chart_type':kind,'rows':rows,'fields':[{'key':f,'label':{'en':f.replace('_',' ').capitalize(),'cs':{'actual':'Skutečné použití','expected':'Očekávané použití','change':'Rozdíl','current':'Současnost','future':'Budoucnost','confidence':'Důvěra v produktivitu','automation':'Automatizace','augmentation':'Nové pracovní role','productivity':'Produktivita'}.get(f,f)}} for f in fields],
-         'status':'ready','source_refs':source_refs,'method':{'en':method_en,'cs':method_cs},
-         'denominator':{'en':'Original survey weights across 21 countries; all retained weights including explicit nonresponse unless valid-answer denominator explicitly chosen. Country HDI groups from pinned official data. Czechia not surveyed.',
+         'status':'ready','source_refs':source_refs,'method':{'en':method_en+' Pooling mode: '+pooling_mode+'. Denominator mode: '+denominator+'. Equal-country normalization divides each original weight by its country total usable weight. This pooling method is inferred from numeric agreement and is not documented original graphic reconstruction.', 'cs':method_cs+' Režim sdružení: '+pooling_mode+'. Jmenovatel: '+denominator+'. Normalizace dělí každou původní váhu celkovou použitelnou vahou země. Metoda je odvozena ze shody čísel, není doloženou reprodukcí původního grafu.'},
+         'denominator':{'en':'21 source countries. Pooling='+pooling_mode+'; denominator='+denominator+'. Original and normalized numerator/all/valid weights, response counts and missing categories retained separately. HDI groups from pinned2023observations; original survey grouping vintage unconfirmed. Czechia not surveyed.',
           'cs':'Původní váhy průzkumu ve 21 zemích; všechny zachované váhy včetně neodpovědí, pokud nebyl výslovně zvolen jmenovatel platných odpovědí. Skupiny HDI z ověřeného zdroje. Česko nebylo dotazováno.'},
          'latest_period':'2025','original_refs':[ref],
          'original_recreation_status':'method_bound_calculation_numeric_benchmark_pending',
-         'denominator_rule':denominator,'fieldwork_period':'2024-11/2025-01'}
+         'denominator_rule':denominator,'pooling_mode':pooling_mode,
+         'pooling_method_status':'explicit_transparent_calculation; equal-country normalization inferred from published-value agreement, not independently confirmed in HDRO method files',
+         'fieldwork_period':'2024-11/2025-01'}
     charts=[]
     use_rows=[];agency_rows=[];work_rows=[]
     for label in HDI_GROUPS:
@@ -214,11 +236,11 @@ def derive_panels(grouped_cells, hdi_source_ref, denominator='all_usable_weights
         work_rows.append({'country':'SURVEY21','period':'2025','label':label,**dict(zip(('automation','augmentation','productivity'),[s['value'] for s in scores])),'question_denominators':dict(zip((AUTOMATION,AUGMENTATION,PRODUCTIVITY),scores))})
     c=chart('original-survey-o1','O.1','AI use and expected use by human development group','Používání AI a očekávané používání podle HDI',use_rows,['actual','expected','change'],'Mean of three separately weighted education, health and work percentages. Actual Q11 yes=1; expected Q12 somewhat/very likely=3/4. Expected minus actual is percentage points, not subsequent observed growth.','Průměr tří samostatně vážených podílů pro vzdělávání, zdraví a práci. Skutečné použitíQ11ano=1; očekávanéQ12=3/4. Rozdíl v procentních bodech není později pozorovaný růst.')
     c['original_refs']=['O.1','1.1'];c['published_value_benchmark']=benchmark('O.1',use_rows)
-    if c['published_value_benchmark']['status']=='passed':c['original_recreation_status']='published_values_and_documented_method_matched'
+    if c['published_value_benchmark']['status']=='passed':c['original_recreation_status']='published_values_matched_method_documentation_incomplete'
     charts.append(c)
     c=chart('original-survey-agency','2.1','Perceived control today and in five years','Vnímaná kontrola dnes a za pět let',agency_rows,['current','future','change'],'High control means original Q14/Q15 codes8–10 on the1–10 scale. Future expectation is not future observation. Change is future minus current in percentage points.','Vysoká kontrola znamená původní kódyQ14/Q15=8–10 na stupnici1–10. Budoucí očekávání není pozorovaný výsledek. Rozdíl je budoucnost minus současnost v procentních bodech.')
     c['published_value_benchmark']=benchmark('2.1',agency_rows)
-    if c['published_value_benchmark']['status']=='passed':c['original_recreation_status']='published_values_and_documented_method_matched'
+    if c['published_value_benchmark']['status']=='passed':c['original_recreation_status']='published_values_matched_method_documentation_incomplete'
     charts.append(c)
     age_rows=[];change_rows=[]
     for age in AGES:
