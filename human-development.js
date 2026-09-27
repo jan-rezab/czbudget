@@ -78,6 +78,8 @@
     node('hd-print').disabled = false;
     node('hd-status').textContent = '';
     node('hd-release').textContent = `${t('release')}: ${payload.release_id} · ${t('generated')}: ${payload.generated_at}`;
+    const downloadLabels = lang() === 'en' ? {core_csv:'All core observations (CSV)',annex_csv:'Full statistical annex (CSV)',chart_csv:'Chart observations (CSV)'} : {core_csv:'Všechna základní pozorování (CSV)',annex_csv:'Úplná statistická příloha (CSV)',chart_csv:'Pozorování grafů (CSV)'};
+    node('hd-downloads').innerHTML = `<a href="/api/v1/human-development/reports" target="_blank" rel="noopener">${lang() === 'en' ? 'Report data (JSON)' : 'Data reportu (JSON)'}</a>` + Object.entries(downloadLabels).filter(([key]) => payload.download_access?.[key] === 'verified_anonymous_head_200' && payload.downloads?.[key]?.startsWith(`https://storage.googleapis.com/czbudget-janrezab-public-snapshots/static-assets/human-development/releases/${payload.release_id}/`)).map(([key,label]) => ` · <a href="${esc(payload.downloads[key])}" target="_blank" rel="noopener">${label}</a>`).join('');
     node('hd-chapter-nav').innerHTML = payload.chapters.map(chapter => `<a href="#hd-chapter-${esc(chapter.id)}">${esc(local(chapter.title))}</a>`).join('');
     node('hd-chapters').innerHTML = payload.chapters.map(chapter => `<section class="hd-section" id="hd-chapter-${esc(chapter.id)}"><h2>${esc(local(chapter.title))}</h2>${payload.charts.filter(chart => chart.chapter === chapter.id).map(chartHTML).join('')}</section>`).join('');
     node('hd-coverage-content').innerHTML = coverageHTML();
