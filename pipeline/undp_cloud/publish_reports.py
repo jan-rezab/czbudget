@@ -28,6 +28,7 @@ from publish_ch5_6_panels import provider_panels
 from publish_ch3_4_panels import provider_panels as care_provider_panels
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
 from original_survey_figures import hdi_mapping_from_observations,grouped_query,derive_panels
+from query_costs import BudgetedQueries, PinnedSourceSpool, pinned_source_query, GIB
 
 PROJECT = 'czbudget-janrezab'
 D = PROJECT+'.undp_human_development'
@@ -197,6 +198,9 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);parser.add_argument('--release-id',default=os.environ['BUILD_ID']);parser.add_argument('--undp-release');parser.add_argument('--gcp-contracts');parser.add_argument('--private-only',action='store_true');parser.add_argument('--original-survey-panels',action='store_true');args=parser.parse_args()
     from google.cloud import bigquery,storage
     bq=bigquery.Client(project=PROJECT,location='EU');gcs=storage.Client(project=PROJECT);started=stamp()
+    cost_queries=BudgetedQueries(bq,bigquery,run_id=os.environ['BUILD_ID'],loader_sha=args.loader_sha,
+        max_query_bytes=int(os.environ.get('PSD_REPORT_MAX_QUERY_BYTES',32*GIB)),
+        max_run_bytes=int(os.environ.get('PSD_REPORT_MAX_RUN_BYTES',64*GIB)))
     private=gcs.bucket(PRIVATE)
     if args.private_only:
         pub=private;pointer=None;expected_generation=0
@@ -235,14 +239,13 @@ def main():
     def download_ref(key):
         return 'gs://'+PRIVATE+'/'+key if args.private_only else 'https://storage.googleapis.com/'+PUBLIC+'/'+key
     # All provider-group pointers are read together once. Every later query uses physical tables and exact release parameters.
-    pointers=[dict(r) for r in bq.query(f'SELECT dataset_id,release_id FROM `{D}.release_pointer`',location='EU').result()]
+    pointers=[dict(r) for r in cost_queries.query(f'SELECT dataset_id,release_id FROM `{D}.release_pointer`')]
     pinned={r['dataset_id']:r['release_id'] for r in pointers}
     print(dump(dict(event='report_source_release_pin_manifest',build_id=os.environ['BUILD_ID'],source_releases={k:v for k,v in pinned.items() if k=='undp_bundle_2025' or k.startswith('hdr_report_sources_2025')})).decode(),flush=True)
     core=args.undp_release or pinned.get('undp_bundle_2025')
     if not core or core!=pinned.get('undp_bundle_2025'):raise ValueError('Requested core release is not the verified publication pointer')
     def query(sql,release,parameters=()):
-        cfg=bigquery.QueryJobConfig(query_parameters=[bigquery.ScalarQueryParameter('release','STRING',release),*parameters])
-        return bq.query(sql,job_config=cfg,location='EU').result()
+        return cost_queries.query(sql,[bigquery.ScalarQueryParameter('release','STRING',release),*parameters])
     metrics=query(f"SELECT * FROM `{D}.metric_observations` WHERE release_id=@release AND (geography_kind='country_or_area' OR (geography_kind='aggregate' AND country_code='ZZK.WORLD')) AND metric IN ('hdi','ihdi','gdi','gii','phdi','le','eys','mys','gnipc')",core)
     core_history_exports={}
     charts,countries=core_charts(metrics,core_history_exports)
@@ -271,9 +274,11 @@ def main():
         m=json.loads(c['source_metadata_json']);m['release_id']=c['release_id'];sid=c['source_id']
         if sid in by_source and by_source[sid].get('sha256')!=m.get('sha256'):raise ValueError('Conflicting pinned source groups '+sid)
         by_source[sid]=m
+    source_sql,source_pins=pinned_source_query(D,by_source)
+    source_spool=PinnedSourceSpool(by_source,lambda:cost_queries.query(source_sql,[bigquery.ScalarQueryParameter('source_pairs','STRING',source_pins)]))
     def source_rows(sid):
         m=by_source[sid]
-        for row in query(f'SELECT * FROM `{D}.report_source_records` WHERE release_id=@release AND source_id=@sid',m['release_id'],[bigquery.ScalarQueryParameter('sid','STRING',sid)]):
+        for row in source_spool.rows(sid):
             r=dict(row);r.update(source_vintage=m.get('vintage'),relation=m.get('relation'));yield r
     iso2_codes={}
     country_names.update({'Czech Republic':'CZE','Türkiye':'TUR','Korea, Rep.':'KOR','Russian Federation':'RUS'})
@@ -466,6 +471,9 @@ def main():
     report_object=immutable(pub,name,body,'application/json; charset=utf-8')
     if not args.private_only:accesses=dict(accesses,json=anonymous_head(name))
     prepared=dict(schema_version='1.0.0',release_id=args.release_id,loader_git_sha=args.loader_sha,build_id=os.environ['BUILD_ID'],region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',started_at=started,validated_at=stamp(),source_releases=payload['source_releases'],raw_destination='Pinned immutable original source objects recorded by each source release receipt',staging_destination=report_object,publication_pointer=None if args.private_only else 'gs://'+PUBLIC+'/'+POINTER,processing_status='validated',publication_status='not_published' if args.private_only else 'prepared',previous_pointer_generation=str(expected_generation),validation=dict(bilingual_schema='passed',exact_source_provenance='passed',country_registry='passed',finite_numeric_values='passed',max_2mb='passed',source_records_bulk_materialization='excluded',roundtrip_hash='passed'),rows=sum(len(c['rows']) for c in charts),ready_charts=sum(c['status']=='ready' for c in charts),original_figures_recreated=0,downloads=[report_object,csv_object,core_object,annex_object,details_object],download_access=accesses,unavailable_sources=gaps)
+    prepared['query_usage']=cost_queries.receipt()
+    prepared['pinned_source_reads']=source_spool.receipt()
+    source_spool.close()
     if args.private_only:
         prepared['history_objects']=history_receipts
         manifest=dict(schema_version='1.0.0',release_id=args.release_id,bucket=PRIVATE,object=name,sha256=sha,bytes=len(body),generation=report_object['generation'],publication_status='not_published',processing_status='validated',source_releases=payload['source_releases'])
