@@ -32,7 +32,7 @@ for (const required of [
   "validate-cityvizor-cloud-release.mjs",
   "verify-runtime-assets-cloud.py",
   "id: full-verification",
-  "for shard in 1 2;",
+  "npx playwright test --workers=16",
   "--global-timeout=420000",
   "waitFor: [assert-single-production, component-verification, full-verification,",
 ]) {

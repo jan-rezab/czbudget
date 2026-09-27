@@ -230,10 +230,9 @@ steps:
         PSD_BUILD_MODE=local npm run validate
         node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs
         node --test tests/industrial-data.test.cjs
-        # One data-server cache at a time; twelve browsers per batch on the 32-CPU worker.
-        for shard in 1 2; do
-          node scripts/run-bounded.mjs -- npx playwright test --workers=12 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --shard=$$shard/2 --output=/workspace/test-results/shard-$$shard
-        done
+        # One run, one data server, sixteen browsers on the 32-CPU worker. Mobile runs the
+        # layout tests here; the preview verifier runs every test on mobile (PSD_MOBILE_SCOPE=all).
+        node scripts/run-bounded.mjs -- npx playwright test --workers=16 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --output=/workspace/test-results/full
 
 
   - id: push
