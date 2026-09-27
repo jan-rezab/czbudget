@@ -1,0 +1,62 @@
+# Data-release publication only (plane-data). Packs tracked data directories from one
+# pinned commit of the public repository into write-once static-asset packs and swaps
+# static-assets/current.json by generation. It never builds images or deploys code.
+# Submit in europe-west4 as psd-data-builder with --no-source; see
+# scripts/publish-repo-asset-packs.py for the raw -> staging -> validation -> publish steps.
+steps:
+  - id: fetch-pinned-source
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        git clone --quiet --filter=blob:none --no-checkout https://github.com/jan-rezab/czbudget.git /workspace/src
+        cd /workspace/src
+        git sparse-checkout set --no-cone /scripts/publish-repo-asset-packs.py $$(printf '/data/%s/ ' $$(echo "${_DIRECTORIES}" | tr ',' ' '))
+        git checkout --quiet --detach "${_SOURCE_SHA}"
+        test "$$(git rev-parse HEAD)" = "${_SOURCE_SHA}"
+
+  - id: read-active-lock
+    waitFor: ["-"]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        mkdir -p /workspace/.base
+        generation="$$(gcloud storage objects describe ${_STATIC_ASSET_BASE_URL}/current.json --format='value(generation)')"
+        test -n "$$generation"
+        printf '%s\n' "$$generation" > /workspace/.base/generation
+        gcloud storage cp "${_STATIC_ASSET_BASE_URL}/current.json#$$generation" /workspace/.base/current.json
+
+  - id: validate-and-publish
+    waitFor: [fetch-pinned-source, read-active-lock]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    env: [BUILD_ID=$BUILD_ID, PROJECT_ID=$PROJECT_ID, REGION=$LOCATION, SERVICE_ACCOUNT=psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com]
+    args:
+      - -ceu
+      - |
+        git config --global --add safe.directory /workspace/src
+        python3 /workspace/src/scripts/publish-repo-asset-packs.py \
+          --root /workspace/src \
+          --source-sha "${_SOURCE_SHA}" \
+          --directories "${_DIRECTORIES}" \
+          --base-lock /workspace/.base/current.json \
+          --base-generation "$$(cat /workspace/.base/generation)" \
+          --output /workspace/.out \
+          --publish
+
+timeout: 1200s
+queueTtl: 600s
+tags: [plane-data, data-publication, serving-assets, static-assets-repo]
+
+options:
+  machineType: E2_MEDIUM
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _SOURCE_SHA: ""
+  _DIRECTORIES: ""
+  _STATIC_ASSET_BASE_URL: gs://czbudget-janrezab-public-snapshots/static-assets
