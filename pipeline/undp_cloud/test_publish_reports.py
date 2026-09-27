@@ -65,7 +65,7 @@ class PrivateOnlyExecutionTests(unittest.TestCase):
   common=dict(release_id='core',source_id='hdr',source_vintage='HDR2025',country_code='CZE',country_name='Czechia',geography_kind='country_or_area',year=2023,metric='hdi',sex='both',source_value='0.9',value='0.9',unit='index',source_column='hdi_2023',source_url='https://example.org/source',source_sha256=sha)
   annex=dict(common,sheet='Table1',row_number=1,column_number=3,period='2023',source_notes='["original note"]')
   class Result:
-   def __init__(self,rows):self.rows=rows
+   def __init__(self,rows):self.rows=rows;self.total_bytes_processed=0;self.total_bytes_billed=0;self.job_id='fixture';self.cache_hit=False
    def result(self):return self.rows
   class BQ:
    def query(self,sql,**kw):

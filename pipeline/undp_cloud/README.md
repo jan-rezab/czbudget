@@ -4,6 +4,29 @@ This dedicated data branch loads every source listed in `sources.json` from the
 UNDP website. Comtrade is a separate trade API and is not an upstream source.
 No website build, deploy, Cloud Run modification or local bulk download occurs.
 
+## Report query cost safeguards
+
+`publish_reports.py` dry-runs every query before execution. The default limits
+are 32 GiB per query and 64 GiB admitted scans per report run (about USD 0.39 at
+USD 6.25/TiB, before allowances). `maximum_bytes_billed` also bounds execution;
+unknown estimates or budget overruns hold publication. Deliberate allowance
+changes use `PSD_REPORT_MAX_QUERY_BYTES` and `PSD_REPORT_MAX_RUN_BYTES`.
+Prepared/completed receipts record query IDs, estimates, billed bytes and limits.
+
+Provider records are fetched once using exact bound release/source pairs and
+explicit provenance columns. An ephemeral SQLite spool on the cloud worker
+serves later source iterations without rescanning BigQuery. Every source hash
+and accepted row count must match its pinned catalogue before any source is
+served. Source JSON text and original values are retained unchanged. The spool
+has a 32 GiB limit and is removed at completion or process exit; a failed spool
+cannot retry its scan inside the same run. No bulk spool runs on this Mac.
+
+The 27 September audit found 242 uncached per-source scans across report build
+attempts, billing 2,792,477,425,664 bytes. The replacement source query was
+validated by a BigQuery dry run at 11,554,155,834 bytes on that table inventory.
+That is one source-table scan per report attempt; future table growth can stop a
+run at its budget rather than silently increasing the bill.
+
 - Branch/worktree: `codex/undp-human-development-20260926`, `work-undp-human-development`.
 - Acquisition: `cloudbuild.acquire.yaml`, Python 3.12 with pinned requirements.
 - Warehouse publication: `cloudbuild.publish.yaml`.
