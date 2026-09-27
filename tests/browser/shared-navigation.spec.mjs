@@ -30,10 +30,12 @@ test('country menus fit the viewport, filter countries and return keyboard focus
     await search.fill('Czechia');
     await expect(menu.locator('a[data-country-code]:visible')).toHaveCount(1);
     await expect(menu.locator('a[data-country-code="CZE"]')).toBeVisible();
-    const box = await menu.locator('.country-menu-panel').boundingBox();
-    expect(box.x).toBeGreaterThanOrEqual(0);
-    expect(box.x + box.width).toBeLessThanOrEqual(width);
-    expect(box.y + box.height).toBeLessThanOrEqual(720);
+    // The full country list loads on first open and re-renders the open menu; measure
+    // the settled panel rather than one replaced between two calls (flaky under load).
+    await expect.poll(async () => {
+      const box = await menu.locator('.country-menu-panel').boundingBox();
+      return box ? {left: box.x >= 0, right: box.x + box.width <= width, bottom: box.y + box.height <= 720} : null;
+    }).toEqual({left: true, right: true, bottom: true});
     await search.press('Escape');
     await expect(search).toHaveValue('');
     await search.press('Escape');
