@@ -211,3 +211,23 @@ test("context associations and deep tables stay inspectable on a narrow screen",
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
   await expectNoRawDownloads(page);
 });
+
+test('service drilldown follows the exact purpose into supporting invoices and keeps incomplete coverage visible', async ({ page }) => {
+  await fixturePraha(page);
+  await openPraha(page);
+  await expect(page.locator('[data-service]')).toHaveCount(2);
+  await page.locator('[data-purpose="2212"]').click();
+  await expect(page.locator('#purpose-title')).toHaveText('Roads');
+  await expect(page.locator('#purpose-detail')).toContainText('do not explain the entire total');
+  await expect(page.locator('#purpose-detail')).toContainText('No supporting accounting rows');
+  await page.locator('[data-purpose-invoices]').click();
+  await expect(page.locator('#ledger-purpose-filter')).toContainText('2212');
+  await expect(page.locator('#ledger-table tbody tr')).toHaveCount(2);
+  await expect(page.locator('#ledger-table tbody')).not.toContainText('Dodavatel bez popisu');
+  await page.locator('#ledger-purpose-filter button').click();
+  await expect(page.locator('#ledger-table tbody tr')).toHaveCount(3);
+  await page.locator('#budget-year').selectOption('2024');
+  await expect(page.locator('#purpose-detail')).toBeHidden();
+  await expect(page.locator('[data-service]')).toHaveCount(0);
+  await expectNoRawDownloads(page);
+});

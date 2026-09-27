@@ -82,3 +82,29 @@ test('ambiguous duplicate years are excluded and an alternate budget measure is 
   const duplicate=[...history,{...history[2],expense_actual:999999}];
   assert.deepEqual(associateAnnualChanges(duplicate,points).pairs.map(row=>row.year),[2011,2014,2015]);
 });
+
+const { serviceGroups, purposeEvidence } = require('../../lib/praha-budget-model.js');
+test('service totals form a complete non-overlapping partition, preserving unknown codes and missing amounts', () => {
+  const row=(code,amount,stage='actual',year=2025,dimension='functional',side='expenditure')=>({code,amount,stage,year,dimension,side});
+  const rows=[row('2212',100),row('2295',200),row('3111',50),row('9999',-10),row('3113',999,'approved'),row('2212',999,'actual',2024),row('5169',999,'actual',2025,'economic'),row('1111',999,'actual',2025,'functional','revenue')];
+  const groups=serviceGroups(rows,2025,'actual');
+  assert.equal(groups.reduce((sum,g)=>sum+g.amount,0),340);
+  assert.deepEqual(groups.flatMap(g=>g.rows.map(r=>r.code)).sort(),['2212','2295','3111','9999']);
+  assert.equal(groups.find(g=>g.id==='unclassified').amount,-10);
+  assert.equal(serviceGroups([...rows,row('2292',null)],2025,'actual').find(g=>g.id==='transport').amount,null);
+});
+
+test('purpose evidence joins exact year and code, scopes project sums and never uses full event or budget totals', () => {
+  const a=(year,paragraphCode,itemCode,event,expenditure,budgetExpenditure=0)=>({year,paragraphCode,itemCode,event,expenditure,budgetExpenditure,eventName:'Shared project',itemName:'Services'});
+  const accounting=[a(2025,'2212','5169','A',100),a(2025,'2212','5169','A',-5),a(2025,'3111','5169','A',900),a(2024,'2212','5169','A',500),a(2025,'22120','5169','A',800),a(2025,'2212','6121','',0,40),a(2025,'2212','1111','A',0),a(2025,'2212','5171','B',null,40)];
+  const payments=[{year:2025,paragraphCode:'2212',expenditure:8},{year:2024,paragraphCode:'2212',expenditure:10},{year:2025,paragraphCode:'22120',expenditure:11}];
+  const result=purposeEvidence(accounting,payments,2025,'2212');
+  assert.equal(result.accounting.length,4);
+  assert.equal(result.items.find(r=>r.code==='5169').amount,95);
+  assert.equal(result.projects.find(r=>r.code==='A').amount,95);
+  assert.equal(result.items.find(r=>r.code==='6121').amount,0);
+  assert.equal(result.items.find(r=>r.code==='5171').amount,null);
+  assert.equal(result.projects.find(r=>r.code==='').records.length,1);
+  assert.deepEqual(result.payments,[payments[0]]);
+  assert.deepEqual(purposeEvidence(accounting,payments,2025,'0000').items,[]);
+});
