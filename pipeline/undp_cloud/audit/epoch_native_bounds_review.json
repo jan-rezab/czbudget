@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "reviewed_at": "2026-09-27",
+  "source_release_id": "fa0e0af3-297b-4c5d-b5d3-c0a77bddeac9",
+  "source_id": "epoch_models_1",
+  "source_url": "https://epoch.ai/data/all_ai_models.csv",
+  "source_sha256": "9169d24afe681a67705551c9a1fb772ad7a67aff86c167d76111448d1c9e5a5c",
+  "source_vintage": "2026-09-27_snapshot",
+  "accepted_warehouse_records": 3623,
+  "received_models": 3622,
+  "counterexample": {
+    "source_row_number": 3093,
+    "Model": "ConvS2S (ensemble of 8 models)",
+    "Publication date": "2017-07-25",
+    "Confidence": "Likely",
+    "Training compute (FLOP)": "5.64e+19",
+    "Training compute lower bound": "5.65000000001e+19",
+    "Training compute upper bound": ""
+  },
+  "aggregate_validation": {
+    "distinct_model_keys": 3622,
+    "missing_model_keys": 0,
+    "width_mismatch": 0,
+    "invalid_nonempty_publication_dates": 0,
+    "invalid_nonempty_central": 0,
+    "invalid_nonempty_lower": 0,
+    "invalid_nonempty_upper": 0,
+    "nonpositive_compute": 0,
+    "reversed_bounds": 0,
+    "central_outside_bounds": 1,
+    "missing_central": 2212,
+    "missing_country": 87,
+    "missing_publication_date": 12,
+    "source_wrong_confidence": 0
+  },
+  "method": "Bounded <=20 problematic rows and one aggregate SQL result over exact physical report_source_records release; one source catalog row binds hash. No model data bulk downloaded. Metadata record/header count is separate from model count.",
+  "correction": "Keep original values and row identity. Exclude any native nonpositive compute, reversed bounds or central outside source bounds from derived counts; expose exclusion status, reasons, source raw decimals and counts. No clamping or substitution. The counterexample is already below1e23 and is not evidence the large-model threshold was met.",
+  "binding_failure": "Unreviewed global CSV field layout holds only Epoch panel with needs_definition gap; exact provenance and unresolved numeric-integrity failures remain blocking.",
+  "publication_status": "Focused local regression tests passed; no new report build or publication performed."
+}

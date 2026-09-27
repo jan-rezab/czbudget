@@ -186,16 +186,21 @@ def epoch_source(rows, metadata, threshold='1e23'):
         seen.add(model)
         central = number(raw['Training compute (FLOP)'])
         lower = number(raw['Training compute lower bound']); upper = number(raw['Training compute upper bound'])
+        source_issues=[]
         if any(v is not None and v <= 0 for v in (central,lower,upper)):
-            raise ValueError('Invalid compute')
+            source_issues.append('nonpositive_source_compute')
         if lower is not None and upper is not None and lower > upper:
-            raise ValueError('Reversed compute bounds')
+            source_issues.append('reversed_source_compute_bounds')
         if central is not None and ((lower is not None and central < lower) or (upper is not None and central > upper)):
-            raise ValueError('Central compute outside bounds')
+            source_issues.append('central_compute_outside_source_bounds')
+        # Inconsistent native observations stay in the ledger but can never
+        # contribute to the derived scenario. Preserve decimals; never clamp.
+
         country = str(raw['Country (of organization)'] or '').strip()
         period = str(raw['Publication date'] or '').strip()
         year = date.fromisoformat(period).year if period else None
-        status = ('excluded_source_wrong' if raw['Confidence'] == 'Wrong' else
+        status = ('excluded_inconsistent_source_compute' if source_issues else
+            'excluded_source_wrong' if raw['Confidence'] == 'Wrong' else
             'missing_compute' if central is None else 'missing_country_category' if not country else
             'missing_publication_date' if year is None else
             'included_central_estimate' if central > limit else 'excluded_central_estimate')
@@ -203,9 +208,9 @@ def epoch_source(rows, metadata, threshold='1e23'):
             counts[year][country] += 1
         details.append(observation(raw,metadata,model_id=model,year=year,country_category=country or None,
             compute_flop=central,compute_lower=lower,compute_upper=upper,confidence=raw['Confidence'],
-            estimation_method=raw['Training compute estimation method'],selection_status=status,
+            estimation_method=raw['Training compute estimation method'],selection_status=status,source_issues=source_issues,
             threshold_flop=limit,threshold_operator='strictly greater than',
-            uncertainty_crosses_threshold=(lower is not None and upper is not None and lower <= limit < upper)))
+            uncertainty_crosses_threshold=(not source_issues and lower is not None and upper is not None and lower <= limit < upper)))
     series = []; cumulative = Counter(); categories = sorted({k for v in counts.values() for k in v})
     for year in range(min(counts),max(counts)+1) if counts else []:
         cumulative.update(counts[year])
@@ -215,6 +220,8 @@ def epoch_source(rows, metadata, threshold='1e23'):
                 method='central compute > threshold; literal source country categorical string; Wrong excluded'))
     return {'model_selection':details,'series':series}, {'status':'derived_scenario',
         'selection_statuses':dict(Counter(d['selection_status'] for d in details)),
+        'source_issue_counts':dict(Counter(issue for d in details for issue in d['source_issues'])),
+        'inconsistent_source_records':[dict(model_id=d['model_id'],selection_status=d['selection_status'],reasons=d['source_issues'],central_source=d['source_record']['Training compute (FLOP)'],lower_source=d['source_record']['Training compute lower bound'],upper_source=d['source_record']['Training compute upper bound']) for d in details if d['source_issues']],
         'figure_status':'HDR5.5 grouping and original snapshot unverified',
         'country_rule':'source category string preserved; multiple select syntax not guessed',
         'coverage':'Curated models; organizations association is not uniquely HQ; source documentation differs on > versus >=1e23'}

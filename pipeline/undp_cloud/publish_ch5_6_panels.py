@@ -96,7 +96,15 @@ def provider_panels(source_rows, by_source):
                 bi('Individual source microprocessor observations; no annual mean or universal processor census.','Jednotlivá pozorování mikroprocesorů ve zdroji; nejde o roční průměr ani úplný soupis procesorů.'),['S6.1.1'],status='historical')
             chart['source_coverage']={k:v for k,v in coverage.items() if k!='source_comments'};charts.append(chart)
         elif sid == 'epoch_models_1':
-            result,coverage=epoch_source(csv_rows(records),metadata)
+            try:
+                result,coverage=epoch_source(csv_rows(records),metadata)
+            except ValueError as error:
+                # An unreviewed global field layout holds only this source panel.
+                # Provenance and numeric-integrity errors still propagate.
+                if str(error) not in {'Reviewed Epoch columns missing','CSV source schema changed','CSV source width mismatch','Multiple CSV headers','Missing CSV header','Duplicate source columns','Unexpected CSV source record'}:
+                    raise
+                gaps.append(dict(source_id=sid,reason='Epoch panel held: unreviewed source binding ('+str(error)+'). No model counts published.',status='needs_definition'))
+                continue
             categories=sorted({r['country_category'] for r in result['series']})
             keys={c:'category'+str(i) for i,c in enumerate(categories)}
             for metric, suffix, en, cs in [('annual_models','annual','Annual','Roční'),('cumulative_models','cumulative','Cumulative','Kumulativní')]:
@@ -107,7 +115,7 @@ def provider_panels(source_rows, by_source):
                 rows=[grouped[y] for y in sorted(grouped)]
                 chart=panel(sid,meta,bi(en+' curated AI models by organization country category',cs+' počet evidovaných modelů AI podle geografické kategorie organizace'),'curated model count / počet evidovaných modelů',rows,
                     [dict(key=keys[c],label=bi(c,c)) for c in categories],
-                    bi('Calculated scenario: central training-compute estimate strictly >10^23FLOP; estimates marked Wrong excluded. Source organization-country categorical strings preserved, including Multinational and multiple selections; they are organization associations, not uniquely headquarters or training location. Confidence, bounds and exclusion counts retained in coverage. Original HDR5.5 grouping/snapshot is not reproduced.','Vypočtený scénář: střední odhad výpočetní práce při trénování výhradně >10^23FLOP; odhady označené Wrong vyloučeny. Původní geografické kategorie organizací zachovány včetně Multinational a vícenásobných voleb; nejde nutně o sídlo ani místo trénování. Počty vyloučení a nejistota zachovány v pokrytí. Původní seskupení/verze HDR5.5 se nereprodukují.'),
+                    bi('Calculated scenario: central training-compute estimate strictly >10^23FLOP; estimates marked Wrong or with inconsistent source compute/bounds excluded; original values retained in the source ledger. Source organization-country categorical strings preserved, including Multinational and multiple selections; they are organization associations, not uniquely headquarters or training location. Confidence, bounds and exclusion counts retained in coverage. Original HDR5.5 grouping/snapshot is not reproduced.','Vypočtený scénář: střední odhad výpočetní práce při trénování výhradně >10^23FLOP; odhady označené Wrong nebo s rozpornými zdrojovými hodnotami či mezemi vyloučeny; původní hodnoty zachovány ve zdrojovém záznamu. Původní geografické kategorie organizací zachovány včetně Multinational a vícenásobných voleb; nejde nutně o sídlo ani místo trénování. Počty vyloučení a nejistota zachovány v pokrytí. Původní seskupení/verze HDR5.5 se nereprodukují.'),
                     bi('Epoch curated models with known publication date, country category and central compute; not all AI models, people or investment. Internal year gaps are zero counts; series stops at latest included publication.','Modely evidované Epoch se známým datem zveřejnění, kategorií země a středním odhadem práce; nejde o všechny modely AI, osoby či investice. Vnitřní roční mezery mají nulový počet; řada končí posledním zahrnutým zveřejněním.'),['5.5'],chapter='chapter5')
                 chart['id']+='-'+suffix
                 chart['source_coverage']=dict(coverage,confidence_counts=dict(Counter(r['confidence'] for r in result['model_selection'])),uncertainty_crossing_threshold_models=sum(r['uncertainty_crosses_threshold'] for r in result['model_selection']),received_models=len(result['model_selection']),model_ledger_status='Not included in public report; original model records retained in pinned source warehouse. Excluded counts disclosed here.')
