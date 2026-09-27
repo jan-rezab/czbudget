@@ -504,6 +504,9 @@ const dynamicMunicipalityPaths = new Set([
   ...internationalMunicipalities.entities.map((entity) => entity.url),
   ...benchmarkMunicipalities.map((entity) => entity.url),
 ].filter(Boolean).map((value) => value.endsWith("/") ? value : `${value}/`));
+// Validate exact history identities against the audited fan-out (or its pinned,
+// tracked directory when it is not hydrated), including cloud-only file links.
+const municipalHistoryPaths = new Set(municipalHistoryFiles.map((name) => `/data/municipal-history/${name}`));
 // Offloaded directories are not in the repository or the image; the server streams
 // them from the published static-asset packs. With the release lock hydrated (Cloud
 // Build sets DATA_ASSET_LOCK) a link must name a file in it; a bare checkout can only
@@ -535,7 +538,7 @@ if (!dataOnly) {
       const resolvedPath = `/${path.relative(root, target).split(path.sep).join("/")}`;
       const dynamicPath = resolvedPath.endsWith("/") ? resolvedPath : `${resolvedPath}/`;
       const cloudHydratedReference = resolvedPath.startsWith("/data/entities/") || resolvedPath.startsWith("/data/municipal-expansion/");
-      let exists = countryPaths.includes(clean) || dynamicMunicipalityPaths.has(dynamicPath) || cloudHydratedReference || servedFromAssetPacks(resolvedPath);
+      let exists = countryPaths.includes(clean) || dynamicMunicipalityPaths.has(dynamicPath) || municipalHistoryPaths.has(resolvedPath) || cloudHydratedReference || servedFromAssetPacks(resolvedPath);
       for (const candidate of candidates) { try { if ((await stat(candidate)).isFile()) { exists = true; break; } } catch {} }
       assert(exists, `Broken local reference ${relative} -> ${reference}`);
     }
