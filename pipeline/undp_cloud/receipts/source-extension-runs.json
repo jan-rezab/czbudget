@@ -1,8 +1,8 @@
 {
   "request_started_at_unix": 1790461758,
-  "recorded_at": "2026-09-27T00:24:35Z",
+  "recorded_at": "2026-09-27T00:25:52Z",
   "extension_budget_minutes": 143,
-  "failed_verification_submissions": 3,
+  "failed_verification_submissions": 4,
   "loader_git_sha": "09df13a139c53b300c8fc288ff96f4962a4c84b4",
   "branch": "codex/undp-human-development-20260926",
   "worktree": "/Users/johnwick/dev/czbudget/work-undp-human-development",
@@ -152,10 +152,10 @@
   "capacity": "No new jobs admitted after failure2. Existing authorized source jobs continue; never canceled for website scheduling.",
   "processing_status": "active_cloud_runs",
   "publication_status": "pending_each_atomic_bundle",
-  "submission_status": "stopped_new_submissions_at_cumulative_failure3",
+  "submission_status": "stopped_new_submissions_at_cumulative_failure4",
   "pisa_progress": {
     "id": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
-    "status": "WORKING",
+    "status": "TIMEOUT",
     "raw_received_bytes": 682364259,
     "raw_generation": "1790466355777384",
     "raw_sha256": "24ee020cd6315d8aca52e07fd9aaef21cbf4f9e5b21601734b4ee6d0928a0905",
@@ -169,6 +169,10 @@
       }
     ],
     "staging_status": "No complete processed checkpoint or staging object at 2026-09-27T00:15Z; long-running source parse, no admitted respondent rows yet.",
-    "memory_status": "Standard Cloud Build API/logs expose no worker memory telemetry; no OOM evidence observed."
+    "memory_status": "Standard Cloud Build API/logs expose no worker memory telemetry; no OOM evidence observed.",
+    "finished_at": "2026-09-27T00:25:08.002876Z",
+    "failure": "context deadline exceeded; no full-source staged/publication records",
+    "corrective_commit": "f92973f041",
+    "retry_status": "pending explicit authorization; no new submission"
   }
 }

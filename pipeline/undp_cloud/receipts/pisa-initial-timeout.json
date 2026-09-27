@@ -1,0 +1,115 @@
+{
+  "createTime": "2026-09-26T23:44:45.883502235Z",
+  "failureInfo": {
+    "detail": "Build step failure: build exceed the duration(seconds:2400)",
+    "type": "USER_BUILD_STEP"
+  },
+  "finishTime": "2026-09-27T00:25:08.002876Z",
+  "id": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
+  "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=europe-west4/596e4e15-18f3-46bf-8b80-e7e8c833d11e?project=258433468858",
+  "name": "projects/258433468858/locations/europe-west4/builds/596e4e15-18f3-46bf-8b80-e7e8c833d11e",
+  "options": {
+    "logging": "CLOUD_LOGGING_ONLY",
+    "pool": {}
+  },
+  "projectId": "czbudget-janrezab",
+  "queueTtl": "1800s",
+  "results": {
+    "buildStepImages": [
+      "sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f"
+    ],
+    "buildStepOutputs": [
+      ""
+    ],
+    "buildStepResults": {
+      "acquire-stage-validate-publish-original-provider-records": {}
+    }
+  },
+  "serviceAccount": "projects/czbudget-janrezab/serviceAccounts/psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "source": {
+    "storageSource": {
+      "bucket": "czbudget-janrezab-data-layers",
+      "generation": "1790466285721620",
+      "object": "cloudbuild-sources/hdr-source-batches/1790466285.47093-91072e2c9d3242fe86eae53f0b892953.tgz"
+    }
+  },
+  "sourceProvenance": {
+    "fileHashes": {
+      "gs://czbudget-janrezab-data-layers/cloudbuild-sources/hdr-source-batches/1790466285.47093-91072e2c9d3242fe86eae53f0b892953.tgz#1790466285721620": {
+        "fileHash": [
+          {
+            "type": "MD5",
+            "value": "o9ULr5RrMp7N7WU30fAEOQ=="
+          },
+          {
+            "type": "SHA256",
+            "value": "iryWwVKA2rnvZXjm7y_w-l91MJJWJKIvsRFX-g905CM="
+          }
+        ]
+      }
+    },
+    "resolvedStorageSource": {
+      "bucket": "czbudget-janrezab-data-layers",
+      "generation": "1790466285721620",
+      "object": "cloudbuild-sources/hdr-source-batches/1790466285.47093-91072e2c9d3242fe86eae53f0b892953.tgz"
+    }
+  },
+  "startTime": "2026-09-26T23:44:46.819320599Z",
+  "status": "TIMEOUT",
+  "steps": [
+    {
+      "args": [
+        "-c",
+        "pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt\npip install --quiet --disable-pip-version-check pyarrow==21.0.0\npython pipeline/undp_cloud/cloud_fixture_contract.py\npython pipeline/undp_cloud/report_sources.py --loader-sha \"${LOADER_SHA}\" --source-group \"${SOURCE_GROUP}\" --resume-run \"${RESUME_RUN}\" --wid-shard-index \"${WID_SHARD_INDEX}\" --wid-shard-count \"${WID_SHARD_COUNT}\"\n"
+      ],
+      "entrypoint": "bash",
+      "env": [
+        "BUILD_ID=596e4e15-18f3-46bf-8b80-e7e8c833d11e",
+        "PYTHONUNBUFFERED=1",
+        "SOURCE_GROUP=pisa",
+        "RESUME_RUN=",
+        "LOADER_SHA=f4ba66209b742f29dfd60a0ef26d67b248150c92",
+        "WID_SHARD_INDEX=0",
+        "WID_SHARD_COUNT=1"
+      ],
+      "exitCode": 1,
+      "id": "acquire-stage-validate-publish-original-provider-records",
+      "name": "python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f",
+      "pullTiming": {
+        "endTime": "2026-09-26T23:44:56.842808463Z",
+        "startTime": "2026-09-26T23:44:52.182824045Z"
+      },
+      "status": "CANCELLED",
+      "timing": {
+        "endTime": "2026-09-27T00:24:53.714317762Z",
+        "startTime": "2026-09-26T23:44:52.182824045Z"
+      }
+    }
+  ],
+  "substitutions": {
+    "_LOADER_SHA": "f4ba66209b742f29dfd60a0ef26d67b248150c92",
+    "_RESUME_RUN": "",
+    "_SOURCE_GROUP": "pisa",
+    "_WID_SHARD_COUNT": "1",
+    "_WID_SHARD_INDEX": "0"
+  },
+  "tags": [
+    "plane-data",
+    "hdr-original-sources"
+  ],
+  "timeout": "2400s",
+  "timing": {
+    "BUILD": {
+      "endTime": "2026-09-27T00:24:51.602985585Z",
+      "startTime": "2026-09-26T23:44:51.601741652Z"
+    },
+    "FETCHSOURCE": {
+      "endTime": "2026-09-26T23:44:51.601512713Z",
+      "startTime": "2026-09-26T23:44:48.820823615Z"
+    },
+    "STORAGE_SOURCE": {
+      "endTime": "2026-09-26T23:44:51.601512713Z",
+      "startTime": "2026-09-26T23:44:48.820823615Z"
+    }
+  }
+}
