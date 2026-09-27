@@ -69,6 +69,7 @@ test("energy flow responses preserve direction and physical-data flags", async (
 test("global energy history fits the measured warehouse scan without relaxing other query limits", async () => {
   const requests = [];
   const store = new TradeStore({
+    energyPeriodsSource: {current: async () => null},
     tokenProvider: async () => "unused",
     fetchImpl: async (_url, options) => {
       const request = JSON.parse(options.body);

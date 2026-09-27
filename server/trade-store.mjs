@@ -2,6 +2,7 @@ import { TRADE_EXPLORER_SQL, tradeExplorerDataset } from './trade-explorer.mjs';
 import fs from "node:fs/promises";
 import path from "node:path";
 import { shareInFlight } from "./in-flight.mjs";
+import { EnergyPeriodsSnapshot } from './energy-periods-snapshot.mjs';
 import { decodeRows, metadataToken, parameter, requestJSON } from "./france-municipal-lines.mjs";
 
 const DEFAULT_PROJECT = "czbudget-janrezab";
@@ -319,6 +320,7 @@ export class TradeStore {
     project = process.env.BQ_PROJECT_ID || process.env.GOOGLE_CLOUD_PROJECT || DEFAULT_PROJECT,
     location = process.env.BQ_LOCATION || DEFAULT_LOCATION,
     now = () => Date.now(),
+    energyPeriodsSource,
     seedPath = path.join(path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html"), "data/trade/annual-hs2-2024.v1.json"),
   } = {}) {
     this.fetchImpl = fetchImpl;
@@ -326,6 +328,7 @@ export class TradeStore {
     this.project = project;
     this.location = location;
     this.now = now;
+    this.energyPeriodsSource = energyPeriodsSource || new EnergyPeriodsSnapshot({fetchImpl, tokenProvider: this.tokenProvider, now});
     this.seedPath = seedPath;
     this.cache = new Map();
     this.pending = new Map();
@@ -482,6 +485,10 @@ export class TradeStore {
     const cached = this.cache.get(cacheKey);
     if (cached?.expiresAt > this.now()) return cached.value;
     return shareInFlight(this.pending, cacheKey, async () => {
+      let published;
+      try { published = await this.energyPeriodsSource.current(); }
+      catch { throw new TradeError(502, 'energy_periods_snapshot_unavailable', 'The verified energy period release is temporarily unavailable.'); }
+      if (published) { this.put(cacheKey, published); return published; }
       // Global history spans all markets and seven annual partitions. Its
       // measured scan is 23 GB; country and single-period queries retain 5 GB.
       const rows = await this.query(ENERGY_PERIODS_SQL, [parameter("min_date", "DATE", ENERGY_MIN_DATE)], {
