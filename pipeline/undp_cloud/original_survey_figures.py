@@ -182,19 +182,19 @@ def derive_panels(grouped_cells, hdi_source_ref, denominator='all_usable_weights
         if not all(r.get(k) for k in ('release_id','source_id','source_url','source_sha256')):
             raise ValueError('Aggregate source provenance missing')
         key=(r['release_id'],r['source_id'],r['source_sha256'],r['source_url'])
-        refs[key]={'source_id':r['source_id'],'release_id':r['release_id'],'sha256':r['source_sha256'],'url':r['source_url'],'vintage':'Nov2024–Jan2025 fieldwork','relation':'original_report_source'}
+        refs[key]={'source_id':r['source_id'],'release_id':r['release_id'],'sha256':r['source_sha256'],'url':r['source_url'],'vintage':'Nov2024–Jan2025 fieldwork','relation':'original_report_source','table':'UNDP AI survey original figure question marginals'}
         if '__unmapped_' in r['group_label']:
             gaps.append({'reason':'unmapped source dimension retained','scope':r['scope'],'group':r['group_label'],'received_n':r['received_n']});continue
         groups[(r['scope'],r['group_label'],r['variable'])].append(r)
     if len(refs)!=1:raise ValueError('Mixed or empty physical survey source releases')
-    source_refs=[*refs.values(),hdi_source_ref]
+    source_refs=[*refs.values(),dict(hdi_source_ref,table=hdi_source_ref.get('table','Official2023HDI country classification'))]
     def group(scope,label,variable,half=False):
         cells=groups.get((scope,label,variable))
         if not cells:raise ValueError('Required figure marginal absent: '+str((scope,label,variable)))
         return stats(cells,variable,half,denominator)
     def chart(id,ref,title_en,title_cs,rows,fields,method_en,method_cs,unit='percent',kind='bar'):
-        return {'id':id,'chapter':ref.split('.')[0] if not ref.startswith('O.') else 'overview',
-         'title':{'en':title_en,'cs':title_cs},'unit':unit,'chart_type':kind,'rows':rows,'fields':fields,
+        return {'id':id,'chapter':'chapter'+ref.split('.')[0] if not ref.startswith('O.') else 'overview',
+         'title':{'en':title_en,'cs':title_cs},'unit':unit,'chart_type':kind,'rows':rows,'fields':[{'key':f,'label':{'en':f.replace('_',' ').capitalize(),'cs':{'actual':'Skutečné použití','expected':'Očekávané použití','change':'Rozdíl','current':'Současnost','future':'Budoucnost','confidence':'Důvěra v produktivitu','automation':'Automatizace','augmentation':'Nové pracovní role','productivity':'Produktivita'}.get(f,f)}} for f in fields],
          'status':'ready','source_refs':source_refs,'method':{'en':method_en,'cs':method_cs},
          'denominator':{'en':'Original survey weights across 21 countries; all retained weights including explicit nonresponse unless valid-answer denominator explicitly chosen. Country HDI groups from pinned official data. Czechia not surveyed.',
           'cs':'Původní váhy průzkumu ve 21 zemích; všechny zachované váhy včetně neodpovědí, pokud nebyl výslovně zvolen jmenovatel platných odpovědí. Skupiny HDI z ověřeného zdroje. Česko nebylo dotazováno.'},
@@ -233,3 +233,32 @@ def derive_panels(grouped_cells, hdi_source_ref, denominator='all_usable_weights
     c=chart('original-survey-job-expectations','6.3','Expected job changes, new roles and productivity','Očekávané změny práce, nové role a produktivita',work_rows,['automation','augmentation','productivity'],'Original figure6.3 note: likely/very likely Q21 codes4/5 plus HALF neutral code3. Separate marginal proportions; not joint automation-and-augmentation shares.','Poznámka k původnímu obrázku6.3:Q21kódy4/5 plus POLOVINA neutrálních odpovědí3. Samostatné podíly, nikoli společný výskyt obou očekávání.')
     charts.append(c)
     return charts,gaps
+
+
+def hdi_mapping_from_observations(observations, survey_country_codes):
+    """Use exact pinned 2023 HDI values, not rankings or country-name guesses.
+
+    Thresholds are documented in the report Readers Guide, PDF284/printed270:
+    low<.550; medium<.700; high<.800; veryhigh>=.800. The survey figure pools
+    low+medium. This defines a transparent 2023 grouping, not proof that the
+    report's unpublished survey calculation used precisely that vintage.
+    """
+    if set(survey_country_codes)!=set(COUNTRIES) or len(set(survey_country_codes.values()))!=21:
+        raise ValueError('Exact source-codebook country mapping required')
+    wanted=set(survey_country_codes.values());values={};provenance=set()
+    for row in observations:
+        r=dict(row)
+        if r.get('metric')!='hdi' or str(r.get('year',r.get('period')))!='2023' or r.get('country_code') not in wanted:continue
+        code=r['country_code']
+        if code in values:raise ValueError('Duplicate2023HDI country value')
+        value=dec(r.get('source_value'))
+        if not Decimal(0)<=value<=Decimal(1):raise ValueError('HDI out of bounds')
+        if r.get('value') is not None and dec(r['value'])!=value:raise ValueError('Source and normalized HDI differ')
+        required=('release_id','source_id','source_url','source_sha256')
+        if not all(r.get(k) for k in required):raise ValueError('HDI provenance absent')
+        provenance.add(tuple(r[k] for k in required));values[code]=value
+    if set(values)!=wanted or len(provenance)!=1:raise ValueError('Missing or mixed HDI grouping release')
+    mapping={name:('Very high' if values[code]>=Decimal('.800') else 'High' if values[code]>=Decimal('.700') else 'Low and medium') for name,code in survey_country_codes.items()}
+    release,source,url,sha=next(iter(provenance))
+    ref={'source_id':source,'release_id':release,'url':url,'sha256':sha,'vintage':'HDR2025 observations2023','table':'HDI2023; Readers Guide PDF284/printed270 group cutoffs','definition_url':REPORT_URL+'#page=284','group_vintage_status':'Transparent2023classification; report survey calculation vintage unconfirmed','country_hdi_values':{k:str(v) for k,v in sorted(values.items())}}
+    return mapping,ref

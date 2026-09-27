@@ -26,6 +26,9 @@ class OriginalFigureTests(unittest.TestCase):
         self.assertEqual(stats(rows,PRODUCTIVITY,half_neutral=True)['value'],50);self.assertIsNone(response_score(PRODUCTIVITY,'6'))
     def test_average_domains_and_agency_difference(self):
         charts,gaps=derive_panels(all_cells(),REF);self.assertFalse(gaps);self.assertEqual(len(charts),5)
+        self.assertEqual(charts[1]['chapter'],'chapter2')
+        self.assertTrue(all(isinstance(f,dict) and set(f)=={'key','label'} for c in charts for f in c['fields']))
+        self.assertTrue(all(ref.get('table') for c in charts for ref in c['source_refs']))
         use=charts[0]['rows'][0];self.assertEqual(use['actual'],40);self.assertEqual(len(use['domain_denominators']),6)
         agency=charts[1]['rows'][0];self.assertEqual(agency['current'],20);self.assertEqual(agency['future'],60);self.assertEqual(agency['change'],40)
         self.assertEqual(charts[2]['rows'][0]['confidence'],20);self.assertEqual(charts[4]['rows'][0]['productivity'],50)
@@ -56,4 +59,14 @@ class OriginalFigureTests(unittest.TestCase):
     def test_uncodable_age_coverage_remains_visible(self):
         rows=all_cells()+cells('Q14',scope='age',group='__unmapped_age__');charts,gaps=derive_panels(rows,REF)
         self.assertEqual(len(gaps),3);self.assertEqual(gaps[0]['reason'],'unmapped source dimension retained');self.assertEqual(len(charts),5)
+class GroupDefinitionTests(unittest.TestCase):
+    def test_pinned_exact_hdi_thresholds_and_missing_sources(self):
+        codes={name:f'C{i:02d}' for i,name in enumerate(COUNTRIES)}
+        rows=[dict(country_code=code,year=2023,metric='hdi',source_value='.700',value='.700',release_id='r',source_id='hdr25_timeseries',source_url='https://hdr.undp.org/exact.csv',source_sha256='a'*64) for code in codes.values()]
+        rows[0]['source_value']=rows[0]['value']='.699999';rows[1]['source_value']=rows[1]['value']='.800'
+        mapping,ref=hdi_mapping_from_observations(rows,codes)
+        self.assertEqual(mapping[COUNTRIES[0]],'Low and medium');self.assertEqual(mapping[COUNTRIES[1]],'Very high');self.assertEqual(mapping[COUNTRIES[2]],'High')
+        self.assertEqual(ref['release_id'],'r');self.assertIn('page=284',ref['definition_url'])
+        with self.assertRaises(ValueError):hdi_mapping_from_observations(rows[:-1],codes)
+        with self.assertRaises(ValueError):hdi_mapping_from_observations(rows+rows[:1],codes)
 if __name__=='__main__':unittest.main()
