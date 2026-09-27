@@ -152,3 +152,35 @@ test('line motion keeps complete context and animates axes and direct labels wit
   await expect(page.locator('#explorer-title')).toContainText('Government spending');
   await expect(page.locator('#explorer-start')).toHaveValue('2005');
 });
+
+test('trade comparison finds and loads countries outside the initial selection', async ({ page }) => {
+  const requested = [];
+  let failComparison = true;
+  await page.route('**/api/v1/trade/countries', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ data: { countries: tradeExplorer.countries.map(c => ({ code: c.country_code, name: c.name_en, latest_annual_period: '2025' })) } }) }));
+  await page.route('**/api/v1/trade/explorer?*', route => {
+    const codes = new URL(route.request().url()).searchParams.get('countries').split(',');
+    requested.push(codes);
+    if (codes.length > 1 && failComparison) {
+      failComparison = false;
+      return route.fulfill({ status: 503, body: 'Unavailable' });
+    }
+    return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ data: { ...tradeExplorer, countries: tradeExplorer.countries.filter(c => codes.includes(c.country_code)), series: tradeExplorer.series.filter(c => codes.includes(c.country_code)) } }) });
+  });
+  await page.goto('/explore/trade/?countries=DEU#explorer-un-trade.countries=DEU');
+  await expect(page.locator('.explorer-workspace')).toHaveAttribute('aria-busy', 'false');
+  await page.locator('#explorer-compare').click();
+  await page.locator('#country-search').fill('czech');
+  await page.locator('.explorer-country-list input[value=CZE]').check();
+  await page.locator('.explorer-dialog-apply').click();
+  await expect(page.locator('dialog .explorer-status')).toContainText('Comparison could not load');
+  await expect(page.locator('#focus-DEU')).toBeVisible();
+  await page.locator('.explorer-dialog-apply').click();
+  await expect(page.locator('dialog')).toHaveCount(0);
+  await expect(page.locator('#focus-CZE')).toBeVisible();
+  await expect(page.locator('#focus-DEU')).toBeVisible();
+  expect(requested.at(-1)).toEqual(['DEU', 'CZE']);
+  await expect(page).toHaveURL(/explorer-un-trade.countries=DEU%2CCZE/);
+  await page.reload();
+  await expect(page.locator('#focus-CZE')).toBeVisible();
+  await expect(page.locator('#focus-DEU')).toBeVisible();
+});

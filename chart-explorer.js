@@ -12,6 +12,7 @@
   const signed = value => value === null ? 'Not comparable' : `${value > 0 ? '+' : ''}${number(value)}`;
   const swatch = field => `<i class="explorer-swatch ${field.dash ? 'dashed' : ''}" style="--series-color:${field.color}" aria-hidden="true"></i>`;
   const $ = selector => root.querySelector(selector);
+  let countryCatalog, countryRequest = 0;
   let dataset, state, controller, chart, navigator, currentData, focus = null, frame = 0, navigatorKey = '', legendKey = '';
   const trade = () => dataset.kind === 'trade';
   const compactUSD = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 2 });
@@ -187,24 +188,60 @@
     });
     $('.psd-chart-rail').prepend(link);
   }
-  function chooseCountries() {
+  async function loadTradeCountries(countries) {
+    const request = ++countryRequest;
+    const response = await fetch(`/api/v1/trade/explorer?countries=${encodeURIComponent(countries.join(','))}`);
+    if (!response.ok) throw new Error('Country history unavailable');
+    const payload = await response.json();
+    if (request !== countryRequest) return false;
+    dataset = payload.data || payload;
+    navigatorKey = ''; legendKey = '';
+    return true;
+  }
+  async function chooseCountries() {
     const selected = new Set(state.countries), dialog = document.createElement('dialog');
     dialog.className = 'explorer-dialog'; dialog.setAttribute('aria-labelledby', 'countries-title');
     dialog.innerHTML = `<header><h2 id="countries-title">Choose your comparison</h2><button class="explorer-dialog-close" aria-label="Close country selection">×</button></header><p>Compare up to four countries. Fewer lines are easier to follow.</p><label for="country-search" class="explorer-eyebrow">Find a country</label><input id="country-search" type="search" placeholder="Search name or country code" autocomplete="off"><div class="explorer-country-list"></div><footer><span class="explorer-status" role="status"></span><button class="explorer-dialog-apply">Apply comparison</button></footer>`;
     document.body.append(dialog);
+    let loading = trade() && !countryCatalog, applying = false;
     function list() {
       const query = dialog.querySelector('input[type=search]').value.toLowerCase();
-      const countries = dataset.countries.filter(c => `${c.name_en} ${c.country_code}`.toLowerCase().includes(query)).sort((a, b) => Number(selected.has(b.country_code)) - Number(selected.has(a.country_code)) || a.name_en.localeCompare(b.name_en));
-      dialog.querySelector('.explorer-country-list').innerHTML = countries.length ? countries.map(c => `<label><input type="checkbox" value="${c.country_code}"${selected.has(c.country_code) ? ' checked' : ''}${selected.size >= 4 && !selected.has(c.country_code) ? ' disabled' : ''}>${esc(c.name_en)}<small>${c.country_code}</small></label>`).join('') : '<p>No countries match your search.</p>';
-      dialog.querySelector('.explorer-status').textContent = `${selected.size} of 4 selected${selected.size === 4 ? ' · Remove one to add another' : ''}`;
-      dialog.querySelector('.explorer-dialog-apply').disabled = selected.size === 0;
+      const countries = (countryCatalog || dataset.countries).filter(c => `${c.name_en} ${c.country_code}`.toLowerCase().includes(query)).sort((a, b) => Number(selected.has(b.country_code)) - Number(selected.has(a.country_code)) || a.name_en.localeCompare(b.name_en));
+      dialog.querySelector('.explorer-country-list').innerHTML = countries.length ? countries.map(c => `<label><input type="checkbox" value="${c.country_code}"${selected.has(c.country_code) ? ' checked' : ''}${applying || (selected.size >= 4 && !selected.has(c.country_code)) ? ' disabled' : ''}>${esc(c.name_en)}<small>${c.country_code}</small></label>`).join('') : '<p>No countries match your search.</p>';
+      dialog.querySelector('.explorer-status').textContent = loading ? 'Loading available countries…' : `${selected.size} of 4 selected${selected.size === 4 ? ' · Remove one to add another' : ''}`;
+      dialog.querySelector('.explorer-dialog-apply').disabled = selected.size === 0 || loading || applying;
     }
     dialog.querySelector('input[type=search]').addEventListener('input', list);
     dialog.querySelector('.explorer-country-list').addEventListener('change', event => { const code = event.target.value; event.target.checked ? selected.add(code) : selected.delete(code); list(); dialog.querySelector(`input[value="${code}"]`)?.focus(); });
     dialog.querySelector('.explorer-dialog-close').addEventListener('click', () => dialog.close());
-    dialog.querySelector('.explorer-dialog-apply').addEventListener('click', () => { dialog.close(); focus = null; update({ countries: [...selected] }); });
+    dialog.querySelector('.explorer-dialog-apply').addEventListener('click', async () => {
+      const countries = [...selected];
+      applying = true; list();
+      dialog.querySelector('.explorer-status').textContent = 'Loading comparison…';
+      try {
+        if (trade() && !await loadTradeCountries(countries)) return;
+        focus = null; update({ countries }); dialog.close();
+      } catch {
+        applying = false; list();
+        dialog.querySelector('.explorer-status').textContent = 'Comparison could not load. Please try again.';
+      }
+    });
     dialog.addEventListener('close', () => { dialog.remove(); root.querySelector('#explorer-compare').focus(); });
     list(); dialog.showModal(); dialog.querySelector('input[type=search]').focus();
+    if (loading) {
+      try {
+        const response = await fetch('/api/v1/trade/countries');
+        if (!response.ok) throw new Error('Country catalogue unavailable');
+        const payload = await response.json();
+        const available = (payload.data || payload).countries
+          .filter(c => c.latest_annual_period)
+          .map(c => ({ country_code: c.code, name_en: c.name }));
+        countryCatalog = [...new Map([...available, ...dataset.countries].map(c => [c.country_code, c])).values()];
+        loading = false; list();
+      } catch {
+        dialog.querySelector('.explorer-status').textContent = 'Available countries could not load. Close and reopen to retry.';
+      }
+    }
   }
   async function init() {
     try {
@@ -226,7 +263,6 @@
       state = M.normalize({ ...M.defaults, ...fromURL() }, dataset);
       mount(); paint({ animate: false });
       if (embeddedReport) {
-        let countryRequest = 0;
         const loadCountry = async event => {
           const code = event.detail?.country;
           if (!/^[A-Z]{3}$/.test(code || '') || (dataset.countries.length === 1 && dataset.countries[0].country_code === code)) return;
