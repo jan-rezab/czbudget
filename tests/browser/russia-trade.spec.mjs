@@ -63,13 +63,18 @@ test('research supplier chart preserves annual reporting side and country shortc
 test('supplier inspection stays below the plot and does not move it during keyboard navigation',async({page})=>{
  await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const data=sample();data.suppliers=['2019','2025'].flatMap((period,i)=>['KOR','GEO','DEU','TUR','ITA'].map(reporter_iso3=>({period,reporter_iso3,partner_iso3:'KGZ',value_usd:100*(i+1)})));return route.fulfill({json:{data}});});
  await page.goto('/deep-dives/russia-trade/?lang=en');
- const host=page.locator('#rt-lead-chart'),plot=host.locator('svg'),tip=host.locator('.psd-plot-tooltip');
+ const host=page.locator('#rt-lead-chart'),tip=host.locator('.psd-plot-tooltip');
  await host.locator('[data-point]').first().focus();await expect(tip).toBeVisible();
- const before=await plot.boundingBox();
- const box=await tip.boundingBox();expect(box.y).toBeGreaterThanOrEqual(before.y+before.height);
- await page.keyboard.press('ArrowRight');await expect(tip).toContainText('2025');
- expect(await plot.boundingBox()).toEqual(before);
- await page.keyboard.press('Escape');await expect(tip).toBeHidden();expect(await plot.boundingBox()).toEqual(before);
+ // Keyboard focus can smooth-scroll this long page. Compare both elements in one
+ // frame and measure plot movement inside its host, independently of page scroll.
+ const layout=()=>host.evaluate(el=>{const h=el.getBoundingClientRect(),p=el.querySelector('svg').getBoundingClientRect(),t=el.querySelector('.psd-plot-tooltip').getBoundingClientRect();return {plot:{x:p.x-h.x,y:p.y-h.y,width:p.width,height:p.height},gap:t.y-p.bottom};});
+ const before=await layout();expect(before.gap).toBeGreaterThanOrEqual(0);
+ await page.keyboard.press('ArrowRight');await expect(tip.locator('strong')).toHaveText('2020');
+ await expect(tip).toContainText('—'); // Missing years remain selectable gaps.
+ expect((await layout()).plot).toEqual(before.plot);
+ await page.keyboard.press('End');await expect(tip.locator('strong')).toHaveText('2025');
+ expect((await layout()).gap).toBeGreaterThanOrEqual(0);expect((await layout()).plot).toEqual(before.plot);
+ await page.keyboard.press('Escape');await expect(tip).toBeHidden();expect((await layout()).plot).toEqual(before.plot);
 });
 
 test('map defaults to major suppliers and can reveal all without changing the evidence table',async({page})=>{
