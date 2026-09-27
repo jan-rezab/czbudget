@@ -5,10 +5,43 @@
     "style": "shared-charts.css",
     "runtime": "chart-runtime.js",
     "manifest": "assets/chart-releases/current.json",
-    "families": ["line", "column", "stacked", "bar", "donut", "globe", "route-map", "scatter", "pyramid"]
+    "families": [
+      "line",
+      "column",
+      "stacked",
+      "bar",
+      "donut",
+      "globe",
+      "route-map",
+      "scatter",
+      "pyramid",
+      "funding-flow"
+    ]
   },
   "consumers": [
-    {"id": "russia-trade-routes", "adapter": "russia-trade.js", "families": ["line", "stacked", "bar", "donut", "route-map"], "tests": ["tests/browser/russia-trade.spec.mjs"], "routes": ["/deep-dives/russia-trade/"], "change_paths": ["russia-trade.js", "russia-trade.css", "deep-dives/russia-trade/index.html", "lib/russia-trade-model.mjs"]},
+    {
+      "id": "russia-trade-routes",
+      "adapter": "russia-trade.js",
+      "families": [
+        "line",
+        "stacked",
+        "bar",
+        "donut",
+        "route-map"
+      ],
+      "tests": [
+        "tests/browser/russia-trade.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/russia-trade/"
+      ],
+      "change_paths": [
+        "russia-trade.js",
+        "russia-trade.css",
+        "deep-dives/russia-trade/index.html",
+        "lib/russia-trade-model.mjs"
+      ]
+    },
     {
       "id": "data-explorer",
       "adapter": "chart-explorer.js",
@@ -233,18 +266,45 @@
     {
       "id": "oecd-report-trends",
       "adapter": "oecd-charts.js",
-      "families": ["line", "bar"],
-      "tests": ["tests/browser/shared-charts.spec.mjs", "tests/browser/redistribution.spec.mjs"],
-      "routes": ["/countries/:country", "/deep-dives/redistribution/", "/deep-dives/tax-burden/"],
-      "change_paths": ["oecd-charts.js", "deep-dives/redistribution/index.html", "deep-dives/tax-burden/index.html", "deep-dives/revenue/index.html", "country.html", "tests/browser/redistribution.spec.mjs"]
+      "families": [
+        "line",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs",
+        "tests/browser/redistribution.spec.mjs"
+      ],
+      "routes": [
+        "/countries/:country",
+        "/deep-dives/redistribution/",
+        "/deep-dives/tax-burden/"
+      ],
+      "change_paths": [
+        "oecd-charts.js",
+        "deep-dives/redistribution/index.html",
+        "deep-dives/tax-burden/index.html",
+        "deep-dives/revenue/index.html",
+        "country.html",
+        "tests/browser/redistribution.spec.mjs"
+      ]
     },
     {
       "id": "pension-payment-charts",
       "adapter": "pensions-today.js",
-      "families": ["line", "bar"],
-      "tests": ["tests/browser/shared-charts.spec.mjs"],
-      "routes": ["/deep-dives/ageing/"],
-      "change_paths": ["pensions-today.js", "deep-dives/ageing/index.html"]
+      "families": [
+        "line",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/shared-charts.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/ageing/"
+      ],
+      "change_paths": [
+        "pensions-today.js",
+        "deep-dives/ageing/index.html"
+      ]
     },
     {
       "id": "oil-pivot-story",
@@ -290,6 +350,26 @@
         "tests/browser/rosling-tribute.spec.mjs",
         "tests/unit/rosling-model.spec.mjs"
       ]
+    },
+    {
+      "id": "revenue-funding-flow",
+      "adapter": "revenue-deep-dive.js",
+      "families": [
+        "funding-flow"
+      ],
+      "tests": [
+        "tests/browser/revenue-flows.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/revenue/"
+      ],
+      "change_paths": [
+        "revenue-deep-dive.js",
+        "revenue-deep-dive.css",
+        "lib/revenue-flow-model.js",
+        "lib/revenue-coverage-policy.js",
+        "deep-dives/revenue/index.html"
+      ]
     }
   ],
   "legacy": {
@@ -326,17 +406,59 @@
       "oecd-charts.js": "specialized-scatter-plus-shared-line",
       "plzen-contract-timeline.js": "specialized-timeline",
       "public-employment.js": "specialized-editorial",
-      "revenue-deep-dive.js": "specialized-flow",
+      "revenue-deep-dive.js": "specialized-stability-plus-shared",
       "tax-detail-chart.js": "specialized-donut",
       "trade-deep-dive.js": "specialized-treemap-plus-line"
     }
   },
   "verification": {
-    "always": ["tests/browser/shared-navigation.spec.mjs"],
-    "shared_contracts": ["tests/unit/chart-explorer.spec.mjs", "tests/unit/chart-renderer.spec.mjs", "tests/unit/chart-registry.spec.mjs", "tests/unit/verification-plan.spec.mjs"],
-    "shared_paths": ["lib/chart-renderer.js", "shared-charts.css", "chart-runtime.js", "psd-chart.js", "psd-chart.css", "chart-components.json", "chart-legacy-inventory.json", "chart-coverage.json", "assets/chart-releases/**", "tests/fixtures/charts/**"]
+    "always": [
+      "tests/browser/shared-navigation.spec.mjs"
+    ],
+    "shared_contracts": [
+      "tests/unit/chart-explorer.spec.mjs",
+      "tests/unit/chart-renderer.spec.mjs",
+      "tests/unit/chart-registry.spec.mjs",
+      "tests/unit/verification-plan.spec.mjs",
+      "tests/unit/revenue-flow.spec.mjs"
+    ],
+    "shared_paths": [
+      "lib/chart-renderer.js",
+      "shared-charts.css",
+      "chart-runtime.js",
+      "psd-chart.js",
+      "psd-chart.css",
+      "chart-components.json",
+      "chart-legacy-inventory.json",
+      "chart-coverage.json",
+      "assets/chart-releases/**",
+      "tests/fixtures/charts/**"
+    ]
   },
   "release": {
-    "content_versioned_adapters": ["global-nav.js", "site-header.css", "rosling-tribute.js", "rosling-tribute.css","russia-trade.js", "russia-trade.css", "lib/russia-trade-model.mjs", "municipal-expanded-profile.js", "cz-history.js", "municipalities-czechia.js", "stories/tariff-charts.js", "stories/chart-rails.js", "stories/oil-pivot.js", "lib/rosling-model.js", "chart-explorer.css", "chart-explorer.js", "lib/chart-explorer-model.js", "trade-deep-dive.js"]
+    "content_versioned_adapters": [
+      "global-nav.js",
+      "site-header.css",
+      "rosling-tribute.js",
+      "rosling-tribute.css",
+      "russia-trade.js",
+      "russia-trade.css",
+      "lib/russia-trade-model.mjs",
+      "municipal-expanded-profile.js",
+      "cz-history.js",
+      "municipalities-czechia.js",
+      "stories/tariff-charts.js",
+      "stories/chart-rails.js",
+      "stories/oil-pivot.js",
+      "lib/rosling-model.js",
+      "chart-explorer.css",
+      "chart-explorer.js",
+      "lib/chart-explorer-model.js",
+      "trade-deep-dive.js",
+      "revenue-deep-dive.js",
+      "revenue-deep-dive.css",
+      "lib/revenue-flow-model.js",
+      "lib/revenue-coverage-policy.js"
+    ]
   }
 }

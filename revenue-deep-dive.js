@@ -1,6 +1,6 @@
 (() => {
   const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "../../";
-  const state = {data:null, code:new URLSearchParams(location.search).get("code") || "CZE", lang:document.documentElement.lang === "en" ? "en" : "cs"};
+  const state = {source:null,recipient:null,playing:true,data:null, code:new URLSearchParams(location.search).get("code") || "CZE", lang:document.documentElement.lang === "en" ? "en" : "cs"};
   const names = {
     BRA:["Brazílie","Brazil"],CHE:["Švýcarsko","Switzerland"],CZE:["Česko","Czechia"],DEU:["Německo","Germany"],DNK:["Dánsko","Denmark"],ESP:["Španělsko","Spain"],FIN:["Finsko","Finland"],FRA:["Francie","France"],GBR:["Spojené království","United Kingdom"],GRC:["Řecko","Greece"],JPN:["Japonsko","Japan"],NLD:["Nizozemsko","Netherlands"],NOR:["Norsko","Norway"],POL:["Polsko","Poland"],SWE:["Švédsko","Sweden"],UKR:["Ukrajina","Ukraine"],USA:["Spojené státy","United States"]
   };
@@ -20,7 +20,7 @@
   const esc = value => String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[char]);
   const fmt = (value, digits=1) => new Intl.NumberFormat(state.lang === "en" ? "en-GB" : "cs-CZ",{minimumFractionDigits:digits,maximumFractionDigits:digits}).format(value);
   const pct = value => value == null ? `<span class="na">—</span>` : `${fmt(value)} %`;
-  const countryName = code => names[code]?.[state.lang === "en" ? 1 : 0] || code;
+  const countryName = code => names[code]?.[state.lang === "en" ? 1 : 0] || state.data?.country_names?.[code] || code;
   const detailMeta = [
     ["personal_income","personalIncome","#a8b63f"],["corporate_income","corporateIncome","#6f7c2a"],["vat","vat","#d0d86f"],["excise","excise","#b59f32"],["social_security","socialFull","#171918"],["property","propertyFull","#a8a69e"],["other","other","#d2ccc1"]
   ];
@@ -32,20 +32,43 @@
     document.querySelectorAll("[data-revenue-copy]").forEach(node=>{const value=t(node.dataset.revenueCopy);if(value)node.textContent=value});
   }
   function chartPoint(row,key){
-    return row.shares[key] || 0;
+    return Number.isFinite(row.shares[key])?row.shares[key]:null;
   }
-  function renderFlow(profile){
-    const sources=detailMeta.map(([key,label,color])=>({key,label:t(label),color,value:profile.tax_detail?.[key]??null}));
-    const levels=levelMeta.map(([key,label,color])=>({key,label:t(label),color,value:profile.government_levels[key]})).filter(item=>item.value!=null&&item.value>.01);
-    const env=profile.environmental_taxes;
-    const rows = items => items.map(item=>`<div class="flow-row" style="--share:${item.value==null?0:Math.max(2,item.value)}%;--row-color:${item.color}"><span>${esc(item.label)}</span><strong>${item.value==null?"—":fmt(item.value)}</strong></div>`).join("");
-    document.querySelector("#hundred-flow").innerHTML=`<div class="flow-side"><header><span>${t("from")}</span><b>100</b></header>${rows(sources)}<div class="flow-memo"><span>${t("environment")}</span><strong>${env?pct(env.share_of_tax_and_social_contributions_pct):"—"}</strong><small>${t("environmentNote")}${env?` · ${env.year}`:""}</small></div></div><div class="flow-pool"><div><span>${t("pool")}</span><strong>100</strong><small>${t("poolNote")}</small></div></div><div class="flow-side"><header><span>${t("to")}</span><b>100</b></header>${rows(levels)}</div>`;
-    const largest=sources.filter(item=>Number.isFinite(item.value)).sort((a,b)=>b.value-a.value)[0];
-    const local=profile.government_levels.local;
-    const transfer=profile.municipal_transfers?.local_revenue_from_transfers_pct;
-    document.querySelector("#revenue-kpis").innerHTML=`<article><span>${t("largestSource")}</span><strong>${esc(largest?.label||"—")}</strong><small>${largest?pct(largest.value):"—"}</small></article><article><span>${t("initialLocal")}</span><strong>${local==null?"—":pct(local)}</strong><small>${t("to")}</small></article><article><span>${t("transferDependence")}</span><strong>${transfer==null?"—":pct(transfer)}</strong><small>${transfer==null?t("notAvailable"):t("ofLocalRevenue")}</small></article>`;
+  async function renderFlow(profile){
+    const code=state.code;
+    const PSDPlot=await window.PSDPlotReady;
+    if(code!==state.code)return;
+    const model=window.PSDRevenueFlow.build({code,profile,lang:state.lang,source:state.source,recipient:state.recipient});
+    const en=state.lang==="en",host=document.querySelector("#hundred-flow");
+    host.classList.remove("hundred-flow");
+    state.flow=PSDPlot.render(host,{...model,type:"funding-flow",locale:en?"en-GB":"cs-CZ",playing:state.playing,
+      tableColumns:[{key:"kind",label:en?"Type":"Typ"},{key:"label",label:en?"Item":"Položka"},{key:"amount",label:en?"Amount":"Hodnota"},{key:"unit",label:en?"Unit":"Jednotka"},{key:"year",label:en?"Year":"Rok"},{key:"source",label:en?"Source":"Zdroj"}],
+      onSelect(kind,key){state.source=kind==="source"?(state.source===key?null:key):null;state.recipient=kind==="recipient"?(state.recipient===key?null:key):null;renderFlow(profile)},
+      onClear(){state.source=null;state.recipient=null;renderFlow(profile)}});
+    const category={personal_income:"1100",corporate_income:"1200",vat:"5111",excise:"5121",social_security:"2000",property:"4000"}[state.source];
+    const observation=code!=="CZE"&&category?profile.tax_observations?.find(r=>r.sector==="S13"&&r.category===category):null;
+    if(observation){model.details.push([en?"Original OECD observation":"Původní údaj OECD",`${observation.source_value} ${observation.source_unit} ×10^${observation.source_multiplier} · ${observation.currency||""} · ${observation.year}`,en?"Reported national amount":"Vykázaná národní částka"]);model.refs.push([en?"Exact OECD source":"Přesný zdroj OECD",observation.source_url]);}
+    document.querySelector("#revenue-flow-note").textContent=model.year+" · "+model.status+". "+model.note;
+    document.querySelector('[data-revenue-copy="flowIntro"]').textContent=code==="CZE"?(en?"Selected Czech national cash receipts and gross budget receipts for 2023. Click a source or recipient to inspect the reported allocation. Gross recipient totals overlap through transfers.":"Vybrané národní peněžní příjmy a hrubé rozpočtové příjmy Česka za rok 2023. Kliknutím na zdroj či příjemce zobrazíte vykázané rozdělení. Hrubé příjmy se překrývají přes transfery."):(en?"Tax shares use OECD government attribution. Dashed transfer routes are shown only where counterpart payments are reported; selecting a tax shows its own allocation only when separately sourced.":"Daňové podíly používají přiřazení úrovním vlády OECD. Přerušované transferové trasy zobrazujeme jen při vykázaných platbách protistraně; výběr daně ukazuje její vlastní rozdělení pouze se samostatným zdrojem.");
+    document.querySelector("#revenue-flow-details").innerHTML=`<strong>${esc(model.detailTitle)}</strong>${model.details.length?`<table><tbody>${model.details.map(row=>`<tr>${row.map(cell=>`<td>${esc(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table>`:""}<p>${model.refs.map(([label,url])=>`<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(label)} ↗</a>`).join(" · ")}</p>`;
+    document.querySelector("#revenue-flow-values").innerHTML=`<summary>${en?"All chart values and sources":"Všechny hodnoty grafu a zdroje"}</summary><div class="revenue-data-scroll"><table><thead><tr>${[en?"Item":"Položka",en?"Amount":"Hodnota",en?"Unit":"Jednotka",en?"Year":"Rok",en?"Source":"Zdroj"].map(v=>`<th>${v}</th>`).join("")}</tr></thead><tbody>${model.rows.map(r=>`<tr><td>${esc(r.label)}</td><td>${esc(r.amount??"—")}</td><td>${esc(r.unit)}</td><td>${r.year}</td><td><a href="${esc(r.source)}" target="_blank" rel="noreferrer">↗</a></td></tr>`).join("")}</tbody></table></div>`;
+    document.querySelector("#revenue-kpis").innerHTML=`<article><span>${en?"Countries with usable coverage":"Země s použitelným pokrytím"}</span><strong>${Object.keys(state.data.countries).length}</strong></article><article><span>${en?"Tax data year":"Rok daňových dat"}</span><strong>${profile.latest_year}</strong></article><article><span>${en?"Data release":"Datová verze"}</span><small>${esc(state.data.release_id)}</small></article>`;
+  }
+  function renderEvidence(profile){
+    const en=state.lang==="en";
+    const rows=profile.transfer_evidence||[];
+    document.querySelector("#revenue-transfer-evidence").innerHTML=`<summary>${en?"Reported transfers and grants — amounts, bases and years":"Vykázané transfery a granty — hodnoty, báze a roky"} (${rows.length})</summary><p>${en?"These observations have different denominators and accounting bases. Do not add them together or allocate them to individual taxes.":"Tyto údaje mají různé jmenovatele a účetní báze. Nesčítejte je a nepřiřazujte je jednotlivým daním."}</p>${evidenceTable(rows,en)}`;
+    const health=profile.health_evidence||[];
+    document.querySelector("#revenue-health-evidence").innerHTML=`<summary>${en?"Health financing source detail":"Detail zdrojů financování zdravotnictví"} (${health.length})</summary><p>${en?"Financing schemes and sources include overlapping parent and child categories. These are separate from OECD tax contributions and must not be added to the tax pool. Missing same-year data is unavailable.":"Finanční schémata a zdroje obsahují překrývající se nadřazené a podřazené kategorie. Jsou oddělené od daňových příspěvků OECD a nesmí se přičítat k daňovému součtu. Chybějící údaje pro stejný rok nejsou dostupné."}</p>${evidenceTable(health,en)}`;
+  }
+  function evidenceTable(rows,en){
+    if(!rows.length)return `<p>${t("notAvailable")}</p>`;
+    return `<div class="revenue-data-scroll"><table><thead><tr>${[en?"Source / recipient":"Zdroj / příjemce",en?"Metric":"Ukazatel",en?"Year":"Rok",en?"Reported value":"Vykázaná hodnota",en?"Unit":"Jednotka",en?"Basis":"Báze",en?"Source":"Zdroj"].map(v=>`<th>${v}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.sector||r.financing_scheme)}</td><td>${esc(r.category||r.financing_source)}</td><td>${r.year}</td><td>${esc(r.source_value??"—")}</td><td>${esc(r.source_unit)}${r.source_multiplier?` ×10^${r.source_multiplier}`:""}</td><td>${esc(r.basis)}</td><td><a href="${esc(r.source_url)}" target="_blank" rel="noreferrer">↗</a></td></tr>`).join("")}</tbody></table></div>`;
   }
   function renderTaxPie(profile){
+    if(!detailMeta.every(([key])=>Number.isFinite(profile.tax_detail?.[key])&&profile.tax_detail[key]>=0)){
+      document.querySelector("#revenue-tax-detail-chart").innerHTML=`<p>${state.lang==="en"?"Incomplete tax subcategory coverage: a complete pie cannot be shown. Reported values remain in the comparison and source tables.":"Neúplné pokrytí daňových podkategorií: úplný koláč nelze zobrazit. Vykázané hodnoty zůstávají ve srovnání a zdrojových tabulkách."}</p>`;return;
+    }
     const labels={personalIncome:t("personalIncome"),corporateIncome:t("corporateIncome"),vat:t("vat"),excise:t("excise"),social:t("socialFull"),property:t("propertyFull"),other:t("other"),chartLabel:t("taxPieAria")};
     window.PSDTaxDetail.render(document.querySelector("#revenue-tax-detail-chart"),profile.tax_detail,{labels,year:profile.latest_year,country:countryName(state.code),lang:state.lang});
   }
@@ -61,18 +84,18 @@
     if(series.length<2){document.querySelector("#stability-chart").textContent=t("notAvailable");return}
     const W=800,H=350,m={l:44,r:18,t:22,b:34};
     const years=series.map(row=>row.year), minYear=Math.min(...years),maxYear=Math.max(...years);
-    const maxValue=Math.ceil(Math.max(...series.flatMap(row=>chartMeta.map(([key])=>chartPoint(row,key))))/10)*10;
+    const maxValue=Math.max(10,Math.ceil(Math.max(...series.flatMap(row=>chartMeta.map(([key])=>chartPoint(row,key))).filter(Number.isFinite))/10)*10);
     const x=year=>m.l+(year-minYear)/(maxYear-minYear)*(W-m.l-m.r), y=value=>H-m.b-value/maxValue*(H-m.t-m.b);
     const grids=Array.from({length:5},(_,index)=>index*maxValue/4).map(value=>`<line class="grid" x1="${m.l}" y1="${y(value)}" x2="${W-m.r}" y2="${y(value)}"/><text class="axis-label" x="${m.l-8}" y="${y(value)+3}" text-anchor="end">${fmt(value,0)}</text>`).join("");
     const ticks=years.filter((year,index)=>index===0||index===years.length-1||year%4===0).map(year=>`<text class="axis-label" x="${x(year)}" y="${H-10}" text-anchor="middle">${year}</text>`).join("");
     const shocks=[2009,2020].filter(year=>year>=minYear&&year<=maxYear).map(year=>`<line class="shock" x1="${x(year)}" y1="${m.t}" x2="${x(year)}" y2="${H-m.b}"/><text class="shock-label" x="${x(year)+5}" y="${m.t+10}">${year}</text>`).join("");
-    const paths=chartMeta.map(([key,,color])=>`<path class="series" style="--series-color:${color}" d="${series.map((row,index)=>`${index?"L":"M"}${x(row.year).toFixed(1)},${y(chartPoint(row,key)).toFixed(1)}`).join(" ")}"/>`).join("");
+    const paths=chartMeta.map(([key,,color])=>`<path class="series" style="--series-color:${color}" d="${series.map((row,index)=>chartPoint(row,key)==null?"":`${index&&chartPoint(series[index-1],key)!=null?"L":"M"}${x(row.year).toFixed(1)},${y(chartPoint(row,key)).toFixed(1)}`).join(" ")}"/>`).join("");
     document.querySelector("#stability-chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("stabilityTitle"))}">${grids}${ticks}${shocks}${paths}</svg>`;
     const shockCards=[2009,2020].map(year=>{
       const current=series.find(row=>row.year===year),previous=series.find(row=>row.year===year-1);
       if(!current||!previous)return `<article class="shock-card"><span>${year} / ${t("shock")}</span><strong>—</strong><small>${t("notAvailable")}</small></article>`;
-      const changes=chartMeta.map(([key,label])=>({label:t(label),delta:chartPoint(current,key)-chartPoint(previous,key)})).sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta));
-      const move=changes[0];return `<article class="shock-card"><span>${year} / ${t("largestMove")}</span><strong>${move.delta>0?"+":""}${fmt(move.delta)}</strong><b>${esc(move.label)}</b><small>${t("percentagePoints")}; ${year-1} → ${year}</small></article>`;
+      const changes=chartMeta.filter(([key])=>chartPoint(current,key)!=null&&chartPoint(previous,key)!=null).map(([key,label])=>({label:t(label),delta:chartPoint(current,key)-chartPoint(previous,key)})).sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta));
+      const move=changes[0];if(!move)return `<article class="shock-card"><span>${year}</span><strong>—</strong><small>${t("notAvailable")}</small></article>`;return `<article class="shock-card"><span>${year} / ${t("largestMove")}</span><strong>${move.delta>0?"+":""}${fmt(move.delta)}</strong><b>${esc(move.label)}</b><small>${t("percentagePoints")}; ${year-1} → ${year}</small></article>`;
     });
     document.querySelector("#shock-readout").innerHTML=shockCards.join("");
   }
@@ -109,7 +132,7 @@
     const eligible=Object.keys(state.data.countries).filter(code=>coverageFor(code).eligible);
     if(!eligible.length)throw new Error("No country meets the revenue coverage policy");
     if(selector){
-      [...selector.options].forEach(option=>{if(!eligible.includes(option.value))option.remove()});
+      selector.replaceChildren(...eligible.map(code=>{const option=document.createElement("option");option.value=code;option.textContent=countryName(code);return option}));
       selector.dataset.countryCodes=eligible.join(",");
     }
     if(!eligible.includes(state.code)){state.excludedCode=state.code;state.code=eligible.includes("CZE")?"CZE":eligible[0]}
@@ -120,6 +143,9 @@
     const notes=[en?"OECD attributes tax revenue to government levels; this does not establish cash routes for each tax.":"OECD přiřazuje daňové příjmy úrovním vlády; nejde o peněžní tok jednotlivých daní.",
       en?"Transfer share uses total local-government revenue as its denominator. It cannot be applied to VAT or another individual tax.":"Podíl transferů má ve jmenovateli celkové příjmy místní vlády. Nelze jej použít na DPH ani jinou jednotlivou daň."];
     if(coverage.missingRecipients?.length)notes.push((en?"Recipient levels not separately reported: ":"Samostatně nevykázané úrovně příjemců: ")+coverage.missingRecipients.map(key=>t(key==="social_security"?"socialFunds":key)).join(", ")+(en?". Missing is not zero.":". Chybějící údaj není nula."));
+    if(state.data.calculation_note)notes.push(en?state.data.calculation_note:"Daňové podíly jsou výpočtem z původních národních částek OECD. Ostatní je zbytek do celku, nikoli samostatné zdrojové pozorování. Báze transferů jsou oddělené.");
+    const missingDetails=detailMeta.filter(([key])=>!Number.isFinite(profile.tax_detail?.[key])).map(([,label])=>t(label));
+    if(missingDetails.length)notes.push((en?"Detailed tax breakdown unavailable for: ":"Detailní daňové rozdělení není dostupné pro: ")+missingDetails.join(", ")+".");
     notes.push(...coverage.notes);
     const notice=state.excludedCode?(en?`${countryName(state.excludedCode)} is unavailable because its coverage is insufficient. Showing ${countryName(state.code)}.`:`${countryName(state.excludedCode)} není k dispozici kvůli nedostatečnému pokrytí. Zobrazuje se ${countryName(state.code)}.`):"";
     document.querySelector("#revenue-coverage").innerHTML=`<strong>${en?"Partial coverage — read before comparing":"Částečné pokrytí — před srovnáním"}</strong><p>${en?"Tax data":"Daňová data"}: ${esc(coverage.taxYear)} · ${en?"Transfer data":"Transferová data"}: ${esc(coverage.transferYear??"—")}. ${esc(notice)}</p><ul>${notes.map(note=>`<li>${esc(note)}</li>`).join("")}</ul>`;
@@ -129,9 +155,10 @@
     translateStatic();if(!state.data)return;
     const profile=state.data.countries[state.code]||state.data.countries.CZE;state.code=state.data.countries[state.code]?state.code:"CZE";
     document.querySelector("#revenue-country-label").textContent=countryName(state.code);document.querySelector("#revenue-year").textContent=profile.latest_year;
-    renderCoverage(profile);renderFlow(profile);renderTaxPie(profile);renderBase(profile);renderStability(profile);renderTransfers(profile);renderComparison();renderSources();
+    document.querySelector("#deep-dive-country-name").textContent=countryName(state.code);
+    renderEvidence(profile);renderCoverage(profile);renderFlow(profile).catch(error=>{console.error(error);document.querySelector("#hundred-flow").textContent=t("loadError")});renderTaxPie(profile);renderBase(profile);renderStability(profile);renderTransfers(profile);renderComparison();renderSources();
   }
-  addEventListener("countryprofilechange",event=>{state.code=event.detail.code;state.lang=event.detail.lang;render()});
+  addEventListener("countryprofilechange",event=>{state.source=null;state.recipient=null;state.code=event.detail.code;state.lang=event.detail.lang;render()});
   new MutationObserver(()=>{const next=document.documentElement.lang === "en" ? "en" : "cs";if(next!==state.lang){state.lang=next;render()}}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
-  document.addEventListener("DOMContentLoaded",()=>{translateStatic();fetch(`${assetRoot}data/country-revenue.v1.json`).then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(data=>{state.data=data;applyCoverage();render()}).catch(error=>{console.error("revenue deep dive",error);document.querySelector("#hundred-flow").innerHTML=`<p class="transfer-unavailable">${t("loadError")}</p>`})});
+  document.addEventListener("DOMContentLoaded",()=>{translateStatic();document.querySelector("#revenue-motion").addEventListener("click",event=>{state.playing=!state.playing;state.flow?.setPlaying(state.playing);event.currentTarget.setAttribute("aria-pressed",String(!state.playing));event.currentTarget.textContent=state.playing?(state.lang==="en"?"Pause motion":"Pozastavit pohyb"):(state.lang==="en"?"Resume motion":"Obnovit pohyb")});fetch("/api/v1/revenue/current").then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(data=>{state.data=data;state.code=new URLSearchParams(location.search).get("code")||state.code;applyCoverage();render()}).catch(error=>{console.error("revenue deep dive",error);document.querySelector("#hundred-flow").innerHTML=`<p class="transfer-unavailable">${t("loadError")}</p>`})});
 })();
