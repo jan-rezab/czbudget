@@ -17,8 +17,10 @@ export class SnapshotError extends Error {
 }
 
 export class SnapshotStore {
-  constructor({ base = process.env.PUBLIC_SNAPSHOT_BASE_URL, localRoot = process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT, fetchImpl = globalThis.fetch, pointerFile = process.env.PUBLIC_SNAPSHOT_POINTER_FILE } = {}) {
+  constructor({ base = process.env.PUBLIC_SNAPSHOT_BASE_URL, localRoot = process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT, fetchImpl = globalThis.fetch, pointerFile = process.env.PUBLIC_SNAPSHOT_POINTER_FILE, tokenProvider } = {}) {
     this.pointerFile = pointerFile;
+    // Local test servers pass the developer's gcloud token; Cloud Run uses the metadata server.
+    this.tokenProvider = tokenProvider;
     this.base = base ? String(base).replace(/\/+$/, "") : "";
     this.localRoot = localRoot ? path.resolve(localRoot) : "";
     this.fetchImpl = fetchImpl;
@@ -204,6 +206,7 @@ export class SnapshotStore {
   }
 
   async googleAccessToken() {
+    if (this.tokenProvider) return this.tokenProvider();
     const now = Date.now();
     if (this.accessToken && this.accessToken.expiresAt > now + 60_000) return this.accessToken.value;
     const response = await this.fetchImpl("http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token", {
