@@ -1,6 +1,6 @@
 (() => {
   const assetRoot = document.currentScript?.src ? new URL(".", document.currentScript.src).href : "../../";
-  const state = {cashExample:false,source:null,recipient:null,playing:true,data:null, code:new URLSearchParams(location.search).get("code") || "CZE", lang:document.documentElement.lang === "en" ? "en" : "cs"};
+  const state = {currency:'native',cashExample:false,source:null,recipient:null,playing:true,data:null, code:new URLSearchParams(location.search).get("code") || "CZE", lang:document.documentElement.lang === "en" ? "en" : "cs"};
   const names = {
     BRA:["Brazílie","Brazil"],CHE:["Švýcarsko","Switzerland"],CZE:["Česko","Czechia"],DEU:["Německo","Germany"],DNK:["Dánsko","Denmark"],ESP:["Španělsko","Spain"],FIN:["Finsko","Finland"],FRA:["Francie","France"],GBR:["Spojené království","United Kingdom"],GRC:["Řecko","Greece"],JPN:["Japonsko","Japan"],NLD:["Nizozemsko","Netherlands"],NOR:["Norsko","Norway"],POL:["Polsko","Poland"],SWE:["Švédsko","Sweden"],UKR:["Ukrajina","Ukraine"],USA:["Spojené státy","United States"]
   };
@@ -39,7 +39,7 @@
     const code=state.code;
     const PSDPlot=await window.PSDPlotReady;
     if(code!==state.code)return;
-    const model=window.PSDRevenueFlow.build({code,profile,lang:state.lang,source:state.source,recipient:state.recipient,cashExample:state.cashExample});
+    const model=window.PSDRevenueFlow.build({code,profile,lang:state.lang,source:state.source,recipient:state.recipient,cashExample:state.cashExample,currency:state.currency,fx:state.data.fx});
     const en=state.lang==="en",host=document.querySelector("#hundred-flow");
     host.classList.remove("hundred-flow");
     state.flow=PSDPlot.render(host,{...model,type:"funding-flow",locale:en?"en-GB":"cs-CZ",playing:state.playing,
@@ -48,7 +48,16 @@
       onClear(){state.cashExample=false;state.source=null;state.recipient=null;renderFlow(profile)}});
     const category={personal_income:"1100",corporate_income:"1200",vat:"5111",excise:"5121",social_security:"2000",property:"4000"}[state.source];
     const observation=code!=="CZE"&&!state.cashExample&&category?profile.tax_observations?.find(r=>r.sector==="S13"&&r.category===category):null;
-    if(observation){model.details.push([en?"Original OECD observation":"Původní údaj OECD",`${observation.source_value} ${observation.source_unit} ×10^${observation.source_multiplier} · ${observation.currency||""} · ${observation.year}`,en?"Reported national amount":"Vykázaná národní částka"]);model.refs.push([en?"Exact OECD source":"Přesný zdroj OECD",sourceURL(observation)]);}
+    if(observation){model.details.push([en?"Original OECD observation":"Původní údaj OECD",`${observation.source_value} ${observation.source_unit} ×10^${observation.source_multiplier} · ${observation.currency||""} · ${observation.year}`,en?"Reported national amount":"Vykázaná národní částka"]);model.refs.push([en?"Exact OECD source":"Přesný zdroj OECD",sourceURL(observation)]);
+      if(state.currency==='EUR'){
+        const eur=window.PSDRevenueFlow.euros(observation.value,observation.currency,observation.year,state.data.fx);
+        model.details.push([en?"Calculated EUR equivalent":"Vypočtený ekvivalent EUR",eur?fmt(eur.value/1e9,3)+' EUR bn':t('notAvailable'),eur?`${observation.year} · ${eur.rate} ${eur.currency}/EUR`:en?"Verified same-year currency and rate required":"Nutná ověřená měna a kurz stejného roku"]);
+        if(eur?.source_url)model.refs.push(['ECB · '+observation.year,eur.source_url]);
+      }
+    }
+    document.querySelector('#revenue-currency-label').textContent=en?'Display currency':'Měna zobrazení';
+    const currencySelect=document.querySelector('#revenue-currency');currencySelect.options[0].textContent=en?'Original currency':'Původní měna';currencySelect.options[1].textContent=en?'EUR · annual average':'EUR · roční průměr';
+    document.querySelector('#revenue-currency-note').textContent=en?'EUR uses the same-year ECB annual average where the source identifies its currency. Tax shares stay in %. Missing rates, PPP values and unidentified historical currency bases are not converted. Original budget amounts and reconciliation residuals remain visible.':'EUR používá roční průměr ECB pro stejný rok, pokud zdroj určuje měnu. Daňové podíly zůstávají v %. Chybějící kurzy, hodnoty PPP a neurčené historické měnové báze nepřepočítáváme. Původní rozpočtové částky a rezidua zůstávají viditelné.';
     document.querySelector("#revenue-year").textContent=model.year;document.querySelector('[data-revenue-copy="scope"]').textContent=code==="CZE"||state.cashExample?(en?"National cash examples":"Národní peněžní příklady"):(en?"OECD · general government":"OECD · sektor vládních institucí");
     document.querySelector("#revenue-flow-note").textContent=model.year+" · "+model.status+". "+model.note;
     document.querySelector('[data-revenue-copy="flowIntro"]').textContent=code==="CZE"?(en?"Selected Czech national cash receipts and gross budget receipts for 2023. Click a source or recipient to inspect the reported allocation. Gross recipient totals overlap through transfers.":"Vybrané národní peněžní příjmy a hrubé rozpočtové příjmy Česka za rok 2023. Kliknutím na zdroj či příjemce zobrazíte vykázané rozdělení. Hrubé příjmy se překrývají přes transfery."):(en?"Tax shares use OECD government attribution. Dashed transfer routes are shown only where counterpart payments are reported; selecting a tax shows its own allocation only when separately sourced.":"Daňové podíly používají přiřazení úrovním vlády OECD. Přerušované transferové trasy zobrazujeme jen při vykázaných platbách protistraně; výběr daně ukazuje její vlastní rozdělení pouze se samostatným zdrojem.");
@@ -67,7 +76,9 @@
   }
   function evidenceTable(rows,en){
     if(!rows.length)return `<p>${t("notAvailable")}</p>`;
-    return `<div class="revenue-data-scroll"><table><thead><tr>${[en?"Source / recipient":"Zdroj / příjemce",en?"Metric":"Ukazatel",en?"Year":"Rok",en?"Reported value":"Vykázaná hodnota",en?"Unit":"Jednotka",en?"Basis":"Báze",en?"Source":"Zdroj"].map(v=>`<th>${v}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.sector||r.financing_scheme)}</td><td>${esc(r.category||r.financing_source)}</td><td>${r.year}</td><td>${esc(r.source_value??"—")}</td><td>${esc(r.source_unit)}${r.source_multiplier?` ×10^${r.source_multiplier}`:""}</td><td>${esc(r.basis)}</td><td><a href="${esc(sourceURL(r))}" target="_blank" rel="noreferrer">↗</a></td></tr>`).join("")}</tbody></table></div>`;
+    return `<div class="revenue-data-scroll"><table><thead><tr>${[en?"Source / recipient":"Zdroj / příjemce",en?"Metric":"Ukazatel",en?"Year":"Rok",en?"Reported value":"Vykázaná hodnota",en?"Unit":"Jednotka",en?"Basis":"Báze",...(state.currency==='EUR'?[en?'Calculated EUR bn':'Vypočtené mld. EUR']:[]),en?"Source":"Zdroj"].map(v=>`<th>${v}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>{
+      const eur=r.currency?window.PSDRevenueFlow.euros(r.value,r.currency,r.year,state.data.fx):null;
+      return `<tr><td>${esc(r.sector||r.financing_scheme)}</td><td>${esc(r.category||r.financing_source)}</td><td>${r.year}</td><td>${esc(r.source_value??"—")}</td><td>${esc(r.source_unit)}${r.source_multiplier?` ×10^${r.source_multiplier}`:""}</td><td>${esc(r.basis)}</td>${state.currency==='EUR'?`<td>${eur?fmt(eur.value/1e9,3)+'<br>'+esc(eur.year+' · '+eur.rate+' '+eur.currency+'/EUR')+(eur.source_url?` · <a href="${esc(eur.source_url)}" target="_blank" rel="noreferrer">ECB ↗</a>`:''):esc(en?'Unavailable: currency basis or same-year rate missing':'Nedostupné: chybí měnová báze či kurz stejného roku')}</td>`:''}<td><a href="${esc(sourceURL(r))}" target="_blank" rel="noreferrer">↗</a></td></tr>`}).join("")}</tbody></table></div>`;
   }
   function renderTaxPie(profile){
     if(!detailMeta.every(([key])=>Number.isFinite(profile.tax_detail?.[key])&&profile.tax_detail[key]>=0)){
@@ -128,7 +139,13 @@
     if(legend){legend.setAttribute("aria-label",t("heatLegend"));legend.innerHTML=`<span><i class="heat-scale" aria-hidden="true"></i>${t("heatLower")} → ${t("heatHigher")}</span><span><i class="selected-key" aria-hidden="true"></i>${t("heatSelected")}</span>`}
   }
   function renderSources(){
-    document.querySelector("#revenue-source-list").innerHTML=state.data.sources.map((source,index)=>`<a href="${esc(source.url)}" target="_blank" rel="noreferrer"><span>0${index+1} / ${t("source")}</span><strong>${esc(source.title)}</strong><small>${t("openSource")}</small></a>`).join("");
+    const profile=state.data.countries[state.code];
+    const urls=new Set([profile.tax_total_source,...profile.transfer_evidence||[],...profile.health_evidence||[]].filter(Boolean).map(sourceURL));
+    const sources=state.data.sources.filter(source=>urls.has(source.url));
+    if(state.code==='CZE')for(const key of ['vat','property','state','funds','local','health']){const [title,url]=window.PSDRevenueFlow.references[key];sources.push({title,url});}
+    if(state.code==='DEU'){const [title,url]=window.PSDRevenueFlow.references.germany;sources.push({title,url});}
+    if(state.data.fx)sources.push({title:state.lang==='en'?'ECB · annual average EUR conversion':'ECB · roční průměr pro převod EUR',url:state.data.fx.source_url});
+    document.querySelector("#revenue-source-list").innerHTML=[...new Map(sources.map(s=>[s.url,s])).values()].map((source,index)=>`<a href="${esc(source.url)}" target="_blank" rel="noreferrer"><span>${String(index+1).padStart(2,'0')} / ${t("source")}</span><strong>${esc(source.title)}</strong><small>${t("openSource")}</small></a>`).join("");
   }
   function coverageFor(code){return window.PSDRevenueCoverage.assess(state.data.countries[code],state.data.availability?.countries?.[code])}
   function applyCoverage(){
@@ -168,5 +185,5 @@
   }
   addEventListener("countryprofilechange",event=>{state.cashExample=false;state.source=null;state.recipient=null;state.code=event.detail.code;state.lang=event.detail.lang;render()});
   new MutationObserver(()=>{const next=document.documentElement.lang === "en" ? "en" : "cs";if(next!==state.lang){state.lang=next;render()}}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
-  document.addEventListener("DOMContentLoaded",()=>{translateStatic();document.querySelector("#revenue-cash-example").addEventListener("click",()=>{state.cashExample=!state.cashExample;state.source=state.cashExample?"vat":null;state.recipient=null;renderFlow(state.data.countries[state.code])});document.querySelector("#revenue-motion").addEventListener("click",event=>{state.playing=!state.playing;state.flow?.setPlaying(state.playing);event.currentTarget.setAttribute("aria-pressed",String(!state.playing));event.currentTarget.textContent=state.playing?(state.lang==="en"?"Pause motion":"Pozastavit pohyb"):(state.lang==="en"?"Resume motion":"Obnovit pohyb")});fetch("/api/v1/revenue/current").then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(data=>{state.data=data;Object.values(data.countries).forEach(profile=>{if(profile.tax_total_source)profile.tax_total_source.source_url=sourceURL(profile.tax_total_source)});state.code=new URLSearchParams(location.search).get("code")||state.code;applyCoverage();render()}).catch(error=>{console.error("revenue deep dive",error);document.querySelector("#hundred-flow").innerHTML=`<p class="transfer-unavailable">${t("loadError")}</p>`})});
+  document.addEventListener("DOMContentLoaded",()=>{translateStatic();document.querySelector("#revenue-currency").addEventListener("change",event=>{state.currency=event.target.value;if(state.data){renderEvidence(state.data.countries[state.code]);renderFlow(state.data.countries[state.code])}});document.querySelector("#revenue-cash-example").addEventListener("click",()=>{state.cashExample=!state.cashExample;state.source=state.cashExample?"vat":null;state.recipient=null;renderFlow(state.data.countries[state.code])});document.querySelector("#revenue-motion").addEventListener("click",event=>{state.playing=!state.playing;state.flow?.setPlaying(state.playing);event.currentTarget.setAttribute("aria-pressed",String(!state.playing));event.currentTarget.textContent=state.playing?(state.lang==="en"?"Pause motion":"Pozastavit pohyb"):(state.lang==="en"?"Resume motion":"Obnovit pohyb")});fetch("/api/v1/revenue/current").then(response=>{if(!response.ok)throw new Error(response.status);return response.json()}).then(data=>{state.data=data;Object.values(data.countries).forEach(profile=>{if(profile.tax_total_source)profile.tax_total_source.source_url=sourceURL(profile.tax_total_source)});state.code=new URLSearchParams(location.search).get("code")||state.code;applyCoverage();render()}).catch(error=>{console.error("revenue deep dive",error);document.querySelector("#hundred-flow").innerHTML=`<p class="transfer-unavailable">${t("loadError")}</p>`})});
 })();

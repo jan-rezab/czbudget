@@ -1,59 +1,32 @@
-# Revenue visual candidate — preparation only
+# Revenue deep dive — prepared, not deployed
 
-27 September 2026. User prohibited push and deployment; these remain prohibited.
+The page reads the verified private release `7e5269b3-8555-46a8-a21d-4c3ff535e3b7` through `/api/v1/revenue/current`. The serving store checks its immutable generation, SHA-256, size and country eligibility before returning it. No loader runs during a website build.
 
-The page adapter now reads `/api/v1/revenue/current`, backed by a generation-pinned,
-SHA-verified private GCS export. Web builds and runtime never query BigQuery or
-invoke loaders. Export code lives in the dedicated data branch, not this checkout.
+Private serving export build `b79b7945-8dbc-4fc8-9105-c633547a71ee` succeeded on 27 September 2026, 12:01:01–12:02:12 UTC. Export size is 1,770,965 bytes, SHA-256 `32f78a71107059f96d48dc0214e6bf2a21fc1ed91452d46c7504291ec39cfbe3`. Its private atomic pointer is `processing-runs/revenue-serving/current.json`. The approved runtime reader grant covers only that serving prefix.
 
-The shared `funding-flow` renderer owns animated paths and source/recipient cards.
-Clicking a source shows only independently supplied tax-specific allocations.
-Unknown allocations remain unavailable; aggregate transfers never allocate VAT.
-Reported ESA counterpart payments can produce separate dashed onward routes.
-Motion pauses for reduced-motion, hidden tabs, offscreen charts and user pause.
-The same amounts and primary source URLs appear in an accessible value table.
+## Country and source boundaries
 
-Czech cash examples use cited 2023 figures and have a separate date/basis note.
-Other countries use their actual OECD tax year and recipient levels. German VAT
-cash shares apply only to 2023. Original nominal OECD source observations are
-available when a tax source is selected. Transfer/grant and health-financing
-observations retain units, periods and bases in separate tables; overlapping health
-parents/children are never summed into taxes. Tax percentages and the residual
-category are labelled as calculations. Incomplete tax pies are withheld, missing
-observations are not zero, and low-coverage countries are excluded.
+The switcher offers 64 eligible partial country profiles; 94 low-coverage geographies remain excluded. Every page shows its periods, recipient reconciliation coverage, missing sectors and source limitations. OECD attribution is not a source-to-recipient cash matrix. A local transfer percentage is never applied to VAT. WOFI grants and ESA accrual transfers remain distinct evidence.
 
-## Verified locally
+Czech cash examples use cited 2023 receipts, with sources and gross recipient totals visible. Source selection reveals the independently reported tax allocation. Health premiums remain separate from social insurance. Clicking local budgets shows own receipts, transfers, alternative adjusted totals and the residual between reported rounded components. Gross recipient totals overlap through transfers and must not be added.
 
-- 20 focused cloud-model tests; 33 JavaScript/API/renderer/release contracts.
-- Generated shared assets and coverage registry validated; no new page-owned SVG.
-- Built-in browser with explicitly synthetic country fixtures: Czech VAT selected
-  municipal amount146.56/share25.84; German VAT local share2.8; Australian unknown
-  allocation remains unavailable; pause; keyboard arrows/Escape; country filter;
-  excluded-USA URL disclosure;390px viewport has no horizontal overflow.
-- Ancillary OECD rate/trend requests return404 in the deliberately sparse synthetic
-  preview. They are not evidence of failure or coverage in the real serving data.
-- Cloud-loaded serving data must still be independently verified after publication;
-  synthetic fixtures are never production source observations.
+German 2023 VAT is an explicitly dated optional example beside its 2024 OECD profile. Rounded allocation percentages are retained without fabricating recipient currency amounts. Other countries show only separately evidenced tax routes; missing tax allocations remain unavailable.
 
-## Current data status
+## EUR display and reconciliation
 
-Verified private backfill release `7e5269b3-8555-46a8-a21d-4c3ff535e3b7` offers
-64 countries as partial profiles and excludes94geographies. WOFI grant observations
-cover85countries; ESA transfer observations cover30. These are distinct measures.
-Original71,517 observations/provenance retained unchanged in the91,349-row release.
+The cloud export snapshots and hashes the direct ECB annual-average series, 2015–2025 selection: 362 reported currency/year observations for 36 currencies. Original decimal text, series key and status are retained. Source: https://data-api.ecb.europa.eu/service/data/EXR/A..EUR.SP00.A?startPeriod=2015&endPeriod=2025&format=csvdata
 
-Runtime export-only read permission was explicitly approved after automatic
-review required clarification, and applied. No raw/warehouse access was added.
-The initial serving export failed its8MiB limit before publication. Compact source
-references preserve observations while avoiding duplicated URLs; source context
-remains lossless in the warehouse.20focused model tests pass. The corrected export
-needs a completion receipt; another build awaits fresh extension approval.
+Calculated EUR = original amount / the same-year currency-per-EUR rate. Czech 2023 cash cards and budget components can be displayed in EUR; original CZK figures remain visible, shares unchanged, residuals converted with the same rate. OECD nominal observations with identified currencies have a calculated EUR detail when a tax is selected. EUR observations require no FX. No nearest-year fallback, PPP conversion or guessed historical currency basis is allowed. ESA MIO_NAC observations lack verified currency metadata here and remain visibly unavailable for EUR conversion.
 
-## Release prerequisites still pending
+## Verification
 
-1. Corrected private serving export completion receipt and real-data page check.
-2. Full website verification in the canonical production build after an authorized
-   main push. Current-main changes were merged without conflicts; the selector
-   correctly chooses the full lane because server/routing changed. No website
-   Cloud Build or deployment was submitted during this preparation.
-3. Explicit user authorization to push/deploy. This file does not authorize it.
+- 23 Python data/export/FX tests pass.
+- 38 focused JavaScript model/API/renderer/registry/release/verification tests pass; ownership, release contracts and diff checks pass.
+- Built-in browser verified real private data, the 64-option switcher, synchronized hero and sticky filters, Czech VAT in EUR, local-budget residuals, German historical VAT, Australian missing allocation and pause.
+- Desktop switcher ends at the right viewport edge. At 390px, the right sticky selector remains visible and page scroll width is exactly 390px after correcting the historical chart's grid overflow.
+- Local preview used existing operator credentials. Runtime impersonation was denied; no Token Creator permission was granted. The exact prefix-scoped runtime binding was verified separately, but an actual runtime smoke check is still required in the normal deployment lane.
+- Sparse checkout omits ancillary OECD rate/trend packs; their local preview 404s are not evidence of production source coverage. No data pack was restored locally.
+
+## Remaining release gates
+
+The normal full website verification and runtime smoke check must pass during the authorized release process. No website build, push or deployment was made. These preparation checks do not replace that release gate.
