@@ -1,0 +1,115 @@
+{
+  "createTime": "2026-09-27T00:15:22.527148705Z",
+  "failureInfo": {
+    "detail": "Build step failure: build step 0 \"python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f\" failed: step exited with non-zero status: 1",
+    "type": "USER_BUILD_STEP"
+  },
+  "finishTime": "2026-09-27T00:21:52.084544Z",
+  "id": "e2063f35-3eea-46e5-b9d5-e3d39912a5ae",
+  "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=europe-west4/e2063f35-3eea-46e5-b9d5-e3d39912a5ae?project=258433468858",
+  "name": "projects/258433468858/locations/europe-west4/builds/e2063f35-3eea-46e5-b9d5-e3d39912a5ae",
+  "options": {
+    "logging": "CLOUD_LOGGING_ONLY",
+    "pool": {}
+  },
+  "projectId": "czbudget-janrezab",
+  "queueTtl": "1800s",
+  "results": {
+    "buildStepImages": [
+      "sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f"
+    ],
+    "buildStepOutputs": [
+      ""
+    ],
+    "buildStepResults": {
+      "acquire-stage-validate-publish-original-provider-records": {}
+    }
+  },
+  "serviceAccount": "projects/czbudget-janrezab/serviceAccounts/psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "source": {
+    "storageSource": {
+      "bucket": "czbudget-janrezab-data-layers",
+      "generation": "1790468122334494",
+      "object": "cloudbuild-sources/hdr-source-batches/1790468122.040944-e250a5fa091a4db999c3c2a2d980aba1.tgz"
+    }
+  },
+  "sourceProvenance": {
+    "fileHashes": {
+      "gs://czbudget-janrezab-data-layers/cloudbuild-sources/hdr-source-batches/1790468122.040944-e250a5fa091a4db999c3c2a2d980aba1.tgz#1790468122334494": {
+        "fileHash": [
+          {
+            "type": "MD5",
+            "value": "D-YwdJgdxPXE5bTTxKi7jA=="
+          },
+          {
+            "type": "SHA256",
+            "value": "mReyw4YPxVrOvv428UAU84ushN3gdFNqCBrhUHqfdOU="
+          }
+        ]
+      }
+    },
+    "resolvedStorageSource": {
+      "bucket": "czbudget-janrezab-data-layers",
+      "generation": "1790468122334494",
+      "object": "cloudbuild-sources/hdr-source-batches/1790468122.040944-e250a5fa091a4db999c3c2a2d980aba1.tgz"
+    }
+  },
+  "startTime": "2026-09-27T00:15:23.493528367Z",
+  "status": "FAILURE",
+  "steps": [
+    {
+      "args": [
+        "-ceu",
+        "pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt\npip install --quiet --disable-pip-version-check pyarrow==21.0.0\npython pipeline/undp_cloud/cloud_fixture_contract.py\npython pipeline/undp_cloud/report_sources.py --loader-sha \"${LOADER_SHA}\" --source-group \"${SOURCE_GROUP}\" --resume-run \"${RESUME_RUN}\" --wid-shard-index \"${WID_SHARD_INDEX}\" --wid-shard-count \"${WID_SHARD_COUNT}\"\n"
+      ],
+      "entrypoint": "bash",
+      "env": [
+        "BUILD_ID=e2063f35-3eea-46e5-b9d5-e3d39912a5ae",
+        "PYTHONUNBUFFERED=1",
+        "SOURCE_GROUP=inequality",
+        "RESUME_RUN=",
+        "LOADER_SHA=09df13a139c53b300c8fc288ff96f4962a4c84b4",
+        "WID_SHARD_INDEX=1",
+        "WID_SHARD_COUNT=4"
+      ],
+      "exitCode": 1,
+      "id": "acquire-stage-validate-publish-original-provider-records",
+      "name": "python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f",
+      "pullTiming": {
+        "endTime": "2026-09-27T00:15:34.589817538Z",
+        "startTime": "2026-09-27T00:15:30.411932693Z"
+      },
+      "status": "FAILURE",
+      "timing": {
+        "endTime": "2026-09-27T00:21:41.859700759Z",
+        "startTime": "2026-09-27T00:15:30.411932693Z"
+      }
+    }
+  ],
+  "substitutions": {
+    "_LOADER_SHA": "09df13a139c53b300c8fc288ff96f4962a4c84b4",
+    "_RESUME_RUN": "",
+    "_SOURCE_GROUP": "inequality",
+    "_WID_SHARD_COUNT": "4",
+    "_WID_SHARD_INDEX": "1"
+  },
+  "tags": [
+    "plane-data",
+    "hdr-original-sources"
+  ],
+  "timeout": "2400s",
+  "timing": {
+    "BUILD": {
+      "endTime": "2026-09-27T00:21:41.859917089Z",
+      "startTime": "2026-09-27T00:15:29.365933508Z"
+    },
+    "FETCHSOURCE": {
+      "endTime": "2026-09-27T00:15:29.365340348Z",
+      "startTime": "2026-09-27T00:15:24.383159228Z"
+    },
+    "STORAGE_SOURCE": {
+      "endTime": "2026-09-27T00:15:29.365340348Z",
+      "startTime": "2026-09-27T00:15:24.383159228Z"
+    }
+  }
+}
