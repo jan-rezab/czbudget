@@ -1,13 +1,13 @@
 """Tiny synthetic source-fidelity tests; no local bulk or cloud SDK needed."""
-import ast,codecs,csv,io,json,tempfile,tarfile,zipfile,unittest,re,sys,types
+import ast,codecs,csv,io,json,tempfile,tarfile,zipfile,unittest,re,sys,types,hashlib
 from pathlib import Path
 from unittest.mock import patch
 from decimal import Decimal
 import openpyxl
 source=Path(__file__).with_name('report_sources.py').read_text()
 tree=ast.parse(source)
-selected=ast.Module(body=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in {'members','records','archive_metadata_member','claim_source_text','decode','csv_encoding'}],type_ignores=[])
-ns=dict(re=re,codecs=codecs,csv=csv,io=io,json=json,Path=Path,Decimal=Decimal,openpyxl=openpyxl,tarfile=tarfile,zipfile=zipfile)
+selected=ast.Module(body=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in {'members','records','archive_metadata_member','claim_source_text','decode','csv_encoding','extract_layout'}],type_ignores=[])
+ns=dict(hashlib=hashlib,re=re,codecs=codecs,csv=csv,io=io,json=json,Path=Path,Decimal=Decimal,openpyxl=openpyxl,tarfile=tarfile,zipfile=zipfile)
 exec(compile(selected,'source_adapters','exec'),ns)
 records=ns['records']
 class SourceFidelity(unittest.TestCase):
@@ -106,6 +106,24 @@ class SourceFidelity(unittest.TestCase):
   self.assertEqual(rows[0][2]['missing_ranges']['answer'],[99.])
   self.assertEqual([r[1] for r in rows[1:]],[1,2,3])
   self.assertEqual(rows[2][2]['answer'],99.);self.assertIsNone(rows[3][2]['answer'])
+ def test_layout_zip_requires_exact_member_preserving_raw_hash(self):
+  output=io.BytesIO()
+  with zipfile.ZipFile(output,'w') as archive:archive.writestr('layout.SAS','INPUT _STATE 1-2;')
+  data=output.getvalue();meta=dict(sha256=hashlib.sha256(data).hexdigest())
+  text=ns['extract_layout'](data,dict(layout_member='layout.SAS'),meta)
+  self.assertEqual(text,'INPUT _STATE 1-2;')
+  self.assertEqual(meta['sha256'],hashlib.sha256(data).hexdigest())
+  self.assertEqual(meta['selected_member_sha256'],hashlib.sha256(text.encode()).hexdigest())
+  with self.assertRaisesRegex(ValueError,'identity'):ns['extract_layout'](data,dict(layout_member='wrong.SAS'),{})
+ def test_brfss_delegation_requires_reviewed_layout_binding(self):
+  calls=[]
+  def rows(*args):calls.append(args);yield 'native.ASC',0,dict(kind='header',columns=['state'])
+  fake=types.SimpleNamespace(rows_from_archive=rows)
+  binding=dict(layout_text='INPUT',expected_rows=1,expected_widths=[2],expected_columns=1,layout_meta={'sha256':'a'*64})
+  with tempfile.TemporaryDirectory() as d,patch.dict(sys.modules,{'brfss_ascii':fake}):
+   p=Path(d)/'x.zip';self.assertEqual(len(list(records(p,'brfss_ascii',Path(d),source_binding=binding))),1)
+   self.assertEqual(calls[0][1:],('INPUT',1,[2],1,{'sha256':'a'*64}))
+   with self.assertRaisesRegex(ValueError,'binding'):list(records(p,'brfss_ascii',Path(d)))
  def test_childlight_is_data_not_executable_code(self):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'x.js';p.write_text('var mapData = {"features":[{"properties":{"py_dpos":".."}}]};')

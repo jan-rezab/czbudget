@@ -67,9 +67,66 @@ def archive_metadata_member(name):
  parts=Path(name).parts
  return '__MACOSX' in parts or Path(name).name.startswith('._') or Path(name).name=='.DS_Store'
 
-def records(path,fmt,root,max_member_bytes=2_000_000_000):
+def extract_layout(data,entry,metadata):
+ if data.startswith(b'PK'):
+  selected=entry.get('layout_member')
+  if not selected:raise ValueError('Verified SAS archive member required')
+  with zipfile.ZipFile(io.BytesIO(data)) as archive:
+   names=archive.namelist()
+   if len(names)!=len(set(names)) or selected not in names:raise ValueError('SAS archive member identity mismatch')
+   member=archive.getinfo(selected)
+   if member.file_size>min(entry.get('layout_max_member_bytes',2_000_000),2_000_000):raise ValueError('SAS member exceeds reviewed bound')
+   text_bytes=archive.read(selected)
+   metadata['archive_members']=[dict(name=m.filename,bytes=m.file_size) for m in archive.infolist()]
+   metadata['selected_member']=selected;metadata['selected_member_sha256']=hashlib.sha256(text_bytes).hexdigest()
+ else:
+  if entry.get('layout_member'):raise ValueError('Expected SAS ZIP archive absent')
+  text_bytes=data
+ return decode(text_bytes)
+
+def acquire_layout(bucket,prefix,entry,root,resume_run=None):
+ """Pin a small original SAS layout alongside the immutable data archive."""
+ sid=entry['source_id'];url=entry['layout_url'];name=f'{prefix}/raw/{sid}.layout.sas.metadata.json'
+ checkpoint=bucket.blob(name);saved=None
+ if checkpoint.exists():saved=json.loads(checkpoint.download_as_bytes())
+ elif resume_run:
+  prior=bucket.blob(f'processing-runs/hdr-report-sources/{resume_run}/raw/{sid}.layout.sas.metadata.json')
+  if prior.exists():
+   candidate=json.loads(prior.download_as_bytes())
+   if candidate.get('url')==url:saved=candidate
+ if saved is None:
+  request=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; PublicSpendingData source ingestion)'})
+  with urllib.request.urlopen(request,timeout=60) as response:
+   data=response.read(2_000_001)
+   if len(data)>2_000_000:raise ValueError('Source SAS layout exceeds 2MB bound')
+   content_type=response.headers.get('Content-Type','')
+   if 'text/html' in content_type or data.lstrip().lower().startswith(b'<!doctype html'):raise ValueError('Provider returned HTML instead of SAS layout')
+   final_url=response.url
+  digest=hashlib.sha256(data).hexdigest()
+  if entry.get('layout_expected_sha256') and digest!=entry['layout_expected_sha256']:raise ValueError('Reviewed source SAS archive SHA256 changed')
+  blob=bucket.blob(f'{prefix}/raw/{sid}.layout.sas')
+  if blob.exists():
+   blob.reload()
+   if hashlib.sha256(blob.download_as_bytes(checksum='auto')).hexdigest()!=digest:raise ValueError('Existing immutable SAS raw differs')
+  else:blob.upload_from_string(data,if_generation_match=0,checksum='auto');blob.reload()
+  saved=dict(url=url,final_url=final_url,sha256=digest,generation=str(blob.generation),raw_uri=f'gs://{BUCKET}/{blob.name}',bytes=len(data),retrieved_at=stamp(),content_type=content_type)
+ else:
+  if saved['url']!=url:raise ValueError('SAS layout checkpoint identity mismatch')
+  if not saved['raw_uri'].startswith('gs://'+BUCKET+'/processing-runs/hdr-report-sources/'):raise ValueError('Untrusted layout raw URI')
+  blob=bucket.blob(saved['raw_uri'].split('/',3)[3],generation=int(saved['generation']))
+  data=blob.download_as_bytes(checksum='auto')
+  if len(data)>2_000_000 or hashlib.sha256(data).hexdigest()!=saved['sha256']:raise ValueError('SAS layout immutable checksum mismatch')
+ if entry.get('layout_expected_sha256') and saved['sha256']!=entry['layout_expected_sha256']:raise ValueError('Reviewed SAS layout checkpoint hash differs')
+ if not checkpoint.exists():upload(bucket,name,(dump(saved)+'\n').encode())
+ return extract_layout(data,entry,saved),saved
+
+def records(path,fmt,root,max_member_bytes=2_000_000_000,source_binding=None):
  """Yield (member, original row ordinal, source JSON). Raw always retained."""
- if fmt=='wid_csv':
+ if fmt=='brfss_ascii':
+  from brfss_ascii import rows_from_archive
+  if source_binding is None:raise ValueError('Verified SAS layout binding required')
+  yield from rows_from_archive(path,source_binding['layout_text'],source_binding['expected_rows'],source_binding['expected_widths'],source_binding['expected_columns'],source_binding['layout_meta'])
+ elif fmt=='wid_csv':
   with open(path,encoding='utf-8-sig',newline='') as f:
    reader=csv.DictReader(f,delimiter=';');seen=0;accepted=0
    required={'country','variable','percentile','year','value','age','pop'}
@@ -329,7 +386,7 @@ def main():
        f.write(data);h.update(data);md5.update(data)
      if 'text/html' in (e['content_type'] or '') and e['format'] not in {'html','verified_claim_html'}:raise ValueError('Provider returned HTML instead of data')
      with open(path,'rb') as f:magic=f.read(32)
-     if e['format'] in {'zip','xlsx'} and not magic.startswith(b'PK'):raise ValueError('Invalid ZIP/XLSX magic')
+     if e['format'] in {'zip','xlsx','brfss_ascii'} and not magic.startswith(b'PK'):raise ValueError('Invalid ZIP/XLSX magic')
      if e['format']=='parquet' and not magic.startswith(b'PAR1'):raise ValueError('Invalid Parquet magic')
      if e['format']=='pdf' and not magic.startswith(b'%PDF'):raise ValueError('Invalid PDF magic')
      if e.get('expected_sha256') and h.hexdigest()!=e['expected_sha256']:raise ValueError('Provider SHA256 mismatch')
@@ -361,18 +418,22 @@ def main():
      if not processed.exists():upload(bucket,processed.name,(dump(e)+'\n').encode())
      print(dump({'event':'source_resumed','source_id':sid,'rows':count,'parser_git_sha':e.get('parser_git_sha')}),flush=True)
      continue
-    e['members']=[{'name':n,'bytes':b} for n,b in members(path,e['format'])] if e.get('parse_mode')!='raw_only' else [{'name':path.name,'bytes':path.stat().st_size,'archive_scan':'pending_adapter'}]
+    parser_binding=None
+    if e['format']=='brfss_ascii':
+     layout_text,layout_meta=acquire_layout(bucket,prefix,e,root,a.resume_run);e['layout_meta']=layout_meta
+     parser_binding=dict(layout_text=layout_text,layout_meta=layout_meta,expected_rows=e['expected_rows'],expected_widths=e['expected_widths'],expected_columns=e['expected_columns'])
+    e['members']=[{'name':n,'bytes':b} for n,b in members(path,'zip' if e['format']=='brfss_ascii' else e['format'])] if e.get('parse_mode')!='raw_only' else [{'name':path.name,'bytes':path.stat().st_size,'archive_scan':'pending_adapter'}]
     names=[m['name'] for m in e['members']]
     if len(names)!=len(set(names)):raise ValueError('Duplicate archive member names')
     supported={'csv','tsv','xlsx','parquet','xpt','dta','json','sav'}
     e['archive_metadata_members']=[dict(m,reason='archive_filesystem_metadata') for m in e['members'] if archive_metadata_member(m['name'])] if e['format'] in {'zip','tar.gz'} else []
     e['unparsed_members']=[m for m in e['members'] if archive_metadata_member(m['name']) or Path(m['name']).suffix.lower().lstrip('.') not in supported] if e['format'] in {'zip','tar.gz'} else []
     with gzip.open(out,'wt',encoding='utf-8',compresslevel=1) as f:
-     for member,n,row in ([] if e.get('parse_mode')=='raw_only' else records(path,e['format'],root,e.get('max_member_bytes',2_000_000_000))):
+     for member,n,row in ([] if e.get('parse_mode')=='raw_only' else records(path,e['format'],root,e.get('max_member_bytes',2_000_000_000),parser_binding)):
       if count==0 and e.get('expected_header') and row.get('columns')!=e['expected_header']:raise ValueError('Declared provider CSV header changed')
       preview_record(preview,member,row)
       f.write(dump(dict(release_id=rid,source_id=sid,member=member,row_number=n,record_json=dump(row),source_url=e['url'],source_sha256=e['sha256']))+'\n');count+=1
-    if e['format'] in {'csv','worldbank_json','xlsx','parquet','zip','js','wid_csv'} and not count and not e.get('parse_mode'):
+    if e['format'] in {'csv','worldbank_json','xlsx','parquet','zip','js','wid_csv','brfss_ascii'} and not count and not e.get('parse_mode'):
      if e['format']!='zip':raise ValueError('Dataset produced no source records')
     e['accepted_records']=count;e['rejected_records']=0;e['deduplicated_records']=0
     e['processing_status']='source_records_validated' if count else 'raw_dataset_held_pending_adapter' if e.get('parse_mode')=='raw_only' else 'raw_document_preserved'
