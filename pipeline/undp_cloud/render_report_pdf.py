@@ -21,6 +21,7 @@ from reportlab.graphics.shapes import Drawing
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.graphics.charts.lineplots import LinePlot
 from reportlab.graphics.charts.barcharts import HorizontalBarChart
+from report_compaction import expanded_rows
 
 PRIVATE='czbudget-janrezab-data-layers'
 PUBLIC='czbudget-janrezab-public-snapshots'
@@ -39,7 +40,7 @@ def dump(value): return json.dumps(value,separators=(',',':'),ensure_ascii=False
 
 
 def selected(chart):
-    rows=chart.get('rows',[])
+    rows=sorted(expanded_rows(chart),key=period_order)
     if chart.get('status') not in {'ready','historical'}:return [],'Unavailable original report object'
     if any(r.get('country')=='CZE' for r in rows):return [r for r in rows if r.get('country')=='CZE'],'Czechia'
     if any(r.get('country')=='SURVEY21' for r in rows):return [r for r in rows if r.get('country')=='SURVEY21'],'Separate 21-country survey pool - Czechia was not surveyed'
@@ -54,6 +55,25 @@ def xvalue(row):
     except Exception:return None
 
 
+def period_order(row):
+    value=xvalue(row)
+    return (0,value,str(row.get('label',''))) if value is not None else (1,str(row.get('period',row.get('year',''))),str(row.get('label','')))
+
+
+def line_segments(rows,fields):
+    """Explicit null observations end a line; no inferred missing years."""
+    segments=[]
+    for index,field in enumerate(fields):
+        current=[]
+        for row in sorted(rows,key=period_order):
+            x=xvalue(row);value=row.get(field['key'])
+            if x is None or value is None:
+                if current:segments.append((index,current));current=[]
+            else:current.append((x,float(value)))
+        if current:segments.append((index,current))
+    return segments
+
+
 def plot(rows,fields,kind,cid):
     d=Drawing(490,225)
     if kind in {'bar','column','stacked','stacked_bar'}:
@@ -66,13 +86,17 @@ def plot(rows,fields,kind,cid):
         for i in range(len(fields)):chart.bars[i].fillColor=PALETTE[i%len(PALETTE)]
     else:
         chart=LinePlot();chart.x=48;chart.y=30;chart.width=410;chart.height=175
-        chart.data=[sorted([(xvalue(r),float(r[f['key']])) for r in rows if xvalue(r) is not None and r.get(f['key']) is not None]) for f in fields]
-        if any(not values for values in chart.data):return None
+        segments=line_segments(rows,fields)
+        if not segments:return None
+        chart.data=[values for _,values in segments]
         chart.joinedLines=0 if 'rupp' in cid else 1
-        if not chart.joinedLines:
-            from reportlab.graphics.widgets.markers import makeMarker
-            chart.lines[0].symbol=makeMarker('FilledCircle');chart.lines[0].symbol.size=2
-        for i in range(len(fields)):chart.lines[i].strokeColor=PALETTE[i%len(PALETTE)];chart.lines[i].strokeWidth=1
+        from reportlab.graphics.widgets.markers import makeMarker
+        for i,(field_index,values) in enumerate(segments):
+            chart.lines[i].strokeColor=PALETTE[field_index%len(PALETTE)];chart.lines[i].strokeWidth=1
+            if not chart.joinedLines or len(values)==1:
+                chart.lines[i].symbol=makeMarker('FilledCircle');chart.lines[i].symbol.size=2
+                chart.lines[i].symbol.fillColor=PALETTE[field_index%len(PALETTE)]
+                chart.lines[i].symbol.strokeColor=PALETTE[field_index%len(PALETTE)]
         chart.xValueAxis.labels.fontSize=7;chart.yValueAxis.labels.fontSize=7
     d.add(chart);return d
 
@@ -95,6 +119,7 @@ def build_pdf(payload,output):
     source_ids=sorted({s.get('source_id','unknown') for c in payload['charts'] for s in c.get('source_refs',[])})
     add(', '.join(source_ids),'SmallSource')
     add('Values in the tables preserve the decimal tokens serialized in the verified public report JSON; no additional rounding is applied. These public numbers may have been normalized from source decimals. Full original source precision, metadata and source rows remain in the referenced source releases and available CSV exports. Plot tick labels are visual scales, not replacement observations.')
+    add('Only explicitly recorded null periods are restored from lossless missing-period ranges. Missing values remain in the exact tables and break plotted lines; unknown gaps are never filled or inferred. Original row dictionaries, survey weights, valid shares and row-level source metadata are retained in the separate chart_details download and original-row CSV audit. These details are not replaced by chart percentages.')
     add('Czechia panels use only CZE observations. Global/source-category context is labelled separately. The 21-country survey pool is never a Czechia or world-population estimate. Missing source definitions and original figure recreations remain in the coverage ledger.')
     add('Downloads from verified snapshot','Heading2')
     for key,url in payload.get('downloads',{}).items():add(key+': '+str(url or 'Not available'),'SmallSource')
@@ -107,6 +132,8 @@ def build_pdf(payload,output):
         add(c['title'],'Heading1');add(scope,'Heading2')
         add('Unit: '+c['unit']+' | Latest source observation: '+str(c.get('latest_period')))
         add('Method: '+en(c['method']));add('Denominator / coverage: '+en(c['denominator']))
+        if c.get('row_details_download'):
+            add('Original row metadata audit: '+str(payload.get('downloads',{}).get(c['row_details_download']) or 'Not available')+' | Includes original survey weighted/unweighted denominators and valid-share fields where supplied by the source.','SmallSource')
         for s in c['source_refs']:
             add('Source '+s.get('source_id','')+' | edition '+str(s['vintage'])+' | table '+str(s['table'])+' | release '+str(s['release_id'])+' | SHA256 '+s.get('sha256','')+' | '+s['url'],'SmallSource')
         if c.get('source_coverage'):add('Additional source coverage: '+json.dumps(c['source_coverage'],ensure_ascii=False,default=str),'SmallSource')
