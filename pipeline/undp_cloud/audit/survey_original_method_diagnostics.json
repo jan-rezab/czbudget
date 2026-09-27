@@ -1,0 +1,188 @@
+{
+  "schema_version": "1.0.0",
+  "scope": "Small aggregate diagnostic only; no new source query or respondent exports",
+  "basis_private_report": {
+    "release_id": "369c3550-0253-40c7-9cf8-8b1acf944b17",
+    "sha256": "5b0ade36aa00f69a7c9336bc73bcd0f3f7d51ed08ed8b7830b2a8b105b25e7ef"
+  },
+  "limitations": "Diagnostic reconstructs weighted country numerators from reviewed floating display percentages and retained exact denominators. Native warehouse query must validate final output. Numeric agreement is not proof of original pooling or graphic recreation.",
+  "country_mapping": {
+    "Australia": "Very high",
+    "Bangladesh": "Low and medium",
+    "Brazil": "High",
+    "China": "High",
+    "Comoros": "Low and medium",
+    "Egypt": "High",
+    "Fiji": "High",
+    "Germany": "Very high",
+    "Greece": "Very high",
+    "India": "Low and medium",
+    "Indonesia": "High",
+    "Japan": "Very high",
+    "Kyrgyzstan": "High",
+    "Nigeria": "Low and medium",
+    "Pakistan": "Low and medium",
+    "Republic of Korea": "Very high",
+    "Russia": "Very high",
+    "South Africa": "High",
+    "Tunisia": "High",
+    "Turkey": "Very high",
+    "United States": "Very high"
+  },
+  "classification_definition": {
+    "source": "HDR2025 Readers Guide PDF284/printed270",
+    "url": "https://hdr.undp.org/system/files/documents/global-report-document/hdr2025reporten.pdf#page=284",
+    "thresholds": {
+      "low": "<0.550",
+      "medium": "0.550≤HDI<0.700",
+      "high": "0.700≤HDI<0.800",
+      "very_high": "HDI≥0.800"
+    },
+    "used_period": "2023",
+    "report_survey_group_vintage": "unconfirmed"
+  },
+  "rows": [
+    {
+      "question": "Q14",
+      "field": "current",
+      "hdi_group": "Low and medium",
+      "period": "2024-11/2025-01 fieldwork",
+      "unit": "percent",
+      "geography": "Pooled source survey countries in given2023HDIgroup",
+      "country_codes": [
+        "BGD",
+        "COM",
+        "IND",
+        "NGA",
+        "PAK"
+      ],
+      "denominator": "Sum across countries of valid answer weight / country total usable weight; control score8–10 numerator",
+      "reported_source_value": "44.6",
+      "diagnostic_calculated": "44.62458690445938771682310928",
+      "reported_precision_match": true,
+      "normalization_method_status": "inferred numeric agreement; not independently documented original estimator",
+      "source_report_url": "https://hdr.undp.org/system/files/documents/global-report-document/hdr2025reporten.pdf#page=61"
+    },
+    {
+      "question": "Q14",
+      "field": "current",
+      "hdi_group": "High",
+      "period": "2024-11/2025-01 fieldwork",
+      "unit": "percent",
+      "geography": "Pooled source survey countries in given2023HDIgroup",
+      "country_codes": [
+        "BRA",
+        "CHN",
+        "EGY",
+        "FJI",
+        "IDN",
+        "KGZ",
+        "ZAF",
+        "TUN"
+      ],
+      "denominator": "Sum across countries of valid answer weight / country total usable weight; control score8–10 numerator",
+      "reported_source_value": "56.5",
+      "diagnostic_calculated": "56.47553216611998516174110285",
+      "reported_precision_match": true,
+      "normalization_method_status": "inferred numeric agreement; not independently documented original estimator",
+      "source_report_url": "https://hdr.undp.org/system/files/documents/global-report-document/hdr2025reporten.pdf#page=61"
+    },
+    {
+      "question": "Q14",
+      "field": "current",
+      "hdi_group": "Very high",
+      "period": "2024-11/2025-01 fieldwork",
+      "unit": "percent",
+      "geography": "Pooled source survey countries in given2023HDIgroup",
+      "country_codes": [
+        "AUS",
+        "DEU",
+        "GRC",
+        "JPN",
+        "KOR",
+        "RUS",
+        "TUR",
+        "USA"
+      ],
+      "denominator": "Sum across countries of valid answer weight / country total usable weight; control score8–10 numerator",
+      "reported_source_value": "45.4",
+      "diagnostic_calculated": "45.41403629196752298873896607",
+      "reported_precision_match": true,
+      "normalization_method_status": "inferred numeric agreement; not independently documented original estimator",
+      "source_report_url": "https://hdr.undp.org/system/files/documents/global-report-document/hdr2025reporten.pdf#page=61"
+    },
+    {
+      "question": "Q15",
+      "field": "future",
+      "hdi_group": "Low and medium",
+      "period": "2024-11/2025-01 fieldwork",
+      "unit": "percent",
+      "geography": "Pooled source survey countries in given2023HDIgroup",
+      "country_codes": [
+        "BGD",
+        "COM",
+        "IND",
+        "NGA",
+        "PAK"
+      ],
+      "denominator": "Sum across countries of valid answer weight / country total usable weight; control score8–10 numerator",
+      "reported_source_value": "45.8",
+      "diagnostic_calculated": "45.78423581190256941550525897",
+      "reported_precision_match": true,
+      "normalization_method_status": "inferred numeric agreement; not independently documented original estimator",
+      "source_report_url": "https://hdr.undp.org/system/files/documents/global-report-document/hdr2025reporten.pdf#page=61"
+    },
+    {
+      "question": "Q15",
+      "field": "future",
+      "hdi_group": "High",
+      "period": "2024-11/2025-01 fieldwork",
+      "unit": "percent",
+      "geography": "Pooled source survey countries in given2023HDIgroup",
+      "country_codes": [
+        "BRA",
+        "CHN",
+        "EGY",
+        "FJI",
+        "IDN",
+        "KGZ",
+        "ZAF",
+        "TUN"
+      ],
+      "denominator": "Sum across countries of valid answer weight / country total usable weight; control score8–10 numerator",
+      "reported_source_value": "57.5",
+      "diagnostic_calculated": "57.47159877711864545995382732",
+      "reported_precision_match": true,
+      "normalization_method_status": "inferred numeric agreement; not independently documented original estimator",
+      "source_report_url": "https://hdr.undp.org/system/files/documents/global-report-document/hdr2025reporten.pdf#page=61"
+    },
+    {
+      "question": "Q15",
+      "field": "future",
+      "hdi_group": "Very high",
+      "period": "2024-11/2025-01 fieldwork",
+      "unit": "percent",
+      "geography": "Pooled source survey countries in given2023HDIgroup",
+      "country_codes": [
+        "AUS",
+        "DEU",
+        "GRC",
+        "JPN",
+        "KOR",
+        "RUS",
+        "TUR",
+        "USA"
+      ],
+      "denominator": "Sum across countries of valid answer weight / country total usable weight; control score8–10 numerator",
+      "reported_source_value": "32.1",
+      "diagnostic_calculated": "32.10286350282087421586330470",
+      "reported_precision_match": true,
+      "normalization_method_status": "inferred numeric agreement; not independently documented original estimator",
+      "source_report_url": "https://hdr.undp.org/system/files/documents/global-report-document/hdr2025reporten.pdf#page=61"
+    }
+  ],
+  "validation": {
+    "six_published_values_match_one_decimal": true,
+    "original_recreation_claimed": false
+  }
+}
