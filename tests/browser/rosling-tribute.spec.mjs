@@ -113,9 +113,19 @@ test('years glide slowly with their labels and preserve position when interrupte
   const transforms=await page.locator('#rosling-health-wealth [data-bubble-id="CZE"], #rosling-health-wealth [data-bubble-follow="CZE"]').evaluateAll(els=>els.map(el=>getComputedStyle(el).transform));
   expect(transforms).toHaveLength(3);expect(new Set(transforms).size).toBe(1);
   await page.locator('[data-play]').click();
-  const before=await position();
-  await page.locator('#rosling-year').evaluate(el=>{el.value='2022';el.dispatchEvent(new Event('input',{bubbles:true}));});
-  const after=await position();expect(Math.hypot(after.x-before.x,after.y-before.y)).toBeLessThan(1);
+  // Sample the interruption synchronously: separate browser calls let the
+  // running animation advance, which measures elapsed travel rather than a jump.
+  const interruption=await page.locator('#rosling-year').evaluate(el=>{
+    const sample=()=>{
+      const circle=document.querySelector('#rosling-health-wealth circle[data-bubble-id="CZE"]');
+      const m=new DOMMatrixReadOnly(getComputedStyle(circle).transform);
+      return {x:Number(circle.getAttribute('cx'))+m.m41,y:Number(circle.getAttribute('cy'))+m.m42};
+    };
+    const before=sample();
+    el.value='2022';el.dispatchEvent(new Event('input',{bubbles:true}));
+    return {before,after:sample()};
+  });
+  expect(Math.hypot(interruption.after.x-interruption.before.x,interruption.after.y-interruption.before.y)).toBeLessThan(1);
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.locator('#rosling-year').evaluate(el=>{el.value='2021';el.dispatchEvent(new Event('input',{bubbles:true}));});
   expect(await bubble.evaluate(el=>el.getAnimations().length)).toBe(0);
