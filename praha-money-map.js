@@ -1,7 +1,7 @@
 (function(root){
   'use strict';
   function mount(host,o){
-    const {T,esc,money,exact,percent,name,projectName,shownValue,plot,openRecord,loadPayments,monitor,link}=o;
+    const {T,esc,money,exact,percent,name,projectName,shownValue,plot,openRecord,openInvoice,loadPayments,monitor,link}=o;
     const params=new URLSearchParams(location.search);
     let route={mode:['services','economic','it'].includes(params.get('map'))?params.get('map'):'services',group:params.get('mapgroup')||'',cost:params.get('mapcost')||'',kind:['opex','capex'].includes(params.get('mapkind'))?params.get('mapkind'):'',project:params.get('mapproject')||'',vendor:params.get('mapsupplier')||''};
     let nodes=[],busy=false;
@@ -11,7 +11,7 @@
     function persist(){const u=new URL(location.href);for(const [key,value] of Object.entries({map:route.mode,mapgroup:route.group,mapcost:route.cost,mapkind:route.kind,mapproject:route.project,mapsupplier:route.vendor})){if(value)u.searchParams.set(key,value);else u.searchParams.delete(key);}history.replaceState(null,'',u);}
     function reset(mode,group=''){route={mode,group,cost:'',kind:'',project:'',vendor:''};persist();render();}
     function up(level){if(level==='root')return reset(route.mode);if(level==='group'){route.cost='';route.kind='';route.project='';route.vendor='';}if(level==='cost'){route.project='';route.vendor='';}if(level==='project')route.vendor='';persist();render();}
-    function inspect(row){const {state}=o.context();openRecord(row.counterparty||T('Invoice allocation','Fakturační alokace'),[[T('Amount','Částka'),exact(row.expenditure)],[T('Fiscal year / recorded date','Účetní rok / datum záznamu'),`${row.year} / ${row.date||'—'}`],[T('Supplier IČO','IČO dodavatele'),row.counterpartyId||T('Not supplied','Neuvedeno')],[T('Project','Akce'),`${row.event} · ${row.eventName}`],[T('Purpose / economic code','Paragraf / položka'),`${row.paragraphCode} / ${row.itemCode}`],[T('Description','Popis'),row.description||T('Not supplied','Neuvedeno')],[T('Original invoice number / contract ID','Původní číslo faktury / ID smlouvy'),T('Not captured','Není zachyceno')],[T('Allocation record ID','ID alokačního záznamu'),row.id],[T('Published release','Publikované vydání'),state.payments?.evidence?.releaseId],['SHA-256',state.payments?.evidence?.sourceSha256]],T('This allocation is linked through the source-reported project, budget codes and supplier ID. It is not an original invoice, a verified contract match or confirmation of bank settlement.','Alokace je propojena přes zdrojem uvedenou akci, rozpočtové kódy a IČO dodavatele. Nejde o originál faktury, ověřenou vazbu na smlouvu ani potvrzení bankovní platby.'),link('https://cityvizor.praha.eu/magistrat','CityVizor · Praha'));}
+    function inspect(row){const {state}=o.context();openInvoice(row,state.payments);}
     function activate(node){if(node.kind==='invoice')return inspect(node.record);if(node.kind==='group'){route.group=node.id;route.cost='';route.kind='';route.project='';route.vendor='';}if(node.kind==='cost'){route.cost=node.id;route.kind='';route.project='';route.vendor='';}if(node.kind==='project'){route.project=node.id;route.vendor='';}if(node.kind==='vendor')route.vendor=node.id;persist();render();host.querySelector('.pb-flow-breadcrumb button:last-child')?.focus({preventScroll:true});}
     host.addEventListener('click',async event=>{
       const mode=event.target.closest('[data-flow-mode]'),kind=event.target.closest('[data-flow-class]'),back=event.target.closest('[data-flow-back]'),node=event.target.closest('[data-flow-node]');

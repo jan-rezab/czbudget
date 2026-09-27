@@ -265,7 +265,7 @@ test('the visual map preserves financial boundaries down to signed invoice alloc
   await expect(page.locator('#praha-money-map-chart .psd-treemap-unsized')).toContainText('-50.00 CZK');
   await page.locator('#praha-money-map-chart .psd-treemap-tile').press('Enter');
   await expect(page.locator('#record-dialog')).toContainText('invoice-with-description');
-  await expect(page.locator('#record-dialog')).toContainText('Not captured');
+  await expect(page.locator('#record-dialog')).toContainText('Not supplied in the published record');
   await expect(page.locator('#record-dialog')).not.toContainText('invoice-without-description');
   await expectNoRawDownloads(page);
 });
@@ -304,4 +304,16 @@ test('magistrate overview separates financing, reconciles statements and keeps i
   await expect(magistrate.locator('.pb-mag-metrics')).toContainText('— CZK');
   await expect(page.locator('#hero-amount')).toContainText('123.97');
   await expectNoRawDownloads(page);
+});
+
+
+test('invoice detail distinguishes missing line items from an unassessed Hlídač link',async({page})=>{
+ await fixturePraha(page);await openPraha(page);await page.locator('#ledger-load').click();
+ await expect(page.locator('#ledger-table tbody tr')).toHaveCount(3);
+ await page.locator('#ledger-table tbody tr').filter({hasText:'Pražská stavební společnost'}).first().getByRole('button').click();
+ const dialog=page.locator('#record-dialog');await expect(dialog.locator('[data-contract-status]')).toHaveAttribute('data-contract-status','not_assessed');
+ await expect(dialog).toContainText('Purchased goods / services line items');
+ await expect(dialog).toContainText('not an invoice line item');
+ await expect(dialog.getByRole('link',{name:'Investigate this supplier on Hlídač státu'})).toHaveAttribute('href','https://www.hlidacstatu.cz/hledat?Q=ico%3A12345678');
+ await expectNoRawDownloads(page);
 });

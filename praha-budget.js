@@ -56,7 +56,7 @@
       if(vendor){exploration.vendor=vendor.dataset.vendor;exploration.tab='invoices';renderInspector();}
       if(event.target.closest('[data-clear-vendor]')){exploration.vendor=null;renderInspector();}
       if(event.target.closest('[data-explore-load]')){const button=event.target.closest('button');button.disabled=true;button.textContent=T('Opening invoice evidence…','Otevírání fakturačních podkladů…');await loadPayments();}
-      if(invoice){const p=investigation().projects.find(p=>p.key===exploration.project),row=p?.invoices[Number(invoice.dataset.exploreInvoice)];if(row) openRecord(row.counterparty||T('Invoice allocation','Fakturační alokace'),[[T('Amount','Částka'),exact(row.expenditure)],[T('Fiscal year / source date','Účetní rok / datum zdroje'),`${row.year} / ${row.date||'—'}`],[T('Supplier IČO','IČO dodavatele'),row.counterpartyId||T('Not reported','Neuvedeno')],[T('Project','Akce'),`${p.code} · ${p.name}`],[T('Budget codes','Rozpočtové kódy'),`${row.paragraphCode} / ${row.itemCode}`],[T('Description','Popis'),row.description||T('Not supplied in this record','V tomto záznamu není uveden')],[T('Original invoice / contract ID','Původní číslo faktury / ID smlouvy'),T('Not captured','Není zachyceno')],[T('Published record ID','ID publikovaného záznamu'),row.id],[T('Release','Vydání'),state.payments.evidence?.releaseId],[T('Source SHA-256','SHA-256 zdroje'),state.payments.evidence?.sourceSha256]],T('This is an invoice allocation, not an original invoice or proof of bank settlement. Its project and budget codes are source-reported; no contract match is inferred.','Jde o fakturační alokaci, nikoli originál faktury nebo doklad bankovní platby. Akce a rozpočtové kódy pocházejí ze zdroje; vazba na smlouvu není odvozena.'),link('https://cityvizor.praha.eu/magistrat','CityVizor · Praha'));}
+      if(invoice){const p=investigation().projects.find(p=>p.key===exploration.project),row=p?.invoices[Number(invoice.dataset.exploreInvoice)];if(row)openInvoice(row,state.payments);}
     });
     $('#project-search').addEventListener('input',event=>{exploration.search=event.target.value;renderProjectList();});
   }
@@ -152,7 +152,7 @@
     bindIT();
     bindExploration();
     window.PrahaMagistrateView.mount($('#magistrate'),{T,esc,money,exact,number,percent,plot,openRecord,link,name,overview:state.overview,year:state.year,clearCharts:()=>{for(const id of ['#magistrate-categories-chart','#magistrate-history-chart']){chartControllers.get(id)?.destroy?.();chartControllers.delete(id);}}});
-    moneyMap=window.PrahaMoneyMap.mount($('#money-map'),{T,esc,money,exact,percent,name,projectName,shownValue,plot,openRecord,loadPayments,monitor,link,clearCharts:()=>{for(const id of ['#praha-money-map-chart','#praha-capital-history-chart']){chartControllers.get(id)?.destroy?.();chartControllers.delete(id);}},context:()=>({state,yearRow:yearRow(),unit:unit()})});
+    moneyMap=window.PrahaMoneyMap.mount($('#money-map'),{T,esc,money,exact,percent,name,projectName,shownValue,plot,openRecord,openInvoice,loadPayments,monitor,link,clearCharts:()=>{for(const id of ['#praha-money-map-chart','#praha-capital-history-chart']){chartControllers.get(id)?.destroy?.();chartControllers.delete(id);}},context:()=>({state,yearRow:yearRow(),unit:unit()})});
     $('#budget-year').value = state.year; $('#budget-unit').value = state.unit;
     $('#language-link').addEventListener('click', event => { event.preventDefault(); const next = new URL(location.href); next.searchParams.set('lang', lang === 'cs' ? 'en' : 'cs'); location.href = next.href; });
     $('#budget-year').addEventListener('change', event => selectYear(Number(event.target.value)));
@@ -171,6 +171,7 @@
     $('#ledger-search').addEventListener('input', () => { state.ledgerPage = 0; renderLedger(); });
     $('#ledger-load').addEventListener('click', loadPayments);
     ['#context-series', '#context-budget', '#context-lag'].forEach(id => $(id).addEventListener('change', renderContext));
+    $('#record-body').addEventListener('click',event=>{const b=event.target.closest('[data-invoice-peer]');if(b){const r=invoiceContext?.peers[Number(b.dataset.invoicePeer)];if(r)openInvoice(r,invoiceContext.context);}});
     $('#record-close').addEventListener('click', () => $('#record-dialog').close());
     $('#record-dialog').addEventListener('click', event => { if (event.target === $('#record-dialog')) { const r = event.target.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) event.target.close(); } });
     $('#budget-table').addEventListener('click', event => { const row = event.target.closest('[data-budget-code]'); if (row) budgetRecord(row.dataset.budgetCode); });
@@ -273,7 +274,18 @@
     if (kind === 'payments' && (!state.payments || state.payments.error)) await loadPayments();
   }
 
+  let invoiceContext=null;
+  function openInvoice(row,context) {
+    const c={...context};
+    invoiceContext={context:c,peers:window.PrahaInvoiceView.describe(row,c).peers};
+    $('#record-title').textContent=row.counterparty||T('Invoice allocation','Fakturační alokace');
+    $('#record-body').innerHTML=window.PrahaInvoiceView.render(row,{T,esc,exact,money,number,link,context:c});
+    $('#record-dialog').classList.add('pb-invoice-dialog');
+    if(!$('#record-dialog').open)$('#record-dialog').showModal();
+    $('#record-dialog').scrollTop=0;$('#record-close').focus({preventScroll:true});
+  }
   function openRecord(title, pairs, note, source) {
+    $('#record-dialog').classList.remove('pb-invoice-dialog');
     $('#record-title').textContent = title;
     $('#record-body').innerHTML = `<dl>${pairs.map(([key, value]) => `<dt>${esc(key)}</dt><dd>${esc(value ?? '—')}</dd>`).join('')}</dl><p class="pb-status warning">${esc(note)}</p><p class="pb-note">${source || ''}</p>`;
     $('#record-dialog').showModal();
@@ -344,9 +356,7 @@
     $('#it-evidence').innerHTML = result ? `<p>${link(result.evidence.sourceUrl,result.profile.name+' · Cityvizor')}</p><dl>${[[T('Year / authority', 'Rok / úřad'),`${result.year} / ${result.profile.name}`],[T('Published release','Publikované vydání'),result.evidence.releaseId],[T('Profile','Profil'),result.evidence.profileKey],[T('Source validity','Platnost zdroje'),result.sourceValidity],[T('Received','Přijato'),result.evidence.receivedAt],['SHA-256',result.evidence.sourceSha256],[T('Identity','Identita'),result.profile.ico || T('IČO missing; native profile only','IČO chybí; pouze původní profil')]].map(([label,value])=>`<dt>${esc(label)}</dt><dd>${esc(value || T('Not reported','Neuvedeno'))}</dd>`).join('')}</dl><p>${T('Amounts describe this publication only. No invoice-to-accounting, contract or bank-payment match has been verified. Records are not added to the consolidated city total.', 'Částky popisují pouze tuto publikaci. Vazba faktury na účetní řádek, smlouvu či bankovní platbu nebyla ověřena. Záznamy se nepřičítají ke konsolidovanému součtu města.')}</p>` : '';
   }
   function inspectITRecord(index) {
-    const result = itState.result, row = result?.rows?.[index]; if (!row) return;
-    const labels = [[T('Authority / year','Úřad / rok'),`${result.profile.name} / ${result.year}`],[T('Supplier','Dodavatel'),row.counterparty],[T('Supplier ID','Identifikátor dodavatele'),row.counterpartyId],[T('Description','Popis'),row.description],[T('Recorded date','Datum záznamu'),row.date],[T('Expenditure · nominal CZK','Výdaj · běžné Kč'),exact(row.expenditure)],[T('Income · nominal CZK','Příjem · běžné Kč'),exact(row.income)],[T('Economic item','Položka'),`${row.itemCode} · ${row.itemName}`],[T('Purpose','Paragraf'),`${row.paragraphCode} · ${row.paragraphName}`],[T('Activity','Akce'),`${row.event} · ${row.eventName}`],[T('Organisational unit','Organizační jednotka'),row.organizationUnit],[T('Allocation record ID','Identifikátor alokačního záznamu'),row.id],[T('Original invoice number','Původní číslo faktury'),null],[T('Published release','Publikované vydání'),result.evidence.releaseId],['SHA-256',result.evidence.sourceSha256]];
-    openRecord(row.counterparty || T('Invoice allocation','Fakturační alokace'), labels.map(([label,value])=>[label,value === null || value === '' || value === undefined ? T('Not supplied','Neuvedeno') : value]), T('An allocation record can represent part of an invoice. Its generated record ID is not the original invoice number. No invoice scan, contract match or bank-payment confirmation is supplied here.', 'Alokační záznam může představovat část faktury. Jeho generovaný identifikátor není původním číslem faktury. Sken dokladu, ověřená vazba na smlouvu ani potvrzení bankovní platby zde nejsou k dispozici.'), link(result.evidence.sourceUrl,result.profile.name+' · Cityvizor'));
+    const result=itState.result,row=result?.rows?.[index];if(row)openInvoice(row,result);
   }
   async function loadPayments() {
     const year = state.year, token = state.request, button = $('#ledger-load'); button.disabled = true; button.textContent = T('Loading records…', 'Načítání záznamů…');
@@ -381,6 +391,7 @@
   }
   function ledgerRecord(index) {
     const row = ledgerRows()[index]; if (!row) return;
+    if(state.ledgerKind==='payments'){openInvoice(row,state.payments);return;}
     const keys = state.ledgerKind === 'payments' ? ['id', 'year', 'date', 'counterparty', 'counterpartyId', 'description', 'paragraphCode', 'paragraphName', 'itemCode', 'itemName', 'event', 'eventName', 'income', 'expenditure'] : state.ledgerKind === 'projects' ? ['code', 'name', 'income', 'expenditure', 'budgetIncome', 'budgetExpenditure'] : ['id', 'year', 'type', 'paragraphCode', 'paragraphName', 'itemCode', 'itemName', 'event', 'eventName', 'organizationUnit', 'income', 'expenditure', 'budgetIncome', 'budgetExpenditure'];
     const evidence = state.ledgerKind === 'payments' ? state.payments.evidence : state.detail.evidence?.cityvizor;
     openRecord(row.counterparty || row.name || row.eventName || row.id, [...keys.map(key => [key, ['income', 'expenditure', 'budgetIncome', 'budgetExpenditure'].includes(key) ? exact(row[key]) : row[key] === '' || row[key] == null ? T('Not reported', 'Neuvedeno') : row[key]]), [T('Published release', 'Publikované vydání'), evidence?.releaseId], [T('Source SHA-256', 'SHA-256 zdroje'), evidence?.sourceSha256], [T('Source validity', 'Platnost zdroje'), state.detail.sourceValidity]], T('Partial magistrate publication. The accounting year may differ from the document date. A project label does not establish completion. No contract or bank-payment match is inferred.', 'Dílčí publikace magistrátu. Účetní rok se může lišit od data dokladu. Název akce nedokládá její dokončení. Neodvozujeme vazbu na smlouvu ani bankovní platbu.'), link('https://cityvizor.praha.eu/magistrat', 'CityVizor · Magistrát hl. m. Prahy'));
