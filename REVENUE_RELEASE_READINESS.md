@@ -24,7 +24,7 @@ observations are not zero, and low-coverage countries are excluded.
 
 ## Verified locally
 
-- 19 focused cloud-model tests; 10 focused JavaScript/API/registry contracts.
+- 20 focused cloud-model tests; 33 JavaScript/API/renderer/release contracts.
 - Generated shared assets and coverage registry validated; no new page-owned SVG.
 - Built-in browser with explicitly synthetic country fixtures: Czech VAT selected
   municipal amount146.56/share25.84; German VAT local share2.8; Australian unknown
@@ -35,13 +35,25 @@ observations are not zero, and low-coverage countries are excluded.
 - Cloud-loaded serving data must still be independently verified after publication;
   synthetic fixtures are never production source observations.
 
+## Current data status
+
+Verified private backfill release `7e5269b3-8555-46a8-a21d-4c3ff535e3b7` offers
+64 countries as partial profiles and excludes94geographies. WOFI grant observations
+cover85countries; ESA transfer observations cover30. These are distinct measures.
+Original71,517 observations/provenance retained unchanged in the91,349-row release.
+
+Runtime export-only read permission was explicitly approved after automatic
+review required clarification, and applied. No raw/warehouse access was added.
+The initial serving export failed its8MiB limit before publication. Compact source
+references preserve observations while avoiding duplicated URLs; source context
+remains lossless in the warehouse.20focused model tests pass. The corrected export
+needs a completion receipt; another build awaits fresh extension approval.
+
 ## Release prerequisites still pending
 
-1. Verified transfer release and private serving export completion receipt.
-2. Read access for `psd-web-runtime` restricted to the revenue-serving object prefix.
-   It currently has no access to the private bucket; broad warehouse/raw access is
-   unnecessary and must not be granted.
-3. Current-main integration and exhaustive exact-commit website verification.
-   Server/routing changed, so the full lane applies. No cloud website verification
-   or production build has been submitted during this preparation.
-4. Explicit user authorization to push/deploy. This file does not authorize it.
+1. Corrected private serving export completion receipt and real-data page check.
+2. Full website verification in the canonical production build after an authorized
+   main push. Current-main changes were merged without conflicts; the selector
+   correctly chooses the full lane because server/routing changed. No website
+   Cloud Build or deployment was submitted during this preparation.
+3. Explicit user authorization to push/deploy. This file does not authorize it.
