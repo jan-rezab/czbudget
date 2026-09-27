@@ -129,7 +129,7 @@ def fetch_source(sha: str, workdir: Path) -> tuple[Path, dict[str, str]]:
     repo.mkdir(parents=True)
     run(["git", "init", "-q"], cwd=str(repo))
     run(["git", "remote", "add", "origin", REPOSITORY], cwd=str(repo))
-    run(["git", "fetch", "-q", "--depth=1", "--filter=blob:none", "origin", sha], cwd=str(repo))
+    run(["git", "fetch", "-q", "--depth=1", "origin", sha], cwd=str(repo))
     fetched = run(["git", "rev-parse", "FETCH_HEAD"], cwd=str(repo), capture=True).strip()
     if fetched != sha:
         raise RuntimeError(f"Fetched {fetched}, expected pinned {sha}")
