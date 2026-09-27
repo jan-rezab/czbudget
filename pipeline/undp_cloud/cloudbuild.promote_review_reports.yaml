@@ -1,0 +1,21 @@
+steps:
+  - id: promote-exact-reviewed-private-report
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: bash
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1', 'DATA_SERVICE_ACCOUNT=${_DATA_SERVICE_ACCOUNT}']
+    args:
+      - -euc
+      - |
+        pip install --quiet --disable-pip-version-check -r pipeline/undp_cloud/requirements.txt
+        python pipeline/undp_cloud/promote_review_report.py --loader-sha '${_LOADER_SHA}' --manifest '${_REVIEW_MANIFEST}' --reviewed-report-sha '${_REVIEWED_REPORT_SHA}' --qa-receipt '${_QA_RECEIPT}'
+timeout: 1800s
+queueTtl: 1800s
+tags: [plane-data, human-development-reports, reviewed-aggregate-promotion]
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _LOADER_SHA: required
+  _REVIEW_MANIFEST: required
+  _REVIEWED_REPORT_SHA: required
+  _QA_RECEIPT: required
+  _DATA_SERVICE_ACCOUNT: psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com
