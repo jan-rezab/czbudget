@@ -70,5 +70,8 @@ private warehouse consumers; report filtering, weights and aggregates require
 separate verified transformations. No public microdata export is authorized.
 
 Focused proof: six synthetic contract/worker-boundary tests pass. The contract
-also passed against actual terminal BigQuery job metadata. No cloud continuation
+also passed against actual terminal BigQuery job metadata. Read-only warehouse
+validation returned613745 rows/unique keys, zero wrong source identities and one
+metadata row declaring613744 native cases (`receipts/pisa-warehouse-stage-validation.json`).
+No cloud continuation
 has been submitted.
