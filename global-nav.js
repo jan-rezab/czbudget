@@ -162,6 +162,14 @@
         <nav class="global-nav" aria-label=""></nav>
         <div class="lang-switch municipality-lang-switch municipal-lang-switch" role="group" aria-label=""><button type="button" data-lang="cs" data-budget-lang="cs" data-deep-lang="cs" aria-pressed="false">CS</button><span aria-hidden="true">/</span><button type="button" data-lang="en" data-budget-lang="en" data-deep-lang="en" aria-pressed="false">EN</button></div>
       </header>`;
+      this.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || event.defaultPrevented) return;
+        const menu = this.querySelector("details[open]");
+        if (!menu) return;
+        event.preventDefault();
+        menu.open = false;
+        menu.querySelector("summary")?.focus();
+      });
     }
 
     renderNavigation() {
@@ -169,7 +177,7 @@
       const t = copy[lang];
       const nav = this.querySelector(".global-nav");
       if (!nav) return;
-      const countryLinks = countries.map(([code, cs, en, flag]) => `<a href="${countryHref(code,lang)}" data-country-code="${code}">${flag && !flag.startsWith(":") ? `<img src="${assetRoot}assets/flags/${flag}.svg" alt="" loading="lazy" decoding="async">` : `<i class="country-menu-flag-emoji" aria-hidden="true">${flagEmoji(flag.slice(1))}</i>`}<span>${lang === "en" ? en : cs}</span></a>`).join("");
+      const countryLinks = [...countries].sort((a,b)=>a[lang === "en" ? 2 : 1].localeCompare(b[lang === "en" ? 2 : 1],lang)).map(([code, cs, en, flag]) => `<a href="${countryHref(code,lang)}" data-country-code="${code}">${flag && !flag.startsWith(":") ? `<img src="${assetRoot}assets/flags/${flag}.svg" alt="" loading="lazy" decoding="async">` : `<i class="country-menu-flag-emoji" aria-hidden="true">${flagEmoji(flag.slice(1))}</i>`}<span>${lang === "en" ? en : cs}</span></a>`).join("");
       const municipalityLinks = municipalityCountries.map(([code, cs, en, flag, slug]) => {
         const destination = slug ? `${assetRoot}municipalities/${slug}/?lang=${lang}` : `${assetRoot}municipalities/?lang=${lang}&country=${code}#directory`;
         return `<a href="${destination}" data-country-code="${code}"><img src="${assetRoot}assets/flags/${flag}.svg" alt="" loading="lazy" decoding="async"><span>${lang === "en" ? en : cs}</span>${depthIcon(municipalityDepth(code), t)}</a>`;
@@ -182,7 +190,9 @@
       nav.setAttribute("aria-label", t.navigation);
       nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><label class="country-menu-search"><span>${t.searchCountry}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${countries.length} ${t.countryMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a><a class="capital-menu-feature" href="${href("money-flow.html", lang)}"><b>↗</b><span>${lang === "cs" ? "Sledujte tok peněz" : "Follow the money"}</span></a>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div><label class="country-menu-search"><span>${t.searchMunicipality}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${municipalityCountries.length} ${t.municipalityMatches}</output></label>${municipalityLegend}<p class="country-menu-empty" hidden>${t.noCountryMatches}</p>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("map.html", lang)}" data-global-nav="map">${t.map}</a><a href="${href("deep-dives/", lang)}" data-global-nav="deep-dives">${t.deepDives}</a><a href="${href("stories/", lang)}" data-global-nav="stories">${t.stories}</a><a href="${methodologyHref}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
       const active = activeSection(this);
-      nav.querySelector(`[data-global-nav="${active}"]`)?.classList.add("active");
+      const activeItem = nav.querySelector(`[data-global-nav="${active}"]`);
+      activeItem?.classList.add("active");
+      if (activeItem?.matches("a")) activeItem.setAttribute("aria-current", "page");
       if (active === "country") nav.querySelector(".country-menu")?.classList.add("active");
       if (active === "cities") nav.querySelector(".municipality-menu")?.classList.add("active");
       const fold=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase(lang==="cs"?"cs":"en");
@@ -213,13 +223,14 @@
     }
   }
 
-  const headerStylesHref = `${assetRoot}site-header.css?v=20260902-municipal-depth`;
+  const headerStylesHref = `${assetRoot}site-header.css?v=20260927-editorial-navigation`;
   const existingHeaderStyles = document.querySelector("link[data-psd-site-header]") || document.querySelector('link[rel="stylesheet"][href*="site-header.css"]');
   if (existingHeaderStyles) {
-    // The page already requested this stylesheet. Swapping the href would start a second
-    // download of the same file under a new cache key, so adopt the link and leave the URL
-    // alone; nginx rewrites stale keys in the HTML it serves.
+    // Older open pages can still reference the old header CSS. Upgrade its cache key
+    // when the new navigation loads; preserve staging's content-addressed URLs.
     existingHeaderStyles.dataset.psdSiteHeader = "true";
+    const version = new URL(existingHeaderStyles.href).searchParams.get("v") || "";
+    if (!/^[a-f0-9]{16,}$/.test(version) && version !== "20260927-editorial-navigation") existingHeaderStyles.href = headerStylesHref;
   } else {
     const styles = document.createElement("link");
     styles.rel = "stylesheet";
