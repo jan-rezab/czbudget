@@ -2,7 +2,7 @@
 """Publish one tracked fan-out directory from a pinned commit as an immutable raw copy.
 
 Data plane only: cloudbuild.raw-fanout.yaml runs it in europe-west4 as psd-data-builder
-(tag plane-data), from a depth-1 fetch of --source-sha. It never touches the website,
+(tag plane-data) from --loader-sha, against a depth-1 fetch of --source-sha. It never touches the website,
 Cloud Run, BigQuery or any serving pointer.
 
   raw         gs://<bucket>/raw/<dataset>/<source-sha>/<directory>/...  (write-once)
@@ -80,7 +80,8 @@ def list_objects(prefix):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--root', required=True, help='checkout of the pinned commit')
-    parser.add_argument('--source-sha', required=True)
+    parser.add_argument('--source-sha', required=True, help='commit whose bytes the raw copy preserves')
+    parser.add_argument('--loader-sha', help='commit this script ran from (recorded in the receipt)')
     parser.add_argument('--dataset', required=True, help='e.g. municipal-benchmarks')
     parser.add_argument('--directory', required=True, help='e.g. data/municipal-benchmarks')
     parser.add_argument('--bucket', default='czbudget-janrezab-data-layers')
@@ -99,7 +100,7 @@ def main():
     receipt = {
         'receipt_schema': 'raw-fanout/1', 'dataset': args.dataset, 'directory': args.directory,
         'source': {'repository': REPOSITORY, 'git_sha': args.source_sha},
-        'loader_git_sha': args.source_sha, 'loader_script_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'loader_git_sha': args.loader_sha or args.source_sha, 'loader_script_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'cloud_build_id': os.environ.get('BUILD_ID'), 'project': os.environ.get('PROJECT_ID'),
         'region': os.environ.get('REGION'), 'service_account': os.environ.get('SERVICE_ACCOUNT'),
         'raw_destination': prefix, 'staging_destination': None, 'publication_pointer': None,

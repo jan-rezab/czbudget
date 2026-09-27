@@ -6,7 +6,9 @@
 #   gcloud builds submit --no-source --project=czbudget-janrezab --region=europe-west4 \
 #     --service-account=projects/czbudget-janrezab/serviceAccounts/psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com \
 #     --config=cloudbuild.raw-fanout.yaml \
-#     --substitutions=_SOURCE_SHA=<commit>,_DATASET=municipal-benchmarks,_DIRECTORY=data/municipal-benchmarks
+#     --substitutions=_SOURCE_SHA=<data commit>,_LOADER_SHA=<main commit carrying this config>,_DATASET=municipal-benchmarks,_DIRECTORY=data/municipal-benchmarks
+# The data commit and the loader commit are fetched separately, so a raw copy can be pinned to
+# the commit whose bytes it preserves even when that commit predates the loader.
 # See scripts/publish-raw-fanout.py for the validation it performs.
 steps:
   - id: fetch-pinned-source
@@ -23,6 +25,12 @@ steps:
         git fetch -q --depth=1 origin "${_SOURCE_SHA}"
         git checkout -q --detach FETCH_HEAD
         test "$$(git rev-parse HEAD)" = "${_SOURCE_SHA}"
+        git init -q /workspace/loader
+        cd /workspace/loader
+        git remote add origin https://github.com/jan-rezab/czbudget.git
+        git fetch -q --depth=1 origin "${_LOADER_SHA}"
+        git checkout -q --detach FETCH_HEAD
+        test "$$(git rev-parse HEAD)" = "${_LOADER_SHA}"
 
   - id: validate-and-publish-raw
     waitFor: [fetch-pinned-source]
@@ -33,9 +41,10 @@ steps:
       - -ceu
       - |
         git config --global --add safe.directory /workspace/src
-        python3 /workspace/src/scripts/publish-raw-fanout.py \
+        python3 /workspace/loader/scripts/publish-raw-fanout.py \
           --root /workspace/src \
           --source-sha "${_SOURCE_SHA}" \
+          --loader-sha "${_LOADER_SHA}" \
           --dataset "${_DATASET}" \
           --directory "${_DIRECTORY}" \
           --output /workspace/.out \
@@ -51,5 +60,6 @@ options:
 
 substitutions:
   _SOURCE_SHA: ""
+  _LOADER_SHA: ""
   _DATASET: ""
   _DIRECTORY: ""
