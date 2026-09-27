@@ -328,8 +328,21 @@ test('opening an allocation automatically shows exact-party contract evidence an
  await page.locator('#ledger-table tbody tr').filter({hasText:'Pražská stavební společnost'}).first().getByRole('button').click();
  const results=page.locator('#related-contract-results');
  await expect(results).toContainText('Published project agreement');
- await expect(results).toContainText('1016400.01 CZK');
+ await expect(results).toContainText('1,016,400.01 CZK');
  await expect(results).toContainText('invoice-to-contract link not verified');
- await expect(results.getByRole('link',{name:'Published project agreement'})).toHaveAttribute('href','https://smlouvy.gov.cz/smlouva/7939187');
+ await expect(results.getByRole('link',{name:'Published project agreement'})).toHaveAttribute('href','https://www.hlidacstatu.cz/Detail/7939187');
+ await expect(results.getByRole('link',{name:'Original register',exact:false})).toHaveAttribute('href','https://smlouvy.gov.cz/smlouva/7939187');
  expect(lookups).toBe(1);await expectNoRawDownloads(page);
 });
+
+ test('financial status opens with cash and keeps cash stock distinct from annual budget flows',async({page})=>{
+ await fixturePraha(page);await openPraha(page);
+ const status=page.locator('#financial-status');
+ await expect(status).toContainText('Cash & selected deposits');
+ await expect(status).toContainText('500,000 CZK');
+ await status.getByText('Exact figures, cash movement & definition',{exact:true}).click();
+ await expect(status).toContainText('500,000.00 CZK');
+ await expect(status).toContainText('100,000.00 CZK');
+ await expect(status).toContainText('Its scope differs from consolidated city-and-district budget flows');
+ await expect(page.locator('#evidence-cards').getByRole('link',{name:/Hlídač státu/})).toBeVisible();
+ });

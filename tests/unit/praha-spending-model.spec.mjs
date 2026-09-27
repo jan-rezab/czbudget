@@ -36,3 +36,9 @@ test('visual navigation retains exact purpose, item, project and supplier scope 
   assert.equal(r.stages.actual,null,'A missing full-city purpose × item matrix must not be invented');
   assert.equal(investigate(d,p,2025,'all',{item:'6125'}).stages.actual,1000);
 });
+
+test('project income includes income-only native rows while preserving zero and unknown amounts',()=>{
+ const r=investigate({accountingRows:[row('spend','5168',100,{income:0}),row('receipt','1111',0,{income:50}),row('zero','5168',0,{income:0,event:'Z'})]},null,2025,'all');
+ assert.equal(r.projects.length,1);assert.equal(r.projects[0].amount,100);assert.equal(r.projects[0].income,50);
+ assert.equal(investigate(null,{rows:[row('allocation','5168',10)]},2025).projects[0].income,null);
+});
