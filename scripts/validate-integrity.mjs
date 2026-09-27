@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { fanoutRoot } from "./lib/municipal-fanout.mjs";
 
 const root = process.cwd();
 const dataOnly = process.argv.includes("--data-only");
@@ -104,6 +105,19 @@ for (const file of productionJson) {
   catch (error) { failures.push(`Invalid JSON ${path.relative(root, file)}: ${error.message}`); }
 }
 
+// The per-entity history and benchmark fan-out is not tracked in Git. Where it has been
+// hydrated its trees are digested as before; where it has not, the release manifest must
+// still pin exactly the trees pipeline/config/municipal-serving-inputs.v1.json pins, which
+// scripts/hydrate-municipal-fanout.py enforces byte for byte wherever the data is restored.
+const historyFanout = fanoutRoot("municipal-history", root);
+const benchmarkFanout = fanoutRoot("municipal-benchmarks", root);
+const fanoutPins = Object.values((await json("pipeline/config/municipal-serving-inputs.v1.json")).inputs).reduce((trees, input) => ({ ...trees, ...input.trees }), {});
+const treeSource = (directory) => {
+  if (directory === "data/municipal-history") return historyFanout;
+  const benchmark = /^data\/municipal-benchmarks\/([a-z]{3})$/.exec(directory);
+  if (benchmark) return benchmarkFanout && path.join(benchmarkFanout, benchmark[1]);
+  return path.join(root, directory);
+};
 try {
   const release = await json("data/release-manifest.v1.json");
   for (const artifact of release.artifacts) {
@@ -116,13 +130,19 @@ try {
         warnings.push(`Local build: skipped release-tree digest for cloud-hydrated ${artifact.path}; Cloud Build verifies it after hydration.`);
         continue;
       }
-      const names = (await readdir(path.join(root, directory))).filter((name) => {
+      const source = treeSource(directory);
+      if (!source) {
+        const pin = fanoutPins[directory];
+        assert(pin && pin.files === artifact.files && pin.bytes === artifact.bytes && pin.sha256 === artifact.sha256, `Release manifest tree for ${artifact.path} is not the pinned fan-out input`);
+        continue;
+      }
+      const names = (await readdir(source)).filter((name) => {
         if (directory.endsWith("entities")) return /^\d{8}\.json$/.test(name);
         if (directory.endsWith("municipal-history")) return name === "index.json" || /^\d{8}\.json$/.test(name);
         return name.endsWith(".json");
       }).sort();
       for (const name of names) {
-        const content = await readFile(path.join(root, directory, name));
+        const content = await readFile(path.join(source, name));
         digest.update(name).update("\0").update(content);
         bytes += content.length;
       }
@@ -159,7 +179,12 @@ assert(new Set(municipalities.map((item) => item.seo.slug)).size === municipalit
 
 const municipalHistoryIndex = await json("data/municipal-history/index.json");
 const municipalDirectoryHistory = await json("data/municipal-history-directory.v1.json");
-const municipalHistoryFiles = (await readdir(path.join(root, "data", "municipal-history"))).filter((name) => /^\d{8}\.json$/.test(name));
+// Without the hydrated fan-out, the directory-history (tracked, and the same rows the files
+// carry) stands in: every municipality must have rows, and the counts must reconcile.
+const municipalHistoryFiles = historyFanout
+  ? (await readdir(historyFanout)).filter((name) => /^\d{8}\.json$/.test(name))
+  : [...new Set(municipalDirectoryHistory.rows.map(([ico]) => ico))].map((ico) => `${ico}.json`);
+if (!historyFanout) warnings.push("Municipal history fan-out not hydrated: per-file history checks ran against data/municipal-history-directory.v1.json; run scripts/hydrate-municipal-fanout.py for the full per-file audit.");
 assert(municipalHistoryIndex.period.from === 2010 && municipalHistoryIndex.period.to === 2025, "Municipal history period must be 2010–2025");
 assert(municipalHistoryIndex.municipality_count === municipalities.length, "Municipal history index count mismatch");
 assert(municipalHistoryFiles.length === municipalities.length, `Expected ${municipalities.length} municipal history files, received ${municipalHistoryFiles.length}`);
@@ -178,8 +203,8 @@ for (const row of municipalDirectoryHistory.rows) {
 let municipalHistoryRows = 0;
 let completeMunicipalHistories = 0;
 const municipalHistoryCoverage = new Map(Array.from({ length: 16 }, (_, index) => [2010 + index, { budget: 0, cash: 0, population: 0 }]));
-for (const entity of municipalities) {
-  const history = await json(`data/municipal-history/${entity.national_id}.json`);
+for (const entity of historyFanout ? municipalities : []) {
+  const history = await json(path.join(historyFanout, `${entity.national_id}.json`));
   assert(history.municipality?.national_id === entity.national_id, `Municipal history ID mismatch for ${entity.national_id}`);
   const years = history.series.map((row) => row.year);
   assert(years.length > 0 && years.every((year, index) => year >= 2010 && year <= 2025 && (!index || year > years[index - 1])), `Municipal history years are invalid for ${entity.national_id}`);
@@ -204,6 +229,30 @@ for (const entity of municipalities) {
   for (const key of ["revenue_approved", "revenue_adjusted", "revenue_actual", "expense_approved", "expense_adjusted", "expense_actual", "tax_revenue", "nontax_revenue", "capital_revenue", "transfer_revenue", "current_expense", "capital_expense", "budget_balance", "cash_current", "cash_previous"]) {
     assert(latest[key] === entity.amounts[key], `Historical 2025 snapshot mismatch for ${entity.national_id}/${key}`);
   }
+}
+if (!historyFanout) {
+  const rowsByEntity = new Map();
+  for (const [key, row] of directoryHistoryRows) {
+    const [ico, year] = key.split("/");
+    if (!rowsByEntity.has(ico)) rowsByEntity.set(ico, new Map());
+    rowsByEntity.get(ico).set(Number(year), row);
+  }
+  for (const entity of municipalities) {
+    const latest = rowsByEntity.get(entity.national_id)?.get(2025);
+    assert(latest, `Municipal history is missing 2025 for ${entity.national_id}`);
+    for (const key of ["revenue_actual", "expense_actual", "budget_balance", "cash_current"]) {
+      assert(latest?.[key] === entity.amounts[key], `Historical 2025 snapshot mismatch for ${entity.national_id}/${key}`);
+    }
+  }
+  municipalHistoryRows = directoryHistoryRows.size;
+  completeMunicipalHistories = [...rowsByEntity.values()].filter((years) => years.size === 16).length;
+  for (const [key, row] of directoryHistoryRows) {
+    const coverage = municipalHistoryCoverage.get(Number(key.split("/")[1]));
+    coverage.budget += 1;
+    if (Number.isInteger(row.population_mid_year) && row.population_mid_year >= 0) coverage.population += 1;
+  }
+  // Cash coverage needs cash_previous, which only the per-file history carries.
+  for (const [year, counts] of municipalHistoryCoverage) counts.cash = municipalHistoryIndex.coverage_by_year.find((row) => row.year === year)?.cash;
 }
 assert(municipalHistoryRows === municipalHistoryIndex.annual_record_count, "Municipal history annual-record count mismatch");
 assert(completeMunicipalHistories === municipalHistoryIndex.complete_series_count, "Municipal complete-history count mismatch");

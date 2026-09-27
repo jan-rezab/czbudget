@@ -1,7 +1,74 @@
+# Data plane only (plane-data): builds, validates and publishes one municipal serving
+# snapshot release (gs://czbudget-janrezab-public-snapshots/municipal/releases/<id>/ and,
+# last, municipal/current.json). It never builds an image, never deploys Cloud Run and
+# never reads the website checkout: every input is pinned.
+#   code + small inputs   depth-1 fetch of _SOURCE_SHA from GitHub
+#   entity/expansion      generation-recorded serving layers under _DATA_LAYER_BASE
+#   history + benchmarks  immutable raw copies pinned in pipeline/config/municipal-serving-inputs.v1.json,
+#                         hash-verified by scripts/hydrate-municipal-fanout.py
+# Before publication the candidate is compared with the active release; with the default
+# _IDENTITY_COUNTRIES every Czech and benchmark payload must be byte-identical. Set it to
+# "none" only for a reviewed, intentional data change.
+# Submit with --no-source in europe-west4 as psd-data-builder:
+#   gcloud builds submit --no-source --project=czbudget-janrezab --region=europe-west4 \
+#     --service-account=projects/czbudget-janrezab/serviceAccounts/psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com \
+#     --config=cloudbuild.data.yaml --substitutions=_SOURCE_SHA=<main commit>
 steps:
+  - id: fetch-pinned-source
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        test "$LOCATION" = europe-west4
+        git init -q /workspace/src
+        cd /workspace/src
+        git remote add origin https://github.com/jan-rezab/czbudget.git
+        git fetch -q --depth=1 origin "${_SOURCE_SHA}"
+        git checkout -q --detach FETCH_HEAD
+        test "$$(git rev-parse HEAD)" = "${_SOURCE_SHA}"
+
+  - id: hydrate-serving-layers
+    waitFor: [fetch-pinned-source]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        mkdir -p /workspace/.inputs
+        cd /workspace/src
+        # Entities, the retired expansion fan-out and the profile bundles, streamed from their
+        # packed layers. Each is read at the generation recorded in the input receipt.
+        for layer in serving entities bundles; do
+          object="${_DATA_LAYER_BASE}/$$layer.tar.gz"
+          generation="$$(gcloud storage objects describe "$$object" --format='value(generation)')"
+          md5="$$(gcloud storage objects describe "$$object" --format='value(md5_hash)')"
+          test -n "$$generation"
+          gcloud storage cat "$$object#$$generation" | tar -xzf -
+          printf '%s\t%s\t%s\n' "$$object" "$$generation" "$$md5" >> /workspace/.inputs/serving-layers.tsv
+        done
+        test -d data/entities
+
+  - id: hydrate-municipal-fanout
+    waitFor: [fetch-pinned-source]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        mkdir -p /workspace/.inputs
+        python3 /workspace/src/scripts/hydrate-municipal-fanout.py --from gcs \
+          --dest /workspace/src/.municipal-fanout \
+          --receipt /workspace/.inputs/municipal-fanout.json
+
   - id: prepare-public-serving-release
+    waitFor: [hydrate-serving-layers, hydrate-municipal-fanout]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    dir: /workspace/src
     entrypoint: node
+    env:
+      - MUNICIPAL_HISTORY_ROOT=/workspace/src/.municipal-fanout/data/municipal-history
+      - MUNICIPAL_BENCHMARK_ROOT=/workspace/src/.municipal-fanout/data/municipal-benchmarks
     args:
       - scripts/prepare-public-serving-snapshots.mjs
       - --output
@@ -12,23 +79,59 @@ steps:
       - ${_PROCESSED_STRUCTURED_ROWS}
 
   - id: validate-public-serving-release
+    waitFor: [prepare-public-serving-release]
     name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    dir: /workspace/src
     entrypoint: node
     args: [scripts/validate-public-serving-snapshot.mjs, /workspace/.public-serving-release]
 
-  - id: ensure-private-snapshot-bucket
+  - id: read-active-release
+    waitFor: [fetch-pinned-source]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     args:
-      - scripts/ensure-public-snapshot-bucket.sh
-      - $PROJECT_ID
-      - gs://$PROJECT_ID-public-snapshots
-      - EU
-      - czbudget-public
-      - europe-west1
+      - -ceu
+      - |
+        mkdir -p /workspace/.active
+        gcloud storage cp "${_PUBLIC_SNAPSHOT_BASE_URL}/current.json" /workspace/.active/current.json
+        routes="$$(python3 -c 'import json; print(json.load(open("/workspace/.active/current.json"))["routes"])')"
+        gcloud storage cp "${_PUBLIC_SNAPSHOT_BASE_URL}/$$routes" /workspace/.active/routes.v1.json.gz
+
+  - id: compare-with-active-release
+    waitFor: [validate-public-serving-release, read-active-release]
+    name: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    dir: /workspace/src
+    entrypoint: sh
+    args:
+      - -ceu
+      - |
+        if [ "${_IDENTITY_COUNTRIES}" = none ]; then
+          node scripts/compare-public-serving-releases.mjs --baseline /workspace/.active/routes.v1.json.gz \
+            --candidate /workspace/.public-serving-release > /workspace/.inputs/payload-identity.json || true
+        else
+          node scripts/compare-public-serving-releases.mjs --baseline /workspace/.active/routes.v1.json.gz \
+            --candidate /workspace/.public-serving-release --countries "${_IDENTITY_COUNTRIES}" \
+            > /workspace/.inputs/payload-identity.json || { cat /workspace/.inputs/payload-identity.json; exit 1; }
+          cat /workspace/.inputs/payload-identity.json
+        fi
+
+  - id: record-input-receipt
+    waitFor: [compare-with-active-release]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        cp /workspace/.public-serving-release/releases/data-$BUILD_ID/manifest.v1.json /workspace/.inputs/manifest.v1.json
+        printf '{"source_sha":"%s","build_id":"%s","region":"%s","service_account":"psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com","release_id":"data-%s"}\n' \
+          "${_SOURCE_SHA}" "$BUILD_ID" "$LOCATION" "$BUILD_ID" > /workspace/.inputs/build.json
+        gcloud storage cp --no-clobber --recursive /workspace/.inputs \
+          "gs://czbudget-janrezab-data-layers/processing-runs/municipal-snapshot/$BUILD_ID/"
 
   - id: publish-bigquery-and-storage
+    waitFor: [record-input-receipt]
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    dir: /workspace/src
     entrypoint: bash
     args:
       - pipeline/warehouse/publish_public_serving.sh
@@ -37,14 +140,20 @@ steps:
       - --release-id
       - data-$BUILD_ID
       - --bucket
-      - gs://$PROJECT_ID-public-snapshots/municipal
+      - ${_PUBLIC_SNAPSHOT_BASE_URL}
       - --use-prepared
       - --skip-validation
 
 timeout: 3600s
+queueTtl: 900s
+tags: [plane-data, data-publication, municipal-snapshot]
 
 substitutions:
+  _SOURCE_SHA: ""
   _PROCESSED_STRUCTURED_ROWS: "101447918"
+  _DATA_LAYER_BASE: gs://czbudget-janrezab-data-layers/2026-08-30
+  _PUBLIC_SNAPSHOT_BASE_URL: gs://czbudget-janrezab-public-snapshots/municipal
+  _IDENTITY_COUNTRIES: CZE,NOR,NLD,FIN
 
 options:
   logging: CLOUD_LOGGING_ONLY

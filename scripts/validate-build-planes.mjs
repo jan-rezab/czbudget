@@ -160,4 +160,19 @@ for (const [name, yaml] of [["cloudbuild.yaml", cloudbuild], ["cloudbuild.verify
   }
 }
 
+// The municipal snapshot and the raw fan-out copies it reads are data-plane publications:
+// pinned inputs, europe-west4 only, no deploy, no IAM change, and no checkout-sourced fan-out.
+for (const [name, required] of [
+  ["cloudbuild.data.yaml", ["scripts/hydrate-municipal-fanout.py --from gcs", "MUNICIPAL_HISTORY_ROOT=", "MUNICIPAL_BENCHMARK_ROOT=", "compare-public-serving-releases.mjs", "_IDENTITY_COUNTRIES: CZE,NOR,NLD,FIN"]],
+  ["cloudbuild.raw-fanout.yaml", ["scripts/publish-raw-fanout.py", "--publish"]],
+]) {
+  const yaml = await readFile(name, "utf8");
+  for (const needle of ["plane-data", "data-publication", 'test "$LOCATION" = europe-west4', "git fetch -q --depth=1 origin", ...required]) {
+    if (!yaml.includes(needle)) throw new Error(`${name} must stay a pinned data-plane publication: missing ${needle}`);
+  }
+  for (const forbidden of ["deploy-immutable.sh", "gcloud run", "add-iam-policy-binding", "ensure-public-snapshot-bucket", "europe-west1"]) {
+    if (yaml.includes(forbidden)) throw new Error(`${name} must not ${forbidden === "europe-west1" ? "use the web region" : `run ${forbidden}`}`);
+  }
+}
+
 console.log("Build-plane boundary OK: code deploy, read-only verification, and data publication are isolated.");

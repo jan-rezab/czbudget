@@ -813,7 +813,8 @@ test("municipal profiles draw interactive history and preserve genuine coverage 
 });
 
 test("municipal history tables preserve source amounts and annual currency conversion", async ({ page }) => {
-  const history = await readJson("data/municipal-history/00261173.json");
+  // The history fan-out is not in the checkout; read it from the snapshot release the page uses.
+  const history = await (await page.request.get("/data/municipal-history/00261173.json")).json();
   const fx = await readJson("data/municipal-fx-rates.v1.json");
   const latest = history.series.at(-1);
   const money = (value, currency) => new Intl.NumberFormat("en-GB", {style:"currency",currency,maximumFractionDigits:0}).format(value);
