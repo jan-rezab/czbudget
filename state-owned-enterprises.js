@@ -55,12 +55,18 @@
   });
   Object.assign(copy.en.sectors, {finance:"Finance",real_estate_tourism:"Real estate & tourism",public_services:"Public services",defence:"Defence",natural_resources:"Natural resources",agriculture_food:"Agriculture & food",water:"Water",other:"Other / unclassified"});
   Object.assign(copy.cs.sectors, {finance:"Finance",real_estate_tourism:"Nemovitosti a cestovní ruch",public_services:"Veřejné služby",defence:"Obrana",natural_resources:"Přírodní zdroje",agriculture_food:"Zemědělství a potraviny",water:"Vodní hospodářství",other:"Ostatní / nezařazeno"});
-  copy.en.methods[0][2] = "Czech coverage includes all companies identified as state-controlled in our 2024 public-entity inventory; municipal, regional and other public owners are excluded. Other countries retain three selected enterprises each. Coverage is uneven and does not claim a complete state portfolio. Financial institutions are included and labelled separately.";
-  copy.cs.methods[0][2] = "Český katalog zahrnuje všechny firmy označené jako státem ovládané v našem inventáři veřejných subjektů za rok 2024; obce, kraje a další veřejní vlastníci jsou vynecháni. Ostatní země obsahují po třech vybraných podnicích. Pokrytí není rovnoměrné ani úplným státním portfoliem. Finanční instituce jsou zahrnuty a samostatně označeny.";
+  copy.en.methods[0][2] = "Czech coverage includes all companies identified as state-controlled in our 2024 public-entity inventory; the published Czech directory also includes city, regional and other public enterprises. Ranking uses verified standalone 2024 history; later years remain in details. ČEZ retains the labelled state-consolidation editorial comparator. Other countries retain three selected enterprises each. Coverage is uneven and does not claim a complete state portfolio. Financial institutions are included and labelled separately.";
+  copy.cs.methods[0][2] = "Český katalog zahrnuje všechny firmy označené jako státem ovládané v našem inventáři veřejných subjektů za rok 2024; publikovaný český registr doplňuje městské, krajské a další veřejné podniky. Pořadí používá samostatné závěrky 2024; novější roky jsou v detailu. ČEZ zachovává označený redakční údaj z konsolidace státu. Ostatní země obsahují po třech vybraných podnicích. Pokrytí není rovnoměrné ani úplným státním portfoliem. Finanční instituce jsou zahrnuty a samostatně označeny.";
   copy.en.methods[2][2] += " Additional Czech rows use individual-entity turnover from the Ministry of Finance strategic-company report, not consolidated group revenue. Missing revenue is not zero; missing ownership shares are excluded from the weighted map.";
   copy.cs.methods[2][2] += " Doplněné české řádky používají obrat samostatných subjektů ze zprávy MF o strategických společnostech, nikoli výnosy konsolidované skupiny. Chybějící výnos není nula; chybějící vlastnický podíl je vynechán z vážené mapy.";
   copy.en.methods[5][2] = "2024 financial snapshot; Czech inventory integration checked on 8 September 2026. Ownership and group boundaries may change after the reporting period.";
   copy.cs.methods[5][2] = "Finanční snímek roku 2024; propojení českého inventáře ověřeno 8. září 2026. Vlastnictví a hranice skupin se mohou po účetním období změnit.";
+  Object.assign(copy.en,{title:"The largest public enterprises",intro:"Czech state, city and regional enterprises alongside selected foreign public enterprises. Rankings use 2024 accounts and documented annual-average exchange rates; financial history and funding remain visible in the details.",ownership:"Public ownership / control",ownerFilter:"Public owner",mapOwnershipLabel:"Public ownership",mapWeighted:"Public ownership share",mapTotalWeighted:"Public ownership-weighted total",mapMethodWeighted:"Revenue × documented public ownership percentage; an analytical share, not valuation."});
+  Object.assign(copy.cs,{title:"Největší veřejné podniky",intro:"České státní, městské a krajské podniky vedle vybraných zahraničních veřejných podniků. Pořadí používá závěrky 2024 a doložené průměrné roční kurzy; historie a financování zůstávají v detailu.",ownership:"Veřejné vlastnictví / kontrola",ownerFilter:"Veřejný vlastník",mapOwnershipLabel:"Veřejné vlastnictví",mapWeighted:"Veřejný vlastnický podíl",mapTotalWeighted:"Součet podle veřejného vlastnictví",mapMethodWeighted:"Výnosy × doložený veřejný vlastnický podíl; analytický podíl, nikoli ocenění."});
+copy.en.methods[2][2]="Czech rows use verified standalone calendar-2024 accounts where available. Documented 2024 editorial snapshots remain labelled fallbacks; ČEZ retains its explicit state-consolidation comparator. Foreign group scopes are unchanged. Later years are history, never substitutes for 2024. Grants can already be included in revenue. Public transport bodies with audited fare or public-service compensation evidence are also included; their legal form remains explicit.";
+  copy.cs.methods[2][2]="České řádky používají ověřené samostatné závěrky kalendářního roku 2024, jsou-li dostupné. Doložené redakční snímky 2024 zůstávají označenou náhradní hodnotou; ČEZ zachovává výslovný údaj konsolidace státu. Zahraniční skupinové rozsahy zůstávají zachovány. Novější roky jsou historií, nikoli náhradou roku 2024. Dotace mohou být zahrnuty ve výnosech. Zahrnuty jsou také veřejné dopravní organizace s doloženým jízdným či kompenzací veřejné služby; jejich právní forma zůstává uvedena.";
+  copy.en.methods[5][2]="Published annual accounts are loaded independently from the website release. Source report years and ownership snapshots can differ from the 2024 ranking period. Coverage remains incomplete; missing values are not zero.";
+  copy.cs.methods[5][2]="Publikované závěrky se načítají nezávisle na vydání webu. Rok zdrojové zprávy a snímek vlastnictví se mohou lišit od pořadí za rok 2024. Pokrytí zůstává neúplné; chybějící údaj není nula.";
   const t = copy[lang];
   const flag = {CZE:"cz",DEU:"de",DNK:"dk",FRA:"fr",GBR:"gb",POL:"pl",SWE:"se",CHE:"ch",UKR:"ua",USA:"us"};
   const number = new Intl.NumberFormat(lang === "en" ? "en-GB" : "cs-CZ", {maximumFractionDigits:1});
@@ -77,7 +83,7 @@
 
   let dataset;
   let records = [];
-  const state = {country:"all", sector:"all", query:"", sort:"revenue", mapValue:"revenue", mapGroup:"country", selectedId:null};
+  const state = {country:"all", sector:"all", query:"", sort:"revenue", owner:"all", mapValue:"revenue", mapGroup:"country", selectedId:null};
   let mapWidth = 0;
 
   function translate() {
@@ -94,14 +100,21 @@
     const countries = [...new Map(records.map(record => [record.country_code, countryName(record)])).entries()].sort((a,b)=>a[1].localeCompare(b[1],lang));
     country.innerHTML = `<option value="all">${t.allCountries}</option>${countries.map(([code,name])=>`<option value="${code}">${escape(name)}</option>`).join("")}`;
     mapCountry.innerHTML = country.innerHTML;
+    const owner=document.querySelector("#soe-owner");
+    owner.innerHTML=`<option value="all">${lang === "en" ? "All public owners" : "Všichni veřejní vlastníci"}</option>${[...new Set(records.map(r=>r.owner_level))].sort().map(level=>`<option value="${escape(level)}">${escape(ownerLabel(level))}</option>`).join("")}`;
     const sectors = [...new Set(records.map(record => record.sector))].sort((a,b)=>t.sectors[a].localeCompare(t.sectors[b],lang));
     sector.innerHTML = `<option value="all">${t.allSectors}</option>${sectors.map(value=>`<option value="${value}">${escape(t.sectors[value])}</option>`).join("")}`;
   }
 
+  function ownerLabel(level) {
+    const labels=lang==="en"?{national:"State",local:"City / municipality",municipal:"City / municipality",regional:"Region",central_or_mixed:"Unknown / mixed public ownership",unknown:"Unknown public owner"}:{national:"Stát",local:"Město / obec",municipal:"Město / obec",regional:"Kraj",central_or_mixed:"Neurčené / smíšené veřejné vlastnictví",unknown:"Neurčený veřejný vlastník"};
+    return labels[level] || level;
+  }
   function filteredRecords() {
     const query = state.query.trim().toLocaleLowerCase(lang);
     return records.filter(record => state.country === "all" || record.country_code === state.country)
       .filter(record => state.sector === "all" || record.sector === state.sector)
+      .filter(record => state.owner === "all" || record.owner_level === state.owner)
       .filter(record => !query || [record.company,countryName(record),t.sectors[record.sector],record[lang === "en" ? "ownership_en" : "ownership_cs"]].join(" ").toLocaleLowerCase(lang).includes(query))
       .sort((a,b) => state.sort === "country" ? countryName(a).localeCompare(countryName(b),lang) || revenueOrder(a,b) : revenueOrder(a,b));
   }
@@ -212,7 +225,7 @@
     svg.querySelectorAll("g.map-chart").forEach(node=>node.remove());
     const chart = svgElement("g",{class:"map-chart"});
     svg.append(chart);
-    const shown = records.filter(record=>state.country==="all"||record.country_code===state.country).filter(record=>mapRecordValue(record) > 0);
+    const shown = records.filter(record=>state.owner==="all"||record.owner_level===state.owner).filter(record=>state.country==="all"||record.country_code===state.country).filter(record=>mapRecordValue(record) > 0);
     const groupMap = new Map();
     shown.forEach(record=>{
       const key = state.mapGroup === "country" ? record.country_code : record.sector;
@@ -286,6 +299,22 @@
     if (selected) updateMapDetail(selected);
   }
 
+  function rankingScopeLabel(scope) {
+    if(scope==="standalone") return lang==="en"?"Individual calendar-2024 accounts":"Samostatná závěrka za kalendářní rok 2024";
+    if(scope==="editorial state-consolidation comparator") return lang==="en"?"Editorial comparator from state consolidation":"Redakční srovnávací údaj z konsolidace státu";
+    if(scope?.startsWith("2024 editorial snapshot fallback")) return lang==="en"?"Documented editorial snapshot for 2024":"Doložený redakční snímek roku 2024";
+    return lang==="en"?"Editorial comparison":"Redakční srovnání";
+  }
+  function ownershipSnapshotLabel(kind) { return kind==="editorial snapshot"?(lang==="en"?"Ownership from editorial snapshot":"Vlastnictví podle redakčního snímku"):(lang==="en"?"Ownership from published directory":"Vlastnictví podle publikovaného registru"); }
+  function historyDetails(record) {
+    const names=lang==="en"?{revenue:"Revenue / turnover",fare_revenue:"Fares",net_result:"Net result",operating_result:"Operating result",public_service_compensation:"Public-service compensation",operating_grants:"Operating grants",capital_grants:"Capital grants"}:{revenue:"Výnosy / obrat",fare_revenue:"Jízdné",net_result:"Čistý výsledek",operating_result:"Provozní výsledek",public_service_compensation:"Kompenzace veřejné služby",operating_grants:"Provozní dotace",capital_grants:"Investiční dotace"};
+    const scopeName=scope=>scope==="standalone"?(lang==="en"?"Individual accounts":"Samostatná závěrka"):scope==="consolidated"?(lang==="en"?"Consolidated group":"Konsolidovaná skupina"):scope;
+    const rows=record.financial_history;
+    if(!rows?.length) return "";
+    const title=lang==="en"?"Financial history · CZK million":"Historie hospodaření · mil. Kč";
+    const warning=lang==="en"?"Compensation and operating grants may already be included in revenue. Funding bases differ; do not add these figures. Missing is not zero.":"Kompenzace a provozní dotace mohou být zahrnuty ve výnosech. Základy vykázání se liší; údaje nesčítejte. Chybějící údaj není nula.";
+    return `<h4>${title}</h4><p>${warning}</p>${rows.slice().sort((a,b)=>b.year-a.year).map(row=>`<section><h5>${escape(row.year)} · ${escape(scopeName(row.scope))}</h5><dl>${Object.entries(row.observations || {}).filter(([key])=>["revenue","fare_revenue","net_result","operating_result","public_service_compensation","operating_grants","capital_grants"].includes(key)).map(([key,obs])=>`<div><dt>${escape(names[key] || key)}</dt><dd>${escape(obs.normalized_value)} mil. CZK <small>${escape(obs.value)} ${escape(obs.unit)} · ${escape(obs.definition)} · ${escape(obs.basis)} · report ${escape(obs.source_report_year)}</small>${/^https:\/\//.test(obs.source_url)?`<a href="${escape(obs.source_url)}" target="_blank" rel="noopener">${t.openSource} · PDF ${escape(obs.page)}</a>`:""}</dd></div>`).join("")}</dl>${(row.funding_components || []).map(c=>`<p>${escape(c.provider)} · ${escape(c.value)} ${escape(c.unit)} · ${escape(c.definition)} · ${escape(c.basis)}${/^https:\/\//.test(c.source_url)?` · <a href="${escape(c.source_url)}" target="_blank" rel="noopener">PDF ${escape(c.page)} · ${escape(c.source_report_year)}</a>`:""}</p>`).join("")}<p>${escape(row.notes)}</p></section>`).join("")}`;
+  }
   function renderTable() {
     const shown = filteredRecords();
     document.querySelector("#soe-count").textContent = shown.length;
@@ -294,7 +323,7 @@
       const rank = records.slice().sort((a,b)=>revenueOrder(a,b)).findIndex(item=>item.id===record.id)+1;
       const note = record[lang === "en" ? "note_en" : "note_cs"];
       const metric = record[lang === "en" ? "metric_en" : "metric_cs"];
-      return `<tr data-country="${record.country_code}"><td class="soe-rank">${record.source_revenue_m === null ? "—" : state.sort === "revenue" ? index+1 : rank}</td><td class="soe-company"><div><img src="../../assets/flags/${flag[record.country_code]}.svg" alt=""><span><strong>${escape(record.company)}</strong><small>${escape(countryName(record))} · ${escape(t.sectors[record.sector])} · ${escape(record.period)}</small></span></div><details><summary>${t.detail}</summary><p>${escape(note)}</p></details></td><td><strong>${escape(record[lang === "en" ? "ownership_en" : "ownership_cs"])}</strong></td><td><strong>${escape(localRevenue(record))}</strong><small>${escape(metric)}</small></td><td class="soe-eur"><strong>${formatEur(eurBn(record))}</strong><small>${record.source_revenue_m === null ? "" : `${t.convertedAt} ${number.format(record.fx_rate)} ${record.currency} ${t.perEuro}`}</small></td><td><a class="soe-source-link" href="${escape(record.source_url)}" target="_blank" rel="noopener"><span>${t.openSource}</span> ↗</a></td></tr>`;
+      return `<tr data-country="${record.country_code}"><td class="soe-rank">${record.source_revenue_m === null ? "—" : state.sort === "revenue" ? index+1 : rank}</td><td class="soe-company"><div><img src="../../assets/flags/${flag[record.country_code]}.svg" alt=""><span><strong>${escape(record.company)}</strong><small>${escape(countryName(record))} · ${escape(t.sectors[record.sector])} · ${escape(record.period)}</small></span></div><details><summary>${t.detail}</summary><p>${escape(note)} · ${escape(rankingScopeLabel(record.ranking_scope))}</p>${record.directory_record ? `<p>${escape(ownerLabel(record.owner_level))} · ${escape(record.directory_record.period)} · ${escape(record.directory_record.legal_form_native)}</p><p>${escape(record.directory_record.notes || "")}</p>`:""}${record.ownership_snapshot?`<p>${escape(ownershipSnapshotLabel(record.ownership_snapshot.kind))} · ${escape(record.ownership_snapshot.period)} · ${escape(formatOwnership(record.ownership_pct))} · <a href="${escape(record.ownership_snapshot.source_url)}" target="_blank" rel="noopener">${t.openSource}</a></p>`:""}${historyDetails(record)}</details></td><td><strong>${escape(record[lang === "en" ? "ownership_en" : "ownership_cs"])}</strong></td><td><strong>${escape(localRevenue(record))}</strong><small>${escape(metric)}</small></td><td class="soe-eur"><strong>${formatEur(eurBn(record))}</strong><small>${record.source_revenue_m === null ? "" : `${t.convertedAt} ${number.format(record.fx_rate)} ${record.currency} ${t.perEuro}`}</small></td><td><a class="soe-source-link" href="${escape(record.source_url)}" target="_blank" rel="noopener"><span>${t.openSource}</span> ↗</a></td></tr>`;
     }).join("");
   }
 
@@ -329,12 +358,13 @@
   }
 
   function wireControls() {
+    document.querySelector("#soe-owner").addEventListener("change",event=>{state.owner=event.target.value;renderTable();renderPortfolioMap();});
     document.querySelector("#soe-search").addEventListener("input",event=>{state.query=event.target.value;renderTable();});
     document.querySelector("#soe-country").addEventListener("change",event=>setCountry(event.target.value));
     document.querySelector("#soe-map-country").addEventListener("change",event=>setCountry(event.target.value));
     document.querySelector("#soe-sector").addEventListener("change",event=>{state.sector=event.target.value;renderTable();});
     document.querySelector("#soe-sort").addEventListener("change",event=>{state.sort=event.target.value;renderTable();});
-    document.querySelector("#soe-reset").addEventListener("click",()=>{Object.assign(state,{country:"all",sector:"all",query:"",sort:"revenue"});document.querySelector("#soe-search").value="";document.querySelector("#soe-country").value="all";document.querySelector("#soe-map-country").value="all";document.querySelector("#soe-sector").value="all";document.querySelector("#soe-sort").value="revenue";dispatchEvent(new Event("deepfilterchange"));renderTable();renderPortfolioMap();});
+    document.querySelector("#soe-reset").addEventListener("click",()=>{Object.assign(state,{country:"all",sector:"all",query:"",sort:"revenue",owner:"all"});document.querySelector("#soe-owner").value="all";document.querySelector("#soe-search").value="";document.querySelector("#soe-country").value="all";document.querySelector("#soe-map-country").value="all";document.querySelector("#soe-sector").value="all";document.querySelector("#soe-sort").value="revenue";dispatchEvent(new Event("deepfilterchange"));renderTable();renderPortfolioMap();});
     document.querySelectorAll("[data-map-value]").forEach(button=>button.addEventListener("click",()=>{
       state.mapValue = button.dataset.mapValue;
       document.querySelectorAll("[data-map-value]").forEach(item=>{const active=item===button;item.classList.toggle("active",active);item.setAttribute("aria-pressed",String(active));});
@@ -353,7 +383,17 @@
     const response = await fetch("../../data/state-owned-enterprises.v1.json?v=20260908-czech-inventory");
     if (!response.ok) throw new Error(`State-enterprise dataset failed: ${response.status}`);
     dataset = await response.json();
-    records = dataset.records.map(record=>({...record,fx_rate:dataset.fx.rates[record.currency]}));
+    records = dataset.records.map(record=>({...record,owner_level:"national",fx_rate:dataset.fx.rates[record.currency]}));
+    try {
+      const directoryResponse=await fetch("/data/public-entity-directory/CZE.v1.json", {cache:"no-cache"});
+      if(!directoryResponse.ok) throw new Error(`Directory ${directoryResponse.status}`);
+      records=StateEnterpriseModel.merge(dataset,await directoryResponse.json());
+    } catch(error) {
+      console.error(error);
+      const notice=document.createElement("p");notice.setAttribute("role","status");
+      notice.textContent=lang==="en"?"Published Czech directory unavailable. Showing the older editorial catalogue only; city and regional coverage is incomplete.":"Publikovaný český registr není dostupný. Zobrazen pouze starší redakční katalog; pokrytí měst a krajů není úplné.";
+      document.querySelector("#soe-body").closest(".soe-table-wrap").before(notice);
+    }
     if (!records.length || records.some(record=>!Number.isFinite(record.fx_rate)||!record.source_url)) throw new Error("State-enterprise catalogue is incomplete");
     const countryCount = new Set(records.map(record=>record.country_code)).size;
     t.heroNote = `${records.length} ${lang === "en" ? "enterprises" : "podniků"} · ${countryCount} ${lang === "en" ? "countries" : "zemí"} · 2024`;
