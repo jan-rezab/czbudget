@@ -212,5 +212,12 @@ if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--loader-sha',required=True);args=p.parse_args()
  try:run(args)
  except Exception as e:
+  if os.environ.get('BUILD_ID') and os.environ.get('PROJECT_ID')=='czbudget-janrezab':
+   root=Path('/workspace/.rosling-history')
+   if root.exists():
+    failure=root/'failed.json'
+    write_json(failure,{'build_id':os.environ['BUILD_ID'],'loader_sha':args.loader_sha,'region':'europe-west4','failed_at':now(),'error':str(e),'processing_status':'failed','publication_status':'inspect active pointer','sources':[json.loads(p.read_text()) for p in root.glob('*.meta.json')]})
+    try:store(failure,'gs://czbudget-janrezab-data-layers/processing-runs/rosling-history/'+os.environ['BUILD_ID']+'/failed.json')
+    except Exception as receipt_error:print('Failure receipt error: '+str(receipt_error),flush=True)
   print(json.dumps({'event':'rosling-history-failed','error':str(e),'published_data':'Previous verified pointer remains unless publication already completed; inspect receipt.'}),flush=True)
   raise
