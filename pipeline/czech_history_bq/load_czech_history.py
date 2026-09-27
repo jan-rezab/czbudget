@@ -16,8 +16,8 @@ build. Pipeline: immutable raw -> staging -> validation -> atomic publish.
 4. Load a per-run staging table, validate it against totals recomputed from the
    JSON with Decimal arithmetic, index.json and the directory file, and
    cross-check 2025 against municipal_budget_line_facts (reported, not fixed).
-5. Only if every blocking validation passes: one `bq cp -f` replaces the
-   published table atomically. The staging table is retained as the immutable
+5. Only if every blocking validation passes: one multi-statement transaction
+   (delete + insert) replaces the published rows atomically. The staging table is retained as the immutable
    release copy for replay/rollback.
 6. Write an immutable receipt (if-generation-match=0) whether or not it published.
 
@@ -561,8 +561,15 @@ def main() -> int:
                     exit_code = 3
                 else:
                     receipt["processing_status"] = "succeeded"
-                    run(["bq", f"--project_id={args.project}", "--location=EU", "cp", "-f",
-                         f"{args.project}:{stage_table}", f"{args.project}:{target}"])
+                    # The data identity holds a table-level grant on the published table only;
+                    # BigQuery checks copy jobs against the whole dataset, so publish with one
+                    # multi-statement transaction instead: readers see the old rows or all new ones.
+                    run(["bq", f"--project_id={args.project}", "--location=EU", "query", "--quiet",
+                         "--use_legacy_sql=false",
+                         f"BEGIN TRANSACTION; "
+                         f"DELETE FROM `{args.project}.{target}` WHERE TRUE; "
+                         f"INSERT INTO `{args.project}.{target}` SELECT * FROM `{args.project}.{stage_table}`; "
+                         f"COMMIT TRANSACTION;"])
                     run(["bq", f"--project_id={args.project}", "update",
                          "--set_label", f"ingestion_run:{safe_run.lower()}",
                          "--set_label", f"source_git_sha:{args.source_sha[:12]}",
