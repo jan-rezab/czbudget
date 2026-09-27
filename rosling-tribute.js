@@ -183,8 +183,8 @@
     measures.forEach(([key,label,url,unit])=>{
       const source=country?.outcomes[key],rows=(source?.series||[]).map(r=>({...r,label:String(r.year),value:r.value})),id='rosling-progress-'+key.replaceAll('_','-');
       plot(id,{type:'line',height:300,rows,fields:[{key:'value',label}],unit:label,includeZero:key!=='life_expectancy_years',emptyLabel:tr('No published observations','Žádná publikovaná pozorování')},chartSource(h,url,label,key),[{key:'year',label:tr('Year','Rok')},{key:'source_value',label:tr('Source numeric text','Zdrojový číselný text')},{key:'source_status',label:tr('Source flag','Zdrojový příznak')},{key:'footnote',label:tr('Source footnote','Zdrojová poznámka')}]);
-      const change=M.change(source?.series);
-      evidence(id,`${change?`<p class="rosling-country-evidence">${change.first.year}: ${fmt(change.first.value)} → ${change.last.year}: ${fmt(change.last.value)}. ${tr('Calculated change','Vypočtená změna')}: ${fmt(change.delta)} ${esc(unit)}.</p>`:`<p class="rosling-caption">${tr('Insufficient history to calculate a change.','Nedostatečná historie pro výpočet změny.')}</p>`}${sourceLine([[key,url]],`PSD country-health-performance.v1 · ${h.generated_at}`)}`);
+      const change=M.change(source?.series),deltaUnit=unit==='%'?tr('percentage points','procentních bodů'):unit;
+      evidence(id,`${change?`<p class="rosling-country-evidence">${change.first.year}: ${fmt(change.first.value)} → ${change.last.year}: ${fmt(change.last.value)}. ${tr('Calculated change','Vypočtená změna')}: ${fmt(change.delta)} ${esc(deltaUnit)}.</p>`:`<p class="rosling-caption">${tr('Insufficient history to calculate a change.','Nedostatečná historie pro výpočet změny.')}</p>`}${sourceLine([[key,url]],`PSD country-health-performance.v1 · ${h.generated_at}`)}`);
     });
   }
   async function services(own){
