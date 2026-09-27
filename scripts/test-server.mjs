@@ -5,7 +5,8 @@ import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
-import { ASSET_PATH } from '../server/static-assets.mjs';
+import { ASSET_PATH, staticAssets } from '../server/static-assets.mjs';
+import { localAssetOptions, serverAccessToken } from './lib/static-asset-source.mjs';
 
 const root = resolve(process.cwd());
 const port = Number(process.env.PORT || 4173);
@@ -20,6 +21,10 @@ if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT) {
 process.env.NODE_ENV = "test";
 process.env.SITE_ROOT = root;
 const { handler } = await import("../server/index.mjs");
+// Datasets that are not in the checkout are served from the published packs: a hydrated
+// DATA_ASSET_LOCK/DATA_ASSET_PACK_ROOT in Cloud Build, else the live lock read with the
+// developer's gcloud credentials. Bytes stay in memory; nothing is written to disk.
+staticAssets.configure(localAssetOptions(process.env, { tokenProvider: serverAccessToken }));
 const lineFixtures = JSON.parse(await readFile(join(root, "tests/fixtures/municipal-lines/manifest.json"), "utf8"));
 const cleanup = async () => {
   if (temporaryRelease) await rm(temporaryRelease, { recursive: true, force: true });
@@ -87,7 +92,7 @@ createServer(async (request, response) => {
     const queryProfile = /^\/municipalities\/(?:france|germany)\/profile\/$/.test(pathname);
     if ((!queryProfile && /^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(pathname))
       // Like nginx in production: a file in the checkout wins; published packs serve the rest.
-      || (process.env.DATA_ASSET_LOCK && ASSET_PATH.test(pathname) && !existsSync(join(root, pathname.slice(1))))
+      || (ASSET_PATH.test(pathname) && !existsSync(join(root, pathname.slice(1))))
       || /^\/(?:public-data|api|auth|docs|developers)(?:\/|$)/.test(pathname)
       || /^\/(?:data\/)?municipal-expansion\/[a-z]{3}\/[^/]+\.json$/.test(pathname)
       || /^\/data\/(?:entities|municipal-history)\/\d{8}\.json$/.test(pathname)

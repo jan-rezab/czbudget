@@ -159,6 +159,9 @@ const files = [
   "site-pages.css",
   "run-log.css",
   "scripts/ui-test-server.mjs",
+  // The UI server streams datasets that left the repository from the published packs.
+  "server/static-assets.mjs",
+  "scripts/lib/static-asset-source.mjs",
   "tests/browser/map-view.spec.mjs",
   "tests/browser/process-log.spec.mjs",
   "data/world-map.v1.json",
