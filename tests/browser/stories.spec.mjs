@@ -1,9 +1,10 @@
 import {test,expect} from '@playwright/test';
+import catalog from '../../content/stories/catalog.mjs';
 
 test('story catalogue supports formats, search, URL state and Czech UI',async({page})=>{
   await page.goto('/stories/?lang=en');
   await expect(page.locator('h1')).toHaveText('Data stories.');
-  await expect(page.locator('.story-card:visible')).toHaveCount(4);
+  await expect(page.locator('.story-card:visible')).toHaveCount(catalog.filter(story=>story.status==='published').length);
   await page.locator('[data-filter="mini"]').click();
   await expect(page.locator('.story-card:visible')).toHaveCount(2);
   await page.locator('#story-search').fill('customs');
@@ -101,3 +102,16 @@ test('oil story supports keyboard chart selection, reduced motion and mobile exp
   await page.locator('#oa-monthly').check();await expect(page.locator('.oa-trend-panel')).toHaveCount(1);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
 });
+
+ test('Russia story includes the complete maps and charts report',async({page})=>{
+  await page.goto('/stories/trade-surged-around-russia/?lang=en');
+  await expect(page.locator('h1')).toHaveText('Trade surged around Russia. Where did the goods go?');
+  const report=page.locator('iframe[title="Russia trade: interactive maps, category stacks and supplier comparisons"]');
+  await report.scrollIntoViewIfNeeded();
+  await expect(report).toHaveAttribute('src',/deep-dives\/russia-trade\/.*frequency=A/);
+  const frame=page.frameLocator('iframe[title="Russia trade: interactive maps, category stacks and supplier comparisons"]');
+  await expect(frame.locator('#rt-map')).toBeAttached();
+  await expect(frame.locator('#rt-growth-KAZ')).toBeAttached();
+  await expect(frame.locator('#rt-growth-KGZ')).toBeAttached();
+  await expect(frame.locator('#rt-lead-chart')).toBeAttached();
+ });

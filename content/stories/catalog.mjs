@@ -6,7 +6,7 @@ export default [
     description:'Follow suppliers, product baskets and onward exports through Kazakhstan and Kyrgyzstan—and test how much the trade statistics can establish.',
     date:'2026-09-27',updated:'2026-09-27',minutes:5,topic:'Trade & sanctions',author:'Public Spending Data',language:'en',featured:false,
     takeaway:'Larger neighbouring markets offer clues about trade detours. Matching shipments requires more evidence.',
-    edition:'Draft editorial snapshot · Annual hub history: 2014–2025 · Supplier comparison: 2019–2025 · Evidence checked 27 September 2026.',
+    edition:'Editorial snapshot · Annual hub history: 2014–2025 · Supplier comparison: 2019–2025 · Evidence checked 27 September 2026.',
   },
   {
     slug:'the-great-oil-pivot',status:'published',format:'interactive',
