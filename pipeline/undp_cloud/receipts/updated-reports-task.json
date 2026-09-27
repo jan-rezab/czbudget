@@ -6,7 +6,7 @@
   "checkpoint_minutes_from_original_source_expansion": 83,
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
-  "failed_cloud_verification_attempts": 6,
+  "failed_cloud_verification_attempts": 7,
   "superseded_builds": [
     {
       "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
@@ -71,7 +71,7 @@
     }
   ],
   "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously.",
-  "checkpoint_status": "STOP_AFTER_SIXTH_TERMINAL_FAILURE; exact size diagnostic and focused correction ready",
+  "checkpoint_status": "EXPLICIT_OVERRIDE_CONTINUATION: one corrected private attempt after source snapshot/tuple correction; original clock/fail7 preserved",
   "failed_source_builds": [
     {
       "id": "a20f0ab0-dd8b-4b05-af8a-92f0c1266327",
@@ -92,6 +92,13 @@
       "reason": "TIMEOUT context deadline exceeded; no processing/staging/publication verified",
       "finished_at": "2026-09-27T00:25:08.002876Z",
       "cumulative_failed_verifications": 4
+    },
+    {
+      "id": "15b9c7ea-7c11-45ac-94f6-abe3e959a2a4",
+      "group": "CDC ASCII initial",
+      "reason": "Fetch/source availability validation failed; no publication; sourceagent diagnosing exact source failure",
+      "finished_at": "2026-09-27T01:06:49.952862Z",
+      "cumulative_failed_verifications": 7
     }
   ],
   "provider_source_record_rows_current_groups": 15193157,
@@ -197,5 +204,14 @@
     "budget_minutes_from_original_start": 179,
     "guard_result": "STOP_NEW_BUILDS due failures5; explicit named corrective retry override; clock/count not reset",
     "max_cpu": 2
+  },
+  "necessary_corrected_private_retry_authorization": {
+    "evidence": "Root explicitly instructed proceedprivateattempt under user approve override yes - lets finish this; automatic review must be honored",
+    "recorded_at": "2026-09-27T01:11:00Z",
+    "guard_result": "STOP failures7; explicit corrective override continuing requested finish, no reset of clock/count",
+    "tested_correction": "32 focused tests plus root14consumer tests; lossless core tuples, exact defaults/nulls; WID homogeneous latestsnapshot/fullhistories exported",
+    "scope": "One corrected private-only reportJSON/CSV/details/PDF build; pin latest validated source pointers at startup; no publicwrites until rootQA",
+    "budget_minutes": 179,
+    "failed_verifications_preserved": 7
   }
 }
