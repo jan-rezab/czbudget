@@ -6,7 +6,7 @@
   "checkpoint_minutes_from_original_source_expansion": 83,
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
-  "failed_cloud_verification_attempts": 3,
+  "failed_cloud_verification_attempts": 4,
   "superseded_builds": [
     {
       "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
@@ -36,13 +36,7 @@
   "website_publication_status": "not_published",
   "data_plane": "europe-west4 / psd-data-builder / plane-data",
   "comtrade": "Unrelated job untouched; user approved distinct concurrent HDR intake",
-  "active_source_builds": [
-    {
-      "id": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
-      "group": "pisa",
-      "status": "WORKING"
-    }
-  ],
+  "active_source_builds": [],
   "published_source_builds": [
     {
       "group": "education",
@@ -77,7 +71,7 @@
     }
   ],
   "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously.",
-  "checkpoint_status": "STOP_NEW_BUILDS_AFTER_THIRD_TERMINAL_FAILURE; explicit retry approval pending; original143-minute deadline preserved",
+  "checkpoint_status": "STOP_NEW_BUILDS_AFTER_FOURTH_TERMINAL_FAILURE; explicit retry approval pending; original143-minute deadline preserved",
   "failed_source_builds": [
     {
       "id": "a20f0ab0-dd8b-4b05-af8a-92f0c1266327",
@@ -91,6 +85,13 @@
       "reason": "No original-provider records available for publication; obsolete WID native variable filter excluded all selected source rows. Corrected code is not yet rerun.",
       "finished_at": "2026-09-27T00:21:52.084544Z",
       "cumulative_failed_verifications": 3
+    },
+    {
+      "id": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
+      "group": "pisa",
+      "reason": "TIMEOUT context deadline exceeded; no processing/staging/publication verified",
+      "finished_at": "2026-09-27T00:25:08.002876Z",
+      "cumulative_failed_verifications": 4
     }
   ],
   "provider_source_record_rows_current_groups": 15193157,
