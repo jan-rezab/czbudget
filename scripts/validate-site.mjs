@@ -1,6 +1,16 @@
-import { readFile, readdir, stat } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { loadExpectedCounts } from "./lib/expected-counts.mjs";
+import { readDataFile, statDataFile } from "./lib/static-asset-source.mjs";
+
+// Large datasets live in the published static-asset packs, not in Git. A file that is
+// checked out is read from the checkout; an offloaded one from the static-asset lock, so
+// every assertion below still runs against the exact published bytes.
+const readFile = async (file, encoding) => {
+  const body = await readDataFile(file);
+  return encoding ? body.toString(encoding) : body;
+};
+const stat = (file) => statDataFile(file);
 
 // Every published-volume total this validator asserts is measured or pinned in
 // exactly one place. See scripts/lib/expected-counts.mjs for which are derived

@@ -1,8 +1,10 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { readdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fanoutRoot } from "./lib/municipal-fanout.mjs";
+import { ASSET_PATH } from "../server/static-assets.mjs";
+import { dataFileDigest, listDataFiles, offloadedRepositoryDatasets, readDataFile } from "./lib/static-asset-source.mjs";
 
 const root = process.cwd();
 const dataOnly = process.argv.includes("--data-only");
@@ -68,6 +70,12 @@ const buildModeOverride = process.env.PSD_BUILD_MODE || "";
 if (buildModeOverride && !["production", "local"].includes(buildModeOverride)) throw new Error(`PSD_BUILD_MODE must be "production" or "local", received ${JSON.stringify(buildModeOverride)}`);
 const productionBuild = buildModeOverride ? buildModeOverride === "production" : Object.values(productionBuildSignals).some(Boolean);
 const close = (a, b, tolerance = 0.011) => Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= tolerance;
+// Checkout first; datasets served from the static-asset packs are read from the lock
+// (Cloud Build hydrates it; locally the live lock is read with gcloud credentials).
+const readFile = async (file, encoding) => {
+  const body = await readDataFile(path.isAbsolute(file) ? path.relative(root, file) : file, { root });
+  return encoding ? body.toString(encoding) : body;
+};
 const json = async (file) => JSON.parse(await readFile(file, "utf8"));
 
 async function filesBelow(directory, predicate = () => true) {
@@ -96,13 +104,30 @@ const canonicalProductionJson = (file) => {
   if (parent === "municipal-history") return path.basename(file) === "index.json" || /^\d{8}\.json$/.test(path.basename(file));
   return true;
 };
+// Datasets that left the repository for the static-asset packs are still production
+// JSON: they are scanned from the lock exactly as the checked-out files are.
 const productionJson = manifestOnly ? [] : [
   ...await filesBelow(path.join(root, "data"), canonicalProductionJson),
+  ...(await offloadedRepositoryDatasets({ root })).map((relative) => path.join(root, relative)).filter(canonicalProductionJson),
   ...await filesBelow(path.join(root, "lib", "data"), (file) => file.endsWith(".json")),
 ];
+const knownDead = [
+  "dublincity.ie/council/council-spending-revenue/budgets",
+  "madrid.es/portales/munimadrid/es/Informacion-financiera/",
+  "statskontoret.se/english/outcome-of-the-central-government-budget/",
+  "whitehouse.gov/wp-content/uploads/2024/03/ap_17_coverage_fy2025.pdf",
+  "Prijmy_a_vydaje_na_socialni_zabezpeceni_12_2025",
+];
+// Read each file once: a pack-served file is not downloaded twice for the two scans.
+const deadSourceHits = [];
 for (const file of productionJson) {
-  try { inspectFinite(await json(file), path.relative(root, file)); }
+  let content;
+  try {
+    content = await readFile(file, "utf8");
+    inspectFinite(JSON.parse(content), path.relative(root, file));
+  }
   catch (error) { failures.push(`Invalid JSON ${path.relative(root, file)}: ${error.message}`); }
+  if (content) for (const dead of knownDead) if (content.includes(dead)) deadSourceHits.push({ file, dead });
 }
 
 // The per-entity history and benchmark fan-out is not tracked in Git. Where it has been
@@ -136,7 +161,11 @@ try {
         assert(pin && pin.files === artifact.files && pin.bytes === artifact.bytes && pin.sha256 === artifact.sha256, `Release manifest tree for ${artifact.path} is not the pinned fan-out input`);
         continue;
       }
-      const names = (await readdir(source)).filter((name) => {
+      // A checkout tree that moved to the static-asset packs is listed from the lock.
+      const listing = source === path.join(root, directory)
+        ? (await listDataFiles(directory, { root, recursive: false })).map((relative) => path.posix.basename(relative))
+        : await readdir(source);
+      const names = listing.filter((name) => {
         if (directory.endsWith("entities")) return /^\d{8}\.json$/.test(name);
         if (directory.endsWith("municipal-history")) return name === "index.json" || /^\d{8}\.json$/.test(name);
         return name.endsWith(".json");
@@ -148,8 +177,10 @@ try {
       }
       assert(names.length === artifact.files && bytes === artifact.bytes && digest.digest("hex") === artifact.sha256, `Release manifest tree digest mismatch for ${artifact.path}`);
     } else {
-      const content = await readFile(path.join(root, artifact.path));
-      assert(content.length === artifact.bytes && createHash("sha256").update(content).digest("hex") === artifact.sha256, `Release manifest mismatch for ${artifact.path}`);
+      // A pack-served file is compared with its lock entry (its raw size and SHA-256); the
+      // server re-verifies those bytes on every read, so the manifest still pins them.
+      const digest = await dataFileDigest(artifact.path, { root });
+      assert(digest.bytes === artifact.bytes && digest.sha256 === artifact.sha256, `Release manifest mismatch for ${artifact.path}`);
     }
   }
 } catch (error) {
@@ -465,17 +496,7 @@ const componentTotal = (items) => items.reduce((sum, item) => sum + item.value_b
 assert(close(componentTotal(health.system_2023.sources), health.system_2023.total_bn, 0.001), "Health-system source total mismatch");
 assert(close(componentTotal(health.system_2023.destinations), health.system_2023.total_bn, 0.001), "Health-system destination total mismatch");
 
-const knownDead = [
-  "dublincity.ie/council/council-spending-revenue/budgets",
-  "madrid.es/portales/munimadrid/es/Informacion-financiera/",
-  "statskontoret.se/english/outcome-of-the-central-government-budget/",
-  "whitehouse.gov/wp-content/uploads/2024/03/ap_17_coverage_fy2025.pdf",
-  "Prijmy_a_vydaje_na_socialni_zabezpeceni_12_2025",
-];
-for (const file of productionJson) {
-  const content = await readFile(file, "utf8");
-  for (const dead of knownDead) assert(!content.includes(dead), `Known-dead source remains in ${path.relative(root, file)}: ${dead}`);
-}
+for (const { file, dead } of deadSourceHits) assert(false, `Known-dead source remains in ${path.relative(root, file)}: ${dead}`);
 
 const nginx = await readFile("nginx.conf.template", "utf8");
 for (const header of ["Strict-Transport-Security", "X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy", "Permissions-Policy", "Content-Security-Policy"]) {
@@ -511,7 +532,7 @@ const municipalHistoryPaths = new Set(municipalHistoryFiles.map((name) => `/data
 // them from the published static-asset packs. With the release lock hydrated (Cloud
 // Build sets DATA_ASSET_LOCK) a link must name a file in it; a bare checkout can only
 // check the prefix.
-const ASSET_PACK_PREFIX = /^\/data\/(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq)\//;
+const ASSET_PACK_PREFIX = ASSET_PATH;
 const assetLock = process.env.DATA_ASSET_LOCK && existsSync(process.env.DATA_ASSET_LOCK) ? await json(process.env.DATA_ASSET_LOCK) : null;
 const servedFromAssetPacks = (resolved) => ASSET_PACK_PREFIX.test(resolved) && (assetLock ? Object.hasOwn(assetLock.files, resolved) : true);
 if (!dataOnly) {

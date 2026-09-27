@@ -165,3 +165,38 @@ export async function listDataFiles(directory, { root = process.cwd(), store = l
 export function isPublishedDataPath(relative) {
   return Boolean(published(relative));
 }
+
+/**
+ * fs.stat for validators: a checked-out path is stat'ed as usual; an offloaded file that is
+ * not checked out must be in the lock and reports its committed (raw) size.
+ */
+export async function statDataFile(relative, { root = process.cwd(), store = localAssetStore() } = {}) {
+  const file = path.resolve(root, relative);
+  try {
+    return await stat(file);
+  } catch (error) {
+    if (error.code !== "ENOENT" || !published(path.relative(root, file))) throw error;
+  }
+  const { bytes } = await dataFileDigest(relative, { root, store });
+  return { size: bytes, isFile: () => true, isDirectory: () => false, published: true };
+}
+
+/**
+ * Pack-served datasets that used to be tracked in Git and validated with the site. The
+ * bulk packs that never lived in the checkout (isred, industrial-intelligence, czech-nku,
+ * czech-project-geography and the bulk of contracts/ and industry/) keep their own
+ * data-plane validators and are not rescanned here.
+ */
+export const REPOSITORY_DATASET = /^\/data\/(?:(?:paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|countries|public-entities|economy|international-municipalities|czech-sfdi-tables|monitor-grants|registry\/source-provenance)\/|contracts\/00075370\.plzen-projects\.v1\.json$|industry\/CZE\.json\.gz$|(?:international-municipalities|municipal-snapshot|municipal-history-directory|cze-medicine-reimbursements|cze-school-funding-2026|czech-consolidated-accounts|czech-sfdi-financing|pensions-today|methodology-sources|eu-budget-flows|sovereign-benchmark-slim)\.v1\.json$)/;
+
+/** Repository datasets that are served from the packs and absent from this checkout. */
+export async function offloadedRepositoryDatasets({ root = process.cwd(), store = localAssetStore() } = {}) {
+  let urls;
+  try { urls = await store.list("/data/"); } catch (error) { throw explain(error, "data/"); }
+  const absent = [];
+  for (const url of urls) {
+    if (!ASSET_PATH.test(url) || !REPOSITORY_DATASET.test(url)) continue;
+    if (!(await exists(path.join(root, url.slice(1))))) absent.push(url.slice(1));
+  }
+  return absent;
+}

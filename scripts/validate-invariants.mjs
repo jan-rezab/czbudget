@@ -14,6 +14,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { offloadedRepositoryDatasets, readDataText } from "./lib/static-asset-source.mjs";
 
 const ROOT = process.env.SITE_ROOT || process.cwd();
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -213,12 +214,17 @@ if (registry) {
     return found;
   }
 
-  const artifacts = (await jsonFiles(path.join(ROOT, "data"))).sort();
+  // Datasets that moved to the static-asset packs are still data artifacts: read them
+  // from the lock, under the same skip rules as the checked-out tree.
+  const offloaded = (await offloadedRepositoryDatasets({ root: ROOT }))
+    .map((relative) => relative.slice("data/".length))
+    .filter((rel) => rel.endsWith(".json") && rel !== "manifest.v1.json" && !rel.split("/").slice(0, -1).some((part) => SKIP_DIRS.has(part)));
+  const artifacts = [...new Set([...await jsonFiles(path.join(ROOT, "data")), ...offloaded])].sort();
 
   for (const artifact of artifacts) {
     let parsed;
     try {
-      parsed = JSON.parse(await readFile(path.join(ROOT, "data", artifact), "utf8"));
+      parsed = JSON.parse(await readDataText(`data/${artifact}`, { root: ROOT }));
     } catch {
       continue;
     }

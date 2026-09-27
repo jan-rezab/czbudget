@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
+import { readDataJSON } from "../../scripts/lib/static-asset-source.mjs";
 
-const readJson = async (relative) => JSON.parse(await readFile(new URL(`../../${relative}`, import.meta.url), "utf8"));
+// Checkout first; datasets served from the static-asset packs are read from the lock.
+const readJson = (relative) => readDataJSON(relative, { root: fileURLToPath(new URL("../..", import.meta.url)) });
 
 test("annual municipal FX rates cover every published municipal currency", async () => {
   const [fx, municipalities] = await Promise.all([

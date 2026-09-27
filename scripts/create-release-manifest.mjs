@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { fanoutRoot } from "./lib/municipal-fanout.mjs";
+import { dataFileDigest, listDataFiles, offloadedRepositoryDatasets, readDataFile, readDataJSON, isPublishedDataPath } from "./lib/static-asset-source.mjs";
 
 const root = process.cwd();
 const selected = [
@@ -24,22 +25,27 @@ const selected = [
   "data/contracts/00075370.plzen-projects.v1.json", "data/money-reports/cze-arad-native.v1.json", "data/money-reports/cze.v1.json",
   "data/industry/CZE.json.gz", "data/registry/source-provenance.v1.json", "data/registry/run-log.v1.json",
 ];
-for (const name of (await readdir(path.join(root, "data"))).sort()) {
+// Datasets served from the static-asset packs are listed and hashed from the lock when they
+// are not checked out, so the manifest is identical with or without them.
+const offloaded = await offloadedRepositoryDatasets({ root });
+const topLevelData = [...new Set([...await readdir(path.join(root, "data")), ...offloaded.filter((relative) => relative.split("/").length === 2).map((relative) => relative.slice("data/".length))])];
+for (const name of topLevelData.sort()) {
   if (/^(?:cze-|czech-|cez-issuer-|mv-administration-grants).*\.json$/.test(name) && !selected.includes(`data/${name}`)) selected.push(`data/${name}`);
 }
 try {
   await access(path.join(root, "data", "municipal-budget-codebook.v1.json"));
   selected.push("data/municipal-budget-codebook.v1.json");
 } catch {}
-for (const code of (await readdir(path.join(root, "data", "countries"))).sort()) {
-  for (const name of (await readdir(path.join(root, "data", "countries", code))).filter((item) => item.endsWith(".json") && !/\s\d+\.json$/.test(item)).sort()) selected.push(`data/countries/${code}/${name}`);
+for (const relative of await listDataFiles("data/countries", { root })) {
+  const [, , code, name, ...deeper] = relative.split("/");
+  if (code && name && !deeper.length && name.endsWith(".json") && !/\s\d+\.json$/.test(name)) selected.push(relative);
 }
 for (const code of ["CZE","POL","DEU","GBR","FRA","USA","CHE","SWE","DNK","UKR"]) selected.push(`data/public-entity-directory/${code}.v1.json`);
 const sha256 = (content) => createHash("sha256").update(content).digest("hex");
 const artifacts = [];
 for (const relative of selected) {
-  const content = await readFile(path.join(root, relative));
-  artifacts.push({ path: relative, bytes: content.length, sha256: sha256(content) });
+  const { bytes, sha256: digest } = await dataFileDigest(relative, { root });
+  artifacts.push({ path: relative, bytes, sha256: digest });
 }
 // Trees that are not in Git (cloud-hydrated layers and the pinned per-entity fan-out) are
 // digested where they have been restored. Where they have not, the previous manifest's
@@ -61,6 +67,20 @@ const treeSource = (directory) => {
 async function pushTree(directory, include) {
   const source = treeSource(directory);
   const key = `${directory}/*.json`;
+  // A repository dataset served from the static-asset packs is digested from the lock.
+  const fanout = directory === "data/municipal-history" || /^data\/municipal-benchmarks\//.test(directory);
+  if (!source && !fanout && isPublishedDataPath(`${directory}/index.json`)) {
+    const digest = createHash("sha256");
+    let bytes = 0;
+    const names = (await listDataFiles(directory, { root, recursive: false })).map((relative) => path.posix.basename(relative)).filter(include).sort();
+    for (const name of names) {
+      const content = await readDataFile(`${directory}/${name}`, { root });
+      digest.update(name).update("\0").update(content);
+      bytes += content.length;
+    }
+    artifacts.push({ path: key, files: names.length, bytes, sha256: digest.digest("hex") });
+    return;
+  }
   if (!source) {
     if (!previousTrees.has(key)) throw new Error(`${directory} is not in this checkout and the previous release manifest has no entry to carry forward`);
     artifacts.push(previousTrees.get(key));
@@ -93,7 +113,7 @@ if (!gitCommit) {
 } else {
   workingTreeDirty = false;
 }
-const snapshot = JSON.parse(await readFile(path.join(root, "data", "municipal-snapshot.v1.json"), "utf8"));
+const snapshot = await readDataJSON("data/municipal-snapshot.v1.json", { root });
 const sourceManifest = await readFile(path.join(root, "pipeline", "source-assets.manifest.json"));
 const manifest = {
   schema_version: "1.0.0",
