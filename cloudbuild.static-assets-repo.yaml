@@ -11,10 +11,13 @@ steps:
     args:
       - -ceu
       - |
-        git clone --quiet --filter=blob:none --no-checkout https://github.com/jan-rezab/czbudget.git /workspace/src
+        # One shallow fetch of the pinned commit. A blobless clone would fetch each missing
+        # file separately at checkout, which stalled a 6,256-file build for 30 minutes.
+        git init -q /workspace/src
         cd /workspace/src
-        git sparse-checkout set --no-cone /scripts/publish-repo-asset-packs.py $$(printf '/data/%s/ ' $$(echo "${_DIRECTORIES}" | tr ',' ' '))
-        git checkout --quiet --detach "${_SOURCE_SHA}"
+        git remote add origin https://github.com/jan-rezab/czbudget.git
+        git fetch -q --depth=1 origin "${_SOURCE_SHA}"
+        git checkout -q --detach FETCH_HEAD
         test "$$(git rev-parse HEAD)" = "${_SOURCE_SHA}"
 
   - id: read-active-lock
