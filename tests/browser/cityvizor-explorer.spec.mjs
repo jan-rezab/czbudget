@@ -122,6 +122,8 @@ test('Czech coverage separates held snapshots from database ingestion and offers
   await page.goto('/czech-sources.html?lang=en');
   await expect(page.locator('#coverage-rows tr')).toHaveCount(3);
   await expect(page.locator('#coverage-rows')).toContainText('0 rows in hlidac_municipality_contract_matches');
+  await expect(page.locator('#coverage-rows')).toContainText('415,303 / 12 cities');
+  await expect(page.locator('#coverage-rows')).toContainText('downloaded and normalized');
   await expect(page.locator('#coverage-rows')).toContainText('Not reconciled in BigQuery');
   await expect(page.locator('main a[href*=".json"], main a[href*=".zip"], main a[href*=".gz"], main a[href*="/api/"], main a[download]')).toHaveCount(0);
   await page.locator('#research-evidence summary').first().click();
@@ -139,6 +141,8 @@ test('Czech coverage does not assign whole-city PAQ data to a district sharing i
   await page.locator('#city-search').fill('Medlánky');
   await expect(page.locator('#city-rows tr')).toHaveCount(1);
   await expect(page.locator('#city-rows')).toContainText('Join not verified');
+  await expect(page.locator('#city-rows')).not.toContainText('Cloud: downloaded and normalized');
+  await expect(page.locator('#city-rows')).toContainText('not this district’s holdings');
   await expect(page.locator('#city-rows a[href*="paq.html"]')).toHaveCount(0);
   await page.locator('#city-search').fill('');
   await page.locator('#city-fresh').selectOption('older');
