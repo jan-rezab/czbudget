@@ -3,7 +3,10 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
-import {createGunzip} from 'node:zlib';
+import {createGunzip, gunzip as gunzipCallback} from 'node:zlib';
+import {promisify} from 'node:util';
+
+const gunzip = promisify(gunzipCallback);
 
 // Data routes served from published static-asset packs rather than from the image.
 // nginx.conf.template mirrors this pattern and stage-runtime.py leaves these paths out.
@@ -12,6 +15,10 @@ export const PUBLIC_ENTITY_PATH = /^\/data\/(?:public-entity-directory\/(?:[A-Z]
 const MAX_FILE = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT_BYTES = 48 * 1024 * 1024;
 const CACHE_BYTES = 16 * 1024 * 1024;
+// Parsed JSON is several times its raw size in memory. Budget the raw bytes behind the
+// parsed values and evict least-recently-used documents; never keep one above the limit.
+const JSON_CACHE_RAW_BYTES = 48 * 1024 * 1024;
+const JSON_MAX_CACHED_RAW = 32 * 1024 * 1024;
 
 export class AssetError extends Error {
   constructor(status, code) { super(code); this.status = status; this.code = code; }
@@ -20,17 +27,32 @@ export class AssetError extends Error {
 export class StaticAssets {
   constructor({lockPath = process.env.DATA_ASSET_LOCK || (process.env.DATA_ASSET_LOCK_OBJECT ? null : new URL('./data-assets-lock.json', import.meta.url)),
     lockObject = process.env.DATA_ASSET_LOCK_OBJECT, lockTtlMs = 60_000,
-    localRoot = process.env.DATA_ASSET_PACK_ROOT, fetchImpl = globalThis.fetch, manifest} = {}) {
+    localRoot = process.env.DATA_ASSET_PACK_ROOT, fetchImpl = globalThis.fetch, manifest, tokenProvider, maxInFlightBytes} = {}) {
+    this.configure({lockPath, lockObject, lockTtlMs, localRoot, fetchImpl, manifest, tokenProvider, maxInFlightBytes});
+  }
+
+  /** Point this store at another lock (test servers use local credentials). Clears every cache. */
+  configure({lockPath = null, lockObject, lockTtlMs = 60_000, localRoot, fetchImpl = globalThis.fetch, manifest, tokenProvider, maxInFlightBytes = MAX_IN_FLIGHT_BYTES} = {}) {
+    this.maxInFlightBytes = maxInFlightBytes;
     this.lockPath = lockPath;
     this.lockObject = lockObject;
     this.lockTtlMs = lockTtlMs;
     this.localRoot = localRoot;
     this.fetch = fetchImpl;
     this.manifest = manifest;
+    this.tokenProvider = tokenProvider;
     this.cache = new Map();
     this.pending = new Map();
     this.cacheBytes = 0;
     this.inFlightBytes = 0;
+    this.json = new Map();
+    this.jsonPending = new Map();
+    this.jsonBytes = 0;
+    this.loading = null;
+    this.remoteLock = null;
+    this.lockFingerprint = null;
+    this.localPacks = new Map();
+    return this;
   }
 
   validateLock(lock) {
@@ -80,6 +102,8 @@ export class StaticAssets {
         if (this.lockFingerprint && this.lockFingerprint !== fingerprint) {
           this.cache.clear();
           this.cacheBytes = 0;
+          this.json.clear();
+          this.jsonBytes = 0;
         }
         this.lockFingerprint = fingerprint;
         this.remoteLock = lock;
@@ -111,6 +135,7 @@ export class StaticAssets {
   }
 
   async token() {
+    if (this.tokenProvider) return this.tokenProvider();
     if (this.accessToken?.expires > Date.now() + 60000) return this.accessToken.value;
     this.tokenLoading ||= (async () => {
       try {
@@ -137,13 +162,13 @@ export class StaticAssets {
       return body;
     }
     if (this.pending.has(url)) return this.pending.get(url);
-    if (this.pending.size >= 32 || this.inFlightBytes + file.size > MAX_IN_FLIGHT_BYTES) throw new AssetError(503, 'asset_capacity_exceeded');
+    if (this.pending.size >= 32 || this.inFlightBytes + file.size > this.maxInFlightBytes) throw new AssetError(503, 'asset_capacity_exceeded');
     this.inFlightBytes += file.size;
     const operation = (async () => {
       const pack = lock.packs[file.pack];
       let body;
       if (!file.size) body = Buffer.alloc(0);
-      else if (this.localRoot) {
+      else if (this.localRoot && await this.localPack(pack)) {
         const handle = await fs.open(path.join(this.localRoot, pack.file), 'r');
         try {
           body = Buffer.alloc(file.size);
@@ -155,6 +180,9 @@ export class StaticAssets {
           }
         } finally { await handle.close(); }
       } else {
+        // A hydrated pack root may hold only some packs (a local dry-run publication);
+        // the others are read from the bucket, still pinned to their generation.
+        if (!/^\d+$/.test(pack.generation || '')) throw new AssetError(502, 'asset_pack_missing');
         const token = await this.token();
         const response = await this.fetch(`https://storage.googleapis.com/storage/v1/b/${lock.bucket}/o/${encodeURIComponent(pack.key)}?alt=media&generation=${pack.generation}`, {
           headers: {Authorization: `Bearer ${token}`, Range: `bytes=${file.offset}-${file.offset + file.size - 1}`, 'Accept-Encoding': 'identity'},
@@ -183,6 +211,69 @@ export class StaticAssets {
       return body;
     })().finally(() => { this.pending.delete(url); this.inFlightBytes -= file.size; });
     this.pending.set(url, operation);
+    return operation;
+  }
+
+  async localPack(pack) {
+    if (!this.localPacks.has(pack.file)) {
+      this.localPacks.set(pack.file, fs.stat(path.join(this.localRoot, pack.file)).then(info => info.isFile() && info.size === pack.size, () => false));
+    }
+    return this.localPacks.get(pack.file);
+  }
+
+  /** The lock entry for a published URL, or null. */
+  async entry(url) {
+    const lock = await this.lock();
+    return Object.hasOwn(lock.files, url) ? lock.files[url] : null;
+  }
+
+  /** Published URLs below a prefix such as /data/countries/. */
+  async list(prefix) {
+    const lock = await this.lock();
+    return Object.keys(lock.files).filter(url => url.startsWith(prefix)).sort();
+  }
+
+  /** The exact committed bytes of a published file: gzip aliases are inflated and re-verified. */
+  async readBuffer(url) {
+    const lock = await this.lock();
+    const file = Object.hasOwn(lock.files, url) && lock.files[url];
+    if (!file) throw new AssetError(404, 'asset_not_found');
+    const body = await this.body(url, file, lock);
+    if (!file.encoding) return body;
+    let raw;
+    try { raw = await gunzip(body, {maxOutputLength: file.raw_size}); } catch { throw new AssetError(502, 'asset_checksum_failed'); }
+    if (raw.length !== file.raw_size || crypto.createHash('sha256').update(raw).digest('hex') !== file.raw_sha256) throw new AssetError(502, 'asset_checksum_failed');
+    return raw;
+  }
+
+  /**
+   * Parsed JSON for server-side readers. Concurrent callers share one read; parsed values
+   * are kept in a least-recently-used cache bounded by their raw size, so a data release
+   * can never grow the API process without limit. Callers must not mutate the result.
+   */
+  async readJSON(url) {
+    const file = await this.entry(url);
+    if (!file) throw new AssetError(404, 'asset_not_found');
+    const key = `${url}\0${file.raw_sha256 || file.sha256}`;
+    if (this.json.has(key)) {
+      const hit = this.json.get(key);
+      this.json.delete(key); this.json.set(key, hit);
+      return hit.value;
+    }
+    if (this.jsonPending.has(key)) return this.jsonPending.get(key);
+    const operation = (async () => {
+      const raw = await this.readBuffer(url);
+      const value = JSON.parse(raw.toString('utf8'));
+      if (raw.length <= JSON_MAX_CACHED_RAW) {
+        while (this.json.size && this.jsonBytes + raw.length > JSON_CACHE_RAW_BYTES) {
+          const [oldest, entry] = this.json.entries().next().value;
+          this.jsonBytes -= entry.bytes; this.json.delete(oldest);
+        }
+        this.json.set(key, {value, bytes: raw.length}); this.jsonBytes += raw.length;
+      }
+      return value;
+    })().finally(() => this.jsonPending.delete(key));
+    this.jsonPending.set(key, operation);
     return operation;
   }
 

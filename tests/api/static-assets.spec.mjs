@@ -263,3 +263,88 @@ test('public-entity data refreshes from an atomic release, with absence-only leg
   service.fetch = async () => response(Buffer.alloc(raw.length));
   await assert.rejects(service.publishedEntityJSON(url), {code: 'asset_checksum_failed'});
 });
+
+function gzipManifest(documents) {
+  // documents: {url: object}; stored as gzip aliases in one pack starting at offset 0.
+  const value = {version: 1, bucket: 'czbudget-janrezab-public-snapshots', packs: {}, files: {}};
+  const parts = []; let offset = 0;
+  for (const [url, document] of Object.entries(documents)) {
+    const plain = Buffer.from(JSON.stringify(document));
+    const packed = gzipSync(plain);
+    value.files[url] = {pack: 'countries', offset, size: packed.length, sha256: crypto.createHash('sha256').update(packed).digest('hex'),
+      encoding: 'gzip', raw_size: plain.length, raw_sha256: crypto.createHash('sha256').update(plain).digest('hex')};
+    parts.push(packed); offset += packed.length;
+  }
+  const pack = Buffer.concat(parts);
+  value.packs.countries = {key: `static-assets/v1/${'c'.repeat(64)}.pack`, file: `${'c'.repeat(64)}.pack`, generation: '42', size: pack.length};
+  return {value, pack};
+}
+function rangeServer(pack, counter = {calls: 0}) {
+  return async (url, options) => {
+    counter.calls++;
+    const [start, end] = options.headers.Range.slice(6).split('-').map(Number);
+    return new Response(pack.subarray(start, end + 1), {status: 206, headers: {'content-range': `bytes ${start}-${end}/${pack.length}`}});
+  };
+}
+
+test('server-side readers get verified, inflated JSON through one shared read', async () => {
+  const {value, pack} = gzipManifest({'/data/countries/cze/a.v1.json': {rows: [1, 2, 3]}, '/data/countries/deu/b.v1.json': {rows: []}});
+  const counter = {calls: 0};
+  const tokens = [];
+  const service = new StaticAssets({manifest: value, localRoot: '', fetchImpl: rangeServer(pack, counter), tokenProvider: async () => { tokens.push(1); return 'local'; }});
+  const results = await Promise.all(Array.from({length: 10}, () => service.readJSON('/data/countries/cze/a.v1.json')));
+  results.forEach(result => assert.deepEqual(result, {rows: [1, 2, 3]}));
+  assert.equal(counter.calls, 1);
+  assert.ok(tokens.length >= 1, 'the configured token provider authenticates range reads');
+  assert.deepEqual(await service.readJSON('/data/countries/cze/a.v1.json'), {rows: [1, 2, 3]});
+  assert.equal(counter.calls, 1);
+  assert.equal((await service.readBuffer('/data/countries/deu/b.v1.json')).toString(), '{"rows":[]}');
+  assert.deepEqual(await service.list('/data/countries/'), ['/data/countries/cze/a.v1.json', '/data/countries/deu/b.v1.json']);
+  assert.equal(await service.entry('/data/countries/absent.json'), null);
+  await assert.rejects(service.readJSON('/data/countries/absent.json'), {status: 404});
+});
+
+test('a gzip alias whose inflated bytes do not match the lock fails closed', async () => {
+  const {value, pack} = gzipManifest({'/data/countries/cze/a.v1.json': {rows: [1]}});
+  value.files['/data/countries/cze/a.v1.json'].raw_sha256 = 'f'.repeat(64);
+  const service = new StaticAssets({manifest: value, localRoot: '', fetchImpl: rangeServer(pack), tokenProvider: async () => 'local'});
+  await assert.rejects(service.readJSON('/data/countries/cze/a.v1.json'), {code: 'asset_checksum_failed'});
+  assert.equal(service.json.size, 0);
+});
+
+test('parsed JSON is evicted least-recently-used within its raw-byte budget', async () => {
+  const big = 'x'.repeat(20 * 1024 * 1024);
+  const {value, pack} = gzipManifest({'/data/countries/a.json': {big}, '/data/countries/b.json': {big}, '/data/countries/c.json': {big}});
+  const service = new StaticAssets({manifest: value, localRoot: '', fetchImpl: rangeServer(pack), tokenProvider: async () => 'local'});
+  for (const name of ['a', 'b', 'c']) await service.readJSON(`/data/countries/${name}.json`);
+  assert.ok(service.jsonBytes <= 48 * 1024 * 1024);
+  assert.equal(service.json.size, 2);
+  assert.deepEqual([...service.json.keys()].map(key => key.split('\0')[0]), ['/data/countries/b.json', '/data/countries/c.json']);
+});
+
+test('a hydrated pack root reads absent packs from the bucket at their pinned generation', async () => {
+  const {mkdtemp, writeFile, rm} = await import('node:fs/promises');
+  const {tmpdir} = await import('node:os');
+  const {join} = await import('node:path');
+  const {value, pack} = gzipManifest({'/data/countries/cze/a.v1.json': {remote: true}});
+  const local = gzipManifest({'/data/economy/manifest.v1.json': {local: true}});
+  local.value.packs.countries.file = `${'d'.repeat(64)}.pack`;
+  local.value.packs.countries.key = `static-assets/v1/${'d'.repeat(64)}.pack`;
+  delete local.value.packs.countries.generation;
+  value.packs.economy = local.value.packs.countries;
+  value.files['/data/economy/manifest.v1.json'] = {...local.value.files['/data/economy/manifest.v1.json'], pack: 'economy'};
+  const root = await mkdtemp(join(tmpdir(), 'asset-root-'));
+  try {
+    await writeFile(join(root, value.packs.economy.file), local.pack);
+    const urls = [];
+    const service = new StaticAssets({manifest: value, localRoot: root, fetchImpl: async (url, options) => { urls.push(url); return rangeServer(pack)(url, options); }, tokenProvider: async () => 'local'});
+    assert.deepEqual(await service.readJSON('/data/economy/manifest.v1.json'), {local: true});
+    assert.equal(urls.length, 0);
+    assert.deepEqual(await service.readJSON('/data/countries/cze/a.v1.json'), {remote: true});
+    assert.equal(urls.length, 1);
+    assert.match(urls[0], /generation=42$/);
+    delete value.packs.countries.generation;
+    const unpinned = new StaticAssets({manifest: value, localRoot: root, fetchImpl: rangeServer(pack), tokenProvider: async () => 'local'});
+    await assert.rejects(unpinned.readJSON('/data/countries/cze/a.v1.json'), {code: 'asset_pack_missing'});
+  } finally { await rm(root, {recursive: true, force: true}); }
+});
