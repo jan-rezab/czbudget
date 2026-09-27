@@ -58,6 +58,22 @@ export class RussiaTradeStore extends TradeStore {
    this.put(key,value);return value;
   });
  }
+ async bilateral(country='CHN') {
+ country=String(country||'CHN').toUpperCase();
+ if(!/^[A-Z]{3}$/.test(country)||country==='RUS')throw new TradeError(400,'invalid_russia_country','Choose a three-letter country code other than Russia.');
+ const key=`russia-bilateral:${country}`,cached=this.cache.get(key);
+ if(cached?.expiresAt>this.now())return cached.value;
+ return shareInFlight(this.pending,key,async()=>{
+  const rows=await this.query(RUSSIA_BILATERAL_SQL,[parameter('country','STRING',country)],{maxResults:'5000',maximumBytesBilled:'4000000000'});
+  const value={schema_version:'russia-bilateral.v1',country,frequency:'A',product:'TOTAL',unit:'current USD',
+   observations:rows.map(row=>({...row,reported_value_usd:row.value_usd,value_usd:row.value_usd==null?null:Number(row.value_usd),product_count:Number(row.product_count)})),suppliers:[],countries:[],
+   source:{title:'UN Comtrade',url:'https://comtradeplus.un.org/',table:'czbudget-janrezab.budget_detail.trade_observations',retrieved_at:rows.map(r=>r.retrieved_at).filter(Boolean).sort().at(-1)||null,
+    release_ids:[...new Set(rows.flatMap(r=>(r.release_ids||'').split('|')).filter(Boolean))],
+    method:'Selected-country annual declarations with Russia, using deduplicated original HS6 baskets. X means exports to Russia; M means imports from Russia. TOTAL and HS2 are separate sums, never added together.',
+    release_note:'Available HS6 subtotals, not official TOTAL. Missing declarations and unreported military transfers are not inferred. Ingestion IDs identify loads, not an immutable snapshot.'}};
+  value.view_id=createHash('sha256').update(JSON.stringify(value)).digest('hex');this.put(key,value);return value;
+ });
+ }
  async routes(exporter = 'DEU', via = 'KAZ', product = '854231') {
   exporter ||= 'DEU'; via ||= 'KAZ'; product ||= '854231';
   if (!EXPORTERS.includes(exporter) || !INTERMEDIARIES.includes(via) || !PRODUCTS.includes(product) || exporter === via)
@@ -148,3 +164,29 @@ export function pageRussiaAggregate(data, page = '0') {
  if(index>0 && start>=total) throw new TradeError(400,'invalid_russia_page','The page is outside this comparison.');
  return {...data,observations:data.observations.slice(start,end),suppliers:data.suppliers.slice(Math.max(0,start-data.observations.length),Math.max(0,end-data.observations.length)),pagination:{page:index,page_size:size,next_page:end<total?index+1:null,observation_count:data.observations.length,supplier_count:data.suppliers.length}};
 }
+
+// Selected-country declarations only: X is country -> Russia; M is imports
+// from Russia. Neither Russia's mirror reports nor World rows are combined.
+export const RUSSIA_BILATERAL_SQL = `
+WITH leaves AS (
+ SELECT period, reporter_iso3, reporter_name, flow_code, product_code, primary_value_usd,
+  classification_code, ingestion_run_id, source_last_released, retrieved_at
+ FROM \`czbudget-janrezab.budget_detail.trade_observations\`
+ WHERE period_start BETWEEN DATE '2014-01-01' AND CURRENT_DATE()
+  AND frequency='A' AND product_type='C' AND reporter_iso3=@country
+  AND partner_iso3='RUS' AND flow_code IN ('X','M')
+  AND aggregation_level=6 AND is_original_classification AND STARTS_WITH(classification_code,'H')
+  AND (customs_code IS NULL OR customs_code='C00')
+  AND (mode_of_transport_code IS NULL OR mode_of_transport_code=0)
+  AND (partner2_area_code IS NULL OR partner2_area_code=0)
+ QUALIFY ROW_NUMBER() OVER (PARTITION BY period,reporter_iso3,flow_code,partner_area_code,product_code
+  ORDER BY source_last_released DESC,loaded_at DESC,trade_observation_id)=1
+)
+SELECT period,reporter_iso3,ANY_VALUE(reporter_name) reporter_name,flow_code,'RUS' partner_iso3,
+ basket product_code,CAST(SUM(primary_value_usd) AS STRING) value_usd,
+ COUNT(DISTINCT product_code) product_count,STRING_AGG(DISTINCT classification_code,'|') classifications,
+ STRING_AGG(DISTINCT ingestion_run_id,'|') release_ids,
+ MAX(source_last_released) source_last_released,MAX(retrieved_at) retrieved_at
+FROM leaves CROSS JOIN UNNEST(['TOTAL',SUBSTR(product_code,1,2)]) basket
+GROUP BY period,reporter_iso3,flow_code,basket ORDER BY period,flow_code,basket
+`;

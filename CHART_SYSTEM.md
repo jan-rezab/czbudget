@@ -17,7 +17,7 @@ The charts use one compact editorial grammar across the portal. The system is in
 ### Implementation ownership
 
 `lib/chart-renderer.js` is the shared renderer for line, column, percentage-stack
-and horizontal-bar families. `shared-charts.css` owns their light paper treatment.
+horizontal-bar and donut families. `shared-charts.css` owns their light paper treatment.
 Load through `chart-runtime.js` and await `window.PSDPlotReady`; callers supply
 rows, fields, units and formatters to `PSDPlot.render(element, spec)`.
 The returned controller exposes `accessor`, with normalized columns and raw rows;
@@ -38,6 +38,10 @@ See `COMPONENT_RELEASES.md` for consumer coverage and migration boundaries.
 1. **Line chart** — change over time. Use a maximum of four lines, direct end labels when space permits, four or five horizontal grid lines, and no decorative area fill.
 2. **Column chart** — composition or annual totals. Use consistent column width, square corners, restrained gaps and the shared baseline.
 3. **Horizontal bar chart** — ranking and comparison. Sort deliberately, align values on the right and highlight only the selected or editorially important row.
+
+4. **Donut chart** — nonnegative parts of one explicitly named denominator. A delta story uses gross positive changes only; declines and net changes are shown separately. Missing or negative inputs withhold the composition. Keep full labels, exact values and keyboard/pointer/touch inspection available alongside the ring.
+
+Adapters may supply `tableColumns` to retain exact source decimal strings and provenance in the canonical table/CSV accessor while numeric copies position marks. `valueLabelFormat` can shorten bar labels without changing inspection values. Never calculate accounting totals from rounded plot coordinates.
 
 ## Required anatomy
 

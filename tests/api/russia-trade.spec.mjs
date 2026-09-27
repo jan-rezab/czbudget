@@ -33,3 +33,11 @@ test('aggregate pagination preserves every observation and mirror declaration be
  assert.deepEqual(observations,data.observations);assert.deepEqual(suppliers,data.suppliers);
  for(const invalid of ['-1','1.5','1000','4'])assert.throws(()=>pageRussiaAggregate(data,invalid),e=>e.code==='invalid_russia_page');
 });
+
+test('bilateral comparison keeps direction, original HS6, annual grain and exact reported strings',async()=>{
+ const {RUSSIA_BILATERAL_SQL}=await import('../../server/russia-trade-store.mjs');const store=new RussiaTradeStore();let calls=0;
+ store.query=async(sql,params)=>{calls++;assert.equal(sql,RUSSIA_BILATERAL_SQL);assert.equal(params[0].parameterValue.value,'CHN');return [{period:'2024',reporter_iso3:'CHN',flow_code:'M',partner_iso3:'RUS',product_code:'27',value_usd:'1234.56789',product_count:'3',release_ids:'load-a|load-b'}];};
+ const data=await store.bilateral('chn');assert.equal(data.country,'CHN');assert.equal(data.frequency,'A');assert.equal(data.observations[0].flow_code,'M');assert.equal(data.observations[0].reported_value_usd,'1234.56789');assert.deepEqual(data.source.release_ids,['load-a','load-b']);assert.equal(await store.bilateral('CHN'),data);assert.equal(calls,1);
+ assert.match(RUSSIA_BILATERAL_SQL,/frequency='A'/);assert.match(RUSSIA_BILATERAL_SQL,/reporter_iso3=@country/);assert.match(RUSSIA_BILATERAL_SQL,/partner_iso3='RUS'/);assert.match(RUSSIA_BILATERAL_SQL,/aggregation_level=6 AND is_original_classification/);assert.match(RUSSIA_BILATERAL_SQL,/flow_code IN \('X','M'\)/);assert.match(RUSSIA_BILATERAL_SQL,/ROW_NUMBER\(\)/);
+ await assert.rejects(store.bilateral('RUS'),e=>e.code==='invalid_russia_country');await assert.rejects(store.bilateral('China'),e=>e.code==='invalid_russia_country');
+});

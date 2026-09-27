@@ -47,7 +47,7 @@
     return { ...to, ...Object.fromEntries(['left', 'plotWidth', 'top', 'plotHeight', 'first', 'last'].map(key => [key, mix(from[key], to[key])])), axis: { ...to.axis, min: mix(from.axis.min, to.axis.min), max: mix(from.axis.max, to.axis.max) } };
   }
   function model(spec) {
-    if (!['line', 'column', 'stacked', 'bar', 'scatter', 'pyramid', 'donut'].includes(spec.type || 'line')) throw new Error('Unsupported shared chart type');
+    if (!['line', 'column', 'stacked', 'bar', 'scatter', 'pyramid'].includes(spec.type || 'line')) throw new Error('Unsupported shared chart type');
     const fields = spec.fields.map((field, i) => ({ ...field, color: field.color || palette[i % palette.length] }));
     const rows = spec.rows.map(row => ({ label: String(row.label ?? row.year ?? ''), values: fields.map(field => {
       const raw = field.value ? field.value(row) : row[field.key];
@@ -62,15 +62,13 @@
       row.stackTotal = total;
       row.shares = total > 0 ? row.values.map(value => value / total * 100) : row.values.map(() => null);
     }
-    if(spec.type==='donut'){if(fields.length!==1)throw new Error('Donuts require one nonnegative value per row');const complete=rows.every(row=>finite(row.values[0])&&row.values[0]>=0),total=complete?rows.reduce((sum,row)=>sum+row.values[0],0):null;for(const row of rows)row.shares=[total>0?row.values[0]/total*100:null];}
     const keys=fields.map((field,index)=>field.key || `series_${index + 1}`);
-    const columns=spec.tableColumns || [{key:'label',label:spec.labelTitle || 'Period'},...fields.map((field,index)=>({key:keys[index],label:field.tableLabel || field.label || keys[index],numeric:true}))];
-    const tableRows=spec.tableColumns?rows.map(row=>Object.fromEntries(columns.map(c=>[c.key,row.raw[c.key]??null]))):rows.map(row=>Object.fromEntries([['label',row.label],...keys.map((key,index)=>[key,row.values[index]])]));
+    const columns=[{key:'label',label:spec.labelTitle || 'Period'},...fields.map((field,index)=>({key:keys[index],label:field.tableLabel || field.label || keys[index],numeric:true}))];
+    const tableRows=rows.map(row=>Object.fromEntries([['label',row.label],...keys.map((key,index)=>[key,row.values[index]])]));
     return { fields, rows, columns, tableRows, accessor:Object.freeze({columns,rows:()=>tableRows}), axis: spec.yDomain || (spec.type === 'stacked' ? (spec.stackMode === 'absolute' ? domain(rows.map(row => row.stackTotal)) : { min: 0, max: 100, ticks: [0, 25, 50, 75, 100] }) : domain(rows.flatMap(row => row.values), spec.includeZero !== false)) };
   }
   function render(host, spec) {
     if (!host) return;
-    if (spec.type === 'donut') return renderDonut(host,spec);
     if (spec.type === 'route-map') return renderRoutes(host, spec);
     if (spec.type === 'scatter' || spec.type === 'pyramid') return renderSpecial(host, spec);
     const previous = host.__psdGeometry;
@@ -160,7 +158,7 @@
       const rowHeight = plotHeight / Math.max(1, rows.length);
       const bx = value => left + (value - axis.min) / (axis.max - axis.min) * plotWidth;
       const maxLabel = Math.floor((left - 16) / 8);
-      marks = rows.map((row, i) => `<text x="${left - 12}" y="${top + i * rowHeight + 22}" text-anchor="end">${escape(row.label.length > maxLabel ? row.label.slice(0, maxLabel - 1) + '…' : row.label)}</text>` + fields.map((field, f) => row.values[f] === null ? '' : `<rect x="${Math.min(bx(0), bx(row.values[f]))}" y="${top + i * rowHeight + f * 28 / fields.length}" width="${Math.abs(bx(row.values[f]) - bx(0))}" height="${26 / fields.length}" fill="${escape(spec.rowColor?.(row.raw, field) || (row.values[f] < 0 ? '#c93237' : field.color))}"/>${spec.valueLabels ? `<text class="psd-plot-bar-value" x="${width - 5}" y="${top + i * rowHeight + f * 28 / fields.length + 18}" text-anchor="end">${escape(spec.valueLabelFormat?spec.valueLabelFormat(row.values[f],row.raw):format(row.values[f], field, row))}</text>` : ''}`).join('')).join('');
+      marks = rows.map((row, i) => `<text x="${left - 12}" y="${top + i * rowHeight + 22}" text-anchor="end">${escape(row.label.length > maxLabel ? row.label.slice(0, maxLabel - 1) + '…' : row.label)}</text>` + fields.map((field, f) => row.values[f] === null ? '' : `<rect x="${Math.min(bx(0), bx(row.values[f]))}" y="${top + i * rowHeight + f * 28 / fields.length}" width="${Math.abs(bx(row.values[f]) - bx(0))}" height="${26 / fields.length}" fill="${escape(spec.rowColor?.(row.raw, field) || (row.values[f] < 0 ? '#c93237' : field.color))}"/>${spec.valueLabels ? `<text class="psd-plot-bar-value" x="${width - 5}" y="${top + i * rowHeight + f * 28 / fields.length + 18}" text-anchor="end">${escape(format(row.values[f], field, row))}</text>` : ''}`).join('')).join('');
       axes = `<g class="psd-plot-grid">${axis.ticks.filter((_,i)=>i%Math.ceil(axis.ticks.length/(width<500?3:5))===0).map(value=>`<line x1="${bx(value)}" x2="${bx(value)}" y1="${top}" y2="${height-bottom}"/><text x="${bx(value)}" y="${height-20}" text-anchor="middle">${axisFormat(value)}</text>`).join('')}<text x="${left}" y="20">${escape(spec.unit || '')}</text></g>`;
       hits = rows.map((row, i) => `<rect class="psd-plot-hit" data-point="${i}" x="0" y="${top + i * rowHeight}" width="${width}" height="${rowHeight}" tabindex="${i ? -1 : 0}" role="button" aria-label="${escape(describe(row))}"/>`).join('');
     }
@@ -540,28 +538,6 @@
     return {destroy:host.__psdChartCleanup};
   }
 
-  // Nonnegative part-to-whole compositions. Adapters define the denominator.
-  function renderDonut(host,spec){
-    const focused=host.contains(document.activeElement)?document.activeElement.dataset?.point:undefined;
-    host.__psdChartCleanup?.();const abort=new AbortController(),on=(node,event,fn)=>node.addEventListener(event,fn,{signal:abort.signal});
-    const data=model(spec),{rows,fields}=data,width=Math.max(300,Math.min(1120,host.clientWidth-8)),height=spec.height||310;
-    host.classList.add('psd-shared-plot');host.dataset.chartComponent='donut';host.__psdChartAccessor=data.accessor;
-    const cx=width/2,cy=height/2,outer=Math.min(height*.42,width*.4),inner=outer*.66,number=new Intl.NumberFormat(spec.locale||'en-GB',{maximumFractionDigits:1});
-    const valid=rows.length&&rows.every(r=>r.shares[0]!==null),describe=row=>`${row.label}: ${fields[0].format?fields[0].format(row.values[0],row.raw):row.values[0]} (${spec.shareFormat?spec.shareFormat(row.shares[0],row.raw):number.format(row.shares[0])+'%'})`;
-    let angle=-Math.PI/2,marks='',point=0;
-    if(valid)for(const row of rows){if(row.values[0]<=0)continue;const end=angle+row.shares[0]/100*Math.PI*2,finish=Math.min(end,angle+Math.PI*2-.000001),xy=(a,r)=>[cx+Math.cos(a)*r,cy+Math.sin(a)*r],a=xy(angle,outer),b=xy(finish,outer),c=xy(finish,inner),d=xy(angle,inner),large=finish-angle>Math.PI?1:0;
-      marks+=`<path class="psd-donut-slice" data-point="${point}" data-row="${rows.indexOf(row)}" d="M${a} A${outer},${outer} 0 ${large} 1 ${b} L${c} A${inner},${inner} 0 ${large} 0 ${d} Z" fill="${escape(spec.rowColor?.(row.raw)||palette[point%palette.length])}" tabindex="${point?-1:0}" role="button" aria-label="${escape(describe(row))}"/>`;angle=end;point++;}
-    host.innerHTML=`${valid?'':`<p class="psd-chart-empty">${escape(spec.emptyLabel||'No complete positive composition')}</p>`}<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title||'')}">${marks}<text class="psd-donut-total" x="${cx}" y="${cy}" text-anchor="middle">${escape(spec.centerLabel||'')}</text><text x="${cx}" y="${cy+23}" text-anchor="middle">${escape(spec.centerSubLabel||'')}</text></svg><div class="psd-plot-inspection" style="--inspection-rows:1;--inspection-fields:1"><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div></div>`;
-    const tip=host.querySelector('.psd-plot-tooltip');let pinned=false;
-    const show=hit=>{tip.textContent=describe(rows[Number(hit.dataset.row)]);tip.hidden=false;},hide=()=>{tip.hidden=true;};
-    on(host,'pointermove',e=>{const hit=e.target.closest('[data-point]');if(hit&&!pinned)show(hit);});on(host,'pointerleave',()=>{if(!pinned&&!host.contains(document.activeElement))hide();});
-    on(host,'focusin',e=>{const hit=e.target.closest('[data-point]');if(hit)show(hit);});on(host,'focusout',e=>{if(!host.contains(e.relatedTarget)){pinned=false;hide();}});
-    const activate=hit=>{pinned=!pinned;if(pinned)show(hit);else hide();spec.onSelect?.(rows[Number(hit.dataset.row)].raw);};
-    on(host,'click',e=>{const hit=e.target.closest('[data-point]');if(hit)activate(hit);});on(document,'pointerdown',e=>{if(!host.contains(e.target)){pinned=false;hide();}});
-    on(host,'keydown',e=>{if(e.key==='Escape'){pinned=false;hide();return;}const hit=e.target.closest('[data-point]');if(!hit)return;if(['Enter',' '].includes(e.key)){e.preventDefault();activate(hit);return;}if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();const all=[...host.querySelectorAll('[data-point]')],i=all.indexOf(hit),next=e.key==='Home'?0:e.key==='End'?all.length-1:Math.max(0,Math.min(all.length-1,i+(['ArrowLeft','ArrowUp'].includes(e.key)?-1:1)));hit.tabIndex=-1;all[next].tabIndex=0;all[next].focus();});
-    const resize=new ResizeObserver(()=>{if(Math.abs(Math.max(300,Math.min(1120,host.clientWidth-8))-width)>1)render(host,spec);});resize.observe(host);host.__psdChartCleanup=()=>{abort.abort();resize.disconnect();};if(focused!==undefined){const selected=host.querySelector(`[data-point="${focused}"]`);if(selected){host.querySelector('[data-point="0"]')?.setAttribute('tabindex','-1');selected.tabIndex=0;selected.focus();}}return {data,accessor:data.accessor,destroy:host.__psdChartCleanup};
-  }
-
   // Spatial charts share the same normalized values, interaction and export contract.
   function renderSpecial(host, spec) {
     const previousBubbles=host.__psdBubbles || new Map(),nextBubbles=new Map();
@@ -605,8 +581,8 @@
         const color=spec.rowColor?.(row.raw) || palette[i%palette.length];
         nextBubbles.set(String(row.raw.code || row.label),{x:x(row.values[0]),y:y(row.values[1]),r:radius});
         marks+=`<circle data-bubble-id="${escape(row.raw.code || row.label)}" class="psd-plot-bubble" cx="${x(row.values[0])}" cy="${y(row.values[1])}" r="${radius}" fill="${escape(color)}"/>`;
-        if(row.raw.selected) marks+=`<text data-bubble-follow="${escape(row.raw.code || row.label)}" class="psd-plot-direct" x="${x(row.values[0])+radius+4}" y="${y(row.values[1])+4}">${escape(row.raw.code || row.label)}</text>`;
-        hits+=`<circle data-bubble-follow="${escape(row.raw.code || row.label)}" class="psd-plot-hit" data-point="${i}" cx="${x(row.values[0])}" cy="${y(row.values[1])}" r="${Math.max(10,radius)}" tabindex="${hits?-1:0}" role="button" aria-label="${escape(describe(row))}"/>`;
+        if(row.raw.selected) marks+=`<text class="psd-plot-direct" x="${x(row.values[0])+radius+4}" y="${y(row.values[1])+4}">${escape(row.raw.code || row.label)}</text>`;
+        hits+=`<circle class="psd-plot-hit" data-point="${i}" cx="${x(row.values[0])}" cy="${y(row.values[1])}" r="${Math.max(10,radius)}" tabindex="${hits?-1:0}" role="button" aria-label="${escape(describe(row))}"/>`;
       });
     } else {
       const max=spec.maxValue || Math.max(1,...rows.flatMap(r=>r.values).filter(finite));
@@ -628,10 +604,10 @@
     host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || '')}">${watermark}${axes}${marks}${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
     const animations=[];
     if(spec.animate&&!document.hidden&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      host.querySelectorAll('[data-bubble-id], [data-bubble-follow]').forEach(mark=>{
-        const id=mark.dataset.bubbleId || mark.dataset.bubbleFollow,a=previousBubbles.get(id),b=nextBubbles.get(id);if(!a||!b)return;
+      host.querySelectorAll('[data-bubble-id]').forEach(mark=>{
+        const id=mark.dataset.bubbleId,a=previousBubbles.get(id),b=nextBubbles.get(id);if(!a||!b)return;
         // Position tween only: tooltip/table always report the selected year's real observation.
-        animations.push(mark.animate([{transform:`translate(${a.x-b.x}px,${a.y-b.y}px)`},{transform:'translate(0,0)'}],{duration:typeof spec.animate==='number'?spec.animate:700,easing:spec.animationEasing || 'ease-in-out'}));
+        animations.push(mark.animate([{transform:`translate(${a.x-b.x}px,${a.y-b.y}px)`},{transform:'translate(0,0)'}],{duration:700,easing:'ease-in-out'}));
       });
     }
     const tooltip=host.querySelector('.psd-plot-tooltip');let pinned=false;
@@ -654,16 +630,7 @@
       hit.setAttribute('tabindex','-1');all[next].setAttribute('tabindex','0');all[next].focus();
     });
     const resize=new ResizeObserver(()=>{if(Math.abs(Math.max(300,Math.min(1120,host.clientWidth-8))-width)>1)render(host,spec);});resize.observe(host);
-    host.__psdChartCleanup=()=>{
-      // Preserve the visible position when a slider or selection interrupts a glide.
-      host.querySelectorAll('[data-bubble-id]').forEach(mark=>{
-        const point=nextBubbles.get(mark.dataset.bubbleId),transform=getComputedStyle(mark).transform;
-        if(point && transform && transform!=='none'){
-          const matrix=new DOMMatrixReadOnly(transform);point.x+=matrix.m41;point.y+=matrix.m42;
-        }
-      });
-      animations.forEach(a=>a.cancel());abort.abort();resize.disconnect();
-    };
+    host.__psdChartCleanup=()=>{animations.forEach(a=>a.cancel());abort.abort();resize.disconnect();};
     if(focused!==undefined)host.querySelector(`[data-point="${focused}"]`)?.focus();
     return {data,accessor:data.accessor,destroy:host.__psdChartCleanup};
   }
