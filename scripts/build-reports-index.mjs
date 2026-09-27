@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-// Renders the report catalogue from deep-dives/reports.json into the two
-// places that used to be maintained by hand and had already drifted apart:
-// the cards on deep-dives/index.html and the bilingual card copy in
-// deep-dives.js. The header links straight to /deep-dives/.
+// Renders the report catalogue, bilingual card copy and grouped header menu
+// from deep-dives/reports.json. All three surfaces share the same registry.
 //
 //   node scripts/build-reports-index.mjs           rewrite the generated blocks
 //   node scripts/build-reports-index.mjs --check   fail if a block is stale
@@ -142,9 +140,17 @@ const copyBlock = LANGS.map((lang) => {
 }).join("\n");
 
 // ------------------------------------------------------------------- rewriting
+const menuGroups = registry.shelves.flatMap(shelf => shelf.clusters.map(cluster => ({
+  id: cluster.id,
+  title: cluster.title,
+  reports: registry.reports.filter(report => report.shelf === shelf.id && report.cluster === cluster.id)
+    .map(report => ({ slug: report.slug, path: report.navPath, title: report.title })),
+})));
+const menuBlock = `  const reportMenuGroups = ${JSON.stringify(menuGroups)};`;
 const targets = [
   { file: "deep-dives/index.html", begin: "<!-- BEGIN GENERATED REPORTS -->", end: "<!-- END GENERATED REPORTS -->", body: indexBlock },
   { file: "deep-dives.js", begin: "/* BEGIN GENERATED REPORT COPY */", end: "/* END GENERATED REPORT COPY */", body: copyBlock },
+  { file: "global-nav.js", begin: "/* BEGIN GENERATED REPORT MENU */", end: "/* END GENERATED REPORT MENU */", body: menuBlock },
 ];
 
 let stale = 0;

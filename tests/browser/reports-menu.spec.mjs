@@ -3,15 +3,55 @@ import { readFileSync } from "node:fs";
 
 const catalogue = JSON.parse(readFileSync(new URL("../../deep-dives/reports.json", import.meta.url), "utf8"));
 
-test("reports navigation opens the reports view in one click", async ({ page }) => {
+test("Reports opens generated topic submenus and links to the complete catalogue", async ({ page }) => {
   await page.goto("/about.html?lang=en", { waitUntil: "networkidle" });
   const reports = page.locator('psd-site-header [data-global-nav="deep-dives"]');
-  await expect(reports).toHaveText("Reports");
-  await expect(page.locator("psd-site-header .deep-dive-menu")).toHaveCount(0);
-  await reports.click();
+  await expect(reports.locator(":scope > summary")).toContainText("Reports");
+  await reports.locator(":scope > summary").click();
+  await expect(reports).toHaveAttribute("open", "");
+  await expect(page).toHaveURL(/about\.html\?lang=en$/);
+  await expect(reports.locator(".report-menu-group")).toHaveCount(catalogue.shelves.flatMap(s => s.clusters).length);
+  await expect(reports.locator("a[data-report-slug]")).toHaveCount(catalogue.reports.length);
+  for (const report of catalogue.reports) {
+    const link = reports.locator(`[data-report-slug="${report.slug}"]`);
+    await expect(link).toHaveText(report.title.en);
+    const expected = new URL(report.navPath, "https://publicspendingdata.org/");
+    expected.searchParams.set("lang", "en");
+    expect(new URL(await link.getAttribute("href"), page.url()).pathname + new URL(await link.getAttribute("href"), page.url()).search).toBe(expected.pathname + expected.search);
+  }
+  await reports.locator(".reports-menu-all").click();
   await expect(page).toHaveURL(/\/deep-dives\/\?lang=en$/);
   await expect(page.locator(".deep-card").first()).toBeVisible();
   await expect(page.locator('psd-site-header [data-global-nav="deep-dives"]')).toHaveClass(/active/);
+});
+
+test("Reports topics work on mobile, preserve Czech and close with Escape or another menu", async ({ page }) => {
+  await page.setViewportSize({width: 390, height: 720});
+  await page.goto("/deep-dives/?lang=cs", { waitUntil: "networkidle" });
+  const reports = page.locator(".reports-menu");
+  const summary = reports.locator(":scope > summary");
+  await summary.focus();
+  await summary.press("Enter");
+  await expect(reports).toHaveAttribute("open", "");
+  await expect(reports.locator(".report-menu-group[open]")).toHaveCount(0);
+  const group = reports.locator('[data-report-topic="spend"]');
+  await group.locator("summary").click();
+  await expect(group.locator('[data-report-slug="education"]')).toBeVisible();
+  await expect(group.locator('[data-report-slug="education"]')).toHaveAttribute("href", /lang=cs/);
+  const box = await reports.locator(".reports-menu-panel").boundingBox();
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(390);
+  expect(box.y + box.height).toBeLessThanOrEqual(720);
+  await group.locator("summary").press("Escape");
+  await expect(reports).not.toHaveAttribute("open", "");
+  await expect(summary).toBeFocused();
+  await summary.click();
+  await page.locator('.municipality-menu > summary').click();
+  await expect(reports).not.toHaveAttribute("open", "");
+  await summary.click();
+  await group.locator('[data-report-slug="education"]').click();
+  await expect(page).toHaveURL(/deep-dives\/education\/\?.*lang=cs/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
 test("report search filters the catalogue and restores every topic when cleared", async ({ page }) => {
