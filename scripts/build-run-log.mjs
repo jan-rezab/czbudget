@@ -25,13 +25,15 @@ import { createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
 import path from "node:path";
 import { retainUnavailableHistory } from './run-log-history.mjs';
+import { readDataFile, readDataJSON } from './lib/static-asset-source.mjs';
 
 const ROOT = process.env.SITE_ROOT || process.cwd();
 const OUT = "data/registry/run-log.v1.json";
 const write = process.argv.includes("--write");
 
 const readJSON = async (p) => JSON.parse(await readFile(path.join(ROOT, p), "utf8"));
-const tryJSON = async (p) => { try { return await readJSON(p); } catch { return null; } };
+// Checkout first, then the published static-asset packs for datasets that left the repository.
+const tryJSON = async (p) => { try { return await readDataJSON(p, { root: ROOT }); } catch { return null; } };
 const unavailableInputs = [];
 const previousLedger = await tryJSON(OUT);
 
@@ -147,7 +149,7 @@ async function provenanceByArtifact() {
     return byArtifact;
   }
   for (const shard of registry.shards || []) {
-    const raw = await readFile(path.join(ROOT, shard.path.replace(/^\//, ""))).catch(() => null);
+    const raw = await readDataFile(shard.path.replace(/^\//, ""), { root: ROOT }).catch(() => null);
     if (!raw) {
       unavailableInputs.push(shard.path);
       continue;
