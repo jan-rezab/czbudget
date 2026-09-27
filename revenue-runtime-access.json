@@ -1,0 +1,11 @@
+{
+  "bucket": "czbudget-janrezab-data-layers",
+  "member": "serviceAccount:psd-web-runtime@czbudget-janrezab.iam.gserviceaccount.com",
+  "role": "roles/storage.objectViewer",
+  "condition": {
+    "title": "RevenueServingReadOnly",
+    "description": "Read only validated revenue serving releases and their private pointer",
+    "expression": "resource.name.startsWith('projects/_/buckets/czbudget-janrezab-data-layers/objects/processing-runs/revenue-serving/')"
+  },
+  "status": "prepared_not_applied"
+}
