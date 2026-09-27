@@ -436,6 +436,9 @@ def main() -> int:
     ap.add_argument("--project", default=os.environ.get("PROJECT_ID", "czbudget-janrezab"))
     ap.add_argument("--dataset", default="budget_detail")
     ap.add_argument("--table", default="czech_municipal_history_annual")
+    # The data identity may edit only the published table in budget_detail (table-level grant);
+    # per-run staging lives in a private processing dataset where it is a writer.
+    ap.add_argument("--stage-dataset", default="processing_czech_history")
     ap.add_argument("--bucket", default="czbudget-janrezab-data-layers")
     ap.add_argument("--run-id", default=os.environ.get("BUILD_ID"))
     ap.add_argument("--region", default="europe-west4")
@@ -449,7 +452,7 @@ def main() -> int:
     safe_run = run_id.replace("-", "_")
     started = now()
     target = f"{args.dataset}.{args.table}"
-    stage_table = f"{args.dataset}._czech_municipal_history_stage_{safe_run}"
+    stage_table = f"{args.stage_dataset}._czech_municipal_history_stage_{safe_run}"
     raw_prefix = f"gs://{args.bucket}/raw/czech-municipal-history/{args.source_sha}/"
     run_prefix = f"gs://{args.bucket}/processing-runs/czech-municipal-history/{run_id}/"
     ctx = {"source_sha": args.source_sha, "loader_sha": args.loader_sha,

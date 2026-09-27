@@ -19,6 +19,8 @@ steps:
       - '${_LOADER_SHA}'
       - --region
       - europe-west4
+      - --stage-dataset
+      - processing_czech_history
 timeout: 1800s
 queueTtl: 900s
 tags: [plane-data, data-publication, czech-municipal-history]
