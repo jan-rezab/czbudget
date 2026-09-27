@@ -209,7 +209,9 @@
   const renderers={journey,spending,distribution,population,progress,services,quiz};
   async function mount(){
     cleanup();const own=++generation;
-    shell();stage.setAttribute('aria-busy','true');stage.innerHTML=`<p role="status">${copy[S.lang].loading}</p>`;
+    // This script is the page's translator: once its shell is in the chosen language,
+    // lift the language paint guard instead of waiting for its five-second fallback.
+    shell();window.psdLanguageReady?.();stage.setAttribute('aria-busy','true');stage.innerHTML=`<p role="status">${copy[S.lang].loading}</p>`;
     // Stage mutations are serialized so a slow view cannot overwrite a newer selection.
     try{await window.PSDPlotReady;if(own!==generation)return;await renderers[S.view](own);if(own!==generation)return;stage.setAttribute('aria-busy','false');}
     catch(error){if(own!==generation)return;stage.setAttribute('aria-busy','false');stage.innerHTML=`<div class="rosling-error" role="alert"><h2>${tr('This view could not load its published data','Tento pohled nemohl načíst publikovaná data')}</h2><p>${tr('The source may be temporarily unavailable. Your selection is preserved.','Zdroj může být dočasně nedostupný. Váš výběr je zachován.')}</p><button class="rosling-button" id="rosling-retry">${tr('Retry','Zkusit znovu')}</button></div>`;document.querySelector('#rosling-retry').onclick=()=>mount();console.error('Rosling tribute',error);}

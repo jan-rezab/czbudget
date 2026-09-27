@@ -83,6 +83,9 @@
     const value = copy[node.dataset.tradeCopy];
     if (value) node.textContent = value;
   });
+  // The page copy is now in the chosen language: lift the language paint guard
+  // rather than leaving the report blank for its five-second fallback.
+  window.psdLanguageReady?.();
 
   const $ = (selector) => document.querySelector(selector);
   const state = {
