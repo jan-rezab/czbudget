@@ -41,3 +41,19 @@ test('category stacks show annual dollar values, fixed groups and separate onwar
  await expect(page.locator('#rt-growth-status')).toContainText('2014 → 2021');
  await expect(page.locator('#rt-growth-key-KAZ')).toContainText('against 2014');
 });
+
+test('research supplier chart preserves annual reporting side and country shortcuts',async({page})=>{
+ await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const u=new URL(route.request().url()),data=sample(u.searchParams.get('frequency'),u.searchParams.get('product'));data.suppliers=['2019','2022','2025'].flatMap((period,i)=>['KOR','GEO','DEU','TUR','ITA'].map((reporter_iso3,j)=>({period,reporter_iso3,partner_iso3:'KGZ',value_usd:100*(i+1)*(j+1)})));return route.fulfill({json:{data}});});
+ await page.goto('/deep-dives/russia-trade/?lang=en');
+ await expect(page.locator('#rt-lead-chart')).toHaveAttribute('data-chart-slug','russia-research-suppliers');
+ await expect(page.locator('#rt-lead-values')).toContainText('South Korea');
+ await expect(page.locator('#rt-lead-status')).toContainText('Annual exporter declarations');
+ await page.locator('#rt-lead-chart [data-action="table"]').click();
+ await expect(page.locator('#rt-lead-chart .psd-chart-panel')).toContainText('2019');
+ await page.getByRole('button',{name:'Find Georgia',exact:true}).click();
+ await expect(page.locator('#rt-search')).toHaveValue('GEO');
+ await expect(page.locator('#rt-suppliers tbody tr')).toHaveCount(1);
+ await page.locator('[data-frequency=M]').click();
+ await expect(page.locator('#rt-lead-status')).toContainText('Annual exporter declarations');
+ await expect(page.locator('#rt-lead-chart')).toHaveAttribute('data-chart-slug','russia-research-suppliers');
+});

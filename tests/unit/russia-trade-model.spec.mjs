@@ -58,3 +58,19 @@ test('earlier baseline ranks pre-invasion growth without borrowing the 2019 refe
  assert.equal(result.baseYear,'2014');assert.equal(result.categories[0].code,'85');assert.equal(result.categories[0].delta,400);
  assert.deepEqual(result.rows.map(r=>r.period),['2014','2019','2021']);assert.equal(result.rows[0].other,800);
 });
+
+import {supplierHistory} from '../../lib/russia-trade-model.mjs';
+test('supplier history keeps annual exporter declarations, absent years and real zeros distinct',()=>{
+ const suppliers=[
+  {period:'2019',reporter_iso3:'DEU',partner_iso3:'KGZ',value_usd:100},
+  {period:'2021',reporter_iso3:'DEU',partner_iso3:'KGZ',value_usd:0},
+  {period:'2021',reporter_iso3:'DEU',partner_iso3:'KAZ',value_usd:999},
+  {period:'202101',reporter_iso3:'DEU',partner_iso3:'KGZ',value_usd:999},
+  {period:'2021',reporter_iso3:'KOR',partner_iso3:'KGZ',value_usd:200}
+ ];
+ const model=supplierHistory({suppliers},'2021');
+ assert.deepEqual(model.rows.map(r=>r.period),['2019','2020','2021']);assert.equal(model.rows[1].DEU,null);assert.equal(model.rows[2].DEU,0);
+ assert.equal(model.comparisons.find(r=>r.reporter==='DEU').delta,-100);assert.equal(model.comparisons.find(r=>r.reporter==='KOR').delta,null);
+ assert.equal(supplierHistory({suppliers:[]},'2025').rows.length,0);
+ assert.equal(supplierHistory({suppliers},'2026').year,'2021');assert.equal(supplierHistory({suppliers},'2014').year,'2014');
+});
