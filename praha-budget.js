@@ -305,7 +305,7 @@
         pending.catch(()=>{if(relatedContractCache.get(key)===cached)relatedContractCache.delete(key);});
       }
       const data=await cached.pending;
-      if(data.release_id!==state.overview.coverage.contracts.warehouseReleaseId||data.payer_ico!=='00064581'||data.supplier_ico!==active.row.counterpartyId||data.match_status!=='not_verified'||!Array.isArray(data.rows)||data.rows.length>50)throw new Error('lookup identity mismatch');
+      if(data.cityvizor_source_release_id!==active.context.evidence?.releaseId||data.release_id!==state.overview.coverage.contracts.warehouseReleaseId||data.payer_ico!=='00064581'||data.supplier_ico!==active.row.counterpartyId||data.match_status!=='not_verified'||!Array.isArray(data.rows)||data.rows.length>50)throw new Error('lookup identity mismatch');
       if(active===invoiceContext&&$('#record-dialog').open)host.innerHTML=window.PrahaInvoiceView.renderContracts(data,{T,esc,link});
     } catch {
       if(active===invoiceContext&&$('#record-dialog').open)host.textContent=T('The related-contract service is unavailable. No missing contract or confirmed match is inferred.','Služba souvisejících smluv není dostupná. Neodvozujeme chybějící smlouvu ani potvrzenou vazbu.');
