@@ -135,11 +135,20 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
   fn={'dta':pyreadstat.read_dta,'xpt':pyreadstat.read_xport,'sav':pyreadstat.read_sav}[fmt]
   n=0
   kwargs={'user_missing':True} if fmt in {'dta','sav'} else {}
-  for df,meta in pyreadstat.read_file_in_chunks(fn,str(path),chunksize=2000,**kwargs):
-   if n==0:yield path.name+'::metadata',1,{'columns':meta.column_names,'labels':meta.column_names_to_labels,'value_labels':meta.variable_value_labels,'missing_ranges':getattr(meta,'missing_ranges',None),'missing_user_values':getattr(meta,'missing_user_values',None),'original_variable_types':getattr(meta,'original_variable_types',None),'file_encoding':getattr(meta,'file_encoding',None),'readstat_variable_types':getattr(meta,'readstat_variable_types',None)}
+  expected_rows=None;source_meta=None
+  if fmt=='sav':
+   _,source_meta=fn(str(path),metadataonly=True,**kwargs)
+   expected_rows=source_meta.number_rows
+   if not isinstance(expected_rows,int) or expected_rows<0:raise ValueError('SAV source case count unavailable')
+  for df,meta in pyreadstat.read_file_in_chunks(fn,str(path),chunksize=20000 if fmt=='sav' else 2000,**kwargs):
+   if source_meta is not None:meta=source_meta
+   if n==0:yield path.name+'::metadata',1,{'expected_source_row_count':expected_rows,'columns':meta.column_names,'labels':meta.column_names_to_labels,'value_labels':meta.variable_value_labels,'missing_ranges':getattr(meta,'missing_ranges',None),'missing_user_values':getattr(meta,'missing_user_values',None),'original_variable_types':getattr(meta,'original_variable_types',None),'file_encoding':getattr(meta,'file_encoding',None),'readstat_variable_types':getattr(meta,'readstat_variable_types',None)}
    df=df.astype(object).where(df.notna(),None)
-   for row in df.to_dict('records'):
-    n+=1;yield path.name,n,row
+   # Keep only one row dictionary alive, not a whole wide chunk of dictionaries.
+   for values in df.itertuples(index=False,name=None):
+    n+=1;yield path.name,n,dict(zip(df.columns,values))
+    if fmt=='sav' and n%20000==0:print(dump({'event':'statistical_source_progress','member':path.name,'rows':n,'expected_rows':expected_rows}),flush=True)
+  if expected_rows is not None and n!=expected_rows:raise ValueError('SAV full source case count mismatch')
  elif fmt in {'verified_claim_html','verified_claim_pdf'}:
   claims=json.loads(Path('pipeline/undp_cloud/audit/ch3_4_verified_claims.json').read_text(),parse_float=Decimal)
   # Source association is resolved by the caller; each curated observation retains

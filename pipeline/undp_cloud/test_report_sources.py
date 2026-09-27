@@ -1,6 +1,7 @@
 """Tiny synthetic source-fidelity tests; no local bulk or cloud SDK needed."""
-import ast,codecs,csv,io,json,tempfile,tarfile,zipfile,unittest,re
+import ast,codecs,csv,io,json,tempfile,tarfile,zipfile,unittest,re,sys,types
 from pathlib import Path
+from unittest.mock import patch
 from decimal import Decimal
 import openpyxl
 source=Path(__file__).with_name('report_sources.py').read_text()
@@ -80,6 +81,31 @@ class SourceFidelity(unittest.TestCase):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'claim.html';p.write_text('<p>16 percent</p>')
    self.assertEqual(ns['claim_source_text'](p,'verified_claim_html').strip(),'16 percent')
+ def test_sav_large_chunks_stream_rows_preserving_metadata(self):
+  calls=[]
+  class Frame:
+   columns=['answer','weight']
+   def astype(self,*args):return self
+   def where(self,*args):return self
+   def notna(self):return True
+   def itertuples(self,**kwargs):
+    self.assert_kwargs=kwargs
+    yield (1.,0.1);yield (99.,0.2);yield (None,0.3)
+   def to_dict(self,*args):raise AssertionError('Must not allocate entire chunk dictionaries')
+  meta=types.SimpleNamespace(number_rows=3,column_names=['answer','weight'],column_names_to_labels={'answer':'Answer'},variable_value_labels={'answer':{99.:'Refusal'}},missing_ranges={'answer':[99.]},original_variable_types={'answer':'F8.0'})
+  def chunks(fn,path,**kwargs):calls.append(kwargs);yield Frame(),meta
+  fake=types.SimpleNamespace(read_sav=lambda *args,**kwargs:(None,meta),read_dta=lambda:None,read_xport=lambda:None,read_file_in_chunks=chunks)
+  with tempfile.TemporaryDirectory() as d,patch.dict(sys.modules,{'pyreadstat':fake}):
+   rows=list(records(Path(d)/'x.sav','sav',Path(d)))
+  self.assertEqual(calls,[{'chunksize':20000,'user_missing':True}])
+  self.assertEqual(rows[0][2]['expected_source_row_count'],3)
+  meta.number_rows=4
+  with tempfile.TemporaryDirectory() as d,patch.dict(sys.modules,{'pyreadstat':fake}),self.assertRaisesRegex(ValueError,'case count mismatch'):
+   list(records(Path(d)/'x.sav','sav',Path(d)))
+  self.assertEqual(rows[0][2]['value_labels']['answer'][99.],'Refusal')
+  self.assertEqual(rows[0][2]['missing_ranges']['answer'],[99.])
+  self.assertEqual([r[1] for r in rows[1:]],[1,2,3])
+  self.assertEqual(rows[2][2]['answer'],99.);self.assertIsNone(rows[3][2]['answer'])
  def test_childlight_is_data_not_executable_code(self):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/'x.js';p.write_text('var mapData = {"features":[{"properties":{"py_dpos":".."}}]};')
