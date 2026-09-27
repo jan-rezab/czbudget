@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { mockPublishedCoverage } from "../fixtures/published-coverage.mjs";
 import { readFile, readdir } from "node:fs/promises";
 import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-counts.mjs";
 
@@ -11,6 +12,9 @@ import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-coun
 // Each test owns its browser context and only reads shared datasets. Splitting
 // the two long desktop/mobile file queues keeps all four cloud workers useful.
 test.describe.configure({ mode: 'parallel' });
+// Coverage pages now consume these published APIs. Replay their recorded contracts
+// as in the focused coverage tests; the browser server has no warehouse credentials.
+test.beforeEach(async ({ page }) => { await mockPublishedCoverage(page); });
 const counts = await loadExpectedCounts();
 const readJson = async (relative) => JSON.parse(await readFile(new URL(`../../${relative}`, import.meta.url), "utf8"));
 
