@@ -62,3 +62,14 @@ test('compact plots preserve accessible country names without a crowded end-labe
     assert.match(desktop, /Czechia/);
   } finally { globalThis.document = originalDocument; }
 });
+test('absolute stacks use cumulative dollar heights and preserve percentage-stack defaults',()=>{
+ const fields=[{key:'a'},{key:'b'}],rows=[{label:'2019',a:200,b:300},{label:'2025',a:500,b:700}];
+ const absolute=charts.model({type:'stacked',stackMode:'absolute',fields,rows});
+ assert.deepEqual(absolute.rows.map(r=>r.stackValues),[[200,300],[500,700]]);
+ assert.ok(absolute.axis.max>=1200);assert.equal(absolute.accessor.rows()[1].b,700);
+ assert.equal(charts.model({type:'stacked',fields,rows}).axis.max,100);
+});
+test('absolute stacks withhold incomplete or negative compositions, but preserve reported zeros',()=>{
+ const fields=[{key:'a'},{key:'b'}],rows=[{a:0,b:0},{a:2,b:null},{a:-1,b:3}];
+ assert.deepEqual(charts.model({type:'stacked',stackMode:'absolute',fields,rows}).rows.map(r=>r.stackValues),[[0,0],[null,null],[null,null]]);
+});

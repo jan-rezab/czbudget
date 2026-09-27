@@ -1,4 +1,4 @@
-import {aggregateModel,supplierComparisons,HUBS} from './lib/russia-trade-model.mjs';
+import {aggregateModel,supplierComparisons,categoryGrowth,HUBS} from './lib/russia-trade-model.mjs';
 const $=s=>document.querySelector(s),lang=document.documentElement.lang==='cs'?'cs':'en',tr=(cs,en)=>lang==='cs'?cs:en;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const locale=lang==='cs'?'cs-CZ':'en-GB',money=v=>v==null?'—':new Intl.NumberFormat(locale,{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:2}).format(v),exact=v=>v==null?'—':new Intl.NumberFormat(locale,{maximumFractionDigits:9}).format(v),pct=v=>v==null?'—':new Intl.NumberFormat(locale,{style:'percent',maximumFractionDigits:1}).format(v);
@@ -8,10 +8,10 @@ const detailed={'854231':['Procesory a řadiče','Processors & controllers'],'84
 const productName=code=>code==='TOTAL'?tr('Veškeré vykázané zboží','All observed goods'):(detailed[code]||chapters[code])?.[lang==='cs'?0:1]||`HS ${code}`;
 const params=new URLSearchParams(location.search),legacy=params.has('exporter')||params.has('via');
 const validProduct=p=>p==='TOTAL'||/^(0[1-9]|[1-8][0-9]|9[0-9])$/.test(p)||Object.hasOwn(detailed,p);
-const state={frequency:params.get('frequency')==='M'?'M':'A',product:!legacy&&validProduct(params.get('product'))?params.get('product'):'TOTAL',period:legacy?null:params.get('period'),data:null,model:null,geometry:null,plot:null,charts:[],map:null,playing:false,timer:null,loading:true,request:0};
+const state={frequency:params.get('frequency')==='M'?'M':'A',product:!legacy&&validProduct(params.get('product'))?params.get('product'):'TOTAL',period:legacy?null:params.get('period'),data:null,model:null,geometry:null,plot:null,charts:[],map:null,playing:false,timer:null,loading:true,request:0,growthData:null,growthCharts:[],growthYear:null,growthFlow:'M',growthRequest:null};
 const label=p=>p?.length===4?p:p?new Intl.DateTimeFormat(locale,{month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(`${p.slice(0,4)}-${p.slice(4)}-01T00:00:00Z`)):'—';
 const country=code=>names[code]||state.data?.countries?.find(c=>c.iso3===code)?.name||code;
-const source=()=>({name:'UN Comtrade',url:state.data.source.url,table:state.data.source.table,extracted:state.data.source.retrieved_at||'—',vintage:'outturn',definition:tr('Vypočtený součet dostupných původních HS6; běžné USD.','Calculated sum of available original HS6 records; current USD.'),caveat:tr('Dostupné detaily, ne oficiální TOTAL. Chybějící není nula.','Available detail, not official TOTAL. Missing is not zero.')});
+const source=(data=state.data)=>({name:'UN Comtrade',url:data.source.url,table:data.source.table,extracted:data.source.retrieved_at||'—',vintage:'outturn',definition:tr('Vypočtený součet dostupných původních HS6; běžné USD.','Calculated sum of available original HS6 records; current USD.'),caveat:tr('Dostupné detaily, ne oficiální TOTAL. Chybějící není nula.','Available detail, not official TOTAL. Missing is not zero.')});
 function sync(){const u=new URL(location.href);for(const k of ['exporter','via'])u.searchParams.delete(k);for(const k of ['frequency','product','period'])if(state[k])u.searchParams.set(k,state[k]);u.searchParams.set('lang',lang);history.replaceState(null,'',u);}
 function playback(){const rows=state.model?.rows||[],i=rows.findIndex(r=>r.period===state.period),ready=rows.length>0&&!state.loading;$('#rt-play').disabled=!ready;$('#rt-play').textContent=state.playing?tr('Ⅱ Pauza','Ⅱ Pause'):tr('▶ Přehrát','▶ Play');$('#rt-play').setAttribute('aria-pressed',String(state.playing));$('#rt-prev').disabled=!ready||i<=0;$('#rt-next').disabled=!ready||i>=rows.length-1;const slider=$('#rt-timeline');slider.disabled=!ready;slider.max=Math.max(0,rows.length-1);slider.value=Math.max(0,i);slider.setAttribute('aria-valuetext',label(state.period));$('.rt-stage').classList.toggle('routes-playing',state.playing);document.querySelectorAll('[data-chapter]').forEach(b=>b.disabled=!ready);}
 function pause(){state.playing=false;clearTimeout(state.timer);playback();}
@@ -51,15 +51,49 @@ function renderHistory(){state.charts.forEach(c=>c?.destroy());state.charts=[];f
  $('#rt-source').textContent=`UN Comtrade · ${productName(state.product)} · ${state.frequency} · ${state.data.source.table} · ${tr('Staženo','Retrieved')}: ${state.data.source.retrieved_at||'—'}`;
  const world=state.data.observations.filter(o=>o.product_code===state.product&&Number(o.partner_area_code)===0&&o.flow_code==='M');$('#rt-provenance').innerHTML=`<p>${esc(state.data.source.method)} ${esc(state.data.source.release_note)}</p><div class="rt-table-scroll">${table([tr('Období / uzel','Period / hub'),'USD',tr('Počet HS6','HS6 count'),'HS',tr('Vydání načtení','Ingestion release')],world.map(o=>[`${esc(o.period)} · ${esc(o.reporter_iso3)}`,esc(o.reported_value_usd),esc(o.product_count),esc(o.classifications),`<code>${esc(o.release_ids)}</code>`]))}</div>`;
 }
+async function loadCategories(){
+ $('#rt-growth-retry').hidden=true;
+ try{
+  if(state.data?.frequency==='A')state.growthData=state.data;
+  if(!state.growthData){
+   $('#rt-growth-status').textContent=tr('Načítáme roční kategorie…','Loading annual categories…');
+   state.growthRequest ||= fetch('/api/v1/trade/russia-aggregate?frequency=A&product=TOTAL',{signal:AbortSignal.timeout(55000)}).then(async r=>{if(!r.ok)throw new Error(r.status);return (await r.json()).data;}).finally(()=>{state.growthRequest=null;});
+   state.growthData=await state.growthRequest;
+  }
+  const years=[...new Set(state.growthData.observations.filter(o=>o.product_code==='TOTAL'&&o.period>'2019').map(o=>o.period))].sort();
+  if(!years.includes(state.growthYear))state.growthYear=years.at(-1)||'2019';
+  $('#rt-growth-year').innerHTML=(years.length?years:['2019']).map(y=>`<option value="${esc(y)}">${esc(y)}</option>`).join('');$('#rt-growth-year').value=state.growthYear;
+  renderCategories();
+ }catch(error){console.error('Russia trade category chart failed',error);$('#rt-growth-status').textContent=tr('Roční kategorie se nepodařilo načíst.','Annual category data could not be loaded.');$('#rt-growth-retry').hidden=false;}
+}
+function renderCategories(){
+ if(!state.growthData)return;
+ const models=HUBS.map(hub=>categoryGrowth(state.growthData,{hub,flow:state.growthFlow,endYear:state.growthYear}));
+ const palette=['#809027','#c93237','#537b84','#bd923f','#89738b','#427c68','#d37d56','#53615e','#ab6380','#7b673f'];
+ const codes=[...new Set(models.flatMap(m=>m.categories.map(c=>c.code)))].sort(),paint=new Map(codes.map((code,i)=>[code,palette[i%palette.length]]));
+ state.growthCharts.forEach(c=>c.destroy());state.growthCharts=[];
+ $('#rt-growth-status').textContent=tr(`Pořadí podle absolutního růstu v USD: 2019 → ${state.growthYear}. Každý uzel má vlastní svislou škálu; hodnoty lze porovnat v tabulce.`, `Ranked by absolute USD growth: 2019 → ${state.growthYear}. Each hub has its own vertical scale; compare exact values in the tables.`);
+ for(const model of models){
+  const wrapper=$('#rt-growth-'+model.hub);wrapper.replaceChildren();const host=document.createElement('div');wrapper.append(host);
+  const fields=[{key:'other',label:tr('Ostatní kategorie','Other categories'),color:'#d2ccc1'},...model.categories.map(c=>({key:c.code,label:`${productName(c.code)} · HS ${c.code}`,color:paint.get(c.code)}))].map(f=>({...f,format:v=>`${exact(v)} USD`}));
+  const title=`${country(model.hub)} · ${state.growthFlow==='M'?tr('dovoz ze světa','World imports'):tr('vývoz do Ruska','exports to Russia')}`;
+  const chart=state.plot.render(host,{type:'stacked',stackMode:'absolute',rows:model.rows,fields,title,unit:tr('Běžné USD / rok','Current USD / year'),height:350,locale});state.growthCharts.push(chart);
+  window.PSDChart.register({slug:'russia-category-growth-'+model.hub.toLowerCase(),el:wrapper,title,accessor:chart.accessor,exports:['csv','png'],embeddable:false,source:{...source(state.growthData),definition:tr('Roční HS2 složení dostupných HS6 součtů; pět největších přírůstků od roku 2019 a zbytek.','Annual HS2 composition of observed HS6 subtotals; five largest increases since 2019 and the remainder.')}});
+  $('#rt-growth-key-'+model.hub).innerHTML=model.categories.length?`<table class="rt-growth-key"><caption>${tr('Zvýrazněné přírůstky proti 2019','Highlighted increases against 2019')}</caption><thead><tr><th>${tr('Kategorie','Category')}</th><th>Δ USD</th><th>${tr('Změna','Change')}</th></tr></thead><tbody>${model.categories.map(c=>`<tr><td><i style="background:${paint.get(c.code)}"></i>${esc(productName(c.code))} <small>HS ${c.code}</small></td><td>${cell(c.delta)}</td><td>${c.ratio===null?'—':pct(c.ratio-1)}</td></tr>`).join('')}</tbody></table>`:`<p class="rt-note">${tr('Není doložen kladný růst proti roku 2019.','No positive growth against 2019 is established.')}</p>`;
+ }
+}
 function latestShared(){return state.model?.rows.filter(r=>[r.KAZ,r.KGZ,r.KAZ_RUS,r.KGZ_RUS].every(Number.isFinite)).at(-1)?.period||state.model?.periods.at(-1);}
 async function load(){pause();const request=++state.request;state.loading=true;state.data=null;state.model=null;state.map?.destroy();state.charts.forEach(c=>c?.destroy());playback();$('#rt-status').textContent=tr('Načítáme všechny dodavatele a obě země…','Loading all suppliers and both hubs…');$('#rt-retry').hidden=true;$('#rt-map').setAttribute('aria-busy','true');for(const id of ['rt-map','rt-legs','rt-trend-wrapper','rt-onward-wrapper','rt-suppliers','rt-dependencies','rt-direct','rt-direct-summary','rt-direct-coverage','rt-exclusions','rt-findings','rt-provenance','rt-source','rt-map-coverage'])$('#'+id).replaceChildren();
- try{const res=await fetch(`/api/v1/trade/russia-aggregate?frequency=${state.frequency}&product=${state.product}`,{signal:AbortSignal.timeout(55000)});if(!res.ok)throw new Error(res.status);const {data}=await res.json();if(request!==state.request)return;state.data=data;state.model=aggregateModel(data);if(!state.model.rows.length)throw new Error('empty');if(!state.model.periods.includes(state.period))state.period=latestShared();state.loading=false;sync();renderHistory();renderPeriod();}
+ try{const res=await fetch(`/api/v1/trade/russia-aggregate?frequency=${state.frequency}&product=${state.product}`,{signal:AbortSignal.timeout(55000)});if(!res.ok)throw new Error(res.status);const {data}=await res.json();if(request!==state.request)return;state.data=data;state.model=aggregateModel(data);if(!state.model.rows.length)throw new Error('empty');if(!state.model.periods.includes(state.period))state.period=latestShared();state.loading=false;sync();renderHistory();renderPeriod();loadCategories();}
  catch(e){if(request!==state.request)return;console.error('Russia trade view failed',e);state.loading=false;state.model=null;playback();$('#rt-status').textContent=tr('Souhrnná data se nepodařilo načíst. Zkuste to znovu.','Aggregate data could not be loaded. Please retry.');$('#rt-retry').hidden=false;playback();}finally{if(request===state.request)$('#rt-map').setAttribute('aria-busy','false');}}
 function controls(){document.querySelectorAll('[data-frequency]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.frequency===state.frequency)));$('#rt-product').value=state.product;}
 document.querySelectorAll('[data-cs][data-en]').forEach(n=>n.innerHTML=n.dataset[lang]);document.title=tr('Obchod kolem Ruska','The trade around Russia')+' — Public Spending Data';$('#rt-back').href=`/deep-dives/?lang=${lang}`;
 $('#rt-product').innerHTML=['TOTAL',...Array.from({length:97},(_,i)=>String(i+1).padStart(2,'0')), '99',...Object.keys(detailed)].map(code=>`<option value="${code}">${esc(productName(code))}${code==='TOTAL'?'':` · HS ${code}`}</option>`).join('');controls();
 for(const b of document.querySelectorAll('[data-frequency]'))b.addEventListener('click',()=>{if(state.frequency===b.dataset.frequency)return;state.frequency=b.dataset.frequency;state.period=null;controls();load();});
 $('#rt-product').addEventListener('change',e=>{state.product=e.target.value;load();});$('#rt-dependencies').addEventListener('click',e=>{const b=e.target.closest('[data-product]');if(b){state.product=b.dataset.product;controls();load();$('#routes').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});}});
+$('#rt-growth-flow').addEventListener('change',e=>{state.growthFlow=e.target.value;renderCategories();});
+$('#rt-growth-year').addEventListener('change',e=>{state.growthYear=e.target.value;renderCategories();});
+$('#rt-growth-retry').addEventListener('click',loadCategories);
 $('#rt-search').addEventListener('input',()=>{if(state.model)renderSuppliers();});$('#rt-retry').addEventListener('click',()=>state.plot&&state.geometry?load():start());
 $('#rt-play').addEventListener('click',()=>{if(state.playing)return pause();if(state.period===state.model.periods.at(-1))select(state.model.periods[0]);state.playing=true;playback();tick();});$('#rt-timeline').addEventListener('input',e=>select(state.model.periods[Number(e.target.value)]));
 for(const [id,step] of [['rt-prev',-1],['rt-next',1]])$('#'+id).addEventListener('click',()=>{const p=state.model.periods[state.model.periods.indexOf(state.period)+step];if(p)select(p);});

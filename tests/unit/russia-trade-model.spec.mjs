@@ -35,3 +35,18 @@ test('supplier panel excludes an incomplete bilateral and preserves genuine zero
  const suppliers=[];for(const reporter_iso3 of ['DEU','USA'])for(const period of ['2019','2025'])for(const partner_iso3 of ['RUS','KAZ','KGZ'])if(!(reporter_iso3==='USA'&&period==='2019'&&partner_iso3==='KGZ'))suppliers.push({period,reporter_iso3,partner_iso3,value_usd:period==='2019'?100:partner_iso3==='RUS'?0:150});
  const a=supplierComparisons({suppliers},'2025');assert.equal(a.find(r=>r.reporter==='DEU').hubDelta,100);assert.equal(a.find(r=>r.reporter==='DEU').direct.delta,-100);assert.equal(a.find(r=>r.reporter==='USA').eligible,false);
 });
+
+import {categoryGrowth} from '../../lib/russia-trade-model.mjs';
+test('growth stacks hold the largest absolute increases fixed and reconcile Other to the subtotal',()=>{
+ const observations=[];
+ for(const [year,total,a,b,c] of [['2019',1000,100,1,200],['2024',1700,800,10,100],['2025',2000,1100,20,90]])for(const [product,value] of [['TOTAL',total],['84',a],['85',b],['87',c]])observations.push(agg(year,'KAZ','M','WORLD',product,value));
+ observations.push(agg('2025','KAZ','M','CHN','84',999999));
+ const m=categoryGrowth({frequency:'A',observations},{hub:'KAZ',endYear:'2025',limit:1});
+ assert.deepEqual(m.categories.map(c=>c.code),['84']);assert.equal(m.categories[0].delta,1000);assert.equal(m.rows[0].other,900);assert.equal(m.rows[2].other,900);assert.equal(m.rows[1]['84'],800);
+});
+test('growth stacks distinguish missing observations, missing baselines and real zero',()=>{
+ const observations=[agg('2019','KGZ','X','RUS','TOTAL',100),agg('2019','KGZ','X','RUS','84',0),agg('2024','KGZ','X','RUS','TOTAL',150),agg('2025','KGZ','X','RUS','TOTAL',200),agg('2025','KGZ','X','RUS','84',100),agg('2025','KGZ','X','RUS','85',50)];
+ const m=categoryGrowth({frequency:'A',observations},{hub:'KGZ',flow:'X'});assert.deepEqual(m.categories.map(c=>c.code),['84']);assert.equal(m.categories[0].ratio,null);assert.equal(m.rows[0]['84'],0);assert.equal(m.rows[1]['84'],null);assert.equal(m.rows[1].other,null);assert.equal(m.rows[2].other,100);
+ assert.throws(()=>categoryGrowth({frequency:'M',observations},{hub:'KGZ'}),/annual/);
+});
+test('growth stack never turns a negative remainder into a valid total',()=>{const observations=[agg('2019','KAZ','M','WORLD','84',10),agg('2025','KAZ','M','WORLD','84',100),agg('2025','KAZ','M','WORLD','TOTAL',50)];assert.equal(categoryGrowth({frequency:'A',observations},{hub:'KAZ'}).rows[0].other,null);});

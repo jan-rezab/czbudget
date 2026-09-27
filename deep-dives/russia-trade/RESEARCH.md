@@ -44,6 +44,14 @@ Ranking score = min(positive change in World imports, positive change in exports
 
 Machinery (84) and electrical equipment (85) are clear candidates for closer product-level work in Kazakhstan; machinery (84) and optical/medical instruments (90) stand out in Kyrgyzstan. This conclusion describes the observed baskets and does not equate the goods on the inbound and outbound sides.
 
+## Annual category stacks
+
+Added 27 September 2026 UTC. Each hub has a separate stacked dollar chart for 2019–2025, using the same annual warehouse observations described above. The flow control selects World-partner imports or Russia-partner exports; these are separate declarations.
+
+For the selected end year, rank HS2 chapters by positive `end-year USD − 2019 USD`, retain the largest five, and hold that category cohort fixed across the timeline. Rank by absolute growth so a tiny starting value cannot dominate solely through a large percentage increase. The companion table shows the dollar change and `(end-year / 2019 − 1) × 100`; a zero baseline has no percentage. Grey is the observed annual subtotal minus the highlighted categories, including all remaining or declining chapters. This is a composition chart, not a stack of the changes themselves.
+
+Columns use current USD, not 100% shares. Each hub has its own clearly disclosed vertical scale. Missing highlighted categories or an inconsistent negative remainder leave a column blank, rather than treating unknown data as zero. Annual categories remain available when the main view switches to monthly or a selected product. The existing Kazakhstan 2020–2022 coverage warning applies to these columns too. All source-figure limitations and release metadata above remain applicable.
+
 ## Mirror discrepancies are central evidence
 
 Coverage: available original HS6 China-export and hub-import declarations, annual 2024, nominal USD. Export values generally use FOB and import values CIF. Definitions, product coverage, valuation and timing differ.
