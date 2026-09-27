@@ -61,6 +61,45 @@ test('runtime data routes include every independently published serving contract
   for (const url of ['/data/trade/README.md', '/data/other.json', '/paq/catalog.json.gz']) assert.doesNotMatch(url, ASSET_PATH);
 });
 
+// Datasets that left the repository on 27 September 2026. nginx must proxy exactly these
+// to the Node server, which reads them from the packs; the image no longer carries them.
+const OFFLOADED_SAMPLES = [
+  '/data/countries/cze/providers.v1.json', '/data/public-entities/CZE.v1.csv.gz',
+  '/data/economy/economic-observations.v1.csv.gz', '/data/international-municipalities/index.v1.json',
+  '/data/czech-sfdi-tables/4774ca359c7e.json', '/data/monitor-grants/paid-facts.ndjson.gz',
+  '/data/registry/source-provenance/sources-001.json.gz', '/data/international-municipalities.v1.json',
+  '/data/municipal-snapshot.v1.json', '/data/municipal-history-directory.v1.json',
+  '/data/cze-medicine-reimbursements.v1.json', '/data/cze-school-funding-2026.v1.json',
+  '/data/czech-consolidated-accounts.v1.json', '/data/czech-sfdi-financing.v1.json', '/data/pensions-today.v1.json',
+  '/data/methodology-sources.v1.json', '/data/eu-budget-flows.v1.json', '/data/sovereign-benchmark-slim.v1.json',
+  '/data/paq/index.json', '/data/industry/CZE.json.gz', '/data/contracts/00075370.plzen-projects.v1.json',
+];
+// Small contracts generated or validated with the code stay in the image.
+const IMAGE_SAMPLES = [
+  '/data/registry/countries.v1.json', '/data/registry/run-log.v1.json', '/data/registry/source-provenance.v1.json',
+  '/data/registry/municipal-entities/CZE.v1.json', '/data/cze-school-funding-2026-summary.v1.json',
+  '/data/country-parity.v1.json', '/data/release-manifest.v1.json', '/data/international-municipalities.v1.json.gz',
+  '/data/czech-monitor-grants.v1.json', '/data/countries.v1.json',
+  // Released independently with the public-company accounts (PUBLIC_ENTITY_PATH).
+  '/data/public-entity-directory/USA.v1.json', '/data/public-entity-directory/manifest.v1.json',
+];
+
+test('nginx proxies every offloaded dataset to the pack server and nothing the image carries', async () => {
+  const {readFile} = await import('node:fs/promises');
+  const nginx = await readFile(new URL('../../nginx.conf.template', import.meta.url), 'utf8');
+  const location = nginx.split('\n').find(line => line.includes('location ~ ^/data/(?:(?:isred|'));
+  assert.ok(location, 'nginx has a static-asset location');
+  const route = new RegExp(location.trim().replace(/^location ~ /, '').replace(/ \{$/, ''));
+  for (const url of OFFLOADED_SAMPLES) {
+    assert.match(url, ASSET_PATH, url);
+    assert.match(url, route, `nginx: ${url}`);
+  }
+  for (const url of IMAGE_SAMPLES) {
+    assert.doesNotMatch(url, ASSET_PATH, url);
+    assert.doesNotMatch(url, route, `nginx: ${url}`);
+  }
+});
+
 test('corrupt, truncated, oversized and non-range replies fail closed and can retry', async () => {
   for (const bad of [() => response(Buffer.from('x')), () => response(Buffer.alloc(raw.length)), () => response(Buffer.alloc(raw.length + 1)), () => new Response(raw), () => response(raw, {'content-range': 'bytes 0-12/13'})]) {
     let attempt = 0;

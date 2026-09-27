@@ -372,7 +372,7 @@ server {
 
   # Immutable cloud packs preserve these public URLs without copying the datasets
   # into every application image. Only files in the revision's lock can resolve.
-  location ~ ^/data/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles)/|trade/automotive-monthly\.v1\.json$|municipal-budget-codebook\.v1\.json$) {
+  location ~ ^/data/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|countries|public-entities|economy|international-municipalities|czech-sfdi-tables|monitor-grants|registry/source-provenance)/|(?:trade/automotive-monthly|municipal-budget-codebook|international-municipalities|municipal-snapshot|municipal-history-directory|cze-medicine-reimbursements|cze-school-funding-2026|czech-consolidated-accounts|czech-sfdi-financing|pensions-today|methodology-sources|eu-budget-flows|sovereign-benchmark-slim)\.v1\.json$) {
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
     proxy_set_header Host $host;

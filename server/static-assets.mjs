@@ -5,7 +5,9 @@ import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
 import {createGunzip} from 'node:zlib';
 
-export const ASSET_PATH = /^\/data\/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|municipal-benchmarks)\/|trade\/automotive-monthly\.v1\.json$|municipal-budget-codebook\.v1\.json$)/;
+// Data routes served from published static-asset packs rather than from the image.
+// nginx.conf.template mirrors this pattern and stage-runtime.py leaves these paths out.
+export const ASSET_PATH = /^\/data\/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|municipal-benchmarks|countries|public-entities|economy|international-municipalities|czech-sfdi-tables|monitor-grants|registry\/source-provenance)\/|(?:trade\/automotive-monthly|municipal-budget-codebook|international-municipalities|municipal-snapshot|municipal-history-directory|cze-medicine-reimbursements|cze-school-funding-2026|czech-consolidated-accounts|czech-sfdi-financing|pensions-today|methodology-sources|eu-budget-flows|sovereign-benchmark-slim)\.v1\.json$)/;
 export const PUBLIC_ENTITY_PATH = /^\/data\/(?:public-entity-directory\/(?:[A-Z]{3}|manifest)\.v1\.json|public-entity-(?:coverage|aggregates)\.v1\.json|cz-public-entities-2024\.json|cz-public-entity-history\.v1\.json)$/;
 const MAX_FILE = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT_BYTES = 48 * 1024 * 1024;
