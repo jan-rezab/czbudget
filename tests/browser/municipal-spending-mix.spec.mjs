@@ -1,7 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { readDataJSON } from "../../scripts/lib/static-asset-source.mjs";
 
-const snapshot = JSON.parse(await readFile(new URL("../../data/municipal-snapshot.v1.json", import.meta.url), "utf8"));
+// Checkout first; the snapshot is served from the static-asset packs.
+const snapshot = await readDataJSON("data/municipal-snapshot.v1.json", { root: fileURLToPath(new URL("../..", import.meta.url)) });
 const totals = snapshot.municipalities.reduce((sum, municipality) => {
   sum.current += Number(municipality.amounts?.current_expense) || 0;
   sum.capital += Number(municipality.amounts?.capital_expense) || 0;

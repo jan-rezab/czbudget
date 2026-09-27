@@ -71,9 +71,18 @@ class RuntimeAssetsTest(unittest.TestCase):
                 assets.verify_remote(descriptor, {**valid, **change})
 
     def test_runtime_surface_excludes_build_and_offloaded_files(self):
+        for value in ['data/countries/cze/providers.v1.json', 'data/public-entities/CZE.v1.csv.gz',
+                      'data/economy/manifest.v1.json', 'data/international-municipalities/index.v1.json', 'data/czech-sfdi-tables/a.json',
+                      'data/monitor-grants/paid-facts.ndjson.gz', 'data/registry/source-provenance/sources-001.json.gz',
+                      'data/international-municipalities.v1.json', 'data/municipal-snapshot.v1.json', 'data/municipal-history-directory.v1.json',
+                      'data/cze-medicine-reimbursements.v1.json', 'data/cze-school-funding-2026.v1.json', 'data/czech-consolidated-accounts.v1.json',
+                      'data/czech-sfdi-financing.v1.json', 'data/pensions-today.v1.json', 'data/methodology-sources.v1.json',
+                      'data/eu-budget-flows.v1.json', 'data/sovereign-benchmark-slim.v1.json']:
+            self.assertFalse(runtime.included(Path(value)), value)
         for value in ['data/isred/a.json', 'data/industrial-intelligence/index.json', 'data/paq/index.json', 'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json', 'data/.query.json', '.public-serving-build/current.json', 'scripts/tool.js', 'content/stories/draft.html', 'content/stories/catalog.mjs', 'pipeline/raw.csv', 'tests/a.js', 'data/entities/00000001.json', 'cz/municipalities/praha/index.html', 'municipalities/finland/example/index.html', 'data/example 2.json']:
             self.assertFalse(runtime.included(Path(value)), value)
-        for value in ['data/registry/countries.v1.json', 'data/municipal-benchmarks/fin.json', 'municipalities/france/profile/index.html', 'cityvizor/index.html', 'lib/money-flow-model.mjs', 'process/log/index.html', 'stories/index.html', 'stories/example/index.html', 'stories/feed.xml', 'stories/vendor/d3-7.9.0.min.js', 'studio/data-in-one-place/index.html', 'global-nav.js', 'explore/index.html', 'explore/trade/index.html', 'explore/government-finances/index.html']:
+        for value in ['data/registry/countries.v1.json', 'data/registry/run-log.v1.json', 'data/registry/source-provenance.v1.json',
+                      'data/registry/municipal-entities/CZE.v1.json', 'data/cze-school-funding-2026-summary.v1.json', 'data/czech-monitor-grants.v1.json', 'data/municipal-benchmarks/fin.json', 'municipalities/france/profile/index.html', 'cityvizor/index.html', 'lib/money-flow-model.mjs', 'process/log/index.html', 'stories/index.html', 'stories/example/index.html', 'stories/feed.xml', 'stories/vendor/d3-7.9.0.min.js', 'studio/data-in-one-place/index.html', 'global-nav.js', 'explore/index.html', 'explore/trade/index.html', 'explore/government-finances/index.html']:
             self.assertTrue(runtime.included(Path(value)), value)
 
     def test_staged_image_has_only_runtime_files_and_pinned_locks(self):

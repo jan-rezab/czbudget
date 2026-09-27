@@ -58,6 +58,15 @@ data/cityvizor-explorer/v1/
 # scripts/build-profiles-from-warehouse.mjs --all-ready.
 .warehouse-profiles/
 
+# Per-entity municipal fan-out restored by scripts/hydrate-municipal-fanout.py from the
+# immutable raw copies pinned in pipeline/config/municipal-serving-inputs.v1.json.
+/.municipal-fanout/
+# The fan-out itself is not tracked: 6,254 history files and 1,010 benchmark profiles, the
+# snapshot builder's inputs only. The small indexes stay tracked because the site serves them
+# (data/municipal-history/index.json, data/municipal-benchmarks/<cc>.json).
+/data/municipal-history/[0-9]*.json
+/data/municipal-benchmarks/*/
+
 # Slim warehouse profiles — identity, history and headline, with detail served by
 # /public-data/municipality-lines rather than repeated in every file. Rebuilt by
 # scripts/build-profiles-from-warehouse.mjs --slim.
@@ -112,20 +121,18 @@ blob-report/
 
 # Static data packs: published to gs://czbudget-janrezab-public-snapshots/static-assets
 # by the data plane and served from there; never part of the image or a web build.
-# The release manifest still checks the five small files re-included below.
+# The release manifest still checks the three small contract files re-included below.
 /data/isred/
 /data/industrial-intelligence/
 /data/czech-nku/
 /data/czech-project-geography/
 /data/contracts/*
 !/data/contracts/country-parity.schema.json
-!/data/contracts/00075370.plzen-projects.v1.json
 !/data/contracts/official-registry/
 /data/contracts/official-registry/*
 !/data/contracts/official-registry/manifest.v1.json
 !/data/contracts/official-registry/lineage.v1.json
 /data/industry/*
-!/data/industry/CZE.json.gz
 
 # Served from static-asset packs (published 27 Sep 2026); see deployment-receipts.
 /data/monitor-2026/
@@ -135,3 +142,26 @@ blob-report/
 /data/france-municipal-profiles/*
 # The Paris profile stays tracked: scripts/validate-site.mjs checks its content.
 !/data/france-municipal-profiles/75.v1.json
+
+# Repository datasets moved to the same packs on 27 September 2026 (ASSET_PATH in
+# server/static-assets.mjs). Validators and tests read them from the static-asset lock
+# through scripts/lib/static-asset-source.mjs; publish changes from a data branch.
+/data/countries/
+/data/public-entities/
+/data/economy/
+/data/international-municipalities/
+/data/czech-sfdi-tables/
+/data/monitor-grants/
+/data/registry/source-provenance/
+/data/paq/
+/data/international-municipalities.v1.json
+/data/municipal-snapshot.v1.json
+/data/municipal-history-directory.v1.json
+/data/cze-medicine-reimbursements.v1.json
+/data/cze-school-funding-2026.v1.json
+/data/czech-consolidated-accounts.v1.json
+/data/czech-sfdi-financing.v1.json
+/data/pensions-today.v1.json
+/data/methodology-sources.v1.json
+/data/eu-budget-flows.v1.json
+/data/sovereign-benchmark-slim.v1.json

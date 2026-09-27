@@ -173,12 +173,12 @@ steps:
         PY
         municipal_release="$$(cat /workspace/.published/municipal-release)"
         cityvizor_release="$$(cat /workspace/.published/cityvizor-release)"
-        # macOS "._" resource forks in the CityVizor release are never read; skip them.
-        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$municipal_release /workspace/.published/municipal/releases/$$municipal_release
-        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/$$cityvizor_release /workspace/.published/cityvizor/releases/$$cityvizor_release
-        while IFS=$$'\t' read -r key file; do
-          gcloud storage cp "gs://czbudget-janrezab-public-snapshots/$$key" "/workspace/.published/assets/$$file"
-        done < /workspace/.published/asset-packs.tsv
+        # The three downloads run at once; macOS "._" resource forks in the CityVizor release
+        # are never read, so skip them. Pack objects are named by their lock file name.
+        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_PUBLIC_SNAPSHOT_BASE_URL}/releases/$$municipal_release /workspace/.published/municipal/releases/$$municipal_release & municipal_pid=$$!
+        gcloud storage rsync -r --exclude='(^|.*/)\._[^/]*$$' ${_CITYVIZOR_SNAPSHOT_BASE_URL}/releases/$$cityvizor_release /workspace/.published/cityvizor/releases/$$cityvizor_release & cityvizor_pid=$$!
+        cut -f1 /workspace/.published/asset-packs.tsv | sed 's#^#gs://czbudget-janrezab-public-snapshots/#' | gcloud storage cp -I /workspace/.published/assets/ & packs_pid=$$!
+        wait $$municipal_pid; wait $$cityvizor_pid; wait $$packs_pid
         python3 scripts/verify-runtime-assets-cloud.py /workspace/.published/assets/lock.json
 
   - id: verify-published-releases
@@ -230,10 +230,9 @@ steps:
         PSD_BUILD_MODE=local npm run validate
         node --test tests/unit/funding-ledgers.spec.mjs tests/unit/funding-deep-dive.spec.mjs tests/unit/funding-systems.spec.mjs
         node --test tests/industrial-data.test.cjs
-        # One data-server cache at a time; twelve browsers per batch on the 32-CPU worker.
-        for shard in 1 2; do
-          node scripts/run-bounded.mjs -- npx playwright test --workers=12 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --shard=$$shard/2 --output=/workspace/test-results/shard-$$shard
-        done
+        # One run, one data server, sixteen browsers on the 32-CPU worker. Mobile runs the
+        # layout tests here; the preview verifier runs every test on mobile (PSD_MOBILE_SCOPE=all).
+        node scripts/run-bounded.mjs -- npx playwright test --workers=16 --max-failures=1 --retries=0 --reporter=line --global-timeout=420000 --output=/workspace/test-results/full
 
 
   - id: push

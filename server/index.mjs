@@ -1,5 +1,6 @@
+import { readJSON as readEntityJSON } from './data-store.mjs';
 import http from "node:http";
-import { ASSET_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
+import { ASSET_PATH, PUBLIC_ENTITY_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
 import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
 import { createMiniReports, requireMiniAuthor } from './mini-reports.mjs';
 const miniReports = createMiniReports();
@@ -31,6 +32,7 @@ const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
 const MAX_REQUEST_URL_BYTES = integerSetting("API_MAX_REQUEST_URL_BYTES", 4 * 1024, 1024, 32 * 1024);
 const MAX_RESPONSE_BYTES = integerSetting("API_MAX_RESPONSE_BYTES", 2 * 1024 * 1024, 64 * 1024, 32 * 1024 * 1024);
+const MAX_REGISTERED_ENTITY_RESPONSE_BYTES = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT = integerSetting("API_MAX_IN_FLIGHT", 32, 1, 1_000);
 const API_IP_MINUTE_LIMIT = integerSetting("API_IP_MINUTE_LIMIT", 300, 1, 100_000);
 const API_USER_MINUTE_LIMIT = integerSetting("API_USER_MINUTE_LIMIT", 300, 1, 100_000);
@@ -62,9 +64,12 @@ function requestID(request) {
   return typeof incoming === "string" && /^[A-Za-z0-9._:-]{1,100}$/.test(incoming) ? incoming : crypto.randomUUID();
 }
 
-export function sendJSON(response, status, payload, extraHeaders = {}) {
+export function sendJSON(response, status, payload, extraHeaders = {}, responsePath = "") {
   let body = JSON.stringify(payload);
-  if (status < 400 && Buffer.byteLength(body) > MAX_RESPONSE_BYTES) {
+  // Registered immutable dataset downloads have their own bounded file contract.
+  // Paginated API calls keep the existing API safety limit.
+  const byteLimit = PUBLIC_ENTITY_PATH.test(responsePath) ? MAX_REGISTERED_ENTITY_RESPONSE_BYTES : MAX_RESPONSE_BYTES;
+  if (status < 400 && Buffer.byteLength(body) > byteLimit) {
     status = 500;
     body = JSON.stringify({
       error: {
@@ -333,6 +338,13 @@ export async function handler(request, response) {
     return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
   }
   try {
+    if (PUBLIC_ENTITY_PATH.test(url.pathname)) {
+      if (!['GET', 'HEAD'].includes(request.method)) throw new DataError(405, 'method_not_allowed', 'Use GET or HEAD.');
+      const value = await readEntityJSON(url.pathname.slice(1));
+      response.setHeader('Cache-Control', 'public, max-age=60, must-revalidate');
+      if (request.method === 'HEAD') { response.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'}); return response.end(); }
+      return sendJSON(response, 200, value, {}, url.pathname);
+    }
     if (ASSET_PATH.test(url.pathname)) return await staticAssets.serve(request, response, url.pathname);
     if (url.pathname === '/mini-reports' || url.pathname.startsWith('/mini-reports/') || url.pathname === '/api/mini-reports' || url.pathname.startsWith('/api/mini-reports/')) {
       response.setHeader('Cache-Control', 'no-store');
@@ -609,7 +621,7 @@ export async function handler(request, response) {
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
     if (response.headersSent) { response.destroy(error); return; }
-    if (ASSET_PATH.test(url.pathname)) {
+    if (ASSET_PATH.test(url.pathname) || PUBLIC_ENTITY_PATH.test(url.pathname) || error instanceof AssetError) {
       response.setHeader('Cache-Control', 'no-store');
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);

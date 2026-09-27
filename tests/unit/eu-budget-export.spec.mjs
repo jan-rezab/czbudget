@@ -2,9 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+import { readDataJSON } from '../../scripts/lib/static-asset-source.mjs';
 
 test('CSV exports the selected country/year, source cells and unrounded EUR-million components', async () => {
-  const data = JSON.parse(await readFile(new URL('../../data/eu-budget-flows.v1.json', import.meta.url)));
+  // Checkout first, else the published static-asset pack.
+  const data = await readDataJSON('data/eu-budget-flows.v1.json', { root: fileURLToPath(new URL('../..', import.meta.url)) });
   const source = await readFile(new URL('../../eu-budget-deep-dive.js', import.meta.url), 'utf8');
   const nodes = new Map();
   let exported;

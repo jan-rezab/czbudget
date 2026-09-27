@@ -39,7 +39,8 @@ test('production cannot promote before focused or exhaustive verification and ca
   // with the candidate-image browser pool.
   assert.match(block('full-verification'),/waitFor: \[verify-published-releases, image-browser-contract, full-python-contracts, warm-browser-worker\]/);
   assert.match(block('full-python-contracts'),/pipeline\/tests/);
-  assert.match(block('full-verification'),/for shard in 1 2; do/);
+  assert.match(block('full-verification'),/npx playwright test --workers=16 --max-failures=1 --retries=0/);
+  assert.match(block('hydrate-published-releases'),/gcloud storage cp -I/);
   assert.match(yaml,/machineType: E2_HIGHCPU_32/);
   assert.match(block('verify-published-releases'),/validate-cityvizor-cloud-release\.mjs/);
   assert.match(block('hydrate-published-releases'),/verify-runtime-assets-cloud\.py/);

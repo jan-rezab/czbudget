@@ -2,7 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-const data = JSON.parse(readFileSync(new URL('../../data/pensions-today.v1.json', import.meta.url)));
+import {fileURLToPath} from 'node:url';
+import {readDataJSON} from '../../scripts/lib/static-asset-source.mjs';
+// Checkout first, else the published static-asset pack.
+const data = await readDataJSON('data/pensions-today.v1.json', {root: fileURLToPath(new URL('../..', import.meta.url))});
 const countries = data.countries;
 test('every source matches its archived evidence', () => {
   for (const s of Object.values(data.sources)) {

@@ -111,7 +111,33 @@ are no longer tracked in Git. They are published as immutable packs under
 `gs://czbudget-janrezab-public-snapshots/static-assets/` and the server streams them
 from there; the image never contained them. A future repack must restore its inputs
 on a data-plane worker from the published packs or the raw snapshots, never from the
-website checkout. Five small files the release manifest checks stay tracked.
+website checkout. Three small contract files under `data/contracts/` stay tracked.
+
+Since 27 September 2026 the remaining large datasets are published the same way by
+`scripts/publish-repo-asset-packs.py` (`cloudbuild.static-assets-repo.yaml`):
+`data/countries`, `data/public-entities`, `data/economy`, `data/international-municipalities`, `data/czech-sfdi-tables`,
+`data/monitor-grants`, `data/registry/source-provenance`, `data/paq` and eleven large
+single files (see `ASSET_PATH` in `server/static-assets.mjs`, which nginx and
+`scripts/stage-runtime.py` mirror). Validators, tests and both test servers read a
+file from the checkout when it is there and otherwise from the lock, through
+`scripts/lib/static-asset-source.mjs` (`static_asset_source.py` for Python): the
+hydrated `DATA_ASSET_LOCK`/`DATA_ASSET_PACK_ROOT` in Cloud Build, else the live
+`static-assets/current.json` with `gcloud auth print-access-token`. Bytes stay in
+memory. To change one of these datasets, commit it on a data branch, publish that
+pinned commit as a pack, then land the code that reads it; never re-add it to `main`.
+`data/public-entity-directory` is not part of this set: it is released independently
+with the public-company accounts (`PUBLIC_ENTITY_PATH`).
+
+The per-entity municipal fan-out (`data/municipal-history/<ico>.json`,
+`data/municipal-benchmarks/<cc>/<id>.json`) is not tracked in Git either. Each input
+is an immutable raw copy under `gs://czbudget-janrezab-data-layers/raw/<dataset>/<git-sha>/`,
+written once by `cloudbuild.raw-fanout.yaml` and pinned by manifest hash and tree digest
+in `pipeline/config/municipal-serving-inputs.v1.json`. `cloudbuild.data.yaml` restores
+them with `scripts/hydrate-municipal-fanout.py --from gcs`, builds the municipal snapshot
+release, and refuses to publish unless every Czech and benchmark payload equals the
+active release (`scripts/compare-public-serving-releases.mjs`), unless a reviewed data
+change sets `_IDENTITY_COUNTRIES=none`. Locally, `--from git` restores the same bytes
+from Git history without network; validators read small fixtures instead.
 
 - Region: `europe-west4`.
 - Identity: a dedicated data builder (`psd-data-builder` or the narrower

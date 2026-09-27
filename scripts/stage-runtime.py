@@ -9,9 +9,18 @@ import shutil
 import hashlib
 
 DIRECTORIES = {'assets', 'cityvizor', 'cz', 'data', 'deep-dives', 'explore', 'lib', 'municipalities', 'process', 'stories', 'studio'}
+# Mirrors ASSET_PATH in server/static-assets.mjs: these are served from published packs.
 OFFLOADED = {'isred', 'industrial-intelligence', 'czech-nku', 'contracts', 'czech-project-geography', 'industry', 'paq',
-             'monitor-2026', 'dotaceeu', 'mv-administration-grants', 'mf-perimeter-history', 'france-municipal-profiles'}
-OFFLOADED_FILES = {'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json'}
+             'monitor-2026', 'dotaceeu', 'mv-administration-grants', 'mf-perimeter-history', 'france-municipal-profiles',
+             'countries', 'public-entities', 'economy', 'international-municipalities',
+             'czech-sfdi-tables', 'monitor-grants'}
+OFFLOADED_SUBDIRECTORIES = {'registry/source-provenance'}
+OFFLOADED_FILES = {'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json'} | {
+    f'data/{name}.v1.json' for name in [
+        'international-municipalities', 'municipal-snapshot', 'municipal-history-directory',
+        'cze-medicine-reimbursements', 'cze-school-funding-2026', 'czech-consolidated-accounts',
+        'czech-sfdi-financing', 'pensions-today', 'methodology-sources', 'eu-budget-flows',
+        'sovereign-benchmark-slim']}
 ROOT_EXTENSIONS = {'.html', '.js', '.css', '.svg', '.png', '.ico', '.xml', '.txt'}
 
 
@@ -58,6 +67,8 @@ def included(relative):
     if parts[0] not in DIRECTORIES:
         return False
     if parts[0] == 'data' and parts[1] in OFFLOADED:
+        return False
+    if parts[0] == 'data' and len(parts) > 2 and '/'.join(parts[1:3]) in OFFLOADED_SUBDIRECTORIES:
         return False
     if re.fullmatch(r'data/(municipal-expansion|municipal-benchmarks)/[^/]+/[^/]+\.json', name):
         return False

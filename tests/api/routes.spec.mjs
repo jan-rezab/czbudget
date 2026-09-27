@@ -6,7 +6,8 @@ import os from "node:os";
 import path from "node:path";
 import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { gzipSync } from "node:zlib";
+import { gunzipSync, gzipSync } from "node:zlib";
+import { localAssetOptions, readDataJSON } from "../../scripts/lib/static-asset-source.mjs";
 
 process.env.NODE_ENV = "test";
 process.env.AUTH_DISABLED_FOR_TESTS = "1";
@@ -18,10 +19,11 @@ process.env.SITE_ROOT = siteRoot;
 // with one real Prague profile assembled from committed source artifacts.
 const snapshotRoot = await fs.mkdtemp(path.join(os.tmpdir(), "czbudget-routes-snapshot-"));
 const releaseId = "routes-test-release";
-const municipalSnapshot = JSON.parse(await fs.readFile(path.join(siteRoot, "data/municipal-snapshot.v1.json"), "utf8"));
+const municipalSnapshot = await readDataJSON("data/municipal-snapshot.v1.json", { root: siteRoot });
 const entity = municipalSnapshot.municipalities.find((item) => item.national_id === "00064581");
 const profile = { schema_version: municipalSnapshot.schema_version, entity };
-const history = JSON.parse(await fs.readFile(path.join(siteRoot, "data/municipal-history/00064581.json"), "utf8"));
+// The history fan-out is not tracked in Git; this is an unchanged, compressed copy of Prague's file.
+const history = JSON.parse(gunzipSync(await fs.readFile(path.join(siteRoot, "tests/fixtures/municipal-history/00064581.json.gz"))).toString("utf8"));
 const payloadHash = crypto.createHash("sha256").update(`${JSON.stringify(profile)}\n${JSON.stringify(history)}`).digest("hex");
 const objectKey = `releases/${releaseId}/profiles/cze/00064581.json.gz`;
 const routePath = entity.seo.municipality_path || entity.seo.path;
@@ -33,6 +35,8 @@ await fs.writeFile(path.join(snapshotRoot, "current.json"), JSON.stringify({ rel
 process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT = snapshotRoot;
 
 const { handler } = await import("../../server/index.mjs");
+// Datasets that left the checkout are read by the API from the static-asset packs.
+(await import("../../server/static-assets.mjs")).staticAssets.configure(localAssetOptions());
 let server;
 let baseURL;
 

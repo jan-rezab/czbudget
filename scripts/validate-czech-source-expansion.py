@@ -2,8 +2,12 @@
 """Focused reconciliation of Czech expanded source outputs (stdlib only)."""
 import json
 from pathlib import Path
+import sys
 ROOT=Path(__file__).resolve().parents[1]
-def read(name):return json.loads((ROOT/'data'/name).read_text())
+sys.path.insert(0,str(ROOT/'scripts'/'lib'))
+from static_asset_source import read_data_json
+# Checkout first; datasets served from the static-asset packs are read from the lock.
+def read(name):return read_data_json('data/'+name,ROOT)
 f=read('cze-school-funding-2026.v1.json');r=f['records'];assert len(r)==f['entity_count']==len({x['RED_IZO'] for x in r});assert sum(x['NIV_CELKEM'] for x in r)==f['allocation_czk']
 for x in r:
  assert abs(x['NIV_CELKEM']-sum(x[k] for k in ('PLATY_CELKEM','ODVODY_CELKEM','FKSP_CELKEM','OBV_CELKEM')))<=1

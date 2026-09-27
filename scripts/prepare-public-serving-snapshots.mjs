@@ -9,6 +9,7 @@ import { createInterface } from "node:readline";
 import { once } from "node:events";
 import { createGzip, gzipSync } from "node:zlib";
 import { pipeline } from "node:stream/promises";
+import { requireFanoutRoot } from "./lib/municipal-fanout.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const args = parseArgs(process.argv.slice(2));
@@ -16,8 +17,17 @@ const releaseId = args.releaseId || new Date().toISOString().replace(/[-:]/g, ""
 const outputRoot = path.resolve(args.output || path.join(ROOT, ".public-serving", releaseId));
 const releaseRoot = path.join(outputRoot, "releases", releaseId);
 const stagingRoot = path.join(outputRoot, "staging");
-const generatedAt = new Date().toISOString();
+const generatedAt = args.generatedAt || new Date().toISOString();
 const shardCount = args.shardCount || 128;
+
+// The per-entity inputs are not tracked in Git. Each resolves to a hydrated copy verified
+// against pipeline/config/municipal-serving-inputs.v1.json (or, on older commits, the
+// checkout) and a missing one fails the build: a release without them would silently drop
+// every benchmark profile or publish Czech profiles with no history.
+const historyRoot = requireFanoutRoot("municipal-history", ROOT);
+const benchmarkRoot = requireFanoutRoot("municipal-benchmarks", ROOT);
+const entityRoot = path.resolve(ROOT, process.env.MUNICIPAL_ENTITY_ROOT || path.join("data", "entities"));
+process.stdout.write(`municipal history from ${path.relative(ROOT, historyRoot) || "."}; benchmarks from ${path.relative(ROOT, benchmarkRoot) || "."}\n`);
 
 await assertFreshOutput(outputRoot);
 await fs.mkdir(path.join(releaseRoot, "shards"), { recursive: true });
@@ -199,13 +209,19 @@ function parseArgs(argv) {
     const value = argv[index + 1];
     if (arg === "--output" && value) parsed.output = argv[++index];
     else if (arg === "--release-id" && value) parsed.releaseId = argv[++index];
+    // Pinning the timestamp makes two builds from the same inputs byte-identical, which is
+    // how a change of input location is proven not to change the published release.
+    else if (arg === "--generated-at" && value) {
+      parsed.generatedAt = argv[++index];
+      if (Number.isNaN(Date.parse(parsed.generatedAt)) || new Date(parsed.generatedAt).toISOString() !== parsed.generatedAt) throw new Error("--generated-at must be an ISO-8601 UTC timestamp such as 2026-09-27T00:00:00.000Z");
+    }
     else if (arg === "--processed-structured-rows" && value) parsed.processedStructuredRows = positiveInteger(argv[++index], arg);
     else if (arg === "--shards" && value) {
       parsed.shardCount = positiveInteger(argv[++index], arg);
       if (parsed.shardCount < 16 || parsed.shardCount > 1024) throw new Error("--shards must be between 16 and 1024");
     }
     else if (arg === "--help") {
-      process.stdout.write("Usage: node scripts/prepare-public-serving-snapshots.mjs [--output DIR] [--release-id ID] [--processed-structured-rows N] [--shards N]\n");
+      process.stdout.write("Usage: node scripts/prepare-public-serving-snapshots.mjs [--output DIR] [--release-id ID] [--generated-at ISO] [--processed-structured-rows N] [--shards N]\n");
       process.exit(0);
     } else throw new Error(`Unknown or incomplete argument: ${arg}`);
   }
@@ -318,25 +334,30 @@ async function sourceFiles() {
   for (const [country, root] of municipal) {
     if (root.endsWith(".ndjson")) {
       fromBundle.push(country);
-      files.push({ file: root, kind: "municipal-expansion", bundle: true });
+      files.push({ file: root, sortKey: path.relative(ROOT, root), kind: "municipal-expansion", bundle: true });
       continue;
     }
     if (root.includes(".warehouse-profiles")) fromWarehouse.push(country);
-    for (const file of await walkJSON(root)) files.push({ file, kind: "municipal-expansion" });
+    for (const file of await walkJSON(root)) files.push({ file, sortKey: path.relative(ROOT, file), kind: "municipal-expansion" });
   }
   if (fromBundle.length) process.stdout.write(`municipal profiles from bundles: ${fromBundle.sort().join(", ")}\n`);
   process.stdout.write(fromWarehouse.length
     ? `municipal profiles from the warehouse: ${fromWarehouse.sort().join(", ")}\n`
     : "municipal profiles: all from the committed fan-out\n");
 
+  // Sources are ordered by the path each would have in a full checkout, not where it was
+  // hydrated, so shard bodies do not depend on the input location. For a checkout that
+  // carries every input this is the same order as sorting the absolute paths.
   const groups = [
-    { directory: path.join(ROOT, "data", "municipal-benchmarks"), kind: "municipal-benchmark" },
-    { directory: path.join(ROOT, "data", "entities"), kind: "czech-public-entity" },
+    { directory: benchmarkRoot, logical: path.join("data", "municipal-benchmarks"), kind: "municipal-benchmark" },
+    { directory: entityRoot, logical: path.join("data", "entities"), kind: "czech-public-entity" },
   ];
   for (const group of groups) {
-    for (const file of await walkJSON(group.directory)) files.push({ file, kind: group.kind });
+    for (const file of await walkJSON(group.directory)) {
+      files.push({ file, sortKey: path.join(group.logical, path.relative(group.directory, file)), kind: group.kind });
+    }
   }
-  return files.sort((a, b) => a.file.localeCompare(b.file));
+  return files.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
 }
 
 async function walkJSON(directory) {
@@ -384,7 +405,7 @@ async function normalizeProfile(source, payload) {
     const municipalityPath = entity.seo?.municipality_path || entity.seo?.path;
     if (!municipalityPath || !String(municipalityPath).startsWith("/cz/municipalities/")) return null;
     const code = String(entity.national_id || path.basename(source.file, ".json"));
-    const historyFile = path.join(ROOT, "data", "municipal-history", `${code}.json`);
+    const historyFile = path.join(historyRoot, `${code}.json`);
     let history = null;
     try { history = await readJSON(historyFile); } catch (error) { if (error.code !== "ENOENT") throw error; }
     const canonicalPath = canonicalizePath(municipalityPath);

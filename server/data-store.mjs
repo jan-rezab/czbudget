@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
+import { ASSET_PATH, AssetError, PUBLIC_ENTITY_PATH, staticAssets } from "./static-assets.mjs";
 
 const ROOT = path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html");
 const cache = new Map();
@@ -32,7 +33,11 @@ export class DataError extends Error {
   }
 }
 
-async function readJSON(relativePath, { useCache = true } = {}) {
+export async function readJSON(relativePath, { useCache = true } = {}) {
+  if (PUBLIC_ENTITY_PATH.test(`/${relativePath}`)) {
+    const published = await staticAssets.publishedEntityJSON(`/${relativePath}`);
+    if (published !== null) return published;
+  }
   if (useCache && cache.has(relativePath)) return cache.get(relativePath);
   const filePath = path.join(ROOT, relativePath);
   if (!filePath.startsWith(`${ROOT}${path.sep}`)) throw new DataError(400, "invalid_path", "Invalid data path.");
@@ -40,11 +45,25 @@ async function readJSON(relativePath, { useCache = true } = {}) {
   try {
     value = JSON.parse(await fs.readFile(filePath, "utf8"));
   } catch (error) {
+    // Large datasets are not in the image: like nginx, read them from the published
+    // static-asset packs. That store bounds its own parsed-JSON cache, so the value is
+    // not pinned in this module's unbounded one.
+    if (error.code === "ENOENT" && ASSET_PATH.test(`/${relativePath}`)) return publishedJSON(`/${relativePath}`);
     if (error.code === "ENOENT") throw new DataError(404, "not_found", "The requested record does not exist.");
     throw error;
   }
   if (useCache) cache.set(relativePath, value);
   return value;
+}
+
+async function publishedJSON(url, assets = staticAssets) {
+  try {
+    return await assets.readJSON(url);
+  } catch (error) {
+    if (error instanceof AssetError && error.status === 404) throw new DataError(404, "not_found", "The requested record does not exist.");
+    if (error instanceof AssetError) throw new DataError(error.status === 503 ? 503 : 502, error.code, "Published data is temporarily unavailable.");
+    throw error;
+  }
 }
 
 async function code(value) {
