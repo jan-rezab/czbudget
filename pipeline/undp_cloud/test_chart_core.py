@@ -1,5 +1,5 @@
 import unittest
-from chart_core import metric_charts, survey_distributions, survey_aggregated_distributions, source_csv_observations, wdi_inequality, gcp_territorial
+from chart_core import metric_charts, survey_distributions, survey_aggregated_distributions, source_csv_observations, wdi_inequality, gcp_territorial, wid_observations
 class ChartContractTests(unittest.TestCase):
  def test_survey_denominator_missing_codes(self):
   common=dict(release_id='r',source_id='s',variable='Q1',country='X')
@@ -24,6 +24,12 @@ class ChartContractTests(unittest.TestCase):
  def test_unep_native_missing_year(self):
   row=dict(source_id='unep',release_id='r',member='f',row_number=2,record_json={'kind':'data','columns':['Country','Flow name','Flow code','Flow unit','2023','2024'],'values':['X','Footprint','MF/cap','t/cap','8.2','']})
   obs=list(source_csv_observations([row],'unep',{'MF/cap'}));self.assertEqual(obs[0]['value'],'8.2');self.assertEqual(obs[0]['unit'],'t/cap');self.assertIsNone(obs[1]['value'])
+ def test_current_wid_native_variable_and_denominator_are_preserved(self):
+  common=dict(source_id='wid_current_DE',release_id='r',member='data',row_number=1)
+  data=dict(variable='sptincj992',percentile='p99p100',age='992',pop='j',country='DE',year='2024',value='0.123',data_quality='estimated')
+  rows=[dict(common,record_json=data),dict(common,row_number=2,record_json=dict(data,age='999')),dict(common,row_number=3,record_json=dict(data,pop='i')),dict(common,row_number=4,record_json=dict(data,variable='sptinc992j'))]
+  obs=list(wid_observations(rows));self.assertEqual(len(obs),1)
+  self.assertEqual((obs[0]['metric'],obs[0]['age'],obs[0]['population'],obs[0]['source_value']),('sptincj992','992','j','0.123'))
  def test_wdi_sum_held(self):
   rows=[dict(release_id='r',country_code='X',period='2023',metric=m,value=v) for m,v in [('SI.DST.FRST.20','5'),('SI.DST.02ND.20','10')]]
   obs,held=wdi_inequality(rows);self.assertEqual(held[0]['value'],'15');self.assertEqual(held[0]['status'],'held_pending_same_survey_welfare_verification')

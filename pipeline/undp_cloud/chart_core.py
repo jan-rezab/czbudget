@@ -178,12 +178,12 @@ def wid_observations(rows):
         if not raw['source_id'].startswith('wid_current_') or raw['member'].endswith('::coverage'):
             continue
         r = record(raw)
-        if r.get('variable') != 'sptinc992j' or r.get('percentile') != 'p99p100':
+        if r.get('variable') != 'sptincj992' or r.get('percentile') != 'p99p100' or r.get('age') != '992' or r.get('pop') != 'j':
             continue
         value = numeric(r.get('value'))
         if value is not None and not Decimal(0) <= value <= Decimal(1):
             raise ValueError('Invalid WID income share')
-        yield dict(context(raw), metric='sptinc992j', percentile='p99p100',
+        yield dict(context(raw), metric=r['variable'], percentile='p99p100',
             country_code=r['country'], geography_kind='wid_country_or_region', period=str(r['year']),
             source_value=r.get('value'), value=str(value) if value is not None else None,
             unit='proportion', age=r.get('age'), population=r.get('pop'),
