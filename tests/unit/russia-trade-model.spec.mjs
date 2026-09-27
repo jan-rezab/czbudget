@@ -91,3 +91,13 @@ test('map selects major suppliers independently for each hub without discarding 
  const selected=largestMapSuppliers(rows);assert.equal(selected.length,16);assert.equal(rows.length,32);
  for(const hub of ['KAZ','KGZ']){const values=selected.filter(r=>r.reporter_iso3===hub);assert.equal(values.length,8);assert.deepEqual(values.map(r=>r.partner_iso3),['14','13','12','11','10','9','8','7']);}
 });
+
+test('direct suppliers distinguish Korean decline, missing endpoints and tiny-base growth',async()=>{
+ const {directSupplierGrowth}=await import('../../lib/russia-trade-model.mjs');const suppliers=[['CHN','2019',10],['CHN','2024',30],['KOR','2019',10],['KOR','2024',5],['PRK','2019',1],['GEO','2019',0],['GEO','2024',2]].map(([reporter_iso3,period,value_usd])=>({reporter_iso3,period,value_usd,partner_iso3:'RUS'}));
+ const rows=directSupplierGrowth({suppliers},'2019','2024');assert.equal(rows[0].reporter,'CHN');assert.equal(rows.find(r=>r.reporter==='KOR').delta,-5);assert.equal(rows.find(r=>r.reporter==='PRK').delta,null);assert.equal(rows.find(r=>r.reporter==='GEO').ratio,null);
+});
+test('bilateral categories and history keep Russia imports distinct from World and preserve absent years',async()=>{
+ const {bilateralHistory}=await import('../../lib/russia-trade-model.mjs');const observations=[['2019','M','TOTAL',10],['2019','M','27',8],['2021','M','TOTAL',30],['2021','M','27',25],['2019','X','TOTAL',4],['2021','X','TOTAL',5]].map(([period,flow_code,product_code,value_usd])=>({period,flow_code,product_code,value_usd,reporter_iso3:'CHN',partner_iso3:'RUS'}));
+ const data={frequency:'A',observations},history=bilateralHistory(data);assert.equal(history[1].period,'2020');assert.equal(history[1].M,null);assert.equal(history[2].X,5);
+ const model=categoryGrowth(data,{hub:'CHN',flow:'M',partner:'RUS',baseYear:'2019',endYear:'2021',continuousYears:true});assert.equal(model.categories[0].code,'27');assert.equal(model.categories[0].delta,17);assert.equal(model.rows[0].other,2);assert.equal(model.rows[1].period,'2020');assert.equal(model.rows[1]['27'],null);assert.equal(model.rows[1].other,null);
+});

@@ -103,3 +103,44 @@ The added chart uses independently queried warehouse exporter declarations to Ky
 The page does not insert the article’s rounded source figures, monthly curves, rolling averages or inferred break dates. Our warehouse consumer lacks monthly observations before 2024. Annual points cannot verify an intra-year 2022 breakpoint or a monthly plateau. HS2 vehicles and precious metals chapters cannot isolate passenger cars or jewellery; validating those questions requires original HS4/HS6 detail, classification concordances, complete monthly panels and source code mappings. No sensitive-product or sanctions status is assigned to an entire HS2 chapter.
 
 Further independent checks should compare stable reporter/product coverage, absolute versus relative changes, nominal value versus reported quantity, importer/exporter valuation differences, and competing domestic-demand explanations. Those are validation requirements, not findings claimed by the new chart.
+
+
+## Other direct suppliers and China’s bilateral composition — 27 September 2026
+
+This iteration adds a separate direct-supplier ranking, annual country–Russia history in both directions, and an HS2 composition chart. It is saved locally for review and is not deployed. The ranking uses every available supplier with both 2019 and the selected year; countries with missing endpoints are named separately. It is an absolute current-USD change ranking, not a sanctions or military-supply score. South Korea (KOR) must not be confused with North Korea (PRK).
+
+Coverage for the following figures: supplier-reported annual exports to Russia, calculated sums of deduplicated original HS6 merchandise observations in `czbudget-janrezab.budget_detail.trade_observations`. World rows, parent aggregates and Russia’s mirror declarations are excluded. All values are current USD. The comparison is 2019 → 2024, a shared observed endpoint for China and the countries below; it is not a complete global panel. Source: executable `RUSSIA_SUPPLIERS_SQL` in `server/russia-trade-store.mjs`, existing bounded audit output. Contributing loads are `un-comtrade-ce02ecee_a628_4629_b650_c28502be7c1b-A2019` and `un-comtrade-r_5c184e3f_c7b6_4629_be5e_2db16aa9ba7f-A2024`; these are ingestion identifiers, not immutable snapshot releases.
+
+| Supplier → Russia | 2019 current USD | 2024 current USD |
+|---|---:|---:|
+| China | 49,748,486,510 | 115,275,861,485 |
+| Türkiye | 4,152,137,036 | 8,561,685,561 |
+| Kazakhstan | 5,670,903,385.47 | 9,546,501,217.33 |
+| Armenia | 718,464,052.87 | 3,136,776,864.11 |
+| India | 2,871,228,560.869 | 4,841,029,765.424 |
+| Kyrgyzstan | 281,252,923 | 976,059,109 |
+| South Korea | 7,774,022,013 | 4,523,886,991 |
+
+South Korea’s direct exports decrease in this comparison. Its growth into Kyrgyzstan is a different declared route and cannot establish Korean goods’ final destination. China and Türkiye’s direct-route expansion is also consistent with the patterns described in [EBRD’s research summary](https://www.ebrd.com/home/news-and-events/news/2023/ebrd-analyses-trade-flows-between-russia-caucasus-and-central-asia.html); that paper’s earlier period and methods are not interchangeable with this table.
+
+A new bounded **read-only** BigQuery EU audit of `RUSSIA_BILATERAL_SQL`, parameter `country=CHN`, returned 2,087 annual aggregate rows. The dry-run upper bound was 1,501,197,271 bytes, with a 4,000,000,000-byte billing cap. No source download, ingestion, warehouse mutation or data publication was performed. Original-classification leaves are deduplicated before independently constructing TOTAL and HS2 sums. X is China’s declared exports to Russia, M is China’s declared imports from Russia. Customs/transport/second-partner total dimensions only; no Russian mirror reports are added. Available annual observations extend from 2014 through 2024; China’s 2025 observations are absent in this view.
+
+| China-reported flow | 2019 current USD | 2021 current USD | 2024 current USD |
+|---|---:|---:|---:|
+| Exports to Russia | 49,748,486,510 | 67,196,722,796 | 115,275,861,485 |
+| Imports from Russia | 61,190,631,855 | 79,593,503,788 | 129,881,357,745 |
+
+Category ranking is calculated as endpoint minus baseline in current USD. The five largest positive chapter changes are held fixed across annual columns; grey is the remaining observed subtotal. Every other chapter, including declining or incomplete comparisons, stays in the companion table. Selecting imports changes the reporting flow, not the reporter; these are Chinese declarations in both directions. Missing years/categories remain gaps. Pre-invasion baselines are selectable; this is not evidence of deliberate wartime preparation. Imports are generally CIF and exports FOB; nominal value changes reflect quantities and prices, especially fuels.
+
+| China-reported category and direction | HS2 | 2019 current USD | 2024 current USD | Calculated change, current USD |
+|---|---:|---:|---:|---:|
+| Vehicles → Russia | 87 | 2,157,423,406 | 25,483,658,123 | 23,326,234,717 |
+| Machinery → Russia | 84 | 9,306,270,646 | 27,289,230,378 | 17,982,959,732 |
+| Electrical equipment → Russia | 85 | 9,472,861,819 | 15,949,785,894 | 6,476,924,075 |
+| Mineral fuels from Russia | 27 | 42,755,152,567 | 95,201,432,124 | 52,446,279,557 |
+| Aluminium from Russia | 76 | 85,233,955 | 3,818,712,138 | 3,733,478,183 |
+| Ores from Russia | 26 | 2,233,209,266 | 5,640,737,247 | 3,407,527,981 |
+
+The exact source is the warehouse table and executable query above, audited 27 September 2026, with the same 2019/2024 ingestion loads. These are available HS6 subtotals, not official TOTAL observations, shipment tracking or evidence of end use. Broad chapters do not designate sanctioned or dual-use products.
+
+North Korean military support has separate documented evidence: the [Multilateral Sanctions Monitoring Team’s 29 May 2025 report](https://msmt.info/view/save/2025/05/29/1085cade-a4b1-4405-94c0-7c980c24fd21-Unlawful_Military_Cooperation_including_Arms_Transfers_between_North_Korea_and_Russia_%28MSMT_2025_1%29.pdf), executive summary on PDF p.3. MSMT is a government monitoring team, not the UN Panel of Experts. Its report documents arms transfers to Russia; it is not used to fill missing Comtrade observations. No numerical arms-transfer estimate is inserted into these commercial charts.
