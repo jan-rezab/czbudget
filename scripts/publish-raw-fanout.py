@@ -23,6 +23,7 @@ import datetime
 import hashlib
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -130,12 +131,17 @@ def main():
         missing = [item for item in files if item['path'] not in existing]
         receipt['counts']['files_deduplicated'] = len(files) - len(missing)
         if missing:
-            with tempfile.TemporaryDirectory() as temporary:
+            # Stage beside the checkout: on Cloud Build /tmp is a different device, so a hard
+            # link from /workspace fails with EXDEV. Fall back to a copy when linking is impossible.
+            with tempfile.TemporaryDirectory(dir=root.parent) as temporary:
                 stage = Path(temporary)
                 for item in missing:
                     target = stage / item['path']
                     target.parent.mkdir(parents=True, exist_ok=True)
-                    os.link(root / item['path'], target)
+                    try:
+                        os.link(root / item['path'], target)
+                    except OSError:
+                        shutil.copy2(root / item['path'], target)
                 top = sorted({item['path'].split('/')[0] for item in missing})
                 # --no-clobber is an if-generation-match=0 precondition on every object.
                 run('gcloud', 'storage', 'cp', '--no-clobber', '--recursive', *(str(stage / name) for name in top), prefix)
