@@ -207,6 +207,7 @@ def main():
     # All provider-group pointers are read together once. Every later query uses physical tables and exact release parameters.
     pointers=[dict(r) for r in bq.query(f'SELECT dataset_id,release_id FROM `{D}.release_pointer`',location='EU').result()]
     pinned={r['dataset_id']:r['release_id'] for r in pointers}
+    print(dump(dict(event='report_source_release_pin_manifest',build_id=os.environ['BUILD_ID'],source_releases={k:v for k,v in pinned.items() if k=='undp_bundle_2025' or k.startswith('hdr_report_sources_2025')})).decode(),flush=True)
     core=args.undp_release or pinned.get('undp_bundle_2025')
     if not core or core!=pinned.get('undp_bundle_2025'):raise ValueError('Requested core release is not the verified publication pointer')
     def query(sql,release,parameters=()):
