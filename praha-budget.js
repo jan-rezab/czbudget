@@ -279,6 +279,7 @@
   }
 
   let invoiceContext=null;
+  const relatedContractCache=new Map();
   function openInvoice(row,context) {
     const c={...context};
     invoiceContext={row,context:c,peers:window.PrahaInvoiceView.describe(row,c).peers};
@@ -287,6 +288,7 @@
     $('#record-dialog').classList.add('pb-invoice-dialog');
     if(!$('#record-dialog').open)$('#record-dialog').showModal();
     $('#record-dialog').scrollTop=0;$('#record-close').focus({preventScroll:true});
+    const form=$('#related-contract-form');if(form)loadRelatedContracts(form);
   }
   async function loadRelatedContracts(form) {
     const active=invoiceContext,host=$('#related-contract-results'),button=form.querySelector('button');
@@ -294,10 +296,16 @@
     button.disabled=true;host.textContent=T('Looking up the exact payer and supplier…','Vyhledávání přesného plátce a dodavatele…');
     try {
       const query=new URLSearchParams({payer:'00064581',supplier:active.row.counterpartyId,date:active.row.date||'',term:form.querySelector('input').value.trim()});
-      const response=await fetch('/api/v1/praha/related-contracts?'+query,{signal:AbortSignal.timeout(25000)});
-      if(!response.ok)throw new Error('lookup unavailable');
-      const data=await response.json();
-      if(data.payer_ico!=='00064581'||data.supplier_ico!==active.row.counterpartyId||data.match_status!=='not_verified'||!Array.isArray(data.rows)||data.rows.length>50)throw new Error('lookup identity mismatch');
+      const key=query.toString();
+      let cached=relatedContractCache.get(key);
+      if(!cached||Date.now()-cached.createdAt>60000){
+        const pending=(async()=>{const response=await fetch('/api/v1/praha/related-contracts?'+query,{signal:AbortSignal.timeout(25000)});if(!response.ok)throw new Error('lookup unavailable');return response.json();})();
+        cached={createdAt:Date.now(),pending};relatedContractCache.set(key,cached);
+        if(relatedContractCache.size>64)relatedContractCache.delete(relatedContractCache.keys().next().value);
+        pending.catch(()=>{if(relatedContractCache.get(key)===cached)relatedContractCache.delete(key);});
+      }
+      const data=await cached.pending;
+      if(data.release_id!==state.overview.coverage.contracts.warehouseReleaseId||data.payer_ico!=='00064581'||data.supplier_ico!==active.row.counterpartyId||data.match_status!=='not_verified'||!Array.isArray(data.rows)||data.rows.length>50)throw new Error('lookup identity mismatch');
       if(active===invoiceContext&&$('#record-dialog').open)host.innerHTML=window.PrahaInvoiceView.renderContracts(data,{T,esc,link});
     } catch {
       if(active===invoiceContext&&$('#record-dialog').open)host.textContent=T('The related-contract service is unavailable. No missing contract or confirmed match is inferred.','Služba souvisejících smluv není dostupná. Neodvozujeme chybějící smlouvu ani potvrzenou vazbu.');
