@@ -127,9 +127,6 @@
           const a = spec.type === 'stacked' ? offset : 0, b = a + value; offset = b;
           const w = spec.type === 'stacked' ? barWidth : barWidth / fields.length;
           const bx = x(i) - barWidth / 2 + (spec.type === 'stacked' ? 0 : f * w);
-          if(spec.type==='column' && finite(spec.unitStep) && spec.unitStep>0 && value>=0 && Number.isInteger(value/spec.unitStep) && value/spec.unitStep<=100){
-            return Array.from({length:value/spec.unitStep},(_,j)=>`<rect class="psd-plot-unit-block" x="${bx}" y="${y((j+1)*spec.unitStep)+2}" width="${w}" height="${Math.max(1,y(j*spec.unitStep)-y((j+1)*spec.unitStep)-4)}" fill="${escape(spec.rowColor?.(row.raw,field) || field.color)}"/>`).join('');
-          }
           return `<rect x="${bx}" y="${Math.min(y(a), y(b))}" width="${w}" height="${Math.abs(y(a) - y(b))}" fill="${escape(field.color)}"/>`;
         }).join('');
       }).join('');
@@ -535,7 +532,6 @@
 
   // Spatial charts share the same normalized values, interaction and export contract.
   function renderSpecial(host, spec) {
-    const previousBubbles=host.__psdBubbles || new Map(),nextBubbles=new Map();
     const focused = host.contains(document.activeElement) ? document.activeElement.dataset?.point : undefined;
     host.__psdChartCleanup?.();
     const abort = new AbortController(), on = (node, event, fn) => node.addEventListener(event, fn, { signal: abort.signal });
@@ -572,10 +568,9 @@
       }).join('');
       rows.forEach((row,i)=> {
         if(!valid(row)) return;
-        const radius=fields.length>2 && finite(row.values[2]) && row.values[2]>0 ? Math.sqrt(row.values[2]/sizeMax)*(spec.bubbleRadius || 32) : 6;
+        const radius=fields.length>2 && finite(row.values[2]) && row.values[2]>0 ? Math.sqrt(row.values[2]/sizeMax)*32 : 6;
         const color=spec.rowColor?.(row.raw) || palette[i%palette.length];
-        nextBubbles.set(String(row.raw.code || row.label),{x:x(row.values[0]),y:y(row.values[1]),r:radius});
-        marks+=`<circle data-bubble-id="${escape(row.raw.code || row.label)}" class="psd-plot-bubble" cx="${x(row.values[0])}" cy="${y(row.values[1])}" r="${radius}" fill="${escape(color)}"/>`;
+        marks+=`<circle class="psd-plot-bubble" cx="${x(row.values[0])}" cy="${y(row.values[1])}" r="${radius}" fill="${escape(color)}"/>`;
         if(row.raw.selected) marks+=`<text class="psd-plot-direct" x="${x(row.values[0])+radius+4}" y="${y(row.values[1])+4}">${escape(row.raw.code || row.label)}</text>`;
         hits+=`<circle class="psd-plot-hit" data-point="${i}" cx="${x(row.values[0])}" cy="${y(row.values[1])}" r="${Math.max(10,radius)}" tabindex="${hits?-1:0}" role="button" aria-label="${escape(describe(row))}"/>`;
       });
@@ -594,17 +589,7 @@
         hits+=`<rect class="psd-plot-hit" data-point="${i}" x="0" y="${by}" width="${width}" height="${step}" tabindex="${i?-1:0}" role="button" aria-label="${escape(describe(row))}"/>`;
       });
     }
-    host.__psdBubbles=nextBubbles;
-    const watermark=spec.type==='scatter'&&spec.yearLabel!==undefined?`<text class="psd-plot-year" x="${left+pw/2}" y="${top+ph*.6}" text-anchor="middle" aria-hidden="true">${escape(spec.yearLabel)}</text>`:'';
-    host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || '')}">${watermark}${axes}${marks}${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
-    const animations=[];
-    if(spec.animate&&!document.hidden&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      host.querySelectorAll('[data-bubble-id]').forEach(mark=>{
-        const id=mark.dataset.bubbleId,a=previousBubbles.get(id),b=nextBubbles.get(id);if(!a||!b)return;
-        // Position tween only: tooltip/table always report the selected year's real observation.
-        animations.push(mark.animate([{transform:`translate(${a.x-b.x}px,${a.y-b.y}px)`},{transform:'translate(0,0)'}],{duration:700,easing:'ease-in-out'}));
-      });
-    }
+    host.innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || '')}">${axes}${marks}${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
     const tooltip=host.querySelector('.psd-plot-tooltip');let pinned=false;
     const hide=()=>{tooltip.hidden=true;};
     function show(hit){const row=rows[Number(hit.dataset.point)];tooltip.textContent=describe(row);tooltip.hidden=false;tooltip.style.left='8px';tooltip.style.top='38px';}
@@ -625,7 +610,7 @@
       hit.setAttribute('tabindex','-1');all[next].setAttribute('tabindex','0');all[next].focus();
     });
     const resize=new ResizeObserver(()=>{if(Math.abs(Math.max(300,Math.min(1120,host.clientWidth-8))-width)>1)render(host,spec);});resize.observe(host);
-    host.__psdChartCleanup=()=>{animations.forEach(a=>a.cancel());abort.abort();resize.disconnect();};
+    host.__psdChartCleanup=()=>{abort.abort();resize.disconnect();};
     if(focused!==undefined)host.querySelector(`[data-point="${focused}"]`)?.focus();
     return {data,accessor:data.accessor,destroy:host.__psdChartCleanup};
   }

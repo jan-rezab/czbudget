@@ -601,7 +601,17 @@ export class TradeStore {
     }
     if (!payload.jobComplete) throw new TradeError(504, "trade_query_timeout", "The trade query did not complete in time.");
     if (payload.errors?.length) throw new TradeError(502, "trade_query_failed", "The UN Comtrade warehouse returned an error.");
-    return decodeRows(payload);
+    const rows = decodeRows(payload);
+    const resultSchema = payload.schema;
+    while (payload.pageToken) {
+      const job = payload.jobReference;
+      if (!job?.jobId || rows.length >= 100000) throw new TradeError(502, "trade_result_incomplete", "The trade result exceeds the bounded response size.");
+      payload = await requestJSON(this.fetchImpl, `${endpoint}/${encodeURIComponent(job.jobId)}?location=${encodeURIComponent(job.location || this.location)}&maxResults=${encodeURIComponent(maxResults)}&pageToken=${encodeURIComponent(payload.pageToken)}`, {headers:{Authorization:`Bearer ${token}`}});
+      if (payload.errors?.length || payload.jobComplete === false) throw new TradeError(502, "trade_result_incomplete", "The trade result could not be read completely.");
+      rows.push(...decodeRows({...payload,schema:payload.schema || resultSchema}));
+      if (rows.length > 100000) throw new TradeError(502, "trade_result_incomplete", "The trade result exceeds the bounded response size.");
+    }
+    return rows;
   }
 }
 

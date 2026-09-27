@@ -206,6 +206,7 @@ async function routeAPI(request, response, url) {
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
   if ((match = pathname.match(/^\/api\/v1\/countries\/([^/]+)$/))) return sendJSON(response, 200, { data: await countryProfile(match[1]) });
+  if (pathname === "/api/v1/trade/russia-aggregate") return sendJSON(response, 200, { data: await russiaTrade.aggregate(url.searchParams.get("frequency"), url.searchParams.get("product")) });
   if (pathname === "/api/v1/trade/russia-routes") return sendJSON(response, 200, { data: await russiaTrade.routes(url.searchParams.get("exporter"), url.searchParams.get("via"), url.searchParams.get("product")) });
   if (pathname === "/api/v1/trade/explorer") return sendJSON(response, 200, { data: await trade.explorer(url.searchParams.get("countries")) }, { "cache-control": "public, max-age=900" });
   if (pathname === "/api/v1/trade/countries") return sendJSON(response, 200, { data: await trade.countries() });

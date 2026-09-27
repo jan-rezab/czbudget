@@ -155,3 +155,9 @@ test('explorer validates countries, preserves missing points and caches a bounde
   await assert.rejects(() => store.explorer('CZE,DEU,GBR,USA,FRA'), /one to four/);
   await assert.rejects(() => store.explorer("CZE');DROP"), /ISO-3/);
 });
+test('warehouse query reads every page rather than silently truncating supplier results', async()=>{
+ const requests=[];
+ const store=new TradeStore({tokenProvider:async()=>"test",fetchImpl:async(url)=>{requests.push(url);return Response.json({jobComplete:true,jobReference:{jobId:'test-job',location:'EU'},schema:{fields:[{name:'value',type:'STRING'}]},rows:[{f:[{v:requests.length===1?'first':'last'}]}],...(requests.length===1?{pageToken:'next-token'}:{})});}});
+ assert.deepEqual(await store.query('SELECT value',[]),[{value:'first'},{value:'last'}]);assert.match(requests[1],/pageToken=next-token/);
+});
+test('warehouse refuses an incomplete result when continuation has no job reference',async()=>{const s=new TradeStore({tokenProvider:async()=>"test",fetchImpl:async()=>Response.json({jobComplete:true,pageToken:'next',rows:[],schema:{fields:[]}})});await assert.rejects(s.query('SELECT 1',[]),e=>e.code==='trade_result_incomplete');});
