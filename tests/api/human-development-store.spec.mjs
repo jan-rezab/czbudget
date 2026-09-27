@@ -43,3 +43,11 @@ test('rejects unknown geography, overlapping and unbounded declared missing rang
   const p=fixture();p.charts[0].missing_periods_by_country={CZE:[{start:2020,end:2021}]};
   assert.equal(validateHumanDevelopment(p,release),p);
 });
+test('validates restored defaults and rejects invalid coordinate defaults',()=>{
+  const p=fixture();p.charts[0].rows=[{value:0}];p.charts[0].row_defaults={country:'CZE',year:2023};
+  assert.equal(validateHumanDevelopment(p,release),p);
+  for(const defaults of [{country:'unlisted',year:2023},{country:'CZE',year:'2023'},{country:'CZE',value:1,year:2023},[]]){
+    p.charts[0].row_defaults=defaults;
+    assert.throws(()=>validateHumanDevelopment(p,release),HumanDevelopmentError);
+  }
+});

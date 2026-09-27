@@ -45,8 +45,16 @@ export function validateHumanDevelopment(payload, releaseId) {
     for (const ref of chart.source_refs) {
       if (!sourceURL(ref.url) || typeof ref.vintage !== 'string' || typeof ref.table !== 'string') fail();
     }
-    for (const row of chart.rows) {
-      if (!row || typeof row !== 'object' ||
+    const defaults = chart.row_defaults || {};
+    if (typeof defaults !== 'object' || Array.isArray(defaults) ||
+        Object.keys(defaults).some(key => !['country', 'year', 'period'].includes(key)) ||
+        (defaults.country != null && !codes.has(defaults.country)) ||
+        (defaults.year != null && !Number.isSafeInteger(defaults.year)) ||
+        (defaults.period != null && (typeof defaults.period !== 'string' || defaults.period.length > 100))) fail();
+    for (const nativeRow of chart.rows) {
+      if (!nativeRow || typeof nativeRow !== 'object' || Array.isArray(nativeRow)) fail();
+      const row = {...defaults, ...nativeRow};
+      if (
           (row.country != null && !codes.has(row.country)) ||
           (row.year == null && row.period == null && row.label == null)) fail();
       for (const key of keys) if (row[key] != null && (typeof row[key] !== 'number' || !Number.isFinite(row[key]))) fail();

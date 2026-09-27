@@ -14,3 +14,9 @@ test('unknown gaps remain unknown and nonannual missing periods remain source li
 test('invalid and unbounded ranges fail before expansion',()=>{
   for(const range of [{start:2022,end:2021},{start:1,end:10000},{start:2020.5,end:2022}])assert.throws(()=>rowsFor({fields:[],rows:[],missing_periods_by_country:{CZE:[range]}},'CZE'));
 });
+test('restores retained coordinates before selection without inheriting a default year into gaps',()=>{
+  const chart={fields:[{key:'value'}],rows:[{value:0}],row_defaults:{country:'CZE',year:2023},annual_period_encoding:'year_integer; original period strings preserved in chart_details',missing_periods_by_country:{CZE:[{start:2020,end:2022}],DEU:[{start:2020,end:2022}]}};
+  assert.deepEqual(rowsFor(chart,'CZE').map(r=>[r.country,r.year,r.value]),[['CZE',2020,null],['CZE',2021,null],['CZE',2022,null],['CZE',2023,0]]);
+  assert.deepEqual(rowsFor(chart,'DEU').map(r=>r.country),['DEU','DEU','DEU']);
+  assert.deepEqual(chart.rows,[{value:0}]);
+});
