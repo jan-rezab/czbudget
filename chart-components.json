@@ -21,34 +21,37 @@
   },
   "consumers": [
     {
-      "id": "praha-budget",
-      "adapter": "praha-budget.js",
+      "id": "municipal-budget",
+      "adapter": "municipal-budget.js",
       "families": [
         "line",
-        "bar",
         "treemap"
       ],
       "tests": [
-        "tests/browser/praha-budget.spec.mjs"
+        "tests/browser/municipal-budget.spec.mjs"
       ],
       "routes": [
-        "/praha-budget.html"
+        "/praha-budget.html",
+        "/municipal-budget.html"
       ],
       "change_paths": [
-        "praha-invoice-view.js",
-        "tests/unit/praha-invoice-view.spec.mjs",
-        "praha-magistrate.js",
-        "lib/praha-magistrate-model.js",
-        "tests/unit/praha-magistrate-model.spec.mjs",
-        "praha-money-map.js",
+        "municipal-budget.html",
         "praha-budget.html",
-        "praha-budget.css",
-        "praha-budget.js",
-        "praha-budget-data.js",
+        "municipal-budget.css",
+        "municipal-budget.js",
+        "municipal-statements.js",
+        "lib/municipal-budget-data.js",
+        "lib/municipal-budget-extensions.js",
+        "lib/cz-budget-labels.js",
+        "praha-invoice-view.js",
         "lib/praha-budget-model.js",
         "lib/praha-spending-model.js",
+        "lib/praha-magistrate-model.js",
+        "lib/praha-company-model.js",
+        "tests/unit/municipal-budget-data.spec.mjs",
+        "tests/unit/praha-invoice-view.spec.mjs",
+        "tests/unit/praha-magistrate-model.spec.mjs",
         "tests/unit/praha-spending-model.spec.mjs",
-        "tests/unit/praha-budget-data.spec.mjs",
         "tests/unit/praha-budget-model.spec.mjs"
       ]
     },
@@ -492,12 +495,13 @@
       "revenue-deep-dive.css",
       "lib/revenue-flow-model.js",
       "lib/revenue-coverage-policy.js",
-      "praha-budget.js",
-      "praha-budget-data.js",
-      "praha-budget.css",
+      "municipal-budget.js",
+      "municipal-budget.css",
+      "municipal-statements.js",
+      "lib/municipal-budget-data.js",
+      "lib/municipal-budget-extensions.js",
+      "lib/cz-budget-labels.js",
       "praha-invoice-view.js",
-      "praha-money-map.js",
-      "praha-magistrate.js",
       "lib/praha-budget-model.js",
       "lib/praha-spending-model.js",
       "lib/praha-magistrate-model.js",

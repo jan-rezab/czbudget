@@ -13,6 +13,9 @@
   enforces this invariant.
 - Never modify or deploy the Riverdata repository or `riverdata.org` from this project.
 - Keep Czech and English navigation available on all municipal and regional pages.
+- The budget viewer is one page for every municipality, keyed by IČO
+  (`municipal-budget.html?ico=`). City-specific sources go in
+  `lib/municipal-budget-extensions.js`, never in the page. See `MUNICIPAL_BUDGET.md`.
 - Brand assets, the palette and the adopted logo rules are in `BRAND.md`; the
   chart grammar is in `CHART_SYSTEM.md`. Preserve the primary mark and wordmark
   rules across hand-written and generated pages.
