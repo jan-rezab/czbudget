@@ -152,7 +152,8 @@
     "private_staging_prefix": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/369c3550-0253-40c7-9cf8-8b1acf944b17/",
     "publication_status": "not_published",
     "public_pointer_updated": false,
-    "processing_status": "validated_review_bundle"
+    "processing_status": "validated_review_bundle",
+    "finished_at": "2026-09-27T01:19:00.246970Z"
   },
   "failed_report_builds": [
     {
@@ -234,5 +235,19 @@
     ],
     "source_release_pins": "Latest validated source pointers including allfourWIDshards; fixed atstartup",
     "csv_exports_on_mac": false
+  },
+  "public_promotion_authorization": {
+    "scope": "Reviewed aggregateJSON/CSV/details only, no rawsurveyrespondents/no publicPDF",
+    "evidence": "Root explicitly GO following userapprovedfinishoverride and exactprivateartifactQA",
+    "report_sha256": "5b0ade36aa00f69a7c9336bc73bcd0f3f7d51ed08ed8b7830b2a8b105b25e7ef",
+    "guard": "STOP failures7; explicit reviewedpublicationoverride continuation; count and original179-minute clock preserved",
+    "qa_receipt": "pipeline/undp_cloud/receipts/report-public-qa369c.json",
+    "region": "europe-west4",
+    "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+    "dataset": "Previouslyvalidated private macroreport release369c3550",
+    "source_manifest": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/369c3550-0253-40c7-9cf8-8b1acf944b17/validated-report-manifest.json",
+    "public_destination": "gs://czbudget-janrezab-public-snapshots/static-assets/human-development/releases/369c3550-0253-40c7-9cf8-8b1acf944b17/",
+    "public_pointer": "gs://czbudget-janrezab-public-snapshots/static-assets/human-development/current.json",
+    "warehouse_reads": "none; exact immutable privatebundle promoted"
   }
 }
