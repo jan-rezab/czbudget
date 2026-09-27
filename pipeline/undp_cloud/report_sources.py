@@ -72,15 +72,15 @@ def records(path,fmt,root,max_member_bytes=2_000_000_000):
  if fmt=='wid_csv':
   with open(path,encoding='utf-8-sig',newline='') as f:
    reader=csv.DictReader(f,delimiter=';');seen=0;accepted=0
-   required={'country','variable','percentile','year','value'}
+   required={'country','variable','percentile','year','value','age','pop'}
    if not required.issubset(set(reader.fieldnames or [])):raise ValueError('Unexpected WID source schema')
    yield path.name+'::metadata',1,{'kind':'header','columns':reader.fieldnames,'delimiter':';'}
    for n,row in enumerate(reader,1):
     seen+=1
-    if row.get('variable')=='sptinc992j' and row.get('percentile')=='p99p100':
+    if row.get('variable')=='sptincj992' and row.get('percentile')=='p99p100' and row.get('age')=='992' and row.get('pop')=='j':
      accepted+=1;yield path.name,n,row
    if accepted==0:raise ValueError('No requested WIDtop1income observations; raw retained, no countryseries published')
-   yield path.name+'::coverage',1,{'received_csv_rows':seen,'accepted_top1_income_rows':accepted,'filtered_out_rows':seen-accepted,'filter':{'variable':'sptinc992j','percentile':'p99p100'},'denominator':'adult equal-split pretax national income; source share is proportion'}
+   yield path.name+'::coverage',1,{'received_csv_rows':seen,'accepted_top1_income_rows':accepted,'filtered_out_rows':seen-accepted,'filter':{'variable':'sptincj992','percentile':'p99p100','age':'992','pop':'j'},'denominator':'adult equal-split pretax national income; source share is proportion'}
  elif fmt=='tar.gz':
   with tarfile.open(path,'r:gz') as t:
    for i,m in enumerate(t):

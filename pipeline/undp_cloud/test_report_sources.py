@@ -62,7 +62,7 @@ class SourceFidelity(unittest.TestCase):
    with self.assertRaises(ValueError):list(records(p,'worldbank_json',Path(d)))
  def test_wid_exact_headers_filter_and_exclusion_counts(self):
   with tempfile.TemporaryDirectory() as d:
-   p=Path(d)/'x.csv';p.write_text('country;variable;percentile;year;value;age;pop;data_quality\nCZ;sptinc992j;p99p100;2024;0.12;992;j;estimated\nCZ;other;p99p100;2024;999;992;j;estimated\n')
+   p=Path(d)/'x.csv';p.write_text('country;variable;percentile;year;value;age;pop;data_quality\nCZ;sptincj992;p99p100;2024;0.12;992;j;estimated\nCZ;other;p99p100;2024;999;992;j;estimated\n')
    rows=list(records(p,'wid_csv',Path(d)))
    self.assertEqual(rows[0][2]['columns'],['country','variable','percentile','year','value','age','pop','data_quality'])
    self.assertEqual(rows[1][2]['value'],'0.12')
