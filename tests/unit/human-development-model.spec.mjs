@@ -20,3 +20,8 @@ test('restores retained coordinates before selection without inheriting a defaul
   assert.deepEqual(rowsFor(chart,'DEU').map(r=>r.country),['DEU','DEU','DEU']);
   assert.deepEqual(chart.rows,[{value:0}]);
 });
+test('omitted compact null cells remain missing while measured zero remains exact',()=>{
+  const chart={fields:[{key:'value'},{key:'other'}],rows:[{year:2023,value:0}],row_defaults:{country:'CZE'}};
+  assert.deepEqual(rowsFor(chart,'CZE'),[{country:'CZE',year:2023,value:0,other:null}]);
+  assert.deepEqual(chart.rows,[{year:2023,value:0}]);
+});
