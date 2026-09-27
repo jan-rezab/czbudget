@@ -78,7 +78,7 @@ const card = (report) => {
   const place = report.place ? `<em class="deep-card-place" data-deep-copy="place${cap(report.key)}">${escapeHtml(report.place.cs)}</em>` : "";
   return `<a class="deep-card available" id="${report.slug}" data-deep-link href="${report.href}">`
     + `<header><span data-deep-copy="source${cap(report.key)}">${escapeHtml(report.source.cs)}</span><b>${escapeHtml(report.badge)}</b></header>`
-    + `${place}<h3 data-deep-copy="${report.key}">${escapeHtml(report.title.cs)}</h3>`
+    + `${place}<h4 data-deep-copy="${report.key}">${escapeHtml(report.title.cs)}</h4>`
     + `<p data-deep-copy="${report.key}Copy">${escapeHtml(report.card.cs)}</p>`
     + `<strong data-deep-copy="open">${escapeHtml(registry.chrome.open.cs)}</strong></a>`;
 };
@@ -103,7 +103,7 @@ const shelfSection = (shelf) => {
         + (cluster.intro ? `<p data-deep-copy="cluster${cap(cluster.id)}Intro">${escapeHtml(cluster.intro.cs)}</p>` : "")
         + `</div>`
       : "";
-    return `<div class="deep-cluster">${heading}<div class="deep-card-grid">${cards.map(card).join("")}</div></div>`;
+    return `<div class="deep-cluster" id="topic-${cluster.id}">${heading}<div class="deep-card-grid">${cards.map(card).join("")}</div></div>`;
   }).join("");
   return `<section class="deep-index deep-shelf" id="${shelf.id}">`
     + `<div class="deep-section-heading"><div><span class="kicker" data-deep-copy="shelf${cap(shelf.id)}Kicker">${escapeHtml(shelf.kicker.cs)}</span>`
@@ -114,9 +114,26 @@ const shelfSection = (shelf) => {
 
 // The comparison contract only describes the cross-country shelf, so it sits
 // between the two shelves rather than at the end of the page.
-const indexBlock = registry.shelves
+const catalogueIntro = () => {
+  const featured = registry.reports.find(report => report.slug === registry.featured);
+  if (!featured) throw new Error('The featured report must exist in the catalogue');
+  const text = key => `<span data-deep-copy="${key}">${escapeHtml(registry.chrome[key].cs)}</span>`;
+  const topics = registry.shelves.flatMap(shelf => shelf.clusters);
+  return `<section class="deep-hero reports-hero" aria-labelledby="reports-title"><div class="reports-intro">`
+    + `<h1 id="reports-title" data-deep-copy="indexTitle">${escapeHtml(registry.chrome.indexTitle.cs)}</h1>`
+    + `<p data-deep-copy="indexIntro">${escapeHtml(registry.chrome.indexIntro.cs)}</p>`
+    + `<a class="reports-browse" href="#report-library">${text('browseReports')}<span aria-hidden="true">↓</span></a></div>`
+    + `<a class="reports-feature" data-deep-link href="${featured.href}"><span class="reports-feature-label">${text('featuredReport')}<span aria-hidden="true">↗</span></span>`
+    + `<h2 data-deep-copy="${featured.key}">${escapeHtml(featured.title.cs)}</h2>`
+    + `<p data-deep-copy="${featured.key}Copy">${escapeHtml(featured.card.cs)}</p>`
+    + `<span class="reports-feature-source" data-deep-copy="source${cap(featured.key)}">${escapeHtml(featured.source.cs)}</span></a></section>`
+    + `<div class="reports-discovery" id="report-library"><div class="reports-tools"><p class="reports-total"><b>${registry.reports.length}</b> ${text('reportLibrary')}</p>`
+    + `<label class="reports-search" hidden><span data-deep-copy="searchReports">${escapeHtml(registry.chrome.searchReports.cs)}</span><input type="search" id="report-search" autocomplete="off" aria-controls="reports-results"></label></div>`
+    + `<nav class="reports-topics" aria-label="${escapeHtml(registry.chrome.browseReports.cs)}">${topics.map(cluster => `<a href="#topic-${cluster.id}" data-deep-copy="cluster${cap(cluster.id)}Title">${escapeHtml(cluster.title.cs)}</a>`).join('')}</nav></div>`;
+};
+const indexBlock = catalogueIntro() + `<div id="reports-results">` + registry.shelves
   .map((shelf) => shelfSection(shelf) + (shelf.id === "compare" ? contractSection() : ""))
-  .join("\n    ");
+  .join("\n    ") + `</div><p class="reports-empty" hidden data-deep-copy="noReports">${escapeHtml(registry.chrome.noReports.cs)}</p><p class="reports-search-status" role="status" aria-live="polite"></p>`;
 
 // ---------------------------------------------------------------- deep-dives.js
 const copyBlock = LANGS.map((lang) => {
