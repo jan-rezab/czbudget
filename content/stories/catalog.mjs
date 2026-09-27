@@ -1,6 +1,14 @@
 // Editorial metadata, not a data pipeline. Only published entries enter the site.
 export default [
   {
+    slug:'trade-surged-around-russia',status:'draft',format:'story',
+    title:'Trade surged around Russia. Where did the goods go?',
+    description:'Follow suppliers, product baskets and onward exports through Kazakhstan and Kyrgyzstan—and test how much the trade statistics can establish.',
+    date:'2026-09-27',updated:'2026-09-27',minutes:5,topic:'Trade & sanctions',author:'Public Spending Data',language:'en',featured:false,
+    takeaway:'Larger neighbouring markets offer clues about trade detours. Matching shipments requires more evidence.',
+    edition:'Draft editorial snapshot · Annual hub history: 2014–2025 · Supplier comparison: 2019–2025 · Evidence checked 27 September 2026.',
+  },
+  {
     slug:'the-great-oil-pivot',status:'published',format:'interactive',
     title:'The great oil pivot.',description:'Russian crude imports shifted from Europe to China and India. Five years of reported trade on one globe.',
     date:'2026-09-26',updated:'2026-09-26',minutes:4,topic:'Energy & trade',author:'Public Spending Data',language:'en',featured:true,
