@@ -74,3 +74,12 @@ test('supplier history keeps annual exporter declarations, absent years and real
  assert.equal(supplierHistory({suppliers:[]},'2025').rows.length,0);
  assert.equal(supplierHistory({suppliers},'2026').year,'2021');assert.equal(supplierHistory({suppliers},'2014').year,'2014');
 });
+
+test('paged consumer assembles the full comparison and rejects changing or incomplete views',async()=>{
+ const {readRussiaAggregate}=await import('../../lib/russia-trade-model.mjs');let calls=0;
+ const pages=[{view_id:'v',observations:[{value_usd:null}],suppliers:[],pagination:{next_page:1,observation_count:1,supplier_count:1}},{view_id:'v',observations:[],suppliers:[{value_usd:0}],pagination:{next_page:null,observation_count:1,supplier_count:1}}];
+ const fetcher=async url=>{assert.match(url,new RegExp(`page=${calls}$`));return Response.json({data:pages[calls++]});};
+ const result=await readRussiaAggregate('A','TOTAL',fetcher);assert.equal(calls,2);assert.equal(result.observations[0].value_usd,null);assert.equal(result.suppliers[0].value_usd,0);assert.equal(result.pagination,undefined);
+ calls=0;pages[1].view_id='changed';await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/changed/);
+ calls=0;pages[1].view_id='v';pages[1].pagination.supplier_count=2;await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/Incomplete/);
+});

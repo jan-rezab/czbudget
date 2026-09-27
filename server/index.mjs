@@ -21,7 +21,7 @@ import { COUNTRIES as WAREHOUSED_COUNTRIES, MunicipalLinesStore } from "./munici
 import { municipalityPage } from "./municipality-page.mjs";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 import { cityVizorStore, CityVizorError } from "./cityvizor-store.mjs";
-import { RussiaTradeStore } from './russia-trade-store.mjs';
+import { RussiaTradeStore, pageRussiaAggregate } from './russia-trade-store.mjs';
 import { TradeError, TradeStore } from "./trade-store.mjs";
 import { ProcessLogError, processLogStore } from "./process-log-store.mjs";
 import { JobMarketError, jobMarketStore } from "./job-market-store.mjs";
@@ -206,7 +206,7 @@ async function routeAPI(request, response, url) {
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
   if ((match = pathname.match(/^\/api\/v1\/countries\/([^/]+)$/))) return sendJSON(response, 200, { data: await countryProfile(match[1]) });
-  if (pathname === "/api/v1/trade/russia-aggregate") return sendJSON(response, 200, { data: await russiaTrade.aggregate(url.searchParams.get("frequency"), url.searchParams.get("product")) });
+  if (pathname === "/api/v1/trade/russia-aggregate") return sendJSON(response, 200, { data: pageRussiaAggregate(await russiaTrade.aggregate(url.searchParams.get("frequency"), url.searchParams.get("product")),url.searchParams.get("page") || "0") });
   if (pathname === "/api/v1/trade/russia-routes") return sendJSON(response, 200, { data: await russiaTrade.routes(url.searchParams.get("exporter"), url.searchParams.get("via"), url.searchParams.get("product")) });
   if (pathname === "/api/v1/trade/explorer") return sendJSON(response, 200, { data: await trade.explorer(url.searchParams.get("countries")) }, { "cache-control": "public, max-age=900" });
   if (pathname === "/api/v1/trade/countries") return sendJSON(response, 200, { data: await trade.countries() });

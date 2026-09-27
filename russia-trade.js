@@ -1,4 +1,4 @@
-import {aggregateModel,supplierComparisons,categoryGrowth,supplierHistory,RESEARCH_SUPPLIERS,HUBS} from './lib/russia-trade-model.mjs';
+import {readRussiaAggregate,aggregateModel,supplierComparisons,categoryGrowth,supplierHistory,RESEARCH_SUPPLIERS,HUBS} from './lib/russia-trade-model.mjs';
 const $=s=>document.querySelector(s),lang=document.documentElement.lang==='cs'?'cs':'en',tr=(cs,en)=>lang==='cs'?cs:en;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const locale=lang==='cs'?'cs-CZ':'en-GB',money=v=>v==null?'—':new Intl.NumberFormat(locale,{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:2}).format(v),exact=v=>v==null?'—':new Intl.NumberFormat(locale,{maximumFractionDigits:9}).format(v),pct=v=>v==null?'—':new Intl.NumberFormat(locale,{style:'percent',maximumFractionDigits:1}).format(v);
@@ -65,7 +65,7 @@ async function loadCategories(){
   if(state.data?.frequency==='A')state.growthData=state.data;
   if(!state.growthData){
    $('#rt-growth-status').textContent=tr('Načítáme roční kategorie…','Loading annual categories…');
-   state.growthRequest ||= fetch('/api/v1/trade/russia-aggregate?frequency=A&product=TOTAL',{signal:AbortSignal.timeout(55000)}).then(async r=>{if(!r.ok)throw new Error(r.status);return (await r.json()).data;}).finally(()=>{state.growthRequest=null;});
+   state.growthRequest ||= readRussiaAggregate('A','TOTAL').finally(()=>{state.growthRequest=null;});
    state.growthData=await state.growthRequest;
   }
   const allYears=[...new Set(state.growthData.observations.filter(o=>o.product_code==='TOTAL').map(o=>o.period))].sort();
@@ -96,7 +96,7 @@ function renderCategories(){
 }
 function latestShared(){return state.model?.rows.filter(r=>[r.KAZ,r.KGZ,r.KAZ_RUS,r.KGZ_RUS].every(Number.isFinite)).at(-1)?.period||state.model?.periods.at(-1);}
 async function load(){pause();const request=++state.request;state.loading=true;state.data=null;state.model=null;state.map?.destroy();state.charts.forEach(c=>c?.destroy());state.leadChart?.destroy();state.leadChart=null;playback();$('#rt-status').textContent=tr('Načítáme všechny dodavatele a obě země…','Loading all suppliers and both hubs…');$('#rt-retry').hidden=true;$('#rt-map').setAttribute('aria-busy','true');for(const id of ['rt-lead-chart','rt-lead-legend','rt-lead-values','rt-lead-status','rt-map','rt-legs','rt-trend-wrapper','rt-onward-wrapper','rt-suppliers','rt-dependencies','rt-direct','rt-direct-summary','rt-direct-coverage','rt-exclusions','rt-findings','rt-provenance','rt-source','rt-map-coverage'])$('#'+id).replaceChildren();
- try{const res=await fetch(`/api/v1/trade/russia-aggregate?frequency=${state.frequency}&product=${state.product}`,{signal:AbortSignal.timeout(55000)});if(!res.ok)throw new Error(res.status);const {data}=await res.json();if(request!==state.request)return;state.data=data;state.model=aggregateModel(data);if(!state.model.rows.length)throw new Error('empty');if(!state.model.periods.includes(state.period))state.period=latestShared();state.loading=false;sync();renderHistory();renderPeriod();loadCategories();}
+ try{const data=await readRussiaAggregate(state.frequency,state.product);if(request!==state.request)return;state.data=data;state.model=aggregateModel(data);if(!state.model.rows.length)throw new Error('empty');if(!state.model.periods.includes(state.period))state.period=latestShared();state.loading=false;sync();renderHistory();renderPeriod();loadCategories();}
  catch(e){if(request!==state.request)return;console.error('Russia trade view failed',e);state.loading=false;state.model=null;playback();$('#rt-status').textContent=tr('Souhrnná data se nepodařilo načíst. Zkuste to znovu.','Aggregate data could not be loaded. Please retry.');$('#rt-retry').hidden=false;playback();}finally{if(request===state.request)$('#rt-map').setAttribute('aria-busy','false');}}
 function controls(){document.querySelectorAll('[data-frequency]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.frequency===state.frequency)));$('#rt-product').value=state.product;}
 document.querySelectorAll('[data-cs][data-en]').forEach(n=>n.innerHTML=n.dataset[lang]);document.title=tr('Obchod kolem Ruska','The trade around Russia')+' — Public Spending Data';$('#rt-back').href=`/deep-dives/?lang=${lang}`;

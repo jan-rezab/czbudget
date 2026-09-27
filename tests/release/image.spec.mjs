@@ -25,3 +25,12 @@ test('candidate image serves matching immutable chart assets and usable tooltips
   await page.keyboard.press('Escape');
   await expect(page.locator('.psd-plot-tooltip')).toBeHidden();
 });
+
+ test('candidate image allows and loads the same-origin Russia report embed',async({page,request})=>{
+  const response=await request.get('/stories/trade-surged-around-russia/?lang=en');
+  expect(response.headers()['content-security-policy']).toContain("frame-src 'self'");
+  await page.goto('/stories/trade-surged-around-russia/?lang=en');
+  await page.locator('iframe').scrollIntoViewIfNeeded();
+  await expect(page.frameLocator('iframe').locator('#rt-map')).toBeAttached();
+  await expect(page.frameLocator('iframe').locator('#rt-growth-KAZ')).toBeAttached();
+ });

@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { TradeStore, TradeError } from './trade-store.mjs';
 import { parameter } from './france-municipal-lines.mjs';
 import { shareInFlight } from './in-flight.mjs';
@@ -53,6 +54,7 @@ export class RussiaTradeStore extends TradeStore {
      release_ids:[...new Set([...rows,...suppliers].flatMap(r=>(r.release_ids||'').split('|')).filter(Boolean))],
      method:'Calculated sums of deduplicated, originally reported HS6 observations. World partner rows are kept separate from bilateral rows. Annual and monthly grains are never combined.',
      release_note:'Ingestion IDs identify contributing loads, not an immutable snapshot. Product counts describe observed coverage, not completeness.'}};
+   value.view_id=createHash('sha256').update(JSON.stringify(value)).digest('hex');
    this.put(key,value);return value;
   });
  }
@@ -139,3 +141,10 @@ SELECT period,reporter_iso3,ANY_VALUE(reporter_name) reporter_name,partner_iso3,
  MAX(retrieved_at) retrieved_at
 FROM leaves GROUP BY period,reporter_iso3,partner_iso3 ORDER BY period,reporter_iso3,partner_iso3
 `;
+
+export function pageRussiaAggregate(data, page = '0') {
+ if (!/^(0|[1-9]\d{0,2})$/.test(String(page))) throw new TradeError(400,'invalid_russia_page','Expected a nonnegative page number.');
+ const index=Number(page),size=1000,total=data.observations.length+data.suppliers.length,start=index*size,end=start+size;
+ if(index>0 && start>=total) throw new TradeError(400,'invalid_russia_page','The page is outside this comparison.');
+ return {...data,observations:data.observations.slice(start,end),suppliers:data.suppliers.slice(Math.max(0,start-data.observations.length),Math.max(0,end-data.observations.length)),pagination:{page:index,page_size:size,next_page:end<total?index+1:null,observation_count:data.observations.length,supplier_count:data.suppliers.length}};
+}

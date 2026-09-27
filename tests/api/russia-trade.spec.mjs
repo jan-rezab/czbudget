@@ -24,3 +24,12 @@ test('aggregate endpoint defaults to annual all goods and retains derived precis
 });
 test('aggregate query excludes regional groups, parents and mirror addition before summing',()=>{assert.match(RUSSIA_AGGREGATE_SQL,/aggregation_level=6/);assert.match(RUSSIA_AGGREGATE_SQL,/QUALIFY ROW_NUMBER/);assert.match(RUSSIA_AGGREGATE_SQL,/GROUP BY period,reporter_iso3,flow_code,partner_area_code,basket/);assert.match(RUSSIA_SUPPLIERS_SQL,/is_reporter AND NOT is_group/);assert.match(RUSSIA_SUPPLIERS_SQL,/frequency='A'/);});
 test('aggregate filters reject malformed frequencies and products before network',async()=>{const s=new RussiaTradeStore();s.query=()=>{throw Error('network');};for(const a of [['Q','TOTAL'],['A','bad'],['A','123456']])await assert.rejects(s.aggregate(...a),e=>e.code==='invalid_russia_aggregate_filter');});
+
+test('aggregate pagination preserves every observation and mirror declaration below the response limit',async()=>{
+ const {pageRussiaAggregate}=await import('../../server/russia-trade-store.mjs');
+ const data={view_id:'same-view',observations:Array.from({length:2300},(_,i)=>({period:'2025',value_usd:i,reported_value_usd:String(i),source_hashes:'a'.repeat(700)})),suppliers:Array.from({length:1200},(_,i)=>({reporter_iso3:'DEU',value_usd:i,reported_value_usd:String(i)})),countries:[],source:{release_ids:['release']}};
+ const observations=[],suppliers=[];let page=0;
+ do {const part=pageRussiaAggregate(data,String(page));assert.ok(Buffer.byteLength(JSON.stringify({data:part}))<2*1024*1024);observations.push(...part.observations);suppliers.push(...part.suppliers);page=part.pagination.next_page;}while(page!==null);
+ assert.deepEqual(observations,data.observations);assert.deepEqual(suppliers,data.suppliers);
+ for(const invalid of ['-1','1.5','1000','4'])assert.throws(()=>pageRussiaAggregate(data,invalid),e=>e.code==='invalid_russia_page');
+});
