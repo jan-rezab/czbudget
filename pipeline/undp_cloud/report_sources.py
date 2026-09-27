@@ -285,6 +285,13 @@ def main():
    try:
     checkpoint=bucket.blob(f'{prefix}/raw/{sid}.metadata.json')
     prior_checkpoint=bucket.blob(f'processing-runs/hdr-report-sources/{a.resume_run}/raw/{sid}.metadata.json') if a.resume_run else None
+    prior_identity_changed=False
+    if not checkpoint.exists() and prior_checkpoint is not None and prior_checkpoint.exists():
+     prior=json.loads(prior_checkpoint.download_as_bytes())
+     if any(prior.get(k)!=entry.get(k) for k in ('source_id','url','format')):
+      e['prior_raw_catalogue_changed']={k:prior.get(k) for k in ('source_id','url','format','raw_uri','generation','sha256')}
+      e['prior_raw_catalogue_changed']['run_id']=a.resume_run
+      prior_checkpoint=None;prior_identity_changed=True
     if checkpoint.exists() or (prior_checkpoint is not None and prior_checkpoint.exists()):
      saved=json.loads((checkpoint if checkpoint.exists() else prior_checkpoint).download_as_bytes())
      if saved['source_id']!=sid or saved['url']!=entry['url'] or saved['format']!=entry['format']:raise ValueError('Resume raw identity mismatch')
@@ -327,7 +334,7 @@ def main():
     blob.download_to_filename(str(path),checksum='auto')
     if sha(path)!=e['sha256']:raise ValueError('Raw cloud object checksum mismatch')
     processed=bucket.blob(f'{prefix}/processed/{sid}.json')
-    prior_processed=bucket.blob(f'processing-runs/hdr-report-sources/{a.resume_run}/processed/{sid}.json') if a.resume_run else None
+    prior_processed=bucket.blob(f'processing-runs/hdr-report-sources/{a.resume_run}/processed/{sid}.json') if a.resume_run and not prior_identity_changed else None
     saved_stage=None
     if processed.exists():saved_stage=json.loads(processed.download_as_bytes())
     elif prior_processed is not None and prior_processed.exists():saved_stage=json.loads(prior_processed.download_as_bytes())
