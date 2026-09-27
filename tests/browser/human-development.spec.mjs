@@ -4,6 +4,9 @@ const base={chapter:'development',unit:'index',chart_type:'line',fields:[{key:'v
 const fixture={schema_version:'1.0.0',release_id:'569ea124-a61b-4616-ac86-9061ea684998',generated_at:'2026-09-27T00:00:00Z',source_releases:['synthetic'],geographies:[{code:'CZE',name:{en:'Czechia',cs:'Česko'}},{code:'DEU',name:{en:'Germany',cs:'Německo'}},{code:'WLD',name:{en:'World',cs:'Svět'}}],chapters:[{id:'development',title:{en:'Development',cs:'Rozvoj'}}],charts:[{...base,id:'reported-index',title:{en:'Reported index',cs:'Vykázaný index'},status:'ready',rows:[{country:'CZE',year:2022,value:0},{country:'CZE',year:2023,value:null}]},{...base,id:'global-trend',title:{en:'Global trend',cs:'Globální řada'},status:'historical',rows:[{country:'WLD',period:'2022-01',value:1.1},{country:'WLD',period:'2023-01',value:1.2}]},{...base,id:'withdrawn-study',title:{en:'Withdrawn study',cs:'Stažená studie'},status:'withdrawn',rows:[]},{...base,id:'unavailable-study',title:{en:'Unavailable study',cs:'Nedostupná studie'},status:'unavailable',rows:[]}],coverage:{source_count:1,unavailable_sources:[{id:'restricted',reason:{en:'Restricted data',cs:'Omezený přístup'}}],original_figures:4}};
 async function open(page,lang='en') {
   const compact=structuredClone(fixture);
+  const national=compact.charts.find(chart=>chart.id==='reported-index');
+  national.row_columns=['country','year','value'];
+  national.rows=national.rows.map(row=>national.row_columns.map(key=>row[key]));
   const global=compact.charts.find(chart=>chart.id==='global-trend');
   global.row_defaults={country:'WLD'};
   global.rows=global.rows.map(({country,...row})=>row);
