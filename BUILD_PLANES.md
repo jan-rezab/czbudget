@@ -113,6 +113,17 @@ from there; the image never contained them. A future repack must restore its inp
 on a data-plane worker from the published packs or the raw snapshots, never from the
 website checkout. Five small files the release manifest checks stay tracked.
 
+The per-entity municipal fan-out (`data/municipal-history/<ico>.json`,
+`data/municipal-benchmarks/<cc>/<id>.json`) is not tracked in Git either. Each input
+is an immutable raw copy under `gs://czbudget-janrezab-data-layers/raw/<dataset>/<git-sha>/`,
+written once by `cloudbuild.raw-fanout.yaml` and pinned by manifest hash and tree digest
+in `pipeline/config/municipal-serving-inputs.v1.json`. `cloudbuild.data.yaml` restores
+them with `scripts/hydrate-municipal-fanout.py --from gcs`, builds the municipal snapshot
+release, and refuses to publish unless every Czech and benchmark payload equals the
+active release (`scripts/compare-public-serving-releases.mjs`), unless a reviewed data
+change sets `_IDENTITY_COUNTRIES=none`. Locally, `--from git` restores the same bytes
+from Git history without network; validators read small fixtures instead.
+
 - Region: `europe-west4`.
 - Identity: a dedicated data builder (`psd-data-builder` or the narrower
   `comtrade-builder`). Neither identity has Cloud Run deployment permission.

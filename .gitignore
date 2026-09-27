@@ -58,6 +58,10 @@ data/cityvizor-explorer/v1/
 # scripts/build-profiles-from-warehouse.mjs --all-ready.
 .warehouse-profiles/
 
+# Per-entity municipal fan-out restored by scripts/hydrate-municipal-fanout.py from the
+# immutable raw copies pinned in pipeline/config/municipal-serving-inputs.v1.json.
+/.municipal-fanout/
+
 # Slim warehouse profiles — identity, history and headline, with detail served by
 # /public-data/municipality-lines rather than repeated in every file. Rebuilt by
 # scripts/build-profiles-from-warehouse.mjs --slim.

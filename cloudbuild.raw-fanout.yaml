@@ -1,0 +1,55 @@
+# Data plane only (plane-data). Copies one fan-out directory from a pinned commit of the
+# public repository into the immutable raw layer:
+#   gs://czbudget-janrezab-data-layers/raw/<_DATASET>/<_SOURCE_SHA>/
+# It writes nothing else except its receipt, never builds images, never deploys and never
+# moves a serving pointer. Submit with --no-source in europe-west4 as psd-data-builder:
+#   gcloud builds submit --no-source --project=czbudget-janrezab --region=europe-west4 \
+#     --service-account=projects/czbudget-janrezab/serviceAccounts/psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com \
+#     --config=cloudbuild.raw-fanout.yaml \
+#     --substitutions=_SOURCE_SHA=<commit>,_DATASET=municipal-benchmarks,_DIRECTORY=data/municipal-benchmarks
+# See scripts/publish-raw-fanout.py for the validation it performs.
+steps:
+  - id: fetch-pinned-source
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    args:
+      - -ceu
+      - |
+        test "$LOCATION" = europe-west4
+        # One shallow fetch; a blobless clone fetches each file separately at checkout.
+        git init -q /workspace/src
+        cd /workspace/src
+        git remote add origin https://github.com/jan-rezab/czbudget.git
+        git fetch -q --depth=1 origin "${_SOURCE_SHA}"
+        git checkout -q --detach FETCH_HEAD
+        test "$$(git rev-parse HEAD)" = "${_SOURCE_SHA}"
+
+  - id: validate-and-publish-raw
+    waitFor: [fetch-pinned-source]
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: bash
+    env: [BUILD_ID=$BUILD_ID, PROJECT_ID=$PROJECT_ID, REGION=$LOCATION, SERVICE_ACCOUNT=psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com]
+    args:
+      - -ceu
+      - |
+        git config --global --add safe.directory /workspace/src
+        python3 /workspace/src/scripts/publish-raw-fanout.py \
+          --root /workspace/src \
+          --source-sha "${_SOURCE_SHA}" \
+          --dataset "${_DATASET}" \
+          --directory "${_DIRECTORY}" \
+          --output /workspace/.out \
+          --publish
+
+timeout: 1200s
+queueTtl: 600s
+tags: [plane-data, data-publication, raw-fanout]
+
+options:
+  machineType: E2_MEDIUM
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _SOURCE_SHA: ""
+  _DATASET: ""
+  _DIRECTORY: ""

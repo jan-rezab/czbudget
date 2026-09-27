@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Pinned sources of the per-entity municipal fan-out, which is not tracked in Git. scripts/hydrate-municipal-fanout.py restores each input from its immutable raw copy and verifies it against this pin; the tree digests equal the entries data/release-manifest.v1.json recorded while the files were tracked. Changing an input means publishing a new raw copy (cloudbuild.raw-fanout.yaml) and updating this file in a reviewed commit.",
+  "inputs": {
+    "municipal-history": {
+      "dataset": "czech-municipal-history",
+      "directory": "data/municipal-history",
+      "source_repository": "https://github.com/jan-rezab/czbudget.git",
+      "source_git_sha": "98abd60e20497611c1993bd884d499cb71d06728",
+      "source_git_tree": "95f8cc2d07c60606b6f90215bab4109f9c62f643",
+      "raw_prefix": "gs://czbudget-janrezab-data-layers/raw/czech-municipal-history/98abd60e20497611c1993bd884d499cb71d06728/",
+      "raw_manifest_sha256": "0342e3a73129e6cacf4be06bf1db15b0767819dba8d00fdb138a0273e2724821",
+      "publication_status": "published by Cloud Build cb5e6d60 (europe-west4, psd-data-builder) on 2026-09-27",
+      "files": 6255,
+      "bytes": 62347126,
+      "trees": {
+        "data/municipal-history": { "files": 6255, "bytes": 62347126, "sha256": "55c62919ba0fe085225f1ca01029c5b88c9fc634366d3f8dae2b48636be7f35f" }
+      }
+    },
+    "municipal-benchmarks": {
+      "dataset": "municipal-benchmarks",
+      "directory": "data/municipal-benchmarks",
+      "source_repository": "https://github.com/jan-rezab/czbudget.git",
+      "source_git_sha": "98abd60e20497611c1993bd884d499cb71d06728",
+      "source_git_tree": "c1b4959f5bf07d44eb2b88720dd0511bf8ca8bc2",
+      "raw_prefix": "gs://czbudget-janrezab-data-layers/raw/municipal-benchmarks/98abd60e20497611c1993bd884d499cb71d06728/",
+      "raw_manifest_sha256": "d660c873ebd68794a643ec2aca22f8884077aa41cda4bc4be971488867bc83df",
+      "publication_status": "pending: submit cloudbuild.raw-fanout.yaml with _SOURCE_SHA=98abd60e20497611c1993bd884d499cb71d06728 _DATASET=municipal-benchmarks _DIRECTORY=data/municipal-benchmarks. The manifest is deterministic for that commit; this SHA-256 is its dry-run value and the hydrator refuses any other.",
+      "files": 1013,
+      "bytes": 30457302,
+      "trees": {
+        "data/municipal-benchmarks": { "files": 3, "bytes": 15229507, "sha256": "65239ca5a8de9ace98380d0fc78a38f6d9483fbb01ee2fbc50270f1e692289bb" },
+        "data/municipal-benchmarks/fin": { "files": 310, "bytes": 6111772, "sha256": "e90793dd8030192d88782da741470b8e5d55e6c52bc25d2c726fb09c660b4d90" },
+        "data/municipal-benchmarks/nld": { "files": 342, "bytes": 2273453, "sha256": "7d12b82c6ca0456c41e5179ceb19a84f0d62be165c8038cab40723994900175f" },
+        "data/municipal-benchmarks/nor": { "files": 358, "bytes": 6842570, "sha256": "7ff4b3d6c60fa626b21effc844ed60d51f4a71369394a12085c9eb0a1aee8386" }
+      }
+    }
+  }
+}

@@ -1,4 +1,6 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
+import { pathToFileURL, fileURLToPath } from "node:url";
+import { requireFanoutRoot } from "./lib/municipal-fanout.mjs";
 
 const root = new URL("../", import.meta.url);
 const output = new URL("data/municipal-spending-splits.v1.json", root);
@@ -46,7 +48,8 @@ async function frenchSplit() {
 }
 
 async function finnishSplit() {
-  const directory = new URL("data/municipal-benchmarks/fin/", root);
+  // The Finnish profiles are not tracked in Git; read the hydrated, pin-verified copy.
+  const directory = pathToFileURL(`${requireFanoutRoot("municipal-benchmarks", fileURLToPath(root))}/fin/`);
   const files = (await readdir(directory)).filter((name) => name.endsWith(".json")).sort();
   let operating = 0;
   let investment = 0;
