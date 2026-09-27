@@ -6,7 +6,7 @@
   "checkpoint_minutes_from_original_source_expansion": 83,
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
-  "failed_cloud_verification_attempts": 1,
+  "failed_cloud_verification_attempts": 2,
   "superseded_builds": [
     {
       "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
@@ -71,7 +71,7 @@
     }
   ],
   "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously.",
-  "checkpoint_status": "ACTIVE_WITH_USER_APPROVED_60_MINUTE_EXTENSION",
+  "checkpoint_status": "STOP_NEW_BUILDS_AT_SECOND_FAILURE; focused source-contract reproduction and correction underway",
   "failed_source_builds": [
     {
       "id": "a20f0ab0-dd8b-4b05-af8a-92f0c1266327",
@@ -94,7 +94,7 @@
     "WHO corrected andpublished",
     "manual verifiedclaim PDF correction code ready but originalclaimbatchnotrerun"
   ],
-  "report_artifacts_status": "Actual private combined export/PDF build queued; no public objects or pointer updates authorized before root QA",
+  "report_artifacts_status": "Private build failed before JSON/PDF objects; no public objects/pointers changed",
   "report_source_census": {
     "numbered_figures": 67,
     "box_figures": 6,
@@ -116,7 +116,7 @@
   },
   "active_report_review_build": {
     "id": "14f611da-1db9-4a35-b0e1-acf23ba02ad8",
-    "status": "QUEUED",
+    "status": "FAILURE",
     "created_at": "2026-09-27T00:13:13.846921676Z",
     "region": "europe-west4",
     "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
@@ -130,6 +130,18 @@
     },
     "private_staging_prefix": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/14f611da-1db9-4a35-b0e1-acf23ba02ad8/",
     "publication_status": "not_published",
-    "public_pointer_updated": false
-  }
+    "public_pointer_updated": false,
+    "finished_at": "2026-09-27T00:14:27.346467Z",
+    "failure": "Epoch adapter rejected curated source row: Central compute outside bounds",
+    "processing_status": "not_generated"
+  },
+  "failed_report_builds": [
+    {
+      "id": "14f611da-1db9-4a35-b0e1-acf23ba02ad8",
+      "loader_git_sha": "09df13a139c53b300c8fc288ff96f4962a4c84b4",
+      "reason": "chart_ch5_6.epoch_source: Central compute outside bounds",
+      "finished_at": "2026-09-27T00:14:27.346467Z",
+      "cumulative_failed_verifications": 2
+    }
+  ]
 }
