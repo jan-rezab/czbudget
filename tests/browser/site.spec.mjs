@@ -82,7 +82,7 @@ const routes = [
 for (const [name, path] of routes) {
   test(`${name} renders without serious accessibility or runtime failures`, async ({ page }) => {
     // Full-page axe analysis of large coverage/budget tables needs a larger cloud budget.
-    if (["methodology", "state budget"].includes(name)) test.setTimeout(300_000);
+    if (["methodology", "state budget", "state-owned enterprises deep dive"].includes(name)) test.setTimeout(300_000);
     const failures = [];
     page.on("pageerror", (error) => failures.push(error.message));
     page.on("console", (message) => {
@@ -972,6 +972,7 @@ test("state-owned enterprise catalogue includes the Czech inventory and handles 
   await expect(page.locator("#soe-body")).toContainText("Dopravní podnik hl. m. Prahy");
   await expect(page.locator("#soe-body")).toContainText("Plzeňské městské dopravní podniky");
   const dpp=page.locator("#soe-body tr").filter({hasText:"Dopravní podnik hl. m. Prahy"});
+  await expect(dpp.locator("[data-history-slot]")).toBeEmpty();
   await dpp.locator("summary").click();
   await expect(dpp).toContainText("2025 · Individual accounts");
   await expect(dpp).toContainText("2024 · Individual accounts");
