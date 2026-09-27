@@ -6,7 +6,7 @@
   "checkpoint_minutes_from_original_source_expansion": 83,
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
-  "failed_cloud_verification_attempts": 5,
+  "failed_cloud_verification_attempts": 6,
   "superseded_builds": [
     {
       "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
@@ -71,7 +71,7 @@
     }
   ],
   "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously.",
-  "checkpoint_status": "EXPLICIT_NAMED_PRIVATE_RETRY_OVERRIDE_AUTHORIZED; failed5 and original179-minute budget retained",
+  "checkpoint_status": "STOP_AFTER_SIXTH_TERMINAL_FAILURE; exact size diagnostic and focused correction ready",
   "failed_source_builds": [
     {
       "id": "a20f0ab0-dd8b-4b05-af8a-92f0c1266327",
@@ -108,7 +108,7 @@
     "WHO corrected andpublished",
     "manual verifiedclaim PDF correction code ready but originalclaimbatchnotrerun"
   ],
-  "report_artifacts_status": "Named explicitly authorized private compaction/PDF retry queued; actual serialized size not yet verified",
+  "report_artifacts_status": "Private retry failed unchanged size cap2220196bytes; source/gap compaction validated but final body not published",
   "report_source_census": {
     "numbered_figures": 67,
     "box_figures": 6,
@@ -130,7 +130,7 @@
   },
   "active_report_review_build": {
     "id": "71b106da-b0c4-4011-bd3f-d08b7e585ee1",
-    "status": "QUEUED",
+    "status": "FAILURE",
     "created_at": "2026-09-27T00:55:53.687799943Z",
     "region": "europe-west4",
     "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
@@ -144,7 +144,10 @@
     },
     "private_staging_prefix": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/71b106da-b0c4-4011-bd3f-d08b7e585ee1/",
     "publication_status": "not_published",
-    "public_pointer_updated": false
+    "public_pointer_updated": false,
+    "finished_at": "2026-09-27T00:57:51.469822Z",
+    "failure": "Report payload2220196bytes exceeds2MiB cap; no immutable report outputs/pointers written",
+    "processing_status": "not_generated"
   },
   "failed_report_builds": [
     {
@@ -160,6 +163,13 @@
       "reason": "Report payload3968370bytes exceeds2MiB cap; held before immutable output/pointer writes",
       "finished_at": "2026-09-27T00:46:10.825538Z",
       "cumulative_failed_verifications": 5
+    },
+    {
+      "id": "71b106da-b0c4-4011-bd3f-d08b7e585ee1",
+      "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
+      "reason": "Report payload2220196bytes exceeds2MiB cap; no immutable report outputs/pointers written",
+      "finished_at": "2026-09-27T00:57:51.469822Z",
+      "cumulative_failed_verifications": 6
     }
   ],
   "report_focused_corrections": {

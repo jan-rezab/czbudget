@@ -152,7 +152,8 @@ def validate(payload):
         if c['status'] in {'ready','historical'} and (not c['fields'] or not c['source_refs'] or not any(r.get(f['key']) is not None for r in c['rows'] for f in c['fields'])):raise ValueError('Ready chart without observations')
         for source in c['source_refs']:
             if not source['url'].startswith('https://') or not source['vintage'] or not source['table'] or not source.get('release_id') or not re.fullmatch('[0-9a-f]{64}',source.get('sha256','')):raise ValueError('Incomplete immutable source reference')
-        for r in c['rows']:
+        for row in c['rows']:
+            r=dict(c.get('row_defaults',{}),**row)
             if r.get('country') is not None and r['country'] not in codes:raise ValueError('Unregistered chart geography')
             if not any(k in r for k in ['year','period','label']):raise ValueError('No observation period/category')
             for f in c['fields']:
