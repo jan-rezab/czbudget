@@ -24,8 +24,8 @@ from publish_observed_hdro_panels import observed_panels
 from report_compaction import compact_chart,expanded_rows
 from publish_wid_snapshot import merge_wid_snapshots
 from history_shards import history_bundle
-from publish_ch5_6_panels import provider_panels
-from publish_ch3_4_panels import provider_panels as care_provider_panels
+from publish_ch5_6_panels import provider_panels, ADMITTED as CH5_6_SOURCES
+from publish_ch3_4_panels import provider_panels as care_provider_panels, ADMITTED as CH3_4_SOURCES
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
 from original_survey_figures import hdi_mapping_from_observations,grouped_query,derive_panels
 from query_costs import BudgetedQueries, PinnedSourceSpool, pinned_source_query, GIB
@@ -36,6 +36,14 @@ PUBLIC = 'czbudget-janrezab-public-snapshots'
 PRIVATE = 'czbudget-janrezab-data-layers'
 POINTER = 'static-assets/human-development/current.json'
 MAX_BYTES = 2*1024*1024
+
+def report_spool_sources(by_source, gcp_contracts=()):
+    needed = set(CH5_6_SOURCES) | set(CH3_4_SOURCES) | {
+        'wdi_country_metadata','wdi_si_dst_10th_10','wdi_si_pov_gini',
+        'wdi_si_dst_frst_20','wdi_si_dst_02nd_20'}
+    needed.update(c['source_id'] for c in gcp_contracts)
+    needed.update(sid for sid in by_source if sid.startswith(('unep_irp_current_mfa_totals_ratios','wid_current_')))
+    return {sid:meta for sid,meta in by_source.items() if sid in needed}
 INDEX = {'hdi': ('Human Development Index', 'Index lidského rozvoje'), 'ihdi': ('Inequality-adjusted HDI', 'HDI upravený o nerovnost'), 'gdi': ('Gender Development Index', 'Index genderového rozvoje'), 'gii': ('Gender Inequality Index', 'Index genderové nerovnosti'), 'phdi': ('Planetary pressures-adjusted HDI', 'HDI upravený o tlak na planetu')}
 DIMENSIONS = {'le': ('Life expectancy', 'Očekávaná délka života'), 'eys': ('Expected years of schooling','Očekávané roky vzdělávání'), 'mys': ('Mean years of schooling','Průměrné roky vzdělávání'), 'gnipc': ('GNI per capita','HND na obyvatele')}
 CS_TOPICS={'Q8':'Znalost umělé inteligence','Q10':'Četnost používání nástrojů AI','Q11':'Setkávání s AI v jednotlivých službách','Q12':'Účely používání AI','Q13':'Interakce s nástroji AI','Q14':'Svoboda volby a kontrola nad vlastním životem','Q15':'Očekávaná svoboda volby za pět let','Q16':'Kontrola nad interakcemi a míra vystavení AI','Q17':'Důvěra v ostatní lidi','Q18':'Důvěra ve využití AI vládou','Q19':'Důvěra v současné systémy AI','Q21':'Dopady AI na práci a pracovní příležitosti'}
@@ -274,8 +282,10 @@ def main():
         m=json.loads(c['source_metadata_json']);m['release_id']=c['release_id'];sid=c['source_id']
         if sid in by_source and by_source[sid].get('sha256')!=m.get('sha256'):raise ValueError('Conflicting pinned source groups '+sid)
         by_source[sid]=m
-    source_sql,source_pins=pinned_source_query(D,by_source)
-    source_spool=PinnedSourceSpool(by_source,lambda:cost_queries.query(source_sql,[bigquery.ScalarQueryParameter('source_pairs','STRING',source_pins)]))
+    gcp_contracts=json.loads(Path(args.gcp_contracts).read_text()) if args.gcp_contracts else []
+    spool_sources=report_spool_sources(by_source,gcp_contracts)
+    source_sql,source_pins=pinned_source_query(D,spool_sources)
+    source_spool=PinnedSourceSpool(spool_sources,lambda:cost_queries.query(source_sql,[bigquery.ScalarQueryParameter('source_pairs','STRING',source_pins)]))
     def source_rows(sid):
         m=by_source[sid]
         for row in source_spool.rows(sid):
@@ -321,7 +331,7 @@ def main():
             native,held=wdi_inequality(wdi_values())
             admit_observations(sid,native,'World Bank household income/consumption inequality / Nerovnost příjmu či spotřeby domácností')
     if args.gcp_contracts:
-        for contract in json.loads(Path(args.gcp_contracts).read_text()):
+        for contract in gcp_contracts:
             sid=contract['source_id']
             if sid not in by_source:raise ValueError('GCP contract source not published')
             admit_observations(sid,gcp_territorial(source_rows(sid),contract),'Territorial fossil CO2 / Teritoriální emise fosilního CO2')
