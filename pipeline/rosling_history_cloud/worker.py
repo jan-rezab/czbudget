@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Source-precision, cloud-only Rosling histories; never deploys website code."""
-import argparse, base64, copy, hashlib, importlib.util, json, math, os, re, subprocess, time, urllib.request, zipfile
+import argparse, base64, copy, hashlib, importlib.util, json, math, os, re, subprocess, time, urllib.request, zipfile, tarfile
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -70,6 +70,28 @@ class Sources:
    mp=self.root/(key+'.meta.json');write_json(mp,meta);store(mp,meta_uri)
   if expected and meta['sha256']!=expected:raise ValueError('Pinned source hash mismatch')
   self.records[key]=meta;return dest
+
+def held_weo(sources):
+ key='weo-april-2026';member='data/sources/international_fiscal/WEOApr2026all.xlsx'
+ archive_uri='gs://czbudget-janrezab-data-layers/workspace-backups/2026-09-12-disk-review/payloads/data-sources.tar.gz#1789235656536595'
+ archive_sha='ec147ab4d04183a75c132f85b3f4dde7a3e87669004e372d849b691e66dba008'
+ member_sha='b29239cb48f8b895d1e526070c4fde01147bc8f6bd3b86f636363bb6bd87fe7a'
+ uri=sources.prefix+'/raw/'+key+'.raw'
+ if describe(uri+'.json'):return sources.get(key,WEO,member_sha)
+ archive=sources.root/'held-data-sources.tar.gz'
+ subprocess.run(['gcloud','storage','cp',archive_uri,str(archive),'--quiet'],check=True,timeout=240)
+ if sha(archive.read_bytes())!=archive_sha:raise ValueError('Held raw archive hash mismatch')
+ dest=sources.root/(key+'.raw')
+ with tarfile.open(archive,'r:gz') as tar:
+  item=tar.getmember(member)
+  if not item.isfile() or item.size!=5585205:raise ValueError('Held source is not the pinned regular workbook')
+  with tar.extractfile(item) as stream,dest.open('wb') as out:
+   while chunk:=stream.read(1024*1024):out.write(chunk)
+ if sha(dest.read_bytes())!=member_sha:raise ValueError('Held IMF workbook hash mismatch')
+ meta={**store(dest,uri),'url':WEO,'received_at':now(),'source_origin':'preserved original official April 2026 source','archive':{'object':archive_uri,'sha256':archive_sha,'member':member,'member_sha256':member_sha},'headers':{}}
+ mp=sources.root/(key+'.meta.json');write_json(mp,meta);store(mp,uri+'.json');sources.records[key]=meta
+ print(json.dumps({'event':'held-imf-source-verified','sha256':member_sha}),flush=True)
+ return dest
 
 def workbook_rows(path):
  with zipfile.ZipFile(path) as z:
@@ -157,7 +179,7 @@ def run(args):
  root=Path('/workspace/.rosling-history');root.mkdir(exist_ok=True);sources=Sources(root,prefix)
  base=sources.get('published-health','https://publicspendingdata.org/data/country-health-performance.v1.json?v='+BASE_HEALTH_SHA,BASE_HEALTH_SHA)
  health=json.loads(base.read_text());baseline=json.loads(sources.get('published-gdp','https://publicspendingdata.org/lib/data/sovereign-benchmark.v1.json?v='+BASE_GDP_SHA,BASE_GDP_SHA).read_text())
- sovereign,overlap=gdp_from_xlsx(sources.get('weo-april-2026',WEO),baseline)
+ sovereign,overlap=gdp_from_xlsx(held_weo(sources),baseline)
  def collect(item):
   key,(group,id,unit,upper)=item
   url='https://api.worldbank.org/v2/country/'+';'.join(COUNTRIES)+'/indicator/'+id+'?source=2&format=json&per_page=20000&date=1960:2026&footnote=y'
