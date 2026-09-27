@@ -74,3 +74,35 @@ test('a published shard from a different profile is rejected before it can enter
   }});
   await assert.rejects(()=>client.loadPayments(2025),/scope/);
 });
+
+test('district IT loader preserves exact identity, allocation amounts and missing invoice numbers', async () => {
+  const profile={key:'cityvizor.praha.eu/6',ico:'00063517',name:'Praha 3',instance:'https://cityvizor.praha.eu',type:'municipality',available_years:[2025],profile_url:'https://cityvizor.praha.eu/praha3'};
+  const calls=[];
+  const client=data.createClient({fetch:async url=>{
+    calls.push(url); let value;
+    if(url.endsWith('/index')) value={complete:true,release_id:'test-release',profiles:[profile,{...profile,key:'cityvizor.cz/6',instance:'https://cityvizor.cz'}]};
+    else if(url===data.PATHS.codebook)value={dimensions:{}};
+    else if(url.includes('/profile?'))value={release_id:'test-release',profile,years:[{year:2025,source_validity:'2025-12-31',accounting:{by_item:[{key:'5168',expenditure_actual_cents:10000,expenditure_budget_cents:12000}]},payments:{rows:3},events:{rows:0},assets:{payments:[{part:1}],events:[]}}]};
+    else value={profile_key:profile.key,year:2025,kind:'payments',columns:['row_id','item','expenditure_cents','counterparty_id','counterparty_name','description'],rows:[['one','5168',10000,'00001234','Vendor','Support'],['correction','5168',-1000,'00001234','Vendor renamed','Correction'],['non-it','5169',8000,'00001234','Vendor','Other service']]};
+    return {ok:true,json:async()=>value};
+  }});
+  const summary=await client.loadITSummary(profile.key,2025);
+  assert.equal(summary.items[0].amount,100);
+  assert.equal(calls.some(url=>url.includes('/shard?')),false,'invoice records must remain lazy');
+  const result=await client.loadITPayments(profile.key,2025);
+  assert.equal(result.rows.length,2);
+  assert.equal(result.rows[1].expenditure,-10);
+  assert.equal(result.rows[0].invoiceNumber,null);
+  assert.equal(result.rows[0].profileKey,profile.key);
+  assert.equal(result.rows[0].counterpartyId,'00001234');
+  await assert.rejects(()=>client.loadITSummary('cityvizor.cz/6',2025),/not published/);
+  await assert.rejects(()=>client.loadITSummary(profile.key,2024),/not published/);
+});
+
+test('district summary rejects profile identity and release drift', async () => {
+  const profile={key:'cityvizor.praha.eu/6',ico:'00063517',type:'municipality',instance:'https://cityvizor.praha.eu',available_years:[2025]};
+  for(const corrupt of [{profile:{...profile,ico:'00064581'},release_id:'r1'},{profile,release_id:'r2'}]) {
+    const client=data.createClient({fetch:async url=>({ok:true,json:async()=>url.endsWith('/index')?{complete:true,release_id:'r1',profiles:[profile]}:{...corrupt,years:[{year:2025}]}})});
+    await assert.rejects(()=>client.loadITSummary(profile.key,2025),/identity|Publication changed/);
+  }
+});

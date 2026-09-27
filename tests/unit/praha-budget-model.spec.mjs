@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
+const math = require('../../lib/praha-budget-model.js');
 const { associateAnnualChanges } = require('../../lib/praha-budget-model.js');
 
 function fixtures(budgetChanges = [10,20,-5,30,5], outcomeChanges = budgetChanges) {
@@ -107,4 +108,26 @@ test('purpose evidence joins exact year and code, scopes project sums and never 
   assert.equal(result.projects.find(r=>r.code==='').records.length,1);
   assert.deepEqual(result.payments,[payments[0]]);
   assert.deepEqual(purposeEvidence(accounting,payments,2025,'0000').items,[]);
+});
+
+test('IT vendor totals retain refunds, separate unidentified names and exclude unrelated codes', () => {
+  const rows=[
+    {itemCode:'5168',counterpartyId:'001',counterparty:'Same name',expenditureCents:10000,description:'System support'},
+    {itemCode:'5168',counterpartyId:'001',counterparty:'Renamed',expenditureCents:-1000,description:'System refund'},
+    {itemCode:'5168',counterpartyId:'002',counterparty:'Same name',expenditureCents:2000},
+    {itemCode:'5168',counterpartyId:'',counterparty:'Unknown',expenditureCents:500},
+    {itemCode:'5168',counterpartyId:'',counterparty:'Unknown',expenditureCents:700},
+    {itemCode:'5162',counterpartyId:'001',expenditureCents:3000},
+    {itemCode:'5169',counterpartyId:'001',expenditureCents:900000},
+  ];
+  const evidence=math.itEvidence([{code:'5168',actualCents:15000,budgetCents:20000}],rows);
+  assert.equal(evidence.actual,150);
+  assert.equal(evidence.invoiceAmount,122);
+  assert.equal(evidence.vendors.length,4);
+  assert.equal(evidence.vendors[0].amount,90);
+  assert.equal(evidence.payments.length,5);
+  assert.equal(math.itEvidence([],rows,'5162').invoiceAmount,30);
+  assert.equal(math.itEvidence([],rows,'it','system').invoiceAmount,90);
+  assert.equal(math.itEvidence([],[]).invoiceAmount,null);
+  assert.equal(math.itEvidence([],[{itemCode:'5168',expenditureCents:null}]).invoiceAmount,null);
 });

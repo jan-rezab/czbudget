@@ -134,11 +134,11 @@
       if (payload.entity?.national_id !== CITY.ico) throw new Error("Published Praha entity identity is invalid");
       return payload;
     }
-    async function yearSummary(year) {
+    async function yearSummary(year, profileKey = CITY.cityvizorKey, ico = CITY.ico) {
       if (exactYear(year) === null) throw new Error("A calendar year is required");
-      const path = `/public-data/cityvizor/profile?key=${encodeURIComponent(CITY.cityvizorKey)}&year=${year}`;
+      const path = `/public-data/cityvizor/profile?key=${encodeURIComponent(profileKey)}&year=${year}`;
       const payload = await json(path);
-      if (payload.profile?.key !== CITY.cityvizorKey || payload.profile.ico !== CITY.ico) throw new Error("CityVizor Praha identity is invalid");
+      if (payload.profile?.key !== profileKey || (ico && payload.profile.ico !== ico)) throw new Error("CityVizor Praha identity is invalid");
       const selected = payload.years?.find(row => Number(row.year) === Number(year));
       if (!selected) throw new Error("The selected year is not published");
       return { payload, selected, path };
@@ -148,9 +148,10 @@
       if (assets.length > 50) throw new Error("The requested layer exceeds the viewer response limit");
       const rows = [];
       for (const [index, asset] of assets.entries()) {
-        const path = `/public-data/cityvizor/shard?key=${encodeURIComponent(CITY.cityvizorKey)}&year=${year}&layer=${kind}&part=${asset.part || index + 1}`;
+        const profileKey = summary.payload.profile.key;
+        const path = `/public-data/cityvizor/shard?key=${encodeURIComponent(profileKey)}&year=${year}&layer=${kind}&part=${asset.part || index + 1}`;
         const payload = await json(path);
-        if (payload.profile_key !== CITY.cityvizorKey || Number(payload.year) !== Number(year) || payload.kind !== kind) throw new Error("Published layer scope is invalid");
+        if (payload.profile_key !== profileKey || Number(payload.year) !== Number(year) || payload.kind !== kind) throw new Error("Published layer scope is invalid");
         rows.push(...expandRows(payload));
       }
       const expected = number(summary.selected[kind]?.rows);
@@ -190,8 +191,31 @@
       if (!region?.shard || !/^[A-Za-z0-9._/-]+\.json\.gz$/.test(region.shard) || region.shard.includes("..")) throw new Error("PAQ territory shard is invalid");
       return normalizeContext(index, catalog, await json(`/data/paq/${region.shard}`, true));
     }
-    return { loadOverview, loadYearDetail, loadPayments, loadContext, clearCache: () => cache.clear() };
+    async function loadITProfiles() {
+      const directory = await json('/public-data/cityvizor/index');
+      if (!directory.complete || !directory.release_id || !Array.isArray(directory.profiles)) throw new Error('Published profile directory is incomplete');
+      const profiles = directory.profiles.filter(profile => profile.type === 'municipality' && profile.instance === 'https://cityvizor.praha.eu' && /^cityvizor\.praha\.eu\/\d+$/.test(profile.key));
+      if (new Set(profiles.map(profile => profile.key)).size !== profiles.length) throw new Error('Duplicate district identities');
+      return { releaseId: directory.release_id, profiles };
+    }
+    async function loadITSummary(profileKey, year) {
+      const directory = await loadITProfiles();
+      const profile = directory.profiles.find(profile => profile.key === profileKey);
+      if (!profile || !profile.available_years.includes(year)) throw new Error('Selected authority or year is not published');
+      const summary = await yearSummary(year, profileKey, profile.ico);
+      if (summary.payload.release_id !== directory.releaseId) throw new Error('Publication changed; reload before comparing records');
+      const items = (summary.selected.accounting?.by_item || []).filter(row => ['5042','5168','5172','6111','6125','5162'].includes(String(row.key))).map(row => ({ code: String(row.key), name: row.label, actualCents: number(row.expenditure_actual_cents), budgetCents: number(row.expenditure_budget_cents), amount: cents(row.expenditure_actual_cents), budget: cents(row.expenditure_budget_cents) }));
+      return { profile, year, items, summary, sourceValidity: summary.selected.source_validity, evidence: { releaseId: directory.releaseId, profileKey, sourceUrl: profile.profile_url, sourceSha256: summary.selected.source_bulk_export?.sha256, receivedAt: summary.selected.source_bulk_export?.retrieved_at } };
+    }
+    async function loadITPayments(profileKey, year) {
+      const result = await loadITSummary(profileKey, year);
+      if (!Array.isArray(result.summary.selected.assets?.payments) || !Number.isInteger(result.summary.selected.payments?.rows)) throw new Error('Invoice coverage is not declared');
+      const [raw, events, codebook] = await Promise.all([layer(year, 'payments', result.summary), layer(year, 'events', result.summary), json(PATHS.codebook).catch(() => null)]);
+      const rows = normalizePayments(raw, year, codebook, events).map((row, index) => ({ ...row, expenditureCents: number(raw[index].expenditure_cents), invoiceNumber: null, profileKey, scope: result.profile.name + ' · published invoice allocations' })).filter(row => ['5042','5168','5172','6111','6125','5162'].includes(row.itemCode));
+      return { ...result, rows, totalPublishedRows: raw.length };
+    }
+    return { loadOverview, loadYearDetail, loadPayments, loadContext, loadITProfiles, loadITSummary, loadITPayments, clearCache: () => cache.clear() };
   }
   let defaultClient;
-  return { CITY, PATHS, createClient, normalizeHistory, normalizeBreakdown, normalizeAccounting, normalizePayments, normalizeContext, number, loadOverview: (...args) => (defaultClient ||= createClient()).loadOverview(...args), loadYearDetail: (...args) => (defaultClient ||= createClient()).loadYearDetail(...args), loadPayments: (...args) => (defaultClient ||= createClient()).loadPayments(...args), loadContext: (...args) => (defaultClient ||= createClient()).loadContext(...args) };
+  return { CITY, PATHS, createClient, normalizeHistory, normalizeBreakdown, normalizeAccounting, normalizePayments, normalizeContext, number, loadOverview: (...args) => (defaultClient ||= createClient()).loadOverview(...args), loadYearDetail: (...args) => (defaultClient ||= createClient()).loadYearDetail(...args), loadPayments: (...args) => (defaultClient ||= createClient()).loadPayments(...args), loadContext: (...args) => (defaultClient ||= createClient()).loadContext(...args), loadITProfiles: (...args) => (defaultClient ||= createClient()).loadITProfiles(...args), loadITSummary: (...args) => (defaultClient ||= createClient()).loadITSummary(...args), loadITPayments: (...args) => (defaultClient ||= createClient()).loadITPayments(...args) };
 }));

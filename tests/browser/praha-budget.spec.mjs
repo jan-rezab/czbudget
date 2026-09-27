@@ -231,3 +231,19 @@ test('service drilldown follows the exact purpose into supporting invoices and k
   await expect(page.locator('[data-service]')).toHaveCount(0);
   await expectNoRawDownloads(page);
 });
+
+test('the overview starts with all spending and traces only the selected project allocations', async ({page}) => {
+  await fixturePraha(page);
+  await openPraha(page);
+  await expect(page.locator('.pb-lenses [data-lens="all"]')).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('.pb-overview-grid button')).toHaveCount(2);
+  await expect(page.locator('#explore-summary')).toContainText('3 m CZK');
+  await page.locator('[data-explore-load]').click();
+  await page.locator('[data-project="A1"]').click();
+  await expect(page.locator('#inspector-content [data-explore-invoice]')).toHaveCount(2);
+  await expect(page.locator('#inspector-content')).not.toContainText('Dodavatel bez popisu');
+  await expect(page.locator('#explore-summary')).toContainText('3 m CZK');
+  await page.locator('[data-inspector-tab="contracts"]').click();
+  await expect(page.locator('#inspector-content')).toContainText('not this project’s contract count');
+  await expectNoRawDownloads(page);
+});
